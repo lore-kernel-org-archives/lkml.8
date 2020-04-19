@@ -2,164 +2,190 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F170C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B45FC54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 20:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 644402145D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 470C221473
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 20:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bkl427su"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="unqQADth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgDST5R (ORCPT
+        id S1726447AbgDSUGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 15:57:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47562 "EHLO
+        Sun, 19 Apr 2020 16:06:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgDST5Q (ORCPT
+        with ESMTP id S1726123AbgDSUGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 15:57:16 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3C9C061A10
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:57:16 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id w65so3879396pfc.12
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:57:16 -0700 (PDT)
+        Sun, 19 Apr 2020 16:06:01 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DED4C061A0C;
+        Sun, 19 Apr 2020 13:06:01 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o185so3448466pgo.3;
+        Sun, 19 Apr 2020 13:06:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YumqERvCKOIqM0l6QjCVu8YaX8ML5bpdCVE8/BBsM/o=;
-        b=bkl427suLOwECWk6iGg5nqxlva0Lm21z8+YcSYxPMfnxxYk4kXifCAsfsfVP0xM7tl
-         sqajdPIGykOuBPwqsxRKX57rAbkXKJB4Ba4itGUQ0cFa8tJ6/hcFajAAt385w5uTF16i
-         NLUN8O8xxvgjfaCK7ir4cSzGXKOAxPL5ReLs93AStASzGo7QkYd9Oaxj9WDIbo4tlaDS
-         BrjfgbsU1ZwyBjRssJwtq/B1q9XvLgpi3JuMHnEkhyvZJ7E+NJmhIJjlvTT7f2/BZq2l
-         RrddBXUrPmYPsNd/LX86JB5UKVSw2PMHiv5bRlMKChIg7HxorXzqkF5m/Ox9l4cDnPvs
-         yeDw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=c83bq8ed+sqgwSVUBCBP9r/j44GMioCiEFSCJDfpF7U=;
+        b=unqQADth7BEvNHoVtKDp4tRsURcEpQbxvjiI6HNGEEA6kVK1qJNF6CN1G22i1VeHaJ
+         iXtdMT9iN78dIXiJ2/AwstGwn1LxOsG/XbqPHaAnuf9tsWQXopfjhxWty0bEWHF5/Knn
+         Dhwzn720OehZTnJ5z23zgTAXUZnGSIki4mSw3S7LjBWdh5T1mdezpV9/TNxXQnNqsIR1
+         C6vXvATA4JMPShjH/A0AWHxV0K9+QYEPFgDZ6cXecTLLKSRZ8VRVwYnoeF3cYOE5VEtD
+         NrayDwmFGH43vo/doeHzmmT60thEXe8Q1k7E0pu5xSE3Nn65HkpOWWk81BozwHMuzhgU
+         vh6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YumqERvCKOIqM0l6QjCVu8YaX8ML5bpdCVE8/BBsM/o=;
-        b=IzimwRUeeSw4yrFXwIAD240z6upDfZqZmbY2b2AE5vzjaCE8HgwuQ3T+Pcz9a9uskG
-         e9qu6mXDXmKGtvjyoiAsLvm9jpB7esBElNQWfQqjmxcXwkZp6JQtMJS7ja2eVHzsAXRQ
-         0qA85oMyFZHe7H+mEuCV5l9F5Fuypqy1Psf/nJdI9HnewSPIkjpXdp6Vajp01I/8k0Vo
-         oLcSG4KjrhDTtQIkvityCZ4ElqLcD+iGmbP9hrCLRRvtFVUABpMGqITEZzv0kn8F24gJ
-         N8aWLuL0dgrAjH7vQ7wE/1FeT44yUQGfZ0W+xTnUZwJVk1ATm788e4/ip53JbNwJ5q3/
-         yqng==
-X-Gm-Message-State: AGi0PubhdSI9CqO+LlmKvkYviy5ByYoBHnwYym3U1UzEzHq5W2oDzaAB
-        hJ852ms1xbaqm3EmlSs/Xb+9Tg==
-X-Google-Smtp-Source: APiQypI9Nu/NqKn50llhvU4NXwGdKoDj2hsBe2DTls8RZ2ERdOAfW5IuQ4pBJ8NgK2mEb4AqK+V+Yg==
-X-Received: by 2002:a63:8c4f:: with SMTP id q15mr2043449pgn.434.1587326235960;
-        Sun, 19 Apr 2020 12:57:15 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id 62sm18191189pfu.181.2020.04.19.12.57.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Apr 2020 12:57:15 -0700 (PDT)
-Subject: Re: INFO: rcu detected stall in io_uring_release
-To:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <20200419040626.628-1-hdanton@sina.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0194d769-d3fc-0e63-9820-80a4ef3bf6bd@kernel.dk>
-Date:   Sun, 19 Apr 2020 13:57:12 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c83bq8ed+sqgwSVUBCBP9r/j44GMioCiEFSCJDfpF7U=;
+        b=ll4uUllclLeipR6QUVHdNzhXBegRMR/3oFKGQOLl33YBDIHjTKa74GIpP9S2XBA3UV
+         kqh19GKoLEw4wpbPlElvOnD9EIWcGhe7cUfaB9mru2NN2ZZblBB9dMMNUvSgjUbekacc
+         jrd1Vu+dhq6+5Jx0Y6MYNRTdoJ2EnAGrRaTEZ0iB78Uv87rblDGVhLKZcmCls8GHcnWQ
+         Op3Bw0qMOiYIYpt7jowJVKEgpcMDcxzDfI8gk/uZWgaeJK9w9u0pZ21ReJ7tCOD4gHMY
+         ierm+LiSIAASSZ6FSP0FRPl0aPuXbWs9K6UiC1aAFI0lwRhbeE8B87JYF106IbZhChwa
+         9g2w==
+X-Gm-Message-State: AGi0PuYOywUFxvubyslZWVZfg6qc6mlJS1CSmPFqumS40iDDSqqby+gy
+        Fjzp0qLxLO1bbO7b9rMPTJM=
+X-Google-Smtp-Source: APiQypJfPiyTQ0pIT4e5nl/vxLqLWBnzwHIRQIMsq/gouF/f5ptcgb8T/fdRB4Z0XoZDy4+gE+EMng==
+X-Received: by 2002:a63:41c2:: with SMTP id o185mr12868739pga.139.1587326760839;
+        Sun, 19 Apr 2020 13:06:00 -0700 (PDT)
+Received: from Ryzen-7-3700X.localdomain ([82.102.31.53])
+        by smtp.gmail.com with ESMTPSA id s66sm10858784pgb.84.2020.04.19.13.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 13:05:59 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 13:05:58 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: Re: [PATCH 2/2] MIPS: VDSO: Do not disable VDSO when linking with
+ ld.lld
+Message-ID: <20200419200558.GA13017@Ryzen-7-3700X.localdomain>
+References: <20200419180445.26722-1-natechancellor@gmail.com>
+ <20200419180445.26722-2-natechancellor@gmail.com>
+ <20200419181715.GA36234@ubuntu-s3-xlarge-x86>
+ <CAK7LNAS7QHB3GuBeLDh66OHbYRMzmNQNwiueU7jH1i7v0UTAAQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200419040626.628-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAS7QHB3GuBeLDh66OHbYRMzmNQNwiueU7jH1i7v0UTAAQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/18/20 10:06 PM, Hillf Danton wrote:
-> 
-> Sat, 18 Apr 2020 11:59:13 -0700
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    8f3d9f35 Linux 5.7-rc1
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=115720c3e00000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
->> dashboard link: https://syzkaller.appspot.com/bug?extid=66243bb7126c410cefe6
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->>
->> Unfortunately, I don't have any reproducer for this crash yet.
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com
->>
->> rcu: INFO: rcu_preempt self-detected stall on CPU
->> rcu: 	0-....: (10500 ticks this GP) idle=57e/1/0x4000000000000002 softirq=44329/44329 fqs=5245 
->> 	(t=10502 jiffies g=79401 q=2096)
->> NMI backtrace for cpu 0
->> CPU: 0 PID: 23184 Comm: syz-executor.5 Not tainted 5.7.0-rc1-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->> Call Trace:
->>  <IRQ>
->>  __dump_stack lib/dump_stack.c:77 [inline]
->>  dump_stack+0x188/0x20d lib/dump_stack.c:118
->>  nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
->>  nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
->>  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
->>  rcu_dump_cpu_stacks+0x19b/0x1e5 kernel/rcu/tree_stall.h:254
->>  print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
->>  check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
->>  rcu_pending kernel/rcu/tree.c:3225 [inline]
->>  rcu_sched_clock_irq.cold+0x55d/0xcfa kernel/rcu/tree.c:2296
->>  update_process_times+0x25/0x60 kernel/time/timer.c:1727
->>  tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:176
->>  tick_sched_timer+0x4e/0x140 kernel/time/tick-sched.c:1320
->>  __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
->>  __hrtimer_run_queues+0x5ca/0xed0 kernel/time/hrtimer.c:1584
->>  hrtimer_interrupt+0x312/0x770 kernel/time/hrtimer.c:1646
->>  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1113 [inline]
->>  smp_apic_timer_interrupt+0x15b/0x600 arch/x86/kernel/apic/apic.c:1138
->>  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
->>  </IRQ>
->> RIP: 0010:io_ring_ctx_wait_and_kill+0x98/0x5a0 fs/io_uring.c:7301
->> Code: 01 00 00 4d 89 f4 48 b8 00 00 00 00 00 fc ff df 4c 89 ed 49 c1 ec 03 48 c1 ed 03 49 01 c4 48 01 c5 eb 1c e8 3a ea 9d ff f3 90 <41> 80 3c 24 00 0f 85 53 04 00 00 48 83 bb 10 01 00 00 00 74 21 e8
->> RSP: 0018:ffffc9000897fdf0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
->> RAX: ffff888024082080 RBX: ffff88808df8e000 RCX: 1ffff9200112ffab
->> RDX: 0000000000000000 RSI: ffffffff81d549c6 RDI: ffff88808df8e300
->> RBP: ffffed1011bf1c2c R08: 0000000000000001 R09: ffffed1011bf1c61
->> R10: ffff88808df8e307 R11: ffffed1011bf1c60 R12: ffffed1011bf1c22
->> R13: ffff88808df8e160 R14: ffff88808df8e110 R15: ffffffff81d54ed0
->>  io_uring_release+0x3e/0x50 fs/io_uring.c:7324
->>  __fput+0x33e/0x880 fs/file_table.c:280
->>  task_work_run+0xf4/0x1b0 kernel/task_work.c:123
->>  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->>  exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
->>  prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
->>  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
->>  do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
->>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> 
-> Make io ring ctx's percpu_ref balanced.
-> 
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -5904,6 +5904,7 @@ static int io_submit_sqes(struct io_ring
->  fail_req:
->  			io_cqring_add_event(req, err);
->  			io_double_put_req(req);
-> +			--submitted;
->  			break;
->  		}
+Hi Masahiro,
 
-Not sure this is right, need to look closer. But if we post a completion
-event, the event has been consumed and should be accounted as such.
+On Mon, Apr 20, 2020 at 04:32:20AM +0900, Masahiro Yamada wrote:
+> On Mon, Apr 20, 2020 at 3:17 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > On Sun, Apr 19, 2020 at 11:04:45AM -0700, Nathan Chancellor wrote:
+> > > Currently, when linking with ld.lld, this warning pops up:
+> > >
+> > >     arch/mips/vdso/Makefile:70: MIPS VDSO requires binutils >= 2.25
+> > >
+> > > ld-ifversion calls ld-version, which calls scripts/ld-version.sh, which
+> > > is specific to GNU ld. ld.lld has a completely different versioning
+> > > scheme (as it follows LLVM's versioning) and it does not have the issue
+> > > mentioned in the comment above this block so it should not be subjected
+> > > to this check.
+> > >
+> > > With this patch, the VDSO successfully links and shows P_MIPS_PC32 in
+> > > vgettimeofday.o.
+> > >
+> > > $ llvm-objdump -Dr arch/mips/vdso/vgettimeofday.o | grep R_MIPS_PC32
+> > >                       00000024:  R_MIPS_PC32  _start
+> > >                       000000b0:  R_MIPS_PC32  _start
+> > >                       000002bc:  R_MIPS_PC32  _start
+> > >                       0000036c:  R_MIPS_PC32  _start
+> > >                       00000468:  R_MIPS_PC32  _start
+> > >
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/785
+> > > Link: https://github.com/llvm/llvm-project/commit/e364e2e9ce50c12eb2bf093560e1a1a8544d455a
+> > > Reported-by: Dmitry Golovin <dima@golovin.in>
+> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > ---
+> > >  arch/mips/vdso/Makefile | 8 +++++---
+> > >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+> > > index d7fe8408603e..f99e583d14a1 100644
+> > > --- a/arch/mips/vdso/Makefile
+> > > +++ b/arch/mips/vdso/Makefile
+> > > @@ -65,9 +65,11 @@ DISABLE_VDSO := n
+> > >  # the comments on that file.
+> > >  #
+> > >  ifndef CONFIG_CPU_MIPSR6
+> > > -  ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
+> > > -    $(warning MIPS VDSO requires binutils >= 2.25)
+> > > -    DISABLE_VDSO := y
+> > > +  ifndef CONFIG_LD_IS_LLD
+> > > +    ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
+> > > +      $(warning MIPS VDSO requires binutils >= 2.25)
+> > > +      DISABLE_VDSO := y
+> > > +    endif
+> > >    endif
+> > >  endif
+> > >
+> > > --
+> > > 2.26.1
+> > >
+> >
+> > Hmmm, I still see this warning when first runing make <config>... I
+> > assume because this Makefile gets parsed before Kconfig runs.
+> 
+> 
+> I do not see the warning for 'make <config>'.
+> 
+> Could you tell me how to reproduce it?
+> 
+> 
+> For cleaning, indeed, i see the warning.
+> 
+> 
+> $ make ARCH=mips  LLVM=1 clean
+> arch/mips/vdso/Makefile:70: MIPS VDSO requires binutils >= 2.25
 
--- 
-Jens Axboe
+This is enough. I think I figured out how to avoid it, I'll be sending
+out v2 shortly, I'd appreciate any comments that you have.
 
+> >
+> > Perhaps it would be better to check if ld-version is 0 (since that means
+> > we are not using GNU ld):
+> >
+> > ifneq ($(call ld-ifversion, -eq, 0, y),y)
+> >
+> > I am open to suggestions though.
+> >
+> > Cheers,
+> > Nathan
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200419181715.GA36234%40ubuntu-s3-xlarge-x86.
+> 
+> 
+> 
+> -- 
+> Best Regards
+> Masahiro Yamada
+> 
+
+Cheers,
+Nathan
