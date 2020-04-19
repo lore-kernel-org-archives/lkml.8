@@ -2,80 +2,164 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E6EC54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F170C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8210921744
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587325684;
-	bh=KJT1cJALkjH8IPN8SBj5aVqN0kfQwNBytF/bn6zKVfI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z336dIRTVpO1HRCC3F6zB01w60spvV3GPT3qsDX1clJjqsQvFYKppfzFfQjnY1fAm
-	 mKJTW1xlAobIqy7NGo/tlYJRO6Iw3gu0IvfmtEiaw3qxLVBfyKib9IkMJRUMNE+FJ5
-	 FwyyO1aqiq7oFwpphnvX2GdOXXEZf4reNL1stAZQ=
+	by mail.kernel.org (Postfix) with ESMTP id 644402145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:57:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bkl427su"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgDSTsD (ORCPT
+        id S1726296AbgDST5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 15:48:03 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38492 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgDSTsD (ORCPT
+        Sun, 19 Apr 2020 15:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgDST5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 15:48:03 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w3so3132142plz.5;
-        Sun, 19 Apr 2020 12:48:02 -0700 (PDT)
+        Sun, 19 Apr 2020 15:57:16 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3C9C061A10
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:57:16 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id w65so3879396pfc.12
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YumqERvCKOIqM0l6QjCVu8YaX8ML5bpdCVE8/BBsM/o=;
+        b=bkl427suLOwECWk6iGg5nqxlva0Lm21z8+YcSYxPMfnxxYk4kXifCAsfsfVP0xM7tl
+         sqajdPIGykOuBPwqsxRKX57rAbkXKJB4Ba4itGUQ0cFa8tJ6/hcFajAAt385w5uTF16i
+         NLUN8O8xxvgjfaCK7ir4cSzGXKOAxPL5ReLs93AStASzGo7QkYd9Oaxj9WDIbo4tlaDS
+         BrjfgbsU1ZwyBjRssJwtq/B1q9XvLgpi3JuMHnEkhyvZJ7E+NJmhIJjlvTT7f2/BZq2l
+         RrddBXUrPmYPsNd/LX86JB5UKVSw2PMHiv5bRlMKChIg7HxorXzqkF5m/Ox9l4cDnPvs
+         yeDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XVDLAqmmcNsGZA6DvUaFp5wX8Hdu6VgQb85DAfNU9EE=;
-        b=lOCiewXaWuIhT+rg/o8v4JApXcvRnpksTRE3Kw0vfKHLXwuVhzBcNzR0kqbhOw+Vng
-         m14i67jOVvuRQr8Qn6Ms3K5d3wlRRAy4nhpO4k5asso7oy2GebtvyAW09GOuzYkr6n0u
-         4pU48d6aomWuZRpuoQrLQWeHAvTX5zkNDMKFAO2N7TCTsebzfJY8EA7Ft5SEz2kag3vU
-         BoVprPad7P7/XohUYkrjCARlfVkQIsqwuNR6M79D8dRXw6WeI0Lo0VpncHQCn1nSUUPk
-         vAFN1KuY+1BBElsrFSfEtyYUFphI1g5kN9Z1e3YhwP1gT31Fpf/I5dJue7No/vDXfR3b
-         ocPQ==
-X-Gm-Message-State: AGi0PubDEqkzp2mGj+eA4IrYARxi670rslD65IhlNBmHg0WAIP+BToF9
-        38L40J7qAG95ZxGTVw7OZWQ=
-X-Google-Smtp-Source: APiQypL/oNNU12e6hvfturuFLEKJm2Tcw6XS1ihtc1V9GAkRooHVTN400PWDSxk8Iks2Ql8Gg519ag==
-X-Received: by 2002:a17:90a:bf8c:: with SMTP id d12mr17598558pjs.11.1587325682585;
-        Sun, 19 Apr 2020 12:48:02 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id z190sm23620136pgz.73.2020.04.19.12.48.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 12:48:01 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id F000E403EA; Sun, 19 Apr 2020 19:48:00 +0000 (UTC)
-Date:   Sun, 19 Apr 2020 19:48:00 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] block: fix blktrace debugfs use after free
-Message-ID: <20200419194800.GF11244@42.do-not-panic.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YumqERvCKOIqM0l6QjCVu8YaX8ML5bpdCVE8/BBsM/o=;
+        b=IzimwRUeeSw4yrFXwIAD240z6upDfZqZmbY2b2AE5vzjaCE8HgwuQ3T+Pcz9a9uskG
+         e9qu6mXDXmKGtvjyoiAsLvm9jpB7esBElNQWfQqjmxcXwkZp6JQtMJS7ja2eVHzsAXRQ
+         0qA85oMyFZHe7H+mEuCV5l9F5Fuypqy1Psf/nJdI9HnewSPIkjpXdp6Vajp01I/8k0Vo
+         oLcSG4KjrhDTtQIkvityCZ4ElqLcD+iGmbP9hrCLRRvtFVUABpMGqITEZzv0kn8F24gJ
+         N8aWLuL0dgrAjH7vQ7wE/1FeT44yUQGfZ0W+xTnUZwJVk1ATm788e4/ip53JbNwJ5q3/
+         yqng==
+X-Gm-Message-State: AGi0PubhdSI9CqO+LlmKvkYviy5ByYoBHnwYym3U1UzEzHq5W2oDzaAB
+        hJ852ms1xbaqm3EmlSs/Xb+9Tg==
+X-Google-Smtp-Source: APiQypI9Nu/NqKn50llhvU4NXwGdKoDj2hsBe2DTls8RZ2ERdOAfW5IuQ4pBJ8NgK2mEb4AqK+V+Yg==
+X-Received: by 2002:a63:8c4f:: with SMTP id q15mr2043449pgn.434.1587326235960;
+        Sun, 19 Apr 2020 12:57:15 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id 62sm18191189pfu.181.2020.04.19.12.57.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Apr 2020 12:57:15 -0700 (PDT)
+Subject: Re: INFO: rcu detected stall in io_uring_release
+To:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <20200419040626.628-1-hdanton@sina.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0194d769-d3fc-0e63-9820-80a4ef3bf6bd@kernel.dk>
+Date:   Sun, 19 Apr 2020 13:57:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419194529.4872-1-mcgrof@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200419040626.628-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I forgot to mention that I've dropped Reviewed-by tags to patches
-I have changed considerably like patch 3/10 which actually fixes
-the race. So if you had provided a review before, a new review
-would be appreciated.
+On 4/18/20 10:06 PM, Hillf Danton wrote:
+> 
+> Sat, 18 Apr 2020 11:59:13 -0700
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    8f3d9f35 Linux 5.7-rc1
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=115720c3e00000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=66243bb7126c410cefe6
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>
+>> Unfortunately, I don't have any reproducer for this crash yet.
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com
+>>
+>> rcu: INFO: rcu_preempt self-detected stall on CPU
+>> rcu: 	0-....: (10500 ticks this GP) idle=57e/1/0x4000000000000002 softirq=44329/44329 fqs=5245 
+>> 	(t=10502 jiffies g=79401 q=2096)
+>> NMI backtrace for cpu 0
+>> CPU: 0 PID: 23184 Comm: syz-executor.5 Not tainted 5.7.0-rc1-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>> Call Trace:
+>>  <IRQ>
+>>  __dump_stack lib/dump_stack.c:77 [inline]
+>>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>>  nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+>>  nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
+>>  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+>>  rcu_dump_cpu_stacks+0x19b/0x1e5 kernel/rcu/tree_stall.h:254
+>>  print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
+>>  check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
+>>  rcu_pending kernel/rcu/tree.c:3225 [inline]
+>>  rcu_sched_clock_irq.cold+0x55d/0xcfa kernel/rcu/tree.c:2296
+>>  update_process_times+0x25/0x60 kernel/time/timer.c:1727
+>>  tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:176
+>>  tick_sched_timer+0x4e/0x140 kernel/time/tick-sched.c:1320
+>>  __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
+>>  __hrtimer_run_queues+0x5ca/0xed0 kernel/time/hrtimer.c:1584
+>>  hrtimer_interrupt+0x312/0x770 kernel/time/hrtimer.c:1646
+>>  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1113 [inline]
+>>  smp_apic_timer_interrupt+0x15b/0x600 arch/x86/kernel/apic/apic.c:1138
+>>  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+>>  </IRQ>
+>> RIP: 0010:io_ring_ctx_wait_and_kill+0x98/0x5a0 fs/io_uring.c:7301
+>> Code: 01 00 00 4d 89 f4 48 b8 00 00 00 00 00 fc ff df 4c 89 ed 49 c1 ec 03 48 c1 ed 03 49 01 c4 48 01 c5 eb 1c e8 3a ea 9d ff f3 90 <41> 80 3c 24 00 0f 85 53 04 00 00 48 83 bb 10 01 00 00 00 74 21 e8
+>> RSP: 0018:ffffc9000897fdf0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
+>> RAX: ffff888024082080 RBX: ffff88808df8e000 RCX: 1ffff9200112ffab
+>> RDX: 0000000000000000 RSI: ffffffff81d549c6 RDI: ffff88808df8e300
+>> RBP: ffffed1011bf1c2c R08: 0000000000000001 R09: ffffed1011bf1c61
+>> R10: ffff88808df8e307 R11: ffffed1011bf1c60 R12: ffffed1011bf1c22
+>> R13: ffff88808df8e160 R14: ffff88808df8e110 R15: ffffffff81d54ed0
+>>  io_uring_release+0x3e/0x50 fs/io_uring.c:7324
+>>  __fput+0x33e/0x880 fs/file_table.c:280
+>>  task_work_run+0xf4/0x1b0 kernel/task_work.c:123
+>>  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>>  exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
+>>  prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+>>  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+>>  do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
+>>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> 
+> Make io ring ctx's percpu_ref balanced.
+> 
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -5904,6 +5904,7 @@ static int io_submit_sqes(struct io_ring
+>  fail_req:
+>  			io_cqring_add_event(req, err);
+>  			io_double_put_req(req);
+> +			--submitted;
+>  			break;
+>  		}
 
-  Luis
+Not sure this is right, need to look closer. But if we post a completion
+event, the event has been consumed and should be accounted as such.
+
+-- 
+Jens Axboe
+
