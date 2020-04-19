@@ -2,125 +2,250 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6D3C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE5DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1E4021D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587259992;
-	bh=/UcjrPZXCXuph9J2Yc5mQBEB5sWwMAN0uuROLhyfxok=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oiy5JUbddwsB514Y567s5nxH3osZgPySy9sai9fxS8sIQ5uQ8XiAX1A4uwlLmrbRX
-	 ylG2ayoVSVluUmfUKjJhi6anzqZmmhx1a2uiRjZDtbbbawVDOpeMTF5HniSvqemQfY
-	 qjEXvEZDoMfGFvXqYLJSOK5T8BR7S46ulz4C4QTQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2768B21927
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725950AbgDSBdL (ORCPT
+        id S1725988AbgDSBem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 21:33:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725824AbgDSBdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 21:33:11 -0400
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D57E221D6C;
-        Sun, 19 Apr 2020 01:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587259990;
-        bh=/UcjrPZXCXuph9J2Yc5mQBEB5sWwMAN0uuROLhyfxok=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EmTgeneEXBXbi3HUis7BKU6v4ye9Tk4FdREG8sJL0+EHg9HvNZ2I/IfV8plCZJ2Y4
-         m6hsI/jx17Vf1JvLM8P6kOrmdDLJ4hZG3CmHNjtnHi8zi8S4Qrp3nff0jXiVcmd0KE
-         nSrAvZxKb/vUpyZikkXL4HYV0lnipdTd2sQjn8ZM=
-Received: by mail-ej1-f52.google.com with SMTP id s3so4825854eji.6;
-        Sat, 18 Apr 2020 18:33:09 -0700 (PDT)
-X-Gm-Message-State: AGi0PubJDrWpmNCwve6vvLDbVEYL8mDWK31p5fEPpXp37gUsbJBrdp/n
-        H3CoR4MoDjZnXaNJEYVXeJzuoUVs4x5NioHLCQ==
-X-Google-Smtp-Source: APiQypI3giH/gDy/cHj5eO3uMu9u4Kz+9zinLfCvMPB/K9QM30cqtMHT04YZTWUcv0gCaVxOevmWmBWBze6mbHrY5R4=
-X-Received: by 2002:a17:906:4bc3:: with SMTP id x3mr10131749ejv.38.1587259988344;
- Sat, 18 Apr 2020 18:33:08 -0700 (PDT)
+        Sat, 18 Apr 2020 21:34:42 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:32869 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725877AbgDSBel (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 21:34:41 -0400
+Received: (qmail 26346 invoked by uid 500); 18 Apr 2020 21:34:40 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 18 Apr 2020 21:34:40 -0400
+Date:   Sat, 18 Apr 2020 21:34:40 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
+        <ingrassia@epigenesys.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in usbhid_close (3)
+In-Reply-To: <000000000000f4957305a3968e84@google.com>
+Message-ID: <Pine.LNX.4.44L0.2004182131100.26218-100000@netrider.rowland.org>
 MIME-Version: 1.0
-References: <20200411074408.38090-1-jitao.shi@mediatek.com> <20200411074408.38090-2-jitao.shi@mediatek.com>
-In-Reply-To: <20200411074408.38090-2-jitao.shi@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 19 Apr 2020 09:32:55 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9YThRHNqv-D7o-XrgqQ6CnH0tvmPCHppDpzmiiT0KEGg@mail.gmail.com>
-Message-ID: <CAAOTY_9YThRHNqv-D7o-XrgqQ6CnH0tvmPCHppDpzmiiT0KEGg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] dt-bindings: display: mediatek: add property to
- control mipi tx drive current
-To:     Jitao Shi <jitao.shi@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>, stonea168@163.com,
-        huijuan.xie@mediatek.com, Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Rob:
+On Sat, 18 Apr 2020, syzbot wrote:
 
-How do you think about this patch? This patch looks good to me.
+> Hello,
+> 
+> syzbot has tested the proposed patch but the reproducer still triggered crash:
+> WARNING in usbhid_stop
+> 
+> usbhid 6-1:0.0: Stop: 1 1 0 0
+> ------------[ cut here ]------------
+> usbhid 6-1:0.0: Stop while open = 1
 
-Regards,
-Chun-Kuang.
+This indicates there is some confusion about whether the wacom device
+is an input device.  Apparently hidinput_connect() either doesn't get
+called or fails, but nevertheless an evdev input handler gets
+associated with the device.
 
-Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8811=E6=
-=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=883:44=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Add a property to control mipi tx drive current:
-> "drive-strength-microamp"
->
-> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt    | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.t=
-xt
-> index a19a6cc375ed..d78b6d6d8fab 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> @@ -33,6 +33,10 @@ Required properties:
->  - #clock-cells: must be <0>;
->  - #phy-cells: must be <0>.
->
-> +Optional properties:
-> +- drive-strength-microamp: adjust driving current, should be 3000 ~ 6000=
-. And
-> +                                                  the step is 200.
-> +
->  Example:
->
->  mipi_tx0: mipi-dphy@10215000 {
-> @@ -42,6 +46,7 @@ mipi_tx0: mipi-dphy@10215000 {
->         clock-output-names =3D "mipi_tx0_pll";
->         #clock-cells =3D <0>;
->         #phy-cells =3D <0>;
-> +       drive-strength-microamp =3D <4600>;
->  };
->
->  dsi0: dsi@1401b000 {
-> --
-> 2.21.0
+Maybe the confusion is only in my head.  This test may help clear it up 
+a little.
+
+Alan Stern
+
+#syz test: https://github.com/google/kasan.git 0fa84af8
+
+Index: usb-devel/drivers/hid/usbhid/hid-core.c
+===================================================================
+--- usb-devel.orig/drivers/hid/usbhid/hid-core.c
++++ usb-devel/drivers/hid/usbhid/hid-core.c
+@@ -747,6 +747,7 @@ static void usbhid_close(struct hid_devi
+ 		return;
+ 
+ 	hid_cancel_delayed_stuff(usbhid);
++	--hid->alan_open;
+ 	usb_kill_urb(usbhid->urbin);
+ 	usbhid->intf->needs_remote_wakeup = 0;
+ }
+@@ -1177,6 +1178,7 @@ static int usbhid_start(struct hid_devic
+ 		usbhid_set_leds(hid);
+ 		device_set_wakeup_enable(&dev->dev, 1);
+ 	}
++	++hid->alan_open;
+ 	return 0;
+ 
+ fail:
+@@ -1197,6 +1199,11 @@ static void usbhid_stop(struct hid_devic
+ 	if (WARN_ON(!usbhid))
+ 		return;
+ 
++	dev_info(&usbhid->intf->dev, "Stop: %d %d %d %d\n",
++			hid->alan1, hid->alan2, hid->alan3, hid->alan4);
++	if (hid->alan_open > 0)
++		dev_WARN(&usbhid->intf->dev, "Stop while open = %d\n",
++				hid->alan_open);
+ 	if (hid->quirks & HID_QUIRK_ALWAYS_POLL) {
+ 		clear_bit(HID_IN_POLLING, &usbhid->iofl);
+ 		usbhid->intf->needs_remote_wakeup = 0;
+Index: usb-devel/drivers/hid/hid-input.c
+===================================================================
+--- usb-devel.orig/drivers/hid/hid-input.c
++++ usb-devel/drivers/hid/hid-input.c
+@@ -1861,6 +1861,7 @@ int hidinput_connect(struct hid_device *
+ 	unsigned int application;
+ 	int i, k;
+ 
++	dev_info(&hid->dev, "In hidinput_connect\n");
+ 	INIT_LIST_HEAD(&hid->inputs);
+ 	INIT_WORK(&hid->led_work, hidinput_led_worker);
+ 
+@@ -1960,6 +1961,7 @@ void hidinput_disconnect(struct hid_devi
+ {
+ 	struct hid_input *hidinput, *next;
+ 
++	++hid->alan3;
+ 	hidinput_cleanup_battery(hid);
+ 
+ 	list_for_each_entry_safe(hidinput, next, &hid->inputs, list) {
+Index: usb-devel/drivers/input/evdev.c
+===================================================================
+--- usb-devel.orig/drivers/input/evdev.c
++++ usb-devel/drivers/input/evdev.c
+@@ -23,6 +23,7 @@
+ #include <linux/major.h>
+ #include <linux/device.h>
+ #include <linux/cdev.h>
++#include <linux/hid.h>
+ #include "input-compat.h"
+ 
+ struct evdev {
+@@ -1329,6 +1330,11 @@ static void evdev_mark_dead(struct evdev
+ static void evdev_cleanup(struct evdev *evdev)
+ {
+ 	struct input_handle *handle = &evdev->handle;
++//	struct hid_device *hid;
++
++//	hid = evdev->handle.dev->hid;
++//	if (hid)
++//		++hid->alan3;
+ 
+ 	evdev_mark_dead(evdev);
+ 	evdev_hangup(evdev);
+Index: usb-devel/drivers/input/input.c
+===================================================================
+--- usb-devel.orig/drivers/input/input.c
++++ usb-devel/drivers/input/input.c
+@@ -23,6 +23,7 @@
+ #include <linux/device.h>
+ #include <linux/mutex.h>
+ #include <linux/rcupdate.h>
++#include <linux/hid.h>
+ #include "input-compat.h"
+ #include "input-poller.h"
+ 
+@@ -1031,6 +1032,10 @@ static int input_attach_handler(struct i
+ 	if (error && error != -ENODEV)
+ 		pr_err("failed to attach handler %s to device %s, error: %d\n",
+ 		       handler->name, kobject_name(&dev->dev.kobj), error);
++	if (!error && dev->hid) {
++		dev_info(&dev->dev, "Attached to handler %s\n", handler->name);
++		dump_stack();
++	}
+ 
+ 	return error;
+ }
+@@ -2157,6 +2162,7 @@ int input_register_device(struct input_d
+ 	const char *path;
+ 	int error;
+ 
++	dev_info(&dev->dev, "In input_register_device\n");
+ 	if (test_bit(EV_ABS, dev->evbit) && !dev->absinfo) {
+ 		dev_err(&dev->dev,
+ 			"Absolute device without dev->absinfo, refusing to register\n");
+@@ -2258,6 +2264,11 @@ EXPORT_SYMBOL(input_register_device);
+  */
+ void input_unregister_device(struct input_dev *dev)
+ {
++	struct hid_device *hid;
++
++	hid = dev->hid;
++	if (hid)
++		++hid->alan4;
+ 	if (dev->devres_managed) {
+ 		WARN_ON(devres_destroy(dev->dev.parent,
+ 					devm_input_device_unregister,
+Index: usb-devel/include/linux/hid.h
+===================================================================
+--- usb-devel.orig/include/linux/hid.h
++++ usb-devel/include/linux/hid.h
+@@ -618,6 +618,9 @@ struct hid_device {							/* device repo
+ 	struct list_head debug_list;
+ 	spinlock_t  debug_list_lock;
+ 	wait_queue_head_t debug_wait;
++
++	int alan_open;
++	int alan1, alan2, alan3, alan4;
+ };
+ 
+ #define to_hid_device(pdev) \
+Index: usb-devel/include/linux/input.h
+===================================================================
+--- usb-devel.orig/include/linux/input.h
++++ usb-devel/include/linux/input.h
+@@ -22,6 +22,7 @@
+ #include <linux/mod_devicetable.h>
+ 
+ struct input_dev_poller;
++struct hid_device;
+ 
+ /**
+  * struct input_value - input value representation
+@@ -129,6 +130,7 @@ enum input_clock_type {
+  *  by a driver
+  */
+ struct input_dev {
++	struct hid_device *hid;
+ 	const char *name;
+ 	const char *phys;
+ 	const char *uniq;
+Index: usb-devel/drivers/hid/wacom_sys.c
+===================================================================
+--- usb-devel.orig/drivers/hid/wacom_sys.c
++++ usb-devel/drivers/hid/wacom_sys.c
+@@ -2017,6 +2017,7 @@ static struct input_dev *wacom_allocate_
+ 	if (!input_dev)
+ 		return NULL;
+ 
++	input_dev->hid = hdev;
+ 	input_dev->name = wacom_wac->features.name;
+ 	input_dev->phys = hdev->phys;
+ 	input_dev->dev.parent = &hdev->dev;
+Index: usb-devel/drivers/hid/hid-core.c
+===================================================================
+--- usb-devel.orig/drivers/hid/hid-core.c
++++ usb-devel/drivers/hid/hid-core.c
+@@ -2001,6 +2001,7 @@ EXPORT_SYMBOL_GPL(hid_connect);
+ 
+ void hid_disconnect(struct hid_device *hdev)
+ {
++	++hdev->alan2;
+ 	device_remove_file(&hdev->dev, &dev_attr_country);
+ 	if (hdev->claimed & HID_CLAIMED_INPUT)
+ 		hidinput_disconnect(hdev);
+@@ -2050,6 +2051,7 @@ EXPORT_SYMBOL_GPL(hid_hw_start);
+  */
+ void hid_hw_stop(struct hid_device *hdev)
+ {
++	++hdev->alan1;
+ 	hid_disconnect(hdev);
+ 	hdev->ll_driver->stop(hdev);
+ }
+
