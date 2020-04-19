@@ -2,116 +2,157 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95E4C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2E3C5321D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A719B21473
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8CE21974
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TTrTHJ5R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLj0QO7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgDSRNN (ORCPT
+        id S1726485AbgDSRS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 13:13:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50642 "EHLO
+        Sun, 19 Apr 2020 13:18:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726668AbgDSRNN (ORCPT
+        by vger.kernel.org with ESMTP id S1725932AbgDSRS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 13:13:13 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC5BC061A0C;
-        Sun, 19 Apr 2020 10:13:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=zLl/O8f9jYA4cx5fo7LmDJmUNDdHX/VFattYUnbZWo8=; b=TTrTHJ5Rl6+8WqZ4OVlavXUHL
-        b/MV6/U2DqN0ZXFUb2Yoi2cyAb5MSV26h765gK+qxknuS9jU3aB7/puQhHat0yjv+wISB27caT4Za
-        uw0Lnm/WxRbGq3brZJb56U5bAQYtc5kYIXp2uhoyn99VfG6iP7DdPKBs6B2r9gyHqs18vlL3wXqN9
-        NxGHEHHpE9mvWtMGrKQEI2QdpQpS5Oty6IQ7+gZol1OElt//d4GhtdmGPYoGTPTLwmql+YZVlJpsj
-        j6ucxTdswTesUGNYNY395InePIr+nJScTsEhezWYe8XSlEgxQCeqlCdNWXPVsZsywAndOB9BPEtNk
-        niXy2U1Ag==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:48106)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jQDUo-0006lc-67; Sun, 19 Apr 2020 18:12:43 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jQDUd-000515-O4; Sun, 19 Apr 2020 18:12:31 +0100
-Date:   Sun, 19 Apr 2020 18:12:31 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Michael Walle <michael@walle.cc>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 3/3] net: phy: bcm54140: add hwmon support
-Message-ID: <20200419171231.GY25745@shell.armlinux.org.uk>
-References: <20200417192858.6997-1-michael@walle.cc>
- <20200417192858.6997-3-michael@walle.cc>
- <20200417195003.GG785713@lunn.ch>
- <35d00dfe1ad24b580dc247d882aa2e39@walle.cc>
- <20200417201338.GI785713@lunn.ch>
- <84679226df03bdd8060cb95761724d3a@walle.cc>
- <20200417212829.GJ785713@lunn.ch>
- <4f3ff33f78472f547212f87f75a37b66@walle.cc>
- <20200419162928.GL836632@lunn.ch>
+        Sun, 19 Apr 2020 13:18:58 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D180C061A0C;
+        Sun, 19 Apr 2020 10:18:58 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 145so1506609pfw.13;
+        Sun, 19 Apr 2020 10:18:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qapmg8H0xsf8FtuVuTZYqLZSXqZnlrHTeBzdG8nPoxQ=;
+        b=ZLj0QO7JBhhyg2TkZzrF+7SNq3YZXndE/CqFNKiGMtdjt9k32EAhBGxNkIZIIP7oqu
+         iAX9gedTI9rI8ozBIW3Uqycn1NbdiuLkxJtKetbn64NN2dyX1yITXvGbBuFy/jZ2WodC
+         FEiZ1vjh6No0KocBqnIVkdi3Qsr8sOpfwb3fsvt6gKcEQGDlqrldwa9QvrrI1sNhFl3j
+         KL8BZIs/jO2fDXlD8p/yaMeg5A63UP4cXEBfZvgz0pHyKNKkOoODGubbdxv+Q+l9Kn1C
+         liD791cj7zzYUIvOhrzeh0t7pmmKLfydHg2b/vUlmMChzQrwbtMTptZXblc4CI/0VlsX
+         bCjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qapmg8H0xsf8FtuVuTZYqLZSXqZnlrHTeBzdG8nPoxQ=;
+        b=PhEcdo6mr9GiEqIWros97z6UdS6W1Yi+mCHjPSNi8eLG+6fsGIfqnn35JH12r/OKWw
+         gxp5zKeFsszzdm8NB7AP6mqJP27VBetSW05og5wGfPSiPazIDVWL4yBskYr9b0dqaRV3
+         LGqqMOzvRR7iA1fz1dUNEEK1aN58H4vr7TyQyZYZCtiYjneWTZQ8om6nEUfDl8hH8owC
+         enI1aXsL1O1rIwrY8RgXbBm7flaCSrrGLw4p+KpZFutoO6EcJ5NlZNbtffjowHeRxB91
+         AyhKZ1vNNi75cEOJ6T4N6+xcZij3CdfcY7cRqBf36nbXhWZDfCP6Ys1rAjOPIiLVaTV6
+         6g4w==
+X-Gm-Message-State: AGi0PuYUCG2LvPN1JxX3LnXQtAeObgTqZPxIOiG/CvF788Bpj9ZUgUoU
+        Zt543GZtz5ogreS9mkDG7Swa3HrG
+X-Google-Smtp-Source: APiQypJBlIWcg4jaSV+mBDmX6rq5LhzmSESAt2LOosTpZPo72+cTWIIFEXwLzWJ6w/2GFdsnOpkRxg==
+X-Received: by 2002:a63:4a59:: with SMTP id j25mr12358714pgl.336.1587316737845;
+        Sun, 19 Apr 2020 10:18:57 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id c15sm2406100pfo.188.2020.04.19.10.18.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 10:18:57 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 10:18:55 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Julian Squires <julian@cipht.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>,
+        linux-input@vger.kernel.org, andreyknvl@google.com,
+        gregkh@linuxfoundation.org, ingrassia@epigenesys.com,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com, Ping Cheng <pingc@wacom.com>,
+        pinglinux@gmail.com, killertofu@gmail.com
+Subject: Re: KASAN: use-after-free Read in usbhid_close (3)
+Message-ID: <20200419171855.GJ166864@dtor-ws>
+References: <20200419041344.GC166864@dtor-ws>
+ <Pine.LNX.4.44L0.2004191000080.29527-100000@netrider.rowland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200419162928.GL836632@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <Pine.LNX.4.44L0.2004191000080.29527-100000@netrider.rowland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 06:29:28PM +0200, Andrew Lunn wrote:
-> On Sun, Apr 19, 2020 at 12:29:23PM +0200, Michael Walle wrote:
-> > Am 2020-04-17 23:28, schrieb Andrew Lunn:
-> > > On Fri, Apr 17, 2020 at 11:08:56PM +0200, Michael Walle wrote:
-> > > > Am 2020-04-17 22:13, schrieb Andrew Lunn:
-> > > > > > Correct, and this function was actually stolen from there ;) This was
-> > > > > > actually stolen from the mscc PHY ;)
-> > > > >
-> > > > > Which in itself indicates it is time to make it a helper :-)
-> > > > 
-> > > > Sure, do you have any suggestions?
+On Sun, Apr 19, 2020 at 10:07:34AM -0400, Alan Stern wrote:
+> On Sat, 18 Apr 2020, Dmitry Torokhov wrote:
+> 
+> > On Sat, Apr 18, 2020 at 09:09:44PM -0700, Dmitry Torokhov wrote:
+> > > Hi Alan,
 > > > 
-> > > mdiobus_get_phy() does the bit i was complaining about, the mdiobus
-> > > internal knowledge.
-> > 
-> > But that doesn't address your other comment.
+> > > On Sat, Apr 18, 2020 at 10:16:32PM -0400, Alan Stern wrote:
+> > > > linux-input people:
+> > > > 
+> > > > syzbot has found a bug related to USB/HID/input, and I have narrowed it
+> > > > down to the wacom driver.  As far as I can tell, the problem is caused
+> > > > the fact that drivers/hid/wacom_sys.c calls input_register_device()
+> > > > in several places, but it never calls input_unregister_device().
+> > > > 
+> > > > I know very little about the input subsystem, but this certainly seems 
+> > > > like a bug.
+> > > 
+> > > Wacom driver uses devm_input_allocate_device(), so unregister should
+> > > happen automatically on device removal once we exit wacom_probe().
+> > > 
+> > > > 
+> > > > When the device is unplugged, the disconnect pathway doesn't call
+> > > > hid_hw_close().  That routine doesn't get called until the user closes
+> > > > the device file (which can be long after the device is gone and
+> > > > hid_hw_stop() has run).  Then usbhid_close() gets a use-after-free
+> > > > error when it tries to access data structures that were deallocated by
+> > > > usbhid_stop().  No doubt there are other problems too, but this is
+> > > > the one that syzbot found.
+> > > 
+> > > Unregistering the input device should result in calling wacom_close()
+> > > (if device was previously opened), which, as far as I can tell, calls
+> > > hid_hw_close().
+> > > 
+> > > I wonder if it is valid to call hid_hw_stop() before hid_hw_close()?
 > 
-> Yes, you are right. But i don't think you can easily generalize the
-> rest. It needs knowledge of the driver private structure to reference
-> pkg_init. You would have to move that into phy_device.
-> 
-> > 
-> > > There is also the question of locking. What happens if the PHY devices
-> > > is unbound while you have an instance of its phydev?
-> > 
-> > Is there any lock one could take to avoid that?
-> 
-> phy_attach_direct() does a get_device(). That at least means the
-> struct device will not go away. I don't know the code well enough to
-> know if that will also stop the phy_device structure from being freed.
+> No, it isn't.  If it were, for example, why would evdev_disconnect() -> 
+> evdev_cleanup() need to call input_close_device()?
 
-Well, struct device is embedded in struct mdio_device, which in turn
-is embedded in struct phy_device. So, if struct device can't go away
-because its refcount is held, the same is true of the structs
-embedding it.
+Because input and HID are not the same. For input, when we attempt to
+unregister an input device we will go through all attached input
+handlers (like evdev) and if they believe they have the device open they
+will attempt to close it. How close is implemented is up to particular
+driver.
+
+I am not sure about HID implementation details, but I could envision
+transports where you can tell the transport that you no longer want
+events to be delivered to you ("close") vs you want to disable hardware
+("stop") and support any order of them.
+
+> And why would 
+> usbhid_disconnect() deallocate the usbhid structure which usbhid_stop()
+> accesses?
+
+This happens only after we return from hid_destroy_device(), so
+even in the presence of devm I'd expect that all devm-related stuff
+instantiated by hid-wacom would have been completed before we get back
+to usbhid_disconnect().
+
+Can we validate that calls to wacom_close() happen?
+
+> 
+> > > It could be that we again get confused by the "easiness" of devm APIs
+> > > and completely screwing up unwind order.
+> 
+> That's probably what happened.
+
+Thanks.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Dmitry
