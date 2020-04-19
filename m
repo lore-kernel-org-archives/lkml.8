@@ -2,134 +2,127 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE07CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A84C38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13472145D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:05:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="dsex5SLw"
+	by mail.kernel.org (Postfix) with ESMTP id 355C022247
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:06:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725950AbgDSJFV (ORCPT
+        id S1726009AbgDSJGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 05:05:21 -0400
-Received: from mout.web.de ([217.72.192.78]:60299 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbgDSJFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 05:05:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587287109;
-        bh=pEOnXWUWJq32wcmWoEXmTWiIZi1eoe0kShcruVve2N0=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=dsex5SLwM2FWZ+kD3hHq/YWgw2bnGwpUuRmz/fjzvwowsM0xtRYHggcioDNFISf+z
-         8RX/CwZdAXm7oo9Oc5pD9uShRNUnXdwd4upy2S1GeeYCnqdgoE32kNnR8oabfqJEc2
-         QLdOBaLRcYa03YqiJDcHdZhY9vXLzyXcLafEr3KA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.85.208]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lpw6t-1imLDu1Dh1-00fioW; Sun, 19
- Apr 2020 11:05:09 +0200
-To:     Bernard Zhao <bernard@vivo.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        =?UTF-8?Q?Felix_K=c3=bchling?= <Felix.Kuehling@amd.com>
-Cc:     kernel@vivo.com, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-Subject: Re: [PATCH] drm/amdgpu: Reduce a lock scope in
- amdgpu_amdkfd_gpuvm_free_memory_of_gpu()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <af0aa64e-f097-76a7-1c7b-5bdf0ad55a31@web.de>
-Date:   Sun, 19 Apr 2020 11:05:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 19 Apr 2020 05:06:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:58915 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgDSJGr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 05:06:47 -0400
+Received: from [192.168.1.183] ([37.4.249.228]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MidPj-1imLAj1UD1-00fj9V; Sun, 19 Apr 2020 11:06:34 +0200
+Subject: Re: [PATCH] ARM: dts: bcm2835-rpi-zero-w: Fix led polarity
+To:     =?UTF-8?Q?Vincent_Stehl=c3=a9?= <vincent.stehle@laposte.net>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>
+References: <20200418123522.6390-1-vincent.stehle@laposte.net>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <063a86f2-fb84-c75d-1be3-9d3fcd1b7e56@i2se.com>
+Date:   Sun, 19 Apr 2020 11:06:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200418123522.6390-1-vincent.stehle@laposte.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:ejkFRws8u94G50TmJ+06NF8v58dM/Kg4QYRAJeDxA65iCsqyUK/
- Q49VO2Za7oZHZZkUJN0I3iAODIrOyQIYm+l0M8q/ZXRdPABhI/AdTc5BclF6ys+nnR/DI2+
- 9X/0Zw35mVrxBzS1j0BNpt2qoflkre6K2XKyljehSrh65S2jNmd5nykKuqggvwyMi2OUawR
- aS9No9WtnCTIgv9vsI7ag==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gurJBLGiZ/0=:p80neTvnogHsEmE7UdujdJ
- 0oOyz9V03SF77HVltzReK3s2iy/sQvXOippGOlBFrPdEtz6fHDihpZV1ohdHCMFEsBQHD8nyI
- /6Xm03a/EBQVhk0HR48N93eTApqBF6zJCwuZrn+kGJHml0Jjf2F2WQ61sLmxr2uBUNRCh2W01
- N3vNP+tbraWfzu/uxX5XF/+/6kZ/KTui+9KZMsJ5VUdM8bZZ1h52uQ9hn5ebZK0tw7kAsCruS
- LJNJzhNVpcg3o3FbtwKqfC2bfVJPlLjOGsJjhtXbglbd3jIGco6TLUpbcHcDjppCmHK2OX8RY
- BXJC8ykeY4+zgzEipuTF1LmdZMK4yI9Ild9048ZcTTaPgx8hal9ho2BmUpfF0u4olQsGyv07F
- hDzuTlVyAeQMwRyo96dQ3pNr/LGCyMiUhKP5M7Gz8ICvS4ZuaY0S/2RDOE4KBk/yFRfMgw3Ds
- BxBAVtXgGAsqkOyIBIxKCCN8fnKy6ugFNkDQJ3utnZZ/bAvI5u46fb8BFuJPy6N7LwBd5kDlq
- pD5sDhkyMXu9wTmdwLfri/cxDObo+zZfsHMicweVMb7OXTodMPsr6i3o7tLUQmEMa8tmAXYvS
- ixtK4iUXM1eXSS0AwhyjBDsEZM4r5eQqKIm9djCbuEcE2F4Ei9a96ZO4doDC9Xxv3IB1+e2Yw
- DKvBOcKIkNcG7jL1ZmbvndT8totiqPGnvmhbhvqbeUi7rAmlCB8GqcqPkNsilDGzOfYmmb3ZJ
- i4decF4KkHaWuc5WsB7iuRJMpbzrhEMRFzfsOH52WBl24g5BplemK6K3dTelY0J2/oKsBPYXD
- qWLRIiwL3IUUvmd5nBa3xhnvuDZMMV66aMLdyPmF41AiAhEYKahBaUAkwXXgHPYc1ypaVZoSe
- B+jekkeXZ0U6CiwNIExyAJ9OlZ9GaMSkKzeCF+5NqDjkdMRf8O0HgQ9Kk1yJOrhxfqnf1kyxF
- kN45qgrhImkuPCrwOkhp82m3ByWwUkrQKbm6jeNsnD7mryP0PORh3j+bcmhmMT2kGmbKo6eUC
- UwdhkBCDZ/8x1yGol97Os5kcxW6GNF2fVSUOOEDbZ+Du7DlWPSVrGNtjOBPiSXbw2gsYBz7+V
- MjxqRWQ0I2G7eSfVLhGONDggHe0C7xQd8gkyiVM2nicamGqj2onKTpPVaCx4EdGOD1/IXdc/X
- R+SM2pOQhYZAyTt48t9GShh/Y1WL5PPAbdL497LBVKou/Y2Lp90k6T7LGslYbBARLhdpErYT9
- yQ5nBvX0MaDZTWVLt
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:nYqWlMjSftu94OxjjBHe+dVbzr6OvuVVl268DET7J0WqTa1tXCK
+ 8/yPjNnLZct5ZNvA3sp6qGDD3yMuFXgek/bqSO7O6s1ptNB6ISbQqxPWKlvkV0qwHMzj3wp
+ 4txjU6Cl0wZnBzFObcbhZGtx1ZIx7QYPeWQIhaB3UIzEVdyCunp58HbdPCGnL4BTZ51siWR
+ A4Pz5cm8rdWRsotLWULLg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0Kp6Ixa+6BE=:qi2YKC4JSGfQXM+7x32zdc
+ QBmLZzuPIoFrDUZ9tgOqioMC0KpFuyUoE7KDk0T3c2RERDc7w6JmNrHlMf2Ns7G5SrOKqwjzD
+ WzEMk3h36pEiyUHruVLQOm38FwptUd4PfY5lU0kDe8NKBAtlxBIJ5bOpiJh1m6jKcLDCoUjxt
+ VGvo1LTt+gFkmzKi/1UMnSYv1c9EsAZz2vIv0NO/VnJ6VVGZ7GigbbEmuohLwRRdknP8aCLGp
+ HkfTdvk3ZfmH/5lzHaziHwAK7jNQwAcOEJKvEKVb/MH0LkOyz77U0COjJ+KiY3oXf5AMsJzAg
+ ZnMLpb1+/ly3rvr9Ycb3b27TfZdOQC9G8ovueOoNPHi0KD5BdxG8JOVkzHGC2DXyeyCg8wWDU
+ eWQ8h7su+JTK38tKBmY/Bzj+sFybfMG5AWEYpaMpoOSIg3tlD58yINGE55OVkPpCh4KsY2wjb
+ 2PO4MfdTmJhdWzXG8rkohgErFrTsAqXmfz3BbEEV8m+uht4Gb5BOegPHLBIjVneVQxxWD0Csn
+ MY/Kl2tb6Kmip2f+/NtYL87b42fxB0Nd0eGRMvAy/hk2f7EiJ5foXhWUI23sAFUxIPRpahhLy
+ 681nURt+3xfFbUAC33rDDUdTHgysZSOZzfp/vvxPWoBAAMt/FZYY0NgSO9pm9guEX7tQ2M4UH
+ XpMC4fSRmE0qO5BpfDEuyby3yvMaIJr+AztLComVAoDOY8ht+5mjM0vcx0aVGIqAF3rKhXUny
+ SHtrAJMftWHL5rhodyOKOU1yhMdJhXUZfoEl7dftASiUOdG2Lu0nOXe97s7NuMOlzm+g2gikm
+ rD9EcUV78+RXlvJni+0Y/ad8Iq83A6lWmtIXPnNPgHRdOOtOwX6Ze9Iy3M5kZK0qFdxUw2e
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Maybe we could reduce the mutex_lock(&mem->lock)`s protected code area,
-> and noneed to protect pr_debug.
+Am 18.04.20 um 14:35 schrieb Vincent Stehlé:
+> The status "ACT" led on the Raspberry Pi Zero W is on when GPIO 47 is low.
+>
+> This has been verified on a board and somewhat confirmed by both the GPIO
+> name ("STATUS_LED_N") and the reduced schematics [1].
+>
+> [1]: https://www.raspberrypi.org/documentation/hardware/raspberrypi/schematics/rpi_SCH_ZeroW_1p1_reduced.pdf
+>
+> Fixes: 2c7c040c73e9 ("ARM: dts: bcm2835: Add Raspberry Pi Zero W")
+> Signed-off-by: Vincent Stehlé <vincent.stehle@laposte.net>
+> Cc: Stefan Wahren <stefan.wahren@i2se.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> ---
 
-I suggest to improve the commit message.
-Would you like to adjust the patch subject?
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-Do you imagine that data synchronisation should evolve in other ways?
+Thanks
 
-Regards,
-Markus
