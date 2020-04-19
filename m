@@ -2,126 +2,91 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7A5C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 11:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4AAC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 11:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3BCF214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 11:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 443CB214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 11:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgDSLrP (ORCPT
+        id S1725963AbgDSLxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 07:47:15 -0400
-Received: from smtprelay0226.hostedemail.com ([216.40.44.226]:37892 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725841AbgDSLrP (ORCPT
+        Sun, 19 Apr 2020 07:53:39 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:59978 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725841AbgDSLxj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 07:47:15 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 8CEFC837F24A;
-        Sun, 19 Apr 2020 11:47:14 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: grade37_79489634b3117
-X-Filterd-Recvd-Size: 3450
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 19 Apr 2020 11:47:13 +0000 (UTC)
-Message-ID: <e4a2c1206cc8009f0e0881e2b9ec2e828c5d9e7c.camel@perches.com>
-Subject: Re: [PATCH] crypto: Delete redundant variable definition
-From:   Joe Perches <joe@perches.com>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>, davem@davemloft.net,
-        herbert@gondor.apana.org.au
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Date:   Sun, 19 Apr 2020 04:44:58 -0700
-In-Reply-To: <20200419071245.3924-1-tangbin@cmss.chinamobile.com>
-References: <20200419071245.3924-1-tangbin@cmss.chinamobile.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sun, 19 Apr 2020 07:53:39 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jQ8W1-0003fL-D0; Sun, 19 Apr 2020 05:53:37 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jQ8Vz-0006Fr-TU; Sun, 19 Apr 2020 05:53:37 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200414070142.288696-1-hch@lst.de>
+        <87r1wl68gf.fsf@x220.int.ebiederm.org> <20200419081926.GA12539@lst.de>
+Date:   Sun, 19 Apr 2020 06:50:32 -0500
+In-Reply-To: <20200419081926.GA12539@lst.de> (Christoph Hellwig's message of
+        "Sun, 19 Apr 2020 10:19:26 +0200")
+Message-ID: <87o8rn3d9z.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jQ8Vz-0006Fr-TU;;;mid=<87o8rn3d9z.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1++Xt8JJKQGcbPJViucMNdTMbptPpl2UTk=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: remove set_fs calls from the exec and coredump code v2
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-04-19 at 15:12 +0800, Tang Bin wrote:
-> The variable "i" is redundant to be assigned a value
-> of zero,because it's assigned in the for loop, so remove
-> redundant one here.
-> 
-> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> 
-> ---
->  drivers/crypto/bcm/cipher.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/crypto/bcm/cipher.c b/drivers/crypto/bcm/cipher.c
-> index c8b940854..5db23c18c 100644
-> --- a/drivers/crypto/bcm/cipher.c
-> +++ b/drivers/crypto/bcm/cipher.c
-> @@ -4724,7 +4724,6 @@ static int spu_dt_read(struct platform_device *pdev)
->  	spu->spu_type = matched_spu_type->type;
->  	spu->spu_subtype = matched_spu_type->subtype;
->  
-> -	i = 0;
->  	for (i = 0; (i < MAX_SPUS) && ((spu_ctrl_regs =
->  		platform_get_resource(pdev, IORESOURCE_MEM, i)) != NULL); i++) {
+Christoph Hellwig <hch@lst.de> writes:
 
-Maybe the for loop could be simplified too by
-moving the assignment inside the loop.
+> On Fri, Apr 17, 2020 at 05:41:52PM -0500, Eric W. Biederman wrote:
+>> > this series gets rid of playing with the address limit in the exec and
+>> > coredump code.  Most of this was fairly trivial, the biggest changes are
+>> > those to the spufs coredump code.
+>> >
+>> > Changes since v1:
+>> >  - properly spell NUL
+>> >  - properly handle the compat siginfo case in ELF coredumps
+>> 
+>> Quick question is exec from a kernel thread within the scope of what you
+>> are looking at?
+>> 
+>> There is a set_fs(USER_DS) in flush_old_exec whose sole purpose appears
+>> to be to allow exec from kernel threads.  Where the kernel threads
+>> run with set_fs(KERNEL_DS) until they call exec.
+>
+> This series doesn't really look at that area.  But I don't think exec
+> from a kernel thread makes any sense, and cleaning up how to set the
+> initial USER_DS vs KERNEL_DS state is something I'll eventually get to,
+> it seems like a major mess at the moment.
 
-Also, the %pe extension could be used.
+Fair enough.  I just wanted to make certain that it is on people's radar
+that when the kernel exec's init the arguments are read from kernel
+memory and the set_fs(USER_DS) in flush_old_exec() that makes that not
+work later.
 
-Perhaps:
----
- drivers/crypto/bcm/cipher.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+It is subtle and easy to miss.  So I figured I would mention it since
+I have been staring at the exec code a lot lately.
 
-diff --git a/drivers/crypto/bcm/cipher.c b/drivers/crypto/bcm/cipher.c
-index c8b940..7d6afa4 100644
---- a/drivers/crypto/bcm/cipher.c
-+++ b/drivers/crypto/bcm/cipher.c
-@@ -4707,7 +4707,6 @@ static int spu_dt_read(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct spu_hw *spu = &iproc_priv.spu;
--	struct resource *spu_ctrl_regs;
- 	const struct spu_type_subtype *matched_spu_type;
- 	struct device_node *dn = pdev->dev.of_node;
- 	int err, i;
-@@ -4724,19 +4723,23 @@ static int spu_dt_read(struct platform_device *pdev)
- 	spu->spu_type = matched_spu_type->type;
- 	spu->spu_subtype = matched_spu_type->subtype;
- 
--	i = 0;
--	for (i = 0; (i < MAX_SPUS) && ((spu_ctrl_regs =
--		platform_get_resource(pdev, IORESOURCE_MEM, i)) != NULL); i++) {
-+	for (i = 0; i < MAX_SPUS; i++) {
-+		struct resource *spu_ctrl_regs;
-+
-+		spu_ctrl_regs = platform_get_resource(pdev, IORESOURCE_MEM, i);
-+		if (!spu_ctrl_regs)
-+			break;
- 
- 		spu->reg_vbase[i] = devm_ioremap_resource(dev, spu_ctrl_regs);
- 		if (IS_ERR(spu->reg_vbase[i])) {
- 			err = PTR_ERR(spu->reg_vbase[i]);
--			dev_err(&pdev->dev, "Failed to map registers: %d\n",
--				err);
-+			dev_err(&pdev->dev, "Failed to map registers: %pe\n",
-+				spu->reg_vbase[i]);
- 			spu->reg_vbase[i] = NULL;
- 			return err;
- 		}
- 	}
-+
- 	spu->num_spu = i;
- 	dev_dbg(dev, "Device has %d SPUs", spu->num_spu);
- 
-
+Eric
