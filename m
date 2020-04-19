@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98272C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD37C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7048A214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237C6214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FOV0ezYf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dOChkGBX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgDSPGL (ORCPT
+        id S1726641AbgDSPGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 11:06:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59432 "EHLO
+        Sun, 19 Apr 2020 11:06:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726601AbgDSPGJ (ORCPT
+        with ESMTP id S1726590AbgDSPGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 11:06:09 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADB93C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:06:08 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k11so8858847wrp.5
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:06:08 -0700 (PDT)
+        Sun, 19 Apr 2020 11:06:08 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC80DC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:06:06 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id t63so7021650wmt.3
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:06:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Y6PiqSVV9dpQAqOqd+uh/E8t5jyLRFjga9Ph1jhDag8=;
-        b=FOV0ezYfjjl9Ks/imkXxFXr8IJNLzQ7xwIGz5OftsX4B5vGc3mutSwNxF4+k3rruRx
-         mhqwouVVHCQI1zzVmlFUnANaD5qlC/XcxHZSsnK73DRZB0w9NxY2FaqPuas2f6beqtfW
-         A9CSX+/O2lSNUzKnyhoT1mv005X/uD9AUhN+DV5GvIUDbI95k44IJI/15/3fsJAjTbLz
-         ewBDortR1gTg2CD5bBHvWce5gplQNHJav2f9TaH44ROQVb6RIvVqCJFiK0KIohrswMpd
-         gDk4tQs7rm4reCvV4J4hoDnnKX8cT2y7vnTW57C3dVB2iwIa9zJZm5aM2YsKvQHJ0jJN
-         OiPQ==
+        bh=mgJBrbN8ENQqYlA1aIDPfUqg5Ku3KzLaL/T3CN2BzCg=;
+        b=dOChkGBXatBUuviw+VQ7NlxwgSe4bulYhXcZnUSRbQzSkY8v2IGYGkp1F67pAW+lHn
+         +rKzTGQtt+p0ef5si0UK/1SZ/FtgfisWJ8S8N8YGxJ24TYQfFLmRCmLzG3mO084ovSeM
+         /QDwzKFejEYNo8+nvKgNBtbLY1L2w45Tzed+My5voD0yFEofKWUG8PJ9mj6rqp87sAXA
+         62LqvCOcn8WBuw6jKOXQ3Dlq6jt6+JC5/4eHv8qlE0djHyL1qoUIK26hitN9stHGipmw
+         kJCVk25HCUAoW2+tZVyzZcDalsZwQN4EjYQjDPtS+wbQqXJwkbqs7WBRL2fvSmIebLpY
+         Em5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Y6PiqSVV9dpQAqOqd+uh/E8t5jyLRFjga9Ph1jhDag8=;
-        b=K6CKN191kie8ID6hf5yNBJoOC+WqEOY5BLV4PFOpYgCr/w85WW2zzxr55eh/4FwR9E
-         FCJ9FjVobJgLb+RhnHZjf3povBC1L5R8V0eKG8db2T/lZesDL/jMJ84N2MrPqW/xBvcb
-         2+ndXvSfhHPq33WYpXysqgE/8tKZjLgfcHB5ijNRtINqJyODumH726l2AthBSlD/v0qU
-         ir+VlQmS0SkseFvvBZexiMGPW5tiw8UAujoJYSpm8/wfV/caVIpD3UeSu4V6BuEC7fiX
-         WEHGlqzbbAaNg2DavQc80zwT6KNSXG/4pX53OBM68fgIW4xNBFez+JFsCoqoZgmvOmsp
-         mtHg==
-X-Gm-Message-State: AGi0PubGxOMnkgvl6/6APhd4HoGvT8hhCRw52dxzMcteCZpkQ+7aIpV5
-        fdrjVboPSfAZg4Vfl7TvYN5f2THPMkgie+lZtn0=
-X-Google-Smtp-Source: APiQypI3G+DRojbxMZCQ/3C6Vsl76B2MCQNsmSARPJUTNIz3W6+yGt8+Kwu0fi2IVqFrot5M1S+9Lw==
-X-Received: by 2002:a5d:4306:: with SMTP id h6mr13372859wrq.234.1587308767273;
-        Sun, 19 Apr 2020 08:06:07 -0700 (PDT)
+        bh=mgJBrbN8ENQqYlA1aIDPfUqg5Ku3KzLaL/T3CN2BzCg=;
+        b=tJU1G+JT0s+w4Yb06uguwrqoMZgTbD4be9zLiO42k8i0Ad4e/aKTodlgJYFTY3uDbx
+         ByF+UcSnckqMRwsjpXknguG6VyRL/O+5FhhXJ8FP9ljGq2SnTwM5CmG1XzMcslGReSQr
+         TsI9LY9iLX6XIs6KjV7YVg25ek1wNuqLScA37j2oqbn5v81eibNC7V8VM2PmOqoKHO+r
+         77y3hCM1ss37TlHhkjn2wg/l6KWDZzheuuL4gfsmtcLWVuN9GinVB4lDulsv/GtkrNbu
+         llOC3ibkwcyaz0urLOUtt5YIuqcf6z9ptSgnsLRMRYW9Wp/hsMLCTpf9O3TyHxi7bFuI
+         7lLg==
+X-Gm-Message-State: AGi0PuYtxRffo6IDendyM76AeFGXAx5OvLZLN+krsLOhIdx+mut+IpYo
+        ppmBvLttYXXtYnlpxNisA3WE+wmIs1wU+Ec+oDo=
+X-Google-Smtp-Source: APiQypIHYS79qS6Ym7/zsAfw92yZoAhc0D6OXdVNJBvmovHjD1VVezpW6nATF5ItbotHjroDPpo0ng==
+X-Received: by 2002:a7b:ca54:: with SMTP id m20mr12078369wml.45.1587308763884;
+        Sun, 19 Apr 2020 08:06:03 -0700 (PDT)
 Received: from lmecxl0524.home (2a01cb058702ff00947c0d9b78b8fa1e.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:947c:d9b:78b8:fa1e])
-        by smtp.gmail.com with ESMTPSA id w12sm25948635wrk.56.2020.04.19.08.06.06
+        by smtp.gmail.com with ESMTPSA id w12sm25948635wrk.56.2020.04.19.08.06.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 08:06:06 -0700 (PDT)
+        Sun, 19 Apr 2020 08:06:03 -0700 (PDT)
 From:   Etienne Carriere <etienne.carriere@linaro.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, james.morse@arm.com,
@@ -66,9 +66,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, james.morse@arm.com,
         jens.wiklander@linaro.org, tee-dev@lists.linaro.org,
         sudeep.holla@arm.com,
         Etienne Carriere <etienne.carriere@linaro.org>
-Subject: [RFC PATCH 6/6] firmware: zynqmp: use SMCCC v1.0 helper functions
-Date:   Sun, 19 Apr 2020 17:05:30 +0200
-Message-Id: <20200419150530.20508-7-etienne.carriere@linaro.org>
+Subject: [RFC PATCH 4/6] firmware: arm_sdei: use SMCCC v1.0 helper functions
+Date:   Sun, 19 Apr 2020 17:05:28 +0200
+Message-Id: <20200419150530.20508-5-etienne.carriere@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200419150530.20508-1-etienne.carriere@linaro.org>
 References: <20200419150530.20508-1-etienne.carriere@linaro.org>
@@ -77,144 +77,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change Xilinx Zynmp driver to use Arm SMCCC v1.0 helper functions
-and ensure platform consistency on SMCCC conduit method.
+Change Arm SDEI firmware driver to use SMCCC v1.0 helper functions.
 
-Main functional change is that SMCCC conduit method for ZynqMP
-firmware must be consistent with conduit methods registered by
-PSCI device that is early probed.
+Functional changes are Arm SDEI firmware driver can find appropriate
+set conduit if it does not define one but another device has set
+the kernel conduit for SMCCC calls.
 
-Another functional change is an addition info trace emitted by the
-device probe sequence: "probing for conduit method from DT.".
+Other functional changes are the trace messages emitted at device
+probe time that now dev_*() traces instead of pr_*() traces.
 
 Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
 ---
- drivers/firmware/xilinx/zynqmp.c | 87 ++++----------------------------
- 1 file changed, 9 insertions(+), 78 deletions(-)
+ drivers/firmware/arm_sdei.c | 79 +++++++++++++------------------------
+ 1 file changed, 27 insertions(+), 52 deletions(-)
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 41b65164a367..1fdc468c9204 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -63,51 +63,11 @@ static int zynqmp_pm_ret_code(u32 ret_status)
- 	}
- }
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index 334c8be0c11f..92f8077e0bde 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -34,12 +34,9 @@
+ #include <linux/uaccess.h>
  
--static noinline int do_fw_call_fail(u64 arg0, u64 arg1, u64 arg2,
--				    u32 *ret_payload)
--{
--	return -ENODEV;
--}
--
--/*
-- * PM function call wrapper
-- * Invoke do_fw_call_smc or do_fw_call_hvc, depending on the configuration
-- */
--static int (*do_fw_call)(u64, u64, u64, u32 *ret_payload) = do_fw_call_fail;
--
--/**
-- * do_fw_call_smc() - Call system-level platform management layer (SMC)
-- * @arg0:		Argument 0 to SMC call
-- * @arg1:		Argument 1 to SMC call
-- * @arg2:		Argument 2 to SMC call
-- * @ret_payload:	Returned value array
-- *
-- * Invoke platform management function via SMC call (no hypervisor present).
-- *
-- * Return: Returns status, either success or error+reason
-- */
--static noinline int do_fw_call_smc(u64 arg0, u64 arg1, u64 arg2,
--				   u32 *ret_payload)
--{
--	struct arm_smccc_res res;
--
--	arm_smccc_smc(arg0, arg1, arg2, 0, 0, 0, 0, 0, &res);
--
--	if (ret_payload) {
--		ret_payload[0] = lower_32_bits(res.a0);
--		ret_payload[1] = upper_32_bits(res.a0);
--		ret_payload[2] = lower_32_bits(res.a1);
--		ret_payload[3] = upper_32_bits(res.a1);
--	}
--
--	return zynqmp_pm_ret_code((enum pm_ret_status)res.a0);
--}
--
- /**
-- * do_fw_call_hvc() - Call system-level platform management layer (HVC)
-- * @arg0:		Argument 0 to HVC call
-- * @arg1:		Argument 1 to HVC call
-- * @arg2:		Argument 2 to HVC call
-+ * do_fw_call() - Call system-level platform management layer
-+ * @arg0:		Argument 0 to HVC/SMC call
-+ * @arg1:		Argument 1 to HVC/SMC call
-+ * @arg2:		Argument 2 to HVC/SMC call
-  * @ret_payload:	Returned value array
-  *
-  * Invoke platform management function via HVC
-@@ -116,12 +76,13 @@ static noinline int do_fw_call_smc(u64 arg0, u64 arg1, u64 arg2,
-  *
-  * Return: Returns status, either success or error+reason
+ /*
+- * The call to use to reach the firmware.
++ * The SMCCC cnduit for the call to use to reach the firmware.
   */
--static noinline int do_fw_call_hvc(u64 arg0, u64 arg1, u64 arg2,
--				   u32 *ret_payload)
-+static noinline int do_fw_call(u64 arg0, u64 arg1, u64 arg2, u32 *ret_payload)
- {
+-static asmlinkage void (*sdei_firmware_call)(unsigned long function_id,
+-		      unsigned long arg0, unsigned long arg1,
+-		      unsigned long arg2, unsigned long arg3,
+-		      unsigned long arg4, struct arm_smccc_res *res);
++static enum arm_smccc_conduit sdei_firmware_call_conduit;
+ 
+ /* entry point from firmware to arch asm code */
+ static unsigned long sdei_entry_point;
+@@ -144,14 +141,14 @@ static int invoke_sdei_fn(unsigned long function_id, unsigned long arg0,
+ 	int err = 0;
  	struct arm_smccc_res res;
  
--	arm_smccc_hvc(arg0, arg1, arg2, 0, 0, 0, 0, 0, &res);
-+	if (arm_smccc_1_0_invoke(arg0, arg1, arg2, 0, 0, 0, 0, 0, &res) ==
-+	    SMCCC_CONDUIT_NONE)
-+		return -ENODEV;
- 
- 	if (ret_payload) {
- 		ret_payload[0] = lower_32_bits(res.a0);
-@@ -287,36 +248,6 @@ static int zynqmp_pm_get_trustzone_version(u32 *version)
- 	return ret;
+-	if (sdei_firmware_call) {
++	if (sdei_firmware_call_conduit != SMCCC_CONDUIT_NONE) {
+ 		sdei_firmware_call(function_id, arg0, arg1, arg2, arg3, arg4,
+ 				   &res);
+ 		if (sdei_is_err(&res))
+ 			err = sdei_to_linux_errno(res.a0);
+ 	} else {
+ 		/*
+-		 * !sdei_firmware_call means we failed to probe or called
++		 * No SMCCC conduit means we failed to probe or called
+ 		 * sdei_mark_interface_broken(). -EIO is not an error returned
+ 		 * by sdei_to_linux_errno() and is used to suppress messages
+ 		 * from this driver.
+@@ -364,7 +361,7 @@ static void sdei_mark_interface_broken(void)
+ {
+ 	pr_err("disabling SDEI firmware interface\n");
+ 	on_each_cpu(&_ipi_mask_cpu, NULL, true);
+-	sdei_firmware_call = NULL;
++	sdei_firmware_call_conduit = SMCCC_CONDUIT_NONE;
  }
  
--/**
-- * get_set_conduit_method() - Choose SMC or HVC based communication
-- * @np:		Pointer to the device_node structure
-- *
-- * Use SMC or HVC-based functions to communicate with EL2/EL3.
-- *
-- * Return: Returns 0 on success or error code
-- */
--static int get_set_conduit_method(struct device_node *np)
+ static int sdei_platform_reset(void)
+@@ -874,23 +871,19 @@ static struct notifier_block sdei_reboot_nb = {
+ 	.notifier_call = sdei_reboot_notifier,
+ };
+ 
+-static void sdei_smccc_smc(unsigned long function_id,
+-			   unsigned long arg0, unsigned long arg1,
+-			   unsigned long arg2, unsigned long arg3,
+-			   unsigned long arg4, struct arm_smccc_res *res)
 -{
--	const char *method;
--
--	if (of_property_read_string(np, "method", &method)) {
--		pr_warn("%s missing \"method\" property\n", __func__);
--		return -ENXIO;
--	}
--
--	if (!strcmp("hvc", method)) {
--		do_fw_call = do_fw_call_hvc;
--	} else if (!strcmp("smc", method)) {
--		do_fw_call = do_fw_call_smc;
--	} else {
--		pr_warn("%s Invalid \"method\" property: %s\n",
--			__func__, method);
--		return -EINVAL;
--	}
--
--	return 0;
+-	arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4, 0, 0, res);
 -}
+-NOKPROBE_SYMBOL(sdei_smccc_smc);
+ 
+-static void sdei_smccc_hvc(unsigned long function_id,
+-			   unsigned long arg0, unsigned long arg1,
+-			   unsigned long arg2, unsigned long arg3,
+-			   unsigned long arg4, struct arm_smccc_res *res)
++static asmlinkage void sdei_firmware_call(unsigned long function_id,
++					  unsigned long arg0,
++					  unsigned long arg1,
++					  unsigned long arg2,
++					  unsigned long arg3,
++					  unsigned long arg4,
++					  struct arm_smccc_res *res)
+ {
+-	arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4, 0, 0, res);
++	arm_smccc_1_0_invoke(function_id, arg0, arg1, arg2, arg3, arg4,
++			     0, 0, res);
+ }
+-NOKPROBE_SYMBOL(sdei_smccc_hvc);
++NOKPROBE_SYMBOL(sdei_firmware_call);
+ 
+ int sdei_register_ghes(struct ghes *ghes, sdei_event_callback *normal_cb,
+ 		       sdei_event_callback *critical_cb)
+@@ -959,48 +952,30 @@ int sdei_unregister_ghes(struct ghes *ghes)
+ 	return err;
+ }
+ 
+-static int sdei_get_conduit(struct platform_device *pdev)
++static enum arm_smccc_conduit sdei_get_conduit(struct platform_device *pdev)
+ {
+-	const char *method;
+-	struct device_node *np = pdev->dev.of_node;
 -
- /**
-  * zynqmp_pm_query_data() - Get query data from firmware
-  * @qdata:	Variable to the zynqmp_pm_query_data structure
-@@ -790,7 +721,7 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
+-	sdei_firmware_call = NULL;
+-	if (np) {
+-		if (of_property_read_string(np, "method", &method)) {
+-			pr_warn("missing \"method\" property\n");
+-			return SMCCC_CONDUIT_NONE;
+-		}
+-
+-		if (!strcmp("hvc", method)) {
+-			sdei_firmware_call = &sdei_smccc_hvc;
+-			return SMCCC_CONDUIT_HVC;
+-		} else if (!strcmp("smc", method)) {
+-			sdei_firmware_call = &sdei_smccc_smc;
+-			return SMCCC_CONDUIT_SMC;
+-		}
+-
+-		pr_warn("invalid \"method\" property: %s\n", method);
++	if (pdev->dev.of_node) {
++		devm_arm_smccc_1_0_set_conduit(pdev->dev);
+ 	} else if (IS_ENABLED(CONFIG_ACPI) && !acpi_disabled) {
+-		if (acpi_psci_use_hvc()) {
+-			sdei_firmware_call = &sdei_smccc_hvc;
+-			return SMCCC_CONDUIT_HVC;
+-		} else {
+-			sdei_firmware_call = &sdei_smccc_smc;
+-			return SMCCC_CONDUIT_SMC;
+-		}
++		if (acpi_psci_use_hvc())
++			arm_smccc_1_0_set_conduit(SMCCC_CONDUIT_HVC);
++		else
++			arm_smccc_1_0_set_conduit(SMCCC_CONDUIT_SMC);
  	}
- 	of_node_put(np);
  
--	ret = get_set_conduit_method(dev->of_node);
-+	ret = devm_arm_smccc_set_conduit(dev);
- 	if (ret)
- 		return ret;
+-	return SMCCC_CONDUIT_NONE;
++	sdei_firmware_call_conduit = arm_smccc_1_0_get_conduit();
++
++	return sdei_firmware_call_conduit;
+ }
  
+ static int sdei_probe(struct platform_device *pdev)
+ {
+ 	int err;
+ 	u64 ver = 0;
+-	int conduit;
++	enum arm_smccc_conduit conduit;
+ 
+ 	conduit = sdei_get_conduit(pdev);
+-	if (!sdei_firmware_call)
++	if (conduit == SMCCC_CONDUIT_NONE)
+ 		return 0;
+ 
+ 	err = sdei_api_get_version(&ver);
 -- 
 2.17.1
 
