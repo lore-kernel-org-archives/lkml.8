@@ -2,187 +2,133 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E31DC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B4EC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC0F9214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7065021D94
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:52:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Ob1/31ZF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZZVhNmDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgDSQvh (ORCPT
+        id S1726465AbgDSQwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 12:51:37 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:33125 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbgDSQvg (ORCPT
+        Sun, 19 Apr 2020 12:52:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21890 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725927AbgDSQwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 12:51:36 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id F0C0323059;
-        Sun, 19 Apr 2020 18:51:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587315094;
+        Sun, 19 Apr 2020 12:52:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587315127;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2HyE6TBA3XUAdH/omLPdoIHFpzwyQMgKdLGgjukg4lo=;
-        b=Ob1/31ZFRYQJJPTGK82mDe3+zpDvyCoCyRVnIVhqOJ0fLqI2fzCUsB/DgeXj/j7cmy7DxP
-        U5wVZfro1sgJ533gBycwNf3jqMfQvfTHzhJjhMEM3yCZgF1EhSAe21Obgb6v8hIfX/7Y3m
-        1cXZISHxzUFdBDu1DU82lb8QbRSkEfQ=
+        bh=wzz7YRw1DCsHCQiZX7ADv0pBrJTMFminqApr+J/RZrg=;
+        b=ZZVhNmDE0pYoAqhlmrouuf2ouUQFtjAuJesK0J2IsIGegEhhlL9q6GXrOnu3W3WeAft+gU
+        1G1jAUdojPbZ206beFA11PEvAYu8DDvrG6l6oHE66OQQlcEGnTKpMm4K7w9eTJGM2wq1YF
+        qp5rQ3cKaXOO2hAHm7UqNcWc5bYslDM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-314-GJeCgLpyMPegH3tJJLuUOQ-1; Sun, 19 Apr 2020 12:52:01 -0400
+X-MC-Unique: GJeCgLpyMPegH3tJJLuUOQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CA4B107ACC7;
+        Sun, 19 Apr 2020 16:52:00 +0000 (UTC)
+Received: from treble (ovpn-112-237.rdu2.redhat.com [10.10.112.237])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B7ED46;
+        Sun, 19 Apr 2020 16:51:58 +0000 (UTC)
+Date:   Sun, 19 Apr 2020 11:51:55 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
+        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org
+Subject: Re: [RFC][PATCH 5/7] x86/speculation: Change __FILL_RETURN_BUFFER to
+ work with objtool
+Message-ID: <20200419165155.4twgzmf6eusk7rv5@treble>
+References: <20200416150752.569029800@infradead.org>
+ <20200416151025.004441230@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 19 Apr 2020 18:51:33 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2 3/3] net: phy: bcm54140: add hwmon support
-In-Reply-To: <20200419155655.GK836632@lunn.ch>
-References: <20200419101249.28991-1-michael@walle.cc>
- <20200419101249.28991-3-michael@walle.cc> <20200419155655.GK836632@lunn.ch>
-Message-ID: <4fd6d06636898560c405713eb91327e3@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: F0C0323059
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[10];
-         NEURAL_HAM(-0.00)[-0.975];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,suse.com,roeck-us.net,gmail.com,armlinux.org.uk,davemloft.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200416151025.004441230@infradead.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-19 17:56, schrieb Andrew Lunn:
-> On Sun, Apr 19, 2020 at 12:12:49PM +0200, Michael Walle wrote:
+On Thu, Apr 16, 2020 at 05:07:57PM +0200, Peter Zijlstra wrote:
+> From: Alexandre Chartre <alexandre.chartre@oracle.com>
 > 
-> Hi Michael
+> Change __FILL_RETURN_BUFFER so that the stack state is deterministically
+> defined for each iteration and that objtool can have an accurate view
+> of the stack.
 > 
-> You have an #if here...
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Link: https://lkml.kernel.org/r/20200414103618.12657-8-alexandre.chartre@oracle.com
+> ---
+>  arch/x86/include/asm/nospec-branch.h |    7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
->> +#if IS_ENABLED(CONFIG_HWMON)
->> +static umode_t bcm54140_hwmon_is_visible(const void *data,
->> +					 enum hwmon_sensor_types type,
->> +					 u32 attr, int channel)
->> +{
->> +	switch (type) {
->> +	case hwmon_in:
->> +		switch (attr) {
->> +		case hwmon_in_min:
->> +		case hwmon_in_max:
->> +			return 0644;
->> +		case hwmon_in_label:
->> +		case hwmon_in_input:
->> +		case hwmon_in_alarm:
->> +			return 0444;
->> +		default:
->> +			return 0;
->> +		}
->> +	case hwmon_temp:
->> +		switch (attr) {
->> +		case hwmon_temp_min:
->> +		case hwmon_temp_max:
->> +			return 0644;
->> +		case hwmon_temp_input:
->> +		case hwmon_temp_alarm:
->> +			return 0444;
->> +		default:
->> +			return 0;
->> +		}
->> +	default:
->> +		return 0;
->> +	}
->> +}
-> 
-> ...
-> 
-> 
->> +static const struct hwmon_chip_info bcm54140_chip_info = {
->> +	.ops = &bcm54140_hwmon_ops,
->> +	.info = bcm54140_hwmon_info,
->>  };
->> 
->>  static int bcm54140_phy_base_read_rdb(struct phy_device *phydev, u16 
->> rdb)
->> @@ -203,6 +522,72 @@ static int bcm54140_get_base_addr_and_port(struct 
->> phy_device *phydev)
->>  	return 0;
->>  }
-> 
-> 
-> Still inside the #if. Some original code is now inside the #if/#endif.
-> Is this correct? Hard to see from just the patch.
+> --- a/arch/x86/include/asm/nospec-branch.h
+> +++ b/arch/x86/include/asm/nospec-branch.h
+> @@ -4,6 +4,7 @@
+>  #define _ASM_X86_NOSPEC_BRANCH_H_
+>  
+>  #include <linux/static_key.h>
+> +#include <linux/frame.h>
+>  
+>  #include <asm/alternative.h>
+>  #include <asm/alternative-asm.h>
+> @@ -46,12 +47,14 @@
+>  #define __FILL_RETURN_BUFFER(reg, nr, sp)	\
+>  	mov	$(nr/2), reg;			\
+>  771:						\
+> +	ANNOTATE_INTRA_FUNCTION_CALL		\
+>  	call	772f;				\
+>  773:	/* speculation trap */			\
+>  	pause;					\
+>  	lfence;					\
+>  	jmp	773b;				\
+>  772:						\
+> +	ANNOTATE_INTRA_FUNCTION_CALL		\
+>  	call	774f;				\
+>  775:	/* speculation trap */			\
+>  	pause;					\
+> @@ -59,8 +62,8 @@
+>  	jmp	775b;				\
+>  774:						\
+>  	dec	reg;				\
+> -	jnz	771b;				\
+> -	add	$(BITS_PER_LONG/8) * nr, sp;
+> +	add	$(BITS_PER_LONG/8) * 2, sp;	\
+> +	jnz	771b;
+>  
+>  #ifdef __ASSEMBLY__
 
-Whoops you're correct, something got messed up here. Will
-fix that in the next version.
+Are we still planning to warn about stack changes inside an alternative?
+If so then this would still fail...
 
--michael
+In this case I think it should be safe, but I'm not sure how we can
+ensure that will always be the case for other alternatives.
 
+And do the ORC entries actually work for this?  As far as I can tell,
+they would be associated with the .altinstructions section and not
+.text, so it wouldn't work.
 
-> 
->> 
->> +/* Check if one PHY has already done the init of the parts common to 
->> all PHYs
->> + * in the Quad PHY package.
->> + */
->> +static bool bcm54140_is_pkg_init(struct phy_device *phydev)
->> +{
->> +	struct bcm54140_phy_priv *priv = phydev->priv;
->> +	struct mii_bus *bus = phydev->mdio.bus;
->> +	int base_addr = priv->base_addr;
->> +	struct phy_device *phy;
->> +	int i;
->> +
-> 
-> ...
-> 
->> +static int bcm54140_phy_probe_once(struct phy_device *phydev)
->> +{
->> +	struct device *hwmon;
->> +	int ret;
->> +
->> +	/* enable hardware monitoring */
->> +	ret = bcm54140_enable_monitoring(phydev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	hwmon = devm_hwmon_device_register_with_info(&phydev->mdio.dev,
->> +						     "BCM54140", phydev,
->> +						     &bcm54140_chip_info,
->> +						     NULL);
->> +	return PTR_ERR_OR_ZERO(hwmon);
->> +}
->> +#endif
-> 
-> 
-> Thanks
->   Andrew
+Also, does objtool not warn about the unreachable speculation traps?
+I'm guessing it doesn't notice unreachable alternatives... which I guess
+is probably fine.
+
+-- 
+Josh
+
