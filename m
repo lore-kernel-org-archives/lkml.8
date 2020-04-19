@@ -6,51 +6,69 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0C0C38A29
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 07:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0841C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B156A21974
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 07:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8373421744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgDSH6N (ORCPT
+        id S1725964AbgDSIBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 03:58:13 -0400
-Received: from verein.lst.de ([213.95.11.211]:35672 "EHLO verein.lst.de"
+        Sun, 19 Apr 2020 04:01:01 -0400
+Received: from verein.lst.de ([213.95.11.211]:35682 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDSH6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 03:58:13 -0400
+        id S1725903AbgDSIBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 04:01:01 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5BA3768BEB; Sun, 19 Apr 2020 09:58:09 +0200 (CEST)
-Date:   Sun, 19 Apr 2020 09:58:09 +0200
+        id 7C63E68BEB; Sun, 19 Apr 2020 10:00:58 +0200 (CEST)
+Date:   Sun, 19 Apr 2020 10:00:58 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-        axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org, tytso@mit.edu,
-        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/8] bdi: add a ->dev_name field to struct
- backing_dev_info
-Message-ID: <20200419075809.GA12222@lst.de>
-References: <20200416165453.1080463-1-hch@lst.de> <20200416165453.1080463-4-hch@lst.de> <20200417085909.GA12234@quack2.suse.cz> <70f001cd-eaec-874f-9742-c44e66368a2a@acm.org>
+Subject: Re: [PATCH 3/4] dma-mapping: add a dma_ops_bypass flag to struct
+ device
+Message-ID: <20200419080058.GB12222@lst.de>
+References: <20200414122506.438134-1-hch@lst.de> <20200414122506.438134-4-hch@lst.de> <20200418124205.GD6113@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <70f001cd-eaec-874f-9742-c44e66368a2a@acm.org>
+In-Reply-To: <20200418124205.GD6113@8bytes.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 08:40:20AM -0700, Bart Van Assche wrote:
-> > This can have a sideeffect not only bdi->dev_name will be truncated to 64
-> > chars (which generally doesn't matter) but possibly also kobject name will
-> > be truncated in the same way.  Which may have user visible effects. E.g.
-> > for fs/vboxsf 64 chars need not be enough. So shouldn't we rather do it the
-> > other way around - i.e., let device_create_vargs() create the device name
-> > and then copy to bdi->dev_name whatever fits?
+On Sat, Apr 18, 2020 at 02:42:05PM +0200, Joerg Roedel wrote:
+> Hi Christoph,
 > 
-> How about using kvasprintf() instead of vsnprintf()?
+> On Tue, Apr 14, 2020 at 02:25:05PM +0200, Christoph Hellwig wrote:
+> > +static inline bool dma_map_direct(struct device *dev,
+> > +		const struct dma_map_ops *ops)
+> > +{
+> > +	if (likely(!ops))
+> > +		return true;
+> > +	if (!dev->dma_ops_bypass)
+> > +		return false;
+> > +
+> > +	return min_not_zero(*dev->dma_mask, dev->bus_dma_limit) >=
+> > +			    dma_direct_get_required_mask(dev);
+> 
+> Why is the dma-mask check done here? The dma-direct code handles memory
+> outside of the devices dma-mask with swiotlb, no?
+> 
+> I also don't quite get what the difference between setting the
+> dma_ops_bypass flag non-zero and setting ops to NULL is.
 
-That is what v1 did, see the thread in response to that on why it isn't
-a good idea.
+The difference is that NULL ops mean imply the direct mapping is always
+used, dma_ops_bypass means a direct mapping is used if no bounce buffering
+using swiotlb is needed, which should also answer your first question.
+The idea is to consolidate code in the core to use an opportunistic
+direct mapping instead of the dynamic iommu mapping.  I though the cover
+letter and commit log explained this well enough, but maybe I need to
+do a better job.
