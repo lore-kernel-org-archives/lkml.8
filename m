@@ -2,144 +2,131 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F60C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0401BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB27721974
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB407214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kTS24IdL"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="NH0bulwr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgDSJZV (ORCPT
+        id S1725987AbgDSJcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 05:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35484 "EHLO
+        Sun, 19 Apr 2020 05:32:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725446AbgDSJZV (ORCPT
+        by vger.kernel.org with ESMTP id S1725306AbgDSJcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 05:25:21 -0400
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 322D3C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 02:25:21 -0700 (PDT)
-Received: by mail-il1-x134.google.com with SMTP id u5so6656946ilb.5
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 02:25:21 -0700 (PDT)
+        Sun, 19 Apr 2020 05:32:15 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 828E5C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 02:32:15 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id k21so6647499ljh.2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 02:32:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IVfVaIgVGlSNv1IAtMUZwjF1hn02HfUDYJcRcSDSIrU=;
-        b=kTS24IdLWHMBDGq+NpCb4YCezSTjPOT3lXb0FhNdXiPmK5NrZGGK52haVSfXEU6Ndj
-         4hqhpbZlaYEpA9yzxLFB17W3ye3e1gJd7soL0Qs8lKKAzvTCpLm3LmK/xTymwN9/4+so
-         GQPQEUYla4HxNT/DwhdhoM7vjrjuFQojP2ml5em2pgpWQVeT+36kc3XwZxjS+XX19ezH
-         IlszYdd8hFN8ApV/RdQwbzGA3kZYPM7svi5cJnEAfqpYuwiZEq1uXeujAk3kezStnPBC
-         kOpKxevP79//eZH2QTfm7mX2wFGQlugSyw2JTgQ7lV1oQEGugBOxxJEjT1DhSw9R38xZ
-         0shg==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/v/9MZ85W5Ot6ZouiFIXv368NZt8k8Og0OLJDhh34+s=;
+        b=NH0bulwrsnvt31tchVdyynbpbLgVBI1HP3Wa6GOh5EZ3Avqvjt8Ws1W0S4skKIE0JE
+         uuFvwHnFs3oUQXVFI6Uw/i025gYebahgui03U0O2zWDkm//77OlUL2W1AKMBSb9Ajkej
+         pH7FGvf7PIw3hRxqcpxFEFxOgYR/zkwsdko5P7TmbImGk2kTGiNw6chaFyxITHjQVqFY
+         uRAVMZmeGktYjCkJxVm65ElzX8WYSVJ2k7Gs01avu1wVrvwPeK6V94oh93DTqReUmhv8
+         6bEZuutMc2hlHCS5Rb8vzRuhQ8/sT8T6SFBRcGie5PJZH40vg8BxIcQxKKnbEzWKi12i
+         ZLwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IVfVaIgVGlSNv1IAtMUZwjF1hn02HfUDYJcRcSDSIrU=;
-        b=ip8SBgENkj1wmugU6XdE9OVCWRiHxqaNXfBx3ZbK2Auw/syWZTU0Y/kETXYZILVTxe
-         fkkWR0gvIICFJeXKppXxOMz0xjXCkuUzGpw/qk+ikO7hA8R9JZM846L9kseKT3aIRwvU
-         y2fPWyiliuaUHZEDBsPMj7K1Zv2M0N7ahj3P132cTItUBL1U79+MuTUxePu6brturbba
-         Ag5mIbjhfz8PnDQtVqxq2clitT7Xzo+RytPYTpVH6NWfuDrjRyfL/D7l22T/Mry2VQJg
-         O230HwY6KTiqpzhi+g+Mh6pMQphJrm2LUCfc3wTjGTBYb3Xu7BGQfaIqapvMtbHedEG5
-         J3BA==
-X-Gm-Message-State: AGi0Puax/avgRwj6oZSYCiWBimLGKHoYQUGcDv9HCMkls8mzoD4KX2Sm
-        k7/TgxoT+cfYpkfBSYORhU6/fhI0qgeOQLoCVfg=
-X-Google-Smtp-Source: APiQypJBoKtsP+3E2TKCkI9VLQhvM6cPmwbZtxSn9QoLSzwFZyzeWjXdAytf78HSH+qeMUpvBnp3KUuWObpUallXbAA=
-X-Received: by 2002:a92:d8ca:: with SMTP id l10mr131258ilo.118.1587288319958;
- Sun, 19 Apr 2020 02:25:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/v/9MZ85W5Ot6ZouiFIXv368NZt8k8Og0OLJDhh34+s=;
+        b=LQy2eaVdLvm0pv7tHX/llMRh+ZM0REZPp47jyJJnvijjQmMDlXwhjgxv/DJaOQPskw
+         gD4kAVfiGV0YPGRSPXowI5PB5d43dZczrMFrMbnQcQbRf9ftMRoBYBmQOoTg7si/Oua9
+         l4u03KsaMydaKR7ZDbKLAf8B/9BsFDHFzGstaZ1Q+ymVtFQ7t+Gur/GPkh2OmNwsdiY1
+         QKHMgoLuyy4nyx9+sF7CGTI3Ur+JK5g07WVtWEbS0ByHBRubLaSztaFtkno6olr/NlwF
+         J3w95qvRAvM57fGwWh+CBic2Ntfh0PHZ60HsKoL4kGtSDbkueyBeHe0KzzYVInnyzqRD
+         YWag==
+X-Gm-Message-State: AGi0PuaCqKN2qx/P9NRA+K+ek9E+8jMq/SC7nvZp3tk5iTizgaDcaW7m
+        ARIH6T1XxvVEBLsDeEh0xcE+8A==
+X-Google-Smtp-Source: APiQypJtvjJEzhQ3IHjsR97nXY/X5+Mcqe2YVVnhcTkS4j8mOhshGgkVFOM17f0YxUmtnPiWj9nvZA==
+X-Received: by 2002:a2e:4942:: with SMTP id b2mr7168793ljd.135.1587288733899;
+        Sun, 19 Apr 2020 02:32:13 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:2a7:ba19:e1ca:ac28:cceb:53f3? ([2a00:1fa0:2a7:ba19:e1ca:ac28:cceb:53f3])
+        by smtp.gmail.com with ESMTPSA id 64sm20404911ljj.41.2020.04.19.02.32.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Apr 2020 02:32:13 -0700 (PDT)
+Subject: Re: [PATCH 6/9] nfsd: fix empty-body warning in nfs4state.c
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Zzy Wysm <zzy@zzywysm.com>
+References: <20200418184111.13401-1-rdunlap@infradead.org>
+ <20200418184111.13401-7-rdunlap@infradead.org>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <34fe524d-f9f0-ba8a-d5cb-ffbeacf1b5d8@cogentembedded.com>
+Date:   Sun, 19 Apr 2020 12:32:08 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200411200632.4045-1-peron.clem@gmail.com> <20200411200632.4045-2-peron.clem@gmail.com>
- <c96f31a2-6ff4-31aa-aaac-2ce9eafb3bfe@arm.com> <CAJiuCcegkNGQ7j4jcT1rBpSLqG1c-nb8g0wq+Nbvt-dGj7am2Q@mail.gmail.com>
- <CAJiuCceU662o7QGJ=mmT3pzVWK7uJUN=6+NKQnZ=Cfj9c2nw7A@mail.gmail.com>
- <d6465e7e-8e05-8b7d-16bd-f40877969089@arm.com> <CAJiuCccv2XPLY6sjcgvvrG5a8ONYHa_xn9i-YUDKUDK5a0DY=A@mail.gmail.com>
- <CAJiuCcfa9ro1V4nBzfD48cCuHpEsLaNA5P0bb-tQ3hcWUCtpkA@mail.gmail.com>
- <000f26f4-3640-797f-c7f6-4b31a5e2669e@arm.com> <CAJiuCccF3tmbmMWNh0nC5WRJ1_iPdj6f1oH1zYMSue_pFrXsPQ@mail.gmail.com>
- <20200414185523.GO5412@sirena.org.uk> <CAJiuCce5ekAed6RF8+x_ehruCXW3900wkFNKRXN_Xo_62MPXew@mail.gmail.com>
- <5e15e7ac-1d9c-d614-8fd9-27525c88cafb@arm.com> <5290a7a8-2a0a-cb89-9d62-270393123054@arm.com>
- <CAJiuCccm4gTAUWhTy+gK0kt4of=8yWcz2n_JtnmeAJofcpBKeQ@mail.gmail.com>
-In-Reply-To: <CAJiuCccm4gTAUWhTy+gK0kt4of=8yWcz2n_JtnmeAJofcpBKeQ@mail.gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 19 Apr 2020 11:25:08 +0200
-Message-ID: <CAJiuCceECTKqTecq5KGayzNqOvQfOctR8RqnncKU66ieU7hH1w@mail.gmail.com>
-Subject: Re: Multiple regulators for one device [was drm/panfrost: add devfreq
- regulator support]
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Mark Brown <broonie@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200418184111.13401-7-rdunlap@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello!
 
-On Fri, 17 Apr 2020 at 14:33, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
->
-> Hi Robin,
->
-> On Fri, 17 Apr 2020 at 13:10, Robin Murphy <robin.murphy@arm.com> wrote:
-> >
-> > On 2020-04-16 2:42 pm, Steven Price wrote:
-> > [...]
-> > > Perhaps a better approach would be for Panfrost to hand over the stru=
-ct
-> > > regulator objects it has already got to the OPP framework. I.e. open
-> > > code dev_pm_opp_set_regulators(), but instead of calling
-> > > regulator_get_optional() simply populate the regulators we already ha=
-ve?
+On 18.04.2020 21:41, Randy Dunlap wrote:
 
-Just saw that a Lima devfreq[0] has been also introduced with I think
-exactly the same logic.
+> Fix gcc empty-body warning when -Wextra is used:
+> 
+> ../fs/nfsd/nfs4state.c:3898:3: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: "J. Bruce Fields" <bfields@fieldses.org>
+> Cc: Chuck Lever <chuck.lever@oracle.com>
+> Cc: linux-nfs@vger.kernel.org
+> ---
+>   fs/nfsd/nfs4state.c |    3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> --- linux-next-20200417.orig/fs/nfsd/nfs4state.c
+> +++ linux-next-20200417/fs/nfsd/nfs4state.c
+[...]
+> @@ -3895,7 +3896,7 @@ nfsd4_setclientid(struct svc_rqst *rqstp
+>   		copy_clid(new, conf);
+>   		gen_confirm(new, nn);
+>   	} else /* case 4 (new client) or cases 2, 3 (client reboot): */
+> -		;
+> +		do_empty();
 
-Is this something that hasn't been triggered by Maintainer or I am
-missing something?
+    In this case explicit {} would probably have been better, as described in 
+Documentation/process/coding-style.rst, clause (3).
 
-I will backport some remarks made on the lima devfreq to improve panfrost o=
-ne.
-They are almost identical.
-
-Regards,
-Clement
-
-0: https://cgit.freedesktop.org/drm-misc/commit/?id=3D1996970773a323533e1cc=
-1b6b97f00a95d675f32
-
-> > >
-> > > The other benefit of that is it would provide a clear hand-over of
-> > > responsibility between Panfrost handling it's own regulators and the =
-OPP
-> > > framework picking up the work. The disadvantage is that Panfrost woul=
-d
-> > > have to track whether the regulators have been handed over or not.
-> >
-> > Sounds like the most logical thing to do is to shuffle things around so
-> > we start by trying to set up an OPP table, then fall back to explicitly
-> > claiming clocks and regulators if necessary. Then we can easily make th=
-e
-> > devfreq decision later in probe based on how that turned out.
->
-> Ok I will propose a new serie with this behavior,
->
-> Thanks
-> Clement
->
-> >
-> > Robin.
+MBR, Sergei
