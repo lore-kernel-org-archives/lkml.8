@@ -2,93 +2,189 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC8DC54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18E1C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C42E2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD902072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgDTGha (ORCPT
+        id S1726006AbgDTGqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 02:37:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:15950 "EHLO mga12.intel.com"
+        Mon, 20 Apr 2020 02:46:12 -0400
+Received: from mga09.intel.com ([134.134.136.24]:48034 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgDTGh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 02:37:28 -0400
-IronPort-SDR: AaM9Due6kpl0q49vaiyZ2AQMIt2jDgBbbVBzWMWx9J/t9QJ77f4VqipvrTCEWSV7oqXH5Xfr6h
- V4ejCAx0/AeA==
+        id S1725773AbgDTGqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 02:46:12 -0400
+IronPort-SDR: wjb+qwEr53pCWR2HQ5p8TUx3Zsum2gz2QcjAsspyUluq3yhprSYMBJqTJPkGAve897+I9o4J3F
+ 1HBHf0DCQatg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 23:37:25 -0700
-IronPort-SDR: TlFsRm2L0OHLpqW/BgXEzaPaTlmjK2y39+9ft9sLWVOcSXT545i+8t4H0CCFwUk3coYZuH+h2w
- F2wnLAi4bthw==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 23:46:10 -0700
+IronPort-SDR: CEQtgG2TlUFykrrmk1GKgfeLqWwsttNnsS0NGryxHW7Vz/K5W/HCCcTcYK1gppwZ8oYXG+803K
+ 2vLggYJXz9Mg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="scan'208";a="364912155"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 19 Apr 2020 23:37:20 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 20 Apr 2020 09:37:19 +0300
-Date:   Mon, 20 Apr 2020 09:37:19 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Nishad Kamdar <nishadkamdar@gmail.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: typec: Use the correct style for SPDX License
- Identifier
-Message-ID: <20200420063719.GA3768833@kuha.fi.intel.com>
-References: <20200419133051.GA7154@nishad>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419133051.GA7154@nishad>
+   d="scan'208";a="254845023"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by orsmga003.jf.intel.com with ESMTP; 19 Apr 2020 23:46:06 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
+        bard.liao@intel.com
+Subject: [PATCH 1/4] Documentation: SoundWire: clarify TDM mode support
+Date:   Mon, 20 Apr 2020 02:51:14 +0800
+Message-Id: <20200419185117.4233-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 07:00:55PM +0530, Nishad Kamdar wrote:
-> This patch corrects the SPDX License Identifier style in
-> header file related to USB Type-C support.
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used).
-> 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Reviewed-by Heikki Krogerus <heikki.krogerus@linux.intel.com>
+The current description of stream topologies does not explicitly
+mention 'mirror' topologies used for audio amplifiers, where all
+amplifiers see the same data and generate a different output based on
+configuration or dynamic information. Add examples and notes to
+explain how channels can be transmitted and mapped.
 
-> ---
->  drivers/usb/typec/tcpm/fusb302_reg.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/tcpm/fusb302_reg.h b/drivers/usb/typec/tcpm/fusb302_reg.h
-> index 00b39d365478..edc0e4b0f1e6 100644
-> --- a/drivers/usb/typec/tcpm/fusb302_reg.h
-> +++ b/drivers/usb/typec/tcpm/fusb302_reg.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +/* SPDX-License-Identifier: GPL-2.0+ */
->  /*
->   * Copyright 2016-2017 Google, Inc
->   *
-> -- 
-> 2.17.1
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+---
+ Documentation/driver-api/soundwire/stream.rst | 89 ++++++++++++++++++-
+ 1 file changed, 86 insertions(+), 3 deletions(-)
 
-thanks,
-
+diff --git a/Documentation/driver-api/soundwire/stream.rst b/Documentation/driver-api/soundwire/stream.rst
+index 8bceece51554..1b386076402c 100644
+--- a/Documentation/driver-api/soundwire/stream.rst
++++ b/Documentation/driver-api/soundwire/stream.rst
+@@ -75,8 +75,33 @@ Slaves are using single port. ::
+ 	                                                   |     (Data)    |
+ 	                                                   +---------------+
+ 
++Example 4: Stereo Stream with L and R channels is rendered by
++Master. Both of the L and R channels are received by two different
++Slaves. Master and both Slaves are using single port handling
++L+R. Each Slave device processes the L + R data locally, typically
++based on static configuration or dynamic orientation, and may drive
++one or more speakers. ::
+ 
+-Example 4: Stereo Stream with L and R channel is rendered by two different
++	+---------------+                    Clock Signal  +---------------+
++	|    Master     +---------+------------------------+     Slave     |
++	|   Interface   |         |                        |   Interface   |
++	|               |         |                        |       1       |
++	|               |         |           Data Signal  |               |
++	|    L  +  R    +---+------------------------------+     L + R     |
++	|     (Data)    |   |     |    Data Direction      |     (Data)    |
++	+---------------+   |     |   +------------->      +---------------+
++	                    |     |
++	                    |     |
++	                    |     |                        +---------------+
++	                    |     +----------------------> |     Slave     |
++	                    |                              |   Interface   |
++	                    |                              |       2       |
++	                    |                              |               |
++	                    +----------------------------> |     L + R     |
++	                                                   |     (Data)    |
++	                                                   +---------------+
++
++Example 5: Stereo Stream with L and R channel is rendered by two different
+ Ports of the Master and is received by only single Port of the Slave
+ interface. ::
+ 
+@@ -101,7 +126,7 @@ interface. ::
+ 	+--------------------+                             |                |
+ 							   +----------------+
+ 
+-Example 5: Stereo Stream with L and R channel is rendered by 2 Masters, each
++Example 6: Stereo Stream with L and R channel is rendered by 2 Masters, each
+ rendering one channel, and is received by two different Slaves, each
+ receiving one channel. Both Masters and both Slaves are using single port. ::
+ 
+@@ -123,12 +148,70 @@ receiving one channel. Both Masters and both Slaves are using single port. ::
+ 	|     (Data)    |     Data Direction               |     (Data)    |
+ 	+---------------+  +----------------------->       +---------------+
+ 
+-Note: In multi-link cases like above, to lock, one would acquire a global
++Example 7: Stereo Stream with L and R channel is rendered by 2
++Masters, each rendering both channels. Each Slave receives L + R. This
++is the same application as Example 4 but with Slaves placed on
++separate links. ::
++
++	+---------------+                    Clock Signal  +---------------+
++	|    Master     +----------------------------------+     Slave     |
++	|   Interface   |                                  |   Interface   |
++	|       1       |                                  |       1       |
++	|               |                     Data Signal  |               |
++	|     L + R     +----------------------------------+     L + R     |
++	|     (Data)    |     Data Direction               |     (Data)    |
++	+---------------+  +----------------------->       +---------------+
++
++	+---------------+                    Clock Signal  +---------------+
++	|    Master     +----------------------------------+     Slave     |
++	|   Interface   |                                  |   Interface   |
++	|       2       |                                  |       2       |
++	|               |                     Data Signal  |               |
++	|     L + R     +----------------------------------+     L + R     |
++	|     (Data)    |     Data Direction               |     (Data)    |
++	+---------------+  +----------------------->       +---------------+
++
++Example 8: 4-channel Stream is rendered by 2 Masters, each rendering a
++2 channels. Each Slave receives 2 channels. ::
++
++	+---------------+                    Clock Signal  +---------------+
++	|    Master     +----------------------------------+     Slave     |
++	|   Interface   |                                  |   Interface   |
++	|       1       |                                  |       1       |
++	|               |                     Data Signal  |               |
++	|    L1 + R1    +----------------------------------+    L1 + R1    |
++	|     (Data)    |     Data Direction               |     (Data)    |
++	+---------------+  +----------------------->       +---------------+
++
++	+---------------+                    Clock Signal  +---------------+
++	|    Master     +----------------------------------+     Slave     |
++	|   Interface   |                                  |   Interface   |
++	|       2       |                                  |       2       |
++	|               |                     Data Signal  |               |
++	|     L2 + R2   +----------------------------------+    L2 + R2    |
++	|     (Data)    |     Data Direction               |     (Data)    |
++	+---------------+  +----------------------->       +---------------+
++
++Note1: In multi-link cases like above, to lock, one would acquire a global
+ lock and then go on locking bus instances. But, in this case the caller
+ framework(ASoC DPCM) guarantees that stream operations on a card are
+ always serialized. So, there is no race condition and hence no need for
+ global lock.
+ 
++Note2: A Slave device may be configured to receive all channels
++transmitted on a link for a given Stream (Example 4) or just a subset
++of the data (Example 3). The configuration of the Slave device is not
++handled by a SoundWire subsystem API, but instead by the
++snd_soc_dai_set_tdm_slot() API. The platform or machine driver will
++typically configure which of the slots are used. For Example 4, the
++same slots would be used by all Devices, while for Example 3 the Slave
++Device1 would use e.g. Slot 0 and Slave device2 slot 1.
++
++Note3: Multiple Sink ports can extract the same information for the
++same bitSlots in the SoundWire frame, however multiple Source ports
++shall be configured with different bitSlot configurations. This is the
++same limitation as with I2S/PCM TDM usages.
++
+ SoundWire Stream Management flow
+ ================================
+ 
 -- 
-heikki
+2.17.1
+
