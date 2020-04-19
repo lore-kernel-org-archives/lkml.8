@@ -2,126 +2,142 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DBFC38A29
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04457C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 429A221D82
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09EA21473
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:38:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="qakdRyWA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ceIT5XZ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726012AbgDSGdk (ORCPT
+        id S1726048AbgDSGiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 02:33:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37522 "EHLO
+        Sun, 19 Apr 2020 02:38:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgDSGdj (ORCPT
+        with ESMTP id S1725446AbgDSGiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 02:33:39 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66446C061A0F
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 23:33:39 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id g184so3927137vsc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 23:33:39 -0700 (PDT)
+        Sun, 19 Apr 2020 02:38:01 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29F08C061A0C;
+        Sat, 18 Apr 2020 23:38:01 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id ay1so2718332plb.0;
+        Sat, 18 Apr 2020 23:38:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=olj6unh6IYZuJdIs2F04EMuJOg0rJtmlozehjb/ljo4=;
-        b=qakdRyWAosXa2M8Dnt6NrNgssX4Mv+jtWt0D3fs/rm0IIjaMrkMu8DOW94Vlyc4EXs
-         HBbOWXb/ouVdhHAY97dK9AYHONKklSbOZapIi7CqYxYlHdgmanPnZ8BmJrZhJqyq9JM1
-         laESH5scPswVS2ZJDptWwCJeAGCOjh0MnIbEaQIfpPWMFHBBtKSl2A0rcyTUZ6aDMTs1
-         J+CjhOizqYKJgnCjnbHv/Fj38pHQSyuqxW9HhK/G7KTT5qZe8MiMf9XE/m6uzsHRViLQ
-         s99hIvNmf69mF4Mt7Ikj5WHLYFUmrIO3KUZfs1e1aaYw2NYINJ5F5oDP1sE6enQU60/e
-         zfQA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=XYbiols2T3sFmlzqIAnLRnHJlR1L5ZQovlULPSM3xQc=;
+        b=ceIT5XZ9XKkOPrXOjsO/Ob0fXgI72L0TZMEDIIEnkFin7bNZfbGXK1OLSkljFHdSxL
+         NlkwM0UDd+az4V78GJnaPhaTSB/g3RY+E6lYaw3SKWHjFwDFPX1KFaZ7CAzix5fv65IJ
+         SNTkPKNhyGg1XwJkJFglosyZWh5lLpDZ4PWQMTl3PvU8fz5atEI2nxezz2cIVhJQG4JN
+         SjTHWtJarfLMuma9rKHWzd6SQmI26gNArXk6++pJ/kQhKxsZjCb4Lij2uYoN6nnqFPXB
+         gjEjORXWwJJLtyGet7jOnB5XxaWXYWpbI1P7AIR1zksjhfyr8Lv/CUz41/yxqUZ57n+T
+         CUUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=olj6unh6IYZuJdIs2F04EMuJOg0rJtmlozehjb/ljo4=;
-        b=GwJYI8JQ2dLdBuOXVNH1c5E4r22YgWJE2qH+cbDliZfPNU9mjyEoR48HCQbDCqcNlZ
-         clTYoN//CTTSuOkKFj3XjilRzhBE6nkNBIXBE2l7VY70Au61NeMSc3XJLwEwzqddAXYz
-         u5WGgVqDtXN5YAk8VfJDBU2HF3/rpGG5fpKt+GEQKO1luC1bgCK56zWu/s/k4f433tnX
-         /tIGWnV+Qdlct0LF/0NGnkV/dHl5qG00P5em29zk6aMY7yPt3LHMdmyNWBdoOMMYDcf6
-         shuz9JBtYDYrwneZ5YvwwkJxzhsMwUxkfQFJdM9/dw3qBsGNMXquED5+m2jrU/l6o2vJ
-         9cTQ==
-X-Gm-Message-State: AGi0PuamSZkFvh0+W1vtOg5N7cbrjTyCzOE0Vv4GyujBYRIjCKkPisWW
-        rGUJM4BAYoFeDx0ggr+jx3jWkfXfai+rG0H0A1xi4Q==
-X-Google-Smtp-Source: APiQypLLd9TBFMBrw30qYiOJQAHyqzFTi2q/XtAiUO90be53KPVwHYQ8gR58pUThHEtu56HBCMW5SjgyVyLbABMpJgM=
-X-Received: by 2002:a67:ebd6:: with SMTP id y22mr184815vso.193.1587278018514;
- Sat, 18 Apr 2020 23:33:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200418104343.GA5132@amd> <DB6PR0802MB2533670AFC1473E5C5EDAD28E9D60@DB6PR0802MB2533.eurprd08.prod.outlook.com>
- <VI1PR08MB3584451F0B0B21E00ACF56A7FED70@VI1PR08MB3584.eurprd08.prod.outlook.com>
-In-Reply-To: <VI1PR08MB3584451F0B0B21E00ACF56A7FED70@VI1PR08MB3584.eurprd08.prod.outlook.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sun, 19 Apr 2020 09:33:26 +0300
-Message-ID: <CAOtvUMfNgdYZF5VaqgF-51b0+KtxqgUFD6njXFX7evz1yAJc9A@mail.gmail.com>
-Subject: Re: Fw: Arm CryptoCell driver -- default Y, even on machines where it
- is obviously useless
-To:     Gilad Ben Yossef <Gilad.BenYossef@arm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Hadar Gat <hadar.gat@arm.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XYbiols2T3sFmlzqIAnLRnHJlR1L5ZQovlULPSM3xQc=;
+        b=tu6OGeaSsYus5KH0dWtKVsBSuIPANvr8Bj837XmrhfQ2ie6D26ufg2p7N7acqF/ecw
+         RE9gBKwSWM/UxaidwVj2gyaXIk0odChEs2LVT4oZy/Le+GISwA4rGZ39L1Hws3WMIJJ6
+         C3ErTfh4T4/aTvWw85Qtz7Kyt2MsUoD8L28q8FUqf9ZkehI9PHqKsLOskkIIclvy352u
+         FxFmjkURjtSEJ87aYA0ySgGs666vWHBRYKpGEHGeie5YY6HdltX0i7H46IIzYNLv4LWX
+         Z5vPy+t6L7UOxZ5HaF+0wUOfbjaHkdYwNufMK1+fF65QzwZetNPEs9dPQEVWucVKN5sz
+         axtw==
+X-Gm-Message-State: AGi0PubrzPc0jotlriLajCtAhOY91OcsQRwUrFAhdunisp0Kbot/faVw
+        bCn8eO3wRKPQkaAtHxKX2Bc=
+X-Google-Smtp-Source: APiQypKs2LRl3WudwRCi5KQMWy4ME1wDmPYGexg9tjVS9lnxpEZ/u1Wgqb7m6MF2m1v5jcTKOPo2Jw==
+X-Received: by 2002:a17:902:bc8c:: with SMTP id bb12mr10566271plb.13.1587278280456;
+        Sat, 18 Apr 2020 23:38:00 -0700 (PDT)
+Received: from CentOS76.localdomain.localdomain ([27.59.158.48])
+        by smtp.gmail.com with ESMTPSA id e27sm23716930pfl.219.2020.04.18.23.37.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Apr 2020 23:37:59 -0700 (PDT)
+From:   jagdsh.linux@gmail.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, ravi.bangoria@linux.ibm.com,
+        irogers@google.com, adrian.hunter@intel.com, tglx@linutronix.de,
+        alexey.budankov@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+Subject: [PATCH] tools/perf/util: Remove duplicate headers
+Date:   Sun, 19 Apr 2020 12:06:53 +0530
+Message-Id: <1587278213-18217-1-git-send-email-jagdsh.linux@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > -----Original Message-----
-> > From: Pavel Machek <pavel@ucw.cz>
-> > Sent: Saturday, 18 April 2020 13:44
-> > To: kernel list <linux-kernel@vger.kernel.org>; Hadar Gat
-> > <Hadar.Gat@arm.com>; herbert@gondor.apana.org.au
-> > Subject: Arm CryptoCell driver -- default Y, even on machines where it =
-is
-> > obviously useless
-> >
-> > Hi!
-> >
-> > I'm configuring kernel for x86, and I get offered HW_RANDOM_CCTRNG with
-> > default=3DY, and help text suggesting I should enable it.
-> >
-> > That's... two wrong suggestions, right?
-> >
-> > Best regards,
-> > Pavel
-...
-> ________________________________________
-> From: Hadar Gat <Hadar.Gat@arm.com>
-> Sent: Saturday, April 18, 2020 11:31 PM
-> To: Pavel Machek; kernel list; herbert@gondor.apana.org.au
-> Cc: Ofir Drang; Gilad Ben Yossef; nd
-> Subject: RE: Arm CryptoCell driver -- default Y, even on machines where i=
-t is obviously useless
->
-> Hi Pavel,
-> I think you got it right..
-> Indeed, Arm CryptoCell CCTRNG driver couldn't be used and obviously usele=
-ss if the Arm CryptoCell HW does not exist in the system.
+From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
 
-There's a delicate point here though - CryptoCell is an independent
-hardware block, it is not tied to a particular CPU architecture.
-There are SoCs with none-Arm architecture CPU using it.
+Code cleanup: Remove duplicate headers which are included twice.
 
-So I would say whatever the answer is, it should be the same for any
-generic embedded style HW block.
+Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+---
+ tools/perf/util/annotate.c | 1 -
+ tools/perf/util/auxtrace.c | 1 -
+ tools/perf/util/config.c   | 1 -
+ tools/perf/util/session.c  | 1 -
+ 4 files changed, 4 deletions(-)
 
-And the help text is not architecture specific anyway, is it not..?
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index f1ea0d6..45f7b28 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -41,7 +41,6 @@
+ #include <linux/bitops.h>
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+-#include <bpf/libbpf.h>
+ #include <subcmd/parse-options.h>
+ #include <subcmd/run-command.h>
+ 
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 3571ce7..c39741a 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -54,7 +54,6 @@
+ #include "util/mmap.h"
+ 
+ #include <linux/ctype.h>
+-#include <linux/kernel.h>
+ #include "symbol/kallsyms.h"
+ #include <internal/lib.h>
+ 
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index ef38eba..64f14a5 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -20,7 +20,6 @@
+ #include "build-id.h"
+ #include "debug.h"
+ #include "config.h"
+-#include "debug.h"
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <stdlib.h>
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 0b0bfe5..8091f1e 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -33,7 +33,6 @@
+ #include "../perf.h"
+ #include "arch/common.h"
+ #include <internal/lib.h>
+-#include <linux/err.h>
+ 
+ #ifdef HAVE_ZSTD_SUPPORT
+ static int perf_session__process_compressed_event(struct perf_session *session,
+-- 
+1.8.3.1
 
-Gilad
-
-
-
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-values of =CE=B2 will give rise to dom!
