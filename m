@@ -2,92 +2,62 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B67C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69215C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 485DC212CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587309252;
-	bh=36ghz+PcZD+5a6Rza8uIksFfreudNnAbN7tPRRPqqvo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XFMqDKOi4FopAb2pihRzTeYbZ+OuEL2gWE+z5l4sMUvTtCtuqGlOvOL7O8NhW5ig0
-	 NjiSAZPAj/c4gttHSuYuknVuPuz7y6RUzD7dDY8ABQKU3VaPrd3BrKQmF1gtBBh+pt
-	 y+6SPxazcXXrFJUMFrDTFzp/wSYzVyim2ooyap+A=
+	by mail.kernel.org (Postfix) with ESMTP id 4054B212CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:15:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5FcjKKuZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgDSPOL (ORCPT
+        id S1726390AbgDSPPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 11:14:11 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:41020 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgDSPOK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 11:14:10 -0400
-Received: by mail-oo1-f68.google.com with SMTP id t3so1534346oou.8;
-        Sun, 19 Apr 2020 08:14:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o4eGY9TLJHufi4vAG1QGgq29m2UtPv1KIcyHNOs1Kx0=;
-        b=AqmMr1xZsfqYN4Jyo4AWjNoG78nqaLH6lOGGnLDHaWkeNtO9OG2++mXX+cE6SyPme+
-         hinGRcf08VaJlCmdjj371EONrtwX+ZbVMB+rUOqplSEdjypgtJL3a5VyGrWZGDNr7c0v
-         uers7m8j1T/3+CQN9pAbEGqeK2dtTet3/y6v/goajwlgBir7cOBpuTgN2z7mcX9+5/rx
-         rvwBd3BCCgfd8kdgzjzbKJhfpdz02rBnTFGuBUuBvxuF02lCsE9HLKPCKzFecHBgfIlY
-         cOoGTqS8zcZMYurnppGIRzHEItnHGJ/TJkdnpGf+UcZc9X3ODe/453+rIeOeqWTN8IRi
-         So8w==
-X-Gm-Message-State: AGi0PuZ0k/bRv9DIBSXKwx/v/G2NsjTv/0J7GrPS34B62o0lzo8cWNe/
-        kwQnabFSBY6qG8qk1DWZfX4OmJMxqX5mNalTCRY=
-X-Google-Smtp-Source: APiQypLtUEOee3fsi1dMjAxiswAhSnzkTuk8dq4mD9gM6SE25cC+IXvIALybg7nOSGvvGzTUJGOYfLISZPWyfOFmufQ=
-X-Received: by 2002:a4a:4c46:: with SMTP id a67mr9508805oob.1.1587309249893;
- Sun, 19 Apr 2020 08:14:09 -0700 (PDT)
+        Sun, 19 Apr 2020 11:15:20 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:48356 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbgDSPPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 11:15:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=XVrE188aHRyG4rfR77ZMbP+LMlJ/d+camixd9PuWXjs=; b=5FcjKKuZ9E+5cmAaemeJbTd7eM
+        JQTdowj4WWcTG0K+P6qBsIkEIIsO9Xy58dvgRrGAavQ31GcWtQ4au8oAKwPIwg/1vPZMIMw+Qa9vJ
+        pWNOWcAgXhmluS0UlH92NbnCcb7vfUcWZ53Vobe1TRmv2oNuUpssvYlMhLKxmTnXovps=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQBfA-003eL6-6J; Sun, 19 Apr 2020 17:15:16 +0200
+Date:   Sun, 19 Apr 2020 17:15:16 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] net: phy: Propagate error from bus->reset
+Message-ID: <20200419151516.GH836632@lunn.ch>
+References: <20200419031713.24423-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-References: <5673945.BT02kTCndr@kreacher> <Pine.LNX.4.44L0.2004191040400.29527-100000@netrider.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2004191040400.29527-100000@netrider.rowland.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 19 Apr 2020 17:13:58 +0200
-Message-ID: <CAJZ5v0hdO5d9bwA00oW1=WLtXzsMeAJHzm_xv6uMM1Q-c3GkMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
- power management flags
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans De Goede <hdegoede@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419031713.24423-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 4:43 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Sat, 18 Apr 2020, Rafael J. Wysocki wrote:
->
-> > Hi,
-> >
-> > This is an update including some fixes and extra patches based on the
-> > continuation of the discussion [1].
->
-> The new code in pm.h and main.c all looks good.  Please add my
-> Acked-by: or Suggested-by: to the portions of the patches that affect
-> those files.
+On Sat, Apr 18, 2020 at 08:17:13PM -0700, Florian Fainelli wrote:
+> If a bus->reset() call for the mii_bus structure returns an error (e.g.:
+> -EPROE_DEFER) we should propagate it accordingly.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-I will, thank you!
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-> It's nice to see that, aside from the documentation, the patches ended
-> up removing more lines than they added.
-
-Indeed.
-
-Cheers!
+    Andrew
