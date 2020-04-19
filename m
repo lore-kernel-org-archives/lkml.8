@@ -5,127 +5,101 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2260C38A30
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2F4C38A2F
 	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A041B21927
+	by mail.kernel.org (Postfix) with ESMTP id BC78121D7E
 	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 01:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tD75O/Fh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JWi1xbRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbgDSBjd (ORCPT
+        id S1726061AbgDSBjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 21:39:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49166 "EHLO
+        Sat, 18 Apr 2020 21:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbgDSBjc (ORCPT
+        with ESMTP id S1725879AbgDSBjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 21:39:32 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC514C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 18:39:30 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id t12so1220007edw.3
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 18:39:30 -0700 (PDT)
+        Sat, 18 Apr 2020 21:39:33 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740D4C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 18:39:33 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id s10so4514974edy.9
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 18:39:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YQ0IcD0MJa87Cl5cTZ+wxBcgc8xap3RC76BVjfIWVzU=;
-        b=tD75O/FhAiU4tZlZn9qCLTOtwiBMTsQyy00zKr8jfD0SDT/f3eOlUGzOufRnPAAoF9
-         I1st4PwIcwVtGKwAMlZ4my/xrbNqmEQtJhw6/jhriv0h185vZFB7nPbIG5FJ+u16OqZn
-         cGAtjUJqvcLR8hzRG97pFV4xaPf4qVTGK3WtUa43hyU1OwHZzQ54+ARTkj865FqFrcBg
-         FthwoEEPalDoI6PZu9z1/93deBEl2du4YAFaAvz2NZx+odT7qSOwE5Imk6bhd9B0LKV0
-         8UW4n/TEPNKHzxXVr2LwrB6rPCb9Y0gxpJoFh055ywb0OcJOjrKukGTAD4DcgJ2sSSGr
-         aIaA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=BQFU3HkYECZtzmLCZGRzFVrW3CLq1ebiJ2ruTF8YJ+o=;
+        b=JWi1xbRpg1gcYErF+rSn53PAiJKAfS7QbtMyFZ4RgGkL7u1vUcNQgkZ378kFXNRilg
+         SdrSiY3vuCQiU+gV7fMtrgOxrT/saiVyvk46pIvPLSRfbC2ERmaiYh7Zj/im+axtnW2g
+         vRPhUjuTseEEKI0RGvYSidchsVXWMNQO4fVBPLkjN3Tps4VrSqeG49kZ8DKWCZcjuk6U
+         jKbOrKephz+itE7eW5fNOtSgP/QzkagitR0YlUaeM3GR+r8mLxN9xydsVvWuphKQXNsI
+         yyWzjhoP/QmXOW05LRIGrM5blgbq0qVqjUk1KAdl4i3TpcKNfPao9KDuRyUSkgAzd938
+         QbTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YQ0IcD0MJa87Cl5cTZ+wxBcgc8xap3RC76BVjfIWVzU=;
-        b=AnH+bTW9bryKkoR2hcq1VBE+bUauq4K1U9dfcOTswTKDp9OdRVkqOMr6b16e1Fxucv
-         19YnxyyRuWhX0r2BAh5wZMUq9M7ktsDkcGvHpnxjQsnjSi1Y0h9FvNUEOra6mxxMsLBj
-         4Zp/JDgJxRln2jMIUEv+9sg0A2VLoEEi6TZTPkz0QRG7+xXFwXrxyD+iOmVPQyxD/FjE
-         L+LD/VdlsL03fLLhpkO0iHJOLZDcrJJ39b43Ih9rrzkv0b37PUIA4E2zaFIZFmIIzyef
-         XsmEnCJvoh1ptNxSFJwrejhUMvLPO1dPtC0r1zjv4GtmLgm66dnGBj2MhYCauJJEkoMe
-         H3Bw==
-X-Gm-Message-State: AGi0PuZPVyBm0oPTMIwA7/eG3rCC8UOkS4X7teo5+8IkYIaOewzeWBj9
-        5FG8QCidqnPcML5MZsuECZw=
-X-Google-Smtp-Source: APiQypKtrQeAtBQk489goKZCmTEe3TzZzMjbpTdAWBmVki5DbC5eT0gEuTu4vqJXhH84TKEqepnGNA==
-X-Received: by 2002:a50:cd89:: with SMTP id p9mr8914024edi.188.1587260369506;
-        Sat, 18 Apr 2020 18:39:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=BQFU3HkYECZtzmLCZGRzFVrW3CLq1ebiJ2ruTF8YJ+o=;
+        b=RZJ2TL2unK25Oqy6ULzYV/m9hfev0ow3mJ6MDfIx8m/RS+dwMFx8bal2N5mpJqqnxt
+         cepP18TbU7QEdM7zgZN65b3l4vsPAS0Sd/cIM2sNlDlhBJ5FEUf3W94lwAKQj2MYIInH
+         ytm5SkcKddsuAVfzM7XL1nYEUHM98nxpgcNkr0ptYPNeUiG6dQwIHn+chIg4rP7mCr/g
+         Q2NzYCW+yJr9OTZHRWhQ21eTwCvdf3mxB9Jy8YMhigBPGU/KvuZ7ZL+n2Dyz3/0Qdx+D
+         e6/pFQLleZcprX0bbLItzs9BG7WeESYwsRLYXOLQL8ykREuioMgDv/eL3+5k8XkiqhxI
+         AQkQ==
+X-Gm-Message-State: AGi0PuYwSRnB0Dm8Q4tCB4ZvLFr7kOxAAdc0G6eJONSSbdJcqcWAbrT8
+        OrUOUPa7Gzc+FCeMougiFD5VkoNK
+X-Google-Smtp-Source: APiQypJJFRIBBVlp00jXau9ACyNbh3FER9denpX7MQqcJOLHpwlzdltDRqQr0Xkszo+o6+DdWKhGnQ==
+X-Received: by 2002:aa7:d14e:: with SMTP id r14mr9159841edo.200.1587260372227;
+        Sat, 18 Apr 2020 18:39:32 -0700 (PDT)
 Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id k33sm3345395edc.18.2020.04.18.18.39.28
+        by smtp.gmail.com with ESMTPSA id r10sm396631edm.55.2020.04.18.18.39.31
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Apr 2020 18:39:28 -0700 (PDT)
+        Sat, 18 Apr 2020 18:39:31 -0700 (PDT)
 From:   Wei Yang <richard.weiyang@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         tim.c.chen@linux.intel.com, ying.huang@intel.com,
         Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH 1/4] mm/swapfile.c: found_free could be represented by (tmp < max)
-Date:   Sun, 19 Apr 2020 01:39:18 +0000
-Message-Id: <20200419013921.14390-1-richard.weiyang@gmail.com>
+Subject: [PATCH 4/4] mm/swapfile.c: move new_cluster to check free_clusters directly
+Date:   Sun, 19 Apr 2020 01:39:21 +0000
+Message-Id: <20200419013921.14390-4-richard.weiyang@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200419013921.14390-1-richard.weiyang@gmail.com>
+References: <20200419013921.14390-1-richard.weiyang@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is not necessary to use the variable found_free to record the
-status. Just check tmp and max is enough.
+Each time it needs jump to new_cluster, it is sure current
+percpu_cluster is null.
+
+Move the new_cluster to check free_clusters directly.
 
 Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
 ---
- mm/swapfile.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ mm/swapfile.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index c457f3be6944..654bad5173bc 100644
+index 07b0bc095411..78e92ff14c79 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -601,7 +601,6 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
- {
- 	struct percpu_cluster *cluster;
+@@ -603,9 +603,9 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
  	struct swap_cluster_info *ci;
--	bool found_free;
  	unsigned long tmp, max;
  
- new_cluster:
-@@ -623,8 +622,6 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
- 			return false;
- 	}
- 
--	found_free = false;
--
- 	/*
- 	 * Other CPUs can use our cluster if they can't find a free cluster,
- 	 * check if there is still free entry in the cluster
-@@ -638,21 +635,19 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
- 	}
- 	ci = lock_cluster(si, tmp);
- 	while (tmp < max) {
--		if (!si->swap_map[tmp]) {
--			found_free = true;
-+		if (!si->swap_map[tmp])
- 			break;
--		}
- 		tmp++;
- 	}
- 	unlock_cluster(ci);
--	if (!found_free) {
-+	if (tmp >= max) {
- 		cluster_set_null(&cluster->index);
- 		goto new_cluster;
- 	}
- 	cluster->next = tmp + 1;
- 	*offset = tmp;
- 	*scan_base = tmp;
--	return found_free;
-+	return tmp < max;
- }
- 
- static void __del_from_avail_list(struct swap_info_struct *p)
+-new_cluster:
+ 	cluster = this_cpu_ptr(si->percpu_cluster);
+ 	if (cluster_is_null(&cluster->index)) {
++new_cluster:
+ 		if (!cluster_list_empty(&si->free_clusters)) {
+ 			cluster->index = si->free_clusters.head;
+ 			cluster->next = cluster_next(&cluster->index) *
 -- 
 2.23.0
 
