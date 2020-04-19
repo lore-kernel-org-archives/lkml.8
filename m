@@ -2,186 +2,133 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3F7C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 00:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5137AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 00:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED31F21927
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 00:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587254743;
-	bh=33JbAin6PHGhZptu6f59hi3G6ZY0jAf3vYhmJbelnZs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=D7tZgzvQ7LvyvsVGF5nqorsPTJmv8cFrtCbt/jQamNHXhQzDow9mSMO++FaI18M1L
-	 qZlTX4WfnnU9K1qdLxcD/QJTY+BHz8tRnWvbfeQzsQnfldC38WzsP7QrqLQsIcC6Dq
-	 WAFsyRgCqc6yJ8CDjTuI6uCyMZJUt1Na55i7y4RE=
+	by mail.kernel.org (Postfix) with ESMTP id 366D920663
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 00:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725982AbgDSAFm (ORCPT
+        id S1725947AbgDSATl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 20:05:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgDSAFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 20:05:41 -0400
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59B6F21927;
-        Sun, 19 Apr 2020 00:05:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587254740;
-        bh=33JbAin6PHGhZptu6f59hi3G6ZY0jAf3vYhmJbelnZs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=c9xI/fMRrcCukMve30jKP7r7lyu297B6dvw7fDLsnxAk0jCkSrNEksbOCz01+CiDu
-         R577ZnyWYoRCO6QuICusA9MpUTHxL3PJLH7hCDic/CkbCyLXgSUKwFzRzsPzMiEYtP
-         F3K1YJev2Eb60V4Lzt5htapSgfInfmQlorxGoWO0=
-Received: by mail-ej1-f43.google.com with SMTP id s9so4751126eju.1;
-        Sat, 18 Apr 2020 17:05:40 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYDB/39/LLAOVLZZDoOU9rxKh1pZU19x3AEIoOTHJf7lSfih2Wa
-        OEbTdATtTQy1mbHT7aSilu2nMqOP52cv66vdPQ==
-X-Google-Smtp-Source: APiQypIULvFRzFBMzFkL3EtwUTFi+ypYZd5hhQkN2Wb/68KrYZ5++frnyfAGznqAC6oplPRSjpCJI0G+9kqCx9X0Rjk=
-X-Received: by 2002:a17:906:eb90:: with SMTP id mh16mr9757904ejb.201.1587254738804;
- Sat, 18 Apr 2020 17:05:38 -0700 (PDT)
+        Sat, 18 Apr 2020 20:19:41 -0400
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.115]:44796 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725804AbgDSATk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 20:19:40 -0400
+Received: from [100.112.6.108] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-c.us-east-1.aws.symcld.net id 57/03-23081-9199B9E5; Sun, 19 Apr 2020 00:19:37 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRWlGSWpSXmKPExsXi5LtOQFdi5uw
+  4g7kzTC2m/FnOZLF5/h9Gi8u75rA5MHvcubaHzePzJrkApijWzLyk/IoE1ow1bx4xFnwTqHiw
+  4xpbA+NZvi5GLg4hgVWMEqvObmLpYuQEctYwSrybkgdiswnoSWy6f5odxBYRYJZYMPU8YxcjB
+  wezQLbEoz2JIGFhAVOJr1O3grWyCKhKbP/Uxwhi8wrYSmyc3wUWlxCQl1i94QAzRFxQ4uTMJ2
+  BxZgEJiYMvXjCDjBQSUJE4950RolxBYv3Vc6wTGHlnIemYhaRjASPTKkbTpKLM9IyS3MTMHF1
+  DAwNdQ0MjXVNdYzO9xCrdZL3SYt3UxOISXUO9xPJiveLK3OScFL281JJNjMCASylgVdnBeHjt
+  e71DjJIcTEqivGXds+OE+JLyUyozEosz4otKc1KLDzHKcHAoSfAumg6UEyxKTU+tSMvMAQY/T
+  FqCg0dJhHctSJq3uCAxtzgzHSJ1ilFRSpx3KkhCACSRUZoH1waLuEuMslLCvIwMDAxCPAWpRb
+  mZJajyrxjFORiVhHl7QKbwZOaVwE1/BbSYCWhxvinY4pJEhJRUA1PjFoavTTZy/54zW6g9ti0
+  wT2+o2fLXJW5CzsVMLc9uhSbX1TeYbVbo+j8UWhPwz376reVry1eG7bl6ir1n74ae2cdzr4kf
+  UmAt3ZrqFCt+7+7yRtOF19ZZrvhwQlVAMLHz1/kzls/cL116ozZJ/84eOQ0+pb79j/nXzz6w4
+  7FUfTOHbB375+sT2q+Ff7Ryf2DYpGaXIVtQdaZdfZ7dm74qyeuJNVsduWZrHv3OyXoi+F7Q2z
+  eHOvp7O03WP/1uddNAYc71uYXKSw69+6a1eeXPS1v996xiWcjFI/KK13TrzzMSvg6CvRLCVvP
+  LmZPzrVY8VChbu33PlX29S60yNf5YbLxoyZKRZP1G8t7fU1FKLMUZiYZazEXFiQBZLoT4MwMA
+  AA==
+X-Env-Sender: Hector.Bujanda@digi.com
+X-Msg-Ref: server-3.tower-414.messagelabs.com!1587255576!1658909!1
+X-Originating-IP: [66.77.174.16]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 19104 invoked from network); 19 Apr 2020 00:19:36 -0000
+Received: from owa.digi.com (HELO MCL-VMS-XCH01.digi.com) (66.77.174.16)
+  by server-3.tower-414.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 19 Apr 2020 00:19:36 -0000
+Received: from DOR-SMS-XCH01.digi.com (10.49.8.99) by MCL-VMS-XCH01.digi.com
+ (10.5.8.49) with Microsoft SMTP Server (TLS) id 14.3.468.0; Sat, 18 Apr 2020
+ 19:19:36 -0500
+Received: from localhost.localdomain (172.27.2.183) by dor-sms-xch01.digi.com
+ (10.49.8.99) with Microsoft SMTP Server (TLS) id 14.3.468.0; Sun, 19 Apr 2020
+ 02:19:30 +0200
+From:   Hector Bujanda <hector.bujanda@digi.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+Date:   Sat, 18 Apr 2020 17:18:57 -0700
+Message-ID: <20200419001858.105281-1-hector.bujanda@digi.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200415011319.25559-1-jitao.shi@mediatek.com> <20200415011319.25559-4-jitao.shi@mediatek.com>
-In-Reply-To: <20200415011319.25559-4-jitao.shi@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 19 Apr 2020 08:05:26 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-Ym8m-PEiwXyJkw=knHRjEMyqRe-jCzm0=o7vB-x1JGw@mail.gmail.com>
-Message-ID: <CAAOTY_-Ym8m-PEiwXyJkw=knHRjEMyqRe-jCzm0=o7vB-x1JGw@mail.gmail.com>
-Subject: Re: [PATCH v15 3/3] drm/mediatek: set dpi pin mode to gpio low to
- avoid leakage current
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        huijuan.xie@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [172.27.2.183]
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+This allows calling gpiod_set_debounce function through char device ioctl.
 
-Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8815=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=889:13=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Config dpi pins mode to output and pull low when dpi is disabled.
-> Aovid leakage current from some dpi pins (Hsync Vsync DE ... ).
+Signed-off-by: Hector Bujanda <hector.bujanda@digi.com>
+---
+ drivers/gpio/gpiolib.c    | 12 ++++++++++++
+ include/uapi/linux/gpio.h | 12 ++++++++++++
+ 2 files changed, 24 insertions(+)
 
-Applied to mediatek-drm-next [1], thanks.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 70f0dedca59f..c959c2962f15 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1073,6 +1073,18 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
+ 			return -EFAULT;
+ 		return 0;
++	} else if (cmd == GPIO_SET_DEBOUNCE_IOCTL) {
++		struct gpioline_debounce linedebounce;
++		struct gpio_desc *desc;
++
++		if (copy_from_user(&linedebounce, ip, sizeof(linedebounce)))
++			return -EFAULT;
++		if (linedebounce.line_offset >= gdev->ngpio)
++			return -EINVAL;
++
++		desc = &gdev->descs[linedebounce.line_offset];
++
++		return gpiod_set_debounce(desc, linedebounce.debounce_usec);
+ 	} else if (cmd == GPIO_GET_LINEHANDLE_IOCTL) {
+ 		return linehandle_create(gdev, ip);
+ 	} else if (cmd == GPIO_GET_LINEEVENT_IOCTL) {
+diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+index 1bf6e6df084b..4b092990d4c8 100644
+--- a/include/uapi/linux/gpio.h
++++ b/include/uapi/linux/gpio.h
+@@ -53,6 +53,17 @@ struct gpioline_info {
+ 	char consumer[32];
+ };
+ 
++/**
++ * struct gpioline_debounce - GPIO line debounce
++ * @line_offset: the local offset on this GPIO device, fill this in when
++ * requesting the line information from the kernel
++ * @debounce_usec: debounce in uSeconds to set for this line
++ */
++struct gpioline_debounce {
++	__u32 line_offset;
++	__u32 debounce_usec;
++};
++
+ /* Maximum number of requested handles */
+ #define GPIOHANDLES_MAX 64
+ 
+@@ -154,5 +165,6 @@ struct gpioevent_data {
+ #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
+ #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
+ #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
++#define GPIO_SET_DEBOUNCE_IOCTL _IOW(0xB4, 0x05, struct gpioline_debounce)
+ 
+ #endif /* _UAPI_GPIO_H_ */
+-- 
+2.17.1
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
-log/?h=3Dmediatek-drm-next
-
-Regards,Chun-Kuang.
-
->
-> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediate=
-k/mtk_dpi.c
-> index 087f5ce732e1..1e01254788d9 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -10,7 +10,9 @@
->  #include <linux/kernel.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/of_graph.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  #include <linux/types.h>
->
-> @@ -74,6 +76,9 @@ struct mtk_dpi {
->         enum mtk_dpi_out_yc_map yc_map;
->         enum mtk_dpi_out_bit_num bit_num;
->         enum mtk_dpi_out_channel_swap channel_swap;
-> +       struct pinctrl *pinctrl;
-> +       struct pinctrl_state *pins_gpio;
-> +       struct pinctrl_state *pins_dpi;
->         int refcount;
->  };
->
-> @@ -379,6 +384,9 @@ static void mtk_dpi_power_off(struct mtk_dpi *dpi)
->         if (--dpi->refcount !=3D 0)
->                 return;
->
-> +       if (dpi->pinctrl && dpi->pins_gpio)
-> +               pinctrl_select_state(dpi->pinctrl, dpi->pins_gpio);
-> +
->         mtk_dpi_disable(dpi);
->         clk_disable_unprepare(dpi->pixel_clk);
->         clk_disable_unprepare(dpi->engine_clk);
-> @@ -403,6 +411,9 @@ static int mtk_dpi_power_on(struct mtk_dpi *dpi)
->                 goto err_pixel;
->         }
->
-> +       if (dpi->pinctrl && dpi->pins_dpi)
-> +               pinctrl_select_state(dpi->pinctrl, dpi->pins_dpi);
-> +
->         mtk_dpi_enable(dpi);
->         return 0;
->
-> @@ -705,6 +716,26 @@ static int mtk_dpi_probe(struct platform_device *pde=
-v)
->         dpi->dev =3D dev;
->         dpi->conf =3D (struct mtk_dpi_conf *)of_device_get_match_data(dev=
-);
->
-> +       dpi->pinctrl =3D devm_pinctrl_get(&pdev->dev);
-> +       if (IS_ERR(dpi->pinctrl)) {
-> +               dpi->pinctrl =3D NULL;
-> +               dev_dbg(&pdev->dev, "Cannot find pinctrl!\n");
-> +       }
-> +       if (dpi->pinctrl) {
-> +               dpi->pins_gpio =3D pinctrl_lookup_state(dpi->pinctrl, "sl=
-eep");
-> +               if (IS_ERR(dpi->pins_gpio)) {
-> +                       dpi->pins_gpio =3D NULL;
-> +                       dev_dbg(&pdev->dev, "Cannot find pinctrl idle!\n"=
-);
-> +               }
-> +               if (dpi->pins_gpio)
-> +                       pinctrl_select_state(dpi->pinctrl, dpi->pins_gpio=
-);
-> +
-> +               dpi->pins_dpi =3D pinctrl_lookup_state(dpi->pinctrl, "def=
-ault");
-> +               if (IS_ERR(dpi->pins_dpi)) {
-> +                       dpi->pins_dpi =3D NULL;
-> +                       dev_dbg(&pdev->dev, "Cannot find pinctrl active!\=
-n");
-> +               }
-> +       }
->         mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         dpi->regs =3D devm_ioremap_resource(dev, mem);
->         if (IS_ERR(dpi->regs)) {
-> --
-> 2.12.5
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
