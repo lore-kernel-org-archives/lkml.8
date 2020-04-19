@@ -1,183 +1,77 @@
 Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_ABUSE_SURBL autolearn=no
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113D0C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 12:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967AFC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 12:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED81B214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 12:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D407214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 12:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbgDSMTc (ORCPT
+        id S1725988AbgDSMZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 08:19:32 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:56215 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgDSMTb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 08:19:31 -0400
-Received: from webmail.gandi.net (webmail15.sd4.0x35.net [10.200.201.15])
-        (Authenticated sender: contact@artur-rojek.eu)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPA id 1C44FFF803;
-        Sun, 19 Apr 2020 12:19:26 +0000 (UTC)
+        Sun, 19 Apr 2020 08:25:05 -0400
+Received: from 8bytes.org ([81.169.241.247]:36440 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbgDSMZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 08:25:05 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id EB734342; Sun, 19 Apr 2020 14:25:03 +0200 (CEST)
+Date:   Sun, 19 Apr 2020 14:25:02 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] dma-mapping: add a dma_ops_bypass flag to struct
+ device
+Message-ID: <20200419122502.GI21900@8bytes.org>
+References: <20200414122506.438134-1-hch@lst.de>
+ <20200414122506.438134-4-hch@lst.de>
+ <20200418124205.GD6113@8bytes.org>
+ <20200419080058.GB12222@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 19 Apr 2020 14:19:26 +0200
-From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND PATCH v5 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
-In-Reply-To: <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
- <20200417202859.35427-3-contact@artur-rojek.eu>
- <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
-Message-ID: <ed0b6fdac4fdb89e87082f2c6b0edc51@artur-rojek.eu>
-X-Sender: contact@artur-rojek.eu
-User-Agent: Roundcube Webmail/1.3.8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419080058.GB12222@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-thanks for the review. Comments inline.
+On Sun, Apr 19, 2020 at 10:00:58AM +0200, Christoph Hellwig wrote:
+> The difference is that NULL ops mean imply the direct mapping is always
+> used, dma_ops_bypass means a direct mapping is used if no bounce buffering
+> using swiotlb is needed, which should also answer your first question.
+> The idea is to consolidate code in the core to use an opportunistic
+> direct mapping instead of the dynamic iommu mapping.  I though the cover
+> letter and commit log explained this well enough, but maybe I need to
+> do a better job.
 
-On 2020-04-17 22:59, Andy Shevchenko wrote:
-> On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek <contact@artur-rojek.eu> 
-> wrote:
->> 
->> The SADC component in JZ47xx SoCs provides support for touchscreen
->> operations (pen position and pen down pressure) in single-ended and
->> differential modes.
->> 
->> Of the known hardware to use this controller, GCW Zero and Anbernic 
->> RG-350
->> utilize the touchscreen mode by having their joystick(s) attached to 
->> the
->> X/Y positive/negative input pins.
->> GCW Zero comes with a single joystick and is sufficiently handled with 
->> the
->> currently implemented single-ended mode. Support for boards with two
->> joysticks, where one is hooked up to Xn/Yn and the other to Xp/Yp 
->> channels
->> will need to be provided in the future.
->> 
->> The touchscreen component of SADC takes a significant time to 
->> stabilize
->> after first receiving the clock and a delay of 50ms has been 
->> empirically
->> proven to be a safe value before data sampling can begin.
->> 
->> All the boards which probe this driver have the interrupt provided 
->> from
->> devicetree, with no need to handle a case where the irq was not 
->> provided.
-> 
-> Device Tree
-> IRQ
-> 
-> ...
-> 
->> +               .scan_type = {
->> +                       .sign = 'u',
->> +                       .realbits = 12,
-> 
->> +                       .storagebits = 16
-> 
-> It's slightly better to leave comma in such cases.
-> 
->> +               },
-> 
->> +               .scan_type = {
->> +                       .sign = 'u',
->> +                       .realbits = 12,
-> 
->> +                       .storagebits = 16
-> 
-> Ditto.
-> 
->> +               },
-> 
-> ...
-> 
->>                 .indexed = 1,
->>                 .channel = INGENIC_ADC_AUX,
->> +               .scan_index = -1
-> 
-> Ditto. You see above? Isn't it nice that you didn't touch that line?
-> So, perhaps next developer can leverage this subtle kind of things.
-> 
->>                 .indexed = 1,
->>                 .channel = INGENIC_ADC_BATTERY,
->> +               .scan_index = -1
-> 
-> Ditto.
-> 
->>                 .indexed = 1,
->>                 .channel = INGENIC_ADC_AUX2,
->> +               .scan_index = -1
-> 
-> Ditto.
-> 
-> ...
-> 
->> +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
->> +{
->> +       struct ingenic_adc *adc = iio_priv(iio_dev);
->> +
-> 
->> +       clk_enable(adc->clk);
-> 
-> Error check?
-> 
->> +       /* It takes significant time for the touchscreen hw to 
->> stabilize. */
->> +       msleep(50);
->> +       ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
->> +                              JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
->> +                              JZ_ADC_REG_CFG_PULL_UP(4));
->> +       writew(80, adc->base + JZ_ADC_REG_ADWAIT);
->> +       writew(2, adc->base + JZ_ADC_REG_ADSAME);
-> 
->> +       writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
-> 
-> Why casting?
-After flipping the bits, the resulting value can't be represented by u8. 
-Since we care only about the first 8 bits anyway, explicit cast here is 
-to silence a compiler warning.
-> 
->> +       writel(0, adc->base + JZ_ADC_REG_ADTCH);
->> +       ingenic_adc_enable(adc, 2, true);
->> +
->> +       return 0;
->> +}
-> 
->> +       irq = platform_get_irq(pdev, 0);
-> 
-> Before it worked w/o IRQ, here is a regression you introduced.
-> 
->> +       if (irq < 0) {
-> 
->> +               dev_err(dev, "Failed to get irq: %d\n", irq);
-> 
-> Redundant message.
-> 
->> +               return irq;
->> +       }
+Ah right, now I see it, when dma_ops_bypass is set it will only use
+direct mapping when the available memory fits into the device's
+dma_masks, and calls into dma_ops otherwise.
 
-- Artur
+I wonder how that will interact with an IOMMU driver, which has to make
+sure that the direct mapping is accessible for the device at all.  It
+can either put the device into a passthrough domain for direct mapping
+or into a re-mapped domain, but then all DMA-API calls need to use dma-ops.
+When the dma_mask covers available memory but coherent_mask doesn't,
+the streaming calls will use dma-direct and alloc_coherent() calls into
+dma-ops. There is no way for the IOMMU driver to ensure both works.
+
+So what are the conditions under which an IOMMU driver would set
+dma_ops_bypass to 1 and get a different result as to when setting
+dev->dma_ops to NULL?
+
+Regards,
+
+	Joerg
