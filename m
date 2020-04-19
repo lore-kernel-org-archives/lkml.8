@@ -2,137 +2,98 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46880C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 02:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDAFC38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 03:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB2721D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 02:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A6021973
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 03:08:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4iH2O59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgDSCty (ORCPT
+        id S1726007AbgDSDIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 22:49:54 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20201 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbgDSCty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 22:49:54 -0400
-IronPort-SDR: VZ6O97qvhYJOkULNrzhL/dIfDOdkmOmaBRFld1WbDH29GJyc6o7ljyyJ1DwF+kdRKcPTJZW8Kf
- GhQAc2l/9Fbg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2020 19:49:53 -0700
-IronPort-SDR: ieWttVn/aTgl915MUJ3l1Ij0cePAR7msaTQU2DnDG7LXv7fV9bQr7cGjCCLJIRqtvSC4J55nt4
- FbCwxRkCi+JQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,401,1580803200"; 
-   d="scan'208";a="455140969"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Apr 2020 19:49:50 -0700
-Date:   Sun, 19 Apr 2020 10:49:48 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Jonathan Cameron <jic23@kernel.org>, kbuild-all@lists.01.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] iio: adc: ti-ads8344: properly byte swap value
-Message-ID: <20200419024948.GK21730@intel.com>
-References: <20200415212257.161238-2-alexandre.belloni@bootlin.com>
- <202004161449.NY5hL54S%lkp@intel.com>
- <20200416205023.GA437042@piout.net>
+        Sat, 18 Apr 2020 23:08:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgDSDIv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 23:08:51 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0FA7C061A0C;
+        Sat, 18 Apr 2020 20:08:51 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n16so3291876pgb.7;
+        Sat, 18 Apr 2020 20:08:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HtCqRr1lMTX0JXiamjHR7TbLRldbnlssn2WnfkSf7dM=;
+        b=S4iH2O591G6zmLgi3xeDv7IV3lf8YUaN7PKuOfc1wWLO7kQU2Jn3Z++jyKKDMkbeTG
+         EnVGhI8i/l6QCO/wvxtO26ZkbObBrBlQjLypRO/O54JATNNzYE6K78XXQwupCtd43UL2
+         X0ZxSElBufJYvyplv4YBlo9zZPS6NrMdX1tROHKe5+yy6SeAgkQE7yrqEyCGzSQZDTA7
+         E573vEP+40eX6s3AlNvfn216xxqy6u7QYZWejfCtxG8WhPqEGLPPLX+0i0G/l47L7T/m
+         5MB/qdHlv8ezZM0JMtQ1EQFU2/nkm65HKW04z67xx3X1cV1ApKYkNRE/RmKvEK2fXVAd
+         F7Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HtCqRr1lMTX0JXiamjHR7TbLRldbnlssn2WnfkSf7dM=;
+        b=hsFl11G4DZkldbJp6CdtnR23TxNhnunay4LY6JLW/oUVKSJdQ2nHAKuOPlkeLnFrc1
+         AcjIw48XF6F/Uyx+bV6bCQ43vS3Z0SejoPuYTokE1ghFZjVR+m9woGYsD4bwBfjJeeqB
+         wOsoiGBymOqUi4/25rWbDKnlx1mPruSl8yCmyJ39Joo8gboV1KbCHTvnGzoqMM3gBajN
+         641pJsvXcxMjTmv0HUBk8lTXvzlOHmw/pDPJmy9N0pbxMNvPS1+TLb0mEIThA626bl+J
+         FYU2n5D3XZ6hILt8XCiQdic0XBSyKmVJgT+eUA/fhNuL3Jw/XDineag5t9m12JOHFqVK
+         VJcA==
+X-Gm-Message-State: AGi0Pua/wWAE44FwqwlbfOA0x1Le4dMBjY24GdXus25/JUZdJeSbUqHz
+        4qdfRH1uMpK7i68iFcb2kfhbQgE6
+X-Google-Smtp-Source: APiQypK43JJB72Xml4+Ac4LUUKe6d23h7l/4noJdxuBPOvRXNPdd8l6jSMMBY7tZvuR7nqsjWimIsA==
+X-Received: by 2002:aa7:9218:: with SMTP id 24mr10457252pfo.312.1587265730437;
+        Sat, 18 Apr 2020 20:08:50 -0700 (PDT)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id g12sm8686146pfm.129.2020.04.18.20.08.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2020 20:08:49 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v2 0/2] dt-bindings: net: mdio.yaml fixes
+Date:   Sat, 18 Apr 2020 20:08:41 -0700
+Message-Id: <20200419030843.18870-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200416205023.GA437042@piout.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:50:23PM +0200, Alexandre Belloni wrote:
-> Hi,
-> 
-> On 16/04/2020 14:22:03+0800, kbuild test robot wrote:
-> > Hi Alexandre,
-> > 
-> > I love your patch! Yet something to improve:
-> > 
-> > [auto build test ERROR on iio/togreg]
-> > [also build test ERROR on v5.7-rc1 next-20200415]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > improve the system. BTW, we also suggest to use '--base' option to specify the
-> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> > 
-> > url:    https://github.com/0day-ci/linux/commits/Alexandre-Belloni/iio-adc-ti-ads8344-improve-the-driver/20200416-073357
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-> > config: c6x-allyesconfig (attached as .config)
-> > compiler: c6x-elf-gcc (GCC) 9.3.0
-> > reproduce:
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # save the attached .config to linux build tree
-> >         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=c6x 
-> > 
-> 
-> I spent some time to reproduce and this is actually not that trivial
-> because your toolchains are linked with libisl22 and most distributions
-> still ship an older version. Maybe you can do something about that?
-Thanks for the feedback, we will resolve this to use old version in
-earliest time.
+Hi,
 
-> 
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> > 
-> > vim +/302 +96 drivers/iio/adc/ti-ads8344.c
-> > 
-> >     72	
-> >     73	static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
-> >     74					  bool differential)
-> >     75	{
-> >     76		struct spi_device *spi = adc->spi;
-> >     77		int ret;
-> >     78		u8 buf[3];
-> >     79	
-> >     80		adc->tx_buf = ADS8344_START;
-> >     81		if (!differential)
-> >     82			adc->tx_buf |= ADS8344_SINGLE_END;
-> >     83		adc->tx_buf |= ADS8344_CHANNEL(channel);
-> >     84		adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
-> >     85	
-> >     86		ret = spi_write(spi, &adc->tx_buf, 1);
-> >     87		if (ret)
-> >     88			return ret;
-> >     89	
-> >     90		udelay(9);
-> >     91	
-> >     92		ret = spi_read(spi, buf, sizeof(buf));
-> >     93		if (ret)
-> >     94			return ret;
-> >     95	
-> >   > 96		return buf[0] << 9 | buf[1] << 1 | buf[2] >> 7;
-> >     97	}
-> >     98	
-> > 
-> 
-> I take it this is a false positive as I don't get any errors when
-> building this driver with the provided toolchain. However, I see a few
-> "internal compiler error: in priority, at haifa-sched.c:1599"
-> 
-> -- 
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
+This patch series documents some common MDIO devices properties such as
+resets (and delays) and broken-turn-around. The second patch also
+rephrases some descriptions to be more general towards MDIO devices and
+not specific towards Ethernet PHYs.
+
+Florian Fainelli (2):
+  dt-bindings: net: mdio: Document common properties
+  dt-bindings: net: mdio: Make descriptions more general
+
+ .../devicetree/bindings/net/mdio.yaml         | 37 ++++++++++++++++---
+ 1 file changed, 32 insertions(+), 5 deletions(-)
+
+-- 
+2.19.1
+
