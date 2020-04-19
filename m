@@ -2,134 +2,91 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E40DC54FC9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C27C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CAD622202
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587305947;
-	bh=HGGxwLDnLH3qBDS3TOfoWeiAb1IBnNmSSrucnC+YpY4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=h6jFZJnCQQzC5I5DmHd36vEHV0vhi/LBJk0oaRB4I1inin1OTcf6YA+Sf8F5QY17y
-	 TfGf4sFFWle/9jfWgyvjU08B1+/DO6HgGUsySkS4xTR1Ct4b2jnu/bJg6FUH2i7mSg
-	 aYchhVKUQD5rfi+BGPZr8Y3VgrxDlVopgZAdi8iM=
+	by mail.kernel.org (Postfix) with ESMTP id 9660B21841
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:19:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgDSOTF (ORCPT
+        id S1726422AbgDSOTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 10:19:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40808 "EHLO mail.kernel.org"
+        Sun, 19 Apr 2020 10:19:25 -0400
+Received: from raptor.unsafe.ru ([5.9.43.93]:60052 "EHLO raptor.unsafe.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbgDSOTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 10:19:04 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725905AbgDSOTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 10:19:24 -0400
+Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08206214AF;
-        Sun, 19 Apr 2020 14:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587305943;
-        bh=HGGxwLDnLH3qBDS3TOfoWeiAb1IBnNmSSrucnC+YpY4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wgZer+L0X/9tLbkf2Hnm+en6Yx73tH9RBpDzlz5WjPLE0ghDarParNoFmXH2p98w1
-         6g+pno0FKZ/bQ3iXbgL41BpeTgBNNpnJDyRjjGOiBzZCFCYl+VeW9w/DC0kMC8EQah
-         MMYG8607eDHxDRLE47wZwZzeFIEoNBB6/5mPjqFg=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Borislav Petkov <bp@suse.de>, Ion Badulescu <ionut@badula.org>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Jessica Yu <jeyu@kernel.org>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>, netdev@vger.kernel.org,
-        oss-drivers@netronome.com, Salil Mehta <salil.mehta@huawei.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Shannon Nelson <snelson@pensando.io>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>
-Subject: [PATCH net-next v2 0/4] Remove vermagic header from global include folder
-Date:   Sun, 19 Apr 2020 17:18:46 +0300
-Message-Id: <20200419141850.126507-1-leon@kernel.org>
-X-Mailer: git-send-email 2.25.2
+        by raptor.unsafe.ru (Postfix) with ESMTPSA id 4282B209FA;
+        Sun, 19 Apr 2020 14:19:20 +0000 (UTC)
+Date:   Sun, 19 Apr 2020 16:19:15 +0200
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH RESEND v11 7/8] proc: use human-readable values for
+ hidepid
+Message-ID: <20200419141915.g4bdjbwvhpre7mra@comp-core-i7-2640m-0182e6>
+References: <20200409123752.1070597-1-gladkov.alexey@gmail.com>
+ <20200409123752.1070597-8-gladkov.alexey@gmail.com>
+ <87imhyaq5t.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imhyaq5t.fsf@x220.int.ebiederm.org>
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Sun, 19 Apr 2020 14:19:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+On Fri, Apr 17, 2020 at 02:05:50PM -0500, Eric W. Biederman wrote:
+> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+> 
+> > The hidepid parameter values are becoming more and more and it becomes
+> > difficult to remember what each new magic number means.
+> 
+> So I relooked at the code.  And I think I was misreading things.
+> However I think it is a legitimate concern.
+> 
+> Can you please mention in your description of this change that
+> switching from fsparam_u32 to fs_param_string is safe even when
+> using the new mount api because fsparam_u32 and fs_param_string
+> both are sent from userspace with "fsconfig(fd, FSCONFIG_SET_STRING, ...)".
 
-Changelog:
-v2:
- * Changed the implementation of patch #4 to be like Masahiro wants.
-I personally don't like this implementation and changing it just to move forward
-this this patchset.
-v1:
-https://lore.kernel.org/lkml/20200415133648.1306956-1-leon@kernel.org
- * Added tags
- * Updated patch #4 with test results
- * Changed scripts/mod/modpost.c to create inclusion of vermagic.h
-   from kernel folder and not from general include/linux. This is
-   needed to generate *.mod.c files, while building modules.
-v0:
-https://lore.kernel.org/lkml/20200414155732.1236944-1-leon@kernel.org
-----------------------------------------------------------------------------
+Sure.
 
-Hi,
+> Or words to that effect.  Ideally you will even manually test that case
+> to confirm.
 
-This is followup to the failure reported by Borislav [1] and suggested
-fix later on [2].
+I will add a selftest for this.
 
-The series removes all includes of linux/vermagic.h, updates hns and
-nfp to use same kernel versioning scheme (exactly like we did for
-other drivers in previous cycle) and removes vermagic.h from global
-include folder.
-
-[1] https://lore.kernel.org/lkml/20200411155623.GA22175@zn.tnic
-[2] https://lore.kernel.org/lkml/20200413080452.GA3772@zn.tnic
-
-------------------------------------------------------------
-1. Honestly, I have no idea if it can go to net-rc, clearly not all my
-patches are fixes, so I'm sending them to the net-next.
-2. Still didn't get response from kbuild, but it passed my own
-compilation tests.
-https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git/log/?h=vermagic
-
-Thanks
-
-Leon Romanovsky (4):
-  drivers: Remove inclusion of vermagic header
-  net/hns: Remove custom driver version in favour of global one
-  net/nfp: Update driver to use global kernel version
-  kernel/module: Hide vermagic header file from general use
-
- drivers/net/bonding/bonding_priv.h                   | 2 +-
- drivers/net/ethernet/3com/3c509.c                    | 1 -
- drivers/net/ethernet/3com/3c515.c                    | 1 -
- drivers/net/ethernet/adaptec/starfire.c              | 1 -
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c      | 3 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h      | 4 ----
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c   | 4 ----
- drivers/net/ethernet/netronome/nfp/nfp_main.c        | 3 ---
- drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c | 2 --
- drivers/net/ethernet/pensando/ionic/ionic_main.c     | 2 +-
- drivers/power/supply/test_power.c                    | 2 +-
- include/linux/vermagic.h                             | 5 +++++
- kernel/module.c                                      | 3 +++
- net/ethtool/ioctl.c                                  | 3 +--
- scripts/mod/modpost.c                                | 1 +
- 15 files changed, 13 insertions(+), 24 deletions(-)
-
---
-2.25.2
+-- 
+Rgrds, legion
 
