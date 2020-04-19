@@ -2,306 +2,122 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888FFC54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3A2C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61B8F21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DC521D94
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="c01HKouM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oOU/p5eB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgDSPpg (ORCPT
+        id S1726372AbgDSPtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 11:45:36 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:50756 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgDSPpg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 11:45:36 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 22F2B9C7;
-        Sun, 19 Apr 2020 17:45:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1587311132;
-        bh=HuQErHwGhO1kJiBT/qX8DgI6To1loNUIuofzPkXRHuk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c01HKouMFlyNWiB9MrwXi3dakOrL/izJKJN8BPGZ3UbSL3fY5v930Lga8unlnFSZ0
-         sZMLHeanamdXcQLtUbnA9XRpuAuqLPDt33v56hPf75uW1/zUlwJpNWW0sS0io4emyR
-         WlK2EVt8gqfztYedI+8euCMGGFZyUKShgXHC6kE0=
-Date:   Sun, 19 Apr 2020 18:45:19 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vishal Sagar <vishal.sagar@xilinx.com>
-Cc:     Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Hyun Kwon <hyun.kwon@xilinx.com>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v11 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Message-ID: <20200419154519.GA11361@pendragon.ideasonboard.com>
-References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
- <20200409194424.45555-2-vishal.sagar@xilinx.com>
- <20200419154305.GA8117@pendragon.ideasonboard.com>
+        Sun, 19 Apr 2020 11:49:47 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:48432 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbgDSPtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 11:49:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=9MvkBXmiEdANg+HoZVypf5aaCZQcXxBtGb3cmIo49e4=; b=oOU/p5eBY6McgT+ZdYrf2lGtEp
+        8xEBF8J9m8asiWfs8rSVsrIX3a97REZg/9Oa4w0hk4fT8jI/O4BtNjN8PhVIAHSfGp87zgx4ZbOQC
+        +wKpRD8ugKNiZ+Xq2WVMXxvtr+C/MSPbLeWEUIH9NK+Va9/Q6+/c8e5BqPg5WcmpYeXM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQCCV-003eaj-5k; Sun, 19 Apr 2020 17:49:43 +0200
+Date:   Sun, 19 Apr 2020 17:49:43 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next v2 2/3] net: phy: add Broadcom BCM54140 support
+Message-ID: <20200419154943.GJ836632@lunn.ch>
+References: <20200419101249.28991-1-michael@walle.cc>
+ <20200419101249.28991-2-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200419154305.GA8117@pendragon.ideasonboard.com>
+In-Reply-To: <20200419101249.28991-2-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vishal,
+On Sun, Apr 19, 2020 at 12:12:48PM +0200, Michael Walle wrote:
 
-On Sun, Apr 19, 2020 at 06:43:07PM +0300, Laurent Pinchart wrote:
-> On Fri, Apr 10, 2020 at 01:14:23AM +0530, Vishal Sagar wrote:
-> > Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
-> > 
-> > The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
-> > DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
-> 
-> The AXI IIC was removed from the subsystem in v4.1, you could drop it
-> from the commit message too.
-> 
-> > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> > Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
-> > ---
-> > v11
-> > - Modify compatible string from 4.0 to 5.0
-> > 
-> > v10
-> > - No changes
-> > 
-> > v9
-> > - Fix xlnx,vfb description.
-> > - s/Optional/Required endpoint property.
-> > - Move data-lanes description from Ports to endpoint property section.
-> > 
-> > v8
-> > - Added reset-gpios optional property to assert video_aresetn
-> > 
-> > v7
-> > - Removed the control name from dt bindings
-> > - Updated the example dt node name to csi2rx
-> > 
-> > v6
-> > - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
-> > - Added reviewed by Rob Herring
-> > 
-> > v5
-> > - Incorporated comments by Luca Cersoli
-> > - Removed DPHY clock from description and example
-> > - Removed bayer pattern from device tree MIPI CSI IP
-> >   doesn't deal with bayer pattern.
-> > 
-> > v4
-> > - Added reviewed by Hyun Kwon
-> > 
-> > v3
-> > - removed interrupt parent as suggested by Rob
-> > - removed dphy clock
-> > - moved vfb to optional properties
-> > - Added required and optional port properties section
-> > - Added endpoint property section
-> > 
-> > v2
-> > - updated the compatible string to latest version supported
-> > - removed DPHY related parameters
-> > - added CSI v2.0 related property (including VCX for supporting upto 16
-> >   virtual channels).
-> > - modified csi-pxl-format from string to unsigned int type where the value
-> >   is as per the CSI specification
-> > - Defined port 0 and port 1 as sink and source ports.
-> > - Removed max-lanes property as suggested by Rob and Sakari
-> >  .../bindings/media/xilinx/xlnx,csi2rxss.txt   | 116 ++++++++++++++++++
-> >  1 file changed, 116 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> > new file mode 100644
-> > index 000000000000..9269a5c880aa
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> 
-> YAML is the recommended form for new DT bindings. This wasn't a
-> requirement when the first version of this series was submitted, and I
-> understand it can be frustrating to chase a moving target, so I can help
-> with the YAML conversion once we sort out the questions below.
-> 
-> > @@ -0,0 +1,116 @@
-> > +Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
-> 
-> Nitpicking, it's CSI-2, not CSI2.
-> 
-> > +--------------------------------------------------------
-> > +
-> > +The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 traffic
-> > +from compliant camera sensors and send the output as AXI4 Stream video data
-> > +for image processing.
-> > +
-> > +The subsystem consists of a MIPI DPHY in slave mode which captures the
-> 
-> And D-PHY, not DPHY :-)
-> 
-> > +data packets. This is passed along the MIPI CSI2 Rx IP which extracts the
-> > +packet data. The optional Video Format Bridge (VFB) converts this data to
-> > +AXI4 Stream video data.
-> > +
-> > +For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Subsystem.
-> 
-> If I understand correctly, this DT binding covers the CSI-2 RX
-> Controller and the optional Video Format Bridge, but leaves the D-PHY
-> out, right ? I think this should be clarified, as the "CSI-2 receiver
-> subsystem" includes the D-PHY.
+Hi Michael
 
-I forgot to mention that if the PHY isn't included in the bindings, then
-it should be referenced through a "phys" property.
+> +static int bcm54140_b0_workaround(struct phy_device *phydev)
+> +{
+> +	int spare3;
+> +	int ret;
 
-> > +
-> > +Required properties:
-> > +--------------------
-> > +- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-5.0".
-> 
-> Is PG232 v5.0 available ? The most recent version I've found was PG232
-> v4.1.
-> 
-> > +- reg: Physical base address and length of the registers set for the device.
-> > +- interrupts: Property with a value describing the interrupt number.
-> > +- clocks: List of phandles to AXI Lite and Video clocks.
-> > +- clock-names: Must contain "lite_aclk" and "video_aclk" in the same order
-> > +  as clocks listed in clocks property.
-> 
-> The subsystem documentation also mentions a dphy_clk_200M. Is that
-> routed to the D-PHY only, or is it also needed for the CSI-2 RX ?
-> 
-> > +- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw design.
-> > +  Packets other than this data type (except for RAW8 and User defined data
-> > +  types) will be filtered out. Possible values are as below -
-> > +  0x1E - YUV4228B
-> > +  0x1F - YUV42210B
-> > +  0x20 - RGB444
-> > +  0x21 - RGB555
-> > +  0x22 - RGB565
-> > +  0x23 - RGB666
-> > +  0x24 - RGB888
-> > +  0x28 - RAW6
-> > +  0x29 - RAW7
-> > +  0x2A - RAW8
-> > +  0x2B - RAW10
-> > +  0x2C - RAW12
-> > +  0x2D - RAW14
-> > +  0x2E - RAW16
-> > +  0x2F - RAW20
-> 
-> Isn't this property required only when the VFB is present ?
-> 
-> > +
-> > +
-> > +Optional properties:
-> > +--------------------
-> > +- xlnx,vfb: Present when Video Format Bridge is enabled in IP configuration
-> > +- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
-> 
-> Unless I'm mistaken, this feature is available starting at v4 of the IP
-> core.
-> 
-> > +- xlnx,en-vcx: When present, there are maximum 16 virtual channels, else
-> > +  only 4. This is present only if xlnx,en-csi-v2-0 is present.
-> > +- xlnx,en-active-lanes: present if the number of active lanes can be
-> > +  re-configured at runtime in the Protocol Configuration Register.
-> > +  Otherwise all lanes, as set in IP configuration, are always active.
-> > +- reset-gpios: Optional specifier for a GPIO that asserts video_aresetn.
-> 
-> Should lite_aresetn also be supported ? We can add a lite-reset-gpios
-> property later, but maybe we should name this video-reset-gpios ? As the
-> video_aresetn signal is the main reset I don't mind keeping the name
-> reset-gpios either. It's up to you.
-> 
-> > +
-> > +Ports
-> > +-----
-> > +The device node shall contain two 'port' child nodes as defined in
-> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > +
-> > +The port@0 is a sink port and shall connect to CSI2 source like camera.
-> > +
-> > +The port@1 is a source port and can be connected to any video processing IP
-> > +which can work with AXI4 Stream data.
-> > +
-> > +Required port properties:
-> > +--------------------
-> > +- reg: 0 - for sink port.
-> > +       1 - for source port.
-> 
-> Don't you need a second source port for embedded non-image data ? If my
-> understanding is correct that port can be enabled or disabled through
-> the CSI_EMB_NON_IMG parameter, so it should be optional in DT too. We
-> can possibly leave it out for now, it can be added later in a
-> backward-compatible way.
-> 
-> > +
-> > +Required endpoint property:
-> > +---------------------------
-> > +- data-lanes: specifies MIPI CSI-2 data lanes as covered in video-interfaces.txt.
-> > +  This is required only in the sink port 0 endpoint which connects to MIPI CSI2
-> > +  source like sensor. The possible values are:
-> > +  1       - For 1 lane enabled in IP.
-> > +  1 2     - For 2 lanes enabled in IP.
-> > +  1 2 3   - For 3 lanes enabled in IP.
-> > +  1 2 3 4 - For 4 lanes enabled in IP.
-> > +
-> > +Example:
-> > +
-> > +	xcsi2rxss_1: csi2rx@a0020000 {
-> > +		compatible = "xlnx,mipi-csi2-rx-subsystem-5.0";
-> > +		reg = <0x0 0xa0020000 0x0 0x10000>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 95 4>;
-> > +		xlnx,csi-pxl-format = <0x2a>;
-> > +		xlnx,vfb;
-> > +		xlnx,en-active-lanes;
-> > +		xlnx,en-csi-v2-0;
-> > +		xlnx,en-vcx;
-> > +		clock-names = "lite_aclk", "video_aclk";
-> > +		clocks = <&misc_clk_0>, <&misc_clk_1>;
-> > +		reset-gpios = <&gpio 86 GPIO_ACTIVE_LOW>;
-> > +
-> > +		ports {
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +
-> > +			port@0 {
-> > +				/* Sink port */
-> > +				reg = <0>;
-> > +				csiss_in: endpoint {
-> > +					data-lanes = <1 2 3 4>;
-> > +					/* MIPI CSI2 Camera handle */
-> > +					remote-endpoint = <&camera_out>;
-> > +				};
-> > +			};
-> > +			port@1 {
-> > +				/* Source port */
-> > +				reg = <1>;
-> > +				csiss_out: endpoint {
-> > +					remote-endpoint = <&vproc_in>;
-> > +				};
-> > +			};
-> > +		};
-> > +	};
+Could you add a comment about what this is working around?
 
--- 
-Regards,
+> +static int bcm54140_phy_probe(struct phy_device *phydev)
+> +{
+> +	struct bcm54140_phy_priv *priv;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&phydev->mdio.dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	phydev->priv = priv;
+> +
+> +	ret = bcm54140_get_base_addr_and_port(phydev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(&phydev->mdio.dev,
+> +		 "probed (port %d, base PHY address %d)\n",
+> +		 priv->port, priv->base_addr);
 
-Laurent Pinchart
+phydev_dbg() ? Do we need to see this message four times?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int bcm54140_config_init(struct phy_device *phydev)
+> +{
+> +	u16 reg = 0xffff;
+> +	int ret;
+> +
+> +	/* Apply hardware errata */
+> +	ret = bcm54140_b0_workaround(phydev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Unmask events we are interested in. */
+> +	reg &= ~(BCM54140_RDB_INT_DUPLEX |
+> +		 BCM54140_RDB_INT_SPEED |
+> +		 BCM54140_RDB_INT_LINK);
+> +	ret = bcm_phy_write_rdb(phydev, BCM54140_RDB_IMR, reg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* LED1=LINKSPD[1], LED2=LINKSPD[2], LED3=ACTIVITY */
+> +	ret = bcm_phy_modify_rdb(phydev, BCM54140_RDB_SPARE1,
+> +				 0, BCM54140_RDB_SPARE1_LSLM);
+> +	if (ret)
+> +		return ret;
+
+What are the reset default for LEDs? Can the LEDs be configured via
+strapping pins? There is currently no good solution for this. Whatever
+you pick will be wrong for somebody else. At minimum, strapping pins,
+if they exist, should not be overridden.
+
