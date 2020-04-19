@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08DDC54FCC
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609C8C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0AD72145D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350C52145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587325562;
-	bh=0fEKditsiCBeZebRHug5c4iFSYsesSSDjhjURwpdjT0=;
+	s=default; t=1587325580;
+	bh=fQXCFGRgJbRf7moNvG4Dc1RHJ+2CVURXn5hwDnCxeLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cFmyKbcWkonEYmwAi22C0WVJGYp53CryfZGa33FeYqxRuKF1CQAPMa3BX5nVXAqhg
-	 c12gbeAos60J2LlMgUpjBSc+DgcjbKH12S5vXQGV/DRG2ifxYnxydnSH37Z8B/WJgj
-	 CSucEznOGZqLoPdcM7VqcknVV/vV5NfsGtSubZcw=
+	b=bWq+wBqEX/doBQd9sbAbg3doQIfAcLhryIRDdY989bnBIvxKZyk7lsk5ITgaI/4ye
+	 HPVqH7Lkk31DzLIXN8vyq987yGPy9Gqq7PcyEInQJi1rJIkumkNTvZrjDl1szr/VXN
+	 oueYE8lPJKItI925OO/HElvGS6aCadwHdckKe1tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgDSTqA (ORCPT
+        id S1726880AbgDSTqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 15:46:00 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:50993 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgDSTpw (ORCPT
+        Sun, 19 Apr 2020 15:46:19 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43539 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbgDSTpq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 15:45:52 -0400
-Received: by mail-pj1-f68.google.com with SMTP id t9so1475946pjw.0;
-        Sun, 19 Apr 2020 12:45:52 -0700 (PDT)
+        Sun, 19 Apr 2020 15:45:46 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x26so3958754pgc.10;
+        Sun, 19 Apr 2020 12:45:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JI0MWD+QJRNLm9H/ySGaj7rD32bWrmPpBuBR7vXM0po=;
-        b=FSJ85UrLjGmYQeyidAk9RbNmDPLXhoqbhpyk9DXkl8GmFnUNmj6xK9avazoX7e+v2a
-         yubrmnSJcrelYPc79zjTQnVncHM8t9RnTAcFcLnmBXNDTK5srsNIouENQhvr6qzX6DtS
-         mrO+foTLSt0khki2wpQsT4J1B9cgafDpTodUZePybyYZHO3aHc1HbREzoXsYTXMN2/+U
-         HNhM1sN7aDHazQ+GfLsFwVwzfC5g7Shj/cxZRnlgvJ8wAwgVYhSk8JDAske7GsuM3bgO
-         i4rG34RlZKPB4djq8QpVVh35J9lOyRXh7B/EVLhXtOMlGeYICVE6kr+9ZeGwpq9QaAgb
-         hgLA==
-X-Gm-Message-State: AGi0PubTppbpnuwqowBk7Hh7pCAZaZyBJg8BE0ax5eG9NyRi4WMjBBUA
-        J7FpEAurtWDS8qSWwoXhS6A=
-X-Google-Smtp-Source: APiQypI5CAO7B1a2nLDOtdLnxkI6y2BKcHcPj3NYYswPtP9sWC/TtH2DZACqpYblnpzrNGt00D3cQA==
-X-Received: by 2002:a17:90a:b10f:: with SMTP id z15mr15705940pjq.188.1587325551767;
-        Sun, 19 Apr 2020 12:45:51 -0700 (PDT)
+        bh=V2K7EZXYN6Xe1jPwFmqZWg/LsfDQ8FxEGzorYIUkLfM=;
+        b=gZSXBx4e+IW+hhj5NGIM5wStvfIBMt58IrDpPpdDDO6ujIjmP5OlcSyiGA+RJvgAlR
+         u4J3TAXJ49XmMpQHPBl/RHqLvoeymtWQ33ogEe0xJLe1ADQOmYV45Z4DepAamC/qPkdY
+         nVlqSB27JHgnFMxA5pjxAf99ruzt8RPDW5oyJgd0kWtyJsBKJWB8OiiN+39Vza2TDEHK
+         7RW3vI0k2tSLINvNoe3fpi3jteT1qnjF4qWyu6DMWUAH0m+zqQjv+2zdSDnZVr01Ulvx
+         +L5csmaYI6JY/KonTUpujfYmR8QJyPY/W1sC2bGksPD27MCi4Q/t2LXPXir8W6hFjfmr
+         jEpg==
+X-Gm-Message-State: AGi0Pub7nChwkSk7y8heGnlCil78S9dy45MHhN5Caqp4/Ha2ArHZ+kwX
+        DwebKWbOxVR92/dxm40DqpiejYqv0CQ=
+X-Google-Smtp-Source: APiQypIMWS/ShJP5LZ41kIXm9G1F2gs0Kheeswgp6JGQgly3HmDS9WmGOoUUTQl9T2/u5sowlGqZhg==
+X-Received: by 2002:a63:7c2:: with SMTP id 185mr2478993pgh.131.1587325545506;
+        Sun, 19 Apr 2020 12:45:45 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 1sm4588pff.151.2020.04.19.12.45.42
+        by smtp.gmail.com with ESMTPSA id a23sm19365100pfo.145.2020.04.19.12.45.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 19 Apr 2020 12:45:43 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 1D0CD42309; Sun, 19 Apr 2020 19:45:39 +0000 (UTC)
+        id E685642000; Sun, 19 Apr 2020 19:45:38 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
         gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
@@ -60,9 +60,9 @@ To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
 Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 10/10] block: put_device() if device_add() fails
-Date:   Sun, 19 Apr 2020 19:45:29 +0000
-Message-Id: <20200419194529.4872-11-mcgrof@kernel.org>
+Subject: [PATCH v2 06/10] blk-debugfs: upgrade warns to BUG_ON() if directory is already found
+Date:   Sun, 19 Apr 2020 19:45:25 +0000
+Message-Id: <20200419194529.4872-7-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200419194529.4872-1-mcgrof@kernel.org>
 References: <20200419194529.4872-1-mcgrof@kernel.org>
@@ -73,30 +73,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Through code inspection I've found that we don't put_device() if
-device_add() fails, and this must be done to decrement its refcount.
+Now that we have moved release_queue from being asynchronous to
+synchronous, and fixed how we use the debugfs directory with blktrace
+we should no longer have expected races with device removal/addition
+and other operations with the debugfs directory.
+
+If races do happen however, we want to be informed of *how* this races
+happens rather than dealing with a debugfs splat, so upgrading this to a
+BUG_ON() should capture better information about how this can happen
+in the future.
+
+This is specially true these days with funky reproducers in userspace
+for which we have no access to, but only a bug splat.
+
+Note that on addition the gendisk kobject is used as the parent for the
+request_queue kobject, and upon removal, now that request_queue removal
+is synchronous, blk_unregister_queue() is called prior to the gendisk
+device_del(). This means we expect to see a sysfs clash first now prior
+to running into a race with the debugfs dentry; so this bug would be
+considered highly unlikely.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- block/genhd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ block/blk-debugfs.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 06b642b23a07..c52095a74792 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -721,8 +721,10 @@ static void register_disk(struct device *parent, struct gendisk *disk,
- 		WARN_ON(ddev->groups);
- 		ddev->groups = groups;
- 	}
--	if (device_add(ddev))
-+	if (device_add(ddev)) {
-+		put_device(ddev);
- 		return;
-+	}
- 	if (!sysfs_deprecated) {
- 		err = sysfs_create_link(block_depr, &ddev->kobj,
- 					kobject_name(&ddev->kobj));
+diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
+index d84038bce0a5..761318dcbf40 100644
+--- a/block/blk-debugfs.c
++++ b/block/blk-debugfs.c
+@@ -19,16 +19,8 @@ void blk_debugfs_register(void)
+ 
+ int __must_check blk_queue_debugfs_register(struct request_queue *q)
+ {
+-	struct dentry *dir = NULL;
+-
+ 	/* This can happen if we have a bug in the lower layers */
+-	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
+-	if (dir) {
+-		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
+-			kobject_name(q->kobj.parent));
+-		dput(dir);
+-		return -EALREADY;
+-	}
++	BUG_ON(debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root));
+ 
+ 	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+ 					    blk_debugfs_root);
 -- 
 2.25.1
 
