@@ -2,116 +2,74 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347EEC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAD2C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F0121974
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:32:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pHtaVDFt"
+	by mail.kernel.org (Postfix) with ESMTP id 0FDE022240
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgDSRcn (ORCPT
+        id S1726412AbgDSRgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 13:32:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725969AbgDSRcm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 13:32:42 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92187C061A0C;
-        Sun, 19 Apr 2020 10:32:42 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id x9so276973vkd.4;
-        Sun, 19 Apr 2020 10:32:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/TqDWfB8cUBXogmz2+ksGks4wWKUG39YBeLr7SZP+ks=;
-        b=pHtaVDFtydBeKDed2OkXR74O6lwGCWGCPOpMyFaMnoTbYzVb9LOxEELnsnyU5gNI7n
-         vxJu8pj/jiyo0ihToGPpMbeH6qhYy0NuPfwppmILjJs/7T6CiG70FNEOnxce9+aN2Zoe
-         ZZd7XDyWTYT28pPN8Y6k5IC2kPaJCnbPWweKSPzVEgw3ueiqTV22ZXdNgpX7w9Qdl7/w
-         NrtR55HklfXY8sd8wskRbN8C9nmfTVhxpxubKATjpDH9iAJMJAeONSmGD9aI+UaHV0sc
-         rXP5BOuf6YyW1DGimSjbtJPNp9RmIPuYbfbCzIoSuxtnPviC1OBfip2GpgGMeLLbTItv
-         A9Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/TqDWfB8cUBXogmz2+ksGks4wWKUG39YBeLr7SZP+ks=;
-        b=jxYj+to1ec5nnd5KYDPfWHcwc7I9w31QF5YA4WP7bbGc1B3hNv58IgezrLQXRXQ7HQ
-         O21IBNmT8EItiw8hdnse1r6pj9zAexuL9QwXtP+Z+fKGDCZOSLMmx9kMJrgCT57zDgbo
-         lB+PbZgfDU8OKllftNZ0NBikC8tut9r/MuBjiX4ZVD4/rzPOhHVAw1d55N33Seau208c
-         VbR2y1p+W40ckD53THc0eT8/zo9/EETDHfzsES+TByeVF37lhXeuvm8MqwvYU9ahjlHC
-         FzZVpPg0K3b9fqpZYOI+nGTkCrcR2uo9kEv/W5shBf1EmqCRcuuNmoXmhbvrKUlIXt8+
-         lBqA==
-X-Gm-Message-State: AGi0PuZWuou+T92MbtajAHeoXMxTR+AHokO+28Kd2OZHfk3+RlKvMK9F
-        0+8DRu1DpjNIeiei0eiW1B+rCh76JlYeinlXniceTZgS
-X-Google-Smtp-Source: APiQypKN8NI7vCpugHw0jz+xvmW0SEVc2PQIK2816SpywZShPmiXtMbVtbRRT9+GWJ9ibc5w2VQZRsG9y8mnHjArHAo=
-X-Received: by 2002:a1f:9541:: with SMTP id x62mr8357446vkd.82.1587317561712;
- Sun, 19 Apr 2020 10:32:41 -0700 (PDT)
+        Sun, 19 Apr 2020 13:36:01 -0400
+Received: from v6.sk ([167.172.42.174]:44728 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbgDSRgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 13:36:00 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id E7242610CB;
+        Sun, 19 Apr 2020 17:35:58 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh@kernel.org>
+Subject: [RESEND PATCH v4 1/3] dt-bindings: Add vendor prefix for Chrontel, Inc.
+Date:   Sun, 19 Apr 2020 19:35:50 +0200
+Message-Id: <20200419173552.675098-2-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200419173552.675098-1-lkundrak@v3.sk>
+References: <20200419173552.675098-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-References: <000000000000e642a905a0cbee6e@google.com> <1587063451-54027-1-git-send-email-xiangxia.m.yue@gmail.com>
-In-Reply-To: <1587063451-54027-1-git-send-email-xiangxia.m.yue@gmail.com>
-From:   Pravin Shelar <pravin.ovn@gmail.com>
-Date:   Sun, 19 Apr 2020 10:32:30 -0700
-Message-ID: <CAOrHB_CjZ1oyNyuj7tgZLZ1XXFahCSO76BfHX7YFo_O68FfrXQ@mail.gmail.com>
-Subject: Re: [PATCH] net: openvswitch: ovs_ct_exit to be done under ovs_lock
-To:     Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Cc:     syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>,
-        ovs dev <dev@openvswitch.org>, kuba@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com, Yi-Hung Wei <yihung.wei@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 1:44 AM <xiangxia.m.yue@gmail.com> wrote:
->
-> From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
->
-> syzbot wrote:
-> | =============================
-> | WARNING: suspicious RCU usage
-> | 5.7.0-rc1+ #45 Not tainted
-> | -----------------------------
-> | net/openvswitch/conntrack.c:1898 RCU-list traversed in non-reader section!!
-> |
-> | other info that might help us debug this:
-> | rcu_scheduler_active = 2, debug_locks = 1
-> | ...
-> |
-> | stack backtrace:
-> | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-> | Workqueue: netns cleanup_net
-> | Call Trace:
-> | ...
-> | ovs_ct_exit
-> | ovs_exit_net
-> | ops_exit_list.isra.7
-> | cleanup_net
-> | process_one_work
-> | worker_thread
->
-> To avoid that warning, invoke the ovs_ct_exit under ovs_lock and add
-> lockdep_ovsl_is_held as optional lockdep expression.
->
-> Link: https://lore.kernel.org/lkml/000000000000e642a905a0cbee6e@google.com
-> Fixes: 11efd5cb04a1 ("openvswitch: Support conntrack zone limit")
-> Cc: Pravin B Shelar <pshelar@ovn.org>
-> Cc: Yi-Hung Wei <yihung.wei@gmail.com>
-> Reported-by: syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com
-> Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+Chrontel makes encoders for video displays and perhaps other stuff.
+Their web site is http://www.chrontel.com/.
 
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Rob Herring <robh@kernel.org>
 
-Thanks.
+---
+Changes since v1:
+- Collect Rob's ack
+
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d3891386d6710..7794ffccd3258 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -187,6 +187,8 @@ patternProperties:
+     description: ChipOne
+   "^chipspark,.*":
+     description: ChipSPARK
++  "^chrontel,.*":
++    description: Chrontel, Inc.
+   "^chrp,.*":
+     description: Common Hardware Reference Platform
+   "^chunghwa,.*":
+-- 
+2.26.0
+
