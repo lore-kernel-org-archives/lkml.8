@@ -2,80 +2,51 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8108AC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D628DC54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BBD2075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:05:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azl4wDkC"
+	by mail.kernel.org (Postfix) with ESMTP id B8D252075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587319932;
+	bh=dqSkdX+gADiKrEy242RtXCo5PPZGV6FUJ2j3yPTuXcY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=VuJFp6zbLY2VqnjgAuMZoBHfZF0QP25dEE/8FglW3MrO1xlI0+V/hrtysYIojxN1I
+	 89G6v4SKWH1/IRQLGIdg2SQmHfUsvBQG0t/kwGIC0SbKEI1xKpkSbGU7Hm2ZsbDOTE
+	 ZLsf1/F/0M+NlRrGRQp0xcHoohjThL3OMsv50J1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgDSSFE (ORCPT
+        id S1726670AbgDSSML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 14:05:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbgDSSFC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 14:05:02 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 041FDC061A0C;
-        Sun, 19 Apr 2020 11:05:01 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id z25so2599260otq.13;
-        Sun, 19 Apr 2020 11:05:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vR4OoJO7KozFHQiJz0C5ZTDf3DqjOZtDT398xwIxeeI=;
-        b=azl4wDkCSMKJ74rVGH7e1BnRmpVBfcQ7l8xnoRK30SrYkmN+CZ6M80VBfoPVg9KZYT
-         GXVcJXJDswjIsXDIsI5AbRwsfHlvAOF5y/yPJhWWpsv34rXVXgmh2sk6+qK+QH7wr//o
-         /5dx81w4IWfLZP2q7JiEiKCpCDrpRwJDzPx3Z/9ge7u3t+/xfyDWFDobJAMZ/yKsRaDf
-         zRnPvBL2IIOoaVK85go5mH+1yKK5ib/ay8dl2ULsQ7x6d6stm63Y9bHln9iBC+tEqK6K
-         iI8w/wn96e2omY2gpTIOsshgpARiKwxuM9T8pZ28HU1FI2Kt+VNEPjdld61o93TjO0mu
-         UGHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vR4OoJO7KozFHQiJz0C5ZTDf3DqjOZtDT398xwIxeeI=;
-        b=OTnQlmte6mPeJDu2YGXwdzgmfjXgkCDAL5eTouIqNbV+hYRBI1hNzLM/Oy8g64wtUk
-         N0mm9Lf1gW8oagaXcqHT8kh+Vrb4bI7Nh2Q7RV+/k4Z0dGqWLxYo/ZXJtxCH/op0KkHq
-         /LJNN3h3vX3FxNxpdIwRojDHesNr4wSG0NSi6KO9HhsPGNjPopRQ5B8qnrLfEWoNDUYV
-         44iEGAQ4Qz1HgpzhFJejrvdqtzJ1EyLGNDWNh5eYBs5x1d/eJNCsfKU10lSBtCy6cel3
-         DTHcDwqbyTMUgqomOype2PE3zZ1AmO+53yrVmoi8KMzpM4MmybOOKGgvOoO7eRfHx6US
-         WRcQ==
-X-Gm-Message-State: AGi0PuYsUW18hOQnRmfxsJaEf1Yg89R6tHpWEGSwjikovyEUnf9LTxHx
-        8JB83bXNXIxIVDu7wkjRW8M=
-X-Google-Smtp-Source: APiQypI0AU/HahbKPMUS1RsluleWWt9SOsw+UeMO8nWI4CcYjCtnEZeQtXTleysjo3v8fs3oxuuXVw==
-X-Received: by 2002:a9d:3c8:: with SMTP id f66mr6551784otf.368.1587319500354;
-        Sun, 19 Apr 2020 11:05:00 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id t10sm3720075oou.38.2020.04.19.11.04.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 11:05:00 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 2/2] MIPS: VDSO: Do not disable VDSO when linking with ld.lld
-Date:   Sun, 19 Apr 2020 11:04:45 -0700
-Message-Id: <20200419180445.26722-2-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200419180445.26722-1-natechancellor@gmail.com>
-References: <20200419180445.26722-1-natechancellor@gmail.com>
+        Sun, 19 Apr 2020 14:12:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbgDSSML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 14:12:11 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E24BA2075E;
+        Sun, 19 Apr 2020 18:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587319931;
+        bh=dqSkdX+gADiKrEy242RtXCo5PPZGV6FUJ2j3yPTuXcY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QpEbxbg2/+LJ8hmCDGGO9pyYTcPrdzxO5nwkgyULS8lKeTHy2UIUAaqpe9f68gbq1
+         wN2DhwC1h6FFPCQtQU67+2QliMWjP27hZBxI53ZA2hSe06bon1wZ5U95hBJOU2MQBM
+         3khLF3xGkeSB0xOwBOAZ6iHLtPC5HFBHEDVl7JxU=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] clk fixes for v5.7-rc1
+Date:   Sun, 19 Apr 2020 11:12:10 -0700
+Message-Id: <20200419181210.204996-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,53 +54,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, when linking with ld.lld, this warning pops up:
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-    arch/mips/vdso/Makefile:70: MIPS VDSO requires binutils >= 2.25
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-ld-ifversion calls ld-version, which calls scripts/ld-version.sh, which
-is specific to GNU ld. ld.lld has a completely different versioning
-scheme (as it follows LLVM's versioning) and it does not have the issue
-mentioned in the comment above this block so it should not be subjected
-to this check.
+are available in the Git repository at:
 
-With this patch, the VDSO successfully links and shows P_MIPS_PC32 in
-vgettimeofday.o.
+  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
 
-$ llvm-objdump -Dr arch/mips/vdso/vgettimeofday.o | grep R_MIPS_PC32
-			00000024:  R_MIPS_PC32	_start
-			000000b0:  R_MIPS_PC32	_start
-			000002bc:  R_MIPS_PC32	_start
-			0000036c:  R_MIPS_PC32	_start
-			00000468:  R_MIPS_PC32	_start
+for you to fetch changes up to ca6df49d62d7cc4c1653a4d9b1ecc61ecd530e02:
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/785
-Link: https://github.com/llvm/llvm-project/commit/e364e2e9ce50c12eb2bf093560e1a1a8544d455a
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- arch/mips/vdso/Makefile | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+  clk: sprd: don't gate uart console clock (2020-04-13 12:20:07 -0700)
 
-diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-index d7fe8408603e..f99e583d14a1 100644
---- a/arch/mips/vdso/Makefile
-+++ b/arch/mips/vdso/Makefile
-@@ -65,9 +65,11 @@ DISABLE_VDSO := n
- # the comments on that file.
- #
- ifndef CONFIG_CPU_MIPSR6
--  ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
--    $(warning MIPS VDSO requires binutils >= 2.25)
--    DISABLE_VDSO := y
-+  ifndef CONFIG_LD_IS_LLD
-+    ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
-+      $(warning MIPS VDSO requires binutils >= 2.25)
-+      DISABLE_VDSO := y
-+    endif
-   endif
- endif
- 
+----------------------------------------------------------------
+Two build fixes for a couple clk drivers and a fix for the Unisoc serial
+clk where we want to keep it on for earlycon.
+
+----------------------------------------------------------------
+Arnd Bergmann (2):
+      clk: asm9260: fix __clk_hw_register_fixed_rate_with_accuracy typo
+      clk: mmp2: fix link error without mmp2
+
+Chunyan Zhang (1):
+      clk: sprd: don't gate uart console clock
+
+ drivers/clk/clk-asm9260.c      |  2 +-
+ drivers/clk/mmp/clk-pll.c      | 33 ++++++++++++++++++++++++++++++++-
+ drivers/clk/mmp/clk.c          | 31 -------------------------------
+ drivers/clk/mmp/clk.h          |  7 -------
+ drivers/clk/sprd/sc9863a-clk.c |  3 ++-
+ 5 files changed, 35 insertions(+), 41 deletions(-)
+
 -- 
-2.26.1
-
+Sent by a computer, using git, on the internet
