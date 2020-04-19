@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DAAC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E00AC5321D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8B621974
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6865F21974
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:49:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgDSQtj (ORCPT
+        id S1726819AbgDSQtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 12:49:39 -0400
-Received: from v6.sk ([167.172.42.174]:43706 "EHLO v6.sk"
+        Sun, 19 Apr 2020 12:49:53 -0400
+Received: from v6.sk ([167.172.42.174]:43732 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgDSQte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 12:49:34 -0400
+        id S1726651AbgDSQtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 12:49:53 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id AA569610AE;
-        Sun, 19 Apr 2020 16:49:33 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 987D5610A9;
+        Sun, 19 Apr 2020 16:49:21 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 7/7] dmaengine: mmp_tdma: Remove the MMP_SRAM dependency
-Date:   Sun, 19 Apr 2020 18:49:12 +0200
-Message-Id: <20200419164912.670973-8-lkundrak@v3.sk>
+Subject: [PATCH 2/7] dmaengine: mmp_tdma: Drop "mmp_tdma: from error messages
+Date:   Sun, 19 Apr 2020 18:49:07 +0200
+Message-Id: <20200419164912.670973-3-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200419164912.670973-1-lkundrak@v3.sk>
 References: <20200419164912.670973-1-lkundrak@v3.sk>
@@ -39,34 +39,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A generic SRAM will driver for Device Tree enabled platforms will do as
-well.
+Drop a redundant "mmp_tdma:" from some error messages. The dev_err()
+appends mostly the same thing for us:
 
-The non-DT drivers that use mmp_tdma to transfer audio samples to and from
-the audio SRAM should depend on MMP_SRAM themselves.
+  [  120.756530] mmp-tdma d42a0800.adma: mmp_tdma: unknown burst size.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- drivers/dma/Kconfig | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/dma/mmp_tdma.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 0924836443152..bd0b6abd32fd3 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -394,12 +394,10 @@ config MMP_TDMA
- 	bool "MMP Two-Channel DMA support"
- 	depends on ARCH_MMP || COMPILE_TEST
- 	select DMA_ENGINE
--	select MMP_SRAM if ARCH_MMP
- 	select GENERIC_ALLOCATOR
- 	help
- 	  Support the MMP Two-Channel DMA engine.
- 	  This engine used for MMP Audio DMA and pxa910 SQU.
--	  It needs sram driver under mach-mmp.
+diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
+index 51e08c16756ae..d559bb4d6a31d 100644
+--- a/drivers/dma/mmp_tdma.c
++++ b/drivers/dma/mmp_tdma.c
+@@ -235,7 +235,7 @@ static int mmp_tdma_config_chan(struct dma_chan *chan)
+ 			tdcr |= TDCR_BURSTSZ_128B;
+ 			break;
+ 		default:
+-			dev_err(tdmac->dev, "mmp_tdma: unknown burst size.\n");
++			dev_err(tdmac->dev, "unknown burst size.\n");
+ 			return -EINVAL;
+ 		}
  
- config MOXART_DMA
- 	tristate "MOXART DMA support"
+@@ -250,7 +250,7 @@ static int mmp_tdma_config_chan(struct dma_chan *chan)
+ 			tdcr |= TDCR_SSZ_32_BITS;
+ 			break;
+ 		default:
+-			dev_err(tdmac->dev, "mmp_tdma: unknown bus size.\n");
++			dev_err(tdmac->dev, "unknown bus size.\n");
+ 			return -EINVAL;
+ 		}
+ 	} else if (tdmac->type == PXA910_SQU) {
+@@ -276,7 +276,7 @@ static int mmp_tdma_config_chan(struct dma_chan *chan)
+ 			tdcr |= TDCR_BURSTSZ_SQU_32B;
+ 			break;
+ 		default:
+-			dev_err(tdmac->dev, "mmp_tdma: unknown burst size.\n");
++			dev_err(tdmac->dev, "unknown burst size.\n");
+ 			return -EINVAL;
+ 		}
+ 	}
 -- 
 2.26.0
 
