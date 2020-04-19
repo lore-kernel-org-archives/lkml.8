@@ -2,161 +2,142 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C726AC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1CDC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A51321973
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:42:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6IY1q84"
+	by mail.kernel.org (Postfix) with ESMTP id DEAA421744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgDSRmE (ORCPT
+        id S1726296AbgDSRtF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 13:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbgDSRmE (ORCPT
+        Sun, 19 Apr 2020 13:49:05 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:46213 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725927AbgDSRtE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 13:42:04 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37E1C061A0C;
-        Sun, 19 Apr 2020 10:42:02 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id v2so3051320plp.9;
-        Sun, 19 Apr 2020 10:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zSa7VEonLrn14NZr8NENNWrUPCxMBtUgC26tpk2K+iQ=;
-        b=g6IY1q84Tm1Q1gj6ZW2S5Odbf0LHq8YmXobTzKVL1GrfkvjbkjZ63IJ24f6IjlBe+m
-         cTNTGpprvyi6L5Xml58PKyLh0sy7LuT7o0kZRGV5KeT1OeXkizKo9x4lZWfyNw/HP9/s
-         i7s22Y+XpoB54sJQcj76Sut6bbNmhBZCqIn1Y0xvOqVBoDHxYexSIBOfjg4ZWuskJto/
-         FD59ypCBmm0mAGafbeTKz7lIesY8NfL2+WNM+HEVJ8rtuM4bz+rmEy7TLf7+UhSfdMmI
-         5LxXG3G2nq3kUnaujCfEaxKJqqsvlzmhFCE20zen8ZG8JzstyghpHkVFaDTTy73nqeuT
-         MtUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zSa7VEonLrn14NZr8NENNWrUPCxMBtUgC26tpk2K+iQ=;
-        b=VED6T9HIFn5aSVR6VGPoej/uFlHI3ff/T7FMBxU5axdg/lUwSckNjXbZ1zIMHyNysr
-         iAwsdcY8pxVQ4N8EydQukkAZJGj4NB3RXQ1vEjrCl1dCShoot6wOqfFGVAGanz2wosOk
-         euaw3IvGKw3rsRSG+Uz9a2S/ByoBR/rVsYxogKdCTfmurW1zffg5msbEEJRcaKg4WMTT
-         aDHALhr6XDp7fqI8zniK8OzGYGbs3lEOmvQS7PntKa/NmIU4708Etmfu75esAxS6moWJ
-         semUriKWPpR95XtPjFE8WnexFMQ/rxL01hakeY3BbO/aE9fQYsvaTejHHgvJulMnLfxD
-         MwzQ==
-X-Gm-Message-State: AGi0PuboMiZE7zvpz5f+ZNrmBX3ED14LOKCWgP7Io5OGiZqwumvsy1sX
-        n+yFwHewEVhbALpkUixSf+UMMkJl
-X-Google-Smtp-Source: APiQypLKPq8ujqCW1wdiwWQNOO06LqWENQmujeHdGZjCAWl0x4xcdeFlV0xAFeCfEUpf9kD7dgFQzA==
-X-Received: by 2002:a17:90a:f00b:: with SMTP id bt11mr17046320pjb.71.1587318121862;
-        Sun, 19 Apr 2020 10:42:01 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h15sm13229350pfe.92.2020.04.19.10.42.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Apr 2020 10:42:01 -0700 (PDT)
-Subject: Re: [PATCH] USB: typec: Use the correct style for SPDX License
- Identifier
-To:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200419133051.GA7154@nishad>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <c8174e44-b803-98c6-918a-2d778c4c18eb@roeck-us.net>
-Date:   Sun, 19 Apr 2020 10:41:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200419133051.GA7154@nishad>
-Content-Type: text/plain; charset=utf-8
+        Sun, 19 Apr 2020 13:49:04 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-213-laDLq3FfMbmzhrklnYYUyw-1; Sun, 19 Apr 2020 18:49:00 +0100
+X-MC-Unique: laDLq3FfMbmzhrklnYYUyw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sun, 19 Apr 2020 18:48:59 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sun, 19 Apr 2020 18:48:59 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Mikulas Patocka' <mpatocka@redhat.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        device-mapper development <dm-devel@redhat.com>
+Subject: RE: [PATCH] x86: introduce memcpy_flushcache_clflushopt
+Thread-Topic: [PATCH] x86: introduce memcpy_flushcache_clflushopt
+Thread-Index: AQHWFLZf1uwJ38llN06XsGw6srhIuah+3wRggAAQ2oCAAcfv8A==
+Date:   Sun, 19 Apr 2020 17:48:59 +0000
+Message-ID: <8452b36a07b1440a8da6d4a1623858c1@AcuMS.aculab.com>
+References: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com>
+ <CAPcyv4goJ2jbXNVZbMUKtRUominhuMhuTKrMh=fnhrfvC4jyjw@mail.gmail.com>
+ <alpine.LRH.2.02.2004081439080.13932@file01.intranet.prod.int.rdu2.redhat.com>
+ <CAPcyv4grNHvyYEc4W6PkymhEJvLb17tXbC3JZdqvtFxmMZ8DCQ@mail.gmail.com>
+ <alpine.LRH.2.02.2004090612320.27517@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2004160411460.7833@file01.intranet.prod.int.rdu2.redhat.com>
+ <CAPcyv4gpe8u=zNrRhvd9ioVNGbOJfRUXzFZuV--be6Hbj0xXtQ@mail.gmail.com>
+ <alpine.LRH.2.02.2004170831530.16047@file01.intranet.prod.int.rdu2.redhat.com>
+ <69c2e011c5814255926f309dd50e6d67@AcuMS.aculab.com>
+ <alpine.LRH.2.02.2004181110160.30139@file01.intranet.prod.int.rdu2.redhat.com>
+In-Reply-To: <alpine.LRH.2.02.2004181110160.30139@file01.intranet.prod.int.rdu2.redhat.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/20 6:30 AM, Nishad Kamdar wrote:
-> This patch corrects the SPDX License Identifier style in
-> header file related to USB Type-C support.
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used).
+From: Mikulas Patocka
+> Sent: 18 April 2020 16:21
 > 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
+> On Sat, 18 Apr 2020, David Laight wrote:
 > 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> > From: Mikulas Patocka
+> > > Sent: 17 April 2020 13:47
+> > ...
+> > > Index: linux-2.6/drivers/md/dm-writecache.c
+> > > ===================================================================
+> > > --- linux-2.6.orig/drivers/md/dm-writecache.c	2020-04-17 14:06:35.139999000 +0200
+> > > +++ linux-2.6/drivers/md/dm-writecache.c	2020-04-17 14:06:35.129999000 +0200
+> > > @@ -1166,7 +1166,10 @@ static void bio_copy_block(struct dm_wri
+> > >  			}
+> > >  		} else {
+> > >  			flush_dcache_page(bio_page(bio));
+> > > -			memcpy_flushcache(data, buf, size);
+> > > +			if (likely(size > 512))
+> > > +				memcpy_flushcache_clflushopt(data, buf, size);
+> > > +			else
+> > > +				memcpy_flushcache(data, buf, size);
+> >
+> > Hmmm... have you looked at how long clflush actually takes?
+> > It isn't too bad if you just do a small number, but using it
+> > to flush large buffers can be very slow.
+> 
+> Yes, I have. It's here:
+> http://people.redhat.com/~mpatocka/testcases/pmem/microbenchmarks/pmem.txt
+> 
+> sequential write 8 + clflush	- 0.3 GB/s on nvdimm
+> sequential write 8 + clflushopt - 1.6 GB/s on nvdimm
+> sequential write-nt 8 bytes	- 1.3 GB/s on nvdimm
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+That table doesn't give enough information to be useful.
+The cpu speed, memory speed and transfer lengths are all relevant.
 
-> ---
->  drivers/usb/typec/tcpm/fusb302_reg.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > I've an Ivy bridge system where the X-server process requests the
+> > frame buffer be flushed out every 10 seconds (no idea why).
+> > With my 2560x1440 monitor this takes over 3ms.
+> >
+> > This really needs a cond_resched() every few clflush instructions.
+> >
+> > 	David
 > 
-> diff --git a/drivers/usb/typec/tcpm/fusb302_reg.h b/drivers/usb/typec/tcpm/fusb302_reg.h
-> index 00b39d365478..edc0e4b0f1e6 100644
-> --- a/drivers/usb/typec/tcpm/fusb302_reg.h
-> +++ b/drivers/usb/typec/tcpm/fusb302_reg.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +/* SPDX-License-Identifier: GPL-2.0+ */
->  /*
->   * Copyright 2016-2017 Google, Inc
->   *
-> 
+> AFAIK Ivy Bridge doesn't have clflushopt, it only has clflush. clflush
+> only allows one outstanding cacle line flush, so it's very slow.
+> clflushopt and clwb relaxed this restriction and there can be multiple
+> cache-invalidation requests in flight until the user serializes it with
+> the sfence instruction.
+
+It isn't that simple.
+While clflush on Ivybridge is slower than clflushopt on newer processors
+both instructions are (relatively) fast for something like 16 or 32
+iterations. After that they get much slower.
+I can't remember where I found the relevant figures, even the ones I
+found didn't show how large the transfers needed to be before the bytes/sec
+became constant.
+
+> The patch checks for clflushopt with
+> "static_cpu_has(X86_FEATURE_CLFLUSHOPT)" and if it is not present, it
+> falls back to non-temporal stores.
+
+Ok, I was expecting you'd be falling back to clflush first.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
