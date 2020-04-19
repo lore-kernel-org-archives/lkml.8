@@ -2,150 +2,90 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66536C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FC0C38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3B021D82
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE2BB2145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NR+b7snK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pvwx1GcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgDSIPt (ORCPT
+        id S1726059AbgDSIPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 04:15:49 -0400
-Received: from mout.web.de ([212.227.17.12]:34233 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgDSIPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 04:15:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587284137;
-        bh=nbpEpWlUW5cjEh1Bv3rGfJegbOGcwEJbutmkmwuZLD4=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=NR+b7snKh2E/IXWwhTPo7o0EaNqH/eJLmLx8sRCDOpGpFun8RvA96KrPki+uP/eGv
-         jjZ6F5jkXrdtfZGdWVY3XYcOSc8KMPtB2vlEHl3iW10gRMM4B3GYgLXFgZUEt4gTtR
-         HkpaMwhGjerUWSfwXRl7gY++IRwcmH9G2jTrn5WM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.85.208]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LfAoO-1itGOO45FY-00oo64; Sun, 19
- Apr 2020 10:15:37 +0200
-To:     Bernard Zhao <bernard@vivo.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        =?UTF-8?Q?Felix_K=c3=bchling?= <Felix.Kuehling@amd.com>,
-        =?UTF-8?Q?Nicolai_H=c3=a4hnle?= <nicolai.haehnle@amd.com>,
-        Nirmoy Das <nirmoy.das@amd.com>,
-        Philip Yang <Philip.Yang@amd.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-Subject: Re: [PATCH] drm/amdgpu: Remove an unnecessary null pointer check in
- amdgpu_cs_bo_handles_chunk()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <1d0f1eb5-a26f-1739-9222-a39c92ba3024@web.de>
-Date:   Sun, 19 Apr 2020 10:15:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 19 Apr 2020 04:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725446AbgDSIPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 04:15:54 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4604DC061A0C;
+        Sun, 19 Apr 2020 01:15:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5ESkbM+8vdIgFeaQKLQyxVIJU96HxbIdvJ6LQfSPcow=; b=pvwx1GcXIeC3t5uPawsWBkdVHQ
+        iiXxl+0atw1Ow7dCeTaEPlV5pGZmU5NeEHgiD6GauX1slXAECXQsFNE9NMWu2519ywz/b+wff/WOX
+        TMC/+MPMdjO3TT0Rftrna/Ci0Cahq1lB09MN0hgPjg6UlZQSvFQvI8Hl6eF9ZnaIwxOSfJg5ri8Io
+        KIuagSQHqNGIuLyx0OKk7Kr7BqpWFvOxOSCJWQS71I0fmCgMrFQjcaFVpza7oTJ7VbiVVU4LRpdAF
+        8xATbPDeZWMvxCY4UHfmtjy1TJqqQqEx8Dbn+J6I61UlAQZJU8HDszvtYFjQWk5yWngyPZTufulmD
+        TFNoMHog==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQ57G-0008EZ-Na; Sun, 19 Apr 2020 08:15:50 +0000
+Date:   Sun, 19 Apr 2020 01:15:50 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Zzy Wysm <zzy@zzywysm.com>
+Subject: Re: [PATCH 8/9] dax: fix empty-body warnings in bus.c
+Message-ID: <20200419081550.GA22341@infradead.org>
+References: <20200418184111.13401-1-rdunlap@infradead.org>
+ <20200418184111.13401-9-rdunlap@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wOtp743KJHdMhl10cI6KVRBvss4Fdnb4/BtUFoR9+59x1tK3riY
- mY6nRjszPurBY7UT9LC0WtAwprPBVPF43VElnd8IyX9/aHVMvsuW5B8VAct0H5cO1SH0ajN
- gPSE9DjWrmG19bN+HGYDFczDz44gBXB37NTTj2YHQXNcI7UeY8yANM4zSlvmFsdfSSXGevO
- XduzCkzdsNQO4jjmwBWCg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:H0vJH86n/Ek=:ZfbLufiwwWQhDor183GtVr
- G+BfaT3z6iB4ASMR78Ywbr4XRpOUuSxx0NN3GvndckjzrmSVNVNxWZuSF+pZiHec5q385tw6E
- 23hhohC7h404kLRsGIGRrtlmapd1R03Mt4EPRt3emzTGWHBEt6E+AAX46grjCbD7+RRSWYtix
- GbVA5Wy5e1ZPO0Badk9+/nKssBrEbqEoGeIcCiUph3+YPsWYjWc6X6w6U4nYVOtNTUW4gKAan
- cl+xR6Fm0iusIgQtq/UW4fmlprSFU1wpk/w2lZd+DbFLdgLwboAG+0PUXSypK/fY2pimSfwDB
- VCuu8SvblgjmNPMZGC4rYQ1wKXae3gyAF9+a4W4oEl6SLGXalFZWUtbJvmGsDoPTyZEiTbBU8
- VWU3EcSei/qWgHeP0TCBbBHIZPTie7ukEQNPDY3hjJ5UnxfCJ5QnrianYuAKC+Z0+wzb/FlzE
- iL08cvODSeggwA7ToO8ZP2hJ1+78AvgipNKEscV5Fl1RmsgBu0DZzycWgOkx8nXFs7GkQ+zTD
- w77DTqi5qiGLTjLuKeehZ8/bfpGkARbAFzGGoMMmo+pGIjVHdv5b+5cj7eNMjOeLoC4z/+w4y
- EUmZjEU+Ghj/OoXdX62P6PtZZtJ0XNDtdCTWQSKcxVuJ1CNRm7CnJkFY4FkNeLHA3i2bAO9ta
- idDsFnjZnlb1atl3k1nzn+Pt51n5opyw+8sboWd2DBMZtzdy0Kcclw/4Bj+6DA7FXAF0ksEF7
- cTGxDQrfFjW1KFkqi3PYmyYEoUnHlVi33z8JsIxXq0B+Ua8+lU0KI9t5qdPbdgqXPUG0ThyCK
- KCPkdX6nybZf8zC2TiU50ckoIvmHT0Qu4DRVSN2BNi90BPVRXtBphD+e+MnHDjCied2HraJfq
- fE/lKZaUSSPGiqUxKt1uDzRSUbH1FgX+rPh5EkuZpzEERzr13UEV7qT4BFziRG/u7obHc8CJ/
- Be/Y5H2OBuGu2hFZ4b2eoY8ZfhzZ77SM+EbOYVEvd/yF8QTAMTLr4Ylvomnk+9mZfMHPKfuPF
- BNbW0IKOxuNi4mTGGXCkPfj/YEoIOl6u3bG7vN+X3frxbuJLX4OrZ8juDvbC1XgR3Mscu300G
- zVF5f+G65OkCi+aWxBI8kGJpNnaLB6tgeWYOICWLi34H9DWtq8gLhWVXMO4lON6lgf3BLWeJL
- VpL+Wtnt9J59+eBNIpOU6shaegL7TnrMKO+aFJMinavCmgPind4QPPEmCyd6KYsj8rVmTLfr7
- nqfmOmqkhGHXhJGMZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200418184111.13401-9-rdunlap@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> kvfree ensure that the null pointer will do nothing.
+On Sat, Apr 18, 2020 at 11:41:10AM -0700, Randy Dunlap wrote:
+>  				rc = -ENOMEM;
+>  		} else
+> -			/* nothing to remove */;
+> +			do_empty(); /* nothing to remove */
+>  	} else if (action == ID_REMOVE) {
+>  		list_del(&dax_id->list);
+>  		kfree(dax_id);
+>  	} else
+> -		/* dax_id already added */;
+> +		do_empty(); /* dax_id already added */
 
-I suggest to improve the commit message.
-Would you like to adjust the patch subject?
-
-Are you looking for further questionable condition checks?
-
-
-=E2=80=A6
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-> @@ -98,8 +98,7 @@ static int amdgpu_cs_bo_handles_chunk(struct amdgpu_cs=
-_parser *p,
-=E2=80=A6
-> +	kvfree(info);
->
->  	return r;
->  }
-
-How do you think about to omit a blank line behind the function call
-at this source code place?
-
-Regards,
-Markus
+This is just nasty.  Please just always turn this bogus warning off
+as the existing code is a perfectly readable idiom while the new code
+is just nasty crap for no good reason at all.
