@@ -2,56 +2,56 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C792FC54FC9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26CAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19D321927
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827E121744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587325544;
-	bh=mEncwTlPQ/QwNpZrdXPAXFRaRHDlumsKGBnaQpNcAaM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pUuNIyYo/OmMikecWWkw6XSXeNZdwpI0XTcq2TwfBCcY3ImN4EV6wPGtjNWfD7dHb
-	 bCl8VFEB8L07NTTmEO8K9MW6pnU/ze++wyYalnkTKlYu6cZ24LolkgR2XqSi5sdgOV
-	 /ebKIOSWPQyk8jGdpHDIlduZabgJboii5WOcMZ3Y=
+	s=default; t=1587325545;
+	bh=4ONcGkkyKJlTlK+skbEzye/8BidjVXjSzA7CQngLmDA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cyOUinU8U9NhEpZuelihsBofWMG+i6Yz4j3NvweQTd7fdJhduvXZibXyEyjgnvXdJ
+	 WTfay0mkTfb/fGdrT8sLDnveJ6suMFHteQR3e9YEkfkBwN6iVRgEBvH0j3jLRAYAAX
+	 UlSV7f9TIf8pdXx/cSd3UmxB1qleIVsCjwdu9aIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgDSTpn (ORCPT
+        id S1726696AbgDSTpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 15:45:43 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:33992 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbgDSTpn (ORCPT
+        Sun, 19 Apr 2020 15:45:44 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33992 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbgDSTpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 19 Apr 2020 15:45:43 -0400
-Received: by mail-pj1-f67.google.com with SMTP id q16so3964021pje.1;
-        Sun, 19 Apr 2020 12:45:42 -0700 (PDT)
+Received: by mail-pj1-f68.google.com with SMTP id q16so3964008pje.1;
+        Sun, 19 Apr 2020 12:45:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=M3p9eZkDL4rEHA+mf+DziMPxePr/ZoUmDl5szec5+p8=;
-        b=kR7P3BpAumPQtEMpAMmv0uihs24LdWxJtNtJ2omS7Ox0qs9r5J2qp9RrtvD88kWJY1
-         ij8zHez55DsUUyQZWftPGU1YUdc8en78zP8XOvjclDo1rvYNdRXFKnc3RyI71JVcWsiJ
-         bCieHoiHNVERbif90e3YALOBbdp+lt2cRnllLMiELsK2jfJEQk+2+WFWS5FIGgad9vN7
-         Yq3Yj5/Cz80aSvUyHNUvKv8styN7QUgVcUuRotby0/HidFwnpisc8UtwedwlcYPJPr9d
-         aUp3+zepgDIPzVZ+iHZRafmCRC+9gDXhAWr1fuwzWFR+EtKXxZeSmzAOHOa2IfggiSI+
-         Ir3A==
-X-Gm-Message-State: AGi0PuaJXAlcfUFCX6nxyLaZHUjg6T9zn9mmnYE2mo9fNogCLeaokZ1Y
-        EVtbjyw4CmdDM1+UtiB5UDE=
-X-Google-Smtp-Source: APiQypKEQ+ZAqACW0RZLGTrbfImbk5QqwTv9Koug1Ir4h4Bs5C6QKAeh0qwqzCBFedbk3w1nTzpjvQ==
-X-Received: by 2002:a17:90a:5b:: with SMTP id 27mr16351976pjb.190.1587325542367;
-        Sun, 19 Apr 2020 12:45:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4nBDa0rXFg9iHiCCMSKdC08ZVJ5XJ1HD+NLLqlL75QE=;
+        b=VZ9lJynRjwhVOzBhr/090oEVTfHvBAjUakYCvEmwHJNI/Eic4xKL00g28UQ/7kkRGT
+         vSKpJ2BlInjVsGPkIGUoymgEaddOpUnrLPzaCRbBA0EZRuMcdk1zyY/7V7jiLDu+1AXT
+         PDvPeqAHkJyb6eIz7AR3sIl5nKn2V85iAinrAN05a0sZJLwJY5Iqyhkg6hTwNdJforI2
+         fEqVBufo1r9eRyW89gwT4kqhcufSAT46AUdxe6hl5v283WFCwmBDcqzyqP/QkYxn+ktY
+         v5jkI8M6k1qTkmxWaFdqsaAYa0FEXpgxDr5B4cEVBetLgdRUrbEj/WwxyJRCj0NlEYEO
+         KzbQ==
+X-Gm-Message-State: AGi0PuZ5Mu0ALFPcNosNOwHirjQmN/IZ3VkFSHqESlnzBzWGDBB1hyNu
+        YRq9zjL9z+75NjQm+eCSE/o=
+X-Google-Smtp-Source: APiQypJayFgKefqgg6H/JR67sswmZGgea+8/ivT+/Vf5pPT068xt+HAMYcOsqSUtrFH/BBGo5pJ52w==
+X-Received: by 2002:a17:90a:9202:: with SMTP id m2mr8028414pjo.109.1587325540421;
+        Sun, 19 Apr 2020 12:45:40 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id v4sm25201600pfb.31.2020.04.19.12.45.39
+        by smtp.gmail.com with ESMTPSA id i8sm22879992pgr.82.2020.04.19.12.45.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 19 Apr 2020 12:45:39 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 99AAB40E7B; Sun, 19 Apr 2020 19:45:38 +0000 (UTC)
+        id 7E737403EA; Sun, 19 Apr 2020 19:45:38 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
         gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
@@ -60,12 +60,10 @@ To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
 Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 02/10] blktrace: move blktrace debugfs creation to helper function
-Date:   Sun, 19 Apr 2020 19:45:21 +0000
-Message-Id: <20200419194529.4872-3-mcgrof@kernel.org>
+Subject: [PATCH v2 00/10] block: fix blktrace debugfs use after free
+Date:   Sun, 19 Apr 2020 19:45:19 +0000
+Message-Id: <20200419194529.4872-1-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200419194529.4872-1-mcgrof@kernel.org>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,49 +71,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the work to create the debugfs directory used into a helper.
-It will make further checks easier to read. This commit introduces
-no functional changes.
+Upstream kernel.org korg#205713 [0] states that there is a UAF in the
+core debugfs debugfs_remove() function, and has gone through pushing for
+a CVE for this, CVE-2019-19770 [1].
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- kernel/trace/blktrace.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+This patch series disputes that CVE, and shows how the issue was just
+a complex misuse of debugfs within blktrace and fixes it.
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index ca39dc3230cb..2c6e6c386ace 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -468,6 +468,18 @@ static void blk_trace_setup_lba(struct blk_trace *bt,
- 	}
- }
- 
-+static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
-+					    struct blk_trace *bt)
-+{
-+	struct dentry *dir = NULL;
-+
-+	dir = debugfs_lookup(buts->name, blk_debugfs_root);
-+	if (!dir)
-+		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-+
-+	return dir;
-+}
-+
- /*
-  * Setup everything required to start tracing
-  */
-@@ -509,9 +521,7 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 
- 	ret = -ENOENT;
- 
--	dir = debugfs_lookup(buts->name, blk_debugfs_root);
--	if (!dir)
--		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-+	dir = blk_trace_debugfs_dir(buts, bt);
- 
- 	bt->dev = dev;
- 	atomic_set(&bt->dropped, 0);
+On this v2 I've dropped two patches from my last series which are not
+needed to ensure we can move back to a synchronous request_queue
+removal. I've also addressed Ming's feedback on ensuring we keep
+functionality working for when paritions are used for a blktrace.  That
+effort lead me to ensuring we don't try to overwrite the request_queue
+debugfs_dir, and add sanity checks in place so that what we give back
+only what is expected.
+
+Although my v1 patches also had fixed the kernel splat we get when we
+try to reproduce the issue:
+
+debugfs: Directory 'loop0' with parent 'block' already present!
+
+This v2 series now provides a clear explanation for *why* this was
+ultimately one of the reasons why we ended up with a crash.
+
+The commit log for the actual fix, patch 3/10, "blktrace: fix debugfs
+use after free" has also been extended to provide a better explanation
+as to *how* overwriting the debugfs_dir leads to an eventual panic with
+blktrace. I hope that helps, as it seems the root cause was still not
+well explained in the commit log.
+
+To make review easier, I've also added some helper functions with no
+functional changes at first, and only extended them later.
+
+Also changed is blk_queue_debugfs_register() to return an int, we do
+this to not make the fact that we don't check for errors on
+register_disk() or add_disk() any worse.
+
+After the patch 3/10 "blktrace: fix debugfs use after free", is applied,
+with the pr_warns(), and prior to reverting back to synchronous request_queue
+removal, if we try to reproduce the issue with break-blktrace [2]'s
+./run_0001.sh script, we'd see::
+
+blk_debugfs: loop0 : registering request_queue debugfs directory twice is not allowed
+blktrace: loop0: request_queue parent is gone
+
+And sometimes only:
+
+blk_debugfs: loop0 : registering request_queue debugfs directory twice is not allowed
+
+After we revert back to synchronous request_queue removal this should no
+longer be possible, and if it is, we want to hear about it. To help with
+this two patches are added which change pr_warn() to BUG_ON()s after we flip
+back to synchronous request_queue removal.
+
+Note that on patch 6/10 "blk-debugfs: upgrade warns to BUG_ON() if
+directory" I explain the syfs layout between a gendisk and the
+request_queue. By reverting back to synchronous request_queue removal,
+if someone manages to figure out a way to create a clash with
+registering block devices, we expect to see a sysfs clash now instead of
+a clash with debugfs, as the debugfs directory is removed now always
+first, prior to clearing out the sysfs dir. *If* there are races
+possible in these areas, we want to hear about them, and the BUG_ON()s
+should make it clearer *where* the real issue is coming from.
+
+Having an asynchronous request_queue removal has exposed other bugs
+lingering around, however most importantly I think its revealing more
+the value of adding error handling for __device_add_disk() and friends.
+If its encouraged I could take a stab at finally addressing that for
+good.
+
+You can find this code on my git tree, on the 20200417-blktrace-fixes
+branch, which is based on linux-next tag next-20200417 [3].
+
+[0] https://bugzilla.kernel.org/show_bug.cgi?id=205713                          
+[1] https://nvd.nist.gov/vuln/detail/CVE-2019-19770 
+[2] https://github.com/mcgrof/break-blktrace
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20200417-blktrace-fixes
+
+Luis Chamberlain (10):
+  block: move main block debugfs initialization to its own file
+  blktrace: move blktrace debugfs creation to helper function
+  blktrace: fix debugfs use after free
+  block: revert back to synchronous request_queue removal
+  blktrace: upgrade warns to BUG_ON() on unexpected circmunstances
+  blk-debugfs: upgrade warns to BUG_ON() if directory is already found
+  blktrace: move debugfs file creation to its own function
+  blktrace: add checks for created debugfs files on setup
+  block: panic if block debugfs dir is not created
+  block: put_device() if device_add() fails
+
+ block/Makefile               |   1 +
+ block/blk-core.c             |  28 +++++---
+ block/blk-debugfs.c          |  39 ++++++++++++
+ block/blk-mq-debugfs.c       |   5 --
+ block/blk-sysfs.c            |  47 ++++++++------
+ block/blk.h                  |  18 ++++++
+ block/genhd.c                |   4 +-
+ include/linux/blkdev.h       |   7 +-
+ include/linux/blktrace_api.h |   1 +
+ kernel/trace/blktrace.c      | 120 +++++++++++++++++++++++++++++++----
+ 10 files changed, 218 insertions(+), 52 deletions(-)
+ create mode 100644 block/blk-debugfs.c
+
 -- 
 2.25.1
 
