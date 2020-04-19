@@ -2,138 +2,101 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1544C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BC1C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1498214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCB7206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Afs/bhME"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="kipdzsx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbgDSSXB (ORCPT
+        id S1726713AbgDSSaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 14:23:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33098 "EHLO
+        Sun, 19 Apr 2020 14:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgDSSXB (ORCPT
+        with ESMTP id S1725969AbgDSSaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 14:23:01 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF504C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 11:23:00 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id f59so2352376uaf.9
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 11:23:00 -0700 (PDT)
+        Sun, 19 Apr 2020 14:30:01 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5128EC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 11:30:00 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k1so9348618wrx.4
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 11:30:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc
-         :content-transfer-encoding;
-        bh=OkSXlLd1OI6YTd2bVj1Y/vakCv0k00Q6ubPQGf9tb58=;
-        b=Afs/bhMEDq2p1dCZuoTJywON2+IgPM8lLUhQ9O0GtNPjL0aIWgaI5nzl7Ukcrlbwrt
-         F0uRHV3C8VvOViv3vFJV/yd9EuepaKKEA+Nl4fPLLJxobSZFPSjvWg5uceQDZlus1/dV
-         KxQi8p7LBLMA4exdiEosaT1uuuPCwnJ7gB0bIsARwJDFptIPXTPEyLoUCHW21hja2pA/
-         lz7o/HRAQRJtMH1QW9ZYe/UJkC0uYonnOL/rrDqHSHphKHp5k4DuaztWRJ465OiLtrhB
-         LIvJYJXB4Clbe/dIg9Lh+Lsc8EwEHo09YRpuG+j3Lw+duGVleSvE3sPS9pJe+sqamBM6
-         qlDg==
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CmcqOEObTFQdLOt2UGQJN9HJojqis9n0w6pP7bmFv/M=;
+        b=kipdzsx0Tpo/fTLe0XupzLUeI/oipi7lAyUTe7Y9vl8IL3yRx3Kj4woQduhVdMCQ8P
+         /tg8obAXM2Ht88W3vGlUrStq0nlnlr9RjSZmJlg5F0sXwdApOR3KjWvb71oGDb4VkOOK
+         Viqg5ARaRMi/83TWN/42CotoZfmdWP7vP5HXk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:cc:content-transfer-encoding;
-        bh=OkSXlLd1OI6YTd2bVj1Y/vakCv0k00Q6ubPQGf9tb58=;
-        b=EV+35QNUFJUtA+HcADJa2bJrfjJOp6Ha1wttmJbvAgD3d1NNLxyuU6AbhSBlz4IvWD
-         YdxfMz1YnhJ6clxu+XQHmWvLjhFDUZF9Qhfn6Vxw0Sdg0UnetzOop/LuhQ2KE3PaGvW1
-         H6qvZKgnyOSMNXvwXr5cgh1CQH9iuk8YXwqs7SINHYJNQ8mUhBzZwpfKaz8Qm2zORgUs
-         G22SoASwb1nB7KRdNoG3i60eSDX7+WAVsJeNyi06jtNa8CMWdfBT7taN81hv+avWGGBt
-         48jeubJewQG40l9ruRgpf7hW45GVi1sBz3CbMLzmJplmAj8HMkZhXFezb+IGD3VvM/Q7
-         WaLA==
-X-Gm-Message-State: AGi0PuZRyFnpgF1L11CGnGAONptOPJbW2OWi6XJbkgXvfECVc7igYJIr
-        KWuOR/fHuPB/6lBlGjn++oMt3W3YqsmzB/Ba3jY=
-X-Received: by 2002:ab0:375a:: with SMTP id i26mt6009964uat.120.1587320579776;
- Sun, 19 Apr 2020 11:22:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=CmcqOEObTFQdLOt2UGQJN9HJojqis9n0w6pP7bmFv/M=;
+        b=HiyK6JBVEO3uJEGPfTDZYByu++vMGiamTHgpX3x69rFbfAm3j0juEkBVl9+8bWEVQs
+         hZvWF1GbXwsjRFhbmBKcrmf+yDdSneK2rPNmdMCONSFrf9OM4RaUbE0MJmI3NtcE90WQ
+         ajObuv8cLCrEf6Xz5U+1VaxGttNBiVFIzKGZ8EzWH5cCzjb6pTaLhhG7EMCYKEfWju2B
+         dGDsIBTNmagB+vcTCsogTJf2dHB3ZIZmlZPqbKzgHPvCt75wSJgpfRy0EitQw65z+oda
+         GhcT8YYW3rbPvDm8EHlgDoi28PcPwpIGsn6iStp/DanUbV5kT3EWz1UN0iYGkA39tu9O
+         4aRQ==
+X-Gm-Message-State: AGi0Pua+qxjaIcn/KjdiJl29U+1Koh7fg8mUOBApiTCMZzA8MAXlL6h9
+        LjUdMV5nVSoIvaGWwwe6nh3srQ==
+X-Google-Smtp-Source: APiQypJUCpgC5BOa1Y09jmDB/FPNpQ5TJRCtCM/8UQHxZh5vD8G9VuH0qgXWHVr2dOKh1H5Up2X25w==
+X-Received: by 2002:adf:e58d:: with SMTP id l13mr15268746wrm.187.1587320999047;
+        Sun, 19 Apr 2020 11:29:59 -0700 (PDT)
+Received: from carbon ([94.26.108.4])
+        by smtp.gmail.com with ESMTPSA id 5sm16653274wmg.34.2020.04.19.11.29.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 11:29:58 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 21:29:57 +0300
+From:   Petko Manolov <petko.manolov@konsulko.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] WRITE_ONCE_INC() and friends
+Message-ID: <20200419182957.GA36919@carbon>
+Mail-Followup-To: David Laight <David.Laight@ACULAB.COM>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200419094439.GA32841@carbon>
+ <491f0b0bc9e4419d93a78974fd7f44c7@AcuMS.aculab.com>
 MIME-Version: 1.0
-References: <20200419041651.GD166864@dtor-ws> <20200419074624.9955-1-priv.luk@gmail.com>
- <20200419180136.GK166864@dtor-ws> <CAJmEJMzzFO1G=iQy=EfwQ89iWMjpcpupBjBkG29aigqYsc36bA@mail.gmail.com>
-In-Reply-To: <CAJmEJMzzFO1G=iQy=EfwQ89iWMjpcpupBjBkG29aigqYsc36bA@mail.gmail.com>
-From:   LuK1337 <priv.luk@gmail.com>
-Date:   Sun, 19 Apr 2020 20:22:48 +0200
-Message-ID: <CAJmEJMxDsPmOpYHYYzUXYxknFe6Uwo6OuF+=Q3bzUmqxK3Psag@mail.gmail.com>
-Subject: Re: [PATCH] Input: xpad - Update xboxone fw2015 init packet
-Cc:     LuK1337 <priv.luk@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <491f0b0bc9e4419d93a78974fd7f44c7@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I had this issue with official Microsoft Xbox One S Controler (model: 1708)=
-;
-It might also be firmware version related as I recently updated my firmware
-to the latest one but I'm not sure about that.
+On 20-04-19 18:02:50, David Laight wrote:
+> From: Petko Manolov
+> > Sent: 19 April 2020 10:45
+> > Recently I started reading up on KCSAN and at some point I ran into stuff like:
+> > 
+> > WRITE_ONCE(ssp->srcu_lock_nesting[idx], ssp->srcu_lock_nesting[idx] + 1);
+> > WRITE_ONCE(p->mm->numa_scan_seq, READ_ONCE(p->mm->numa_scan_seq) + 1);
+> 
+> If all the accesses use READ/WRITE_ONCE() why not just mark the structure 
+> field 'volatile'?
 
-(also sorry for duplicate msgs that you might have received from me;
-I'm new to lkml)
-On Sun, Apr 19, 2020 at 8:14 PM LuK1337 <priv.luk@gmail.com> wrote:
->
-> I had this issue with official Microsoft Xbox One S Controler (model: 170=
-8);
-> It might also be firmware version related as I recently updated my firmwa=
-re
-> to the latest one but I'm not sure about that.
->
-> On Sun, Apr 19, 2020 at 8:01 PM Dmitry Torokhov <dmitry.torokhov@gmail.co=
-m> wrote:
->>
->> On Sun, Apr 19, 2020 at 09:46:23AM +0200, LuK1337 wrote:
->> > From: =C5=81ukasz Patron <priv.luk@gmail.com>
->> >
->> > Appending { 0x05, 0x20, 0x02, 0x0f, 0x06 } to
->> > xboxone_fw2015_init fixes an issue where the
->> > controller is somewhat stuck in bluetooth
->> > mode until you plug it into Windows PC.
->> >
->> > Signed-off-by: =C5=81ukasz Patron <priv.luk@gmail.com>
->>
->> Thank you =C5=81ukasz. Could you please tell me what device(s) have you
->> observed the issue with? I am a bit worried if this may interfere with
->> other devices that currently work fine with the driver. Cameron, Mark,
->> do you have any concerns here?
->>
->> > ---
->> >  drivers/input/joystick/xpad.c | 3 ++-
->> >  1 file changed, 2 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xp=
-ad.c
->> > index 6b40a1c68f9f..894fa81f717a 100644
->> > --- a/drivers/input/joystick/xpad.c
->> > +++ b/drivers/input/joystick/xpad.c
->> > @@ -455,7 +455,8 @@ struct xboxone_init_packet {
->> >   * or later firmware installed (or present from the factory).
->> >   */
->> >  static const u8 xboxone_fw2015_init[] =3D {
->> > -     0x05, 0x20, 0x00, 0x01, 0x00
->> > +     0x05, 0x20, 0x00, 0x01, 0x00,
->> > +     0x05, 0x20, 0x02, 0x0f, 0x06
->> >  };
->> >
->> >  /*
->> > --
->> > 2.26.0
->> >
->>
->> Thanks.
->>
->> --
->> Dmitry
+This is a bit heavy.  I guess you've read this one: 
+
+	https://lwn.net/Articles/233479/
+
+And no, i am not sure all accesses are through READ/WRITE_ONCE().  If, for 
+example, all others are from withing spin_lock/unlock pairs then we _may_ not 
+need READ/WRITE_ONCE().
+
+I merely proposed the _INC() variant for better readability.
+
+
+		Petko
