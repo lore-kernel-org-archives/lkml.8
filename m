@@ -2,90 +2,64 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FC0C38A29
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD41C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE2BB2145D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:15:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pvwx1GcX"
+	by mail.kernel.org (Postfix) with ESMTP id 70CD92145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgDSIPz (ORCPT
+        id S1725963AbgDSIT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 04:15:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725446AbgDSIPy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 04:15:54 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4604DC061A0C;
-        Sun, 19 Apr 2020 01:15:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5ESkbM+8vdIgFeaQKLQyxVIJU96HxbIdvJ6LQfSPcow=; b=pvwx1GcXIeC3t5uPawsWBkdVHQ
-        iiXxl+0atw1Ow7dCeTaEPlV5pGZmU5NeEHgiD6GauX1slXAECXQsFNE9NMWu2519ywz/b+wff/WOX
-        TMC/+MPMdjO3TT0Rftrna/Ci0Cahq1lB09MN0hgPjg6UlZQSvFQvI8Hl6eF9ZnaIwxOSfJg5ri8Io
-        KIuagSQHqNGIuLyx0OKk7Kr7BqpWFvOxOSCJWQS71I0fmCgMrFQjcaFVpza7oTJ7VbiVVU4LRpdAF
-        8xATbPDeZWMvxCY4UHfmtjy1TJqqQqEx8Dbn+J6I61UlAQZJU8HDszvtYFjQWk5yWngyPZTufulmD
-        TFNoMHog==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQ57G-0008EZ-Na; Sun, 19 Apr 2020 08:15:50 +0000
-Date:   Sun, 19 Apr 2020 01:15:50 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sun, 19 Apr 2020 04:19:29 -0400
+Received: from verein.lst.de ([213.95.11.211]:35777 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgDSIT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 04:19:29 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 5319B68BEB; Sun, 19 Apr 2020 10:19:26 +0200 (CEST)
+Date:   Sun, 19 Apr 2020 10:19:26 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        Zzy Wysm <zzy@zzywysm.com>
-Subject: Re: [PATCH 8/9] dax: fix empty-body warnings in bus.c
-Message-ID: <20200419081550.GA22341@infradead.org>
-References: <20200418184111.13401-1-rdunlap@infradead.org>
- <20200418184111.13401-9-rdunlap@infradead.org>
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: remove set_fs calls from the exec and coredump code v2
+Message-ID: <20200419081926.GA12539@lst.de>
+References: <20200414070142.288696-1-hch@lst.de> <87r1wl68gf.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200418184111.13401-9-rdunlap@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <87r1wl68gf.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 11:41:10AM -0700, Randy Dunlap wrote:
->  				rc = -ENOMEM;
->  		} else
-> -			/* nothing to remove */;
-> +			do_empty(); /* nothing to remove */
->  	} else if (action == ID_REMOVE) {
->  		list_del(&dax_id->list);
->  		kfree(dax_id);
->  	} else
-> -		/* dax_id already added */;
-> +		do_empty(); /* dax_id already added */
+On Fri, Apr 17, 2020 at 05:41:52PM -0500, Eric W. Biederman wrote:
+> > this series gets rid of playing with the address limit in the exec and
+> > coredump code.  Most of this was fairly trivial, the biggest changes are
+> > those to the spufs coredump code.
+> >
+> > Changes since v1:
+> >  - properly spell NUL
+> >  - properly handle the compat siginfo case in ELF coredumps
+> 
+> Quick question is exec from a kernel thread within the scope of what you
+> are looking at?
+> 
+> There is a set_fs(USER_DS) in flush_old_exec whose sole purpose appears
+> to be to allow exec from kernel threads.  Where the kernel threads
+> run with set_fs(KERNEL_DS) until they call exec.
 
-This is just nasty.  Please just always turn this bogus warning off
-as the existing code is a perfectly readable idiom while the new code
-is just nasty crap for no good reason at all.
+This series doesn't really look at that area.  But I don't think exec
+from a kernel thread makes any sense, and cleaning up how to set the
+initial USER_DS vs KERNEL_DS state is something I'll eventually get to,
+it seems like a major mess at the moment.
