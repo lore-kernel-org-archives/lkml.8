@@ -2,109 +2,153 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00252C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED81C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2E7821973
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D4E21841
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:55:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRDLnidN"
+	dkim=pass (2048-bit key) header.d=bonedaddy.net header.i=@bonedaddy.net header.b="iPFIDk3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgDSOtD (ORCPT
+        id S1726476AbgDSOzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 10:49:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgDSOtC (ORCPT
+        Sun, 19 Apr 2020 10:55:18 -0400
+Received: from smtp.bonedaddy.net ([45.33.94.42]:48512 "EHLO
+        smtp.bonedaddy.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726398AbgDSOzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 10:49:02 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2145C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 07:49:02 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id r20so3650171pfh.9
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 07:49:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/Y9EEw8+vVKXR26VXHGaBoc+4Thx4gdgWJh52Fb86wo=;
-        b=VRDLnidNIQ94FASqAA6G3i2QeT/rvVAqB5LSMEooXFenJPdZobyzHyAkBrCSTRnE26
-         tqIj8It5BQWlWFcf9ixyxn7ww/1ndf9/uvD+Lj8KBGU4fNn25Mi79upymETY641UATtk
-         jNFfa37BcMrfLyS9yK+wF/v9tuuWiQF4y5i+sS6NPPy8N17y6gwe5mIo8pg8cC8NxFSm
-         uin61QRKfhdgPQafT/8eKYhZ3Q59CMO8RWGKhzSV1L76BT4vs78s5GtaqmV/7BAW66jc
-         5qenEjmB/QdUVwWAy9zw7ozpmRoOCKPAc6v5O70zm2HolR3a7oplNaPpUgtCLLxr72sx
-         1KfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/Y9EEw8+vVKXR26VXHGaBoc+4Thx4gdgWJh52Fb86wo=;
-        b=ENiIIvO3dJFeY60Hf3DzMgrS8acl98539DZ2Fe1zeDuqVBvrABWQPg/RvABe0EhHPr
-         dUR2S/O2r9ClrjfS53tRSK3yDZ9SaVXTfG7Zfk+pXKMvpVCZyrR3097GM7yTcyY0Dw+R
-         TP+79UGV7zXNc4I+uaf+A2802k2XS5+ZNZ2ARw9XlbANBy6xL1+w46gKcNIJ+BgDRenH
-         KfCnIgkOJd6uC4+qvJkCs/bvdWZHCualXA5nHFQQwvZmJnUn6ksI6Sc6RSlRDkIX6bBs
-         1b7YP5CevSv/9NGkuadN3D4wUdUgxbylUCkVP2VoE3ur0sofBgVdh47iVQmlx/DElhDh
-         DEPw==
-X-Gm-Message-State: AGi0PuZSxxIHf+Eiss1VgxIaOsTLNUxZDZwFCCMJrsXl+2RS6vY41a6v
-        UrCCTlYlVAB9aFEI5VbLH4Y=
-X-Google-Smtp-Source: APiQypKXrkGJULiInhOYddfSqXGw/DiJQmKHwtfCSBWDQFR/Mwm1wJTiairEqo6yETBDP/QxRA0YhQ==
-X-Received: by 2002:a63:cc:: with SMTP id 195mr11999844pga.373.1587307742128;
-        Sun, 19 Apr 2020 07:49:02 -0700 (PDT)
-Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id f21sm11128349pfn.71.2020.04.19.07.48.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 Apr 2020 07:49:01 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 20:18:55 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] debugfs: Use the correct style for SPDX License Identifier
-Message-ID: <20200419144852.GA9206@nishad>
+        Sun, 19 Apr 2020 10:55:17 -0400
+X-Greylist: delayed 415 seconds by postgrey-1.27 at vger.kernel.org; Sun, 19 Apr 2020 10:55:17 EDT
+Received: from chianamo (n58-108-4-64.per1.wa.optusnet.com.au [58.108.4.64])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: pabs3@bonedaddy.net)
+        by smtp.bonedaddy.net (Postfix) with ESMTPSA id 53E19180043;
+        Sun, 19 Apr 2020 10:48:20 -0400 (EDT)
+Authentication-Results: smtp.bonedaddy.net; dmarc=fail (p=none dis=none) header.from=bonedaddy.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bonedaddy.net;
+        s=mail; t=1587307702;
+        bh=orbOLhLh68VHjj9KoqAE/l3nV665NUdq1aidfrkBWoc=;
+        h=Subject:From:To:Cc:In-Reply-To:References:Date;
+        b=iPFIDk3EJOmtIhN/wwEuJ3N6eojbUPY3vQsC1Ifs6qYznwpDvqeXYxrtmphy2pFne
+         ALFR6r0IIAOxwEFgW8OiAmcd65jSDecQ1LVFgwoG7/sU23RqQAhtR9S4txVRxGmlRN
+         aRzeeUMvgBWkIoxb2qcx3Hhc4Skoz8m+YxVtbI2QRxPlfqVI8x16RUm4HLBASs/UNn
+         Cq6ZmzsT0Y5sHM3guS27QOOAfvgyzUsozGfYYTLrXJEg1PUOzxCdk0U9SgmyXDHKsd
+         7Zq1JnSQjGxv5Ihn9Qkv4IeuoayStdAGYAuSf5FL2HCGVxexserZzgPeeV3Gdfy3M1
+         w7yfjY+L8cdhg==
+Message-ID: <9cb6a39a43178be29af2f47a92c2e84754b62b69.camel@bonedaddy.net>
+Subject: Re: [PATCH 0/3] dm raid/raid1: enable discard support when any
+ devices support discard
+From:   Paul Wise <pabs3@bonedaddy.net>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200419131908.GA22398@redhat.com>
+References: <20200419073026.197967-1-pabs3@bonedaddy.net>
+         <20200419131908.GA22398@redhat.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-Dc6DoNjKBj0aUd9iYgmL"
+Date:   Sun, 19 Apr 2020 22:48:16 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Evolution 3.36.1-1 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style in
-header file related to debugfs File System support.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used).
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+--=-Dc6DoNjKBj0aUd9iYgmL
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- fs/debugfs/internal.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, 2020-04-19 at 09:19 -0400, Mike Snitzer wrote:
 
-diff --git a/fs/debugfs/internal.h b/fs/debugfs/internal.h
-index f0d73d86cc1a..034e6973cead 100644
---- a/fs/debugfs/internal.h
-+++ b/fs/debugfs/internal.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  *  internal.h - declarations internal to debugfs
-  *
--- 
-2.17.1
+> You went overboard with implementation before checking to see if your
+> work would be well received.  Your 2/3 patch header shows you're
+> capable of analyzing past commits to explain the evolution of code,
+> etc.  But yet you make no mention of this commit header which explicitly
+> speaks to why what you're proposing is _not_ acceptable:
+>=20
+> commit 8a74d29d541cd86569139c6f3f44b2d210458071
+> Author: Mike Snitzer <snitzer@redhat.com>
+> Date:   Tue Nov 14 15:40:52 2017 -0500
+>=20
+>     dm: discard support requires all targets in a table support discards
+
+I do remember seeing this commit while working on this, I guess I
+ignored it in my attempts to get fstrim working on my rootfs, woops.
+
+> I haven't looked closely at MD raid in this area but if you trully think
+> underlying MD raid can cope with issuing discards to devices that don't
+> support them (or that it avoids issuing them?) then please update
+> dm-raid.c to conditionally set ti->discard_supported (if not all devices
+> support discard).  That is how to inform DM core that the target knows
+> better and it will manage discards issued to it.  It keeps the change
+> local to dm-raid.c without the flag-day you're proposing.
+
+On my system I have a HDD and an SSD, with /boot on MD RAID and / on
+ext4 on DM RAID on 2 DM crypt volumes. In this setup fstrim works on
+/boot but does not work on / and with my patches it works on / again.
+In addition I don't see any messages in dmesg or other issues when
+doing fstrim / with my patches.
+
+I think I might have been worried that discards_supported has other
+side effects but grepping the code now I see that was unfounded.
+I'll switch the next version to just setting discards_supported.
+I still think that my proposed overboard design is clearer though :)
+
+You'll see from the following command that MD raid 0/1/10 arrays enable
+discards when any device supports discards:
+
+   git grep -wW discard_supported
+
+It appears that the block layer ignores discard requests when the queue
+for the block device indicates that discard is not supported on it:
+
+   git grep -wW __blkdev_issue_discard
+
+It seems to me that where possible DM/MD letting the block layer decide
+to pass on or ignore discard requests is the right design. I'm possibly
+incorrectly assuming that all block device drivers will correctly
+advertise support for discard without false positive/negatives.
+
+BTW, any idea where I should fix the `fstrim --fstab` issue? It is
+expecting the queue/discard_granularity sysfs entry to be non-zero.
+=46rom my initial debugging attempts it seems raid_io_hints is at fault.
+
+Thanks for your initial response and any further insight you can give.
+
+--=20
+bye,
+pabs
+
+https://bonedaddy.net/pabs3/
+
+--=-Dc6DoNjKBj0aUd9iYgmL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEYQsotVz8/kXqG1Y7MRa6Xp/6aaMFAl6cZLAACgkQMRa6Xp/6
+aaPZ+w/+NU6azXlrvR0spHz7eK7FaXlJcaVAVePc+ZeKnZzByER1yKehAzkvM+XP
+dJ5NsJO/S5IugiM2F7QVPAx2/eOcYOcchAnE0SBKOv/y4IK5RLa0z6d/+WzzSbFc
+JCcrvuTZBmTaVfkFpkCXbAjtpqAW1kasRFF8iz4R84TrszNfjVG3zhs50GQld3pU
+VIvTctdmLdY7hVbUBLSgOEoRqz5ikPq+h3YRo99uCXF3RrZ6mb9tS/Ngxn9+HNu6
+1hzsIyHIesXR9C2s3r7ZVEQ3Vbm4RIjpIBS1DC4R8koaFofRumo8VLZw+K6VEnfD
+ni7nktV62Hd9S+bepuYrk6Ca5N8SdbwBC8lJBIqoESRuM3uIxgxgoKxfsPhAYTOc
+7D9ksk4Uc7qZ+VdvFfAnbXaHl45PfLTNsg52ANfz4CCnJLGYhRKmjg9nXkqZKCcM
+uuvrCey4trHMpdE77KEuLRVWm+4RXEWpEmAQ4RIOgK+3Q4pzRWJM5tHAkcCJjTCc
+5LOIuT1oBKyx7y3XeLmPTfhliZFr3USjmDZtCorw5Z+tT4d4GEElfL4+x+3T9y6w
+MAaxMZ9qHQDnzvhhIZfqRne4OrmDJqaanqxI5PYwjtYBbDKNW3EnTZJUUB1h8Vph
+k8oMt5TBpBexc7TXuty8W9wiVgQzsgEcthDcNBBX8sPz5y/Gf/o=
+=enD1
+-----END PGP SIGNATURE-----
+
+--=-Dc6DoNjKBj0aUd9iYgmL--
 
