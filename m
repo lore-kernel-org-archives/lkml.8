@@ -2,157 +2,80 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2E3C5321D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5195C5321D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8CE21974
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:19:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLj0QO7J"
+	by mail.kernel.org (Postfix) with ESMTP id CD7FA21927
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgDSRS7 (ORCPT
+        id S1726537AbgDSR1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 13:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725932AbgDSRS6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 13:18:58 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D180C061A0C;
-        Sun, 19 Apr 2020 10:18:58 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 145so1506609pfw.13;
-        Sun, 19 Apr 2020 10:18:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qapmg8H0xsf8FtuVuTZYqLZSXqZnlrHTeBzdG8nPoxQ=;
-        b=ZLj0QO7JBhhyg2TkZzrF+7SNq3YZXndE/CqFNKiGMtdjt9k32EAhBGxNkIZIIP7oqu
-         iAX9gedTI9rI8ozBIW3Uqycn1NbdiuLkxJtKetbn64NN2dyX1yITXvGbBuFy/jZ2WodC
-         FEiZ1vjh6No0KocBqnIVkdi3Qsr8sOpfwb3fsvt6gKcEQGDlqrldwa9QvrrI1sNhFl3j
-         KL8BZIs/jO2fDXlD8p/yaMeg5A63UP4cXEBfZvgz0pHyKNKkOoODGubbdxv+Q+l9Kn1C
-         liD791cj7zzYUIvOhrzeh0t7pmmKLfydHg2b/vUlmMChzQrwbtMTptZXblc4CI/0VlsX
-         bCjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qapmg8H0xsf8FtuVuTZYqLZSXqZnlrHTeBzdG8nPoxQ=;
-        b=PhEcdo6mr9GiEqIWros97z6UdS6W1Yi+mCHjPSNi8eLG+6fsGIfqnn35JH12r/OKWw
-         gxp5zKeFsszzdm8NB7AP6mqJP27VBetSW05og5wGfPSiPazIDVWL4yBskYr9b0dqaRV3
-         LGqqMOzvRR7iA1fz1dUNEEK1aN58H4vr7TyQyZYZCtiYjneWTZQ8om6nEUfDl8hH8owC
-         enI1aXsL1O1rIwrY8RgXbBm7flaCSrrGLw4p+KpZFutoO6EcJ5NlZNbtffjowHeRxB91
-         AyhKZ1vNNi75cEOJ6T4N6+xcZij3CdfcY7cRqBf36nbXhWZDfCP6Ys1rAjOPIiLVaTV6
-         6g4w==
-X-Gm-Message-State: AGi0PuYUCG2LvPN1JxX3LnXQtAeObgTqZPxIOiG/CvF788Bpj9ZUgUoU
-        Zt543GZtz5ogreS9mkDG7Swa3HrG
-X-Google-Smtp-Source: APiQypJBlIWcg4jaSV+mBDmX6rq5LhzmSESAt2LOosTpZPo72+cTWIIFEXwLzWJ6w/2GFdsnOpkRxg==
-X-Received: by 2002:a63:4a59:: with SMTP id j25mr12358714pgl.336.1587316737845;
-        Sun, 19 Apr 2020 10:18:57 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id c15sm2406100pfo.188.2020.04.19.10.18.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 10:18:57 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 10:18:55 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Julian Squires <julian@cipht.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>,
-        linux-input@vger.kernel.org, andreyknvl@google.com,
-        gregkh@linuxfoundation.org, ingrassia@epigenesys.com,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com, Ping Cheng <pingc@wacom.com>,
-        pinglinux@gmail.com, killertofu@gmail.com
-Subject: Re: KASAN: use-after-free Read in usbhid_close (3)
-Message-ID: <20200419171855.GJ166864@dtor-ws>
-References: <20200419041344.GC166864@dtor-ws>
- <Pine.LNX.4.44L0.2004191000080.29527-100000@netrider.rowland.org>
+        Sun, 19 Apr 2020 13:27:54 -0400
+Received: from v6.sk ([167.172.42.174]:44470 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgDSR1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 13:27:53 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id F09BD610C1;
+        Sun, 19 Apr 2020 17:27:51 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Michael Turquette <mturquette@baylibre.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 02/10] clk: mmp: frac: Allow setting bits other than the numerator/denominator
+Date:   Sun, 19 Apr 2020 19:27:34 +0200
+Message-Id: <20200419172742.674717-3-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200419172742.674717-1-lkundrak@v3.sk>
+References: <20200419172742.674717-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.2004191000080.29527-100000@netrider.rowland.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 10:07:34AM -0400, Alan Stern wrote:
-> On Sat, 18 Apr 2020, Dmitry Torokhov wrote:
-> 
-> > On Sat, Apr 18, 2020 at 09:09:44PM -0700, Dmitry Torokhov wrote:
-> > > Hi Alan,
-> > > 
-> > > On Sat, Apr 18, 2020 at 10:16:32PM -0400, Alan Stern wrote:
-> > > > linux-input people:
-> > > > 
-> > > > syzbot has found a bug related to USB/HID/input, and I have narrowed it
-> > > > down to the wacom driver.  As far as I can tell, the problem is caused
-> > > > the fact that drivers/hid/wacom_sys.c calls input_register_device()
-> > > > in several places, but it never calls input_unregister_device().
-> > > > 
-> > > > I know very little about the input subsystem, but this certainly seems 
-> > > > like a bug.
-> > > 
-> > > Wacom driver uses devm_input_allocate_device(), so unregister should
-> > > happen automatically on device removal once we exit wacom_probe().
-> > > 
-> > > > 
-> > > > When the device is unplugged, the disconnect pathway doesn't call
-> > > > hid_hw_close().  That routine doesn't get called until the user closes
-> > > > the device file (which can be long after the device is gone and
-> > > > hid_hw_stop() has run).  Then usbhid_close() gets a use-after-free
-> > > > error when it tries to access data structures that were deallocated by
-> > > > usbhid_stop().  No doubt there are other problems too, but this is
-> > > > the one that syzbot found.
-> > > 
-> > > Unregistering the input device should result in calling wacom_close()
-> > > (if device was previously opened), which, as far as I can tell, calls
-> > > hid_hw_close().
-> > > 
-> > > I wonder if it is valid to call hid_hw_stop() before hid_hw_close()?
-> 
-> No, it isn't.  If it were, for example, why would evdev_disconnect() -> 
-> evdev_cleanup() need to call input_close_device()?
+For the I2S fractional clocks, there are more bits that need to be set
+for the clock to run. Their actual meaning is unknown.
 
-Because input and HID are not the same. For input, when we attempt to
-unregister an input device we will go through all attached input
-handlers (like evdev) and if they believe they have the device open they
-will attempt to close it. How close is implemented is up to particular
-driver.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/clk/mmp/clk-frac.c | 3 +++
+ drivers/clk/mmp/clk.h      | 1 +
+ 2 files changed, 4 insertions(+)
 
-I am not sure about HID implementation details, but I could envision
-transports where you can tell the transport that you no longer want
-events to be delivered to you ("close") vs you want to disable hardware
-("stop") and support any order of them.
-
-> And why would 
-> usbhid_disconnect() deallocate the usbhid structure which usbhid_stop()
-> accesses?
-
-This happens only after we return from hid_destroy_device(), so
-even in the presence of devm I'd expect that all devm-related stuff
-instantiated by hid-wacom would have been completed before we get back
-to usbhid_disconnect().
-
-Can we validate that calls to wacom_close() happen?
-
-> 
-> > > It could be that we again get confused by the "easiness" of devm APIs
-> > > and completely screwing up unwind order.
-> 
-> That's probably what happened.
-
-Thanks.
-
+diff --git a/drivers/clk/mmp/clk-frac.c b/drivers/clk/mmp/clk-frac.c
+index ed9928f5bdc7f..48f592bd633df 100644
+--- a/drivers/clk/mmp/clk-frac.c
++++ b/drivers/clk/mmp/clk-frac.c
+@@ -148,7 +148,10 @@ static int clk_factor_init(struct clk_hw *hw)
+ 		val &= ~(masks->den_mask << masks->den_shift);
+ 		val |= (factor->ftbl[0].den & masks->den_mask) <<
+ 			masks->den_shift;
++	}
+ 
++	if (!(val & masks->enable_mask) || i >= factor->ftbl_cnt) {
++		val |= masks->enable_mask;
+ 		writel(val, factor->base);
+ 	}
+ 
+diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
+index 971b4d6d992fb..0efd5b0b2f01b 100644
+--- a/drivers/clk/mmp/clk.h
++++ b/drivers/clk/mmp/clk.h
+@@ -16,6 +16,7 @@ struct mmp_clk_factor_masks {
+ 	unsigned int den_mask;
+ 	unsigned int num_shift;
+ 	unsigned int den_shift;
++	unsigned int enable_mask;
+ };
+ 
+ struct mmp_clk_factor_tbl {
 -- 
-Dmitry
+2.26.0
+
