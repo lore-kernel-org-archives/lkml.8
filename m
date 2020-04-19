@@ -2,122 +2,109 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3A2C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADADCC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66DC521D94
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1FF21744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oOU/p5eB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kmEUSvyM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgDSPtr (ORCPT
+        id S1726384AbgDSPwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 11:49:47 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:48432 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgDSPtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 11:49:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=9MvkBXmiEdANg+HoZVypf5aaCZQcXxBtGb3cmIo49e4=; b=oOU/p5eBY6McgT+ZdYrf2lGtEp
-        8xEBF8J9m8asiWfs8rSVsrIX3a97REZg/9Oa4w0hk4fT8jI/O4BtNjN8PhVIAHSfGp87zgx4ZbOQC
-        +wKpRD8ugKNiZ+Xq2WVMXxvtr+C/MSPbLeWEUIH9NK+Va9/Q6+/c8e5BqPg5WcmpYeXM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jQCCV-003eaj-5k; Sun, 19 Apr 2020 17:49:43 +0200
-Date:   Sun, 19 Apr 2020 17:49:43 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2 2/3] net: phy: add Broadcom BCM54140 support
-Message-ID: <20200419154943.GJ836632@lunn.ch>
-References: <20200419101249.28991-1-michael@walle.cc>
- <20200419101249.28991-2-michael@walle.cc>
+        Sun, 19 Apr 2020 11:52:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgDSPwH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 11:52:07 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9A6C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:52:07 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id u10so5794451lfo.8
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=puq4LGaJLu91tsP0EOV/aht8/LoEw9dhNvgkrrgI0M0=;
+        b=kmEUSvyMZy3pWlmfBj6ph9+yTJxIicCoTZ2oHWv22uPHShhrD6dXB3nFdSVSQ9UKIH
+         X01wDHoO0o3SD9U8nkBwKk6WZIDmluNtrFFPXTkmLLyEe0f+4uK8ugdiQSG9t2xSurz6
+         EXZw5KnLHhgHjIVub6meTCWW44m+827f4GjD4iHMj07dOmVdf7BkblrI5b8Eshm0qOr7
+         hZYZ3RK3rdu0rTi3+E/4xotGRwYv6RmXJCNx3AXwKU04DNuHgUoQHVowT99KEA1om/xC
+         993dUnXPWRO5bdVcMJNqG+DFM6AjpM51c6yfVVcV5Ef7oe1ujo0nIyFMz/T3Uwz9Q1Hi
+         0L9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=puq4LGaJLu91tsP0EOV/aht8/LoEw9dhNvgkrrgI0M0=;
+        b=f0xE7nXQHHBP220TzATULLFM/a8sqWodSxH9f497ZPXuaIFXk7oFzO9uTK9hZoOu3l
+         CF1Ll/2XEp92SpKeXl9dYCeLxVPpXxogptTdVdmHgyTA6EerqtjwWqPScOLyw4V70aAD
+         tlH6CfEcm8YAKo97EgYWP/PyaZeC0MSQG8koVkg6LN/D/GsABHnW+ECkHnWll+ohPws8
+         Pr+5eNVLOg30ZHdER6PjbEI/3Zgnc7kkPpaS0qlT82GgQn3A0/n6P/V+Qw0MSlyvfE75
+         9d6C6VZsVmh8sO8dw2bimxB3a3QleM46m9cEdsQ1sEC+BL0Wt1vhqKBMufgr5qU4cUS2
+         FVqg==
+X-Gm-Message-State: AGi0Pua/AL5ZfqNEw5lacmZgh4xBx895kuXB1LxhT1A5J7JXUGif18iE
+        ck8C1pXDODzOOwrTr5cdqHaxYq+kyWVIq2ly8UkbuYSA54/mIEki
+X-Google-Smtp-Source: APiQypIxAPipFGPF2SN+XT1jDXJXTJdHsgQn2AhHXb63BfvDD9HsotRIaefG6KlobjMHGAGZARFRi1m53SGunpj7bv4=
+X-Received: by 2002:a05:6512:405:: with SMTP id u5mr7642643lfk.192.1587311525570;
+ Sun, 19 Apr 2020 08:52:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419101249.28991-2-michael@walle.cc>
+References: <20200419150530.20508-1-etienne.carriere@linaro.org> <20200419150530.20508-2-etienne.carriere@linaro.org>
+In-Reply-To: <20200419150530.20508-2-etienne.carriere@linaro.org>
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+Date:   Sun, 19 Apr 2020 17:51:54 +0200
+Message-ID: <CAN5uoS_h1T4hw7zpmqzLjTBN8_16JRgXnWGzVmaZ7ohhV6DfdQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/6] firmware: helper functions for SMCCC v1.0
+ invocation conduit
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, james.morse@arm.com,
+        michal.simek@xilinx.com, richard.gong@linux.intel.com,
+        lorenzo.pieralisi@arm.com, Mark Rutland <mark.rutland@arm.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        tee-dev@lists.linaro.org, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 12:12:48PM +0200, Michael Walle wrote:
+On Sun, 19 Apr 2020 at 17:05, Etienne Carriere
+<etienne.carriere@linaro.org> wrote:
+>
+> +#define arm_smccc_1_0_invoke(...) ({                                   \
+> +               enum arm_smccc_conduit conduit = arm_smccc_1_0_get_conduit(); \
+> +               switch (conduit) {                                      \
+> +               case SMCCC_CONDUIT_HVC:                                 \
+> +                       arm_smccc_hvc(__VA_ARGS__);                     \
+> +                       break;                                          \
+> +               case SMCCC_CONDUIT_SMC:                                 \
+> +                       arm_smccc_smc(__VA_ARGS__);                     \
+> +                       break;                                          \
+> +               default:                                                \
+> +                       __fail_smccc_1_0(__VA_ARGS__);                  \
+> +                       conduit = SMCCC_CONDUIT_NONE;                   \
+> +               }                                                       \
+> +               conduit;                                                \
+> +       })
 
-Hi Michael
+Checkpatch complains here (traces below) but I think this is a false positive
+due to the line breaks in the macro definition.
 
-> +static int bcm54140_b0_workaround(struct phy_device *phydev)
-> +{
-> +	int spare3;
-> +	int ret;
+WARNING: Possible switch case/default not preceded by break or
+fallthrough comment
+#231: FILE: include/linux/arm-smccc.h:415:
++ case SMCCC_CONDUIT_SMC: \
 
-Could you add a comment about what this is working around?
+WARNING: Possible switch case/default not preceded by break or
+fallthrough comment
+#234: FILE: include/linux/arm-smccc.h:418:
++ default: \
 
-> +static int bcm54140_phy_probe(struct phy_device *phydev)
-> +{
-> +	struct bcm54140_phy_priv *priv;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&phydev->mdio.dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	phydev->priv = priv;
-> +
-> +	ret = bcm54140_get_base_addr_and_port(phydev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_info(&phydev->mdio.dev,
-> +		 "probed (port %d, base PHY address %d)\n",
-> +		 priv->port, priv->base_addr);
-
-phydev_dbg() ? Do we need to see this message four times?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int bcm54140_config_init(struct phy_device *phydev)
-> +{
-> +	u16 reg = 0xffff;
-> +	int ret;
-> +
-> +	/* Apply hardware errata */
-> +	ret = bcm54140_b0_workaround(phydev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Unmask events we are interested in. */
-> +	reg &= ~(BCM54140_RDB_INT_DUPLEX |
-> +		 BCM54140_RDB_INT_SPEED |
-> +		 BCM54140_RDB_INT_LINK);
-> +	ret = bcm_phy_write_rdb(phydev, BCM54140_RDB_IMR, reg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* LED1=LINKSPD[1], LED2=LINKSPD[2], LED3=ACTIVITY */
-> +	ret = bcm_phy_modify_rdb(phydev, BCM54140_RDB_SPARE1,
-> +				 0, BCM54140_RDB_SPARE1_LSLM);
-> +	if (ret)
-> +		return ret;
-
-What are the reset default for LEDs? Can the LEDs be configured via
-strapping pins? There is currently no good solution for this. Whatever
-you pick will be wrong for somebody else. At minimum, strapping pins,
-if they exist, should not be overridden.
-
+Regards,
+Etienne
