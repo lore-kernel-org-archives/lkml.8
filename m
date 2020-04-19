@@ -2,142 +2,116 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5CAC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AC9C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5187C214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E181E2145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NGL2kl3S"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="GTxrWi+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbgDSJfR (ORCPT
+        id S1725960AbgDSJoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 05:35:17 -0400
-Received: from mout.web.de ([217.72.192.78]:54673 "EHLO mout.web.de"
+        Sun, 19 Apr 2020 05:44:16 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:40806 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbgDSJfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 05:35:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587288890;
-        bh=aBvp8j+L1nTaifasG/k6Eo+pawLiP4BJx5o+pIro8s0=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=NGL2kl3SGeJGNdhv085qZJDI8JQKKK1KUB3SS5KkI6jkJAAv44o4ns7QXIan8EO0f
-         fERGM2/7NL4VW3J5GAntXx40oILNalQQ68f5qWGl//O4LDHw78+ZXbHApk151LbqTv
-         WcLni7ro2Ijf8liKzqGcp25a6Iockt/FByNL2AnE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.85.208]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lx7Ab-1jBBwm47jN-016bxG; Sun, 19
- Apr 2020 11:34:50 +0200
-To:     Bernard Zhao <bernard@vivo.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
-        =?UTF-8?Q?Jos=c3=a9_Roberto_de_Souza?= <jose.souza@intel.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com
-Subject: Re: [PATCH] drm/amdgpu: Return more error codes in
- amdgpu_connector_set_property()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <a00cc21a-383f-67ca-cdc5-b727ae59d31c@web.de>
-Date:   Sun, 19 Apr 2020 11:34:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        id S1725832AbgDSJoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 05:44:16 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 494lK70l80z9tyDn;
+        Sun, 19 Apr 2020 11:44:11 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=GTxrWi+1; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id agMTeFgwJHef; Sun, 19 Apr 2020 11:44:11 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 494lK66bZKz9tyDm;
+        Sun, 19 Apr 2020 11:44:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587289450; bh=SAV0xGuQ9VZ7E187cmvKPxd3AgnPYrEdvKnWeiHAfaQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GTxrWi+19O2fSCk7JG/AeNxZChGPXLbHyoUL587A2HuZmmYIqZVaDYFi70A0eA3Bo
+         wSL9nGPptXJxbHyosjGozMIIID+C6oJhwdn/2p29mXTdlsgeQzr0L75Bm4B8plck9b
+         ObV+mOQOW2qWcJsuB3cAMswzJyItwO5WAqbhsyAo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 30B6E8B76F;
+        Sun, 19 Apr 2020 11:44:14 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 026YLU_0W1Wh; Sun, 19 Apr 2020 11:44:14 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E4FF48B752;
+        Sun, 19 Apr 2020 11:44:12 +0200 (CEST)
+Subject: Re: [PATCH 8/8] exec: open code copy_string_kernel
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Jeremy Kerr <jk@ozlabs.org>, linux-fsdevel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>
+References: <20200414070142.288696-1-hch@lst.de>
+ <20200414070142.288696-9-hch@lst.de>
+ <ffea91ee-f386-9d19-0bc9-ab59eb7b9a41@c-s.fr> <20200419080646.GE12222@lst.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <5f96e86a-b084-4330-b7d1-08b78416994c@c-s.fr>
+Date:   Sun, 19 Apr 2020 11:44:06 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:32A2D40OkSgOcF5U7bMgBASVmVpEIHqnEQAeY0qIr1t30awZDCv
- dKG06tryG/C3sJ6q1+pylBfR81tovhOYb3Zp0CrR5ItgTtWjdAs3FqJyAc02g1KJr9CVhPw
- DR+ej5uT+rp2Vhu5YYZB6ognP0v6Wc4MAzaVF5n/mLRNTpgCm8VfVP00kVGwERE2GYyD1Hp
- p20p3jIjOjK82b42fQaNQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7BxhmcytRdY=:fTRjN3HGS/7AbzQduubich
- eeKu4J5yzbwF+70UnBon0fmKOIhqyaq6ipwA8RbA+v4+ow0jEjPiU/drOLFQTFr9faa8Drhxy
- /5sRAiWsE4EGg+3BR/fRyBN4957pBwX+J6Ai7GI89cOQ6iNmUkIqZn0l/KW5lVWEo5c4C+q1r
- +eWKX9pQ0yJVsCSgdXeP1SJs5iLKcRzrcCh5AyakT5GsxEihpQH/SxAav3I0qvmDQdxQwTsHY
- UcArRghSx992CFbV6+XYzjIUP50Z31G7LoaPhNY1PHSKq4lMeXh7Vi7Ka59P5f+xkkXAPP5vF
- Gqp3RNgLBcmW14TVjHuInyk7A2L0Yf5GnJaEjZmMrhnzw8M9juCo+T9RwvGErQ5xq8B9t1Hhb
- W+jGfNNkyPvLn0gqulxbUTj5ZNaNDfJ0LQOnqzqyFJqaWnQn7E9aUPi2RoY19YQvFhkyWcmS2
- o3r410BFdBkgM5fVkuRUlO4NI4vU1s4ayIlDlh275ko0Fufk3y846BMU+Z8GZCHZUpvqceiNi
- 1zTlfydTNSZnv4UKuJ31G0NaE9BhKSYKxQns93zJWd/mR5AmJxBA0CWMqL5+9flVwRo5c9j/b
- RWhQ/8O/qjzTKE1RpZXBg7zTeOSX0z4jgsZK88Sni+LpfsrusW2fn5T+/s5gE3cnOh9I0jnmV
- i0vJZh9fQ5ILNyvjCdsIS4XTtP3Kd29GYkDMP0alyqJiUqxYjEx7h8utBVSembjoxvDiBrxEc
- 64p8WbjW9iPrP6Kl732cS9xlKFc64Ol8vlCbIFOYq5LP7rmDYUT0LH65bMTdkh9wT11/kbYBG
- pFOcjkLLafZwEfzy1EcyLkb6pAnqNMhvLyleZt070KG8IQwzAjp7fJv0qQH96qiRQ6Wp+/Ed5
- X8g+Q1LLQQ/FmOYmPU//AjI1Rw75qw5tBqLjWNCYhnralLSclxPedSnS/uPR6PVe7QB8Vys4W
- s72prYTTHER+nXyqJ1/oawoi/Mea62qNbeSZ75IoDBOUa9khIQ1sWGkjUqUSmLy8m3WivbWQX
- SdKW2xwT7Y2Q+jwNUBd1UMZU3LAF+vxVkQpEY9/dkWCdCaR6nJphCe5GwpCFsfL8amj8Fxxr4
- 2IhUCpgQM2UPpZDbO5uh3zbvcNXNgEODi7ciiqJ57yf1+Ww0cpWJ+xrLA3FvbkGLiM988v0st
- G86CYnAaNsPDz4QsLO0KE5GbS3SaRwkjjvx2wC8rH8ER3vVWAXC5h2QCoMj13I4PqgfHeuMf2
- s3oGdQUkXkWcqnwZb
+In-Reply-To: <20200419080646.GE12222@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The "if(!encoder)" branch return the same value 0 of the success
-> branch, maybe return -EINVAL is more better.
 
-I suggest to improve the commit message.
 
-* Would you like to adjust the patch subject?
+Le 19/04/2020 à 10:06, Christoph Hellwig a écrit :
+> On Sat, Apr 18, 2020 at 10:15:42AM +0200, Christophe Leroy wrote:
+>>
+>>
+>> Le 14/04/2020 à 09:01, Christoph Hellwig a écrit :
+>>> Currently copy_string_kernel is just a wrapper around copy_strings that
+>>> simplifies the calling conventions and uses set_fs to allow passing a
+>>> kernel pointer.  But due to the fact the we only need to handle a single
+>>> kernel argument pointer, the logic can be sigificantly simplified while
+>>> getting rid of the set_fs.
+>>
+>>
+>> Instead of duplicating almost identical code, can you write a function that
+>> takes whether the source is from user or from kernel, then you just do
+>> things like:
+>>
+>> 	if (from_user)
+>> 		len = strnlen_user(str, MAX_ARG_STRLEN);
+>> 	else
+>> 		len = strnlen(str, MAX_ARG_STRLEN);
+>>
+>>
+>> 	if (from_user)
+>> 		copy_from_user(kaddr+offset, str, bytes_to_copy);
+>> 	else
+>> 		memcpy(kaddr+offset, str, bytes_to_copy);
+> 
+> We'll need two different str variables then with and without __user
+> annotations to keep type safety.  And introduce a branch-y and unreadable
+> mess in the exec fast path instead of adding a simple and well understood
+> function for the kernel case that just deals with the much simpler case
+> of just copying a single arg vector from a kernel address.
+> 
 
-* How do you think about to add the tag =E2=80=9CFixes=E2=80=9D
-  because of adjustments for the exception handling?
-
-Regards,
-Markus
+About the branch, I was expecting GCC to inline and eliminate the unused 
+branch.
