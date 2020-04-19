@@ -2,116 +2,134 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9FAC352BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE07CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4537222242
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587286514;
-	bh=B7vop3xwaQJ6PIjFyy41WJ6ZY2Cvtqgx45oek7lxwYc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OXm7Eu0/qPzC3wOh0cA5IACbfBUrU7n2J6pAR9gU/n3mtn/EZo1YKicoYFYsAyzKs
-	 vHK+fBR/ISlzd+DzzAukxIqbYAiaDJNzUJ9wO/RiWE9BG0YHApm3tegWfpuMDYfD3+
-	 ePKVz27LQkXzwdJx3BI/Q9FAsc3u0WKJ2mvg94fg=
+	by mail.kernel.org (Postfix) with ESMTP id A13472145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:05:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="dsex5SLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgDSIzM (ORCPT
+        id S1725950AbgDSJFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 04:55:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40226 "EHLO mail.kernel.org"
+        Sun, 19 Apr 2020 05:05:21 -0400
+Received: from mout.web.de ([217.72.192.78]:60299 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDSIzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 04:55:12 -0400
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3C0C214AF;
-        Sun, 19 Apr 2020 08:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587286511;
-        bh=B7vop3xwaQJ6PIjFyy41WJ6ZY2Cvtqgx45oek7lxwYc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IAD5rMFU6M6EG55Jl0GAqkoc1sbbxlbt7uqnKjRgl4VB6FbVyusUt2xjy8crsYFyV
-         YyjXwd79m1ZRSiMDkxIFtfg66929eWiKe6iWafn0MNJW3yBH1lMnFgDEutmux6+Nst
-         zoPf0gBihahJ8Xo4WTjVUNjQscu35xsEx1MDRQUg=
-Received: by mail-io1-f46.google.com with SMTP id f3so7408612ioj.1;
-        Sun, 19 Apr 2020 01:55:11 -0700 (PDT)
-X-Gm-Message-State: AGi0PubJW3tMa6nYE9Fbn/DOLAJvWWqf5NiUI9JyWThszyZdfmfOqn/t
-        p7EfcgIBxsvXXHbnqVmpfRoYu057dNl89qz4wrE=
-X-Google-Smtp-Source: APiQypKcQgkER4Paz90cO5JDq8rFKshjOC7P9sa9VdPg08yX5P11CegPcw2SrKkqWtvC8UcNZPYt6trYdGQIO8cBTiM=
-X-Received: by 2002:a02:969a:: with SMTP id w26mr10554759jai.71.1587286511272;
- Sun, 19 Apr 2020 01:55:11 -0700 (PDT)
+        id S1725832AbgDSJFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 05:05:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1587287109;
+        bh=pEOnXWUWJq32wcmWoEXmTWiIZi1eoe0kShcruVve2N0=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=dsex5SLwM2FWZ+kD3hHq/YWgw2bnGwpUuRmz/fjzvwowsM0xtRYHggcioDNFISf+z
+         8RX/CwZdAXm7oo9Oc5pD9uShRNUnXdwd4upy2S1GeeYCnqdgoE32kNnR8oabfqJEc2
+         QLdOBaLRcYa03YqiJDcHdZhY9vXLzyXcLafEr3KA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.85.208]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lpw6t-1imLDu1Dh1-00fioW; Sun, 19
+ Apr 2020 11:05:09 +0200
+To:     Bernard Zhao <bernard@vivo.com>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        =?UTF-8?Q?Felix_K=c3=bchling?= <Felix.Kuehling@amd.com>
+Cc:     kernel@vivo.com, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>
+Subject: Re: [PATCH] drm/amdgpu: Reduce a lock scope in
+ amdgpu_amdkfd_gpuvm_free_memory_of_gpu()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <af0aa64e-f097-76a7-1c7b-5bdf0ad55a31@web.de>
+Date:   Sun, 19 Apr 2020 11:05:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200418104343.GA5132@amd> <DB6PR0802MB2533670AFC1473E5C5EDAD28E9D60@DB6PR0802MB2533.eurprd08.prod.outlook.com>
- <VI1PR08MB3584451F0B0B21E00ACF56A7FED70@VI1PR08MB3584.eurprd08.prod.outlook.com>
- <CAOtvUMfNgdYZF5VaqgF-51b0+KtxqgUFD6njXFX7evz1yAJc9A@mail.gmail.com>
-In-Reply-To: <CAOtvUMfNgdYZF5VaqgF-51b0+KtxqgUFD6njXFX7evz1yAJc9A@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sun, 19 Apr 2020 10:55:00 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEGSAD2Kkjg56UhMGgjuLBSOAKJ7ZMHdzfP2szGncu-4Q@mail.gmail.com>
-Message-ID: <CAMj1kXEGSAD2Kkjg56UhMGgjuLBSOAKJ7ZMHdzfP2szGncu-4Q@mail.gmail.com>
-Subject: Re: Fw: Arm CryptoCell driver -- default Y, even on machines where it
- is obviously useless
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Hadar Gat <hadar.gat@arm.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:ejkFRws8u94G50TmJ+06NF8v58dM/Kg4QYRAJeDxA65iCsqyUK/
+ Q49VO2Za7oZHZZkUJN0I3iAODIrOyQIYm+l0M8q/ZXRdPABhI/AdTc5BclF6ys+nnR/DI2+
+ 9X/0Zw35mVrxBzS1j0BNpt2qoflkre6K2XKyljehSrh65S2jNmd5nykKuqggvwyMi2OUawR
+ aS9No9WtnCTIgv9vsI7ag==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gurJBLGiZ/0=:p80neTvnogHsEmE7UdujdJ
+ 0oOyz9V03SF77HVltzReK3s2iy/sQvXOippGOlBFrPdEtz6fHDihpZV1ohdHCMFEsBQHD8nyI
+ /6Xm03a/EBQVhk0HR48N93eTApqBF6zJCwuZrn+kGJHml0Jjf2F2WQ61sLmxr2uBUNRCh2W01
+ N3vNP+tbraWfzu/uxX5XF/+/6kZ/KTui+9KZMsJ5VUdM8bZZ1h52uQ9hn5ebZK0tw7kAsCruS
+ LJNJzhNVpcg3o3FbtwKqfC2bfVJPlLjOGsJjhtXbglbd3jIGco6TLUpbcHcDjppCmHK2OX8RY
+ BXJC8ykeY4+zgzEipuTF1LmdZMK4yI9Ild9048ZcTTaPgx8hal9ho2BmUpfF0u4olQsGyv07F
+ hDzuTlVyAeQMwRyo96dQ3pNr/LGCyMiUhKP5M7Gz8ICvS4ZuaY0S/2RDOE4KBk/yFRfMgw3Ds
+ BxBAVtXgGAsqkOyIBIxKCCN8fnKy6ugFNkDQJ3utnZZ/bAvI5u46fb8BFuJPy6N7LwBd5kDlq
+ pD5sDhkyMXu9wTmdwLfri/cxDObo+zZfsHMicweVMb7OXTodMPsr6i3o7tLUQmEMa8tmAXYvS
+ ixtK4iUXM1eXSS0AwhyjBDsEZM4r5eQqKIm9djCbuEcE2F4Ei9a96ZO4doDC9Xxv3IB1+e2Yw
+ DKvBOcKIkNcG7jL1ZmbvndT8totiqPGnvmhbhvqbeUi7rAmlCB8GqcqPkNsilDGzOfYmmb3ZJ
+ i4decF4KkHaWuc5WsB7iuRJMpbzrhEMRFzfsOH52WBl24g5BplemK6K3dTelY0J2/oKsBPYXD
+ qWLRIiwL3IUUvmd5nBa3xhnvuDZMMV66aMLdyPmF41AiAhEYKahBaUAkwXXgHPYc1ypaVZoSe
+ B+jekkeXZ0U6CiwNIExyAJ9OlZ9GaMSkKzeCF+5NqDjkdMRf8O0HgQ9Kk1yJOrhxfqnf1kyxF
+ kN45qgrhImkuPCrwOkhp82m3ByWwUkrQKbm6jeNsnD7mryP0PORh3j+bcmhmMT2kGmbKo6eUC
+ UwdhkBCDZ/8x1yGol97Os5kcxW6GNF2fVSUOOEDbZ+Du7DlWPSVrGNtjOBPiSXbw2gsYBz7+V
+ MjxqRWQ0I2G7eSfVLhGONDggHe0C7xQd8gkyiVM2nicamGqj2onKTpPVaCx4EdGOD1/IXdc/X
+ R+SM2pOQhYZAyTt48t9GShh/Y1WL5PPAbdL497LBVKou/Y2Lp90k6T7LGslYbBARLhdpErYT9
+ yQ5nBvX0MaDZTWVLt
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Apr 2020 at 08:33, Gilad Ben-Yossef <gilad@benyossef.com> wrote:
->
-> > > -----Original Message-----
-> > > From: Pavel Machek <pavel@ucw.cz>
-> > > Sent: Saturday, 18 April 2020 13:44
-> > > To: kernel list <linux-kernel@vger.kernel.org>; Hadar Gat
-> > > <Hadar.Gat@arm.com>; herbert@gondor.apana.org.au
-> > > Subject: Arm CryptoCell driver -- default Y, even on machines where it is
-> > > obviously useless
-> > >
-> > > Hi!
-> > >
-> > > I'm configuring kernel for x86, and I get offered HW_RANDOM_CCTRNG with
-> > > default=Y, and help text suggesting I should enable it.
-> > >
-> > > That's... two wrong suggestions, right?
-> > >
-> > > Best regards,
-> > > Pavel
-> ...
-> > ________________________________________
-> > From: Hadar Gat <Hadar.Gat@arm.com>
-> > Sent: Saturday, April 18, 2020 11:31 PM
-> > To: Pavel Machek; kernel list; herbert@gondor.apana.org.au
-> > Cc: Ofir Drang; Gilad Ben Yossef; nd
-> > Subject: RE: Arm CryptoCell driver -- default Y, even on machines where it is obviously useless
-> >
-> > Hi Pavel,
-> > I think you got it right..
-> > Indeed, Arm CryptoCell CCTRNG driver couldn't be used and obviously useless if the Arm CryptoCell HW does not exist in the system.
->
-> There's a delicate point here though - CryptoCell is an independent
-> hardware block, it is not tied to a particular CPU architecture.
-> There are SoCs with none-Arm architecture CPU using it.
->
-> So I would say whatever the answer is, it should be the same for any
-> generic embedded style HW block.
->
-> And the help text is not architecture specific anyway, is it not..?
->
+> Maybe we could reduce the mutex_lock(&mem->lock)`s protected code area,
+> and noneed to protect pr_debug.
 
-Both the default y and and the help text are indeed incorrect. This
-should be fixed. We don't enable device drivers by default, and
-definitely not as as builtins. A conditional default m could be
-acceptable if the condition is sufficiently narrow.
+I suggest to improve the commit message.
+Would you like to adjust the patch subject?
 
-While at it, could we add a depends on CONFIG_OF since this code is
-definitely unusable on non-DT systems.
+Do you imagine that data synchronisation should evolve in other ways?
+
+Regards,
+Markus
