@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040ACC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69DCC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4CE021974
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9001F22240
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgDSR2G (ORCPT
+        id S1726738AbgDSR2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 13:28:06 -0400
+        Sun, 19 Apr 2020 13:28:08 -0400
 Received: from v6.sk ([167.172.42.174]:44490 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726681AbgDSR2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 13:28:01 -0400
+        id S1726693AbgDSR2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 13:28:04 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 70D62610C4;
-        Sun, 19 Apr 2020 17:28:00 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 8508D610C5;
+        Sun, 19 Apr 2020 17:28:03 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Michael Turquette <mturquette@baylibre.com>
 Cc:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 05/10] clk: mmp2: Move thermal register defines up a bit
-Date:   Sun, 19 Apr 2020 19:27:37 +0200
-Message-Id: <20200419172742.674717-6-lkundrak@v3.sk>
+Subject: [PATCH 06/10] clk: mmp2: Rename mmp2_pll_init() to mmp2_main_clk_init()
+Date:   Sun, 19 Apr 2020 19:27:38 +0200
+Message-Id: <20200419172742.674717-7-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200419172742.674717-1-lkundrak@v3.sk>
 References: <20200419172742.674717-1-lkundrak@v3.sk>
@@ -40,40 +40,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A trivial change to keep the sorting sane. The APBC registers are happier
-when they are grouped together, instead of mixed with the APMU ones.
+This is a trivial rename for a routine that registers more clock sources
+than the PLLs -- there's also a XO.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- drivers/clk/mmp/clk-of-mmp2.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clk/mmp/clk-of-mmp2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
-index 52dc8b43acd9a..524574187c17a 100644
+index 524574187c17a..ac88ea99b7c68 100644
 --- a/drivers/clk/mmp/clk-of-mmp2.c
 +++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -45,6 +45,10 @@
- #define APBC_SSP1	0x54
- #define APBC_SSP2	0x58
- #define APBC_SSP3	0x5c
-+#define APBC_THERMAL0	0x90
-+#define APBC_THERMAL1	0x98
-+#define APBC_THERMAL2	0x9c
-+#define APBC_THERMAL3	0xa0
- #define APMU_SDH0	0x54
- #define APMU_SDH1	0x58
- #define APMU_SDH2	0xe8
-@@ -55,10 +59,6 @@
- #define APMU_DISP1	0x110
- #define APMU_CCIC0	0x50
- #define APMU_CCIC1	0xf4
--#define APBC_THERMAL0	0x90
--#define APBC_THERMAL1	0x98
--#define APBC_THERMAL2	0x9c
--#define APBC_THERMAL3	0xa0
- #define APMU_USBHSIC0	0xf8
- #define APMU_USBHSIC1	0xfc
- #define APMU_GPU	0xcc
+@@ -139,7 +139,7 @@ static struct mmp_clk_factor_tbl uart_factor_tbl[] = {
+ 	{.num = 3521, .den = 689},	/*19.23MHZ */
+ };
+ 
+-static void mmp2_pll_init(struct mmp2_clk_unit *pxa_unit)
++static void mmp2_main_clk_init(struct mmp2_clk_unit *pxa_unit)
+ {
+ 	struct clk *clk;
+ 	struct mmp_clk_unit *unit = &pxa_unit->unit;
+@@ -456,7 +456,7 @@ static void __init mmp2_clk_init(struct device_node *np)
+ 
+ 	mmp_clk_init(np, &pxa_unit->unit, MMP2_NR_CLKS);
+ 
+-	mmp2_pll_init(pxa_unit);
++	mmp2_main_clk_init(pxa_unit);
+ 
+ 	mmp2_apb_periph_clk_init(pxa_unit);
+ 
 -- 
 2.26.0
 
