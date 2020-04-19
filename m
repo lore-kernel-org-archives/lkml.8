@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E30C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4468C5321D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7068F21927
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC5D206E9
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgDSRMt (ORCPT
+        id S1726861AbgDSRMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 13:12:49 -0400
-Received: from v6.sk ([167.172.42.174]:44022 "EHLO v6.sk"
+        Sun, 19 Apr 2020 13:12:54 -0400
+Received: from v6.sk ([167.172.42.174]:44156 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgDSRMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 13:12:39 -0400
+        id S1726211AbgDSRMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 13:12:52 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 6EFA3610BE;
-        Sun, 19 Apr 2020 17:12:38 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 09D6B610B7;
+        Sun, 19 Apr 2020 17:12:21 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 List-Id: <soc.lore.kernel.org>
 To:     soc@kernel.org
@@ -31,10 +31,10 @@ Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
         Haojian Zhuang <haojian.zhuang@gmail.com>,
         Robert Jarzmik <robert.jarzmik@free.fr>,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        stable@vger.kernel.org
-Subject: [PATCH 15/15] ARM: dts: mmp3-dell-ariel: Fix the SPI devices
-Date:   Sun, 19 Apr 2020 19:11:57 +0200
-Message-Id: <20200419171157.672999-16-lkundrak@v3.sk>
+        Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH 08/15] ARM: dts: mmp*: Fix up encoding of the /rtc interrupts property
+Date:   Sun, 19 Apr 2020 19:11:50 +0200
+Message-Id: <20200419171157.672999-9-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200419171157.672999-1-lkundrak@v3.sk>
 References: <20200419171157.672999-1-lkundrak@v3.sk>
@@ -45,50 +45,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've managed to get about everything wrong while digging these out of
-OEM's board file.
+This way the device tree validator learns that each cell of the property
+constitutes a separate item. Otherwise it gets unnecessairly upset:
 
-Correct the bus numbers, the exact model of the NOR flash, polarity of
-the chip selects and align the SPI frequency with the data sheet.
-
-Tested that it works now, with a slight fix to the PXA SSP driver.
+  mmp3-dell-ariel.dt.yaml: rtc@d4010000: interrupts: [[1, 0]] is too short
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Cc: <stable@vger.kernel.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- arch/arm/boot/dts/mmp3-dell-ariel.dts | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/mmp2.dtsi | 2 +-
+ arch/arm/boot/dts/mmp3.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mmp3-dell-ariel.dts b/arch/arm/boot/dts/mmp3-dell-ariel.dts
-index 15449c72c042b..b0ec14c421641 100644
---- a/arch/arm/boot/dts/mmp3-dell-ariel.dts
-+++ b/arch/arm/boot/dts/mmp3-dell-ariel.dts
-@@ -98,19 +98,19 @@ &twsi4 {
- 	status = "okay";
- };
- 
--&ssp3 {
-+&ssp1 {
- 	status = "okay";
--	cs-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
-+	cs-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
- 
- 	firmware-flash@0 {
--		compatible = "st,m25p80", "jedec,spi-nor";
-+		compatible = "winbond,w25q32", "jedec,spi-nor";
- 		reg = <0>;
--		spi-max-frequency = <40000000>;
-+		spi-max-frequency = <104000000>;
- 		m25p,fast-read;
- 	};
- };
- 
--&ssp4 {
--	cs-gpios = <&gpio 56 GPIO_ACTIVE_HIGH>;
-+&ssp2 {
-+	cs-gpios = <&gpio 56 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+index da10567b5aca6..4306f3a6742bf 100644
+--- a/arch/arm/boot/dts/mmp2.dtsi
++++ b/arch/arm/boot/dts/mmp2.dtsi
+@@ -364,7 +364,7 @@ twsi6: i2c@d4034000 {
+ 			rtc: rtc@d4010000 {
+ 				compatible = "mrvl,mmp-rtc";
+ 				reg = <0xd4010000 0x1000>;
+-				interrupts = <1 0>;
++				interrupts = <1>, <0>;
+ 				interrupt-names = "rtc 1Hz", "rtc alarm";
+ 				interrupt-parent = <&intcmux5>;
+ 				clocks = <&soc_clocks MMP2_CLK_RTC>;
+diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
+index 9b5087a95e736..3ac5e4e86e56d 100644
+--- a/arch/arm/boot/dts/mmp3.dtsi
++++ b/arch/arm/boot/dts/mmp3.dtsi
+@@ -474,7 +474,7 @@ twsi6: i2c@d4034000 {
+ 			rtc: rtc@d4010000 {
+ 				compatible = "mrvl,mmp-rtc";
+ 				reg = <0xd4010000 0x1000>;
+-				interrupts = <1 0>;
++				interrupts = <1>, <0>;
+ 				interrupt-names = "rtc 1Hz", "rtc alarm";
+ 				interrupt-parent = <&rtc_mux>;
+ 				clocks = <&soc_clocks MMP2_CLK_RTC>;
 -- 
 2.26.0
 
