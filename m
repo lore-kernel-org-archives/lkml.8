@@ -2,150 +2,111 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13520C2BA2B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57373C38A2F
 	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D480D214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34BBE214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="comv+33c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kv38Spaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbgDSIoJ (ORCPT
+        id S1725987AbgDSIvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 04:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57420 "EHLO
+        Sun, 19 Apr 2020 04:51:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725910AbgDSIoI (ORCPT
+        by vger.kernel.org with ESMTP id S1725446AbgDSIvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 04:44:08 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E89BC061A0C;
-        Sun, 19 Apr 2020 01:44:06 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o185so2964605pgo.3;
-        Sun, 19 Apr 2020 01:44:06 -0700 (PDT)
+        Sun, 19 Apr 2020 04:51:02 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B9E3C061A0C;
+        Sun, 19 Apr 2020 01:51:02 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id z6so2759347plk.10;
+        Sun, 19 Apr 2020 01:51:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HDuwLvARoJkJSZwVdQdf+z8zoIZqWqA2KSZFSJiI1jU=;
-        b=comv+33cklPlMXpi4bCNur7Oo3aADIMts7dmwACmm3ub+sdNLPXwxZDyNAhfSitd/F
-         bKAhwHPvtlZegevxRat3R0koR84Ihtz6tYRBbvA+Sg62uKlmIOK66q+20w0E7Oyr1lv8
-         LdBkELb7B1nxAWDz+dCvXmy3CMLGXZj+lx+80Dx4w3VJBjt1ZH8prbw459J7LQnIxrM5
-         E5ipyumMQjbAgWTPbLUkN/foJuGo7pOK2Hynz5aazW6SnVtMdmf3JY6Wc2NwSPiU5xfS
-         2842X8uPrBGcJpK2rF+Gzj5I+ZwGUBgxlXOFwfSh1cuonSwdvHlzXDO2QPA2SKc+ZAy0
-         tHbw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bSX4atb1G7v7QvX1S6vwKE3Ct6JtORUQlj+orW3uWPs=;
+        b=kv38SpajgjSUEG3RXxlvI4h01z9FLYQDklEBbr7764fo1zBcwhjvxl7TXyZGty8pKm
+         avJTsKIv7iHJSoAopAF8DfFvVATqZWGEi89QEt6AiGeRs5Yv2bqQ28tTcSQdXqwJ06Js
+         1T6SVkLn7GeW18AUR1+FXRM33uSpjb9K9RrlYQS+NDgHhJkvaPVSXFBW9MP6KpFh3QNM
+         2PnNfQYbFRd0JH5OuT9Ve4CmK4KT/p8VpvLHdpiFkUhOqaB5Wnii8jvZD+NdBOiT3jgO
+         R3fmOYkpG4fDhO5dX3cdgaU6piKiJJPUdpvY/ERbxYisiRNChzpcOO/6R10l46mp+lXs
+         Exug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HDuwLvARoJkJSZwVdQdf+z8zoIZqWqA2KSZFSJiI1jU=;
-        b=D5P6GJs2CQeYqa/QK1evzWq0AGU/WDGHrdil/43R/fr/PU/z47VW9IayZCnFFdBK5a
-         l9pORMbHdnsOtF/vLeb1odm8W2p5IXDI94cv5YyC6juN8pVm+vxpt+MruHsS9kvit/yW
-         XHGQElWP5MxIuNPrq2Ohpjnm3vfNykt8SyRTvAcP5693BVDdGzETofNLp/nD1H8Oxh9+
-         xmbcUxwb2+hJRyaH+3RwCj6SHFY5KApDy6URaeWDW5o/9hPwMqY3Ii2/vIx8cBo835YL
-         OWEofo5RvAwK7jbAmy0TAhsE+/t2glUsFjPy8pIxnQe05Y3Eu4e4D4GESWlf32G4TG/W
-         KzGQ==
-X-Gm-Message-State: AGi0PuaeTaF5OTPqeWhzopGMEwCOFUKPw1u4jf0AAhsgUnpsxkVVeyoX
-        qCFO2Ue1hT8hb0yF1ViQtC4=
-X-Google-Smtp-Source: APiQypLTNkL0FlLdpu8plOA88EM9HEHBSDUeucwsX5RV0Meaau9rUDuMqf3YVXorjSpV58yyasilow==
-X-Received: by 2002:a63:5d5c:: with SMTP id o28mr11522235pgm.322.1587285845663;
-        Sun, 19 Apr 2020 01:44:05 -0700 (PDT)
-Received: from local.opencloud.tech.localdomain ([219.143.130.26])
-        by smtp.gmail.com with ESMTPSA id t5sm6846533pjo.19.2020.04.19.01.44.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Apr 2020 01:44:05 -0700 (PDT)
-From:   xiangxia.m.yue@gmail.com
-To:     syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com
-Cc:     davem@davemloft.net, dev@openvswitch.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        pshelar@ovn.org, syzkaller-bugs@googlegroups.com,
-        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
-        Yi-Hung Wei <yihung.wei@gmail.com>
-Subject: [PATCH] net: openvswitch: ovs_ct_exit to be done under ovs_lock
-Date:   Fri, 17 Apr 2020 02:57:31 +0800
-Message-Id: <1587063451-54027-1-git-send-email-xiangxia.m.yue@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <000000000000e642a905a0cbee6e@google.com>
-References: <000000000000e642a905a0cbee6e@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bSX4atb1G7v7QvX1S6vwKE3Ct6JtORUQlj+orW3uWPs=;
+        b=KvylcsijMcI7g0qovWi6teUSGCps5ZXJ2+jzG94LQBpudWug60gpoGLtYh20BMDnHl
+         im/7704to5vO1PYXmh0OyV6BUVD81+xkANfLGG/L2mUzR7qOCbHCSpIQvTIAqO6gsrvm
+         UVQccuyqU1nMJy2bx/Djg2DwVKo6Sd/CFxEoWcfg2R8BiEydGcpw9ygkrH4In/vY1d/5
+         /JjDgqLP9l+My8JS5K6gY7DlDJE2VYdCYLBMaNESTDrww+TcSHvQPibNguIwkP2ydC01
+         JQ3Zn6Y2VhLF75cTT2cJhb6U4VHr+Q1r0gmvM2ICf7fhn836wVU7xpcosnOperKMv6tn
+         iUZw==
+X-Gm-Message-State: AGi0Pub/4THUWsfAh764ffFjIOPVX8MRos4t0kAmz7UZ2k3exwYhtOEA
+        jHoxJg1oWaVlYrhcrhaJW3hnyZOwP1KB83yuhxI=
+X-Google-Smtp-Source: APiQypI7EuM03jEU3Nn+IPvOp5XXJmt5UCbT1rkVoh8qe5oslUbzYORmUJH0gm+oATx53iA69AKBICqpxb6VjF8dUmQ=
+X-Received: by 2002:a17:90a:224b:: with SMTP id c69mr14870292pje.8.1587286261844;
+ Sun, 19 Apr 2020 01:51:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0ihzD4knW=pKFmcsW0Q9c5rfyJMFh2ChiePe5SWO6G_TQ@mail.gmail.com>
+ <CAHp75Vf6MT1AFacUkRUP3760nv=3V5kzF2AHWJG64tr5yZ2=dg@mail.gmail.com> <1920083.GZryhg05AW@kreacher>
+In-Reply-To: <1920083.GZryhg05AW@kreacher>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 19 Apr 2020 11:50:50 +0300
+Message-ID: <CAHp75Vey91K6d+5w8Cnni-Fqitb6xGe1CqxeqpSvzyxVXnNvDg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/6] platform/x86: intel_cht_int33fe: clean up series
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+On Sat, Apr 18, 2020 at 10:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> On Thursday, April 16, 2020 5:21:15 PM CEST Andy Shevchenko wrote:
+> > On Thu, Apr 16, 2020 at 6:05 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > On Thu, Apr 16, 2020 at 4:17 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Wed, Apr 08, 2020 at 07:09:00PM +0300, Andy Shevchenko wrote:
 
-syzbot wrote:
-| =============================
-| WARNING: suspicious RCU usage
-| 5.7.0-rc1+ #45 Not tainted
-| -----------------------------
-| net/openvswitch/conntrack.c:1898 RCU-list traversed in non-reader section!!
-|
-| other info that might help us debug this:
-| rcu_scheduler_active = 2, debug_locks = 1
-| ...
-|
-| stack backtrace:
-| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-| Workqueue: netns cleanup_net
-| Call Trace:
-| ...
-| ovs_ct_exit
-| ovs_exit_net
-| ops_exit_list.isra.7
-| cleanup_net
-| process_one_work
-| worker_thread
+...
 
-To avoid that warning, invoke the ovs_ct_exit under ovs_lock and add
-lockdep_ovsl_is_held as optional lockdep expression.
+> > > > Greg, Rafael,
+> > > > any suggestion how to proceed with this series?
+> > > >
+> > > > (It has been reviewed and tested).
+> > >
+> > > You can merge them through platform/x86 as far as I'm concerned, or
+> > > please let me know if you want me to pick them up.
+> >
+> > Works for me, but I would like to ask for formal Ack tag.
+>
+> I'm guessing that you talk about the first two patches, right?
 
-Link: https://lore.kernel.org/lkml/000000000000e642a905a0cbee6e@google.com
-Fixes: 11efd5cb04a1 ("openvswitch: Support conntrack zone limit")
-Cc: Pravin B Shelar <pshelar@ovn.org> 
-Cc: Yi-Hung Wei <yihung.wei@gmail.com>
-Reported-by: syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com
-Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
----
- net/openvswitch/conntrack.c | 3 ++-
- net/openvswitch/datapath.c  | 4 +++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+Correct!
 
-diff --git a/net/openvswitch/conntrack.c b/net/openvswitch/conntrack.c
-index e726159cfcfa..4340f25fe390 100644
---- a/net/openvswitch/conntrack.c
-+++ b/net/openvswitch/conntrack.c
-@@ -1895,7 +1895,8 @@ static void ovs_ct_limit_exit(struct net *net, struct ovs_net *ovs_net)
- 		struct hlist_head *head = &info->limits[i];
- 		struct ovs_ct_limit *ct_limit;
- 
--		hlist_for_each_entry_rcu(ct_limit, head, hlist_node)
-+		hlist_for_each_entry_rcu(ct_limit, head, hlist_node,
-+					 lockdep_ovsl_is_held())
- 			kfree_rcu(ct_limit, rcu);
- 	}
- 	kfree(ovs_net->ct_limit_info->limits);
-diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
-index d8ae541d22a8..94b024534987 100644
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -2466,8 +2466,10 @@ static void __net_exit ovs_exit_net(struct net *dnet)
- 	struct net *net;
- 	LIST_HEAD(head);
- 
--	ovs_ct_exit(dnet);
- 	ovs_lock();
-+
-+	ovs_ct_exit(dnet);
-+
- 	list_for_each_entry_safe(dp, dp_next, &ovs_net->dps, list_node)
- 		__dp_destroy(dp);
- 
+> Please feel free to add my ACK to both, thanks!
+
+Thanks!
+
 -- 
-2.23.0
-
+With Best Regards,
+Andy Shevchenko
