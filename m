@@ -7,34 +7,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E5BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53618C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9904212CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377F9212CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDSOlE (ORCPT
+        id S1726419AbgDSOlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 10:41:04 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:34139 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725793AbgDSOlC (ORCPT
+        Sun, 19 Apr 2020 10:41:18 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:33441 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725793AbgDSOlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 10:41:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tw-JNwa_1587307259;
-Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0Tw-JNwa_1587307259)
+        Sun, 19 Apr 2020 10:41:18 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tw-JNwQ_1587307258;
+Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0Tw-JNwQ_1587307258)
           by smtp.aliyun-inc.com(127.0.0.1);
           Sun, 19 Apr 2020 22:40:59 +0800
 From:   Lai Jiangshan <laijs@linux.alibaba.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 3/3] x86/entry: remove an unused label
-Date:   Sun, 19 Apr 2020 14:40:49 +0000
-Message-Id: <20200419144049.1906-4-laijs@linux.alibaba.com>
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>
+Subject: [PATCH 2/3] x86: remove address operator on function machine_check()
+Date:   Sun, 19 Apr 2020 14:40:48 +0000
+Message-Id: <20200419144049.1906-3-laijs@linux.alibaba.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200419144049.1906-1-laijs@linux.alibaba.com>
 References: <20200419144049.1906-1-laijs@linux.alibaba.com>
@@ -45,28 +47,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The label .Lcommon_\sym was introduced by 39e9543344fa.
-(x86-64: Reduce amount of redundant code generated for invalidate_interruptNN)
-And all the other relevant information was removed by 52aec3308db8
-(x86/tlb: replace INVALIDATE_TLB_VECTOR by CALL_FUNCTION_VECTOR)
+machine_check is function address, the address operator
+on it is nop for compiler.
+
+Make it consistent with the other function addresses in the
+same file.
 
 Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 ---
- arch/x86/entry/entry_64.S | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/kernel/idt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index b789835afbab..7d40d1034358 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -798,7 +798,6 @@ _ASM_NOKPROBE(common_interrupt)
- SYM_CODE_START(\sym)
- 	UNWIND_HINT_IRET_REGS
- 	pushq	$~(\num)
--.Lcommon_\sym:
- 	call	interrupt_entry
- 	UNWIND_HINT_REGS indirect=1
- 	call	\do_sym	/* rdi points to pt_regs */
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 87ef69a72c52..98bcb502f967 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -93,7 +93,7 @@ static const __initconst struct idt_data def_idts[] = {
+ 	INTG(X86_TRAP_DB,		debug),
+ 
+ #ifdef CONFIG_X86_MCE
+-	INTG(X86_TRAP_MC,		&machine_check),
++	INTG(X86_TRAP_MC,		machine_check),
+ #endif
+ 
+ 	SYSG(X86_TRAP_OF,		overflow),
+@@ -186,7 +186,7 @@ static const __initconst struct idt_data ist_idts[] = {
+ 	ISTG(X86_TRAP_NMI,	nmi,		IST_INDEX_NMI),
+ 	ISTG(X86_TRAP_DF,	double_fault,	IST_INDEX_DF),
+ #ifdef CONFIG_X86_MCE
+-	ISTG(X86_TRAP_MC,	&machine_check,	IST_INDEX_MCE),
++	ISTG(X86_TRAP_MC,	machine_check,	IST_INDEX_MCE),
+ #endif
+ };
+ 
 -- 
 2.20.1
 
