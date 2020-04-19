@@ -2,111 +2,132 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B784C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D46DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30746214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0DA921473
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:29:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="TNJ/SZf3"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Z8ON4iq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDSKP6 (ORCPT
+        id S1726009AbgDSK30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 06:15:58 -0400
-Received: from mout.gmx.net ([212.227.17.20]:39385 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbgDSKP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 06:15:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1587291296;
-        bh=UUB43ghojZyqJzvryIRz1INl9pLMh7p0IJbFf5QP2Es=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=TNJ/SZf3+4mTpQq09XvbEyvPAHJj8RbOs1bUbeVrvmWwhamx3wKM6Wwxg489RXSoX
-         Tvb/kBsBy80uXtHp1ki78P50zlijkGMUM6XBBHX4XFd/armTBMemJRMkfOSJ9W0gja
-         zyVuriMRIJVHaBb0VfoQTQAhKNVInzofhzLWz6w4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MCKFu-1jZQeD43DG-009PuW; Sun, 19
- Apr 2020 12:14:56 +0200
-Date:   Sun, 19 Apr 2020 12:14:53 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Malcolm Priestley <tvboxspy@gmail.com>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        "John B. Wyatt IV" <jbwyatt4@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] staging: vt6656: Fix functions' documentation
-Message-ID: <20200419101453.GB3244@ubuntu>
-References: <20200418123659.4475-1-oscar.carter@gmx.com>
- <20200418123659.4475-3-oscar.carter@gmx.com>
- <adc4bc72-5c80-e8f4-8d48-052109ae18b7@gmail.com>
- <20200419074717.GA3244@ubuntu>
- <42190e0e-4167-3cd6-0e52-d240ae67a502@gmail.com>
+        Sun, 19 Apr 2020 06:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725783AbgDSK3Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 06:29:25 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606DEC061A0C;
+        Sun, 19 Apr 2020 03:29:25 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 752A223059;
+        Sun, 19 Apr 2020 12:29:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587292163;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TbYFlrjpu4ST5SWEqVqD8WF0zCnnnfS7jHo+g2Rkr/U=;
+        b=Z8ON4iq3dQ8V1H+OpfOlW447vjWjj8F3TPtlN3Yz8zYTA5BSaOY0XWx/Y9HSJyhzYadX24
+        TDCYo5t+cSmelPa2fUKTBOwZZ5PUSNgpYB+uwiR9HGApIfC55MzEFsUVMc+wISMl66rj7N
+        QOsnkY44q06h15OD5gnGpAiFKfOiNjA=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42190e0e-4167-3cd6-0e52-d240ae67a502@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:uGVWodHyCTLdQ3XSyWqGBZ4gQuQDAHqGOos9oFi6KdRRLurA2TE
- /W+2OrlkPNeLluPXom2bihOZ14hvB6pWiAHLFLenr/3WGp2S336HJ5ruDal0aQUR7rztnTw
- f3VMb037pQIrOYptMrcdZNQQwVrGJmGsJ6jG7o0vRlqWOMjqeRQERobCJ6Cun2tRb4pfJuH
- Hb6Chks/Vf+S0eEwb4RZQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:i0sX5EJMf+I=:LUHt9YIF5DCp27j010j+Ig
- FhgIyn9jwz2q4dsefuegfy2wsFt0ctImsaTmMr6bqF8pWYARk57rok42ttTC8Qh1Yy9sbtrMg
- ihzXGYLDJBgEDD7OJjTsfnHkJVsjFVXS7BSDuUttu8GinuvsWs/WIzqpmY5zz2IkC0wR5rhom
- vkxRmJy0BU2uYAVk5iJjJdB9Nc+hcbDBoa/tqOJrTZ3pHNXi9fMb37spncRgzJVyOTCbbzgkN
- whIgfTO2MoSstXnfRdIsDuaIWDBL2Mi8zXATRjX8yGz4qUkVMIUYGD/PgzpalsmA7vig1nQUp
- FnE/cul4yLnny3hrxqX1KqBK7CPBYuJxFcuPTG3lMYOb7TQp2uO2pKlCLJiH80RSA79IZdedr
- CdjStDLrLaOaU8I3S/FrFPjVFcZg+cjSh7oFf0G3Pu7KXs9gPPc5NUCHGUkOa9Uuc0CmNpl2x
- cyCaf/VVvKIZ74loeN6+ariHNnExq9zctMPsSqCDI9jBrZV7D2XsQH9FNLDw3MCNmqMcBO1Oa
- 8aY60w4SVYEjz+pCWkhkBkk/6uEBmZ/my0vErgetSsxE680ffmleUAtyCZSqYeM3fSksN6VyQ
- k9mHI5JbDpr5HqOAlnJUWMfdxmaCNG4zxzsSUBTR2V2BHJO0+brR2l68dT/eoD5LCTq1qwK87
- UXc7CD0eDv2V0QKVuV8XG77i2c1WHtbr1FWXVisfQoAeZdxY8JdMi3czYjRAicYv+mCxxT3P7
- w40C3BxcuttRDrHWmvzGRTXEhaFA+YYVbQyrjStpB39t+eYR7/AGqiEsUFE9roxUtD8FrRiUt
- tOTU1rhJFAmoSurqwoydx3y2zKorUsSc1cAt1yoVmkON57jOZP3xabwxkowPZpAYumGXG7q8I
- lRwE/37G7iOlyUVCa67r9Lb2ToWsx3He3XkE+RG9+jO6wwtWe4H8ogA3GkaU7stzU58ydDuzg
- EdW44xBRs/blD8nysJAa3XNfdXAMGU3n5LKaZNq1DwbgP8VTsEbq29PEXGhvyCDwrx6HgstFj
- eY5nY31S2zyWjDlQq56SgerOaDGTtQ/sylD28TYHT3NBxqvxhGPIf8skT7u2k9zdVmn14VCTt
- y4cF0GYeyG0Y2PBQVjzsyHgP4xSupg5pvW+CuevBQ+w3O5Z3cG91J/MTyX6xeFa3rTw2tpRzZ
- 2ZPtJP9mbRYWbAvqTzqoObxbXUu9ls5GkVdVYUnTuMpB+ioWa97e0ALqAuGA3oHNWfTAriJ8M
- m7/JlmOW9JPCBd3e8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 19 Apr 2020 12:29:23 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 3/3] net: phy: bcm54140: add hwmon support
+In-Reply-To: <20200417212829.GJ785713@lunn.ch>
+References: <20200417192858.6997-1-michael@walle.cc>
+ <20200417192858.6997-3-michael@walle.cc> <20200417195003.GG785713@lunn.ch>
+ <35d00dfe1ad24b580dc247d882aa2e39@walle.cc>
+ <20200417201338.GI785713@lunn.ch>
+ <84679226df03bdd8060cb95761724d3a@walle.cc>
+ <20200417212829.GJ785713@lunn.ch>
+Message-ID: <4f3ff33f78472f547212f87f75a37b66@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 752A223059
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[10];
+         NEURAL_HAM(-0.00)[-0.974];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,suse.com,roeck-us.net,gmail.com,armlinux.org.uk,davemloft.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 10:22:50AM +0100, Malcolm Priestley wrote:
->
->
-> On 19/04/2020 08:47, Oscar Carter wrote:
-> > On Sat, Apr 18, 2020 at 07:05:53PM +0100, Malcolm Priestley wrote:
-> >> Actually I don't really think the function descriptions are needed at=
- all the
-> >> names of the functions are enough.
-> >>
-> > Then, it would be better leave the documentation as it was before or r=
-emove it?
-> >
->
-> I would remove them all except for comments inside functions.
->
-Ok, then I make the suggested changes and send a new version serie.
+Am 2020-04-17 23:28, schrieb Andrew Lunn:
+> On Fri, Apr 17, 2020 at 11:08:56PM +0200, Michael Walle wrote:
+>> Am 2020-04-17 22:13, schrieb Andrew Lunn:
+>> > > Correct, and this function was actually stolen from there ;) This was
+>> > > actually stolen from the mscc PHY ;)
+>> >
+>> > Which in itself indicates it is time to make it a helper :-)
+>> 
+>> Sure, do you have any suggestions?
+> 
+> mdiobus_get_phy() does the bit i was complaining about, the mdiobus
+> internal knowledge.
 
-> Regards
->
-> Malcolm
+But that doesn't address your other comment.
 
-Thanks,
-Oscar Carter
+> There is also the question of locking. What happens if the PHY devices
+> is unbound while you have an instance of its phydev?
+
+Is there any lock one could take to avoid that?
+
+> What happens if the base PHY is unbound? Are the three others then
+> unusable?
+
+In my case, this would mean the hwmon device is also removed. I don't
+see any other way to do it right now. I guess it would be better to
+have the hwmon device registered to some kind of parent device.
+
+> I think we need to take a step back and look at how we handle quad
+> PHYs in general. The VSC8584 has many of the same issues.
+
+For the BCM54140 there are three different functions:
+  (1) PHY functions accessible by the PHYs own address (ie PHY
+      status/control)
+  (2) PHY functions but only accessible by the global registers (ie
+      interrupt enables per PHY of the shared interrupt pin)
+  (3) global functions (like sensors, global configuration)
+
+(1) is already supported in the current PHY framework. (2) and (3)
+need the "hack" which uses mdiobus_read/write() with the base
+address.
+
+-michael
