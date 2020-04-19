@@ -2,227 +2,125 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D91C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07DAC38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F78521841
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87942214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="MnVlAW5E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UwlL/VrP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgDSKNL (ORCPT
+        id S1726183AbgDSKOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 06:13:11 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:41177 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbgDSKNI (ORCPT
+        Sun, 19 Apr 2020 06:14:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55247 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725914AbgDSKOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 06:13:08 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 9149F23059;
-        Sun, 19 Apr 2020 12:13:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587291183;
+        Sun, 19 Apr 2020 06:14:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587291274;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=dVOR36wUUAgqWiE9r1z9/+kv5+zWMoO7OVGdx+qKcxA=;
-        b=MnVlAW5EXw7D8hOBgut2fyiAwuqud16UBWMahqzEuX1n3kC2PILTE1CLxN4eq3FBiPiBOn
-        qfWwdN6Kq17uURzIdgyvgX2yKwsKR8xQzfnVm/8tEt5cXSB59sFTgkkDe6wJRReSDkz5Ai
-        5ZBthmQ3PR2qnE9SEWIR8AB+YUoZwKg=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH net-next v2 1/3] net: phy: broadcom: add helper to write/read RDB registers
-Date:   Sun, 19 Apr 2020 12:12:47 +0200
-Message-Id: <20200419101249.28991-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=8baLkYkh/KcmTrmqVwBM6+ZAc7sVyDzY0epJyjGRumI=;
+        b=UwlL/VrPRJRfuISzF5Bneo8vyScJMyDeTi1ZYqYjsCl2d0x2BLB5EIgRYKmlmMBltFQ/lc
+        jTYDNz3kwkRkv+HlMqHtsYVK/I3cUmeAeliURztWzBvSp0N1AI1STGk4ksDv0NoHOc1XTN
+        C3bpHQLOJZYPB+ZSLlI5KsznThWvsio=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-IW6iJNaTNWq4C8M4BsYEhA-1; Sun, 19 Apr 2020 06:14:32 -0400
+X-MC-Unique: IW6iJNaTNWq4C8M4BsYEhA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 261DD107ACC9;
+        Sun, 19 Apr 2020 10:14:31 +0000 (UTC)
+Received: from asgard.redhat.com (unknown [10.36.110.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DFB6D7E7FA;
+        Sun, 19 Apr 2020 10:14:28 +0000 (UTC)
+Date:   Sun, 19 Apr 2020 12:14:32 +0200
+From:   Eugene Syromiatnikov <esyr@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        David Sterba <dsterba@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>
+Cc:     Jeff Mahoney <jeffm@suse.com>
+Subject: [PATCH] btrfs: move enum btrfs_compression_type to the UAPI header
+Message-ID: <20200419101432.GA32249@asgard.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 9149F23059
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.841];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[11];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
-         FREEMAIL_CC(0.00)[suse.com,roeck-us.net,lunn.ch,gmail.com,armlinux.org.uk,davemloft.net,walle.cc];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RDB (Register Data Base) registers are used on newer Broadcom PHYs. Add
-helper to read, write and modify these registers.
+It is passed in struct btrfs_ioctl_defrag_range_args.compress_type
+to BTRFS_IOC_DEFRAG_RANGE, so it has to be a part of UAPI.
+Also, rely on enum definition rules to get BTRFS_NR_COMPRESS_TYPES
+value and mark it as non-ABI.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Complements: 33ca913349962208 ("btrfs: uapi/linux/btrfs.h migration, move struct btrfs_ioctl_defrag_range_args")
+Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
 ---
-changes since v1:
- - corrected typo
- - added Reviewed-by
+ fs/btrfs/compression.h     |  9 +--------
+ include/uapi/linux/btrfs.h | 10 ++++++++++
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
- drivers/net/phy/bcm-phy-lib.c | 80 +++++++++++++++++++++++++++++++++++
- drivers/net/phy/bcm-phy-lib.h |  9 ++++
- include/linux/brcmphy.h       |  3 ++
- 3 files changed, 92 insertions(+)
-
-diff --git a/drivers/net/phy/bcm-phy-lib.c b/drivers/net/phy/bcm-phy-lib.c
-index e77b274a09fd..d5f9a2701989 100644
---- a/drivers/net/phy/bcm-phy-lib.c
-+++ b/drivers/net/phy/bcm-phy-lib.c
-@@ -155,6 +155,86 @@ int bcm_phy_write_shadow(struct phy_device *phydev, u16 shadow,
- }
- EXPORT_SYMBOL_GPL(bcm_phy_write_shadow);
+diff --git a/fs/btrfs/compression.h b/fs/btrfs/compression.h
+index d253f7a..3483b26 100644
+--- a/fs/btrfs/compression.h
++++ b/fs/btrfs/compression.h
+@@ -6,6 +6,7 @@
+ #ifndef BTRFS_COMPRESSION_H
+ #define BTRFS_COMPRESSION_H
  
-+int __bcm_phy_read_rdb(struct phy_device *phydev, u16 rdb)
-+{
-+	int val;
-+
-+	val = __phy_write(phydev, MII_BCM54XX_RDB_ADDR, rdb);
-+	if (val < 0)
-+		return val;
-+
-+	return __phy_read(phydev, MII_BCM54XX_RDB_DATA);
-+}
-+EXPORT_SYMBOL_GPL(__bcm_phy_read_rdb);
-+
-+int bcm_phy_read_rdb(struct phy_device *phydev, u16 rdb)
-+{
-+	int ret;
-+
-+	phy_lock_mdio_bus(phydev);
-+	ret = __bcm_phy_read_rdb(phydev, rdb);
-+	phy_unlock_mdio_bus(phydev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(bcm_phy_read_rdb);
-+
-+int __bcm_phy_write_rdb(struct phy_device *phydev, u16 rdb, u16 val)
-+{
-+	int ret;
-+
-+	ret = __phy_write(phydev, MII_BCM54XX_RDB_ADDR, rdb);
-+	if (ret < 0)
-+		return ret;
-+
-+	return __phy_write(phydev, MII_BCM54XX_RDB_DATA, val);
-+}
-+EXPORT_SYMBOL_GPL(__bcm_phy_write_rdb);
-+
-+int bcm_phy_write_rdb(struct phy_device *phydev, u16 rdb, u16 val)
-+{
-+	int ret;
-+
-+	phy_lock_mdio_bus(phydev);
-+	ret = __bcm_phy_write_rdb(phydev, rdb, val);
-+	phy_unlock_mdio_bus(phydev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(bcm_phy_write_rdb);
-+
-+int __bcm_phy_modify_rdb(struct phy_device *phydev, u16 rdb, u16 mask, u16 set)
-+{
-+	int new, ret;
-+
-+	ret = __phy_write(phydev, MII_BCM54XX_RDB_ADDR, rdb);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = __phy_read(phydev, MII_BCM54XX_RDB_DATA);
-+	if (ret < 0)
-+		return ret;
-+
-+	new = (ret & ~mask) | set;
-+	if (new == ret)
-+		return 0;
-+
-+	return __phy_write(phydev, MII_BCM54XX_RDB_DATA, new);
-+}
-+EXPORT_SYMBOL_GPL(__bcm_phy_modify_rdb);
-+
-+int bcm_phy_modify_rdb(struct phy_device *phydev, u16 rdb, u16 mask, u16 set)
-+{
-+	int ret;
-+
-+	phy_lock_mdio_bus(phydev);
-+	ret = __bcm_phy_modify_rdb(phydev, rdb, mask, set);
-+	phy_unlock_mdio_bus(phydev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(bcm_phy_modify_rdb);
-+
- int bcm_phy_enable_apd(struct phy_device *phydev, bool dll_pwr_down)
- {
- 	int val;
-diff --git a/drivers/net/phy/bcm-phy-lib.h b/drivers/net/phy/bcm-phy-lib.h
-index 129df819be8c..4d3de91cda6c 100644
---- a/drivers/net/phy/bcm-phy-lib.h
-+++ b/drivers/net/phy/bcm-phy-lib.h
-@@ -48,6 +48,15 @@ int bcm_phy_write_shadow(struct phy_device *phydev, u16 shadow,
- 			 u16 val);
- int bcm_phy_read_shadow(struct phy_device *phydev, u16 shadow);
++#include <linux/btrfs.h>
+ #include <linux/sizes.h>
  
-+int __bcm_phy_write_rdb(struct phy_device *phydev, u16 rdb, u16 val);
-+int bcm_phy_write_rdb(struct phy_device *phydev, u16 rdb, u16 val);
-+int __bcm_phy_read_rdb(struct phy_device *phydev, u16 rdb);
-+int bcm_phy_read_rdb(struct phy_device *phydev, u16 rdb);
-+int __bcm_phy_modify_rdb(struct phy_device *phydev, u16 rdb, u16 mask,
-+			 u16 set);
-+int bcm_phy_modify_rdb(struct phy_device *phydev, u16 rdb, u16 mask,
-+		       u16 set);
-+
- int bcm_phy_ack_intr(struct phy_device *phydev);
- int bcm_phy_config_intr(struct phy_device *phydev);
- 
-diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
-index 6462c5447872..e14f78b3c8a4 100644
---- a/include/linux/brcmphy.h
-+++ b/include/linux/brcmphy.h
-@@ -114,6 +114,9 @@
- #define MII_BCM54XX_SHD_VAL(x)	((x & 0x1f) << 10)
- #define MII_BCM54XX_SHD_DATA(x)	((x & 0x3ff) << 0)
- 
-+#define MII_BCM54XX_RDB_ADDR	0x1e
-+#define MII_BCM54XX_RDB_DATA	0x1f
-+
  /*
-  * AUXILIARY CONTROL SHADOW ACCESS REGISTERS.  (PHY REG 0x18)
+@@ -100,14 +101,6 @@ blk_status_t btrfs_submit_compressed_read(struct inode *inode, struct bio *bio,
+ 
+ unsigned int btrfs_compress_str2level(unsigned int type, const char *str);
+ 
+-enum btrfs_compression_type {
+-	BTRFS_COMPRESS_NONE  = 0,
+-	BTRFS_COMPRESS_ZLIB  = 1,
+-	BTRFS_COMPRESS_LZO   = 2,
+-	BTRFS_COMPRESS_ZSTD  = 3,
+-	BTRFS_NR_COMPRESS_TYPES = 4,
+-};
+-
+ struct workspace_manager {
+ 	struct list_head idle_ws;
+ 	spinlock_t ws_lock;
+diff --git a/include/uapi/linux/btrfs.h b/include/uapi/linux/btrfs.h
+index e6b6cb0f..82cc9ac 100644
+--- a/include/uapi/linux/btrfs.h
++++ b/include/uapi/linux/btrfs.h
+@@ -558,6 +558,16 @@ struct btrfs_ioctl_clone_range_args {
   */
+ #define BTRFS_DEFRAG_RANGE_COMPRESS 1
+ #define BTRFS_DEFRAG_RANGE_START_IO 2
++
++enum btrfs_compression_type {
++	BTRFS_COMPRESS_NONE  = 0,
++	BTRFS_COMPRESS_ZLIB  = 1,
++	BTRFS_COMPRESS_LZO   = 2,
++	BTRFS_COMPRESS_ZSTD  = 3,
++
++	BTRFS_NR_COMPRESS_TYPES /* non-ABI */
++};
++
+ struct btrfs_ioctl_defrag_range_args {
+ 	/* start of the defrag operation */
+ 	__u64 start;
 -- 
-2.20.1
+2.1.4
 
