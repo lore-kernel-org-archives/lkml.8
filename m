@@ -2,84 +2,137 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8144EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 02:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46880C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 02:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCAD21924
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 02:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB2721D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 02:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725960AbgDSCiJ (ORCPT
+        id S1725994AbgDSCty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 22:38:09 -0400
-Received: from mail-m127107.qiye.163.com ([115.236.127.107]:64589 "EHLO
-        mail-m127107.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgDSCiJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 22:38:09 -0400
-X-Greylist: delayed 491 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Apr 2020 22:38:06 EDT
-Received: from vivo.com (wm-12.qy.internal [127.0.0.1])
-        by mail-m127107.qiye.163.com (Hmail) with ESMTP id AB45B81818;
-        Sun, 19 Apr 2020 10:29:17 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <ALkAhAAeCMuv1EhLduXMcKoR.3.1587263357615.Hmail.bernard@vivo.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        =?UTF-8?Q?Felix_K=C3=BChling?= <Felix.Kuehling@amd.com>,
-        linux-kernel@vger.kernel.org, opensource.kernel@vivo.com,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gZHJtL2FtZGdwdTogUmVtb3ZlIGFuIHVubmVjZXNzYXJ5IGNvbmRpdGlvbiBjaGVjayBpbiByZXNlcnZlX2JvX2FuZF9jb25kX3Ztcygp?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 117.89.196.49
-In-Reply-To: <3dedf704-896c-b1c1-2609-066522f89274@web.de>
+        Sat, 18 Apr 2020 22:49:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20201 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgDSCty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 22:49:54 -0400
+IronPort-SDR: VZ6O97qvhYJOkULNrzhL/dIfDOdkmOmaBRFld1WbDH29GJyc6o7ljyyJ1DwF+kdRKcPTJZW8Kf
+ GhQAc2l/9Fbg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2020 19:49:53 -0700
+IronPort-SDR: ieWttVn/aTgl915MUJ3l1Ij0cePAR7msaTQU2DnDG7LXv7fV9bQr7cGjCCLJIRqtvSC4J55nt4
+ FbCwxRkCi+JQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,401,1580803200"; 
+   d="scan'208";a="455140969"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Apr 2020 19:49:50 -0700
+Date:   Sun, 19 Apr 2020 10:49:48 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Jonathan Cameron <jic23@kernel.org>, kbuild-all@lists.01.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] iio: adc: ti-ads8344: properly byte swap value
+Message-ID: <20200419024948.GK21730@intel.com>
+References: <20200415212257.161238-2-alexandre.belloni@bootlin.com>
+ <202004161449.NY5hL54S%lkp@intel.com>
+ <20200416205023.GA437042@piout.net>
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [117.89.196.49) ] by ajax-webmail ( [127.0.0.1] ) ; Sun, 19 Apr 2020 10:29:17 +0800 (GMT+08:00)
-From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
-Date:   Sun, 19 Apr 2020 10:29:17 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVITk5CQkJCT01OQk9JT1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSUJDTk5DSU5DN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6NxA6Ezo6Hjg2Dg1KPhM3Hw4jNhgwFClVSFVKTkNMSU1ISE1LTExPVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlKSkxVQ0JVSkJNVU9CWVdZCAFZQU9OSUg3Bg++
-X-HM-Tid: 0a719044c30e986bkuuuab45b81818
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416205023.GA437042@piout.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgoKCuWPkeS7tuS6uu+8mk1hcmt1cyBFbGZyaW5nIDxNYXJrdXMuRWxmcmluZ0B3ZWIuZGU+CuWP
-kemAgeaXpeacn++8mjIwMjAtMDQtMTkgMDI6MTg6MDYK5pS25Lu25Lq677yaQmVybmFyZCBaaGFv
-IDxiZXJuYXJkQHZpdm8uY29tPixBbGV4IERldWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFtZC5j
-b20+LCJDaHJpc3RpYW4gS8O2bmlnIiA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPixhbWQtZ2Z4
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZyxkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCuaK
-hOmAgeS6uu+8miJGZWxpeCBLw7xobGluZyIgPEZlbGl4Lkt1ZWhsaW5nQGFtZC5jb20+LGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsb3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20sQ2h1bm1p
-bmcgWmhvdSA8RGF2aWQxLlpob3VAYW1kLmNvbT4sRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xs
-LmNoPixEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+CuS4u+mimO+8mlJlOiBbUEFUQ0hd
-IGRybS9hbWRncHU6IFJlbW92ZSBhbiB1bm5lY2Vzc2FyeSBjb25kaXRpb24gY2hlY2sgaW4gcmVz
-ZXJ2ZV9ib19hbmRfY29uZF92bXMoKT4+IFRoZXJlIGlzIG5vIG5lZWQgdG8gaWYgY2hlY2sgYWdh
-aW4sCj4KPlRoYW5rcyBmb3IgdGhpcyBpbmZvcm1hdGlvbi4KPgo+KiBTaG91bGQgdGhlIGZ1bmN0
-aW9uIG5hbWUgYmUgbWVudGlvbmVkIGluIHRoaXMgY2hhbmdlIGRlc2NyaXB0aW9uPwo+Cj4qIFdv
-dWxkIHlvdSBsaWtlIHRvIGFkanVzdCB0aGUgcGF0Y2ggc3ViamVjdD8KPgo+Cj4+IG1heWJlIHdl
-IGNvdWxkIG1lcmdlIGludG8gdGhlIGFib3ZlIGVsc2UgYnJhbmNoLgo+Cj5JIHN1Z2dlc3QgdG8g
-cmVjb25zaWRlciB0aGlzIHdvcmRpbmcuCj4KPgo+4oCmCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9hbWQvYW1kZ3B1L2FtZGdwdV9hbWRrZmRfZ3B1dm0uYwo+PiBAQCAtNzM1LDEwICs3MzUsOCBA
-QCBzdGF0aWMgaW50IHJlc2VydmVfYm9fYW5kX2NvbmRfdm1zKHN0cnVjdCBrZ2RfbWVtICptZW0s
-Cj7igKYKPgo+SSBwcm9wb3NlIHRvIHRha2UgZnVydGhlciBjb2Rpbmcgc3R5bGUgYXNwZWN0cyBp
-bnRvIGFjY291bnQuCj5odHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVs
-L2dpdC90b3J2YWxkcy9saW51eC5naXQvdHJlZS9Eb2N1bWVudGF0aW9uL3Byb2Nlc3MvY29kaW5n
-LXN0eWxlLnJzdD9pZD05MDI4MGVhYTg4YWMxYTkxNDBkYzc1OTk0MTEyMzUzMGQ1NTQ1YmI2I24x
-OTEKPgo+UG9zc2libGUgcmVmYWN0b3Jpbmc6Cj4JaWYgKHJldCkgewo+CQlwcl9lcnIo4oCmKTsK
-PgkJ4oCmCj4JfSBlbHNlIHsKPgkJY3R4LT5yZXNlcnZlZCA9IHRydWU7Cj4JfQo+Cj4KPkhvdyBk
-byB5b3UgdGhpbmsgYWJvdXQgdG8gYWRkIHRoZSB0YWcg4oCcRml4ZXPigJ0/Cj4KClN1cmUsIEkg
-d2lsbCBtb2RpZnkgdGhlIGNvZGUgYW5kIGFkanVzdCB0aGlzIHBhdGNoIHN1YmplY3QuIEkgd2ls
-bCBzdWJtaXQgaXQgYWdhaW4uCgo+UmVnYXJkcywKPk1hcmt1cwoNCg0K
+On Thu, Apr 16, 2020 at 10:50:23PM +0200, Alexandre Belloni wrote:
+> Hi,
+> 
+> On 16/04/2020 14:22:03+0800, kbuild test robot wrote:
+> > Hi Alexandre,
+> > 
+> > I love your patch! Yet something to improve:
+> > 
+> > [auto build test ERROR on iio/togreg]
+> > [also build test ERROR on v5.7-rc1 next-20200415]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help
+> > improve the system. BTW, we also suggest to use '--base' option to specify the
+> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> > 
+> > url:    https://github.com/0day-ci/linux/commits/Alexandre-Belloni/iio-adc-ti-ads8344-improve-the-driver/20200416-073357
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+> > config: c6x-allyesconfig (attached as .config)
+> > compiler: c6x-elf-gcc (GCC) 9.3.0
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=c6x 
+> > 
+> 
+> I spent some time to reproduce and this is actually not that trivial
+> because your toolchains are linked with libisl22 and most distributions
+> still ship an older version. Maybe you can do something about that?
+Thanks for the feedback, we will resolve this to use old version in
+earliest time.
+
+> 
+> > If you fix the issue, kindly add following tag as appropriate
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > 
+> > All errors (new ones prefixed by >>):
+> > 
+> > 
+> > vim +/302 +96 drivers/iio/adc/ti-ads8344.c
+> > 
+> >     72	
+> >     73	static int ads8344_adc_conversion(struct ads8344 *adc, int channel,
+> >     74					  bool differential)
+> >     75	{
+> >     76		struct spi_device *spi = adc->spi;
+> >     77		int ret;
+> >     78		u8 buf[3];
+> >     79	
+> >     80		adc->tx_buf = ADS8344_START;
+> >     81		if (!differential)
+> >     82			adc->tx_buf |= ADS8344_SINGLE_END;
+> >     83		adc->tx_buf |= ADS8344_CHANNEL(channel);
+> >     84		adc->tx_buf |= ADS8344_CLOCK_INTERNAL;
+> >     85	
+> >     86		ret = spi_write(spi, &adc->tx_buf, 1);
+> >     87		if (ret)
+> >     88			return ret;
+> >     89	
+> >     90		udelay(9);
+> >     91	
+> >     92		ret = spi_read(spi, buf, sizeof(buf));
+> >     93		if (ret)
+> >     94			return ret;
+> >     95	
+> >   > 96		return buf[0] << 9 | buf[1] << 1 | buf[2] >> 7;
+> >     97	}
+> >     98	
+> > 
+> 
+> I take it this is a false positive as I don't get any errors when
+> building this driver with the provided toolchain. However, I see a few
+> "internal compiler error: in priority, at haifa-sched.c:1599"
+> 
+> -- 
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> 
