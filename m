@@ -1,152 +1,143 @@
-Return-Path: <SRS0=3CHW=6C=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D299C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 23:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910F9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 00:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0B021BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Apr 2020 23:27:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="SHBqs5Tv"
+	by mail.kernel.org (Postfix) with ESMTP id 6E95721973
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 00:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587254694;
+	bh=v9pZ3WZNZEvx4oF1pGUXqLlB1PXbgAzl0qA9nRFRcew=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iApLi9Ie0/oGmlgAsotZVjOofYeJeLvctSERwvF0yOYb48+t9BUQ/hMxYAyvZ00uy
+	 SHZtq8i4tfPDPxV+kAA/ImWrtHjMhR4zTZrZzstcrZradiOhSdZFBRAkoNSSDAzM3L
+	 AtJSnyE0L5giegfo83jV3CQJNxkjInmlN+Qd67+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgDRX1F (ORCPT
+        id S1725939AbgDSAEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Apr 2020 19:27:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725982AbgDRX1E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Apr 2020 19:27:04 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42EB0C061A0F
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 16:27:04 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a22so2783695pjk.5
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Apr 2020 16:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.washington.edu; s=goo201206;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=cUB7vdca0MZaJN7908SrqMzaWtQshCgrQGTimt6WXAg=;
-        b=SHBqs5TvQq09m2V0itEAb9laKJVkdszNqUOMrH3jL2JPNyTiR2palwCZTYkoAhmx7D
-         21HzuuAMqYhvz44uZleZWuYu+EpMZDZSRCl5UJnqfDLrESBxndlSJJNaCDXcHwLhXYTD
-         i0HCoVM1GorPe52KBFFHPYNewpeJR9fRfWzy8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=cUB7vdca0MZaJN7908SrqMzaWtQshCgrQGTimt6WXAg=;
-        b=rgLR+1iWMy7nSCO9THIcLE8jOMD2+JzUoGROrwDSbSfQ0L7BTa/E50MZIxWjl89/Ag
-         f6ghd6TsKuogYIA9+mn4qWTeDHZoidp20uIsquFW5VflIKEYrzGEd3sNrl0E9cwRhIlK
-         T9d0O6mFbWr9hfqKuZzDjTFPGImLwZYBCDgD4uNrPCWCi6DTVWqDXK6OGsPKRvL3SG0D
-         0uTbbUav6WBRWOu3T4jNSngv+Xnfzc6kA0ZC73V5S50yhWvP/K7q619Os6A79ZHgwHlI
-         j5LuzIz07B8LZ5lFaupG5ge7tNg6+hjv6L77hlpADdDiu5kJTQCUBDd3QOdNpJuMRaR3
-         1ttA==
-X-Gm-Message-State: AGi0PuZkD25SIl1oxE+S5hURgohE7A3QqC2zgxWlNab7z8rrAEUSPQbO
-        eOn8/bFEc8O/IjU9Mq0BiNXoZw==
-X-Google-Smtp-Source: APiQypJCCGQF4cugES6slU2mpdEx2GHrEHuPITzBVyuTaVJ/RHTBYfuNwArajpvWKLf808CbnsWMow==
-X-Received: by 2002:a17:90a:fc89:: with SMTP id ci9mr5854418pjb.140.1587252423701;
-        Sat, 18 Apr 2020 16:27:03 -0700 (PDT)
-Received: from localhost.localdomain (c-73-53-94-119.hsd1.wa.comcast.net. [73.53.94.119])
-        by smtp.gmail.com with ESMTPSA id u7sm21429323pfu.90.2020.04.18.16.27.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Apr 2020 16:27:03 -0700 (PDT)
-From:   Luke Nelson <lukenels@cs.washington.edu>
-X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
-To:     bpf@vger.kernel.org
-Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf 2/2] bpf, selftests: Add test for BPF_STX BPF_B storing R10
-Date:   Sat, 18 Apr 2020 16:26:54 -0700
-Message-Id: <20200418232655.23870-2-luke.r.nels@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200418232655.23870-1-luke.r.nels@gmail.com>
-References: <20200418232655.23870-1-luke.r.nels@gmail.com>
+        Sat, 18 Apr 2020 20:04:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725804AbgDSAEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Apr 2020 20:04:49 -0400
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B644821BE5;
+        Sun, 19 Apr 2020 00:04:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587254689;
+        bh=v9pZ3WZNZEvx4oF1pGUXqLlB1PXbgAzl0qA9nRFRcew=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JmENRTRR/USNvPNYSd3QE4+FFbWum08VUHzVCR0xqqMOsfxlw80sHuQjMYk+IPzxZ
+         n7qqO+Oihe+J9oAyE9fSyjASwTbB+Tiex9woMXIlN/R+s9KIN2OJKC9a17yWwWq9nX
+         zvhYMZICIRuwvd6QxgYUj61knbarD0zgX9/u1j/o=
+Received: by mail-ed1-f44.google.com with SMTP id d16so4171270edv.8;
+        Sat, 18 Apr 2020 17:04:48 -0700 (PDT)
+X-Gm-Message-State: AGi0Pubf7x68AOgdqcAj01h6e2TmiktTLOvKprOb+c8N0xCaGz3nMsGO
+        9fj3sAA+Yj1IfWGbmUbzL1UP1LDEiq+Zz1ryjA==
+X-Google-Smtp-Source: APiQypLh2svs6+HFQn0QDrjIM0+ZgyqnnZlhJlt1ICrnKga20H9COUuvFy8z5br34719WC7LFPwgTiemoWhvlZCmvEU=
+X-Received: by 2002:aa7:c649:: with SMTP id z9mr8927514edr.288.1587254687117;
+ Sat, 18 Apr 2020 17:04:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200415011319.25559-1-jitao.shi@mediatek.com> <20200415011319.25559-2-jitao.shi@mediatek.com>
+In-Reply-To: <20200415011319.25559-2-jitao.shi@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 19 Apr 2020 08:04:34 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9szPeYM=pDvC7Q-LheQ1dCvQisK8rAg0K-8a17hnoh=w@mail.gmail.com>
+Message-ID: <CAAOTY_9szPeYM=pDvC7Q-LheQ1dCvQisK8rAg0K-8a17hnoh=w@mail.gmail.com>
+Subject: Re: [PATCH v15 1/3] dt-bindings: display: mediatek: control dpi pins
+ mode to avoid leakage
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        huijuan.xie@mediatek.com, stonea168@163.com,
+        cawa.cheng@mediatek.com,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a test to test_verifier that writes the lower 8 bits of
-R10 (aka FP) using BPF_B to an array map and reads the result back. The
-expected behavior is that the result should be the same as first copying
-R10 to R9, and then storing / loading the lower 8 bits of R9.
+Hi, Jitao:
 
-This test catches a bug that was present in the x86-64 JIT that caused
-an incorrect encoding for BPF_STX BPF_B when the source operand is R10.
+Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8815=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=889:13=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. =
+Set
+> the dpi pins to gpio mode and output-low to avoid leakage current when dp=
+i
+> disabled.
 
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
----
- .../selftests/bpf/verifier/stack_ptr.c        | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Applied to mediatek-drm-next [1], thanks.
 
-diff --git a/tools/testing/selftests/bpf/verifier/stack_ptr.c b/tools/testing/selftests/bpf/verifier/stack_ptr.c
-index 7276620ef242..8bfeb77c60bd 100644
---- a/tools/testing/selftests/bpf/verifier/stack_ptr.c
-+++ b/tools/testing/selftests/bpf/verifier/stack_ptr.c
-@@ -315,3 +315,43 @@
- 	},
- 	.result = ACCEPT,
- },
-+{
-+	"store PTR_TO_STACK in R10 to array map using BPF_B",
-+	.insns = {
-+	/* Load pointer to map. */
-+	BPF_MOV64_REG(BPF_REG_2, BPF_REG_10),
-+	BPF_ALU64_IMM(BPF_ADD, BPF_REG_2, -8),
-+	BPF_ST_MEM(BPF_DW, BPF_REG_2, 0, 0),
-+	BPF_LD_MAP_FD(BPF_REG_1, 0),
-+	BPF_EMIT_CALL(BPF_FUNC_map_lookup_elem),
-+	BPF_JMP_IMM(BPF_JNE, BPF_REG_0, 0, 2),
-+	BPF_MOV64_IMM(BPF_REG_0, 2),
-+	BPF_EXIT_INSN(),
-+	BPF_MOV64_REG(BPF_REG_1, BPF_REG_0),
-+	/* Copy R10 to R9. */
-+	BPF_MOV64_REG(BPF_REG_9, BPF_REG_10),
-+	/* Pollute other registers with unaligned values. */
-+	BPF_MOV64_IMM(BPF_REG_2, -1),
-+	BPF_MOV64_IMM(BPF_REG_3, -1),
-+	BPF_MOV64_IMM(BPF_REG_4, -1),
-+	BPF_MOV64_IMM(BPF_REG_5, -1),
-+	BPF_MOV64_IMM(BPF_REG_6, -1),
-+	BPF_MOV64_IMM(BPF_REG_7, -1),
-+	BPF_MOV64_IMM(BPF_REG_8, -1),
-+	/* Store both R9 and R10 with BPF_B and read back. */
-+	BPF_STX_MEM(BPF_B, BPF_REG_1, BPF_REG_10, 0),
-+	BPF_LDX_MEM(BPF_B, BPF_REG_2, BPF_REG_1, 0),
-+	BPF_STX_MEM(BPF_B, BPF_REG_1, BPF_REG_9, 0),
-+	BPF_LDX_MEM(BPF_B, BPF_REG_3, BPF_REG_1, 0),
-+	/* Should read back as same value. */
-+	BPF_JMP_REG(BPF_JEQ, BPF_REG_2, BPF_REG_3, 2),
-+	BPF_MOV64_IMM(BPF_REG_0, 1),
-+	BPF_EXIT_INSN(),
-+	BPF_MOV64_IMM(BPF_REG_0, 42),
-+	BPF_EXIT_INSN(),
-+	},
-+	.fixup_map_array_48b = { 3 },
-+	.result = ACCEPT,
-+	.retval = 42,
-+	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
-+},
--- 
-2.17.1
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-next
 
+Regards,
+Chun-Kuang.
+
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt | 6 =
+++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.t=
+xt
+> index 58914cf681b8..77def4456706 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> @@ -17,6 +17,9 @@ Required properties:
+>    Documentation/devicetree/bindings/graph.txt. This port should be conne=
+cted
+>    to the input port of an attached HDMI or LVDS encoder chip.
+>
+> +Optional properties:
+> +- pinctrl-names: Contain "default" and "sleep".
+> +
+>  Example:
+>
+>  dpi0: dpi@1401d000 {
+> @@ -27,6 +30,9 @@ dpi0: dpi@1401d000 {
+>                  <&mmsys CLK_MM_DPI_ENGINE>,
+>                  <&apmixedsys CLK_APMIXED_TVDPLL>;
+>         clock-names =3D "pixel", "engine", "pll";
+> +       pinctrl-names =3D "default", "sleep";
+> +       pinctrl-0 =3D <&dpi_pin_func>;
+> +       pinctrl-1 =3D <&dpi_pin_idle>;
+>
+>         port {
+>                 dpi0_out: endpoint {
+> --
+> 2.12.5
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
