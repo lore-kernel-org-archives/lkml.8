@@ -2,155 +2,134 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3036DC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E40DC54FC9
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17A65214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CAD622202
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587305947;
+	bh=HGGxwLDnLH3qBDS3TOfoWeiAb1IBnNmSSrucnC+YpY4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=h6jFZJnCQQzC5I5DmHd36vEHV0vhi/LBJk0oaRB4I1inin1OTcf6YA+Sf8F5QY17y
+	 TfGf4sFFWle/9jfWgyvjU08B1+/DO6HgGUsySkS4xTR1Ct4b2jnu/bJg6FUH2i7mSg
+	 aYchhVKUQD5rfi+BGPZr8Y3VgrxDlVopgZAdi8iM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgDSORg (ORCPT
+        id S1726335AbgDSOTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 10:17:36 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:55922 "EHLO raptor.unsafe.ru"
+        Sun, 19 Apr 2020 10:19:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbgDSORg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 10:17:36 -0400
-Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1725905AbgDSOTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 10:19:04 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 2AD14209FA;
-        Sun, 19 Apr 2020 14:17:32 +0000 (UTC)
-Date:   Sun, 19 Apr 2020 16:17:27 +0200
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH RESEND v11 2/8] proc: allow to mount many instances of
- proc in one pid namespace
-Message-ID: <20200419141727.zjstym5kbp5efoz6@comp-core-i7-2640m-0182e6>
-References: <20200409123752.1070597-1-gladkov.alexey@gmail.com>
- <20200409123752.1070597-3-gladkov.alexey@gmail.com>
- <87tv1iaqnq.fsf@x220.int.ebiederm.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 08206214AF;
+        Sun, 19 Apr 2020 14:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587305943;
+        bh=HGGxwLDnLH3qBDS3TOfoWeiAb1IBnNmSSrucnC+YpY4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wgZer+L0X/9tLbkf2Hnm+en6Yx73tH9RBpDzlz5WjPLE0ghDarParNoFmXH2p98w1
+         6g+pno0FKZ/bQ3iXbgL41BpeTgBNNpnJDyRjjGOiBzZCFCYl+VeW9w/DC0kMC8EQah
+         MMYG8607eDHxDRLE47wZwZzeFIEoNBB6/5mPjqFg=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Borislav Petkov <bp@suse.de>, Ion Badulescu <ionut@badula.org>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Jessica Yu <jeyu@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, netdev@vger.kernel.org,
+        oss-drivers@netronome.com, Salil Mehta <salil.mehta@huawei.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Shannon Nelson <snelson@pensando.io>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>
+Subject: [PATCH net-next v2 0/4] Remove vermagic header from global include folder
+Date:   Sun, 19 Apr 2020 17:18:46 +0300
+Message-Id: <20200419141850.126507-1-leon@kernel.org>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87tv1iaqnq.fsf@x220.int.ebiederm.org>
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Sun, 19 Apr 2020 14:17:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 01:55:05PM -0500, Eric W. Biederman wrote:
-> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
-> 
-> > This patch allows to have multiple procfs instances inside the
-> > same pid namespace. The aim here is lightweight sandboxes, and to allow
-> > that we have to modernize procfs internals.
-> >
-> > 1) The main aim of this work is to have on embedded systems one
-> > supervisor for apps. Right now we have some lightweight sandbox support,
-> > however if we create pid namespacess we have to manages all the
-> > processes inside too, where our goal is to be able to run a bunch of
-> > apps each one inside its own mount namespace without being able to
-> > notice each other. We only want to use mount namespaces, and we want
-> > procfs to behave more like a real mount point.
-> >
-> > 2) Linux Security Modules have multiple ptrace paths inside some
-> > subsystems, however inside procfs, the implementation does not guarantee
-> > that the ptrace() check which triggers the security_ptrace_check() hook
-> > will always run. We have the 'hidepid' mount option that can be used to
-> > force the ptrace_may_access() check inside has_pid_permissions() to run.
-> > The problem is that 'hidepid' is per pid namespace and not attached to
-> > the mount point, any remount or modification of 'hidepid' will propagate
-> > to all other procfs mounts.
-> >
-> > This also does not allow to support Yama LSM easily in desktop and user
-> > sessions. Yama ptrace scope which restricts ptrace and some other
-> > syscalls to be allowed only on inferiors, can be updated to have a
-> > per-task context, where the context will be inherited during fork(),
-> > clone() and preserved across execve(). If we support multiple private
-> > procfs instances, then we may force the ptrace_may_access() on
-> > /proc/<pids>/ to always run inside that new procfs instances. This will
-> > allow to specifiy on user sessions if we should populate procfs with
-> > pids that the user can ptrace or not.
-> >
-> > By using Yama ptrace scope, some restricted users will only be able to see
-> > inferiors inside /proc, they won't even be able to see their other
-> > processes. Some software like Chromium, Firefox's crash handler, Wine
-> > and others are already using Yama to restrict which processes can be
-> > ptracable. With this change this will give the possibility to restrict
-> > /proc/<pids>/ but more importantly this will give desktop users a
-> > generic and usuable way to specifiy which users should see all processes
-> > and which users can not.
-> >
-> > Side notes:
-> > * This covers the lack of seccomp where it is not able to parse
-> > arguments, it is easy to install a seccomp filter on direct syscalls
-> > that operate on pids, however /proc/<pid>/ is a Linux ABI using
-> > filesystem syscalls. With this change LSMs should be able to analyze
-> > open/read/write/close...
-> >
-> > In the new patchset version I removed the 'newinstance' option
-> > as suggested by Eric W. Biederman.
-> 
-> Some very small requests.
-> 
-> 1) Can you please not place fs_info in fs_context, and instead allocate
->    fs_info in fill_super?  Unless I have misread introduced a resource
->    leak if proc is not mounted or if proc is simply reconfigured.
+From: Leon Romanovsky <leonro@mellanox.com>
 
-Hm ... it seems you're right.
+Changelog:
+v2:
+ * Changed the implementation of patch #4 to be like Masahiro wants.
+I personally don't like this implementation and changing it just to move forward
+this this patchset.
+v1:
+https://lore.kernel.org/lkml/20200415133648.1306956-1-leon@kernel.org
+ * Added tags
+ * Updated patch #4 with test results
+ * Changed scripts/mod/modpost.c to create inclusion of vermagic.h
+   from kernel folder and not from general include/linux. This is
+   needed to generate *.mod.c files, while building modules.
+v0:
+https://lore.kernel.org/lkml/20200414155732.1236944-1-leon@kernel.org
+----------------------------------------------------------------------------
 
-> 2) Can you please move hide_pid and pid_gid into fs_info in this patch?
->    As was shown by my recent bug fix 
+Hi,
 
-OK. I’ll do it in the next version.
+This is followup to the failure reported by Borislav [1] and suggested
+fix later on [2].
 
-> 3) Can you please rebase on on v5.7-rc1 or v5.7-rc2 and repost these
->    patches please?  I thought I could do it safely but between my bug
->    fixes, and Alexey Dobriyan's parallel changes to proc these patches
->    do not apply cleanly.
-> 
->    Plus there is a resource leak in this patch.
+The series removes all includes of linux/vermagic.h, updates hns and
+nfp to use same kernel versioning scheme (exactly like we did for
+other drivers in previous cycle) and removes vermagic.h from global
+include folder.
 
-On my way.
+[1] https://lore.kernel.org/lkml/20200411155623.GA22175@zn.tnic
+[2] https://lore.kernel.org/lkml/20200413080452.GA3772@zn.tnic
 
-> >  struct proc_fs_context {
-> > -	struct pid_namespace	*pid_ns;
-> > +	struct proc_fs_info	*fs_info;
->         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> Please don't do this. As best as I can tell that introduces a memory
-> leak of proc is not mounted.  Please allocate fs_info in 
+------------------------------------------------------------
+1. Honestly, I have no idea if it can go to net-rc, clearly not all my
+patches are fixes, so I'm sending them to the net-next.
+2. Still didn't get response from kbuild, but it passed my own
+compilation tests.
+https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git/log/?h=vermagic
 
-OK.
+Thanks
 
--- 
-Rgrds, legion
+Leon Romanovsky (4):
+  drivers: Remove inclusion of vermagic header
+  net/hns: Remove custom driver version in favour of global one
+  net/nfp: Update driver to use global kernel version
+  kernel/module: Hide vermagic header file from general use
+
+ drivers/net/bonding/bonding_priv.h                   | 2 +-
+ drivers/net/ethernet/3com/3c509.c                    | 1 -
+ drivers/net/ethernet/3com/3c515.c                    | 1 -
+ drivers/net/ethernet/adaptec/starfire.c              | 1 -
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c      | 3 ---
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h      | 4 ----
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c   | 4 ----
+ drivers/net/ethernet/netronome/nfp/nfp_main.c        | 3 ---
+ drivers/net/ethernet/netronome/nfp/nfp_net_ethtool.c | 2 --
+ drivers/net/ethernet/pensando/ionic/ionic_main.c     | 2 +-
+ drivers/power/supply/test_power.c                    | 2 +-
+ include/linux/vermagic.h                             | 5 +++++
+ kernel/module.c                                      | 3 +++
+ net/ethtool/ioctl.c                                  | 3 +--
+ scripts/mod/modpost.c                                | 1 +
+ 15 files changed, 13 insertions(+), 24 deletions(-)
+
+--
+2.25.2
 
