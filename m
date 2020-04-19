@@ -2,86 +2,117 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2626CC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE6FC54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01C002075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A365621744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:10:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xggy72PC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMF1DXFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgDSS6w (ORCPT
+        id S1726424AbgDSTKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 14:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38542 "EHLO
+        Sun, 19 Apr 2020 15:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgDSS6v (ORCPT
+        with ESMTP id S1725848AbgDSTKt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 14:58:51 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52E9C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 11:58:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=58eelTMq/bLN5j06iA2jKBO2BNattXuFwU1DrQ+JtV4=; b=Xggy72PCBquU81ve6cNPE+KxXh
-        QMeo7dl65RflQIUaU99ssIOE3HMWrtkXbdbglE1iNsbVzMAP9OoHiK8Js+/tm+2cNmJzbYOX3m3N3
-        bhWBAx0cFuqGeCJwz0G6qHpADspoP1WUY1/n5bwzr0rTqJxxEyMBOP+XY2etbSSadqpMZk9qKw9uH
-        C2ZXkEe0h5X6PGhMfnC34tm4B8EbYNVHwdknqtRcU/WBox92C3OJ513dDGK+e6dbRpFmy3trq6Nbt
-        vThw/RVRbSjYryv8isCOpCVAkXJXFrnO65BWSgNl9MlyxXiekOZNcn6JnNrslQJbzHVrMJN/RRFm4
-        3ehowW+Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQF9N-0005Wx-5n; Sun, 19 Apr 2020 18:58:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 92D593012D8;
-        Sun, 19 Apr 2020 20:58:38 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 515402B4E18EF; Sun, 19 Apr 2020 20:58:38 +0200 (CEST)
-Date:   Sun, 19 Apr 2020 20:58:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
-        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org
-Subject: Re: [RFC][PATCH 5/7] x86/speculation: Change __FILL_RETURN_BUFFER to
- work with objtool
-Message-ID: <20200419185838.GX20696@hirez.programming.kicks-ass.net>
-References: <20200416150752.569029800@infradead.org>
- <20200416151025.004441230@infradead.org>
- <20200419165155.4twgzmf6eusk7rv5@treble>
- <20200419165519.wstqpqmvyom4yh3r@treble>
+        Sun, 19 Apr 2020 15:10:49 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AB3EC061A0C;
+        Sun, 19 Apr 2020 12:10:49 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id x10so6968854oie.1;
+        Sun, 19 Apr 2020 12:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gED75tHRUZsoWEBmkmqXmBkA+S7n+TXCiZUX+ASdEyA=;
+        b=AMF1DXFRPm9Bk2MU0CgrIARVheldiQhxEiQbB0EpUkPWCUMpk9ohQMAwbi4ShqBtdd
+         p3uu4cYI/3J8aCDSkzPifeuU4v6OK9jdP63Z8MqSalHHTYcf2Ky9o9DQLxOMmLIIvgU0
+         FoGFyJl3TZY7zrAU841JHbEE2tqAG1a/eAraXi9sKJpT6aDEtU/4m4OFMABqs2irQVhA
+         79AVHbzXGeIeCW5I3C3GJi1F7WBCY1a1YUrVfMAz8iDc6Znpxny4sb0eTxKyZ6AY9A+8
+         XzenocQ/xWKFrjh7QZ4llHhcPYnMmkxedz2lc5Cju6rY9fMqAEd3FBmoAO5FOxykeK3d
+         aYwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gED75tHRUZsoWEBmkmqXmBkA+S7n+TXCiZUX+ASdEyA=;
+        b=RzIm7/vAwX/xQEWOq1tOCRLnVc+obRdi/cgJEwpwMguF26qzJwrVJziwGER0ccdP9+
+         17mQqmVIsvwRuMYQ/szFSf4HcS007W9h1EDdjguhHNiBMVup+jjM6je7Z6/jVyQ+Ve/X
+         frGll5xqUwlzBIN1YXhM2IvrS7xwXc4WXKbLSBFdG6N/WbsVJBprY6okm7sC8lGeTCpQ
+         0K2u2LbUQgKVFJEKQUPHDNxy4aRsdHPO3Y6b9YF8npyhCF90tpDGXtNGxiwaoyHctnAr
+         crb8a+wu9/3B0TrFv/KbfMMOcYaUmqMhM9LaadzPTHIWnJah7IOFTVvpTbyLrX5fonXG
+         Byow==
+X-Gm-Message-State: AGi0PuZCS23G2uOP/+u4WXzwSkDXxuVa/Ex2vrTqe9sEBOAkidcq0MWm
+        mkGOyK7UAwqGtfeF9SB6CCPqYa74RKHveymF1QQ=
+X-Google-Smtp-Source: APiQypJy/sjdjUWZOujEBGWlWQXsxdIbkeokdvT3BGmONZYx9UDW/EoFLMydMrhyS4nVxPTI0l8LnJ60Q9sNUNhhjPg=
+X-Received: by 2002:aca:5d83:: with SMTP id r125mr8757326oib.8.1587323448883;
+ Sun, 19 Apr 2020 12:10:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419165519.wstqpqmvyom4yh3r@treble>
+References: <1587302823-4435-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587302823-4435-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <975f3a73bb272b8276687af609cd7e592d6ba9ac.camel@perches.com>
+In-Reply-To: <975f3a73bb272b8276687af609cd7e592d6ba9ac.camel@perches.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Sun, 19 Apr 2020 20:10:22 +0100
+Message-ID: <CA+V-a8uADgccR7sr_Jc0t6gcwGSX5aOANF4NZeNY6ZoSaJJ4Xg@mail.gmail.com>
+Subject: Re: [PATCH v8 8/8] MAINTAINERS: Add file patterns for rcar PCI device
+ tree bindings
+To:     Joe Perches <joe@perches.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 11:55:19AM -0500, Josh Poimboeuf wrote:
-> On Sun, Apr 19, 2020 at 11:52:00AM -0500, Josh Poimboeuf wrote:
-> > Are we still planning to warn about stack changes inside an alternative?
-> > If so then this would still fail...
-> > 
-> > In this case I think it should be safe, but I'm not sure how we can
-> > ensure that will always be the case for other alternatives.
-> > 
-> > And do the ORC entries actually work for this?  As far as I can tell,
-> > they would be associated with the .altinstructions section and not
-> > .text, so it wouldn't work.
-> 
-> My preference would be to move RSB stuffing out-of-line too, like you
-> did the retpolines.  Or use static branches.  Then we could add an
-> objtool warning to prevent stack changes in alternatives.
+Hi Joe,
 
-I effectively did the static_branch thing, but with an alternative, it's
-in the last patch, due to me being a moron and not refreshing the stack
-before sending it out.
+On Sun, Apr 19, 2020 at 5:38 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Sun, 2020-04-19 at 14:27 +0100, Lad Prabhakar wrote:
+> > Add file pattern entry for rcar PCI devicetree binding, so that when
+> > people run ./scripts/get_maintainer.pl the rcar PCI maintainers could also
+> > be listed.
+> []
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> []
+> > @@ -12933,6 +12933,7 @@ L:    linux-pci@vger.kernel.org
+> >  L:   linux-renesas-soc@vger.kernel.org
+> >  S:   Maintained
+> >  F:   drivers/pci/controller/*rcar*
+> > +F:   Documentation/devicetree/bindings/pci/*rcar*
+>
+> MAINTAINERS was recently sorted for consistency.
+>
+> Please move this new line above drivers/ to keep alphabetic ordering.
+>
+Sure I will rebase this patch on -next and post this patch independently.
+
+Cheers,
+--Prabhakar
