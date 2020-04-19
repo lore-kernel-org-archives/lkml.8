@@ -2,51 +2,40 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D694C5321D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00495C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC60214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54ED21473
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="VL8lHcY8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="K0nBRNGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgDSQ5A (ORCPT
+        id S1726492AbgDSRFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 12:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725970AbgDSQ5A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 12:57:00 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F4FC061A0C;
-        Sun, 19 Apr 2020 09:56:59 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 25FEC23059;
-        Sun, 19 Apr 2020 18:56:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587315418;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/XyGS8Ih2jliMK5tWK4NrlSo2vV1w+fYZEjP9GEbFHQ=;
-        b=VL8lHcY891HUtQsplwCdu2HO0oAmA8YZ+BzC7x4Va83HsABuf8gAgtHnOU7B4Ntd+hFHIT
-        xH6Pfb/wiP5NHafpYNVgy/eqVUFmYRq1pKrAkW8RYrOfXdgEM9HFGxCobbAcew5TX59qWA
-        jBhDFKZ7wFCS9NU/GTos+TuQxqVJ0nI=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 19 Apr 2020 18:56:58 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andrew Lunn <andrew@lunn.ch>
+        Sun, 19 Apr 2020 13:05:51 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:48620 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgDSRFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 13:05:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=df22MOiMiBWPmZ9Unkx77qadZVa96KWysrhmpciDQY4=; b=K0nBRNGsQY3lkkO4oT1w01NaQm
+        nsDK8Xw6vAdXBHItWPAKhsaJskg/SyCU26sC4OXoKm4a1n88nk/yKjKauW9aQp6J9N2FytLzfNegB
+        dH5MZ2s8pHB7v1r8/KTY4j56if+warOy6nrLRn00wMUIC+3w0FIBRQo+E+Ab1hZOOTqM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQDO7-003f7D-KM; Sun, 19 Apr 2020 19:05:47 +0200
+Date:   Sun, 19 Apr 2020 19:05:47 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
 Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -54,105 +43,64 @@ Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
         "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2 2/3] net: phy: add Broadcom BCM54140 support
-In-Reply-To: <20200419164958.GN836632@lunn.ch>
-References: <20200419101249.28991-1-michael@walle.cc>
- <20200419101249.28991-2-michael@walle.cc> <20200419154943.GJ836632@lunn.ch>
- <d40eafc5ed95b62886e10159dcb7a509@walle.cc>
- <20200419164958.GN836632@lunn.ch>
-Message-ID: <8478a8bb5542f8e40fa17a003893f08d@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 25FEC23059
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[10];
-         NEURAL_HAM(-0.00)[-0.977];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,suse.com,roeck-us.net,gmail.com,armlinux.org.uk,davemloft.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Subject: Re: [PATCH net-next 3/3] net: phy: bcm54140: add hwmon support
+Message-ID: <20200419170547.GO836632@lunn.ch>
+References: <20200417192858.6997-1-michael@walle.cc>
+ <20200417192858.6997-3-michael@walle.cc>
+ <20200417195003.GG785713@lunn.ch>
+ <35d00dfe1ad24b580dc247d882aa2e39@walle.cc>
+ <20200417201338.GI785713@lunn.ch>
+ <84679226df03bdd8060cb95761724d3a@walle.cc>
+ <20200417212829.GJ785713@lunn.ch>
+ <4f3ff33f78472f547212f87f75a37b66@walle.cc>
+ <20200419162928.GL836632@lunn.ch>
+ <ebc026792e09d5702d031398e96d34f2@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ebc026792e09d5702d031398e96d34f2@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-19 18:49, schrieb Andrew Lunn:
-> On Sun, Apr 19, 2020 at 06:33:40PM +0200, Michael Walle wrote:
->> >
->> > > +
->> > > +	return 0;
->> > > +}
->> > > +
->> > > +static int bcm54140_config_init(struct phy_device *phydev)
->> > > +{
->> > > +	u16 reg = 0xffff;
->> > > +	int ret;
->> > > +
->> > > +	/* Apply hardware errata */
->> > > +	ret = bcm54140_b0_workaround(phydev);
->> > > +	if (ret)
->> > > +		return ret;
->> > > +
->> > > +	/* Unmask events we are interested in. */
->> > > +	reg &= ~(BCM54140_RDB_INT_DUPLEX |
->> > > +		 BCM54140_RDB_INT_SPEED |
->> > > +		 BCM54140_RDB_INT_LINK);
->> > > +	ret = bcm_phy_write_rdb(phydev, BCM54140_RDB_IMR, reg);
->> > > +	if (ret)
->> > > +		return ret;
->> > > +
->> > > +	/* LED1=LINKSPD[1], LED2=LINKSPD[2], LED3=ACTIVITY */
->> > > +	ret = bcm_phy_modify_rdb(phydev, BCM54140_RDB_SPARE1,
->> > > +				 0, BCM54140_RDB_SPARE1_LSLM);
->> > > +	if (ret)
->> > > +		return ret;
->> >
->> > What are the reset default for LEDs? Can the LEDs be configured via
->> > strapping pins? There is currently no good solution for this. Whatever
->> > you pick will be wrong for somebody else. At minimum, strapping pins,
->> > if they exist, should not be overridden.
->> 
->> Fair enough. There are no strapping options, just the "default 
->> behaviour",
->> where LED1/2 indicates the speed, and LED3 just activity (no link
->> indication). And I just noticed that in this case the comment above is
->> wrong, because it is actually link/activity. Further, there are myriad
->> configuration options which I didn't want to encode altogether. So 
->> I've
->> just chosen the typical one (which actually matches our hardware), ie.
->> to have the "activity/led mode". The application note mentions some 
->> other
->> concrete modes, but I don't know if its worth implementing them. Maybe 
->> we
->> can have a enumeration of some distinct modes? Ie.
->> 
->>    broadcom,led-mode = <BCM54140_NO_CHANGE>;
->>    broadcom,led-mode = <BCM54140_ACT_LINK_MODE>;
+> > Maybe we need a phydev->shared structure, which all PHYs in one
+> > package share?
 > 
-> Configuring LEDs is a mess at the moment. No two PHYs do it the
-> same. For a long time i've had a TODO item to make PHY LEDs work just
-> like every other LED in linux, and you can set trigger actions which
-> are then implemented in hardware.
+> That came to my mind too. But how could the PHY core find out which
+> shared structure belongs to which phydev? I guess the phydev have to
+> find out, but then how does it tell the PHY core that it wants such
+> a shared structure. Have the (base) PHY address as an identifier?
+
+Yes. I was thinking along those lines.
+
+phy_package_join(phydev, base)
+
+If this is the first call with that value of base, allocate the
+structure, set the ref count to 1, and set phydev->shared to point to
+it. For subsequent calls, increment the reference count, and set
+phydev->shared.
+
+phy_package_leave(phydev)
+
+Decrement the reference count, and set phydev->shared to NULL. If the
+reference count goes to 0, free the structure.
+
+> > Get the core to do reference counting on the structure?
+> > Add helpers phy_read_shared(), phy_write_shared(), etc, which does
+> > MDIO accesses on the base device, taking care of the locking.
 > 
-> We have been pushing back on adding DT properties, it just makes the
-> problem worse. If reset defaults are good enough for you, please leave
-> it at that.
+> The "base" access is another thing, I guess, which has nothing to do
+> with the shared structure.
 
-Unfortunately not. We need the link/act, which I presume will also be
-used by most other users, thus the driver enables this setting. I don't
-know any board which just have an activity led, that is just off and
-blinks for a short time if there is RX or TX, which is the reset default
-setting of this PHY.
+I'm making the assumption that all global addresses are at the base
+address. If we don't want to make that assumption, we need the change
+the API above so you pass a cookie, and all PHYs need to use the same
+cookie to identify the package.
 
--michael
+Maybe base is the wrong name, since MSCC can have the base as the high
+address of the four, not the low?
+
+Still just thinking aloud....
+
+       Andrew
