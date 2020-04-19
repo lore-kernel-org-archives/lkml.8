@@ -2,113 +2,104 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFFEC38A29
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 07:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4361C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 07:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFBE521974
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 07:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA63D21974
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 07:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1WAVyJY"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="L88xN24A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgDSHqf (ORCPT
+        id S1726115AbgDSHrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 03:46:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725903AbgDSHqe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 03:46:34 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3139BC061A0C;
-        Sun, 19 Apr 2020 00:46:34 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id k21so6519125ljh.2;
-        Sun, 19 Apr 2020 00:46:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XEstN1SgEvGh1nrX3CNzhK3F/ve2pikk0hjy+pd1w1g=;
-        b=G1WAVyJYw1nYjFB9yztOZwG50VPCmIsppMClBRoZtoYJM3ocAdhXWwHeBRkm6lurB1
-         PX6Q+JC0Eg5YhYMoIynB5PZw3PTShXh8VTuGWOfNJC2D30SaKU0mTD2ZpglYqXjffrNB
-         b1dC5K07Yny3hEi2hCMETuG981J+3N2iC8VTIcEOV8eYDBCOWPOb8oRbiDGCNhdewn5Q
-         N4YmTz2pNlFgo18BfbU6n6N4Hk4BKTOrZCpKqKIJQOOl/JubwVzgeKBbhnGlhtgstVi5
-         pNQ8zlmGy1myQ/T1iJ1pjVqJjX7SMyF1FFe1V4iFdLPlNA0Dv5Irz1wUSYdWyna7TNwL
-         EUlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XEstN1SgEvGh1nrX3CNzhK3F/ve2pikk0hjy+pd1w1g=;
-        b=G07CTWcyOfq5YwF2KLk1/ODoUyaJuWd58aVzOcWlof9LQZ1usQa8lnurp66as7fFc/
-         BlaEO48pwLHWUAKcQbOXMiY8xldp8oj2pJmlkMeb8FN8mDRR2pLK4AVwWPHtFk2RQbPz
-         ziUJ46rMT27ARbEiiu8uH0QMwOE1dk2KqEe65wIOOVUV+TH7VYkollQjdooEbdTwUd/H
-         Wx8qCedEjIRw//vFe6xXA3Il1LSE8qCfusKpOODlbZW4UVUc0Z8u+6t+wOlRR/JetSA/
-         VtzhIMZYZaA4/zVCzBnd07mOR2WqkQOu1CxT9SLIYEyQ8fMiUdyc2CkCh69a1IddNXZM
-         dhGg==
-X-Gm-Message-State: AGi0PuZ/FHqMHCrXHY9NHM3kQMBBKcMWVSA2Mz5q10GlLNW7ipeQoFtL
-        2x0hs4l4oZdhgaz313y+TlTQiecX3aw=
-X-Google-Smtp-Source: APiQypIHNnshfJJbE4qKO2Uv+cKUPcxtuv73re1pRTkPxUNmZ8MSf4BYda0S6cMv9ceyOTUMmOG2aw==
-X-Received: by 2002:a2e:760c:: with SMTP id r12mr6461805ljc.139.1587282392694;
-        Sun, 19 Apr 2020 00:46:32 -0700 (PDT)
-Received: from luk-pc.lan (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
-        by smtp.googlemail.com with ESMTPSA id f2sm10954407lja.30.2020.04.19.00.46.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 00:46:31 -0700 (PDT)
-From:   LuK1337 <priv.luk@gmail.com>
-Cc:     =?UTF-8?q?=C5=81ukasz=20Patron?= <priv.luk@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sun, 19 Apr 2020 03:47:43 -0400
+Received: from mout.gmx.net ([212.227.17.22]:55645 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgDSHrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 03:47:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1587282450;
+        bh=vUSOECUk4A1mxf1ROMn314fFRK9fMORoG5b7Bw2RiDE=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=L88xN24AYqj90BWGl/q2KoIEmUQBg9VI9P377qLfYrtGRzd2BycuRy3r2pnP9kaj3
+         I4QgbDPnvoXLIXwzcXhOhwBVtQ0wrl04h+rnqgq/yumEoOZet5mkjgJjyjcAzWMp5Q
+         SwzA1awLY6+T65DOcmYAh8ULPyKAX4iOdza6FDtY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1Mwwdf-1j2vsn0M6F-00yTuy; Sun, 19
+ Apr 2020 09:47:30 +0200
+Date:   Sun, 19 Apr 2020 09:47:17 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Malcolm Priestley <tvboxspy@gmail.com>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Forest Bond <forest@alittletooquiet.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: xpad - Update xboxone fw2015 init packet
-Date:   Sun, 19 Apr 2020 09:46:23 +0200
-Message-Id: <20200419074624.9955-1-priv.luk@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200419041651.GD166864@dtor-ws>
-References: <20200419041651.GD166864@dtor-ws>
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "John B. Wyatt IV" <jbwyatt4@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] staging: vt6656: Fix functions' documentation
+Message-ID: <20200419074717.GA3244@ubuntu>
+References: <20200418123659.4475-1-oscar.carter@gmx.com>
+ <20200418123659.4475-3-oscar.carter@gmx.com>
+ <adc4bc72-5c80-e8f4-8d48-052109ae18b7@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <adc4bc72-5c80-e8f4-8d48-052109ae18b7@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:C+eQwfMRlP9LtW3tNHYP23t/9OFkChviWB5f1D306aNEAqLQh/f
+ PZq2e+MsIGdN5uaBB//2rSMKODQt3trR63byvjSBzXjQZp6GGdFHgSKSI890l5I4WYXVu/M
+ SF67fTyzYlFK8evNfdqjSWxro4t4MZrBmtBPfQaDM+pbdFN4Y9WF2xAOQ8/FDt+dh/3If2E
+ lFTPH9rS0aLBMiWv8d8YA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LMwP+G4IPtI=:j736PCtEgPykBb0xF2qwnY
+ 0TgUwgJv8SbU5ltOB9UImauPJ2uSmbsFHiPnBX+udnnR1Tp/jkfFYIQ2PqKJVMy5g5+CYNDeU
+ DCWwUx+avuF8CCZgOYd0ROEFy0JM+sNc8j6zvXhhpRNaSgCJkEPllCBDM6DJXa8QzB/VMoV8n
+ kIIzqUvKRbWn+SZLncD8iEJGx+A8KV2sbci0tNSzc8m9qKX6lA1bRy5Gnq/btlMKwKueVfMKH
+ vtRwjCaWM7X0eWdpXA1JdyciVkBMlv5XSb4uh+xUlv7HM08BEd7xpr1DGBzmecV+h8RTr5GI8
+ AdVvs51UeFnwhfyeBbi28iOmiBXPZEtJN/dBdK99eK9IDFVRTffBblClcfaQa9bCxd9FtIeXZ
+ j5KG7opdj52/m5QOeaFGCr+c+hX+m6D25BiiXgtOZdgckFmFVPh/nAxF8CZ9W7zjYdxndy4i9
+ KXr7WZU2GXim2Yc2QsLEXNpqunGPJZakysFE5KJ+nIoMSULSUf8tN9Iwd/lc6HcsmqQxxDkQu
+ SruE/mlZrAmXAspwhSt1OvF8qAOayIvWrAwXBHB1viRxLSaEdoKkgxD95JlSK0SgZ+4pdRwuw
+ KJnYD1MFIStcIZN5+zK+wUaTIVLcWiL/ZShbrci8Laz6jEdEns894856zHTZHhsz0lZhmmp6m
+ yHcoIR45xUdVlOsGG1TgSlmUKayWyjitOaztf6dscXCyLLRK+quECuADuqdKzusYl8Sgpl7HY
+ d19u1E99/cBaw2nMYsKPt08/qzVcPW6HflnQ1qThGz84S4L64omHvremoqwp9uQIgBgrnSAS7
+ MNGQ2lcDxpDDCSKEkxVjtXKifQNPDKKXcyEQ7aqriz2AEHXrV6YXsAeg+0C861GIQSUG541yb
+ kYoQZHBZJ/sv3ovPtHeU7mm+4fJTBuQPa5tO3Gm6KkF824F8AyxL/al28xx4pEVIxfzNq5I0+
+ Gj+dv4G6TqebTgzXsRVGe85YlYwAL3ku6/r2fqYPnKUohSLh45afpetZ34Hkk9IYf17qLa+R4
+ QLOE28iubMHH04Ti1YrX8fiBbQmXyopINcUh4gKDEjaeEsoqFZRNbJjPosUsr4MddB6XxbLvH
+ Pacjy2rOc+IqmfWcWsw2QFJPNNo41WLxY3J0M4kBWouh1T/auhnosi/KbExPTVvY0+4a3Lv1H
+ oByUJIYLNh46JzcZpeP+c9EFDL5PJRE5VBn0DIeH3bt4Imh9IPBm9c6Qqf7NfqUD7KWoyKsMM
+ k3jmHouw+vYGtSUVg
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Łukasz Patron <priv.luk@gmail.com>
+On Sat, Apr 18, 2020 at 07:05:53PM +0100, Malcolm Priestley wrote:
+> Actually I don't really think the function descriptions are needed at al=
+l the
+> names of the functions are enough.
+>
+Then, it would be better leave the documentation as it was before or remov=
+e it?
 
-Appending { 0x05, 0x20, 0x02, 0x0f, 0x06 } to
-xboxone_fw2015_init fixes an issue where the
-controller is somewhat stuck in bluetooth
-mode until you plug it into Windows PC.
+> card.c needs to be removed the bss callers to baseband.c, the tbtt's to =
+power.c
+> and the rest to mac.c
+>
+> Regards
+>
+> Malcolm
 
-Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
----
- drivers/input/joystick/xpad.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
-index 6b40a1c68f9f..894fa81f717a 100644
---- a/drivers/input/joystick/xpad.c
-+++ b/drivers/input/joystick/xpad.c
-@@ -455,7 +455,8 @@ struct xboxone_init_packet {
-  * or later firmware installed (or present from the factory).
-  */
- static const u8 xboxone_fw2015_init[] = {
--	0x05, 0x20, 0x00, 0x01, 0x00
-+	0x05, 0x20, 0x00, 0x01, 0x00,
-+	0x05, 0x20, 0x02, 0x0f, 0x06
- };
- 
- /*
--- 
-2.26.0
-
+Thanks,
+Oscar Carter
