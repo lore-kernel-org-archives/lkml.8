@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B3DC5321D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42457C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43CCC206E9
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2722F22244
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 17:13:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgDSRM7 (ORCPT
+        id S1726661AbgDSRNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 13:12:59 -0400
-Received: from v6.sk ([167.172.42.174]:44164 "EHLO v6.sk"
+        Sun, 19 Apr 2020 13:13:04 -0400
+Received: from v6.sk ([167.172.42.174]:44168 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbgDSRM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 13:12:57 -0400
+        id S1726875AbgDSRNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 13:13:00 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id D2E66610B9;
-        Sun, 19 Apr 2020 17:12:25 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 8757B610BA;
+        Sun, 19 Apr 2020 17:12:28 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 List-Id: <soc.lore.kernel.org>
 To:     soc@kernel.org
@@ -32,9 +32,9 @@ Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
         Robert Jarzmik <robert.jarzmik@free.fr>,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
         Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH 10/15] ARM: dts: mmp3: Fix USB & USB PHY node names
-Date:   Sun, 19 Apr 2020 19:11:52 +0200
-Message-Id: <20200419171157.672999-11-lkundrak@v3.sk>
+Subject: [PATCH 11/15] ARM: dts: berlin*: Fix up the SDHCI node names
+Date:   Sun, 19 Apr 2020 19:11:53 +0200
+Message-Id: <20200419171157.672999-12-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200419171157.672999-1-lkundrak@v3.sk>
 References: <20200419171157.672999-1-lkundrak@v3.sk>
@@ -45,77 +45,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are better generic ones and the validation is going to complain:
+The node name preferred by mmc-controller.yaml binding spec is "mmc":
 
-  mmp3-dell-ariel.dt.yaml: hsic@f0001000: $nodename:0: 'hsic@f0001000'
-      does not match '^usb(@.*)?'
-  mmp3-dell-ariel.dt.yaml: hsic@f0002000: $nodename:0: 'hsic@f0002000'
-      does not match '^usb(@.*)?'
-  ...
+  berlin2-sony-nsz-gs7.dt.yaml: sdhci@ab0000: $nodename:0:
+      'sdhci@ab0000' does not match '^mmc(@.*)?$'
+  berlin2-sony-nsz-gs7.dt.yaml: sdhci@ab0800: $nodename:0:
+      'sdhci@ab0800' does not match '^mmc(@.*)?$'
+  berlin2-sony-nsz-gs7.dt.yaml: sdhci@ab1000: $nodename:0:
+      'sdhci@ab1000' does not match '^mmc(@.*)?$'
+  berlin2cd-google-chromecast.dt.yaml: sdhci@ab0000: $nodename:0:
+      'sdhci@ab0000' does not match '^mmc(@.*)?$'
+  berlin2cd-valve-steamlink.dt.yaml: sdhci@ab0000: $nodename:0:
+      'sdhci@ab0000' does not match '^mmc(@.*)?$'
+  berlin2q-marvell-dmp.dt.yaml: sdhci@ab0000: $nodename:0:
+      'sdhci@ab0000' does not match '^mmc(@.*)?$'
+  berlin2q-marvell-dmp.dt.yaml: sdhci@ab0800: $nodename:0:
+      'sdhci@ab0800' does not match '^mmc(@.*)?$'
+  berlin2q-marvell-dmp.dt.yaml: sdhci@ab1000: $nodename:0:
+      'sdhci@ab1000' does not match '^mmc(@.*)?$'
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- arch/arm/boot/dts/mmp3.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/berlin2.dtsi   | 6 +++---
+ arch/arm/boot/dts/berlin2cd.dtsi | 2 +-
+ arch/arm/boot/dts/berlin2q.dtsi  | 6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
-index 531e1d85d5fa6..a4d8d846f81af 100644
---- a/arch/arm/boot/dts/mmp3.dtsi
-+++ b/arch/arm/boot/dts/mmp3.dtsi
-@@ -183,14 +183,14 @@ hsi0_mux: interrupt-controller@d42821d0 {
- 				mrvl,intc-nr-irqs = <5>;
- 			};
+diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
+index d2f7d984bba5c..3ab3cd250da70 100644
+--- a/arch/arm/boot/dts/berlin2.dtsi
++++ b/arch/arm/boot/dts/berlin2.dtsi
+@@ -77,7 +77,7 @@ soc@f7000000 {
  
--			usb_otg_phy0: usb-otg-phy@d4207000 {
-+			usb_otg_phy0: usb-phy@d4207000 {
- 				compatible = "marvell,mmp3-usb-phy";
- 				reg = <0xd4207000 0x40>;
- 				#phy-cells = <0>;
- 				status = "disabled";
- 			};
+ 		ranges = <0 0xf7000000 0x1000000>;
  
--			usb_otg0: usb-otg@d4208000 {
-+			usb_otg0: usb@d4208000 {
- 				compatible = "marvell,pxau2o-ehci";
- 				reg = <0xd4208000 0x200>;
- 				interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-@@ -201,7 +201,7 @@ usb_otg0: usb-otg@d4208000 {
- 				status = "disabled";
- 			};
+-		sdhci0: sdhci@ab0000 {
++		sdhci0: mmc@ab0000 {
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab0000 0x200>;
+ 			clocks = <&chip_clk CLKID_SDIO0XIN>, <&chip_clk CLKID_SDIO0>;
+@@ -86,7 +86,7 @@ sdhci0: sdhci@ab0000 {
+ 			status = "disabled";
+ 		};
  
--			hsic_phy0: hsic-phy@f0001800 {
-+			hsic_phy0: usb-phy@f0001800 {
- 				compatible = "marvell,mmp3-hsic-phy",
- 					     "usb-nop-xceiv";
- 				reg = <0xf0001800 0x40>;
-@@ -209,7 +209,7 @@ hsic_phy0: hsic-phy@f0001800 {
- 				status = "disabled";
- 			};
+-		sdhci1: sdhci@ab0800 {
++		sdhci1: mmc@ab0800 {
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab0800 0x200>;
+ 			clocks = <&chip_clk CLKID_SDIO1XIN>, <&chip_clk CLKID_SDIO1>;
+@@ -95,7 +95,7 @@ sdhci1: sdhci@ab0800 {
+ 			status = "disabled";
+ 		};
  
--			hsic0: hsic@f0001000 {
-+			hsic0: usb@f0001000 {
- 				compatible = "marvell,pxau2o-ehci";
- 				reg = <0xf0001000 0x200>;
- 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-@@ -223,7 +223,7 @@ hsic0: hsic@f0001000 {
- 				status = "disabled";
- 			};
+-		sdhci2: sdhci@ab1000 {
++		sdhci2: mmc@ab1000 {
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab1000 0x200>;
+ 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
+index e5c1f4213ff90..7cf3e6302d75c 100644
+--- a/arch/arm/boot/dts/berlin2cd.dtsi
++++ b/arch/arm/boot/dts/berlin2cd.dtsi
+@@ -62,7 +62,7 @@ soc@f7000000 {
  
--			hsic_phy1: hsic-phy@f0002800 {
-+			hsic_phy1: usb-phy@f0002800 {
- 				compatible = "marvell,mmp3-hsic-phy",
- 					     "usb-nop-xceiv";
- 				reg = <0xf0002800 0x40>;
-@@ -231,7 +231,7 @@ hsic_phy1: hsic-phy@f0002800 {
- 				status = "disabled";
- 			};
+ 		ranges = <0 0xf7000000 0x1000000>;
  
--			hsic1: hsic@f0002000 {
-+			hsic1: usb@f0002000 {
- 				compatible = "marvell,pxau2o-ehci";
- 				reg = <0xf0002000 0x200>;
- 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+-		sdhci0: sdhci@ab0000 {
++		sdhci0: mmc@ab0000 {
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab0000 0x200>;
+ 			clocks = <&chip_clk CLKID_SDIO0XIN>, <&chip_clk CLKID_SDIO0>;
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index 99d6872a6dfcc..c44a32e873f44 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -122,7 +122,7 @@ soc@f7000000 {
+ 		ranges = <0 0xf7000000 0x1000000>;
+ 		interrupt-parent = <&gic>;
+ 
+-		sdhci0: sdhci@ab0000 {
++		sdhci0: mmc@ab0000 {
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab0000 0x200>;
+ 			clocks = <&chip_clk CLKID_SDIO1XIN>, <&chip_clk CLKID_SDIO>;
+@@ -131,7 +131,7 @@ sdhci0: sdhci@ab0000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhci1: sdhci@ab0800 {
++		sdhci1: mmc@ab0800 {
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab0800 0x200>;
+ 			clocks = <&chip_clk CLKID_SDIO1XIN>, <&chip_clk CLKID_SDIO>;
+@@ -140,7 +140,7 @@ sdhci1: sdhci@ab0800 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhci2: sdhci@ab1000 {
++		sdhci2: mmc@ab1000 {
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab1000 0x200>;
+ 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.26.0
 
