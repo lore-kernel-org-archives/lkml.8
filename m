@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B91C54F70
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC020C3A5A0
 	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 13:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1D5122202
+	by mail.kernel.org (Postfix) with ESMTP id B6360214AF
 	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 13:58:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgDSN5u (ORCPT
+        id S1726384AbgDSN5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 09:57:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48974 "EHLO
+        Sun, 19 Apr 2020 09:57:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgDSN5t (ORCPT
+        with ESMTP id S1726307AbgDSN5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 09:57:49 -0400
+        Sun, 19 Apr 2020 09:57:50 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9730C061A10
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 06:57:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6F2C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 06:57:50 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jQAS7-0002lw-R6; Sun, 19 Apr 2020 15:57:44 +0200
+        id 1jQASC-0002n1-Ok; Sun, 19 Apr 2020 15:57:48 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5FA89100EA1;
-        Sun, 19 Apr 2020 15:57:43 +0200 (CEST)
-Date:   Sun, 19 Apr 2020 13:56:39 -0000
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 48876FFBA2;
+        Sun, 19 Apr 2020 15:57:48 +0200 (CEST)
+Date:   Sun, 19 Apr 2020 13:56:44 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] irq/urgent for 5.7-rc2
+Subject: [GIT pull] x86/urgent for 5.7-rc2
 References: <158730459860.31269.9496277256253823777.tglx@nanos.tec.linutronix.de>
-Message-ID: <158730459980.31269.13583785801133825132.tglx@nanos.tec.linutronix.de>
+Message-ID: <158730460462.31269.9837303049447973264.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
@@ -51,404 +51,430 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest irq/urgent branch from:
+please pull the latest x86/urgent branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2020-04-19
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2020-04-19
 
-up to:  b5963029d9e3: Merge tag 'irqchip-fixes-5.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms into irq/urgent
+up to:  8b9a18a9f249: x86/split_lock: Add Tremont family CPU models
 
 
-A set of fixes/updates for the interrupt subsystem:
+A set of fixes for x86 and objtool:
 
- - Remove setup_irq() and remove_irq(). All users have been converted so
-   remove them before new users surface.
+ objtool:
+ 
+  - Ignore the double UD2 which is emitted in BUG() when CONFIG_UBSAN_TRAP
+    is enabled.
 
- - A set of bugfixes for various interrupt chip drivers
+  - Support clang non-section symbols in objtool ORC dump
 
- - Add a few missing static attributes to address sparse warnings.
+  - Fix switch table detection in .text.unlikely
+
+  - Make the BP scratch register warning more robust.
+
+ x86:
+
+  - Increase microcode maximum patch size for AMD to cope with new CPUs
+    which have a larger patch size.
+
+  - Fix a crash in the resource control filesystem when the removal of the
+    default resource group is attempted.
+
+  - Preserve Code and Data Prioritization enabled state accross CPU
+    hotplug.
+
+  - Update split lock cpu matching to use the new X86_MATCH macros.
+
+  - Change the split lock enumeration as Intel finaly decided that the
+    IA32_CORE_CAPABILITIES bits are not architectural contrary to what
+    the SDM claims. !@#%$^!
+
+  - Add Tremont CPU models to the split lock detection cpu match.
+
+  - Add a missing static attribute to make sparse happy.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Atish Patra (1):
-      irqchip/sifive-plic: Fix maximum priority threshold value
+James Morse (1):
+      x86/resctrl: Preserve CDP enable over CPU hotplug
 
-Grygorii Strashko (1):
-      irqchip/ti-sci-inta: Fix processing of masked irqs
+Jason Yan (1):
+      x86/umip: Make umip_insns static
 
-Jason Yan (2):
-      irqchip/irq-mvebu-icu: Make legacy_bindings static
-      irqchip/irq-bcm7038-l1: Make bcm7038_l1_of_init() static
+John Allen (1):
+      x86/microcode/AMD: Increase microcode PATCH_MAX_SIZE
 
-Marc Zyngier (3):
-      irqchip/gic-v4.1: Add support for VPENDBASER's Dirty+Valid signaling
-      irqchip/gic-v4.1: Update effective affinity of virtual SGIs
-      irqchip/meson-gpio: Fix HARDIRQ-safe -> HARDIRQ-unsafe lock order
+Josh Poimboeuf (5):
+      objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
+      objtool: Support Clang non-section symbols in ORC dump
+      objtool: Support Clang non-section symbols in ORC generation
+      objtool: Fix switch table detection in .text.unlikely
+      objtool: Make BP scratch register warning more robust
 
-Zenghui Yu (1):
-      irqchip/mbigen: Free msi_desc on device teardown
+Reinette Chatre (1):
+      x86/resctrl: Fix invalid attempt at removing the default resource group
 
-afzal mohammed (1):
-      genirq: Remove setup_irq() and remove_irq()
+Tony Luck (3):
+      x86/split_lock: Update to use X86_MATCH_INTEL_FAM6_MODEL()
+      x86/split_lock: Bits in IA32_CORE_CAPABILITIES are not architectural
+      x86/split_lock: Add Tremont family CPU models
 
 
- drivers/irqchip/irq-bcm7038-l1.c   |  2 +-
- drivers/irqchip/irq-gic-v3-its.c   | 20 +++++++++++++++++
- drivers/irqchip/irq-gic-v3.c       | 11 ++++++----
- drivers/irqchip/irq-mbigen.c       |  8 ++++++-
- drivers/irqchip/irq-meson-gpio.c   | 18 +++++++++-------
- drivers/irqchip/irq-mvebu-icu.c    |  2 +-
- drivers/irqchip/irq-sifive-plic.c  |  2 +-
- drivers/irqchip/irq-ti-sci-inta.c  |  3 ++-
- include/linux/irq.h                |  2 --
- include/linux/irqchip/arm-gic-v3.h |  2 ++
- kernel/irq/manage.c                | 44 --------------------------------------
- 11 files changed, 51 insertions(+), 63 deletions(-)
+ arch/x86/include/asm/microcode_amd.h   |  2 +-
+ arch/x86/kernel/cpu/intel.c            | 54 ++++++++++++++++++++++------------
+ arch/x86/kernel/cpu/resctrl/core.c     |  2 ++
+ arch/x86/kernel/cpu/resctrl/internal.h |  1 +
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 16 +++++++++-
+ arch/x86/kernel/umip.c                 |  2 +-
+ tools/objtool/check.c                  | 26 +++++++++++-----
+ tools/objtool/orc_dump.c               | 44 ++++++++++++++++-----------
+ tools/objtool/orc_gen.c                | 33 ++++++++++++++++-----
+ 9 files changed, 127 insertions(+), 53 deletions(-)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index eb9bce93cd05..fd7c537fb42a 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -416,7 +416,7 @@ static const struct irq_domain_ops bcm7038_l1_domain_ops = {
- 	.map			= bcm7038_l1_map,
+diff --git a/arch/x86/include/asm/microcode_amd.h b/arch/x86/include/asm/microcode_amd.h
+index 6685e1218959..7063b5a43220 100644
+--- a/arch/x86/include/asm/microcode_amd.h
++++ b/arch/x86/include/asm/microcode_amd.h
+@@ -41,7 +41,7 @@ struct microcode_amd {
+ 	unsigned int			mpb[0];
  };
  
--int __init bcm7038_l1_of_init(struct device_node *dn,
-+static int __init bcm7038_l1_of_init(struct device_node *dn,
- 			      struct device_node *parent)
- {
- 	struct bcm7038_l1_chip *intc;
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 54d142ccc63a..124251b0ccba 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -14,6 +14,7 @@
- #include <linux/dma-iommu.h>
- #include <linux/efi.h>
- #include <linux/interrupt.h>
-+#include <linux/iopoll.h>
- #include <linux/irqdomain.h>
- #include <linux/list.h>
- #include <linux/log2.h>
-@@ -3672,6 +3673,20 @@ static int its_vpe_set_affinity(struct irq_data *d,
- 	return IRQ_SET_MASK_OK_DONE;
+-#define PATCH_MAX_SIZE PAGE_SIZE
++#define PATCH_MAX_SIZE (3 * PAGE_SIZE)
+ 
+ #ifdef CONFIG_MICROCODE_AMD
+ extern void __init load_ucode_amd_bsp(unsigned int family);
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index bf08d4508ecb..a19a680542ce 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1119,35 +1119,53 @@ void switch_to_sld(unsigned long tifn)
+ 	sld_update_msr(!(tifn & _TIF_SLD));
  }
  
-+static void its_wait_vpt_parse_complete(void)
-+{
-+	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
-+	u64 val;
-+
-+	if (!gic_rdists->has_vpend_valid_dirty)
-+		return;
-+
-+	WARN_ON_ONCE(readq_relaxed_poll_timeout(vlpi_base + GICR_VPENDBASER,
-+						val,
-+						!(val & GICR_VPENDBASER_Dirty),
-+						10, 500));
-+}
-+
- static void its_vpe_schedule(struct its_vpe *vpe)
- {
- 	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
-@@ -3702,6 +3717,8 @@ static void its_vpe_schedule(struct its_vpe *vpe)
- 	val |= vpe->idai ? GICR_VPENDBASER_IDAI : 0;
- 	val |= GICR_VPENDBASER_Valid;
- 	gicr_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
-+
-+	its_wait_vpt_parse_complete();
- }
- 
- static void its_vpe_deschedule(struct its_vpe *vpe)
-@@ -3910,6 +3927,8 @@ static void its_vpe_4_1_schedule(struct its_vpe *vpe,
- 	val |= FIELD_PREP(GICR_VPENDBASER_4_1_VPEID, vpe->vpe_id);
- 
- 	gicr_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
-+
-+	its_wait_vpt_parse_complete();
- }
- 
- static void its_vpe_4_1_deschedule(struct its_vpe *vpe,
-@@ -4035,6 +4054,7 @@ static int its_sgi_set_affinity(struct irq_data *d,
- 	 * not on the host (since they can only be targetting a vPE).
- 	 * Tell the kernel we've done whatever it asked for.
- 	 */
-+	irq_data_update_effective_affinity(d, mask_val);
- 	return IRQ_SET_MASK_OK;
- }
- 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 9dbc81b6f62e..d7006ef18a0d 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -873,6 +873,7 @@ static int __gic_update_rdist_properties(struct redist_region *region,
- 	gic_data.rdists.has_rvpeid &= !!(typer & GICR_TYPER_RVPEID);
- 	gic_data.rdists.has_direct_lpi &= (!!(typer & GICR_TYPER_DirectLPIS) |
- 					   gic_data.rdists.has_rvpeid);
-+	gic_data.rdists.has_vpend_valid_dirty &= !!(typer & GICR_TYPER_DIRTY);
- 
- 	/* Detect non-sensical configurations */
- 	if (WARN_ON_ONCE(gic_data.rdists.has_rvpeid && !gic_data.rdists.has_vlpis)) {
-@@ -893,10 +894,11 @@ static void gic_update_rdist_properties(void)
- 	if (WARN_ON(gic_data.ppi_nr == UINT_MAX))
- 		gic_data.ppi_nr = 0;
- 	pr_info("%d PPIs implemented\n", gic_data.ppi_nr);
--	pr_info("%sVLPI support, %sdirect LPI support, %sRVPEID support\n",
--		!gic_data.rdists.has_vlpis ? "no " : "",
--		!gic_data.rdists.has_direct_lpi ? "no " : "",
--		!gic_data.rdists.has_rvpeid ? "no " : "");
-+	if (gic_data.rdists.has_vlpis)
-+		pr_info("GICv4 features: %s%s%s\n",
-+			gic_data.rdists.has_direct_lpi ? "DirectLPI " : "",
-+			gic_data.rdists.has_rvpeid ? "RVPEID " : "",
-+			gic_data.rdists.has_vpend_valid_dirty ? "Valid+Dirty " : "");
- }
- 
- /* Check whether it's single security state view */
-@@ -1620,6 +1622,7 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 	gic_data.rdists.has_rvpeid = true;
- 	gic_data.rdists.has_vlpis = true;
- 	gic_data.rdists.has_direct_lpi = true;
-+	gic_data.rdists.has_vpend_valid_dirty = true;
- 
- 	if (WARN_ON(!gic_data.domain) || WARN_ON(!gic_data.rdists.rdist)) {
- 		err = -ENOMEM;
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index 6b566bba263b..ff7627b57772 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -220,10 +220,16 @@ static int mbigen_irq_domain_alloc(struct irq_domain *domain,
- 	return 0;
- }
- 
-+static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-+				   unsigned int nr_irqs)
-+{
-+	platform_msi_domain_free(domain, virq, nr_irqs);
-+}
-+
- static const struct irq_domain_ops mbigen_domain_ops = {
- 	.translate	= mbigen_domain_translate,
- 	.alloc		= mbigen_irq_domain_alloc,
--	.free		= irq_domain_free_irqs_common,
-+	.free		= mbigen_irq_domain_free,
- };
- 
- static int mbigen_of_create_domain(struct platform_device *pdev,
-diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
-index ccc7f823911b..bc7aebcc96e9 100644
---- a/drivers/irqchip/irq-meson-gpio.c
-+++ b/drivers/irqchip/irq-meson-gpio.c
-@@ -144,12 +144,17 @@ struct meson_gpio_irq_controller {
- static void meson_gpio_irq_update_bits(struct meson_gpio_irq_controller *ctl,
- 				       unsigned int reg, u32 mask, u32 val)
- {
-+	unsigned long flags;
- 	u32 tmp;
- 
-+	spin_lock_irqsave(&ctl->lock, flags);
-+
- 	tmp = readl_relaxed(ctl->base + reg);
- 	tmp &= ~mask;
- 	tmp |= val;
- 	writel_relaxed(tmp, ctl->base + reg);
-+
-+	spin_unlock_irqrestore(&ctl->lock, flags);
- }
- 
- static void meson_gpio_irq_init_dummy(struct meson_gpio_irq_controller *ctl)
-@@ -196,14 +201,15 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
- 			       unsigned long  hwirq,
- 			       u32 **channel_hwirq)
- {
-+	unsigned long flags;
- 	unsigned int idx;
- 
--	spin_lock(&ctl->lock);
-+	spin_lock_irqsave(&ctl->lock, flags);
- 
- 	/* Find a free channel */
- 	idx = find_first_zero_bit(ctl->channel_map, NUM_CHANNEL);
- 	if (idx >= NUM_CHANNEL) {
--		spin_unlock(&ctl->lock);
-+		spin_unlock_irqrestore(&ctl->lock, flags);
- 		pr_err("No channel available\n");
- 		return -ENOSPC;
- 	}
-@@ -211,6 +217,8 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
- 	/* Mark the channel as used */
- 	set_bit(idx, ctl->channel_map);
- 
-+	spin_unlock_irqrestore(&ctl->lock, flags);
-+
- 	/*
- 	 * Setup the mux of the channel to route the signal of the pad
- 	 * to the appropriate input of the GIC
-@@ -225,8 +233,6 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
- 	 */
- 	*channel_hwirq = &(ctl->channel_irqs[idx]);
- 
--	spin_unlock(&ctl->lock);
--
- 	pr_debug("hwirq %lu assigned to channel %d - irq %u\n",
- 		 hwirq, idx, **channel_hwirq);
- 
-@@ -287,13 +293,9 @@ static int meson_gpio_irq_type_setup(struct meson_gpio_irq_controller *ctl,
- 			val |= REG_EDGE_POL_LOW(params, idx);
- 	}
- 
--	spin_lock(&ctl->lock);
--
- 	meson_gpio_irq_update_bits(ctl, REG_EDGE_POL,
- 				   REG_EDGE_POL_MASK(params, idx), val);
- 
--	spin_unlock(&ctl->lock);
--
- 	return 0;
- }
- 
-diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-index 547045d89c4b..91adf771f185 100644
---- a/drivers/irqchip/irq-mvebu-icu.c
-+++ b/drivers/irqchip/irq-mvebu-icu.c
-@@ -66,7 +66,7 @@ struct mvebu_icu_irq_data {
- 	unsigned int type;
- };
- 
--DEFINE_STATIC_KEY_FALSE(legacy_bindings);
-+static DEFINE_STATIC_KEY_FALSE(legacy_bindings);
- 
- static void mvebu_icu_init(struct mvebu_icu *icu,
- 			   struct mvebu_icu_msi_data *msi_data,
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index c34fb3ae0ff8..d0a71febdadc 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -56,7 +56,7 @@
- #define     CONTEXT_THRESHOLD		0x00
- #define     CONTEXT_CLAIM		0x04
- 
--#define	PLIC_DISABLE_THRESHOLD		0xf
-+#define	PLIC_DISABLE_THRESHOLD		0x7
- #define	PLIC_ENABLE_THRESHOLD		0
- 
- struct plic_priv {
-diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-index 8f6e6b08eadf..7e3ebf6ed2cd 100644
---- a/drivers/irqchip/irq-ti-sci-inta.c
-+++ b/drivers/irqchip/irq-ti-sci-inta.c
-@@ -37,6 +37,7 @@
- #define VINT_ENABLE_SET_OFFSET	0x0
- #define VINT_ENABLE_CLR_OFFSET	0x8
- #define VINT_STATUS_OFFSET	0x18
-+#define VINT_STATUS_MASKED_OFFSET	0x20
- 
- /**
-  * struct ti_sci_inta_event_desc - Description of an event coming to
-@@ -116,7 +117,7 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
- 	chained_irq_enter(irq_desc_get_chip(desc), desc);
- 
- 	val = readq_relaxed(inta->base + vint_desc->vint_id * 0x1000 +
--			    VINT_STATUS_OFFSET);
-+			    VINT_STATUS_MASKED_OFFSET);
- 
- 	for_each_set_bit(bit, &val, MAX_EVENTS_PER_VINT) {
- 		virq = irq_find_mapping(domain, vint_desc->events[bit].hwirq);
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 9315fbb87db3..c63c2aa915ff 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -573,8 +573,6 @@ enum {
- #define IRQ_DEFAULT_INIT_FLAGS	ARCH_IRQ_INIT_FLAGS
- 
- struct irqaction;
--extern int setup_irq(unsigned int irq, struct irqaction *new);
--extern void remove_irq(unsigned int irq, struct irqaction *act);
- extern int setup_percpu_irq(unsigned int irq, struct irqaction *new);
- extern void remove_percpu_irq(unsigned int irq, struct irqaction *act);
- 
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index 765d9b769b69..6c36b6cc3edf 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -243,6 +243,7 @@
- 
- #define GICR_TYPER_PLPIS		(1U << 0)
- #define GICR_TYPER_VLPIS		(1U << 1)
-+#define GICR_TYPER_DIRTY		(1U << 2)
- #define GICR_TYPER_DirectLPIS		(1U << 3)
- #define GICR_TYPER_LAST			(1U << 4)
- #define GICR_TYPER_RVPEID		(1U << 7)
-@@ -686,6 +687,7 @@ struct rdists {
- 	bool			has_vlpis;
- 	bool			has_rvpeid;
- 	bool			has_direct_lpi;
-+	bool			has_vpend_valid_dirty;
- };
- 
- struct irq_domain;
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index fe40c658f86f..453a8a0f4804 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1690,34 +1690,6 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
- 	return ret;
- }
- 
--/**
-- *	setup_irq - setup an interrupt
-- *	@irq: Interrupt line to setup
-- *	@act: irqaction for the interrupt
-- *
-- * Used to statically setup interrupts in the early boot process.
-- */
--int setup_irq(unsigned int irq, struct irqaction *act)
--{
--	int retval;
--	struct irq_desc *desc = irq_to_desc(irq);
--
--	if (!desc || WARN_ON(irq_settings_is_per_cpu_devid(desc)))
--		return -EINVAL;
--
--	retval = irq_chip_pm_get(&desc->irq_data);
--	if (retval < 0)
--		return retval;
--
--	retval = __setup_irq(irq, desc, act);
--
--	if (retval)
--		irq_chip_pm_put(&desc->irq_data);
--
--	return retval;
--}
--EXPORT_SYMBOL_GPL(setup_irq);
+-#define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
 -
  /*
-  * Internal function to unregister an irqaction - used to free
-  * regular and special interrupts that are part of the architecture.
-@@ -1858,22 +1830,6 @@ static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
- 	return action;
+- * The following processors have the split lock detection feature. But
+- * since they don't have the IA32_CORE_CAPABILITIES MSR, the feature cannot
+- * be enumerated. Enable it by family and model matching on these
+- * processors.
++ * Bits in the IA32_CORE_CAPABILITIES are not architectural, so they should
++ * only be trusted if it is confirmed that a CPU model implements a
++ * specific feature at a particular bit position.
++ *
++ * The possible driver data field values:
++ *
++ * - 0: CPU models that are known to have the per-core split-lock detection
++ *	feature even though they do not enumerate IA32_CORE_CAPABILITIES.
++ *
++ * - 1: CPU models which may enumerate IA32_CORE_CAPABILITIES and if so use
++ *      bit 5 to enumerate the per-core split-lock detection feature.
+  */
+ static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
+-	SPLIT_LOCK_CPU(INTEL_FAM6_ICELAKE_X),
+-	SPLIT_LOCK_CPU(INTEL_FAM6_ICELAKE_L),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		0),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		0),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	1),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	1),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	1),
+ 	{}
+ };
+ 
+ void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
+ {
+-	u64 ia32_core_caps = 0;
++	const struct x86_cpu_id *m;
++	u64 ia32_core_caps;
++
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		return;
+ 
+-	if (c->x86_vendor != X86_VENDOR_INTEL)
++	m = x86_match_cpu(split_lock_cpu_ids);
++	if (!m)
+ 		return;
+-	if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
+-		/* Enumerate features reported in IA32_CORE_CAPABILITIES MSR. */
++
++	switch (m->driver_data) {
++	case 0:
++		break;
++	case 1:
++		if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITIES))
++			return;
+ 		rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
+-	} else if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+-		/* Enumerate split lock detection by family and model. */
+-		if (x86_match_cpu(split_lock_cpu_ids))
+-			ia32_core_caps |= MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
++		if (!(ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
++			return;
++		break;
++	default:
++		return;
+ 	}
+ 
+-	if (ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT)
+-		split_lock_setup();
++	split_lock_setup();
+ }
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 89049b343c7a..d8cc5223b7ce 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -578,6 +578,8 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+ 	d->id = id;
+ 	cpumask_set_cpu(cpu, &d->cpu_mask);
+ 
++	rdt_domain_reconfigure_cdp(r);
++
+ 	if (r->alloc_capable && domain_setup_ctrlval(r, d)) {
+ 		kfree(d);
+ 		return;
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 181c992f448c..3dd13f3a8b23 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -601,5 +601,6 @@ bool has_busy_rmid(struct rdt_resource *r, struct rdt_domain *d);
+ void __check_limbo(struct rdt_domain *d, bool force_free);
+ bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
+ bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
++void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
+ 
+ #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 064e9ef44cd6..5a359d9fcc05 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1859,6 +1859,19 @@ static int set_cache_qos_cfg(int level, bool enable)
+ 	return 0;
  }
  
--/**
-- *	remove_irq - free an interrupt
-- *	@irq: Interrupt line to free
-- *	@act: irqaction for the interrupt
-- *
-- * Used to remove interrupts statically setup by the early boot process.
-- */
--void remove_irq(unsigned int irq, struct irqaction *act)
--{
--	struct irq_desc *desc = irq_to_desc(irq);
++/* Restore the qos cfg state when a domain comes online */
++void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
++{
++	if (!r->alloc_capable)
++		return;
++
++	if (r == &rdt_resources_all[RDT_RESOURCE_L2DATA])
++		l2_qos_cfg_update(&r->alloc_enabled);
++
++	if (r == &rdt_resources_all[RDT_RESOURCE_L3DATA])
++		l3_qos_cfg_update(&r->alloc_enabled);
++}
++
+ /*
+  * Enable or disable the MBA software controller
+  * which helps user specify bandwidth in MBps.
+@@ -3072,7 +3085,8 @@ static int rdtgroup_rmdir(struct kernfs_node *kn)
+ 	 * If the rdtgroup is a mon group and parent directory
+ 	 * is a valid "mon_groups" directory, remove the mon group.
+ 	 */
+-	if (rdtgrp->type == RDTCTRL_GROUP && parent_kn == rdtgroup_default.kn) {
++	if (rdtgrp->type == RDTCTRL_GROUP && parent_kn == rdtgroup_default.kn &&
++	    rdtgrp != &rdtgroup_default) {
+ 		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP ||
+ 		    rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED) {
+ 			ret = rdtgroup_ctrl_remove(kn, rdtgrp);
+diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+index 4d732a444711..8d5cbe1bbb3b 100644
+--- a/arch/x86/kernel/umip.c
++++ b/arch/x86/kernel/umip.c
+@@ -81,7 +81,7 @@
+ #define	UMIP_INST_SLDT  3       /* 0F 00 /0 */
+ #define	UMIP_INST_STR   4       /* 0F 00 /1 */
+ 
+-const char * const umip_insns[5] = {
++static const char * const umip_insns[5] = {
+ 	[UMIP_INST_SGDT] = "SGDT",
+ 	[UMIP_INST_SIDT] = "SIDT",
+ 	[UMIP_INST_SMSW] = "SMSW",
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 8dd01f986fbb..4b170fd08a28 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1050,10 +1050,7 @@ static struct rela *find_jump_table(struct objtool_file *file,
+ 	 * it.
+ 	 */
+ 	for (;
+-	     &insn->list != &file->insn_list &&
+-	     insn->sec == func->sec &&
+-	     insn->offset >= func->offset;
 -
--	if (desc && !WARN_ON(irq_settings_is_per_cpu_devid(desc)))
--		__free_irq(desc, act->dev_id);
--}
--EXPORT_SYMBOL_GPL(remove_irq);
++	     &insn->list != &file->insn_list && insn->func && insn->func->pfunc == func;
+ 	     insn = insn->first_jump_src ?: list_prev_entry(insn, list)) {
+ 
+ 		if (insn != orig_insn && insn->type == INSN_JUMP_DYNAMIC)
+@@ -2008,8 +2005,8 @@ static int validate_return(struct symbol *func, struct instruction *insn, struct
+ 	}
+ 
+ 	if (state->bp_scratch) {
+-		WARN("%s uses BP as a scratch register",
+-		     func->name);
++		WARN_FUNC("BP used as a scratch register",
++			  insn->sec, insn->offset);
+ 		return 1;
+ 	}
+ 
+@@ -2364,14 +2361,27 @@ static bool ignore_unreachable_insn(struct instruction *insn)
+ 	    !strcmp(insn->sec->name, ".altinstr_aux"))
+ 		return true;
+ 
++	if (!insn->func)
++		return false;
++
++	/*
++	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
++	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
++	 * the UD2, which causes GCC's undefined trap logic to emit another UD2
++	 * (or occasionally a JMP to UD2).
++	 */
++	if (list_prev_entry(insn, list)->dead_end &&
++	    (insn->type == INSN_BUG ||
++	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
++	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
++		return true;
++
+ 	/*
+ 	 * Check if this (or a subsequent) instruction is related to
+ 	 * CONFIG_UBSAN or CONFIG_KASAN.
+ 	 *
+ 	 * End the search at 5 instructions to avoid going into the weeds.
+ 	 */
+-	if (!insn->func)
+-		return false;
+ 	for (i = 0; i < 5; i++) {
+ 
+ 		if (is_kasan_insn(insn) || is_ubsan_insn(insn))
+diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
+index 13ccf775a83a..ba4cbb1cdd63 100644
+--- a/tools/objtool/orc_dump.c
++++ b/tools/objtool/orc_dump.c
+@@ -66,7 +66,7 @@ int orc_dump(const char *_objname)
+ 	char *name;
+ 	size_t nr_sections;
+ 	Elf64_Addr orc_ip_addr = 0;
+-	size_t shstrtab_idx;
++	size_t shstrtab_idx, strtab_idx = 0;
+ 	Elf *elf;
+ 	Elf_Scn *scn;
+ 	GElf_Shdr sh;
+@@ -127,6 +127,8 @@ int orc_dump(const char *_objname)
+ 
+ 		if (!strcmp(name, ".symtab")) {
+ 			symtab = data;
++		} else if (!strcmp(name, ".strtab")) {
++			strtab_idx = i;
+ 		} else if (!strcmp(name, ".orc_unwind")) {
+ 			orc = data->d_buf;
+ 			orc_size = sh.sh_size;
+@@ -138,7 +140,7 @@ int orc_dump(const char *_objname)
+ 		}
+ 	}
+ 
+-	if (!symtab || !orc || !orc_ip)
++	if (!symtab || !strtab_idx || !orc || !orc_ip)
+ 		return 0;
+ 
+ 	if (orc_size % sizeof(*orc) != 0) {
+@@ -159,21 +161,29 @@ int orc_dump(const char *_objname)
+ 				return -1;
+ 			}
+ 
+-			scn = elf_getscn(elf, sym.st_shndx);
+-			if (!scn) {
+-				WARN_ELF("elf_getscn");
+-				return -1;
+-			}
 -
- /**
-  *	free_irq - free an interrupt allocated with request_irq
-  *	@irq: Interrupt line to free
+-			if (!gelf_getshdr(scn, &sh)) {
+-				WARN_ELF("gelf_getshdr");
+-				return -1;
+-			}
+-
+-			name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
+-			if (!name || !*name) {
+-				WARN_ELF("elf_strptr");
+-				return -1;
++			if (GELF_ST_TYPE(sym.st_info) == STT_SECTION) {
++				scn = elf_getscn(elf, sym.st_shndx);
++				if (!scn) {
++					WARN_ELF("elf_getscn");
++					return -1;
++				}
++
++				if (!gelf_getshdr(scn, &sh)) {
++					WARN_ELF("gelf_getshdr");
++					return -1;
++				}
++
++				name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
++				if (!name) {
++					WARN_ELF("elf_strptr");
++					return -1;
++				}
++			} else {
++				name = elf_strptr(elf, strtab_idx, sym.st_name);
++				if (!name) {
++					WARN_ELF("elf_strptr");
++					return -1;
++				}
+ 			}
+ 
+ 			printf("%s+%llx:", name, (unsigned long long)rela.r_addend);
+diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
+index 41e4a2754da4..4c0dabd28000 100644
+--- a/tools/objtool/orc_gen.c
++++ b/tools/objtool/orc_gen.c
+@@ -88,11 +88,6 @@ static int create_orc_entry(struct elf *elf, struct section *u_sec, struct secti
+ 	struct orc_entry *orc;
+ 	struct rela *rela;
+ 
+-	if (!insn_sec->sym) {
+-		WARN("missing symbol for section %s", insn_sec->name);
+-		return -1;
+-	}
+-
+ 	/* populate ORC data */
+ 	orc = (struct orc_entry *)u_sec->data->d_buf + idx;
+ 	memcpy(orc, o, sizeof(*orc));
+@@ -105,8 +100,32 @@ static int create_orc_entry(struct elf *elf, struct section *u_sec, struct secti
+ 	}
+ 	memset(rela, 0, sizeof(*rela));
+ 
+-	rela->sym = insn_sec->sym;
+-	rela->addend = insn_off;
++	if (insn_sec->sym) {
++		rela->sym = insn_sec->sym;
++		rela->addend = insn_off;
++	} else {
++		/*
++		 * The Clang assembler doesn't produce section symbols, so we
++		 * have to reference the function symbol instead:
++		 */
++		rela->sym = find_symbol_containing(insn_sec, insn_off);
++		if (!rela->sym) {
++			/*
++			 * Hack alert.  This happens when we need to reference
++			 * the NOP pad insn immediately after the function.
++			 */
++			rela->sym = find_symbol_containing(insn_sec,
++							   insn_off - 1);
++		}
++		if (!rela->sym) {
++			WARN("missing symbol for insn at offset 0x%lx\n",
++			     insn_off);
++			return -1;
++		}
++
++		rela->addend = insn_off - rela->sym->offset;
++	}
++
+ 	rela->type = R_X86_64_PC32;
+ 	rela->offset = idx * sizeof(int);
+ 	rela->sec = ip_relasec;
 
