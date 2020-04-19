@@ -8,77 +8,82 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA88C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 13:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21826C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24E73214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 13:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC71321744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="subicgQ/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CdBL6A6X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgDSN6O (ORCPT
+        id S1726100AbgDSOA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 09:58:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49036 "EHLO
+        Sun, 19 Apr 2020 10:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgDSN6N (ORCPT
+        with ESMTP id S1725905AbgDSOA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 09:58:13 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E941BC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 06:58:12 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a7so3041975pju.2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 06:58:12 -0700 (PDT)
+        Sun, 19 Apr 2020 10:00:28 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81236C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 07:00:28 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y22so2928648pll.4
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 07:00:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:cc:subject:message-id:mime-version:content-disposition
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=lSaqW9KjQVYKEsedDl7cS0NR1ij1Mdkbrdhn2d6I2Lk=;
-        b=subicgQ/QUi5UL0nz0RMLIUy+DwHFxXl4+qqY7f3Br6tCeUH+sLA0OtFCRH+4/5nNI
-         pJpbglwW1mDz5GlUiDaEfUoS3ZGnZUd57OAf1OCHh3EKHDFwzVuPqtQ/svDb4dCq/p8P
-         U/yWEud3ORN3+hx+I7fEnRs65PHibSdZQTgip7zQvXdtwaRjxqA50XYri+n9xJvlHZfx
-         5BbBls2IkPkKQIYnvmQfB+PJ7n8L2kOfTq+u0g47vVFnbMHDB6JkEgrgqNL06Oas3XVK
-         FpHWpPRjYZGWdfA3wG1A8VBNl/6ALW6FioT50fre3MVIYCMeHDM70VF9j2tLgePGGJjf
-         ezbQ==
+        bh=zul1UlU8/LOKKj0PI9LG0ti1QsdQkiWiKOknlEboVJY=;
+        b=CdBL6A6Xp5iwifCOKP8Ree7zSIRJZnxjJU5iG2mEwhlKjnrV7odri3Mk5xYBeEYa4q
+         EdqHad9l1TBJaVsEqju24/bcY9/ry/BiXL0L+s7APxAApUJ4Uj2OGGtZPiMz5uPkjM4m
+         wUpA6f26glLIE4CqR+9kEzz5oPCBwDA+X1ZDPY+NDkK7EFY6dBmKEXCs+gfdZea4Gqj6
+         OjhwBv3JphXmduzt+yqYcTQT/KTpvGVl3HOhqQiiUxcJFNpvg3hrOuFS/WRwzRJNogMz
+         qOOKHt5nRAdaSAKb6125DeKejoKSYdMoZY+rE5SScsg2KhpvgK+FgweNp1g1rb0rcexX
+         ARGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:cc:subject:message-id:mime-version
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=lSaqW9KjQVYKEsedDl7cS0NR1ij1Mdkbrdhn2d6I2Lk=;
-        b=Xbiu2xK0QUCeWTVR74SKR/my9D6gbDwAl6+kiBEfe9Rze7CXhxta5cA8T2Ko9up7fT
-         Ox1nHl4MTFwTJ5mtvQCXFsDM8NDmfbY4oeF5iBObK5kzkYn5iT04/AvFQ5Px/NodvHY8
-         o+V2W9R72wDJx7uVYiWtlarzFnvvQTwkuET3nbSWiEjZCAYQWQVAacH1FkA2FMopwZk6
-         8KmZe3tXDB8Kpdm/8L1M6wIc+UTqcbiExd8Ws3zh00mtgdQ3C7XJ/VWT+oJT4RGa+AFt
-         OU6YKfqY+R4/v4nAo8o8aQik7kwUfZghl9bGz9uSGKQL2QZm1Cq0HLbJGJnCUZl5kDcw
-         JJOA==
-X-Gm-Message-State: AGi0Pub4DWgKJ1ptlfx2xjwfo1XluOZHRL3zAcLIPHUFB7DKJFG32up3
-        1ZYgJuhm4PwdLektOeAF0KlMIV8X
-X-Google-Smtp-Source: APiQypIq/mcSI+krcIZLLOoEAljwMo3bELZXJm8xiHSD6XIuZxt4eZ5DfnEJq4S9d/N9d4k510mblg==
-X-Received: by 2002:a17:902:8609:: with SMTP id f9mr11925544plo.203.1587304692236;
-        Sun, 19 Apr 2020 06:58:12 -0700 (PDT)
+        bh=zul1UlU8/LOKKj0PI9LG0ti1QsdQkiWiKOknlEboVJY=;
+        b=BhqQkDAKK9EaCtM1MjHRwqYbq4/kWyAmNcLEuvlAnXNxT7217PPPI3wkYTLcjc11pj
+         QOsxnRSqH2QCZTfDVNYFvywDiSmJ1W6COh9vBIXXyTMGt7EgjGx4BuPuUCvd0gUaEf9+
+         JSyFhBLXZAFhrBvFpRxvvL5bNgutqw7x/+RKrI6h7WZWzP0FPfueWgpnjRovNCMVqYjP
+         iSlr42xoskJMNJR1e0m2ZyPtcZ2ml/zjS4jLwZZx+puqoYdTYLlGGQO+1Q0sNz136J3X
+         Q4axu1i6+BQD1+TMCfQMLkhlbyV0E6YasWA5rmJf7w5/tWMigv4N44NyBuEcOk2nyeVP
+         OcPg==
+X-Gm-Message-State: AGi0PuY08ORXUBAuI1dF+qeYpa/l/yctImRGgQ004pqeHy0EbEKHogg7
+        RNpx6R1oZGCnm04EAuKfUxSFgdkgw9Y=
+X-Google-Smtp-Source: APiQypKifngc3bmfCia2G2OpWAAQNWQIuWJArWvuLcf1MFOegsUZ895fuWpFubZmkvXqW4JTUcMpkw==
+X-Received: by 2002:a17:90a:2344:: with SMTP id f62mr15900767pje.152.1587304827968;
+        Sun, 19 Apr 2020 07:00:27 -0700 (PDT)
 Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id n9sm11450775pjt.29.2020.04.19.06.58.10
-        for <linux-kernel@vger.kernel.org>
+        by smtp.gmail.com with ESMTPSA id w75sm17041105pfc.156.2020.04.19.07.00.24
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 Apr 2020 06:58:11 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 19:28:07 +0530
+        Sun, 19 Apr 2020 07:00:27 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 19:30:21 +0530
 From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     David Kershner <david.kershner@unisys.com>,
+        sparmaintainer@unisys.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>
 Cc:     linux-kernel@vger.kernel.org
 Subject: [PATCH] drivers: visorbus: Use the correct style for SPDX License
  Identifier
-Message-ID: <20200419135803.GA7814@nishad>
+Message-ID: <20200419140017.GA7875@nishad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 User-Agent: Mutt/1.9.4 (2018-02-28)
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This patch corrects the SPDX License Identifier style in
-header files related to Unisys visorbus configuration.
+header file related to Unisys visorbus configuration.
 For C header files Documentation/process/license-rules.rst
 mandates C-like comments (opposed to C source files where
 C++ style should be used).
