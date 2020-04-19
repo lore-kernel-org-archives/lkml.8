@@ -2,102 +2,149 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98599C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9F8C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82E7221473
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9831F21841
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 10:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbgDSJ5M (ORCPT
+        id S1725969AbgDSKCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 05:57:12 -0400
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:43820 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbgDSJ5L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 05:57:11 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 494lc13wsszQkJn;
-        Sun, 19 Apr 2020 11:57:05 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id NEBcbWR4rXqI; Sun, 19 Apr 2020 11:57:01 +0200 (CEST)
-Date:   Sun, 19 Apr 2020 19:56:51 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Stefan Metzmacher <metze@samba.org>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH] vfs: add faccessat2 syscall
-Message-ID: <20200419095651.djee6mgneyf3qi3v@yavin.dot.cyphar.com>
-References: <20200416143532.11743-1-mszeredi@redhat.com>
- <c47459a5-3323-121e-ec66-4a8eb2a8afca@samba.org>
+        Sun, 19 Apr 2020 06:02:24 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:55292 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbgDSKCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 06:02:23 -0400
+Received: from p508fcedd.dip0.t-ipconnect.de ([80.143.206.221] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jQ6mB-00069Y-8z; Sun, 19 Apr 2020 12:02:11 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        heiko@sntech.de, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        xxm@rock-chips.com, kever.yang@rock-chips.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v5 1/3] iio: adc: rockchip_saradc: move all of probe to devm-functions
+Date:   Sun, 19 Apr 2020 12:02:05 +0200
+Message-Id: <20200419100207.58108-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lmda2lbevichqywo"
-Content-Disposition: inline
-In-Reply-To: <c47459a5-3323-121e-ec66-4a8eb2a8afca@samba.org>
-X-Rspamd-Queue-Id: 37BD217EF
-X-Rspamd-Score: -9.29 / 15.00 / 15.00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
---lmda2lbevichqywo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Parts of the saradc probe rely on devm functions and later parts do not.
+This makes it more difficult to for example enable triggers via their
+devm-functions and would need more undo-work in remove.
 
-On 2020-04-18, Stefan Metzmacher <metze@samba.org> wrote:
-> > POSIX defines faccessat() as having a fourth "flags" argument, while the
-> > linux syscall doesn't have it.  Glibc tries to emulate AT_EACCESS and
-> > AT_SYMLINK_NOFOLLOW, but AT_EACCESS emulation is broken.
-> >=20
-> > Add a new faccessat(2) syscall with the added flags argument and implem=
-ent
-> > both flags.
-> >=20
-> > The value of AT_EACCESS is defined in glibc headers to be the same as
-> > AT_REMOVEDIR.  Use this value for the kernel interface as well, together
-> > with the explanatory comment.
->=20
-> It would be nice if resolv_flags would also be passed in addition to the
-> at flags.
-> See:https://lore.kernel.org/linux-api/CAHk-=3DwiaL6zznNtCHKg6+MJuCqDxO=3D=
-yVfms3qR9A0czjKuSSiA@mail.gmail.com/
->=20
-> We should avoid expecting yet another syscall in near future.
+So to make life easier for the driver, move the rest of probe calls
+also to their devm-equivalents.
 
-If faccessat2() supported AT_EMPTY_PATH (which I'd be in favour of),
-there's no need to add resolve flags because you could open the file as
-O_PATH with whatever resolve flags you want, and then check it with
-faccessat2().
+This includes moving the clk- and regulator-disabling to a devm_action
+so that they gets disabled both during remove and in the error case
+in probe, after the action is registered.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+changes in v5:
+- none
+changes in v4:
+- new patch as suggested by Jonathan
 
---lmda2lbevichqywo
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/iio/adc/rockchip_saradc.c | 37 ++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
+index 582ba047c4a6..270eb7e83823 100644
+--- a/drivers/iio/adc/rockchip_saradc.c
++++ b/drivers/iio/adc/rockchip_saradc.c
+@@ -193,6 +193,15 @@ static void rockchip_saradc_reset_controller(struct reset_control *reset)
+ 	reset_control_deassert(reset);
+ }
+ 
++static void rockchip_saradc_disable(void *data)
++{
++	struct rockchip_saradc *info = data;
++
++	clk_disable_unprepare(info->clk);
++	clk_disable_unprepare(info->pclk);
++	regulator_disable(info->vref);
++}
++
+ static int rockchip_saradc_probe(struct platform_device *pdev)
+ {
+ 	struct rockchip_saradc *info = NULL;
+@@ -304,6 +313,14 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 		goto err_pclk;
+ 	}
+ 
++	ret = devm_add_action_or_reset(&pdev->dev,
++				       rockchip_saradc_disable, info);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register devm action, %d\n",
++			ret);
++		return ret;
++	}
++
+ 	platform_set_drvdata(pdev, indio_dev);
+ 
+ 	indio_dev->name = dev_name(&pdev->dev);
+@@ -315,14 +332,12 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 	indio_dev->channels = info->data->channels;
+ 	indio_dev->num_channels = info->data->num_channels;
+ 
+-	ret = iio_device_register(indio_dev);
++	ret = devm_iio_device_register(&pdev->dev, indio_dev);
+ 	if (ret)
+-		goto err_clk;
++		return ret;
+ 
+ 	return 0;
+ 
+-err_clk:
+-	clk_disable_unprepare(info->clk);
+ err_pclk:
+ 	clk_disable_unprepare(info->pclk);
+ err_reg_voltage:
+@@ -330,19 +345,6 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
+-static int rockchip_saradc_remove(struct platform_device *pdev)
+-{
+-	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+-	struct rockchip_saradc *info = iio_priv(indio_dev);
+-
+-	iio_device_unregister(indio_dev);
+-	clk_disable_unprepare(info->clk);
+-	clk_disable_unprepare(info->pclk);
+-	regulator_disable(info->vref);
+-
+-	return 0;
+-}
+-
+ #ifdef CONFIG_PM_SLEEP
+ static int rockchip_saradc_suspend(struct device *dev)
+ {
+@@ -383,7 +385,6 @@ static SIMPLE_DEV_PM_OPS(rockchip_saradc_pm_ops,
+ 
+ static struct platform_driver rockchip_saradc_driver = {
+ 	.probe		= rockchip_saradc_probe,
+-	.remove		= rockchip_saradc_remove,
+ 	.driver		= {
+ 		.name	= "rockchip-saradc",
+ 		.of_match_table = rockchip_saradc_match,
+-- 
+2.25.1
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXpwgYAAKCRCdlLljIbnQ
-ElqnAQDppWaDa1Cc9a8o5EOeojrE4ZHo8+PiXfVr3y9Ee7V75AD/d35WYD5+LhFD
-cVKGSxPjCXAcAalrnfXQI8yCl/6iFAs=
-=mf5A
------END PGP SIGNATURE-----
-
---lmda2lbevichqywo--
