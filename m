@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B964C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98272C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3891214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7048A214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:06:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FAsKztdL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FOV0ezYf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgDSPGF (ORCPT
+        id S1726623AbgDSPGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 11:06:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59416 "EHLO
+        Sun, 19 Apr 2020 11:06:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbgDSPGE (ORCPT
+        with ESMTP id S1726601AbgDSPGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 11:06:04 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBBBDC061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:06:03 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j1so3427913wrt.1
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:06:03 -0700 (PDT)
+        Sun, 19 Apr 2020 11:06:09 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADB93C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:06:08 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k11so8858847wrp.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:06:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ObSDf1aLj5u4GmmbiRGYRUxXBmWBTKTJj89dIRLXbuQ=;
-        b=FAsKztdL6snh1BvfjbKlo3DppwMhfJGyfvYsvsLDgMAglmASIZERqy/cdA3zJg6Puw
-         3HTyEoaVdE6Aa1WsXVffBrI3qn+8dIcyobWayRxzZlgfefMyN2a8IWQITohU4VAeYwBw
-         gfCtxfPIGieg2Lh5DvpL9MjAjK2qX0I6Mh5BosntHrUQnST2aCbFysOypsis+dwXkRRk
-         3fCEpbPZ0aBHf1S0EZx+fb0TnsSh+TaW4t3lBjmFGDDZ0FL7jVcsG/dKPKn4pKFXQBcA
-         T5xZLNbD+nsAoCij2bXT5aaNR373Kr2DrpKwYvPilMJ0UnJoVar/VTx2xatPYLebPqR+
-         773g==
+        bh=Y6PiqSVV9dpQAqOqd+uh/E8t5jyLRFjga9Ph1jhDag8=;
+        b=FOV0ezYfjjl9Ks/imkXxFXr8IJNLzQ7xwIGz5OftsX4B5vGc3mutSwNxF4+k3rruRx
+         mhqwouVVHCQI1zzVmlFUnANaD5qlC/XcxHZSsnK73DRZB0w9NxY2FaqPuas2f6beqtfW
+         A9CSX+/O2lSNUzKnyhoT1mv005X/uD9AUhN+DV5GvIUDbI95k44IJI/15/3fsJAjTbLz
+         ewBDortR1gTg2CD5bBHvWce5gplQNHJav2f9TaH44ROQVb6RIvVqCJFiK0KIohrswMpd
+         gDk4tQs7rm4reCvV4J4hoDnnKX8cT2y7vnTW57C3dVB2iwIa9zJZm5aM2YsKvQHJ0jJN
+         OiPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ObSDf1aLj5u4GmmbiRGYRUxXBmWBTKTJj89dIRLXbuQ=;
-        b=f3vzmQdhroN0YaGGJuAm0MMgMBwIAmagdYGE1G1OF+kD8VV1I67Fzpj7rx+IBXsk1i
-         iCA62d/CvL+FCFXqo1Cw0ZEH9xNq+G34ITRxVI76rdkyI+z4JJrsvv0I0CEr/nhA0wQO
-         5Xhb5ey/v6DudI2TGDCMYCjtncvLIwd5j44LvXw4GwyKptUgMfJGyacg8dnQG1dFIenc
-         vMGrMU027pJzzSWZLmdSjPUe7XotVgrgFTzgJU6PYe5bcSjJbcN+CaXx9k3Qjx71JUYG
-         a8k2E/AXmJ5rBtjMp3Wh4CCs7eYJWGVN0N/phe3p3K98LoDubNkX3m89XCaMrWnT/Mlr
-         6WDQ==
-X-Gm-Message-State: AGi0PuYYzYhksPR6J8CpELFQN1rynX19kYpNTnT8h2B2YttfJx+G5viQ
-        +/SA/7fCcRej1rZe6vzSttEghGf0tL5NF6CMWr8=
-X-Google-Smtp-Source: APiQypLkrRiQ4l9Ag27jWuqY2Firc1AQu0LIYqJNeNMNzAN9BhPzlQzcaNCc7h6b2/CA98LcZcj1WQ==
-X-Received: by 2002:a5d:6647:: with SMTP id f7mr14854178wrw.41.1587308762199;
-        Sun, 19 Apr 2020 08:06:02 -0700 (PDT)
+        bh=Y6PiqSVV9dpQAqOqd+uh/E8t5jyLRFjga9Ph1jhDag8=;
+        b=K6CKN191kie8ID6hf5yNBJoOC+WqEOY5BLV4PFOpYgCr/w85WW2zzxr55eh/4FwR9E
+         FCJ9FjVobJgLb+RhnHZjf3povBC1L5R8V0eKG8db2T/lZesDL/jMJ84N2MrPqW/xBvcb
+         2+ndXvSfhHPq33WYpXysqgE/8tKZjLgfcHB5ijNRtINqJyODumH726l2AthBSlD/v0qU
+         ir+VlQmS0SkseFvvBZexiMGPW5tiw8UAujoJYSpm8/wfV/caVIpD3UeSu4V6BuEC7fiX
+         WEHGlqzbbAaNg2DavQc80zwT6KNSXG/4pX53OBM68fgIW4xNBFez+JFsCoqoZgmvOmsp
+         mtHg==
+X-Gm-Message-State: AGi0PubGxOMnkgvl6/6APhd4HoGvT8hhCRw52dxzMcteCZpkQ+7aIpV5
+        fdrjVboPSfAZg4Vfl7TvYN5f2THPMkgie+lZtn0=
+X-Google-Smtp-Source: APiQypI3G+DRojbxMZCQ/3C6Vsl76B2MCQNsmSARPJUTNIz3W6+yGt8+Kwu0fi2IVqFrot5M1S+9Lw==
+X-Received: by 2002:a5d:4306:: with SMTP id h6mr13372859wrq.234.1587308767273;
+        Sun, 19 Apr 2020 08:06:07 -0700 (PDT)
 Received: from lmecxl0524.home (2a01cb058702ff00947c0d9b78b8fa1e.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:947c:d9b:78b8:fa1e])
-        by smtp.gmail.com with ESMTPSA id w12sm25948635wrk.56.2020.04.19.08.06.01
+        by smtp.gmail.com with ESMTPSA id w12sm25948635wrk.56.2020.04.19.08.06.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 08:06:01 -0700 (PDT)
+        Sun, 19 Apr 2020 08:06:06 -0700 (PDT)
 From:   Etienne Carriere <etienne.carriere@linaro.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, james.morse@arm.com,
@@ -66,9 +66,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, james.morse@arm.com,
         jens.wiklander@linaro.org, tee-dev@lists.linaro.org,
         sudeep.holla@arm.com,
         Etienne Carriere <etienne.carriere@linaro.org>
-Subject: [RFC PATCH 3/6] tee: optee: use SMCCC v1.0 helper functions
-Date:   Sun, 19 Apr 2020 17:05:27 +0200
-Message-Id: <20200419150530.20508-4-etienne.carriere@linaro.org>
+Subject: [RFC PATCH 6/6] firmware: zynqmp: use SMCCC v1.0 helper functions
+Date:   Sun, 19 Apr 2020 17:05:30 +0200
+Message-Id: <20200419150530.20508-7-etienne.carriere@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200419150530.20508-1-etienne.carriere@linaro.org>
 References: <20200419150530.20508-1-etienne.carriere@linaro.org>
@@ -77,280 +77,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change OP-TEE driver to use SMCCC v1.0 helper function.
+Change Xilinx Zynmp driver to use Arm SMCCC v1.0 helper functions
+and ensure platform consistency on SMCCC conduit method.
 
-No functional change but initialization traces that are changed
-from pr_*() traces the device dev_*() traces and info trace
-"probing for conduit method." being replaced with trace
-"probing for conduit method from DT."
+Main functional change is that SMCCC conduit method for ZynqMP
+firmware must be consistent with conduit methods registered by
+PSCI device that is early probed.
+
+Another functional change is an addition info trace emitted by the
+device probe sequence: "probing for conduit method from DT.".
 
 Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
 ---
- drivers/tee/optee/call.c          | 14 ++---
- drivers/tee/optee/core.c          | 85 ++++++++-----------------------
- drivers/tee/optee/optee_private.h |  4 +-
- 3 files changed, 30 insertions(+), 73 deletions(-)
+ drivers/firmware/xilinx/zynqmp.c | 87 ++++----------------------------
+ 1 file changed, 9 insertions(+), 78 deletions(-)
 
-diff --git a/drivers/tee/optee/call.c b/drivers/tee/optee/call.c
-index cf2367ba08d6..706e7814a401 100644
---- a/drivers/tee/optee/call.c
-+++ b/drivers/tee/optee/call.c
-@@ -137,9 +137,9 @@ u32 optee_do_call_with_arg(struct tee_context *ctx, phys_addr_t parg)
- 	while (true) {
- 		struct arm_smccc_res res;
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 41b65164a367..1fdc468c9204 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -63,51 +63,11 @@ static int zynqmp_pm_ret_code(u32 ret_status)
+ 	}
+ }
  
--		optee->invoke_fn(param.a0, param.a1, param.a2, param.a3,
--				 param.a4, param.a5, param.a6, param.a7,
--				 &res);
-+		arm_smccc_1_0_invoke(param.a0, param.a1, param.a2, param.a3,
-+				     param.a4, param.a5, param.a6, param.a7,
-+				     &res);
- 
- 		if (res.a0 == OPTEE_SMC_RETURN_ETHREAD_LIMIT) {
- 			/*
-@@ -395,8 +395,8 @@ void optee_enable_shm_cache(struct optee *optee)
- 	while (true) {
- 		struct arm_smccc_res res;
- 
--		optee->invoke_fn(OPTEE_SMC_ENABLE_SHM_CACHE, 0, 0, 0, 0, 0, 0,
--				 0, &res);
-+		arm_smccc_1_0_invoke(OPTEE_SMC_ENABLE_SHM_CACHE,
-+				     0, 0, 0, 0, 0, 0, 0, &res);
- 		if (res.a0 == OPTEE_SMC_RETURN_OK)
- 			break;
- 		optee_cq_wait_for_completion(&optee->call_queue, &w);
-@@ -421,8 +421,8 @@ void optee_disable_shm_cache(struct optee *optee)
- 			struct optee_smc_disable_shm_cache_result result;
- 		} res;
- 
--		optee->invoke_fn(OPTEE_SMC_DISABLE_SHM_CACHE, 0, 0, 0, 0, 0, 0,
--				 0, &res.smccc);
-+		arm_smccc_1_0_invoke(OPTEE_SMC_DISABLE_SHM_CACHE,
-+				     0, 0, 0, 0, 0, 0, 0, &res.smccc);
- 		if (res.result.status == OPTEE_SMC_RETURN_ENOTAVAIL)
- 			break; /* All shm's freed */
- 		if (res.result.status == OPTEE_SMC_RETURN_OK) {
-diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-index 99698b8a3a74..f3bc657d1e97 100644
---- a/drivers/tee/optee/core.c
-+++ b/drivers/tee/optee/core.c
-@@ -335,11 +335,11 @@ static const struct tee_desc optee_supp_desc = {
- 	.flags = TEE_DESC_PRIVILEGED,
- };
- 
--static bool optee_msg_api_uid_is_optee_api(optee_invoke_fn *invoke_fn)
-+static bool optee_msg_api_uid_is_optee_api(void)
+-static noinline int do_fw_call_fail(u64 arg0, u64 arg1, u64 arg2,
+-				    u32 *ret_payload)
+-{
+-	return -ENODEV;
+-}
+-
+-/*
+- * PM function call wrapper
+- * Invoke do_fw_call_smc or do_fw_call_hvc, depending on the configuration
+- */
+-static int (*do_fw_call)(u64, u64, u64, u32 *ret_payload) = do_fw_call_fail;
+-
+-/**
+- * do_fw_call_smc() - Call system-level platform management layer (SMC)
+- * @arg0:		Argument 0 to SMC call
+- * @arg1:		Argument 1 to SMC call
+- * @arg2:		Argument 2 to SMC call
+- * @ret_payload:	Returned value array
+- *
+- * Invoke platform management function via SMC call (no hypervisor present).
+- *
+- * Return: Returns status, either success or error+reason
+- */
+-static noinline int do_fw_call_smc(u64 arg0, u64 arg1, u64 arg2,
+-				   u32 *ret_payload)
+-{
+-	struct arm_smccc_res res;
+-
+-	arm_smccc_smc(arg0, arg1, arg2, 0, 0, 0, 0, 0, &res);
+-
+-	if (ret_payload) {
+-		ret_payload[0] = lower_32_bits(res.a0);
+-		ret_payload[1] = upper_32_bits(res.a0);
+-		ret_payload[2] = lower_32_bits(res.a1);
+-		ret_payload[3] = upper_32_bits(res.a1);
+-	}
+-
+-	return zynqmp_pm_ret_code((enum pm_ret_status)res.a0);
+-}
+-
+ /**
+- * do_fw_call_hvc() - Call system-level platform management layer (HVC)
+- * @arg0:		Argument 0 to HVC call
+- * @arg1:		Argument 1 to HVC call
+- * @arg2:		Argument 2 to HVC call
++ * do_fw_call() - Call system-level platform management layer
++ * @arg0:		Argument 0 to HVC/SMC call
++ * @arg1:		Argument 1 to HVC/SMC call
++ * @arg2:		Argument 2 to HVC/SMC call
+  * @ret_payload:	Returned value array
+  *
+  * Invoke platform management function via HVC
+@@ -116,12 +76,13 @@ static noinline int do_fw_call_smc(u64 arg0, u64 arg1, u64 arg2,
+  *
+  * Return: Returns status, either success or error+reason
+  */
+-static noinline int do_fw_call_hvc(u64 arg0, u64 arg1, u64 arg2,
+-				   u32 *ret_payload)
++static noinline int do_fw_call(u64 arg0, u64 arg1, u64 arg2, u32 *ret_payload)
  {
  	struct arm_smccc_res res;
  
--	invoke_fn(OPTEE_SMC_CALLS_UID, 0, 0, 0, 0, 0, 0, 0, &res);
-+	arm_smccc_1_0_invoke(OPTEE_SMC_CALLS_UID, 0, 0, 0, 0, 0, 0, 0, &res);
+-	arm_smccc_hvc(arg0, arg1, arg2, 0, 0, 0, 0, 0, &res);
++	if (arm_smccc_1_0_invoke(arg0, arg1, arg2, 0, 0, 0, 0, 0, &res) ==
++	    SMCCC_CONDUIT_NONE)
++		return -ENODEV;
  
- 	if (res.a0 == OPTEE_MSG_UID_0 && res.a1 == OPTEE_MSG_UID_1 &&
- 	    res.a2 == OPTEE_MSG_UID_2 && res.a3 == OPTEE_MSG_UID_3)
-@@ -347,7 +347,7 @@ static bool optee_msg_api_uid_is_optee_api(optee_invoke_fn *invoke_fn)
- 	return false;
+ 	if (ret_payload) {
+ 		ret_payload[0] = lower_32_bits(res.a0);
+@@ -287,36 +248,6 @@ static int zynqmp_pm_get_trustzone_version(u32 *version)
+ 	return ret;
  }
  
--static void optee_msg_get_os_revision(optee_invoke_fn *invoke_fn)
-+static void optee_msg_get_os_revision(void)
- {
- 	union {
- 		struct arm_smccc_res smccc;
-@@ -358,8 +358,8 @@ static void optee_msg_get_os_revision(optee_invoke_fn *invoke_fn)
- 		}
- 	};
- 
--	invoke_fn(OPTEE_SMC_CALL_GET_OS_REVISION, 0, 0, 0, 0, 0, 0, 0,
--		  &res.smccc);
-+	arm_smccc_1_0_invoke(OPTEE_SMC_CALL_GET_OS_REVISION,
-+			     0, 0, 0, 0, 0, 0, 0, &res.smccc);
- 
- 	if (res.result.build_id)
- 		pr_info("revision %lu.%lu (%08lx)", res.result.major,
-@@ -368,14 +368,15 @@ static void optee_msg_get_os_revision(optee_invoke_fn *invoke_fn)
- 		pr_info("revision %lu.%lu", res.result.major, res.result.minor);
- }
- 
--static bool optee_msg_api_revision_is_compatible(optee_invoke_fn *invoke_fn)
-+static bool optee_msg_api_revision_is_compatible(void)
- {
- 	union {
- 		struct arm_smccc_res smccc;
- 		struct optee_smc_calls_revision_result result;
- 	} res;
- 
--	invoke_fn(OPTEE_SMC_CALLS_REVISION, 0, 0, 0, 0, 0, 0, 0, &res.smccc);
-+	arm_smccc_1_0_invoke(OPTEE_SMC_CALLS_REVISION,
-+			     0, 0, 0, 0, 0, 0, 0, &res.smccc);
- 
- 	if (res.result.major == OPTEE_MSG_REVISION_MAJOR &&
- 	    (int)res.result.minor >= OPTEE_MSG_REVISION_MINOR)
-@@ -383,8 +384,7 @@ static bool optee_msg_api_revision_is_compatible(optee_invoke_fn *invoke_fn)
- 	return false;
- }
- 
--static bool optee_msg_exchange_capabilities(optee_invoke_fn *invoke_fn,
--					    u32 *sec_caps)
-+static bool optee_msg_exchange_capabilities(u32 *sec_caps)
- {
- 	union {
- 		struct arm_smccc_res smccc;
-@@ -400,8 +400,8 @@ static bool optee_msg_exchange_capabilities(optee_invoke_fn *invoke_fn,
- 	if (!IS_ENABLED(CONFIG_SMP) || nr_cpu_ids == 1)
- 		a1 |= OPTEE_SMC_NSEC_CAP_UNIPROCESSOR;
- 
--	invoke_fn(OPTEE_SMC_EXCHANGE_CAPABILITIES, a1, 0, 0, 0, 0, 0, 0,
--		  &res.smccc);
-+	arm_smccc_1_0_invoke(OPTEE_SMC_EXCHANGE_CAPABILITIES, a1,
-+			     0, 0, 0, 0, 0, 0, &res.smccc);
- 
- 	if (res.result.status != OPTEE_SMC_RETURN_OK)
- 		return false;
-@@ -437,8 +437,7 @@ static struct tee_shm_pool *optee_config_dyn_shm(void)
- 	return rc;
- }
- 
--static struct tee_shm_pool *
--optee_config_shm_memremap(optee_invoke_fn *invoke_fn, void **memremaped_shm)
-+static struct tee_shm_pool *optee_config_shm_memremap(void **memremaped_shm)
- {
- 	union {
- 		struct arm_smccc_res smccc;
-@@ -455,7 +454,8 @@ optee_config_shm_memremap(optee_invoke_fn *invoke_fn, void **memremaped_shm)
- 	void *rc;
- 	const int sz = OPTEE_SHM_NUM_PRIV_PAGES * PAGE_SIZE;
- 
--	invoke_fn(OPTEE_SMC_GET_SHM_CONFIG, 0, 0, 0, 0, 0, 0, 0, &res.smccc);
-+	arm_smccc_1_0_invoke(OPTEE_SMC_GET_SHM_CONFIG,
-+			     0, 0, 0, 0, 0, 0, 0, &res.smccc);
- 	if (res.result.status != OPTEE_SMC_RETURN_OK) {
- 		pr_err("static shm service not available\n");
- 		return ERR_PTR(-ENOENT);
-@@ -515,45 +515,6 @@ optee_config_shm_memremap(optee_invoke_fn *invoke_fn, void **memremaped_shm)
- 	return rc;
- }
- 
--/* Simple wrapper functions to be able to use a function pointer */
--static void optee_smccc_smc(unsigned long a0, unsigned long a1,
--			    unsigned long a2, unsigned long a3,
--			    unsigned long a4, unsigned long a5,
--			    unsigned long a6, unsigned long a7,
--			    struct arm_smccc_res *res)
--{
--	arm_smccc_smc(a0, a1, a2, a3, a4, a5, a6, a7, res);
--}
--
--static void optee_smccc_hvc(unsigned long a0, unsigned long a1,
--			    unsigned long a2, unsigned long a3,
--			    unsigned long a4, unsigned long a5,
--			    unsigned long a6, unsigned long a7,
--			    struct arm_smccc_res *res)
--{
--	arm_smccc_hvc(a0, a1, a2, a3, a4, a5, a6, a7, res);
--}
--
--static optee_invoke_fn *get_invoke_func(struct device *dev)
+-/**
+- * get_set_conduit_method() - Choose SMC or HVC based communication
+- * @np:		Pointer to the device_node structure
+- *
+- * Use SMC or HVC-based functions to communicate with EL2/EL3.
+- *
+- * Return: Returns 0 on success or error code
+- */
+-static int get_set_conduit_method(struct device_node *np)
 -{
 -	const char *method;
 -
--	pr_info("probing for conduit method.\n");
--
--	if (device_property_read_string(dev, "method", &method)) {
--		pr_warn("missing \"method\" property\n");
--		return ERR_PTR(-ENXIO);
+-	if (of_property_read_string(np, "method", &method)) {
+-		pr_warn("%s missing \"method\" property\n", __func__);
+-		return -ENXIO;
 -	}
 -
--	if (!strcmp("hvc", method))
--		return optee_smccc_hvc;
--	else if (!strcmp("smc", method))
--		return optee_smccc_smc;
+-	if (!strcmp("hvc", method)) {
+-		do_fw_call = do_fw_call_hvc;
+-	} else if (!strcmp("smc", method)) {
+-		do_fw_call = do_fw_call_smc;
+-	} else {
+-		pr_warn("%s Invalid \"method\" property: %s\n",
+-			__func__, method);
+-		return -EINVAL;
+-	}
 -
--	pr_warn("invalid \"method\" property: %s\n", method);
--	return ERR_PTR(-EINVAL);
+-	return 0;
 -}
 -
- static int optee_remove(struct platform_device *pdev)
- {
- 	struct optee *optee = platform_get_drvdata(pdev);
-@@ -586,7 +547,6 @@ static int optee_remove(struct platform_device *pdev)
- 
- static int optee_probe(struct platform_device *pdev)
- {
--	optee_invoke_fn *invoke_fn;
- 	struct tee_shm_pool *pool = ERR_PTR(-EINVAL);
- 	struct optee *optee = NULL;
- 	void *memremaped_shm = NULL;
-@@ -594,23 +554,23 @@ static int optee_probe(struct platform_device *pdev)
- 	u32 sec_caps;
- 	int rc;
- 
--	invoke_fn = get_invoke_func(&pdev->dev);
--	if (IS_ERR(invoke_fn))
--		return PTR_ERR(invoke_fn);
-+	rc = devm_arm_smccc_1_0_set_conduit(&pdev->dev);
-+	if (rc)
-+		return rc;
- 
--	if (!optee_msg_api_uid_is_optee_api(invoke_fn)) {
-+	if (!optee_msg_api_uid_is_optee_api()) {
- 		pr_warn("api uid mismatch\n");
- 		return -EINVAL;
+ /**
+  * zynqmp_pm_query_data() - Get query data from firmware
+  * @qdata:	Variable to the zynqmp_pm_query_data structure
+@@ -790,7 +721,7 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
  	}
+ 	of_node_put(np);
  
--	optee_msg_get_os_revision(invoke_fn);
-+	optee_msg_get_os_revision();
+-	ret = get_set_conduit_method(dev->of_node);
++	ret = devm_arm_smccc_set_conduit(dev);
+ 	if (ret)
+ 		return ret;
  
--	if (!optee_msg_api_revision_is_compatible(invoke_fn)) {
-+	if (!optee_msg_api_revision_is_compatible()) {
- 		pr_warn("api revision mismatch\n");
- 		return -EINVAL;
- 	}
- 
--	if (!optee_msg_exchange_capabilities(invoke_fn, &sec_caps)) {
-+	if (!optee_msg_exchange_capabilities(&sec_caps)) {
- 		pr_warn("capabilities mismatch\n");
- 		return -EINVAL;
- 	}
-@@ -625,7 +585,7 @@ static int optee_probe(struct platform_device *pdev)
- 	 * If dynamic shared memory is not available or failed - try static one
- 	 */
- 	if (IS_ERR(pool) && (sec_caps & OPTEE_SMC_SEC_CAP_HAVE_RESERVED_SHM))
--		pool = optee_config_shm_memremap(invoke_fn, &memremaped_shm);
-+		pool = optee_config_shm_memremap(&memremaped_shm);
- 
- 	if (IS_ERR(pool))
- 		return PTR_ERR(pool);
-@@ -636,7 +596,6 @@ static int optee_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	optee->invoke_fn = invoke_fn;
- 	optee->sec_caps = sec_caps;
- 
- 	teedev = tee_device_alloc(&optee_desc, NULL, pool, optee);
-diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
-index d9c5037b4e03..e186e318e157 100644
---- a/drivers/tee/optee/optee_private.h
-+++ b/drivers/tee/optee/optee_private.h
-@@ -69,8 +69,7 @@ struct optee_supp {
-  * struct optee - main service struct
-  * @supp_teedev:	supplicant device
-  * @teedev:		client device
-- * @invoke_fn:		function to issue smc or hvc
-- * @call_queue:		queue of threads waiting to call @invoke_fn
-+ * @call_queue:		queue of threads waiting to invoke secure world
-  * @wait_queue:		queue of threads from secure world waiting for a
-  *			secure world sync object
-  * @supp:		supplicant synchronization struct for RPC to supplicant
-@@ -82,7 +81,6 @@ struct optee_supp {
- struct optee {
- 	struct tee_device *supp_teedev;
- 	struct tee_device *teedev;
--	optee_invoke_fn *invoke_fn;
- 	struct optee_call_queue call_queue;
- 	struct optee_wait_queue wait_queue;
- 	struct optee_supp supp;
 -- 
 2.17.1
 
