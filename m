@@ -2,111 +2,90 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A65AC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36795C5321D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFFE621744
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1385521744
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:32:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YgLNaEPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgDSQc3 (ORCPT
+        id S1726674AbgDSQcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 12:32:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46224 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726319AbgDSQc2 (ORCPT
+        Sun, 19 Apr 2020 12:32:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32853 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726157AbgDSQcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 12:32:28 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03JGVmR2103828
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:32:27 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gg25t41h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:32:27 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Sun, 19 Apr 2020 17:32:20 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 19 Apr 2020 17:32:18 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03JGWMmI65208530
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 19 Apr 2020 16:32:22 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8CE2F4C04A;
-        Sun, 19 Apr 2020 16:32:22 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 396554C040;
-        Sun, 19 Apr 2020 16:32:22 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 19 Apr 2020 16:32:22 +0000 (GMT)
-Received: from [9.206.160.27] (unknown [9.206.160.27])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Sun, 19 Apr 2020 12:32:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587313951;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OVSecy80g6h7wXJCHuK830BzdD+TP99pr69Glv0B7sY=;
+        b=YgLNaEPjVx3GE9vDRbq9SslzqvOnj4elY4RkZlJTb6/4fnb/L/16/3/1nqiFSCQRle1jkA
+        iXd/6K87GD8DIfKi1WL1ctlvXvFs6T9TaABVjjpx7zmLvjrVoPbA17bGV+G6oJvKOeuWqW
+        vIObHvHVniwe9SKWgfLd8tI3as35R8s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-235-BvjPstCqNQK_S7N_aQ8Okw-1; Sun, 19 Apr 2020 12:32:25 -0400
+X-MC-Unique: BvjPstCqNQK_S7N_aQ8Okw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 4F428A01A8;
-        Mon, 20 Apr 2020 02:32:16 +1000 (AEST)
-Subject: Re: [PATCH AUTOSEL 5.5 73/75] ocxl: Add PCI hotplug dependency to
- Kconfig
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        "Alastair D'Silva" <alastair@d-silva.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20200418140910.8280-1-sashal@kernel.org>
- <20200418140910.8280-73-sashal@kernel.org>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Mon, 20 Apr 2020 02:32:19 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 782D718C43C5;
+        Sun, 19 Apr 2020 16:32:24 +0000 (UTC)
+Received: from treble (ovpn-112-237.rdu2.redhat.com [10.10.112.237])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BCB2B5DA76;
+        Sun, 19 Apr 2020 16:32:22 +0000 (UTC)
+Date:   Sun, 19 Apr 2020 11:32:19 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
+        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org
+Subject: Re: [RFC][PATCH 3/7] objtool: Allow branches within the same
+ alternative.
+Message-ID: <20200419163219.b5dpg246xh6avsci@treble>
+References: <20200416150752.569029800@infradead.org>
+ <20200416151024.885221682@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200418140910.8280-73-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20041916-0028-0000-0000-000003FB1EEC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041916-0029-0000-0000-000024C0DC41
-Message-Id: <c2bceeb6-07bb-1cc4-0d67-48b9fe0f6ba9@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-19_04:2020-04-17,2020-04-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 spamscore=0 priorityscore=1501 clxscore=1031 adultscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=978 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004190144
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200416151024.885221682@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/4/20 12:09 am, Sasha Levin wrote:
-> From: Frederic Barrat <fbarrat@linux.ibm.com>
+On Thu, Apr 16, 2020 at 05:07:55PM +0200, Peter Zijlstra wrote:
+> From: Alexandre Chartre <alexandre.chartre@oracle.com>
 > 
-> [ Upstream commit 49ce94b8677c7d7a15c4d7cbbb9ff1cd8387827b ]
+> Currently objtool prevents any branch to an alternative. While preventing
+> branching from the outside to the middle of an alternative makes perfect
+> sense, branching within the same alternative should be allowed. To do so,
+> identify each alternative and check that a branch to an alternative comes
+> from the same alternative.
 > 
-> The PCI hotplug framework is used to update the devices when a new
-> image is written to the FPGA.
-> 
-> Reviewed-by: Alastair D'Silva <alastair@d-silva.org>
-> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-> Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> Link: https://lore.kernel.org/r/20191121134918.7155-12-fbarrat@linux.ibm.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Link: https://lkml.kernel.org/r/20200414103618.12657-3-alexandre.chartre@oracle.com
 
-This shouldn't be backported to any of the stable trees.
+I I think I'd rather just drop this patch.  It adds some complexity and
+I don't really see a benefit to having the warning in the first place.
+
+Branching to the middle of an alternative group just doesn't seem like a
+realistic scenario (can it even be done with the alternative macros?).
+
+Even if it were possible, I'm not sure why somebody would attempt such a
+feat.  And it seems like it would just wreck the system anyway.
 
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+Josh
 
