@@ -2,125 +2,126 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1720CC38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8DBC54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA02820771
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587319220;
-	bh=TpSGjLK6Os3XD9yctC02fA91I/meIQhSlAd8+qaXXv4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PKuyX/zHigAkkoUxSP9Kz1emzI9Zycse/ph8xRmJJ+/Eq/Cf1ruQYW3G8Ft59Vj8u
-	 m7RnjFx8YasBa4NITeVk2VnfFr3/8/m+gnSShWz+gEJO18UdJpZ8b9YzBQQzJfQTr0
-	 JiIng+cCZApOK+HNV/JGvi1K+QGB1akj1jET33cI=
+	by mail.kernel.org (Postfix) with ESMTP id 0DF6621974
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 18:01:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDIpk6C7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgDSSAT (ORCPT
+        id S1726495AbgDSSBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 14:00:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
+        Sun, 19 Apr 2020 14:01:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgDSSAT (ORCPT
+        with ESMTP id S1725793AbgDSSBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 14:00:19 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3F39C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 11:00:18 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id y4so7399755ljn.7
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 11:00:18 -0700 (PDT)
+        Sun, 19 Apr 2020 14:01:39 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E7FC061A0C;
+        Sun, 19 Apr 2020 11:01:39 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b8so3804617pfp.8;
+        Sun, 19 Apr 2020 11:01:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KquQ7eqJ5WxLr4ruGXMoT/FQZYgAagIrOw4D8jrNTS4=;
-        b=b5UUF65TFhoiwY6dQWiWGe/vGQW+FgBnonYQnlUUCMjWlRU22RHod2dAIgJ3iz6fXV
-         iHPKFSUyF0y9t9WsYQQ9kcB4/DxZHIV6ObTaC9u1rZW5FgGVn0mO6KxSqN3rfAPJuw14
-         TD6cuXjvI56ndC599LrGWOU/QkG+aROAcxZTk=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=KpOqt3ibcjgu9959clRGOJ/frmqx1Frhy+1ehyb6rKs=;
+        b=YDIpk6C7AXGUdjBgyuMNw8tQuWAfxYnXK82anp3paB1Ymj0wavoSosiBEqli2Z3Cf6
+         qr4kna32p61tAeiEQYEAHrg6T9d15oepQk5/MbRFIDl3KiKyITsqwjSkUPUhHeX35fT4
+         Arj9exIpY8AavJ8ovAR7sWrjKssv/YILKaPYXtFFTCefFp5eR178J7w6696YmSR/jx0x
+         //t5El8c78LJjGjKbUQWEyneyXF2xamQbnnCoe4hKmmpbG3FB0UypL7VYBK4H2jBpHaW
+         xoyr21NPZgL8CuRRmJgmz9I219x4zoWUMA/0s9MAmSYw5MTTWEIdNFbERgdD1EfvcEwz
+         oJbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KquQ7eqJ5WxLr4ruGXMoT/FQZYgAagIrOw4D8jrNTS4=;
-        b=oEq5uVCjzFHNWbAXvFCJtcTIz97GmrFUZ5AVg2uSsKgnVBolQFLRVjSobLNNMhiPsH
-         Js1cv7tUEER37JjYI9RSytbohDD0AAahNms1cr+6y68SQo3Z0ECx4gpLbjekiTNcRK0x
-         VYkyDJ4Fm+ySdCxW6fwKxApBBtnj5pC21L4KQ6ef4XXRgHYvnT5VRsU2aAgX/iooJmNh
-         W1OKEibviK23xKUXBU57n1eCHvzFABY/MKtxGzmdpqp+sHLoLFpDUO6gBP8S/t0XYeQS
-         oL9MLt/r/E1dyBNEmNysg/ifGe4MOgRc3ed5H2HiqZ7x32lfpXCxKHM/TDWHCFZJpFQF
-         FvoA==
-X-Gm-Message-State: AGi0PuYP5PgHxE2G+wrXoFXQ9mTbBhut3vvI2Dx0LJXIqaQ/tLEIrUU/
-        ahP5dE9yqsojnm6K07qBclpWMuv3m2g=
-X-Google-Smtp-Source: APiQypLJGs7v5fbmZ7VI+iHnQMKIRVY+V2oCzwab2koy9w3vQBmwhLgl7kbqxJ0f/ILLMGXUfmyXtg==
-X-Received: by 2002:a2e:8752:: with SMTP id q18mr7762621ljj.72.1587319216518;
-        Sun, 19 Apr 2020 11:00:16 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id c19sm7129570ljd.0.2020.04.19.11.00.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Apr 2020 11:00:15 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id u6so7432051ljl.6
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 11:00:15 -0700 (PDT)
-X-Received: by 2002:a2e:8512:: with SMTP id j18mr3316865lji.201.1587319215104;
- Sun, 19 Apr 2020 11:00:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=KpOqt3ibcjgu9959clRGOJ/frmqx1Frhy+1ehyb6rKs=;
+        b=bcBLVgo+Uzv00YpkV5JyeBh+SjrAWgYo3STuzrlPZCxlS0BK1Bp3WuH1gaPhTItNM3
+         3J0cmqU6286z+ITKrQaM7CUScd5DeXgLC+NepSRDAxEaoOW+d/poRnNzNqex/ywPo0Um
+         OXj946So4Ycs7mMY8fHFN513rdv1XR4PbVr0MH9DRhN+2FLKv96qcz39ufAa8C86Ny2X
+         7VMc3w0jD05BQ4kzfXAgorEsi5+DTARqzSg0CMPyYVEsUYIibooq5pEEyU+4k3NRb6KK
+         jDQ43RB3jd1UwIZTx3WAWzXL8usTlEVESjk1/FjhdPPZpQqPWqmo5tr55f/KOfRYGMgW
+         SrNg==
+X-Gm-Message-State: AGi0PuaS5shbmmQGzglR5+zEUutlOpEYKRjTNPbaICK+DgWv0EtJw0qJ
+        eIRge4lDhQW+ECbU2KMmFVI=
+X-Google-Smtp-Source: APiQypK3R4NboOhxdB/lNjNaSvIg54OvPS2ZyTTqFss6oO8a++ttbXPiuI9ld2t2Bewo+JaT6DULNA==
+X-Received: by 2002:a63:3002:: with SMTP id w2mr12813379pgw.290.1587319299237;
+        Sun, 19 Apr 2020 11:01:39 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id v26sm3543872pfe.121.2020.04.19.11.01.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 11:01:38 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 11:01:36 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     LuK1337 <priv.luk@gmail.com>,
+        Cameron Gutman <aicommander@gmail.com>,
+        Mark Furneaux <mark@furneaux.ca>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: xpad - Update xboxone fw2015 init packet
+Message-ID: <20200419180136.GK166864@dtor-ws>
+References: <20200419041651.GD166864@dtor-ws>
+ <20200419074624.9955-1-priv.luk@gmail.com>
 MIME-Version: 1.0
-References: <20200417172556.217480-1-bgeffon@google.com>
-In-Reply-To: <20200417172556.217480-1-bgeffon@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 19 Apr 2020 10:59:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgOYDi2pqECSGnxnBijemqWoLPWDh1LSKV5UrSivUUoRA@mail.gmail.com>
-Message-ID: <CAHk-=wgOYDi2pqECSGnxnBijemqWoLPWDh1LSKV5UrSivUUoRA@mail.gmail.com>
-Subject: Re: [PATCH] mm: Fix MREMAP_DONTUNMAP accounting on VMA merge
-To:     Brian Geffon <bgeffon@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Sonny Rao <sonnyrao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        syzbot <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200419074624.9955-1-priv.luk@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:26 AM Brian Geffon <bgeffon@google.com> wrote:
->
-> However, MREMAP_DONTUNMAP leaves that original portion in place which
-> means that the VMA which was split and then remerged is not actually
-> split at the end of the mremap.
+On Sun, Apr 19, 2020 at 09:46:23AM +0200, LuK1337 wrote:
+> From: Łukasz Patron <priv.luk@gmail.com>
+> 
+> Appending { 0x05, 0x20, 0x02, 0x0f, 0x06 } to
+> xboxone_fw2015_init fixes an issue where the
+> controller is somewhat stuck in bluetooth
+> mode until you plug it into Windows PC.
+> 
+> Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
 
-I was waiting to hear others comment on this, but it's been very quiet.
+Thank you Łukasz. Could you please tell me what device(s) have you
+observed the issue with? I am a bit worried if this may interfere with
+other devices that currently work fine with the driver. Cameron, Mark,
+do you have any concerns here?
 
-The patch looks correct to me, and the explanation is great. I'm
-inclined to just apply it.
+> ---
+>  drivers/input/joystick/xpad.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
+> index 6b40a1c68f9f..894fa81f717a 100644
+> --- a/drivers/input/joystick/xpad.c
+> +++ b/drivers/input/joystick/xpad.c
+> @@ -455,7 +455,8 @@ struct xboxone_init_packet {
+>   * or later firmware installed (or present from the factory).
+>   */
+>  static const u8 xboxone_fw2015_init[] = {
+> -	0x05, 0x20, 0x00, 0x01, 0x00
+> +	0x05, 0x20, 0x00, 0x01, 0x00,
+> +	0x05, 0x20, 0x02, 0x0f, 0x06
+>  };
+>  
+>  /*
+> -- 
+> 2.26.0
+> 
 
-HOWEVER.
+Thanks.
 
-I started looking at copy_vma(), and noticed that we seem to have
-exactly one caller: move_vma().
-
-So I do have a query: would it perhaps not be a good idea to simply
-remove the "vma_merge()" call from copy_vma(), and do at the end of
-move_vma() instead?
-
-I don't hate this patch either, and I'll happily apply it if people
-prefer this one, but before doing that I thought I'd ask whether maybe
-instead of fixing up the mess made by vma_merge() that people didn't
-think about, maybe we should fix it at the underlying source of the
-problem?
-
-Are there any advantages to merging early? Shouldn't the basic
-principle be that we'd strive to always do the vma_merge() at the end
-of an operation that might have generated a mergable sequence of
-vma's?
-
-               Linus
+-- 
+Dmitry
