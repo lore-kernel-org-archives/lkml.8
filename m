@@ -2,286 +2,121 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE157C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A955C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7D5C21473
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6CC21927
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 19:26:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YzeFIPgR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHrhNz9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgDSTVn (ORCPT
+        id S1726460AbgDST0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 15:21:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42060 "EHLO
+        Sun, 19 Apr 2020 15:26:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726011AbgDSTVm (ORCPT
+        with ESMTP id S1726022AbgDST0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 15:21:42 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D18EC061A10
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:21:41 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id r14so3882126pfg.2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 12:21:41 -0700 (PDT)
+        Sun, 19 Apr 2020 15:26:13 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4822C061A0C;
+        Sun, 19 Apr 2020 12:26:13 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id x26so3945351pgc.10;
+        Sun, 19 Apr 2020 12:26:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RGMN6tbtT6za2or0wESO5PWSuHGgRvOO5vUg0g7tI/c=;
-        b=YzeFIPgR3xDhN7Clw6ZM8Aqizc6EXlVaPyg6cUMeTK5zjZ9wpu+8TOXbJvs8m17x2e
-         HD/72UoaLoPAw8JSrBJMCMqJWleXN08yQ7TBCyf6QwGJr+rmThs197DRTJhEWaiuxW+0
-         4RvhvXDLDrYR7kpKhWAqdZVjlXG1dSGidNRk1MVdMc+21ttu5wepnN5gj/aF9hA6isBE
-         nJeaeiows3eRK8RhpBI2zG12nTY8xpvPiQi9cm79+/Nme/dr/hmIGUExR4AePnyyd36F
-         5Y/cWYBWBrk0Oi27dBWPR3nvHijhFJO+W/UyF8d3awBO8UPmYG854Z/jxfnO1zKxlnRD
-         S1+g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=MryED8uai1n3gclYsGl5qk+GTHUCazZ5O/sEZ7i7aTw=;
+        b=KHrhNz9eW2SEE10dN9YUDkj+Ug7Reo0bS49H4hagifMITN32wf7w38RTWZh8FgBLzp
+         Ze8EXPb7NdEYMbBLJlMO+wc+CfhSvGJ0NM3kdOa7K1ttzItHClDETecWsi/eQ2UGGA4P
+         eQpxI+w+bRUKdGBkKMTOGPU/r6sVcZJZ3mZ11jpIQZzXmFBQim0yemDodqOGOz3+n49J
+         u1oDBQYQHRunfftqt/321rwt4f2d9RabY8OdJe+KpqEanDUlv2WBq64eIRiIRHYgixgd
+         abjoJwce/1rVuIxVG0w0Jo3WwM5AwgMNPKsqdwCFfMlDIqMbvY2gYx6etyhTvfdgo5C5
+         lvyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RGMN6tbtT6za2or0wESO5PWSuHGgRvOO5vUg0g7tI/c=;
-        b=l9PlFx5EQogcUD/8LhBDurT1o9Z/rQlMpNh2qj8IYN2MpENzCuf1yCi4eCsxKoVi7e
-         mLOySReGWVbw1wAkj6VSAiQrISMFpbAO6OfNVFt5gBLyoW170yA1Ys/iHzfc0ZSdwVdJ
-         BWY2kKKVQAckkHcWlcR/tbHbVTY05WrC1Rkdi5u9bCYZ3Oapv6rk3YEyVwj4YKZwbp1U
-         f/VlDHZuIyVv2KJpBW4F5dt9T4dSo9DjqB4o3bDiANoR5Fe0cFMw2kU/71g6zeD+oB7E
-         sYbdXqqvl8jI4qAshZQmvuQdFbxTvwchmo69WjCTibS2OHD8qNeYjtfHmRF+EjEduQBm
-         T2Jw==
-X-Gm-Message-State: AGi0PubVcmL/Jv3jjolz5fZ3kdxMb2eKSbNe97X/0+Y9GiD6ZC0ADngF
-        QWgC4WEQ0aWGtneUaQ7g8NEjQmJ3WAc=
-X-Google-Smtp-Source: APiQypLIKEQgXhQvct1QrZGarkIuUOJr9obBhQy5yuCohrGWlylbu2HUorcgT0wcj/Y/BW9elhJ9NQ==
-X-Received: by 2002:a63:5d60:: with SMTP id o32mr12883753pgm.172.1587324100903;
-        Sun, 19 Apr 2020 12:21:40 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o99sm11880162pjo.8.2020.04.19.12.21.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=MryED8uai1n3gclYsGl5qk+GTHUCazZ5O/sEZ7i7aTw=;
+        b=RpEFTTdj9108n/uvKfEOnzXKRPH4qdkvWwJ6B2YDYWZ4lBJzSSIF+JqrBYDJQUOjCR
+         tirZ22SPszYEK3CCDufTZZesZ/Ye7M3euFT6krby9mC4bVLbqRJvq4nMU65Pk0bogTRi
+         hs1pCNCdd3eht1rWiws1B6B84IXMHggsafYkOmLL0zg4BiyDxIfTswTFwoRdpgnmw91L
+         1IElPgFShe/GQcOxDK7Sbzlg9TDub2VFr9JRqH2wthTzUmAfoINmJA1WqCjgu1TcCGKs
+         YfHXat38d06M38RD3R5S2N0ZW9IOSazRHVbZyKkMAe/JuYb01pEcyfQcNi8sRVPIy9NF
+         5BBQ==
+X-Gm-Message-State: AGi0PuYdjhAbStRIdYC0BpFqS1nPIfVphc2lBCPJ7lunYaxWvHFLZ8WD
+        frcIYYD1WAgYQibEOyqKXE4=
+X-Google-Smtp-Source: APiQypJq57LDtDw5YkhAyu3co9ZJlm0e2Zx8UQb5qRrl36rguXOG17PZM06e+tqpYWCqGOa438Wv0A==
+X-Received: by 2002:a62:5b02:: with SMTP id p2mr14019001pfb.14.1587324373535;
+        Sun, 19 Apr 2020 12:26:13 -0700 (PDT)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id x16sm22724383pfm.146.2020.04.19.12.26.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 12:21:40 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 12:21:37 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, evgreen@chromium.org,
-        ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/5] arm64: dts: qcom: sc7180: Update reserved memory map
-Message-ID: <20200419192137.GF987656@yoga>
-References: <20200417142605.28885-1-sibis@codeaurora.org>
- <20200417142605.28885-4-sibis@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417142605.28885-4-sibis@codeaurora.org>
+        Sun, 19 Apr 2020 12:26:13 -0700 (PDT)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Mark Brown <broonie@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [Patch v2 1/9] spi: bcm-qspi: Handle clock probe deferral
+Date:   Sun, 19 Apr 2020 15:23:30 -0400
+Message-Id: <20200419192339.32023-2-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200419192339.32023-1-kdasu.kdev@gmail.com>
+References: <20200419192339.32023-1-kdasu.kdev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17 Apr 07:26 PDT 2020, Sibi Sankar wrote:
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-> Add missing regions and remove unused regions from the reserved memory
-> map, as described in version 5.
-> 
+The clock provider may not be ready by the time spi-bcm-qspi gets
+probed, handle probe deferral using devm_clk_get_optional().
 
-Your patch looks good, but I'm quite unhappy with the way these turns
-out and we have been ignoring the fact that different devices on the
-same platform (with TZ) might come with different firmware versions and
-hence different layout of the peripheral memory region.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ drivers/spi/spi-bcm-qspi.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-So how about pushing out at least the peripheral regions to the device's
-dts (the others are pretty much static, except when using coreboot)?
-That should reduce your patch to 4(?) delete-nodes?
+diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
+index 23d295f36c80..74f4579c3f6a 100644
+--- a/drivers/spi/spi-bcm-qspi.c
++++ b/drivers/spi/spi-bcm-qspi.c
+@@ -1222,6 +1222,11 @@ int bcm_qspi_probe(struct platform_device *pdev,
+ 	}
+ 
+ 	qspi = spi_master_get_devdata(master);
++
++	qspi->clk = devm_clk_get_optional(&pdev->dev, NULL);
++	if (IS_ERR(qspi->clk))
++		return PTR_ERR(qspi->clk);
++
+ 	qspi->pdev = pdev;
+ 	qspi->trans_pos.trans = NULL;
+ 	qspi->trans_pos.byte = 0;
+@@ -1335,13 +1340,6 @@ int bcm_qspi_probe(struct platform_device *pdev,
+ 		qspi->soc_intc = NULL;
+ 	}
+ 
+-	qspi->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(qspi->clk)) {
+-		dev_warn(dev, "unable to get clock\n");
+-		ret = PTR_ERR(qspi->clk);
+-		goto qspi_probe_err;
+-	}
+-
+ 	ret = clk_prepare_enable(qspi->clk);
+ 	if (ret) {
+ 		dev_err(dev, "failed to prepare clock\n");
+-- 
+2.17.1
 
-Regards,
-Bjorn
-
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 63 +++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 83 ++++++++++++++++++++++++-
->  2 files changed, 144 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 17eadd80f15de..e613d70cc0198 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -28,6 +28,69 @@ chosen {
->  	};
->  };
->  
-> +/*
-> + * Reserved memory changes
-> + *
-> + * Keep all modifications to the memory map (from sc7180.dtsi) in one place.
-> + * Delete all unused memory nodes and re-create atf_mem/venus_mem/camera_mem
-> + * and wlan_mem memory nodes.
-> + *
-> + */
-> +
-> +/delete-node/ &hyp_mem;
-> +/delete-node/ &xbl_mem;
-> +/delete-node/ &aop_mem;
-> +/delete-node/ &sec_apps_mem;
-> +/delete-node/ &tz_mem;
-> +/delete-node/ &camera_mem;
-> +/delete-node/ &npu_mem;
-> +/delete-node/ &venus_mem;
-> +/delete-node/ &cdsp_mem;
-> +/delete-node/ &adsp_mem;
-> +/delete-node/ &wlan_mem;
-> +/delete-node/ &ipa_fw_mem;
-> +/delete-node/ &ipa_gsi_mem;
-> +/delete-node/ &gpu_mem;
-> +
-> +/* Increase the size from 132 MB to 140 MB */
-> +&mpss_mem {
-> +	reg = <0x0 0x86000000 0x0 0x8c00000>;
-> +};
-> +
-> +/* Increase the size from 2MB to 8MB */
-> +&rmtfs_mem {
-> +	reg = <0x0 0x84400000 0x0 0x800000>;
-> +};
-> +
-> +/ {
-> +	reserved-memory {
-> +		atf_mem: memory@80b00000 {
-> +			reg = <0x0 0x80b00000 0x0 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		camera_mem: memory@8ec00000 {
-> +			reg = <0x0 0x8ec00000 0x0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		venus_mem: memory@8f600000 {
-> +			reg = <0 0x8f600000 0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		wlan_mem: memory@94100000 {
-> +			reg = <0x0 0x94100000 0x0 0x200000>;
-> +			no-map;
-> +		};
-> +
-> +		mba_mem: memory@94400000 {
-> +			reg = <0x0 0x94400000 0x0 0x200000>;
-> +			no-map;
-> +		};
-> +	};
-> +};
-> +
->  &apps_rsc {
->  	pm6150-rpmh-regulators {
->  		compatible = "qcom,pm6150-rpmh-regulators";
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 853ba6e8a53ca..f73ffd74d4fcd 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -69,18 +69,97 @@ reserved_memory: reserved-memory {
->  		#size-cells = <2>;
->  		ranges;
->  
-> +		hyp_mem: memory@80000000 {
-> +			reg = <0x0 0x80000000 0x0 0x600000>;
-> +			no-map;
-> +		};
-> +
-> +		xbl_mem: memory@80600000 {
-> +			reg = <0x0 0x80600000 0x0 0x200000>;
-> +			no-map;
-> +		};
-> +
-> +		aop_mem: memory@80800000 {
-> +			reg = <0x0 0x80800000 0x0 0x20000>;
-> +			no-map;
-> +		};
-> +
->  		aop_cmd_db_mem: memory@80820000 {
->  			reg = <0x0 0x80820000 0x0 0x20000>;
->  			compatible = "qcom,cmd-db";
->  		};
->  
-> +		sec_apps_mem: memory@808ff000 {
-> +			reg = <0x0 0x808ff000 0x0 0x1000>;
-> +			no-map;
-> +		};
-> +
->  		smem_mem: memory@80900000 {
->  			reg = <0x0 0x80900000 0x0 0x200000>;
->  			no-map;
->  		};
->  
-> -		venus_mem: memory@8f600000 {
-> -			reg = <0 0x8f600000 0 0x500000>;
-> +		tz_mem: memory@80b00000 {
-> +			reg = <0x0 0x80b00000 0x0 0x3900000>;
-> +			no-map;
-> +		};
-> +
-> +		rmtfs_mem: memory@84400000 {
-> +			compatible = "qcom,rmtfs-mem";
-> +			reg = <0x0 0x84400000 0x0 0x200000>;
-> +			no-map;
-> +
-> +			qcom,client-id = <1>;
-> +			qcom,vmid = <15>;
-> +		};
-> +
-> +		mpss_mem: memory@86000000 {
-> +			reg = <0x0 0x86000000 0x0 0x8400000>;
-> +			no-map;
-> +		};
-> +
-> +		camera_mem: memory@8e400000 {
-> +			reg = <0x0 0x8e400000 0x0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		npu_mem: memory@8e900000 {
-> +			reg = <0x0 0x8e900000 0x0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		venus_mem: memory@8ee00000 {
-> +			reg = <0x0 0x8ee00000 0x0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		cdsp_mem: memory@8f300000 {
-> +			reg = <0x0 0x8f300000 0x0 0x1e00000>;
-> +			no-map;
-> +		};
-> +
-> +		adsp_mem: memory@91100000 {
-> +			reg = <0x0 0x91100000 0x0 0x2800000>;
-> +			no-map;
-> +		};
-> +
-> +		wlan_mem: memory@93900000 {
-> +			reg = <0x0 0x93900000 0x0 0x200000>;
-> +			no-map;
-> +		};
-> +
-> +		ipa_fw_mem: memory@93b00000 {
-> +			reg = <0x0 0x93b00000 0x0 0x10000>;
-> +			no-map;
-> +		};
-> +
-> +		ipa_gsi_mem: memory@93b10000 {
-> +			reg = <0x0 0x93b10000 0x0 0x5000>;
-> +			no-map;
-> +		};
-> +
-> +		gpu_mem: memory@93b15000 {
-> +			reg = <0x0 0x93b15000 0x0 0x2000>;
->  			no-map;
->  		};
->  	};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
