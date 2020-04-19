@@ -2,143 +2,88 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DDAC38A29
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39B2C38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75AF421D79
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587336266;
-	bh=nkfNhUxB7twrSGUzyUAMobuT5zi/cEpZEu4ZRGsuvo4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=v7ZO+VQW3IcyXKO9hAXj1jWeAYEizDg+uTqqG+XxYtOtYe0xzedFZ8hCbmcYfyuKo
-	 sw+gN4G2Rs7RfE8/musXsVIkcwu3nYnX+T9Ba0warbAKtkfjzQsbyhJkx3gS5ZZeJm
-	 zdrsZGE9jp5v2Dg6maewAXwGItfOUzwXw+VKpXgI=
+	by mail.kernel.org (Postfix) with ESMTP id 82B3520735
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:47:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="XOHNPhSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgDSWoZ (ORCPT
+        id S1726054AbgDSWrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 18:44:25 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:57963 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbgDSWoZ (ORCPT
+        Sun, 19 Apr 2020 18:47:02 -0400
+Received: from mx.aristanetworks.com ([162.210.129.12]:47015 "EHLO
+        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgDSWrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 18:44:25 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 03JMhwJB009257;
-        Mon, 20 Apr 2020 07:43:59 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 03JMhwJB009257
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587336239;
-        bh=gV/58YzON11th09Ti+Q8EbO1d/yan4JpxqInk2QGwes=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FgiQUpEnZCCVaIVWx/unrd1QG7sa9rq24slnHk0eFwMxg1QdlLrIjfH/SpHuWWCT5
-         ByafFrn4UMsGC5LRT59KG15IAFnUk6ok1l66FmrHu741j05+dv9Cxbrh3EHJT2wiw/
-         9UtixbBdOUORKCDFJj8ONXAtkO3k4EdtoRwZdbXzqaIdaBGlqdVj0ETACR89kuuLXn
-         1leWcw9phhOWGYISjDoJVjQD3T90V+7ftx8rSrz0gtz+645fhPhOU1y+qiJKFmPk9l
-         Z19jEmSzS7Y3mZkkyDOOVJFBqj3PMJlDStTC2hwOFu3Uy+zD3Z90inxZPeJ0F2CCNs
-         sdjP6Tv+tjlUw==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id z1so4816150vsn.11;
-        Sun, 19 Apr 2020 15:43:59 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaQCcQPIs8oHn7TeOVbbxkGH40jkE4x+oMYFK/uCImTCF9AmKku
-        rd/n1UbXIpFsuxUPWjrYM/psdaFF4otMHFIBKvs=
-X-Google-Smtp-Source: APiQypL18FhGmx9Srecmi4TdYq4Vj1H09SIbwKmnMxjZzAe5yiIXkku5jzH7VBRLIM/hcElDA0yKpv6VkHkLWl34k4c=
-X-Received: by 2002:a67:fa11:: with SMTP id i17mr9772277vsq.155.1587336237833;
- Sun, 19 Apr 2020 15:43:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200419222804.483191-1-masahiroy@kernel.org>
-In-Reply-To: <20200419222804.483191-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 20 Apr 2020 07:43:21 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQmdxmk7_fxo0v6T92GwXpXbmukcMBD_4Dp+L89ymM7=A@mail.gmail.com>
-Message-ID: <CAK7LNAQmdxmk7_fxo0v6T92GwXpXbmukcMBD_4Dp+L89ymM7=A@mail.gmail.com>
-Subject: Re: [PATCH] arch: split MODULE_ARCH_VERMAGIC definitions out to <asm/vermagic.h>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 19 Apr 2020 18:47:02 -0400
+X-Greylist: delayed 608 seconds by postgrey-1.27 at vger.kernel.org; Sun, 19 Apr 2020 18:47:02 EDT
+Received: from visor (unknown [10.95.89.82])
+        by smtp.aristanetworks.com (Postfix) with ESMTP id 6A65040186F;
+        Sun, 19 Apr 2020 15:36:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+        s=Arista-A; t=1587335813;
+        bh=jxHvGKInQk3QYVsXG/uXRFxG6JYrVJcDhgYhQzWLrgY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=XOHNPhSXSLcLMDl1uoUInQu8yYaUyH+XrQgX3P2c9zo9zi1XKUXgVJVoWvJ05mD4D
+         3HQ8eoo6T4WudQbrxcTs82obvhyyxHbjFWJHUeROpcdABDK6BuYK/CQmbn+m9rlkP4
+         7YUZXKbeiWHChPz4gPLv75mCvw3JPDY6iRo7x7lhwDzzb1GxSufalDjvWnrQYRX8S1
+         vYjNW5XlgPjijixdZ752Ik4swIXHqDu4KzL70jv5d+sg7DhTIzWPjhSS9YMqH0TNK/
+         F7wiyB95UTzj4LPpWBX4PDXOKzSBJJKHQoZd7NiS/Fl/Jpoy11zKy5zbGMWPIeKg09
+         PaiIn3d5mnWuA==
+Date:   Sun, 19 Apr 2020 15:36:53 -0700
+From:   Ivan Delalande <colona@arista.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH] scripts/decodecode: fix trapping instruction formatting
+Message-ID: <20200419223653.GA31248@visor>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.13.5 (2020-03-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 7:28 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> As the bug report [1] pointed out, <linux/vermagic.h> must be included
-> after <linux/module.h>.
->
-> I believe we should be able to include headers in any order. We often
-> sort include directives alphabetically, but it is just coding style
-> convention. Technically, we can get rid of the include order restriction
-> by making every header self-contained.
->
-> Currently, arch-specific MODULE_ARCH_VERMAGIC is defined in
-> <asm/module.h>, but it is not included from <linux/vermagic.h>.
->
-> Hence, the straight-forward fix-up would be as follows:
->
-> |--- a/include/linux/vermagic.h
-> |+++ b/include/linux/vermagic.h
-> |@@ -1,5 +1,6 @@
-> | /* SPDX-License-Identifier: GPL-2.0 */
-> | #include <generated/utsrelease.h>
-> |+#include <linux/module.h>
-> |
-> | /* Simply sanity version stamp for modules. */
-> | #ifdef CONFIG_SMP
->
-> This works enough, but for further cleanups, I split MODULE_ARCH_VERMAGIC
-> definitions into <asm/vermagic.h>.
->
-> With this, <linux/module.h> and <linux/vermagic.h> will be orthogonal,
-> and the location of MODULE_ARCH_VERMAGIC definitions will be consistent.
->
-> For arc and ia64, MODULE_PROC_FAMILY is only used for defining
-> MODULE_ARCH_VERMAGIC. I squashed it.
->
-> FOR hexagon, nds32, and xtensa, I removed <asm/modules.h> entirely
-> because they contained nothing but MODULE_ARCH_VERMAGIC definition.
-> Kbuild will automatically generate <asm/modules.h> at build-time,
-> wrapping <asm-generic/module.h>.
->
-> [1] https://lore.kernel.org/lkml/20200411155623.GA22175@zn.tnic
->
+If the trapping instruction contains a ':', for a memory access through
+segment registers for example, the sed substitution will insert the '*'
+marker in the middle of the instruction instead of the line address:
 
-I forgot to add this:
+	2b:   65 48 0f c7 0f          cmpxchg16b %gs:*(%rdi)          <-- trapping instruction
 
-Reported-by: Borislav Petkov <bp@suse.de>
+I started to think I had forgotten some quirk of the assembly syntax
+before noticing that it was actually coming from the script. Fix it to
+add the address marker at the right place for these instructions:
 
+	28:   49 8b 06                mov    (%r14),%rax
+	2b:*  65 48 0f c7 0f          cmpxchg16b %gs:(%rdi)           <-- trapping instruction
+	30:   0f 94 c0                sete   %al
 
+Fixes: 18ff44b189e2 ("scripts/decodecode: make faulting insn ptr more robust")
+Signed-off-by: Ivan Delalande <colona@arista.com>
+---
+ scripts/decodecode | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
-> I do not mean to replace the work by Leon Romanovsky:
-> https://lkml.org/lkml/2020/4/19/201
->
-> His work intends to hide <linux/vermagic.h> from driver writers.
-> It is solving a different problem.
-> It does not solve the include order restriction reported by [1].
-> It still relies on kernel/module.c and *.mod.c
-> include <linux/vermagic.h> after <linux/module.h>.
->
-> I believe we should not impose any restriction about the include order.
-> So, this patch is the direct answer to the bug report [1].
->
-> BTW, I think commit f58dd03b1157bdf3b64c36e9525f8d7f69c25df2
-> was a bad way to suppress the problem, but that is another story.
->
-
-
+diff --git a/scripts/decodecode b/scripts/decodecode
+index ba8b8d5834e6..fbdb325cdf4f 100755
+--- a/scripts/decodecode
++++ b/scripts/decodecode
+@@ -126,7 +126,7 @@ faultlinenum=$(( $(wc -l $T.oo  | cut -d" " -f1) - \
+ faultline=`cat $T.dis | head -1 | cut -d":" -f2-`
+ faultline=`echo "$faultline" | sed -e 's/\[/\\\[/g; s/\]/\\\]/g'`
+ 
+-cat $T.oo | sed -e "${faultlinenum}s/^\(.*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
++cat $T.oo | sed -e "${faultlinenum}s/^\([^:]*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
+ echo
+ cat $T.aa
+ cleanup
 -- 
-Best Regards
-Masahiro Yamada
+Ivan Delalande
+Arista Networks
