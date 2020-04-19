@@ -2,83 +2,157 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A12C38A30
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D694C5321D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6A322253
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC60214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 16:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d4lvu25T"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="VL8lHcY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgDSQz2 (ORCPT
+        id S1726661AbgDSQ5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 12:55:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27447 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725970AbgDSQz1 (ORCPT
+        Sun, 19 Apr 2020 12:57:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725970AbgDSQ5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 12:55:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587315327;
+        Sun, 19 Apr 2020 12:57:00 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F4FC061A0C;
+        Sun, 19 Apr 2020 09:56:59 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 25FEC23059;
+        Sun, 19 Apr 2020 18:56:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587315418;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=vGICrycXQ813HE5piGlfG1KXzSs5G6rL6S2opOPLquo=;
-        b=d4lvu25TYbgKdIxL53jMTBj7A/V4PduioHDN8sL8n/T2y1FEmYUEXpUe9kYpZ/lv3p7oU4
-        35dQTmem/pg+V19ZjCci+HgkZ+f5djtXzD0of3iGp9QnohXjs2METigykrESZk+dnkumdt
-        MKZwy3ZnVCEusLywtLb5hHgMt695N4w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-341-4U55EugePyOS9oger1QR9Q-1; Sun, 19 Apr 2020 12:55:25 -0400
-X-MC-Unique: 4U55EugePyOS9oger1QR9Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 299FC107B767;
-        Sun, 19 Apr 2020 16:55:24 +0000 (UTC)
-Received: from treble (ovpn-112-237.rdu2.redhat.com [10.10.112.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 58FA81001902;
-        Sun, 19 Apr 2020 16:55:22 +0000 (UTC)
-Date:   Sun, 19 Apr 2020 11:55:19 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     alexandre.chartre@oracle.com, linux-kernel@vger.kernel.org,
-        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org
-Subject: Re: [RFC][PATCH 5/7] x86/speculation: Change __FILL_RETURN_BUFFER to
- work with objtool
-Message-ID: <20200419165519.wstqpqmvyom4yh3r@treble>
-References: <20200416150752.569029800@infradead.org>
- <20200416151025.004441230@infradead.org>
- <20200419165155.4twgzmf6eusk7rv5@treble>
+        bh=/XyGS8Ih2jliMK5tWK4NrlSo2vV1w+fYZEjP9GEbFHQ=;
+        b=VL8lHcY891HUtQsplwCdu2HO0oAmA8YZ+BzC7x4Va83HsABuf8gAgtHnOU7B4Ntd+hFHIT
+        xH6Pfb/wiP5NHafpYNVgy/eqVUFmYRq1pKrAkW8RYrOfXdgEM9HFGxCobbAcew5TX59qWA
+        jBhDFKZ7wFCS9NU/GTos+TuQxqVJ0nI=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200419165155.4twgzmf6eusk7rv5@treble>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 19 Apr 2020 18:56:58 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next v2 2/3] net: phy: add Broadcom BCM54140 support
+In-Reply-To: <20200419164958.GN836632@lunn.ch>
+References: <20200419101249.28991-1-michael@walle.cc>
+ <20200419101249.28991-2-michael@walle.cc> <20200419154943.GJ836632@lunn.ch>
+ <d40eafc5ed95b62886e10159dcb7a509@walle.cc>
+ <20200419164958.GN836632@lunn.ch>
+Message-ID: <8478a8bb5542f8e40fa17a003893f08d@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 25FEC23059
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[10];
+         NEURAL_HAM(-0.00)[-0.977];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,suse.com,roeck-us.net,gmail.com,armlinux.org.uk,davemloft.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 11:52:00AM -0500, Josh Poimboeuf wrote:
-> Are we still planning to warn about stack changes inside an alternative?
-> If so then this would still fail...
+Am 2020-04-19 18:49, schrieb Andrew Lunn:
+> On Sun, Apr 19, 2020 at 06:33:40PM +0200, Michael Walle wrote:
+>> >
+>> > > +
+>> > > +	return 0;
+>> > > +}
+>> > > +
+>> > > +static int bcm54140_config_init(struct phy_device *phydev)
+>> > > +{
+>> > > +	u16 reg = 0xffff;
+>> > > +	int ret;
+>> > > +
+>> > > +	/* Apply hardware errata */
+>> > > +	ret = bcm54140_b0_workaround(phydev);
+>> > > +	if (ret)
+>> > > +		return ret;
+>> > > +
+>> > > +	/* Unmask events we are interested in. */
+>> > > +	reg &= ~(BCM54140_RDB_INT_DUPLEX |
+>> > > +		 BCM54140_RDB_INT_SPEED |
+>> > > +		 BCM54140_RDB_INT_LINK);
+>> > > +	ret = bcm_phy_write_rdb(phydev, BCM54140_RDB_IMR, reg);
+>> > > +	if (ret)
+>> > > +		return ret;
+>> > > +
+>> > > +	/* LED1=LINKSPD[1], LED2=LINKSPD[2], LED3=ACTIVITY */
+>> > > +	ret = bcm_phy_modify_rdb(phydev, BCM54140_RDB_SPARE1,
+>> > > +				 0, BCM54140_RDB_SPARE1_LSLM);
+>> > > +	if (ret)
+>> > > +		return ret;
+>> >
+>> > What are the reset default for LEDs? Can the LEDs be configured via
+>> > strapping pins? There is currently no good solution for this. Whatever
+>> > you pick will be wrong for somebody else. At minimum, strapping pins,
+>> > if they exist, should not be overridden.
+>> 
+>> Fair enough. There are no strapping options, just the "default 
+>> behaviour",
+>> where LED1/2 indicates the speed, and LED3 just activity (no link
+>> indication). And I just noticed that in this case the comment above is
+>> wrong, because it is actually link/activity. Further, there are myriad
+>> configuration options which I didn't want to encode altogether. So 
+>> I've
+>> just chosen the typical one (which actually matches our hardware), ie.
+>> to have the "activity/led mode". The application note mentions some 
+>> other
+>> concrete modes, but I don't know if its worth implementing them. Maybe 
+>> we
+>> can have a enumeration of some distinct modes? Ie.
+>> 
+>>    broadcom,led-mode = <BCM54140_NO_CHANGE>;
+>>    broadcom,led-mode = <BCM54140_ACT_LINK_MODE>;
 > 
-> In this case I think it should be safe, but I'm not sure how we can
-> ensure that will always be the case for other alternatives.
+> Configuring LEDs is a mess at the moment. No two PHYs do it the
+> same. For a long time i've had a TODO item to make PHY LEDs work just
+> like every other LED in linux, and you can set trigger actions which
+> are then implemented in hardware.
 > 
-> And do the ORC entries actually work for this?  As far as I can tell,
-> they would be associated with the .altinstructions section and not
-> .text, so it wouldn't work.
+> We have been pushing back on adding DT properties, it just makes the
+> problem worse. If reset defaults are good enough for you, please leave
+> it at that.
 
-My preference would be to move RSB stuffing out-of-line too, like you
-did the retpolines.  Or use static branches.  Then we could add an
-objtool warning to prevent stack changes in alternatives.
+Unfortunately not. We need the link/act, which I presume will also be
+used by most other users, thus the driver enables this setting. I don't
+know any board which just have an activity led, that is just off and
+blinks for a short time if there is RX or TX, which is the reset default
+setting of this PHY.
 
--- 
-Josh
-
+-michael
