@@ -6,69 +6,54 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0841C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29298C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8373421744
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7DC206D5
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 08:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgDSIBB (ORCPT
+        id S1725988AbgDSIDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 04:01:01 -0400
-Received: from verein.lst.de ([213.95.11.211]:35682 "EHLO verein.lst.de"
+        Sun, 19 Apr 2020 04:03:43 -0400
+Received: from verein.lst.de ([213.95.11.211]:35696 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDSIBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 04:01:01 -0400
+        id S1725903AbgDSIDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 04:03:42 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 7C63E68BEB; Sun, 19 Apr 2020 10:00:58 +0200 (CEST)
-Date:   Sun, 19 Apr 2020 10:00:58 +0200
+        id ABB1568BEB; Sun, 19 Apr 2020 10:03:39 +0200 (CEST)
+Date:   Sun, 19 Apr 2020 10:03:39 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] dma-mapping: add a dma_ops_bypass flag to struct
- device
-Message-ID: <20200419080058.GB12222@lst.de>
-References: <20200414122506.438134-1-hch@lst.de> <20200414122506.438134-4-hch@lst.de> <20200418124205.GD6113@8bytes.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 2/8] signal: clean up __copy_siginfo_to_user32
+Message-ID: <20200419080339.GC12222@lst.de>
+References: <20200414070142.288696-1-hch@lst.de> <20200414070142.288696-3-hch@lst.de> <87pnc5akhk.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200418124205.GD6113@8bytes.org>
+In-Reply-To: <87pnc5akhk.fsf@x220.int.ebiederm.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 02:42:05PM +0200, Joerg Roedel wrote:
-> Hi Christoph,
+On Fri, Apr 17, 2020 at 04:08:23PM -0500, Eric W. Biederman wrote:
+> This bothers me because it makes all architectures pay for the sins of
+> x32.  Further it starts burying the details of the what is happening in
+> architecture specific helpers.  Hiding the fact that there is only
+> one niche architecture that does anything weird.
 > 
-> On Tue, Apr 14, 2020 at 02:25:05PM +0200, Christoph Hellwig wrote:
-> > +static inline bool dma_map_direct(struct device *dev,
-> > +		const struct dma_map_ops *ops)
-> > +{
-> > +	if (likely(!ops))
-> > +		return true;
-> > +	if (!dev->dma_ops_bypass)
-> > +		return false;
-> > +
-> > +	return min_not_zero(*dev->dma_mask, dev->bus_dma_limit) >=
-> > +			    dma_direct_get_required_mask(dev);
-> 
-> Why is the dma-mask check done here? The dma-direct code handles memory
-> outside of the devices dma-mask with swiotlb, no?
-> 
-> I also don't quite get what the difference between setting the
-> dma_ops_bypass flag non-zero and setting ops to NULL is.
+> I am very sensitive to hiding away signal handling details right now
+> because way to much of the signal handling code got hidden in
+> architecture specific files and was quite buggy because as a result.
 
-The difference is that NULL ops mean imply the direct mapping is always
-used, dma_ops_bypass means a direct mapping is used if no bounce buffering
-using swiotlb is needed, which should also answer your first question.
-The idea is to consolidate code in the core to use an opportunistic
-direct mapping instead of the dynamic iommu mapping.  I though the cover
-letter and commit log explained this well enough, but maybe I need to
-do a better job.
+I much prefer the unconditional flags over the crazy ifdef mess in
+the current coe and your version.  Except for that and the rather
+strange and confusing copy_siginfo_to_external32 name it pretty much
+looks the same.
