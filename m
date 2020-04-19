@@ -2,175 +2,307 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CFFC5321D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ECAC54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1470421841
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4632221973
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 15:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0lqQZIH"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Tm0eBZ17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgDSPhH (ORCPT
+        id S1726335AbgDSPnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 11:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35914 "EHLO
+        Sun, 19 Apr 2020 11:43:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbgDSPhG (ORCPT
+        with ESMTP id S1725927AbgDSPnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 11:37:06 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA1DC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:37:06 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id j4so5805975otr.11
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 08:37:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5HPkHkilPOStTzSXVFfPa6HLneZJ21Zsjdgq+nilkL4=;
-        b=V0lqQZIHRClIouuiv23kabocfPPwew/MbrlMwaTf6BSgRjqx78x+A23spcrNOdFLdF
-         rd+IofAHhan+XUkGuqna8/jgl6Emm4QjB3KwTfAzo3JwxChC0hgmlKoc+/SH5BcTLgg6
-         g7m99/WPg2vT7fczC3Imxr3/oQOIu05OUy3IxypHcjXvOeQZhuivi8Vnct/kQ2JFEy+4
-         suI0HzGCZj389zGJQsZw2gGBo4XSHic3l+ZptKWnfj5zJgkAl6J1bCSrSx8Z+3BmgM73
-         HVxBnwKJz7nnqaEVfYDJHQxTH5arphxYMotF9ah2Q4sa6HxP7JjaTcwSYIK96/UfIVwf
-         G16Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5HPkHkilPOStTzSXVFfPa6HLneZJ21Zsjdgq+nilkL4=;
-        b=IK058yzSgDbRXUkIXLX3aD8dY5a327H2moRLe0mDBSWRknWHUfwJH+BhWR7J+drmgB
-         Vk7X9b5xgHUYCNQvmnkWAZviE0OGlhvdfXjrmkGQ+r5pFb+nRwDLZ6prY7zpHxl5acgD
-         VFkvDCPrz5BhpBC9TD5xEvelutsoSZR6qyZHK9H3DMh03/f5lIYg3SqpGE0REE2huAAv
-         I3jQSpeDlL9AtSkr7lun5cIlSuUzl6Vn5juLVDT/F+u3zXlMF1S2sgOSESP9LGuglMPQ
-         fRBr72rkzD3M6GA/N1GHCOHWwpuozZZl6Dwu8G20OU+58KhlSyaWoC2n0SjoF1yGd13o
-         TqpA==
-X-Gm-Message-State: AGi0PuY4um92bLe6kGXFRoqOExOw5mAvcZf1FvkwH/jpEC3sfYu+Mh+d
-        GeosvK/sBKEtlSmU9wd6mXM=
-X-Google-Smtp-Source: APiQypJ4OTXmUT4H5orAHesfhbel+Qm1LfCizO7KwfZJZy2Mej3jk8Dt88rnYsKAjGjG8RjHc97IZA==
-X-Received: by 2002:a9d:728e:: with SMTP id t14mr6631841otj.63.1587310625625;
-        Sun, 19 Apr 2020 08:37:05 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id m12sm173807oov.41.2020.04.19.08.37.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 Apr 2020 08:37:04 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 08:37:03 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] kbuild: Set CLANG_VERSION only when Clang is used
-Message-ID: <20200419153703.GA41789@ubuntu-s3-xlarge-x86>
-References: <20200419123612.173187-1-sedat.dilek@gmail.com>
+        Sun, 19 Apr 2020 11:43:24 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D6EC061A0C;
+        Sun, 19 Apr 2020 08:43:23 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8DC0E528;
+        Sun, 19 Apr 2020 17:43:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587310999;
+        bh=BYggn48w0d4cVLdQWuqDL2y0MIYNN5XQfNXhNTDpHhQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Tm0eBZ17UpZTN7OIK2fL0iS0KEpeYErWNQuRQzZ2an0KBvv6akAhyOGrOB1c5mj7j
+         i+Y7DEMI7wihePDVqmFOw4fjvFwOy+tNLDoxhXMUETkFP8davY1ama1VRoGACmXQmp
+         OtqDYZO+HYwQfnKKFhzvMLuDUWOrwHeu8lgl5dZQ=
+Date:   Sun, 19 Apr 2020 18:43:05 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v11 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Message-ID: <20200419154305.GA8117@pendragon.ideasonboard.com>
+References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
+ <20200409194424.45555-2-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200419123612.173187-1-sedat.dilek@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200409194424.45555-2-vishal.sagar@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 02:36:12PM +0200, Sedat Dilek wrote:
-> Do like GCC_VERSION is set when GCC (see CC_IS_GCC) is used.
+Hi Vishal,
+
+Thank you for the patch.
+
+On Fri, Apr 10, 2020 at 01:14:23AM +0530, Vishal Sagar wrote:
+> Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
 > 
-> Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+> DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
+
+The AXI IIC was removed from the subsystem in v4.1, you could drop it
+from the commit message too.
+
+> 
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
 > ---
->  init/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v11
+> - Modify compatible string from 4.0 to 5.0
 > 
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 9e22ee8fbd75..c23f9d3d6d6c 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -25,7 +25,7 @@ config CC_IS_CLANG
->  
->  config CLANG_VERSION
->  	int
-> -	default $(shell,$(srctree)/scripts/clang-version.sh $(CC))
-> +	default $(shell,$(srctree)/scripts/clang-version.sh $(CC)) if CC_IS_CLANG
->  
->  config CC_CAN_LINK
->  	def_bool $(success,$(srctree)/scripts/cc-can-link.sh $(CC))
-> -- 
-> 2.26.1
+> v10
+> - No changes
 > 
+> v9
+> - Fix xlnx,vfb description.
+> - s/Optional/Required endpoint property.
+> - Move data-lanes description from Ports to endpoint property section.
+> 
+> v8
+> - Added reset-gpios optional property to assert video_aresetn
+> 
+> v7
+> - Removed the control name from dt bindings
+> - Updated the example dt node name to csi2rx
+> 
+> v6
+> - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
+> - Added reviewed by Rob Herring
+> 
+> v5
+> - Incorporated comments by Luca Cersoli
+> - Removed DPHY clock from description and example
+> - Removed bayer pattern from device tree MIPI CSI IP
+>   doesn't deal with bayer pattern.
+> 
+> v4
+> - Added reviewed by Hyun Kwon
+> 
+> v3
+> - removed interrupt parent as suggested by Rob
+> - removed dphy clock
+> - moved vfb to optional properties
+> - Added required and optional port properties section
+> - Added endpoint property section
+> 
+> v2
+> - updated the compatible string to latest version supported
+> - removed DPHY related parameters
+> - added CSI v2.0 related property (including VCX for supporting upto 16
+>   virtual channels).
+> - modified csi-pxl-format from string to unsigned int type where the value
+>   is as per the CSI specification
+> - Defined port 0 and port 1 as sink and source ports.
+> - Removed max-lanes property as suggested by Rob and Sakari
+>  .../bindings/media/xilinx/xlnx,csi2rxss.txt   | 116 ++++++++++++++++++
+>  1 file changed, 116 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> new file mode 100644
+> index 000000000000..9269a5c880aa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
 
-I don't understand the motivation behind this. The commit message needs
-to be expanded upon or further clarification is needed.
+YAML is the recommended form for new DT bindings. This wasn't a
+requirement when the first version of this series was submitted, and I
+understand it can be frustrating to chase a moving target, so I can help
+with the YAML conversion once we sort out the questions below.
 
-CONFIG_GCC_VERSION is always set, either to 0 if using clang or the
-actual version spit out by GCC so the commit message is not entirely
-accurate.
+> @@ -0,0 +1,116 @@
+> +Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
 
-It is done in the
+Nitpicking, it's CSI-2, not CSI2.
 
-    default $(shell,$(srctree)/scripts/gcc-version.sh $(CC)) if CC_IS_GCC
-    default 0
+> +--------------------------------------------------------
+> +
+> +The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 traffic
+> +from compliant camera sensors and send the output as AXI4 Stream video data
+> +for image processing.
+> +
+> +The subsystem consists of a MIPI DPHY in slave mode which captures the
 
-way because it relies on the __GNUC__, __GNUC_MINOR__, and
-__GNUC_PATCHLEVEL__ preprocessor macros to figure out the verison, which
-clang also defines (to 4, 2, and 1 respectively) so it has to be done
-this way to avoid confusing clang for GCC.
+And D-PHY, not DPHY :-)
 
-We can handle this in clang-version.sh so that CONFIG_CLANG_VERSION is
-set to zero if CONFIG_CC_IS_GCC is set, just like CONFIG_GCC_VERSION:
+> +data packets. This is passed along the MIPI CSI2 Rx IP which extracts the
+> +packet data. The optional Video Format Bridge (VFB) converts this data to
+> +AXI4 Stream video data.
+> +
+> +For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Subsystem.
 
-if ! ( $compiler --version | grep -q clang) ; then
-    echo 0
-    exit 1
-fi
+If I understand correctly, this DT binding covers the CSI-2 RX
+Controller and the optional Video Format Bridge, but leaves the D-PHY
+out, right ? I think this should be clarified, as the "CSI-2 receiver
+subsystem" includes the D-PHY.
 
-CONFIG_CLANG_VERSION needs to be defined, otherwise we are breaking the
-assumption that I made in commit df3da04880b4 ("mips: Fix unroll macro
-when building with Clang").
+> +
+> +Required properties:
+> +--------------------
+> +- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-5.0".
 
-With your patch and GCC 9.3.0 building malta_defconfig:
+Is PG232 v5.0 available ? The most recent version I've found was PG232
+v4.1.
 
-arch/mips/include/asm/r4kcache.h: In function 'blast_scache64_node':
-arch/mips/include/asm/unroll.h:29:9: error: 'CONFIG_CLANG_VERSION' undeclared (first use in this function); did you mean 'CONFIG_LD_VERSION'?
-   29 |         CONFIG_CLANG_VERSION >= 80000) &&  \
-      |         ^~~~~~~~~~~~~~~~~~~~
-/home/nathan/src/linux/include/linux/compiler.h:330:9: note: in definition of macro '__compiletime_assert'
-  330 |   if (!(condition))     \
-      |         ^~~~~~~~~
-/home/nathan/src/linux/include/linux/compiler.h:350:2: note: in expansion of macro '_compiletime_assert'
-  350 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-/home/nathan/src/linux/include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-      |                                     ^~~~~~~~~~~~~~~~~~
-/home/nathan/src/linux/include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-      |  ^~~~~~~~~~~~~~~~
-/home/nathan/src/linux/arch/mips/include/asm/unroll.h:28:2: note: in expansion of macro 'BUILD_BUG_ON'
-   28 |  BUILD_BUG_ON((CONFIG_GCC_VERSION >= 40700 ||  \
-      |  ^~~~~~~~~~~~
-/home/nathan/src/linux/arch/mips/include/asm/r4kcache.h:203:2: note: in expansion of macro 'unroll'
-  203 |  unroll(times, _cache_op, insn, op, (addr) + (i++ * (lsize))); \
-      |  ^~~~~~
-/home/nathan/src/linux/arch/mips/include/asm/r4kcache.h:370:4: note: in expansion of macro 'cache_unroll'
-  370 |    cache_unroll(32, kernel_cache, indexop,  \
-      |    ^~~~~~~~~~~~
-/home/nathan/src/linux/arch/mips/include/asm/r4kcache.h:376:1: note: in expansion of macro '__BUILD_BLAST_CACHE_NODE'
-  376 | __BUILD_BLAST_CACHE_NODE(s, scache, Index_Writeback_Inv_SD, Hit_Writeback_Inv_SD, 64)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~
+> +- reg: Physical base address and length of the registers set for the device.
+> +- interrupts: Property with a value describing the interrupt number.
+> +- clocks: List of phandles to AXI Lite and Video clocks.
+> +- clock-names: Must contain "lite_aclk" and "video_aclk" in the same order
+> +  as clocks listed in clocks property.
 
-Cheers,
-Nathan
+The subsystem documentation also mentions a dphy_clk_200M. Is that
+routed to the D-PHY only, or is it also needed for the CSI-2 RX ?
+
+> +- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw design.
+> +  Packets other than this data type (except for RAW8 and User defined data
+> +  types) will be filtered out. Possible values are as below -
+> +  0x1E - YUV4228B
+> +  0x1F - YUV42210B
+> +  0x20 - RGB444
+> +  0x21 - RGB555
+> +  0x22 - RGB565
+> +  0x23 - RGB666
+> +  0x24 - RGB888
+> +  0x28 - RAW6
+> +  0x29 - RAW7
+> +  0x2A - RAW8
+> +  0x2B - RAW10
+> +  0x2C - RAW12
+> +  0x2D - RAW14
+> +  0x2E - RAW16
+> +  0x2F - RAW20
+
+Isn't this property required only when the VFB is present ?
+
+> +
+> +
+> +Optional properties:
+> +--------------------
+> +- xlnx,vfb: Present when Video Format Bridge is enabled in IP configuration
+> +- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
+
+Unless I'm mistaken, this feature is available starting at v4 of the IP
+core.
+
+> +- xlnx,en-vcx: When present, there are maximum 16 virtual channels, else
+> +  only 4. This is present only if xlnx,en-csi-v2-0 is present.
+> +- xlnx,en-active-lanes: present if the number of active lanes can be
+> +  re-configured at runtime in the Protocol Configuration Register.
+> +  Otherwise all lanes, as set in IP configuration, are always active.
+> +- reset-gpios: Optional specifier for a GPIO that asserts video_aresetn.
+
+Should lite_aresetn also be supported ? We can add a lite-reset-gpios
+property later, but maybe we should name this video-reset-gpios ? As the
+video_aresetn signal is the main reset I don't mind keeping the name
+reset-gpios either. It's up to you.
+
+> +
+> +Ports
+> +-----
+> +The device node shall contain two 'port' child nodes as defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +The port@0 is a sink port and shall connect to CSI2 source like camera.
+> +
+> +The port@1 is a source port and can be connected to any video processing IP
+> +which can work with AXI4 Stream data.
+> +
+> +Required port properties:
+> +--------------------
+> +- reg: 0 - for sink port.
+> +       1 - for source port.
+
+Don't you need a second source port for embedded non-image data ? If my
+understanding is correct that port can be enabled or disabled through
+the CSI_EMB_NON_IMG parameter, so it should be optional in DT too. We
+can possibly leave it out for now, it can be added later in a
+backward-compatible way.
+
+> +
+> +Required endpoint property:
+> +---------------------------
+> +- data-lanes: specifies MIPI CSI-2 data lanes as covered in video-interfaces.txt.
+> +  This is required only in the sink port 0 endpoint which connects to MIPI CSI2
+> +  source like sensor. The possible values are:
+> +  1       - For 1 lane enabled in IP.
+> +  1 2     - For 2 lanes enabled in IP.
+> +  1 2 3   - For 3 lanes enabled in IP.
+> +  1 2 3 4 - For 4 lanes enabled in IP.
+> +
+> +Example:
+> +
+> +	xcsi2rxss_1: csi2rx@a0020000 {
+> +		compatible = "xlnx,mipi-csi2-rx-subsystem-5.0";
+> +		reg = <0x0 0xa0020000 0x0 0x10000>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 95 4>;
+> +		xlnx,csi-pxl-format = <0x2a>;
+> +		xlnx,vfb;
+> +		xlnx,en-active-lanes;
+> +		xlnx,en-csi-v2-0;
+> +		xlnx,en-vcx;
+> +		clock-names = "lite_aclk", "video_aclk";
+> +		clocks = <&misc_clk_0>, <&misc_clk_1>;
+> +		reset-gpios = <&gpio 86 GPIO_ACTIVE_LOW>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				/* Sink port */
+> +				reg = <0>;
+> +				csiss_in: endpoint {
+> +					data-lanes = <1 2 3 4>;
+> +					/* MIPI CSI2 Camera handle */
+> +					remote-endpoint = <&camera_out>;
+> +				};
+> +			};
+> +			port@1 {
+> +				/* Source port */
+> +				reg = <1>;
+> +				csiss_out: endpoint {
+> +					remote-endpoint = <&vproc_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+
+-- 
+Regards,
+
+Laurent Pinchart
