@@ -2,73 +2,78 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF346C38A29
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 07:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB463C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 07:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D463021D82
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 07:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8981122209
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 07:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587280837;
+	bh=vt3TJOLsgbVq5z3ryXQV9c3uwAyQdtYrPyTNZTdaUCw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eVCzNxQxXs/Bu9pz/rY3VULB93gTx/wABs+hMxpTvPw6u6NBa1f5xhy1Xsy01D8Z8
+	 FPL2Mc7oR9J6vKxcVehBz+tRgt8FqdJQ0JXHClUis3IvS0nxeR826aaGruYwxMKb7n
+	 gtrujLbICQQE8W07VVTS/83Yc1PEIIU/UuPfWu+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726012AbgDSHLO (ORCPT
+        id S1725964AbgDSHUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 03:11:14 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:4377 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgDSHLN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 03:11:13 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.15]) by rmmx-syy-dmz-app02-12002 (RichMail) with SMTP id 2ee25e9bf98210d-b83fb; Sun, 19 Apr 2020 15:10:58 +0800 (CST)
-X-RM-TRANSID: 2ee25e9bf98210d-b83fb
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.1.172.61])
-        by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee85e9bf980792-fc83d;
-        Sun, 19 Apr 2020 15:10:58 +0800 (CST)
-X-RM-TRANSID: 2ee85e9bf980792-fc83d
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] crypto: Delete redundant variable definition
-Date:   Sun, 19 Apr 2020 15:12:45 +0800
-Message-Id: <20200419071245.3924-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Sun, 19 Apr 2020 03:20:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgDSHUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 03:20:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B12C21D82;
+        Sun, 19 Apr 2020 07:20:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587280833;
+        bh=vt3TJOLsgbVq5z3ryXQV9c3uwAyQdtYrPyTNZTdaUCw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Xo5YEXruRxHnfGTcFc0NCKUcIXKpDkCfOCmbljxB9b2kJY6yeQGUdCppiIK9zrMj9
+         2DM2w0mBZMRJJ9QcqcFVdAbgbmZdp4RCqv6hnw6zDqsNZ3rJyKs9jJGKJQqhDrW/k5
+         aFWYVspO1ws1g/FMCPkh6mayFSwoXQKJoXMJRmd4=
+Date:   Sun, 19 Apr 2020 09:20:30 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        baolin.wang@linaro.org, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, bradleybolen@gmail.com, faiz_abbas@ti.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, bbiswas@nvidia.com,
+        anrao@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH 4.19.113 0/3] Fix for long operation cmds busy detection
+Message-ID: <20200419072030.GB3544449@kroah.com>
+References: <1587150844-12003-1-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587150844-12003-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable "i" is redundant to be assigned a value
-of zero,because it's assigned in the for loop, so remove
-redundant one here.
+On Fri, Apr 17, 2020 at 12:14:01PM -0700, Sowjanya Komatineni wrote:
+> This series includes manually backported changes that implements Tegra
+> specific timeout callback to switch between finite and infinite HW busy
+> detection wait modes.
+> 
+> sdhci-tegra driver patch implements set_timeout callback based on one of
+> the sdhci host driver patch that refactors sdhci_set_timeout and allows
+> drivers to call __sdhci_set_timeout with their timeout callback
+> implementation.
+> 
+> Both of these patches are manually backported in this series.
 
-Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Is this a bugfix or a new feature?  I can't tell, but it feels like it's
+a new feature.  What's wrong with just using the 5.4.y kernel tree?
 
----
- drivers/crypto/bcm/cipher.c | 1 -
- 1 file changed, 1 deletion(-)
+thanks,
 
-diff --git a/drivers/crypto/bcm/cipher.c b/drivers/crypto/bcm/cipher.c
-index c8b940854..5db23c18c 100644
---- a/drivers/crypto/bcm/cipher.c
-+++ b/drivers/crypto/bcm/cipher.c
-@@ -4724,7 +4724,6 @@ static int spu_dt_read(struct platform_device *pdev)
- 	spu->spu_type = matched_spu_type->type;
- 	spu->spu_subtype = matched_spu_type->subtype;
- 
--	i = 0;
- 	for (i = 0; (i < MAX_SPUS) && ((spu_ctrl_regs =
- 		platform_get_resource(pdev, IORESOURCE_MEM, i)) != NULL); i++) {
- 
--- 
-2.20.1.windows.1
-
-
-
+greg k-h
