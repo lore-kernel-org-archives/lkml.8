@@ -2,155 +2,125 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B41C38A29
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CEBC38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 705B321973
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:22:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkrhN0oz"
+	by mail.kernel.org (Postfix) with ESMTP id 9BE4321D82
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 06:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgDSGWs (ORCPT
+        id S1726007AbgDSG1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 02:22:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgDSGWs (ORCPT
+        Sun, 19 Apr 2020 02:27:43 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:5122 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgDSG1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 02:22:48 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3DCC061A0C;
-        Sat, 18 Apr 2020 23:22:47 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id u6so6406268ljl.6;
-        Sat, 18 Apr 2020 23:22:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=IzTtIFRjYXveQaOsap7Ahk5ZI4rl9Tq5J8b2Kvm4YXI=;
-        b=DkrhN0oztnt/6TlHZBaZWxItG3iTHrKv+3OY50mbu4fdcWCDR85VXaNG6gdhmXmNMT
-         W5Xxpbp9QtG7MvXH5AFoGqsefik9MG6q6ZsHaEJjKL71W88o/RNOFIUkc4a2W6q/gVaM
-         Xu5W1Fp8VhojFInwbd04DMztBE0F5n/jJImjmrmtgBkGPw+qFNB32WmTKEAXnA01z3sy
-         Hc8hsUAzbNMhwUeo3ohZK57b9VA9ujJMySuNYBw85dLLljB+fVFj0HEiV3/Ytn/2jA34
-         PrJj1wcBJ3xeuWwjNlzfIa5Yd3/Lxcbd5YHxMZlL45Fj/CXsNe9uGQpZzI17ulqZgnUJ
-         sfaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=IzTtIFRjYXveQaOsap7Ahk5ZI4rl9Tq5J8b2Kvm4YXI=;
-        b=pQPg5o3WZjmsGzONEOzWli0O00vQwnFfpBeHkh37zbNSA2o6mfeKy20+0yNvtDwdPj
-         VpCoJluj1+dYELmb8iYBhVJDqNiKvlwKB/C5RO7X7ajGPXDDzaMbadTnZWGU3i3+32pc
-         Lbhck+pjjNFf4RfbYDnckUxYphssx5iSyvRv85zpDIURuD+kcOjcOkS/9iHOrQIld+Di
-         mFJ7xt6K6MYYUV5GXQqoSBrjQ2RqMU0ryI64J3ppWs0sx3om6NK/nUrNZ7oU/9r9CNM5
-         7Y9u3hNoAOwhSD20hy5vocWCQTLxOPfyav+HabHcCDkVuAHKhUiWTOMmECB1BMwKq5//
-         rGsg==
-X-Gm-Message-State: AGi0PuZZbNT6QVGXd+6xV2H41QPy8nMVaiNyYOPfUPopTDbJ0Mt9Xfa7
-        1kPGod+p63kRpt53lM1DEVErLBQ/uJsAwBN8GGeLVfE+
-X-Google-Smtp-Source: APiQypIpY3aUAzHUQfQLx2jI0YLTTDEpw59oWaAaUqF68KrTWhsXeiTiQmgKQhJGx86x0bo3AGFsTKMaBIRQ6QS+v9U=
-X-Received: by 2002:a2e:9616:: with SMTP id v22mr6182921ljh.107.1587277365815;
- Sat, 18 Apr 2020 23:22:45 -0700 (PDT)
+        Sun, 19 Apr 2020 02:27:43 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5e9bef4f983-b7bd1; Sun, 19 Apr 2020 14:27:29 +0800 (CST)
+X-RM-TRANSID: 2eec5e9bef4f983-b7bd1
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [192.168.0.105] (unknown[112.1.172.61])
+        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5e9bef4fd6a-f5185;
+        Sun, 19 Apr 2020 14:27:28 +0800 (CST)
+X-RM-TRANSID: 2eea5e9bef4fd6a-f5185
+Subject: Re: [PATCH v2] ipmi:bt-bmc: Fix error handling and status check
+To:     minyard@acm.org
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+References: <20200418080228.19028-1-tangbin@cmss.chinamobile.com>
+ <20200418134909.GF6246@minyard.net>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <cc048630-831d-9765-7f7a-7eaacd3a8199@cmss.chinamobile.com>
+Date:   Sun, 19 Apr 2020 14:29:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-From:   Sun Ted <xulinsun@gmail.com>
-Date:   Sun, 19 Apr 2020 14:22:34 +0800
-Message-ID: <CACiNFG4y9T8tjcpypyfFfOgPjRkc++rNhn85iuuWARA7dXemJA@mail.gmail.com>
-Subject: net/sunrpc Bug ? Unable to handle kernel NULL pointer dereference at
- virtual address 0000000000000000 on kernel 5.2.37
-To:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        xulin sun <xulinsun@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200418134909.GF6246@minyard.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Forks,
+Hi, Corey:
 
-On the kernel version 5.2.37 or a bit earlier, running pressure
-testing with module insert & remove, actually the inserted module is
-not special and could be anyone.
-After dozens of testing, there will be throw below call trace and the
-system hung.
+On 2020/4/18 21:49, Corey Minyard wrote:
+> On Sat, Apr 18, 2020 at 04:02:29PM +0800, Tang Bin wrote:
+>> If the function platform_get_irq() failed, the negative
+>> value returned will not be detected here. So fix error
+>> handling in bt_bmc_config_irq(). And if devm_request_irq()
+>> failed, 'bt_bmc->irq' is assigned to zero maybe redundant,
+>> it may be more suitable for using the correct negative values
+>> to make the status check in the function bt_bmc_remove().
+> You need to mention changing platform_get_irq to
+> platform_get_irq_optional in the header.
+>
+> Another comment inline below.
+>
+> Otherwise, this looks good.
 
-Testing script for insert & remove module like below:
-             for each in {1..100} ; do echo "$each" ; insmod
-openvswitch.ko ;  rmmod  openvswitch.ko ; usleep 100000 ; done
-The target machine is: arm64, cortex a53.
+Got it. The v3 will be as follows：
 
-Disassembled the line " __wake_up_common_lock+0x98/0xe0 ", it located
-the code "include/linux/spinlock.h" , it should be using the NULL
-pointer "lock->rlock "
+If the function platform_get_irq() failed, the negative value
 
-static __always_inline void spin_unlock_irqrestore(spinlock_t *lock,
-unsigned long flags)
-{
-        raw_spin_unlock_irqrestore(&lock->rlock, flags);
+returned will not be detected here. So fix error handling in
 
-Did you ever see this issue or have a fix for this based on kernel
-5.2.37 version?
+bt_bmc_config_irq(). And in the function bt_bmc_probe(),
 
-Call trace:
-openvswitch: Open vSwitch switching datapath
-Unable to handle kernel NULL pointer dereference at virtual address
-0000000000000000
-Mem abort info:
-  ESR = 0x86000005
-  Exception class = IABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-user pgtable: 4k pages, 39-bit VAs, pgdp=00000008f2ea9000
-[0000000000000000] pgd=0000000000000000, pud=0000000000000000
-Internal error: Oops: 86000005 [#1] PREEMPT SMP
-Modules linked in: openvswitch hse sch_fq_codel nsh nf_conncount
-nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 [last unloaded:
-openvswitch]
-CPU: 2 PID: 209 Comm: kworker/u9:3 Not tainted 5.2.37-yocto-standard #1
-Hardware name: Freescale S32G275 (DT)
-Workqueue: xprtiod xs_stream_data_receive_workfn
-pstate: 80000085 (Nzcv daIf -PAN -UAO)
-pc : 0x0
-lr : __wake_up_common+0x90/0x150
-sp : ffffff801146ba60
-x29: ffffff801146ba60 x28: ffffff8010d36000
-x27: ffffff801146bb90 x26: 0000000000000000
-x25: 0000000000000003 x24: 0000000000000000
-x23: 0000000000000001 x22: ffffff801146bb00
-x21: ffffff8010d351e8 x20: 0000000000000000
-x19: ffffff80112c37a0 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000000 x14: 0000000000000000
-x13: 0000003002000000 x12: 0000902802000000
-x11: 0000000000000000 x10: 000001000000ed01
-x9 : 0000010000000000 x8 : 9b5e0000000048a6
-x7 : 0000000000000068 x6 : ffffff80112c37a0
-x5 : 0000000000000000 x4 : ffffff801146bb90
-x3 : ffffff801146bb90 x2 : 0000000000000000
-x1 : 0000000000000003 x0 : ffffff80112c37a0
-Call trace:
- 0x0
- __wake_up_common_lock+0x98/0xe0
- __wake_up+0x40/0x50
- wake_up_bit+0x8c/0xb8
- rpc_make_runnable+0xc8/0xd0
- rpc_wake_up_task_on_wq_queue_action_locked+0x110/0x278
- rpc_wake_up_queued_task.part.0+0x40/0x58
- rpc_wake_up_queued_task+0x38/0x48
- xprt_complete_rqst+0x68/0x128
- xs_read_stream.constprop.0+0x2ec/0x3d0
- xs_stream_data_receive_workfn+0x60/0x190
- process_one_work+0x1bc/0x440
- worker_thread+0x50/0x408
- kthread+0x104/0x130
- ret_from_fork+0x10/0x1c
-Code: bad PC value
-Kernel panic - not syncing: Fatal exception in interrupt
-SMP: stopping secondary CPUs
-Kernel Offset: disabled
-CPU features: 0x0002,2000200c
-Memory Limit: none
+when get irq failed, it will print error message. So use
 
-Thanks
-Xulin
+platform_get_irq_optional() to simplify code. Finally in the
+
+function bt_bmc_remove() should make the right status
+
+check if get irq failed.
+
+>
+> You need to set this to rc.  Otherwise it will remain the interrupt
+> number assigned by platform_get_irq_optional().
+
+Yes, I think you are right. I'm not as considerate as you. Thank you for 
+your instruction.
+
+When get irq failed, the 'bt_bmc->irq' is negative; when request irq 
+failed, the 'bt_bmc->irq = 0' is right.
+
+So 'bt_bmc->irq <= 0' means irq failed.
+
+Now let me rearrange the logic here:
+
+     In bt_bmc_probe():
+
+         bt_bmc_config_irq(bt_bmc, pdev);
+
+         if (bt_bmc->irq > 0) {
+
+         }
+
+
+     In bt_bmc_remove():
+
+         if (bt_bmc->irq <= 0)
+             del_timer_sync(&bt_bmc->poll_timer);
+
+
+If you think this logic is correct, I'll submit v3.
+
+Thanks,
+
+Tang Bin
+
+>
+>
+>
+>
+
+
