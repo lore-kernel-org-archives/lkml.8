@@ -2,87 +2,114 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15844C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED422C38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3BED218AC
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D8520B1F
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:22:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="q361Dw3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgDSWUm (ORCPT
+        id S1726050AbgDSWW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 18:20:42 -0400
-Received: from mga14.intel.com ([192.55.52.115]:43066 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgDSWUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 18:20:42 -0400
-IronPort-SDR: YarkP1peTj8pJ7DIXHjLJ++DrfDCHRVCYRgbAaudPInYeTp7P3vRN23Klse9O51CmJ0qoeerVe
- qDnLIMV0njzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 15:20:42 -0700
-IronPort-SDR: iMyrqd0w9kkDgNJOqMuBhbWjtqKbPncMEvlvXXKhv/G3fplHyqe9BIQAcCQusETU+x7wl+zSaq
- U4QSkck0WrNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,404,1580803200"; 
-   d="scan'208";a="246747551"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 19 Apr 2020 15:20:38 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jQIIq-001v70-5G; Mon, 20 Apr 2020 01:20:40 +0300
-Date:   Mon, 20 Apr 2020 01:20:40 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
-        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        hauke.mehrtens@intel.com, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200419222040.GJ185537@smile.fi.intel.com>
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200418105533.477ce529@collabora.com>
+        Sun, 19 Apr 2020 18:22:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725891AbgDSWW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 18:22:56 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73462C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 15:22:56 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id w3so3215696plz.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 15:22:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WZGGvjnGunABiy25qrhz6ksRUn1sXB4cu8ILhBoEIw4=;
+        b=q361Dw3uF5Qr1t4y5v+dPldxAaxHS8ShKiBGG9s7RVfzTEnTG5VLizSByAFZb1rMpb
+         ayBMS4rffRqTEtTGq2GcohUU29nxm4JKb9Jy5YuH4M4v07exxqLF3Ya15BzgFws3bGTa
+         cWV1MEg+VFSJUKMHu8BHH6cyJOvBubkmQ2UaSzQFLXCfiapBdMcZb2j7MlepzaTnhlnI
+         ROEhJvJXGkqhZ/AjMcEbWz+7k/7F4jFOuj8/yE7edpR+U1yixc08d+SqPbFZtY3Xs4sK
+         dsxKekAYVfOXOuF/pdJghZiesUM7RdHfCFYAb1u+pcI/CUtsrY5VVycGGZnrYTGI00Re
+         oUqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WZGGvjnGunABiy25qrhz6ksRUn1sXB4cu8ILhBoEIw4=;
+        b=QbLW57At2/soeOc7EVaTJWJIqqUmQigSyl+LxpvS9lqtUFkN9GP/6qpC8c9xcNfBUf
+         G8bxltwHzXWajK9qO0WP3zvjwHFpWMvi8cTwk9YXgAI1YxK0Vcq3+Y8uEsyY41rm7bXL
+         81WYS9xyrv3Phk7NvTnval9dOfErZp66+8EoIEbOl85U/Ot/j4PKIlMNQh1k3MljcL4D
+         Jxmz/QC3C7ioXiAdoeOhyGKqgoDJTvgP5ww8iAN9Vyt9vRFKjWfccZYXC1lOaifrD4ka
+         mzVughz7NAmXzvr/oKIFowai47vENixS5QxPBH3Xyzm8W4KkS8PkiqwtgUZJVb/BRUTe
+         lQsQ==
+X-Gm-Message-State: AGi0PuZvsOxy4mli6e5TNZgD+T+Fa9C5mT6Qpnk5weUJbD9beiN0Mslg
+        d1btCtSKhQuDep5qXQfB0SL9XQ==
+X-Google-Smtp-Source: APiQypLVocmgSAnp2tycKBAS6H3WFAfrUrUN7XSJV8KonygiDW2GikHzh3bDUBJj0YUm49eMWZW93g==
+X-Received: by 2002:a17:90a:8d0f:: with SMTP id c15mr16391639pjo.100.1587334975940;
+        Sun, 19 Apr 2020 15:22:55 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id e66sm21780994pfa.69.2020.04.19.15.22.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Apr 2020 15:22:55 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] fs: openat2: Extend open_how to allow
+ userspace-selected fds
+To:     Aleksa Sarai <cyphar@cyphar.com>,
+        Josh Triplett <josh@joshtriplett.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <cover.1586830316.git.josh@joshtriplett.org>
+ <f969e7d45a8e83efc1ca13d675efd8775f13f376.1586830316.git.josh@joshtriplett.org>
+ <20200419104404.j4e5gxdn2duvmu6s@yavin.dot.cyphar.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b7dae79b-4c5f-65f6-0960-617070357201@kernel.dk>
+Date:   Sun, 19 Apr 2020 16:22:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418105533.477ce529@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200419104404.j4e5gxdn2duvmu6s@yavin.dot.cyphar.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 10:55:33AM +0200, Boris Brezillon wrote:
-> On Fri, 17 Apr 2020 16:21:47 +0800
-> "Ramuthevar,Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+On 4/19/20 4:44 AM, Aleksa Sarai wrote:
+> On 2020-04-13, Josh Triplett <josh@joshtriplett.org> wrote:
+>> Inspired by the X protocol's handling of XIDs, allow userspace to select
+>> the file descriptor opened by openat2, so that it can use the resulting
+>> file descriptor in subsequent system calls without waiting for the
+>> response to openat2.
+>>
+>> In io_uring, this allows sequences like openat2/read/close without
+>> waiting for the openat2 to complete. Multiple such sequences can
+>> overlap, as long as each uses a distinct file descriptor.
 > 
-> > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> I'm not sure I understand this explanation -- how can you trigger a
+> syscall with an fd that hasn't yet been registered (unless you're just
+> hoping the race goes in your favour)?
 
-> > +static const struct of_device_id lgm_nand_match[] = {
-> > +	{ .compatible = "intel,lgm-nand", },
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, lgm_nand_match);
-> 
-> You probably have a missing "depends on OF" in your Kconfig.
+io_uring can do chains of requests, where each link in the chain isn't
+started until the previous one has completed. Hence if you know what fd
+that openat2 will return, you can submit a chain ala:
 
-Since it's using device property API, dependency is not needed.
+<open file X, give me fd Y><read from fd Y><close fd Y>
+
+as a single submission. This isn't possible to do currently, as the read
+will depend on the output of the open, and we have no good way of
+knowing what that fd will be.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Jens Axboe
 
