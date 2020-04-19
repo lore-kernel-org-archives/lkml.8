@@ -2,86 +2,164 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9983C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F136DC38A29
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E50421473
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:26:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="s3PNsvb5"
+	by mail.kernel.org (Postfix) with ESMTP id D5B0B20B1F
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 22:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgDSW07 (ORCPT
+        id S1726079AbgDSW2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 18:26:59 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42495 "EHLO ozlabs.org"
+        Sun, 19 Apr 2020 18:28:22 -0400
+Received: from mga05.intel.com ([192.55.52.43]:59485 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgDSW06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 18:26:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4954FD26njz9s71;
-        Mon, 20 Apr 2020 08:26:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587335216;
-        bh=1t3nKIxwa3UFVp+S2fzmC0xdx/aJrfbzuPaqGW3cEpI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=s3PNsvb5x/DOlUJygmoCKz+eeXNWrMLRoRU0nuvgsdGiSVvMxsyvClI+p670aZfir
-         iEn36Jdk9+mkR6IUrX9uRGcU+WPMs8+VHvACGHW83Mmb9VSHPPeyHwLLfyNHEEUsXy
-         YZApkT2eN+vfYpEPO2gS6wotObhRhcA9bp/VUWWzmJUwcuqBPANiPKlDq+P5hXbhSW
-         38Fz+R3KSbCVYs6nbNOGxwG9FkbWsdiheI9d7GYjetVFKufmncbQTDbNI2hno0b1UY
-         HFV7Oqnda49MhMQfAWpZRjHjsBPbp6E9P5tt3D+vstraWDOcRInoF/Yzk1Sr55LaeI
-         INBb13ObOH7Xg==
-Date:   Mon, 20 Apr 2020 08:26:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the kvm tree
-Message-ID: <20200420082654.0aa91ae0@canb.auug.org.au>
+        id S1725848AbgDSW2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 18:28:20 -0400
+IronPort-SDR: YdqpwMrfgpoC84ppwJ97RGM0CqlkCXFCH76UccdgMLk/WnQv3PDyaJZXetlzZFYyxzYvbWbHKr
+ UNtpFWpYt30w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 15:28:20 -0700
+IronPort-SDR: Nh+Dex8K9ftQjDSvavCHtA2y3a9nVX58784fZWSVhNqHos1DyHm21UfAcqen4FhIVAQ9CFSSxP
+ PEoGt9ZMnosw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,404,1580803200"; 
+   d="scan'208";a="289824346"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 19 Apr 2020 15:28:15 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jQIQD-001v9r-Qw; Mon, 20 Apr 2020 01:28:17 +0300
+Date:   Mon, 20 Apr 2020 01:28:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, piotrs@cadence.com, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200419222817.GK185537@smile.fi.intel.com>
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JBlD/qXVz.FuC7+N7En=Zi=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/JBlD/qXVz.FuC7+N7En=Zi=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Apr 17, 2020 at 04:21:47PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> This patch adds the new IP of Nand Flash Controller(NFC) support
+> on Intel's Lightning Mountain(LGM) SoC.
+> 
+> DMA is used for burst data transfer operation, also DMA HW supports
+> aligned 32bit memory address and aligned data access by default.
+> DMA burst of 8 supported. Data register used to support the read/write
+> operation from/to device.
+> 
+> NAND controller driver implements ->exec_op() to replace legacy hooks,
+> these specific call-back method to execute NAND operations.
 
-Hi all,
+I guess untested version slipped into mailing list...
+See below why.
 
-Commit
+...
 
-  0d16b11933fc ("KVM: x86: make Hyper-V PV TLB flush use tlb_flush_guest()")
+> +#include <linux/clk.h>
+> +#include <linux/completion.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/dma-direction.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/resource.h>
+> +#include <linux/sched.h>
+> +#include <linux/types.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/mtd/rawnand.h>
+> +#include <linux/mtd/nand_ecc.h>
+> +#include <linux/platform_device.h>
 
-is missing a Signed-off-by from its committer.
+> +#include <linux/of.h>
 
---=20
-Cheers,
-Stephen Rothwell
+Do you need this?
 
---Sig_/JBlD/qXVz.FuC7+N7En=Zi=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> +#include <linux/mtd/partitions.h>
+> +#include <linux/io.h>
+> +#include <linux/slab.h>
+> +#include <mtd/mtd-abi.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/mtd/nand.h>
 
------BEGIN PGP SIGNATURE-----
+Basically, do you need all of them?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6c0C4ACgkQAVBC80lX
-0GzvNgf7BWQvV/P7qGKi28lD8sp6PbM5bJjCjwYM/OE94K6buCGz8xKgBWGzU7Jq
-3jtkETOArBRxvg9Ai3uKD3PsHxBDATtwDB2bwrWAUdq3aN3o34FvQrAyZr/PEg3Z
-ENtATX1++Xzo12yPZLvFJkGNSBWWeyMFCMrmW+hdE9cQR/no7TdML5oCoWairZUK
-RaL4RvTxrhpyHEV4fB0/Ekflblltl9Tcz1s2OaYnT+yAharFia58RsVOK66ioux0
-mktOpfscoBF8MAywLyvk5DHJXV1Gso69APAzNb9jrGLzEqoSWpOIcqrE8GluPhJD
-A6k2JaNwXTcMqcGXyXS8SNSXIFCjAA==
-=McZG
------END PGP SIGNATURE-----
+And maybe keep them in order?
 
---Sig_/JBlD/qXVz.FuC7+N7En=Zi=--
+...
+
+> +static int lgm_dma_init(struct device *dev, struct lgm_nand_host *lgm_host)
+> +{
+> +	int ret;
+> +
+> +	/* Prepare for TX DMA: */
+> +	lgm_host->dma_tx = dma_request_chan(dev, "tx");
+> +	if (IS_ERR(lgm_host->dma_tx)) {
+> +		ret = PTR_ERR(lgm_host->dma_tx);
+> +		dev_err(dev, "can't get the TX DMA channel, error %d!\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	/* Prepare for RX: */
+> +	lgm_host->dma_rx = dma_request_chan(dev, "rx");
+> +	if (IS_ERR(lgm_host->dma_rx)) {
+> +		ret = PTR_ERR(lgm_host->dma_rx);
+> +		dev_err(dev, "can't get the RX DMA channel, error %d\n", ret);
+
+I suspect this error path hasn't been tested. I don't see where tx channel
+freeing is happening.
+
+> +		goto err;
+> +	}
+> +
+> +	return 0;
+
+> +err:
+> +	return ret;
+
+Redundant label.
+
+> +}
+
+...
+
+> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
+> +	lgm_host->nandaddr_va = res;
+> +	nandaddr_pa = res->start;
+> +	if (IS_ERR(lgm_host->nandaddr_va))
+> +		return PTR_ERR(lgm_host->nandaddr_va);
+
+I'm wondering what is this.  How is it even compile?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
