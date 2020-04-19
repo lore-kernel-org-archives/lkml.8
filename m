@@ -2,117 +2,133 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF08C54F70
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABA9C38A30
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3956A21D82
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B8E21473
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 09:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWRvVsQ1"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="GMo5yCAo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgDSJwS (ORCPT
+        id S1726006AbgDSJy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 05:52:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725923AbgDSJwR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 05:52:17 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6475C061A0C;
-        Sun, 19 Apr 2020 02:52:17 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o15so2974452pgi.1;
-        Sun, 19 Apr 2020 02:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+11ImWVoVHo1Abgo1KUvhS2FQIppsCfo6UH+T+/qzgs=;
-        b=FWRvVsQ1TN0ioGAeP+byZm1uP2+/Un1uA4Yij5mmCFDmuFOEH5LJ0Un71NJml3z2zS
-         RwqkhA8ucP14SMtr023/NLsNMRFzQOBlGsJXK6RccSIaGF9cuUsUqNGsCwhQCMZDm5kp
-         oPlT8jKmogxlORhe/7Mkirg4kuMV7n0tsmSiMCGWcgXsVxM72lnYMevctrLQ/PlyX4sR
-         NUBOqXht8yFnrc8C6Ng82pnF18qCTS7vFHYkwqDkJT61ZL2v1aYxm/F9hWPl5qOXCZma
-         Ikxgie+/qJyHPvrqviIVO5lfrbMLvejysrt61YFI7IJRsZJMgigQb9zUphubNm3Yw99N
-         ymnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+11ImWVoVHo1Abgo1KUvhS2FQIppsCfo6UH+T+/qzgs=;
-        b=GHu+z26RdfTdvCM9VeP5bqbdK7jrlVJf+VYEMaQq1Sx+Dm7p61Zp/DGuxXnlb0cK4Z
-         DgZ0h4oMoVRjYWt83Md6HEYMYAaGLR4kvodwmirjrnb52DR4BEcLqFtIuSiHvFZrJ3oz
-         Gx5A5cNG+irKdgDYdfdbSNSMemEQ3pzncBG3J0BZOCFuMXFnya6bqA4ZX97s7fn5RAVv
-         HxCpsTv8giA0kN5VTNFe7I+KrtoO/fegq879WAVwIO+E+yUXPLN17HzSbH/1VkKpAu68
-         kNpdi9JSBrvpM+KiOxd8XvO1eQE3+0Oy59DUQVAAlhOSynXvGbMpmEsdRuU6Yaw/Deyn
-         XOeg==
-X-Gm-Message-State: AGi0PubJhaDQ9gGiZixeTXSFAya8ztzu+fjk+JkFBcnOSgrYNDStjc4d
-        eqxXi1Rn6OkSlvU55eHZn8c=
-X-Google-Smtp-Source: APiQypIV0Hhn3WvBrjTXwFhP/7vuLOvB5fDLVw64BVXPX8cdraufg3tgoyuc1aqBd6agwvtez4MFPg==
-X-Received: by 2002:aa7:8d52:: with SMTP id s18mr9868901pfe.72.1587289937219;
-        Sun, 19 Apr 2020 02:52:17 -0700 (PDT)
-Received: from CentOS76.localdomain.localdomain ([27.59.130.218])
-        by smtp.gmail.com with ESMTPSA id h193sm18745431pfe.30.2020.04.19.02.52.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Apr 2020 02:52:16 -0700 (PDT)
-From:   jagdsh.linux@gmail.com
-To:     hadar.gat@arm.com, mpm@selenic.com, herbert@gondor.apana.org.au,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-Subject: [PATCH] drivers/char/hw_random/cctrng.c: Compilation fix.
-Date:   Sun, 19 Apr 2020 15:21:18 +0530
-Message-Id: <1587289878-121900-1-git-send-email-jagdsh.linux@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 19 Apr 2020 05:54:57 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:22141 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbgDSJy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 05:54:56 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 494lYR3Xc3z9tyDn;
+        Sun, 19 Apr 2020 11:54:51 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=GMo5yCAo; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id nAxBIwYGtWFH; Sun, 19 Apr 2020 11:54:51 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 494lYR2Jrbz9tyDm;
+        Sun, 19 Apr 2020 11:54:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587290091; bh=SLDSEP4XrdF5pJ0VblHWXGRy2Y2Yp8jccdJto8CbGTc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GMo5yCAoAVsWdEb2nyZuGs/NcpmrR+c2viuYh+CDDCjDG1lIiDMq2G0pmSZt72ixe
+         Nk4oU7rpwicZO+eB/vvr2dnukKPFj//Ec4hCZumhU5k0eGF6SaCEn/t//2hPYX1I9R
+         8JM1OIFgJImOH1tnT7v7AWgzpBxrn7PMltFf9/5U=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 94BBE8B76F;
+        Sun, 19 Apr 2020 11:54:54 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id IH0yUOqJJstY; Sun, 19 Apr 2020 11:54:54 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EADAD8B752;
+        Sun, 19 Apr 2020 11:54:53 +0200 (CEST)
+Subject: Re: [PATCH 1/2] signal: Factor copy_siginfo_to_external32 from
+ copy_siginfo_to_user32
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, Jeremy Kerr <jk@ozlabs.org>
+References: <20200414070142.288696-1-hch@lst.de>
+ <20200414070142.288696-3-hch@lst.de> <87pnc5akhk.fsf@x220.int.ebiederm.org>
+ <87k12dakfx.fsf_-_@x220.int.ebiederm.org>
+ <c51c6192-2ea4-62d8-dd22-305f7a1e0dd3@c-s.fr>
+ <87v9lx3t4j.fsf@x220.int.ebiederm.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <f35ddc94-e046-a807-9f58-04887aefe374@c-s.fr>
+Date:   Sun, 19 Apr 2020 11:54:41 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <87v9lx3t4j.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
 
-Adding the needed header <linux/fips.h> to fix following compilation error.
 
-	CC      drivers/char/hw_random/cctrng.o
-	drivers/char/hw_random/cctrng.c: In function ‘cc_trng_compwork_handler’:
-	drivers/char/hw_random/cctrng.c:334:49: error: ‘fips_enabled’ undeclared (first use in this function)
-	  if (CC_REG_FLD_GET(RNG_ISR, CRNGT_ERR, isr) && fips_enabled) {
-							 ^
-	drivers/char/hw_random/cctrng.c:334:49: note: each undeclared identifier is reported only once for each function it appears in
-	drivers/char/hw_random/cctrng.c:335:3: error: implicit declaration of function ‘fips_fail_notify’ [-Werror=implicit-function-declaration]
-	   fips_fail_notify();
-	   ^
-	cc1: some warnings being treated as errors
-	make[4]: *** [drivers/char/hw_random/cctrng.o] Error 1
+Le 18/04/2020 à 13:55, Eric W. Biederman a écrit :
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> 
+>> Le 17/04/2020 à 23:09, Eric W. Biederman a écrit :
+>>>
+>>> To remove the use of set_fs in the coredump code there needs to be a
+>>> way to convert a kernel siginfo to a userspace compat siginfo.
+>>>
+>>> Call that function copy_siginfo_to_compat and factor it out of
+>>> copy_siginfo_to_user32.
+>>
+>> I find it a pitty to do that.
+>>
+>> The existing function could have been easily converted to using
+>> user_access_begin() + user_access_end() and use unsafe_put_user() to copy to
+>> userspace to avoid copying through a temporary structure on the stack.
+>>
+>> With your change, it becomes impossible to do that.
+> 
+> I don't follow.  You don't like temporary structures in the coredump
+> code or temporary structures in copy_siginfo_to_user32?
 
-Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
----
- drivers/char/hw_random/cctrng.c | 4 ++++
- 1 file changed, 4 insertions(+)
+In copy_siginfo_to_user32()
 
-diff --git a/drivers/char/hw_random/cctrng.c b/drivers/char/hw_random/cctrng.c
-index bdcd562..3124269 100644
---- a/drivers/char/hw_random/cctrng.c
-+++ b/drivers/char/hw_random/cctrng.c
-@@ -18,6 +18,10 @@
- 
- #include "cctrng.h"
- 
-+#ifdef CONFIG_CRYPTO_FIPS
-+#include <linux/fips.h>
-+#endif
-+
- #define CC_REG_LOW(name)  (name ## _BIT_SHIFT)
- #define CC_REG_HIGH(name) (CC_REG_LOW(name) + name ## _BIT_SIZE - 1)
- #define CC_GENMASK(name)  GENMASK(CC_REG_HIGH(name), CC_REG_LOW(name))
--- 
-1.8.3.1
+> 
+> A temporary structure in copy_siginfo_to_user is pretty much required
+> so that it can be zeroed to guarantee we don't pass a structure with
+> holes to userspace.
 
+Why ? We can zeroize the user structure directly, either with 
+clear_user() or with some not yet existing unsafe_clear_user() or 
+equivalent.
+
+> 
+> The implementation of copy_siginfo_to_user32 used to use the equivalent
+> of user_access_begin() and user_access_end() and the code was a mess
+> that was very difficult to reason about.  I recall their being holes
+> in the structure that were being copied to userspace.
+> 
+> Meanwhile if you are going to set all of the bytes a cache hot temporary
+> structure is quite cheap.
+
+But how can we be sure it is cache hot ? As we are using memset() to 
+zeroize it, it won't be loaded from memory as it will use dcbz 
+instruction, but at some point in time it will get flushed back to 
+memory, that's consuming anyway. Unless we invalidate it after the copy, 
+but that becomes complex.
+
+Christophe
