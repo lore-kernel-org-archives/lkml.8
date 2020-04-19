@@ -2,97 +2,128 @@ Return-Path: <SRS0=L1Qp=6D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AF2C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEE6C54F70
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF6A521D94
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1423C21841
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Apr 2020 14:11:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgDSOHg (ORCPT
+        id S1726147AbgDSOLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 10:07:36 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:45079 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1725949AbgDSOHf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 10:07:35 -0400
-Received: (qmail 30013 invoked by uid 500); 19 Apr 2020 10:07:34 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 19 Apr 2020 10:07:34 -0400
-Date:   Sun, 19 Apr 2020 10:07:34 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-cc:     Julian Squires <julian@cipht.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>,
-        <linux-input@vger.kernel.org>, <andreyknvl@google.com>,
-        <gregkh@linuxfoundation.org>, <ingrassia@epigenesys.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>, Ping Cheng <pingc@wacom.com>,
-        <pinglinux@gmail.com>, <killertofu@gmail.com>
-Subject: Re: KASAN: use-after-free Read in usbhid_close (3)
-In-Reply-To: <20200419041344.GC166864@dtor-ws>
-Message-ID: <Pine.LNX.4.44L0.2004191000080.29527-100000@netrider.rowland.org>
+        Sun, 19 Apr 2020 10:11:43 -0400
+Received: from raptor.unsafe.ru ([5.9.43.93]:45414 "EHLO raptor.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbgDSOLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 10:11:42 -0400
+Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by raptor.unsafe.ru (Postfix) with ESMTPSA id BFC74209FB;
+        Sun, 19 Apr 2020 14:11:39 +0000 (UTC)
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>
+Subject: [PATCH v12 1/7] proc: rename struct proc_fs_info to proc_fs_opts
+Date:   Sun, 19 Apr 2020 16:10:51 +0200
+Message-Id: <20200419141057.621356-2-gladkov.alexey@gmail.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Sun, 19 Apr 2020 14:11:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Apr 2020, Dmitry Torokhov wrote:
+Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+ fs/proc_namespace.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-> On Sat, Apr 18, 2020 at 09:09:44PM -0700, Dmitry Torokhov wrote:
-> > Hi Alan,
-> > 
-> > On Sat, Apr 18, 2020 at 10:16:32PM -0400, Alan Stern wrote:
-> > > linux-input people:
-> > > 
-> > > syzbot has found a bug related to USB/HID/input, and I have narrowed it
-> > > down to the wacom driver.  As far as I can tell, the problem is caused
-> > > the fact that drivers/hid/wacom_sys.c calls input_register_device()
-> > > in several places, but it never calls input_unregister_device().
-> > > 
-> > > I know very little about the input subsystem, but this certainly seems 
-> > > like a bug.
-> > 
-> > Wacom driver uses devm_input_allocate_device(), so unregister should
-> > happen automatically on device removal once we exit wacom_probe().
-> > 
-> > > 
-> > > When the device is unplugged, the disconnect pathway doesn't call
-> > > hid_hw_close().  That routine doesn't get called until the user closes
-> > > the device file (which can be long after the device is gone and
-> > > hid_hw_stop() has run).  Then usbhid_close() gets a use-after-free
-> > > error when it tries to access data structures that were deallocated by
-> > > usbhid_stop().  No doubt there are other problems too, but this is
-> > > the one that syzbot found.
-> > 
-> > Unregistering the input device should result in calling wacom_close()
-> > (if device was previously opened), which, as far as I can tell, calls
-> > hid_hw_close().
-> > 
-> > I wonder if it is valid to call hid_hw_stop() before hid_hw_close()?
-
-No, it isn't.  If it were, for example, why would evdev_disconnect() -> 
-evdev_cleanup() need to call input_close_device()?  And why would 
-usbhid_disconnect() deallocate the usbhid structure which usbhid_stop()
-accesses?
-
-> > It could be that we again get confused by the "easiness" of devm APIs
-> > and completely screwing up unwind order.
-
-That's probably what happened.
-
-Alan Stern
-
-> Let's also add Ping and Jason to the conversation...
+diff --git a/fs/proc_namespace.c b/fs/proc_namespace.c
+index 273ee82d8aa9..9a8b624bc3db 100644
+--- a/fs/proc_namespace.c
++++ b/fs/proc_namespace.c
+@@ -37,23 +37,23 @@ static __poll_t mounts_poll(struct file *file, poll_table *wait)
+ 	return res;
+ }
+ 
+-struct proc_fs_info {
++struct proc_fs_opts {
+ 	int flag;
+ 	const char *str;
+ };
+ 
+ static int show_sb_opts(struct seq_file *m, struct super_block *sb)
+ {
+-	static const struct proc_fs_info fs_info[] = {
++	static const struct proc_fs_opts fs_opts[] = {
+ 		{ SB_SYNCHRONOUS, ",sync" },
+ 		{ SB_DIRSYNC, ",dirsync" },
+ 		{ SB_MANDLOCK, ",mand" },
+ 		{ SB_LAZYTIME, ",lazytime" },
+ 		{ 0, NULL }
+ 	};
+-	const struct proc_fs_info *fs_infop;
++	const struct proc_fs_opts *fs_infop;
+ 
+-	for (fs_infop = fs_info; fs_infop->flag; fs_infop++) {
++	for (fs_infop = fs_opts; fs_infop->flag; fs_infop++) {
+ 		if (sb->s_flags & fs_infop->flag)
+ 			seq_puts(m, fs_infop->str);
+ 	}
+@@ -63,7 +63,7 @@ static int show_sb_opts(struct seq_file *m, struct super_block *sb)
+ 
+ static void show_mnt_opts(struct seq_file *m, struct vfsmount *mnt)
+ {
+-	static const struct proc_fs_info mnt_info[] = {
++	static const struct proc_fs_opts mnt_opts[] = {
+ 		{ MNT_NOSUID, ",nosuid" },
+ 		{ MNT_NODEV, ",nodev" },
+ 		{ MNT_NOEXEC, ",noexec" },
+@@ -72,9 +72,9 @@ static void show_mnt_opts(struct seq_file *m, struct vfsmount *mnt)
+ 		{ MNT_RELATIME, ",relatime" },
+ 		{ 0, NULL }
+ 	};
+-	const struct proc_fs_info *fs_infop;
++	const struct proc_fs_opts *fs_infop;
+ 
+-	for (fs_infop = mnt_info; fs_infop->flag; fs_infop++) {
++	for (fs_infop = mnt_opts; fs_infop->flag; fs_infop++) {
+ 		if (mnt->mnt_flags & fs_infop->flag)
+ 			seq_puts(m, fs_infop->str);
+ 	}
+-- 
+2.25.3
 
