@@ -2,131 +2,1170 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FUZZY_XPILL,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6E9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D633C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B62E206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:30:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="CWuuWOAq"
+	by mail.kernel.org (Postfix) with ESMTP id 0D743206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDTLae (ORCPT
+        id S1726151AbgDTLce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:30:34 -0400
-Received: from mout.web.de ([212.227.17.12]:42143 "EHLO mout.web.de"
+        Mon, 20 Apr 2020 07:32:34 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61316 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725550AbgDTLac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:30:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587382208;
-        bh=0B52QO5d88rlSA3Ua9U36vat2jaLtIQ+5fObyjLI1LQ=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=CWuuWOAqPoSMg3d2EGJcAoupSQT30uN4rtBpYQdIX+oFdeVpQY4NviY4goEp5kZcu
-         1lEYgTp2ea6R7Y14O2V7QWlqVG/QdoB6ARy7MdT/32EzKYg8+cLa6IGsqo2jjvObvd
-         Q4PMVrqBEgviW/beuREJUN0jFyFXEb5iY7vSGevI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.153.203]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M4qav-1j0s2P1nXZ-00z1o2; Mon, 20
- Apr 2020 13:30:08 +0200
-Subject: Re: [PATCH v2 1/4] selftests: kmod: Use variable NAME in
- kmod_test_0001()
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        linux-kselftest@vger.kernel.org
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-References: <1587381782-31047-1-git-send-email-yangtiezhu@loongson.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <ff9ef06c-0607-8b8e-b80d-6a531921a67e@web.de>
-Date:   Mon, 20 Apr 2020 13:30:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1725550AbgDTLce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:32:34 -0400
+IronPort-SDR: PcyL/A1PiS25NhaWqHzGCrhU29Z9ttF0I4hExNHACWGjtMRUvMLO9MgzpITA7qgJBxAjzDrZ5o
+ foM9R6XTT3eg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 04:32:16 -0700
+IronPort-SDR: 3zrEze2YsyFUGEZ9+NjjYl+l4rlhJIpp2ZmU+YKUMcUZBFqtsaJPfzOW/w7ezQjFOdKrxDeBge
+ VqsMvRqUg1LQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
+   d="scan'208";a="290056767"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Apr 2020 04:32:15 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jQUev-00210R-QE; Mon, 20 Apr 2020 14:32:17 +0300
+Date:   Mon, 20 Apr 2020 14:32:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Rishi Gupta <gupt21@gmail.com>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org,
+        corbet@lwn.net, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] tty/serial: ttvys: add null modem driver for
+ emulation
+Message-ID: <20200420113217.GR185537@smile.fi.intel.com>
+References: <1587012974-21219-1-git-send-email-gupt21@gmail.com>
+ <1587012974-21219-2-git-send-email-gupt21@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1587381782-31047-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:g3ViuacKBow5chrPunQBhdtgEYyThlgqtDBl3bZfFPcCG/bqb93
- V47DPJHssPqkEyCefpbYS8gBbeIrIQz4s7HLYOplXPv31BDY0GvPgkQWJSwmtXX5tJPu5Pm
- X9dW8s2gnElr4Q8xlI32BkRyP1fKJ0lUgbSh/TOof8XabAjNWCTpHxjrnwPZoA1Im2EzNng
- YMktMnpJ5qz8w2Fep2AKQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UUVuJhNSVag=:UxEHXjE8ZbWBac3NugaIBX
- fODaneXxP8wG0XQfgfpruAb9QSjs98UYMk1a6J7mIVdIuUh2eKGFX15gNzuZ8of/tA/e1dJmX
- Wm08EKa9G9NSKgVSJXU8gqX8J85+BiX//L3WbzIRNV2qViC9JI/nR4xgYADDDi4xHBR5vV/eT
- p6FSbSLWTw6YA+4lzKIVN7kBlvzlEGCI5GzyP8hrzW926oBKmeQoO/UWu2awmwpSpSpvDXu7R
- LOOAp2nBocPXSzLjdhTRaZbtTByQPqK4VlFgQxR1Z3hKMZvw63Hlh3P9EIdm+7QUTzl4GmNbc
- 02H57zQ1rLWYIYdf1S8jZ5cYtR7g22QpD2iXEFTNhXD98d8OaLm9A2bNgqdY9jaAa+eDeiUyP
- /RVEzAr+2o/Wel3GrkP7oGix5UMmV9SDww35iXFz7xtTrcDFjG31pUN+KGtdx1nO1LHZQqxev
- aiLnX1TvMqbgOTIJpAPT1VMTckpApZLuDXzJtIUQFIGSkKeNezlpqFhdyEOAtQK1+99IEgqM8
- ANr0ILI5JwUDN6DRtQlBcAdDZJuv8Cmn1oMr3bOf003b1wYThMJE1Z0+ytGiWCdEEhsnZgoxh
- Eeco4tMwWNNgCTXUP5f7rfRqEZsWvIv8jmjCCyQ1UO84wfW6JHt83ZRoHlwwfEh/aolW4mHrx
- ZO5zU0QXGWJmntYmmXq4YoKozeJaldHZBTb/Sk7/HU7XTpJrwIesq1bxeYO32Pyc7IZ8ZUVZY
- yrobG/3dugZubcmAFQiHNsf17ZoHvHnALNO83r5VNJR9b90varUf/zMjbJRv0gE2FUMRylWQz
- ji93GMbFOFL3Wfu6wTL7i7Z7CqWkNGOEhj80df6v9MxvPAQnEDRYA2Rt4hUJ5bq3keWI2CG3Z
- msqIkAGZ/p8b1wO1nquNJ1Xf5olBhQ9G81KtY1OdTAzUaQsA34cIRuXuckgGftUBXaXgsO8b6
- L+87LGSNpFRy1Jr6/eXJZq3AvKNtKfwRc9QpeB8TDpCKUBJxJOPfRv+wsdrjmj4Nb4B6rwyCt
- pzseqixU8UBo6AyMNIH1whZpjP3ZefRhVz6bdEZZBTPMfq4ffm3PNn1tXux6EGEsXOuUyesO+
- v9EARnWVQ2ocW5HrWkJBihdGv45Nn6zM9rFaaSQ2r8Vle7BRjINedg+ASsTTD4jGD9iAGgMDB
- NIBYmvrsKmsPBElx89kKY/qJml8z5zoqKhfVqqb+sH8L8mKr0bybAPbNXWzDHpSUFHYB1WSTU
- ZoBh4PNQGtWvYEuKY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587012974-21219-2-git-send-email-gupt21@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Use the variable NAME instead of "\000" directly in kmod_test_0001().
+On Thu, Apr 16, 2020 at 10:26:12AM +0530, Rishi Gupta wrote:
+> The ttyvs driver creates virtual tty devices that can be
+> used with standard POSIX APIs for serial port based applications.
+> The driver is used mainly for testing user space applications.
+> 
+> Devices can be created through device tree and through configfs.
+> Various serial port events are emulated through a sysfs file.
 
-Would this patch series have been a bit nicer together with
-a cover letter?
+...
 
-Regards,
-Markus
+> +TTYVS VIRTUAL SERIAL DRIVER
+> +M:	Rishi Gupta <gupt21@gmail.com>
+> +L:	linux-serial@vger.kernel.org
+
+> +L:	linux-kernel@vger.kernel.org
+
+Redundant. It's default for all.
+
+> +S:	Maintained
+> +F:	Documentation/admin-guide/virtual-tty-ttyvs.rst
+> +F:	Documentation/devicetree/bindings/serial/ttyvs.yaml
+> +F:	drivers/tty/ttyvs.c
+
+...
+
+> +#include <linux/init.h>
+> +#include <linux/idr.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/slab.h>
+> +#include <linux/wait.h>
+> +#include <linux/tty.h>
+> +#include <linux/tty_driver.h>
+> +#include <linux/tty_flip.h>
+> +#include <linux/serial.h>
+> +#include <linux/sched.h>
+> +#include <linux/version.h>
+> +#include <linux/mutex.h>
+> +#include <linux/device.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/configfs.h>
+
+Perhaps ordered?
+
+...
+
+> +#define VS_CON_CTS    0x0001
+> +#define VS_CON_DCD    0x0002
+> +#define VS_CON_DSR    0x0004
+> +#define VS_CON_RI     0x0008
+
+> +#define VS_MCR_DTR    0x0001
+> +#define VS_MCR_RTS    0x0002
+> +#define VS_MCR_LOOP   0x0004
+
+> +#define VS_MSR_CTS    0x0008
+> +#define VS_MSR_DCD    0x0010
+> +#define VS_MSR_RI     0x0020
+> +#define VS_MSR_DSR    0x0040
+
+> +#define VS_CRTSCTS       0x0001
+> +#define VS_XON           0x0002
+> +#define VS_NONE          0x0004
+> +#define VS_DATA_5        0x0008
+> +#define VS_DATA_6        0x0010
+> +#define VS_DATA_7        0x0020
+> +#define VS_DATA_8        0x0040
+> +#define VS_PARITY_NONE   0x0080
+> +#define VS_PARITY_ODD    0x0100
+> +#define VS_PARITY_EVEN   0x0200
+> +#define VS_PARITY_MARK   0x0400
+> +#define VS_PARITY_SPACE  0x0800
+> +#define VS_STOP_1        0x1000
+> +#define VS_STOP_2        0x2000
+
+> +#define VS_SNM 0x0001
+> +#define VS_CNM 0x0002
+> +#define VS_SLB 0x0003
+> +#define VS_CLB 0x0004
+
+Can you use TABs to indent?
+
+...
+
+> +/* Represents a virtual tty device in this virtual card */
+> +struct vs_dev {
+> +	/* index for this device in tty core */
+
+Convert these comments to kernel-doc.
+
+> +	unsigned int own_index;
+> +	/* index of the device to which this device is connected */
+> +	unsigned int peer_index;
+> +	/* shadow modem status register */
+> +	int msr_reg;
+> +	/* shadow modem control register */
+> +	int mcr_reg;
+> +	/* rts line connections for this device */
+> +	int rts_mappings;
+> +	/* dtr line connections for this device */
+> +	int dtr_mappings;
+> +	int set_odtr_at_open;
+> +	int set_pdtr_at_open;
+> +	int odevtyp;
+> +	/* mutual exclusion at device level */
+> +	struct mutex lock;
+> +	int is_break_on;
+> +	/* currently active baudrate */
+> +	int baud;
+> +	int uart_frame;
+> +	int waiting_msr_chg;
+> +	int tx_paused;
+> +	int faulty_cable;
+> +	struct tty_struct *own_tty;
+> +	struct tty_struct *peer_tty;
+> +	struct serial_struct serial;
+> +	struct async_icount icount;
+> +	struct device *device;
+> +};
+
+...
+
+> +static ssize_t event_store(struct device *dev,
+> +		struct device_attribute *attr, const char *buf, size_t count)
+> +{
+> +	int ret, push = 1;
+> +	struct vs_dev *local_vsdev = dev_get_drvdata(dev);
+> +	struct tty_struct *tty_to_write = local_vsdev->own_tty;
+> +
+
+> +	if (!buf || (count <= 0))
+
+On which circumstances the count can be < 0 ?!
+Have you checked when it can be 0 here? Can it at all?
+
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Ensure required structure has been allocated, initialized and
+> +	 * port has been opened.
+> +	 */
+> +	if (!tty_to_write || (tty_to_write->port == NULL)
+> +			|| (tty_to_write->port->count <= 0))
+
+Better formatting style and indentation, please.
+
+> +		return -EIO;
+
+When port->count can be less than zero?
+
+> +	if (!test_bit(ASYNCB_INITIALIZED, &tty_to_write->port->flags))
+> +		return -EIO;
+> +
+> +	mutex_lock(&local_vsdev->lock);
+> +
+> +	switch (buf[0]) {
+> +	case '1':
+> +		ret = tty_insert_flip_char(tty_to_write->port, -7, TTY_FRAME);
+> +		if (ret < 0)
+> +			goto fail;
+> +		local_vsdev->icount.frame++;
+> +		break;
+> +	case '2':
+> +		ret = tty_insert_flip_char(tty_to_write->port, -8, TTY_PARITY);
+> +		if (ret < 0)
+> +			goto fail;
+> +		local_vsdev->icount.parity++;
+> +		break;
+> +	case '3':
+> +		ret = tty_insert_flip_char(tty_to_write->port, 0, TTY_OVERRUN);
+> +		if (ret < 0)
+> +			goto fail;
+> +		local_vsdev->icount.overrun++;
+> +		break;
+> +	case '4':
+> +		local_vsdev->msr_reg |= VS_MSR_RI;
+> +		local_vsdev->icount.rng++;
+> +		push = -1;
+> +		break;
+> +	case '5':
+> +		local_vsdev->msr_reg &= ~VS_MSR_RI;
+> +		local_vsdev->icount.rng++;
+> +		push = -1;
+> +		break;
+> +	case '6':
+> +		ret = tty_insert_flip_char(tty_to_write->port, 0, TTY_BREAK);
+> +		if (ret < 0)
+> +			goto fail;
+> +		local_vsdev->icount.brk++;
+> +		break;
+> +	case '7':
+> +		local_vsdev->faulty_cable = 1;
+> +		push = -1;
+> +		break;
+> +	case '8':
+> +		local_vsdev->faulty_cable = 0;
+> +		push = -1;
+> +		break;
+> +	default:
+> +		mutex_unlock(&local_vsdev->lock);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (push)
+> +		tty_flip_buffer_push(tty_to_write->port);
+> +	ret = count;
+> +
+> +fail:
+> +	mutex_unlock(&local_vsdev->lock);
+> +	return ret;
+> +}
+> +static DEVICE_ATTR_WO(event);
+> +
+> +static struct attribute *ttyvs_attrs[] = {
+> +	&dev_attr_event.attr,
+
+> +	NULL,
+
+No comma for terminator line.
+
+> +};
+> +ATTRIBUTE_GROUPS(ttyvs);
+> +
+> +/*
+> + * Checks if the given serial port has received its carrier detect
+> + * line raised or not. Return 1 if the carrier is raised otherwise 0.
+> + */
+> +static int vs_port_carrier_raised(struct tty_port *port)
+> +{
+> +	struct vs_dev *local_vsdev = idr_find(&db, port->tty->index);
+> +
+
+> +	return (local_vsdev->msr_reg & VS_MSR_DCD) ? 1 : 0;
+
+Redundant ternary. Use !! if you wish to tight the values to [0..1] range, but
+rather simple drop the ternary.
+
+> +}
+> +
+> +/* Shutdown the given serial port */
+> +static void vs_port_shutdown(struct tty_port *port)
+> +{
+> +	pr_debug("shutting down the port!\n");
+
+dev_dbg()
+Everywhere where you have struct device available use dev_*() instead of pr_*().
+
+> +}
+
+...
+
+> +/*
+> + * Update modem control and status registers according to the bit
+> + * mask(s) provided. The RTS and DTR values can be set only if the
+> + * current handshaking state of the tty device allows direct control
+> + * of the modem control lines. The pin mappings are honoured.
+> + *
+> + * Caller holds lock of thegiven virtual tty device.
+> + */
+> +static int vs_update_modem_lines(struct tty_struct *tty,
+> +			unsigned int set, unsigned int clear)
+> +{
+> +	int ctsint = 0;
+> +	int dcdint = 0;
+> +	int dsrint = 0;
+> +	int rngint = 0;
+
+> +	int mcr_ctrl_reg = 0;
+
+Redundant assignment.
+Also check other variables here, and in entire code.
+
+> +	int wakeup_blocked_open = 0;
+> +	int rts_mappings, dtr_mappings, msr_state_reg;
+> +	struct async_icount *evicount;
+> +	struct vs_dev *vsdev, *local_vsdev, *remote_vsdev;
+> +
+> +	local_vsdev = idr_find(&db, tty->index);
+> +
+> +	/* Read modify write MSR register */
+> +	if (tty->index != local_vsdev->peer_index) {
+> +		remote_vsdev = idr_find(&db, local_vsdev->peer_index);
+> +		msr_state_reg = remote_vsdev->msr_reg;
+> +		vsdev = remote_vsdev;
+> +	} else {
+> +		msr_state_reg = local_vsdev->msr_reg;
+> +		vsdev = local_vsdev;
+> +	}
+> +
+> +	rts_mappings = local_vsdev->rts_mappings;
+> +	dtr_mappings = local_vsdev->dtr_mappings;
+> +
+> +	if (set & TIOCM_RTS) {
+> +		mcr_ctrl_reg |= VS_MCR_RTS;
+> +		if ((rts_mappings & VS_CON_CTS) == VS_CON_CTS) {
+> +			msr_state_reg |= VS_MSR_CTS;
+> +			ctsint++;
+> +		}
+> +		if ((rts_mappings & VS_CON_DCD) == VS_CON_DCD) {
+> +			msr_state_reg |= VS_MSR_DCD;
+> +			dcdint++;
+> +			wakeup_blocked_open = 1;
+> +		}
+> +		if ((rts_mappings & VS_CON_DSR) == VS_CON_DSR) {
+> +			msr_state_reg |= VS_MSR_DSR;
+> +			dsrint++;
+> +		}
+> +		if ((rts_mappings & VS_CON_RI) == VS_CON_RI) {
+> +			msr_state_reg |= VS_MSR_RI;
+> +			rngint++;
+> +		}
+> +	}
+> +
+> +	if (set & TIOCM_DTR) {
+> +		mcr_ctrl_reg |= VS_MCR_DTR;
+> +		if ((dtr_mappings & VS_CON_CTS) == VS_CON_CTS) {
+> +			msr_state_reg |= VS_MSR_CTS;
+> +			ctsint++;
+> +		}
+> +		if ((dtr_mappings & VS_CON_DCD) == VS_CON_DCD) {
+> +			msr_state_reg |= VS_MSR_DCD;
+> +			dcdint++;
+> +			wakeup_blocked_open = 1;
+> +		}
+> +		if ((dtr_mappings & VS_CON_DSR) == VS_CON_DSR) {
+> +			msr_state_reg |= VS_MSR_DSR;
+> +			dsrint++;
+> +		}
+> +		if ((dtr_mappings & VS_CON_RI) == VS_CON_RI) {
+> +			msr_state_reg |= VS_MSR_RI;
+> +			rngint++;
+> +		}
+> +	}
+> +
+> +	if (clear & TIOCM_RTS) {
+> +		mcr_ctrl_reg &= ~VS_MCR_RTS;
+> +		if ((rts_mappings & VS_CON_CTS) == VS_CON_CTS) {
+> +			msr_state_reg &= ~VS_MSR_CTS;
+> +			ctsint++;
+> +		}
+> +		if ((rts_mappings & VS_CON_DCD) == VS_CON_DCD) {
+> +			msr_state_reg &= ~VS_MSR_DCD;
+> +			dcdint++;
+> +		}
+> +		if ((rts_mappings & VS_CON_DSR) == VS_CON_DSR) {
+> +			msr_state_reg &= ~VS_MSR_DSR;
+> +			dsrint++;
+> +		}
+> +		if ((rts_mappings & VS_CON_RI) == VS_CON_RI) {
+> +			msr_state_reg &= ~VS_MSR_RI;
+> +			rngint++;
+> +		}
+> +	}
+> +
+> +	if (clear & TIOCM_DTR) {
+> +		mcr_ctrl_reg &= ~VS_MCR_DTR;
+> +		if ((dtr_mappings & VS_CON_CTS) == VS_CON_CTS) {
+> +			msr_state_reg &= ~VS_MSR_CTS;
+> +			ctsint++;
+> +		}
+> +		if ((dtr_mappings & VS_CON_DCD) == VS_CON_DCD) {
+> +			msr_state_reg &= ~VS_MSR_DCD;
+> +			dcdint++;
+> +		}
+> +		if ((dtr_mappings & VS_CON_DSR) == VS_CON_DSR) {
+> +			msr_state_reg &= ~VS_MSR_DSR;
+> +			dsrint++;
+> +		}
+> +		if ((dtr_mappings & VS_CON_RI) == VS_CON_RI) {
+> +			msr_state_reg &= ~VS_MSR_RI;
+> +			rngint++;
+> +		}
+> +	}
+> +
+> +	local_vsdev->mcr_reg = mcr_ctrl_reg;
+> +	vsdev->msr_reg = msr_state_reg;
+> +
+> +	evicount = &vsdev->icount;
+> +	evicount->cts += ctsint;
+> +	evicount->dsr += dsrint;
+> +	evicount->dcd += dcdint;
+> +	evicount->rng += rngint;
+> +
+> +	if (vsdev->own_tty && vsdev->own_tty->port) {
+> +		/* Wake up process blocked on TIOCMIWAIT ioctl */
+> +		if ((vsdev->waiting_msr_chg == 1) &&
+> +				(vsdev->own_tty->port->count > 0)) {
+> +			wake_up_interruptible(
+> +					&vsdev->own_tty->port->delta_msr_wait);
+> +		}
+> +
+> +		/* Wake up application blocked on carrier detect signal */
+> +		if ((wakeup_blocked_open == 1) &&
+> +				(vsdev->own_tty->port->blocked_open > 0)) {
+> +			wake_up_interruptible(&vsdev->own_tty->port->open_wait);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Invoked when user space process opens a serial port. The tty core
+> + * calls this to install tty and initialize the required resources.
+> + */
+> +static int vs_install(struct tty_driver *drv, struct tty_struct *tty)
+> +{
+> +	int ret;
+> +	struct tty_port *port;
+> +
+
+> +	port = kcalloc(1, sizeof(struct tty_port), GFP_KERNEL);
+
+What the point of kcalloc(1, ...) ?
+
+> +	if (!port)
+> +		return -ENOMEM;
+> +
+> +	/* First initialize and then set port operations */
+> +	tty_port_init(port);
+> +	port->ops = &vs_port_ops;
+> +
+> +	ret = tty_port_install(port, drv, tty);
+> +	if (ret) {
+> +		kfree(port);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Invoked when there exist no user process or tty is to be
+> + * released explicitly for whatever reason.
+> + */
+> +static void vs_cleanup(struct tty_struct *tty)
+> +{
+> +	tty_port_put(tty->port);
+> +}
+> +
+> +/*
+> + * Called when open system call is called on virtual tty device node.
+> + * The tty core allocates 'struct tty_struct' for this device and
+> + * set up various resources, sets up line discipline and call this
+> + * function. For first time allocation happens and from next time
+> + * onwards only re-opening happens.
+> + *
+> + * The tty core finds the tty driver serving this device node and the
+> + * index of this tty device as registered by this driver with tty core.
+> + * From this inded we retrieve the virtual tty device to work on.
+> + *
+> + * If the same serial port is opened more than once, the tty structure
+> + * passed to this function will be same but filp structure will be
+> + * different every time. Caller holds tty lock.
+> + *
+> + * This driver does not set CLOCAL by default. This means that the
+> + * open() system call will block until it find its carrier detect
+> + * line raised. Application should use O_NONBLOCK/O_NDELAY flag if
+> + * it does not want to wait for DCD line change.
+> + */
+> +static int vs_open(struct tty_struct *tty, struct file *filp)
+> +{
+> +	int ret;
+> +	struct vs_dev *remote_vsdev;
+> +	struct vs_dev *local_vsdev = idr_find(&db, tty->index);
+> +
+> +	local_vsdev->own_tty = tty;
+> +
+> +	/*
+> +	 * If this device is one end of a null modem connection,
+> +	 * provide its address to remote end.
+> +	 */
+> +	if (tty->index != local_vsdev->peer_index) {
+> +		remote_vsdev = idr_find(&db, local_vsdev->peer_index);
+> +		remote_vsdev->peer_tty = tty;
+> +	}
+> +
+> +	memset(&local_vsdev->serial, 0, sizeof(struct serial_struct));
+> +	memset(&local_vsdev->icount, 0, sizeof(struct async_icount));
+> +
+> +	/*
+> +	 * Handle DTR raising logic ourselve instead of tty_port helpers
+> +	 * doing it. Locking virtual tty is not required here.
+> +	 */
+> +	if (local_vsdev->set_odtr_at_open == 1)
+> +		vs_update_modem_lines(tty, TIOCM_DTR | TIOCM_RTS, 0);
+> +
+> +	/* Associate tty with port and do port level opening. */
+> +	ret = tty_port_open(tty->port, tty, filp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	tty->port->close_delay  = 0;
+> +	tty->port->closing_wait = ASYNC_CLOSING_WAIT_NONE;
+> +	tty->port->drain_delay  = 0;
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Invoked by tty layer when release() is called on the file pointer
+> + * that was previously created with a call to open().
+> + */
+> +static void vs_close(struct tty_struct *tty, struct file *filp)
+> +{
+> +	if (test_bit(TTY_IO_ERROR, &tty->flags))
+> +		return;
+> +
+> +	if (tty && filp && tty->port && (tty->port->count > 0))
+> +		tty_port_close(tty->port, tty, filp);
+> +
+> +	if (tty && C_HUPCL(tty) && tty->port && (tty->port->count < 1))
+> +		vs_update_modem_lines(tty, 0, TIOCM_DTR | TIOCM_RTS);
+> +}
+> +
+> +/*
+> + * Invoked when write() system call is invoked on device node.
+> + * This function constructs evry byte as per the current uart
+> + * frame settings. Finally, the data is inserted into the tty
+> + * buffer of the receiver tty device.
+> + */
+> +static int vs_write(struct tty_struct *tty,
+> +			const unsigned char *buf, int count)
+> +{
+> +	int x;
+> +	unsigned char *data = NULL;
+> +	struct tty_struct *tty_to_write = NULL;
+> +	struct vs_dev *rx_vsdev = NULL;
+> +	struct vs_dev *tx_vsdev = idr_find(&db, tty->index);
+
+> +	if (tx_vsdev->tx_paused || !tty || tty->stopped
+> +			|| (count < 1) || !buf || tty->hw_stopped)
+
+Indentation issue.
+Fix in entire code.
+
+> +		return 0;
+> +
+> +	if (tx_vsdev->is_break_on == 1) {
+> +		pr_debug("break condition is on!\n");
+> +		return -EIO;
+> +	}
+> +
+> +	if (tx_vsdev->faulty_cable == 1)
+> +		return count;
+> +
+> +	if (tty->index != tx_vsdev->peer_index) {
+> +		/* Null modem */
+> +		tty_to_write = tx_vsdev->peer_tty;
+> +		rx_vsdev = idr_find(&db, tx_vsdev->peer_index);
+> +
+> +		if ((tx_vsdev->baud != rx_vsdev->baud) ||
+> +			(tx_vsdev->uart_frame != rx_vsdev->uart_frame)) {
+> +			/*
+> +			 * Emulate data sent but not received due to
+> +			 * mismatched baudrate/framing.
+> +			 */
+> +			pr_debug("mismatched serial port settings!\n");
+> +			tx_vsdev->icount.tx++;
+> +			return count;
+> +		}
+> +	} else {
+> +		/* Loop back */
+> +		tty_to_write = tty;
+> +		rx_vsdev = tx_vsdev;
+> +	}
+> +
+> +	if (tty_to_write) {
+> +		if ((tty_to_write->termios.c_cflag & CSIZE) == CS8) {
+> +			data = (unsigned char *)buf;
+> +		} else {
+> +			data = kcalloc(count, sizeof(char), GFP_KERNEL);
+> +			if (!data)
+> +				return -ENOMEM;
+> +
+> +			/* Emulate correct number of data bits */
+> +			switch (tty_to_write->termios.c_cflag & CSIZE) {
+> +			case CS7:
+> +				for (x = 0; x < count; x++)
+> +					data[x] = buf[x] & 0x7F;
+> +				break;
+> +			case CS6:
+> +				for (x = 0; x < count; x++)
+> +					data[x] = buf[x] & 0x3F;
+> +				break;
+> +			case CS5:
+> +				for (x = 0; x < count; x++)
+> +					data[x] = buf[x] & 0x1F;
+> +				break;
+
+> +			default:
+> +				data = (unsigned char *)buf;
+
+When this possible?
+
+> +			}
+> +		}
+> +
+> +		tty_insert_flip_string(tty_to_write->port, data, count);
+> +		tty_flip_buffer_push(tty_to_write->port);
+> +		tx_vsdev->icount.tx++;
+> +		rx_vsdev->icount.rx++;
+> +
+
+> +		if (data != buf)
+> +			kfree(data);
+
+> +	} else {
+> +		/*
+> +		 * Other end is still not opened, emulate transmission from
+> +		 * local end but don't make other end receive it as is the
+> +		 * case in real world.
+> +		 */
+> +		tx_vsdev->icount.tx++;
+> +	}
+> +
+> +	return count;
+> +}
+
+...
+
+> +	info.type		    = PORT_UNKNOWN;
+> +	info.line		    = serial.line;
+> +	info.port		    = tty->index;
+> +	info.irq			= 0;
+> +	info.flags		    = tty->port->flags;
+> +	info.xmit_fifo_size = 0;
+> +	info.baud_base	    = 0;
+> +	info.close_delay	= tty->port->close_delay;
+> +	info.closing_wait   = tty->port->closing_wait;
+> +	info.custom_divisor = 0;
+> +	info.hub6		    = 0;
+> +	info.io_type		= SERIAL_IO_MEM;
+
+Full of indentation issues.
+
+> +
+> +	ret = copy_to_user((void __user *)arg, &info,
+> +				sizeof(struct serial_struct));
+
+Wouldn't
+
+	if (copy_to_user(...))
+		return -EFAULT;
+	return 0;
+
+work better?
+
+> +
+> +	return ret ? -EFAULT : 0;
+
+...
+
+> +	u32 baud;
+
+u32? Why?
+
+...
+
+> +static int vs_ioctl(struct tty_struct *tty,
+> +				unsigned int cmd, unsigned long arg)
+> +{
+> +	switch (cmd) {
+> +	case TIOCGSERIAL:
+> +		return vs_get_serinfo(tty, arg);
+> +	case TIOCMIWAIT:
+> +		return vs_wait_change(tty, arg);
+> +	}
+> +
+
+> +	return -ENOIOCTLCMD;
+
+Perhaps this should be default case above.
+
+> +}
+
+...
+
+> +static void vs_throttle(struct tty_struct *tty)
+> +{
+> +	struct vs_dev *local_vsdev = idr_find(&db, tty->index);
+> +	struct vs_dev *remote_vsdev = idr_find(&db, local_vsdev->peer_index);
+> +
+> +	if (tty->termios.c_cflag & CRTSCTS) {
+> +		mutex_lock(&local_vsdev->lock);
+> +		remote_vsdev->tx_paused = 1;
+> +		vs_update_modem_lines(tty, 0, TIOCM_RTS);
+> +		mutex_unlock(&local_vsdev->lock);
+
+> +	} else if ((tty->termios.c_iflag & IXON) ||
+> +				(tty->termios.c_iflag & IXOFF)) {
+
+Indentation issues. Fix in every alike places.
+
+> +		vs_put_char(tty, STOP_CHAR(tty));
+> +	} else {
+> +		/* do nothing */
+> +	}
+> +}
+
+...
+
+> +static int vs_tiocmget(struct tty_struct *tty)
+> +{
+> +	int status, msr_reg, mcr_reg;
+> +	struct vs_dev *local_vsdev = idr_find(&db, tty->index);
+> +
+> +	mutex_lock(&local_vsdev->lock);
+> +	mcr_reg = local_vsdev->mcr_reg;
+> +	msr_reg = local_vsdev->msr_reg;
+> +	mutex_unlock(&local_vsdev->lock);
+> +
+
+> +	status = ((mcr_reg & VS_MCR_DTR)  ? TIOCM_DTR  : 0) |
+> +			 ((mcr_reg & VS_MCR_RTS)  ? TIOCM_RTS  : 0) |
+> +			 ((mcr_reg & VS_MCR_LOOP) ? TIOCM_LOOP : 0) |
+> +			 ((msr_reg & VS_MSR_DCD)  ? TIOCM_CAR  : 0) |
+> +			 ((msr_reg & VS_MSR_RI)   ? TIOCM_RI   : 0) |
+> +			 ((msr_reg & VS_MSR_CTS)  ? TIOCM_CTS  : 0) |
+> +			 ((msr_reg & VS_MSR_DSR)  ? TIOCM_DSR  : 0);
+
+Why not to indent by first line properly?
+Fix this in all similar places.
+
+> +	return status;
+> +}
+
+...
+
+> +static int vs_break_ctl(struct tty_struct *tty, int break_state)
+> +{
+> +	struct tty_struct *tty_to_write;
+> +	struct vs_dev *brk_rx_vsdev;
+> +	struct vs_dev *brk_tx_vsdev = idr_find(&db, tty->index);
+> +
+> +	if (tty->index != brk_tx_vsdev->peer_index) {
+> +		tty_to_write = brk_tx_vsdev->peer_tty;
+> +		brk_rx_vsdev = idr_find(&db, brk_tx_vsdev->peer_index);
+> +	} else {
+> +		tty_to_write = tty;
+> +		brk_rx_vsdev = brk_tx_vsdev;
+> +	}
+> +
+> +	mutex_lock(&brk_tx_vsdev->lock);
+> +
+
+> +	if (break_state != 0) {
+
+	if (break_state) {
+
+> +		if (brk_tx_vsdev->is_break_on == 1)
+> +			return 0;
+> +
+> +		brk_tx_vsdev->is_break_on = 1;
+> +		if (tty_to_write != NULL) {
+> +			tty_insert_flip_char(tty_to_write->port, 0, TTY_BREAK);
+> +			tty_flip_buffer_push(tty_to_write->port);
+> +			brk_rx_vsdev->icount.brk++;
+> +		}
+> +	} else {
+> +		brk_tx_vsdev->is_break_on = 0;
+> +	}
+> +
+> +	mutex_unlock(&brk_tx_vsdev->lock);
+> +	return 0;
+> +}
+
+...
+
+> +static void vs_send_xchar(struct tty_struct *tty, char ch)
+> +{
+> +	int was_paused;
+> +	struct vs_dev *local_vsdev = idr_find(&db, tty->index);
+> +
+> +	was_paused = local_vsdev->tx_paused;
+> +	if (was_paused)
+> +		local_vsdev->tx_paused = 0;
+> +
+> +	vs_put_char(tty, ch);
+> +	if (was_paused)
+> +		local_vsdev->tx_paused = 1;
+
+
+Can it be refactored like
+
+	if (local_vsdev->tx_paused) {
+		local_vsdev->tx_paused = 0;
+		vs_put_char(tty, ch);
+		local_vsdev->tx_paused = 1;
+	} else {
+		vs_put_char(tty, ch);
+	}
+
+?
+
+> +}
+
+...
+
+> +static int vs_del_specific_devs(int ownidx, int free_idr)
+> +{
+> +	struct vs_dev *vsdev1, *vsdev2;
+> +
+> +	/*
+> +	 * If user just created configfs item but did not populated valid
+> +	 * index, device will not exist, so bail out early.
+> +	 */
+> +	vsdev1 = idr_find(&db, ownidx);
+> +	if (!vsdev1)
+> +		return 0;
+> +
+> +	vs_unreg_one_dev(ownidx, vsdev1);
+> +
+> +	/* If this device is part of a null modem, delete peer also */
+> +	if (vsdev1->own_index != vsdev1->peer_index) {
+> +		vsdev2 = idr_find(&db, vsdev1->peer_index);
+> +		if (vsdev2) {
+> +			vs_unreg_one_dev(vsdev2->own_index, vsdev2);
+
+> +			if (free_idr)
+
+This...
+
+> +				idr_remove(&db, vsdev2->own_index);
+> +			kfree(vsdev2);
+> +		}
+> +	}
+
+> +	if (free_idr)
+
+...and this. Can you elaborate in which case we won't free IDR?
+
+> +		idr_remove(&db, ownidx);
+> +	kfree(vsdev1);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int vs_alloc_reg_one_dev(int oidx, int pidx, int rtsmap,
+> +			int dtrmap, int dtropn)
+> +{
+> +	int ret, id;
+> +	struct vs_dev *vsdev;
+> +	struct device *dev;
+> +
+> +	/* Allocate and init virtual tty device's private data */
+
+> +	vsdev = kcalloc(1, sizeof(struct vs_dev), GFP_KERNEL);
+
+What the point of kcalloc(1, ...)?
+
+> +	if (!vsdev)
+> +		return -ENOMEM;
+> +
+> +	id = idr_alloc(&db, vsdev, oidx, oidx + 1, GFP_KERNEL);
+> +	if (id < 0) {
+> +		ret = id;
+> +		goto fail_id;
+> +	}
+> +
+> +	vsdev->own_tty = NULL;
+> +	vsdev->peer_tty = NULL;
+> +	vsdev->own_index = oidx;
+> +	vsdev->peer_index =  pidx;
+> +	vsdev->rts_mappings = rtsmap;
+> +	vsdev->dtr_mappings = dtrmap;
+> +	vsdev->set_odtr_at_open = dtropn;
+> +	vsdev->msr_reg = 0;
+> +	vsdev->mcr_reg = 0;
+> +	vsdev->waiting_msr_chg = 0;
+> +	vsdev->tx_paused = 0;
+> +	vsdev->faulty_cable = 0;
+> +	mutex_init(&vsdev->lock);
+> +
+> +	/*
+> +	 * Register with tty core with a specific minor number.
+> +	 * Driver core itself will create sysfs nodes (ttyvs_groups).
+> +	 */
+> +	dev = tty_register_device_attr(ttyvs_driver, oidx, NULL,
+> +				vsdev, ttyvs_groups);
+> +	if (!dev) {
+> +		ret = -ENOMEM;
+> +		goto fail_reg;
+> +	}
+> +
+> +	vsdev->device = dev;
+> +	return 0;
+> +
+> +fail_reg:
+> +	idr_remove(&db, id);
+> +fail_id:
+> +	kfree(vsdev);
+> +	return ret;
+> +}
+
+...
+
+> +		*dtratopen = di->pdtratopn ? 1 : 0;
+
+> +		*dtratopen = di->odtratopn  ? 1 : 0;
+
+Do you need ternary? (Btw, second one has indentation issues)
+
+...
+
+> +static int vs_extract_dev_param_dt(const struct device_node *np,
+> +			unsigned int *idx, int *rtsmap, int *dtrmap,
+> +			int *dtratopen, int exclude)
+> +{
+> +	int ret;
+> +
+> +	ret = of_property_read_u32(np, "dev-num", idx);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (*idx >= max_num_vs_devs)
+> +		return -EINVAL;
+> +
+> +	ret = vs_parse_dt_get_map(np, "rtsmap", rtsmap);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vs_parse_dt_get_map(np, "dtrmap", dtrmap);
+> +	if (ret)
+> +		return ret;
+> +
+
+> +	*dtratopen = of_property_read_bool(np,
+> +						"set-dtr-at-open") ? 1 : 0;
+
+Why ternary, why two lines?
+
+> +
+> +	return 0;
+> +}
+
+...
+
+> +fail:
+
+fail_unlock: will better describe what you are doing here.
+Same applies to other labels (revisit them all).
+
+> +	mutex_unlock(&card_lock);
+> +	return ret;
+
+...
+
+> +static const struct tty_operations vs_serial_ops = {
+> +	.install	     = vs_install,
+> +	.cleanup	     = vs_cleanup,
+> +	.open	         = vs_open,
+> +	.close	         = vs_close,
+> +	.write	         = vs_write,
+> +	.put_char	     = vs_put_char,
+> +	.flush_chars     = vs_flush_chars,
+> +	.write_room      = vs_write_room,
+> +	.chars_in_buffer = vs_chars_in_buffer,
+> +	.ioctl	         = vs_ioctl,
+> +	.set_termios     = vs_set_termios,
+> +	.throttle	     = vs_throttle,
+> +	.unthrottle      = vs_unthrottle,
+> +	.stop	         = vs_stop,
+> +	.start	         = vs_start,
+> +	.hangup	         = vs_hangup,
+> +	.break_ctl       = vs_break_ctl,
+> +	.flush_buffer    = vs_flush_buffer,
+> +	.wait_until_sent = vs_wait_until_sent,
+> +	.send_xchar      = vs_send_xchar,
+> +	.tiocmget	     = vs_tiocmget,
+> +	.tiocmset	     = vs_tiocmset,
+> +	.get_icount      = vs_get_icount,
+> +};
+
+Your code has enormous amount of indentation issues. Please, fix your editor
+settings or do something about it.
+
+...
+
+> +		if (of_property_read_u32(child, "peer-dev", &peer)) {
+> +			ret = vs_add_lb(NULL, child);
+> +			if (ret) {
+> +				pr_err("can't create lb %s %d\n",
+> +						child->name, ret);
+> +				continue;
+> +			}
+> +		} else {
+
+> +			peer_node = of_find_node_by_phandle(peer);
+> +			if (peer_node) {
+> +				of_node_set_flag(peer_node, OF_POPULATED);
+> +				ret = vs_add_nm(NULL, child, peer_node);
+> +				if (ret) {
+> +					pr_err("can't create nm %s <-> %s %d\n",
+> +						child->name, peer_node->name,
+> +						ret);
+> +					continue;
+> +				}
+> +			} else {
+> +				pr_err("can't find peer for %s %d\n",
+> +						child->name, ret);
+> +			}
+
+Besides pr_err(), I guess should be dev_err() or so, above looks like OF voodoo
+magic which I believe already implemented in OF framework. Care to think about
+it?
+
+> +		}
+
+...
+
+> +	return container_of(to_config_group(item),
+> +				struct vs_cfs_dev_info, grp);
+
+It's perfectly one line. Why two?
+
+...
+
+> +static ssize_t vs_dev_create_store(struct config_item *item,
+> +		const char *page, size_t len)
+> +{
+> +	u8 val;
+> +	int ret;
+> +	struct vs_cfs_dev_info *di;
+> +
+> +	ret = kstrtou8(page, 0, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* User must write 1 to this node create device */
+> +	if (val != 1)
+> +		return -EINVAL;
+
+Why above it's not boolean? Why this doesn't accept 0?
+Can't you simple ignore 'false' case?
+
+> +
+> +	di = to_vs_dinfo(item);
+> +
+> +	/* devtype must be defined to proceed further */
+> +	if (!di->devtype)
+> +		return -EINVAL;
+> +
+> +	if (strncmp(di->devtype, "lb", 2) == 0)
+> +		ret = vs_add_lb(di, NULL);
+> +	else if (strncmp(di->devtype, "nm", 2) == 0)
+> +		ret = vs_add_nm(di, NULL, NULL);
+> +	else
+> +		return -EINVAL;
+
+
+match_string() / sysfs_match_string() ?
+
+> +	if (ret)
+> +		return ret;
+> +	return len;
+> +}
+
+...
+
+> +VS_DEV_ATTR_WR_STR(devtype)
+> +VS_DEV_ATTR_WR_U16(ownidx)
+> +VS_DEV_ATTR_WR_U16(peeridx)
+> +VS_DEV_ATTR_WR_U8(ortsmap)
+> +VS_DEV_ATTR_WR_U8(odtrmap)
+> +VS_DEV_ATTR_WR_U8(odtratopn)
+> +VS_DEV_ATTR_WR_U8(prtsmap)
+> +VS_DEV_ATTR_WR_U8(pdtrmap)
+> +VS_DEV_ATTR_WR_U8(pdtratopn)
+
+Where are semicolons? Above looks fragile.
+
+...
+
+> +static struct configfs_attribute *vs_dev_attrs[] = {
+> +	&vs_dev_attr_devtype,
+> +	&vs_dev_attr_ownidx,
+> +	&vs_dev_attr_ortsmap,
+> +	&vs_dev_attr_odtrmap,
+> +	&vs_dev_attr_odtratopn,
+> +	&vs_dev_attr_peeridx,
+> +	&vs_dev_attr_prtsmap,
+> +	&vs_dev_attr_pdtrmap,
+> +	&vs_dev_attr_pdtratopn,
+> +	&vs_dev_attr_create,
+
+> +	NULL,
+
+No comma for terminator line.
+
+> +};
+
+> +/*
+> + * By default this driver supports upto 64 virtual devices. This
+> + * can be overridden through max_num_vs_devs module parameter or
+> + * through max-num-vs-devs device tree property.
+> + */
+> +module_param(max_num_vs_devs, ushort, 0);
+> +MODULE_PARM_DESC(max_num_vs_devs,
+> +		"Maximum virtual tty devices to be supported");
+
+Can't you update this dynamically thru sysfs?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
