@@ -2,107 +2,139 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519C5C54FC9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A026CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30B932074B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2F82074B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="emt3bcME"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Gdf0lZfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgDTDB1 (ORCPT
+        id S1726109AbgDTDEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 23:01:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725865AbgDTDB0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 23:01:26 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834A1C061A0C;
-        Sun, 19 Apr 2020 20:01:26 -0700 (PDT)
+        Sun, 19 Apr 2020 23:04:37 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36817 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725896AbgDTDEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 23:04:37 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 495BKr4jMzz9sR4;
-        Mon, 20 Apr 2020 13:01:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587351684;
-        bh=EXvHwasEn6ueQoK02J1mxsjP8ImqNeLDZvYXLJk2orA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=emt3bcMEsDH5vmmqPQiBP3gcl4rZHI2up2/XiFFrXibOgLWmBkjo+PkAj1R8ZlrAd
-         1RMeRnfmHGBvQdZPtQtH8G8Utleb4/HOXfPQQJTod4Zmv3eup++c3+RNNCDE9+z+Aq
-         755auWX6RjVrl6kbA/GF8KE6h8F28n2BTiBzPzX//KSZQY/mv7VANCGECvrtSujneH
-         zcErS5NPGkztXzUutCEdkdZYVJ4YRWiWvmK9lkHmFt6JCNq4P84jr6NoxHALEhxlDV
-         Zy3gCI1iJJY+fLDdmE6e35l1wf9AwTFrsiqBUHoLzIHQ3VuZrQO1fQMr1vIxsVMooN
-         ew1DR6lx31usQ==
-Date:   Mon, 20 Apr 2020 13:01:18 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20200420130118.7a866fd5@canb.auug.org.au>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 495BPY1B6Sz9sR4;
+        Mon, 20 Apr 2020 13:04:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1587351874;
+        bh=zqFglfs+OWwiFYdz+pg3YEVVbd/md31jahle7Ih0HU4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Gdf0lZfuhRtXWn9XYKXxepVVuDOfiv59WFv1PTE2PQfslSmIGkxjwQqS9XEdGF7W9
+         QR/uesda+C73aEg+f1PQ+m8355evDSUOoxV8DIjYahUJ/ZYQoCoT7hZ6Kg8Z31hF6+
+         a3OMF1pX9eZYurylCG6+u9z7sGwffoOz+sSLn2vWw1d0FhMaaZZwrfWj4M9iTioCqO
+         eIyWKkGK0p+b6Gp3XRrE7PVPdFEtB9hRR1eHqWZe+iumg9WDjt+PNlyFLyJlYQ4aqQ
+         kVs9kfQiA99CtIFHnF9vJVqVq4HwpVWdAfLTptcbYjkqt05vc2TSg9wVf6+7hu/A91
+         DCnoO0yM3nxiQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] iommu: spapr_tce: Disable compile testing to fix build on book3s_32 config
+In-Reply-To: <a99ee461-664c-51ae-cb3a-cf5d87048d86@c-s.fr>
+References: <20200414142630.21153-1-krzk@kernel.org> <a99ee461-664c-51ae-cb3a-cf5d87048d86@c-s.fr>
+Date:   Mon, 20 Apr 2020 13:04:47 +1000
+Message-ID: <874ktej1rk.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TQAAgXi.j+9sTT+m4qv9GoZ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TQAAgXi.j+9sTT+m4qv9GoZ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> On 04/14/2020 02:26 PM, Krzysztof Kozlowski wrote:
+>> Although SPAPR_TCE_IOMMU itself can be compile tested on certain PowerPC
+>> configurations, its presence makes arch/powerpc/kvm/Makefile to select
+>> modules which do not build in such configuration.
+>> 
+>> The arch/powerpc/kvm/ modules use kvm_arch.spapr_tce_tables which exists
+>> only with CONFIG_PPC_BOOK3S_64.  However these modules are selected when
+>> COMPILE_TEST and SPAPR_TCE_IOMMU are chosen leading to build failures:
+>> 
+>>      In file included from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20:0,
+>>                       from arch/powerpc/kvm/book3s_64_vio_hv.c:22:
+>>      arch/powerpc/include/asm/book3s/64/pgtable.h:17:0: error: "_PAGE_EXEC" redefined [-Werror]
+>>       #define _PAGE_EXEC  0x00001 /* execute permission */
+>> 
+>>      In file included from arch/powerpc/include/asm/book3s/32/pgtable.h:8:0,
+>>                       from arch/powerpc/include/asm/book3s/pgtable.h:8,
+>>                       from arch/powerpc/include/asm/pgtable.h:18,
+>>                       from include/linux/mm.h:95,
+>>                       from arch/powerpc/include/asm/io.h:29,
+>>                       from include/linux/io.h:13,
+>>                       from include/linux/irq.h:20,
+>>                       from arch/powerpc/include/asm/hardirq.h:6,
+>>                       from include/linux/hardirq.h:9,
+>>                       from include/linux/kvm_host.h:7,
+>>                       from arch/powerpc/kvm/book3s_64_vio_hv.c:12:
+>>      arch/powerpc/include/asm/book3s/32/hash.h:29:0: note: this is the location of the previous definition
+>>       #define _PAGE_EXEC 0x200 /* software: exec allowed */
+>> 
+>> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>> Fixes: e93a1695d7fb ("iommu: Enable compile testing for some of drivers")
+>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> ---
+>>   drivers/iommu/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+>> index 58b4a4dbfc78..3532b1ead19d 100644
+>> --- a/drivers/iommu/Kconfig
+>> +++ b/drivers/iommu/Kconfig
+>> @@ -362,7 +362,7 @@ config IPMMU_VMSA
+>>   
+>>   config SPAPR_TCE_IOMMU
+>>   	bool "sPAPR TCE IOMMU Support"
+>> -	depends on PPC_POWERNV || PPC_PSERIES || (PPC && COMPILE_TEST)
+>> +	depends on PPC_POWERNV || PPC_PSERIES
+>>   	select IOMMU_API
+>>   	help
+>>   	  Enables bits of IOMMU API required by VFIO. The iommu_ops
+>> 
+>
+> Should it be fixed the other way round, something like:
 
-Hi all,
+That doesn't actually fix this specific issue, the code will build but
+then not link:
 
-After merging the drm-misc tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
+  ld: arch/powerpc/../../virt/kvm/vfio.o: in function `.kvm_spapr_tce_release_vfio_group':
+  vfio.c:(.text.kvm_spapr_tce_release_vfio_group+0xb0): undefined reference to `.kvm_spapr_tce_release_iommu_group'
+  ld: arch/powerpc/../../virt/kvm/vfio.o: in function `.kvm_vfio_set_group':
+  vfio.c:(.text.kvm_vfio_set_group+0x7f4): undefined reference to `.kvm_spapr_tce_attach_iommu_group'
+  ld: arch/powerpc/kvm/powerpc.o: in function `.kvm_arch_vm_ioctl':
+  (.text.kvm_arch_vm_ioctl+0x1a4): undefined reference to `.kvm_vm_ioctl_create_spapr_tce'
+  ld: (.text.kvm_arch_vm_ioctl+0x230): undefined reference to `.kvm_vm_ioctl_create_spapr_tce'
+  make[1]: *** [/home/michael/linux/Makefile:1106: vmlinux] Error 1
 
-drivers/video/fbdev/controlfb.c: In function 'controlfb_mmap':
-drivers/video/fbdev/controlfb.c:756:23: error: implicit declaration of func=
-tion 'pgprot_cached_wthru'; did you mean 'pgprot_cached'? [-Werror=3Dimplic=
-it-function-declaration]
-  756 |   vma->vm_page_prot =3D pgprot_cached_wthru(vma->vm_page_prot);
-      |                       ^~~~~~~~~~~~~~~~~~~
-      |                       pgprot_cached
-drivers/video/fbdev/controlfb.c:756:23: error: incompatible types when assi=
-gning to type 'pgprot_t' {aka 'struct <anonymous>'} from type 'int'
+> diff --git a/arch/powerpc/kvm/Makefile b/arch/powerpc/kvm/Makefile
+> index 2bfeaa13befb..906707d15810 100644
+> --- a/arch/powerpc/kvm/Makefile
+> +++ b/arch/powerpc/kvm/Makefile
+> @@ -135,4 +135,4 @@ obj-$(CONFIG_KVM_BOOK3S_32) += kvm.o
+>   obj-$(CONFIG_KVM_BOOK3S_64_PR) += kvm-pr.o
+>   obj-$(CONFIG_KVM_BOOK3S_64_HV) += kvm-hv.o
+>
+> -obj-y += $(kvm-book3s_64-builtin-objs-y)
+> +obj-$(CONFIG_KVM_BOOK3S_64) += $(kvm-book3s_64-builtin-objs-y)
 
-Presumably exposed by commit
+But this is probably still a good thing to do, as it would have made the
+error messages clearer in this case I think.
 
-  a07a63b0e24d ("video: fbdev: controlfb: add COMPILE_TEST support")
-
-I just turned off COMPILE_TEST again for today.  Please let me know when
-this is fixed.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/TQAAgXi.j+9sTT+m4qv9GoZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6dEH4ACgkQAVBC80lX
-0GzkQAf+NYTRus1sYkOm7D8jCQ3yofQuSbktV19Rv+ynryJTfHkb6cncymKSaDyM
-u/nzABHVAnKABm7hjUQrJTTmXD7j5irg0YcFgTlwM4mTTNol7vMQvVio7lDfS2bm
-4F7rdrvgzTQWn8sMrKhc5QLDzdVOUZJl30Z2Iov3ddDoZ+g4JAGIej6tSJGX6Gs+
-xMnI3MowjKR1eU+3rp2r+mtQpahSBQYI9uFFaSQasS1PEq955Zc7ifGi6laYjHfQ
-ozoTfzEK934KVOG1vCCQt44XacBr6ek9o2wHcn3ZAuf0Eco4n1DUI6qzAvi9P5XX
-YtoxihgKOyJtuHOi7E+w7cwvs8oM5w==
-=2xmG
------END PGP SIGNATURE-----
-
---Sig_/TQAAgXi.j+9sTT+m4qv9GoZ--
+cheers
