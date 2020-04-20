@@ -2,75 +2,107 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E16EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1098C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D39220775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587393415;
-	bh=cNnhSQRcFA0Sj002AyZDg4SB/tTuyxPaam4FLSdajLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2ZNeWo6RPOn4Po+Hn+/m0k39DKQnX4bMRoaAaQ4XvNnBGIUER2LM7FtkhfrKd1oeA
-	 R79bima65UJ0Vmls+yFQQhjSTvXHX34DOrVqaT41OIMKgSoGX9sJE2AC1FxcupXojq
-	 n1QSnpbb0V1D5yOzcF96lhaxcRn6rQrsm901PZuY=
+	by mail.kernel.org (Postfix) with ESMTP id 8CAB520735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vyOI+HG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729938AbgDTOgy (ORCPT
+        id S1729945AbgDTOhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbgDTOgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:36:54 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 20 Apr 2020 10:37:33 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12099 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729341AbgDTOhc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 10:37:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587393452; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=EM11yBpYLcckdOBs38ODNnN92Ufx3r9qUUl7hts1f74=; b=vyOI+HG1glvKvoImFvWj/Q/llEKDSs44a/RN9jJqREsV/NXF3iLYe9PpegCliHhhwE0s9TCr
+ CPwiwxAfxk4+dAKD+oXrgJnUDzWPE5vqpp0bi1Ujtfy9mpX5YvtqXL6D0etYg1gMjhME/ObN
+ 4THLOfLC0dbRQlSQYH8fqWCML3g=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9db3a4.7fe55b3e9ea0-smtp-out-n01;
+ Mon, 20 Apr 2020 14:37:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DB491C433BA; Mon, 20 Apr 2020 14:37:24 +0000 (UTC)
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36B0620735;
-        Mon, 20 Apr 2020 14:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587393413;
-        bh=cNnhSQRcFA0Sj002AyZDg4SB/tTuyxPaam4FLSdajLY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u7OOEk9GRTrdn4X0FbyAQoc6E9BBl7zetM4G7vZqWMqav6EQhxJl6DyS1YWKn0i82
-         zXJ8MtX/Fny4iKRxYMI6zsPmtjegy6qeZ99mJLaLir4AQOo6iTTgnDIJ/v/GyrMIXb
-         G4vb0PcT3m2a28gXg7C+1gzlB3VD7puTfSgmyJsE=
-Date:   Mon, 20 Apr 2020 22:36:41 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org, eha@deif.com,
-        angelo@sysam.it, andrew.smirnov@gmail.com, gustavo@embeddedor.com,
-        weic@nvidia.com, mhosny@nvidia.com, michael@walle.cc,
-        peng.ma@nxp.com
-Subject: Re: [PATCH v5 11/12] arm64: dts: ls1028a: Specify the DMA channels
- for the DSPI controllers
-Message-ID: <20200420143640.GA32419@dragon>
-References: <20200318001603.9650-1-olteanv@gmail.com>
- <20200318001603.9650-12-olteanv@gmail.com>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 447F9C433D2;
+        Mon, 20 Apr 2020 14:37:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 447F9C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv2 0/6] iommu/arm-smmu: Allow client devices to select identity mapping
+Date:   Mon, 20 Apr 2020 20:07:04 +0530
+Message-Id: <cover.1587392905.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318001603.9650-12-olteanv@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 02:16:02AM +0200, Vladimir Oltean wrote:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> 
-> LS1028A has a functional connection to the eDMA module. Even if the
-> spi-fsl-dspi.c driver is not using DMA for LS1028A now, define the slots
-> in the DMAMUX for connecting the eDMA channels to the 3 DSPI
-> controllers.
-> 
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+This series allows DRM, Modem devices to set a default
+identity mapping in qcom smmu implementation.
 
-Applied, thanks.
+Patch 1 is cleanup to support other SoCs to call into
+QCOM specific  implementation.
+Patch 2 sets the default identity domain for DRM devices.
+Patch 3 implements def_domain_type callback for arm-smmu.
+Patch 4 sets the default identity domain for modem device.
+Patch 5-6 adds the iommus property for mss pil.
+
+This is based on Joerg's tree:
+ - https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v2
+
+Jordan Crouse (1):
+  iommu/arm-smmu: Allow client devices to select direct mapping
+
+Sai Prakash Ranjan (2):
+  iommu: arm-smmu-impl: Convert to a generic reset implementation
+  iommu/arm-smmu: Implement iommu_ops->def_domain_type call-back
+
+Sibi Sankar (3):
+  iommu/arm-smmu-qcom: Request direct mapping for modem device
+  dt-bindings: remoteproc: qcom: Add iommus property
+  arm64: dts: qcom: sdm845-cheza: Add iommus property
+
+ .../bindings/remoteproc/qcom,q6v5.txt         |  3 ++
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |  5 +++
+ drivers/iommu/arm-smmu-impl.c                 |  8 ++--
+ drivers/iommu/arm-smmu-qcom.c                 | 37 +++++++++++++++++--
+ drivers/iommu/arm-smmu.c                      | 20 ++++++++++
+ drivers/iommu/arm-smmu.h                      |  1 +
+ 6 files changed, 68 insertions(+), 6 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
