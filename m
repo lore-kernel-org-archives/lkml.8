@@ -2,519 +2,257 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA52C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3735AC38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28EB20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FAD6206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SF3uNjgW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qOT0X9ri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgDTQhe (ORCPT
+        id S1726793AbgDTQhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41376 "EHLO
+        Mon, 20 Apr 2020 12:37:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726715AbgDTQhb (ORCPT
+        by vger.kernel.org with ESMTP id S1726743AbgDTQhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:37:31 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248F6C025493
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:37:31 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id nu11so88933pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:37:31 -0700 (PDT)
+        Mon, 20 Apr 2020 12:37:48 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C652C025491
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:37:48 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id i10so12974676wrv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:37:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YpJu6pVB4AjYmVJCZOGMz5xkByxxExkM2MfEWTvpz9s=;
-        b=SF3uNjgWacZxFNrws9/RX90YpSzpKhsaJxcaWleYqsA/YzHAkF1sFaf/wFmk5f/dy8
-         bOL9YPNMk28MBTlVMf1dCEp07RLMEsPdXftZBQU3Z96lNsFrT2mbUwNPbif+YW4V4r0T
-         IYyStXs0u41Hq3JJgJsDuA0xaR4uqX7meSLmQ=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Rj3jrSbU2b68oTmKDFbN7ThfXz7DCPKlENH6dIentbg=;
+        b=qOT0X9riAMzmEP5Ha7488hZVekV30Pk1csqcVzplu+ZIg38c2b8tJvtqrQxgpOYkB9
+         gX3MxO54dkj2kFQFhE5lK6hQo7mTnazAsr/J9Mos46z019jWW0wXkiX4mXVo7Slw+LmM
+         v5tq74Of3prsSVSua+OY6XUstDoUqWTCf0/NpP7ovNedfz5TSTxz9xs1B4lJkC9hP74b
+         YBH+u7CaAba8aqdOIlMvsOdBz5fvPCDxaisMIDG148fRwFWGWsEtfhVUIWBUGapQLE7h
+         bOZo0wZ/o5qKajlkAxKhsO8NZxFKfxwBbEQ6JKkH71oNt5TtD6msKqc81wIjQ6P9pA/e
+         A2cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YpJu6pVB4AjYmVJCZOGMz5xkByxxExkM2MfEWTvpz9s=;
-        b=CcNxp3+7WKubWumf9VW7tA3Y9o34VYNRmSlmNB8M2Cgt1D/Xpazg2GLWiBT61Yu8XA
-         CcH12B/bDr1jJ7OYIaJrBZvXCVd9wwi0DJz+Jzc4E/LpLVKYxD0vM/HdEHr03enXnf8S
-         NIe86Zd+qHkMKegrJckJUKBvkSuB25b5nOKyzcRiLdu/yscyWjb5qGVKEZ+YWDJ9/95n
-         kmLJjK2IN44IPDTOpdtztAJ8cibaMXp8Crh3HVqlr63ymlUp2MZBAo4AcJsqJL4ukCc9
-         HGw5hQiVHAqQJR0O5k1owvBRtCjJTYTJgTYoXkW/bt6GqiYDJoNboXQvKQVN65W7sKKs
-         K8lg==
-X-Gm-Message-State: AGi0PuZlFvw+pZ1aX/IBqtcFv5Kl46E5Bp35XbHC15O/+5Y90WfOsZb/
-        zdVp7flgjlDG3t3wHKmz1U5Cr68GiAU=
-X-Google-Smtp-Source: APiQypJiBO2Mk1IfLT5YXEX9Fz7Z8LWo8NIOjQDVB5FUCENBJOBbPncaB+gmEmKwDTC4TDPxca34hA==
-X-Received: by 2002:a17:90a:d153:: with SMTP id t19mr297294pjw.42.1587400650291;
-        Mon, 20 Apr 2020 09:37:30 -0700 (PDT)
-Received: from mathewk1.lan ([161.97.192.125])
-        by smtp.gmail.com with ESMTPSA id cp22sm98109pjb.28.2020.04.20.09.37.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Rj3jrSbU2b68oTmKDFbN7ThfXz7DCPKlENH6dIentbg=;
+        b=Vkol3/RolP+ElhsSvJr5rwykLBNGkf9JciMf4b3cvgOWG7v4ZD5e7iEiKRNLHo2XZT
+         4uZq0v/ZlKrQGE+J4icD8IH/AxIn/alfDhvl62Rp6G6GCbdjmzvBzMx2e+METM0pp3W3
+         XqTAUcSdr+fny/0UTYIsVKHUD04qKE3WYfNS1RVbnWrbtKI6HWslczRcPbSzHFfZh4Ua
+         fTrbdVyrEYRtLLLOuv5KsbuTHg1NvLL6sWSN2QU6agD8dtoygPLW4n2ToKtg+2G54iEF
+         0yTF8B8j3g8JImWXJOrZ+fSAoV3A/DsqBS56ua+201psNpQlr2Hdrr6SkXYB7lMHFESj
+         gm/w==
+X-Gm-Message-State: AGi0PuZ/T7qs+Lunc+UM2X6H1opa9MVFR5yJrjiXB6pLpje2BMXN4W71
+        iJe7CXQUFlSL2blGlvCIZleqZw==
+X-Google-Smtp-Source: APiQypKAH6kAxnN7z1zkH/+viWwXnCewnUDNHJ9TNYyq8qYdBhojhij+2K2UR3NYJ6w9XnjttNtugg==
+X-Received: by 2002:adf:e5c8:: with SMTP id a8mr21467911wrn.56.1587400666708;
+        Mon, 20 Apr 2020 09:37:46 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id s8sm42510wru.38.2020.04.20.09.37.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 09:37:29 -0700 (PDT)
-From:   Mathew King <mathewk@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mathew King <mathewk@chromium.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH v0 2/2] typec: Add Type-C charger
-Date:   Mon, 20 Apr 2020 10:36:57 -0600
-Message-Id: <20200420163657.60650-3-mathewk@chromium.org>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-In-Reply-To: <20200420163657.60650-1-mathewk@chromium.org>
-References: <20200420163657.60650-1-mathewk@chromium.org>
+        Mon, 20 Apr 2020 09:37:46 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 17:37:44 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V5 4/4] backlight: qcom-wled: Add support for WLED5
+ peripheral that is present on PM8150L PMICs
+Message-ID: <20200420163744.3qbeqwv7myzmam3d@holly.lan>
+References: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
+ <1586274430-28402-5-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586274430-28402-5-git-send-email-kgunda@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an option to expose USB Type-C ports that can charge system
-batteries as a power_supply class. This implementation only exposes
-three properties of the power supply.
+On Tue, Apr 07, 2020 at 09:17:10PM +0530, Kiran Gunda wrote:
+> From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> 
+> PM8150L WLED supports the following:
+>     - Two modulators and each sink can use any of the modulator
+>     - Multiple CABC selection options from which one can be selected/enabled
+>     - Multiple brightness width selection (12 bits to 15 bits)
+> 
+> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> ---
+>  drivers/video/backlight/qcom-wled.c | 443 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 442 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+> index a6ddaa9..3a57011 100644
+> --- a/drivers/video/backlight/qcom-wled.c
+> +++ b/drivers/video/backlight/qcom-wled.c
+> ...
+> +static const u8 wled5_brightness_reg[MOD_MAX] = {
+> +	[MOD_A] = WLED5_SINK_REG_MOD_A_BRIGHTNESS_LSB,
+> +	[MOD_B] = WLED5_SINK_REG_MOD_B_BRIGHTNESS_LSB,
+> +};
+> +
+> +static const u8 wled5_src_sel_reg[MOD_MAX] = {
+> +	[MOD_A] = WLED5_SINK_REG_MOD_A_SRC_SEL,
+> +	[MOD_B] = WLED5_SINK_REG_MOD_B_SRC_SEL,
+> +};
+> +
+> +static const u8 wled5_brt_wid_sel_reg[MOD_MAX] = {
+> +	[MOD_A] = WLED5_SINK_REG_MOD_A_BRIGHTNESS_WIDTH_SEL,
+> +	[MOD_B] = WLED5_SINK_REG_MOD_B_BRIGHTNESS_WIDTH_SEL,
+> +};
+> +
 
-POWER_SUPPLY_PROP_ONLINE - Set to true if the Type-C port is configured
-                           as a sink and is connected to a partner
-POWER_SUPPLY_PROP_STATUS - Set to CHARGING if a partner is connected and
-                           the port is a sink and set to NOT_CHARGING
-                           otherwise
-POWER_SUPPLY_PROP_USB_TYPE - When a partner is conneced set to TYPE_C,
-                             TYPE_PD, or TYPE_PD_DRP depending on the
-                             partner capibilities and set to
-                             TYPE_UNKNOWN otherwise
+Each of these lookup tables are used exactly once... and half the time
+when this code chooses between MOD_A and MOD_B a ternary is used and
+half the time these lookup tables.
 
-This implementation can be expanded as the typec class is expaneded. In
-particular the STATUS property should show more than CHARGING and
-NOT_CHARGING. Also properties like VOLTAGE and CURRENT can be added when
-the typec class supports getting PDOs.
+I suggest these be removed.
 
-Signed-off-by: Mathew King <mathewk@chromium.org>
----
- drivers/usb/typec/Kconfig   |  11 ++
- drivers/usb/typec/Makefile  |   1 +
- drivers/usb/typec/charger.c | 204 ++++++++++++++++++++++++++++++++++++
- drivers/usb/typec/charger.h |  33 ++++++
- drivers/usb/typec/class.c   |  48 +++++++--
- drivers/usb/typec/class.h   |   2 +
- 6 files changed, 290 insertions(+), 9 deletions(-)
- create mode 100644 drivers/usb/typec/charger.c
- create mode 100644 drivers/usb/typec/charger.h
 
-diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-index b4f2aac7ae8a..1040c990cb7e 100644
---- a/drivers/usb/typec/Kconfig
-+++ b/drivers/usb/typec/Kconfig
-@@ -46,6 +46,17 @@ menuconfig TYPEC
- 
- if TYPEC
- 
-+config TYPEC_CHARGER
-+	bool "Type-C Power Supply support"
-+	depends on POWER_SUPPLY
-+	help
-+	  Say Y here to enable Type-C charging ports to be exposed as a power
-+	  supply class.
-+
-+	  If you choose this option Type-C charger support will be built into
-+	  the typec driver. This will expose all Type-C ports as a power_supply
-+	  class.
-+
- source "drivers/usb/typec/tcpm/Kconfig"
- 
- source "drivers/usb/typec/ucsi/Kconfig"
-diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
-index 7753a5c3cd46..6fc5424761a1 100644
---- a/drivers/usb/typec/Makefile
-+++ b/drivers/usb/typec/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_TYPEC)		+= typec.o
- typec-y				:= class.o mux.o bus.o
-+typec-$(CONFIG_TYPEC_CHARGER)	+= charger.o
- obj-$(CONFIG_TYPEC)		+= altmodes/
- obj-$(CONFIG_TYPEC_TCPM)	+= tcpm/
- obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
-diff --git a/drivers/usb/typec/charger.c b/drivers/usb/typec/charger.c
-new file mode 100644
-index 000000000000..07c3cd065be8
---- /dev/null
-+++ b/drivers/usb/typec/charger.c
-@@ -0,0 +1,204 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * USB Type-C Charger Class
-+ *
-+ * Copyright (C) 2020, Google LLC
-+ * Author: Mathew King <mathewk@google.com>
-+ */
-+
-+#include <linux/slab.h>
-+
-+#include "charger.h"
-+#include "class.h"
-+
-+static enum power_supply_property typec_charger_props[] = {
-+	POWER_SUPPLY_PROP_ONLINE,
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_USB_TYPE
-+};
-+
-+static enum power_supply_usb_type typec_charger_usb_types[] = {
-+	POWER_SUPPLY_USB_TYPE_UNKNOWN,
-+	POWER_SUPPLY_USB_TYPE_C,
-+	POWER_SUPPLY_USB_TYPE_PD,
-+	POWER_SUPPLY_USB_TYPE_PD_DRP,
-+};
-+
-+static int typec_charger_get_prop(struct power_supply *psy,
-+				  enum power_supply_property psp,
-+				  union power_supply_propval *val)
-+{
-+	struct typec_charger *charger = power_supply_get_drvdata(psy);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		val->intval = charger->psy_online;
-+		break;
-+	case POWER_SUPPLY_PROP_STATUS:
-+		val->intval = charger->psy_status;
-+		break;
-+	case POWER_SUPPLY_PROP_USB_TYPE:
-+		val->intval = charger->psy_usb_type;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int typec_charger_set_prop(struct power_supply *psy,
-+				  enum power_supply_property psp,
-+				  const union power_supply_propval *val)
-+{
-+	return -EINVAL;
-+}
-+
-+static int typec_charger_is_writeable(struct power_supply *psy,
-+				      enum power_supply_property psp)
-+{
-+	return 0;
-+}
-+
-+/**
-+ * typec_charger_changed - Notify of a Type-C charger change
-+ * @charger: Type-C charger that changed
-+ *
-+ * Notifies the Type-C charger that one or more of its attributes may have
-+ * changed.
-+ */
-+void typec_charger_changed(struct typec_charger *charger)
-+{
-+	int last_psy_status, last_psy_usb_type, last_psy_online;
-+
-+	last_psy_online = charger->psy_online;
-+	last_psy_status = charger->psy_status;
-+	last_psy_usb_type = charger->psy_usb_type;
-+
-+	if (!charger->partner) {
-+		charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_UNKNOWN;
-+		charger->psy_online = 0;
-+		charger->psy_status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		goto out_notify;
-+	}
-+
-+	if (charger->port->pwr_role == TYPEC_SOURCE) {
-+		charger->psy_online = 0;
-+		charger->psy_status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		if (charger->partner->usb_pd)
-+			charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_PD_DRP;
-+		else
-+			charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_UNKNOWN;
-+
-+		goto out_notify;
-+	}
-+
-+	charger->psy_online = 1;
-+	charger->psy_status = POWER_SUPPLY_STATUS_CHARGING;
-+
-+	if (charger->partner->usb_pd)
-+		charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_PD;
-+	else
-+		charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_C;
-+
-+out_notify:
-+	if (last_psy_usb_type != charger->psy_usb_type ||
-+	    last_psy_status != charger->psy_status ||
-+	    last_psy_online != charger->psy_online)
-+		power_supply_changed(charger->psy);
-+}
-+EXPORT_SYMBOL_GPL(typec_charger_changed);
-+
-+/**
-+ * typec_register_charger - Register a USB Type-C Charger
-+ * @port: Type-C port to register as a charger
-+ *
-+ * Registers a Type-C port as a charger.
-+ *
-+ * Returns handle to the charger on success or ERR_PTR on failure.
-+ */
-+struct typec_charger *typec_register_charger(struct typec_port *port)
-+{
-+	struct power_supply_config psy_cfg = {};
-+	struct typec_charger *charger;
-+	struct power_supply *psy;
-+
-+	charger = kzalloc(sizeof(struct typec_charger), GFP_KERNEL);
-+	if (!port)
-+		return ERR_PTR(-ENOMEM);
-+
-+	charger->port = port;
-+	sprintf(charger->name, TYPEC_CHARGER_DIR_NAME, port->id);
-+	charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_UNKNOWN;
-+	charger->psy_online = 0;
-+	charger->psy_status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+
-+	charger->psy_desc.name = charger->name;
-+	charger->psy_desc.type = POWER_SUPPLY_TYPE_USB;
-+	charger->psy_desc.get_property = typec_charger_get_prop;
-+	charger->psy_desc.set_property = typec_charger_set_prop;
-+	charger->psy_desc.property_is_writeable =
-+		typec_charger_is_writeable;
-+	charger->psy_desc.properties = typec_charger_props;
-+	charger->psy_desc.num_properties =
-+				ARRAY_SIZE(typec_charger_props);
-+	charger->psy_desc.usb_types = typec_charger_usb_types;
-+	charger->psy_desc.num_usb_types =
-+			ARRAY_SIZE(typec_charger_usb_types);
-+	psy_cfg.drv_data = charger;
-+
-+	psy = devm_power_supply_register_no_ws(&port->dev, &charger->psy_desc,
-+					       &psy_cfg);
-+	if (IS_ERR(psy)) {
-+		dev_err(&port->dev, "Failed to register Type-C power supply\n");
-+		return ERR_CAST(psy);
-+	}
-+	charger->psy = psy;
-+
-+	return charger;
-+}
-+EXPORT_SYMBOL_GPL(typec_register_charger);
-+
-+/**
-+ * typec_unregister_charger - Unregister a USB Type-C Charger
-+ * @charger: The charger to unregister
-+ *
-+ * Unregisters a charger created with typec_register_charger().
-+ */
-+void typec_unregister_charger(struct typec_charger *charger)
-+{
-+	if (!IS_ERR_OR_NULL(charger))
-+		kfree(charger);
-+}
-+EXPORT_SYMBOL_GPL(typec_unregister_charger);
-+
-+/**
-+ * typec_charger_register_partner - Register a partner with a USB Type-C Charger
-+ * @charger: The charger to add the partner too
-+ * @partner: The partner to add
-+ *
-+ * Add a partner to a Type-C charger to indicate that the partner is connected
-+ * and may be charging.
-+ */
-+void typec_charger_register_partner(struct typec_charger *charger,
-+				    struct typec_partner *partner)
-+{
-+	charger->partner = partner;
-+	typec_charger_changed(charger);
-+}
-+EXPORT_SYMBOL_GPL(typec_charger_register_partner);
-+
-+/**
-+ * typec_charger_unregister_partner - Unregister a USB Type-C Charger partner
-+ * @charger: The charger to remove the partner from
-+ *
-+ * Remove partner added with typec_charger_register_partner().
-+ */
-+void typec_charger_unregister_partner(struct typec_charger *charger)
-+{
-+	if (!IS_ERR_OR_NULL(charger))
-+		charger->partner = NULL;
-+
-+	typec_charger_changed(charger);
-+}
-+EXPORT_SYMBOL_GPL(typec_charger_unregister_partner);
-diff --git a/drivers/usb/typec/charger.h b/drivers/usb/typec/charger.h
-new file mode 100644
-index 000000000000..32cdaa7c1a83
---- /dev/null
-+++ b/drivers/usb/typec/charger.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __USB_TYPEC_CHARGER_H__
-+#define __USB_TYPEC_CHARGER_H__
-+
-+#include <linux/power_supply.h>
-+#include <linux/usb/typec.h>
-+
-+#include "class.h"
-+
-+#define TYPEC_CHARGER_DIR_NAME			"TYPEC_CHARGER%d"
-+#define TYPEC_CHARGER_DIR_NAME_LENGTH		sizeof(TYPEC_CHARGER_DIR_NAME)
-+
-+struct typec_charger {
-+	struct typec_port *port;
-+	struct typec_partner *partner;
-+	char name[TYPEC_CHARGER_DIR_NAME_LENGTH];
-+	struct power_supply *psy;
-+	struct power_supply_desc psy_desc;
-+	int psy_usb_type;
-+	int psy_online;
-+	int psy_status;
-+};
-+
-+struct typec_charger *typec_register_charger(struct typec_port *port);
-+void typec_unregister_charger(struct typec_charger *charger);
-+
-+void typec_charger_register_partner(struct typec_charger *charger,
-+				    struct typec_partner *partner);
-+void typec_charger_unregister_partner(struct typec_charger *charger);
-+void typec_charger_changed(struct typec_charger *charger);
-+
-+#endif /* __USB_TYPEC_CHARGER_H__ */
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index 9a1fdce137b9..1542d3af342c 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- 
- #include "bus.h"
-+#include "charger.h"
- #include "class.h"
- 
- static DEFINE_IDA(typec_index_ida);
-@@ -489,6 +490,12 @@ static void typec_partner_release(struct device *dev)
- {
- 	struct typec_partner *partner = to_typec_partner(dev);
- 
-+	if (IS_ENABLED(CONFIG_TYPEC_CHARGER)) {
-+		struct typec_port *port = to_typec_port(dev->parent);
-+
-+		typec_charger_unregister_partner(port->charger);
-+	}
-+
- 	ida_destroy(&partner->mode_ids);
- 	kfree(partner);
- }
-@@ -580,6 +587,10 @@ struct typec_partner *typec_register_partner(struct typec_port *port,
- 		return ERR_PTR(ret);
- 	}
- 
-+	if (IS_ENABLED(CONFIG_TYPEC_CHARGER) && port->charger) {
-+		typec_charger_register_partner(port->charger, partner);
-+	}
-+
- 	return partner;
- }
- EXPORT_SYMBOL_GPL(typec_register_partner);
-@@ -1283,6 +1294,9 @@ static void typec_release(struct device *dev)
- {
- 	struct typec_port *port = to_typec_port(dev);
- 
-+	if (IS_ENABLED(CONFIG_TYPEC_CHARGER))
-+		typec_unregister_charger(port->charger);
-+
- 	ida_simple_remove(&typec_index_ida, port->id);
- 	ida_destroy(&port->mode_ids);
- 	typec_switch_put(port->sw);
-@@ -1564,7 +1578,8 @@ struct typec_port *typec_register_port(struct device *parent,
- 	id = ida_simple_get(&typec_index_ida, 0, 0, GFP_KERNEL);
- 	if (id < 0) {
- 		kfree(port);
--		return ERR_PTR(id);
-+		ret = id;
-+		goto err_return;
- 	}
- 
- 	switch (cap->type) {
-@@ -1617,32 +1632,47 @@ struct typec_port *typec_register_port(struct device *parent,
- 
- 	port->cap = kmemdup(cap, sizeof(*cap), GFP_KERNEL);
- 	if (!port->cap) {
--		put_device(&port->dev);
--		return ERR_PTR(-ENOMEM);
-+		ret = -ENOMEM;
-+		goto err_put_device;
- 	}
- 
- 	port->sw = typec_switch_get(&port->dev);
- 	if (IS_ERR(port->sw)) {
- 		ret = PTR_ERR(port->sw);
--		put_device(&port->dev);
--		return ERR_PTR(ret);
-+		goto err_put_device;
- 	}
- 
- 	port->mux = typec_mux_get(&port->dev, NULL);
- 	if (IS_ERR(port->mux)) {
- 		ret = PTR_ERR(port->mux);
--		put_device(&port->dev);
--		return ERR_PTR(ret);
-+		goto err_put_device;
- 	}
- 
- 	ret = device_add(&port->dev);
- 	if (ret) {
- 		dev_err(parent, "failed to register port (%d)\n", ret);
--		put_device(&port->dev);
--		return ERR_PTR(ret);
-+		goto err_put_device;
-+	}
-+
-+	if (IS_ENABLED(CONFIG_TYPEC_CHARGER)) {
-+		port->charger = typec_register_charger(port);
-+
-+		if (IS_ERR(port->charger)) {
-+			ret = PTR_ERR(port->charger);
-+			goto err_device_del;
-+		}
- 	}
- 
- 	return port;
-+
-+err_device_del:
-+	device_del(&port->dev);
-+
-+err_put_device:
-+	put_device(&port->dev);
-+
-+err_return:
-+	return ERR_PTR(ret);
- }
- EXPORT_SYMBOL_GPL(typec_register_port);
- 
-diff --git a/drivers/usb/typec/class.h b/drivers/usb/typec/class.h
-index ec933dfe1323..0ff0a590d316 100644
---- a/drivers/usb/typec/class.h
-+++ b/drivers/usb/typec/class.h
-@@ -41,6 +41,8 @@ struct typec_port {
- 	struct typec_switch		*sw;
- 	struct typec_mux		*mux;
- 
-+	struct typec_charger		*charger;
-+
- 	const struct typec_capability	*cap;
- 	const struct typec_operations   *ops;
- };
--- 
-2.26.1.301.g55bc3eb7cb9-goog
+>  static int wled3_set_brightness(struct wled *wled, u16 brightness)
+>  {
+>  	int rc, i;
+> @@ -225,6 +291,25 @@ static int wled4_set_brightness(struct wled *wled, u16 brightness)
+>  	return 0;
+>  }
+>  
+> +static int wled5_set_brightness(struct wled *wled, u16 brightness)
+> +{
+> +	int rc, offset;
+> +	u16 low_limit = wled->max_brightness * 1 / 1000;
 
+Multiplying by 1 is redundant.
+
+
+> +	u8 v[2];
+> +
+> +	/* WLED5's lower limit is 0.1% */
+> +	if (brightness < low_limit)
+> +		brightness = low_limit;
+> +
+> +	v[0] = brightness & 0xff;
+> +	v[1] = (brightness >> 8) & 0x7f;
+> +
+> +	offset = wled5_brightness_reg[wled->cfg.mod_sel];
+> +	rc = regmap_bulk_write(wled->regmap, wled->sink_addr + offset,
+> +			       v, 2);
+> +	return rc;
+> +}
+> +
+>  static void wled_ovp_work(struct work_struct *work)
+>  {
+>  	struct wled *wled = container_of(work,
+> @@ -317,11 +420,67 @@ static int wled4_ovp_fault_status(struct wled *wled, bool *fault_set)
+>  	return rc;
+>  }
+>  
+> +static int wled5_ovp_fault_status(struct wled *wled, bool *fault_set)
+> +{
+> +	int rc;
+> +	u32 int_rt_sts, fault_sts;
+> +
+> +	*fault_set = false;
+> +	rc = regmap_read(wled->regmap,
+> +			wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS,
+> +			&int_rt_sts);
+> +	if (rc < 0) {
+> +		dev_err(wled->dev, "Failed to read INT_RT_STS rc=%d\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	rc = regmap_read(wled->regmap,
+> +			wled->ctrl_addr + WLED3_CTRL_REG_FAULT_STATUS,
+> +			&fault_sts);
+> +	if (rc < 0) {
+> +		dev_err(wled->dev, "Failed to read FAULT_STATUS rc=%d\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	if (int_rt_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
+> +		*fault_set = true;
+> +
+> +	if (fault_sts & (WLED3_CTRL_REG_OVP_FAULT_BIT |
+> +			       WLED5_CTRL_REG_OVP_PRE_ALARM_BIT))
+
+Correct me if I'm wrong but isn't the only difference between the WLED4
+and WLED5 code that the wled5 code also checks the
+WLED5_CTRL_REG_OVP_PRE_ALARM_BIT ?
+
+If so why do we need to pull out (and duplicate) this code code using
+the function pointers?
+
+> +		*fault_set = true;
+> +
+> +	if (*fault_set)
+> +		dev_dbg(wled->dev, "WLED OVP fault detected, int_rt_sts=0x%x fault_sts=0x%x\n",
+> +			int_rt_sts, fault_sts);
+> +
+> +	return rc;
+> +}
+> +
+> @@ -615,6 +797,7 @@ static void wled_auto_string_detection(struct wled *wled)
+>  
+>  #define WLED_AUTO_DETECT_OVP_COUNT		5
+>  #define WLED_AUTO_DETECT_CNT_DLY_US		USEC_PER_SEC
+> +
+
+Nit picking but this additional line is in the wrong patch ;-)
+
+
+>  static bool wled4_auto_detection_required(struct wled *wled)
+>  {
+>  	s64 elapsed_time_us;
+> @@ -648,6 +831,46 @@ static bool wled4_auto_detection_required(struct wled *wled)
+>  	return false;
+>  }
+>  
+> +static bool wled5_auto_detection_required(struct wled *wled)
+> +{
+> +	s64 elapsed_time_us;
+> +
+> +	if (!wled->cfg.auto_detection_enabled)
+> +		return false;
+> +
+> +	/*
+> +	 * Check if the OVP fault was an occasional one
+> +	 * or if it's firing continuously, the latter qualifies
+> +	 * for an auto-detection check.
+> +	 */
+> +	if (!wled->auto_detection_ovp_count) {
+> +		wled->start_ovp_fault_time = ktime_get();
+> +		wled->auto_detection_ovp_count++;
+> +	} else {
+> +		/*
+> +		 * WLED5 has OVP fault density interrupt configuration i.e. to
+> +		 * count the number of OVP alarms for a certain duration before
+> +		 * triggering OVP fault interrupt. By default, number of OVP
+> +		 * fault events counted before an interrupt is fired is 32 and
+> +		 * the time interval is 12 ms. If we see more than one OVP fault
+> +		 * interrupt, then that should qualify for a real OVP fault
+> +		 * condition to run auto calibration algorithm.
+> +		 */
+
+Given the above why do we have a software mechanism to wait until the
+second time the interrupt fires? I'm a bit rusty on this driver but
+wasn't there already some mechanism to slightly delay turning on the
+fault detection?
+
+
+Daniel.
