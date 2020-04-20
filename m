@@ -2,118 +2,102 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256E8C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815D7C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDEC8207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587403834;
-	bh=WJI0iLfDsytzXcwanqGsflVdhW1CScnnDHgpeUZuVRc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=We0VgU+hNYBk7gpi0ex8YeSFuedDaN10WOX+30Y/1QnMDAHaFi0VGGTqFufhvc7JS
-	 vWFom2pPBnHPEXRg8kIo2AquVIJyX57srsC20BWNOUvneS4zZYsNV1N8xAlO/R00nq
-	 4ciZ0CIfSxkijyz5QuvVGo/hg8+EtgRIcsrFgMCM=
+	by mail.kernel.org (Postfix) with ESMTP id 6C0A7207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgDTRac (ORCPT
+        id S1726858AbgDTRal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgDTRab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:30:31 -0400
-Received: from tleilax.com (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 573C520782;
-        Mon, 20 Apr 2020 17:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587403831;
-        bh=WJI0iLfDsytzXcwanqGsflVdhW1CScnnDHgpeUZuVRc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eMzXdyGJCECydOrsTRmLVZPCtkcGTNjT3cKOddec8xU0idn1+l802im22eRVe3KkN
-         6TyKXjzeT3OIURok6NEh/XQqrpqG4Jj52euu5GiicrNYo78HqFOTh3lZO0vMRjM2Xi
-         XtJfs6xiBSrMymwsRHycyZ37qTi/6N6M+9XC37UE=
-From:   Jeff Layton <jlayton@kernel.org>
-To:     linux-man@vger.kernel.org
-Cc:     linux-api@vger.kernel.org, viro@zeniv.linux.org.uk,
-        akpm@linux-foundation.org, andres@anarazel.de, dhowells@redhat.com,
-        willy@infradead.org, hch@infradead.org, jack@suse.cz,
-        david@fromorbit.com, linux-kernel@vger.kernel.org
-Subject: [RFC man-pages PATCH] sync.2: add details about new syncfs() behavior
-Date:   Mon, 20 Apr 2020 13:30:29 -0400
-Message-Id: <20200420173029.31627-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.25.3
+        Mon, 20 Apr 2020 13:30:41 -0400
+Received: from smtprelay0214.hostedemail.com ([216.40.44.214]:39548 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726396AbgDTRaj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:30:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id CD7071802EC18;
+        Mon, 20 Apr 2020 17:30:37 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wire77_794acccb34a52
+X-Filterd-Recvd-Size: 2900
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 20 Apr 2020 17:30:33 +0000 (UTC)
+Message-ID: <0cff04825062a6e4b04a19cac80152b9943402b1.camel@perches.com>
+Subject: Re: [PATCHv3 01/50] kallsyms/printk: Add loglvl to print_ip_sym()
+From:   Joe Perches <joe@perches.com>
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Michal Simek <monstr@monstr.eu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Will Deacon <will@kernel.org>, linux-mips@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Date:   Mon, 20 Apr 2020 10:28:17 -0700
+In-Reply-To: <7616c5f4-def1-7362-ceef-db76107b9c2b@arista.com>
+References: <20200418201944.482088-1-dima@arista.com>
+         <20200418201944.482088-2-dima@arista.com>
+         <24a1f021e52ccabfd53baa22b93947ef10e6bf3b.camel@perches.com>
+         <7616c5f4-def1-7362-ceef-db76107b9c2b@arista.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syncfs() now also returns errors if writeback fails.
+On Mon, 2020-04-20 at 18:25 +0100, Dmitry Safonov wrote:
+> Hi Joe,
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- man2/sync.2 | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+Hi Dmitry.
 
-This patch shouldn't be merged until the relevant kernel patch series
-has been merge. I'm hoping to get this into v5.8:
+> On 4/18/20 9:40 PM, Joe Perches wrote:
+> > On Sat, 2020-04-18 at 21:18 +0100, Dmitry Safonov wrote:
+> > > print_ip_sym() needs to have a log level parameter to comply with other
+> > > parts being printed. Otherwise, half of the expected backtrace would be
+> > > printed and other may be missing with some logging level.
+> > 
+> > I'd rather create another extension to %ps that also emits
+> > the [<address>] along with the symbol lookup and retire
+> > print_ip_sym altogether.
+> 
+> Makes sense.
+> Would you mind if I'll do it on the top of these patches?
+> [not to mix new printk-format with patches those add loglvl parameter]
 
-    [PATCH v6 0/2] vfs: have syncfs() return error when there are writeback errors
+Of course not, but the proposal below doesn't compile
+and I've been playing with a slightly different
+implementation.
 
-diff --git a/man2/sync.2 b/man2/sync.2
-index 7198f3311b05..a025080713ed 100644
---- a/man2/sync.2
-+++ b/man2/sync.2
-@@ -86,11 +86,26 @@ to indicate the error.
- is always successful.
- .PP
- .BR syncfs ()
--can fail for at least the following reason:
-+can fail for at least the following reasons:
- .TP
- .B EBADF
- .I fd
- is not a valid file descriptor.
-+.TP
-+.B EIO
-+An error occurred during synchronization.
-+This error may relate to data written to any file on the filesystem, or on
-+metadata related to the filesytem itself.
-+.TP
-+.B ENOSPC
-+Disk space was exhausted while synchronizing.
-+.TP
-+.BR ENOSPC ", " EDQUOT
-+Data was written to a files on NFS or another filesystem which does not
-+allocate space at the time of a
-+.BR write (2)
-+system call, and some previous write failed due to insufficient
-+storage space.
- .SH VERSIONS
- .BR syncfs ()
- first appeared in Linux 2.6.39;
-@@ -121,6 +136,13 @@ or
- .BR syncfs ()
- provide the same guarantees as fsync called on every file in
- the system or filesystem respectively.
-+.PP
-+In mainline kernel versions prior to 5.8,
-+.\" commit <<< TBD >>>
-+.BR syncfs ()
-+will only fail with EBADF when passed a bad file descriptor. In 5.8
-+and later kernels, it will also report an error if one or more inodes failed
-+to be written back since the last syncfs call.
- .SH BUGS
- Before version 1.3.20 Linux did not wait for I/O to complete
- before returning.
--- 
-2.25.3
+I'll post it in a few days.
+
 
