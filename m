@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC39C55183
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214C7C55182
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A822A20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE3020BED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="DkH0cJIW"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="jSJCSfFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgDTWLr (ORCPT
+        id S1728091AbgDTWLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:11:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38082 "EHLO
+        Mon, 20 Apr 2020 18:11:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgDTWLo (ORCPT
+        with ESMTP id S1728014AbgDTWLs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:11:44 -0400
+        Mon, 20 Apr 2020 18:11:48 -0400
 Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD39C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:11:43 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id x8so8844179qtp.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:11:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17923C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:11:48 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id o10so10031262qtr.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:11:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=T7/z7NMewJSIi2itFoYhlm0aJz+TzGla37jQr9d/NIQ=;
-        b=DkH0cJIWSxLVdQu3FuqQ6xuCWHM39JsPRR6UFozRIF79nnzQlMdLi7EsaGotcqDA0e
-         mNCEoz7y0HOoBLz8deGU0CU2oVJztygMslxineP4v3GTFiAHGm4eQpca6dq0xW06C/MO
-         CoLBEidF1VHQMiolPK5tH8rqy/W4Ht/Xog9SjtOCtiUV2iJOwa5jS1H+H5ZbxvEqqoSs
-         /i7hQwgNO2XWIRMa1RxwCGoLHG+Lo3vjNXq7LMVY+yWi8szuGGn4UDdrP9UJoEmYZxO3
-         oAfPtfRd37MeP5qQNnUbjZPMqHQLwi8MrXy+3jsseVCy4fJ0jGfuLZghtHfEHs57jIfS
-         Mz4g==
+        bh=qdvfGvgiqTSSOoBTgsdkzUj0PUR50dAV0CLgbDwpjiQ=;
+        b=jSJCSfFnTO4OPR2PXMMzBOLsjd60fYz1Vz33KEeQxmcKLLFNqwHx+eXNUVCnUa2jgm
+         MQ4870epg/fzfEnY9kY5ISvA7kYnVP/9AuHpnpKNUl/oO0szqT26wFUh2CLiVtMBuEeT
+         ZQ5OHAfKrv2ncOOfaqOue/BLHXBNj0mcCmcukxAk66reBSpYugVJdzKsveaTJa52j0jM
+         8hWWqm8AlHfx56RV3dkaOZgwf/VK1N06+y7NVVNpwC6B7rOoga8lfZ2wESPCMrP38XY9
+         mNp05N9AcF1W0XAbs5y1ZVxleAKBZyozJujlPFrpgen1kBAtNDHA683yLdfD8tP2K5ne
+         g74w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=T7/z7NMewJSIi2itFoYhlm0aJz+TzGla37jQr9d/NIQ=;
-        b=UJaSj4is+mt8Y1WyoHbhH0b4m+xmzqdWfRZhSelVT7YTCVyzR1BKwHf3u5s3oTJBAl
-         L0AZvEKJi2+wzwF5xTUysZRJFkJAJPNCDl6/zpiYa6Lh+SM4Iupn0VLt1JBKfjWE/Qo7
-         X/Rt2+5kpT7+CJ/zZEXO5IlBipRoDkPCzx3VIv/+t4BTo0yG51nCkMLadJgnkVQjMPBj
-         jpAQsrk8E1iucq7XYgAcbHY//q5D4fJNp9mUJVMSM+SLSVAjJGKzFbrX0sD1xK77SJy9
-         7M0rm8+1qtANksSPT0SfDjPCz5KupALXAROfhVZLpuMegiZxgFG9kblmrGLnlp4/Xc5y
-         65gw==
-X-Gm-Message-State: AGi0PuYiBDatC5bDUkk2Qug94sCmmzPkLy1T9tWD8r0XY2xAlYt6NU57
-        /c7RIsh2guAvDFZnVMYwqk4ABA==
-X-Google-Smtp-Source: APiQypIX1NRNeD/ZDLr7me0AtRIIPQ0sv2K/iH3epenr+0kAb6qHkWrCRyhhYf5EM6qgF7KVBtQkXg==
-X-Received: by 2002:ac8:7c96:: with SMTP id y22mr18152524qtv.17.1587420702984;
-        Mon, 20 Apr 2020 15:11:42 -0700 (PDT)
+        bh=qdvfGvgiqTSSOoBTgsdkzUj0PUR50dAV0CLgbDwpjiQ=;
+        b=p+S7pmYskpdd3YlmSePnL+4lZyj6lFUpzXro5EUlrcbMNfVk2AugYFiq4NlVF08WoT
+         9WP/Cy27UudYSsn/KymnrYBOStDzQ9PvCS7Gq2tufKkf6SNrp3n7a1vcg+XT43XvEmU1
+         wYGlgvWwF+Pw/wjS+AbnYWW3VeqriwHsXMqTv/mJ2EAQvQeDhLbXm6FbWreQX9OCx8Cp
+         1UHzKltxrcr+4IehaLjIH0n+cjfrCgJXYdTiVGT2pqKiRshP/jfaCJlQuhdc4yf8uyYi
+         MFO229CqmzdvTRMCoesnaXX0pZImGTBPhe5g1NmbiIN0rpzUxYkwfvCGg88Wm1Nzi1XM
+         D+pQ==
+X-Gm-Message-State: AGi0PuY5S8r73jfq8RhyHDbHNL0IbEnwi+uo45lFX3mTtRjF7/gQpVRS
+        GMlt5vm/CR+OIs9ZtDcKZEBSGQ==
+X-Google-Smtp-Source: APiQypLfSIi+vdlDFawvJqDgWwzmcuPG3NT3Wp2BJPzm3VNpRR8NI6wXFm3m0cUbCRlugdLi8j0DTQ==
+X-Received: by 2002:ac8:16d2:: with SMTP id y18mr18682751qtk.64.1587420707285;
+        Mon, 20 Apr 2020 15:11:47 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:e6b6])
-        by smtp.gmail.com with ESMTPSA id m25sm606580qkg.83.2020.04.20.15.11.41
+        by smtp.gmail.com with ESMTPSA id j2sm426943qth.57.2020.04.20.15.11.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 15:11:42 -0700 (PDT)
+        Mon, 20 Apr 2020 15:11:46 -0700 (PDT)
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Joonsoo Kim <js1304@gmail.com>,
         Alex Shi <alex.shi@linux.alibaba.com>
@@ -69,9 +69,9 @@ Cc:     Shakeel Butt <shakeelb@google.com>,
         Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
         cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com
-Subject: [PATCH 02/18] mm: memcontrol: fix theoretical race in charge moving
-Date:   Mon, 20 Apr 2020 18:11:10 -0400
-Message-Id: <20200420221126.341272-3-hannes@cmpxchg.org>
+Subject: [PATCH 04/18] mm: memcontrol: move out cgroup swaprate throttling
+Date:   Mon, 20 Apr 2020 18:11:12 -0400
+Message-Id: <20200420221126.341272-5-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200420221126.341272-1-hannes@cmpxchg.org>
 References: <20200420221126.341272-1-hannes@cmpxchg.org>
@@ -82,87 +82,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The move_lock is a per-memcg lock, but the VM accounting code that
-needs to acquire it comes from the page and follows page->mem_cgroup
-under RCU protection. That means that the page becomes unlocked not
-when we drop the move_lock, but when we update page->mem_cgroup. And
-that assignment doesn't imply any memory ordering. If that pointer
-write gets reordered against the reads of the page state -
-page_mapped, PageDirty etc. the state may change while we rely on it
-being stable and we can end up corrupting the counters.
+The cgroup swaprate throttling is about matching new anon allocations
+to the rate of available IO when that is being throttled. It's the io
+controller hooking into the VM, rather than a memory controller thing.
 
-Place an SMP memory barrier to make sure we're done with all page
-state by the time the new page->mem_cgroup becomes visible.
+Rename mem_cgroup_throttle_swaprate() to cgroup_throttle_swaprate(),
+and drop the @memcg argument which is only used to check whether the
+preceding page charge has succeeded and the fault is proceeding.
 
-Also replace the open-coded move_lock with a lock_page_memcg() to make
-it more obvious what we're serializing against.
+We could decouple the call from mem_cgroup_try_charge() here as well,
+but that would cause unnecessary churn: the following patches convert
+all callsites to a new charge API and we'll decouple as we go along.
 
 Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- mm/memcontrol.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ include/linux/swap.h |  6 ++----
+ mm/memcontrol.c      |  5 ++---
+ mm/swapfile.c        | 14 +++++++-------
+ 3 files changed, 11 insertions(+), 14 deletions(-)
 
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index b835d8dbea0e..e0380554f4c4 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -645,11 +645,9 @@ static inline int mem_cgroup_swappiness(struct mem_cgroup *mem)
+ #endif
+ 
+ #if defined(CONFIG_SWAP) && defined(CONFIG_MEMCG) && defined(CONFIG_BLK_CGROUP)
+-extern void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg, int node,
+-					 gfp_t gfp_mask);
++extern void cgroup_throttle_swaprate(struct page *page, gfp_t gfp_mask);
+ #else
+-static inline void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg,
+-						int node, gfp_t gfp_mask)
++static inline void cgroup_throttle_swaprate(struct page *page, gfp_t gfp_mask)
+ {
+ }
+ #endif
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 5beea03dd58a..41f5ed79272e 100644
+index 5ed8f6651383..711d6dd5cbb1 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -5372,7 +5372,6 @@ static int mem_cgroup_move_account(struct page *page,
+@@ -6493,12 +6493,11 @@ int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
+ int mem_cgroup_try_charge_delay(struct page *page, struct mm_struct *mm,
+ 			  gfp_t gfp_mask, struct mem_cgroup **memcgp)
  {
- 	struct lruvec *from_vec, *to_vec;
- 	struct pglist_data *pgdat;
--	unsigned long flags;
- 	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
+-	struct mem_cgroup *memcg;
  	int ret;
- 	bool anon;
-@@ -5399,18 +5398,13 @@ static int mem_cgroup_move_account(struct page *page,
- 	from_vec = mem_cgroup_lruvec(from, pgdat);
- 	to_vec = mem_cgroup_lruvec(to, pgdat);
  
--	spin_lock_irqsave(&from->move_lock, flags);
-+	lock_page_memcg(page);
+ 	ret = mem_cgroup_try_charge(page, mm, gfp_mask, memcgp);
+-	memcg = *memcgp;
+-	mem_cgroup_throttle_swaprate(memcg, page_to_nid(page), gfp_mask);
++	if (*memcgp)
++		cgroup_throttle_swaprate(page, gfp_mask);
+ 	return ret;
+ }
  
- 	if (!anon && page_mapped(page)) {
- 		__mod_lruvec_state(from_vec, NR_FILE_MAPPED, -nr_pages);
- 		__mod_lruvec_state(to_vec, NR_FILE_MAPPED, nr_pages);
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 9c9ab44780ba..74543137371b 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -3744,11 +3744,12 @@ static void free_swap_count_continuations(struct swap_info_struct *si)
+ }
+ 
+ #if defined(CONFIG_MEMCG) && defined(CONFIG_BLK_CGROUP)
+-void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg, int node,
+-				  gfp_t gfp_mask)
++void cgroup_throttle_swaprate(struct page *page, gfp_t gfp_mask)
+ {
+ 	struct swap_info_struct *si, *next;
+-	if (!(gfp_mask & __GFP_IO) || !memcg)
++	int nid = page_to_nid(page);
++
++	if (!(gfp_mask & __GFP_IO))
+ 		return;
+ 
+ 	if (!blk_cgroup_congested())
+@@ -3762,11 +3763,10 @@ void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg, int node,
+ 		return;
+ 
+ 	spin_lock(&swap_avail_lock);
+-	plist_for_each_entry_safe(si, next, &swap_avail_heads[node],
+-				  avail_lists[node]) {
++	plist_for_each_entry_safe(si, next, &swap_avail_heads[nid],
++				  avail_lists[nid]) {
+ 		if (si->bdev) {
+-			blkcg_schedule_throttle(bdev_get_queue(si->bdev),
+-						true);
++			blkcg_schedule_throttle(bdev_get_queue(si->bdev), true);
+ 			break;
+ 		}
  	}
- 
--	/*
--	 * move_lock grabbed above and caller set from->moving_account, so
--	 * mod_memcg_page_state will serialize updates to PageDirty.
--	 * So mapping should be stable for dirty pages.
--	 */
- 	if (!anon && PageDirty(page)) {
- 		struct address_space *mapping = page_mapping(page);
- 
-@@ -5426,15 +5420,23 @@ static int mem_cgroup_move_account(struct page *page,
- 	}
- 
- 	/*
-+	 * All state has been migrated, let's switch to the new memcg.
-+	 *
- 	 * It is safe to change page->mem_cgroup here because the page
--	 * is referenced, charged, and isolated - we can't race with
--	 * uncharging, charging, migration, or LRU putback.
-+	 * is referenced, charged, isolated, and locked: we can't race
-+	 * with (un)charging, migration, LRU putback, or anything else
-+	 * that would rely on a stable page->mem_cgroup.
-+	 *
-+	 * Note that lock_page_memcg is a memcg lock, not a page lock,
-+	 * to save space. As soon as we switch page->mem_cgroup to a
-+	 * new memcg that isn't locked, the above state can change
-+	 * concurrently again. Make sure we're truly done with it.
- 	 */
-+	smp_mb();
- 
--	/* caller should have done css_get */
--	page->mem_cgroup = to;
-+	page->mem_cgroup = to; 	/* caller should have done css_get */
- 
--	spin_unlock_irqrestore(&from->move_lock, flags);
-+	__unlock_page_memcg(from);
- 
- 	ret = 0;
- 
 -- 
 2.26.0
 
