@@ -2,464 +2,753 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D308C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E342C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2919D20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAD120672
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:26:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="dyFeAmcf";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="cSrWn2po"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ChLEMWNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgDTEUs (ORCPT
+        id S1726009AbgDTE0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 00:20:48 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:18286 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgDTEUs (ORCPT
+        Mon, 20 Apr 2020 00:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgDTE0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 00:20:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1587356447; x=1618892447;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=8nRkcxVAyAVgErzy4y29tSdaJVgliKQGbUtVr3zQF/o=;
-  b=dyFeAmcflygsVfktauDYByPWtM92EMYUFulOWtDmj+awCnk+6VsaykoI
-   lWES3stlysOG7SfUzsxDj9f9O4CamjCHek1egplr4CWKIsBiisWQMMQHv
-   DbELIbXzDmb58i8Sfniv0AJh8fpCipyeMVlTsIOqwhEayLvt8w0OY5Zv5
-   jx/jG9RzLpSU7vkRK52qnRIqcgZxi4I2WDkZcuHbVSNJq7ahnnWBVb1Px
-   xKon/0BAYpzCcJnJ+iQ5Uz/ygURTAeBiSsgjWlBpKKtkxM2mhHhhlEIBr
-   qB187wP0/sNRi2VhUoOhYWxyHMXIdSQ27LxUqRUS1qRQH8uA3zW5Wj4GG
-   g==;
-IronPort-SDR: STCYjek4Z+dkO0bUqNVhRM0z14uMJxgvNebTDv0nAtRJA2ZuySqidkpHKE65fJ2xdscv7cgrVE
- 8JNMgti1tDYXHsEjcHJSBUypxFDts4SPV4JuuCtvSIDm9FKDuQJ8uPHLXZzI/Ie1xxNklUwN7D
- igXsEXs4KQqbxOuM6kCte9lxYTZEoMDLiuFdrZz/6esnRT4msFE8sgaBl8V9la9I3Rv+CDAwIp
- RLF2ixHEJWKqyMUJu9hx0dmfpYXNkhVK6/puihRZ5X2L+WHpbUR5LApFB3ctdQdSkhMQCTZYgl
- F24=
-X-IronPort-AV: E=Sophos;i="5.72,405,1580745600"; 
-   d="scan'208";a="135988705"
-Received: from mail-mw2nam12lp2048.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.48])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Apr 2020 12:20:42 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HN/HLHBXW22AEAmDPILrnevJPIQhzYkzwL7v74vZGb5S7qGEaaUNPOXHVa2+aPnkjpt37QUVO/g6QSgUtDhEPKW/JOTxM9WMKOEVZEsmhGkhICHWHrs4S6zR77NCvYyR+JJa14sS3e6/zMP+hN0PhqvQZHgGJRvlnooUupT27+ZrqzMV5QLANu6ZW0cP1lM1M7mvZzHt0DraTgFrtjhc08ip4q7AKBRwrzFvZVbVJV4nmrsYfsc64eB/RCb2Ya/ckUIsdJIwNsFFvhnsHZdqdV/8IXEeVS5lS6sy9KvizLl5UdONppIJjn0NFjGC+xJJqCzulWu4MO7X10GCp5ptRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8nRkcxVAyAVgErzy4y29tSdaJVgliKQGbUtVr3zQF/o=;
- b=j4sqzoISubhbjvTiozHyEz3anf/Me8x7lxZNRRek0pb0pA44CLtV3LxKaZeYRnDcMbR9l0Cec2om5geHWPlZsbtXC7RL/hq7NBQwGgdk1y+2xsLf/EF3QKfmpy55JJ3XbxLwZb7xGZx4VXuQiNJc+H56hLpRqs7SQRrbpuffCALaOqzoUIAmtc5ZqFLRIR0r7B33nIMmMp5pxYvVws/+QidagOhOn0O930b/yR4XCr8K1GFFwvNElTUv/u/RKYDUaXKB91OFJ6cReV0T1XJS96LHJOh9RS4V9+RWPlUlV4UfqWGVkGPbIftXv0Ld3Sk5hLjcQQZ1BsDY329d+X1+DQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8nRkcxVAyAVgErzy4y29tSdaJVgliKQGbUtVr3zQF/o=;
- b=cSrWn2pogdkQ0Ux9dhBCybNNwpHsBYRmXM0r1Ph2dnaoMsRHBSZfBL+FBUpAS+WZqL/THoPNLK3i21Up6tn7pE6SrcfYHi8pw8Yi8M9mvbCEQ8D62k3sMICOyiSgOug60yh4g0r+brdUa9fJjPSG3olhWZrFvFU9XlLLjs6PKfE=
-Received: from BY5PR04MB6724.namprd04.prod.outlook.com (2603:10b6:a03:219::15)
- by BY5PR04MB7091.namprd04.prod.outlook.com (2603:10b6:a03:227::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Mon, 20 Apr
- 2020 04:20:40 +0000
-Received: from BY5PR04MB6724.namprd04.prod.outlook.com
- ([fe80::5591:a2e7:4fad:6b0c]) by BY5PR04MB6724.namprd04.prod.outlook.com
- ([fe80::5591:a2e7:4fad:6b0c%6]) with mapi id 15.20.2921.030; Mon, 20 Apr 2020
- 04:20:40 +0000
-From:   Atish Patra <Atish.Patra@wdc.com>
-To:     "atishp@atishpatra.org" <atishp@atishpatra.org>,
-        "ardb@kernel.org" <ardb@kernel.org>
-CC:     "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "will@kernel.org" <will@kernel.org>
-Subject: Re: [v3 PATCH 5/5] RISC-V: Add EFI stub support.
-Thread-Topic: [v3 PATCH 5/5] RISC-V: Add EFI stub support.
-Thread-Index: AQHWE1+28FOiVu5TgkiR99oyVUE/r6h7XhGAgALW74CAAILMgIAAHjUAgABv1oCAAAF7gIACJ+EA
-Date:   Mon, 20 Apr 2020 04:20:39 +0000
-Message-ID: <b6a28d62be4d42319fca2adaad755612ef094667.camel@wdc.com>
-References: <20200415195422.19866-1-atish.patra@wdc.com>
-         <20200415195422.19866-6-atish.patra@wdc.com>
-         <CAMj1kXFRqTYr7_M_j6oN1-xnQ6V4uCYK49yAbjvrf1BB823Cng@mail.gmail.com>
-         <CAOnJCUK3fqsR93ewYMUkanh+x1EJN_3QwkFjSDDZZr2MjzpnUQ@mail.gmail.com>
-         <CAMj1kXFOkARJ9k81pu-LuHEd7H7AZRRrquzVN-WQ3J239JUZTw@mail.gmail.com>
-         <CAMj1kXGv8XrXJ=Tx88O38a9UYM3iuBevg5NXRpMrny1XJZGB7A@mail.gmail.com>
-         <CAOnJCUJOY_84eesRreVyEQKjL2awkehcFi5ydMv0USNeaFHd6A@mail.gmail.com>
-         <CAMj1kXHLfXOp=JQhAeFx6oazFp=kqiS0TMTV06ZthTFg6QdzWw@mail.gmail.com>
-In-Reply-To: <CAMj1kXHLfXOp=JQhAeFx6oazFp=kqiS0TMTV06ZthTFg6QdzWw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Atish.Patra@wdc.com; 
-x-originating-ip: [2601:641:500:3bd0:3a49:27ae:9617:88a2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dd67f4c5-958c-405a-3049-08d7e4e22f23
-x-ms-traffictypediagnostic: BY5PR04MB7091:
-x-microsoft-antispam-prvs: <BY5PR04MB70913362A713AF6AF07FAFB4FAD40@BY5PR04MB7091.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 03793408BA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6724.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(478600001)(53546011)(186003)(5660300002)(81156014)(30864003)(6506007)(8676002)(71200400001)(110136005)(54906003)(66946007)(66476007)(8936002)(76116006)(64756008)(66556008)(66446008)(2616005)(2906002)(4326008)(36756003)(6512007)(7416002)(6486002)(86362001)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YppD5pevyxv90o7P2CpEt6v8AmF73gDRTGyQIr5MUb3MCDWQbhvE2UbjTM5I5FRr6WrxhFwTBXJ5aBRoiSC4ixGYVngn82IN86JQkuYMQQAhXxRzK6jvrFU544S8z55E+aa8zjLzIAkEXCqfWXBjHn7uTrVx3OXtBoIuy3fE76SnFILaDkb6GjrmbRBbH1LOY0eyY7Hh4j/1KggMOF6/XbAzAQUWrxqzeKR51URLnJP9VGanuG7UTT64UBpiGER+3I84yIFvx5dF38OGLwlBM64/N5QenZHuhQlmMdeTLDJV3n9ESX2AjmXXcjaTmqXIyGvdqq6Ll0WLsDRWOa8UPOLpJOUQVSjYIMiiT5m1Xcb2YyBsEeXHypXTfeXJjOgfiHsnGXzDtE/8Dw1Gm84SL3ibLv2YP0x7wTUFT7L9d3d9LMORYdIDXAw5znErWf/h
-x-ms-exchange-antispam-messagedata: cAMLuxC4Ket6+wHFYJD/GOb0yEz05wOiI3DA9R2p3RPlG8W9nXrLUlcYzdaBCg7E2v782tBpAyRI13crvwEtDQ4Pxi4l8/v7CYDWtzehV7fgQ7so41ydjhDnjnHVuA7CjCt2R4KEEuncP095dXq215JDV+EQUecBs3nV5rblxYcFH5kIYdp39zG0ZLyR1LShljyIoaYq2sTgMAbw1U/qaw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0E26D5F32087334A8A420A389EACEE3F@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 20 Apr 2020 00:26:16 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D8EC061A0C;
+        Sun, 19 Apr 2020 21:26:15 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 495DCl3y7cz9s71;
+        Mon, 20 Apr 2020 14:26:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587356771;
+        bh=jW6+I11fxU183TABBa8rlTARNMpCmEo0k9wQT8gldeo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ChLEMWNiH/U6Qhx4va/wo5qXRcX+uLOtC6cP6h2T1leKhAoySZfpzDlWonEEL9EjX
+         dK1S4g8gTXeefbep23z2gO/v8iIdUqf/h+krF/Cn/wyZaE+1LPtMoZMxQsl58mBHMo
+         4za0AZ0tM/fSJ2J90UXoG4CKQ17mS7hekIcAySaBVXnc5BEZ7pVVJqaKtFIjY7G9SP
+         T6DhVhCDpPCZH/hEaoxBsnCr+ObCG6CAix4ulbvU3Vvx3wisi/XUxHeznzuUxTpI1k
+         I3E2Hls1Lhs26Af+1DTFzUCXBOIs188VbuQAouXUxN6/HkT88NyqN8jqXfhodG6HLr
+         gErQAWXVJaAKQ==
+Date:   Mon, 20 Apr 2020 14:26:10 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Apr 20
+Message-ID: <20200420142610.390e5922@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd67f4c5-958c-405a-3049-08d7e4e22f23
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 04:20:39.8611
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0WD4iNMFDV71+Mt1YvYm68VcIYWG8zB5jIwoT0FFBJ56vOh2H7MzeOXo/rIisdsg6EhLVFOTDC1Dre4Ug2pZsQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7091
+Content-Type: multipart/signed; boundary="Sig_/eexMcoPIbzfUrTWo9fk5aDt";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTA0LTE4IGF0IDIxOjI0ICswMjAwLCBBcmQgQmllc2hldXZlbCB3cm90ZToN
-Cj4gT24gU2F0LCAxOCBBcHIgMjAyMCBhdCAyMToxOSwgQXRpc2ggUGF0cmEgPGF0aXNocEBhdGlz
-aHBhdHJhLm9yZz4NCj4gd3JvdGU6DQo+ID4gT24gU2F0LCBBcHIgMTgsIDIwMjAgYXQgNTozOSBB
-TSBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPg0KPiA+IHdyb3RlOg0KPiA+ID4gT24g
-U2F0LCAxOCBBcHIgMjAyMCBhdCAxMjo1MSwgQXJkIEJpZXNoZXV2ZWwgPGFyZGJAa2VybmVsLm9y
-Zz4NCj4gPiA+IHdyb3RlOg0KPiA+ID4gPiBPbiBTYXQsIDE4IEFwciAyMDIwIGF0IDA1OjAzLCBB
-dGlzaCBQYXRyYSA8DQo+ID4gPiA+IGF0aXNocEBhdGlzaHBhdHJhLm9yZz4gd3JvdGU6DQo+ID4g
-PiA+ID4gT24gVGh1LCBBcHIgMTYsIDIwMjAgYXQgMTI6NDEgQU0gQXJkIEJpZXNoZXV2ZWwgPA0K
-PiA+ID4gPiA+IGFyZGJAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4gPiA+ID4gPiBPbiBXZWQsIDE1
-IEFwciAyMDIwIGF0IDIxOjU0LCBBdGlzaCBQYXRyYSA8DQo+ID4gPiA+ID4gPiBhdGlzaC5wYXRy
-YUB3ZGMuY29tPiB3cm90ZToNCj4gPiA+ID4gPiA+ID4gQWRkIGEgUklTQy1WIGFyY2hpdGVjdHVy
-ZSBzcGVjaWZpYyBzdHViIGNvZGUgdGhhdA0KPiA+ID4gPiA+ID4gPiBhY3R1YWxseSBjb3BpZXMg
-dGhlDQo+ID4gPiA+ID4gPiA+IGFjdHVhbCBrZXJuZWwgaW1hZ2UgdG8gYSB2YWxpZCBhZGRyZXNz
-IGFuZCBqdW1wIHRvIGl0DQo+ID4gPiA+ID4gPiA+IGFmdGVyIGJvb3Qgc2VydmljZXMNCj4gPiA+
-ID4gPiA+ID4gYXJlIHRlcm1pbmF0ZWQuIEVuYWJsZSBVRUZJIHJlbGF0ZWQga2VybmVsIGNvbmZp
-Z3MgYXMNCj4gPiA+ID4gPiA+ID4gd2VsbCBmb3IgUklTQy1WLg0KPiA+ID4gPiA+ID4gPiANCj4g
-PiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQXRpc2ggUGF0cmEgPGF0aXNoLnBhdHJhQHdkYy5j
-b20+DQo+ID4gPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gPiAgYXJjaC9yaXNjdi9LY29uZmln
-ICAgICAgICAgICAgICAgICAgICAgICAgfCAgMjAgKysrKw0KPiA+ID4gPiA+ID4gPiAgYXJjaC9y
-aXNjdi9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiA+ID4gPiA+ID4g
-PiAgYXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgfCAgIDEgKw0KPiA+
-ID4gPiA+ID4gPiAgYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9lZmkuaCAgICAgICAgICAgICAgfCAg
-NDQNCj4gPiA+ID4gPiA+ID4gKysrKysrKysrDQo+ID4gPiA+ID4gPiA+ICBkcml2ZXJzL2Zpcm13
-YXJlL2VmaS9LY29uZmlnICAgICAgICAgICAgICB8ICAgMiArLQ0KPiA+ID4gPiA+ID4gPiAgZHJp
-dmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi9NYWtlZmlsZSAgICAgfCAgIDcgKysNCj4gPiA+ID4g
-PiA+ID4gIGRyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIvcmlzY3Ytc3R1Yi5jIHwgMTExDQo+
-ID4gPiA+ID4gPiA+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+ID4gPiA+ID4gIDcgZmls
-ZXMgY2hhbmdlZCwgMTg1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiA+ID4gPiA+
-ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2VmaS5oDQo+ID4g
-PiA+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1
-Yi9yaXNjdi0NCj4gPiA+ID4gPiA+ID4gc3R1Yi5jDQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
-ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9LY29uZmlnIGIvYXJjaC9yaXNjdi9LY29uZmln
-DQo+ID4gPiA+ID4gPiA+IGluZGV4IGYzOWUzMjZhN2E0Mi4uZWI0ZjQxYzhmM2NlIDEwMDY0NA0K
-PiA+ID4gPiA+ID4gPiAtLS0gYS9hcmNoL3Jpc2N2L0tjb25maWcNCj4gPiA+ID4gPiA+ID4gKysr
-IGIvYXJjaC9yaXNjdi9LY29uZmlnDQo+ID4gPiA+ID4gPiA+IEBAIC0zNzksMTAgKzM3OSwzMCBA
-QCBjb25maWcgQ01ETElORV9GT1JDRQ0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gIGVu
-ZGNob2ljZQ0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gK2NvbmZpZyBFRklfU1RVQg0K
-PiA+ID4gPiA+ID4gPiArICAgICAgIGJvb2wNCj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4g
-PiArY29uZmlnIEVGSQ0KPiA+ID4gPiA+ID4gPiArICAgICAgIGJvb2wgIlVFRkkgcnVudGltZSBz
-dXBwb3J0Ig0KPiA+ID4gPiA+ID4gPiArICAgICAgIGRlcGVuZHMgb24gT0YNCj4gPiA+ID4gPiA+
-ID4gKyAgICAgICBzZWxlY3QgTElCRkRUDQo+ID4gPiA+ID4gPiA+ICsgICAgICAgc2VsZWN0IFVD
-UzJfU1RSSU5HDQo+ID4gPiA+ID4gPiA+ICsgICAgICAgc2VsZWN0IEVGSV9QQVJBTVNfRlJPTV9G
-RFQNCj4gPiA+ID4gPiA+ID4gKyAgICAgICBzZWxlY3QgRUZJX1NUVUINCj4gPiA+ID4gPiA+ID4g
-KyAgICAgICBzZWxlY3QgRUZJX0dFTkVSSUNfU1RVQg0KPiA+ID4gPiA+ID4gPiArICAgICAgIGRl
-ZmF1bHQgeQ0KPiA+ID4gPiA+ID4gPiArICAgICAgIGhlbHANCj4gPiA+ID4gPiA+ID4gKyAgICAg
-ICAgIFRoaXMgb3B0aW9uIHByb3ZpZGVzIHN1cHBvcnQgZm9yIHJ1bnRpbWUNCj4gPiA+ID4gPiA+
-ID4gc2VydmljZXMgcHJvdmlkZWQNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgIGJ5IFVFRkkgZmly
-bXdhcmUgKHN1Y2ggYXMgbm9uLXZvbGF0aWxlDQo+ID4gPiA+ID4gPiA+IHZhcmlhYmxlcywgcmVh
-bHRpbWUNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICBjbG9jaywgYW5kIHBsYXRmb3JtIHJlc2V0
-KS4gQSBVRUZJIHN0dWIgaXMNCj4gPiA+ID4gPiA+ID4gYWxzbyBwcm92aWRlZCB0bw0KPiA+ID4g
-PiA+ID4gPiArICAgICAgICAgYWxsb3cgdGhlIGtlcm5lbCB0byBiZSBib290ZWQgYXMgYW4gRUZJ
-DQo+ID4gPiA+ID4gPiA+IGFwcGxpY2F0aW9uLiBUaGlzDQo+ID4gPiA+ID4gPiA+ICsgICAgICAg
-ICBpcyBvbmx5IHVzZWZ1bCBvbiBzeXN0ZW1zIHRoYXQgaGF2ZSBVRUZJDQo+ID4gPiA+ID4gPiA+
-IGZpcm13YXJlLg0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICBlbmRtZW51DQo+ID4g
-PiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiAgbWVudSAiUG93ZXIgbWFuYWdlbWVudCBvcHRpb25z
-Ig0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gIHNvdXJjZSAia2VybmVsL3Bvd2VyL0tj
-b25maWciDQo+ID4gPiA+ID4gPiA+ICtzb3VyY2UgImRyaXZlcnMvZmlybXdhcmUvS2NvbmZpZyIN
-Cj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ICBlbmRtZW51DQo+ID4gPiA+ID4gPiA+IGRp
-ZmYgLS1naXQgYS9hcmNoL3Jpc2N2L01ha2VmaWxlIGIvYXJjaC9yaXNjdi9NYWtlZmlsZQ0KPiA+
-ID4gPiA+ID4gPiBpbmRleCBmYjZlMzdkYjgzNmQuLjA3OTQzNTgwNGQ2ZCAxMDA2NDQNCj4gPiA+
-ID4gPiA+ID4gLS0tIGEvYXJjaC9yaXNjdi9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4gPiArKysgYi9h
-cmNoL3Jpc2N2L01ha2VmaWxlDQo+ID4gPiA+ID4gPiA+IEBAIC04MCw2ICs4MCw3IEBAIGhlYWQt
-eSA6PSBhcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLm8NCj4gPiA+ID4gPiA+ID4gIGNvcmUteSArPSBh
-cmNoL3Jpc2N2Lw0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gIGxpYnMteSArPSBhcmNo
-L3Jpc2N2L2xpYi8NCj4gPiA+ID4gPiA+ID4gK2NvcmUtJChDT05GSUdfRUZJX1NUVUIpICs9DQo+
-ID4gPiA+ID4gPiA+ICQob2JqdHJlZSkvZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi9saWIu
-YQ0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gIFBIT05ZICs9IHZkc29faW5zdGFsbA0K
-PiA+ID4gPiA+ID4gPiAgdmRzb19pbnN0YWxsOg0KPiA+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZpZw0KPiA+ID4gPiA+ID4gPiBiL2FyY2gvcmlzY3Yv
-Y29uZmlncy9kZWZjb25maWcNCj4gPiA+ID4gPiA+ID4gaW5kZXggNGRhNDg4NjI0NmE0Li5hZTY5
-ZTEyZDMwNmEgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+IC0tLSBhL2FyY2gvcmlzY3YvY29uZmlncy9k
-ZWZjb25maWcNCj4gPiA+ID4gPiA+ID4gKysrIGIvYXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZp
-Zw0KPiA+ID4gPiA+ID4gPiBAQCAtMTI5LDMgKzEyOSw0IEBAIENPTkZJR19ERUJVR19CTE9DS19F
-WFRfREVWVD15DQo+ID4gPiA+ID4gPiA+ICAjIENPTkZJR19SVU5USU1FX1RFU1RJTkdfTUVOVSBp
-cyBub3Qgc2V0DQo+ID4gPiA+ID4gPiA+ICBDT05GSUdfTUVNVEVTVD15DQo+ID4gPiA+ID4gPiA+
-ICAjIENPTkZJR19TWVNGU19TWVNDQUxMIGlzIG5vdCBzZXQNCj4gPiA+ID4gPiA+ID4gK0NPTkZJ
-R19FRkk9eQ0KPiA+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9pbmNsdWRlL2Fz
-bS9lZmkuaA0KPiA+ID4gPiA+ID4gPiBiL2FyY2gvcmlzY3YvaW5jbHVkZS9hc20vZWZpLmgNCj4g
-PiA+ID4gPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gPiA+ID4gaW5kZXggMDAw
-MDAwMDAwMDAwLi42MmQ3ZDVlYWZlZDgNCj4gPiA+ID4gPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
-ID4gPiA+ID4gPiArKysgYi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2VmaS5oDQo+ID4gPiA+ID4g
-PiA+IEBAIC0wLDAgKzEsNDQgQEANCj4gPiA+ID4gPiA+ID4gKy8qIFNQRFgtTGljZW5zZS1JZGVu
-dGlmaWVyOiBHUEwtMi4wICovDQo+ID4gPiA+ID4gPiA+ICsvKg0KPiA+ID4gPiA+ID4gPiArICog
-Q29weXJpZ2h0IChDKSAyMDIwIFdlc3Rlcm4gRGlnaXRhbCBDb3Jwb3JhdGlvbiBvciBpdHMNCj4g
-PiA+ID4gPiA+ID4gYWZmaWxpYXRlcy4NCj4gPiA+ID4gPiA+ID4gKyAqIEJhc2VkIG9uIGFyY2gv
-YXJtNjQvaW5jbHVkZS9hc20vZWZpLmgNCj4gPiA+ID4gPiA+ID4gKyAqLw0KPiA+ID4gPiA+ID4g
-PiArI2lmbmRlZiBfQVNNX0VGSV9IDQo+ID4gPiA+ID4gPiA+ICsjZGVmaW5lIF9BU01fRUZJX0gN
-Cj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiArI2luY2x1ZGUgPGFzbS9pby5oPg0KPiA+
-ID4gPiA+ID4gPiArI2luY2x1ZGUgPGFzbS9tbXVfY29udGV4dC5oPg0KPiA+ID4gPiA+ID4gPiAr
-I2luY2x1ZGUgPGFzbS9wdHJhY2UuaD4NCj4gPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxhc20vdGxi
-Zmx1c2guaD4NCj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiArI2RlZmluZSBWQV9CSVRT
-X01JTiAzOQ0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICsvKiBvbiBSSVNDLVYsIHRo
-ZSBGRFQgbWF5IGJlIGxvY2F0ZWQgYW55d2hlcmUgaW4gc3lzdGVtDQo+ID4gPiA+ID4gPiA+IFJB
-TSAqLw0KPiA+ID4gPiA+ID4gPiArc3RhdGljIGlubGluZSB1bnNpZ25lZCBsb25nDQo+ID4gPiA+
-ID4gPiA+IGVmaV9nZXRfbWF4X2ZkdF9hZGRyKHVuc2lnbmVkIGxvbmcgZHJhbV9iYXNlKQ0KPiA+
-ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gPiArICAgICAgIHJldHVybiBVTE9OR19NQVg7DQo+
-ID4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKy8qIExvYWQg
-aW5pdHJkIGF0IGVub3VnaCBkaXN0YW5jZSBmcm9tIERSQU0gc3RhcnQgKi8NCj4gPiA+ID4gPiA+
-ID4gK3N0YXRpYyBpbmxpbmUgdW5zaWduZWQgbG9uZw0KPiA+ID4gPiA+ID4gPiBlZmlfZ2V0X21h
-eF9pbml0cmRfYWRkcih1bnNpZ25lZCBsb25nIGRyYW1fYmFzZSwNCj4gPiA+ID4gPiA+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnDQo+
-ID4gPiA+ID4gPiA+IG5lZCBsb25nIGltYWdlX2FkZHIpDQo+ID4gPiA+ID4gPiA+ICt7DQo+ID4g
-PiA+ID4gPiA+ICsgICAgICAgcmV0dXJuIGRyYW1fYmFzZSArIFNaXzI1Nk07DQo+ID4gPiA+ID4g
-PiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyNkZWZpbmUgZWZpX2JzX2Nh
-bGwoZnVuYywgLi4uKSBlZmlfc3lzdGVtX3RhYmxlKCktDQo+ID4gPiA+ID4gPiA+ID5ib290dGlt
-ZS0+ZnVuYyhfX1ZBX0FSR1NfXykNCj4gPiA+ID4gPiA+ID4gKyNkZWZpbmUgZWZpX3J0X2NhbGwo
-ZnVuYywgLi4uKSBlZmlfc3lzdGVtX3RhYmxlKCktDQo+ID4gPiA+ID4gPiA+ID5ydW50aW1lLT5m
-dW5jKF9fVkFfQVJHU19fKQ0KPiA+ID4gPiA+ID4gPiArI2RlZmluZSBlZmlfaXNfbmF0aXZlKCkg
-ICAgICAgICAgICAgICAgKHRydWUpDQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyNk
-ZWZpbmUgZWZpX3RhYmxlX2F0dHIoaW5zdCwgYXR0cikgICAgIChpbnN0LT5hdHRyKQ0KPiA+ID4g
-PiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICsjZGVmaW5lIGVmaV9jYWxsX3Byb3RvKGluc3QsIGZ1
-bmMsIC4uLikgaW5zdC0+ZnVuYyhpbnN0LCANCj4gPiA+ID4gPiA+ID4gIyNfX1ZBX0FSR1NfXykN
-Cj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiArI2RlZmluZQ0KPiA+ID4gPiA+ID4gPiBh
-bGxvY19zY3JlZW5faW5mbyh4Li4uKSAgICAgICAgICAgICAgICAoJnNjcmVlbl9pbmZvKQ0KPiA+
-ID4gPiA+ID4gPiArZXh0ZXJuIGNoYXIgc3RleHRfb2Zmc2V0W107DQo+ID4gPiA+ID4gPiA+ICsN
-Cj4gPiA+ID4gPiA+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBmcmVlX3NjcmVlbl9pbmZvKHN0cnVj
-dCBzY3JlZW5faW5mbw0KPiA+ID4gPiA+ID4gPiAqc2kpDQo+ID4gPiA+ID4gPiA+ICt7DQo+ID4g
-PiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyNlbmRpZiAvKiBf
-QVNNX0VGSV9IICovDQo+ID4gPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Zpcm13YXJl
-L2VmaS9LY29uZmlnDQo+ID4gPiA+ID4gPiA+IGIvZHJpdmVycy9maXJtd2FyZS9lZmkvS2NvbmZp
-Zw0KPiA+ID4gPiA+ID4gPiBpbmRleCAyYTJiMmI5NmExZGMuLmZjZGM3ODlkM2Y4NyAxMDA2NDQN
-Cj4gPiA+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9maXJtd2FyZS9lZmkvS2NvbmZpZw0KPiA+ID4g
-PiA+ID4gPiArKysgYi9kcml2ZXJzL2Zpcm13YXJlL2VmaS9LY29uZmlnDQo+ID4gPiA+ID4gPiA+
-IEBAIC0xMTEsNyArMTExLDcgQEAgY29uZmlnIEVGSV9HRU5FUklDX1NUVUINCj4gPiA+ID4gPiA+
-ID4gDQo+ID4gPiA+ID4gPiA+ICBjb25maWcgRUZJX0FSTVNUVUJfRFRCX0xPQURFUg0KPiA+ID4g
-PiA+ID4gPiAgICAgICAgIGJvb2wgIkVuYWJsZSB0aGUgRFRCIGxvYWRlciINCj4gPiA+ID4gPiA+
-ID4gLSAgICAgICBkZXBlbmRzIG9uIEVGSV9HRU5FUklDX1NUVUINCj4gPiA+ID4gPiA+ID4gKyAg
-ICAgICBkZXBlbmRzIG9uIEVGSV9HRU5FUklDX1NUVUIgJiYgIVJJU0NWDQo+ID4gPiA+ID4gPiA+
-ICAgICAgICAgZGVmYXVsdCB5DQo+ID4gPiA+ID4gPiA+ICAgICAgICAgaGVscA0KPiA+ID4gPiA+
-ID4gPiAgICAgICAgICAgU2VsZWN0IHRoaXMgY29uZmlnIG9wdGlvbiB0byBhZGQgc3VwcG9ydCBm
-b3INCj4gPiA+ID4gPiA+ID4gdGhlIGR0Yj0gY29tbWFuZA0KPiA+ID4gPiA+ID4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4g
-PiBiL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIvTWFrZWZpbGUNCj4gPiA+ID4gPiA+ID4g
-aW5kZXggMmI0ZTA5YmY5ODdjLi43ZDQ2YjcwYjUxZjIgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+IC0t
-LSBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIvTWFrZWZpbGUNCj4gPiA+ID4gPiA+ID4g
-KysrIGIvZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4g
-PiBAQCAtMjIsNiArMjIsOCBAQCBjZmxhZ3MtDQo+ID4gPiA+ID4gPiA+ICQoQ09ORklHX0FSTTY0
-KSAgICAgICAgICAgICAgICA6PSAkKHN1YnN0DQo+ID4gPiA+ID4gPiA+ICQoQ0NfRkxBR1NfRlRS
-QUNFKSwsJChLQlVJTERfQ0ZMQUdTKSkgXA0KPiA+ID4gPiA+ID4gPiAgY2ZsYWdzLSQoQ09ORklH
-X0FSTSkgICAgICAgICAgIDo9ICQoc3Vic3QNCj4gPiA+ID4gPiA+ID4gJChDQ19GTEFHU19GVFJB
-Q0UpLCwkKEtCVUlMRF9DRkxBR1MpKSBcDQo+ID4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgLWZuby1idWlsdGluIC1mcGljIFwNCj4gPiA+ID4gPiA+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAkKGNhbGwgY2Mtb3B0aW9uLC1tbm8tDQo+
-ID4gPiA+ID4gPiA+IHNpbmdsZS1waWMtYmFzZSkNCj4gPiA+ID4gPiA+ID4gK2NmbGFncy0kKENP
-TkZJR19SSVNDVikgICAgICAgICA6PSAkKHN1YnN0DQo+ID4gPiA+ID4gPiA+ICQoQ0NfRkxBR1Nf
-RlRSQUNFKSwsJChLQlVJTERfQ0ZMQUdTKSkgXA0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC1mcGljDQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
-PiAgY2ZsYWdzLSQoQ09ORklHX0VGSV9HRU5FUklDX1NUVUIpICAgICAgKz0NCj4gPiA+ID4gPiA+
-ID4gLUkkKHNyY3RyZWUpL3NjcmlwdHMvZHRjL2xpYmZkdA0KPiA+ID4gPiA+ID4gPiANCj4gPiA+
-ID4gPiA+ID4gQEAgLTU3LDYgKzU5LDcgQEAgbGliLQ0KPiA+ID4gPiA+ID4gPiAkKENPTkZJR19F
-RklfR0VORVJJQ19TVFVCKSAgICAgICAgICAgICAgICArPSBlZmktc3R1Yi5vDQo+ID4gPiA+ID4g
-PiA+IGZkdC5vIHN0cmluZy5vIFwNCj4gPiA+ID4gPiA+ID4gIGxpYi0kKENPTkZJR19BUk0pICAg
-ICAgICAgICAgICArPSBhcm0zMi1zdHViLm8NCj4gPiA+ID4gPiA+ID4gIGxpYi0kKENPTkZJR19B
-Uk02NCkgICAgICAgICAgICArPSBhcm02NC1zdHViLm8NCj4gPiA+ID4gPiA+ID4gIGxpYi0kKENP
-TkZJR19YODYpICAgICAgICAgICAgICArPSB4ODYtc3R1Yi5vDQo+ID4gPiA+ID4gPiA+ICtsaWIt
-JChDT05GSUdfUklTQ1YpICAgICAgICAgICAgKz0gcmlzY3Ytc3R1Yi5vDQo+ID4gPiA+ID4gPiA+
-ICBDRkxBR1NfYXJtMzItc3R1Yi5vICAgICAgICAgICAgOj0NCj4gPiA+ID4gPiA+ID4gLURURVhU
-X09GRlNFVD0kKFRFWFRfT0ZGU0VUKQ0KPiA+ID4gPiA+ID4gPiAgQ0ZMQUdTX2FybTY0LXN0dWIu
-byAgICAgICAgICAgIDo9DQo+ID4gPiA+ID4gPiA+IC1EVEVYVF9PRkZTRVQ9JChURVhUX09GRlNF
-VCkNCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IEBAIC04MSw2ICs4NCwxMCBAQCBTVFVC
-Q09QWV9GTEFHUy0NCj4gPiA+ID4gPiA+ID4gJChDT05GSUdfQVJNNjQpICAgICAgICs9IC0tcHJl
-Zml4LWFsbG9jLXNlY3Rpb25zPS5pbml0IFwNCj4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAtLXByZWZpeC0NCj4gPiA+ID4gPiA+ID4gc3ltYm9scz1fX2Vm
-aXN0dWJfDQo+ID4gPiA+ID4gPiA+ICBTVFVCQ09QWV9SRUxPQy0kKENPTkZJR19BUk02NCkgOj0g
-Ul9BQVJDSDY0X0FCUw0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gK1NUVUJDT1BZX0ZM
-QUdTLSQoQ09ORklHX1JJU0NWKSArPSAtLXByZWZpeC1hbGxvYy0NCj4gPiA+ID4gPiA+ID4gc2Vj
-dGlvbnM9LmluaXQgXA0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIC0tcHJlZml4LQ0KPiA+ID4gPiA+ID4gPiBzeW1ib2xzPV9fZWZpc3R1Yl8NCj4gPiA+
-ID4gPiA+ID4gK1NUVUJDT1BZX1JFTE9DLSQoQ09ORklHX1JJU0NWKSA6PSBSX1JJU0NWX0hJMjAN
-Cj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiAgJChvYmopLyUuc3R1Yi5vOiAkKG9iaikv
-JS5vIEZPUkNFDQo+ID4gPiA+ID4gPiA+ICAgICAgICAgJChjYWxsIGlmX2NoYW5nZWQsc3R1YmNv
-cHkpDQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9m
-aXJtd2FyZS9lZmkvbGlic3R1Yi9yaXNjdi1zdHViLmMNCj4gPiA+ID4gPiA+ID4gYi9kcml2ZXJz
-L2Zpcm13YXJlL2VmaS9saWJzdHViL3Jpc2N2LXN0dWIuYw0KPiA+ID4gPiA+ID4gPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NA0KPiA+ID4gPiA+ID4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjY5ZDEzZTBl
-YmFlYQ0KPiA+ID4gPiA+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiA+ID4gPiA+ICsrKyBiL2Ry
-aXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIvcmlzY3Ytc3R1Yi5jDQo+ID4gPiA+ID4gPiA+IEBA
-IC0wLDAgKzEsMTExIEBADQo+ID4gPiA+ID4gPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
-cjogR1BMLTIuMA0KPiA+ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+ID4gKyAqIENvcHlyaWdo
-dCAoQykgMjAxMywgMjAxNCBMaW5hcm8gTHRkOyAgPA0KPiA+ID4gPiA+ID4gPiByb3kuZnJhbnpA
-bGluYXJvLm9yZz4NCj4gPiA+ID4gPiA+ID4gKyAqIENvcHlyaWdodCAoQykgMjAyMCBXZXN0ZXJu
-IERpZ2l0YWwgQ29ycG9yYXRpb24gb3IgaXRzDQo+ID4gPiA+ID4gPiA+IGFmZmlsaWF0ZXMuDQo+
-ID4gPiA+ID4gPiA+ICsgKg0KPiA+ID4gPiA+ID4gPiArICogVGhpcyBmaWxlIGltcGxlbWVudHMg
-dGhlIEVGSSBib290IHN0dWIgZm9yIHRoZSBSSVNDLVYgDQo+ID4gPiA+ID4gPiA+IGtlcm5lbC4N
-Cj4gPiA+ID4gPiA+ID4gKyAqIEFkYXB0ZWQgZnJvbSBBUk02NCB2ZXJzaW9uIGF0DQo+ID4gPiA+
-ID4gPiA+IGRyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIvYXJtNjQtc3R1Yi5jLg0KPiA+ID4g
-PiA+ID4gPiArICovDQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxs
-aW51eC9lZmkuaD4NCj4gPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9saWJmZHQuaD4NCj4g
-PiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9saWJmZHRfZW52Lmg+DQo+ID4gPiA+ID4gPiA+
-ICsjaW5jbHVkZSA8YXNtL2VmaS5oPg0KPiA+ID4gPiA+ID4gPiArI2luY2x1ZGUgPGFzbS9zZWN0
-aW9ucy5oPg0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICsjaW5jbHVkZSAiZWZpc3R1
-Yi5oIg0KPiA+ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+ID4gKyAqIFJJU0NWIHJlcXVpcmVz
-IHRoZSBrZXJuZWwgaW1hZ2UgdG8gcGxhY2VkIFRFWFRfT0ZGU0VUDQo+ID4gPiA+ID4gPiA+IGJ5
-dGVzIGJleW9uZCBhIDIgTUINCj4gPiA+ID4gPiA+ID4gKyAqIGFsaWduZWQgYmFzZSBmb3IgNjQg
-Yml0IGFuZCA0TUIgZm9yIDMyIGJpdC4NCj4gPiA+ID4gPiA+ID4gKyAqLw0KPiA+ID4gPiA+IA0K
-PiA+ID4gPiA+IEZpeGVkIHRoZSBjb21tZW50Lg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiAr
-I2lmZGVmIENPTkZJR182NEJJVA0KPiA+ID4gPiA+ID4gPiArI2RlZmluZSBNSU5fS0lNR19BTElH
-TiBTWl8yTQ0KPiA+ID4gPiA+ID4gPiArI2Vsc2UNCj4gPiA+ID4gPiA+ID4gKyNkZWZpbmUgTUlO
-X0tJTUdfQUxJR04gU1pfNE0NCj4gPiA+ID4gPiA+ID4gKyNlbmRpZg0KPiA+ID4gPiA+ID4gPiAr
-DQo+ID4gPiA+ID4gPiA+ICt0eXBlZGVmIF9fYXR0cmlidXRlX18oKG5vcmV0dXJuKSkgdm9pZA0K
-PiA+ID4gPiA+ID4gPiAoKmp1bXBfa2VybmVsX2Z1bmMpKHVuc2lnbmVkIGludCwNCj4gPiA+ID4g
-PiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgDQo+ID4gPiA+ID4gPiA+ICAgdW5zaWduZWQgbG9uZyk7DQo+ID4gPiA+ID4gPiA+ICtl
-Zmlfc3RhdHVzX3QgY2hlY2tfcGxhdGZvcm1fZmVhdHVyZXModm9pZCkNCj4gPiA+ID4gPiA+ID4g
-K3sNCj4gPiA+ID4gPiA+ID4gKyAgICAgICByZXR1cm4gRUZJX1NVQ0NFU1M7DQo+ID4gPiA+ID4g
-PiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gK3N0YXRpYyB1MzIgZ2V0X2Jv
-b3RfaGFydGlkX2Zyb21fZmR0KHVuc2lnbmVkIGxvbmcgZmR0KQ0KPiA+ID4gPiA+ID4gPiArew0K
-PiA+ID4gPiA+ID4gPiArICAgICAgIGludCBjaG9zZW5fbm9kZSwgbGVuOw0KPiA+ID4gPiA+ID4g
-PiArICAgICAgIGNvbnN0IGZkdDMyX3QgKnByb3A7DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4g
-PiA+ID4gKyAgICAgICBjaG9zZW5fbm9kZSA9IGZkdF9wYXRoX29mZnNldCgodm9pZCAqKWZkdCwN
-Cj4gPiA+ID4gPiA+ID4gIi9jaG9zZW4iKTsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICBpZiAoY2hv
-c2VuX25vZGUgPCAwKQ0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIFUzMl9N
-QVg7DQo+ID4gPiA+ID4gPiA+ICsgICAgICAgcHJvcCA9IGZkdF9nZXRwcm9wKCh2b2lkICopZmR0
-LCBjaG9zZW5fbm9kZSwNCj4gPiA+ID4gPiA+ID4gImJvb3QtaGFydGlkIiwgJmxlbik7DQo+ID4g
-PiA+ID4gPiA+ICsgICAgICAgaWYgKCFwcm9wIHx8IGxlbiAhPSBzaXplb2YodTMyKSkNCj4gPiA+
-ID4gPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBVMzJfTUFYOw0KPiA+ID4gPiA+ID4gPiAr
-DQo+ID4gPiA+ID4gPiA+ICsgICAgICAgcmV0dXJuIGZkdDMyX3RvX2NwdSgqcHJvcCk7DQo+ID4g
-PiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKy8qDQo+ID4gPiA+
-ID4gPiA+ICsgKiBKdW1wIHRvIHJlYWwga2VybmVsIGhlcmUgd2l0aCBmb2xsb3dpbmcgY29uc3Ry
-YWludHMuDQo+ID4gPiA+ID4gPiA+ICsgKiAxLiBNTVUgc2hvdWxkIGJlIGRpc2FibGVkLg0KPiA+
-ID4gPiA+ID4gPiArICogMi4gYTAgc2hvdWxkIGNvbnRhaW4gaGFydGlkDQo+ID4gPiA+ID4gPiA+
-ICsgKiAzLiBhMSBzaG91bGQgRFQgYWRkcmVzcw0KPiA+ID4gPiA+ID4gPiArICovDQo+ID4gPiA+
-ID4gPiA+ICt2b2lkIF9fbm9yZXR1cm4gZWZpX2VudGVyX2tlcm5lbCh1bnNpZ25lZCBsb25nDQo+
-ID4gPiA+ID4gPiA+IGVudHJ5cG9pbnQsIHVuc2lnbmVkIGxvbmcgZmR0LA0KPiA+ID4gPiA+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nIGZkdF9zaXpl
-KQ0KPiA+ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gPiArICAgICAgIHVuc2lnbmVkIGxvbmcg
-a2VybmVsX2VudHJ5ID0gZW50cnlwb2ludCArDQo+ID4gPiA+ID4gPiA+ICh1bnNpZ25lZCBsb25n
-KXN0ZXh0X29mZnNldDsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICBqdW1wX2tlcm5lbF9mdW5jIGp1
-bXBfa2VybmVsID0gKGp1bXBfa2VybmVsX2Z1bmMpDQo+ID4gPiA+ID4gPiA+IGtlcm5lbF9lbnRy
-eTsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICB1MzIgaGFydGlkID0gZ2V0X2Jvb3RfaGFydGlkX2Zy
-b21fZmR0KGZkdCk7DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICBpZiAo
-aGFydGlkID09IFUzMl9NQVgpDQo+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAvKiBXZSBj
-YW4gbm90IHVzZSBwYW5pYyBvciBCVUcgYXQgdGhpcw0KPiA+ID4gPiA+ID4gPiBwb2ludCAqLw0K
-PiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgX19hc21fXyBfX3ZvbGF0aWxlX18gKCJlYnJl
-YWsiKTsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAvKiBEaXNhYmxlIE1NVSAqLw0KPiA+ID4gPiA+
-ID4gPiArICAgICAgIGNzcl93cml0ZShDU1JfU0FUUCwgMCk7DQo+ID4gPiA+ID4gPiA+ICsgICAg
-ICAganVtcF9rZXJuZWwoaGFydGlkLCBmZHQpOw0KPiA+ID4gPiA+ID4gPiArfQ0KPiA+ID4gPiA+
-ID4gPiArDQo+ID4gPiA+ID4gPiA+ICtlZmlfc3RhdHVzX3QgaGFuZGxlX2tlcm5lbF9pbWFnZSh1
-bnNpZ25lZCBsb25nDQo+ID4gPiA+ID4gPiA+ICppbWFnZV9hZGRyLA0KPiA+ID4gPiA+ID4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nDQo+ID4gPiA+ID4g
-PiA+ICppbWFnZV9zaXplLA0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB1bnNpZ25lZCBsb25nDQo+ID4gPiA+ID4gPiA+ICpyZXNlcnZlX2FkZHIsDQo+ID4g
-PiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcN
-Cj4gPiA+ID4gPiA+ID4gKnJlc2VydmVfc2l6ZSwNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBkcmFtX2Jhc2UsDQo+ID4gPiA+ID4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVmaV9sb2FkZWRfaW1hZ2VfdA0K
-PiA+ID4gPiA+ID4gPiAqaW1hZ2UpDQo+ID4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiA+ICsg
-ICAgICAgZWZpX3N0YXR1c190IHN0YXR1czsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICB1bnNpZ25l
-ZCBsb25nIGtlcm5lbF9zaXplLCBrZXJuZWxfbWVtc2l6ZSA9IDA7DQo+ID4gPiA+ID4gPiA+ICsg
-ICAgICAgdW5zaWduZWQgbG9uZyBtYXhfYWxsb2NfYWRkcmVzczsNCj4gPiA+ID4gPiA+ID4gKw0K
-PiA+ID4gPiA+ID4gPiArICAgICAgIGlmIChpbWFnZS0+aW1hZ2VfYmFzZSAhPSBfc3RhcnQpDQo+
-ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBwcl9lZmlfZXJyKCJGSVJNV0FSRSBCVUc6DQo+
-ID4gPiA+ID4gPiA+IGVmaV9sb2FkZWRfaW1hZ2VfdDo6aW1hZ2VfYmFzZSBoYXMgYm9ndXMgdmFs
-dWVcbiIpOw0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IEkgZG9u
-J3QgdGhpbmsgeW91IG5lZWQgdGhpcy4NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+IA0KPiA+ID4g
-PiA+IFN1cmUuIEkgd2lsbCByZW1vdmUgaXQuIEkgZ3Vlc3MgQVJNNjQgY29kZSBoYXMgdGhlIGVy
-cm9yDQo+ID4gPiA+ID4gcHJpbnQgZm9yDQo+ID4gPiA+ID4gbGVnYWN5IGxvYWRlciBjb2RlID8N
-Cj4gPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IE5vLCBmb3IgYnJva2VuIGRpc3RybyB2ZXJz
-aW9ucyBvZiBHUlVCDQo+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiArICAgICAgIGtlcm5lbF9zaXpl
-ID0gX2VkYXRhIC0gX3N0YXJ0Ow0KPiA+ID4gPiA+ID4gPiArICAgICAgIGtlcm5lbF9tZW1zaXpl
-ID0ga2VybmVsX3NpemUgKyAoX2VuZCAtIF9lZGF0YSk7DQo+ID4gPiA+ID4gPiA+ICsgICAgICAg
-bWF4X2FsbG9jX2FkZHJlc3MgPSByb3VuZF91cChkcmFtX2Jhc2UsDQo+ID4gPiA+ID4gPiA+IE1J
-Tl9LSU1HX0FMSUdOKSArDQo+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBrZXJuZWxfbWVtc2l6ZTsNCj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+
-ID4gPiBZb3Ugc2FpZCB0aGUga2VybmVsIGNvdWxkIGJlIGFueXdoZXJlIGluIG1lbW9yeSwgYXMg
-bG9uZyBhcw0KPiA+ID4gPiA+ID4gaXQgaXMNCj4gPiA+ID4gPiA+IGFsaWduZWQgY29ycmVjdGx5
-LCByaWdodD8NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBTb3JyeSBJIHdhcyB3cm9uZyBhYm91dCB0
-aGlzLiBSSVNDLVYga2VybmVsIG1hcHMgUEFHRV9PRkZTRVQNCj4gPiA+ID4gPiB2aXJ0dWFsDQo+
-ID4gPiA+ID4gYWRkcmVzcyB0byB0aGUNCj4gPiA+ID4gPiBwaHlzaWNhbCBhZGRyZXNzIDx4eXo+
-IHdoZXJlIGl0IGlzIGJvb3RlZC4gVGhhdCBtZWFucyBtZW1vcnkNCj4gPiA+ID4gPiBiZXR3ZWVu
-DQo+ID4gPiA+ID4gZHJhbSBzdGFydCBhbmQgYW5kIDx4eXo+IGFkZHJlc3MNCj4gPiA+ID4gPiB3
-aWxsIGJlIHVudXNhYmxlLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gT0sNCj4gPiA+
-ID4gDQo+ID4gPiA+ID4gSSBhbHNvIHJlYWxpemVkIHRoYXQgdGhlIGFib3ZlIGNvbXB1dGluZyBt
-YXhfYWRkcmVzcyBhcyBhYm92ZQ0KPiA+ID4gPiA+IGFsc28NCj4gPiA+ID4gPiB3b24ndCB3b3Jr
-IGZvciB0aGUgZm9sbG93aW5nIHJlYXNvbi4NCj4gPiA+ID4gPiBlZmlfYWxsb2NhdGVfcGFnZXNf
-YWxpZ25lZCBhY3R1YWxseSBBTElHTl9ET1dOIHRoZQ0KPiA+ID4gPiA+IG1heF9hZGRyZXNzLiBU
-aHVzLA0KPiA+ID4gPiA+IGVmaSB3b24ndCBmaW5kIGVub3VnaA0KPiA+ID4gPiA+IGZyZWUgbWVt
-b3J5IGluIHRoaXMgY2FzZSBpZiB0aGUgbWF4X2FkZHJlc3MgaXMgY29tcHV0ZWQgZnJvbQ0KPiA+
-ID4gPiA+IHRoZSBkcmFtX2Jhc2UuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSXMgdGhlcmUgYW4g
-aW1wbGljaXQgcmVxdWlyZW1lbnQgZm9yDQo+ID4gPiA+ID4gZWZpX2FsbG9jYXRlX3BhZ2VzX2Fs
-aWduZWQgb3INCj4gPiA+ID4gPiBlZmlfbG93X2FsbG9jX2Fib3ZlIHNob3VsZCBiZSB0cmllZCBp
-biBjYXNlIG9mIGZhaWx1cmU/DQo+ID4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiBObyBub3Qg
-cmVhbGx5LiBXaGF0IGV2ZXIgd29ya3MgZm9yIHlvdXIgcGFydGljdWxhciB1c2UgY2FzZSBpcw0K
-PiA+ID4gPiBhY2NlcHRhYmxlIHRvIG1lLg0KPiA+ID4gPiANCj4gPiA+ID4gPiA+IEluIHRoYXQg
-Y2FzZSwgeW91IGRvbid0IG5lZWQgdGhpcywgeW91IGNhbiBzaW1wbHkgcGFzcw0KPiA+ID4gPiA+
-ID4gVUxPTkdfTUFYIGFzDQo+ID4gPiA+ID4gPiB0aGUgbWF4IGFkZHJlc3MuDQo+ID4gPiA+ID4g
-PiANCj4gPiA+ID4gPiBBcyBSSVNDLVYgc2hvdWxkIGFsbG9jYXRlIG1lbW9yeSBhcyBsb3cgYXMg
-cG9zc2libGUgdG8gYXZvaWQNCj4gPiA+ID4gPiBtZW1vcnkNCj4gPiA+ID4gPiB3YXN0YWdlLCBJ
-IHRoaW5rIHRoZSBmb2xsb3dpbmcgc2hvdWxkIHdvcmsuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
-ZWZpX2xvd19hbGxvY19hYm92ZSgqcmVzZXJ2ZV9zaXplLCBNSU5fS0lNR19BTElHTiwNCj4gPiA+
-ID4gPiByZXNlcnZlX2FkZHIsIGRyYW1fYmFzZSk7DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSWYg
-dGhpcyBsb29rcyBva2F5IHRvIHlvdSwgZWZpX2xvd19hbGxvY19hYm92ZSBzaG91bGQgYmUNCj4g
-PiA+ID4gPiBtb3ZlZCBiYWNrIHRvDQo+ID4gPiA+ID4gbWVtLmMgZnJvbSByZWxvY2F0ZS5jLg0K
-PiA+ID4gPiA+IFNob3VsZCBJIGRvIGl0IGluIGEgc2VwYXJhdGUgcGF0Y2ggb3IgdGhlIG9yaWdp
-bmFsIHBhdGNoDQo+ID4gPiA+ID4gc2hvdWxkIGJlDQo+ID4gPiA+ID4gbW9kaWZpZWQgc28gdGhh
-dCBlZmlfbG93X2FsbG9jX2Fib3ZlIHdhcyBuZXZlciBtb3ZlZCB0bw0KPiA+ID4gPiA+IHJlbG9j
-YXRlLmMNCj4gPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IE5vLCBwbGVhc2Uga2VlcCBlZmlf
-bG93X2FsbG9jX2Fib3ZlKCkgd2hlcmUgaXQgaXMsIGJ1dCBkcm9wIHRoZQ0KPiA+ID4gPiBzdGF0
-aWMsIGFuZCBwdXQgYmFjayB0aGUgZGVjbGFyYXRpb24gaW4gZWZpc3R1Yi5oDQo+ID4gPiA+IA0K
-PiA+ID4gDQo+ID4gPiBBbHRlcm5hdGl2ZWx5LCBjYW4geW91IGNoZWNrIHdoZXRoZXIgZWZpX3Jl
-bG9jYXRlX2tlcm5lbCgpDQo+ID4gPiBhbHJlYWR5DQo+ID4gPiBkb2VzIHdoYXQgeW91IG5lZWQ/
-DQo+ID4gDQo+ID4gWWVhaC4gZWZpX3JlbG9jYXRlX2tlcm5lbCB3b3JrcyB0b28uIEl0J3MganVz
-dCB0aGF0DQo+ID4gZWZpX3JlbG9jYXRlX2tlcm5lbCBleHBlY3RzIGEgcHJlZmVycmVkIGFkZHJl
-c3MNCj4gPiB3aGljaCBSSVNDLVYgZG9lc24ndCBjYXJlIGFib3V0Lg0KPiANCj4gVGhlcmUgaXMg
-YSBwcmVmZXJyZWQgYWRkcmVzcywgbm8/IFRoZSBiYXNlIG9mIERSQU0/DQo+IA0KDQpJIGp1c3Qg
-cmVhbGl6ZWQgdGhhdCBteSByZXBseSBmcm9tIG15IGdtYWlsIG5ldmVyIGxhbmRlZCBpbiBhbnkg
-b2YgdGhlDQptYWlsaW5nIGxpc3RzLiBJZiB5b3UgaGF2ZSBhbHJlYWR5IHJlY2VpdmVkIGl0LCBz
-b3JyeSBmb3IgdGhlIHNwYW0uDQoNCiJJZiB0aGUgcHJlZmVycmVkIGFkZHJlc3MgaXMgc2V0IGFz
-IHRoZSBiYXNlIG9mIERSQU0sIGVmaV9ic19jYWxsIGlzDQpib3VuZCB0byBmYWlsIGFzIHdlbGwg
-YmVjYXVzZSB0aGUgYmFzZSBvZiBEUkFNIGlzIHJlc2VydmVkIGJ5IHRoZQ0KZmlybXdhcmUuIFNv
-IHRoZSBlZmkgbWVtb3J5IGFsbG9jYXRvciBjYW4ndCBhbGxvY2F0ZSBhdCB0aGF0IGFkZHJlc3Mu
-DQpUZWNobmljYWxseSwgaXQgd2lsbCB3b3JrIGJ1dCBpdCBpcyBubyBkaWZmZXJlbnQgdGhhbiBw
-YXNzaW5nDQpVTE9OR19NQVguIFNvIEkgdGhvdWdodCBVTE9OR19NQVggd2lsbCBhdm9pZCB0aGUg
-Y29uZnVzaW9uLg0KDQpXZSB0cnkgdG8gYWxsb2NhdGUgYXMgbG93IGFzIHBvc3NpYmxlIHNvIEkg
-YW0gcGFzc2luZyBkcmFtX2Jhc2UgYXMgdGhlDQptaW5pbXVtIGFkZHJlc3MgYW55d2F5cy4gQXMg
-dGhlIGZpcm13YXJlIHJlc2VydmVkIHRoZSBmaXJzdCBmZXcgS0JzLA0KDQoNCj4gPiBJIGNhbiBw
-YXNzIFVMT05HX01BWCBzbyB0aGF0DQo+ID4gZWZpX2JzX2NhbGwgd2lsbCBmYWlsIGFuZA0KPiA+
-IGVmaV9sb3dfYWxsb2NfYWJvdmUgd2lsbCBiZSBpbnZva2VkIGV2ZW50dWFsbHkuDQo+ID4gDQo+
-ID4gSSBhbSBhbHNvIHRoaW5raW5nIHRvIHB1dCBhIGNoZWNrIGluIHJlbG9jYXRlX2tlcm5lbCBm
-b3IgcHJlZmVycmVkDQo+ID4gYWRkcmVzcyAhPSBVTE9OR19NQVggdG8gYXZvaWQNCj4gPiBhbiBl
-eHRyYSBlZmlfYnNfY2FsbC4gVGhlIGV4dHJhIGNhbGwgZG9lc24ndCBhY3R1YWxseSBjcmVhdGUg
-YW4NCj4gPiBpc3N1ZSwNCj4gPiBqdXN0IGEgbWlub3Igb3B0aW1pemF0aW9uLg0KPiA+IEJ1dCBp
-ZiB0aGF0IGlzIG5vdCBhY2NlcHRhYmxlIGZvciBnZW5lcmljIGNvZGUsIHRoYXQgaXMgZmluZSBh
-cw0KPiA+IHdlbGwuDQo+ID4gDQo+ID4gVGhhbmtzIGZvciB5b3VyIHN1Z2dlc3Rpb25zIGFuZCB0
-aW1lLg0KPiA+IC0tDQo+ID4gUmVnYXJkcywNCj4gPiBBdGlzaA0KDQotLSANClJlZ2FyZHMsDQpB
-dGlzaA0K
+--Sig_/eexMcoPIbzfUrTWo9fk5aDt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Changes since 20200417:
+
+My fixes tree is empty again.
+
+The qcom tree still had its build failure for which I reverted a commit.
+
+The crypto tree still has its build failure for which I reverted 5 commits.
+
+The drm-misc tree gained a build failure for which I disabled a
+COMPILE_TEST setting.
+
+The sound-asoc tree still has its build failures so I used the version from
+next-20200414.
+
+The ipmi tree gained a build failure for which I applied a patch.
+
+Non-merge commits (relative to Linus' tree): 2732
+ 3544 files changed, 76515 insertions(+), 37271 deletions(-)
+
+----------------------------------------------------------------------------
+
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
+
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf. After
+the final fixups (if any), I do an x86_64 modules_install followed by
+builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+and sparc64 defconfig and htmldocs. And finally, a simple boot test
+of the powerpc pseries_le_defconfig kernel in qemu (with and without
+kvm enabled).
+
+Below is a summary of the state of the merge.
+
+I am currently merging 318 trees (counting Linus' and 78 trees of bug
+fix patches pending for the current merge release).
+
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
+
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+$ git checkout master
+$ git reset --hard stable
+Merging origin/master (ae83d0b416db Linux 5.7-rc2)
+Merging fixes/master (8f3d9f354286 Linux 5.7-rc1)
+Merging kbuild-current/fixes (d2f1606edabd scripts/config: allow colons in =
+option strings for sed)
+Merging arc-current/for-curr (5185f4773e90 ARC: [plat-eznps]: Restrict to C=
+ONFIG_ISA_ARCOMPACT)
+Merging arm-current/fixes (89604523a76e ARM: 8961/2: Fix Kbuild issue cause=
+d by per-task stack protector GCC plugin)
+Merging arm-soc-fixes/arm/fixes (512e8d40f91d ARM: dts: OMAP3: disable RNG =
+on N950/N9)
+Merging arm64-fixes/for-next/fixes (c9a4ef664501 arm64: Delete the space se=
+parator in __emit_inst)
+Merging m68k-current/for-linus (86cded5fc525 m68k: defconfig: Update defcon=
+figs for v5.6-rc4)
+Merging powerpc-fixes/fixes (1d0c32ec3b86 KVM: PPC: Fix kernel crash with P=
+R KVM)
+Merging s390-fixes/fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging sparc/master (63bef48fd6c9 Merge branch 'akpm' (patches from Andrew=
+))
+Merging fscrypt-current/for-stable (2b4eae95c736 fscrypt: don't evict dirty=
+ inodes after removing key)
+Merging net/master (9bacd256f135 tcp: cache line align MAX_TCP_HEADER)
+Merging bpf/master (edadedf1c5b4 tipc: fix incorrect increasing of link win=
+dow)
+Merging ipsec/master (91fac45cd006 Merge branch 'Fix-88x3310-leaving-power-=
+save-mode')
+Merging netfilter/master (bc8e71314e84 netfilter: flowtable: Free block_cb =
+when being deleted)
+Merging ipvs/master (0141317611ab Merge branch 'hns3-fixes')
+Merging wireless-drivers/master (1f8fbe9c93fa MAINTAINERS: update list of q=
+tnfmac maintainers)
+Merging mac80211/master (9bacd256f135 tcp: cache line align MAX_TCP_HEADER)
+Merging rdma-fixes/for-rc (8f3d9f354286 Linux 5.7-rc1)
+Merging sound-current/for-linus (a8cf44f085ac ALSA: hda: Remove ASUS ROG Ze=
+nith from the blacklist)
+Merging sound-asoc-fixes/for-linus (c1c14187fcb4 Merge remote-tracking bran=
+ch 'asoc/for-5.7' into asoc-linus)
+Merging regmap-fixes/for-linus (b810878a8fee Merge branch 'regmap-5.7' into=
+ regmap-linus)
+Merging regulator-fixes/for-linus (8f3d9f354286 Linux 5.7-rc1)
+Merging spi-fixes/for-linus (5e60c07c8615 Merge remote-tracking branch 'spi=
+/for-5.7' into spi-linus)
+Merging pci-current/for-linus (8f3d9f354286 Linux 5.7-rc1)
+Merging driver-core.current/driver-core-linus (2b07021a940c debugfs: remove=
+ return value of debugfs_create_u32())
+Merging tty.current/tty-linus (3dc4db366236 serial: sh-sci: Make sure statu=
+s register SCxSR is read in correct sequence)
+Merging usb.current/usb-linus (be34a5854b46 USB: Add USB_QUIRK_DELAY_CTRL_M=
+SG and USB_QUIRK_DELAY_INIT for Corsair K70 RGB RAPIDFIRE)
+Merging usb-gadget-fixes/fixes (a7b778357ca4 usb: raw-gadget: Fix copy_to/f=
+rom_user() checks)
+Merging usb-serial-fixes/usb-linus (8f3d9f354286 Linux 5.7-rc1)
+Merging usb-chipidea-fixes/ci-for-usb-stable (7cbf3dd3139a usb: chipidea: u=
+dc: fix sleeping function called from invalid context)
+Merging phy/fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging staging.current/staging-linus (ea81c3486442 staging: vt6656: Power =
+save stop wake_up_count wrap around.)
+Merging char-misc.current/char-misc-linus (8f3d9f354286 Linux 5.7-rc1)
+Merging soundwire-fixes/fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging thunderbolt-fixes/fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging input-current/for-linus (e3b4f94ef52a Input: usbtouchscreen - add s=
+upport for BonXeon TP)
+Merging crypto-current/master (55b3209acbb0 crypto: caam - fix the address =
+of the last entry of S/G)
+Merging ide/master (63bef48fd6c9 Merge branch 'akpm' (patches from Andrew))
+Merging vfio-fixes/for-linus (95f89e090618 vfio/type1: Initialize resv_msi_=
+base)
+Merging kselftest-fixes/fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging modules-fixes/modules-linus (57baec7b1b04 scripts/nsdeps: make sure=
+ to pass all module source files to spatch)
+Merging slave-dma-fixes/fixes (aee45dba3ad9 dt-bindings: dma: uniphier-xdma=
+c: switch to single reg region)
+Merging backlight-fixes/for-backlight-fixes (219d54332a09 Linux 5.4)
+Merging mtd-fixes/mtd/fixes (2098c564701c mtd: spi-nor: Compile files in co=
+ntrollers/ directory)
+Merging mfd-fixes/for-mfd-fixes (603d9299da32 mfd: mt6397: Fix probe after =
+changing mt6397-core)
+Merging v4l-dvb-fixes/fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging reset-fixes/reset/fixes (b460e0a9e240 reset: intel: add unspecified=
+ HAS_IOMEM dependency)
+Merging mips-fixes/mips-fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging at91-fixes/at91-fixes (54ecb8f7028c Linux 5.4-rc1)
+Merging omap-fixes/fixes (07bdc492cff6 ARM: dts: OMAP3: disable RNG on N950=
+/N9)
+Merging kvm-fixes/master (56a87e5d997b KVM: SVM: Fix __svm_vcpu_run declara=
+tion.)
+Merging kvms390-fixes/master (1493e0f944f3 KVM: s390: vsie: Fix possible ra=
+ce when shadowing region 3 tables)
+Merging hwmon-fixes/hwmon (c843b382e61b hwmon: (jc42) Fix name to have no i=
+llegal characters)
+Merging nvdimm-fixes/libnvdimm-fixes (f84afbdd3a9e libnvdimm: Out of bounds=
+ read in __nd_ioctl())
+Merging btrfs-fixes/next-fixes (9dba7a236504 Merge branch 'misc-5.7' into n=
+ext-fixes)
+Merging vfs-fixes/fixes (5bd73286d50f fix a braino in legitimize_path())
+Merging dma-mapping-fixes/for-linus (9c24eaf81cc4 iommu/vt-d: Return the co=
+rrect dma mask when we are bypassing the IOMMU)
+Merging i3c-fixes/master (6fbc7275c7a9 Linux 5.2-rc7)
+Merging drivers-x86-fixes/fixes (f585c9d5436a platform/x86/intel-uncore-fre=
+q: make uncore_root_kobj static)
+Merging samsung-krzk-fixes/fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging pinctrl-samsung-fixes/pinctrl-fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging devicetree-fixes/dt/linus (0903060fe590 kbuild: check libyaml insta=
+llation for 'make dt_binding_check')
+Merging scsi-fixes/fixes (fa17a6dc84d1 scsi: Update referenced link to cdrt=
+ools)
+Merging drm-fixes/drm-fixes (4da858c08643 Merge branch 'linux-5.7' of git:/=
+/github.com/skeggsb/linux into drm-fixes)
+Merging amdgpu-fixes/drm-fixes (2c409ba81be2 drm/radeon: fix si_enable_smc_=
+cac() failed issue)
+Merging drm-intel-fixes/for-linux-next-fixes (5809e8f8ee42 Merge tag 'gvt-f=
+ixes-2020-04-14' of https://github.com/intel/gvt-linux into drm-intel-fixes)
+Merging mmc-fixes/fixes (d5891f7c53d2 mmc: cqhci: Avoid false "cqhci: CQE s=
+tuck on" by not open-coding timeout loop)
+Merging rtc-fixes/rtc-fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging gnss-fixes/gnss-linus (8f3d9f354286 Linux 5.7-rc1)
+Merging hyperv-fixes/hyperv-fixes (1a06d017fb3f Drivers: hv: vmbus: Fix Sus=
+pend-to-Idle for Generation-2 VM)
+Merging soc-fsl-fixes/fix (fe8fe7723a3a soc: fsl: dpio: register dpio irq h=
+andlers after dpio create)
+Merging risc-v-fixes/fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging pidfd-fixes/fixes (a966dcfe153a clone3: add build-time CLONE_ARGS_S=
+IZE_VER* validity checks)
+Merging fpga-fixes/fixes (3c2760b78f90 fpga: dfl: pci: fix return value of =
+cci_pci_sriov_configure)
+Merging spdx/spdx-linus (5b8b9d0c6d0e Merge branch 'akpm' (patches from And=
+rew))
+Merging gpio-intel-fixes/fixes (8f3d9f354286 Linux 5.7-rc1)
+Merging pinctrl-intel-fixes/fixes (69388e15f507 pinctrl: cherryview: Add mi=
+ssing spinlock usage in chv_gpio_irq_handler)
+Merging erofs-fixes/fixes (d1eef1c61974 Linux 5.5-rc2)
+Merging drm-misc-fixes/for-linux-next-fixes (7bfc1fec1af3 drm/dp_mst: Zero =
+assigned PBN when releasing VCPI slots)
+Merging kspp-gustavo/for-next/kspp (90e5d84c7b06 xattr.h: Replace zero-leng=
+th array with flexible-array member)
+Merging kbuild/for-next (b032227c6293 Merge tag 'nios2-v5.7-rc1' of git://g=
+it.kernel.org/pub/scm/linux/kernel/git/lftan/nios2)
+Merging compiler-attributes/compiler-attributes (98d54f81e36b Linux 5.6-rc4)
+Merging leaks/leaks-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging dma-mapping/for-next (9bb50ed74709 dma-debug: fix displaying of dma=
+ allocation type)
+Merging asm-generic/master (060dc911501f nds32: fix build failure caused by=
+ page table folding updates)
+Merging arc/for-next (def9d2780727 Linux 5.5-rc7)
+Merging arm/for-next (52d3b2f98483 Merge branch 'devel-stable' into for-nex=
+t)
+Merging arm64/for-next/core (fc2266011acc arm64: armv8_deprecated: Fix unde=
+f_hook mask for thumb setend)
+Merging arm-perf/for-next/perf (8f3d9f354286 Linux 5.7-rc1)
+Merging arm-soc/for-next (512e8d40f91d ARM: dts: OMAP3: disable RNG on N950=
+/N9)
+Merging amlogic/for-next (8f3d9f354286 Linux 5.7-rc1)
+Merging aspeed/for-next (de285b938cf3 ARM: dts: aspeed: ast2600: Fix SCU IR=
+Q controller nodes)
+Merging at91/at91-next (ec539e70d882 Merge branches 'at91-soc', 'at91-dt' a=
+nd 'at91-defconfig' into at91-next)
+Merging imx-mxs/for-next (46535d78fdfe Merge branch 'imx/dt64' into for-nex=
+t)
+Merging keystone/next (560b4d4691b0 Merge branch 'for_5.7/keystone-dts' int=
+o next)
+Merging mediatek/for-next (23a161322658 Merge branch 'v5.7-next/soc' into f=
+or-next)
+Merging mvebu/for-next (9d32706f8aa8 Merge branch 'mvebu/dt64' into mvebu/f=
+or-next)
+Merging omap/for-next (e90f16cc1a48 Merge branch 'fixes' into for-next)
+Merging qcom/for-next (217aeedd10d5 Merge branches 'arm64-defconfig-for-5.8=
+', 'arm64-for-5.8', 'drivers-for-5.8' and 'dts-for-5.8' into for-next)
+Applying: Revert "soc: qcom: rpmh: Allow RPMH driver to be loaded as a modu=
+le"
+Merging raspberrypi/for-next (e7b7daeb48e0 ARM: dts: bcm283x: Use firmware =
+PM driver for V3D)
+CONFLICT (content): Merge conflict in arch/arm/configs/bcm2835_defconfig
+Merging realtek/for-next (486f29df6941 Merge branch 'v5.8/dt' into next)
+Merging renesas/next (a710158e9fa2 Merge branch 'renesas-arm-dt-for-v5.8' i=
+nto renesas-next)
+Merging reset/reset/next (2ebf89fd4ecf reset: hi6220: Add support for AO re=
+set controller)
+Merging rockchip/for-next (c018aff1a201 Merge branch 'v5.7-armsoc/dts64' in=
+to for-next)
+Merging samsung-krzk/for-next (ff602fc2b39e Merge branch 'next/soc' into fo=
+r-next)
+Merging scmi/for-linux-next (8f3d9f354286 Linux 5.7-rc1)
+Merging sunxi/sunxi/for-next (4f7a2d7e5f1e Merge branches 'sunxi/clk-for-5.=
+8', 'sunxi/config-for-5.8' and 'sunxi/dt-for-5.8' into sunxi/for-next)
+Merging tegra/for-next (723fa610ebd2 Merge branch for-5.8/arm64/dt into for=
+-next)
+Merging clk/clk-next (e7f552f727f5 Merge branch 'clk-fixes' into clk-next)
+Merging clk-samsung/for-next (54ecb8f7028c Linux 5.4-rc1)
+Merging c6x/for-linux-next (8adcc59974b8 Merge branch 'work.misc' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/viro/vfs)
+Merging csky/linux-next (10cb08260605 csky: Fixup perf probe -x hungup)
+Merging h8300/h8300-next (beab3d5cb0e1 irq-renesas-h8s: Fix external interr=
+upt control.)
+Merging ia64/next (172e7890406d tty/serial: cleanup after ioc*_serial drive=
+r removal)
+Merging m68k/for-next (86cded5fc525 m68k: defconfig: Update defconfigs for =
+v5.6-rc4)
+Merging m68knommu/for-next (ba000760eb0f m68k: Replace setup_irq() by reque=
+st_irq())
+Merging microblaze/next (8f3d9f354286 Linux 5.7-rc1)
+Merging mips/mips-next (19c968222934 MIPS: DTS: CI20: make DM9000 Ethernet =
+controller use NVMEM to find the default MAC address)
+Merging nds32/next (d785c5a324cd nds32: configs: Cleanup CONFIG_CROSS_COMPI=
+LE)
+Merging nios2/for-next (0ec8a5054d7f MAINTAINERS: Remove nios2-dev@lists.ro=
+cketboards.org)
+Merging openrisc/for-next (9737e2c5f0bc openrisc: Remove obsolete show_trac=
+e_task function)
+Merging parisc-hd/for-next (7111951b8d49 Linux 5.6)
+Merging powerpc/next (6ba4a2d35910 selftests/powerpc: Always build the tm-p=
+oison test 64-bit)
+Merging fsl/next (a76bea0287ce powerpc/kmcent2: add ranges to the pci bridg=
+es)
+Merging soc-fsl/next (461c3ac0dc46 soc: fsl: qe: fix sparse warnings for uc=
+c_slow.c)
+Merging risc-v/for-next (8f3d9f354286 Linux 5.7-rc1)
+Merging sifive/for-next (467e050e9760 Merge branch 'i2c/for-current' of git=
+://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux)
+Merging s390/features (8f3d9f354286 Linux 5.7-rc1)
+Merging sh/sh-next (a193018e5290 sh: add missing EXPORT_SYMBOL() for __dela=
+y)
+Merging sparc-next/master (b71acb0e3721 Merge branch 'linus' of git://git.k=
+ernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6)
+Merging uml/linux-next (4a7c46247f9c um: Remove some unnecessary NULL check=
+s in vector_user.c)
+Merging xtensa/xtensa-for-next (70cbddb97385 arch/xtensa: fix grammar in Kc=
+onfig help text)
+Merging fscrypt/master (861261f2a9cc ubifs: wire up FS_IOC_GET_ENCRYPTION_N=
+ONCE)
+Merging afs/afs-next (4fe171bb81b1 afs: Remove set but not used variable 'r=
+et')
+Merging btrfs/for-next (5a7ef5cb05dc Merge branch 'for-next-current-v5.6-20=
+200331' into for-next-20200331)
+Merging ceph/master (2a575f138d00 ceph: fix potential bad pointer deref in =
+async dirops cb's)
+Merging cifs/for-next (ae83d0b416db Linux 5.7-rc2)
+Merging configfs/for-next (e2f238f7d5a1 configfs: calculate the depth of pa=
+rent item)
+Merging ecryptfs/next (8b614cb8f1dc Merge tag '5.6-rc4-smb3-fixes' of git:/=
+/git.samba.org/sfrench/cifs-2.6)
+Merging erofs/dev (8f3d9f354286 Linux 5.7-rc1)
+Merging exfat/dev (f8cfd4e877fa exfat: truncate atimes to 2s granularity)
+Merging ext3/for_next (a32f0ecd79b4 Merge fanotify fix from Nathan Chancell=
+or.)
+Merging ext4/dev (907ea529fc4c ext4: convert BUG_ON's to WARN_ON's in mball=
+oc.c)
+Merging f2fs/dev (864d76b0dc8f f2fs: fix quota_sync failure due to f2fs_loc=
+k_op)
+Merging fsverity/fsverity (98d54f81e36b Linux 5.6-rc4)
+Merging fuse/for-next (3e8cb8b2eaeb fuse: fix stack use after return)
+Merging jfs/jfs-next (7aba5dcc2346 jfs: Replace zero-length array with flex=
+ible-array member)
+Merging nfs/linux-next (ae83d0b416db Linux 5.7-rc2)
+Merging nfs-anna/linux-next (55dee1bc0d72 nfs: add minor version to nfs_ser=
+ver_key for fscache)
+Merging nfsd/nfsd-next (2653de9f0398 fs: nfsd: fileache.c: Use built-in RCU=
+ list checking)
+CONFLICT (content): Merge conflict in net/sunrpc/cache.c
+Merging orangefs/for-next (aa317d3351de orangefs: clarify build steps for t=
+est server in orangefs.txt)
+Merging overlayfs/overlayfs-next (2eda9eaa6d7e ovl: document xino expected =
+behavior)
+Merging ubifs/linux-next (3676f32a98cd ubi: ubi-media.h: Replace zero-lengt=
+h array with flexible-array member)
+Merging v9fs/9p-next (c6f141412d24 9p: document short read behaviour with O=
+_NONBLOCK)
+Merging xfs/for-next (f0f7a674d4df xfs: move inode flush to the sync workqu=
+eue)
+Merging zonefs/for-next (0dda2ddb7ded zonefs: select FS_IOMAP)
+Merging iomap/iomap-for-next (457df33e035a iomap: Handle memory allocation =
+failure in readahead)
+Merging djw-vfs/vfs-for-next (56939e014a6c hibernate: Allow uswsusp to writ=
+e to swap)
+Merging file-locks/locks-next (dbdaf6a3250b locks: reinstate locks_delete_b=
+lock optimization)
+Merging vfs/for-next (ffca8b2a77f2 Merge branch 'work.exfat' into for-next)
+Merging printk/for-next (d34f14ae521f Merge branch 'for-5.7-preferred-conso=
+le' into for-next)
+Merging pci/next (8f3d9f354286 Linux 5.7-rc1)
+Merging pstore/for-next/pstore (8f3d9f354286 Linux 5.7-rc1)
+Merging hid/for-next (ce01b5b5386f Merge branch 'for-5.8/mcp2221' into for-=
+next)
+Merging i2c/i2c/for-next (6942557f34e7 Merge branch 'i2c/for-5.8' into i2c/=
+for-next)
+Merging i3c/i3c/next (b4203ce05563 i3c master: GETMRL's 3rd byte is optiona=
+l even with BCR_IBI_PAYLOAD)
+Merging dmi/master (8cf87c744696 firmware/dmi: Report DMI Bios & EC firmwar=
+e release)
+Merging hwmon-staging/hwmon-next (635049d0e3a0 hwmon: (dell-smm) Use one DM=
+I match for all XPS models)
+Merging jc_docs/docs-next (d98dbbe0d331 scripts: documentation-file-ref-che=
+ck: Add line break before exit)
+Merging v4l-dvb/master (ceab3ac1e60d media: dvb-frontends: DUMMY_FE should =
+depends on DVB_CORE)
+Merging v4l-dvb-next/master (54ecb8f7028c Linux 5.4-rc1)
+Merging fbdev/fbdev-for-next (732146a3f1dc video: fbdev: imxfb: fix a typo =
+in imxfb_probe())
+Merging pm/linux-next (c087b3aec013 Merge branch 'acpi-pci' into linux-next)
+Merging cpufreq-arm/cpufreq/arm/linux-next (8be6bbe59a69 cpufreq: omap: Bui=
+ld driver by default for ARCH_OMAP2PLUS)
+Merging cpupower/cpupower (8f3d9f354286 Linux 5.7-rc1)
+Merging opp/opp/linux-next (aca48b61f963 opp: Manage empty OPP tables with =
+clk handle)
+Merging thermal/thermal/linux-next (79799562bf08 thermal: int3400_thermal: =
+Statically initialize .get_mode()/.set_mode() ops)
+Merging thermal-rzhang/next (54ecb8f7028c Linux 5.4-rc1)
+Merging thermal-soc/next (6c375eccded4 thermal: db8500: Rewrite to be a pur=
+e OF sensor)
+Merging ieee1394/for-next (67f8e65e4fc1 firewire: net: remove set but not u=
+sed variable 'guid')
+Merging dlm/next (a48f9721e6db dlm: no need to check return value of debugf=
+s_create functions)
+Merging swiotlb/linux-next (4cdfb27ba80d xen/swiotlb: remember having calle=
+d xen_create_contiguous_region())
+Merging rdma/for-next (8f3d9f354286 Linux 5.7-rc1)
+Merging net-next/master (0fde6e3b55a1 Merge branch 'r8169-series-with-impro=
+vements')
+Merging bpf-next/master (2fcd80144b93 Merge tag 'tag-chrome-platform-fixes-=
+for-v5.7-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platf=
+orm/linux)
+Merging ipsec-next/master (308491755f36 xfrm: add prep for esp beet mode of=
+fload)
+Merging mlx5-next/mlx5-next (59e9e8e4fe83 net/mlx5: Enable SW-defined RoCEv=
+2 UDP source port)
+Merging netfilter-next/master (0fde6e3b55a1 Merge branch 'r8169-series-with=
+-improvements')
+Merging ipvs-next/master (d54725cd11a5 netfilter: nf_tables: support for mu=
+ltiple devices per netdev hook)
+Merging wireless-drivers-next/master (f0f383347ced brcmfmac: remove leading=
+ space)
+Merging bluetooth/master (0fde6e3b55a1 Merge branch 'r8169-series-with-impr=
+ovements')
+Merging mac80211-next/master (7b2d38b7dd89 mac80211_hwsim: notify wmediumd =
+of used MAC addresses)
+Merging gfs2/for-next (197694d09af5 docs: filesystems: convert gfs2-glocks.=
+txt to ReST)
+Merging mtd/mtd/next (025a06c1104c mtd: Convert fallthrough comments into s=
+tatements)
+Merging nand/nand/next (fca88925d769 mtd: rawnand: toshiba: Support reading=
+ the number of bitflips for BENAND (Built-in ECC NAND))
+Merging spi-nor/spi-nor/next (8f3d9f354286 Linux 5.7-rc1)
+Merging crypto/master (0a8f5989e034 crypto: marvell/octeontx - Add missing =
+'\n' in log messages)
+Applying: Revert "crypto: hisilicon/qm - stop qp by judging sq and cq tail"
+Applying: Revert "crypto: hisilicon/sec2 - add controller reset support for=
+ SEC2"
+Applying: Revert "crypto: hisilicon/hpre - add controller reset support for=
+ HPRE"
+Applying: Revert "crypto: hisilicon/zip - add controller reset support for =
+zip"
+Applying: Revert "crypto: hisilicon/qm - add controller reset interface"
+Merging drm/drm-next (8f3d9f354286 Linux 5.7-rc1)
+Merging amdgpu/drm-next (c029bbfac1bf PCI/P2PDMA: Add additional AMD ZEN ro=
+ot ports to the whitelist)
+CONFLICT (content): Merge conflict in drivers/gpu/drm/amd/powerplay/renoir_=
+ppt.c
+CONFLICT (content): Merge conflict in drivers/gpu/drm/amd/amdgpu/amdgpu_ras=
+.c
+Merging drm-intel/for-linux-next (31a02eb70b8d drm/i915: Refactor setting d=
+ma info to a common helper)
+Merging drm-tegra/drm/tegra/for-next (e32c8c2a5fbe drm/tegra: hdmi: Silence=
+ deferred-probe error)
+Merging drm-misc/for-linux-next (8eea6e26fc2e dt-bindings: display: convert=
+ rockchip rk3066 hdmi bindings to yaml)
+CONFLICT (content): Merge conflict in drivers/gpu/drm/i915/display/intel_dp=
+_mst.c
+Merging drm-msm/msm-next (a5fb8b918920 drm/msm/a6xx: Use the DMA API for GM=
+U memory objects)
+Merging mali-dp/for-upstream/mali-dp (f634c6a80287 dt/bindings: display: Ad=
+d optional property node define for Mali DP500)
+Merging imx-drm/imx-drm/next (2c76b324c794 drm/imx: parallel-display: Adjus=
+t bus_flags handling)
+Merging etnaviv/etnaviv/next (f232d9ec029c drm/etnaviv: fix TS cache flushi=
+ng on GPUs with BLT engine)
+Merging regmap/for-next (f320d878bff2 Merge branch 'regmap-5.8' into regmap=
+-next)
+Merging sound/for-next (093b8494f299 ALSA: usb-audio: Print more informatio=
+n in stream proc files)
+Merging sound-asoc/for-next (09b0653f0937 Merge remote-tracking branch 'aso=
+c/for-5.8' into asoc-next)
+$ git reset --hard HEAD^
+Merging next-20200414 version of sound-asoc
+Merging modules/modules-next (0f74226649fb kernel: module: Replace zero-len=
+gth array with flexible-array member)
+Merging input/next (81b4d1d22ca0 Input: evdev - use keyed wakeups)
+Merging block/for-next (8f3d9f354286 Linux 5.7-rc1)
+Merging device-mapper/for-next (ad4e80a639fc dm verity fec: fix hash block =
+number in verity_fec_decode)
+Merging pcmcia/pcmcia-next (a8c122f72d94 pcmcia: remove some unused space c=
+haracters)
+Merging mmc/next (24003eb98a4d mmc: sdhci: add spin lock for sdhci_set_defa=
+ult_irqs in sdhci_init)
+Merging md/for-next (e820d55cb99d md: fix raid10 hang issue caused by barri=
+er)
+Merging mfd/for-mfd-next (d2923aa45356 mfd: intel-lpss: Fix Intel Elkhart L=
+ake LPSS I2C input clock)
+Merging backlight/for-backlight-next (ee0c8e494cc3 backlight: corgi: Conver=
+t to use GPIO descriptors)
+Merging battery/for-next (164eaf6b435c power: supply: 88pm860x_battery: rem=
+ove redundant dev_err message)
+Merging regulator/for-next (2ea8db7200d4 regulator: tps80031: remove redund=
+ant assignment to variables ret and val)
+Merging security/next-testing (3e27a33932df security: remove duplicated inc=
+lude from security.h)
+Merging apparmor/apparmor-next (01df52d726b5 apparmor: remove duplicate che=
+ck of xattrs on profile attachment.)
+Merging integrity/next-integrity (9e2b4be377f0 ima: add a new CONFIG for lo=
+ading arch-specific policies)
+Merging keys/keys-next (43672cf93c6d Merge branch 'notifications-pipe-core'=
+ into keys-next)
+CONFLICT (content): Merge conflict in include/linux/lsm_hooks.h
+CONFLICT (content): Merge conflict in fs/pipe.c
+Applying: io_uring: fix up for get_pipe_info() API change
+Applying: security: keys: fixup for "security: Refactor declaration of LSM =
+hooks"
+Merging selinux/next (430059024389 selinux: implement new format of filenam=
+e transitions)
+Merging smack/for-next (92604e825304 smack: use GFP_NOFS while holding inod=
+e_smack::smk_lock)
+Merging tomoyo/master (8f3d9f354286 Linux 5.7-rc1)
+Merging tpmdd/next (8e0ea4627151 tpm/tpm_tis: Free IRQ if probing fails)
+Merging watchdog/master (ea104a9e4d3e watchdog: sp805: fix restart handler)
+Merging iommu/next (ff68eb23308e Merge branches 'iommu/fixes', 'arm/qcom', =
+'arm/omap', 'arm/smmu', 'x86/amd', 'x86/vt-d', 'virtio' and 'core' into nex=
+t)
+Merging vfio/next (f44efca0493d vfio: Ignore -ENODEV when getting MSI cooki=
+e)
+Merging audit/next (8f3d9f354286 Linux 5.7-rc1)
+Merging devicetree/for-next (7e5ff5917593 Merge branch 'dt/linus' into dt/n=
+ext)
+Merging mailbox/mailbox-for-next (0a67003b1985 mailbox: imx: add SCU MU sup=
+port)
+Merging spi/for-next (36792a4aa66c Merge remote-tracking branch 'spi/for-5.=
+8' into spi-next)
+Merging tip/auto-latest (36d1b5ecb415 Merge branch 'irq/urgent')
+Merging clockevents/timers/drivers/next (c1ac28a4de6f Revert "clocksource: =
+Avoid creating dead devices")
+Merging edac/edac-for-next (d9976bc155b1 MAINTAINERS: Remove sifive_l2_cach=
+e.c from EDAC-SIFIVE pattern)
+Merging irqchip/irq/irqchip-next (4cea749d56be Revert "irqchip/xilinx: Enab=
+le generic irq multi handler")
+Merging ftrace/for-next (8e99cf91b99b tracing: Do not allocate buffer in tr=
+ace_find_next_entry() in atomic)
+Merging rcu/rcu/next (fa389f19dd0a mm/mmap.c: Add cond_resched() for exit_m=
+map() CPU stalls)
+Merging kvm/linux-next (604e8bba0dc5 KVM: Remove redundant argument to kvm_=
+arch_vcpu_ioctl_run)
+Merging kvm-arm/next (463050599742 Merge tag 'kvm-arm-removal' into kvmarm-=
+master/next)
+Merging kvm-ppc/kvm-ppc-next (9a5788c615f5 KVM: PPC: Book3S HV: Add a capab=
+ility for enabling secure guests)
+Merging kvms390/next (7a2653612bb6 s390/gmap: return proper error code on k=
+sm unsharing)
+Merging xen-tip/linux-next (74f4c438f22c arm/xen: make _xen_start_info stat=
+ic)
+Merging percpu/for-next (dedac37ea96b Merge branch 'for-5.7' into for-next)
+Merging workqueues/for-next (4acf8a423cd3 Merge branch 'for-5.7' into for-n=
+ext)
+Merging drivers-x86/for-next (8f3d9f354286 Linux 5.7-rc1)
+Merging chrome-platform/for-next (9d33ea331032 platform/chrome: cros_ec_typ=
+ec: Register port partner)
+Merging hsi/for-next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging leds/for-next (ca99522667ad leds: tca6507: Include the right header)
+Merging ipmi/for-next (d6850a47c933 ipmi: use vzalloc instead of kmalloc fo=
+r user creation)
+Merging driver-core/driver-core-next (55623260bb33 test_firmware: remove un=
+necessary test_fw_mutex in test_dev_config_show_xxx)
+Merging usb/usb-next (e9010320f2d9 usb: cdns3: gadget: make a bunch of func=
+tions static)
+Merging usb-gadget/next (4a5dbd900957 dt-bindings: usb: add documentation f=
+or aspeed usb-vhub)
+Merging usb-serial/usb-next (8f3d9f354286 Linux 5.7-rc1)
+Merging usb-chipidea-next/ci-for-usb-next (95caa2ae70fd usb: chipidea: allo=
+w disabling glue drivers if EMBEDDED)
+Merging phy-next/next (8f3d9f354286 Linux 5.7-rc1)
+Merging tty/tty-next (a8e7346b7c0a serial: uartps: Use cdns_uart_tx_empty i=
+n console_write)
+Merging char-misc/char-misc-next (8f3d9f354286 Linux 5.7-rc1)
+Merging extcon/extcon-next (108339e7a4fe extcon: remove redundant assignmen=
+t to variable idx)
+Merging soundwire/next (8f3d9f354286 Linux 5.7-rc1)
+Merging thunderbolt/next (cbb5494ebce5 Revert "thunderbolt: Prevent crash i=
+f non-active NVMem file is read")
+Merging staging/staging-next (710c451fbcb2 staging: rtl8188eu: make const c=
+har array static)
+Merging mux/for-next (f356d58c3a04 Merge branch 'i2c-mux/for-next' into for=
+-next)
+Merging icc/icc-next (03c4e6186bbb interconnect: qcom: Add OSM L3 support o=
+n SC7180)
+Merging slave-dma/next (a02254f8a676 dmaengine: ioat: Decreasing allocation=
+ chunk size 2M->512K)
+Merging cgroup/for-next (eec8fd0277e3 device_cgroup: Cleanup cgroup eBPF de=
+vice filter code)
+Merging scsi/for-next (b8178c2dfcee Merge branch 'misc' into for-next)
+Merging scsi-mkp/for-next (7109cb515172 scsi: qedf: Get dev info after upda=
+ting the params)
+Merging vhost/linux-next (a09caf89a4d7 vhost: disable for OABI)
+Merging rpmsg/for-next (ee7cef848adf Merge branches 'hwspinlock-next', 'rpm=
+sg-next' and 'rproc-next' into for-next)
+Merging gpio/for-next (9f676e5313c1 gpio: mlxbf2: remove unused including <=
+linux/version.h>)
+Merging gpio-brgl/gpio/for-next (aa58a21ae378 gpio: pca953x: disable regmap=
+ locking)
+Merging gpio-intel/for-next (8f3d9f354286 Linux 5.7-rc1)
+Merging pinctrl/for-next (987a527ed69d Merge branch 'devel' into for-next)
+Merging pinctrl-intel/for-next (3dbf1ee6abbb pinctrl: cherryview: Add missi=
+ng spinlock usage in chv_gpio_irq_handler)
+Merging pinctrl-samsung/for-next (b577a2799140 pinctrl: samsung: Correct se=
+tting of eint wakeup mask on s5pv210)
+Merging pwm/for-next (6f0841a8197b pwm: Add support for Azoteq IQS620A PWM =
+generator)
+Merging userns/for-next (4fa3b1c41737 proc: Handle umounts cleanly)
+Merging ktest/for-next (1091c8fce8aa ktest: Fix typos in ktest.pl)
+Merging random/dev (ab9a7e27044b random: avoid warnings for !CONFIG_NUMA bu=
+ilds)
+Merging kselftest/next (b87080eab4c1 selftests/ipc: Fix test failure seen a=
+fter initial test run)
+Merging y2038/y2038 (c4e71212a245 Revert "drm/etnaviv: reject timeouts with=
+ tv_nsec >=3D NSEC_PER_SEC")
+Merging livepatching/for-next (d28b4c1b2b3d Merge branch 'for-5.6/selftests=
+' into for-next)
+Merging coresight/next (a59f11c764b0 coresight: Fix support for sparsely po=
+pulated ports)
+Merging rtc/rtc-next (11ddbdfb68e4 rtc: rc5t619: Fix an ERR_PTR vs NULL che=
+ck)
+Merging nvdimm/libnvdimm-for-next (f6d2b802f80d Merge branch 'for-5.7/libnv=
+dimm' into libnvdimm-for-next)
+Merging at24/at24/for-next (8f3d9f354286 Linux 5.7-rc1)
+Merging ntb/ntb-next (5cc3de3c7435 NTB: ntb_test: Fix bug when counting rem=
+ote files)
+Merging kspp/for-next/kspp (c7527373fe28 gcc-common.h: Update for GCC 10)
+Merging cisco/for-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging gnss/gnss-next (8f3d9f354286 Linux 5.7-rc1)
+Merging fsi/next (2c01397b71c5 fsi: aspeed: Fix OPB0 byte order register va=
+lues)
+CONFLICT (content): Merge conflict in drivers/fsi/Kconfig
+Merging slimbus/for-next (b23f2e2df6c9 slimbus: ngd: remove redundant assig=
+nment)
+Merging nvmem/for-next (10dceb230b3b nvmem: imx-ocotp: Improve logic to sav=
+e many code lines)
+Merging xarray/xarray (27586ca786a7 XArray: Handle retry entries within xas=
+_find_marked)
+Merging hyperv/hyperv-next (e66b54d07be4 drivers: hv: remove redundant assi=
+gnment to pointer primary_channel)
+Merging auxdisplay/auxdisplay (2f920c0f0e29 auxdisplay: charlcd: replace ze=
+ro-length array with flexible-array member)
+Merging kgdb/kgdb/for-next (5ea771abd5a3 kdb: Censor attempts to set PROMPT=
+ without ENABLE_MEM_READ)
+Merging pidfd/for-next (6952a4f64644 selftests: add pid namespace ENOMEM re=
+gression test)
+Merging devfreq/devfreq-next (a35a2f2b3e6e PM / devfreq: tegra30: Delete an=
+ error message in tegra_devfreq_probe())
+Merging hmm/hmm (8f3d9f354286 Linux 5.7-rc1)
+Merging fpga/for-next (cef0ca6417de fpga: dfl: afu: support debug access to=
+ memory-mapped afu regions)
+Merging kunit/test (8f3d9f354286 Linux 5.7-rc1)
+Merging cel/cel-next (23cf1ee1f186 svcrdma: Fix leak of svc_rdma_recv_ctxt =
+objects)
+Merging generic-ioremap/for-next (4bdc0d676a64 remove ioremap_nocache and d=
+evm_ioremap_nocache)
+Merging cfi/cfi/next (b6fe8bc67d2d mtd: hyperbus: move direct mapping setup=
+ to AM654 HBMC driver)
+Merging kunit-next/kunit (8f3d9f354286 Linux 5.7-rc1)
+Merging trivial/for-next (fad7c9020948 err.h: remove deprecated PTR_RET for=
+ good)
+Merging zx2c4/for-next (16fbf79b0f83 Linux 5.6-rc7)
+Merging mhi/mhi-next (8f3d9f354286 Linux 5.7-rc1)
+Applying: video: fbdev: controlfb: remove COMPILE_TEST for now
+Applying: ipmi: vzalloc use requires vmallo.h inclusion
+Merging akpm-current/current (8bd30abc5412 ipc/namespace.c: use a work queu=
+e to free_ipc)
+$ git checkout -b akpm remotes/origin/akpm/master
+Applying: amdgpu: a NULL ->mm does not mean a thread is a kthread
+Applying: i915/gvt: remove unused xen bits
+Applying: kernel: move use_mm/unuse_mm to kthread.c
+Applying: kernel: move use_mm/unuse_mm to kthread.c
+Applying: kernel: better document the use_mm/unuse_mm API contract
+Applying: kernel-better-document-the-use_mm-unuse_mm-api-contract-v2
+Applying: kernel: set USER_DS in kthread_use_mm
+Applying: mm/kmemleak: silence KCSAN splats in checksum
+Applying: mm/frontswap: mark various intentional data races
+Applying: mm/page_io: mark various intentional data races
+Applying: mm-page_io-mark-various-intentional-data-races-v2
+Applying: mm/swap_state: mark various intentional data races
+Applying: mm/filemap.c: fix a data race in filemap_fault()
+Applying: mm/swapfile: fix and annotate various data races
+Applying: mm-swapfile-fix-and-annotate-various-data-races-v2
+Applying: mm/page_counter: fix various data races at memsw
+Applying: mm/memcontrol: fix a data race in scan count
+Applying: mm/list_lru: fix a data race in list_lru_count_one
+Applying: mm/mempool: fix a data race in mempool_free()
+Applying: mm/util.c: annotate an data race at vm_committed_as
+Applying: mm/rmap: annotate a data race at tlb_flush_batched
+Applying: mm: annotate a data race in page_zonenum()
+Applying: mm/swap.c: annotate data races for lru_rotate_pvecs
+Applying: net-zerocopy: use vm_insert_pages() for tcp rcv zerocopy
+Applying: mm/madvise: pass task and mm to do_madvise
+Applying: mm/madvise: introduce process_madvise() syscall: an external memo=
+ry hinting API
+Applying: fix process_madvise build break for arm64
+Applying: mm/madvise: check fatal signal pending of target process
+Applying: pid: move pidfd_get_pid() to pid.c
+Applying: mm/madvise: support both pid and pidfd for process_madvise
+Applying: mm/madvise: employ mmget_still_valid() for write lock
+Applying: mm/madvise: allow KSM hints for remote API
+Applying: drivers/media/platform/sti/delta/delta-ipc.c: fix read buffer ove=
+rflow
+Merging akpm/master (e98ff732aff9 drivers/media/platform/sti/delta/delta-ip=
+c.c: fix read buffer overflow)
+
+--Sig_/eexMcoPIbzfUrTWo9fk5aDt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6dJGIACgkQAVBC80lX
+0Gy+MAf/TLT6WLRw3kKccbic8GgCm2fzxSXj6NVotv6RF0wIRvvOY0ZyC3d50gkq
+FimzhiKC+ugPk2jvDaGH26tlZKmb1WQ48rYadgFEeUSuGQfZwK1asXTnxtSBZIFC
+MfxyofweGu2JmwLISC3e8x+patOwaOnoukPgpABKUBb1o3pM/qI+zVz6cIOMUrjh
+kqu4Gvglug0P0dyjm/x8PAqjYB1CRd8yg+7AS43G3UVHFoDYkDBoYJyMt/I8XzyA
+hHWEnkSUzt8WAg73HhqMWrJ19l7gc2AC9izzvkxWOJMqTYKUnwy7rxNetM+/hhQZ
+DNLH29mQY5/Fq4sfM4NCAAaanmhJwA==
+=+PRb
+-----END PGP SIGNATURE-----
+
+--Sig_/eexMcoPIbzfUrTWo9fk5aDt--
