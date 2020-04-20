@@ -2,104 +2,169 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B5FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C572C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D506E206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122C22074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="O62Hh01n"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0bvD2YaX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgDTPPU (ORCPT
+        id S1726420AbgDTPRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:15:20 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:33686 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725865AbgDTPPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:15:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=j04KOWK7oiQmUIJaNm9oBICc+BDi64eNQbDFosd6GAc=; b=O
-        62Hh01nRPnqzdOOXRJBwPCqr2UDY3DOTlZATbevd/ObcSAWL7KgWQL0sDcBMZ7LJ
-        kGxzdz1++TMkEI/En/EeTpEOXMQpjeZKSJ8jWioH4uONIU9GcnG6EKO21XAM3pLX
-        U3qiTCZjCtWnELGaFn90k6DnmoT0HMDAjTbn21FI6s=
-Received: from localhost.localdomain (unknown [120.229.255.67])
-        by app2 (Coremail) with SMTP id XQUFCgCHj+NwvJ1eNKwjAA--.950S3;
-        Mon, 20 Apr 2020 23:14:58 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH v2] SUNRPC: Remove unreachable error condition
-Date:   Mon, 20 Apr 2020 23:14:19 +0800
-Message-Id: <1587395659-86206-1-git-send-email-xiyuyang19@fudan.edu.cn>
+        Mon, 20 Apr 2020 11:17:15 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:9128 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726061AbgDTPRO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:17:14 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KF86eZ009838;
+        Mon, 20 Apr 2020 17:17:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=utrDtfDiBp72eoR3DFVmDIYTn4oU6h7X8z50uW0XqAY=;
+ b=0bvD2YaXsrK2zDpYtviIlolYHaArCW/O9D63XPC0jTNRAAAn2QAgHHo+ut7x1+bEiAZt
+ GC8IQRhFwQ2eVRtioH5m282YqCUI+8E5Q+tRa0OjZ0dXKYeFOIsRIay8Aa7lgRYdY1pp
+ f2pXtuH8h0/+3mvLku3x4HtnsSOx45zXQNNgGCsUX6pr+ktglUgX3pTPgK73tGLSsiJx
+ YXF+Yx4LtyefGdR7CDBSVzPw/T+GRwnprizeVcpoZGG8h/PrS3AXpv+/pMQOcKhXbvxG
+ WmJfFCU/pZxDXHF86kVAd80zDCuSUWCpbY2KzgcR4zJPx4xF3NzqIlD+LEeREBjuFNhl gA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30fpp8k577-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 17:17:07 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C54CA10002A;
+        Mon, 20 Apr 2020 17:17:06 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B9EE22B3E39;
+        Mon, 20 Apr 2020 17:17:06 +0200 (CEST)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Apr 2020 17:17:06
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
+CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+Subject: [PATCH v2] i2c: stm32: don't print an error on probe deferral
+Date:   Mon, 20 Apr 2020 17:17:06 +0200
+Message-ID: <1587395826-17541-1-git-send-email-alain.volmat@st.com>
 X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgCHj+NwvJ1eNKwjAA--.950S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gw48Kr4rAryUZry3Gr47CFg_yoWkAwc_XF
-        4IqFykX34DGF4qyFZrCr40yFy7C3y5Kr18Gwn7G34xG3Wjv3Z0vFs5CFn3ArWfurWfuF13
-        CrZrGry3Zw13tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUba8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
-        6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-        IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
-        3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
-        sGvfC2KfnxnUUI43ZEXa7VUbHa0DUUUUU==
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_05:2020-04-20,2020-04-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rpc_clnt_test_and_add_xprt() invokes rpc_call_null_helper(), which
-return the value of rpc_run_task() to "task". Since rpc_run_task() is
-impossible to return an ERR pointer, there is no need to add the
-IS_ERR() condition on "task" here. So we need to remove it.
+From: Etienne Carriere <etienne.carriere@st.com>
 
-Fixes: 7f554890587c ("SUNRPC: Allow addition of new transports to a
-struct rpc_clnt")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
-Changes in v2:
-- Remove useless IS_ERR check instead of fixing a refcnt leak in this
-error path
----
- net/sunrpc/clnt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Do not print an error trace when deferring probe for some resource.
+Fix as well the error message in case of tx dma_request_chan failure.
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 7324b21f923e..5957e336caf7 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2803,8 +2803,7 @@ int rpc_clnt_test_and_add_xprt(struct rpc_clnt *clnt,
- 	task = rpc_call_null_helper(clnt, xprt, NULL,
- 			RPC_TASK_SOFT|RPC_TASK_SOFTCONN|RPC_TASK_ASYNC|RPC_TASK_NULLCREDS,
- 			&rpc_cb_add_xprt_call_ops, data);
--	if (IS_ERR(task))
--		return PTR_ERR(task);
+Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+---
+v2: replace dev_dbg with dev_err in case of error with dma_request_chan for tx
+
+ drivers/i2c/busses/i2c-stm32.c   | 10 +++++++---
+ drivers/i2c/busses/i2c-stm32f4.c |  4 +++-
+ drivers/i2c/busses/i2c-stm32f7.c |  7 +++++--
+ 3 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-stm32.c b/drivers/i2c/busses/i2c-stm32.c
+index 1da347e6a358..3f69a3bb6119 100644
+--- a/drivers/i2c/busses/i2c-stm32.c
++++ b/drivers/i2c/busses/i2c-stm32.c
+@@ -25,8 +25,9 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
+ 	/* Request and configure I2C TX dma channel */
+ 	dma->chan_tx = dma_request_chan(dev, "tx");
+ 	if (IS_ERR(dma->chan_tx)) {
+-		dev_dbg(dev, "can't request DMA tx channel\n");
+ 		ret = PTR_ERR(dma->chan_tx);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "can't request DMA tx channel\n");
+ 		goto fail_al;
+ 	}
+ 
+@@ -44,8 +45,10 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
+ 	/* Request and configure I2C RX dma channel */
+ 	dma->chan_rx = dma_request_chan(dev, "rx");
+ 	if (IS_ERR(dma->chan_rx)) {
+-		dev_err(dev, "can't request DMA rx channel\n");
+ 		ret = PTR_ERR(dma->chan_rx);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "can't request DMA rx channel\n");
 +
- 	rpc_put_task(task);
- success:
- 	return 1;
+ 		goto fail_tx;
+ 	}
+ 
+@@ -73,7 +76,8 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
+ 	dma_release_channel(dma->chan_tx);
+ fail_al:
+ 	devm_kfree(dev, dma);
+-	dev_info(dev, "can't use DMA\n");
++	if (ret != -EPROBE_DEFER)
++		dev_info(dev, "can't use DMA\n");
+ 
+ 	return ERR_PTR(ret);
+ }
+diff --git a/drivers/i2c/busses/i2c-stm32f4.c b/drivers/i2c/busses/i2c-stm32f4.c
+index d6a69dfcac3f..48e269284369 100644
+--- a/drivers/i2c/busses/i2c-stm32f4.c
++++ b/drivers/i2c/busses/i2c-stm32f4.c
+@@ -797,8 +797,10 @@ static int stm32f4_i2c_probe(struct platform_device *pdev)
+ 
+ 	rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+ 	if (IS_ERR(rst)) {
+-		dev_err(&pdev->dev, "Error: Missing controller reset\n");
+ 		ret = PTR_ERR(rst);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Error: Missing reset ctrl\n");
++
+ 		goto clk_free;
+ 	}
+ 	reset_control_assert(rst);
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 8102e33a6753..59a0dcd6a475 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -1967,7 +1967,8 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 
+ 	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(i2c_dev->clk)) {
+-		dev_err(&pdev->dev, "Error: Missing controller clock\n");
++		if (PTR_ERR(i2c_dev->clk) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get controller clock\n");
+ 		return PTR_ERR(i2c_dev->clk);
+ 	}
+ 
+@@ -1979,8 +1980,10 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 
+ 	rst = devm_reset_control_get(&pdev->dev, NULL);
+ 	if (IS_ERR(rst)) {
+-		dev_err(&pdev->dev, "Error: Missing controller reset\n");
+ 		ret = PTR_ERR(rst);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Error: Missing reset ctrl\n");
++
+ 		goto clk_free;
+ 	}
+ 	reset_control_assert(rst);
 -- 
 2.7.4
 
