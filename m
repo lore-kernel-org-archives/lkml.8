@@ -2,145 +2,167 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63300C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E1AC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C820206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387270;
-	bh=GDyjfu7ebG7emcPN4pJip7jomcgTh/VTqPJeZLV1WfU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NFK/9nsfN9/plICnsLyrcFv6ns9YPr6GDvty56X47LVUm3X4h3YdDPF9/Zj/4nexK
-	 OT0ew/di26RHD3XY2V5lFiQzaKZw4cm9ZmEsLKQAB7p3NNBn9N1k53aXYmQjc9aktQ
-	 639pBFHUpbkOBX6b3/Omu7F9SkOhMlr6K50WYjgY=
+	by mail.kernel.org (Postfix) with ESMTP id 5995A206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbgDTMy3 (ORCPT
+        id S1729225AbgDTMyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:54:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728917AbgDTMqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:46:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E9BA2078E;
-        Mon, 20 Apr 2020 12:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386782;
-        bh=GDyjfu7ebG7emcPN4pJip7jomcgTh/VTqPJeZLV1WfU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i5yJVmMXe11QHM+VL1SDr0gpwx/gOQ+BJwqwlzR8luw6fvF1+Vt/WPvqM4JJ3/20X
-         D1jGDKGpumYBu3mlR2dajT+/2CARYWpwmI5lodzQOHEc55C35B4qVywsMX4wkvtcE6
-         XoWxXwXWKrHseob8g56J8gjoh9HxvI3SKi2IHiaw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 24/60] perf report: Fix no branch type statistics report issue
-Date:   Mon, 20 Apr 2020 14:39:02 +0200
-Message-Id: <20200420121508.382700414@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
-References: <20200420121500.490651540@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Apr 2020 08:54:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33230 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728914AbgDTMqV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:46:21 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCWjK0051078;
+        Mon, 20 Apr 2020 08:45:53 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gcbed6yr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:53 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCWmXu051170;
+        Mon, 20 Apr 2020 08:45:52 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gcbed6xw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:52 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCdt3A020512;
+        Mon, 20 Apr 2020 12:45:51 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04wdc.us.ibm.com with ESMTP id 30fs660jnt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 12:45:51 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCjoQN59244996
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 12:45:50 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 18966136053;
+        Mon, 20 Apr 2020 12:45:50 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D509136059;
+        Mon, 20 Apr 2020 12:45:46 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 12:45:45 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
+        kirill@shutemov.name,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH v3 14/22] powerpc/kvm/book3s: Use find_kvm_host_pte in h_enter
+Date:   Mon, 20 Apr 2020 18:14:26 +0530
+Message-Id: <20200420124434.47330-15-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_04:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxlogscore=877
+ clxscore=1015 suspectscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+Since kvmppc_do_h_enter can get called in realmode use low level
+arch_spin_lock which is safe to be called in realmode.
 
-commit c3b10649a80e9da2892c1fd3038c53abd57588f6 upstream.
-
-Previously we could get the report of branch type statistics.
-
-For example:
-
-  # perf record -j any,save_type ...
-  # t perf report --stdio
-
-  #
-  # Branch Statistics:
-  #
-  COND_FWD:  40.6%
-  COND_BWD:   4.1%
-  CROSS_4K:  24.7%
-  CROSS_2M:  12.3%
-      COND:  44.7%
-    UNCOND:   0.0%
-       IND:   6.1%
-      CALL:  24.5%
-       RET:  24.7%
-
-But now for the recent perf, it can't report the branch type statistics.
-
-It's a regression issue caused by commit 40c39e304641 ("perf report: Fix
-a no annotate browser displayed issue"), which only counts the branch
-type statistics for browser mode.
-
-This patch moves the branch_type_count() outside of ui__has_annotation()
-checking, then branch type statistics can work for stdio mode.
-
-Fixes: 40c39e304641 ("perf report: Fix a no annotate browser displayed issue")
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200313134607.12873-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
- tools/perf/builtin-report.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/powerpc/kvm/book3s_64_mmu_hv.c |  5 ++---
+ arch/powerpc/kvm/book3s_hv_rm_mmu.c | 22 ++++++----------------
+ 2 files changed, 8 insertions(+), 19 deletions(-)
 
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -181,24 +181,23 @@ static int hist_iter__branch_callback(st
+diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+index 121146f5a331..9d48173a8b77 100644
+--- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
++++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
+@@ -281,11 +281,10 @@ static long kvmppc_virtmode_do_h_enter(struct kvm *kvm, unsigned long flags,
  {
- 	struct hist_entry *he = iter->he;
- 	struct report *rep = arg;
--	struct branch_info *bi;
-+	struct branch_info *bi = he->branch_info;
- 	struct perf_sample *sample = iter->sample;
- 	struct evsel *evsel = iter->evsel;
- 	int err;
+ 	long ret;
  
-+	branch_type_count(&rep->brtype_stat, &bi->flags,
-+			  bi->from.addr, bi->to.addr);
+-	/* Protect linux PTE lookup from page table destruction */
+-	rcu_read_lock_sched();	/* this disables preemption too */
++	preempt_disable();
+ 	ret = kvmppc_do_h_enter(kvm, flags, pte_index, pteh, ptel,
+ 				kvm->mm->pgd, false, pte_idx_ret);
+-	rcu_read_unlock_sched();
++	preempt_enable();
+ 	if (ret == H_TOO_HARD) {
+ 		/* this can't happen */
+ 		pr_err("KVM: Oops, kvmppc_h_enter returned too hard!\n");
+diff --git a/arch/powerpc/kvm/book3s_hv_rm_mmu.c b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+index 03f8347de48b..83e987fecf97 100644
+--- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
++++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+@@ -210,7 +210,7 @@ long kvmppc_do_h_enter(struct kvm *kvm, unsigned long flags,
+ 	pte_t *ptep;
+ 	unsigned int writing;
+ 	unsigned long mmu_seq;
+-	unsigned long rcbits, irq_flags = 0;
++	unsigned long rcbits;
+ 
+ 	if (kvm_is_radix(kvm))
+ 		return H_FUNCTION;
+@@ -248,17 +248,9 @@ long kvmppc_do_h_enter(struct kvm *kvm, unsigned long flags,
+ 
+ 	/* Translate to host virtual address */
+ 	hva = __gfn_to_hva_memslot(memslot, gfn);
+-	/*
+-	 * If we had a page table table change after lookup, we would
+-	 * retry via mmu_notifier_retry.
+-	 */
+-	if (!realmode)
+-		local_irq_save(irq_flags);
+-	/*
+-	 * If called in real mode we have MSR_EE = 0. Otherwise
+-	 * we disable irq above.
+-	 */
+-	ptep = __find_linux_pte(pgdir, hva, NULL, &hpage_shift);
 +
- 	if (!ui__has_annotation() && !rep->symbol_ipc)
- 		return 0;
++	arch_spin_lock(&kvm->mmu_lock.rlock.raw_lock);
++	ptep = find_kvm_host_pte(kvm, mmu_seq, hva, &hpage_shift);
+ 	if (ptep) {
+ 		pte_t pte;
+ 		unsigned int host_pte_size;
+@@ -272,8 +264,7 @@ long kvmppc_do_h_enter(struct kvm *kvm, unsigned long flags,
+ 		 * to <= host page size, if host is using hugepage
+ 		 */
+ 		if (host_pte_size < psize) {
+-			if (!realmode)
+-				local_irq_restore(flags);
++			arch_spin_unlock(&kvm->mmu_lock.rlock.raw_lock);
+ 			return H_PARAMETER;
+ 		}
+ 		pte = kvmppc_read_update_linux_pte(ptep, writing);
+@@ -287,8 +278,7 @@ long kvmppc_do_h_enter(struct kvm *kvm, unsigned long flags,
+ 			pa |= gpa & ~PAGE_MASK;
+ 		}
+ 	}
+-	if (!realmode)
+-		local_irq_restore(irq_flags);
++	arch_spin_unlock(&kvm->mmu_lock.rlock.raw_lock);
  
--	bi = he->branch_info;
- 	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
- 	if (err)
- 		goto out;
- 
- 	err = addr_map_symbol__inc_samples(&bi->to, sample, evsel);
- 
--	branch_type_count(&rep->brtype_stat, &bi->flags,
--			  bi->from.addr, bi->to.addr);
--
- out:
- 	return err;
- }
-
+ 	ptel &= HPTE_R_KEY | HPTE_R_PP0 | (psize-1);
+ 	ptel |= pa;
+-- 
+2.25.3
 
