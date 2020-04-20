@@ -2,59 +2,79 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E6FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DCEC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FED72080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A622080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgDTH1l (ORCPT
+        id S1726355AbgDTH1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:27:41 -0400
-Received: from elvis.franken.de ([193.175.24.41]:47913 "EHLO elvis.franken.de"
+        Mon, 20 Apr 2020 03:27:45 -0400
+Received: from elvis.franken.de ([193.175.24.41]:47920 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgDTH1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:27:40 -0400
+        id S1726262AbgDTH1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 03:27:44 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jQQqA-00070o-01; Mon, 20 Apr 2020 09:27:38 +0200
+        id 1jQQqA-00070o-03; Mon, 20 Apr 2020 09:27:38 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id C3D0DC0181; Mon, 20 Apr 2020 09:02:40 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 09:02:40 +0200
+        id 55A92C0181; Mon, 20 Apr 2020 09:20:36 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 09:20:36 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: MIPS ioremap cleanups v2
-Message-ID: <20200420070240.GB4627@alpha.franken.de>
-References: <20200416150011.820984-1-hch@lst.de>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: Re: [PATCH v8 7/7] MIPS: DTS: CI20: make DM9000 Ethernet controller
+ use NVMEM to find the default MAC address
+Message-ID: <20200420072036.GD4627@alpha.franken.de>
+References: <cover.1582905653.git.hns@goldelico.com>
+ <1250f496a1f0bd51e89e5a1ba7a3e92a5570b27a.1582905653.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416150011.820984-1-hch@lst.de>
+In-Reply-To: <1250f496a1f0bd51e89e5a1ba7a3e92a5570b27a.1582905653.git.hns@goldelico.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 05:00:04PM +0200, Christoph Hellwig wrote:
-> Hi Thomas,
+On Fri, Feb 28, 2020 at 05:00:53PM +0100, H. Nikolaus Schaller wrote:
+> There is a unique MAC address programmed into the eFuses
+> of the JZ4780 chip in the CI20 factory. By using this
+> for initializing the DM9000 Ethernet controller, every
+> CI20 board has an individual - but stable - MAC address
+> and DHCP can assign stable IP addresses.
 > 
-> below is a bunch of cleanups for the MIPS ioremap code.  Compile tested
-> only.
-> 
-> Changes since v1:
->  - don't remove cpu_has_64bit_gp_regs
->  - add a new prep patch to stop txx9aclc-ac97 from poking into ioremap
->    internals
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  arch/mips/boot/dts/ingenic/ci20.dts | 3 +++
+>  1 file changed, 3 insertions(+)
 
-series applied to mips-next.
+applied to mips-next.
 
 Thomas.
 
