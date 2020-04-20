@@ -2,214 +2,345 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E70C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12BDC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0464320857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965F720B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="gLFWuolC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXXxbecT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgDTNqc (ORCPT
+        id S1728539AbgDTNqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:46:32 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:59096 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgDTNqb (ORCPT
+        Mon, 20 Apr 2020 09:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728496AbgDTNqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 09:46:31 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 5334E20CD9;
-        Mon, 20 Apr 2020 13:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587390390; bh=2Yha78wdaBWdV4Os8gh18PUzHd9AUb6A+au0cwwAvQ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLFWuolCyKX/s7wXlWaP50UKXmfpnKgZBwWFSoTeaA5F726Liy2qqg5fyS/G5VT0e
-         22FKNYcmvwfz+ACNhNuaqU6Po+u11skto8Jmuat90KO5M5GVRp0hfTWnpyObzuWYzn
-         hF8/6h/AUgrVqUNG3FWbaORBhs8a9xLBNrXUxxwaMiuNGaYNGx5bjejlMi22Mm3CO2
-         6dHr/P6QUX36PlG6YqN24BSI+KqTJfy/BjObzDViKySV0olHgFOg4iL5k7iRxQ2guz
-         bWTLJf7Mr9a0UDC0RvWoxbJfZEua/ly37lLfx7uy9axy5bNQgo4tWNgVIOIl/TLR5i
-         RV5MjrUrTh2xA==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] MIPS: Loongson64: Make RS780E ACPI as a platform driver
-Date:   Mon, 20 Apr 2020 21:45:26 +0800
-Message-Id: <20200420134536.210475-2-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200420134536.210475-1-jiaxun.yang@flygoat.com>
-References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
- <20200420134536.210475-1-jiaxun.yang@flygoat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F34B6C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:46:30 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id d17so12202049wrg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QKgplVPQdfQcjzRB1sKoI8Hqbl0bABv2vB41UjfbcXI=;
+        b=NXXxbecTDl09xrdYUb9UHNvkXHvfD0BPmfBJEVE5yJYRj14Gj0j7l86s6gz1zubHnx
+         dQMwKBHFRugzwbc74sR4ZhP3o39fds6vaSL7TZ8T+FPSPGiA1WzH9vFrvQoa5VfYFp5W
+         Sdwq+s5EfCS8IULw+SkYMvTJ+f9f4/eH3yJzMWz6VnKykS5ZUVn8242HYPOYpyEU8QxN
+         2MkwiP7PGdyDHK2oqwAiKznFn3wiJLxyXZYrJ7qcNEBfCiRuE/jElXijuDaSSonSMLdr
+         /KbiBLEKiCQLykixo9NIgK7y6r1OR8wQpZ87Fh5YGeYR0YDLtBs3FR28iOnSZnn+NcjC
+         x58w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QKgplVPQdfQcjzRB1sKoI8Hqbl0bABv2vB41UjfbcXI=;
+        b=aEMHPaCV04yV90nsbgNwsXev+ti7jrmRBjqTTD+NNEiwJY3Q6hY2YKRWhqWQzTBzxI
+         mri4kLcS8ktBcBEZagnemRTssUK6HjZlX/6oqG06edEZihWO3GYBKRdS6DBxpF9p6DEO
+         WW9+vYOzz2ONEDBHP2LNy3wIdsK/L8btF2RuC3JEdPEdo/kNQzoYOcJMmBc8GTcP4Lv0
+         D3KlhzVszgR+BtCIVW/0P6Ng2VsQmDiUSCufsDS7bf5O+kO32J10PleFDKocOtkU76tN
+         mMJd8RTfrKu/5n4CXwtZytt06KMl93qN0fZ+yKKsNpl0cxofe2Ko4OomaYlWIV73bWV1
+         r0QQ==
+X-Gm-Message-State: AGi0PuaB8NEUnFB9qyON4+70Heyww/frB0nROWXaolkr61DGYBkoqwAI
+        H9mTTlgbD1TT6WtEw11HVUq4Gnmx
+X-Google-Smtp-Source: APiQypKKtGC/gkjzXGrhThAPOtIOiZyvZzpsLutsg1rr6wqT7tLYRuzZz67hV6sD798+0rYGZreQFw==
+X-Received: by 2002:adf:f0cb:: with SMTP id x11mr19088449wro.266.1587390374537;
+        Mon, 20 Apr 2020 06:46:14 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id p190sm1380393wmp.38.2020.04.20.06.46.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 06:46:13 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, Ofir Bitton <obitton@habana.ai>
+Subject: [PATCH] habanalabs: load CPU device boot loader from host
+Date:   Mon, 20 Apr 2020 16:46:10 +0300
+Message-Id: <20200420134610.31909-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make RS780E ACPI as a platform driver so we can enable it
-by DeviceTree selectively.
+From: Ofir Bitton <obitton@habana.ai>
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
-v2: Rebase to mips-next
----
- arch/mips/loongson64/Makefile                 |  2 +-
- arch/mips/loongson64/pci.c                    |  2 -
- drivers/platform/mips/Kconfig                 |  6 ++
- drivers/platform/mips/Makefile                |  1 +
- .../platform/mips/rs780e-acpi.c               | 58 ++++++++++++-------
- 5 files changed, 46 insertions(+), 23 deletions(-)
- rename arch/mips/loongson64/acpi_init.c => drivers/platform/mips/rs780e-acpi.c (70%)
+Load CPU device boot loader during driver boot time in order to avoid flash
+write for every boot loader update.
 
-diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
-index 32b8c224852f..6f3c2b47f66f 100644
---- a/arch/mips/loongson64/Makefile
-+++ b/arch/mips/loongson64/Makefile
-@@ -2,7 +2,7 @@
- #
- # Makefile for Loongson-3 family machines
- #
--obj-$(CONFIG_MACH_LOONGSON64) += cop2-ex.o platform.o acpi_init.o dma.o \
-+obj-$(CONFIG_MACH_LOONGSON64) += cop2-ex.o platform.o dma.o \
- 				setup.o init.o env.o time.o reset.o \
+To preserve backward-compatibility, skip the device boot load if the device
+doesn't request it.
+
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/firmware_if.c        | 22 +++++-
+ drivers/misc/habanalabs/goya/goya.c          | 83 ++++----------------
+ drivers/misc/habanalabs/habanalabs.h         |  4 +-
+ drivers/misc/habanalabs/include/hl_boot_if.h |  3 +
+ 4 files changed, 44 insertions(+), 68 deletions(-)
+
+diff --git a/drivers/misc/habanalabs/firmware_if.c b/drivers/misc/habanalabs/firmware_if.c
+index 99983822feeb..fb15a0ffb14d 100644
+--- a/drivers/misc/habanalabs/firmware_if.c
++++ b/drivers/misc/habanalabs/firmware_if.c
+@@ -329,7 +329,7 @@ static void fw_read_errors(struct hl_device *hdev, u32 boot_err0_reg)
  
- obj-$(CONFIG_SMP)	+= smp.o
-diff --git a/arch/mips/loongson64/pci.c b/arch/mips/loongson64/pci.c
-index e84ae20c3290..a440a2725a20 100644
---- a/arch/mips/loongson64/pci.c
-+++ b/arch/mips/loongson64/pci.c
-@@ -43,8 +43,6 @@ static int __init pcibios_init(void)
- 
- 	register_pci_controller(&loongson_pci_controller);
- 
--	sbx00_acpi_init();
--
- 	return 0;
- }
- 
-diff --git a/drivers/platform/mips/Kconfig b/drivers/platform/mips/Kconfig
-index 5e77b0dc5fd6..8ac149173c64 100644
---- a/drivers/platform/mips/Kconfig
-+++ b/drivers/platform/mips/Kconfig
-@@ -24,4 +24,10 @@ config CPU_HWMON
- 	help
- 	  Loongson-3A/3B CPU Hwmon (temperature sensor) driver.
- 
-+config RS780E_ACPI
-+	bool "Loongson RS780E ACPI Controller"
-+	depends on MACH_LOONGSON64 || COMPILE_TEST
-+	help
-+	  Loongson RS780E PCH ACPI Controller driver.
-+
- endif # MIPS_PLATFORM_DEVICES
-diff --git a/drivers/platform/mips/Makefile b/drivers/platform/mips/Makefile
-index be8146c20dc8..178149098777 100644
---- a/drivers/platform/mips/Makefile
-+++ b/drivers/platform/mips/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_CPU_HWMON) += cpu_hwmon.o
-+obj-$(CONFIG_RS780E_ACPI) += rs780e-acpi.o
-diff --git a/arch/mips/loongson64/acpi_init.c b/drivers/platform/mips/rs780e-acpi.c
-similarity index 70%
-rename from arch/mips/loongson64/acpi_init.c
-rename to drivers/platform/mips/rs780e-acpi.c
-index 8d7c119ddf91..e5a643b78ac9 100644
---- a/arch/mips/loongson64/acpi_init.c
-+++ b/drivers/platform/mips/rs780e-acpi.c
-@@ -3,32 +3,23 @@
- #include <linux/init.h>
- #include <linux/ioport.h>
- #include <linux/export.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
- 
--#define SBX00_ACPI_IO_BASE 0x800
--#define SBX00_ACPI_IO_SIZE 0x100
-+static unsigned long acpi_iobase;
- 
--#define ACPI_PM_EVT_BLK         (SBX00_ACPI_IO_BASE + 0x00) /* 4 bytes */
--#define ACPI_PM_CNT_BLK         (SBX00_ACPI_IO_BASE + 0x04) /* 2 bytes */
--#define ACPI_PMA_CNT_BLK        (SBX00_ACPI_IO_BASE + 0x0F) /* 1 byte */
--#define ACPI_PM_TMR_BLK         (SBX00_ACPI_IO_BASE + 0x18) /* 4 bytes */
--#define ACPI_GPE0_BLK           (SBX00_ACPI_IO_BASE + 0x10) /* 8 bytes */
--#define ACPI_END                (SBX00_ACPI_IO_BASE + 0x80)
-+#define ACPI_PM_EVT_BLK         (acpi_iobase + 0x00) /* 4 bytes */
-+#define ACPI_PM_CNT_BLK         (acpi_iobase + 0x04) /* 2 bytes */
-+#define ACPI_PMA_CNT_BLK        (acpi_iobase + 0x0F) /* 1 byte */
-+#define ACPI_PM_TMR_BLK         (acpi_iobase + 0x18) /* 4 bytes */
-+#define ACPI_GPE0_BLK           (acpi_iobase + 0x10) /* 8 bytes */
-+#define ACPI_END                (acpi_iobase + 0x80)
- 
- #define PM_INDEX        0xCD6
- #define PM_DATA         0xCD7
- #define PM2_INDEX       0xCD0
- #define PM2_DATA        0xCD1
- 
--/*
-- * SCI interrupt need acpi space, allocate here
-- */
--
--static int __init register_acpi_resource(void)
--{
--	request_region(SBX00_ACPI_IO_BASE, SBX00_ACPI_IO_SIZE, "acpi");
--	return 0;
--}
--
- static void pmio_write_index(u16 index, u8 reg, u8 value)
+ int hl_fw_init_cpu(struct hl_device *hdev, u32 cpu_boot_status_reg,
+ 			u32 msg_to_cpu_reg, u32 boot_err0_reg, bool skip_bmc,
+-			u32 cpu_timeout)
++			u32 cpu_timeout, u32 boot_fit_timeout)
  {
- 	outb(reg, index);
-@@ -141,11 +132,38 @@ void acpi_registers_setup(void)
- 	pm2_iowrite(0xf8, value);
- }
+ 	u32 status;
+ 	int rc;
+@@ -337,6 +337,26 @@ int hl_fw_init_cpu(struct hl_device *hdev, u32 cpu_boot_status_reg,
+ 	dev_info(hdev->dev, "Going to wait for device boot (up to %lds)\n",
+ 		cpu_timeout / USEC_PER_SEC);
  
--int __init sbx00_acpi_init(void)
-+static int rs780e_acpi_probe(struct platform_device *pdev)
- {
--	register_acpi_resource();
-+	struct resource *res;
++	/* Wait for boot FIT request */
++	rc = hl_poll_timeout(
++		hdev,
++		cpu_boot_status_reg,
++		status,
++		status == CPU_BOOT_STATUS_WAITING_FOR_BOOT_FIT,
++		10000,
++		boot_fit_timeout);
 +
-+	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
-+	if (!res)
-+		return -ENODEV;
++	if (rc) {
++		dev_dbg(hdev->dev,
++			"No boot fit request received, resuming boot\n");
++	} else {
++		rc = hdev->asic_funcs->load_boot_fit_to_device(hdev);
++		if (rc)
++			goto out;
 +
-+	/* SCI interrupt need acpi space, allocate here */
-+	if (!request_region(res->start, resource_size(res), "acpi")) {
-+		pr_err("RS780E-ACPI: Failed to request IO Region\n");
-+		return -EBUSY;
++		WREG32(msg_to_cpu_reg, KMD_MSG_FIT_RDY);
 +	}
 +
-+	acpi_iobase = res->start;
-+
- 	acpi_registers_setup();
- 	acpi_hw_clear_status();
+ 	/* Make sure CPU boot-loader is running */
+ 	rc = hl_poll_timeout(
+ 		hdev,
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index ddc506d74988..f969fe35f9ce 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -72,7 +72,7 @@
+  *
+  */
+ 
+-#define GOYA_UBOOT_FW_FILE	"habanalabs/goya/goya-u-boot.bin"
++#define GOYA_BOOT_FIT_FILE	"habanalabs/goya/goya-boot-fit.itb"
+ #define GOYA_LINUX_FW_FILE	"habanalabs/goya/goya-fit.itb"
+ 
+ #define GOYA_MMU_REGS_NUM		63
+@@ -87,6 +87,7 @@
+ #define GOYA_TEST_QUEUE_WAIT_USEC	100000		/* 100ms */
+ #define GOYA_PLDM_MMU_TIMEOUT_USEC	(MMU_CONFIG_TIMEOUT_USEC * 100)
+ #define GOYA_PLDM_QMAN0_TIMEOUT_USEC	(HL_DEVICE_TIMEOUT_USEC * 30)
++#define GOYA_BOOT_FIT_REQ_TIMEOUT_USEC	1000000		/* 1s */
+ 
+ #define GOYA_QMAN0_FENCE_VAL		0xD169B243
+ 
+@@ -2210,80 +2211,37 @@ static void goya_halt_engines(struct hl_device *hdev, bool hard_reset)
+ }
+ 
+ /*
+- * goya_push_uboot_to_device() - Push u-boot FW code to device.
++ * goya_load_firmware_to_device() - Load LINUX FW code to device.
+  * @hdev: Pointer to hl_device structure.
+  *
+- * Copy u-boot fw code from firmware file to SRAM BAR.
++ * Copy LINUX fw code from firmware file to HBM BAR.
+  *
+  * Return: 0 on success, non-zero for failure.
+  */
+-static int goya_push_uboot_to_device(struct hl_device *hdev)
++static int goya_load_firmware_to_device(struct hl_device *hdev)
+ {
+ 	void __iomem *dst;
+ 
+-	dst = hdev->pcie_bar[SRAM_CFG_BAR_ID] + UBOOT_FW_OFFSET;
++	dst = hdev->pcie_bar[DDR_BAR_ID] + LINUX_FW_OFFSET;
+ 
+-	return hl_fw_load_fw_to_device(hdev, GOYA_UBOOT_FW_FILE, dst);
++	return hl_fw_load_fw_to_device(hdev, GOYA_LINUX_FW_FILE, dst);
+ }
+ 
+ /*
+- * goya_load_firmware_to_device() - Load LINUX FW code to device.
++ * goya_load_boot_fit_to_device() - Load boot fit to device.
+  * @hdev: Pointer to hl_device structure.
+  *
+- * Copy LINUX fw code from firmware file to HBM BAR.
++ * Copy boot fit file to SRAM BAR.
+  *
+  * Return: 0 on success, non-zero for failure.
+  */
+-static int goya_load_firmware_to_device(struct hl_device *hdev)
++static int goya_load_boot_fit_to_device(struct hl_device *hdev)
+ {
+ 	void __iomem *dst;
+ 
+-	dst = hdev->pcie_bar[DDR_BAR_ID] + LINUX_FW_OFFSET;
+-
+-	return hl_fw_load_fw_to_device(hdev, GOYA_LINUX_FW_FILE, dst);
+-}
+-
+-static int goya_pldm_init_cpu(struct hl_device *hdev)
+-{
+-	u32 unit_rst_val;
+-	int rc;
+-
+-	/* Must initialize SRAM scrambler before pushing u-boot to SRAM */
+-	goya_init_golden_registers(hdev);
+-
+-	/* Put ARM cores into reset */
+-	WREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL, CPU_RESET_ASSERT);
+-	RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
++	dst = hdev->pcie_bar[SRAM_CFG_BAR_ID] + BOOT_FIT_SRAM_OFFSET;
+ 
+-	/* Reset the CA53 MACRO */
+-	unit_rst_val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
+-	WREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N, CA53_RESET);
+-	RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
+-	WREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N, unit_rst_val);
+-	RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
+-
+-	rc = goya_push_uboot_to_device(hdev);
+-	if (rc)
+-		return rc;
+-
+-	rc = goya_load_firmware_to_device(hdev);
+-	if (rc)
+-		return rc;
+-
+-	WREG32(mmPSOC_GLOBAL_CONF_UBOOT_MAGIC, KMD_MSG_FIT_RDY);
+-	WREG32(mmPSOC_GLOBAL_CONF_WARM_REBOOT, CPU_BOOT_STATUS_NA);
+-
+-	WREG32(mmCPU_CA53_CFG_RST_ADDR_LSB_0,
+-		lower_32_bits(SRAM_BASE_ADDR + UBOOT_FW_OFFSET));
+-	WREG32(mmCPU_CA53_CFG_RST_ADDR_MSB_0,
+-		upper_32_bits(SRAM_BASE_ADDR + UBOOT_FW_OFFSET));
+-
+-	/* Release ARM core 0 from reset */
+-	WREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL,
+-					CPU_RESET_CORE0_DEASSERT);
+-	RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
+-
+-	return 0;
++	return hl_fw_load_fw_to_device(hdev, GOYA_BOOT_FIT_FILE, dst);
+ }
+ 
+ /*
+@@ -2325,7 +2283,7 @@ static void goya_read_device_fw_version(struct hl_device *hdev,
+ 	}
+ }
+ 
+-static int goya_init_cpu(struct hl_device *hdev, u32 cpu_timeout)
++static int goya_init_cpu(struct hl_device *hdev)
+ {
+ 	struct goya_device *goya = hdev->asic_specific;
+ 	int rc;
+@@ -2346,22 +2304,14 @@ static int goya_init_cpu(struct hl_device *hdev, u32 cpu_timeout)
+ 		return -EIO;
+ 	}
+ 
+-	if (hdev->pldm) {
+-		rc = goya_pldm_init_cpu(hdev);
+-		if (rc)
+-			return rc;
+-
+-		goto out;
+-	}
+-
+ 	rc = hl_fw_init_cpu(hdev, mmPSOC_GLOBAL_CONF_CPU_BOOT_STATUS,
+ 			mmPSOC_GLOBAL_CONF_UBOOT_MAGIC, mmCPU_BOOT_ERR0,
+-			false, cpu_timeout);
++			false, GOYA_CPU_TIMEOUT_USEC,
++			GOYA_BOOT_FIT_REQ_TIMEOUT_USEC);
+ 
+ 	if (rc)
+ 		return rc;
+ 
+-out:
+ 	goya->hw_cap_initialized |= HW_CAP_CPU;
  
  	return 0;
- }
+@@ -2476,7 +2426,7 @@ static int goya_hw_init(struct hl_device *hdev)
+ 	 */
+ 	WREG32(mmHW_STATE, HL_DEVICE_HW_STATE_DIRTY);
+ 
+-	rc = goya_init_cpu(hdev, GOYA_CPU_TIMEOUT_USEC);
++	rc = goya_init_cpu(hdev);
+ 	if (rc) {
+ 		dev_err(hdev->dev, "failed to initialize CPU\n");
+ 		return rc;
+@@ -5270,6 +5220,7 @@ static const struct hl_asic_funcs goya_funcs = {
+ 	.get_queue_id_for_cq = goya_get_queue_id_for_cq,
+ 	.read_device_fw_version = goya_read_device_fw_version,
+ 	.load_firmware_to_device = goya_load_firmware_to_device,
++	.load_boot_fit_to_device = goya_load_boot_fit_to_device,
+ 	.set_dma_mask_from_fw = goya_set_dma_mask_from_fw,
+ 	.get_device_time = goya_get_device_time
+ };
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 0d3d3c59ae2b..0def1e97bc1b 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -552,6 +552,7 @@ enum hl_pll_frequency {
+  * @read_device_fw_version: read the device's firmware versions that are
+  *                          contained in registers
+  * @load_firmware_to_device: load the firmware to the device's memory
++ * @load_boot_fit_to_device: load boot fit to device's memory
+  * @set_dma_mask_from_fw: set the DMA mask in the driver according to the
+  *                        firmware configuration
+  * @get_device_time: Get the device time.
+@@ -646,6 +647,7 @@ struct hl_asic_funcs {
+ 	void (*read_device_fw_version)(struct hl_device *hdev,
+ 					enum hl_fw_component fwc);
+ 	int (*load_firmware_to_device)(struct hl_device *hdev);
++	int (*load_boot_fit_to_device)(struct hl_device *hdev);
+ 	void (*set_dma_mask_from_fw)(struct hl_device *hdev);
+ 	u64 (*get_device_time)(struct hl_device *hdev);
+ };
+@@ -1645,7 +1647,7 @@ int hl_fw_armcp_info_get(struct hl_device *hdev);
+ int hl_fw_get_eeprom_data(struct hl_device *hdev, void *data, size_t max_size);
+ int hl_fw_init_cpu(struct hl_device *hdev, u32 cpu_boot_status_reg,
+ 			u32 msg_to_cpu_reg, u32 boot_err0_reg, bool skip_bmc,
+-			u32 cpu_timeout);
++			u32 cpu_timeout, u32 boot_fit_timeout);
+ 
+ int hl_pci_bars_map(struct hl_device *hdev, const char * const name[3],
+ 			bool is_wc[3]);
+diff --git a/drivers/misc/habanalabs/include/hl_boot_if.h b/drivers/misc/habanalabs/include/hl_boot_if.h
+index 7106315fc92e..c22d134e73af 100644
+--- a/drivers/misc/habanalabs/include/hl_boot_if.h
++++ b/drivers/misc/habanalabs/include/hl_boot_if.h
+@@ -11,6 +11,8 @@
+ #define LKD_HARD_RESET_MAGIC		0xED7BD694
+ #define HL_POWER9_HOST_MAGIC		0x1DA30009
+ 
++#define BOOT_FIT_SRAM_OFFSET		0x200000
 +
-+static const struct of_device_id rs780e_acpi_match[] = {
-+	{ .compatible = "loongson,rs780e-acpi" },
-+	{},
-+};
-+
-+static struct platform_driver rs780e_acpi_driver = {
-+	.probe = rs780e_acpi_probe,
-+	.driver = {
-+		.name = "RS780E-ACPI",
-+		.of_match_table = rs780e_acpi_match,
-+	},
-+};
-+builtin_platform_driver(rs780e_acpi_driver);
+ /*
+  * CPU error bits in BOOT_ERROR registers
+  *
+@@ -77,6 +79,7 @@ enum cpu_boot_status {
+ 	CPU_BOOT_STATUS_BMC_WAITING_SKIPPED, /* deprecated - will be removed */
+ 	/* Last boot loader progress status, ready to receive commands */
+ 	CPU_BOOT_STATUS_READY_TO_BOOT = 15,
++	CPU_BOOT_STATUS_WAITING_FOR_BOOT_FIT = 16,
+ };
+ 
+ enum kmd_msg {
 -- 
-2.26.0.rc2
+2.17.1
 
