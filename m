@@ -2,148 +2,202 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AACC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07946C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 690592078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0B8206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s9Ej0RPY"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="YynSS5+9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HLp4uB1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgDTHhV (ORCPT
+        id S1726100AbgDTHit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:37:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725886AbgDTHhV (ORCPT
+        Mon, 20 Apr 2020 03:38:49 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:38743 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725773AbgDTHis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:37:21 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEE10C061A41
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:37:19 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id h2so9809205wmb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=x4d8njD2ChzZ2kuDWBQWJtIw3UQE6E7sHmhOoB5ezqs=;
-        b=s9Ej0RPYb9lJkeS+N4KaZqRVDOm/SMTuNsIfiyVl/sCG8tzdLnNngYV+RVgyER1R3F
-         VRzB6TNY6rn0cuPvz+jDOcsgEm6vB1iflYdPxH4S/bamY84eTcqa+4vtDy05GKDS4zS0
-         Kmm16bHrfBNiQYXYskNt3fsMJzTC+pNl8kFLLFI9UFzWOxH8F7RfDCklTUfNpN0f2I44
-         VR2D/sc2g96ROMto0j2Rr+t14rZ1StFnVNPpwNhsirhV/Pqwh8cGs84i9OzxMvWPinBI
-         Lffym77ABv9sVKQAf5rNjW5F0P8/MHbhNn36a9zIpouhrv8SW+gc2OjC9ud+o76ZOm5t
-         peAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=x4d8njD2ChzZ2kuDWBQWJtIw3UQE6E7sHmhOoB5ezqs=;
-        b=gcGYSBdSq7dnwqZgSciby95biu0q6dltrzC3OjgXM9dSL8AWH481M68SwlmXRSU9xd
-         SeQiav5BkQ74abDus0XfyASsezDeyMIlytObBk3VQ+mKAYFgcxaD8aggR9EKEXihrwWY
-         cTxPmpjZjQnsliMP4jQ8WdKpQcaQ5gGNlVThzX0SG60JhabqTTL4NLhuRowvfoD2Y3AS
-         FHSPKkIupxxLHRZmAlKxzqPiU9YN/CdmxFoRU8Eh0fwn0gaeTZ6YRg8qXU3pN1jc96px
-         IT3maZfFAYe7mUvJ/SonDw499RIRDiZts12q6lg/Y+hlkY0wAkycYE52eSOzaBkU9ulv
-         js1A==
-X-Gm-Message-State: AGi0PubvWyOoiUv+nsNbJD8aPa7Y0v7k25l23xfKUbDEff/WMpacGDgn
-        mXdqQGZHenP+Dw9majxmfuP8mQ==
-X-Google-Smtp-Source: APiQypI3JmmCDHjcMn3A1vzcEpxgsLlbI4LO3mEsYg5l0mrqs5au0PNliOvfe+fdVwtahiKITEMREQ==
-X-Received: by 2002:a1c:6344:: with SMTP id x65mr16504650wmb.56.1587368238713;
-        Mon, 20 Apr 2020 00:37:18 -0700 (PDT)
-Received: from dell ([95.149.164.107])
-        by smtp.gmail.com with ESMTPSA id y40sm43875wrd.20.2020.04.20.00.37.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 00:37:18 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 08:37:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Ran Bi <ran.bi@mediatek.com>
-Cc:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Mon, 20 Apr 2020 03:38:48 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C558658021E;
+        Mon, 20 Apr 2020 03:38:46 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 20 Apr 2020 03:38:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=5Sw64u1dSQy+/AZPUD2ocyiGqku
+        gbFqYdfvxed0EDRY=; b=YynSS5+9xuhmRiG56G7GdbYPCW8jO8KOD4IoTjNhpnV
+        TXKPXqmua83B8ei57HL3DaYlRJtfUMcPxYtn08/hp3mXUdF2d25A/1X3KKbAkRlK
+        ghitZz0zjSvzOfK/R2z0rKR1g5H4w904f+KY6Jqs1ZRt+O1pAwUEoNgsFaBAFrI9
+        58LgC7+dI3pGibuVGwzVop5UyctI++7yP9IwO5IwhmwOfBE8U1/d9CdNS/s/KbUS
+        3gW79VGBNMpAwFOG7/O+ptXcq4Qfkbt50JVeeKk5Nq9o+DrjpD5KaKA9K47176hS
+        R0/LMSSildCA/fbL0E+dhzbGYYYMY9tEtqMlg3hek2w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=5Sw64u
+        1dSQy+/AZPUD2ocyiGqkugbFqYdfvxed0EDRY=; b=HLp4uB1Tle4K92shgr1Z4o
+        I6IqDdPkOLErhagBFdX0SF7qQYacnanlpFk3AnPXZjZNzAX2Trij5GpfMMfK4oXY
+        0u/0BGBFXezH6WZfumh/kyWtXSARqqBRhQiU+h1HDBav7AUTmGgBgGp+HuFQZZ8L
+        OSuKN0+yXX5SHYcom3W2ZsRh+SkdTZWTWq9EuA1FR/Uv5nHrXv6v57k+Au2MM441
+        wB1yetUvg9Wy0v9RFu3TbmxS+IboXoiUwyoYuba+stcj46e9q68I1duMo9hIGMfx
+        NGLcimcFtLWubDIovljxJYdAd+6CIjyfSceHn47wJ6TxfjZr2nf0jFog8A9MYQbw
+        ==
+X-ME-Sender: <xms:hFGdXqSLF4RpRYkTefunXLy68Ah9GyhS0RKRLmpBwtI_hJTAszptjw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgedvgdduvddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:hFGdXuS5lZijoMyt14sVshcQo6T4aTzHUJEVa3IzCfMJcuGJjNB-pA>
+    <xmx:hFGdXgP06PsbO8XuzzC0aJZhlbh5ZY10dnOrooV5_FkdXCbT0y5ztQ>
+    <xmx:hFGdXn2rcXlRRicCiP5MqsSec5lFGRnU2audJYs15o6DDLkM4mq0eQ>
+    <xmx:hlGdXtusGVYKKvBUw4w6T_rD-GJekUI0m6eZa8s1_ntY-dlevIq47A>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5B36A3280069;
+        Mon, 20 Apr 2020 03:38:44 -0400 (EDT)
+Date:   Mon, 20 Apr 2020 09:38:42 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Philipp Rossak <embed3d@gmail.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v12 5/6] rtc: mt6397: Add support for the MediaTek MT6358
- RTC
-Message-ID: <20200420073716.GM3737@dell>
-References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1586333531-21641-6-git-send-email-hsin-hsiung.wang@mediatek.com>
- <20200416091438.GA2167633@dell>
- <1587112169.12875.2.camel@mhfsdcap03>
- <1587113392.13323.3.camel@mhfsdcap03>
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
+ PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+Message-ID: <20200420073842.nx4xb3zqvu23arkc@gilmour.lan>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
+ <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
+ <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
+ <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
+ <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nd4xfztpubexblrg"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1587113392.13323.3.camel@mhfsdcap03>
+In-Reply-To: <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020, Ran Bi wrote:
 
-> On Fri, 2020-04-17 at 16:29 +0800, Ran Bi wrote:
-> > On Thu, 2020-04-16 at 10:14 +0100, Lee Jones wrote:
-> > > On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
-> > > 
-> > > > From: Ran Bi <ran.bi@mediatek.com>
-> > > > 
-> > > > This add support for the MediaTek MT6358 RTC. Driver using
-> > > > compatible data to store different RTC_WRTGR address offset.
-> > > > This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
-> > > > driver which only needed by armv7 CPU without ATF.
-> > > > 
-> > > > Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > > Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> > > > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > > > Acked-by: Sebastian Reichel <sre@kernel.org>
-> > > > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> > > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> > > 
-> > > Please place these in chronological order.  They should provide some
-> > > history, rather than a unordered slab list of random sign-offs.
-> > > 
-> > 
-> > I suppose that you mean the order should be like below, right?
-> > Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> > Acked-by: Sebastian Reichel <sre@kernel.org>
-> > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
-> > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> > 
-> 
-> Correction, I think following is the correct chronological order:
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Acked-by: Sebastian Reichel <sre@kernel.org>
-> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+--nd4xfztpubexblrg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This looks better, yes.
+Hi,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On Fri, Apr 17, 2020 at 02:09:06PM +0200, Philipp Rossak wrote:
+> > > I'm a bit skeptical on that one since it doesn't even list the
+> > > interrupts connected to the GPU that the binding mandates.
+> >=20
+> > I think he left it out for a future update.
+> > But best he comments himself.
+>=20
+> I'm currently working on those bindings. They are now 90% done, but they =
+are
+> not finished till now. Currently there is some mainline support missing to
+> add the full binding. The A83T and also the A31/A31s have a GPU Power Off
+> Gating Register in the R_PRCM module, that is not supported right now in
+> Mainline. The Register need to be written when the GPU is powered on and
+> off.
+>=20
+> @Maxime: I totally agree on your point that a demo needs to be provided
+> before the related DTS patches should be provided. That's the reason why I
+> added the gpu placeholder patches.
+> Do you have an idea how a driver for the R_PRCM stuff can look like? I'm =
+not
+> that experienced with the clock driver framework.
+
+It looks like a power-domain to me, so you'd rather plug that into the genpd
+framework.
+
+> The big question is right now how to proceed with the A83T and A31s patch=
+es.
+> I see there three options, which one do you prefer?:
+>=20
+> 1. Provide now placeholder patches and send new patches, if everything is
+> clear and other things are mainlined
+> 2. Provide now patches as complete as possible and provide later patches =
+to
+> complete them when the R_PRCM things are mainlined
+> 3. Leave them out, till the related work is mainlined and the bindings are
+> final.
+
+Like I said, the DT *has* to be backward-compatible, so for any DT patch th=
+at
+you are asking to be merged, you should be prepared to support it indefinit=
+ely
+and be able to run from it, and you won't be able to change the bindings la=
+ter
+on.
+
+> Since this GPU IP core is very flexible and the SOC manufactures can
+> configure it on their needs, I think the binding will extend in the futur=
+e.
+> For example the SGX544 GPU is available in different configurations: there
+> is a SGX544 core and SGX544MPx core. The x stands for the count of the US=
+SE
+> (Universal Scalable Shader Engine) cores. For example the GPU in the A83T=
+ is
+> a MP1 and the A31/A31s a MP2.
+
+Mali is in the same situation and it didn't cause much trouble.
+
+> In addition to that some of the GPU's have also a 2D engine.
+
+In the same memory region, running from the same interrupts, or is it a
+completely separate IP that happens to be sold by the same vendor?
+
+> There might be even more differences in the GPU's that we don't know right
+> now and should be described in the Devicetree, but that's a different top=
+ic
+> that we should keep in mind.
+
+Like I said, it's not a completely different topic.
+
+Maxime
+
+--nd4xfztpubexblrg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp1RggAKCRDj7w1vZxhR
+xUoGAQD6t2KhRl/JXPpcbOq2qYAidBLKV4Lqvkk8MmRHUxeoNQEAt6SP6CIMrrfb
+nDX66jY4FpmurrYXbFF39NVW4Y9HWw8=
+=Wz+7
+-----END PGP SIGNATURE-----
+
+--nd4xfztpubexblrg--
