@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F615C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E719AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCE4206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C539E206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387042;
-	bh=zfLSUs3Dq2oSO1Qvmk/OaAjgtJzb07dCTrMqO1Zdfa4=;
+	s=default; t=1587387049;
+	bh=foRUgx3kHTVvLrsvmFGzq49A+mAA4agcq0rc10os9tk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UIPd/zCirlXLpfJiDalC1CMYwFwCb/rvC95K5U1EZI+qjx+IueomH35KZZGsZQe7m
-	 O9VxxvrzdbNCnxPc8U7RZLU8l0YH0fEtK0KJOO4uq7+53NYnMlpM+qU7eZ0s0lEy/d
-	 QhCYMvD1Ie2ifL3071x1b2WsVSyYKcRo63Fn5lVw=
+	b=MiDihDIuyDnqg2X26JYuNBGDdHlayH/bZATNhXRIHTTLsH4INTVJg1GJmQNjGTfyv
+	 fjP9tQdgvzlKwifyHJQQ0IxfnBpkrTByX1AyKHLF9T3FMMySSm4mLpCb/d3nJhzUvQ
+	 n9O67FOHrU3mpwFpzYOYumh1ymEjwOOI8uFljwXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbgDTMuh (ORCPT
+        id S1729352AbgDTMtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46100 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:49:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729381AbgDTMtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:49:13 -0400
+        id S1726991AbgDTMst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 480FE206DD;
-        Mon, 20 Apr 2020 12:49:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A48F20735;
+        Mon, 20 Apr 2020 12:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386952;
-        bh=zfLSUs3Dq2oSO1Qvmk/OaAjgtJzb07dCTrMqO1Zdfa4=;
+        s=default; t=1587386928;
+        bh=foRUgx3kHTVvLrsvmFGzq49A+mAA4agcq0rc10os9tk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dazSWC141sP9E8aPqh8eWRqm891eekoZcDps28aYT3lJFvQMJ5kwJDkAY9PyI6tMH
-         sRylL7lxBGLkvjwuYaS0jW7n4HA9STI9/pfaKVDRRFp6AU+Nkkantyzu7hpE0IPO3+
-         hyUQQKwTFAV2OQTr9SPwQw8Ji+apfTJqiqEGeceo=
+        b=yZ5/jmkIQoDvq0mcZhfs0l8szGvE18UgBkHHahtJAmAFtoUatU7ntPuva3t/9M+v7
+         QH+EEu/89pxVemdUA4f5QBJjpQ81cjPy7G3LLSIINeFFtKy8w9z9s1QJWmXkldcdxO
+         1vuuRk87IXeRt4bOlkEFv0xlwyIvR1GqaA+XqzC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH 4.19 33/40] x86/resctrl: Preserve CDP enable over CPU hotplug
-Date:   Mon, 20 Apr 2020 14:39:43 +0200
-Message-Id: <20200420121505.491872082@linuxfoundation.org>
+        syzbot+6693adf1698864d21734@syzkaller.appspotmail.com,
+        syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com,
+        stable@kernel.org, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.19 24/40] mac80211_hwsim: Use kstrndup() in place of kasprintf()
+Date:   Mon, 20 Apr 2020 14:39:34 +0200
+Message-Id: <20200420121501.234251204@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
@@ -60,74 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-commit 9fe0450785abbc04b0ed5d3cf61fcdb8ab656b4b upstream.
+commit 7ea862048317aa76d0f22334202779a25530980c upstream.
 
-Resctrl assumes that all CPUs are online when the filesystem is mounted,
-and that CPUs remember their CDP-enabled state over CPU hotplug.
+syzbot reports a warning:
 
-This goes wrong when resctrl's CDP-enabled state changes while all the
-CPUs in a domain are offline.
+precision 33020 too large
+WARNING: CPU: 0 PID: 9618 at lib/vsprintf.c:2471 set_precision+0x150/0x180 lib/vsprintf.c:2471
+ vsnprintf+0xa7b/0x19a0 lib/vsprintf.c:2547
+ kvasprintf+0xb2/0x170 lib/kasprintf.c:22
+ kasprintf+0xbb/0xf0 lib/kasprintf.c:59
+ hwsim_del_radio_nl+0x63a/0x7e0 drivers/net/wireless/mac80211_hwsim.c:3625
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
+ ...
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-When a domain comes online, enable (or disable!) CDP to match resctrl's
-current setting.
+Thus it seems that kasprintf() with "%.*s" format can not be used for
+duplicating a string with arbitrary length. Replace it with kstrndup().
 
-Fixes: 5ff193fbde20 ("x86/intel_rdt: Add basic resctrl filesystem support")
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200221162105.154163-1-james.morse@arm.com
+Note that later this string is limited to NL80211_WIPHY_NAME_MAXLEN == 64,
+but the code is simpler this way.
+
+Reported-by: syzbot+6693adf1698864d21734@syzkaller.appspotmail.com
+Reported-by: syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com
+Cc: stable@kernel.org
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Link: https://lore.kernel.org/r/20200410123257.14559-1-tuomas.tynkkynen@iki.fi
+[johannes: add note about length limit]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/intel_rdt.c          |    2 ++
- arch/x86/kernel/cpu/intel_rdt.h          |    1 +
- arch/x86/kernel/cpu/intel_rdt_rdtgroup.c |   13 +++++++++++++
- 3 files changed, 16 insertions(+)
+ drivers/net/wireless/mac80211_hwsim.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/arch/x86/kernel/cpu/intel_rdt.c
-+++ b/arch/x86/kernel/cpu/intel_rdt.c
-@@ -555,6 +555,8 @@ static void domain_add_cpu(int cpu, stru
- 	d->id = id;
- 	cpumask_set_cpu(cpu, &d->cpu_mask);
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3327,9 +3327,9 @@ static int hwsim_new_radio_nl(struct sk_
+ 		param.no_vif = true;
  
-+	rdt_domain_reconfigure_cdp(r);
-+
- 	if (r->alloc_capable && domain_setup_ctrlval(r, d)) {
- 		kfree(d);
- 		return;
---- a/arch/x86/kernel/cpu/intel_rdt.h
-+++ b/arch/x86/kernel/cpu/intel_rdt.h
-@@ -567,5 +567,6 @@ void cqm_setup_limbo_handler(struct rdt_
- void cqm_handle_limbo(struct work_struct *work);
- bool has_busy_rmid(struct rdt_resource *r, struct rdt_domain *d);
- void __check_limbo(struct rdt_domain *d, bool force_free);
-+void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
- 
- #endif /* _ASM_X86_INTEL_RDT_H */
---- a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-+++ b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-@@ -1777,6 +1777,19 @@ static int set_cache_qos_cfg(int level,
- 	return 0;
- }
- 
-+/* Restore the qos cfg state when a domain comes online */
-+void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
-+{
-+	if (!r->alloc_capable)
-+		return;
-+
-+	if (r == &rdt_resources_all[RDT_RESOURCE_L2DATA])
-+		l2_qos_cfg_update(&r->alloc_enabled);
-+
-+	if (r == &rdt_resources_all[RDT_RESOURCE_L3DATA])
-+		l3_qos_cfg_update(&r->alloc_enabled);
-+}
-+
- /*
-  * Enable or disable the MBA software controller
-  * which helps user specify bandwidth in MBps.
+ 	if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
+-		hwname = kasprintf(GFP_KERNEL, "%.*s",
+-				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
+-				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
++		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  GFP_KERNEL);
+ 		if (!hwname)
+ 			return -ENOMEM;
+ 		param.hwname = hwname;
+@@ -3385,9 +3385,9 @@ static int hwsim_del_radio_nl(struct sk_
+ 	if (info->attrs[HWSIM_ATTR_RADIO_ID]) {
+ 		idx = nla_get_u32(info->attrs[HWSIM_ATTR_RADIO_ID]);
+ 	} else if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
+-		hwname = kasprintf(GFP_KERNEL, "%.*s",
+-				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
+-				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
++		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  GFP_KERNEL);
+ 		if (!hwname)
+ 			return -ENOMEM;
+ 	} else
 
 
