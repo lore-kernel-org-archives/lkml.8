@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A2FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214EBC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34CBD206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017C7206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387002;
-	bh=m8l51jy6f+AxdoBnIpuRXLRfyMVhFxZcRIy1pnC+d+g=;
+	s=default; t=1587387008;
+	bh=PvzQYekc9rviXYusn8MIPZu7+m17k5b5gSCNGZcpQa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0WTTH7KTYi2+TYOZm29zx9UtaX681Oi5uPjUCHIc3qicwD0mmPTAtGT73oSgihcxR
-	 u/Q24vBZarWKi8zAUjhj/oLsNdsEH3wIRTyipKeviJBQ/T97O0aha3E7WRZZiNGI+S
-	 Ee9ZzI3ajIwyVhBOqh+83hr11KhWw/WaM7nDyewY=
+	b=LgizVg4WMV7qW5m5iREcRBk9ruTz+BU7np/WCy/QEpK556PIoT/qyuC7SpSurYQNZ
+	 nFYmOLZsVsVoyF43nw4XrMvdrsYWQsamxGwtUVJIaNA1px39N+BASN7wwZO9liDh0L
+	 9OLpayrfgLPrcs8WQjVtDulrSZD3wujGYQDAS7KI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbgDTMuB (ORCPT
+        id S1729467AbgDTMtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:50:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47056 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:49:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729488AbgDTMtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:49:50 -0400
+        id S1729431AbgDTMta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:49:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9E6E206E9;
-        Mon, 20 Apr 2020 12:49:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F34D22260;
+        Mon, 20 Apr 2020 12:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386989;
-        bh=m8l51jy6f+AxdoBnIpuRXLRfyMVhFxZcRIy1pnC+d+g=;
+        s=default; t=1587386969;
+        bh=PvzQYekc9rviXYusn8MIPZu7+m17k5b5gSCNGZcpQa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6cT39NPEvWzxtujDIXTKZyXIu9LFgozWiE7iZFmQkZ8ZOEXG3/lBEEipDD+G9MwV
-         q9zVs7w4NW5iWlD8mKbPpPqsh77OmQ+z1+IheTuKvSqyrroc10FTVQiRfWFTL4Tmjy
-         6C0coCodHS5VAKhLn/9YupwDE/FP8SqT+lXrEVw8=
+        b=JA/27YagO1LSLa8fU/qw4pLhK2axoe1AZlA2Q0pg04iMpqsgVFGB0hE5lhS7B336V
+         iFUC/oGh/EIUet/xXNXiBF6DIseq2nRdIvgEN+pefDVpKw7vkWmIbZ+QCN038o4TeF
+         oYBWsahhKPFgFHKF7iWPxdkFmO68a4GtBGJDSKyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 11/40] jbd2: improve comments about freeing data buffers whose page mapping is NULL
-Date:   Mon, 20 Apr 2020 14:39:21 +0200
-Message-Id: <20200420121454.697285897@linuxfoundation.org>
+        stable@vger.kernel.org, Austin Kim <austindh.kim@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Roman Gushchin <guro@fb.com>, Roman Penyaev <rpenyaev@suse.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.19 40/40] mm/vmalloc.c: move area->pages after if statement
+Date:   Mon, 20 Apr 2020 14:39:50 +0200
+Message-Id: <20200420121508.076569623@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
@@ -59,41 +67,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Austin Kim <austindh.kim@gmail.com>
 
-commit 780f66e59231fcf882f36c63f287252ee47cc75a upstream.
+commit 7ea362427c170061b8822dd41bafaa72b3bcb9ad upstream.
 
-Improve comments in jbd2_journal_commit_transaction() to describe why
-we don't need to clear the buffer_mapped bit for freeing file mapping
-buffers whose page mapping is NULL.
+If !area->pages statement is true where memory allocation fails, area is
+freed.
 
-Link: https://lore.kernel.org/r/20200217112706.20085-1-yi.zhang@huawei.com
-Fixes: c96dceeabf76 ("jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer")
-Suggested-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+In this case 'area->pages = pages' should not executed.  So move
+'area->pages = pages' after if statement.
+
+[akpm@linux-foundation.org: give area->pages the same treatment]
+Link: http://lkml.kernel.org/r/20190830035716.GA190684@LGEARND20B15
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Roman Penyaev <rpenyaev@suse.de>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/commit.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ mm/vmalloc.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -992,9 +992,10 @@ restart_loop:
- 			 * journalled data) we need to unmap buffer and clear
- 			 * more bits. We also need to be careful about the check
- 			 * because the data page mapping can get cleared under
--			 * out hands, which alse need not to clear more bits
--			 * because the page and buffers will be freed and can
--			 * never be reused once we are done with them.
-+			 * our hands. Note that if mapping == NULL, we don't
-+			 * need to make buffer unmapped because the page is
-+			 * already detached from the mapping and buffers cannot
-+			 * get reused.
- 			 */
- 			mapping = READ_ONCE(bh->b_page->mapping);
- 			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1668,7 +1668,6 @@ static void *__vmalloc_area_node(struct
+ 	nr_pages = get_vm_area_size(area) >> PAGE_SHIFT;
+ 	array_size = (nr_pages * sizeof(struct page *));
+ 
+-	area->nr_pages = nr_pages;
+ 	/* Please note that the recursion is strictly bounded. */
+ 	if (array_size > PAGE_SIZE) {
+ 		pages = __vmalloc_node(array_size, 1, nested_gfp|highmem_mask,
+@@ -1676,13 +1675,16 @@ static void *__vmalloc_area_node(struct
+ 	} else {
+ 		pages = kmalloc_node(array_size, nested_gfp, node);
+ 	}
+-	area->pages = pages;
+-	if (!area->pages) {
++
++	if (!pages) {
+ 		remove_vm_area(area->addr);
+ 		kfree(area);
+ 		return NULL;
+ 	}
+ 
++	area->pages = pages;
++	area->nr_pages = nr_pages;
++
+ 	for (i = 0; i < area->nr_pages; i++) {
+ 		struct page *page;
+ 
 
 
