@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CAEC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9D7C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D97A420736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7687206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387379;
-	bh=kVSr5u9Tfukq6cFf5zlcKPgwmUDvRS+rSSj1Vpb+p8Y=;
+	s=default; t=1587387382;
+	bh=3U4MOA2zSjanbkoh2i0PBmMVJ0JOxoR9ZqVWiBu1pGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N/xF89EQmx0eUhM5IG+5HhK3Ylw1Gh4v9/Nqg6Fi5Z3jl9BsV8qgAUafpFCfcVc4O
-	 Cpavn6Ocjc7jBFe3AD7ip3C51EkSy6ZY9lEwdJh6owZdKE+dEgxgvd3hWFupVvle/B
-	 nOsDkxb9NUOMl341DiVAqxgKq8BBTGFom7mUinB0=
+	b=MrGFcDqde0Ay54rkLshcDQmQmKUn2Wi2nColXpxzmzXezqW+CF9HgpwM2RC9RlG7d
+	 nO1iBB6paCHpN9uYKjm6uV1haZj2WJSpHgHLYba0CLek00uHX6GNMnx7zK07Cd+Ptt
+	 Ggerjt3psZYG9xMvbHFduzi9lxzbHFLW51lJrvhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgDTM4T (ORCPT
+        id S1728680AbgDTMpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:56:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39516 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbgDTMpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:12 -0400
+        id S1728638AbgDTMpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F39D120736;
-        Mon, 20 Apr 2020 12:45:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 875E120747;
+        Mon, 20 Apr 2020 12:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386711;
-        bh=kVSr5u9Tfukq6cFf5zlcKPgwmUDvRS+rSSj1Vpb+p8Y=;
+        s=default; t=1587386709;
+        bh=3U4MOA2zSjanbkoh2i0PBmMVJ0JOxoR9ZqVWiBu1pGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tx70bB08tElU+4dLJojO0+BHoY+4QidmL9PSmdFnrl0Fqc7Ij3tiBNI6IXpR315PK
-         Ktux+0l5kb2n9X5DPhyNfO6mfX+uMqhCSgOQdeQ1pJhzTWt6vR1cP2Wb98T0b4JuKB
-         gkzTZFG/mob9lHb1uFhfLejBoRD45tf/x8ezaGPg=
+        b=g2y2J8XF4e9oJjMtKXGfcQqvmdY34H4aIAufKZ+48guUrCGpJNuyzelnTy72mjCuV
+         +p0BYm6luH1c25+xEqlQr5BtZ1CWeENisiB86pFk/+JMCp2er5qvxOHHrSDpxlZMIv
+         H70bMEjYCM4BEfU+zYYi/Kopuszo90PF6nHYIz8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.6 68/71] x86/resctrl: Preserve CDP enable over CPU hotplug
-Date:   Mon, 20 Apr 2020 14:39:22 +0200
-Message-Id: <20200420121522.502302366@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>
+Subject: [PATCH 5.6 67/71] proc, time/namespace: Show clock symbolic names in /proc/pid/timens_offsets
+Date:   Mon, 20 Apr 2020 14:39:21 +0200
+Message-Id: <20200420121522.296713087@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -60,74 +63,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Andrei Vagin <avagin@gmail.com>
 
-commit 9fe0450785abbc04b0ed5d3cf61fcdb8ab656b4b upstream.
+commit 94d440d618467806009c8edc70b094d64e12ee5a upstream.
 
-Resctrl assumes that all CPUs are online when the filesystem is mounted,
-and that CPUs remember their CDP-enabled state over CPU hotplug.
+Michael Kerrisk suggested to replace numeric clock IDs with symbolic names.
 
-This goes wrong when resctrl's CDP-enabled state changes while all the
-CPUs in a domain are offline.
+Now the content of these files looks like this:
+$ cat /proc/774/timens_offsets
+monotonic      864000         0
+boottime      1728000         0
 
-When a domain comes online, enable (or disable!) CDP to match resctrl's
-current setting.
+For setting offsets, both representations of clocks (numeric and symbolic)
+can be used.
 
-Fixes: 5ff193fbde20 ("x86/intel_rdt: Add basic resctrl filesystem support")
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200221162105.154163-1-james.morse@arm.com
+As for compatibility, it is acceptable to change things as long as
+userspace doesn't care. The format of timens_offsets files is very new and
+there are no userspace tools yet which rely on this format.
+
+But three projects crun, util-linux and criu rely on the interface of
+setting time offsets and this is why it's required to continue supporting
+the numeric clock IDs on write.
+
+Fixes: 04a8682a71be ("fs/proc: Introduce /proc/pid/timens_offsets")
+Suggested-by: Michael Kerrisk <mtk.manpages@gmail.com>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Michael Kerrisk <mtk.manpages@gmail.com>
+Acked-by: Michael Kerrisk <mtk.manpages@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200411154031.642557-1-avagin@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/resctrl/core.c     |    2 ++
- arch/x86/kernel/cpu/resctrl/internal.h |    1 +
- arch/x86/kernel/cpu/resctrl/rdtgroup.c |   13 +++++++++++++
- 3 files changed, 16 insertions(+)
+ fs/proc/base.c          |   14 +++++++++++++-
+ kernel/time/namespace.c |   15 ++++++++++++++-
+ 2 files changed, 27 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -578,6 +578,8 @@ static void domain_add_cpu(int cpu, stru
- 	d->id = id;
- 	cpumask_set_cpu(cpu, &d->cpu_mask);
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -1573,6 +1573,7 @@ static ssize_t timens_offsets_write(stru
+ 	noffsets = 0;
+ 	for (pos = kbuf; pos; pos = next_line) {
+ 		struct proc_timens_offset *off = &offsets[noffsets];
++		char clock[10];
+ 		int err;
  
-+	rdt_domain_reconfigure_cdp(r);
+ 		/* Find the end of line and ensure we don't look past it */
+@@ -1584,10 +1585,21 @@ static ssize_t timens_offsets_write(stru
+ 				next_line = NULL;
+ 		}
+ 
+-		err = sscanf(pos, "%u %lld %lu", &off->clockid,
++		err = sscanf(pos, "%9s %lld %lu", clock,
+ 				&off->val.tv_sec, &off->val.tv_nsec);
+ 		if (err != 3 || off->val.tv_nsec >= NSEC_PER_SEC)
+ 			goto out;
 +
- 	if (r->alloc_capable && domain_setup_ctrlval(r, d)) {
- 		kfree(d);
- 		return;
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -601,5 +601,6 @@ bool has_busy_rmid(struct rdt_resource *
- void __check_limbo(struct rdt_domain *d, bool force_free);
- bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
- bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
-+void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
++		clock[sizeof(clock) - 1] = 0;
++		if (strcmp(clock, "monotonic") == 0 ||
++		    strcmp(clock, __stringify(CLOCK_MONOTONIC)) == 0)
++			off->clockid = CLOCK_MONOTONIC;
++		else if (strcmp(clock, "boottime") == 0 ||
++			 strcmp(clock, __stringify(CLOCK_BOOTTIME)) == 0)
++			off->clockid = CLOCK_BOOTTIME;
++		else
++			goto out;
++
+ 		noffsets++;
+ 		if (noffsets == ARRAY_SIZE(offsets)) {
+ 			if (next_line)
+--- a/kernel/time/namespace.c
++++ b/kernel/time/namespace.c
+@@ -337,7 +337,20 @@ static struct user_namespace *timens_own
  
- #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1859,6 +1859,19 @@ static int set_cache_qos_cfg(int level,
- 	return 0;
+ static void show_offset(struct seq_file *m, int clockid, struct timespec64 *ts)
+ {
+-	seq_printf(m, "%d %lld %ld\n", clockid, ts->tv_sec, ts->tv_nsec);
++	char *clock;
++
++	switch (clockid) {
++	case CLOCK_BOOTTIME:
++		clock = "boottime";
++		break;
++	case CLOCK_MONOTONIC:
++		clock = "monotonic";
++		break;
++	default:
++		clock = "unknown";
++		break;
++	}
++	seq_printf(m, "%-10s %10lld %9ld\n", clock, ts->tv_sec, ts->tv_nsec);
  }
  
-+/* Restore the qos cfg state when a domain comes online */
-+void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
-+{
-+	if (!r->alloc_capable)
-+		return;
-+
-+	if (r == &rdt_resources_all[RDT_RESOURCE_L2DATA])
-+		l2_qos_cfg_update(&r->alloc_enabled);
-+
-+	if (r == &rdt_resources_all[RDT_RESOURCE_L3DATA])
-+		l3_qos_cfg_update(&r->alloc_enabled);
-+}
-+
- /*
-  * Enable or disable the MBA software controller
-  * which helps user specify bandwidth in MBps.
+ void proc_timens_show_offsets(struct task_struct *p, struct seq_file *m)
 
 
