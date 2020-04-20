@@ -2,250 +2,637 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DA1C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89388C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 852EF206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F1F206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hfCwL9e+"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="jBPLObEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgDTSUQ (ORCPT
+        id S1728014AbgDTSVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:20:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57486 "EHLO
+        Mon, 20 Apr 2020 14:21:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgDTSUO (ORCPT
+        with ESMTP id S1726013AbgDTSVb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:20:14 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B010C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:20:14 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id r16so1507345edw.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:20:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZtO01bYahgOb7Z9oRmIlu41t03TJcXzE5gRBaNEAL7Q=;
-        b=hfCwL9e+vf+caPGwbcjlSh2CVWoPvLRnIJcrj9mrBBg13LqXHm391fyBRHAGUhOojJ
-         LFECsoHiwbzsCXzyE4yH5jK/CDgMbH7FByj4ye7bEj/Ofh9EY2YC2x6C7G6R7GjxFyvx
-         2gRQywjHtfuTQV7PlTAPcwJydCPzueCu7uy7izUk1uyjenndaa6On7aS8aabj3t4uFE+
-         p8oCadvi8p8EhSxf6uH8wrvny0KrtCMVNd4OS91UYmaa2RWisGlQjHRt7xajzGeHfkD+
-         77kA25TlmNCq/KLfxDuchQz6UT/xj/9zjeQ2akTKJ8eiod7ODfifUo9nA88OMQiZpONE
-         lY+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZtO01bYahgOb7Z9oRmIlu41t03TJcXzE5gRBaNEAL7Q=;
-        b=aKczS7kotAdB8t8Ir7051qp9U8AA2+6++s8qyeLAH7W99OwKKodzoMMbDpo/OnOeSS
-         2pNemaR6h8Yub3CGZPmyOIhRR8qoExRKIqkBmfzNCV36gpz5hKHYda2vsTRkO0Cz5fKw
-         bQSF1/idE52agrV3p7Jynzk37HPuvCM5vYz8dFKh2wvDdzQ9o1pXURFb46zxW6ZLRV4s
-         fVvBV/OlcsjbJdV0gt0unvUMTwiGuAU4L+i3vGL78klGHVo+gr5p57aozjXNo9CzFdo7
-         KPVldDmbaRRURBI4F7VcmR5ozn8zb79ivqH0ecY5nC21+3RGy+Xu3B20aggMzSPh9A+e
-         HXYg==
-X-Gm-Message-State: AGi0PubbvhK5yVqq6tHhvLkYuH7ZwBcKAiBBa90jKUsPBFngvVFh0ioV
-        JRmrUc2oYGhZz+OLIraq2Ueq0oXlz52BPau9uM3LmQ==
-X-Google-Smtp-Source: APiQypIB2bw4dzyFz/giglaCjVx3tH8usOa1T6pRutdl0wU2qwmyfZCwpwPbaM4BrQQaPmzCgUG//qy8oe92xQNI5M4=
-X-Received: by 2002:a50:ee86:: with SMTP id f6mr16488628edr.123.1587406812976;
- Mon, 20 Apr 2020 11:20:12 -0700 (PDT)
+        Mon, 20 Apr 2020 14:21:31 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7267CC061A10;
+        Mon, 20 Apr 2020 11:21:30 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id B0D4E23EE4;
+        Mon, 20 Apr 2020 20:21:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587406887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vwEBwgvmCYPfvAKge2+NSIvwW5FdG8ZfE7JqOI8vxnA=;
+        b=jBPLObEsJPD5mgruQc590lHq/xX6FDHPqeNCxehibIlghCLA0U/pOWj+s0GQTrGgPL75/D
+        ct9EGmXAx6ORKa/z9yHubgjF/+Qf8CHuz6NJrTaRvhoZFWnyc1J2p1tcUHPRwI5ptbzlgG
+        YI/LzVOgnguFoTlmCMmxGe2s6HLfzuw=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH net-next v3 3/3] net: phy: bcm54140: add hwmon support
+Date:   Mon, 20 Apr 2020 20:21:13 +0200
+Message-Id: <20200420182113.22577-3-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200420182113.22577-1-michael@walle.cc>
+References: <20200420182113.22577-1-michael@walle.cc>
 MIME-Version: 1.0
-References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net>
- <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
- <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com> <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com>
-In-Reply-To: <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 20 Apr 2020 11:20:01 -0700
-Message-ID: <CAPcyv4hrfZsg48Gw_s7xTLLhjLTk_U+PV0MsLnG+xh3652xFCQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: B0D4E23EE4
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[0.828];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[suse.com,roeck-us.net,lunn.ch,gmail.com,armlinux.org.uk,davemloft.net,walle.cc];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 10:29 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sun, Apr 19, 2020 at 10:08 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > Do we have examples of doing exception handling from C? I thought all
-> > the exception handling copy routines were assembly routines?
->
-> You need assembler for the actual access, but that's a _single_
-> instruction - best done as inline asm.
->
-> The best example of something that does *exactly* what you want to do is likely
->
->         unsafe_get_user();
->         unsafe_put_user();
->
-> which basically turns into a single instruction with exception
-> handling, with the exception hander jumping directly to an error
-> label.
->
-> Ok, so right now gcc can't do that for inline asm with outputs, so it
-> generates fairly nasty code (a secondary register with the error state
-> that then causes a conditional branch on it), but that's a compiler
-> limitation that will eventually go away (where "eventially" means that
-> it already works in LLVM with experimental patches).
->
-> You could literally mis-use those helpers as-is (please don't - the
-> code generation is correct, but at the very least we'd have to
-> re-organize a bit to make it a better interface, ie have an
-> alternative name like "unsafe_get_kernel()" for kernel pointer
-> accesses).
->
-> You'd have to do the alignment guarantees yourself, but there are
-> examples of that in this area too (strnlen_user() does exactly that -
-> aligned word accesses).
+The PHY supports monitoring its die temperature as well as two analog
+voltages. Add support for it.
 
-Ok, I'll take a deeper look, but my initial reaction is that this
-approach could be a way to replace memcpy_mcsafe_slow(), but would be
-unfortunate for the fast case which can just use rep; movs;
+Signed-off-by: Michael Walle <michael@walle.cc>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+---
+changes since v2:
+ - fixed messed up #if IS_ENABLED(CONFIG_HWMON) fences
+ - removed channel parameter from bcm54140_hwmon_read_temp()
 
->
-> So the point here is that the current interfaces are garbage, _if_ the
-> whole "access a single value" is actually performance-critical.
->
-> And if that is *not* the case, then the best thing to do is likely to
-> just use a static call. No inlining of single instructions at all,
-> just always use a function call, and then pick the function
-> appropriately.
->
-> Honestly, I can't imagine that the "single access" case is so
-> timing-critical that the static call isn't the right model. Your use
-> case is _not_ as important or common as doing user accesses.
->
-> Finally, the big question is whether the completely broken hardware
-> even matters. Are there actual customers that actually use the garbage
-> "we can crash the machine" stuff?
->
-> Because when it comes to things like nvdimms etc, the _primary_
-> performance target would be getting the kernel entirely out of the
-> way, and allowing databases etc to just access the damn thing
-> directly.
->
-> And if you allow user space to access it directly, then you just have
-> to admit that it's not a software issue any more - it's the hardware
-> that is terminally broken and unusable garbage. It's not even
-> interesting to work around things in the kernel, because user space
-> can just crash the machine directly.
->
-> This is why I absolutely detest that thing so much. The hardware is
-> _so_ fundamentally broken that I have always considered the kernel
-> workarounds to basically be "staging" level stuff - good enough for
-> some random testing of known-broken stuff, but not something that
-> anybody sane should ever use.
->
-> So my preference would actually be to just call the broken cases to be
-> largely ignored, at least from a performance angle. If you can only
-> access it through the kernel, the biggest performance limitation is
-> that you cannot do any DAX-like thing at all safely, so then the
-> performance of some kernel accessors is completely secondary and
-> meaningless. When a kernel entry/exit takes a few thousand cycles on
-> the broken hardware (due to _other_ bugs), what's the point about
-> worrying about trying to inline some single access to the nvdimm?
->
-> Did the broken hardware ever spread out into the general public?
-> Because if not, then the proper thing to do might be to just make it a
-> compile-time option for the (few) customers that signed up for testing
-> the initial broken stuff, and make the way _forward_ be a clean model
-> without the need to worry about any exceptions at all.
+changes since v1:
+ - add IS_ENABLED(CONFIG_HWMON) guards
+ - clamp values before conversion
+ - add mutex alarm_lock
+ - use mdiobus_get_phy()
+ - make CONFIG_BCM54140_PHY depend on HWMON (or disabled altogether)
+ - add BCM54140_HWMON_IN_xx(ch) macros
 
-There are 3 classes of hardware, all of them trigger exceptions* it's
-just the recoverability of those exceptions that is different:
+Btw. is it possible to rely on the compiler to strip away unused
+function calls. For exmaple, instead of using the
+#if IS_ENABLED(CONFIG_HWMON) guards, one could use the following:
 
-1/ Recovery not supported all exceptions report PCC=1 (processor
-context corrupted) and the kernel decides to panic.
+  if (IS_ENABLED(CONFIG_HWMON))
+    if (!bcm54140_is_pkg_init(phydev)) {
+      ret = bcm54140_phy_probe_once(phydev);
+      if (ret)
+        return ret;
+    }
+  }
 
-2/ Recovery supported, user processes killed on consumption, panic on
-kernel consumption outside of an exception handler instrumented code
-path. Unfortunately there is no architectural way to distinguish
-class1 from class2 outside of a PCI quirk whitelist. The kernel prior
-to memcpy_mcsafe() just unconditionally enabled recovery for user
-consumption, panicked on kernel consumption, and hoped that exceptions
-are sent with PCC=0. The introduction of memcpy_mcsafe() to handle
-poison consumption from kernel-space without a panic introduced this
-not pretty caveat that some platforms needed to do special snowflake
-memcpy to avoid known scenarios** that trigger PCC=1 when they could
-otherwise trigger PCC=0. So a PCI quirk whitelist was added for those.
+This will then optimize away the devm_hwmon_device_register() call.
 
-3/ Recovery supported *and* special snowflake memcpy rules relaxed.
-Still no architectural way to discover this state so let us just
-enable memcpy_mcsafe_fast() always and let the former whitelist become
-a blacklist of "this CPU requires you to do a dance to avoid some
-PCC=1 cases, but that dance impacts performance".
+ Documentation/hwmon/bcm54140.rst |  45 ++++
+ Documentation/hwmon/index.rst    |   1 +
+ drivers/net/phy/Kconfig          |   1 +
+ drivers/net/phy/bcm54140.c       | 396 +++++++++++++++++++++++++++++++
+ 4 files changed, 443 insertions(+)
+ create mode 100644 Documentation/hwmon/bcm54140.rst
 
-* I'm at a loss of why you seem to be suggesting that hardware should
-/ could avoid all exceptions. What else could hardware do besides
-throw an exception on consumption of a naturally occuring multi-bit
-ECC error? Data is gone, and only software might know how to recover.
+diff --git a/Documentation/hwmon/bcm54140.rst b/Documentation/hwmon/bcm54140.rst
+new file mode 100644
+index 000000000000..bc6ea4b45966
+--- /dev/null
++++ b/Documentation/hwmon/bcm54140.rst
+@@ -0,0 +1,45 @@
++.. SPDX-License-Identifier: GPL-2.0-only
++
++Broadcom BCM54140 Quad SGMII/QSGMII PHY
++=======================================
++
++Supported chips:
++
++   * Broadcom BCM54140
++
++     Datasheet: not public
++
++Author: Michael Walle <michael@walle.cc>
++
++Description
++-----------
++
++The Broadcom BCM54140 is a Quad SGMII/QSGMII PHY which supports monitoring
++its die temperature as well as two analog voltages.
++
++The AVDDL is a 1.0V analogue voltage, the AVDDH is a 3.3V analogue voltage.
++Both voltages and the temperature are measured in a round-robin fashion.
++
++Sysfs entries
++-------------
++
++The following attributes are supported.
++
++======================= ========================================================
++in0_label		"AVDDL"
++in0_input		Measured AVDDL voltage.
++in0_min			Minimum AVDDL voltage.
++in0_max			Maximum AVDDL voltage.
++in0_alarm		AVDDL voltage alarm.
++
++in1_label		"AVDDH"
++in1_input		Measured AVDDH voltage.
++in1_min			Minimum AVDDH voltage.
++in1_max			Maximum AVDDH voltage.
++in1_alarm		AVDDH voltage alarm.
++
++temp1_input		Die temperature.
++temp1_min		Minimum die temperature.
++temp1_max		Maximum die temperature.
++temp1_alarm		Die temperature alarm.
++======================= ========================================================
+diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+index f022583f96f6..19ad0846736d 100644
+--- a/Documentation/hwmon/index.rst
++++ b/Documentation/hwmon/index.rst
+@@ -42,6 +42,7 @@ Hardware Monitoring Kernel Drivers
+    asb100
+    asc7621
+    aspeed-pwm-tacho
++   bcm54140
+    bel-pfe
+    coretemp
+    da9052
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index cb7936b577de..bacfee41b564 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -349,6 +349,7 @@ config BROADCOM_PHY
+ config BCM54140_PHY
+ 	tristate "Broadcom BCM54140 PHY"
+ 	depends on PHYLIB
++	depends on HWMON || HWMON=n
+ 	select BCM_NET_PHYLIB
+ 	help
+ 	  Support the Broadcom BCM54140 Quad SGMII/QSGMII PHY.
+diff --git a/drivers/net/phy/bcm54140.c b/drivers/net/phy/bcm54140.c
+index 0eeb60de67f8..aa854477e06a 100644
+--- a/drivers/net/phy/bcm54140.c
++++ b/drivers/net/phy/bcm54140.c
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/bitfield.h>
+ #include <linux/brcmphy.h>
++#include <linux/hwmon.h>
+ #include <linux/module.h>
+ #include <linux/phy.h>
+ 
+@@ -50,6 +51,69 @@
+ #define  BCM54140_RDB_TOP_IMR_PORT1	BIT(5)
+ #define  BCM54140_RDB_TOP_IMR_PORT2	BIT(6)
+ #define  BCM54140_RDB_TOP_IMR_PORT3	BIT(7)
++#define BCM54140_RDB_MON_CTRL		0x831	/* monitor control */
++#define  BCM54140_RDB_MON_CTRL_V_MODE	BIT(3)	/* voltage mode */
++#define  BCM54140_RDB_MON_CTRL_SEL_MASK	GENMASK(2, 1)
++#define  BCM54140_RDB_MON_CTRL_SEL_TEMP	0	/* meassure temperature */
++#define  BCM54140_RDB_MON_CTRL_SEL_1V0	1	/* meassure AVDDL 1.0V */
++#define  BCM54140_RDB_MON_CTRL_SEL_3V3	2	/* meassure AVDDH 3.3V */
++#define  BCM54140_RDB_MON_CTRL_SEL_RR	3	/* meassure all round-robin */
++#define  BCM54140_RDB_MON_CTRL_PWR_DOWN	BIT(0)	/* power-down monitor */
++#define BCM54140_RDB_MON_TEMP_VAL	0x832	/* temperature value */
++#define BCM54140_RDB_MON_TEMP_MAX	0x833	/* temperature high thresh */
++#define BCM54140_RDB_MON_TEMP_MIN	0x834	/* temperature low thresh */
++#define  BCM54140_RDB_MON_TEMP_DATA_MASK GENMASK(9, 0)
++#define BCM54140_RDB_MON_1V0_VAL	0x835	/* AVDDL 1.0V value */
++#define BCM54140_RDB_MON_1V0_MAX	0x836	/* AVDDL 1.0V high thresh */
++#define BCM54140_RDB_MON_1V0_MIN	0x837	/* AVDDL 1.0V low thresh */
++#define  BCM54140_RDB_MON_1V0_DATA_MASK	GENMASK(10, 0)
++#define BCM54140_RDB_MON_3V3_VAL	0x838	/* AVDDH 3.3V value */
++#define BCM54140_RDB_MON_3V3_MAX	0x839	/* AVDDH 3.3V high thresh */
++#define BCM54140_RDB_MON_3V3_MIN	0x83a	/* AVDDH 3.3V low thresh */
++#define  BCM54140_RDB_MON_3V3_DATA_MASK	GENMASK(11, 0)
++#define BCM54140_RDB_MON_ISR		0x83b	/* interrupt status */
++#define  BCM54140_RDB_MON_ISR_3V3	BIT(2)	/* AVDDH 3.3V alarm */
++#define  BCM54140_RDB_MON_ISR_1V0	BIT(1)	/* AVDDL 1.0V alarm */
++#define  BCM54140_RDB_MON_ISR_TEMP	BIT(0)	/* temperature alarm */
++
++/* According to the datasheet the formula is:
++ *   T = 413.35 - (0.49055 * bits[9:0])
++ */
++#define BCM54140_HWMON_TO_TEMP(v) (413350L - (v) * 491)
++#define BCM54140_HWMON_FROM_TEMP(v) DIV_ROUND_CLOSEST_ULL(413350L - (v), 491)
++
++/* According to the datasheet the formula is:
++ *   U = bits[11:0] / 1024 * 220 / 0.2
++ *
++ * Normalized:
++ *   U = bits[11:0] / 4096 * 2514
++ */
++#define BCM54140_HWMON_TO_IN_1V0(v) ((v) * 2514 >> 11)
++#define BCM54140_HWMON_FROM_IN_1V0(v) DIV_ROUND_CLOSEST_ULL(((v) << 11), 2514)
++
++/* According to the datasheet the formula is:
++ *   U = bits[10:0] / 1024 * 880 / 0.7
++ *
++ * Normalized:
++ *   U = bits[10:0] / 2048 * 4400
++ */
++#define BCM54140_HWMON_TO_IN_3V3(v) ((v) * 4400 >> 12)
++#define BCM54140_HWMON_FROM_IN_3V3(v) DIV_ROUND_CLOSEST_ULL(((v) << 12), 4400)
++
++#define BCM54140_HWMON_TO_IN(ch, v) ((ch) ? BCM54140_HWMON_TO_IN_3V3(v) \
++					  : BCM54140_HWMON_TO_IN_1V0(v))
++#define BCM54140_HWMON_FROM_IN(ch, v) ((ch) ? BCM54140_HWMON_FROM_IN_3V3(v) \
++					    : BCM54140_HWMON_FROM_IN_1V0(v))
++#define BCM54140_HWMON_IN_MASK(ch) ((ch) ? BCM54140_RDB_MON_3V3_DATA_MASK \
++					 : BCM54140_RDB_MON_1V0_DATA_MASK)
++#define BCM54140_HWMON_IN_VAL_REG(ch) ((ch) ? BCM54140_RDB_MON_3V3_VAL \
++					    : BCM54140_RDB_MON_1V0_VAL)
++#define BCM54140_HWMON_IN_MIN_REG(ch) ((ch) ? BCM54140_RDB_MON_3V3_MIN \
++					    : BCM54140_RDB_MON_1V0_MIN)
++#define BCM54140_HWMON_IN_MAX_REG(ch) ((ch) ? BCM54140_RDB_MON_3V3_MAX \
++					    : BCM54140_RDB_MON_1V0_MAX)
++#define BCM54140_HWMON_IN_ALARM_BIT(ch) ((ch) ? BCM54140_RDB_MON_ISR_3V3 \
++					      : BCM54140_RDB_MON_ISR_1V0)
+ 
+ #define BCM54140_DEFAULT_DOWNSHIFT 5
+ #define BCM54140_MAX_DOWNSHIFT 9
+@@ -57,8 +121,328 @@
+ struct bcm54140_priv {
+ 	int port;
+ 	int base_addr;
++#if IS_ENABLED(CONFIG_HWMON)
++	bool pkg_init;
++	/* protect the alarm bits */
++	struct mutex alarm_lock;
++	u16 alarm;
++#endif
+ };
+ 
++#if IS_ENABLED(CONFIG_HWMON)
++static umode_t bcm54140_hwmon_is_visible(const void *data,
++					 enum hwmon_sensor_types type,
++					 u32 attr, int channel)
++{
++	switch (type) {
++	case hwmon_in:
++		switch (attr) {
++		case hwmon_in_min:
++		case hwmon_in_max:
++			return 0644;
++		case hwmon_in_label:
++		case hwmon_in_input:
++		case hwmon_in_alarm:
++			return 0444;
++		default:
++			return 0;
++		}
++	case hwmon_temp:
++		switch (attr) {
++		case hwmon_temp_min:
++		case hwmon_temp_max:
++			return 0644;
++		case hwmon_temp_input:
++		case hwmon_temp_alarm:
++			return 0444;
++		default:
++			return 0;
++		}
++	default:
++		return 0;
++	}
++}
++
++static int bcm54140_hwmon_read_alarm(struct device *dev, unsigned int bit,
++				     long *val)
++{
++	struct phy_device *phydev = dev_get_drvdata(dev);
++	struct bcm54140_priv *priv = phydev->priv;
++	int tmp, ret = 0;
++
++	mutex_lock(&priv->alarm_lock);
++
++	/* latch any alarm bits */
++	tmp = bcm_phy_read_rdb(phydev, BCM54140_RDB_MON_ISR);
++	if (tmp < 0) {
++		ret = tmp;
++		goto out;
++	}
++	priv->alarm |= tmp;
++
++	*val = !!(priv->alarm & bit);
++	priv->alarm &= ~bit;
++
++out:
++	mutex_unlock(&priv->alarm_lock);
++	return ret;
++}
++
++static int bcm54140_hwmon_read_temp(struct device *dev, u32 attr, long *val)
++{
++	struct phy_device *phydev = dev_get_drvdata(dev);
++	u16 reg, tmp;
++
++	switch (attr) {
++	case hwmon_temp_input:
++		reg = BCM54140_RDB_MON_TEMP_VAL;
++		break;
++	case hwmon_temp_min:
++		reg = BCM54140_RDB_MON_TEMP_MIN;
++		break;
++	case hwmon_temp_max:
++		reg = BCM54140_RDB_MON_TEMP_MAX;
++		break;
++	case hwmon_temp_alarm:
++		return bcm54140_hwmon_read_alarm(dev,
++						 BCM54140_RDB_MON_ISR_TEMP,
++						 val);
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	tmp = bcm_phy_read_rdb(phydev, reg);
++	if (tmp < 0)
++		return tmp;
++
++	*val = BCM54140_HWMON_TO_TEMP(tmp & BCM54140_RDB_MON_TEMP_DATA_MASK);
++
++	return 0;
++}
++
++static int bcm54140_hwmon_read_in(struct device *dev, u32 attr,
++				  int channel, long *val)
++{
++	struct phy_device *phydev = dev_get_drvdata(dev);
++	u16 bit, reg, tmp;
++
++	switch (attr) {
++	case hwmon_in_input:
++		reg = BCM54140_HWMON_IN_VAL_REG(channel);
++		break;
++	case hwmon_in_min:
++		reg = BCM54140_HWMON_IN_MIN_REG(channel);
++		break;
++	case hwmon_in_max:
++		reg = BCM54140_HWMON_IN_MAX_REG(channel);
++		break;
++	case hwmon_in_alarm:
++		bit = BCM54140_HWMON_IN_ALARM_BIT(channel);
++		return bcm54140_hwmon_read_alarm(dev, bit, val);
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	tmp = bcm_phy_read_rdb(phydev, reg);
++	if (tmp < 0)
++		return tmp;
++
++	tmp &= BCM54140_HWMON_IN_MASK(channel);
++	*val = BCM54140_HWMON_TO_IN(channel, tmp);
++
++	return 0;
++}
++
++static int bcm54140_hwmon_read(struct device *dev,
++			       enum hwmon_sensor_types type, u32 attr,
++			       int channel, long *val)
++{
++	switch (type) {
++	case hwmon_temp:
++		return bcm54140_hwmon_read_temp(dev, attr, val);
++	case hwmon_in:
++		return bcm54140_hwmon_read_in(dev, attr, channel, val);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static const char *const bcm54140_hwmon_in_labels[] = {
++	"AVDDL",
++	"AVDDH",
++};
++
++static int bcm54140_hwmon_read_string(struct device *dev,
++				      enum hwmon_sensor_types type, u32 attr,
++				      int channel, const char **str)
++{
++	switch (type) {
++	case hwmon_in:
++		switch (attr) {
++		case hwmon_in_label:
++			*str = bcm54140_hwmon_in_labels[channel];
++			return 0;
++		default:
++			return -EOPNOTSUPP;
++		}
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int bcm54140_hwmon_write_temp(struct device *dev, u32 attr,
++				     int channel, long val)
++{
++	struct phy_device *phydev = dev_get_drvdata(dev);
++	u16 mask = BCM54140_RDB_MON_TEMP_DATA_MASK;
++	u16 reg;
++
++	val = clamp_val(val, BCM54140_HWMON_TO_TEMP(mask),
++			BCM54140_HWMON_TO_TEMP(0));
++
++	switch (attr) {
++	case hwmon_temp_min:
++		reg = BCM54140_RDB_MON_TEMP_MIN;
++		break;
++	case hwmon_temp_max:
++		reg = BCM54140_RDB_MON_TEMP_MAX;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	return bcm_phy_modify_rdb(phydev, reg, mask,
++				  BCM54140_HWMON_FROM_TEMP(val));
++}
++
++static int bcm54140_hwmon_write_in(struct device *dev, u32 attr,
++				   int channel, long val)
++{
++	struct phy_device *phydev = dev_get_drvdata(dev);
++	u16 mask = BCM54140_HWMON_IN_MASK(channel);
++	u16 reg;
++
++	val = clamp_val(val, 0, BCM54140_HWMON_TO_IN(channel, mask));
++
++	switch (attr) {
++	case hwmon_in_min:
++		reg = BCM54140_HWMON_IN_MIN_REG(channel);
++		break;
++	case hwmon_in_max:
++		reg = BCM54140_HWMON_IN_MAX_REG(channel);
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	return bcm_phy_modify_rdb(phydev, reg, mask,
++				  BCM54140_HWMON_FROM_IN(channel, val));
++}
++
++static int bcm54140_hwmon_write(struct device *dev,
++				enum hwmon_sensor_types type, u32 attr,
++				int channel, long val)
++{
++	switch (type) {
++	case hwmon_temp:
++		return bcm54140_hwmon_write_temp(dev, attr, channel, val);
++	case hwmon_in:
++		return bcm54140_hwmon_write_in(dev, attr, channel, val);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static const struct hwmon_channel_info *bcm54140_hwmon_info[] = {
++	HWMON_CHANNEL_INFO(temp,
++			   HWMON_T_INPUT | HWMON_T_MIN | HWMON_T_MAX |
++			   HWMON_T_ALARM),
++	HWMON_CHANNEL_INFO(in,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM | HWMON_I_LABEL,
++			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
++			   HWMON_I_ALARM | HWMON_I_LABEL),
++	NULL
++};
++
++static const struct hwmon_ops bcm54140_hwmon_ops = {
++	.is_visible = bcm54140_hwmon_is_visible,
++	.read = bcm54140_hwmon_read,
++	.read_string = bcm54140_hwmon_read_string,
++	.write = bcm54140_hwmon_write,
++};
++
++static const struct hwmon_chip_info bcm54140_chip_info = {
++	.ops = &bcm54140_hwmon_ops,
++	.info = bcm54140_hwmon_info,
++};
++
++static int bcm54140_enable_monitoring(struct phy_device *phydev)
++{
++	u16 mask, set;
++
++	/* 3.3V voltage mode */
++	set = BCM54140_RDB_MON_CTRL_V_MODE;
++
++	/* select round-robin */
++	mask = BCM54140_RDB_MON_CTRL_SEL_MASK;
++	set |= FIELD_PREP(BCM54140_RDB_MON_CTRL_SEL_MASK,
++			  BCM54140_RDB_MON_CTRL_SEL_RR);
++
++	/* remove power-down bit */
++	mask |= BCM54140_RDB_MON_CTRL_PWR_DOWN;
++
++	return bcm_phy_modify_rdb(phydev, BCM54140_RDB_MON_CTRL, mask, set);
++}
++
++/* Check if one PHY has already done the init of the parts common to all PHYs
++ * in the Quad PHY package.
++ */
++static bool bcm54140_is_pkg_init(struct phy_device *phydev)
++{
++	struct bcm54140_priv *priv = phydev->priv;
++	struct mii_bus *bus = phydev->mdio.bus;
++	int base_addr = priv->base_addr;
++	struct phy_device *phy;
++	int i;
++
++	/* Quad PHY */
++	for (i = 0; i < 4; i++) {
++		phy = mdiobus_get_phy(bus, base_addr + i);
++		if (!phy)
++			continue;
++
++		if ((phy->phy_id & phydev->drv->phy_id_mask) !=
++		    (phydev->drv->phy_id & phydev->drv->phy_id_mask))
++			continue;
++
++		priv = phy->priv;
++
++		if (priv && priv->pkg_init)
++			return true;
++	}
++
++	return false;
++}
++
++static int bcm54140_probe_once(struct phy_device *phydev)
++{
++	struct device *hwmon;
++	int ret;
++
++	/* enable hardware monitoring */
++	ret = bcm54140_enable_monitoring(phydev);
++	if (ret)
++		return ret;
++
++	hwmon = devm_hwmon_device_register_with_info(&phydev->mdio.dev,
++						     "BCM54140", phydev,
++						     &bcm54140_chip_info,
++						     NULL);
++	return PTR_ERR_OR_ZERO(hwmon);
++}
++#endif
++
+ static int bcm54140_base_read_rdb(struct phy_device *phydev, u16 rdb)
+ {
+ 	struct bcm54140_priv *priv = phydev->priv;
+@@ -222,6 +606,18 @@ static int bcm54140_probe(struct phy_device *phydev)
+ 	if (ret)
+ 		return ret;
+ 
++#if IS_ENABLED(CONFIG_HWMON)
++	mutex_init(&priv->alarm_lock);
++
++	if (!bcm54140_is_pkg_init(phydev)) {
++		ret = bcm54140_probe_once(phydev);
++		if (ret)
++			return ret;
++	}
++
++	priv->pkg_init = true;
++#endif
++
+ 	phydev_dbg(phydev, "probed (port %d, base PHY address %d)\n",
+ 		   priv->port, priv->base_addr);
+ 
+-- 
+2.20.1
 
-** Unaligned access across a cacheline boundary, fast string consumption...
-
-> > The writes can mmu-fault now that memcpy_mcsafe() is also used by
-> > _copy_to_iter_mcsafe(). This allows a clean bypass of the block layer
-> > in fs/dax.c in addition to the pmem driver access of poisoned memory.
-> > Now that the fallback is a sane rep; movs; it can be considered for
-> > plain copy_to_iter() for other user copies so you get exception
-> > handling on kernel access of poison outside of persistent memory. To
-> > Andy's point I think a recoverable copy (for exceptions or faults) is
-> > generally useful.
->
-> I think that's completely independent.
->
-> If we have good reasons for having targets with exception handling,
-> then that has absolutely nothing to do with machine checks or buggy
-> hardware.
->
-> And it sure shouldn't be called "mcsafe", since it has nothing to do
-> with that situation any more.
-
-Ok, true.
-
-> > I understand the gripes about the mcsafe_slow() implementation, but
-> > how do I implement mcsafe_fast() any better than how it is currently
-> > organized given that, setting aside machine check handling,
-> > memcpy_mcsafe() is the core of a copy_to_iter*() front-end that can
-> > mmu-fault on either source or destination access?
->
-> So honestly, once it is NOT about the broken machine check garbage,
-> then it should be sold on its own independent reasons.
->
-> Do we want to have a "copy_to_iter_safe" that can handle page faults?
-> Because we have lots of those kinds of things, we have
->
->  - load_unaligned_zeropad()
->
->    This loads a single word knowing that the _first_ byte is valid,
-> but can take an exception and zero-pad if it crosses a page boundary
->
->  - probe_kernel_read()/write()
->
->    This is a kernel memcpy() with the source/destination perhaps being unmapped.
->
->  - various perf and tracing helpers that have special semantics.
->
-> but once it's about some generic interface, then it also needs to take
-> other architectures into account.
-
-For the fast case it's really just copy_user_enhanced_fast_string()
-without forced stac/clac when the source and dest are both kernel
-accesses.
