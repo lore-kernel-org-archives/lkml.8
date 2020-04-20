@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCAAC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51D7C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8606820747
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CFE206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386979;
-	bh=lxkUJsM0iAOAiyGAre8OHyc12fzmfOmeCmAa/EcSP8g=;
+	s=default; t=1587386985;
+	bh=x6obM/CduAWie+8FcaDLnDXEVtgF+cqfK2NxnMy5rb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lmVxzBnFVMKXNhTqqnsn8cy9vGboDq3ddjgJa+gpW1V9BocffwM/v4LcxBsuqdzDR
-	 Q8iXxK39IsdEIHPoV7YAAFqbnbLitJ1+VaWCRZF4t+zF8D0xIdCCLPE4uPRXu61txO
-	 Qvmp4CRIQZumIm5VYwUA3e/g/u44jn22cQ1xOfMQ=
+	b=fjToKyx6/sv5TQ8FibXwttsBA1Cu7dSRJ+H+ih02I+ZRxKV/V3p6CzSMNGRdPLe5g
+	 sLs7t/PokDPQM46F432h1dTnCtJyEom0wLrBjbiuoirSDBYBYOalE1QJ2YLUZB/rmt
+	 lKO3h5hplqqiUkXy4isog9qGcMTJJPZyb/SuCA9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgDTMtj (ORCPT
+        id S1729477AbgDTMto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:49:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46442 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:49:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729424AbgDTMt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:49:28 -0400
+        id S1729448AbgDTMtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:49:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0580C206DD;
-        Mon, 20 Apr 2020 12:49:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3141A20735;
+        Mon, 20 Apr 2020 12:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386967;
-        bh=lxkUJsM0iAOAiyGAre8OHyc12fzmfOmeCmAa/EcSP8g=;
+        s=default; t=1587386974;
+        bh=x6obM/CduAWie+8FcaDLnDXEVtgF+cqfK2NxnMy5rb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXlVO1yCF4YKz3/p5UDXA+FhtEhYbddJ7m1fcC3o8LfYYXymU9lIYTDyKrvTDK2WR
-         YUDulrg371SiEtBq8JZ1HZbTd2AGS2UWMW4JBtnmgayLYDwddIDoaRnpJR4tNSyVhM
-         KrA07MAJJ8lbiQkQACBlOUn1Mp3nASYV7ViMjrXk=
+        b=qCCSGC9VT23Bt/HMwC5Evb1TR9tixlkTripN8bS9aHdpIE2MGvPPy0Uy8UHHH9t25
+         8F6vkkm9Qnmzhzs4eB8rMvjSEZuZyCch+39sWYv5q0F3wnrdjMrqTgCbbRkFaHkeTS
+         tUwt1jNtbhUshG6tUPJZ/sHQ5+Qt07vtVisahunE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Karthick Gopalasubramanian <kargop@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 39/40] wil6210: remove reset file from debugfs
-Date:   Mon, 20 Apr 2020 14:39:49 +0200
-Message-Id: <20200420121507.866464684@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 15/40] ASoC: Intel: mrfld: fix incorrect check on p->sink
+Date:   Mon, 20 Apr 2020 14:39:25 +0200
+Message-Id: <20200420121458.076035564@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
@@ -62,65 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Karthick Gopalasubramanian <kargop@codeaurora.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 32dcfe8316cdbd885542967c0c85f5b9de78874b upstream.
+commit f5e056e1e46fcbb5f74ce560792aeb7d57ce79e6 upstream.
 
-Reset file is not used and may cause race conditions
-with operational driver if used.
+The check on p->sink looks bogus, I believe it should be p->source
+since the following code blocks are related to p->source. Fix
+this by replacing p->sink with p->source.
 
-Signed-off-by: Karthick Gopalasubramanian <kargop@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Addresses-Coverity: ("Copy-paste error")
+Link: https://lore.kernel.org/r/20191119113640.166940-1-colin.king@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/wil6210/debugfs.c |   27 ---------------------------
- 1 file changed, 27 deletions(-)
+ sound/soc/intel/atom/sst-atom-controls.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/ath/wil6210/debugfs.c
-+++ b/drivers/net/wireless/ath/wil6210/debugfs.c
-@@ -730,32 +730,6 @@ struct dentry *wil_debugfs_create_ioblob
- 	return debugfs_create_file(name, mode, parent, wil_blob, &fops_ioblob);
- }
+--- a/sound/soc/intel/atom/sst-atom-controls.c
++++ b/sound/soc/intel/atom/sst-atom-controls.c
+@@ -1341,7 +1341,7 @@ int sst_send_pipe_gains(struct snd_soc_d
+ 				dai->capture_widget->name);
+ 		w = dai->capture_widget;
+ 		snd_soc_dapm_widget_for_each_source_path(w, p) {
+-			if (p->connected && !p->connected(w, p->sink))
++			if (p->connected && !p->connected(w, p->source))
+ 				continue;
  
--/*---reset---*/
--static ssize_t wil_write_file_reset(struct file *file, const char __user *buf,
--				    size_t len, loff_t *ppos)
--{
--	struct wil6210_priv *wil = file->private_data;
--	struct net_device *ndev = wil->main_ndev;
--
--	/**
--	 * BUG:
--	 * this code does NOT sync device state with the rest of system
--	 * use with care, debug only!!!
--	 */
--	rtnl_lock();
--	dev_close(ndev);
--	ndev->flags &= ~IFF_UP;
--	rtnl_unlock();
--	wil_reset(wil, true);
--
--	return len;
--}
--
--static const struct file_operations fops_reset = {
--	.write = wil_write_file_reset,
--	.open  = simple_open,
--};
--
- /*---write channel 1..4 to rxon for it, 0 to rxoff---*/
- static ssize_t wil_write_file_rxon(struct file *file, const char __user *buf,
- 				   size_t len, loff_t *ppos)
-@@ -2461,7 +2435,6 @@ static const struct {
- 	{"desc",	0444,		&fops_txdesc},
- 	{"bf",		0444,		&fops_bf},
- 	{"mem_val",	0644,		&fops_memread},
--	{"reset",	0244,		&fops_reset},
- 	{"rxon",	0244,		&fops_rxon},
- 	{"tx_mgmt",	0244,		&fops_txmgmt},
- 	{"wmi_send", 0244,		&fops_wmi},
+ 			if (p->connect &&  p->source->power &&
 
 
