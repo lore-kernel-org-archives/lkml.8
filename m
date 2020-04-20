@@ -2,90 +2,113 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A287C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7257C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4D220747
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xy8tnJGN"
+	by mail.kernel.org (Postfix) with ESMTP id 9C21F20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587387072;
+	bh=GxhdlBmpsPege9HnDm7gfiKhMN+7fazKKcr9Va8+fnY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ev22Jquolg7CBVg4YjEsGEY3/fj9UpLdRzUXo/ANJQVSIlDxkQDNLKPZMtPzZcgts
+	 tagMKWKZIbmWoQ7QbIU0iUVlX+wyupTSucrdcm/ocaAp68e/idnDgjBI+3WKTQRiUa
+	 7U3Ei8vuIMMZVzobAV/ICIWVjBJfkrXoodPidEko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgDTMvE (ORCPT
+        id S1729559AbgDTMvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:51:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729543AbgDTMu7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:50:59 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97463C061A0F;
-        Mon, 20 Apr 2020 05:50:57 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id d7so8599266oif.9;
-        Mon, 20 Apr 2020 05:50:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=35aqzVMMcIlOOYhLALGKxscQPUJo+RlR+stQptgOImc=;
-        b=Xy8tnJGNE6IPz8WZ/6FO3Q1inVAJSdTpoIxxV8Ux3JOU6jzoZgSo2z7XMgnEPW46N9
-         P6QxEiWKXe/FZpYWdIedsYvkjV7dQVVb4YBZX1wagT0BAfcG8106E9ivHOW67/4Y9LTA
-         LO5V8Ofjd4lLcW7yirW8B48dF5Mf+o7nZdYWcxYn8triKYf6kU5NJc8DECDek6B/dOBP
-         fc0CE8kIyjAbZoyRZNZrVd9CPs1RC5VirmUNeSnxLxzHV/OG+rFCAiXYxHfKJKl/CPIV
-         L+TFufhxIn3IQVFRYmHE3GRcMP5TuEJuUDWRIuwAjNdfkhX4sAulJvl7fFVD8R4o6b6m
-         cIBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=35aqzVMMcIlOOYhLALGKxscQPUJo+RlR+stQptgOImc=;
-        b=DGJ7UIN1yCI9flJwcZOZS+FQ8LNqgkUteNVB0vnNpHr0SAKIXupjbQP9A3LvRtNFit
-         T6SUy4dDRR1JTjECyuE3OMv26jlSZprRcBj56TcMKQVvNveqevP3+zFoLWlSWPPC+58T
-         JNYUfoQrVGdbBmFa41qplSp3M01OrYW3Rg1RyHS9jrCABgB/iE2YzT7MlnL6QEKddj/4
-         L42Te7uK6h5TrAeORhtmB8u7vJlrnM6gn1WU76sI32Fe0JoIp4ooB8QypwVY6F23rxvJ
-         MvKQDyeAMLBfpOK83pe4k6zrX4cdWxQMJyVXtalj9bJsu8Ae3Fcv/xLmiPJmpUEBgNo3
-         Q0ow==
-X-Gm-Message-State: AGi0Pubaj5KjhIvgncNKqPHR5iYLIg+ffJjww+l6pZ7PH0RYlLnM6tOr
-        S0cSGL7YxpgCjxPi/pDMMd9DJRC7pvGDTQpnZXU=
-X-Google-Smtp-Source: APiQypJQOv9Ww+7hoK/CdulOK2O+mlEVZi3+qaYbfvCToGcp+X800VBJy2czYU/s9k9AzL8Q0DF1MbReNmebyiXuhYg=
-X-Received: by 2002:aca:fc0a:: with SMTP id a10mr10490437oii.77.1587387056332;
- Mon, 20 Apr 2020 05:50:56 -0700 (PDT)
+        Mon, 20 Apr 2020 08:51:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729274AbgDTMso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 449122072B;
+        Mon, 20 Apr 2020 12:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587386923;
+        bh=GxhdlBmpsPege9HnDm7gfiKhMN+7fazKKcr9Va8+fnY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Dju6cWJb8diPsmGFw8Jo8I9bjeov0I2+EBa9amfRWViCojMeXXxyJtmyd9Ve/Mm1f
+         u1QcnuCJanc9v9Xt/joHzcBwUtcUBfHjyppzjqoJcuhYE+kOTcUNMeyMuYY127pgUf
+         glllMeuBi0vMRbHVAjdI9lkxiCDCA/vWlqCbP+1Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 22/40] tracing: Fix the race between registering snapshot event trigger and triggering snapshot operation
+Date:   Mon, 20 Apr 2020 14:39:32 +0200
+Message-Id: <20200420121500.526690215@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
+References: <20200420121444.178150063@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200417221341.31428-1-TheSven73@gmail.com> <20200420121542.GB6507@sirena.org.uk>
- <CAGngYiWauBTnXDcP9UC1S7U5Ogy0B=bUZSdGs1Z9aKZ2+sB=Qw@mail.gmail.com> <20200420122534.GC6507@sirena.org.uk>
-In-Reply-To: <20200420122534.GC6507@sirena.org.uk>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 20 Apr 2020 08:50:45 -0400
-Message-ID: <CAGngYiV9MxeLrERkgU2+rucCiJ5StCXN7GXxKLMfaJ-bqSpAAw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: sound: add Microsemi ZL38060 binding
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 8:25 AM Mark Brown <broonie@kernel.org> wrote:
->
-> I'd expect someone with knowledge of the hardware such as yourself.
+From: Xiao Yang <yangx.jy@cn.fujitsu.com>
 
-I claim no expertise - I was just getting tired of dragging the
-out-of-tree vendor
-driver for this chip from kernel to kernel. AFAIK, most people using this chip
-have forked the vendor driver and adapted it to their specific needs.
+commit 0bbe7f719985efd9adb3454679ecef0984cb6800 upstream.
 
-If my name has to be there, I'd be keen to hand it over once someone more
-familiar with this chip comes along.
+Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
+or snapshot_count_trigger()) when register_snapshot_trigger() has completed
+registration but doesn't allocate buffer for 'snapshot' event trigger.  In
+the rare case, 'snapshot' operation always detects the lack of allocated
+buffer so make register_snapshot_trigger() allocate buffer first.
 
-Hopefully someone from Microsemi will be monitoring this discussion.
+trigger-snapshot.tc in kselftest reproduces the issue on slow vm:
+-----------------------------------------------------------
+cat trace
+...
+ftracetest-3028  [002] ....   236.784290: sched_process_fork: comm=ftracetest pid=3028 child_comm=ftracetest child_pid=3036
+     <...>-2875  [003] ....   240.460335: tracing_snapshot_instance_cond: *** SNAPSHOT NOT ALLOCATED ***
+     <...>-2875  [003] ....   240.460338: tracing_snapshot_instance_cond: *** stopping trace here!   ***
+-----------------------------------------------------------
+
+Link: http://lkml.kernel.org/r/20200414015145.66236-1-yangx.jy@cn.fujitsu.com
+
+Cc: stable@vger.kernel.org
+Fixes: 93e31ffbf417a ("tracing: Add 'snapshot' event trigger command")
+Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ kernel/trace/trace_events_trigger.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -1081,14 +1081,10 @@ register_snapshot_trigger(char *glob, st
+ 			  struct event_trigger_data *data,
+ 			  struct trace_event_file *file)
+ {
+-	int ret = register_trigger(glob, ops, data, file);
++	if (tracing_alloc_snapshot_instance(file->tr) != 0)
++		return 0;
+ 
+-	if (ret > 0 && tracing_alloc_snapshot_instance(file->tr) != 0) {
+-		unregister_trigger(glob, ops, data, file);
+-		ret = 0;
+-	}
+-
+-	return ret;
++	return register_trigger(glob, ops, data, file);
+ }
+ 
+ static int
+
+
