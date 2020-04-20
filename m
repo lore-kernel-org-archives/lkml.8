@@ -2,162 +2,199 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB37C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADEDC54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF468206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E62206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:08:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="eoqWpiOw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X9uJC3U0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbgDTFIh (ORCPT
+        id S1726245AbgDTFIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47298 "EHLO
+        Mon, 20 Apr 2020 01:08:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgDTFIg (ORCPT
+        with ESMTP id S1725710AbgDTFIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:08:36 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0F3C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:08:36 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id p16so1747613edm.10
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:08:36 -0700 (PDT)
+        Mon, 20 Apr 2020 01:08:44 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F266C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:08:43 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 145so2124753pfw.13
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:08:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uosnnvhWZ3yyd1hjeyEdalFBW58ozyttD3SAmZ9epkk=;
-        b=eoqWpiOwRq7oi4XyC2As+GUHLC5NEcZO1OOE4PRCK1UPnSV64nsIERwHkSaXSb1dXW
-         8ciCXTUnSaOgWRKxTBfIk/x746ztoISrwImvbu7zUF//ygyqTnbEwNtwad8pWAE0tlLF
-         804WRCHLh/Po0dTXTLal3QEkVr8WjIdRa7gF/K9a+6RXlUwuMEDBQgKPvyO9l6kBNiFQ
-         sROA4R4733K1cB+fGzkmc2I49Ou2AL4qMfdApkWJwUKs1HpyfYya8lM6KJGumgV4MRl4
-         rKnBTsXYivznrdqhvAu6F57Kt1Wj4IbjIQ1/BkGhB7vdWkBLJOEtt0vSTZFUHrXOIUX6
-         OZug==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4gUGv+ZCjCcrhjTvHG5ziQUYSTyPzACEckQT7aiUK7k=;
+        b=X9uJC3U03LE/E8rmZE0XuCdwZJbnRytUlAx9FrQwwlGkChycAzJN8WqWG4z1YnXDON
+         HMR3olsD+KObwpvL3Ri4BeyPU+8+Va86Mh1IzL2BHOqQuHQ+ox/oD9EGct5J8okJHgXF
+         Yk9IT6N7kp928eOfHBBRUYpCpF/y5XHqFzbOC4wYfklxvTs9uwJYDL5eIRl+31PgajXy
+         bc3++07cJfyi8Hjvvkt9P9DH6uzJl+5azC6v9AsQToYrR1if8eslrf1IpUJZTOTzJ95n
+         gXj9RiQ2mF83M5KDsr35ColP9WA5AQ1wcfboNiGNrD9Fv+Y0elgqq6JP79q5HpSHQ27g
+         rYsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uosnnvhWZ3yyd1hjeyEdalFBW58ozyttD3SAmZ9epkk=;
-        b=ViIWyDDPNJOKGC9S9P78ts8wbvcwgO96SnXL9OSoozqk08oLNO90u+1lgxElwyXYlq
-         BLrHSbszU4ZfKKX3wERo/ES4yYomBuAD906pZyUU2Vn6CFobm6Om22HOCUe1D1j5v0Gj
-         LyBR1iLX5Xcdw6cr9NspBtm0A0YZop8QAABcEtUNIS8Ti46bbFDiMwsVUamgKLKOrCAP
-         q2CTydChgEnHQE65EOKVJclj+c4vky3tR9JCJ5SLNroPqCApuVGKmhosNxTmxnzDvhxI
-         5AJmvgzmiFpX89nOEcOrVhDS2qYhHRZRMYMeHxz2QpidTMikaZltpIjsSiUSZbdNnmMt
-         vmGQ==
-X-Gm-Message-State: AGi0PuaZkyZLJxxQpD93bHmQJFXVGI4L2figJxmzGX1nn7LMa+fUa3Ms
-        ErmdJHPnM0HyCq+PybBnb4y0kTqYmVrKOrP4sZH2Zg==
-X-Google-Smtp-Source: APiQypKvZgj9wXFg38gj+SIw0DMo/cjC6QoMNTqE70yXQ5Mpi1Piz373LSRUoNAHXo/kXfpbyB4oZQtKaQOTioBGdeE=
-X-Received: by 2002:a05:6402:2203:: with SMTP id cq3mr921641edb.154.1587359314565;
- Sun, 19 Apr 2020 22:08:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4gUGv+ZCjCcrhjTvHG5ziQUYSTyPzACEckQT7aiUK7k=;
+        b=QbH6KVDmhw35TALXx8IzD72KMoSaiYNIXn67zzi1zih/TsBduysVgd4s4R/1ccEqbj
+         qVNcPB1T61PucTbkWVWUJZ9QfB9KI30yl4il41r4LWvsq+SgifChaVEI32muFm4W5kgk
+         GYufs2mGjdFeW5ck6J/DUbbvxbzbb0zlZD/RIOdtSIJpqRjSyCiu0VhR/RjqI6c2H9zo
+         0BfJZFpmBp/CQjglwunwNrGfQY9GKUs09i6dLlXM8f4ferf2WFFIHnkSSWP+17Zz5AJv
+         FF66MZ0SarKUn3TMoQ3otJJBb++/Zh7XkDgD0TzSfNhcGh5OQCsT63TEqkHlKoIMcu2T
+         9DHw==
+X-Gm-Message-State: AGi0PubJuFiu1YfoZE8+bNTsnnxlz9QUTMl9xrqQZeNevD09TZgyVt3M
+        F5K4l1xfWza/lhk5WqEBMuDYDg==
+X-Google-Smtp-Source: APiQypLPG0FHjWMYWRILI1qc5uGuQ35TQc1UpGIeiqyVPUSa4LSrYFXt0NcBUUD3hgN4J6zA911MnA==
+X-Received: by 2002:a65:57c3:: with SMTP id q3mr15658034pgr.106.1587359322426;
+        Sun, 19 Apr 2020 22:08:42 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id w125sm8752316pgw.22.2020.04.19.22.08.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 22:08:41 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 22:09:04 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, s-anna@ti.com, elder@linaro.org,
+        Markus.Elfring@web.de, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] remoteproc: Split firmware name allocation from
+ rproc_alloc()
+Message-ID: <20200420050904.GC1516868@builder.lan>
+References: <20200415204858.2448-1-mathieu.poirier@linaro.org>
+ <20200415204858.2448-3-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net> <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
-In-Reply-To: <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sun, 19 Apr 2020 22:08:23 -0700
-Message-ID: <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com>
-Subject: Re: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415204858.2448-3-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 1:52 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sat, Apr 18, 2020 at 1:30 PM Andy Lutomirski <luto@amacapital.net> wro=
-te:
-> >
-> > Maybe I=E2=80=99m missing something obvious, but what=E2=80=99s the alt=
-ernative?  The _mcsafe variants don=E2=80=99t just avoid the REP mess =E2=
-=80=94 they also tell the kernel that this particular access is recoverable=
- via extable.
->
-> .. which they could easily do exactly the same way the user space
-> accessors do, just with a much simplified model that doesn't even care
-> about multiple sizes, since unaligned accesses weren't valid anyway.
->
-> The thing is, all of the MCS code has been nasty. There's no reason
-> for it what-so-ever that I can tell. The hardware has been so
-> incredibly broken that it's basically unusable, and most of the
-> software around it seems to have been about testing.
->
-> So I absolutely abhor that thing. Everything about that code has
-> screamed "yeah, we completely mis-designed the hardware, we're pushing
-> the problems into software, and nobody even uses it or can test it so
-> there's like 5 people who care".
->
-> And I'm pushing back on it, because I think that the least the code
-> can do is to at least be simple.
->
-> For example, none of those optimizations should exist. That function
-> shouldn't have been inline to begin with. And if it really really
-> matters from a performance angle that it was inline (which I doubt),
-> it shouldn't have looked like a memory copy, it should have looked
-> like "get_user()" (except without all the complications of actually
-> having to test addresses or worry about different sizes).
->
->
-> And it almost certainly shouldn't have been done in low-level asm
-> either. It could have been a single "read aligned word" interface
-> using an inline asm, and then everything else could have been done as
-> C code around it.
+On Wed 15 Apr 13:48 PDT 2020, Mathieu Poirier wrote:
 
-Do we have examples of doing exception handling from C? I thought all
-the exception handling copy routines were assembly routines?
+> Make the firmware name allocation a function on its own in an
+> effort to cleanup function rproc_alloc().
+> 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
->
-> But no. The software side is almost as messy as the hardware side is.
-> I hate it. And since nobody sane can test it, and the broken hardware
-> is _so_ broken than nobody should ever use it, I have continually
-> pushed back against this kind of ugly nasty special code.
->
-> We know the writes can't fault, since they are buffered. So they
-> aren't special at all.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-The writes can mmu-fault now that memcpy_mcsafe() is also used by
-_copy_to_iter_mcsafe(). This allows a clean bypass of the block layer
-in fs/dax.c in addition to the pmem driver access of poisoned memory.
-Now that the fallback is a sane rep; movs; it can be considered for
-plain copy_to_iter() for other user copies so you get exception
-handling on kernel access of poison outside of persistent memory. To
-Andy's point I think a recoverable copy (for exceptions or faults) is
-generally useful.
+Regards,
+Bjorn
 
-> We know the acceptable reads for the broken hardware basically boil
-> down to a single simple word-size aligned read, so you need _one_
-> special inline asm for that. The rest of the cases can be handled by
-> masking and shifting if you really really need to - and done better
-> that way than with byte accesses anyway.
->
-> Then you have _one_ C file that implements everything using that
-> single operation (ok, if people absolutely want to do sizes, I guess
-> they can if they can just hide it in that one file), and you have one
-> header file that exposes the interfaces to it, and you're done.
->
-> And you strive hard as hell to not impact anything else, because you
-> know that the hardware is unacceptable until all those special rules
-> go away. Which they apparently finally have.
-
-I understand the gripes about the mcsafe_slow() implementation, but
-how do I implement mcsafe_fast() any better than how it is currently
-organized given that, setting aside machine check handling,
-memcpy_mcsafe() is the core of a copy_to_iter*() front-end that can
-mmu-fault on either source or destination access?
+> ---
+>  drivers/remoteproc/remoteproc_core.c | 66 ++++++++++++++++------------
+>  1 file changed, 39 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 80056513ae71..4dee63f319ba 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1979,6 +1979,33 @@ static const struct device_type rproc_type = {
+>  	.release	= rproc_type_release,
+>  };
+>  
+> +static int rproc_alloc_firmware(struct rproc *rproc,
+> +				const char *name, const char *firmware)
+> +{
+> +	char *p, *template = "rproc-%s-fw";
+> +	int name_len;
+> +
+> +	if (!firmware) {
+> +		/*
+> +		 * If the caller didn't pass in a firmware name then
+> +		 * construct a default name.
+> +		 */
+> +		name_len = strlen(name) + strlen(template) - 2 + 1;
+> +		p = kmalloc(name_len, GFP_KERNEL);
+> +		if (!p)
+> +			return -ENOMEM;
+> +		snprintf(p, name_len, template, name);
+> +	} else {
+> +		p = kstrdup(firmware, GFP_KERNEL);
+> +		if (!p)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	rproc->firmware = p;
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * rproc_alloc() - allocate a remote processor handle
+>   * @dev: the underlying device
+> @@ -2007,42 +2034,21 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>  			  const char *firmware, int len)
+>  {
+>  	struct rproc *rproc;
+> -	char *p, *template = "rproc-%s-fw";
+> -	int name_len;
+>  
+>  	if (!dev || !name || !ops)
+>  		return NULL;
+>  
+> -	if (!firmware) {
+> -		/*
+> -		 * If the caller didn't pass in a firmware name then
+> -		 * construct a default name.
+> -		 */
+> -		name_len = strlen(name) + strlen(template) - 2 + 1;
+> -		p = kmalloc(name_len, GFP_KERNEL);
+> -		if (!p)
+> -			return NULL;
+> -		snprintf(p, name_len, template, name);
+> -	} else {
+> -		p = kstrdup(firmware, GFP_KERNEL);
+> -		if (!p)
+> -			return NULL;
+> -	}
+> -
+>  	rproc = kzalloc(sizeof(struct rproc) + len, GFP_KERNEL);
+> -	if (!rproc) {
+> -		kfree(p);
+> +	if (!rproc)
+>  		return NULL;
+> -	}
+> +
+> +	if (rproc_alloc_firmware(rproc, name, firmware))
+> +		goto free_rproc;
+>  
+>  	rproc->ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
+> -	if (!rproc->ops) {
+> -		kfree(p);
+> -		kfree(rproc);
+> -		return NULL;
+> -	}
+> +	if (!rproc->ops)
+> +		goto free_firmware;
+>  
+> -	rproc->firmware = p;
+>  	rproc->name = name;
+>  	rproc->priv = &rproc[1];
+>  	rproc->auto_boot = true;
+> @@ -2091,6 +2097,12 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>  	rproc->state = RPROC_OFFLINE;
+>  
+>  	return rproc;
+> +
+> +free_firmware:
+> +	kfree(rproc->firmware);
+> +free_rproc:
+> +	kfree(rproc);
+> +	return NULL;
+>  }
+>  EXPORT_SYMBOL(rproc_alloc);
+>  
+> -- 
+> 2.20.1
+> 
