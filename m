@@ -2,151 +2,121 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38050C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79049C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 187C12074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501082074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="GXh55I+p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNPvc9kL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbgDTPKX (ORCPT
+        id S1730096AbgDTPKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:10:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55758 "EHLO
+        Mon, 20 Apr 2020 11:10:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgDTPKW (ORCPT
+        with ESMTP id S1726905AbgDTPKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:10:22 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BE0C061A0C;
-        Mon, 20 Apr 2020 08:10:22 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5491423058;
-        Mon, 20 Apr 2020 17:10:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587395421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0ltuHb7l1+7HEhaCHMWAHJsVLlBWvFM9cUwwU6Q/+H8=;
-        b=GXh55I+p1XeHFEEJ6lgxqTmXqMK/e3uuEU+gkGUFZobafGr56JCOwSt3Ejd2lU/MFAVeNe
-        zF9AjRTaLC3ZhH6pvE07AhQcKnziOrFttyI5FSynVv5TDOORoeDisFYhDCf/1KAvvcTqnp
-        hiS2S5vSYapB9uU8mmb0/8a4s2CVQg4=
+        Mon, 20 Apr 2020 11:10:39 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7A55C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:10:39 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id l25so3502798vso.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dNzKdVNw/y2yDQaVrRieyT4KFZArRiYw0+stJCrhWMM=;
+        b=JNPvc9kLgjs5c9Uy8hyHPgxiH8+0negQy6zmpAHp2KR6Ir9JpMb7vP75WjtW3y0ml3
+         duKpnVNLX7bu1KKmfoNSSZTd2XfqLNgfybcp7NcogR/KjElgrEgPekEydh+OYoHy7WX1
+         5Q35lOKzjXK6z+M81TfHZLXOyDX4SrnLSb7JlKtPgsA8BYznUlwbOMver8L5++NGeUty
+         CyPJtO3+WaFWoxFV0kx1ALlDuCBjDedXYhzrQnL6PClY6VeGZOrfR4hOo01pSmF7BAI+
+         To9EM+eupvrq1bDopsdFZXw5gapsU0Uu45aXg1/+jrS7mbxs7w5xBq8kQIfLGZkcn/9B
+         s+Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dNzKdVNw/y2yDQaVrRieyT4KFZArRiYw0+stJCrhWMM=;
+        b=AgL1D78PbAPH2WJ0NK1qPHSTTk+loUIRxb5faSa2rxhH4AfdHrTLwmP3QyJsN+7rgU
+         t52G63RIWXyvc1O4QyLEwiWXxdy5uC9ylNOQcc5c7moM1FQIPeRgVKKH8l8uM0m7nGLJ
+         MxmTz/FkwXG+zLDXzurmYr3Tyt8/7DTsIzFBhOG/g5398hPjJAnMJoO5YRoL47B4weLJ
+         Nt8cV1lXUoXhpSmoxnHXlRiJ74IUmdjwZE1G1xqNHTXf0IiLd8vaEPeDvs/Sy5RY1ZVX
+         oUVx/zSD2yl3Tk0V7wA2zEM9lbjPIB+p/Zc+ESniO1DYeaAXsqA9tBK2ZPwjH839vB7K
+         w5Jg==
+X-Gm-Message-State: AGi0PubXDfHZIQfM4QH3xytjdi5AY0zD+d7wr+Sf2Q7f6rB1cbyyJXDO
+        gaHf+tPuMQRuoskYEm8b4sd/SaveplUg5zc003inHSgd
+X-Google-Smtp-Source: APiQypL2QQKbpGTWOQ+R3+RLwT9Wlq4zMNhd6n1JfD0GCVkNSx+1rXyQG12GB7grmz3Zt9kxXQTBLbme8f5g5qTDxc0=
+X-Received: by 2002:a67:7d83:: with SMTP id y125mr10557611vsc.96.1587395438822;
+ Mon, 20 Apr 2020 08:10:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Apr 2020 17:10:19 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 3/3] net: phy: bcm54140: add hwmon support
-In-Reply-To: <20200419215549.GR836632@lunn.ch>
-References: <20200417195003.GG785713@lunn.ch>
- <35d00dfe1ad24b580dc247d882aa2e39@walle.cc>
- <20200417201338.GI785713@lunn.ch>
- <84679226df03bdd8060cb95761724d3a@walle.cc>
- <20200417212829.GJ785713@lunn.ch>
- <4f3ff33f78472f547212f87f75a37b66@walle.cc>
- <20200419162928.GL836632@lunn.ch>
- <ebc026792e09d5702d031398e96d34f2@walle.cc>
- <20200419170547.GO836632@lunn.ch>
- <0f7ea4522a76f977f3aa3a80dd62201d@walle.cc>
- <20200419215549.GR836632@lunn.ch>
-Message-ID: <75428c5faab7fc656051ab227663e6e6@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 5491423058
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[10];
-         NEURAL_HAM(-0.00)[-0.969];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,suse.com,roeck-us.net,gmail.com,armlinux.org.uk,davemloft.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+References: <20200418100248.4552-1-tangbin@cmss.chinamobile.com>
+In-Reply-To: <20200418100248.4552-1-tangbin@cmss.chinamobile.com>
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+Date:   Mon, 20 Apr 2020 17:10:27 +0200
+Message-ID: <CAH9NwWck5KwOGNcYWOAsfKa5CQjJHqMr2j8FW9SmWUYiyu1ebA@mail.gmail.com>
+Subject: Re: [PATCH] drm/etnaviv: Omit superfluous error message in etnaviv_gpu_platform_probe()
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Am Sa., 18. Apr. 2020 um 12:01 Uhr schrieb Tang Bin
+<tangbin@cmss.chinamobile.com>:
+>
+> In the function etnaviv_gpu_platform_probe(), when get irq failed,
+> the function platform_get_irq() logs an error message, so remove
+> redundant message here.
+>
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 
-Am 2020-04-19 23:55, schrieb Andrew Lunn:
->> But what does that have to do with the shared structure? I don't think
->> you have to "bundle" the shared structure with the "access the global
->> registers" method.
-> 
-> We don't need to. But it would be a good way to clean up code which
-> locks the mdio bus, does a register access on some other device, and
-> then unlocks the bus.
+Reviewed-by: Christian Gmeiner <christian.gmeiner@gmail.com>
 
-I'd like do an RFC for that. But how should I proceed with the original
-patch series? Should I send an updated version; you didn't reply to the
-LED stuff. That is the last remark for now.
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> index a31eeff2b..6dbe0c45b 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> @@ -1770,10 +1770,8 @@ static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
+>
+>         /* Get Interrupt: */
+>         gpu->irq = platform_get_irq(pdev, 0);
+> -       if (gpu->irq < 0) {
+> -               dev_err(dev, "failed to get irq: %d\n", gpu->irq);
+> +       if (gpu->irq < 0)
+>                 return gpu->irq;
+> -       }
+>
+>         err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
+>                                dev_name(gpu->dev), gpu);
+> --
+> 2.20.1.windows.1
+>
+>
+>
 
-> As a general rule of thumb, it is better to have the core do the
-> locking, rather than the driver. Driver writers don't always think
-> about locking, so it is better to give driver writers safe APIs to
-> use.
 
-Ok I see, but what locking do you have in mind? We could have something
-like
+-- 
+greets
+--
+Christian Gmeiner, MSc
 
-__phy_package_write(struct phy_device *dev, u32 regnum, u16 val)
-{
-   return __mdiobus_write(phydev->mdio.bus, phydev->shared->addr,
-                          regnum, val);
-}
-
-and its phy_package_write() equivalent. But that would just be
-convenience functions, nothing where you actually help the user with
-locking. Am I missing something?
-
->>> Get the core to do reference counting on the structure?
->>> Add helpers phy_read_shared(), phy_write_shared(), etc, which does
->>> MDIO accesses on the base device, taking care of the locking.
->>> 
->> The "base" access is another thing, I guess, which has nothing to do
->> with the shared structure.
->> 
-> I'm making the assumption that all global addresses are at the base
-> address. If we don't want to make that assumption, we need the change
-> the API above so you pass a cookie, and all PHYs need to use the same
-> cookie to identify the package.
-
-how would a phy driver deduce a common cookie? And how would that be a
-difference to using a PHY address.
-
-> Maybe base is the wrong name, since MSCC can have the base as the high
-> address of the four, not the low?
-
-I'd say it might be any of the four addresses as long as it is the same
-across the PHYs in the same package. And in that case you can also have
-the phy_package_read/write() functions.
-
--michael
+https://christian-gmeiner.info/privacypolicy
