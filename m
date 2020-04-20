@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDA8C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83279C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5D5206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3C82075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386670;
-	bh=Ee0rTNJ5wGbk6j/GMNwLsv1TUL2vjWg/zZsKORfPaVQ=;
+	s=default; t=1587386673;
+	bh=zdaV98C4qGP4BiZi+UEicnipIKDAQoW3KWA80HZLGKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wUEOcaVZTdEj00DGdlHn+pZytI7rwN678exJo3fWHYQlxg2yzEoUfLdqidSNmbrgj
-	 xqA0drSi0E24iPqcD5P1M/fB4rysX7PX2faIx7O8+8pJaiO0YoqQpKoA4JWCZFKill
-	 m2Q14EkEzdwPixf3V/P6FzYOBFMsPOkvSlj5RTts=
+	b=yaNpbvjkOE2KWBhbsTMklAUqxN6oDHWtAmS21xQR8Y3tJU98Kb3TaFmOHL4aQQ9Y8
+	 rX6RWpyq4446lzEM4iFmHhGWaldW7JyN/uCeuMjU9LJQ6WQxnE5M7jih6/bAHiRu+V
+	 C1VXCYslug77PQxL3zQZS8EE88T57pMKOZ8ycB/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728577AbgDTMo3 (ORCPT
+        id S1728586AbgDTMoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:44:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38376 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:44:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728566AbgDTMoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:25 -0400
+        id S1728571AbgDTMo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:44:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6620C206DD;
-        Mon, 20 Apr 2020 12:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D59F0206DD;
+        Mon, 20 Apr 2020 12:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386664;
-        bh=Ee0rTNJ5wGbk6j/GMNwLsv1TUL2vjWg/zZsKORfPaVQ=;
+        s=default; t=1587386667;
+        bh=zdaV98C4qGP4BiZi+UEicnipIKDAQoW3KWA80HZLGKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YdBuwHbUoOUr2L/8gQmnTCk1RFmgXWgqRLM5k/kJGPwReziAJta8xM37y2UfPCi8I
-         HPi/eJwIvtV8gXnsug9M1WYQSy7zRnzmqOfdbno2YxamTZcCjozgCvqbfid6sYFL3g
-         lxFcCThy7wF5ypmRoDJSsltOKg7BD93rzAPDDe2c=
+        b=a2iE0JHVyzG9NJZidmUie0a9X0bYsBcpPzblsMVVHsB4XdjZ1NaHa8T08Hk2xGL5q
+         QSqRbY8DjqAljV4tJPOoBvJavToXek9VRMHPQLsSEiUducfiSLPexAzTb1ykt5hOcx
+         3OPx9T3klwA2I+UoRhjdk5FYsqSGI5hM7FjmrjGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 47/71] ALSA: usb-audio: Check mapping at creating connector controls, too
-Date:   Mon, 20 Apr 2020 14:39:01 +0200
-Message-Id: <20200420121518.775063938@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.6 48/71] arm64: vdso: dont free unallocated pages
+Date:   Mon, 20 Apr 2020 14:39:02 +0200
+Message-Id: <20200420121518.940384546@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -58,105 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Mark Rutland <mark.rutland@arm.com>
 
-commit 934b96594ed66b07dbc7e576d28814466df3a494 upstream.
+commit 9cc3d0c6915aee5140f8335d41bbc3ff1b79aa4e upstream.
 
-Add the mapping check to build_connector_control() so that the device
-specific quirk can provide the node to skip for the badly behaving
-connector controls.  As an example, ALC1220-VB-based codec implements
-the skip entry for the broken SPDIF connector detection.
+The aarch32_vdso_pages[] array never has entries allocated in the C_VVAR
+or C_VDSO slots, and as the array is zero initialized these contain
+NULL.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200412081331.4742-5-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+However in __aarch32_alloc_vdso_pages() when
+aarch32_alloc_kuser_vdso_page() fails we attempt to free the page whose
+struct page is at NULL, which is obviously nonsensical.
+
+This patch removes the erroneous page freeing.
+
+Fixes: 7c1deeeb0130 ("arm64: compat: VDSO setup for compat layer")
+Cc: <stable@vger.kernel.org> # 5.3.x-
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c      |   18 +++++++++++-------
- sound/usb/mixer_maps.c |    4 +++-
- 2 files changed, 14 insertions(+), 8 deletions(-)
+ arch/arm64/kernel/vdso.c |   13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1750,11 +1750,15 @@ static void get_connector_control_name(s
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -260,18 +260,7 @@ static int __aarch32_alloc_vdso_pages(vo
+ 	if (ret)
+ 		return ret;
  
- /* Build a mixer control for a UAC connector control (jack-detect) */
- static void build_connector_control(struct usb_mixer_interface *mixer,
-+				    const struct usbmix_name_map *imap,
- 				    struct usb_audio_term *term, bool is_input)
- {
- 	struct snd_kcontrol *kctl;
- 	struct usb_mixer_elem_info *cval;
- 
-+	if (check_ignored_ctl(find_map(imap, term->id, 0)))
-+		return;
-+
- 	cval = kzalloc(sizeof(*cval), GFP_KERNEL);
- 	if (!cval)
- 		return;
-@@ -2090,7 +2094,7 @@ static int parse_audio_input_terminal(st
- 	/* Check for jack detection. */
- 	if ((iterm.type & 0xff00) != 0x0100 &&
- 	    uac_v2v3_control_is_readable(bmctls, control))
--		build_connector_control(state->mixer, &iterm, true);
-+		build_connector_control(state->mixer, state->map, &iterm, true);
- 
- 	return 0;
+-	ret = aarch32_alloc_kuser_vdso_page();
+-	if (ret) {
+-		unsigned long c_vvar =
+-			(unsigned long)page_to_virt(aarch32_vdso_pages[C_VVAR]);
+-		unsigned long c_vdso =
+-			(unsigned long)page_to_virt(aarch32_vdso_pages[C_VDSO]);
+-
+-		free_page(c_vvar);
+-		free_page(c_vdso);
+-	}
+-
+-	return ret;
++	return aarch32_alloc_kuser_vdso_page();
  }
-@@ -3051,13 +3055,13 @@ static int snd_usb_mixer_controls_badd(s
- 		memset(&iterm, 0, sizeof(iterm));
- 		iterm.id = UAC3_BADD_IT_ID4;
- 		iterm.type = UAC_BIDIR_TERMINAL_HEADSET;
--		build_connector_control(mixer, &iterm, true);
-+		build_connector_control(mixer, map->map, &iterm, true);
- 
- 		/* Output Term - Insertion control */
- 		memset(&oterm, 0, sizeof(oterm));
- 		oterm.id = UAC3_BADD_OT_ID3;
- 		oterm.type = UAC_BIDIR_TERMINAL_HEADSET;
--		build_connector_control(mixer, &oterm, false);
-+		build_connector_control(mixer, map->map, &oterm, false);
- 	}
- 
- 	return 0;
-@@ -3132,8 +3136,8 @@ static int snd_usb_mixer_controls(struct
- 			if ((state.oterm.type & 0xff00) != 0x0100 &&
- 			    uac_v2v3_control_is_readable(le16_to_cpu(desc->bmControls),
- 							 UAC2_TE_CONNECTOR)) {
--				build_connector_control(state.mixer, &state.oterm,
--							false);
-+				build_connector_control(state.mixer, state.map,
-+							&state.oterm, false);
- 			}
- 		} else {  /* UAC_VERSION_3 */
- 			struct uac3_output_terminal_descriptor *desc = p;
-@@ -3158,8 +3162,8 @@ static int snd_usb_mixer_controls(struct
- 			if ((state.oterm.type & 0xff00) != 0x0100 &&
- 			    uac_v2v3_control_is_readable(le32_to_cpu(desc->bmControls),
- 							 UAC3_TE_INSERTION)) {
--				build_connector_control(state.mixer, &state.oterm,
--							false);
-+				build_connector_control(state.mixer, state.map,
-+							&state.oterm, false);
- 			}
- 		}
- 	}
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -360,9 +360,11 @@ static const struct usbmix_name_map cors
- };
- 
- /* Some mobos shipped with a dummy HD-audio show the invalid GET_MIN/GET_MAX
-- * response for Input Gain Pad (id=19, control=12).  Skip it.
-+ * response for Input Gain Pad (id=19, control=12) and the connector status
-+ * for SPDIF terminal (id=18).  Skip them.
-  */
- static const struct usbmix_name_map asus_rog_map[] = {
-+	{ 18, NULL }, /* OT, connector control */
- 	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
- 	{}
- };
+ #else
+ static int __aarch32_alloc_vdso_pages(void)
 
 
