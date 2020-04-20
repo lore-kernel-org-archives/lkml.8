@@ -2,90 +2,110 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3439C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982C5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73F0120724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EE42084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587419499;
-	bh=B/dfKMmuTONvk6ty+qAMIeILFbX+oH0+Hy/F91HFAUI=;
+	s=default; t=1587419512;
+	bh=ARynByPt6K845Y1WKAWZFIjRAWGpQIaOXNbufeYGcSY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d9UVECHC1+MvJPopwJKyiCKljJtPUSixbtntwM1evNuUHCq9yGexDZv42hvvhWV31
-	 4GWkQctBmedFjnxkLGzVWAs1nwHdJmAUEr823yhEG64KnlO6Hvxcu1T09PzDhlAtrS
-	 +wVDa6VhbIQPeIIPr/1yGvtxzGPG3AtxidwdmvPM=
+	b=2uZ6JDkafeWo8hogKcE+caPRX/pIyo67WMGC8MtoCFI6SuqwtQsg9IVr56MrwcLii
+	 F/iqTCF66+jOUZAgTLqQ2rtntlNZKFgHxg8HLvS0U7h28YyArt4X6uhfHw6986bg9E
+	 NxPirEonAHdqOFNJQx3aeyTGSQM6TyWN62V0cC1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgDTVvi (ORCPT
+        id S1728077AbgDTVvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:51:38 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39541 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbgDTVvg (ORCPT
+        Mon, 20 Apr 2020 17:51:51 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45274 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgDTVvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:51:36 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m13so9527899otf.6;
-        Mon, 20 Apr 2020 14:51:34 -0700 (PDT)
+        Mon, 20 Apr 2020 17:51:50 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w65so5590197pfc.12;
+        Mon, 20 Apr 2020 14:51:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=p7UDp6VFOvZVJd86c+X78VAVI+WZaZqOQqo82HUqcl8=;
-        b=EG7usU7xDEJ5IkKw+OGzgjlFmUOiLSpNTeqprpzrBm5lGG+WPGsD0aj6NzNG0LXwsj
-         iFbCbdhXLCB9yhzzP7E0kgrXR3wt7ldWof9jeZfjJ1SP0f86KjNOezkpcqA+6gEQZIq1
-         Ra5XAeMko4NP49jkzhrL/J6v5txX1CdLw8l/eTtfJUesdGUNnhGmxmB0kxrbxbVjxQFH
-         DCnjjeZbIRjODmNL3AF0oMQvLhUqGNz5uen47UTz9huTwJZKsarzNy08e2HvDoOxaDDA
-         F4DJxokptQHYgsUfCcgX7MVPdxQEN0uT4rAMjxRVlPC9IDq3BWRX6XIXuXWewDQg9lQR
-         euYQ==
-X-Gm-Message-State: AGi0PubVxWnLGcRJ8vOqPgbyV8UGvE95U0LsT8qW8C3EtPNjN9JfXxI/
-        bDTIK0Z80FnJ+pXLmLLJSQ==
-X-Google-Smtp-Source: APiQypLlCMJKSpvw5YK2vDoQx6DBM4WD7lw4e0YXtQbavcaOPNtRq8AFpJJ7cLo5k+2x49wbeu8Uww==
-X-Received: by 2002:a9d:6142:: with SMTP id c2mr11782100otk.92.1587419487306;
-        Mon, 20 Apr 2020 14:51:27 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n184sm177819oia.40.2020.04.20.14.51.26
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VgKKIxe7DirK2QHauC8VINdT+s5Rf3r97F/D9e91FTk=;
+        b=H96w90Jl+0udPwrk0fCuqQ5ZsyVIC8IZoYI77IhJGNEG2sEptZpqUxkctZwCQMARnF
+         6vyPxwKIy7SDQqZqCnSMMSRvV2tyQuhMeOjvjuUva0z1/TKyhHR7/23Uu2zd3psGuYjL
+         DhZzOrD9H0/aPIPYA2HahtqVugVmODTF37HulnZByflKnEhGgVc0PJK9f57fTmVZ98Mf
+         UfOHTumgzsM8VeVN/Psj/geeHP68s5RzL2LlGXKlCz1qbj10OEy8rEVou2uIYucL5uDe
+         +jx+bcdAftS3XBhF+7nctnCWFeSOZrupZ5yUqzy3Oz+HjgYcdoZeF7gBJngY2f7XYOWY
+         WBcQ==
+X-Gm-Message-State: AGi0PuZzuoRhA1o+6Ize/xHNEXBfusvlsZXE+VuAP6LOqNWvtGDMIQom
+        KXJY0RV1o/AUJi/TxdF58Q8=
+X-Google-Smtp-Source: APiQypJn1hT4fbB9tcubgpiWGRaRQPxvG+yu2nN4pARSrEYvbs5rxdCSMPSxa0mg9FkB0ytg6Ag33w==
+X-Received: by 2002:aa7:9302:: with SMTP id 2mr18486299pfj.256.1587419509699;
+        Mon, 20 Apr 2020 14:51:49 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id z15sm355748pjt.20.2020.04.20.14.51.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:51:26 -0700 (PDT)
-Received: (nullmailer pid 26126 invoked by uid 1000);
-        Mon, 20 Apr 2020 21:51:25 -0000
-Date:   Mon, 20 Apr 2020 16:51:25 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Saravanan Sekar <saravanan@linumiz.com>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, broonie@kernel.org,
-        lgirdwood@gmail.com, saravanan@linumiz.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 1/4] =?iso-8859-1?Q?dt-bindings?=
- =?iso-8859-1?Q?=3A_Add_an_entry_for_W=FCrth?= Elektronik, we
-Message-ID: <20200420215125.GA26070@bogus>
-References: <20200415065535.7753-1-saravanan@linumiz.com>
- <20200415065535.7753-2-saravanan@linumiz.com>
+        Mon, 20 Apr 2020 14:51:48 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 0A6DB4028E; Mon, 20 Apr 2020 21:51:48 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 21:51:47 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v2 04/10] block: revert back to synchronous request_queue
+ removal
+Message-ID: <20200420215147.GP11244@42.do-not-panic.com>
+References: <20200419194529.4872-1-mcgrof@kernel.org>
+ <20200419194529.4872-5-mcgrof@kernel.org>
+ <749d56bd-1d66-e47b-a356-8d538e9c99b4@acm.org>
+ <20200420185943.GM11244@42.do-not-panic.com>
+ <eba2a91b-62a6-839d-df54-2a1cf8262652@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200415065535.7753-2-saravanan@linumiz.com>
+In-Reply-To: <eba2a91b-62a6-839d-df54-2a1cf8262652@acm.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 08:55:32 +0200, Saravanan Sekar wrote:
-> Add an entry for Würth Elektronik GmbH, we
+On Mon, Apr 20, 2020 at 02:11:13PM -0700, Bart Van Assche wrote:
+> On 4/20/20 11:59 AM, Luis Chamberlain wrote:
+> > On Sun, Apr 19, 2020 at 03:23:31PM -0700, Bart Van Assche wrote:
+> > > On 4/19/20 12:45 PM, Luis Chamberlain wrote:
+> > > > + * Decrements the refcount to the request_queue kobject, when this reaches
+> > > > + * 0 we'll have blk_release_queue() called. You should avoid calling
+> > > > + * this function in atomic context but if you really have to ensure you
+> > > > + * first refcount the block device with bdgrab() / bdput() so that the
+> > > > + * last decrement happens in blk_cleanup_queue().
+> > > > + */
+> > > 
+> > > Is calling bdgrab() and bdput() an option from a context in which it is not
+> > > guaranteed that the block device is open?
+> > 
+> > If the block device is not open, nope. For that blk_get_queue() can
+> > be used, and is used by the block layer. This begs the question:
+> > 
+> > Do we have *drivers* which requires access to the request_queue from
+> > atomic context when the block device is not open?
 > 
-> Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+> Instead of trying to answer that question, how about changing the references
+> to bdgrab() and bdput() into references to blk_get_queue() and
+> blk_put_queue()? I think if that change is made that we won't have to
+> research what the answer to the bdgrab()/bdput() question is.
 
-Applied, thanks.
+Yeah that's fine, now at least we'd have documented what should be avoided.
 
-Rob
+  Luis
