@@ -2,82 +2,111 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F08CC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24ADC38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A10F20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8ED20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:43:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgDTQn2 (ORCPT
+        id S1726285AbgDTQnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:43:28 -0400
-Received: from smtprelay0139.hostedemail.com ([216.40.44.139]:60660 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726023AbgDTQn2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:43:28 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 2D475182CED5B;
-        Mon, 20 Apr 2020 16:43:27 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: wire71_b275595b508
-X-Filterd-Recvd-Size: 2334
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 20 Apr 2020 16:43:24 +0000 (UTC)
-Message-ID: <f54d6f0a6c31ab3911c2b35caef49df340ab1196.camel@perches.com>
-Subject: Re: [PATCH v1] pinctrl: fix several typos
-From:   Joe Perches <joe@perches.com>
-To:     Dejin Zheng <zhengdejin5@gmail.com>, aisheng.dong@nxp.com,
-        festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch,
-        kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, geert+renesas@glider.be,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, jun.nie@linaro.org,
-        stephan@gerhold.net, linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 20 Apr 2020 09:41:09 -0700
-In-Reply-To: <20200419164956.3484-1-zhengdejin5@gmail.com>
-References: <20200419164956.3484-1-zhengdejin5@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 20 Apr 2020 12:43:51 -0400
+Received: from sauhun.de ([88.99.104.3]:47794 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726013AbgDTQnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 12:43:51 -0400
+Received: from localhost (p54B335B8.dip0.t-ipconnect.de [84.179.53.184])
+        by pokefinder.org (Postfix) with ESMTPSA id F06262C1F4C;
+        Mon, 20 Apr 2020 18:43:49 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 18:43:49 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Bjorn Ardo <bjorn.ardo@axis.com>
+Cc:     Patrick Williams <alpawi@amazon.com>,
+        =?utf-8?B?QmrDtnJuIEFyZMO2?= <bjornar@axis.com>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: slave-eeprom: initialize empty eeprom properly
+Message-ID: <20200420164349.GD3721@ninjato>
+References: <20191001164009.21610-1-alpawi@amazon.com>
+ <150599be-9125-4ab9-e2a6-e792b41910e6@axis.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6Nae48J/T25AfBN4"
+Content-Disposition: inline
+In-Reply-To: <150599be-9125-4ab9-e2a6-e792b41910e6@axis.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-20 at 00:49 +0800, Dejin Zheng wrote:
-> use codespell to fix lots of typos over frontends.
-[]
-> diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-[]
-> @@ -418,7 +418,7 @@ static const unsigned lcdvsi1_a_1_pins[] = { DB8500_PIN_E2 };
->  static const unsigned lcd_d0_d7_a_1_pins[] = {
->  	DB8500_PIN_G5, DB8500_PIN_G4, DB8500_PIN_H4, DB8500_PIN_H3,
->  	DB8500_PIN_J3, DB8500_PIN_H2, DB8500_PIN_J2, DB8500_PIN_H1 };
-> -/* D8 thru D11 often used as TVOUT lines */
-> +/* D8 through D11 often used as TVOUT lines */
 
-thru is _really_ common and a generally accepted informal
-for through so I suggest this not be changed.
+--6Nae48J/T25AfBN4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://www.dictionary.com/browse/thru
-preposition, adverb, adjective
-an informal, simplified spelling of through.
+On Wed, Oct 02, 2019 at 08:20:53AM +0200, Bjorn Ardo wrote:
+> Hi,
+>=20
+>=20
+> I sent in another patch earlier that added support for specifying a file =
+in
+> devicetree to initilize the eeprom from, corresponding to the case of
+> pre-flashed eeprom. Maybe these two patches should be merged so this
+> initialization is only done if no file is specified?
 
-https://www.merriam-webster.com/dictionary/thru
-While never extremely common, tho and thru have a long history of
-occasional use as spelling variants of though and through.
+Yes, I agree.
 
-Their greatest popularity occurred in the late 19th and early 20th 
-centuries, when their adoption was advocated by spelling reformers. 
-Their current use occurs chiefly in informal writing (as in personal 
-letters) and in some technical journals.
+> /BA
+>=20
+> On 10/1/19 6:40 PM, Patrick Williams wrote:
+> > The i2c-slave-eeprom driver emulates at24 class eeprom devices,
+> > which come initialized with all 1s.  Do the same in the software
+> > emulation.
+> >=20
+> > Signed-off-by: Patrick Williams <alpawi@amazon.com>
+> > ---
+> >   drivers/i2c/i2c-slave-eeprom.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/drivers/i2c/i2c-slave-eeprom.c b/drivers/i2c/i2c-slave-eep=
+rom.c
+> > index db9763cb4dae..efee56106251 100644
+> > --- a/drivers/i2c/i2c-slave-eeprom.c
+> > +++ b/drivers/i2c/i2c-slave-eeprom.c
+> > @@ -131,6 +131,8 @@ static int i2c_slave_eeprom_probe(struct i2c_client=
+ *client, const struct i2c_de
+> >   	if (!eeprom)
+> >   		return -ENOMEM;
+> > +	memset(eeprom->buffer, 0xFF, size);
+> > +
+> >   	eeprom->idx_write_cnt =3D 0;
+> >   	eeprom->num_address_bytes =3D flag_addr16 ? 2 : 1;
+> >   	eeprom->address_mask =3D size - 1;
 
+--6Nae48J/T25AfBN4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6d0UUACgkQFA3kzBSg
+Kba+gxAAj7fIStG6KAF5VvDWWpM8Pg8kZRzkCLZ+FY8Ihrj3aJT+hTkUaU3BwfCV
+OXQCQWQP9OHDcSJJbjVq3XyG4b4pAXTuokoCQVX5OjB5b5Oi/RJhpt3U8JFKy/eh
+x17uULwKA0zUZ05z9iaKcKDy8xNOEkfAdDlJRPdWPx5LJIa0VyGLgeadU+YAtd31
+cs/+WKVTMFkA53hAKO+emVlY0yrDzpjBTiBbn9psIhKEyJ78fwEjChUq1m1tF2u5
+4Gl4KMvuK5oc0JoNzppsqybDZ67qWqjYT7E99AUPMOBjZwXZiR7BS6v0IatQjn5r
+4vdGVPQTZ6NRRAuzq7IjBrj/rVC7qRiAX/0rI6WVCDDa400xA+2zYQDXx2BrceFc
+5zTejMPuJheqJ4lESiMgc1gC3BMCpbC8T3CTUqekij4CsakPfQYdpqPXT1L2Y+Rc
+Cw5YGw6mPn6EJlsmuxzaRYSQvYpH876cTyIw0wX97Pgs9fbY5l8LPicXbgfqTzzO
+ZQt0YVBz/Z65xhjqlifguiMPvARJX0zyAQ/Gr8zRA2uhH/RIxo7Y4RjvajWjvkLQ
+jwQXiB5dkB9XX/1DLmMKVf3ADw1gtSjQunKk/cOLt2qNNatVZVivbXQsZfBJz8mZ
+nm1EeUgEFjGacGrQFjrWDpRlCtOCvRXwWS6meTU+m+mwnyVIERQ=
+=C9ai
+-----END PGP SIGNATURE-----
+
+--6Nae48J/T25AfBN4--
