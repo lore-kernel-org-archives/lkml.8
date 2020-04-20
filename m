@@ -2,139 +2,122 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA26C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4201FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EDFF21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:17:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NFTzldCL"
+	by mail.kernel.org (Postfix) with ESMTP id 277C6206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587406776;
+	bh=FNwCRRCaDykb2beVb/8z0YOJV10hRNfkyTQcwKKb9WY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wFR7QOEAbXJfGKf1llxHCrU4jTw9/cMst1RUqLdAS2DKdSJ79uybmMdsKvP4unS3m
+	 Towgz/Q8buIYzJppwxZSHaMxHPlI+YS1IKjlJT+STkao0Hn1nikm/jNXmo6gshK57Y
+	 EW/mmaGaqju1Q7mJeE5uuZKnDUM1BK2PKv0l5REI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgDTSRj (ORCPT
+        id S1727768AbgDTSTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:17:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57018 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725891AbgDTSRi (ORCPT
+        Mon, 20 Apr 2020 14:19:35 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41302 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbgDTSTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:17:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587406657;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LjYYLpViXa5cvb5XcfETBsdixh6Asqe6wqOEDaZtUC8=;
-        b=NFTzldCLGlsxKgMMnlSjW6g3SmUoHKNq4IoiLsrL961CvZ0W9RwyhA29fjO62itrhTq1sz
-        ze8PXEgWeb+jqxOyD5/zaH16GGEDYz1CFGMa1YzU/E79XomHd+lM+sNXSbNPnvihRVDQc0
-        Jee4OmEUrL9yTsHVx8Nnftvb0fGwwAU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-69-qbGKek6pOImhJoEFQ5KkeQ-1; Mon, 20 Apr 2020 14:17:35 -0400
-X-MC-Unique: qbGKek6pOImhJoEFQ5KkeQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C0DED107ACCA;
-        Mon, 20 Apr 2020 18:17:33 +0000 (UTC)
-Received: from treble (ovpn-118-158.rdu2.redhat.com [10.10.118.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 722A15C1B2;
-        Mon, 20 Apr 2020 18:17:32 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 13:17:30 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [GIT pull] perf/urgent for 5.7-rc2
-Message-ID: <20200420181730.4bmggezf2zhu4ffb@treble>
-References: <158730459860.31269.9496277256253823777.tglx@nanos.tec.linutronix.de>
- <158730460101.31269.5005570498545135614.tglx@nanos.tec.linutronix.de>
- <CAHk-=wjUS9b-B1n=OCBdqq3mdVTNGz0zqhGnrtMijoB5qT+96g@mail.gmail.com>
- <20200419200758.3xry3vn2a5caxapx@treble>
- <20200420074845.GA72554@gmail.com>
- <CAHk-=wiG=Bz57AUmbTyZYMKU6C+nZpS8P2=vFf5xAAhBzrPuTQ@mail.gmail.com>
- <20200420174031.GM20730@hirez.programming.kicks-ass.net>
+        Mon, 20 Apr 2020 14:19:35 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d24so4248735pll.8;
+        Mon, 20 Apr 2020 11:19:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T7v8hOkx9WmIy3YT7d2v0dE+Bx4o1hmDGi8iBopJx8s=;
+        b=BsySMqaAcPXGGn3krkyUXsewJQoYTRz0tKGMsHlPAXRyPv/5fPKZdgkH+UAFvykbhO
+         NznnhAHnSm4GCUKUO3IFUdGpkLi2CJgwjcgOUVkINLB+MWy5xbdWRvAhI4Qxmf0NuPhM
+         4ie+r/3mGnUJ3rmM9PJbJIaBsYnm1fuZx9BMokJecGwCxBg2cx2DJX1rF8qjuYJ/PWcC
+         anG6IUNazIOCuq/uqGvz8wFC2yd9sYkiJFFdYOCar6htV78ITfMgrFop03Wi+NkxfgCd
+         t4aQ1XzTn1RrxgE1gOr4emu8DySnxBh0po9L6gmlc9KWu8Q1XgCr8hYKeezaIzsZ1A34
+         Q+4A==
+X-Gm-Message-State: AGi0PuZtpZY1CA0GG0e6YLTjwakBJGhfVzWlSf3cE3033BsJXlvRzX13
+        xb3gjY19tagqnpuIZ24CCfcMBLhG/W0=
+X-Google-Smtp-Source: APiQypIXOYg11jQH19yBATdPxBOUTTvM6LmfAQB6BGlPXyvZz1WWKkiNQzkriWbPYZ8XEQCiV4mz3w==
+X-Received: by 2002:a17:90a:1955:: with SMTP id 21mr750807pjh.133.1587406772794;
+        Mon, 20 Apr 2020 11:19:32 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id j14sm35043pjm.27.2020.04.20.11.19.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 11:19:31 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 12DF74028E; Mon, 20 Apr 2020 18:19:31 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 18:19:31 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v3 3/4] kmod: Return directly if module name is empty in
+ request_module()
+Message-ID: <20200420181931.GJ11244@42.do-not-panic.com>
+References: <1587386035-5188-1-git-send-email-yangtiezhu@loongson.cn>
+ <1587386035-5188-4-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200420174031.GM20730@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <1587386035-5188-4-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 07:40:31PM +0200, Peter Zijlstra wrote:
-> On Mon, Apr 20, 2020 at 09:51:55AM -0700, Linus Torvalds wrote:
-> > On Mon, Apr 20, 2020 at 12:48 AM Ingo Molnar <mingo@kernel.org> wrote:
-> > >
-> > > Fortunately, much of what objtool does against vmlinux.o can be
-> > > parallelized in a rather straightforward fashion I believe, if we build
-> > > with -ffunction-sections.
-> > 
-> > Well, I was actually thinking about a simpler model.
-> > 
-> > By "link time" I didn't mean "after final link". Yes, there may be
-> > reasons to do it at that point too (to do any whole-program checks),
-> > but that wasn't what I meant.
-> > 
-> > I meant literally doing it in the $(LD) and $(AR) phases, when you
-> > still have lots of independent object files that you are just about to
-> > link (or archive - do we even do that any more?) into one.
-> > 
-> > Then you'd parallelize exactly the same way we do now: one object file
-> > at a time, and with no real change of semantics.
-> > 
-> > IOW, what I was thinking that instead of doing it as part of a final
-> > step after the CC/AS, we'd do it as a preparatory step before the
-> > LD/AR. Same exact operation, same exact target *.o files, just shifted
-> > in time.
+On Mon, Apr 20, 2020 at 08:33:54PM +0800, Tiezhu Yang wrote:
+> If module name is empty, it is better to return directly at the beginning
+> of request_module() without doing the needless call_modprobe() operation.
 > 
-> So my pet peeve is that when objtool errors, or crashes, the .o file
-> gets deleted and it becomes really hard to debug the situation. I'm
-> thinking that your suggestion would actually help with that too.
+> Call trace:
+> 
+> request_module()
+>       |
+>       |
+> __request_module()
+>       |
+>       |
+> call_modprobe()
+>       |
+>       |
+> call_usermodehelper_exec() -- retval = sub_info->retval;
+>       |
+>       |
+> call_usermodehelper_exec_work()
+>       |
+>       |
+> call_usermodehelper_exec_sync() -- sub_info->retval = ret;
+>       |
+>       | --> call_usermodehelper_exec_async() --> do_execve()
+>       |
+> kernel_wait4(pid, (int __user *)&ret, 0, NULL);
+> 
+> sub_info->retval is 256 after call kernel_wait4(), the function
+> call_usermodehelper_exec() returns sub_info->retval which is 256,
+> then call_modprobe() and __request_module() returns 256.
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-I do have the same pet peeve and I'm thinking we should just revert
-644592d32837 ("objtool: Fail the kernel build on fatal errors") which
-would ease most of the pain.  Those fatal errors don't really buy us
-much IMO.  Agree?
+Thanks for looking into this. I still cannot find where
+userspace it returns 256. Can you? If I run modprobe without
+an argument I see 1 returned.
 
-> I just don't have enough Kbuild foo to even attempt this :/
+At least kmod [0] has a series of cmd helper structs, the one for modprobe
+seems to be kmod_cmd_compat_modprobe, and I can see -1 returned which
+can be converted to 255. It can also return EXIT_FAILURE or EXIT_SUCCESS
+and /usr/include/stdlib.h defines these as 1 and 0 respectively.
 
-It's an interesting idea, but it might have its own share of annoyances.
+https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git/
 
-If you added something bad to a file, and just rebuilt that file, you
-wouldn't see the objtool warning until later when you build the entire
-kernel.  (Of course the same complaint would apply to vmlinux.o
-validation.)  But the warning shows the .o file, which could be
-confusing.
-
-And for localized testing where you don't want to rebuild everything,
-you'd have to figure out which archive belongs to the .o file you want
-to run objtool on.  And then rebuilding that archive manually might not
-work, for example I have no idea what's going wrong here:
-
-  $ make arch/x86/kernel/built-in.a
-    CALL    scripts/checksyscalls.sh
-    CALL    scripts/atomic/check-atomics.sh
-    DESCEND  objtool
-    AR      arch/x86/kernel/built-in.a
-  ar: arch/x86/kernel/fpu/built-in.a: No such file or directory
-  make[2]: *** [scripts/Makefile.build:387: arch/x86/kernel/built-in.a] Error 1
-  make[1]: *** [scripts/Makefile.build:488: arch/x86/kernel] Error 2
-  make: *** [Makefile:1723: arch/x86] Error 2
-
-
-Though I do really like Ingo's idea for parallelizing things for
-vmlinux.o.
-
--- 
-Josh
-
+  Luis
