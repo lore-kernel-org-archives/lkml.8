@@ -2,92 +2,77 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497E7C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35CCC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2795620724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:33:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="pHC4uN65"
+	by mail.kernel.org (Postfix) with ESMTP id B3A6120735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgDTMdc (ORCPT
+        id S1726698AbgDTMeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:33:32 -0400
-Received: from plaes.org ([188.166.43.21]:34990 "EHLO plaes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgDTMdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:33:31 -0400
-Received: from plaes.org (localhost [127.0.0.1])
-        by plaes.org (Postfix) with ESMTPSA id CCE9A40A95;
-        Mon, 20 Apr 2020 12:32:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
-        t=1587385978; bh=dD6UJxueO7iBXUJ0MYPcRp2vcNvPimi5NJR2GD1gM1U=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=pHC4uN65eK9FrZlif52Y7dJqnVpm/59WYaZQDMSv2CworsbmtUgWCLLJw63uW7CCa
-         NRaKKkAAT30qxnEYe2S44AL0KbginlGKs6+yg/JSgw3RUUmSb6n30S7J9AHpYYP/JW
-         XSfFlEORgxc42MBi9xx1ud5zA1c1FwBCIkh/PLXG62ZIN8UYfuF08m9yJ47cD/iVCm
-         SjoYpBF/EY3FeRvMYE7AjvKCcG0vjoIFLfeXBlhuU30eo9IM5obdRQXXOmzBOfAL/j
-         QEKlBuWLji8Vj3e6k7jWE0QNmAIhrvYllmH/RV9plJhx3kThbDA4ckR10tHEfDM4hf
-         tZ+IfhX2kx/iQ==
-Date:   Mon, 20 Apr 2020 12:32:57 +0000
-From:   Priit Laes <plaes@plaes.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 0/4] ARM: sun7i: Convert A20 GMAC driver to CCU
-Message-ID: <20200420123257.GA18522@plaes.org>
-References: <20200417221730.555954-1-plaes@plaes.org>
+        Mon, 20 Apr 2020 08:34:01 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:52200 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725886AbgDTMeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:34:01 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb9uzlp1eHSgqAA--.29S2;
+        Mon, 20 Apr 2020 20:33:56 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jessica Yu <jeyu@kernel.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v3 0/4] Fix some issues about kmod
+Date:   Mon, 20 Apr 2020 20:33:51 +0800
+Message-Id: <1587386035-5188-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417221730.555954-1-plaes@plaes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Dxb9uzlp1eHSgqAA--.29S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYY7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2js
+        IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+        5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeV
+        CFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
+        c2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+        tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcV
+        CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE
+        14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyT
+        uYvjfUeWlkDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 01:17:26AM +0300, Priit Laes wrote:
-> This serie converts Allwinner A20 (sun7i) GMAC driver to CCU
-> while still retaining compatibility with existing devicetrees.
-> 
-> First two patches contain preliminary work which convert
-> sun4i/sun7i clock drivers to platform devices and creates regmap
-> to access gmac register from the sun7i gmac driver.
-> 
-> Third patch implements syscon-based regmap to allow driver manage
-> its own clock source.
-> 
-> Fourth patch updates the devicetree and drops the unused clocks.
-> 
-> While testing the driver I noticed following bugs with the existing
-> sun7i gmac driver:
-> - driver relies on u-boot for initialization (fixed in this
->   implementation)
+v3:
+  - use the quotes with correct format in the commit message of patch 4/4,
+    sorry for that
 
-Scratch that.. this is actually due to unhandled rx and tx delays,
-which I "accidentally" fixed by copying the value BIT(12) from the
-u-boot..
+Tiezhu Yang (4):
+  selftests: kmod: Use variable NAME in kmod_test_0001()
+  kmod: Remove redundant "be an" in the comment
+  kmod: Return directly if module name is empty in request_module()
+  test_kmod: Avoid potential double free in trigger_config_run_type()
 
-> - `systemctl restart networking` fails to bring the link up again.
-> 
-> 
-> Priit Laes (4):
->   clk: sunxi-ng: a10/a20: rewrite init code to a platform driver
->   clk: sunxi-ng: a20: export a regmap to access the GMAC register
->   net: stmmac: dwmac-sunxi: Implement syscon-based clock handling
->   ARM: dts: sun7i: Use syscon-based implementation for gmac
-> 
->  arch/arm/boot/dts/sun7i-a20.dtsi              |  36 +----
->  drivers/clk/sunxi-ng/ccu-sun4i-a10.c          | 108 ++++++++++++---
->  .../net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 124 ++++++++++++++++--
->  3 files changed, 206 insertions(+), 62 deletions(-)
-> 
-> -- 
-> 2.25.2
-> 
+ kernel/kmod.c                        | 10 +++++++---
+ lib/test_kmod.c                      |  2 +-
+ tools/testing/selftests/kmod/kmod.sh |  4 ++--
+ 3 files changed, 10 insertions(+), 6 deletions(-)
+
+-- 
+2.1.0
+
