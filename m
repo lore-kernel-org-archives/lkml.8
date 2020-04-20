@@ -2,92 +2,113 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03909C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DC5C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB5A120735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387182;
-	bh=VnYYLsz/sYIWnIIfbHRQhrU0U/h+gGUu95y/4hL63Ng=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=txVQwrnvdPZtFueOMYTnQZRYcoO32iUSUeFDiu+dzwoNNjaFSbYCxGZxRyZSWn405
-	 NMlDRlfBKJ1sblpg6Auu2RUdyJa6uyQUe+rYzy5MVDxIuWyswX5oECkFDMTRRNFc3l
-	 2wYvkXq/FuLiROuOZQG2IUzMdCOsYfpQbXXdefDA=
+	by mail.kernel.org (Postfix) with ESMTP id 7C0D4206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anisinha-ca.20150623.gappssmtp.com header.i=@anisinha-ca.20150623.gappssmtp.com header.b="b9aWT0Pv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgDTMxC (ORCPT
+        id S1729600AbgDTMxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:53:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728987AbgDTMq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:46:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4D27206D4;
-        Mon, 20 Apr 2020 12:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386819;
-        bh=VnYYLsz/sYIWnIIfbHRQhrU0U/h+gGUu95y/4hL63Ng=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VVY8M7S1AIGbqZkUUPi/mucvz/Sh+dSPWSBZ8JDRfyjcoC82QCE6ysg8cB3zE6Jxv
-         DalJ1CLrhs54IS5suS4yfawGGLyejaiZEWMfxjLXP+zFf958SoaGkhI0O/SuwwFd19
-         RqzMILVt2WEDSJP/K6dwhsh1mU9fcLuGu8iPIB6g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 38/60] ALSA: usb-audio: Dont override ignore_ctl_error value from the map
-Date:   Mon, 20 Apr 2020 14:39:16 +0200
-Message-Id: <20200420121511.186018233@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
-References: <20200420121500.490651540@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Apr 2020 08:53:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729588AbgDTMw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:52:58 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BAAC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 05:52:58 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id d17so11968932wrg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 05:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anisinha-ca.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A9w9a9BtCPltYxmsYrcgvCRZHciAh4PTWSTVRz9kigo=;
+        b=b9aWT0PvNBisz/4PQKYiKEVpgRsAxhjfLt1qR2nrfXJi3AAsNyH9myAqavnV7G7Wh3
+         ElDYT+3Z6mcCFjzJTkesXuFmF6M4ZvyvqDG6Q16cY/iTg381FhpIurr+Vpt8g4fmjHgF
+         tLsG2LYWWzRO/EhwTxPLHSjZVHgzASUL7SBZaZtBRdFwdO3yL2HUwXIWoQWvvfg3NMWb
+         QInP5qHaC70IjauzS5k9eC6bVnx9AcrwXuwrWMv9E5W977ELACP09TRyluv/MZFu2EWf
+         TmcSmHM7Fd4Qyy4Gy/2sXTcK9Y0SPXZ9mXMf9wDgqO65R19TDZFHLQPi/HAb3e0DrdwS
+         3jdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A9w9a9BtCPltYxmsYrcgvCRZHciAh4PTWSTVRz9kigo=;
+        b=WjNnD8TFQM+5dW+JEcCa3xpgp0q9vZkN0Nh+mUoxVemkwN+a9GrGeFXJRawC8ZY03q
+         6TDJHt7x3R3q4y9sh4sEgbzKve4YB16PfQAAtxXJdyBvJ1coNm6VuZVfd8Kig+myFik0
+         0LLB7JKRVfr/GbzRq5f+1+2Rb7DEqcLKb/kKs2ZpZOK14ffa2689WyKdGB2n2TwjQOzB
+         THcz0WjZBGbKlKajGzywGY+O0FSUKHj7RD5SHjF7Khe31Ulz3Wt0yxKzMJiSS2+TcNxO
+         0ifKuHEd7DixHKkhmfUgLvtZ4yt0414Bju2Oeg7D7PJA6k2JOF2aMy+GPcIGb35ONfqI
+         M6Hg==
+X-Gm-Message-State: AGi0PuZz6QdV8ROmLVw/899WzDPiUa2CeRxPFDyYIChmcjoSBzMSapP0
+        mLPBC7oUcTIQhV5gEHdAX2KK+soSC8N+aLF3988Alg==
+X-Google-Smtp-Source: APiQypKv8s+5s+Sevqx84IoEmsSamRLTByngbt6QvoW+EFkP1sdpYDQsDL0PBv9J6edYJSBFQPoebLmLgKY71poU3nw=
+X-Received: by 2002:a5d:4485:: with SMTP id j5mr17584675wrq.427.1587387177183;
+ Mon, 20 Apr 2020 05:52:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1587303383-37819-1-git-send-email-ani@anisinha.ca> <20200420090913.GV2586@lahna.fi.intel.com>
+In-Reply-To: <20200420090913.GV2586@lahna.fi.intel.com>
+From:   Ani Sinha <ani@anisinha.ca>
+Date:   Mon, 20 Apr 2020 18:22:46 +0530
+Message-ID: <CAARzgwwk+=pRAfhg7bv8Zi8f91m5AMv8gVn9Rwxfgc7-RJ-dxg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: pciehp: Cleanup unused HP_SUPR_RM macro
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, Ani Sinha <ani@anirban.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Denis Efremov <efremov@linux.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+On Mon, Apr 20, 2020 at 2:39 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Sun, Apr 19, 2020 at 07:06:20PM +0530, Ani Sinha wrote:
+> > We do not use PCIE hotplug surprise (PCI_EXP_SLTCAP_HPS) bit anymore.
+> > Consequently HP_SUPR_RM() macro is not used in the kernel source anymore.
+> > Let's clean it up.
+> >
+> > Signed-off-by: Ani Sinha <ani@anisinha.ca>
+>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
+> BTW, there seem to be other macros like EMI() that is not used anymore
+> so maybe worth removing them as well.
 
-commit 3507245b82b4362dc9721cbc328644905a3efa22 upstream.
+Sent a patch.
 
-The mapping table may contain also ignore_ctl_error flag for devices
-that are known to behave wild.  Since this flag always writes the
-card's own ignore_ctl_error flag, it overrides the value already set
-by the module option, so it doesn't follow user's expectation.
-Let's fix the code not to clear the flag that has been set by user.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200412081331.4742-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/usb/mixer.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -3085,7 +3085,7 @@ static int snd_usb_mixer_controls(struct
- 		if (map->id == state.chip->usb_id) {
- 			state.map = map->map;
- 			state.selector_map = map->selector_map;
--			mixer->ignore_ctl_error = map->ignore_ctl_error;
-+			mixer->ignore_ctl_error |= map->ignore_ctl_error;
- 			break;
- 		}
- 	}
-
-
+>
+>
+> > ---
+> >  drivers/pci/hotplug/pciehp.h | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> > index ae44f46..5747967 100644
+> > --- a/drivers/pci/hotplug/pciehp.h
+> > +++ b/drivers/pci/hotplug/pciehp.h
+> > @@ -148,7 +148,6 @@ struct controller {
+> >  #define MRL_SENS(ctrl)               ((ctrl)->slot_cap & PCI_EXP_SLTCAP_MRLSP)
+> >  #define ATTN_LED(ctrl)               ((ctrl)->slot_cap & PCI_EXP_SLTCAP_AIP)
+> >  #define PWR_LED(ctrl)                ((ctrl)->slot_cap & PCI_EXP_SLTCAP_PIP)
+> > -#define HP_SUPR_RM(ctrl)     ((ctrl)->slot_cap & PCI_EXP_SLTCAP_HPS)
+> >  #define EMI(ctrl)            ((ctrl)->slot_cap & PCI_EXP_SLTCAP_EIP)
+> >  #define NO_CMD_CMPL(ctrl)    ((ctrl)->slot_cap & PCI_EXP_SLTCAP_NCCS)
+> >  #define PSN(ctrl)            (((ctrl)->slot_cap & PCI_EXP_SLTCAP_PSN) >> 19)
+> > --
+> > 2.7.4
