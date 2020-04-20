@@ -2,155 +2,82 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3D5C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABC7C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69A3C20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:52:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pmeerw.net header.i=@pmeerw.net header.b="GJhpntXv"
+	by mail.kernel.org (Postfix) with ESMTP id 8FCDD20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgDTJwC (ORCPT
+        id S1726284AbgDTJwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:52:02 -0400
-Received: from ns.pmeerw.net ([84.19.176.117]:51376 "EHLO ns.pmeerw.net"
+        Mon, 20 Apr 2020 05:52:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50800 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgDTJwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:52:02 -0400
-X-Greylist: delayed 453 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Apr 2020 05:52:02 EDT
-Received: by ns.pmeerw.net (Postfix, from userid 1000)
-        id 47CBAE0382; Mon, 20 Apr 2020 11:44:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pmeerw.net; s=mail;
-        t=1587375865; bh=lpD1xO/eMPO6mvEjPB98SZe45yNb8zLAzeyM/dqfXgQ=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=GJhpntXvqdsJwStzPSVfYKwZZOLnI3VPCVSiyJPeVnGdi3BaNDDRATE3UTRSGrWpF
-         tsi05MomKiWK7xlsrR+oVA/rPqs27yqTb85pJ39PKLsNYaRMdLPGBvS5b5+wtlBbky
-         AfLHbeHHxi8hcD3YZPNziGMw4wJZjfLDWerChbLo=
-Received: from localhost (localhost [127.0.0.1])
-        by ns.pmeerw.net (Postfix) with ESMTP id 2353CE019D;
-        Mon, 20 Apr 2020 11:44:25 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 11:44:25 +0200 (CEST)
-From:   Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-To:     Mathieu Othacehe <m.othacehe@gmail.com>
-cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
+        id S1725773AbgDTJwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:52:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1EF9AACA2;
+        Mon, 20 Apr 2020 09:52:20 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id AF6091E126F; Mon, 20 Apr 2020 11:52:18 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 11:52:18 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>,
+        axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org, tytso@mit.edu,
+        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] iio: vcnl4000: Factorize data reading and
- writing.
-In-Reply-To: <20200420084210.14245-2-m.othacehe@gmail.com>
-Message-ID: <alpine.DEB.2.21.2004201142160.8178@vps.pmeerw.net>
-References: <20200420084210.14245-1-m.othacehe@gmail.com> <20200420084210.14245-2-m.othacehe@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+Subject: Re: [PATCH 3/8] bdi: add a ->dev_name field to struct
+ backing_dev_info
+Message-ID: <20200420095218.GB17130@quack2.suse.cz>
+References: <20200416165453.1080463-1-hch@lst.de>
+ <20200416165453.1080463-4-hch@lst.de>
+ <20200417085909.GA12234@quack2.suse.cz>
+ <70f001cd-eaec-874f-9742-c44e66368a2a@acm.org>
+ <20200419075809.GA12222@lst.de>
+ <a37e947d-c49a-837e-e97d-647ca9d378c3@acm.org>
+ <20200419160651.GA18308@lst.de>
+ <20200420074801.GA30795@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420074801.GA30795@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020, Mathieu Othacehe wrote:
-
-> Factorize data reading in vcnl4000_measure into a vcnl4000_read_block_data
-> function. Use it to provide a vcnl4000_read_data function that is able to
-> read sensor data under lock. Also add a vcnl4000_write_data function.
-
-comments below
- 
-> Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
-> ---
->  drivers/iio/light/vcnl4000.c | 54 +++++++++++++++++++++++++++++++++---
->  1 file changed, 50 insertions(+), 4 deletions(-)
+On Mon 20-04-20 09:48:01, Christoph Hellwig wrote:
+> On Sun, Apr 19, 2020 at 06:06:51PM +0200, Christoph Hellwig wrote:
+> > > (https://lore.kernel.org/linux-block/20200416071519.807660-4-hch@lst.de/) 
+> > > and also to the replies to that patch? This is what I found in the replies: 
+> > > "When driver try to to re-register bdi but without release_bdi(), the old 
+> > > dev_name will be cover directly by the newer in bdi_register_va(). So, I am 
+> > > not sure whether it can cause memory leak for bdi->dev_name."
+> > >
+> > > Has it been considered to avoid that leak by freeing bdi->dev_name from 
+> > > unregister_bdi(), e.g. as follows?
+> > 
+> > We'd need some protection against concurrent accesses as unregister_bdi
+> > can race with them.  But with RCU that could be handled, so let me try
+> > that.
 > 
-> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> index 58e97462e803..4e87d2cf1100 100644
-> --- a/drivers/iio/light/vcnl4000.c
-> +++ b/drivers/iio/light/vcnl4000.c
-> @@ -215,11 +215,59 @@ static int vcnl4200_init(struct vcnl4000_data *data)
->  	return 0;
->  };
->  
-> +static int vcnl4000_read_block_data(struct vcnl4000_data *data, u8 data_reg,
-> +				    int *val)
-> +{
-> +	__be16 buf;
-> +	int ret;
-> +
-> +	ret = i2c_smbus_read_i2c_block_data(data->client,
-> +		data_reg, sizeof(buf), (u8 *) &buf);
-> +	if (ret < 0)
-> +		goto end;
-> +
-> +	*val = be16_to_cpu(buf);
-> +end:
-> +	return ret;
-> +}
-> +
-> +static int vcnl4000_read_data(struct vcnl4000_data *data, u8 data_reg,
-> +			      int *val)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&data->vcnl4000_lock);
-> +	ret = vcnl4000_read_block_data(data, data_reg, val);
-> +	mutex_unlock(&data->vcnl4000_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static int vcnl4000_write_data(struct vcnl4000_data *data, u8 data_reg,
-> +			       u16 val)
-> +{
-> +	int ret;
-> +
-> +	if (val > U16_MAX)
-> +		return -ERANGE;
-> +
-> +	mutex_lock(&data->vcnl4000_lock);
-> +
-> +	ret = i2c_smbus_write_byte_data(data->client, data_reg, val >> 8);
+> I looked into it, and while it seems doable I think this goes in the
+> wrong direction as it pushed the RCU knowledge into the callers.  I'd
+> rather get something like this series in ASAP, and then for 5.8 or 5.9
+> move the bdi pointer to the gendisk and stop re-registering it and thus
+> solve the problems root cause for real.
 
-why not use i2c_smbus_write_word_data()?
+Yeah, if it could be done it would be a nice solution. Because
+re-registering of BDIs is a long-term source of troubles...
 
-> +	if (ret < 0)
-> +		goto end;
-> +
-> +	ret = i2c_smbus_write_byte_data(data->client, data_reg + 1, val);
-> +end:
-> +	mutex_unlock(&data->vcnl4000_lock);
-> +
-> +	return ret;
-> +}
-> +
->  static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
->  				u8 rdy_mask, u8 data_reg, int *val)
->  {
->  	int tries = 20;
-> -	__be16 buf;
->  	int ret;
->  
->  	mutex_lock(&data->vcnl4000_lock);
-> @@ -246,13 +294,11 @@ static int vcnl4000_measure(struct vcnl4000_data *data, u8 req_mask,
->  		goto fail;
->  	}
->  
-> -	ret = i2c_smbus_read_i2c_block_data(data->client,
-> -		data_reg, sizeof(buf), (u8 *) &buf);
-> +	ret = vcnl4000_read_block_data(data, data_reg, val);
->  	if (ret < 0)
->  		goto fail;
->  
->  	mutex_unlock(&data->vcnl4000_lock);
-> -	*val = be16_to_cpu(buf);
->  
->  	return 0;
->  
-> 
-
+								Honza
 -- 
-
-Peter Meerwald-Stadler
-Mobile: +43 664 24 44 418
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
