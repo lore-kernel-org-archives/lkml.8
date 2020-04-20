@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C677FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18A8C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9386820724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25F02070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386428;
-	bh=a1nlVqdsk4D5BjlJ48WK3giP60i3LW0LTGtsZFB7Kzg=;
+	s=default; t=1587386434;
+	bh=fGBeDcGkMF8qnx98mzK/4Lz582y1joSmdAPT16srA5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDWp58BWVuiojfJiMwz3F8wEDoimO1XDb+Eqq4ZAAgzj5kec/zlMoteXZPITT4kys
-	 CobJWiIoVwL4usGRSD4GvmErlrG+LIEWuv0W59cBDrc4jHlISItyf3GlYMpffadRLA
-	 sbNCIuyM7QqOmJMatSMGXRQ4j54ZTUVlK/rvPDmk=
+	b=qI6Lv7134tSc1q/2km4EAfjcXDDRP0vZQO+1NNJfYvDw2noYEimbbx3QWKIPuAYeX
+	 z5hOuOZCUEZOr7OTCFIz7J+Gh9JY6HzIPK4hUJtRAyv/zP7jeKzWfHOdI1Qm0J1E3a
+	 JI3bK9F5xdNEcSgofmNEozjlf1/pMfFqSp4+LlVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgDTMk1 (ORCPT
+        id S1727786AbgDTMkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:40:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60826 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:40:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727078AbgDTMkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:40:25 -0400
+        id S1727109AbgDTMka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:40:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84C6B20724;
-        Mon, 20 Apr 2020 12:40:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E09C2070B;
+        Mon, 20 Apr 2020 12:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386425;
-        bh=a1nlVqdsk4D5BjlJ48WK3giP60i3LW0LTGtsZFB7Kzg=;
+        s=default; t=1587386430;
+        bh=fGBeDcGkMF8qnx98mzK/4Lz582y1joSmdAPT16srA5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=phcB+N0jeqDM9+cqNIRfqEy/g1OGUsJE1p8UTm+MvYRazijHfAoAiMAo0WLnBrVhK
-         pyUW/Ts04EtSRoDbbmZDyhvD3hcnh1JPEPh4bvIDI8Hxi3I8kGBc+T8S6s+KSYZouk
-         +BPM3w6HA0pMg2STrt8GZg8HTnBH61UPAc9+zP2U=
+        b=nagGELThqmJrwQJhrtU4cwJpnk9eJdMrJyZl6DGJIok+tpDm9Ik9qYGMfwC2C/Ace
+         QpaFjEQ7Ri4Pm3iK7lPl1zBDFkCqYQK7vDvztaP9KbE+6LW02RfUwgIsBe+59LBHc0
+         2UgnmuTuBzbcv4RpQdqvGVIJwGtpAzzH1fG1s2UM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 18/65] net: mscc: ocelot: fix untagged packet drops when enslaving to vlan aware bridge
-Date:   Mon, 20 Apr 2020 14:38:22 +0200
-Message-Id: <20200420121510.439819707@linuxfoundation.org>
+Subject: [PATCH 5.5 02/65] hsr: check protocol version in hsr_newlink()
+Date:   Mon, 20 Apr 2020 14:38:06 +0200
+Message-Id: <20200420121506.628904411@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -60,283 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 87b0f983f66f23762921129fd35966eddc3f2dae ]
+[ Upstream commit 4faab8c446def7667adf1f722456c2f4c304069c ]
 
-To rehash a previous explanation given in commit 1c44ce560b4d ("net:
-mscc: ocelot: fix vlan_filtering when enslaving to bridge before link is
-up"), the switch driver operates the in a mode where a single VLAN can
-be transmitted as untagged on a particular egress port. That is the
-"native VLAN on trunk port" use case.
+In the current hsr code, only 0 and 1 protocol versions are valid.
+But current hsr code doesn't check the version, which is received by
+userspace.
 
-The configuration for this native VLAN is driven in 2 ways:
- - Set the egress port rewriter to strip the VLAN tag for the native
-   VID (as it is egress-untagged, after all).
- - Configure the ingress port to drop untagged and priority-tagged
-   traffic, if there is no native VLAN. The intention of this setting is
-   that a trunk port with no native VLAN should not accept untagged
-   traffic.
+Test commands:
+    ip link add dummy0 type dummy
+    ip link add dummy1 type dummy
+    ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1 version 4
 
-Since both of the above configurations for the native VLAN should only
-be done if VLAN awareness is requested, they are actually done from the
-ocelot_port_vlan_filtering function, after the basic procedure of
-toggling the VLAN awareness flag of the port.
+In the test commands, version 4 is invalid.
+So, the command should be failed.
 
-But there's a problem with that simplistic approach: we are trying to
-juggle with 2 independent variables from a single function:
- - Native VLAN of the port - its value is held in port->vid.
- - VLAN awareness state of the port - currently there are some issues
-   here, more on that later*.
-The actual problem can be seen when enslaving the switch ports to a VLAN
-filtering bridge:
- 0. The driver configures a pvid of zero for each port, when in
-    standalone mode. While the bridge configures a default_pvid of 1 for
-    each port that gets added as a slave to it.
- 1. The bridge calls ocelot_port_vlan_filtering with vlan_aware=true.
-    The VLAN-filtering-dependent portion of the native VLAN
-    configuration is done, considering that the native VLAN is 0.
- 2. The bridge calls ocelot_vlan_add with vid=1, pvid=true,
-    untagged=true. The native VLAN changes to 1 (change which gets
-    propagated to hardware).
- 3. ??? - nobody calls ocelot_port_vlan_filtering again, to reapply the
-    VLAN-filtering-dependent portion of the native VLAN configuration,
-    for the new native VLAN of 1. One can notice that after toggling "ip
-    link set dev br0 type bridge vlan_filtering 0 && ip link set dev br0
-    type bridge vlan_filtering 1", the new native VLAN finally makes it
-    through and untagged traffic finally starts flowing again. But
-    obviously that shouldn't be needed.
+After this patch, following error will occur.
+"Error: hsr: Only versions 0..1 are supported."
 
-So it is clear that 2 independent variables need to both re-trigger the
-native VLAN configuration. So we introduce the second variable as
-ocelot_port->vlan_aware.
-
-*Actually both the DSA Felix driver and the Ocelot driver already had
-each its own variable:
- - Ocelot: ocelot_port_private->vlan_aware
- - Felix: dsa_port->vlan_filtering
-but the common Ocelot library needs to work with a single, common,
-variable, so there is some refactoring done to move the vlan_aware
-property from the private structure into the common ocelot_port
-structure.
-
-Fixes: 97bb69e1e36e ("net: mscc: ocelot: break apart ocelot_vlan_port_apply")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Fixes: ee1c27977284 ("net/hsr: Added support for HSR v1")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/ocelot/felix.c     |    5 --
- drivers/net/ethernet/mscc/ocelot.c |   84 ++++++++++++++++++-------------------
- drivers/net/ethernet/mscc/ocelot.h |    2 
- include/soc/mscc/ocelot.h          |    4 +
- 4 files changed, 47 insertions(+), 48 deletions(-)
+ net/hsr/hsr_netlink.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/net/dsa/ocelot/felix.c
-+++ b/drivers/net/dsa/ocelot/felix.c
-@@ -46,11 +46,8 @@ static int felix_fdb_add(struct dsa_swit
- 			 const unsigned char *addr, u16 vid)
- {
- 	struct ocelot *ocelot = ds->priv;
--	bool vlan_aware;
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -61,10 +61,16 @@ static int hsr_newlink(struct net *src_n
+ 	else
+ 		multicast_spec = nla_get_u8(data[IFLA_HSR_MULTICAST_SPEC]);
  
--	vlan_aware = dsa_port_is_vlan_filtering(dsa_to_port(ds, port));
--
--	return ocelot_fdb_add(ocelot, port, addr, vid, vlan_aware);
-+	return ocelot_fdb_add(ocelot, port, addr, vid);
- }
- 
- static int felix_fdb_del(struct dsa_switch *ds, int port,
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -183,44 +183,47 @@ static void ocelot_vlan_mode(struct ocel
- 	ocelot_write(ocelot, val, ANA_VLANMASK);
- }
- 
--void ocelot_port_vlan_filtering(struct ocelot *ocelot, int port,
--				bool vlan_aware)
-+static int ocelot_port_set_native_vlan(struct ocelot *ocelot, int port,
-+				       u16 vid)
- {
- 	struct ocelot_port *ocelot_port = ocelot->ports[port];
--	u32 val;
-+	u32 val = 0;
- 
--	if (vlan_aware)
--		val = ANA_PORT_VLAN_CFG_VLAN_AWARE_ENA |
--		      ANA_PORT_VLAN_CFG_VLAN_POP_CNT(1);
+-	if (!data[IFLA_HSR_VERSION])
++	if (!data[IFLA_HSR_VERSION]) {
+ 		hsr_version = 0;
 -	else
--		val = 0;
--	ocelot_rmw_gix(ocelot, val,
--		       ANA_PORT_VLAN_CFG_VLAN_AWARE_ENA |
--		       ANA_PORT_VLAN_CFG_VLAN_POP_CNT_M,
--		       ANA_PORT_VLAN_CFG, port);
-+	if (ocelot_port->vid != vid) {
-+		/* Always permit deleting the native VLAN (vid = 0) */
-+		if (ocelot_port->vid && vid) {
-+			dev_err(ocelot->dev,
-+				"Port already has a native VLAN: %d\n",
-+				ocelot_port->vid);
-+			return -EBUSY;
++	} else {
+ 		hsr_version = nla_get_u8(data[IFLA_HSR_VERSION]);
++		if (hsr_version > 1) {
++			NL_SET_ERR_MSG_MOD(extack,
++					   "Only versions 0..1 are supported");
++			return -EINVAL;
 +		}
-+		ocelot_port->vid = vid;
 +	}
-+
-+	ocelot_rmw_gix(ocelot, REW_PORT_VLAN_CFG_PORT_VID(vid),
-+		       REW_PORT_VLAN_CFG_PORT_VID_M,
-+		       REW_PORT_VLAN_CFG, port);
  
--	if (vlan_aware && !ocelot_port->vid)
-+	if (ocelot_port->vlan_aware && !ocelot_port->vid)
- 		/* If port is vlan-aware and tagged, drop untagged and priority
- 		 * tagged frames.
- 		 */
- 		val = ANA_PORT_DROP_CFG_DROP_UNTAGGED_ENA |
- 		      ANA_PORT_DROP_CFG_DROP_PRIO_S_TAGGED_ENA |
- 		      ANA_PORT_DROP_CFG_DROP_PRIO_C_TAGGED_ENA;
--	else
--		val = 0;
- 	ocelot_rmw_gix(ocelot, val,
- 		       ANA_PORT_DROP_CFG_DROP_UNTAGGED_ENA |
- 		       ANA_PORT_DROP_CFG_DROP_PRIO_S_TAGGED_ENA |
- 		       ANA_PORT_DROP_CFG_DROP_PRIO_C_TAGGED_ENA,
- 		       ANA_PORT_DROP_CFG, port);
- 
--	if (vlan_aware) {
-+	if (ocelot_port->vlan_aware) {
- 		if (ocelot_port->vid)
- 			/* Tag all frames except when VID == DEFAULT_VLAN */
--			val |= REW_TAG_CFG_TAG_CFG(1);
-+			val = REW_TAG_CFG_TAG_CFG(1);
- 		else
- 			/* Tag all frames */
--			val |= REW_TAG_CFG_TAG_CFG(3);
-+			val = REW_TAG_CFG_TAG_CFG(3);
- 	} else {
- 		/* Port tagging disabled. */
- 		val = REW_TAG_CFG_TAG_CFG(0);
-@@ -228,31 +231,31 @@ void ocelot_port_vlan_filtering(struct o
- 	ocelot_rmw_gix(ocelot, val,
- 		       REW_TAG_CFG_TAG_CFG_M,
- 		       REW_TAG_CFG, port);
-+
-+	return 0;
+ 	return hsr_dev_finalize(dev, link, multicast_spec, hsr_version);
  }
--EXPORT_SYMBOL(ocelot_port_vlan_filtering);
- 
--static int ocelot_port_set_native_vlan(struct ocelot *ocelot, int port,
--				       u16 vid)
-+void ocelot_port_vlan_filtering(struct ocelot *ocelot, int port,
-+				bool vlan_aware)
- {
- 	struct ocelot_port *ocelot_port = ocelot->ports[port];
-+	u32 val;
- 
--	if (ocelot_port->vid != vid) {
--		/* Always permit deleting the native VLAN (vid = 0) */
--		if (ocelot_port->vid && vid) {
--			dev_err(ocelot->dev,
--				"Port already has a native VLAN: %d\n",
--				ocelot_port->vid);
--			return -EBUSY;
--		}
--		ocelot_port->vid = vid;
--	}
-+	ocelot_port->vlan_aware = vlan_aware;
- 
--	ocelot_rmw_gix(ocelot, REW_PORT_VLAN_CFG_PORT_VID(vid),
--		       REW_PORT_VLAN_CFG_PORT_VID_M,
--		       REW_PORT_VLAN_CFG, port);
-+	if (vlan_aware)
-+		val = ANA_PORT_VLAN_CFG_VLAN_AWARE_ENA |
-+		      ANA_PORT_VLAN_CFG_VLAN_POP_CNT(1);
-+	else
-+		val = 0;
-+	ocelot_rmw_gix(ocelot, val,
-+		       ANA_PORT_VLAN_CFG_VLAN_AWARE_ENA |
-+		       ANA_PORT_VLAN_CFG_VLAN_POP_CNT_M,
-+		       ANA_PORT_VLAN_CFG, port);
- 
--	return 0;
-+	ocelot_port_set_native_vlan(ocelot, port, ocelot_port->vid);
- }
-+EXPORT_SYMBOL(ocelot_port_vlan_filtering);
- 
- /* Default vlan to clasify for untagged frames (may be zero) */
- static void ocelot_port_set_pvid(struct ocelot *ocelot, int port, u16 pvid)
-@@ -857,12 +860,12 @@ static void ocelot_get_stats64(struct ne
- }
- 
- int ocelot_fdb_add(struct ocelot *ocelot, int port,
--		   const unsigned char *addr, u16 vid, bool vlan_aware)
-+		   const unsigned char *addr, u16 vid)
- {
- 	struct ocelot_port *ocelot_port = ocelot->ports[port];
- 
- 	if (!vid) {
--		if (!vlan_aware)
-+		if (!ocelot_port->vlan_aware)
- 			/* If the bridge is not VLAN aware and no VID was
- 			 * provided, set it to pvid to ensure the MAC entry
- 			 * matches incoming untagged packets
-@@ -889,7 +892,7 @@ static int ocelot_port_fdb_add(struct nd
- 	struct ocelot *ocelot = priv->port.ocelot;
- 	int port = priv->chip_port;
- 
--	return ocelot_fdb_add(ocelot, port, addr, vid, priv->vlan_aware);
-+	return ocelot_fdb_add(ocelot, port, addr, vid);
- }
- 
- int ocelot_fdb_del(struct ocelot *ocelot, int port,
-@@ -1488,8 +1491,8 @@ static int ocelot_port_attr_set(struct n
- 		ocelot_port_attr_ageing_set(ocelot, port, attr->u.ageing_time);
- 		break;
- 	case SWITCHDEV_ATTR_ID_BRIDGE_VLAN_FILTERING:
--		priv->vlan_aware = attr->u.vlan_filtering;
--		ocelot_port_vlan_filtering(ocelot, port, priv->vlan_aware);
-+		ocelot_port_vlan_filtering(ocelot, port,
-+					   attr->u.vlan_filtering);
- 		break;
- 	case SWITCHDEV_ATTR_ID_BRIDGE_MC_DISABLED:
- 		ocelot_port_attr_mc_set(ocelot, port, !attr->u.mc_disabled);
-@@ -1860,7 +1863,6 @@ static int ocelot_netdevice_port_event(s
- 			} else {
- 				err = ocelot_port_bridge_leave(ocelot, port,
- 							       info->upper_dev);
--				priv->vlan_aware = false;
- 			}
- 		}
- 		if (netif_is_lag_master(info->upper_dev)) {
---- a/drivers/net/ethernet/mscc/ocelot.h
-+++ b/drivers/net/ethernet/mscc/ocelot.h
-@@ -66,8 +66,6 @@ struct ocelot_port_private {
- 	struct phy_device *phy;
- 	u8 chip_port;
- 
--	u8 vlan_aware;
--
- 	phy_interface_t phy_mode;
- 	struct phy *serdes;
- 
---- a/include/soc/mscc/ocelot.h
-+++ b/include/soc/mscc/ocelot.h
-@@ -411,6 +411,8 @@ struct ocelot_port {
- 
- 	void __iomem			*regs;
- 
-+	bool				vlan_aware;
-+
- 	/* Ingress default VLAN (pvid) */
- 	u16				pvid;
- 
-@@ -527,7 +529,7 @@ int ocelot_port_bridge_leave(struct ocel
- int ocelot_fdb_dump(struct ocelot *ocelot, int port,
- 		    dsa_fdb_dump_cb_t *cb, void *data);
- int ocelot_fdb_add(struct ocelot *ocelot, int port,
--		   const unsigned char *addr, u16 vid, bool vlan_aware);
-+		   const unsigned char *addr, u16 vid);
- int ocelot_fdb_del(struct ocelot *ocelot, int port,
- 		   const unsigned char *addr, u16 vid);
- int ocelot_vlan_add(struct ocelot *ocelot, int port, u16 vid, bool pvid,
 
 
