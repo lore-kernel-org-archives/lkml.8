@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E322DC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31773C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBE20214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1682078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="jHgtKMai"
+	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="M2rMcKlo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgDTHQ2 (ORCPT
+        id S1726468AbgDTHQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:16:28 -0400
-Received: from mail-eopbgr680105.outbound.protection.outlook.com ([40.107.68.105]:20708
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        Mon, 20 Apr 2020 03:16:31 -0400
+Received: from mail-co1nam11on2138.outbound.protection.outlook.com ([40.107.220.138]:53754
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726151AbgDTHQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:16:24 -0400
+        id S1726161AbgDTHQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 03:16:25 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UaBuw2ak3rNv7v9bAUrwvrLhsz0014+m99ijR/1xTVtTEqfYmG0XqAyva+hSWxcp66RZI2gDGBH2KG0sTiRJwTxObeRothHyg85izPxh49qAlYOHpvYx6kVYIZPI9VUZs7/lR3DCF5FCliM08EgZAvMI8NbpdNSvgicEPLVM/lVezlDTIixUG1BPb8F41QDahTkg+jgHW9mx1bD7yuv31ZYussC4djuQmvvL1SbUKjYzrJUNHPl8pelF4Ge2edXh0eQCeYHyZPrGUbFCZ3lq3BHMz2A3NkfJ9ZdhMhhHReydxJ6spuwaFcKi4UgqLpT+5szQZkWJeaFgFhdOM8uW5g==
+ b=UBAnFg/mCOz+ErpHv2NSOBQWOptEUcUQGn7EOcENIW+lCIarPUF5LrxXfQKEAVD2V9m3Yx8gw+isTHG8tL1BCU1iXXgcXHdBC4X4yp8UzRgbJ6kaJzeTcjnS7YfOs4Tl86XHtxpGJgmIO+GBl85p2wBPg5RBTB6PKNaUb/OlNX1j75JG2fnGIWhRdPcjFrqud7S/TFhj7I+iOBfrgZG4qpuBeY0G+k1EpJF6NWvjHR5FbF0AHB9bsy+JQGyZyFKMBUTavIXq7Emu2srr8avo1wHx1BmcnGQLzX3851kONjaG21RlKhxhvnhm/wdvntVMq6IDrWcvTisu4vafNNBdwQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6dAWobLvVWrE8yxfuLtMfva9SmJ+ZqWnqRTNKx+Qvng=;
- b=FPJR4MQTh4yu+n24iGOoJOwamZnCFxTL96+yQgaYnBHigSy+ZdyLNx1O44UAV0yHe0kpPHTdvAopszfnzv20QEQnd1WGCoMPlFpwFhmc9Sw9eViTb25KheSum1rPWFN2y7Kd4ia+BPKwxC08WFf9juhC2lTD1Cj+pA4MOs5Wt1ytdXr+Pps3M1jIUViA4O78V35kwR3hpcH4990//m8UwTQ/jqd0PPAIWXHeNcAUiaxM+Qa2+6mM+mgobHTZSX4kCdJYk4TYTzm3Zt19xKemcY92HcABJAe33aMhhmLJsd1Y51rVoxG6Z6kYfLiuwLMjaYfPYnmPk/ntRbr+VNEXgg==
+ bh=4yYEsRUYimhigxmNAl7hxApckYLbS26D6tFLpPrG/lo=;
+ b=Zon1sozQeDM3YBIMPfViOe3LN10WhMF3SakUUohxP5ezfqhUL9s3qwkiqqWDJUqmXqk+hEP7hLXqf867h7zEwfruRdaPPlYs7bq01XrpRctEoaXc/G/p31UmGsf3QJg47WDw9adaneWqUi/qA9JsVKAp3cBBglm8EKfogp7Greff4VrCXFS5d+IGhoVXm6qFfrQvRzIZgwff0+gxIIh5smezPhi0t9i9aad1AfMtuGAU0Uc3/4xPEqCV8Zec70X+HhCRT9O+MePimuWd8JBxmdZjX146GyfFBhCbV5bLX47Rmy0uAxZY313a/4L/Lijuom7MFZzX6y97rmAKfntHrw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  204.77.163.244) smtp.rcpttodomain=zeniv.linux.org.uk
  smtp.mailfrom=garmin.com; dmarc=pass (p=quarantine sp=quarantine pct=20)
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garmin.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6dAWobLvVWrE8yxfuLtMfva9SmJ+ZqWnqRTNKx+Qvng=;
- b=jHgtKMair2wI2r01/1ks3F4CAd1GOOAoZVOgmiRWczyN/0EKuQmLE2DX0hmY3wfqKGLzb5qQaf28yhmgyOVxy3M9qudrpDwTdlznRq5TcmRPUGVsJXeGERzREdO2xHDUxMwgWtaUvBT0rzEayjJ07NurmSouSuyRI7v7PxHV+tXsYY57P9EPvZUzABkXEaW5JgVs7ckRtdedkypOUMbKRr4tCZvjs5G2WVNAFSFzni2zMkB6K6KvhyTzmS6+n38CjzIjWk6n+nBGAxTGisS+VqJkVSvW7sqEPNPySCxjnBvMUL0W9NhG6/KulzGaS8hiXh4o7XrEHXUjJBd8eKS4DA==
-Received: from BN6PR06CA0018.namprd06.prod.outlook.com (2603:10b6:404:10b::28)
- by MWHPR04MB1102.namprd04.prod.outlook.com (2603:10b6:301:44::37) with
+ bh=4yYEsRUYimhigxmNAl7hxApckYLbS26D6tFLpPrG/lo=;
+ b=M2rMcKlo4LyEmZNQpHoBi/g0BzY22mToxCtY0yoGAc5rF1HaOWRD1NK9R5pZPSSwHUushgRVWnn5EBHAtEu71forlt5lzGveAPDUoClFPD7FpBGoJiS30/iTJ3OclenMMfwqM5mZ+YIspiso+7Uo09TsWJU4uZ5mcNdwuZJ9xpvt9xeUstKdB7AmF/Wb2MNtnTwKGoyJl/67inseffQoO5E6FGf95vfih38vuqFRB10V3OCS279+X3vpnFMSLsB5xEh0Ai0ddOP8mh6HdliBqLG/7SLtyYZdGF3igJvvwJ0p1K+tBFteujhgE6eR5Jppb58hjdjWxT3Zn5Gx0iPbfA==
+Received: from DM6PR03CA0044.namprd03.prod.outlook.com (2603:10b6:5:100::21)
+ by BN6PR04MB1202.namprd04.prod.outlook.com (2603:10b6:404:92::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Mon, 20 Apr
  2020 07:16:18 +0000
-Received: from BN7NAM10FT049.eop-nam10.prod.protection.outlook.com
- (2603:10b6:404:10b:cafe::5) by BN6PR06CA0018.outlook.office365.com
- (2603:10b6:404:10b::28) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DM6NAM10FT049.eop-nam10.prod.protection.outlook.com
+ (2603:10b6:5:100:cafe::d8) by DM6PR03CA0044.outlook.office365.com
+ (2603:10b6:5:100::21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend
- Transport; Mon, 20 Apr 2020 07:16:17 +0000
+ Transport; Mon, 20 Apr 2020 07:16:18 +0000
 Authentication-Results: spf=pass (sender IP is 204.77.163.244)
  smtp.mailfrom=garmin.com; zeniv.linux.org.uk; dkim=none (message not signed)
  header.d=none;zeniv.linux.org.uk; dmarc=pass action=none
@@ -57,17 +57,17 @@ Received-SPF: Pass (protection.outlook.com: domain of garmin.com designates
  204.77.163.244 as permitted sender) receiver=protection.outlook.com;
  client-ip=204.77.163.244; helo=edgetransport.garmin.com;
 Received: from edgetransport.garmin.com (204.77.163.244) by
- BN7NAM10FT049.mail.protection.outlook.com (10.13.157.3) with Microsoft SMTP
+ DM6NAM10FT049.mail.protection.outlook.com (10.13.153.121) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.2921.25 via Frontend Transport; Mon, 20 Apr 2020 07:16:17 +0000
 Received: from OLAWPA-EXMB7.ad.garmin.com (10.5.144.21) by
- olawpa-edge4.garmin.com (10.60.4.228) with Microsoft SMTP Server
+ olawpa-edge1.garmin.com (10.60.4.227) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1466.3; Mon, 20 Apr 2020 02:16:15 -0500
+ 15.1.1466.3; Mon, 20 Apr 2020 02:16:17 -0500
 Received: from ola-d01c000-vm.ad.garmin.com (10.5.84.15) by
  OLAWPA-EXMB7.ad.garmin.com (10.5.144.21) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Mon, 20 Apr 2020 02:16:15 -0500
+ 15.1.1913.5; Mon, 20 Apr 2020 02:16:16 -0500
 From:   Nate Karstens <nate.karstens@garmin.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Jeff Layton <jlayton@kernel.org>,
@@ -86,9 +86,9 @@ To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         <linux-kernel@vger.kernel.org>
 CC:     Changli Gao <xiaosuo@gmail.com>,
         Nate Karstens <nate.karstens@garmin.com>
-Subject: [PATCH 1/4] fs: Implement close-on-fork
-Date:   Mon, 20 Apr 2020 02:15:45 -0500
-Message-ID: <20200420071548.62112-2-nate.karstens@garmin.com>
+Subject: [PATCH 4/4] net: Add SOCK_CLOFORK
+Date:   Mon, 20 Apr 2020 02:15:48 -0500
+Message-ID: <20200420071548.62112-5-nate.karstens@garmin.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420071548.62112-1-nate.karstens@garmin.com>
 References: <20200420071548.62112-1-nate.karstens@garmin.com>
@@ -98,282 +98,130 @@ Content-Type: text/plain
 X-ClientProxiedBy: OLAWPA-EXMB3.ad.garmin.com (10.5.144.15) To
  OLAWPA-EXMB7.ad.garmin.com (10.5.144.21)
 X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1020-25366.005
-X-TM-AS-Result: No-8.450200-8.000000-10
-X-TMASE-MatchedRID: BPEQoO09kToY5XJhZJs6SDCMW7zNwFaIGiQ8GIEGP38y2ckJNvUX+HzK
-        3Q9zSFL7ATYOMR69+dqRXQsE2URVLPpC5SMG+P7XB8FxO/BQHsIacZilk37ECL95OdmJ178B3A8
-        rIQHSOzD6Pp/0inv5dXDlPghqPnfyYlldA0POS1IaPMGCcVm9DgKflB9+9kWVlaO5BvPDtzcxAn
-        K2eeQXhhfb/g6/AVAtMRc8tpsXpWvHLcRe7wyoEIlSWYvdSPSY4F58RPNYsrEHAe47mcoCCclQV
-        vH1JO6TNcFOGcoM9ErGBkuRwWcFOGi8YU2giSiPutvHF25zoU8r9gVlOIN/6mcBMv0Fvtzl0dsY
-        UxvcQZcuI35yUPSOFqkquW+P/OwXo8WMkQWv6iXBcIE78YqRWvcUt5lc1lLgoGRyAacnhaaAxBo
-        6LHbCgebkD1AsfOCTGhoVV6XcNT7hO5URK+drpH7cGd19dSFd
+X-TM-AS-Result: No-5.988100-8.000000-10
+X-TMASE-MatchedRID: 3IdSvgGCM2OSsyjfsjrH/tKhw1CGAxrILoFHmcx3krwAIXlMppp3Xw5a
+        yixA3COc1+Otxunw83huL3ESIrARlyHhSBQfglfsA9lly13c/gHaKQ0GLhRPDxh58BVvx3LmF5J
+        Ui8H1I3XP8poBdrWc73VybJRFpSevgRZdz333xpBJUdgxNDUXWmf6wD367VgtDs0BGU1luwj6p1
+        jlhLAJAsAhMlHsyVwnkA7KM/+6n4wylv9EjaWo1Q97mDMXdNW364sVlliWKx8fE8yM4pjsDwtuK
+        BGekqUpOlxBO2IcOBbnd1hvM4M+M/Oj3yVarJf2NRETSGY0whj9UjqKN8S2I8jQVQJrd8Qi
 X-TM-AS-User-Approved-Sender: No
 X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--8.450200-8.000000
+X-TMASE-Result: 10--5.988100-8.000000
 X-TMASE-Version: SMEX-12.5.0.1300-8.5.1020-25366.005
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:204.77.163.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:edgetransport.garmin.com;PTR:extedge.garmin.com;CAT:NONE;SFTY:;SFS:(10019020)(396003)(39860400002)(346002)(136003)(376002)(46966005)(110136005)(246002)(8676002)(7696005)(186003)(54906003)(70586007)(44832011)(36756003)(2616005)(70206006)(8936002)(5660300002)(107886003)(26005)(2906002)(86362001)(356005)(7416002)(6666004)(47076004)(82740400003)(7636003)(336012)(426003)(1076003)(316002)(4326008)(478600001)(921003);DIR:OUT;SFP:1102;
+X-Forefront-Antispam-Report: CIP:204.77.163.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:edgetransport.garmin.com;PTR:extedge.garmin.com;CAT:NONE;SFTY:;SFS:(10019020)(396003)(376002)(136003)(346002)(39860400002)(46966005)(478600001)(8936002)(70206006)(8676002)(70586007)(7636003)(107886003)(82740400003)(7416002)(4326008)(6666004)(316002)(7696005)(86362001)(26005)(110136005)(2906002)(44832011)(356005)(336012)(47076004)(5660300002)(1076003)(426003)(246002)(186003)(54906003)(36756003)(2616005)(921003);DIR:OUT;SFP:1102;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e6563c99-e5b1-49fc-6a0b-08d7e4fab7cc
-X-MS-TrafficTypeDiagnostic: MWHPR04MB1102:
-X-Microsoft-Antispam-PRVS: <MWHPR04MB11026E7775EF9345F78969939CD40@MWHPR04MB1102.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-MS-Office365-Filtering-Correlation-Id: 9ab779eb-5e35-43ed-9d80-08d7e4fab828
+X-MS-TrafficTypeDiagnostic: BN6PR04MB1202:
+X-Microsoft-Antispam-PRVS: <BN6PR04MB12023E2A07EE7DB67768D0F19CD40@BN6PR04MB1202.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
 X-Forefront-PRVS: 03793408BA
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: a9cmivBsdETlNUdnyu40HEPW/ndezmSP0HeTdSRoCicfy4opYVORQq3X2z1Y97aD64c/lCl/sFQDIqXUfWmUSUAZbMSSrIbGa1kbgZcMZg+sNM3ghYkSJv9mZHZFZJ52D1NugxvyPQ8TocABi6leyQHhrCRBV2qhzMVXLL/R/PPZMMargyGafiRu4iyNPdnkM6K+MWW+sPzs8vEpeWfvFQYt+mFPP6R6aQtALgjPIyZPZyeduHBIBCoRv0s2UHR4toXpNjx2qPXP79H/IQ492kmIsQblhHC9O+luS+zHIMPSDHwWRTIu/vgCUajsrXZbjWFDCABxHzwT+RS2zORkt3WWXbenUEkU1mc44z4i5wORwKpkomJIPy9GexahHfqQUOhT/ro9YHg7/XOD2Q/P00nMRha2Oy1jOTTCECuXXC5kAgHkqtd3pOHkt9YfYFJ2N2hnQpNOSR+i1zIDTUxnG5DPhQyiA/jen/uGnCWSumwSMY65ujShgmLe8zqI0sX0kb/cT8QUbfHX8WtK6Q427YCxCL08paxh7qOP92cG8sc=
+X-Microsoft-Antispam-Message-Info: 0CcKh8Qf3FddEbi5nhFMe1VjNNcgSCdxvxgYKQ0r8QLp6udo80abRk9RAM73VPsVotqQ5hMJQ+Y9jQnYZv93duqDQj4t4HAhGnhwdZKZbrwulBDWqLHm4oFlodAX1DxEYVDFsfmRkT7zTVdzv//mDk7HYKvDA2zc5YtyrVAcxYtmkCj4V83xUnmzcp8k3Zou/Chtri2EbJ37H+3Xy3xR3Ow1l25NxHf5HLZtHFySl51u6naoWhPFm0NmTIdDlJHThvHNdqP1zhWTOaQFv4WuxRTyuaeGZrdqK0V0o3Bp2UqxKH2Yj01ylctsK+nXszGvzi8ftQnEuHrbpqgtr5ady6lYsiKe+yXOGk37Rj8xRqD3njbWF8YlfoEiupOIcNr//YR8TJhfwX8diaZ1Zrz8DFgGmvIgrX9Et/Lz/Jq1QdlIMWGUYDasnW4I4rjLSCY10yLXXL6qhHrB4BMMoUUIY1JWu/Gq46QK2Zj+aOE75r8rseRvCy4qc2sZ5z+T6duX872YkGq8ceuSUXC7KeM9HQ==
 X-OriginatorOrg: garmin.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 07:16:17.1749
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 07:16:17.7851
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6563c99-e5b1-49fc-6a0b-08d7e4fab7cc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ab779eb-5e35-43ed-9d80-08d7e4fab828
 X-MS-Exchange-CrossTenant-Id: 38d0d425-ba52-4c0a-a03e-2a65c8e82e2d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38d0d425-ba52-4c0a-a03e-2a65c8e82e2d;Ip=[204.77.163.244];Helo=[edgetransport.garmin.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR04MB1102
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR04MB1202
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The close-on-fork flag causes the file descriptor to be closed
-atomically in the child process before the child process returns
-from fork(). Implement this feature and provide a method to
-get/set the close-on-fork flag using fcntl(2).
+Implements a new socket flag that automatically sets the
+close-on-fork flag for sockets created using socket(2),
+socketpair(2), and accept4(2).
 
-This functionality was approved by the Austin Common Standards
-Revision Group for inclusion in the next revision of the POSIX
-standard (see issue 1318 in the Austin Group Defect Tracker).
-
-Co-developed-by: Changli Gao <xiaosuo@gmail.com>
-Signed-off-by: Changli Gao <xiaosuo@gmail.com>
 Signed-off-by: Nate Karstens <nate.karstens@garmin.com>
 ---
- fs/fcntl.c                             |  2 ++
- fs/file.c                              | 50 +++++++++++++++++++++++++-
- include/linux/fdtable.h                |  7 ++++
- include/linux/file.h                   |  2 ++
- include/uapi/asm-generic/fcntl.h       |  5 +--
- tools/include/uapi/asm-generic/fcntl.h |  5 +--
- 6 files changed, 66 insertions(+), 5 deletions(-)
+ include/linux/net.h |  3 ++-
+ net/socket.c        | 14 ++++++++------
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 2e4c0fa2074b..23964abf4a1a 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -335,10 +335,12 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
- 		break;
- 	case F_GETFD:
- 		err = get_close_on_exec(fd) ? FD_CLOEXEC : 0;
-+		err |= get_close_on_fork(fd) ? FD_CLOFORK : 0;
- 		break;
- 	case F_SETFD:
- 		err = 0;
- 		set_close_on_exec(fd, arg & FD_CLOEXEC);
-+		set_close_on_fork(fd, arg & FD_CLOFORK);
- 		break;
- 	case F_GETFL:
- 		err = filp->f_flags;
-diff --git a/fs/file.c b/fs/file.c
-index c8a4e4c86e55..de7260ba718d 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -57,6 +57,8 @@ static void copy_fd_bitmaps(struct fdtable *nfdt, struct fdtable *ofdt,
- 	memset((char *)nfdt->open_fds + cpy, 0, set);
- 	memcpy(nfdt->close_on_exec, ofdt->close_on_exec, cpy);
- 	memset((char *)nfdt->close_on_exec + cpy, 0, set);
-+	memcpy(nfdt->close_on_fork, ofdt->close_on_fork, cpy);
-+	memset((char *)nfdt->close_on_fork + cpy, 0, set);
+diff --git a/include/linux/net.h b/include/linux/net.h
+index 6451425e828f..57663c9dc8c4 100644
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -17,7 +17,7 @@
+ #include <linux/stringify.h>
+ #include <linux/random.h>
+ #include <linux/wait.h>
+-#include <linux/fcntl.h>	/* For O_CLOEXEC and O_NONBLOCK */
++#include <linux/fcntl.h>	/* For O_CLOEXEC, O_CLOFORK, and O_NONBLOCK */
+ #include <linux/rcupdate.h>
+ #include <linux/once.h>
+ #include <linux/fs.h>
+@@ -73,6 +73,7 @@ enum sock_type {
  
- 	cpy = BITBIT_SIZE(count);
- 	set = BITBIT_SIZE(nfdt->max_fds) - cpy;
-@@ -118,7 +120,7 @@ static struct fdtable * alloc_fdtable(unsigned int nr)
- 	fdt->fd = data;
- 
- 	data = kvmalloc(max_t(size_t,
--				 2 * nr / BITS_PER_BYTE + BITBIT_SIZE(nr), L1_CACHE_BYTES),
-+				 3 * nr / BITS_PER_BYTE + BITBIT_SIZE(nr), L1_CACHE_BYTES),
- 				 GFP_KERNEL_ACCOUNT);
- 	if (!data)
- 		goto out_arr;
-@@ -126,6 +128,8 @@ static struct fdtable * alloc_fdtable(unsigned int nr)
- 	data += nr / BITS_PER_BYTE;
- 	fdt->close_on_exec = data;
- 	data += nr / BITS_PER_BYTE;
-+	fdt->close_on_fork = data;
-+	data += nr / BITS_PER_BYTE;
- 	fdt->full_fds_bits = data;
- 
- 	return fdt;
-@@ -236,6 +240,17 @@ static inline void __clear_close_on_exec(unsigned int fd, struct fdtable *fdt)
- 		__clear_bit(fd, fdt->close_on_exec);
- }
- 
-+static inline void __set_close_on_fork(unsigned int fd, struct fdtable *fdt)
-+{
-+	__set_bit(fd, fdt->close_on_fork);
-+}
-+
-+static inline void __clear_close_on_fork(unsigned int fd, struct fdtable *fdt)
-+{
-+	if (test_bit(fd, fdt->close_on_fork))
-+		__clear_bit(fd, fdt->close_on_fork);
-+}
-+
- static inline void __set_open_fd(unsigned int fd, struct fdtable *fdt)
- {
- 	__set_bit(fd, fdt->open_fds);
-@@ -290,6 +305,7 @@ struct files_struct *dup_fd(struct files_struct *oldf, int *errorp)
- 	new_fdt = &newf->fdtab;
- 	new_fdt->max_fds = NR_OPEN_DEFAULT;
- 	new_fdt->close_on_exec = newf->close_on_exec_init;
-+	new_fdt->close_on_fork = newf->close_on_fork_init;
- 	new_fdt->open_fds = newf->open_fds_init;
- 	new_fdt->full_fds_bits = newf->full_fds_bits_init;
- 	new_fdt->fd = &newf->fd_array[0];
-@@ -337,6 +353,12 @@ struct files_struct *dup_fd(struct files_struct *oldf, int *errorp)
- 
- 	for (i = open_files; i != 0; i--) {
- 		struct file *f = *old_fds++;
-+
-+		if (test_bit(open_files - i, new_fdt->close_on_fork)) {
-+			__clear_bit(open_files - i, new_fdt->open_fds);
-+			f = NULL;
-+		}
-+
- 		if (f) {
- 			get_file(f);
- 		} else {
-@@ -453,6 +475,7 @@ struct files_struct init_files = {
- 		.max_fds	= NR_OPEN_DEFAULT,
- 		.fd		= &init_files.fd_array[0],
- 		.close_on_exec	= init_files.close_on_exec_init,
-+		.close_on_fork	= init_files.close_on_fork_init,
- 		.open_fds	= init_files.open_fds_init,
- 		.full_fds_bits	= init_files.full_fds_bits_init,
- 	},
-@@ -865,6 +888,31 @@ bool get_close_on_exec(unsigned int fd)
- 	return res;
- }
- 
-+void set_close_on_fork(unsigned int fd, int flag)
-+{
-+	struct files_struct *files = current->files;
-+	struct fdtable *fdt;
-+	spin_lock(&files->file_lock);
-+	fdt = files_fdtable(files);
-+	if (flag)
-+		__set_close_on_fork(fd, fdt);
-+	else
-+		__clear_close_on_fork(fd, fdt);
-+	spin_unlock(&files->file_lock);
-+}
-+
-+bool get_close_on_fork(unsigned int fd)
-+{
-+	struct files_struct *files = current->files;
-+	struct fdtable *fdt;
-+	bool res;
-+	rcu_read_lock();
-+	fdt = files_fdtable(files);
-+	res = close_on_fork(fd, fdt);
-+	rcu_read_unlock();
-+	return res;
-+}
-+
- static int do_dup2(struct files_struct *files,
- 	struct file *file, unsigned fd, unsigned flags)
- __releases(&files->file_lock)
-diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
-index f07c55ea0c22..61c551947fa3 100644
---- a/include/linux/fdtable.h
-+++ b/include/linux/fdtable.h
-@@ -27,6 +27,7 @@ struct fdtable {
- 	unsigned int max_fds;
- 	struct file __rcu **fd;      /* current fd array */
- 	unsigned long *close_on_exec;
-+	unsigned long *close_on_fork;
- 	unsigned long *open_fds;
- 	unsigned long *full_fds_bits;
- 	struct rcu_head rcu;
-@@ -37,6 +38,11 @@ static inline bool close_on_exec(unsigned int fd, const struct fdtable *fdt)
- 	return test_bit(fd, fdt->close_on_exec);
- }
- 
-+static inline bool close_on_fork(unsigned int fd, const struct fdtable *fdt)
-+{
-+	return test_bit(fd, fdt->close_on_fork);
-+}
-+
- static inline bool fd_is_open(unsigned int fd, const struct fdtable *fdt)
- {
- 	return test_bit(fd, fdt->open_fds);
-@@ -61,6 +67,7 @@ struct files_struct {
- 	spinlock_t file_lock ____cacheline_aligned_in_smp;
- 	unsigned int next_fd;
- 	unsigned long close_on_exec_init[1];
-+	unsigned long close_on_fork_init[1];
- 	unsigned long open_fds_init[1];
- 	unsigned long full_fds_bits_init[1];
- 	struct file __rcu * fd_array[NR_OPEN_DEFAULT];
-diff --git a/include/linux/file.h b/include/linux/file.h
-index 142d102f285e..86fbb36b438b 100644
---- a/include/linux/file.h
-+++ b/include/linux/file.h
-@@ -85,6 +85,8 @@ extern int f_dupfd(unsigned int from, struct file *file, unsigned flags);
- extern int replace_fd(unsigned fd, struct file *file, unsigned flags);
- extern void set_close_on_exec(unsigned int fd, int flag);
- extern bool get_close_on_exec(unsigned int fd);
-+extern void set_close_on_fork(unsigned int fd, int flag);
-+extern bool get_close_on_fork(unsigned int fd);
- extern int __get_unused_fd_flags(unsigned flags, unsigned long nofile);
- extern int get_unused_fd_flags(unsigned flags);
- extern void put_unused_fd(unsigned int fd);
-diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-index 9dc0bf0c5a6e..0cb7199a7743 100644
---- a/include/uapi/asm-generic/fcntl.h
-+++ b/include/uapi/asm-generic/fcntl.h
-@@ -98,8 +98,8 @@
+ /* Flags for socket, socketpair, accept4 */
+ #define SOCK_CLOEXEC	O_CLOEXEC
++#define SOCK_CLOFORK	O_CLOFORK
+ #ifndef SOCK_NONBLOCK
+ #define SOCK_NONBLOCK	O_NONBLOCK
  #endif
+diff --git a/net/socket.c b/net/socket.c
+index 2eecf1517f76..ba6e971c7e78 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -1511,12 +1511,14 @@ int __sys_socket(int family, int type, int protocol)
  
- #define F_DUPFD		0	/* dup */
--#define F_GETFD		1	/* get close_on_exec */
--#define F_SETFD		2	/* set/clear close_on_exec */
-+#define F_GETFD		1	/* get close_on_exec & close_on_fork */
-+#define F_SETFD		2	/* set/clear close_on_exec & close_on_fork */
- #define F_GETFL		3	/* get file->f_flags */
- #define F_SETFL		4	/* set file->f_flags */
- #ifndef F_GETLK
-@@ -160,6 +160,7 @@ struct f_owner_ex {
+ 	/* Check the SOCK_* constants for consistency.  */
+ 	BUILD_BUG_ON(SOCK_CLOEXEC != O_CLOEXEC);
++	BUILD_BUG_ON(SOCK_CLOFORK != O_CLOFORK);
+ 	BUILD_BUG_ON((SOCK_MAX | SOCK_TYPE_MASK) != SOCK_TYPE_MASK);
+ 	BUILD_BUG_ON(SOCK_CLOEXEC & SOCK_TYPE_MASK);
++	BUILD_BUG_ON(SOCK_CLOFORK & SOCK_TYPE_MASK);
+ 	BUILD_BUG_ON(SOCK_NONBLOCK & SOCK_TYPE_MASK);
  
- /* for F_[GET|SET]FL */
- #define FD_CLOEXEC	1	/* actually anything with low bit set goes */
-+#define FD_CLOFORK	2
+ 	flags = type & ~SOCK_TYPE_MASK;
+-	if (flags & ~(SOCK_CLOEXEC | SOCK_NONBLOCK))
++	if (flags & ~(SOCK_CLOEXEC | SOCK_CLOFORK | SOCK_NONBLOCK))
+ 		return -EINVAL;
+ 	type &= SOCK_TYPE_MASK;
  
- /* for posix fcntl() and lockf() */
- #ifndef F_RDLCK
-diff --git a/tools/include/uapi/asm-generic/fcntl.h b/tools/include/uapi/asm-generic/fcntl.h
-index ac190958c981..e04a00fecb4a 100644
---- a/tools/include/uapi/asm-generic/fcntl.h
-+++ b/tools/include/uapi/asm-generic/fcntl.h
-@@ -97,8 +97,8 @@
- #endif
+@@ -1527,7 +1529,7 @@ int __sys_socket(int family, int type, int protocol)
+ 	if (retval < 0)
+ 		return retval;
  
- #define F_DUPFD		0	/* dup */
--#define F_GETFD		1	/* get close_on_exec */
--#define F_SETFD		2	/* set/clear close_on_exec */
-+#define F_GETFD		1	/* get close_on_exec & close_on_fork */
-+#define F_SETFD		2	/* set/clear close_on_exec & close_on_fork */
- #define F_GETFL		3	/* get file->f_flags */
- #define F_SETFL		4	/* set file->f_flags */
- #ifndef F_GETLK
-@@ -159,6 +159,7 @@ struct f_owner_ex {
+-	return sock_map_fd(sock, flags & (O_CLOEXEC | O_NONBLOCK));
++	return sock_map_fd(sock, flags & (O_CLOEXEC | O_CLOFORK | O_NONBLOCK));
+ }
  
- /* for F_[GET|SET]FL */
- #define FD_CLOEXEC	1	/* actually anything with low bit set goes */
-+#define FD_CLOFORK	2
+ SYSCALL_DEFINE3(socket, int, family, int, type, int, protocol)
+@@ -1547,7 +1549,7 @@ int __sys_socketpair(int family, int type, int protocol, int __user *usockvec)
+ 	int flags;
  
- /* for posix fcntl() and lockf() */
- #ifndef F_RDLCK
+ 	flags = type & ~SOCK_TYPE_MASK;
+-	if (flags & ~(SOCK_CLOEXEC | SOCK_NONBLOCK))
++	if (flags & ~(SOCK_CLOEXEC | SOCK_CLOFORK | SOCK_NONBLOCK))
+ 		return -EINVAL;
+ 	type &= SOCK_TYPE_MASK;
+ 
+@@ -1715,7 +1717,7 @@ int __sys_accept4_file(struct file *file, unsigned file_flags,
+ 	int err, len, newfd;
+ 	struct sockaddr_storage address;
+ 
+-	if (flags & ~(SOCK_CLOEXEC | SOCK_NONBLOCK))
++	if (flags & ~(SOCK_CLOEXEC | SOCK_CLOFORK | SOCK_NONBLOCK))
+ 		return -EINVAL;
+ 
+ 	if (SOCK_NONBLOCK != O_NONBLOCK && (flags & SOCK_NONBLOCK))
+@@ -3628,8 +3630,8 @@ EXPORT_SYMBOL(kernel_listen);
+  *	@newsock: new connected socket
+  *	@flags: flags
+  *
+- *	@flags must be SOCK_CLOEXEC, SOCK_NONBLOCK or 0.
+- *	If it fails, @newsock is guaranteed to be %NULL.
++ *	@flags must be SOCK_CLOEXEC, SOCK_CLOFORK, SOCK_NONBLOCK,
++ *	or 0. If it fails, @newsock is guaranteed to be %NULL.
+  *	Returns 0 or an error.
+  */
+ 
 -- 
 2.26.1
 
