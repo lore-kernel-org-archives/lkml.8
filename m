@@ -2,87 +2,139 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 213A4C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7140DC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E1A21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587400455;
-	bh=hXdqdvStMdt0tN5I2czOifevXXjFsXK/cpNbPz7EVHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M5lq0Z7qe4jyE1Yu2SiDiYiA1kiZfhTz1w0DnzWQlqwuN3aP05CqMA6Ur5v2bQYEP
-	 2V0GrchdusSLyAP7fmv1cRucjRDlSbKMVdrVWNKcjq7xeCZD2hXp5sbcMEkKfHVRwj
-	 sZPE98/4Nn/0KcGAyG/Wbu/Gp1tes7kk2l+Fw9r0=
+	by mail.kernel.org (Postfix) with ESMTP id 2CACA206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgDTQeO (ORCPT
+        id S1726530AbgDTQfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:34:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725287AbgDTQeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:34:13 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2E2A20775;
-        Mon, 20 Apr 2020 16:34:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587400453;
-        bh=hXdqdvStMdt0tN5I2czOifevXXjFsXK/cpNbPz7EVHw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0D8LAaLFzEt8AA3I7m6syrw55ULBFted7FhihglL6mxivC0E6Y5omZQfiE02trxNb
-         KZ2CU/KKWdsasYMmjJrHS+Co2gp9EIhPNVRkoHt9Lj4PPLsM6x+oDPGwCVq3SvEPp5
-         yuXpncSXdm8rPrPhDSFSv06SbCTPExMnOsdsq3b8=
-Date:   Mon, 20 Apr 2020 18:34:10 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Li RongQing <lirongqing@baidu.com>
-Cc:     peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
-        srikar@linux.vnet.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/isolation: allow isolcpus and nohz_full for
- different cpus
-Message-ID: <20200420163409.GB10024@lenoir>
-References: <1587027078-16239-1-git-send-email-lirongqing@baidu.com>
+        Mon, 20 Apr 2020 12:35:17 -0400
+Received: from smtprelay0171.hostedemail.com ([216.40.44.171]:38196 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725287AbgDTQfR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 12:35:17 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id C26278384364;
+        Mon, 20 Apr 2020 16:35:15 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: lock50_4abfde65a5055
+X-Filterd-Recvd-Size: 4328
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 20 Apr 2020 16:35:13 +0000 (UTC)
+Message-ID: <7d6019da19d52c851d884731b1f16328fdbe2e3d.camel@perches.com>
+Subject: Re: [RFC PATCH bpf-next 0/6] bpf, printk: add BTF-based type
+ printing
+From:   Joe Perches <joe@perches.com>
+To:     Alan Maguire <alan.maguire@oracle.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
+        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Date:   Mon, 20 Apr 2020 09:32:57 -0700
+In-Reply-To: <alpine.LRH.2.21.2004201623390.12711@localhost>
+References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
+         <20200418160536.4mrvqh2lasqbyk77@ast-mbp>
+         <alpine.LRH.2.21.2004201623390.12711@localhost>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587027078-16239-1-git-send-email-lirongqing@baidu.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 04:51:18PM +0800, Li RongQing wrote:
-> when both isolcpus and nohz_full are set, their cpus must be
-> same now, in fact isolcpus and nohz_full are not related, and
-> different cpus are expected for some cases, for example, some
-> cores for polling threads wants to isolcpus, and some cores for
-> dedicated threads, only nohz_full is expected
+On Mon, 2020-04-20 at 16:29 +0100, Alan Maguire wrote:
+> On Sat, 18 Apr 2020, Alexei Starovoitov wrote:
 > 
-> so define two housekeeping mask to save these two configuration
-> separately and make cpus same only when both nohz_full and
-> isolcpus with nohz are passed into kernel
+> > On Fri, Apr 17, 2020 at 11:42:34AM +0100, Alan Maguire wrote:
+> > > The printk family of functions support printing specific pointer types
+> > > using %p format specifiers (MAC addresses, IP addresses, etc).  For
+> > > full details see Documentation/core-api/printk-formats.rst.
+> > > 
+> > > This RFC patchset proposes introducing a "print typed pointer" format
+> > > specifier "%pT<type>"; the type specified is then looked up in the BPF
+> > > Type Format (BTF) information provided for vmlinux to support display.
+> > 
+> > This is great idea! Love it.
+> > 
 > 
-> fix a build error when CONFIG_CPUMASK_OFFSTACK is not configured
-> reported by kbuild test robot <lkp@intel.com>
+> Thanks for taking a look!
+>  
+> > > The above potential use cases hint at a potential reply to
+> > > a reasonable objection that such typed display should be
+> > > solved by tracing programs, where the in kernel tracing records
+> > > data and the userspace program prints it out.  While this
+> > > is certainly the recommended approach for most cases, I
+> > > believe having an in-kernel mechanism would be valuable
+> > > also.
+> > 
+> > yep. This is useful for general purpose printk.
+> > The only piece that must be highlighted in the printk documentation
+> > that unlike the rest of BPF there are zero safety guarantees here.
+> > The programmer can pass wrong pointer to printk() and the kernel _will_ crash.
+> > 
+> 
+> Good point; I'll highlight the fact that we aren't
+> executing in BPF context, no verifier etc.
+> 
+> > >   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+> > > 
+> > >   pr_info("%pTN<struct sk_buff>", skb);
+> > 
+> > why follow "TN" convention?
+> > I think "%p<struct sk_buff>" is much more obvious, unambiguous, and
+> > equally easy to parse.
+> > 
+> 
+> That was my first choice, but the first character
+> after the 'p' in the '%p' specifier signifies the
+> pointer format specifier. If we use '<', and have
+> '%p<', where do we put the modifiers? '%p<xYz struct foo>'
+> seems clunky to me.
 
-What is the usecase when you want to affine managed interrupt?
-Do you only want to affine IRQ or do you also want to affine
-every unbound work, such as kthread, workqueues, timers, etc...?
+While I don't really like the %p<struct type> block,
+it's at least obvious what's being attempted.
 
-In the end I would like to group the isolation features that only
-make sense together. So we could end up with three cpumasks, one
-for "domains", one for "nohz" and one for all "unbound" works.
+Modifiers could easily go after the <struct type> block.
 
-In fact "domains" should even disappear and become "unbound" +
-"load_balance", as that's the desired outcome of having NULL domains.
+It appears a %p<struct type> output might be a lot of
+total characters so another potential issue might be
+the maximum length of each individual printk.
 
-I'm trying to prepare a suitable interface for all that in cpusets
-where we already have the load_balance part.
+> > I like the choice of C style output, but please format it similar to drgn. Like:
+> > *(struct task_struct *)0xffff889ff8a08000 = {
+> > 	.thread_info = (struct thread_info){
+> > 		.flags = (unsigned long)0,
+> > 		.status = (u32)0,
+> > 	},
+> > 	.state = (volatile long)1,
+> > 	.stack = (void *)0xffffc9000c4dc000,
+> > 	.usage = (refcount_t){
+> > 		.refs = (atomic_t){
+> > 			.counter = (int)2,
+> > 		},
+> > 	},
+> > 	.flags = (unsigned int)4194560,
+> > 	.ptrace = (unsigned int)0,
 
-Thanks.
+And here, the issue might be duplicating the log level
+for each line of output and/or prefixing each line with
+whatever struct type is being dumped as interleaving
+with other concurrent logging is possible.
+
+Here as well the individual field types don't contain
+enough information to determine if a field should be
+output as %x or %u.
+
+
