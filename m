@@ -2,159 +2,145 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4472C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E8EC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B24AE20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4333B221F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:36:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="sNGjbZ0q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPlNud7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgDTJfE (ORCPT
+        id S1726208AbgDTJgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:35:04 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54974 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725773AbgDTJfD (ORCPT
+        Mon, 20 Apr 2020 05:36:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725773AbgDTJgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:35:03 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K9Xodh030718;
-        Mon, 20 Apr 2020 11:34:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=a05mT9cvrGwq02jpMc/AFPdAz6oDSD/XlNg9F8frg1U=;
- b=sNGjbZ0q5b1ryKnFWcYEDuUXzdzoocENayMtfTKmenh5r13POZB1Uh+vuHfHCCaT5hyY
- 31INmIl6kwo1UibKvqE0EJ3hkLDaQDE9oVKwkLpH7TOuR2vM5AGctAwGbnBvmui1ByDb
- x2sVmN/aBciCpI5m+ts/dSN7jFwx5dpf03DL287gUJNmrh/nxg4hXM4MbTfoeuGlaAQq
- 9vnbqF+JCsl2uX+uJjI7D/YPsNEde9SVgOpHgWphHJKpENrYqBw5SVYI/n/9oIKrrHpX
- dnJxlcLQeRBfjZQVysYvFknk8gxgsl25niIPIwhREAQzceAjB5fXEAtH590Jfc6TaKb/ mA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fq119ggr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 11:34:47 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 26CBA10003A;
-        Mon, 20 Apr 2020 11:34:46 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 034CE2C0BE8;
-        Mon, 20 Apr 2020 11:34:46 +0200 (CEST)
-Received: from [10.211.6.74] (10.75.127.44) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Apr
- 2020 11:34:44 +0200
-Subject: Re: [RESEND v6 1/6] dt-bindings: mfd: Document STM32 low power timer
- bindings
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200420085930.26989-1-benjamin.gaignard@st.com>
- <20200420085930.26989-2-benjamin.gaignard@st.com>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <f9d41617-797e-15d4-a058-a0a9e6669cdc@st.com>
-Date:   Mon, 20 Apr 2020 11:34:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 20 Apr 2020 05:36:14 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E3D9C061A0C;
+        Mon, 20 Apr 2020 02:36:13 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id t3so9836579qkg.1;
+        Mon, 20 Apr 2020 02:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/3syDFruM55e7HQozZGMW1Rq8pizNFPEYU3zJts7jcc=;
+        b=jPlNud7IcyvvcC4FDfDaaF2GJOXTaOY9mACZEfQBSkhKxw2DZCnYqHSpqTGEPfimor
+         PjSWJpwWjdewLz98XZ/UZIfk/d/51vUoWdhqLHmdQfBUjLAy81WKoFUNUJmySNGtwnlm
+         /szq8VzdM6ihajM4VLZ10Bg/ouBqD2rD8P4Y6y+FZ2146MEIhyGRVtdtNbPi8sOrMuzy
+         Le86yrjIg4cAZVEsIU28yajgXDgKtthrapoK9jK7m7mTolLO94iLRVJ/lgXUtEr2NKb7
+         3USDC1P8FxQUb3Y2Lk5csj4rO7UlziADVkkITlHvfjUtzVnxO6u4ONGsIzgo0HLOy/X+
+         pugA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/3syDFruM55e7HQozZGMW1Rq8pizNFPEYU3zJts7jcc=;
+        b=Y2Gs9P7DeYpRy7Yi6nV9eWowL5vfE5QR+fBn+tEyPpo3A+FshZJfIjJ+stVpVlqQAa
+         TMl918CfUqSNtdhwr5yhtH2if6SZYPLvwbo6foPa5LE3k2B6VVkVcJ12I0XWObiT4pie
+         h7jh30gOUdJVvHxjYPfPQL9qVkNvKO5n1fTSmuaOP8e1JMHTPj2hPeInouTSVZg9hr4I
+         PO77izWKyoXFkssMzA8sacGMa2QWoYrqKhqtymxmpVa9RLIeb3RS+TNIepBZxQJhnQvw
+         7jwz6RzV40K0dDH2NiaXT95BTTxxsrs1Dj1xOSo8S6Hg0GBrLnVADBsTD/9BOxaARFZg
+         ytHg==
+X-Gm-Message-State: AGi0PuZI47uCtBGUdGDflaFj8AMrtHrJ1HlgOLrtl3AX8F6SxjVdjSqV
+        zJ73zA0XSyZw8Bzhk7TGDQjYLXdA17DVuOw+mF8=
+X-Google-Smtp-Source: APiQypLw+gOLHPIU20qEHGA+Tzz3uLgk+8kc5CB4I2cZCht+4GtvYnE+IUKaHLhktJS/u/ZqgBaQaC1xS3anJ+HAJLw=
+X-Received: by 2002:a37:6f41:: with SMTP id k62mr14432765qkc.239.1587375372653;
+ Mon, 20 Apr 2020 02:36:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200420085930.26989-2-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_03:2020-04-17,2020-04-20 signatures=0
+References: <20200413070014.12960-1-zhang.lyra@gmail.com> <20200413070014.12960-2-zhang.lyra@gmail.com>
+In-Reply-To: <20200413070014.12960-2-zhang.lyra@gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Mon, 20 Apr 2020 17:36:01 +0800
+Message-ID: <CABOV4+XaTMd=A5_5eTtGG=S3DvgBCTxrqV4aXnp55pTsdbO4NA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 1/2] cpuidle: allow idle state to be found as
+ deepest state for s2idle only
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/20/20 10:59 AM, Benjamin Gaignard wrote:
-> Add a subnode to STM low power timer bindings to support timer driver
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/mfd/st,stm32-lptimer.yaml     | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
-> index ddf190cb800b..64bab1c3bdac 100644
-> --- a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
-> @@ -33,6 +33,9 @@ properties:
->      items:
->        - const: mux
->  
-> +  interrupts:
-> +    maxItems: 1
-> +
->    "#address-cells":
->      const: 1
->  
-> @@ -93,6 +96,16 @@ patternProperties:
->      required:
->        - compatible
->  
-> +  timer:
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        const: st,stm32-lptimer-timer
-> +
-> +    required:
-> +      - compatible
-> +
->  required:
->    - "#address-cells"
->    - "#size-cells"
-> @@ -106,11 +119,13 @@ additionalProperties: false
->  examples:
->    - |
->      #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->      timer@40002400 {
->        compatible = "st,stm32-lptimer";
->        reg = <0x40002400 0x400>;
->        clocks = <&timer_clk>;
->        clock-names = "mux";
-> +      interrupts-extended = <&exti 47 IRQ_TYPE_LEVEL_HIGH>;
->        #address-cells = <1>;
->        #size-cells = <0>;
->  
-> @@ -131,6 +146,10 @@ examples:
->        timer {
->          compatible = "st,stm32-lptimer-timer";
->        };
-> +
-> +      timer {
-> +        compatible = "st,stm32-lptimer-timer";
-> +      };
+Hello,
 
-Hi Benjamin,
-
-It looks like the compatible is duplicated in this example.
-Also, from "PATCH v6" I don't see the wakeup-source flag in your resend.
-Can you double-check ?
+Any comments or suggests on this? That would be very appreciated.
 
 Thanks,
-Best Regards,
-Fabrice
+Chunyan
 
->      };
->  
->  ...
-> 
+
+On Mon, Apr 13, 2020 at 5:09 PM <zhang.lyra@gmail.com> wrote:
+>
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> Add a new flag CPUIDLE_FLAG_S2IDLE to allow c-state to be found as
+> deepest state for s2idle only, so that users can add a new c-state
+> for using s2idle and don't worry disturbing other use cases such as
+> play_idle() which probably don't want to enter into so much deep
+> idle state since devices are not suspended for that kind of cases.
+>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> ---
+>  drivers/cpuidle/cpuidle.c        | 3 ++-
+>  drivers/cpuidle/dt_idle_states.c | 3 +++
+>  include/linux/cpuidle.h          | 1 +
+>  3 files changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> index de81298051b3..bb61f0c271d2 100644
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -89,7 +89,8 @@ static int find_deepest_state(struct cpuidle_driver *drv,
+>                     s->exit_latency_ns <= latency_req ||
+>                     s->exit_latency_ns > max_latency_ns ||
+>                     (s->flags & forbidden_flags) ||
+> -                   (s2idle && !s->enter_s2idle))
+> +                   (s2idle && !s->enter_s2idle) ||
+> +                   (!s2idle && (s->flags & CPUIDLE_FLAG_S2ILDE)))
+>                         continue;
+>
+>                 latency_req = s->exit_latency_ns;
+> diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
+> index 252f2a9686a6..530db2726c05 100644
+> --- a/drivers/cpuidle/dt_idle_states.c
+> +++ b/drivers/cpuidle/dt_idle_states.c
+> @@ -80,6 +80,9 @@ static int init_state_node(struct cpuidle_state *idle_state,
+>         idle_state->flags = 0;
+>         if (of_property_read_bool(state_node, "local-timer-stop"))
+>                 idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> +
+> +       if (of_property_read_bool(state_node, "for-s2idle-only"))
+> +               idle_state->flags |= CPUIDLE_FLAG_S2ILDE;
+>         /*
+>          * TODO:
+>          *      replace with kstrdup and pointer assignment when name
+> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+> index ec2ef63771f0..08da701f74cd 100644
+> --- a/include/linux/cpuidle.h
+> +++ b/include/linux/cpuidle.h
+> @@ -78,6 +78,7 @@ struct cpuidle_state {
+>  #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
+>  #define CPUIDLE_FLAG_UNUSABLE  BIT(3) /* avoid using this state */
+>  #define CPUIDLE_FLAG_OFF       BIT(4) /* disable this state by default */
+> +#define CPUIDLE_FLAG_S2ILDE    BIT(5) /* state is used for s2idle only */
+>
+>  struct cpuidle_device_kobj;
+>  struct cpuidle_state_kobj;
+> --
+> 2.20.1
+>
