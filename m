@@ -2,65 +2,105 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D88C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8C4C38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3A39206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A712084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:07:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qx09VHFf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgDTSH1 (ORCPT
+        id S1727908AbgDTSHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:07:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55478 "EHLO
+        Mon, 20 Apr 2020 14:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgDTSH1 (ORCPT
+        with ESMTP id S1726067AbgDTSH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:07:27 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13290C061A0C;
-        Mon, 20 Apr 2020 11:07:27 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4FBDB127D38C5;
+        Mon, 20 Apr 2020 14:07:29 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00DBBC061A0C;
+        Mon, 20 Apr 2020 11:07:29 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id np9so202596pjb.4;
+        Mon, 20 Apr 2020 11:07:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SN+5NQh5GO88eOTvwunTZ0nqR3Nb9UtRYbfk0MSr7bY=;
+        b=Qx09VHFf98yTcYTnvwSEuiXgDBGzA2cEh9hU+9fXyRF1r89n7O02AEfWo5K9PIvT97
+         ipXJkS8m8TogUQn4xmopNWZ3kuVEe5N6YObvYzyF8SM715dpnFc/5i2WuGB+baGzeek8
+         YlGaq7Ue7v399Sg+sF9eQGfdn7ROXy8EfBugSnZfoTL67KORaSMipCbw7zwh4GX8FIfC
+         wHirEn7BdWoBJzL4GIQ5xCfAM0J9mvd1PLzr9+cdVgY5UcDhQG2TQnKLINk13Pcm6CRe
+         XOL4fWem4bD7yVEAe3AJu8KdDaYvJ5GAJMPDMP7uPsxOzeortooI+FTxDVL1Ri5tni+J
+         L7hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SN+5NQh5GO88eOTvwunTZ0nqR3Nb9UtRYbfk0MSr7bY=;
+        b=NVXwL89j8es/OEmkH1PFPE4gKsfnjclLnAv6L0vluG8CeRZEvPm+iZvfb090LK4WkX
+         1QMt1HB/PHzBqZoeqUoVeidBIAqhjwxb7/dyusuvLS0c/0PhI+TludT1OXYmhhVwu40I
+         1Kmtv+2osupc1B1+G+kWT06wCcHDUclCnd/l3X82GHLYmyKUb0o8uqURTc16mdlrRKse
+         hndSwOSWxY+IT2Ww7KL1DeW2+q8iy978MWD2e0G9URwINZ5Al8rJTg+TjyaV+zWmLmcW
+         ot+JRu1VeYbxsR2v8hQ8cKYaJ32voa2KokCn9zycl8b+K4xDLmdYExs0jibeWspygpH3
+         Xbgg==
+X-Gm-Message-State: AGi0PubYlFvTxKMsMRkUT78BtGi3nTvo3FmXdmqR1ocDFDYpyKs5amPX
+        v2eUsP9KXS7rD8tiMQh0vHGo4z7S
+X-Google-Smtp-Source: APiQypKalceZVtLrFMB4bapQ/qPhpIz0IoQfWZ4qPleh/uBeWC28RetThiV9xgvcWA+j1JMS/KyVcA==
+X-Received: by 2002:a17:90a:1946:: with SMTP id 6mr789203pjh.42.1587406048026;
+        Mon, 20 Apr 2020 11:07:28 -0700 (PDT)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id e7sm131193pfh.161.2020.04.20.11.07.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 20 Apr 2020 11:07:26 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 11:07:25 -0700 (PDT)
-Message-Id: <20200420.110725.484589741956408175.davem@davemloft.net>
-To:     john.haxby@oracle.com
-Cc:     edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] ipv6: fix restrict IPV6_ADDRFORM operation
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <2728d063cd3c34c25eec068e06a0676199a84f62.1587221721.git.john.haxby@oracle.com>
-References: <cover.1587221721.git.john.haxby@oracle.com>
-        <2728d063cd3c34c25eec068e06a0676199a84f62.1587221721.git.john.haxby@oracle.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Apr 2020 11:07:26 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v3 0/3] dt-bindings: net: mdio.yaml fixes
+Date:   Mon, 20 Apr 2020 11:07:20 -0700
+Message-Id: <20200420180723.27936-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Haxby <john.haxby@oracle.com>
-Date: Sat, 18 Apr 2020 16:30:49 +0100
+Hi,
 
-> Commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation") fixed a
-> problem found by syzbot an unfortunate logic error meant that it
-> also broke IPV6_ADDRFORM.
-> 
-> Rearrange the checks so that the earlier test is just one of the series
-> of checks made before moving the socket from IPv6 to IPv4.
-> 
-> Fixes: b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation")
-> Signed-off-by: John Haxby <john.haxby@oracle.com>
+This patch series documents some common MDIO devices properties such as
+resets (and delays) and broken-turn-around. The second patch also
+rephrases some descriptions to be more general towards MDIO devices and
+not specific towards Ethernet PHYs.
 
-Applied, thanks.
+Changes in v3:
+
+- corrected wording of 'broken-turn-around' in ethernet-phy.yaml and
+  mdio.yaml, add Andrew's R-b tag to patch #3
+
+Florian Fainelli (3):
+  dt-bindings: net: Correct description of 'broken-turn-around'
+  dt-bindings: net: mdio: Document common properties
+  dt-bindings: net: mdio: Make descriptions more general
+
+ .../devicetree/bindings/net/ethernet-phy.yaml |  3 +-
+ .../devicetree/bindings/net/mdio.yaml         | 38 ++++++++++++++++---
+ 2 files changed, 35 insertions(+), 6 deletions(-)
+
+-- 
+2.19.1
+
