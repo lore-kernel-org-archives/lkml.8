@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC66C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DB0C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 541D520775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F77420775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:01:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbgDTPB3 (ORCPT
+        id S1730059AbgDTPBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:01:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:7304 "EHLO mga17.intel.com"
+        Mon, 20 Apr 2020 11:01:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55407 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726615AbgDTPB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:01:29 -0400
-IronPort-SDR: 76eank+CLq3di1HflN3KvpHKZYvYCxTg4zEeKcCjWbRVDREmbdghFgymGpZKgP2GvI3w8ZXN9e
- N2FWydLjz1Dw==
+        id S1726615AbgDTPBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:01:31 -0400
+IronPort-SDR: hKZq6191hYOPDL53Wcdnqcic0SYBmSpwyfScQNJmUMhGYTHzO2Dfua+7FL14sG0EJDRl+sCY2c
+ 4LuX6+uObRlA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 08:01:28 -0700
-IronPort-SDR: nIj6jujxwQbHA6S73J7l/SKuTg21+ioDzcvtCM5i6/giANOJfbplrV7FxPqr6oeUkfigGml6Lq
- qlzs47tvpLBw==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 08:01:19 -0700
+IronPort-SDR: Tj7Hqlbcg61uLPQx9hd2dSt9aKWYf8+4wqpfAZNcR6z3nl613pvu2zBCGHWKnlTIM9yttZ3y3T
+ 9ddJKJ6bvEjQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="scan'208";a="455725120"
+   d="scan'208";a="455725041"
 Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Apr 2020 08:01:25 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 20 Apr 2020 08:01:15 -0700
 From:   Chen Yu <yu.c.chen@intel.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -41,9 +41,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
 Cc:     linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 2/2][v2] sched: Extract the task putting code from pick_next_task()
-Date:   Mon, 20 Apr 2020 23:01:55 +0800
-Message-Id: <4f301770996c02f44d52a4868f510025d5a3a558.1587393807.git.yu.c.chen@intel.com>
+Subject: [PATCH 1/2][v2] sched: Make newidle_balance() static again
+Date:   Mon, 20 Apr 2020 23:01:43 +0800
+Message-Id: <34d7c9496b77c928fcbe6085213115bd4d48d5a2.1587393807.git.yu.c.chen@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1587393807.git.yu.c.chen@intel.com>
 References: <cover.1587393807.git.yu.c.chen@intel.com>
@@ -52,76 +52,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new function finish_prev_task() to do the balance
-when necessary, and then put previous task back to the run queue.
-This function is extracted from pick_next_task() to prepare for
-future usage by other type of task picking logic.
+After Commit 6e2df0581f56 ("sched: Fix pick_next_task() vs 'change'
+pattern race"), there is no need to expose newidle_balance() as it
+is only used within fair.c file. Change this function back to static again.
 
 No functional change.
 
 Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 ---
- kernel/sched/core.c | 39 +++++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 16 deletions(-)
+v2: Rename the remaining idle_balance() to newidle_balance()
+    to fix an compile error when CONFIG_SMP is not set.
+---
+ kernel/sched/fair.c  | 6 ++++--
+ kernel/sched/sched.h | 4 ----
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 3a61a3b8eaa9..bf59a5cf030c 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3904,6 +3904,28 @@ static inline void schedule_debug(struct task_struct *prev, bool preempt)
- 	schedstat_inc(this_rq()->sched_count);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 02f323b85b6d..cca5c9b7b5ae 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3873,6 +3873,8 @@ static inline unsigned long cfs_rq_load_avg(struct cfs_rq *cfs_rq)
+ 	return cfs_rq->avg.load_avg;
  }
  
-+static void finish_prev_task(struct rq *rq, struct task_struct *prev,
-+			     struct rq_flags *rf)
-+{
-+	const struct sched_class *class;
-+#ifdef CONFIG_SMP
-+	/*
-+	 * We must do the balancing pass before put_next_task(), such
-+	 * that when we release the rq->lock the task is in the same
-+	 * state as before we took rq->lock.
-+	 *
-+	 * We can terminate the balance pass as soon as we know there is
-+	 * a runnable task of @class priority or higher.
-+	 */
-+	for_class_range(class, prev->sched_class, &idle_sched_class) {
-+		if (class->balance(rq, prev, rf))
-+			break;
-+	}
-+#endif
++static int newidle_balance(struct rq *this_rq, struct rq_flags *rf);
 +
-+	put_prev_task(rq, prev);
-+}
-+
- /*
-  * Pick up the highest-prio task:
+ static inline unsigned long task_util(struct task_struct *p)
+ {
+ 	return READ_ONCE(p->se.avg.util_avg);
+@@ -4054,7 +4056,7 @@ attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
+ static inline void
+ detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
+ 
+-static inline int idle_balance(struct rq *rq, struct rq_flags *rf)
++static inline int newidle_balance(struct rq *rq, struct rq_flags *rf)
+ {
+ 	return 0;
+ }
+@@ -10425,7 +10427,7 @@ static inline void nohz_newidle_balance(struct rq *this_rq) { }
+  *     0 - failed, no new tasks
+  *   > 0 - success, new (fair) tasks present
   */
-@@ -3937,22 +3959,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 	}
+-int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
++static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
+ {
+ 	unsigned long next_balance = jiffies + HZ;
+ 	int this_cpu = this_rq->cpu;
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index db3a57675ccf..be83f88495fb 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1504,14 +1504,10 @@ static inline void unregister_sched_domain_sysctl(void)
+ }
+ #endif
  
- restart:
--#ifdef CONFIG_SMP
--	/*
--	 * We must do the balancing pass before put_next_task(), such
--	 * that when we release the rq->lock the task is in the same
--	 * state as before we took rq->lock.
--	 *
--	 * We can terminate the balance pass as soon as we know there is
--	 * a runnable task of @class priority or higher.
--	 */
--	for_class_range(class, prev->sched_class, &idle_sched_class) {
--		if (class->balance(rq, prev, rf))
--			break;
--	}
--#endif
+-extern int newidle_balance(struct rq *this_rq, struct rq_flags *rf);
 -
--	put_prev_task(rq, prev);
-+	finish_prev_task(rq, prev, rf);
+ #else
  
- 	for_each_class(class) {
- 		p = class->pick_next_task(rq);
+ static inline void sched_ttwu_pending(void) { }
+ 
+-static inline int newidle_balance(struct rq *this_rq, struct rq_flags *rf) { return 0; }
+-
+ #endif /* CONFIG_SMP */
+ 
+ #include "stats.h"
 -- 
 2.17.1
 
