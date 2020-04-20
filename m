@@ -2,236 +2,740 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CA6C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916A5C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 337FC20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:17:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZpIQTNQw"
+	by mail.kernel.org (Postfix) with ESMTP id 6DA6E20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgDTERo (ORCPT
+        id S1726036AbgDTESo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 00:17:44 -0400
-Received: from mail-db8eur05on2069.outbound.protection.outlook.com ([40.107.20.69]:6025
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725710AbgDTERn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 00:17:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S8BHxclWo2YIEZHLVRoWDTn6Oh75iz0NSRszsMAPt1eLUo+cqEKj/lXSB23KhqfB2oeGu95mTdiOoWixOKwvyfSHPOTIcqO523Eq1b8XVVV8fBhGWVXY17VLFsshwS8xqAEJKDcHyeGWIf0zzJ8QFp1msw8obi9fV52KWMckqSPcDWN7SmldaaUce347e4ay5/chE/3f8fBVHpKydGuUzfr8/Y/YQsQJrzvaTfxRqDlmlkCrPWj5rFX69uOOLYzhHie8LpfeU2+uIdft1QKyRv0msi8w5J/nZv7VWbgvRqN1yM6X10bRSTHKH9+eskKh1Iy+1jOmQMpWznJkWbGB/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kuLwDv66kK88MQ9M5XNCVshWxNxOxAhX2rezii51fpg=;
- b=PnWD7xBXeA/7YkvULi3npGyo9xJ0yGUXZqrHgeq83SCm8qtdgWB3shkjWmaIP55HngD+HFqABL0DCJ8EJTFKGPh7s8BL3EMTUtMkVehYIU1kAuWazHTn8ESw3ht5eh/NurImgBIS4+8T+Ak4g8vn6N59IOQ9bxevRvneUjSJzkcH+mKcrqwlDbM68iZGm6Snp4N+bZyaEwDHaKpjNpCGX5QbUF23C9uLRkFXE9VQ601NGAeP/ZRRA1AasNVHoba3a9hJNj4PHuusRdccUj+ySNfRsLree4o8NJUw2vdPw8tos3nMs3JOfOag6nXidisjz7xsXAkcJxatlL7O3GcLWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kuLwDv66kK88MQ9M5XNCVshWxNxOxAhX2rezii51fpg=;
- b=ZpIQTNQwYoTQn7kz3Z6PFpZp9kA8Hx+Y3rLL3qXkBq4bKPKiu0aUP4unzjLDyZuJTOchO0xE7d9/eGhq22E8Oz7oyT8AKT+LH3jBP/gAWKq/xQWsX9cMDVh0fINb06m5IQpl23AKXioclufoRYl7HOuQn1KMxvGJV7gSD9S77WQ=
-Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
- by DB8PR04MB6842.eurprd04.prod.outlook.com (2603:10a6:10:11c::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.26; Mon, 20 Apr
- 2020 04:17:38 +0000
-Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
- ([fe80::2924:94ba:2206:216e]) by DB8PR04MB6795.eurprd04.prod.outlook.com
- ([fe80::2924:94ba:2206:216e%8]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
- 04:17:38 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     John Garry <john.garry@huawei.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "will@kernel.org" <will@kernel.org>
-CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "irogers@google.com" <irogers@google.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "zhangshaokun@hisilicon.com" <zhangshaokun@hisilicon.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [RFC PATCH v2 09/13] perf vendor events: Add JSON metrics for
- imx8mm DDR Perf
-Thread-Topic: [RFC PATCH v2 09/13] perf vendor events: Add JSON metrics for
- imx8mm DDR Perf
-Thread-Index: AQHWFKVVX4GZScOVYUWAj3jiI1Adb6iBYhwQ
-Date:   Mon, 20 Apr 2020 04:17:38 +0000
-Message-ID: <DB8PR04MB67959336311C0CF525BB24ADE6D40@DB8PR04MB6795.eurprd04.prod.outlook.com>
-References: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
- <1587120084-18990-10-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1587120084-18990-10-git-send-email-john.garry@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiangqing.zhang@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 287c8f5a-5837-41ef-f8c7-08d7e4e1c2fd
-x-ms-traffictypediagnostic: DB8PR04MB6842:
-x-microsoft-antispam-prvs: <DB8PR04MB68422DE7BC9ED43B02B51914E6D40@DB8PR04MB6842.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 03793408BA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(366004)(376002)(66946007)(66556008)(66446008)(33656002)(66476007)(64756008)(71200400001)(86362001)(7416002)(52536014)(2906002)(76116006)(26005)(5660300002)(478600001)(110136005)(53546011)(8676002)(8936002)(4326008)(54906003)(6506007)(81156014)(316002)(7696005)(55016002)(186003)(9686003)(32563001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ENucy+yF+pJ5R/pbpJp8BewARX/DZhzxfL98O2nIby+9h4GDStFoDTMUthj+ikbypHGFkM1wLl4GHGXgChlh7DHF9ZW1fONYShP9bIPy6XiWmHAXwpBDhZ+cOdcpijXFPi00f8E1dyJnoBMIbdj5e2lF7QjmWtp6gfVyVWkh7SXnOO8lld8YMHTZeUT0pWKMQydjcowHTVYjMIQPalZUDOD2miuZTi2pjTi6mSvDoo8qlzUopXXevnABXNNKfg3yOH3qji6RC0VfF8057M5cpxr0EnKSvJUFoYFGRaKt3Ong+MTaVnZb2kB1kPpTtegLNWwGEhq/xXq14woFjApRTBOFmaxcctx+R3iRBhLXCq11XzXh5JX46z0pAvxQ7N7tbDmRfzdHLiCm95rxiuJLFPehx6uS2yTdAiUyB3ARwaG9z3wUmwfgch8Z6u/W829luCJn9l/+p0SDGvkW2vgcNxlsC9SLzVhHyHMGBHyPwvmkZXSQcT+NVxRr4ANHKGTE
-x-ms-exchange-antispam-messagedata: QAEQbz546axUe4Hk+HJLSggKeJiJi5F9SYs9tBxP4j6RQGsyQs7x+HWzJBGUxrRERup3BydxhVQ3Mp3hfH42Lk4d81/v/pUcldqrI656WJwGIPRvff2Oxhtp3aVcFtAm4SNjp9ZvXB4W/K45GBK8CA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Mon, 20 Apr 2020 00:18:44 -0400
+Received: from mga12.intel.com ([192.55.52.136]:9018 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbgDTESo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 00:18:44 -0400
+IronPort-SDR: 1lmd2IVoH0t/xiyJnq6lxdCz/uGXt/YYALD8nNePBHA5RM87Von6OtygX0iwakPcg3oEk7MT1e
+ ydg8CvX1BWeg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 21:18:43 -0700
+IronPort-SDR: 85gVmBVdeDE1JfznfamMH77Dtz8FytPYU50XraWuT3CzsmIEYp2bqpjhtUYS611zXoaYQV7MIV
+ a4CofOkEjiVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
+   d="scan'208";a="455552348"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Apr 2020 21:18:42 -0700
+Received: from [10.249.68.96] (vramuthx-mobl1.gar.corp.intel.com [10.249.68.96])
+        by linux.intel.com (Postfix) with ESMTP id 7D3EB580479;
+        Sun, 19 Apr 2020 21:18:35 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200418105533.477ce529@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <79e186a8-68fb-0e75-910b-9f1b40679ca2@linux.intel.com>
+Date:   Mon, 20 Apr 2020 12:18:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 287c8f5a-5837-41ef-f8c7-08d7e4e1c2fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 04:17:38.4531
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kMSC/ZzGBrsxxAJRHZtKhBtMNIo6OQ/z8MQkbMAkMoTwhnVIpPfzD9lVveaJjCIFo2J6rY9R3Igm3M6stVvzSQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6842
+In-Reply-To: <20200418105533.477ce529@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvaG4gR2FycnkgPGpvaG4u
-Z2FycnlAaHVhd2VpLmNvbT4NCj4gU2VudDogMjAyMMTqNNTCMTfI1SAxODo0MQ0KPiBUbzogcGV0
-ZXJ6QGluZnJhZGVhZC5vcmc7IG1pbmdvQHJlZGhhdC5jb207IGFjbWVAa2VybmVsLm9yZzsNCj4g
-bWFyay5ydXRsYW5kQGFybS5jb207IGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb207
-DQo+IGpvbHNhQHJlZGhhdC5jb207IG5hbWh5dW5nQGtlcm5lbC5vcmc7IHdpbGxAa2VybmVsLm9y
-Zw0KPiBDYzogYWtAbGludXguaW50ZWwuY29tOyBsaW51eGFybUBodWF3ZWkuY29tOyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBKb2FraW0gWmhhbmcgPHFpYW5ncWluZy56aGFuZ0Bu
-eHAuY29tPjsgaXJvZ2Vyc0Bnb29nbGUuY29tOw0KPiByb2Jpbi5tdXJwaHlAYXJtLmNvbTsgemhh
-bmdzaGFva3VuQGhpc2lsaWNvbi5jb207DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsgSm9obiBHYXJyeSA8am9obi5nYXJyeUBodWF3ZWkuY29tPg0KPiBTdWJqZWN0OiBb
-UkZDIFBBVENIIHYyIDA5LzEzXSBwZXJmIHZlbmRvciBldmVudHM6IEFkZCBKU09OIG1ldHJpY3Mg
-Zm9yDQo+IGlteDhtbSBERFIgUGVyZg0KPiANCj4gRnJvbTogSm9ha2ltIFpoYW5nIDxxaWFuZ3Fp
-bmcuemhhbmdAbnhwLmNvbT4NCj4gDQo+IEFkZCBKU09OIG1ldHJpY3MgZm9yIGlteDhtbSBERFIg
-UGVyZi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEpvYWtpbSBaaGFuZyA8cWlhbmdxaW5nLnpoYW5n
-QG54cC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEpvaG4gR2FycnkgPGpvaG4uZ2FycnlAaHVhd2Vp
-LmNvbT4NCj4gLS0tDQo+ICAuLi4vYXJjaC9hcm02NC9mcmVlc2NhbGUvaW14OG1tL3N5cy9kZHJj
-Lmpzb24gICAgICB8IDM5DQo+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gIC4uLi9hcmNoL2Fy
-bTY0L2ZyZWVzY2FsZS9pbXg4bW0vc3lzL21ldHJpY3MuanNvbiAgIHwgMTggKysrKysrKysrKw0K
-PiAgdG9vbHMvcGVyZi9wbXUtZXZlbnRzL2pldmVudHMuYyAgICAgICAgICAgICAgICAgICAgfCAg
-MSArDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDU4IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NA0KPiB0b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9mcmVlc2NhbGUvaW14
-OG1tL3N5cy9kZHJjLmpzb24NCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiB0b29scy9wZXJmL3Bt
-dS1ldmVudHMvYXJjaC9hcm02NC9mcmVlc2NhbGUvaW14OG1tL3N5cy9tZXRyaWNzLmpzb24NCj4g
-DQo+IGRpZmYgLS1naXQNCj4gYS90b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9mcmVl
-c2NhbGUvaW14OG1tL3N5cy9kZHJjLmpzb24NCj4gYi90b29scy9wZXJmL3BtdS1ldmVudHMvYXJj
-aC9hcm02NC9mcmVlc2NhbGUvaW14OG1tL3N5cy9kZHJjLmpzb24NCj4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi44YTNkYWU2MWE0OGYNCj4gLS0tIC9kZXYvbnVs
-bA0KPiArKysgYi90b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9mcmVlc2NhbGUvaW14
-OG1tL3N5cy9kZHJjLmpzb24NCj4gQEAgLTAsMCArMSwzOSBAQA0KPiArWw0KPiArICAgew0KPiAr
-ICAgICAgICAgICAiQnJpZWZEZXNjcmlwdGlvbiI6ICJkZHIgY3ljbGVzIGV2ZW50IiwNCj4gKyAg
-ICAgICAgICAgIkV2ZW50Q29kZSI6ICIweDAwIiwNCj4gKyAgICAgICAgICAgIkV2ZW50TmFtZSI6
-ICJpbXg4X2Rkci5jeWNsZXMiLA0KPiArICAgICAgICAgICAiVW5pdCI6ICJpbXg4X2RkciIsDQo+
-ICsgICAgICAgICAgICJDb21wYXQiOiAiaS5teDhtbSINCj4gKyAgIH0sDQo+ICsgICB7DQo+ICsg
-ICAgICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjogImRkciByZWFkLWN5Y2xlcyBldmVudCIsDQo+
-ICsgICAgICAgICAgICJFdmVudENvZGUiOiAiMHgyYSIsDQo+ICsgICAgICAgICAgICJFdmVudE5h
-bWUiOiAiaW14OF9kZHIucmVhZF9jeWNsZXMiLA0KPiArICAgICAgICAgICAiVW5pdCI6ICJpbXg4
-X2RkciIsDQo+ICsgICAgICAgICAgICJDb21wYXQiOiAiaS5teDhtbSINCj4gKyAgIH0sDQo+ICsg
-ICB7DQo+ICsgICAgICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjogImRkciB3cml0ZS1jeWNsZXMg
-ZXZlbnQiLA0KPiArICAgICAgICAgICAiRXZlbnRDb2RlIjogIjB4MmIiLA0KPiArICAgICAgICAg
-ICAiRXZlbnROYW1lIjogImlteDhfZGRyLndyaXRlX2N5Y2xlcyIsDQo+ICsgICAgICAgICAgICJV
-bml0IjogImlteDhfZGRyIiwNCj4gKyAgICAgICAgICAgIkNvbXBhdCI6ICJpLm14OG1tIg0KPiAr
-ICAgfSwNCj4gKyAgIHsNCj4gKyAgICAgICAgICAgIkJyaWVmRGVzY3JpcHRpb24iOiAiZGRyIHJl
-YWQgZXZlbnQiLA0KPiArICAgICAgICAgICAiRXZlbnRDb2RlIjogIjB4MzUiLA0KPiArICAgICAg
-ICAgICAiRXZlbnROYW1lIjogImlteDhfZGRyLnJlYWQiLA0KPiArICAgICAgICAgICAiVW5pdCI6
-ICJpbXg4X2RkciIsDQo+ICsgICAgICAgICAgICJDb21wYXQiOiAiaS5teDhtbSINCj4gKyAgIH0s
-DQo+ICsgICB7DQo+ICsgICAgICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjogImRkciB3cml0ZSBl
-dmVudCIsDQo+ICsgICAgICAgICAgICJFdmVudENvZGUiOiAiMHgzOCIsDQo+ICsgICAgICAgICAg
-ICJFdmVudE5hbWUiOiAiaW14OF9kZHIud3JpdGUiLA0KPiArICAgICAgICAgICAiVW5pdCI6ICJp
-bXg4X2RkciIsDQo+ICsgICAgICAgICAgICJDb21wYXQiOiAiaS5teDhtbSINCj4gKyAgIH0NCj4g
-K10NCkhpIEpvaG4sDQoNClRlc3RlZCBmcm9tIGJyYW5jaDogcHJpdmF0ZS10b3BpYy1wZXJmLTUu
-Ny1zeXMtcG11LWV2ZW50cy12Mg0KDQpERFIgZXZlbnRzIHRlc3QgaXMgb2theSBvbiBib3RoIDhN
-TSBhbmQgOFFNLg0KDQoNCj4gZGlmZiAtLWdpdA0KPiBhL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9h
-cmNoL2FybTY0L2ZyZWVzY2FsZS9pbXg4bW0vc3lzL21ldHJpY3MuanNvbg0KPiBiL3Rvb2xzL3Bl
-cmYvcG11LWV2ZW50cy9hcmNoL2FybTY0L2ZyZWVzY2FsZS9pbXg4bW0vc3lzL21ldHJpY3MuanNv
-bg0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLmI2YTc3NmNh
-N2NjMg0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9hcmNo
-L2FybTY0L2ZyZWVzY2FsZS9pbXg4bW0vc3lzL21ldHJpY3MuanNvbg0KPiBAQCAtMCwwICsxLDE4
-IEBADQo+ICtbDQo+ICsgICB7DQo+ICsJICAgICJCcmllZkRlc2NyaXB0aW9uIjogImJ5dGVzIGFs
-bCBtYXN0ZXJzIHJlYWQgZnJvbSBkZHIgYmFzZWQgb24NCj4gcmVhZC1jeWNsZXMgZXZlbnQiLA0K
-PiArCSAgICAiTWV0cmljTmFtZSI6ICJpbXg4bW1fZGRyX3JlYWQuYWxsIiwNCj4gKwkgICAgIk1l
-dHJpY0V4cHIiOiAiaW14OF9kZHIucmVhZF9jeWNsZXMgKiA0ICogNCIsDQo+ICsJICAgICJTY2Fs
-ZVVuaXQiOiAiOS43NjU2MjVlLTRNQiIsDQo+ICsJICAgICJVbml0IjogImlteDhfZGRyIiwNCj4g
-KwkgICAgIkNvbXBhdCI6ICJpLm14OG1tIg0KPiArICAgIH0sDQo+ICsgICB7DQo+ICsJICAgICJC
-cmllZkRlc2NyaXB0aW9uIjogImJ5dGVzIGFsbCBtYXN0ZXJzIHdyaXRlIHRvIGRkciBiYXNlZCBv
-bg0KPiB3cml0ZS1jeWNsZXMgZXZlbnQiLA0KPiArCSAgICAiTWV0cmljTmFtZSI6ICJpbXg4bW1f
-ZGRyX3dyaXRlLmFsbCIsDQo+ICsJICAgICJNZXRyaWNFeHByIjogImlteDhfZGRyLndyaXRlX2N5
-Y2xlcyAqIDQgKiA0IiwNCj4gKwkgICAgIlNjYWxlVW5pdCI6ICI5Ljc2NTYyNWUtNE1CIiwNCj4g
-KwkgICAgIlVuaXQiOiAiaW14OF9kZHIiLA0KPiArCSAgICAiQ29tcGF0IjogImkubXg4bW0iDQo+
-ICsgICAgfQ0KPiArXQ0KDQpIb3dldmVyLCBpdCBzZWVtcyB0aGF0IHRoZXJlIGFyZSBzbWFsbCBk
-ZWZlY3RzIGZyb20gbWV0cmljLg0KDQpGaXJzdGx5LCBjb3VsZCB5b3UgaGVscCBjaGFuZ2UgIlNj
-YWxlVW5pdCI6ICI5Ljc2NTYyNWUtNE1CIiBpbnRvICJTY2FsZVVuaXQiOiAiOS43NjU2MjVlLTRL
-QiIsIHRoaXMgaXMgYSBtaXN0YWtlLg0KDQpUaGVuLCB5b3UgY2FuIHNlZSB0aGF0IHRlc3QgaXMg
-b2theSBmcm9tIDhNTS4gSG93ZXZlciwgbWV0cmljIHdvdWxkIGFkZCB0d2ljZSBvbmNlIHRpbWUg
-ZnJvbSA4UU0gd2hpY2ggaGFzIHR3byBkZHIgcGVyZihkZHIwL2RkcjEpLCBpdCBsb29rcyBpbmNv
-cnJlY3QuDQoNCjhNTToNCnJvb3RAaW14OG1tZXZrOn4jIC4vcGVyZiBzdGF0IC12IC1hIC1JIDEw
-MDAgLU0gaW14OG1tX2Rkcl93cml0ZS5hbGwNClVzaW5nIENQVUlEIDB4MDAwMDAwMDA0MTBmZDAz
-MA0KbWV0cmljIGV4cHIgaW14OF9kZHIud3JpdGVfY3ljbGVzICogNCAqIDQgZm9yIGlteDhtbV9k
-ZHJfd3JpdGUuYWxsDQpmb3VuZCBldmVudCBpbXg4X2Rkci53cml0ZV9jeWNsZXMNCmFkZGluZyB7
-aW14OF9kZHIud3JpdGVfY3ljbGVzfTpXDQppbXg4X2Rkci53cml0ZV9jeWNsZXMgLT4gaW14OF9k
-ZHIwL2V2ZW50PTB4MmIvDQppbXg4X2Rkci53cml0ZV9jeWNsZXM6IDEzMTUzIDEwMDA0OTUxMjUg
-MTAwMDQ5NTEyNQ0KIyAgICAgICAgICAgdGltZSAgICAgICAgICAgICBjb3VudHMgdW5pdCBldmVu
-dHMNCiAgICAgMS4wMDA0NzY2MjUgICAgICAgICAgICAgIDEzMTUzICAgICAgaW14OF9kZHIud3Jp
-dGVfY3ljbGVzICAgICAjICAgIDIwNS41IE1CICBpbXg4bW1fZGRyX3dyaXRlLmFsbA0KaW14OF9k
-ZHIud3JpdGVfY3ljbGVzOiAzNTgyIDEwMDA2ODEzNzUgMTAwMDY4MTM3NQ0KICAgICAyLjAwMTE2
-Nzc1MCAgICAgICAgICAgICAgIDM1ODIgICAgICBpbXg4X2Rkci53cml0ZV9jeWNsZXMgICAgICMg
-ICAgIDU2LjAgTUIgIGlteDhtbV9kZHJfd3JpdGUuYWxsDQoNCg0KOFFNOg0Kcm9vdEBpbXg4cW1t
-ZWs6fiMgLi9wZXJmIHN0YXQgLXYgLWEgLUkgMTAwMCAtTSBpbXg4cW1fZGRyX3JlYWQuYWxsDQpV
-c2luZyBDUFVJRCAweDAwMDAwMDAwNDEwZmQwMzANCm1ldHJpYyBleHByIGlteDhfZGRyLnJlYWRf
-Y3ljbGVzICogNCAqIDQgZm9yIGlteDhxbV9kZHJfcmVhZC5hbGwNCmZvdW5kIGV2ZW50IGlteDhf
-ZGRyLnJlYWRfY3ljbGVzDQptZXRyaWMgZXhwciBpbXg4X2Rkci5yZWFkX2N5Y2xlcyAqIDQgKiA0
-IGZvciBpbXg4cW1fZGRyX3JlYWQuYWxsDQpmb3VuZCBldmVudCBpbXg4X2Rkci5yZWFkX2N5Y2xl
-cw0KYWRkaW5nIHtpbXg4X2Rkci5yZWFkX2N5Y2xlc306Vyx7aW14OF9kZHIucmVhZF9jeWNsZXN9
-OlcNCmlteDhfZGRyLnJlYWRfY3ljbGVzIC0+IGlteDhfZGRyMC9ldmVudD0weDJhLw0KaW14OF9k
-ZHIucmVhZF9jeWNsZXMgLT4gaW14OF9kZHIxL2V2ZW50PTB4MmEvDQppbXg4X2Rkci5yZWFkX2N5
-Y2xlcyAtPiBpbXg4X2RkcjAvZXZlbnQ9MHgyYS8NCmlteDhfZGRyLnJlYWRfY3ljbGVzIC0+IGlt
-eDhfZGRyMS9ldmVudD0weDJhLw0KaW14OF9kZHIucmVhZF9jeWNsZXM6IDIyNzQ4IDEwMDAzNzg3
-NTAgMTAwMDM3ODc1MA0KaW14OF9kZHIucmVhZF9jeWNsZXM6IDI0NjQwIDEwMDAzNzY2MjUgMTAw
-MDM3NjYyNQ0KaW14OF9kZHIucmVhZF9jeWNsZXM6IDIyODAwIDEwMDAzNzUxMjUgMTAwMDM3NTEy
-NQ0KaW14OF9kZHIucmVhZF9jeWNsZXM6IDI0NjE2IDEwMDAzNzI2MjUgMTAwMDM3MjYyNQ0KIyAg
-ICAgICAgICAgdGltZSAgICAgICAgICAgICBjb3VudHMgdW5pdCBldmVudHMNCiAgICAgMS4wMDAz
-NzcyNTAgICAgICAgICAgICAgIDQ3Mzg4ICAgICAgaW14OF9kZHIucmVhZF9jeWNsZXMgICAgICAj
-ICAgIDc0MC40IE1CICBpbXg4cW1fZGRyX3JlYWQuYWxsDQogICAgIDEuMDAwMzc3MjUwICAgICAg
-ICAgICAgICA0NzQxNiAgICAgIGlteDhfZGRyLnJlYWRfY3ljbGVzDQppbXg4X2Rkci5yZWFkX2N5
-Y2xlczogMzI2NzIgMTAwMDQ1NDM3NSAxMDAwNDU0Mzc1DQppbXg4X2Rkci5yZWFkX2N5Y2xlczog
-Mzc4ODggMTAwMDQ1NzI1MCAxMDAwNDU3MjUwDQppbXg4X2Rkci5yZWFkX2N5Y2xlczogMzI3MzYg
-MTAwMDQ2MDI1MCAxMDAwNDYwMjUwDQppbXg4X2Rkci5yZWFkX2N5Y2xlczogMzgwMTIgMTAwMDQ2
-MzAwMCAxMDAwNDYzMDAwDQogICAgIDIuMDAwODEyMzc1ICAgICAgICAgICAgICA3MDU2MCAgICAg
-IGlteDhfZGRyLnJlYWRfY3ljbGVzICAgICAgIyAgIDExMDIuNSBNQiAgaW14OHFtX2Rkcl9yZWFk
-LmFsbA0KICAgICAyLjAwMDgxMjM3NSAgICAgICAgICAgICAgNzA3NDggICAgICBpbXg4X2Rkci5y
-ZWFkX2N5Y2xlcw0KDQoNCkJlc3QgUmVnYXJkcywNCkpvYWtpbSBaaGFuZw0KPiBcIE5vIG5ld2xp
-bmUgYXQgZW5kIG9mIGZpbGUNCj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9q
-ZXZlbnRzLmMgYi90b29scy9wZXJmL3BtdS1ldmVudHMvamV2ZW50cy5jDQo+IGluZGV4IDc2YTg0
-ZWMyZmZjOC4uZWZkYWRlMDE5NGFmIDEwMDY0NA0KPiAtLS0gYS90b29scy9wZXJmL3BtdS1ldmVu
-dHMvamV2ZW50cy5jDQo+ICsrKyBiL3Rvb2xzL3BlcmYvcG11LWV2ZW50cy9qZXZlbnRzLmMNCj4g
-QEAgLTI1Nyw2ICsyNTcsNyBAQCBzdGF0aWMgc3RydWN0IG1hcCB7DQo+ICAJeyAiaGlzaV9zY2Ns
-LGhoYSIsICJoaXNpX3NjY2wsaGhhIiB9LA0KPiAgCXsgImhpc2lfc2NjbCxsM2MiLCAiaGlzaV9z
-Y2NsLGwzYyIgfSwNCj4gIAkvKiBpdCdzIG5vdCByZWFsaXN0aWMgdG8ga2VlcCBhZGRpbmcgdGhl
-c2UsIHdlIG5lZWQgc29tZXRoaW5nIG1vcmUNCj4gc2NhbGFibGUgLi4uICovDQo+ICsJeyAiaW14
-OF9kZHIiLCAiaW14OF9kZHIiIH0sDQo+ICAJeyAic21tdXYzX3BtY2ciLCAic21tdXYzX3BtY2ci
-IH0sDQo+ICAJeyAiTDNQTUMiLCAiYW1kX2wzIiB9LA0KPiAgCXt9DQo+IC0tDQo+IDIuMTYuNA0K
-DQo=
+Hi Boris,
+
+   Thank you very much for the review comments and your time...
+
+On 18/4/2020 4:55 pm, Boris Brezillon wrote:
+> On Fri, 17 Apr 2020 16:21:47 +0800
+> "Ramuthevar,Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> This patch adds the new IP of Nand Flash Controller(NFC) support
+>> on Intel's Lightning Mountain(LGM) SoC.
+>>
+>> DMA is used for burst data transfer operation, also DMA HW supports
+>> aligned 32bit memory address and aligned data access by default.
+>> DMA burst of 8 supported. Data register used to support the read/write
+>> operation from/to device.
+>>
+>> NAND controller driver implements ->exec_op() to replace legacy hooks,
+>> these specific call-back method to execute NAND operations.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   drivers/mtd/nand/raw/Kconfig          |   7 +
+>>   drivers/mtd/nand/raw/Makefile         |   1 +
+>>   drivers/mtd/nand/raw/intel_lgm_nand.c | 740 ++++++++++++++++++++++++++++++++++
+> I wonder if we shouldn't name the driver infineon-nand-controller.c
+> since the original design comes from Infineon IIUC. intel_lgm_nand.c is
+> definitely misleading, as we also have a nand_intel.c file which is for
+> Intel NAND chips (not NAND controllers). If we keep intel in the name,
+> let's at least add a "-controller" suffix to make it clear.
+sure , will add -controller suffix.
+>
+> Side note for Miquel: I guess we would also benefit from having a clear
+> core vs controller-drivers split as recently done for spi-nor (a
+> controller subdir has been created).
+>
+>>   3 files changed, 748 insertions(+)
+>>   create mode 100644 drivers/mtd/nand/raw/intel_lgm_nand.c
+>>
+>> diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+>> index a80a46bb5b8b..9efc4bbaf4a3 100644
+>> --- a/drivers/mtd/nand/raw/Kconfig
+>> +++ b/drivers/mtd/nand/raw/Kconfig
+>> @@ -457,6 +457,13 @@ config MTD_NAND_CADENCE
+>>   	  Enable the driver for NAND flash on platforms using a Cadence NAND
+>>   	  controller.
+>>   
+>> +config MTD_NAND_INTEL_LGM
+>> +	tristate "Support for NAND controller on Intel LGM SoC"
+>> +	depends on X86
+> Do we have a hard dependency on x86 here? Maybe 'depends on HAS_MMIO'
+> would be enough.
+yes Boris, we have hard dependency on x86.
+>> +	help
+>> +	  Enables support for NAND Flash chips on Intel's LGM SoC.
+>> +          NAND flash interfaced through the External Bus Unit.
+>> +
+>>   comment "Misc"
+>>   
+>>   config MTD_SM_COMMON
+>> diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
+>> index 2d136b158fb7..49a301ae0c9d 100644
+>> --- a/drivers/mtd/nand/raw/Makefile
+>> +++ b/drivers/mtd/nand/raw/Makefile
+>> @@ -58,6 +58,7 @@ obj-$(CONFIG_MTD_NAND_TEGRA)		+= tegra_nand.o
+>>   obj-$(CONFIG_MTD_NAND_STM32_FMC2)	+= stm32_fmc2_nand.o
+>>   obj-$(CONFIG_MTD_NAND_MESON)		+= meson_nand.o
+>>   obj-$(CONFIG_MTD_NAND_CADENCE)		+= cadence-nand-controller.o
+>> +obj-$(CONFIG_MTD_NAND_INTEL_LGM)	+= intel_lgm_nand.o
+>>   
+>>   nand-objs := nand_base.o nand_legacy.o nand_bbt.o nand_timings.o nand_ids.o
+>>   nand-objs += nand_onfi.o
+>> diff --git a/drivers/mtd/nand/raw/intel_lgm_nand.c b/drivers/mtd/nand/raw/intel_lgm_nand.c
+>> new file mode 100644
+>> index 000000000000..96cd1831f070
+>> --- /dev/null
+>> +++ b/drivers/mtd/nand/raw/intel_lgm_nand.c
+>> @@ -0,0 +1,740 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/* Copyright (c) 2019 Intel Corporation. */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/completion.h>
+>> +#include <linux/dmaengine.h>
+>> +#include <linux/dma-direction.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/err.h>
+>> +#include <linux/init.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/module.h>
+>> +#include <linux/resource.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/types.h>
+>> +#include <linux/mtd/mtd.h>
+>> +#include <linux/mtd/rawnand.h>
+>> +#include <linux/mtd/nand_ecc.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/of.h>
+>> +#include <linux/mtd/partitions.h>
+>> +#include <linux/io.h>
+>> +#include <linux/slab.h>
+>> +#include <mtd/mtd-abi.h>
+>> +#include <linux/mod_devicetable.h>
+>> +#include <linux/mtd/nand.h>
+>> +
+>> +#define LGM_CLC			0x000
+>> +#define LGM_CLC_RST		0x00000000u
+>> +
+>> +#define LGM_NAND_ECC_OFFSET	0x008
+>> +
+>> +#define LGM_ADDR_SEL(n)		(0x20 + (n) * 4)
+>> +#define LGM_ADDR_MASK		(5 << 4)
+>> +#define LGM_ADDR_SEL_REGEN	0x1
+>> +
+>> +#define LGM_BUSCON(n)		(0x60 + (n) * 4)
+>> +#define LGM_BUSCON_CMULT_V4	0x1
+>> +#define LGM_BUSCON_RECOVC(n)	((n) << 2)
+>> +#define LGM_BUSCON_HOLDC(n)	((n) << 4)
+>> +#define LGM_BUSCON_WAITRDC(n)	((n) << 6)
+>> +#define LGM_BUSCON_WAITWRC(n)	((n) << 8)
+>> +#define LGM_BUSCON_BCGEN_CS	0x0
+>> +#define LGM_BUSCON_SETUP_EN	BIT(22)
+>> +#define LGM_BUSCON_ALEC		0xC000
+>> +
+> Hm, I'm pretty sure we don't need the LGM_ prefix here.
+Agreed!, will replace EBU_ prefix to LGM_
+>> +#define NAND_CON		0x0B0
+>> +#define NAND_CON_NANDM_EN	BIT(0)
+>> +#define NAND_CON_NANDM_DIS	0x0
+>> +#define NAND_CON_CSMUX_E_EN	BIT(1)
+>> +#define NAND_CON_ALE_P_LOW	BIT(2)
+>> +#define NAND_CON_CLE_P_LOW	BIT(3)
+>> +#define NAND_CON_CS_P_LOW	BIT(4)
+>> +#define NAND_CON_SE_P_LOW	BIT(5)
+>> +#define NAND_CON_WP_P_LOW	BIT(6)
+>> +#define NAND_CON_PRE_P_LOW	BIT(7)
+>> +#define NAND_CON_IN_CS_S(n)	((n) << 8)
+>> +#define NAND_CON_OUT_CS_S(n)	((n) << 10)
+>> +#define NAND_CON_LAT_EN_CS_P	((0x3D) << 18)
+>> +
+>> +#define NAND_WAIT		0x0B4
+>> +#define NAND_WAIT_RDBY		BIT(0)
+>> +#define NAND_WAIT_WR_C		BIT(3)
+>> +
+>> +#define NAND_CTL1		0x110
+>> +#define NAND_CTL1_ADDR_3_SHIFT	24
+>> +
+>> +#define NAND_CTL2		0x114
+>> +#define NAND_CTL2_ADDR_5_SHIFT	8
+>> +#define NAND_CTL2_CYC_N_V5	(0x2 << 16)
+>> +
+>> +#define NAND_INT_MSK_CTL	0x124
+>> +#define NAND_INT_MSK_CTL_WR_C	BIT(4)
+>> +
+>> +#define NAND_INT_STA		0x128
+>> +#define NAND_INT_STA_WR_C	BIT(4)
+>> +
+>> +#define NAND_CTL		0x130
+>> +#define NAND_CTL_MODE_ECC	0x1
+>> +#define NAND_CTL_GO		BIT(2)
+>> +#define NAND_CTL_CE_SEL_CS(n)	BIT(3 + (n))
+>> +#define NAND_CTL_RW_READ	0x0
+>> +#define NAND_CTL_RW_WRITE	BIT(10)
+>> +#define NAND_CTL_ECC_OFF_V8TH	BIT(11)
+>> +#define NAND_CTL_CKFF_EN	0x0
+>> +#define NAND_CTL_MSG_EN		BIT(17)
+>> +
+>> +#define NAND_PARA0		0x13c
+>> +#define NAND_PARA0_PAGE_V8192	0x3
+>> +#define NAND_PARA0_PIB_V256	(0x3 << 4)
+>> +#define NAND_PARA0_BYP_EN_NP	0x0
+>> +#define NAND_PARA0_BYP_DEC_NP	0x0
+>> +#define NAND_PARA0_TYPE_ONFI	BIT(18)
+>> +#define NAND_PARA0_ADEP_EN	BIT(21)
+>> +
+>> +#define NAND_CMSG_0		0x150
+>> +#define NAND_CMSG_1		0x154
+>> +
+>> +#define NAND_WRITE_CMD		(NAND_CON_CS_P_LOW | NAND_CON_CLE_P_LOW)
+>> +#define NAND_WRITE_ADDR		(NAND_CON_CS_P_LOW | NAND_CON_ALE_P_LOW)
+> I would redefine ALE, CLE and CS here instead of re-using the NAND_CON
+> definitions. Even if they have the same value they represent different
+> things I think. One is encoding the signal polarity when configuring
+> the NAND controller, and the other one is an offset in the memory bus
+> MMIO range that's used to control the CLE/ALE/CS signals.
+Noted, will update.
+>
+> #define NAND_ALE_OFFS			BIT(2)
+> #define NAND_CLE_OFFS			BIT(3)
+> #define NAND_CS_OFFS			BIT(4)
+>
+>> +#define NAND_WRITE_DATA		NAND_CON_CS_P_LOW
+>> +#define NAND_READ_DATA		NAND_CON_CS_P_LOW
+> Can we not hide that behind macros. And there's no point having 2
+> different definitions for read/write, since all they do is keeping the
+> CS line asserted, the direction is selection by the operation done on
+> the bus (read or write). BTW, you even mix those without realizing the
+> mistake in your implementation :P.
+Sure, do optimization with single macro
+>
+>> +
+>> +#define NAND_CHIP_NO_SELECTION	-1
+>> +#define NAND_CHIP_SELECTION	0x0
+>> +
+>> +struct lgm_nand_host {
+> infineon_nand_controller?
+better we keep intel_nand_controller , is it okay?
+>> +	struct nand_controller	controller;
+>> +	struct nand_chip	chip;
+>> +	void __iomem		*lgm_va;
+>> +	void __iomem		*hsnand_va;
+>> +	void __iomem		*nandaddr_va;
+> You can drop the _va suffixes and pick names describing what's exposed
+> by the MMIO range (lgm doesn't sounds like a good name to me).
+Noted, will pick the proper name
+>> +	struct clk		*clk;
+>> +	unsigned long		clk_rate;
+>> +	u32			cs;
+>> +	u32			nd_para0;
+>> +	struct device		*dev;
+>> +	struct dma_chan		*dma_tx;
+>> +	struct dma_chan		*dma_rx;
+>> +	struct completion	dma_access_complete;
+>> +	const char *cs_name;
+>> +};
+>> +
+>> +static u8 lgm_nand_readb(struct nand_chip *chip, int op)
+> Make op an unsigned int.
+okay, noted.
+>> +{
+>> +	struct lgm_nand_host *lgm_host = nand_get_controller_data(chip);
+>> +	void __iomem *nand_wait = lgm_host->lgm_va + NAND_WAIT;
+>> +	u32 stat;
+>> +	int ret;
+>> +	u8 val;
+>> +
+>> +	val = readb(lgm_host->nandaddr_va + op);
+>> +
+>> +	ret = readl_poll_timeout(nand_wait, stat, stat & NAND_WAIT_WR_C,
+>> +				 20, 1000);
+>> +	if (ret)
+>> +		dev_warn(lgm_host->dev,
+>> +			 "lgm nand write timeout. nand_wait(0x%p)=0x%x\n",
+>> +			 nand_wait, readl(nand_wait));
+>> +
+>> +	return val;
+>> +}
+>> +
+>> +static void lgm_nand_writeb(struct nand_chip *chip, int op, u8 value)
+>> +{
+>> +	struct lgm_nand_host *lgm_host = nand_get_controller_data(chip);
+>> +	void __iomem *nand_wait = lgm_host->lgm_va + NAND_WAIT;
+>> +	u32 stat;
+>> +	int ret;
+>> +
+>> +	writeb(value, lgm_host->nandaddr_va + op);
+> Looks like NAND_CON_CS_P_LOW is always set, so no need to force the
+> caller to pass it in op.
+Agreed!
+>> +
+>> +	ret = readl_poll_timeout(nand_wait, stat, stat & NAND_WAIT_WR_C,
+>> +				 20, 1000);
+>> +	if (ret)
+>> +		dev_warn(lgm_host->dev,
+>> +			 "lgm nand write timeout. nand_wait(0x%p)=0x%x\n",
+>> +			 nand_wait, readl(nand_wait));
+>> +}
+>> +
+>> +static unsigned char lgm_read_byte(struct nand_chip *chip)
+>> +{
+>> +	return lgm_nand_readb(chip, NAND_READ_DATA);
+>> +}
+> This one should not be needed.
+Good catch , will drop it.
+>> +
+>> +static void lgm_read_buf(struct nand_chip *chip, u_char *buf, int len)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < len; i++)
+>> +		buf[i] = lgm_nand_readb(chip, NAND_WRITE_DATA);
+>> +}
+>> +
+>> +static void lgm_write_buf(struct nand_chip *chip, const u_char *buf, int len)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < len; i++)
+>> +		lgm_nand_writeb(chip, NAND_WRITE_DATA, buf[i]);
+>> +}
+>> +
+>> +static void lgm_select_chip(struct nand_chip *chip, int select)
+>> +{
+>> +	struct lgm_nand_host *lgm_host = nand_get_controller_data(chip);
+>> +	void __iomem *nand_con = lgm_host->lgm_va + NAND_CON;
+>> +	u32 cs = lgm_host->cs;
+>> +	int val;
+>> +
+>> +	switch (select) {
+>> +	case NAND_CHIP_NO_SELECTION:
+>> +		val = readl(nand_con);
+>> +		writel(val & ~NAND_CON_NANDM_EN, nand_con);
+>> +		break;
+> Please move that to an unselect_chip() function. I also see that this
+> function is never called with NAND_CHIP_NO_SELECTION. Oh, and you don't
+> need the select argument since you only support one CS per chip.
+Sure , will update as per single chip selection support.
+>
+>> +	case NAND_CHIP_SELECTION:
+>> +		writel(NAND_CON_NANDM_EN | NAND_CON_CSMUX_E_EN |
+>> +		       NAND_CON_CS_P_LOW | NAND_CON_SE_P_LOW |
+>> +		       NAND_CON_WP_P_LOW | NAND_CON_PRE_P_LOW |
+>> +		       NAND_CON_IN_CS_S(cs) | NAND_CON_OUT_CS_S(cs) |
+>> +		       NAND_CON_LAT_EN_CS_P, nand_con);
+>> +		break;
+>> +	default:
+>> +		break;
+>> +	}
+>> +}
+>> +
+>> +static int lgm_dev_ready(struct nand_chip *chip)
+>> +{
+>> +	struct lgm_nand_host *lgm_host = nand_get_controller_data(chip);
+>> +
+>> +	return readl(lgm_host->lgm_va + NAND_WAIT) & NAND_WAIT_RDBY;
+>> +}
+>> +
+>> +static void lgm_cmd_ctrl(struct nand_chip *chip, int cmd, unsigned int ctrl)
+>> +{
+>> +	if (cmd == NAND_CMD_NONE)
+>> +		return;
+>> +
+>> +	if (ctrl & NAND_CLE)
+>> +		lgm_nand_writeb(chip, NAND_WRITE_CMD, cmd);
+>> +	else if (ctrl & NAND_ALE)
+>> +		lgm_nand_writeb(chip, NAND_WRITE_ADDR, cmd);
+>> +}
+> Looks like you're still sticking to the old cmd_ctrl() interface.
+> Please inline what can be inlined in exec_op() (everything that's
+> related to CMD/ADDR cycle emission) and add helpers for the read/write
+> data logic.
+Yes, Your are right, function definition need to be updated and aligned 
+with exec_op() based definitions
+>> +
+>> +static int lgm_nand_ooblayout_ecc(struct mtd_info *mtd, int section,
+>> +				  struct mtd_oob_region *oobregion)
+>> +{
+>> +	struct nand_chip *chip = mtd_to_nand(mtd);
+>> +
+>> +	if (section)
+>> +		return -ERANGE;
+>> +
+>> +	oobregion->offset = LGM_NAND_ECC_OFFSET;
+>> +	oobregion->length = chip->ecc.total;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int lgm_nand_ooblayout_free(struct mtd_info *mtd, int section,
+>> +				   struct mtd_oob_region *oobregion)
+>> +{
+>> +	struct nand_chip *chip = mtd_to_nand(mtd);
+>> +
+>> +	if (section)
+>> +		return -ERANGE;
+>> +
+>> +	oobregion->offset = chip->ecc.total + LGM_NAND_ECC_OFFSET;
+>> +	oobregion->length = mtd->oobsize - oobregion->offset;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct mtd_ooblayout_ops lgm_nand_ooblayout_ops = {
+>> +	.ecc = lgm_nand_ooblayout_ecc,
+>> +	.free = lgm_nand_ooblayout_free,
+>> +};
+>> +
+>> +static inline struct lgm_nand_host *nand_to_lgm(struct nand_chip *chip)
+>> +{
+>> +	return container_of(chip, struct lgm_nand_host, chip);
+>> +}
+> Please move that function next to the struct definition, and you can
+> drop the inline specifier, the compiler should be smart enough to
+> inline it anyway.
+Noted, will move next to structure  and also drop inline.
+>> +static int lgm_nand_exec_op(struct nand_chip *chip,
+>> +			    const struct nand_operation *op, bool check_only)
+>> +{
+>> +	struct lgm_nand_host *host = nand_to_lgm(chip);
+>> +	const struct nand_op_instr *instr = NULL;
+>> +	unsigned int op_id;
+>> +	int i, ret = 0;
+>> +
+>> +	for (op_id = 0; op_id < op->ninstrs; op_id++) {
+>> +		instr = &op->instrs[op_id];
+>> +
+>> +		lgm_select_chip(chip, host->cs);
+> Should be moved before the for() loop (no need to select the chip
+> every time you excute an instruction).
+Good catch, Thanks!
+>> +
+>> +		switch (instr->type) {
+>> +		case NAND_OP_CMD_INSTR:
+>> +			lgm_cmd_ctrl(chip, instr->ctx.cmd.opcode, NAND_CLE);
+> 			lgm_nand_writeb(chip, NAND_CLE_OFFS,
+> 					instr->ctx.cmd.opcode);	
+>
+>> +		break;
+> Missing tab here^.
+Noted.
+>> +
+>> +		case NAND_OP_ADDR_INSTR:
+>> +			for (i = 0; i < instr->ctx.addr.naddrs; i++)
+>> +				lgm_cmd_ctrl(chip, instr->ctx.addr.addrs[i],
+>> +					     NAND_ALE);
+> 				lgm_nand_writeb(chip, NAND_ALE_OFFS,
+> 						instr->ctx.addr.addrs[i]);
+>
+>> +			break;
+>> +
+>> +		case NAND_OP_DATA_IN_INSTR:
+>> +			lgm_read_buf(chip, instr->ctx.data.buf.in,
+>> +				     instr->ctx.data.len);
+>> +			break;
+>> +
+>> +		case NAND_OP_DATA_OUT_INSTR:
+>> +			lgm_write_buf(chip, instr->ctx.data.buf.out,
+>> +				      instr->ctx.data.len);
+>> +			break;
+>> +
+>> +		case NAND_OP_WAITRDY_INSTR:
+>> +			ret = lgm_dev_ready(chip);
+> That's wrong, WAITRDY should wait for the NAND_WAIT_RDBY flag to be
+> set but you only check its value once.
+okay, let me check and update.
+>
+> 			ret = readl_poll_timeout(lgm_host->lgm_va +
+> 						  NAND_WAIT, status,
+> 						  status & NAND_WAIT_RDBY, 20,
+> 						  instr->ctx.waitrdy.timeout_ms * 1000);
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct nand_controller_ops lgm_nand_controller_ops {
+>> +	.attach_chip = lgm_nand_attach_chip,
+>> +	.exec_op = lgm_nand_exec_op,
+>> +};
+>> +
+>> +static void lgm_dma_exit(struct lgm_nand_host *lgm_host)
+> lgm_dma_cleanup()?
+Noted, will update the function name
+>> +{
+>> +	if (lgm_host->dma_rx) {
+>> +		dma_release_channel(lgm_host->dma_rx);
+>> +		lgm_host->dma_rx = NULL;
+>> +	}
+>> +
+>> +	if (lgm_host->dma_tx) {
+>> +		dma_release_channel(lgm_host->dma_tx);
+>> +		lgm_host->dma_tx = NULL;
+>> +	}
+>> +}
+>> +
+>> +static int lgm_dma_init(struct device *dev, struct lgm_nand_host *lgm_host)
+>> +{
+>> +	int ret;
+>> +
+>> +	/* Prepare for TX DMA: */
+>> +	lgm_host->dma_tx = dma_request_chan(dev, "tx");
+>> +	if (IS_ERR(lgm_host->dma_tx)) {
+>> +		ret = PTR_ERR(lgm_host->dma_tx);
+>> +		dev_err(dev, "can't get the TX DMA channel, error %d!\n", ret);
+>> +		goto err;
+>> +	}
+>> +
+>> +	/* Prepare for RX: */
+>> +	lgm_host->dma_rx = dma_request_chan(dev, "rx");
+> Hm, too bad there's not devm_ version for that one.
+>
+>> +	if (IS_ERR(lgm_host->dma_rx)) {
+>> +		ret = PTR_ERR(lgm_host->dma_rx);
+>> +		dev_err(dev, "can't get the RX DMA channel, error %d\n", ret);
+>> +		goto err;
+>> +	}
+>> +
+>> +	return 0;
+>> +err:
+> No need for an error path if you just return the error code. BTW, I
+> don't like those functions that don't cleanup behind them when an error
+> happens. I know it's all handled in the dma_exit() function, but still.
+okay, will return error code and also cleanup.
+>> +	return ret;
+>> +}
+>> +
+>> +static int lgm_nand_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct lgm_nand_host *lgm_host;
+>> +	struct nand_chip *nand;
+>> +	phys_addr_t nandaddr_pa;
+>> +	struct mtd_info *mtd;
+>> +	struct resource *res;
+>> +	int ret;
+>> +	u32 cs;
+>> +
+>> +	lgm_host = devm_kzalloc(dev, sizeof(*lgm_host), GFP_KERNEL);
+>> +	if (!lgm_host)
+>> +		return -ENOMEM;
+>> +
+>> +	lgm_host->dev = dev;
+>> +	nand_controller_init(&lgm_host->controller);
+>> +
+>> +	lgm_host->lgm_va =
+>> +	devm_platform_ioremap_resource_byname(pdev, "lgmnand");
+> 	lgm_host->lgm_va = devm_platform_ioremap_resource_byname(pdev,
+> 								  "lgmnand");
+>
+>> +	if (IS_ERR(lgm_host->lgm_va))
+>> +		return PTR_ERR(lgm_host->lgm_va);
+>> +
+>> +	lgm_host->hsnand_va =
+>> +	devm_platform_ioremap_resource_byname(pdev, "hsnand");
+>> +	if (IS_ERR(lgm_host->hsnand_va))
+>> +		return PTR_ERR(lgm_host->hsnand_va);
+>> +
+>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to get chip select: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	lgm_host->cs = cs;
+>> +
+>> +	lgm_host->cs_name = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", cs);
+> You don't need to keep the cs_name attached to lgm_host as it's
+> automatically release. You can just get rid of the lgm_host->cs_name
+> field.
+Good point for me to update, Thanks!
+>> +	if (IS_ERR(lgm_host->cs_name)) {
+>> +		ret = PTR_ERR(lgm_host->cs_name);
+>> +		dev_err(dev, "failed to get chip select name: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
+>> +	lgm_host->nandaddr_va = res;
+>> +	nandaddr_pa = res->start;
+>> +	if (IS_ERR(lgm_host->nandaddr_va))
+>> +		return PTR_ERR(lgm_host->nandaddr_va);
+>> +
+>> +	lgm_host->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(lgm_host->clk)) {
+>> +		ret = PTR_ERR(lgm_host->clk);
+>> +		dev_err(dev, "failed to get clock: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = clk_prepare_enable(lgm_host->clk);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to enable clock: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +	lgm_host->clk_rate = clk_get_rate(lgm_host->clk);
+>> +
+>> +	ret = lgm_dma_init(dev, lgm_host);
+>> +	if (ret)
+>> +		goto disable_clk;
+>> +
+>> +	writel(lower_32_bits(nandaddr_pa) | LGM_ADDR_SEL_REGEN | LGM_ADDR_MASK,
+>> +	       lgm_host->lgm_va + LGM_ADDR_SEL(cs));
+>> +
+>> +	writel(LGM_BUSCON_CMULT_V4 | LGM_BUSCON_RECOVC(1) |
+>> +	       LGM_BUSCON_HOLDC(1) | LGM_BUSCON_WAITRDC(2) |
+>> +	       LGM_BUSCON_WAITWRC(2) | LGM_BUSCON_BCGEN_CS | LGM_BUSCON_ALEC |
+>> +	       LGM_BUSCON_SETUP_EN, lgm_host->lgm_va + LGM_BUSCON(cs));
+>> +
+>> +	/*
+>> +	 * NAND physical address selection is based on the chip select
+>> +	 * and written to ADDR_SEL register to get Memory Region Base address.
+>> +	 * FPI Bus addresses are compared to this base address in conjunction
+>> +	 * with the mask control. Driver need to program this field!
+>> +	 * Address: 0x17400 if chip select is CS_0
+>> +	 * Address: 0x17C00 if chip select is CS_1
+>> +	 * Refer the Intel LGM SoC datasheet.
+>> +	 */
+>> +	writel(0x17400051, lgm_host->lgm_va + LGM_ADDR_SEL(0));
+>> +	writel(0x17C00051, lgm_host->lgm_va + LGM_ADDR_SEL(cs));
+> No magic value please. I guess the 0x51 at the end encode some flags, so
+> please describe those fields and come with a macro to generate the base
+> range value (or a mapping table).
+sure, will add MACRO instead of magic values.
+>> +	nand_set_flash_node(&lgm_host->chip, dev->of_node);
+>> +	mtd = nand_to_mtd(&lgm_host->chip);
+>> +	mtd->dev.parent = dev;
+>> +	lgm_host->dev = dev;
+>> +
+>> +	platform_set_drvdata(pdev, lgm_host);
+>> +	nand_set_controller_data(&lgm_host->chip, lgm_host);
+>> +
+>> +	nand = &lgm_host->chip;
+>> +	nand->controller = &lgm_host->controller;
+>> +	nand->controller->ops = &lgm_nand_controller_ops;
+>> +
+>> +	/* Scan to find existence of the device */
+>> +	ret = nand_scan(&lgm_host->chip, 1);
+>> +	if (ret)
+>> +		goto exit_dma;
+>> +
+>> +	ret = mtd_device_register(mtd, NULL, 0);
+>> +	if (ret)
+>> +		goto clean_nand;
+>> +
+>> +	return 0;
+>> +
+>> +clean_nand:
+>> +	nand_cleanup(&lgm_host->chip);
+>> +exit_dma:
+>> +	lgm_dma_exit(lgm_host);
+>> +disable_clk:
+>> +	clk_disable_unprepare(lgm_host->clk);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int lgm_nand_remove(struct platform_device *pdev)
+>> +{
+>> +	struct lgm_nand_host *lgm_host = platform_get_drvdata(pdev);
+>> +
+>> +	nand_release(&lgm_host->chip);
+> Can you use mtd_device_unregister() + nand_cleanup() instead, and check
+> their return value?
+Sure, will use .
+>> +	clk_disable_unprepare(lgm_host->clk);
+>> +	lgm_dma_exit(lgm_host);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id lgm_nand_match[] = {
+>> +	{ .compatible = "intel,lgm-nand", },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, lgm_nand_match);
+> You probably have a missing "depends on OF" in your Kconfig.
+okay , Noted.
+>> +
+>> +static struct platform_driver lgm_nand_driver = {
+>> +	.probe = lgm_nand_probe,
+>> +	.remove = lgm_nand_remove,
+>> +	.driver = {
+>> +		.name = "intel-lgm-nand",
+>> +		.of_match_table = lgm_nand_match,
+>> +	},
+>> +
+>> +};
+>> +module_platform_driver(lgm_nand_driver);
+>> +
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@intel.com>");
+>> +MODULE_DESCRIPTION("Intel's LGM External Bus NAND Controller driver");
+> I didn't review the DMA and ECC aspects yet, but I think you have enough
+> things to address for a v3.
+
+Thanks a lot for the review comments and valuable inputs to me for 
+further driver patch preparation.
+
+Regards
+Vadviel
