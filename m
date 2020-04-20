@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A28C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D03C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B47620736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A1920736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387497;
-	bh=AOHe/n3kDDZTI78L9QgIyTTp24peUgU2CILtvhhe0Kk=;
+	s=default; t=1587387503;
+	bh=plMxhHApsc4BN2fh/xPdBd++keSZJd9EE9BXwTtjyPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XU7/brlgkRF/x9xtMJlBR/8mZaom31vuXUGegygV8EHBVn+mXmhNz3gkSfDDlDeX3
-	 uQkG9nEnuXvAHMe5zQXX72mCHgJkVeQGLPhc4T1LUDA2d7eI91jW8qKHQjVYsylls2
-	 c3qgR7Oml3MpH+qFp9EZT90JN8SdVD59OdOOgVJc=
+	b=tucUyC894sPkSc0VZRi6yBW5sKFoaOU1rdmRoL82GdDUXRGQ7FN6IcLxf4/Ietua5
+	 0mrTt93M/11RMVOhmebz9eOZeTSADtxZr5BWr9pTOB24jVxc0bZTAcLSizSD3xR49o
+	 YdIZc8WrNl59J6FecM7X4T3D5nlCjMAVnx2MfpUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbgDTM6Q (ORCPT
+        id S1728305AbgDTMnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:58:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36738 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:43:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728359AbgDTMnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:43:18 -0400
+        id S1727801AbgDTMmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:42:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9CFC2075A;
-        Mon, 20 Apr 2020 12:43:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5242320735;
+        Mon, 20 Apr 2020 12:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386598;
-        bh=AOHe/n3kDDZTI78L9QgIyTTp24peUgU2CILtvhhe0Kk=;
+        s=default; t=1587386570;
+        bh=plMxhHApsc4BN2fh/xPdBd++keSZJd9EE9BXwTtjyPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g5La4CT2M0i1BUE+DEjbl1EGqurpYqGNdfJRRH2UjDFCA2Vvt1222bXAV4FD9uHhB
-         bu8uvnsSRhafL1uCaM5cstX4z2D1hAUeJCKFqIxYQvW5gIjXV6pxi5Fi/u2bNWEWue
-         ryTz4ePmFIXvEvHEUdpbhLO9YcdKxwlv8OedHmrM=
+        b=dRoDWGfPEQeWxrz9fqEviac/5gzMSKfdrCEaFngf6a0rrpWFTL+nEkn8oXEvrHqRZ
+         ogqRc+RBCHX64mTlHau86k4fEQE4E1AWF5g3xa77exjJdu3WWn80OwP+qiijz4xfm4
+         XURWPMWNMpDQncV/zRFzBewhEQ6KbpDWch8TKNsg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Toralf=20F=C3=B6rster?= <toralf.foerster@gmx.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 22/71] Revert "ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()"
-Date:   Mon, 20 Apr 2020 14:38:36 +0200
-Message-Id: <20200420121512.763120030@linuxfoundation.org>
+        stable@vger.kernel.org, Gilberto Bertin <me@jibi.io>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 11/71] net: tun: record RX queue in skb before do_xdp_generic()
+Date:   Mon, 20 Apr 2020 14:38:25 +0200
+Message-Id: <20200420121510.699855599@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -61,47 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Gilberto Bertin <me@jibi.io>
 
-This reverts commit 281e612b4b9587c0c72e30c49ec279587b20da0f which is
-commit 65a691f5f8f0bb63d6a82eec7b0ffd193d8d8a5f upstream.
+[ Upstream commit 3fe260e00cd0bf0be853c48fcc1e19853df615bb ]
 
-Rafael writes:
-	It has not been marked for -stable or otherwise requested to be
-	included AFAICS.  Also it depends on other mainline commits that
-	have not been included into 5.6.5.
+This allows netif_receive_generic_xdp() to correctly determine the RX
+queue from which the skb is coming, so that the context passed to the
+XDP program will contain the correct RX queue index.
 
-Reported-by: Toralf Förster <toralf.foerster@gmx.de>
-Reported-by: Rafael J. Wysocki <rafael@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Gilberto Bertin <me@jibi.io>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/acpi/ec.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/tun.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1646,6 +1646,7 @@ static int acpi_ec_add(struct acpi_devic
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1925,6 +1925,7 @@ drop:
  
- 		if (boot_ec && ec->command_addr == boot_ec->command_addr &&
- 		    ec->data_addr == boot_ec->data_addr) {
-+			boot_ec_is_ecdt = false;
- 			/*
- 			 * Trust PNP0C09 namespace location rather than
- 			 * ECDT ID. But trust ECDT GPE rather than _GPE
-@@ -1665,12 +1666,9 @@ static int acpi_ec_add(struct acpi_devic
+ 	skb_reset_network_header(skb);
+ 	skb_probe_transport_header(skb);
++	skb_record_rx_queue(skb, tfile->queue_index);
  
- 	if (ec == boot_ec)
- 		acpi_handle_info(boot_ec->handle,
--				 "Boot %s EC initialization complete\n",
-+				 "Boot %s EC used to handle transactions and events\n",
- 				 boot_ec_is_ecdt ? "ECDT" : "DSDT");
+ 	if (skb_xdp) {
+ 		struct bpf_prog *xdp_prog;
+@@ -2498,6 +2499,7 @@ build:
+ 	skb->protocol = eth_type_trans(skb, tun->dev);
+ 	skb_reset_network_header(skb);
+ 	skb_probe_transport_header(skb);
++	skb_record_rx_queue(skb, tfile->queue_index);
  
--	acpi_handle_info(ec->handle,
--			 "EC: Used to handle transactions and events\n");
--
- 	device->driver_data = ec;
+ 	if (skb_xdp) {
+ 		err = do_xdp_generic(xdp_prog, skb);
+@@ -2509,7 +2511,6 @@ build:
+ 	    !tfile->detached)
+ 		rxhash = __skb_get_hash_symmetric(skb);
  
- 	ret = !!request_region(ec->data_addr, 1, "EC data");
+-	skb_record_rx_queue(skb, tfile->queue_index);
+ 	netif_receive_skb(skb);
+ 
+ 	/* No need for get_cpu_ptr() here since this function is
 
 
