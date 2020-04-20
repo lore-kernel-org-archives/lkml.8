@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF7FC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAFFC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A955520736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E2720736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lj/Yowy3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MA9Hc7It"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgDTTJi (ORCPT
+        id S1728068AbgDTTJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:09:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37374 "EHLO
+        Mon, 20 Apr 2020 15:09:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727873AbgDTTJ2 (ORCPT
+        by vger.kernel.org with ESMTP id S1725896AbgDTTJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:09:28 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E3EC061A0C;
-        Mon, 20 Apr 2020 12:09:27 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id g13so11536868wrb.8;
-        Mon, 20 Apr 2020 12:09:27 -0700 (PDT)
+        Mon, 20 Apr 2020 15:09:32 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAF49C061A10;
+        Mon, 20 Apr 2020 12:09:31 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z6so818807wml.2;
+        Mon, 20 Apr 2020 12:09:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mO+e6MGsJdi3QsmX2S9FqCiq+qKAo+MDQiNuazkChc4=;
-        b=lj/Yowy3mR+wzrP1hv/Lipx2wxOFCvJx7zwCePnxQBgh3cINmba7Ci9nAWmE4X7A7O
-         3EnBYGEylOQ2eudOMBV10N2DOuTIqyuwLHneQNPgHx0PIh0dxMST2wDLDhtGKepq11vT
-         a8ZT07xbcZQh7/B8rct2AdxLGG8IOi8puKbTicodJzksTd46gCwKtduoKCKWoif0bu64
-         AI2wiprTJYA4KeXwAVp25Xhl/y/Vp2hlwjzGKvOU4F8y+yrvdOH00nkApEnDeiYNuiiX
-         Y+/P9KeN8qsgsgNchrAEqfaIAYJvmhN0JIV2cjbcCvfo4iFBQRtVC1e3BlPT7b/JGHSN
-         Y0Uw==
+        bh=jF5s6mIDV3imWHwN3gxECUXiGCch+faubGbjA6qiFuo=;
+        b=MA9Hc7It1IJZS+3VUl8IaZyr9hEDq/mPbwd2Pq14bW3UdHhu3Dabnrqnz0uKE2ACn0
+         RI4VbmAncJlw5s7+wqp6aqxucd/Lzwu70Zs2RxmHCrMmOhE10y3nfl4lnHk+3AFT3Rlh
+         T6QC/lqivqxOPHLl4kyK0K89R/iPqKz6M0aiphsxPEfi+zYGa55qPoZh8qlHhgmWecuh
+         JhEDEjaFvZgMcT+X8wbdysuG4376TwlrcbdWs9ZT26LfI/m6LwW9YjMojxgbzi/K+dn/
+         PbisGkgdwDoMXsWyOTQK7I1mgMwHwHcIZ74Wh+vpBtGStJ1r5EydNlwvHBGVuxq1CuYz
+         584w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=mO+e6MGsJdi3QsmX2S9FqCiq+qKAo+MDQiNuazkChc4=;
-        b=jp08pZKHtzh1PiQsRUIk1t7WYoYFwwmtZTbGQDycaxO/MzoKKUCvPoztq8dztmF7uO
-         jY335f1SWXO+8Hq7bf7bLYmgNaAZlBeY/Joun5mobHbYvqLgRZB8O4+ysNurqIZonHjw
-         sfTUE475epyiYuYpvrY0gSRjuoidgSoZ9ChSCYiqbEcxFkVZLRBfpsNTPdSTMCCX/tIY
-         5r1jUkOWDRoViWzIckR+zpvjFHmftGcpQLdhhpqnaWcdfBUdxaa80z0KAQPDtSEa7spX
-         WtuJYWVGlVWxqrNuoQ8DSr3Ssq76jdjxpHsc3aBljNovRTbHR2bpgeJU1fo0Ddvc1AxV
-         Z5UQ==
-X-Gm-Message-State: AGi0PuYYV+0eJgD/5cDImxFMCxooY621ru0GH90t+KWwqfpWX9ditsUQ
-        ffqp59fR4uBs+7dJu50NRl0cy4OsqlU=
-X-Google-Smtp-Source: APiQypLMnJWMh92m5YsJHf9BqBjCmjXxO84KbIg7LOknPhc0h3h1ured9ATaL62NfwsOoyvx68JZ3A==
-X-Received: by 2002:adf:bc05:: with SMTP id s5mr19880920wrg.70.1587409766670;
-        Mon, 20 Apr 2020 12:09:26 -0700 (PDT)
+        bh=jF5s6mIDV3imWHwN3gxECUXiGCch+faubGbjA6qiFuo=;
+        b=jbnpT6awTHD4knoQunGFIWdLhslGiSIaogFQrnjoRSY3XGIj3xAX9rlvYX2BbkRoAY
+         zLqJ+LyKQbL3U6zHeOLdndS3f1UNZpuFcj00++E5FvQX+p6o3FRGglZOyF1rHvraT6sW
+         updKlaaokOAfyx+w4VOJEjHck2kTuvf2okrNBJQl6IwcN1KiLmjvPblRUbVuuaUE0+HN
+         meFtvlF+kB7sOlAwyK00gVt+H754gCdXM9lKjr92STR9ys5dE6bgPi7eWkp725kn6jGH
+         VSbERCWwHbr9abig8PeCUBx8ypnmzkslRSocdg2qIk33FUjSMHEamgtxzOJR1zC/ZePJ
+         qSNw==
+X-Gm-Message-State: AGi0PuZMxzyXlFz253M5lIyE+q4WesEr0XXPViG307C9tnpDhWN756LD
+        5ZfXmSS4aOgscw99LUBNHd8=
+X-Google-Smtp-Source: APiQypLRVea+hlqZbX7g3aJ3ofjkpxEYOpCmtuezTVESJGLwrvrSTxpYQYGNwxv6uiXrQpOstFAbiw==
+X-Received: by 2002:a05:600c:2941:: with SMTP id n1mr872602wmd.25.1587409770565;
+        Mon, 20 Apr 2020 12:09:30 -0700 (PDT)
 Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id y5sm621251wru.15.2020.04.20.12.09.25
+        by smtp.gmail.com with ESMTPSA id y5sm621251wru.15.2020.04.20.12.09.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 12:09:26 -0700 (PDT)
+        Mon, 20 Apr 2020 12:09:30 -0700 (PDT)
 From:   Kamal Dasu <kdasu.kdev@gmail.com>
 To:     Kamal Dasu <kdasu.kdev@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com,
         Mark Brown <broonie@kernel.org>
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Patch v3 4/9] spi: bcm-qspi: Drive MSPI peripheral SSb pin on cs_change
-Date:   Mon, 20 Apr 2020 15:08:48 -0400
-Message-Id: <20200420190853.45614-5-kdasu.kdev@gmail.com>
+Subject: [Patch v3 6/9] spi: bcm-qspi: Make PM suspend/resume work with SCMI clock management
+Date:   Mon, 20 Apr 2020 15:08:50 -0400
+Message-Id: <20200420190853.45614-7-kdasu.kdev@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200420190853.45614-1-kdasu.kdev@gmail.com>
 References: <20200420190853.45614-1-kdasu.kdev@gmail.com>
@@ -75,74 +75,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per the spi core implementation for MSPI devices when the transfer is
-the last one in the message, the chip may stay selected until the next
-transfer. On multi-device SPI busses with nothing blocking messages going
-to other devices, this is just a performance hint; starting a message to
-another device deselects this one. But in other cases, this can be used
-to ensure correctness. Some devices need protocol transactions to be built
-from a series of spi_message submissions, where the content of one message
-is determined by the results of previous messages and where the whole
-transaction ends when the chipselect goes intactive.
-
-On CS change after completing the last serial transfer, the MSPI driver
-drives SSb pin CDRAM register correctly according comments in core spi.h
-as shown below:
-
-case 1) EOM =1, cs_change =0: SSb inactive
-case 2) EOM =1, cs_change =1: SSb active
-case 3) EOM =0, cs_change =0: SSb active
-case 4) EOM =0, cs_change =1: SSb inactive
+SCMI only passes clk_prepare_enable() and clk_disable_unprepare(), made
+changes to suspend/resume ops to use the appropriate calls so that PM
+works for ARM and ARM64 platforms.
 
 Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 ---
- drivers/spi/spi-bcm-qspi.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/spi/spi-bcm-qspi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
-index d901dcb10d06..c48c399dce53 100644
+index e00208801c8b..a3936ae5a860 100644
 --- a/drivers/spi/spi-bcm-qspi.c
 +++ b/drivers/spi/spi-bcm-qspi.c
-@@ -615,19 +615,15 @@ static int update_qspi_trans_byte_count(struct bcm_qspi *qspi,
- 		if (qt->trans->cs_change &&
- 		    (flags & TRANS_STATUS_BREAK_CS_CHANGE))
- 			ret |= TRANS_STATUS_BREAK_CS_CHANGE;
--		if (ret)
--			goto done;
+@@ -1455,7 +1455,7 @@ static int __maybe_unused bcm_qspi_suspend(struct device *dev)
+ 			bcm_qspi_read(qspi, BSPI, BSPI_STRAP_OVERRIDE_CTRL);
  
--		dev_dbg(&qspi->pdev->dev, "advance msg exit\n");
- 		if (bcm_qspi_mspi_transfer_is_last(qspi, qt))
--			ret = TRANS_STATUS_BREAK_EOM;
-+			ret |= TRANS_STATUS_BREAK_EOM;
- 		else
--			ret = TRANS_STATUS_BREAK_NO_BYTES;
-+			ret |= TRANS_STATUS_BREAK_NO_BYTES;
+ 	spi_master_suspend(qspi->master);
+-	clk_disable(qspi->clk);
++	clk_disable_unprepare(qspi->clk);
+ 	bcm_qspi_hw_uninit(qspi);
  
- 		qt->trans = NULL;
- 	}
+ 	return 0;
+@@ -1473,7 +1473,7 @@ static int __maybe_unused bcm_qspi_resume(struct device *dev)
+ 		qspi->soc_intc->bcm_qspi_int_set(qspi->soc_intc, MSPI_DONE,
+ 						 true);
  
--done:
- 	dev_dbg(&qspi->pdev->dev, "trans %p len %d byte %d ret %x\n",
- 		qt->trans, qt->trans ? qt->trans->len : 0, qt->byte, ret);
- 	return ret;
-@@ -774,7 +770,16 @@ static int write_to_hw(struct bcm_qspi *qspi, struct spi_device *spi)
- 	bcm_qspi_write(qspi, MSPI, MSPI_NEWQP, 0);
- 	bcm_qspi_write(qspi, MSPI, MSPI_ENDQP, slot - 1);
+-	ret = clk_enable(qspi->clk);
++	ret = clk_prepare_enable(qspi->clk);
+ 	if (!ret)
+ 		spi_master_resume(qspi->master);
  
--	if (tstatus & TRANS_STATUS_BREAK_DESELECT) {
-+	/*
-+	 *  case 1) EOM =1, cs_change =0: SSb inactive
-+	 *  case 2) EOM =1, cs_change =1: SSb stay active
-+	 *  case 3) EOM =0, cs_change =0: SSb stay active
-+	 *  case 4) EOM =0, cs_change =1: SSb inactive
-+	 */
-+	if (((tstatus & TRANS_STATUS_BREAK_DESELECT)
-+	     == TRANS_STATUS_BREAK_CS_CHANGE) ||
-+	    ((tstatus & TRANS_STATUS_BREAK_DESELECT)
-+	     == TRANS_STATUS_BREAK_EOM)) {
- 		mspi_cdram = read_cdram_slot(qspi, slot - 1) &
- 			~MSPI_CDRAM_CONT_BIT;
- 		write_cdram_slot(qspi, slot - 1, mspi_cdram);
 -- 
 2.17.1
 
