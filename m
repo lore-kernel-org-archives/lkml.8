@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875FEC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F2BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6471A20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6372070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386476;
-	bh=7+5pEKWARNc84ZkGGLnLU/rBEp2gTmMmQzl/RUdX5DU=;
+	s=default; t=1587386480;
+	bh=0EGY66fsxLPM8SesOHH0e4VqaPDSb1hdf79Q4j0V9AU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYFZDl4OC5A1KPWvZ1ncMB78OoTkFEF0RNpMiKRzFB2GR+KMnAkjiHsS+ys7t61Mw
-	 TsfU4nnsmEP3nTRXOUcf7c8S4LU5lspfKF6K9RTyrOXSK05pU3aWa5ce/2z6aACy2z
-	 O7yvgz+B4MK6rp0YLbV/qECDZk4K6L0m2ExXO6Lw=
+	b=MKj1jDcGIF75CKGTroQbf4Q4dD8EKIFMw7GSwgNbgz4lwNHFhjinW6Ny/7Ij6x74T
+	 c2c1AX3/LmxjZmgCgjYLX/KbKay87x4KxG3oLHQlx5yl0VhgdKpZYKvrMywpa1N3sw
+	 vabatSoqBcAjg+K8gdemsQ8wcqrr/RV+0aV/tjfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgDTMlP (ORCPT
+        id S1727996AbgDTMlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:41:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33790 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:41:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727962AbgDTMlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:41:12 -0400
+        id S1727975AbgDTMlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:41:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B412070B;
-        Mon, 20 Apr 2020 12:41:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2F242072B;
+        Mon, 20 Apr 2020 12:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386472;
-        bh=7+5pEKWARNc84ZkGGLnLU/rBEp2gTmMmQzl/RUdX5DU=;
+        s=default; t=1587386474;
+        bh=0EGY66fsxLPM8SesOHH0e4VqaPDSb1hdf79Q4j0V9AU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kElVvrx0LaR5a3wrP2MqsFpsfSUazkHRA+DIDWqBKXGE6Q4EiBabe987h+5BkyBfW
-         kL9MjUGtMXZvvKA0n/bA5nMI3TU8ShDHCTk8zO5+Wb8xHtuHcFP3X2GCE0kDu0Dnce
-         Cd1ITPb52Bt4Ui5SRgW6aw7PPLyKaYGqC+Nju5zk=
+        b=f28uBNnZR+rAGpHKvvesjMCr3ge4gsiUqn6icwisphzDEEqEamWF0lUoOPY3R38pj
+         7wT7aIi2QQtdYXLpckLacySNyhCcMPvsFHCZ7/q2v7vkob5vfjMT2y+YwQDSTGsIIJ
+         aFTwp1WihxrL+UThpw28NvEezyl9LMiQIoMFgpT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        stable@vger.kernel.org, "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
         Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.5 35/65] ARM: dts: imx7-colibri: fix muxing of usbc_det pin
-Date:   Mon, 20 Apr 2020 14:38:39 +0200
-Message-Id: <20200420121513.884223890@linuxfoundation.org>
+Subject: [PATCH 5.5 36/65] arm64: dts: librem5-devkit: add a vbus supply to usb0
+Date:   Mon, 20 Apr 2020 14:38:40 +0200
+Message-Id: <20200420121514.100912290@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -60,55 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+From: Angus Ainslie (Purism) <angus@akkea.ca>
 
-commit 7007f2eca0f258710899ca486da00546d03db0ed upstream.
+commit dde061b865598ad91f50140760e1d224e5045db9 upstream.
 
-USB_C_DET pin shouldn't be in ethernet group.
+Without a VBUS supply the dwc3 driver won't go into otg mode.
 
-Creating a separate group allows one to use this pin
-as an USB ID pin.
-
-Fixes: b326629f25b7 ("ARM: dts: imx7: add Toradex Colibri iMX7S/iMX7D suppor")
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Fixes: eb4ea0857c83 ("arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit")
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx7-colibri.dtsi |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -345,7 +345,7 @@
- &iomuxc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4
--		     &pinctrl_gpio7>;
-+		     &pinctrl_gpio7 &pinctrl_usbc_det>;
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+@@ -743,6 +743,7 @@
+ };
  
- 	pinctrl_gpio1: gpio1-grp {
- 		fsl,pins = <
-@@ -450,7 +450,6 @@
+ &usb3_phy0 {
++	vbus-supply = <&reg_5v_p>;
+ 	status = "okay";
+ };
  
- 	pinctrl_enet1: enet1grp {
- 		fsl,pins = <
--			MX7D_PAD_ENET1_CRS__GPIO7_IO14			0x14
- 			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x73
- 			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0	0x73
- 			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1	0x73
-@@ -648,6 +647,12 @@
- 		>;
- 	};
- 
-+	pinctrl_usbc_det: gpio-usbc-det {
-+		fsl,pins = <
-+			MX7D_PAD_ENET1_CRS__GPIO7_IO14	0x14
-+		>;
-+	};
-+
- 	pinctrl_usbh_reg: gpio-usbh-vbus {
- 		fsl,pins = <
- 			MX7D_PAD_UART3_CTS_B__GPIO4_IO7	0x14 /* SODIMM 129 USBH PEN */
 
 
