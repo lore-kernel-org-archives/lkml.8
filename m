@@ -2,93 +2,145 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0638C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09749C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C63D1206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5964206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:52:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gUoBBpw6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XPxAXLcT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgDTNv4 (ORCPT
+        id S1728903AbgDTNwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:51:56 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32730 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728453AbgDTNvz (ORCPT
+        Mon, 20 Apr 2020 09:52:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54378 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728574AbgDTNv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:51:55 -0400
+        Mon, 20 Apr 2020 09:51:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587390714;
+        s=mimecast20190719; t=1587390718;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7gTi1IicJlsSKfDG5naKX5cqpPONHfHCE+Bv1EVj7p4=;
-        b=gUoBBpw6NCikbS3zprdf3+h9DSV9fUBYnEjk0fyv1ZGJ+fgBEMHeSxNtRQpCHLPFwWjTtM
-        znBsleMobdmCdvT1hsYHbceZoZhiwx+vldo7rM6t9G0AkJofPcC9Q3m8LWFXnppKpz6WJ2
-        S+2mueE5Kx/tA/3NNf/8nwffUBmfEys=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-INKShmURNTy5bpxBXC5Pew-1; Mon, 20 Apr 2020 09:51:51 -0400
-X-MC-Unique: INKShmURNTy5bpxBXC5Pew-1
-Received: by mail-qv1-f69.google.com with SMTP id p12so10239683qvm.21
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:51:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7gTi1IicJlsSKfDG5naKX5cqpPONHfHCE+Bv1EVj7p4=;
-        b=K8pK4tKBb8RMxoOrp6sNcvec3aX1U6n1jNcoQTERw+JtK7QlaRGzFS84vFdS2UsLBe
-         FsP7ouhjIrdhRNreUZdDhBWIagFp/O4Kh27oeC+SPCuJqRcN7rhkCFWSj22YyczxJhxz
-         Ybk17/y1Ny3sQJWtoH7rO+1k48NWITj3QS5la7xoyYeXqAEmE5e3zCukrsdMP3YCEeSF
-         PioSeN7Flj7mrepY+XFyd3YcYtHvNbIzmlMKlZ8+bJSG44xgIhHUinVnb8fZ5ke2yHdA
-         O/+ahpqHWvMvZrTB+EJLfaBVeswCs7Fk60fCnJUcmpcM2b9ymB7lJJljOazf59unZMSz
-         p4xg==
-X-Gm-Message-State: AGi0PuZbFHcEzbvgwLhdLafF1dXr5DHRJvTF5WsfFrq/2lVCzINTNxRV
-        T1N3F+ZNOyIbm1lDIoeeFUhXAS8G0VJlUD2NBXTTgy0PptXJTyd7bi51Ybp3mOXHleUt8n8ySP7
-        zI5e2vNfBWekg8BYi3kqSSR+c
-X-Received: by 2002:a05:620a:1009:: with SMTP id z9mr15818457qkj.270.1587390711071;
-        Mon, 20 Apr 2020 06:51:51 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIL/5HvAE8uGB2QeYJcMl1quKM2t1afKsHoOGNm7ioq9h6iVSe8lTD2IPGc1eogwV5ywc6E9A==
-X-Received: by 2002:a05:620a:1009:: with SMTP id z9mr15818438qkj.270.1587390710884;
-        Mon, 20 Apr 2020 06:51:50 -0700 (PDT)
-Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
-        by smtp.gmail.com with ESMTPSA id y9sm606038qkb.41.2020.04.20.06.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 06:51:50 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 09:51:48 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     pbonzini@redhat.com, tglx@linutronix.de, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kvm/eventfd: remove unneeded conversion to bool
-Message-ID: <20200420135148.GK287932@xz-x1>
-References: <20200420123805.4494-1-yanaijie@huawei.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=00MEmElFq0InaxZeBkM2hq8Ej0A8kJ9QIciCtrGjSuQ=;
+        b=XPxAXLcT4vcdWp3FBtbVR1WnSlCI1p4kq9351SXFr7P9dtgcstFmqnCdVVg9LegUhs1ZGu
+        dMgcGCboRwYFWggJr/z3lhqZd7VNOZW4oh8zAjQLIxGPBWQW/XE7M4V3UHAeIu0rWpjQsX
+        Vb6/3yAqZRWcCzFECVCYXCxVFLehu5U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-CborrHU8Moqzqf41xip6Ww-1; Mon, 20 Apr 2020 09:51:54 -0400
+X-MC-Unique: CborrHU8Moqzqf41xip6Ww-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8779BA0CC8;
+        Mon, 20 Apr 2020 13:51:52 +0000 (UTC)
+Received: from max.home.com (ovpn-114-63.ams2.redhat.com [10.36.114.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7546310013A1;
+        Mon, 20 Apr 2020 13:51:49 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        "okir@suse.de" <okir@suse.de>,
+        "tanxin.ctf@gmail.com" <tanxin.ctf@gmail.com>,
+        "xiyuyang19@fudan.edu.cn" <xiyuyang19@fudan.edu.cn>,
+        "akpm@osdl.org" <akpm@osdl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "yuanxzhang@fudan.edu.cn" <yuanxzhang@fudan.edu.cn>
+Subject: [PATCH] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Mon, 20 Apr 2020 15:51:47 +0200
+Message-Id: <20200420135147.21572-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200420123805.4494-1-yanaijie@huawei.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 08:38:05PM +0800, Jason Yan wrote:
-> The '==' expression itself is bool, no need to convert it to bool again.
-> This fixes the following coccicheck warning:
-> 
-> virt/kvm/eventfd.c:724:38-43: WARNING: conversion to bool not needed
-> here
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+nfs3_set_acl keeps track of the acl it allocated locally to determine if =
+an acl
+needs to be released at the end.  This results in a memory leak when the
+function allocates an acl as well as a default acl.  Fix by releasing acl=
+s
+that differ from the acl originally passed into nfs3_set_acl.
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
+Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
+Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+---
+ fs/nfs/nfs3acl.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
--- 
-Peter Xu
+diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
+index c5c3fc6e6c60..26c94b32d6f4 100644
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -253,37 +253,45 @@ int nfs3_proc_setacls(struct inode *inode, struct p=
+osix_acl *acl,
+=20
+ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+ {
+-	struct posix_acl *alloc =3D NULL, *dfacl =3D NULL;
++	struct posix_acl *orig =3D acl, *dfacl =3D NULL, *alloc;
+ 	int status;
+=20
+ 	if (S_ISDIR(inode->i_mode)) {
+ 		switch(type) {
+ 		case ACL_TYPE_ACCESS:
+-			alloc =3D dfacl =3D get_acl(inode, ACL_TYPE_DEFAULT);
++			alloc =3D get_acl(inode, ACL_TYPE_DEFAULT);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl =3D alloc;
+ 			break;
+=20
+ 		case ACL_TYPE_DEFAULT:
+-			dfacl =3D acl;
+-			alloc =3D acl =3D get_acl(inode, ACL_TYPE_ACCESS);
++			alloc =3D get_acl(inode, ACL_TYPE_ACCESS);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl =3D acl;
++			acl =3D alloc;
+ 			break;
+ 		}
+ 	}
+=20
+ 	if (acl =3D=3D NULL) {
+-		alloc =3D acl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
++		alloc =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+ 		if (IS_ERR(alloc))
+ 			goto fail;
++		acl =3D alloc;
+ 	}
+ 	status =3D __nfs3_proc_setacls(inode, acl, dfacl);
+-	posix_acl_release(alloc);
++out:
++	if (acl !=3D orig)
++		posix_acl_release(acl);
++	if (dfacl !=3D orig)
++		posix_acl_release(dfacl);
+ 	return status;
+=20
+ fail:
+-	return PTR_ERR(alloc);
++	status =3D PTR_ERR(alloc);
++	goto out;
+ }
+=20
+ const struct xattr_handler *nfs3_xattr_handlers[] =3D {
+
+base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
+--=20
+2.25.3
 
