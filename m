@@ -2,190 +2,122 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5A6C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A80C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47B5920672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:08:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="czKwoRDJ"
+	by mail.kernel.org (Postfix) with ESMTP id 59AA02074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgDTQIl (ORCPT
+        id S1726984AbgDTQKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726036AbgDTQIl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:08:41 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91503C061A10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:08:40 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id u10so8422819lfo.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:08:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NL3IEwcfzNQpHmXPpfrLIKWyab3iYaw/7gQEiU+sf+M=;
-        b=czKwoRDJdYo2K9jc/Bu4C6/Iv+Jc+T9L3xnSK1VPB8pCKP2Jqe02WP/XIrV+cLTqHe
-         45z9qsvugomaaXxlBZKo1HWUkBm1EeWYVfql4iAwQ5G8tbU0TUjtf39PF01XeqnUrIYL
-         CN5gYCVEoinRdadcSvhf4j5AmfWwb7fMT6sDZ+XH/XB4enysEQqqjfpgYwKB4UBU5DxF
-         gRZ2ewZvM5CRelCDpedWoqwvwVu1pushq5v5MKpmRRakreumGcWQQLMVRJqPn7Z3FNZq
-         DjKJwezAZ5gdB8ekpQ7q50H5nBAblHnSbmNBOCWZX9Ckh0bk8RNc4RJiDRjXERJ1pHIX
-         g+9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NL3IEwcfzNQpHmXPpfrLIKWyab3iYaw/7gQEiU+sf+M=;
-        b=oC3cj+440kX2cWVhIYvZsQ9Lrkqec176X0ZAUHNhah+PVq9HXeTaA/2OnT3rBmK+w7
-         PZ5HI77439o26lRUp19UPglCtIn6vJhgmErJMO6dhElXtdHQj9er8jb9y4G7cy4i64yW
-         bGpHbB0hOT6xw6+jYkrhNOCvaE4QKvNFssqfDwohCJD0w+TPuayZ1r3WskUxjPhu/46E
-         6aSd9Dh++bv2IiJKNgGzO8ggn+3lXgvuT5LaOChIdSaXYhZdBqSNC4PBocNQ5HgL+07c
-         FXZyVhFSO/ixx6RNr/Kwv+gH+SqVV6GGs4Ce9/MBFLwfeSVG7twsjdMs02lSsPPx7ZwV
-         qBrw==
-X-Gm-Message-State: AGi0PuZcF3Z3LxIuEYs79eyAa5ynflui/qrFP/RzyMc3YmgXE5BeSTQ9
-        SUBvJnu9wA/lbzRSoKw1p8/NJOL+v4dWzU+D8njcNg==
-X-Google-Smtp-Source: APiQypKB4wP6bv3movpA3yXEyiywpA4vIc8NpmSfY2rAPduF5WboKyncgZPcIL771EReYQDwKZ0+cny7Gib+g3VLc7k=
-X-Received: by 2002:a19:550a:: with SMTP id n10mr11048932lfe.143.1587398918866;
- Mon, 20 Apr 2020 09:08:38 -0700 (PDT)
+        Mon, 20 Apr 2020 12:10:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:51626 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbgDTQKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 12:10:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61D1531B;
+        Mon, 20 Apr 2020 09:10:33 -0700 (PDT)
+Received: from [192.168.0.110] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6BFC3F73D;
+        Mon, 20 Apr 2020 09:10:32 -0700 (PDT)
+Subject: Re: [PATCH RFC] KVM: arm64: Sidestep stage2_unmap_vm() on vcpu reset
+ when S2FWB is supported
+To:     Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Marc Zyngier <maz@kernel.org>
+References: <20200415072835.1164-1-yuzenghui@huawei.com>
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+Message-ID: <e99bc07d-0dd4-055c-808f-fd9cde88d2fc@arm.com>
+Date:   Mon, 20 Apr 2020 17:10:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
- <20200418122123.10157ddd@why> <CY4PR12MB1271277CEE4F1FE06B71DDE8DAD60@CY4PR12MB1271.namprd12.prod.outlook.com>
- <8a03b55223b118c6fc605d7204e01460@kernel.org>
-In-Reply-To: <8a03b55223b118c6fc605d7204e01460@kernel.org>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Mon, 20 Apr 2020 09:08:27 -0700
-Message-ID: <CABEDWGxLKB68iknXtK8-4ke3wGW-6RKBnDEh6rFbBekLyawVOw@mail.gmail.com>
-Subject: Re: [PATCH] genirq/msi: Check null pointer before copying struct msi_msg
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>, tglx@linutronix.de,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200415072835.1164-1-yuzenghui@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 2:14 AM Marc Zyngier <maz@kernel.org> wrote:
+Hi,
+
+On 4/15/20 8:28 AM, Zenghui Yu wrote:
+> stage2_unmap_vm() was introduced to unmap user RAM region in the stage2
+> page table to make the caches coherent. E.g., a guest reboot with stage1
+> MMU disabled will access memory using non-cacheable attributes. If the
+> RAM and caches are not coherent at this stage, some evicted dirty cache
+> line may go and corrupt guest data in RAM.
 >
-> On 2020-04-18 16:19, Gustavo Pimentel wrote:
-> > Hi Marc and Alan,
-> >
-> >> I'm not convinced by this. If you know that, by construction, these
-> >> interrupts are not associated with an underlying MSI, why calling
-> >> get_cached_msi_msg() the first place?
-> >>
-> >> There seem to be some assumptions in the DW EDMA driver that the
-> >> signaling would be MSI based, so maybe someone from Synopsys
-> >> (Gustavo?)
-> >> could clarify that. From my own perspective, running on an endpoint
-> >> device means that it is *generating* interrupts, and I'm not sure what
-> >> the MSIs represent here.
-> >
-> > Giving a little context to this topic.
-> >
-> > The eDMA IP present on the Synopsys DesignWare PCIe Endpoints can be
-> > configured and triggered *remotely* as well *locally*.
-> > For the sake of simplicity let's assume for now the eDMA was
-> > implemented
-> > on the EP and that is the IP that we want to configure and use.
-> >
-> > When I say *remotely* I mean that this IP can be configurable through
-> > the
-> > RC/CPU side, however, for that, it requires the eDMA registers to be
-> > exposed through a PCIe BAR on the EP. This will allow setting the SAR,
-> > DAR and other settings, also need(s) the interrupt(s) address(es) to be
-> > set as well (MSI or MSI-X only) so that it can signal through PCIe (to
-> > the RC and consecutively the associated EP driver) if the data transfer
-> > has been completed, aborted or if the Linked List consumer algorithm
-> > has
-> > passed in some linked element marked with a watermark.
-> >
-> > It was based on this case that the eDMA driver was exclusively
-> > developed.
-> >
-> > However, Alan, wants to expand a little more this, by being able to use
-> > this driver on the EP side (through
-> > pcitest/pci_endpoint_test/pci_epf_test) so that he can configure this
-> > IP
-> > *locally*.
-> > In fact, when doing this, he doesn't need to configure the interrupt
-> > address (MSI or MSI-X), because this IP provides a local interrupt line
-> > so that be connected to other blocks on the EP side.
+> Since ARMv8.4, S2FWB feature is mandatory and KVM will take advantage
+> of it to configure the stage2 page table and the attributes of memory
+> access. So we ensure that guests always access memory using cacheable
+> attributes and thus, the caches always be coherent.
 >
-> Right, so this confirms my hunch that the driver is being used in
-> a way that doesn't reflect the expected use case. Rather than
-> papering over the problem by hacking the core code, I'd rather see
-> the eDMA driver be updated to support both host and endpoint cases.
-> This probably boils down to a PCI vs non-PCI set of helpers.
+> So on CPUs that support S2FWB, we can safely reset the vcpu without a
+> heavy stage2 unmapping.
 >
-> Alan, could you confirm whether we got it right?
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Christoffer Dall <christoffer.dall@arm.com>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>
+> If this is correct, there should be a great performance improvement on
+> a guest reboot (or reset) on systems support S2FWB. But I'm afraid that
+> I've missed some points here, so please comment!
+>
+> The commit 957db105c997 ("arm/arm64: KVM: Introduce stage2_unmap_vm")
+> was merged about six years ago and I failed to track its histroy and
+> intention. Instead of a whole stage2 unmapping, something like
+> stage2_flush_vm() looks enough to me. But again, I'm unsure...
+>
+> Thanks for having a look!
 
-Thanks Marc and Gustavo. I appreciate all your comments and feedback.
+I had a chat with Christoffer about stage2_unmap_vm, and as I understood it, the
+purpose was to make sure that any changes made by userspace were seen by the guest
+while the MMU is off. When a stage 2 fault happens, we do clean+inval on the
+dcache, or inval on the icache if it was an exec fault. This means that whatever
+the host userspace writes while the guest is shut down and is still in the cache,
+the guest will be able to read/execute.
 
-You both got it right. As Gustavo mentioned, I am trying to expand dw-edma
-for additional use cases.
-
-First new use case is for integration of dw-edma with pci-epf-test so the latter
-can initiate dma transfers locally from endpoint memory to host memory over the
-PCIe bus in response to a user command issued from the host-side command
-prompt using the pcitest utility. When the locally-initiated dma
-transfer completes
-in this use case on the endpoint side, dw-edma issues an interrupt to the local
-CPU on the endpoint side by way of a legacy interrupt and pci-epf-test issues
-an interrupt toward the remote host CPU across the PCIe bus by way of legacy,
-MSI, or possibly MSI-X interrupt.
-
-Second new use case is for integration of dw-edma with pci_endpoint_test
-running on the host CPU so the latter can initiate dma transfers locally from
-host-side in response to a user command issued from the host-side command
-prompt using the pcitest utility. This use case is for host systems that have
-Synopsys DesignWare PCI eDMA hardware on the host side. When the
-locally-initiated dma transfer completes in this use case on the host-side,
-dw-edma issues a legacy interrupt to its local host CPU and pci-epf-test running
-on the endpoint side issues a legacy, MSI, or possibly MSI-X interrupt
-across the
-PCIe bus toward the host CPU.
-
-When both the host and endpoint sides have the Synopsys DesignWare PCI
-eDMA hardware, more use cases become possible in which eDMA controllers
-from both systems can be engaged to move data. Embedded DMA controllers
-from other PCIe IP vendors may also be supported with additional dmaengine
-drivers under the Linux PCI Endpoint Framework with pci-epf-test, pcitest, and
-pci_endpoint_test suite as well as new PCI endpoint function drivers for such
-applications that require dma, for example nvme or virtio_net endpoint function
-drivers.
-
-I submitted a recent patch [1] and [2] which Gustavo ACk'd to decouple dw-edma
-from struct pci_dev. This enabled me to exercise dw-edma on some riscv host
-and endpoint systems that I work with.
-
-I will submit another patch to decouple dw-edma from struct msi_msg such
-that it would only call get_cached_msi_msg() on the host-side in its original
-use case with remotely initiated dma transfers using the BAR access method.
-
-The crash that I reported in __get_cached_msi_msg() is probably worth fixing
-too. It seems to be low impact since get_cached_msi_msg() seems to be called
-infrequently by a few callers.
-
-Regards,
-Alan Mikhak
-
-[1] https://patchwork.kernel.org/patch/11489607/
-[2] https://patchwork.kernel.org/patch/11491757/
+This can be relevant if the guest relocates the kernel and overwrites the original
+image location, and userspace copies the original kernel image back in before
+restarting the vm.
 
 >
-> Thanks,
+>  virt/kvm/arm/arm.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
->          M.
-> --
-> Jazz is not dead. It just smells funny...
+> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> index 48d0ec44ad77..e6378162cdef 100644
+> --- a/virt/kvm/arm/arm.c
+> +++ b/virt/kvm/arm/arm.c
+> @@ -983,8 +983,11 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+>  	/*
+>  	 * Ensure a rebooted VM will fault in RAM pages and detect if the
+>  	 * guest MMU is turned off and flush the caches as needed.
+> +	 *
+> +	 * S2FWB enforces all memory accesses to RAM being cacheable, we
+> +	 * ensure that the cache is always coherent.
+>  	 */
+> -	if (vcpu->arch.has_run_once)
+> +	if (vcpu->arch.has_run_once && !cpus_have_const_cap(ARM64_HAS_STAGE2_FWB))
+
+I think userspace does not invalidate the icache when loading a new kernel image,
+and if the guest patched instructions, they could potentially still be in the
+icache. Should the icache be invalidated if FWB is present?
+
+Thanks,
+Alex
+>  		stage2_unmap_vm(vcpu->kvm);
+>  
+>  	vcpu_reset_hcr(vcpu);
