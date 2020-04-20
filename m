@@ -2,355 +2,195 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D36C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7599C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCF22223D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1EFF2074B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgDTDtT (ORCPT
+        id S1726181AbgDTDvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 23:49:19 -0400
-Received: from mga03.intel.com ([134.134.136.65]:24243 "EHLO mga03.intel.com"
+        Sun, 19 Apr 2020 23:51:20 -0400
+Received: from mga14.intel.com ([192.55.52.115]:60073 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgDTDtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 23:49:18 -0400
-IronPort-SDR: AYYnb+JpxBDsAolqsiVEuc7vRYVZSTk/np8BTmkL0TMZCXPIhOWCnbibEcQUu2LStq9UJcW2U8
- nR5izweqp7TQ==
+        id S1725865AbgDTDvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 23:51:19 -0400
+IronPort-SDR: g5sExSVW+Gq8V5grouvunPStRJQM/wLfhb8Da0LQ9Qgiv/u7orBF6DDQqy1uMj48LI/80mh6N3
+ FWyebe3R2JTg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 20:49:17 -0700
-IronPort-SDR: 4UrEBGeaG8cV+J8iDtXegv6cO0gUSC0Sro0oybKE9nidysZMuV2xlK7GnOfe+sxGDZj5TASIVK
- JyLWN20GySjw==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 20:51:19 -0700
+IronPort-SDR: CfFEBT4MLSVTlHmccAs4qtToM21XwPEYk5B9Ya1uEWAivPvPZXEGASbBg4GLYgh0jooea0EBUq
+ p1rXpAxK/UgA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
-   d="scan'208";a="258208618"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 19 Apr 2020 20:49:17 -0700
-Received: from [10.249.68.96] (vramuthx-mobl1.gar.corp.intel.com [10.249.68.96])
-        by linux.intel.com (Postfix) with ESMTP id 7137F580479;
-        Sun, 19 Apr 2020 20:49:11 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Hauke Mehrtens <hauke@hauke-m.de>, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     cheol.yong.kim@intel.com, hauke.mehrtens@intel.com,
-        andriy.shevchenko@intel.com, anders.roxell@linaro.org,
-        vigneshr@ti.com, arnd@arndb.de, richard@nod.at,
-        qi-ming.wu@intel.com, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org,
-        boris.brezillon@collabora.com, miquel.raynal@bootlin.com,
-        tglx@linutronix.de, masonccyang@mxic.com.tw, piotrs@cadence.com,
-        John Crispin <john@phrozen.org>
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <daee329a-b4ae-fae3-8d59-6bcf7377df22@hauke-m.de>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <fce11099-234f-5f5a-c877-095932d28975@linux.intel.com>
-Date:   Mon, 20 Apr 2020 11:49:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+   d="scan'208";a="401692193"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.105])
+  by orsmga004.jf.intel.com with ESMTP; 19 Apr 2020 20:51:17 -0700
+Date:   Mon, 20 Apr 2020 11:51:16 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Corey Minyard <cminyard@mvista.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the ipmi tree
+Message-ID: <20200420035116.GA61926@shbuild999.sh.intel.com>
+References: <20200420130959.489a4136@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <daee329a-b4ae-fae3-8d59-6bcf7377df22@hauke-m.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420130959.489a4136@canb.auug.org.au>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hauke,
+On Mon, Apr 20, 2020 at 01:09:59PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the ipmi tree, today's linux-next build (powerpc
+> allyesconfig) failed like this:
+> 
+> drivers/char/ipmi/ipmi_msghandler.c: In function 'free_user_work':
+> drivers/char/ipmi/ipmi_msghandler.c:1156:2: error: implicit declaration of function 'vfree'; did you mean 'kvfree'? [-Werror=implicit-function-declaration]
+>  1156 |  vfree(user);
+>       |  ^~~~~
+>       |  kvfree
+> drivers/char/ipmi/ipmi_msghandler.c: In function 'ipmi_create_user':
+> drivers/char/ipmi/ipmi_msghandler.c:1188:13: error: implicit declaration of function 'vzalloc'; did you mean 'kvzalloc'? [-Werror=implicit-function-declaration]
+>  1188 |  new_user = vzalloc(sizeof(*new_user));
+>       |             ^~~~~~~
+>       |             kvzalloc
+> drivers/char/ipmi/ipmi_msghandler.c:1188:11: warning: assignment to 'struct ipmi_user *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>  1188 |  new_user = vzalloc(sizeof(*new_user));
+>       |           ^
+> 
+> Caused by commit
+> 
+>   d6850a47c933 ("ipmi: use vzalloc instead of kmalloc for user creation")
+> 
+> I have applied the following patch for today:
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 20 Apr 2020 13:03:29 +1000
+> Subject: [PATCH] ipmi: vzalloc use requires vmallo.h inclusion
+> 
+> Fixes: d6850a47c933 ("ipmi: use vzalloc instead of kmalloc for user creation")
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/char/ipmi/ipmi_msghandler.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+> index 96f157323646..9afd220cd824 100644
+> --- a/drivers/char/ipmi/ipmi_msghandler.c
+> +++ b/drivers/char/ipmi/ipmi_msghandler.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/workqueue.h>
+>  #include <linux/uuid.h>
+>  #include <linux/nospec.h>
+> +#include <linux/vmalloc.h>
 
-   Thank you very much for the review comments and your time...
+Thanks for the fix! I just compiled and tested the patch on x86 platforms.
 
-On 18/4/2020 1:05 am, Hauke Mehrtens wrote:
-> On 4/17/20 10:21 AM, Ramuthevar, Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> Thanks for adding me in CC, I am using my private mail it took me too
-> long to configure Outlook.
->
-> I compared the register description of the LGM with the VRX200, the EBU
-> and NAND block are looking very similar. I think the VRX200 also
-> supports HW ECC and DMA, nobody implimented it in the upstream driver.
->
-> I think replacing the old XWAY dirver with this one is a good approach.
-Thank you for confirmation to replace the xway_nand.c since you are the 
-owner for that driver.
-> Then we can add feature flags to activate the extra features only on the
-> SoCs which support them.
->
-> On older SoCs the EBU (NAND) and the PCI (not express) IP core are
-> sharing some parts like an endianess switch, this is causeing some more
-> problems.
->
->> This patch adds the new IP of Nand Flash Controller(NFC) support
->> on Intel's Lightning Mountain(LGM) SoC.
->>
->> DMA is used for burst data transfer operation, also DMA HW supports
->> aligned 32bit memory address and aligned data access by default.
->> DMA burst of 8 supported. Data register used to support the read/write
->> operation from/to device.
->>
->> NAND controller driver implements ->exec_op() to replace legacy hooks,
->> these specific call-back method to execute NAND operations.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> .....
->
->> +config MTD_NAND_INTEL_LGM
->> +	tristate "Support for NAND controller on Intel LGM SoC"
->> +	depends on X86
-> Compile test should also work for other archs
-Noted, will add it.
->> +	help
->> +	  Enables support for NAND Flash chips on Intel's LGM SoC.
->> +          NAND flash interfaced through the External Bus Unit.
->> +
->>   comment "Misc"
-> .....
->
->> +
->> +#define LGM_CLC			0x000
->> +#define LGM_CLC_RST		0x00000000u
->> +
->> +#define LGM_NAND_ECC_OFFSET	0x008
-> It is confusing that this is not a register but a different definition.
-> Please move it somewheer else.
-Noted, will move it.
->> +#define LGM_ADDR_SEL(n)		(0x20 + (n) * 4)
->> +#define LGM_ADDR_MASK		(5 << 4)
->> +#define LGM_ADDR_SEL_REGEN	0x1
->> +
->> +#define LGM_BUSCON(n)		(0x60 + (n) * 4)
->> +#define LGM_BUSCON_CMULT_V4	0x1
->> +#define LGM_BUSCON_RECOVC(n)	((n) << 2)
->> +#define LGM_BUSCON_HOLDC(n)	((n) << 4)
->> +#define LGM_BUSCON_WAITRDC(n)	((n) << 6)
->> +#define LGM_BUSCON_WAITWRC(n)	((n) << 8)
->> +#define LGM_BUSCON_BCGEN_CS	0x0
->> +#define LGM_BUSCON_SETUP_EN	BIT(22)
->> +#define LGM_BUSCON_ALEC		0xC000
->> +
->> +#define NAND_CON		0x0B0
->> +#define NAND_CON_NANDM_EN	BIT(0)
->> +#define NAND_CON_NANDM_DIS	0x0
->> +#define NAND_CON_CSMUX_E_EN	BIT(1)
->> +#define NAND_CON_ALE_P_LOW	BIT(2)
->> +#define NAND_CON_CLE_P_LOW	BIT(3)
->> +#define NAND_CON_CS_P_LOW	BIT(4)
->> +#define NAND_CON_SE_P_LOW	BIT(5)
->> +#define NAND_CON_WP_P_LOW	BIT(6)
->> +#define NAND_CON_PRE_P_LOW	BIT(7)
->> +#define NAND_CON_IN_CS_S(n)	((n) << 8)
->> +#define NAND_CON_OUT_CS_S(n)	((n) << 10)
->> +#define NAND_CON_LAT_EN_CS_P	((0x3D) << 18)
->> +
->> +#define NAND_WAIT		0x0B4
->> +#define NAND_WAIT_RDBY		BIT(0)
->> +#define NAND_WAIT_WR_C		BIT(3)
-> The registers with the LGM_ prefix, NAND_CON and NAND_WAIT are from the
-> EBU (EBU_N) register block. I would prefer if the have the same prefix.
-> You should use a different prefix for the register definitions below
-> this comment, which are from the NAND Controller (HSNAND).
-Sure, will use as you have suggested
->> +#define NAND_CTL1		0x110
->> +#define NAND_CTL1_ADDR_3_SHIFT	24
->> +
->> +#define NAND_CTL2		0x114
->> +#define NAND_CTL2_ADDR_5_SHIFT	8
->> +#define NAND_CTL2_CYC_N_V5	(0x2 << 16)
->> +
->> +#define NAND_INT_MSK_CTL	0x124
->> +#define NAND_INT_MSK_CTL_WR_C	BIT(4)
->> +
->> +#define NAND_INT_STA		0x128
->> +#define NAND_INT_STA_WR_C	BIT(4)
->> +
->> +#define NAND_CTL		0x130
->> +#define NAND_CTL_MODE_ECC	0x1
->> +#define NAND_CTL_GO		BIT(2)
->> +#define NAND_CTL_CE_SEL_CS(n)	BIT(3 + (n))
->> +#define NAND_CTL_RW_READ	0x0
->> +#define NAND_CTL_RW_WRITE	BIT(10)
->> +#define NAND_CTL_ECC_OFF_V8TH	BIT(11)
->> +#define NAND_CTL_CKFF_EN	0x0
->> +#define NAND_CTL_MSG_EN		BIT(17)
-> Till here I find the same registers you use also in the VRX200
-> description. I haven't checked all the bits. Danube only has the
-> registers from the EBU, I haven't checked the SoCs in between.
-Okay, I don't have other SoC's datasheet to check, otherwise would have 
-checked it.
->> +#define NAND_PARA0		0x13c
->> +#define NAND_PARA0_PAGE_V8192	0x3
->> +#define NAND_PARA0_PIB_V256	(0x3 << 4)
->> +#define NAND_PARA0_BYP_EN_NP	0x0
->> +#define NAND_PARA0_BYP_DEC_NP	0x0
->> +#define NAND_PARA0_TYPE_ONFI	BIT(18)
->> +#define NAND_PARA0_ADEP_EN	BIT(21)
->> +
->> +#define NAND_CMSG_0		0x150
->> +#define NAND_CMSG_1		0x154
->> +
->> +#define NAND_WRITE_CMD		(NAND_CON_CS_P_LOW | NAND_CON_CLE_P_LOW)
->> +#define NAND_WRITE_ADDR		(NAND_CON_CS_P_LOW | NAND_CON_ALE_P_LOW)
->> +#define NAND_WRITE_DATA		NAND_CON_CS_P_LOW
->> +#define NAND_READ_DATA		NAND_CON_CS_P_LOW
->> +
->> +#define NAND_CHIP_NO_SELECTION	-1
->> +#define NAND_CHIP_SELECTION	0x0
->> +
-> ....
->> +static int lgm_nand_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct lgm_nand_host *lgm_host;
->> +	struct nand_chip *nand;
->> +	phys_addr_t nandaddr_pa;
->> +	struct mtd_info *mtd;
->> +	struct resource *res;
->> +	int ret;
->> +	u32 cs;
->> +
->> +	lgm_host = devm_kzalloc(dev, sizeof(*lgm_host), GFP_KERNEL);
->> +	if (!lgm_host)
->> +		return -ENOMEM;
->> +
->> +	lgm_host->dev = dev;
->> +	nand_controller_init(&lgm_host->controller);
->> +
->> +	lgm_host->lgm_va =
->> +	devm_platform_ioremap_resource_byname(pdev, "lgmnand");
->> +	if (IS_ERR(lgm_host->lgm_va))
->> +		return PTR_ERR(lgm_host->lgm_va);
-> lgm_va is named ebu_n in the register description. Could you rename this
-> variable to ebu. I think the _va postfix is not needed as it should be
-> clear that this is a virtual addresss.
-Noted, will rename it.
->
->> +	lgm_host->hsnand_va =
->> +	devm_platform_ioremap_resource_byname(pdev, "hsnand");
->> +	if (IS_ERR(lgm_host->hsnand_va))
->> +		return PTR_ERR(lgm_host->hsnand_va);
->> +
->> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
->> +	if (ret) {
->> +		dev_err(dev, "failed to get chip select: %d\n", ret);
->> +		return ret;
->> +	}
-> The cs should be validated, ifsome uses cs == 4 there will be a problem.
-> LGM supports CS 0 to 3 like the VRX200, danube for example only 0 and 1.
-Even LGM also supports 0 or 1
->
->> +	lgm_host->cs = cs;
->> +
->> +	lgm_host->cs_name = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", cs);
-> cs_name is only used locally in this function you can also use some
-> memory on the stack to generate the name.
->
->> +	if (IS_ERR(lgm_host->cs_name)) {
->> +		ret = PTR_ERR(lgm_host->cs_name);
->> +		dev_err(dev, "failed to get chip select name: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
-> This will only support one chip select at a time on the SoC. It is not
-> possible to configure the DTS in a way to talk to two NAND chips on
-> different chip selects. I think this is an uncommon scenario and I do
-> not know if other NAND drivers in Linux support this feature.
+Hi Corey,
 
-Yes, you are Right, LGM supports only one nand chip at a time.
+Will you folder it into your tree, or you prefer me to send a v2? 
 
->> +	lgm_host->nandaddr_va = res;
->> +	nandaddr_pa = res->start;
->> +	if (IS_ERR(lgm_host->nandaddr_va))
->> +		return PTR_ERR(lgm_host->nandaddr_va);
->> +
->> +	lgm_host->clk = devm_clk_get(dev, NULL);
->> +	if (IS_ERR(lgm_host->clk)) {
->> +		ret = PTR_ERR(lgm_host->clk);
->> +		dev_err(dev, "failed to get clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_prepare_enable(lgm_host->clk);
->> +	if (ret) {
->> +		dev_err(dev, "failed to enable clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +	lgm_host->clk_rate = clk_get_rate(lgm_host->clk);
->> +
->> +	ret = lgm_dma_init(dev, lgm_host);
->> +	if (ret)
->> +		goto disable_clk;
->> +
->> +	writel(lower_32_bits(nandaddr_pa) | LGM_ADDR_SEL_REGEN | LGM_ADDR_MASK,
->> +	       lgm_host->lgm_va + LGM_ADDR_SEL(cs));
->> +
->> +	writel(LGM_BUSCON_CMULT_V4 | LGM_BUSCON_RECOVC(1) |
->> +	       LGM_BUSCON_HOLDC(1) | LGM_BUSCON_WAITRDC(2) |
->> +	       LGM_BUSCON_WAITWRC(2) | LGM_BUSCON_BCGEN_CS | LGM_BUSCON_ALEC |
->> +	       LGM_BUSCON_SETUP_EN, lgm_host->lgm_va + LGM_BUSCON(cs));
->> +
->> +	/*
->> +	 * NAND physical address selection is based on the chip select
->> +	 * and written to ADDR_SEL register to get Memory Region Base address.
->> +	 * FPI Bus addresses are compared to this base address in conjunction
->> +	 * with the mask control. Driver need to program this field!
->> +	 * Address: 0x17400 if chip select is CS_0
->> +	 * Address: 0x17C00 if chip select is CS_1
->> +	 * Refer the Intel LGM SoC datasheet.
-> Could you please name the section name in the document, to make it
-> easier to find it, the number will probably change over time.
+Anyway, I prepared a v2 here:
 
-okay, Noted
+Thanks,
+Feng
 
-Regards
-Vadivel
->> +	 */
->> +	writel(0x17400051, lgm_host->lgm_va + LGM_ADDR_SEL(0));
->> +	writel(0x17C00051, lgm_host->lgm_va + LGM_ADDR_SEL(cs));
-> Please do not use magic values here. For example you set here the
-> LGM_ADDR_SEL_REGEN bit a mask and a base.
-Noted, will update with MACRO
->> +	nand_set_flash_node(&lgm_host->chip, dev->of_node);
->> +	mtd = nand_to_mtd(&lgm_host->chip);
->> +	mtd->dev.parent = dev;
->> +	lgm_host->dev = dev;
->> +
->> +	platform_set_drvdata(pdev, lgm_host);
->> +	nand_set_controller_data(&lgm_host->chip, lgm_host);
->> +
->> +	nand = &lgm_host->chip;
->> +	nand->controller = &lgm_host->controller;
->> +	nand->controller->ops = &lgm_nand_controller_ops;
->> +
->> +	/* Scan to find existence of the device */
->> +	ret = nand_scan(&lgm_host->chip, 1);
->> +	if (ret)
->> +		goto exit_dma;
->> +
->> +	ret = mtd_device_register(mtd, NULL, 0);
->> +	if (ret)
->> +		goto clean_nand;
->> +
->> +	return 0;
->> +
->> +clean_nand:
->> +	nand_cleanup(&lgm_host->chip);
->> +exit_dma:
->> +	lgm_dma_exit(lgm_host);
->> +disable_clk:
->> +	clk_disable_unprepare(lgm_host->clk);
->> +
->> +	return ret;
->> +}
-> Hauke
->
+
+From b39b962a49efd6d7a6ea70f0a2ec8828a1d01768 Mon Sep 17 00:00:00 2001
+From: Feng Tang <feng.tang@intel.com>
+Date: Fri, 17 Apr 2020 12:48:28 +0800
+Subject: [PATCH] ipmi: use vzalloc instead of kmalloc for user creation
+
+We met mulitple times of failure of staring bmc-watchdog,
+due to the runtime memory allocation failure of order 4.
+
+     bmc-watchdog: page allocation failure: order:4, mode:0x40cc0(GFP_KERNEL|__GFP_COMP), nodemask=(null),cpuset=/,mems_allowed=0-1
+     CPU: 1 PID: 2571 Comm: bmc-watchdog Not tainted 5.5.0-00045-g7d6bb61d6188c #1
+     Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.00.01.0015.110720180833 11/07/2018
+     Call Trace:
+      dump_stack+0x66/0x8b
+      warn_alloc+0xfe/0x160
+      __alloc_pages_slowpath+0xd3e/0xd80
+      __alloc_pages_nodemask+0x2f0/0x340
+      kmalloc_order+0x18/0x70
+      kmalloc_order_trace+0x1d/0xb0
+      ipmi_create_user+0x55/0x2c0 [ipmi_msghandler]
+      ipmi_open+0x72/0x110 [ipmi_devintf]
+      chrdev_open+0xcb/0x1e0
+      do_dentry_open+0x1ce/0x380
+      path_openat+0x305/0x14f0
+      do_filp_open+0x9b/0x110
+      do_sys_open+0x1bd/0x250
+      do_syscall_64+0x5b/0x1f0
+      entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Using vzalloc/vfree for creating ipmi_user heals the
+problem
+
+Thanks to Stephen Rothwell for finding the vmalloc.h
+inclusion issue.
+
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+---
+  v2:
+     * explicitely include vmalloc.h, otherwise there
+       will be compilation error as found by Stephen
+       Rothwell  
+ 
+ drivers/char/ipmi/ipmi_msghandler.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index c48d8f0..9afd220 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -33,6 +33,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/uuid.h>
+ #include <linux/nospec.h>
++#include <linux/vmalloc.h>
+ 
+ #define IPMI_DRIVER_VERSION "39.2"
+ 
+@@ -1153,7 +1154,7 @@ static void free_user_work(struct work_struct *work)
+ 					      remove_work);
+ 
+ 	cleanup_srcu_struct(&user->release_barrier);
+-	kfree(user);
++	vfree(user);
+ }
+ 
+ int ipmi_create_user(unsigned int          if_num,
+@@ -1185,7 +1186,7 @@ int ipmi_create_user(unsigned int          if_num,
+ 	if (rv)
+ 		return rv;
+ 
+-	new_user = kmalloc(sizeof(*new_user), GFP_KERNEL);
++	new_user = vzalloc(sizeof(*new_user));
+ 	if (!new_user)
+ 		return -ENOMEM;
+ 
+@@ -1232,7 +1233,7 @@ int ipmi_create_user(unsigned int          if_num,
+ 
+ out_kfree:
+ 	srcu_read_unlock(&ipmi_interfaces_srcu, index);
+-	kfree(new_user);
++	vfree(new_user);
+ 	return rv;
+ }
+ EXPORT_SYMBOL(ipmi_create_user);
+-- 
+2.7.4
