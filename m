@@ -5,70 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B13C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263DCC55182
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8D3B20724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01E7206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ulZuFGYb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYOvvc8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgDTU6f (ORCPT
+        id S1728334AbgDTU6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:58:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54996 "EHLO
+        Mon, 20 Apr 2020 16:58:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727881AbgDTU6V (ORCPT
+        with ESMTP id S1727811AbgDTU6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:58:21 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F83C061A0C;
-        Mon, 20 Apr 2020 13:58:21 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r26so1192970wmh.0;
-        Mon, 20 Apr 2020 13:58:21 -0700 (PDT)
+        Mon, 20 Apr 2020 16:58:17 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E34C061A0C;
+        Mon, 20 Apr 2020 13:58:17 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x18so13971900wrq.2;
+        Mon, 20 Apr 2020 13:58:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0CEMq9p3y53YSLRVr6wlGedagkBpUr96QW3htu5fn8M=;
-        b=ulZuFGYbZXWjjqMRKVh4G+DDgM8jrPd5lgC6lLQ7x3eNkKNQt3ZJ/Iu6BPH8ckFMVr
-         emmEcdw/62JMEmpP4hAZmTISbZKbVASjZTp8Y8p8FWs+0ZqCDfHt0T8s2AGCwVXSbRsL
-         LTdNk9Pio9cToWJI9SvZRMq+Lsb1L5ARq9qrc94ImCbq/QVvBRLfys8+o7vi0khsSzhY
-         +ONPwmhnhHq3HxKJrcphuZc6rVei0zTeL4Pyi9k3jR7iSNtaUhp46uxEcp5IUyj5Z2I0
-         7WNb8GL+U9gLPq8VYo/Evi11Pi/mif6iDOf9uPT0aZOu8JTr+ryHJsYqxwn9mPpTetkA
-         t/lA==
+        bh=SHn0IUO/wMyWf4dmZUNBbUc0aQhvnXEYVuFtFRS3HPk=;
+        b=sYOvvc8pHTWkwLYyRhZCTaQv3HQfMB2rRRWZeysxNcQYbmmUOp2p3z72BwtJKY42cO
+         D9O4GMHQugm296ZulvGVy0+bGU4QYzNx8wYsTtxch2rQk1pGGo8AUetdwwzkg2mRKPMI
+         So4vh3Kn155oQtk193g2rUc5BHZ2DRoNrUtEqT1p9T1TZ0e41zhabPWE2PYPe92Tm7Nh
+         O59mOM3iTwUAmkO4rPafQr8wG/VpIOXxY61N4mh9C0MI8xSONe68JPzqCDOjRi0o4UtO
+         3FlMKKGoq2fd1gc0ocdRS+E5OdTykTDNftuMU95Foie7gc8he7WYm7uqQ7+CzfKHpXVX
+         lkHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0CEMq9p3y53YSLRVr6wlGedagkBpUr96QW3htu5fn8M=;
-        b=Ed9IQZSkmckbnrltp5PMSZYlFd5g0bIjbWMvRA+S0Q0KaxL67w5ARDKB1u03oy0n0U
-         En3RqKE+nG/EqQdqd+rbLAc1+/P090sq8KPVRtOixGXqGPQf/pq5eQV8ht+Dqd+lUmY9
-         2wbOlhJGHsKO+sn9EJYh2uvkgcmZFdfT1riq/dVCVLwjBHGIXZD3mkiPLCI4qKP7FANe
-         jX0d+L5y1v09CMaZkHEJ8W17WzxIZyaYWcstN1x/bn3gQnGHym1gdRwqPZr4Yh/Ceiyl
-         CGN6F1kAhikjVwcifsHWD+FAgCxWpEw3DIfb/5yRqs3PljF0FdpTTHigRzLCZMnnTrxI
-         /tIg==
-X-Gm-Message-State: AGi0PuZxSjrOOv27z6ln69D/00CfrWx/FfzOOzrkB7I8WjIwXu22pa87
-        uFNYd7WhOvSiQjseP3h/WA==
-X-Google-Smtp-Source: APiQypKXrGH1q/hccGZ4dOO6jGl50did0fsnoStDobiZ8ykrGUvRJGDFPKznv34CYl+tcim6mTBu5w==
-X-Received: by 2002:a1c:6a0b:: with SMTP id f11mr1243151wmc.123.1587416300040;
-        Mon, 20 Apr 2020 13:58:20 -0700 (PDT)
+        bh=SHn0IUO/wMyWf4dmZUNBbUc0aQhvnXEYVuFtFRS3HPk=;
+        b=eno/8QSMYAb2omJEbKdVJ80Q3EedQLwHwKf7nUPW2odXfl0eByWY81oS3aDEdtBlXe
+         OVZVQu/5+rrrFaEylRCMf3j2lckNJjhZbSN9JNN81KkVMUeTJO8BTVk6JsMJkr23dyKR
+         odDZw/91LsV3VOe7VGCiH/hmj5F1D04zQrwvtC6J1hJpeHXkpbJqY46AaEl3kp1aVRET
+         a19XnSPCzQcZYLTx8nj0PAUYdnhgr/WwncOMnHI4DiR70zzlnU8MRgbrxYun9kWZ9AK4
+         fUSetp/ax/AhN1UwNgjdLJ/51KOAbUlBQirvIOO48gultjGrYr5SZv2X3MSLBwsbYJVf
+         e6sA==
+X-Gm-Message-State: AGi0PuZsocrNEg+2t0LYxROvxNpT3XU5aHQozt3DQwPYK4QBj8VjVbpJ
+        czE5sq9iWpfRLXBKc3RoMg==
+X-Google-Smtp-Source: APiQypLKNc2450WVam91XBOVv47aWlD4TeLe7WSZEd1VlY2LCaKg56Ic/Ldct6oBg/DIOV9rh1Ftiw==
+X-Received: by 2002:a5d:4ac6:: with SMTP id y6mr20438480wrs.212.1587416296043;
+        Mon, 20 Apr 2020 13:58:16 -0700 (PDT)
 Received: from avx2.telecom.by ([46.53.249.74])
-        by smtp.gmail.com with ESMTPSA id m8sm863069wrx.54.2020.04.20.13.58.19
+        by smtp.gmail.com with ESMTPSA id m8sm863069wrx.54.2020.04.20.13.58.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:58:19 -0700 (PDT)
+        Mon, 20 Apr 2020 13:58:15 -0700 (PDT)
 From:   Alexey Dobriyan <adobriyan@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     adobriyan@gmail.com, linux-kernel@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, pmladek@suse.com,
         rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
         andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk
-Subject: [PATCH 13/15] print_integer, printf: rewrite num_to_str() via print_integer()
-Date:   Mon, 20 Apr 2020 23:57:41 +0300
-Message-Id: <20200420205743.19964-13-adobriyan@gmail.com>
+Subject: [PATCH 09/15] proc: s/p/tsk/
+Date:   Mon, 20 Apr 2020 23:57:37 +0300
+Message-Id: <20200420205743.19964-9-adobriyan@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200420205743.19964-1-adobriyan@gmail.com>
 References: <20200420205743.19964-1-adobriyan@gmail.com>
@@ -79,69 +79,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In my opinion, num_to_str() is more understandable this way.
+"p" will be used for pointeg to string start, use "tsk" as the best
+identifier name.
 
 Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 ---
- lib/vsprintf.c | 30 +++++++++++-------------------
- 1 file changed, 11 insertions(+), 19 deletions(-)
+ fs/proc/fd.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 7c488a1ce318..df2b5ce08fe9 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -51,6 +51,7 @@
- 
- #include <linux/string_helpers.h>
- #include "kstrtox.h"
-+#include "print-integer.h"
- 
- /**
-  * simple_strtoull - convert a string to an unsigned long long
-@@ -343,33 +344,24 @@ char *put_dec(char *buf, unsigned long long n)
-  */
- int num_to_str(char *buf, int size, unsigned long long num, unsigned int width)
+diff --git a/fs/proc/fd.c b/fs/proc/fd.c
+index 81882a13212d..e098302b5101 100644
+--- a/fs/proc/fd.c
++++ b/fs/proc/fd.c
+@@ -228,16 +228,16 @@ static struct dentry *proc_lookupfd_common(struct inode *dir,
+ static int proc_readfd_common(struct file *file, struct dir_context *ctx,
+ 			      instantiate_t instantiate)
  {
--	/* put_dec requires 2-byte alignment of the buffer. */
--	char tmp[sizeof(num) * 3] __aligned(2);
--	int idx, len;
-+	char tmp[20];
-+	char *p = tmp + sizeof(tmp);
-+	ptrdiff_t len;
+-	struct task_struct *p = get_proc_task(file_inode(file));
++	struct task_struct *tsk = get_proc_task(file_inode(file));
+ 	struct files_struct *files;
+ 	unsigned int fd;
  
--	/* put_dec() may work incorrectly for num = 0 (generate "", not "0") */
--	if (num <= 9) {
--		tmp[0] = '0' + num;
--		len = 1;
--	} else {
--		len = put_dec(tmp, num) - tmp;
--	}
-+	p = _print_integer_u64(p, num);
-+	len = tmp + sizeof(tmp) - p;
+-	if (!p)
++	if (!tsk)
+ 		return -ENOENT;
  
- 	if (len > size || width > size)
- 		return 0;
+ 	if (!dir_emit_dots(file, ctx))
+ 		goto out;
+-	files = get_files_struct(p);
++	files = get_files_struct(tsk);
+ 	if (!files)
+ 		goto out;
  
- 	if (width > len) {
--		width = width - len;
--		for (idx = 0; idx < width; idx++)
--			buf[idx] = ' ';
-+		memset(buf, ' ', width - len);
-+		memcpy(buf + width - len, p, len);
-+		return width;
- 	} else {
--		width = 0;
-+		memcpy(buf, p, len);
-+		return len;
- 	}
--
--	for (idx = 0; idx < len; ++idx)
--		buf[idx + width] = tmp[len - idx - 1];
--
--	return len + width;
+@@ -259,7 +259,7 @@ static int proc_readfd_common(struct file *file, struct dir_context *ctx,
+ 
+ 		len = snprintf(name, sizeof(name), "%u", fd);
+ 		if (!proc_fill_cache(file, ctx,
+-				     name, len, instantiate, p,
++				     name, len, instantiate, tsk,
+ 				     &data))
+ 			goto out_fd_loop;
+ 		cond_resched();
+@@ -269,7 +269,7 @@ static int proc_readfd_common(struct file *file, struct dir_context *ctx,
+ out_fd_loop:
+ 	put_files_struct(files);
+ out:
+-	put_task_struct(p);
++	put_task_struct(tsk);
+ 	return 0;
  }
  
- #define SIGN	1		/* unsigned/signed, must be 1 */
 -- 
 2.24.1
 
