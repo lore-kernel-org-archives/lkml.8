@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAED4C54FC9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CF7C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5EA8206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB42214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgDTCSo (ORCPT
+        id S1726509AbgDTCTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 22:18:44 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54780 "EHLO huawei.com"
+        Sun, 19 Apr 2020 22:19:33 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54800 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726050AbgDTCSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725865AbgDTCSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 19 Apr 2020 22:18:43 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 266DAE0A4CACE56D3F2C;
+        by Forcepoint Email with ESMTP id 2B5AC86B4620DA3A6865;
         Mon, 20 Apr 2020 10:18:40 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 20 Apr 2020 10:18:34 +0800
+ 14.3.487.0; Mon, 20 Apr 2020 10:18:33 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Guojia Liao <liaoguojia@huawei.com>,
+        Jian Shen <shenjian15@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 04/10] net: hns3: remove useless proto_support field in struct hclge_fd_cfg
-Date:   Mon, 20 Apr 2020 10:17:29 +0800
-Message-ID: <1587349055-4403-5-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 02/10] net: hns3: split out hclge_get_fd_rule_info()
+Date:   Mon, 20 Apr 2020 10:17:27 +0800
+Message-ID: <1587349055-4403-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587349055-4403-1-git-send-email-tanhuazhong@huawei.com>
 References: <1587349055-4403-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,94 +47,351 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-proto_support field in struct hclge_fd_cfg shows what protocols
-in flow direct table are supported now. It is unnecessary since
-checking which one is unsupported will be more efficient,
-so this patch removes it.
+hclge_get_fd_rule_info() is bloated, this patch separates
+it into several standalone functions for readability and
+maintainability.
 
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 17 ++++++-----------
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h |  1 -
- 2 files changed, 6 insertions(+), 12 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 303 +++++++++++----------
+ 1 file changed, 159 insertions(+), 144 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 999f056..e238a9d 100644
+index 80d0651..b1fe204 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -4876,9 +4876,6 @@ static int hclge_init_fd_config(struct hclge_dev *hdev)
- 		return -EOPNOTSUPP;
- 	}
+@@ -5938,6 +5938,149 @@ static int hclge_get_fd_rule_cnt(struct hnae3_handle *handle,
+ 	return 0;
+ }
  
--	hdev->fd_cfg.proto_support =
--		TCP_V4_FLOW | UDP_V4_FLOW | SCTP_V4_FLOW | TCP_V6_FLOW |
--		UDP_V6_FLOW | SCTP_V6_FLOW | IPV4_USER_FLOW | IPV6_USER_FLOW;
- 	key_cfg = &hdev->fd_cfg.key_cfg[HCLGE_FD_STAGE_1];
- 	key_cfg->key_sel = HCLGE_FD_KEY_BASE_ON_TUPLE,
- 	key_cfg->inner_sipv6_word_en = LOW_2_WORDS;
-@@ -4892,11 +4889,9 @@ static int hclge_init_fd_config(struct hclge_dev *hdev)
- 				BIT(INNER_SRC_PORT) | BIT(INNER_DST_PORT);
- 
- 	/* If use max 400bit key, we can support tuples for ether type */
--	if (hdev->fd_cfg.max_key_length == MAX_KEY_LENGTH) {
--		hdev->fd_cfg.proto_support |= ETHER_FLOW;
-+	if (hdev->fd_cfg.fd_mode == HCLGE_FD_MODE_DEPTH_2K_WIDTH_400B_STAGE_1)
- 		key_cfg->tuple_active |=
- 				BIT(INNER_DST_MAC) | BIT(INNER_SRC_MAC);
--	}
- 
- 	/* roce_type is used to filter roce frames
- 	 * dst_vport is used to specify the rule
-@@ -5397,7 +5392,8 @@ static int hclge_fd_check_ext_tuple(struct hclge_dev *hdev,
- 	}
- 
- 	if (fs->flow_type & FLOW_MAC_EXT) {
--		if (!(hdev->fd_cfg.proto_support & ETHER_FLOW))
-+		if (hdev->fd_cfg.fd_mode !=
-+		    HCLGE_FD_MODE_DEPTH_2K_WIDTH_400B_STAGE_1)
- 			return -EOPNOTSUPP;
- 
- 		if (is_zero_ether_addr(fs->h_ext.h_dest))
-@@ -5413,21 +5409,20 @@ static int hclge_fd_check_spec(struct hclge_dev *hdev,
- 			       struct ethtool_rx_flow_spec *fs,
- 			       u32 *unused_tuple)
++static void hclge_fd_get_tcpip4_info(struct hclge_fd_rule *rule,
++				     struct ethtool_tcpip4_spec *spec,
++				     struct ethtool_tcpip4_spec *spec_mask)
++{
++	spec->ip4src = cpu_to_be32(rule->tuples.src_ip[IPV4_INDEX]);
++	spec_mask->ip4src = rule->unused_tuple & BIT(INNER_SRC_IP) ?
++			0 : cpu_to_be32(rule->tuples_mask.src_ip[IPV4_INDEX]);
++
++	spec->ip4dst = cpu_to_be32(rule->tuples.dst_ip[IPV4_INDEX]);
++	spec_mask->ip4dst = rule->unused_tuple & BIT(INNER_DST_IP) ?
++			0 : cpu_to_be32(rule->tuples_mask.dst_ip[IPV4_INDEX]);
++
++	spec->psrc = cpu_to_be16(rule->tuples.src_port);
++	spec_mask->psrc = rule->unused_tuple & BIT(INNER_SRC_PORT) ?
++			0 : cpu_to_be16(rule->tuples_mask.src_port);
++
++	spec->pdst = cpu_to_be16(rule->tuples.dst_port);
++	spec_mask->pdst = rule->unused_tuple & BIT(INNER_DST_PORT) ?
++			0 : cpu_to_be16(rule->tuples_mask.dst_port);
++
++	spec->tos = rule->tuples.ip_tos;
++	spec_mask->tos = rule->unused_tuple & BIT(INNER_IP_TOS) ?
++			0 : rule->tuples_mask.ip_tos;
++}
++
++static void hclge_fd_get_ip4_info(struct hclge_fd_rule *rule,
++				  struct ethtool_usrip4_spec *spec,
++				  struct ethtool_usrip4_spec *spec_mask)
++{
++	spec->ip4src = cpu_to_be32(rule->tuples.src_ip[IPV4_INDEX]);
++	spec_mask->ip4src = rule->unused_tuple & BIT(INNER_SRC_IP) ?
++			0 : cpu_to_be32(rule->tuples_mask.src_ip[IPV4_INDEX]);
++
++	spec->ip4dst = cpu_to_be32(rule->tuples.dst_ip[IPV4_INDEX]);
++	spec_mask->ip4dst = rule->unused_tuple & BIT(INNER_DST_IP) ?
++			0 : cpu_to_be32(rule->tuples_mask.dst_ip[IPV4_INDEX]);
++
++	spec->tos = rule->tuples.ip_tos;
++	spec_mask->tos = rule->unused_tuple & BIT(INNER_IP_TOS) ?
++			0 : rule->tuples_mask.ip_tos;
++
++	spec->proto = rule->tuples.ip_proto;
++	spec_mask->proto = rule->unused_tuple & BIT(INNER_IP_PROTO) ?
++			0 : rule->tuples_mask.ip_proto;
++
++	spec->ip_ver = ETH_RX_NFC_IP4;
++}
++
++static void hclge_fd_get_tcpip6_info(struct hclge_fd_rule *rule,
++				     struct ethtool_tcpip6_spec *spec,
++				     struct ethtool_tcpip6_spec *spec_mask)
++{
++	cpu_to_be32_array(spec->ip6src,
++			  rule->tuples.src_ip, IPV6_SIZE);
++	cpu_to_be32_array(spec->ip6dst,
++			  rule->tuples.dst_ip, IPV6_SIZE);
++	if (rule->unused_tuple & BIT(INNER_SRC_IP))
++		memset(spec_mask->ip6src, 0, sizeof(spec_mask->ip6src));
++	else
++		cpu_to_be32_array(spec_mask->ip6src, rule->tuples_mask.src_ip,
++				  IPV6_SIZE);
++
++	if (rule->unused_tuple & BIT(INNER_DST_IP))
++		memset(spec_mask->ip6dst, 0, sizeof(spec_mask->ip6dst));
++	else
++		cpu_to_be32_array(spec_mask->ip6dst, rule->tuples_mask.dst_ip,
++				  IPV6_SIZE);
++
++	spec->psrc = cpu_to_be16(rule->tuples.src_port);
++	spec_mask->psrc = rule->unused_tuple & BIT(INNER_SRC_PORT) ?
++			0 : cpu_to_be16(rule->tuples_mask.src_port);
++
++	spec->pdst = cpu_to_be16(rule->tuples.dst_port);
++	spec_mask->pdst = rule->unused_tuple & BIT(INNER_DST_PORT) ?
++			0 : cpu_to_be16(rule->tuples_mask.dst_port);
++}
++
++static void hclge_fd_get_ip6_info(struct hclge_fd_rule *rule,
++				  struct ethtool_usrip6_spec *spec,
++				  struct ethtool_usrip6_spec *spec_mask)
++{
++	cpu_to_be32_array(spec->ip6src, rule->tuples.src_ip, IPV6_SIZE);
++	cpu_to_be32_array(spec->ip6dst, rule->tuples.dst_ip, IPV6_SIZE);
++	if (rule->unused_tuple & BIT(INNER_SRC_IP))
++		memset(spec_mask->ip6src, 0, sizeof(spec_mask->ip6src));
++	else
++		cpu_to_be32_array(spec_mask->ip6src,
++				  rule->tuples_mask.src_ip, IPV6_SIZE);
++
++	if (rule->unused_tuple & BIT(INNER_DST_IP))
++		memset(spec_mask->ip6dst, 0, sizeof(spec_mask->ip6dst));
++	else
++		cpu_to_be32_array(spec_mask->ip6dst,
++				  rule->tuples_mask.dst_ip, IPV6_SIZE);
++
++	spec->l4_proto = rule->tuples.ip_proto;
++	spec_mask->l4_proto = rule->unused_tuple & BIT(INNER_IP_PROTO) ?
++			0 : rule->tuples_mask.ip_proto;
++}
++
++static void hclge_fd_get_ether_info(struct hclge_fd_rule *rule,
++				    struct ethhdr *spec,
++				    struct ethhdr *spec_mask)
++{
++	ether_addr_copy(spec->h_source, rule->tuples.src_mac);
++	ether_addr_copy(spec->h_dest, rule->tuples.dst_mac);
++
++	if (rule->unused_tuple & BIT(INNER_SRC_MAC))
++		eth_zero_addr(spec_mask->h_source);
++	else
++		ether_addr_copy(spec_mask->h_source, rule->tuples_mask.src_mac);
++
++	if (rule->unused_tuple & BIT(INNER_DST_MAC))
++		eth_zero_addr(spec_mask->h_dest);
++	else
++		ether_addr_copy(spec_mask->h_dest, rule->tuples_mask.dst_mac);
++
++	spec->h_proto = cpu_to_be16(rule->tuples.ether_proto);
++	spec_mask->h_proto = rule->unused_tuple & BIT(INNER_ETH_TYPE) ?
++			0 : cpu_to_be16(rule->tuples_mask.ether_proto);
++}
++
++static void hclge_fd_get_ext_info(struct ethtool_rx_flow_spec *fs,
++				  struct hclge_fd_rule *rule)
++{
++	if (fs->flow_type & FLOW_EXT) {
++		fs->h_ext.vlan_tci = cpu_to_be16(rule->tuples.vlan_tag1);
++		fs->m_ext.vlan_tci =
++				rule->unused_tuple & BIT(INNER_VLAN_TAG_FST) ?
++				cpu_to_be16(VLAN_VID_MASK) :
++				cpu_to_be16(rule->tuples_mask.vlan_tag1);
++	}
++
++	if (fs->flow_type & FLOW_MAC_EXT) {
++		ether_addr_copy(fs->h_ext.h_dest, rule->tuples.dst_mac);
++		if (rule->unused_tuple & BIT(INNER_DST_MAC))
++			eth_zero_addr(fs->m_u.ether_spec.h_dest);
++		else
++			ether_addr_copy(fs->m_u.ether_spec.h_dest,
++					rule->tuples_mask.dst_mac);
++	}
++}
++
+ static int hclge_get_fd_rule_info(struct hnae3_handle *handle,
+ 				  struct ethtool_rxnfc *cmd)
  {
-+	u32 flow_type;
- 	int ret;
- 
- 	if (fs->location >= hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
- 		return -EINVAL;
- 
--	if (!(fs->flow_type & hdev->fd_cfg.proto_support))
--		return -EOPNOTSUPP;
--
- 	if ((fs->flow_type & FLOW_EXT) &&
- 	    (fs->h_ext.data[0] != 0 || fs->h_ext.data[1] != 0)) {
- 		dev_err(&hdev->pdev->dev, "user-def bytes are not supported\n");
- 		return -EOPNOTSUPP;
- 	}
- 
--	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT)) {
-+	flow_type = fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT);
-+	switch (flow_type) {
+@@ -5970,162 +6113,34 @@ static int hclge_get_fd_rule_info(struct hnae3_handle *handle,
  	case SCTP_V4_FLOW:
  	case TCP_V4_FLOW:
  	case UDP_V4_FLOW:
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 71df23d..a58c262 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -580,7 +580,6 @@ struct hclge_fd_key_cfg {
- struct hclge_fd_cfg {
- 	u8 fd_mode;
- 	u16 max_key_length; /* use bit as unit */
--	u32 proto_support;
- 	u32 rule_num[MAX_STAGE_NUM]; /* rule entry number */
- 	u16 cnt_num[MAX_STAGE_NUM]; /* rule hit counter number */
- 	struct hclge_fd_key_cfg key_cfg[MAX_STAGE_NUM];
+-		fs->h_u.tcp_ip4_spec.ip4src =
+-				cpu_to_be32(rule->tuples.src_ip[IPV4_INDEX]);
+-		fs->m_u.tcp_ip4_spec.ip4src =
+-			rule->unused_tuple & BIT(INNER_SRC_IP) ?
+-			0 : cpu_to_be32(rule->tuples_mask.src_ip[IPV4_INDEX]);
+-
+-		fs->h_u.tcp_ip4_spec.ip4dst =
+-				cpu_to_be32(rule->tuples.dst_ip[IPV4_INDEX]);
+-		fs->m_u.tcp_ip4_spec.ip4dst =
+-			rule->unused_tuple & BIT(INNER_DST_IP) ?
+-			0 : cpu_to_be32(rule->tuples_mask.dst_ip[IPV4_INDEX]);
+-
+-		fs->h_u.tcp_ip4_spec.psrc = cpu_to_be16(rule->tuples.src_port);
+-		fs->m_u.tcp_ip4_spec.psrc =
+-				rule->unused_tuple & BIT(INNER_SRC_PORT) ?
+-				0 : cpu_to_be16(rule->tuples_mask.src_port);
+-
+-		fs->h_u.tcp_ip4_spec.pdst = cpu_to_be16(rule->tuples.dst_port);
+-		fs->m_u.tcp_ip4_spec.pdst =
+-				rule->unused_tuple & BIT(INNER_DST_PORT) ?
+-				0 : cpu_to_be16(rule->tuples_mask.dst_port);
+-
+-		fs->h_u.tcp_ip4_spec.tos = rule->tuples.ip_tos;
+-		fs->m_u.tcp_ip4_spec.tos =
+-				rule->unused_tuple & BIT(INNER_IP_TOS) ?
+-				0 : rule->tuples_mask.ip_tos;
+-
++		hclge_fd_get_tcpip4_info(rule, &fs->h_u.tcp_ip4_spec,
++					 &fs->m_u.tcp_ip4_spec);
+ 		break;
+ 	case IP_USER_FLOW:
+-		fs->h_u.usr_ip4_spec.ip4src =
+-				cpu_to_be32(rule->tuples.src_ip[IPV4_INDEX]);
+-		fs->m_u.tcp_ip4_spec.ip4src =
+-			rule->unused_tuple & BIT(INNER_SRC_IP) ?
+-			0 : cpu_to_be32(rule->tuples_mask.src_ip[IPV4_INDEX]);
+-
+-		fs->h_u.usr_ip4_spec.ip4dst =
+-				cpu_to_be32(rule->tuples.dst_ip[IPV4_INDEX]);
+-		fs->m_u.usr_ip4_spec.ip4dst =
+-			rule->unused_tuple & BIT(INNER_DST_IP) ?
+-			0 : cpu_to_be32(rule->tuples_mask.dst_ip[IPV4_INDEX]);
+-
+-		fs->h_u.usr_ip4_spec.tos = rule->tuples.ip_tos;
+-		fs->m_u.usr_ip4_spec.tos =
+-				rule->unused_tuple & BIT(INNER_IP_TOS) ?
+-				0 : rule->tuples_mask.ip_tos;
+-
+-		fs->h_u.usr_ip4_spec.proto = rule->tuples.ip_proto;
+-		fs->m_u.usr_ip4_spec.proto =
+-				rule->unused_tuple & BIT(INNER_IP_PROTO) ?
+-				0 : rule->tuples_mask.ip_proto;
+-
+-		fs->h_u.usr_ip4_spec.ip_ver = ETH_RX_NFC_IP4;
+-
++		hclge_fd_get_ip4_info(rule, &fs->h_u.usr_ip4_spec,
++				      &fs->m_u.usr_ip4_spec);
+ 		break;
+ 	case SCTP_V6_FLOW:
+ 	case TCP_V6_FLOW:
+ 	case UDP_V6_FLOW:
+-		cpu_to_be32_array(fs->h_u.tcp_ip6_spec.ip6src,
+-				  rule->tuples.src_ip, IPV6_SIZE);
+-		if (rule->unused_tuple & BIT(INNER_SRC_IP))
+-			memset(fs->m_u.tcp_ip6_spec.ip6src, 0,
+-			       sizeof(int) * IPV6_SIZE);
+-		else
+-			cpu_to_be32_array(fs->m_u.tcp_ip6_spec.ip6src,
+-					  rule->tuples_mask.src_ip, IPV6_SIZE);
+-
+-		cpu_to_be32_array(fs->h_u.tcp_ip6_spec.ip6dst,
+-				  rule->tuples.dst_ip, IPV6_SIZE);
+-		if (rule->unused_tuple & BIT(INNER_DST_IP))
+-			memset(fs->m_u.tcp_ip6_spec.ip6dst, 0,
+-			       sizeof(int) * IPV6_SIZE);
+-		else
+-			cpu_to_be32_array(fs->m_u.tcp_ip6_spec.ip6dst,
+-					  rule->tuples_mask.dst_ip, IPV6_SIZE);
+-
+-		fs->h_u.tcp_ip6_spec.psrc = cpu_to_be16(rule->tuples.src_port);
+-		fs->m_u.tcp_ip6_spec.psrc =
+-				rule->unused_tuple & BIT(INNER_SRC_PORT) ?
+-				0 : cpu_to_be16(rule->tuples_mask.src_port);
+-
+-		fs->h_u.tcp_ip6_spec.pdst = cpu_to_be16(rule->tuples.dst_port);
+-		fs->m_u.tcp_ip6_spec.pdst =
+-				rule->unused_tuple & BIT(INNER_DST_PORT) ?
+-				0 : cpu_to_be16(rule->tuples_mask.dst_port);
+-
++		hclge_fd_get_tcpip6_info(rule, &fs->h_u.tcp_ip6_spec,
++					 &fs->m_u.tcp_ip6_spec);
+ 		break;
+ 	case IPV6_USER_FLOW:
+-		cpu_to_be32_array(fs->h_u.usr_ip6_spec.ip6src,
+-				  rule->tuples.src_ip, IPV6_SIZE);
+-		if (rule->unused_tuple & BIT(INNER_SRC_IP))
+-			memset(fs->m_u.usr_ip6_spec.ip6src, 0,
+-			       sizeof(int) * IPV6_SIZE);
+-		else
+-			cpu_to_be32_array(fs->m_u.usr_ip6_spec.ip6src,
+-					  rule->tuples_mask.src_ip, IPV6_SIZE);
+-
+-		cpu_to_be32_array(fs->h_u.usr_ip6_spec.ip6dst,
+-				  rule->tuples.dst_ip, IPV6_SIZE);
+-		if (rule->unused_tuple & BIT(INNER_DST_IP))
+-			memset(fs->m_u.usr_ip6_spec.ip6dst, 0,
+-			       sizeof(int) * IPV6_SIZE);
+-		else
+-			cpu_to_be32_array(fs->m_u.usr_ip6_spec.ip6dst,
+-					  rule->tuples_mask.dst_ip, IPV6_SIZE);
+-
+-		fs->h_u.usr_ip6_spec.l4_proto = rule->tuples.ip_proto;
+-		fs->m_u.usr_ip6_spec.l4_proto =
+-				rule->unused_tuple & BIT(INNER_IP_PROTO) ?
+-				0 : rule->tuples_mask.ip_proto;
+-
+-		break;
+-	case ETHER_FLOW:
+-		ether_addr_copy(fs->h_u.ether_spec.h_source,
+-				rule->tuples.src_mac);
+-		if (rule->unused_tuple & BIT(INNER_SRC_MAC))
+-			eth_zero_addr(fs->m_u.ether_spec.h_source);
+-		else
+-			ether_addr_copy(fs->m_u.ether_spec.h_source,
+-					rule->tuples_mask.src_mac);
+-
+-		ether_addr_copy(fs->h_u.ether_spec.h_dest,
+-				rule->tuples.dst_mac);
+-		if (rule->unused_tuple & BIT(INNER_DST_MAC))
+-			eth_zero_addr(fs->m_u.ether_spec.h_dest);
+-		else
+-			ether_addr_copy(fs->m_u.ether_spec.h_dest,
+-					rule->tuples_mask.dst_mac);
+-
+-		fs->h_u.ether_spec.h_proto =
+-				cpu_to_be16(rule->tuples.ether_proto);
+-		fs->m_u.ether_spec.h_proto =
+-				rule->unused_tuple & BIT(INNER_ETH_TYPE) ?
+-				0 : cpu_to_be16(rule->tuples_mask.ether_proto);
+-
++		hclge_fd_get_ip6_info(rule, &fs->h_u.usr_ip6_spec,
++				      &fs->m_u.usr_ip6_spec);
+ 		break;
++	/* The flow type of fd rule has been checked before adding in to rule
++	 * list. As other flow types have been handled, it must be ETHER_FLOW
++	 * for the default case
++	 */
+ 	default:
+-		spin_unlock_bh(&hdev->fd_rule_lock);
+-		return -EOPNOTSUPP;
+-	}
+-
+-	if (fs->flow_type & FLOW_EXT) {
+-		fs->h_ext.vlan_tci = cpu_to_be16(rule->tuples.vlan_tag1);
+-		fs->m_ext.vlan_tci =
+-				rule->unused_tuple & BIT(INNER_VLAN_TAG_FST) ?
+-				cpu_to_be16(VLAN_VID_MASK) :
+-				cpu_to_be16(rule->tuples_mask.vlan_tag1);
++		hclge_fd_get_ether_info(rule, &fs->h_u.ether_spec,
++					&fs->m_u.ether_spec);
++		break;
+ 	}
+ 
+-	if (fs->flow_type & FLOW_MAC_EXT) {
+-		ether_addr_copy(fs->h_ext.h_dest, rule->tuples.dst_mac);
+-		if (rule->unused_tuple & BIT(INNER_DST_MAC))
+-			eth_zero_addr(fs->m_u.ether_spec.h_dest);
+-		else
+-			ether_addr_copy(fs->m_u.ether_spec.h_dest,
+-					rule->tuples_mask.dst_mac);
+-	}
++	hclge_fd_get_ext_info(fs, rule);
+ 
+ 	if (rule->action == HCLGE_FD_ACTION_DROP_PACKET) {
+ 		fs->ring_cookie = RX_CLS_FLOW_DISC;
 -- 
 2.7.4
 
