@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CACEC54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8ECC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78A5221D79
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B91021D79
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bkoHMPSl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvzqiPWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgDTIAm (ORCPT
+        id S1726386AbgDTIAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45696 "EHLO
+        Mon, 20 Apr 2020 04:00:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgDTIAl (ORCPT
+        with ESMTP id S1725815AbgDTIAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:00:41 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B714C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:00:40 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id o15so4099761pgi.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:00:40 -0700 (PDT)
+        Mon, 20 Apr 2020 04:00:44 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB87C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:00:44 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t9so2101622pjw.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=52791mAUB6suGZo+tXBAHs9ubgU/UiPptwuGuey0HWA=;
-        b=bkoHMPSlvqVW/xIixrvQlW7MbpVixhIaJq0vY5WKIHElzYLLQgSSuswqnD2GJjG37v
-         hDYUKCpT5HMeLWz8SJG2A45HSv7coWTC6M+IqY4iC6YTxlEB1/tcbUJe3BzNGq/NJO3F
-         WQjbjEmK5je2oi5CqvrgQ/jccvxhhyjSbyMPQWnPO1fGogVu6JeMyCdDLyvr/utL1uo5
-         TNgcZkFGtMq3LcPUL4nowaQLIbG0kYwpGen491ED2+LJL+UxxkI0EDbF15ZPDvb7kY3E
-         YvSZdoFkLpTZGDzxoYQpPX7Y6e34wj33q34RV+fw1iItvM8Gb5jin7SvaU25G75ZhZb7
-         2ekg==
+        bh=rjiAZZ5G9Er5K6DiVUvm4RrDcTPBJJbdH0An8HV3WPU=;
+        b=gvzqiPWEaA6Fgy60bF41PNiLgy/POLCSDD+oUs6ipMccf/+BYVsPxFo1T9L82vf8Ex
+         WiXpeN2aywfKiDT43mgK37lstftSsLOH8MHzRbRcwQPgkiVb7UicVVJuv+WKrhSeQyV8
+         xKPDyXR654sP98fA+HCkmgn6A5mjkbKenQwRPTGAWeIc1PU2pqEGFAzCd7Ac1gQHOH0y
+         jY5Sehb5Vu5T7mOjkngLPKUm2lJWqEeDuKJIlB0YwFyT+Dth43OileJiiOdAgVsj/2E9
+         UTg2O7sq+mxqwEcOurJrKs3XkXDNpcVlAIo9EwTTon0dVbZgTE0BVt4H0dfbh1xqhvNK
+         xnqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=52791mAUB6suGZo+tXBAHs9ubgU/UiPptwuGuey0HWA=;
-        b=FJeUMeENDpTKHzVGExTexUrS8T2dJ+RbjubSrY5gTAUR2zct92bYmQuv/YAKM9Za6F
-         jiDdjrulq/rZhO1udLkxrdUrK5w9Swy25yQ0ObA/tGWjUOLluI1IiBJn++QnghfYMP6h
-         auWe2tcRPsV384i4S9DFCwHRahv4kNCQLB0IC3S/UVK2c+qz7VvRYUjv9q2tE/u2o8jG
-         ZpQSMC5QLsaxQ5mQCP5XtJ992g8QUGLjlkb2EMOyOj73jva6xNP08flYGFZn3zDwWViG
-         v+my4DlthRXUYxAaHyJQtUV1k3gA4AD+HeS4F29INgOwelhqJkaj2DbLuG3eKAKEg1p1
-         7aIw==
-X-Gm-Message-State: AGi0PubAl8nsBgffsurQ4B2/kTYV4rMEnla7P19mj2WKPbuwmB5x97Ow
-        uGc1wHFmtmxqv64jKY88wug=
-X-Google-Smtp-Source: APiQypKIqxDuVLDfanElVReNdt0lDoBqnFlIavFkF0s5oVkkFlBVHvGOtxlIwVQfMUK3NLD1WhwOwQ==
-X-Received: by 2002:a62:14a:: with SMTP id 71mr14794311pfb.33.1587369639755;
-        Mon, 20 Apr 2020 01:00:39 -0700 (PDT)
+        bh=rjiAZZ5G9Er5K6DiVUvm4RrDcTPBJJbdH0An8HV3WPU=;
+        b=rXig7hIUKVO3cLA5BepAPs0lpTAuQYJHhPO/S3IQbMSebyo6d3LdOjcAK5BqFmkvFT
+         Klup/fxwA41/e6Am96rmrkLgFeQKJA3wz3ltOgwORf6vrz09YMmzinwMfG+Rl7JKV9S9
+         T5aH0W3mCPBl+Ec+AFyK5c90upbVHnOJCKQDwuxJ3/jqdJ1Aw1D00ggKRQmGm+2X4boD
+         mlJ1imiRXs7XhuG+32Lf8KNetEmfa6K8oefZWpkBH+TBBy9IGAs+Cmf2Az9M7gkgjUu9
+         5gLqrn0W7IPISgesmlZb3nAQsBnEPXgc5E1GcfhvKmBTAEydzbT0S+Yno6W6su1GB7jb
+         KdiA==
+X-Gm-Message-State: AGi0Pubsr0592SAAOkf5jvn9mdq/147mv7EteR7rZvzMriqP60LYeqbZ
+        tGDH2XGYCzc0Nn7lv/bw+4Y=
+X-Google-Smtp-Source: APiQypIvOwWszR77pALzUGPwEo5gChdgiIboqtUTfCay4xpGZgEOfJFRZ2OBWLI7JL9nqKisiVg0jg==
+X-Received: by 2002:a17:902:8697:: with SMTP id g23mr15390776plo.306.1587369644029;
+        Mon, 20 Apr 2020 01:00:44 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id n9sm314947pjt.29.2020.04.20.01.00.35
+        by smtp.gmail.com with ESMTPSA id n9sm314947pjt.29.2020.04.20.01.00.40
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Apr 2020 01:00:39 -0700 (PDT)
+        Mon, 20 Apr 2020 01:00:43 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -77,9 +77,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Pavel Machek <pavel@ucw.cz>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH 03/10] mm/migrate: separate PageHighMem() and PageHighMemZone() use case
-Date:   Mon, 20 Apr 2020 16:59:35 +0900
-Message-Id: <1587369582-3882-4-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH 04/10] kexec: separate PageHighMem() and PageHighMemZone() use case
+Date:   Mon, 20 Apr 2020 16:59:36 +0900
+Message-Id: <1587369582-3882-5-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587369582-3882-1-git-send-email-iamjoonsoo.kim@lge.com>
 References: <1587369582-3882-1-git-send-email-iamjoonsoo.kim@lge.com>
@@ -117,22 +117,22 @@ I apply the rule #2 for this patch.
 
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- include/linux/migrate.h | 2 +-
+ kernel/kexec_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-index 3e546cb..9a57766 100644
---- a/include/linux/migrate.h
-+++ b/include/linux/migrate.h
-@@ -47,7 +47,7 @@ static inline struct page *new_page_nodemask(struct page *page,
- 		order = HPAGE_PMD_ORDER;
- 	}
- 
--	if (PageHighMem(page) || (zone_idx(page_zone(page)) == ZONE_MOVABLE))
-+	if (PageHighMemZone(page) || zone_idx(page_zone(page)) == ZONE_MOVABLE)
- 		gfp_mask |= __GFP_HIGHMEM;
- 
- 	new_page = __alloc_pages_nodemask(gfp_mask, order,
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index ba1d91e..33097b7 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -766,7 +766,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 			 * gfp_flags honor the ones passed in.
+ 			 */
+ 			if (!(gfp_mask & __GFP_HIGHMEM) &&
+-			    PageHighMem(old_page)) {
++			    PageHighMemZone(old_page)) {
+ 				kimage_free_pages(old_page);
+ 				continue;
+ 			}
 -- 
 2.7.4
 
