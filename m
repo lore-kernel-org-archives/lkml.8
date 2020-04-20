@@ -2,137 +2,97 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A5FC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D6EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A3720A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71DD20A8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fynmVLdY"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="d+DuWXGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgDTJbi (ORCPT
+        id S1726141AbgDTJcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:31:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725775AbgDTJbi (ORCPT
+        Mon, 20 Apr 2020 05:32:15 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17866 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725775AbgDTJcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:31:38 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC81C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 02:31:37 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F08140068F64889F873250A.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:1400:68f6:4889:f873:250a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5221D1EC0469;
-        Mon, 20 Apr 2020 11:31:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1587375096;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=CXhTfvXi11xyHHW7Yd77e/vXQQSj/cvzXDUeJIedA8g=;
-        b=fynmVLdY6AUb68D6SdKAM4i7yRswJcGa/nZw0Ce5PtMXYuLkgWosT91CehApC5vMx+21lk
-        Y+mGSvvLzToXwGFDVC6oYYlClGr866kd49Yqjn0u0XdohWOiLdU/+zAdxfhrUQWPAR9v+q
-        BU2sMXvgX5YPZnaaHzu+8TASg8aaJZE=
-Date:   Mon, 20 Apr 2020 11:31:29 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Evalds Iodzevics <evalds.iodzevics@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH] x86/microcode/intel: replace sync_core() with
- native_cpuid_reg(eax)
-Message-ID: <20200420093129.GA21839@zn.tnic>
-References: <20200420120037.1537-1-evalds.iodzevics@gmail.com>
+        Mon, 20 Apr 2020 05:32:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1587375114; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=WwfkyFbcuXnFIazV/b/xCYn+RCxqzjkdrFPhj3trVx5QZLQfTgIgehU2EAdRQB2gRJtkjvd7XQwfF/8r6ihwtE2/hZvTYetzdENWO9MJzHubTiCdy/DfKvQw3AGJfKAWZPEQtUBs2n/kVFHkhnk77z47NbR6z4+4Z774zv304F4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1587375114; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=YWokOhjuoZJKbniCXhiZb2T0HCc4vugSkhCjBeD1p6M=; 
+        b=XlKsNGl86xQB1J1JLN3M564gAhsNgoPRi1BEAoKrYjjiSp8TyEZ8rkT6dL1GgQ2+W58ZQWPGZWkXkLqjkbtwp0b4lYk6jB19vaOcUtaDixkUIxSgQu76J5OgqS5EwsftgSHGbP9cZsFqpEJnBpqbO4J0NW75i5HDoOaEsk3njVo=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1587375114;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=YWokOhjuoZJKbniCXhiZb2T0HCc4vugSkhCjBeD1p6M=;
+        b=d+DuWXGMpg3iToKjczmPbUL5Q9L9a+f4ZfNK/k3pD27VNs1Arucf5MNzFzbVujal
+        k65yj4QlWG0kcIJNqYMeitByF5QOHF/5ZZkRigkxYI1AHik6SiMZ7zExzn0eGqXUb5p
+        9Y0dnk23KN2c8leB2DacSCLO5wFCSwRx3IiSLp1I=
+Received: from [127.0.0.1] (115.205.241.167 [115.205.241.167]) by mx.zoho.com.cn
+        with SMTPS id 1587375111104526.5026860230735; Mon, 20 Apr 2020 17:31:51 +0800 (CST)
+Date:   Mon, 20 Apr 2020 17:31:49 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 0/5] Loongson64: RS780E clean-ups
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <20200420090726.GA9388@alpha.franken.de>
+References: <20200420073347.157230-1-jiaxun.yang@flygoat.com> <20200420090726.GA9388@alpha.franken.de>
+Message-ID: <3C79E5D5-594D-4139-88CE-050BBD9C6D88@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200420120037.1537-1-evalds.iodzevics@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 03:00:37PM +0300, Evalds Iodzevics wrote:
-> sync_core() always jums past cpuid instruction on 32 bit machines
-> because data structure boot_cpu_data are not populated so early in boot.
 
-I'm guessing because boot_cpu_data.cpuid_level is not properly set and
-very early code in head_32.S sets it to -1 temporarily until the highest
-CPUID level has been detected (or not).
 
-But the microcode loading happens *before* that.
+=E4=BA=8E 2020=E5=B9=B44=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885=
+:07:26, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=
+=B0:
+>On Mon, Apr 20, 2020 at 03:33:35PM +0800, Jiaxun Yang wrote:
+>> Basically ensure all RS780E stuff is enabled by DeviceTree=2E
+>> So I can post LS7A support later on=2E
+>>=20
+>> Hi Thomas, could you please pick them into MIPS tree?
+>
+>well, first patch doesn't apply, because it relies on your PCI patch
+>series=2E I've fixed this while applying and then faced
+>
+>arch/mips/loongson64/pci=2Eo: In function `pcibios_init':
+>pci=2Ec:(=2Einit=2Etext+0x44): undefined reference to `sbx00_acpi_init'
+>
+>IMHO there is something to improve=2E=2E=2E
 
-I'd probably be interested how you trigger that but since the backport
-got changed (see below) and yours is correcting it to the upstream
-variant then perhaps maybe I don't care that much. :)
+Oops, sorry=2E
+It should depends on PCI series=2E
 
-> It depends on commit 5dedade6dfa243c130b85d1e4daba6f027805033 for
-> native_cpuid_reg(eax) definitions
-> 
-> This patch is for 4.4 but also should apply to 4.9
-> 
-> Signed-off-by: Evalds Iodzevics <evalds.iodzevics@gmail.com>
-> ---
->  arch/x86/include/asm/microcode_intel.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/microcode_intel.h b/arch/x86/include/asm/microcode_intel.h
-> index 90343ba50485..92ce9c8a508b 100644
-> --- a/arch/x86/include/asm/microcode_intel.h
-> +++ b/arch/x86/include/asm/microcode_intel.h
-> @@ -60,7 +60,7 @@ static inline u32 intel_get_microcode_revision(void)
->  	native_wrmsrl(MSR_IA32_UCODE_REV, 0);
->  
->  	/* As documented in the SDM: Do a CPUID 1 here */
-> -	sync_core();
-> +	native_cpuid_eax(1);
->  
->  	/* get the current revision from MSR 0x8B */
->  	native_rdmsr(MSR_IA32_UCODE_REV, dummy, rev);
-> -- 
+I'll send v2 without this requirement soon=2E
 
-Hrm, the original patch of mine did use native_cpuid_eax():
+Thanks=2E
 
-4167709bbf82 ("x86/microcode/intel: Add a helper which gives the microcode revision")
+>
+>Thomas=2E
+>
 
-but the backport:
-
-commit 98cc1464cfd6edf9dc7fa96aaaf596aae952029b
-Author: Borislav Petkov <bp@suse.de>
-Date:   Mon Jan 9 12:41:45 2017 +0100
-
-    x86/microcode/intel: Add a helper which gives the microcode revision
-    
-    commit 4167709bbf826512a52ebd6aafda2be104adaec9 upstream.
-    
-    Since on Intel we're required to do CPUID(1) first, before reading
-    the microcode revision MSR, let's add a special helper which does the
-    required steps so that we don't forget to do them next time, when we
-    want to read the microcode revision.
-    
-    Signed-off-by: Borislav Petkov <bp@suse.de>
-    Link: http://lkml.kernel.org/r/20170109114147.5082-4-bp@alien8.de
-    Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-    [bwh: Backported to 4.4:
-     - Don't touch prev_rev variable in apply_microcode()
-     - Keep using sync_core(), which will alway includes the necessary CPUID
-     	^^^^^^^^^^^^^^^^^^^
-
-decided to use sync_core() for whatever reason. Perhaps because the
-native_cpuid* things weren't there. Adding Ben to Cc.
-
-I believe this is the background info Greg needed to figure out *why*
-you're doing this.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--=20
+Jiaxun Yang
