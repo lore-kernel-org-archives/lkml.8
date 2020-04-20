@@ -2,131 +2,150 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01CDC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C01C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B41C82071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9472071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tNk46QkH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CF9oVWum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgDTSJz (ORCPT
+        id S1727835AbgDTSKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:09:55 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.80]:22723 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726013AbgDTSJy (ORCPT
+        Mon, 20 Apr 2020 14:10:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbgDTSKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:09:54 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id B48A72848A
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:09:52 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Qargj4g9sXVkQQargjFtPS; Mon, 20 Apr 2020 13:09:52 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=In-Reply-To:Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:References:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wJHD7TM3Fxu768MV0g98UB0HrQgL7g1TGpW7kc7eYmA=; b=tNk46QkHwbkRhl/pIcS2wG+G02
-        odFVU+69XYalTXZ55cswb2uY9LTYg1AEqtqpo9b3/S5mIVFEKMATcgSc24hrX3zvXLMZqD34wVlyr
-        F/S0uYUIIyY0zom6YAhFTwAwa904HAVlvCRvOuo3QqfHxC4TfpbsbZRd+s5kBiCSgiBbYxlKJxr7d
-        HIpwG2vPDiQKSKftvnXky++w/poyCBovxQnoPy0C164JiN+WDau9x5cWfsdKluft6KZzlM7KXfw3u
-        iF5O65eIjTpjA1zu1uStxusQYJX7souRp4akcRbIR+cabjI6lB5k2zcz0HgetteNKJdyR47nYmUDC
-        QlhL/NLA==;
-Received: from [201.166.169.58] (port=24020 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jQarf-0043yr-CF; Mon, 20 Apr 2020 13:09:51 -0500
-Date:   Mon, 20 Apr 2020 13:14:01 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 1/2][next] m68k: amiga: config: Replace zero-length
- array with flexible-array member
-Message-ID: <20200420181401.GA32172@embeddedor>
+        Mon, 20 Apr 2020 14:10:39 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F09C061A0C;
+        Mon, 20 Apr 2020 11:10:39 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id l3so5216018edq.13;
+        Mon, 20 Apr 2020 11:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OsEsVqFYdMSb7DvTNoLz36ojWhYP2bDeJgp2Rpv0Krk=;
+        b=CF9oVWum7P6oGqf/+o/Kfq8ccqpl/kqXKpD5Ov3s0d6NsvfIEGAmcv8qfwxjZn0zVg
+         ynvyXJBYZxaE6qa+9ImjKr17D04XIQPPy4Yhi0GtZvMcehBwVgh+am27oicRuZZBy69Y
+         0UE2jBqxbyKVjh3oWwFNvRqjhQiKr57pzRmKNO0fRLYyr1LtdquWn2zwQmk8e/fSC77+
+         DzC+16bcYwTLYolDPEl7ov14N67ELp26piJ8A+kX6zrkQsOK4pZJ4AzYDK0l+vPUoZ9R
+         vBNELc1LN+uOG3lJ4pojJI9EQbhO4dPXVorQBY3l7vszpjDGMIh9CeoZLnM5l5pUSdNU
+         Af9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OsEsVqFYdMSb7DvTNoLz36ojWhYP2bDeJgp2Rpv0Krk=;
+        b=n8q3eGWDsdxfa1oV7caEywVrmSGEoTzXroxa442+neiF8KVBOCOifLwLkDqB80mw0W
+         pkz7ZspJim46/gEoYE9fhz06e8wKLheG7QGVjRBkYABgaMaHGgc+dhms+itJ50ePiupk
+         XDW7cGwISEQHu7UDjzqS2zQlQpawrR5Y7ZSGM3BzksaOF7XZ20hT05W07Pdxm0nF6aKZ
+         Z2vyxodsHb6DwZZv9l017CtKfJhdRwIGJrHeeV2KfPEJBCX4dhcloBebnhB3jyb+8C4X
+         oKOLJ334LdI3SIelBPeTDPPzgcq5N++nTjvlJzg9/1rZ0zC+L7hCzT0eSPXL8ww1MBDC
+         Y1mg==
+X-Gm-Message-State: AGi0PuZnpm7Oi9KAepyRh8Ddsvb6+1XxOZvuFnWxCqJmH6TReymGFKlW
+        gz2UQ0BJ1JjsM+TxXng0ydE2VpuEet/WyWvt1HA=
+X-Google-Smtp-Source: APiQypKh8INZWiu0vYAwkyTSSdFKBGinZbwNyt+jZO5Euhz9Y9RwZQSR5ngPH+538R2KWSEW23JML9DVlLKeSSsbzMs=
+X-Received: by 2002:a50:9ea1:: with SMTP id a30mr16192872edf.318.1587406237905;
+ Mon, 20 Apr 2020 11:10:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1585264062.git.gustavo@embeddedor.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.169.58
-X-Source-L: No
-X-Exim-ID: 1jQarf-0043yr-CF
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.169.58]:24020
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200318001603.9650-1-olteanv@gmail.com> <20200318001603.9650-13-olteanv@gmail.com>
+ <CAMuHMdUDYWNOOrAXrq1Lf5_GD84Z1rr4Co5buZS-GnJvGyN5yA@mail.gmail.com>
+In-Reply-To: <CAMuHMdUDYWNOOrAXrq1Lf5_GD84Z1rr4Co5buZS-GnJvGyN5yA@mail.gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 20 Apr 2020 21:10:27 +0300
+Message-ID: <CA+h21hpHeL08Gb36m1RNrE6agebZu7ygz9jFekOH7zGc9uLcSQ@mail.gmail.com>
+Subject: Re: [PATCH v5 12/12] arm64: dts: ls1028a-rdb: Add a spidev node for
+ the mikroBUS
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Esben Haabendal <eha@deif.com>,
+        Angelo Dureghello <angelo@sysam.it>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        Michael Walle <michael@walle.cc>, peng.ma@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Hi Geert,
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+On Mon, 20 Apr 2020 at 21:07, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Vladimir,
+>
+> On Wed, Mar 18, 2020 at 1:17 AM Vladimir Oltean <olteanv@gmail.com> wrote:
+> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> >
+> > For debugging, it is useful to have access to the DSPI controller
+> > signals. On the reference design board, these are exported to either the
+> > mikroBUS1 or mikroBUS2 connector (according to the CPLD register
+> > BRDCFG3[SPI3]).
+> >
+> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+>
+> Thanks for your patch!
+>
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> > @@ -83,6 +83,20 @@
+> >         };
+> >  };
+> >
+> > +&dspi2 {
+> > +       bus-num = <2>;
+> > +       status = "okay";
+> > +
+> > +       /* mikroBUS1 */
+> > +       spidev@0 {
+>
+> Please use generic node names, e.g. "dac@0".
+>
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+It's not a DAC. It's really an unpopulated pin header. I would have
+really liked to have access to that as a char device with the default
+board DTS, via spidev. That being said, there are warnings to not use
+the "spidev" compatible in device trees. So if what I want is not
+possible, I'd rather drop the patch altogether.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+> > +               compatible = "rohm,dh2228fv";
+> > +               spi-max-frequency = <20000000>;
+> > +               fsl,spi-cs-sck-delay = <100>;
+> > +               fsl,spi-sck-cs-delay = <100>;
+> > +               reg = <0>;
+> > +       };
+> > +};
+> > +
+> >  &esdhc {
+> >         sd-uhs-sdr104;
+> >         sd-uhs-sdr50;
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- arch/m68k/amiga/config.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/m68k/amiga/config.c b/arch/m68k/amiga/config.c
-index c32ab8041cf6..06c15374200e 100644
---- a/arch/m68k/amiga/config.c
-+++ b/arch/m68k/amiga/config.c
-@@ -628,7 +628,7 @@ struct savekmsg {
- 	unsigned long magic2;		/* SAVEKMSG_MAGIC2 */
- 	unsigned long magicptr;		/* address of magic1 */
- 	unsigned long size;
--	char data[0];
-+	char data[];
- };
- 
- static struct savekmsg *savekmsg;
--- 
-2.26.0
-
+Thanks,
+-Vladimir
