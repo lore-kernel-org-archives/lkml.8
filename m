@@ -2,94 +2,163 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67626C55182
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99141C55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A95720575
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587415672;
-	bh=WqjuUPcshkg1Fl5UeaP99Bk/vgsChhwPDzeZB2nrP0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Li85pmZHHz6UpxqymC1YdO5tvMJ2Plhr9+U8kclvo31paKINiEmH5FvCiYmsZNw+q
-	 7QtQnGiR5R/Zunt5gxHMx3X3vfWMhvsWZVp0lDRD/DSEBOEbAvZ3+spZa0n/WdO2Cs
-	 K0dzGduIugEYtufYVQTMhqaJJTJLqWtSkHJRL8hg=
+	by mail.kernel.org (Postfix) with ESMTP id 7127D20575
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:48:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CKA2nH/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgDTUrv (ORCPT
+        id S1726988AbgDTUsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:47:51 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44163 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgDTUrv (ORCPT
+        Mon, 20 Apr 2020 16:48:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgDTUsL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:47:51 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j4so9364255otr.11;
-        Mon, 20 Apr 2020 13:47:50 -0700 (PDT)
+        Mon, 20 Apr 2020 16:48:11 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1ABFC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:48:10 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id d74so851639vka.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:48:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B+ddsi5VGRAjSUDzYFLvM4SMaW8xDMNOr5MejZ6LqjQ=;
+        b=CKA2nH/nooYDOCpIHm+FZyrE3QSdUeH80aEVskTZhJ5hvmFNeeuqWGmlcYLV3kD80X
+         k867cXGkm9KVgnlM6zq7bkXRIuVsY1jL0IbWduWO5Dihn2SDF4qjYXCxjuzD3dq+1hXR
+         bf6rXnMLqg0Pl90SvjAdOAciFvULAXvAfh/Rc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=03daUD91BmLRPkQX2g3OkI4KkmbbVSqJ0/5HyTXhZcc=;
-        b=qqYtHF7D7hJOvUHjPrpQpuGiq04khtT2zl5OzGwrBqLOCUWbYs4hOCHiLf00pEXk9G
-         6TqOmBlVzn6JfJPn071k5pmsBImb1jDrVxT226Ab2ou6KHCcuWJO2oEevzslHX/LI6wD
-         VKoHRlH+GBrFQJPb+RAXaU/t4cqD8P4WYhVkg6Ozn5JLFH9coROdY6QXdIAEeRDVdnuB
-         ONEyEa1QtC2GZq6nZoTH1R85yXdyr6bqWgMuRlStKpKwPcxcVXcIgTmtkXQxv87ZsIy5
-         RPOctmCGKCEJSMSO4wMcnjW/4lr5xe/AEeqMA6Fe7xtwfVMYDkb+DATdb9OEKprPZFVX
-         Ph3Q==
-X-Gm-Message-State: AGi0PuZuJGFrIsP8z0tlFt/DuMuqY3R3DbO0Gscw6bC5YeN35td70OEC
-        pxw9kimhDP5UJ9CpmKflHB8rT4o=
-X-Google-Smtp-Source: APiQypIc3Svb/uK4rCWU7hsCX+MGdL5CagM45jjt3R28s7oM272csJN2xAQ8XONrOXLQhKLdKOBmZg==
-X-Received: by 2002:a05:6830:3110:: with SMTP id b16mr4600911ots.68.1587415670216;
-        Mon, 20 Apr 2020 13:47:50 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p13sm130461oom.34.2020.04.20.13.47.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:47:48 -0700 (PDT)
-Received: (nullmailer pid 2136 invoked by uid 1000);
-        Mon, 20 Apr 2020 20:47:47 -0000
-Date:   Mon, 20 Apr 2020 15:47:47 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>, od@zcrc.me,
-        =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 01/13] dt-bindings: timer: Convert ingenic,tcu.txt to YAML
-Message-ID: <20200420204747.GA2076@bogus>
-References: <20200413152633.198301-1-paul@crapouillou.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B+ddsi5VGRAjSUDzYFLvM4SMaW8xDMNOr5MejZ6LqjQ=;
+        b=HamSirgijvPSg2GvUihXugV9rhXxsO895ymNi4yO92RbgTGHnbIS2Wj2Np0uOOGoG9
+         wETDYBsE1mb14opo7KShEzjAp2/T3OMxx1GYzbI8dBkai+U/T6wVNw03MB7bF7IycUxp
+         RIhQ/Xj6Ihas43HUp1HpILxSNEemHMju86zktyPRWtuwNs8hG4F4xpsLqjQnNc7mH6ml
+         +ca9hvHxnDyxx4ijUhaDb1FBnjBoJYyqN3Y9nXcwbum5UhF/fbHPItWysFDNrVF3yuKz
+         Sga1bq74IRPP7uEzr7Si1o/f/H/nLzYMdWjA+fafhrBvr6dSusX6pe4xn6E49Q/cc5cw
+         hwLQ==
+X-Gm-Message-State: AGi0Pub73mwR7tyrCozc8/wly/BUdXX5C6nOzPw35UWW6tpyQ0RpOsc9
+        vXwLuNvfacS9bkcjwkLYlXxaZAQndlg=
+X-Google-Smtp-Source: APiQypKopT8m8ZADa9aWlFUztkPB+dtACT+ICKkXHrUteqcaEmiBwktqkgQyHtkZEz7A5IdWRiOaEA==
+X-Received: by 2002:a1f:3190:: with SMTP id x138mr12987301vkx.41.1587415689132;
+        Mon, 20 Apr 2020 13:48:09 -0700 (PDT)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id q125sm166387vke.4.2020.04.20.13.48.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 13:48:08 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id n26so2510187uap.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:48:08 -0700 (PDT)
+X-Received: by 2002:a9f:27ca:: with SMTP id b68mr9683072uab.8.1587415687643;
+ Mon, 20 Apr 2020 13:48:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413152633.198301-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200417141531.1.Ia4b74158497213eabad7c3d474c50bfccb3f342e@changeid>
+ <20200420203107.GR576963@builder.lan>
+In-Reply-To: <20200420203107.GR576963@builder.lan>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 20 Apr 2020 13:47:56 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WVqdpNyCmtDFb1t_BZiu=7QbMNTr91Pfm1Jd3V6CMhrA@mail.gmail.com>
+Message-ID: <CAD=FV=WVqdpNyCmtDFb1t_BZiu=7QbMNTr91Pfm1Jd3V6CMhrA@mail.gmail.com>
+Subject: Re: [PATCH] soc: qcom: rpmh: Dirt can only make you dirtier, not cleaner
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 17:26:21 +0200, Paul Cercueil wrote:
-> Convert the ingenic,tcu.txt file to YAML.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     This one patch was sent as standalone before, so it's technically
->     a V2. Support for 'assigned-clocks', 'assigned-clock-parents',
->     'assigned-clock-rates' was added.
-> 
->  .../devicetree/bindings/timer/ingenic,tcu.txt | 138 ---------
->  .../bindings/timer/ingenic,tcu.yaml           | 281 ++++++++++++++++++
->  2 files changed, 281 insertions(+), 138 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
-> 
+Hi,
 
-Applied, thanks.
+On Mon, Apr 20, 2020 at 1:30 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Fri 17 Apr 14:15 PDT 2020, Douglas Anderson wrote:
+>
+> > Adding an item into the cache should never be able to make the cache
+> > cleaner.  Use "|=" rather than "=" to update the dirty flag.
+> >
+>
+> This is correct...
+>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>
+> > Fixes: bb7000677a1b ("soc: qcom: rpmh: Update dirty flag only when data changes")
+> > Reported-by: Stephen Boyd <swboyd@chromium.org>
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> >  drivers/soc/qcom/rpmh.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+> > index 3abbb08cd6e1..d1626a1328d7 100644
+> > --- a/drivers/soc/qcom/rpmh.c
+> > +++ b/drivers/soc/qcom/rpmh.c
+> > @@ -151,10 +151,10 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
+> >               break;
+> >       }
+> >
+> > -     ctrlr->dirty = (req->sleep_val != old_sleep_val ||
+> > -                     req->wake_val != old_wake_val) &&
+> > -                     req->sleep_val != UINT_MAX &&
+> > -                     req->wake_val != UINT_MAX;
+> > +     ctrlr->dirty |= (req->sleep_val != old_sleep_val ||
+> > +                      req->wake_val != old_wake_val) &&
+> > +                      req->sleep_val != UINT_MAX &&
+> > +                      req->wake_val != UINT_MAX;
+>
+> ...but this logic says dirty "if either sleep or wake has changed and
+> both sleep and wake are requested".
+>
+> So what if we have an entry with only sleep wake changed, then the
+> controller won't be dirty and hence the hardware won't know about this
+> request - until another "fully specified" request comes in, which would
+> cause the controller to be dirty and flush out the "partially specified"
+> request as well.
+>
+> Is this really the expected behavior?
 
-Rob
+IIRC, this has to do with how is_req_valid() works and how it's called
+from rpmh_flush().  ...but since I clearly screwed up the "|=" in the
+past let's see if I screwed this up too.  ...errr, what I mean to say
+is that I never make any mistakes.  Ever.  How dare you accuse me of
+such a thing?  ;-)
+
+So is_req_valid() says that a request is valid if all three of these are true
+* Sleep is not UINT_MAX
+* Wake is not UINT_MAX
+* Sleep is not equal to wake
+
+If a request is not valid then rpmh_flush will ignore it, it won't be
+sent, and it's as if it wasn't even in the cache.  Also: It's not
+expected that anyone will ever change a value _to_ UINT_MAX, so once
+something is initialized it's never uninitialized (NOTE: I don't think
+anything actually enforces this).
+
+The above means that until both sleep and wake have changed away from
+their default of UINT_MAX that they can't really dirty the cache
+because we act as if they're not even in the cache.  Once they get
+something then the cache gets dirty if either sleep changes or wake
+changes.
+
+
+So I think the logic is right...  Does that make sense?
+
+
+-Doug
