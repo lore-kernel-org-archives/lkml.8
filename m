@@ -6,95 +6,59 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D331C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D908FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB3C2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C402F2078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:16:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgDTJPY (ORCPT
+        id S1726296AbgDTJQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:15:24 -0400
-Received: from mga14.intel.com ([192.55.52.115]:12508 "EHLO mga14.intel.com"
+        Mon, 20 Apr 2020 05:16:52 -0400
+Received: from elvis.franken.de ([193.175.24.41]:48049 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgDTJPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:15:24 -0400
-IronPort-SDR: ERLGhk0r8U8rMQUG/GRuYVRN2yb7z9Z6KkP/dvk124RNgDkAGRKEWkTHahHmRJLCyjMevRrxng
- YNMq2Q4eUulQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 02:15:23 -0700
-IronPort-SDR: isaKgCpWgOqEpkT9mN/xaHP6Fa/X+Nj6YLMccDHBdtzjyTO8/Hx3QWzI7ibS+5geRDhK3kscXa
- Q0+sNtjD0C5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="scan'208";a="258285784"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 20 Apr 2020 02:15:23 -0700
-Received: from [10.249.68.96] (vramuthx-mobl1.gar.corp.intel.com [10.249.68.96])
-        by linux.intel.com (Postfix) with ESMTP id 3106C580479;
-        Mon, 20 Apr 2020 02:15:17 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
-        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200420102959.2659774d@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <85f510a8-59a8-0ac4-23bf-86c5c2b85a96@linux.intel.com>
-Date:   Mon, 20 Apr 2020 17:15:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1725886AbgDTJQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:16:51 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jQSXh-00019d-00; Mon, 20 Apr 2020 11:16:41 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id AAFE5C0181; Mon, 20 Apr 2020 11:07:26 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 11:07:26 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 0/5] Loongson64: RS780E clean-ups
+Message-ID: <20200420090726.GA9388@alpha.franken.de>
+References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200420102959.2659774d@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
-     Thank you very much for the review comments and your time...
+On Mon, Apr 20, 2020 at 03:33:35PM +0800, Jiaxun Yang wrote:
+> Basically ensure all RS780E stuff is enabled by DeviceTree.
+> So I can post LS7A support later on.
+> 
+> Hi Thomas, could you please pick them into MIPS tree?
 
-On 20/4/2020 4:29 pm, Boris Brezillon wrote:
-> On Fri, 17 Apr 2020 16:21:47 +0800
-> "Ramuthevar,Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
->> +
->> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
->> +	lgm_host->nandaddr_va = res;
->> +	nandaddr_pa = res->start;
->> +	if (IS_ERR(lgm_host->nandaddr_va))
->> +		return PTR_ERR(lgm_host->nandaddr_va);
-> Hm, I didn't realize you needed the physical address for DMA transfers.
-> Just use platform_get_resource_by_name()+devm_ioremap_resource() in
-> that case.
->
-Yes, you are right, needed the physical address for DMA transfers.
->> +
->> +	writel(LGM_BUSCON_CMULT_V4 | LGM_BUSCON_RECOVC(1) |
->> +	       LGM_BUSCON_HOLDC(1) | LGM_BUSCON_WAITRDC(2) |
->> +	       LGM_BUSCON_WAITWRC(2) | LGM_BUSCON_BCGEN_CS | LGM_BUSCON_ALEC |
->> +	       LGM_BUSCON_SETUP_EN, lgm_host->lgm_va + LGM_BUSCON(cs));
-> I'm sure some the timings you hardcode here can be extracted from the
-> NAND timings. Can you see if you can implement ->setup_data_interface()
-> instead.
+well, first patch doesn't apply, because it relies on your PCI patch
+series. I've fixed this while applying and then faced
 
-Yes, I have seen few of the drivers implemented 
-->setup_data_interface(), Noted.
+arch/mips/loongson64/pci.o: In function `pcibios_init':
+pci.c:(.init.text+0x44): undefined reference to `sbx00_acpi_init'
 
-Regards
-Vadivel
+IMHO there is something to improve...
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
