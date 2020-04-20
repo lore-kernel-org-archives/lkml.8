@@ -2,112 +2,136 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8905C38A30
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BA2C38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B33932074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B6A206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vd5D+k03"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="mhJZK62y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgDTSTn (ORCPT
+        id S1727909AbgDTSTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:19:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57396 "EHLO
+        Mon, 20 Apr 2020 14:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbgDTSTn (ORCPT
+        with ESMTP id S1727891AbgDTSTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:19:43 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 483D4C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:19:43 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f8so4258762plt.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:19:43 -0700 (PDT)
+        Mon, 20 Apr 2020 14:19:49 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52154C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:19:49 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id l13so9368832qtr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:19:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=idNzN2pm7FEPN1n487Ax7LSZYU5+9Uhm24wE5AT9T4s=;
-        b=Vd5D+k03lqQVldIAukk7ZSeEk3nNjGfLlRkJtZcPLZa1qUfbt3YNor+uzJPtjhDEdK
-         siCEfcbX5/HSKmYiXqG/Dp0Z+kOqWn5OXn5OAls/y+r1Fh8h7HiQrhSig3OkH7/jBFNR
-         X00tFwMEKdkCgynoNQ2UzSmdN8ShZotARmEbxM/brXav5nNLOLIXywDh17aaFbG6Fl2R
-         dS7/NspoKF5bHe05Bp+zwCcaYv4YZHhCHIHd/2xJALdFt5fvQf8aMvDguHmzrgZ7edf7
-         Ovi9Byyy9yXeTW13Qb8eM9Wxfha0gyXwnMoKrmelBbGjVwDZcZbxMvpZjAWm64MKU1c5
-         +XQw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wbj5Jn5Vw1aw1JPpmJhE17asrFe9woSoR8mVODQoPqk=;
+        b=mhJZK62yxd1Yt8t6+e73NqmCAyFLNSwOAD3UGKApIsnrGptryq3MQchKcLvkJr7AYd
+         mF4qLwxJlib0XfyJLGWFBhZikt5+atLR6e1BuhwE9eJl3ZRnRFy7zfEAlw4sqI+nfk8Y
+         Wk8A8CcA4NLyU9SCD8W1IHeJeltDBvfUiCXRU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=idNzN2pm7FEPN1n487Ax7LSZYU5+9Uhm24wE5AT9T4s=;
-        b=NIIsU5Zq4MmP7CXUskxPImclrAFRql+3rTMh4V8/XTFnafXlGYoK52eOyE21/nCvSw
-         sPlbs7ET+WB1N8Yx7GGoSCNIU8PcOWCemVpPAgVvoeCW74QizA8CKe9p9ZwbR2blNDaq
-         npDFXVbakDZcFUykfISnK7eog8/3dVGRV7+fmDjCN6dtQfAXUctgM3PtI7s6JFnv3KPZ
-         WlyacsFiklqmQR2PpSVdWDTLYMNN8tLhozIcQy6bN3v2K7/azxPaGhvA3BT5NFG2h7Zn
-         S7cEgMNNOu7HsoGGRtuDJsIDVhiKDXCsjpo2JCMeJ67gCbvLD/PLlMR052fdirXB+UTH
-         iAgA==
-X-Gm-Message-State: AGi0PuabZjQMvUf8ULopgkWzhnrgWn7bMx+g7vc0A3p2neomPQjDOJP6
-        abTtDJ2Nxxronzlnf+g8N1M=
-X-Google-Smtp-Source: APiQypIa5no58EAZMdGt72lHrrO+ZVAYnEQIiK1hn+NTjKtEri8J0x2+rKim+soaz3PrHXk1Fg2vPQ==
-X-Received: by 2002:a17:90a:f0c6:: with SMTP id fa6mr783307pjb.5.1587406782749;
-        Mon, 20 Apr 2020 11:19:42 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([122.182.233.24])
-        by smtp.gmail.com with ESMTPSA id x66sm146331pfb.173.2020.04.20.11.19.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Apr 2020 11:19:42 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     adaplas@gmail.com, b.zolnierkie@samsung.com
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH] video/fbdev/riva: Remove dead code
-Date:   Mon, 20 Apr 2020 23:57:24 +0530
-Message-Id: <1587407244-32574-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wbj5Jn5Vw1aw1JPpmJhE17asrFe9woSoR8mVODQoPqk=;
+        b=GGFkPl+zHV5EOJ1KesA31jNTwmJeIhFnRy87BQCmdv9Xd4QpWrvrK0G9k/GTOyyBcV
+         5ekZyOnKdmXJ6fNKDmZXGW+qD5+1Zlla8j7g9QomASzPeBAgdCCFVH6eCtUTXo8+Vkec
+         e7NUZ0yezAsE3i9De80sHox1yLxMbjM7u4rz6QBr5khZkzyxyRh3ZaFanOFsNkdAAHpz
+         UqxpHdjTI6OMHOT7dbrqDG4zdZY64GQWdnZQrwlwcWlra+WoJ0hm8LlCzY3i1XaN38TY
+         UgxZrFw8GJddjtFyWsi77/BMOV4oA97ixwzN0wByVzGDelGwlJ3RDX70FFNKIZO47o6i
+         makA==
+X-Gm-Message-State: AGi0PuYr8zWVuEP6ZxS52qhfPYqiwiCFz0IlRyl7fx92hd5MRCOUausN
+        aCjKQgitF2FkLVdTAebO9IsCKA==
+X-Google-Smtp-Source: APiQypK5aRYcjAbwnF0DrucCOVmO+azYt8ByKi1esZgOEhz+FFAE8PfIMu7anl08Bx6LRK++QnQIrg==
+X-Received: by 2002:ac8:1b97:: with SMTP id z23mr17149912qtj.294.1587406788282;
+        Mon, 20 Apr 2020 11:19:48 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id b5sm181704qkf.131.2020.04.20.11.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 11:19:47 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 14:19:47 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH rcu/dev -fixes 3/4] rcu/tree: Avoid using xchg() in
+ kfree_call_rcu_add_ptr_to_bulk()
+Message-ID: <20200420181947.GD90777@google.com>
+References: <20200420153837.194532-1-joel@joelfernandes.org>
+ <20200420153837.194532-4-joel@joelfernandes.org>
+ <20200420171829.GA12196@pc636>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420171829.GA12196@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are dead code since 3.15. These can be removed forever if no
-plan to use it further.
+On Mon, Apr 20, 2020 at 07:18:29PM +0200, Uladzislau Rezki wrote:
+> On Mon, Apr 20, 2020 at 11:38:36AM -0400, Joel Fernandes (Google) wrote:
+> > From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > 
+> > There is no need to use xchg(), the access is serialized by krcp->lock.
+> > The xchg() function adds some atomic barriers which remain hidden in
+> > x86's disassembly but are visible on ARM for instance.
+> > 
+> > Replace xchg() with a load + store.
+> > 
+> > Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > ---
+> >  kernel/rcu/tree.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index cd61649e1b001..f6eb3aee0935e 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -3088,7 +3088,8 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+> >  	/* Check if a new block is required. */
+> >  	if (!krcp->bhead ||
+> >  			krcp->bhead->nr_records == KFREE_BULK_MAX_ENTR) {
+> > -		bnode = xchg(&krcp->bcached, NULL);
+> > +		bnode = krcp->bcached;
+> > +		krcp->bcached = NULL;
+> >  		if (!bnode) {
+> >  			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
+> >  
+> >
+> But we populate the cache without holding the krcp->lock. That is why it
+> is xchg here. See below:
+> 
+> <snip>
+>   if (cmpxchg(&krcp->bcached, NULL, bhead))
+>      free_page((unsigned long) bhead);
+> <snip>
+> 
+> we do not hold any krcp->lock here, we do not need it.
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- drivers/video/fbdev/riva/riva_hw.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+You are right. This patch is not helpful in this situation even though it
+does not break things. Let us drop this patch. Please review the other 3 and
+provide your Reviewed-by tag if they look Ok to you, thanks.
 
-diff --git a/drivers/video/fbdev/riva/riva_hw.c b/drivers/video/fbdev/riva/riva_hw.c
-index 0601c13..08c9ee4 100644
---- a/drivers/video/fbdev/riva/riva_hw.c
-+++ b/drivers/video/fbdev/riva/riva_hw.c
-@@ -1343,24 +1343,6 @@ static char nv3_get_param(nv3_fifo_info *res_info, nv3_sim_state * state, nv3_ar
- /*
-  * Load fixed function state and pre-calculated/stored state.
-  */
--#if 0
--#define LOAD_FIXED_STATE(tbl,dev)                                       \
--    for (i = 0; i < sizeof(tbl##Table##dev)/8; i++)                 \
--        chip->dev[tbl##Table##dev[i][0]] = tbl##Table##dev[i][1]
--#define LOAD_FIXED_STATE_8BPP(tbl,dev)                                  \
--    for (i = 0; i < sizeof(tbl##Table##dev##_8BPP)/8; i++)            \
--        chip->dev[tbl##Table##dev##_8BPP[i][0]] = tbl##Table##dev##_8BPP[i][1]
--#define LOAD_FIXED_STATE_15BPP(tbl,dev)                                 \
--    for (i = 0; i < sizeof(tbl##Table##dev##_15BPP)/8; i++)           \
--        chip->dev[tbl##Table##dev##_15BPP[i][0]] = tbl##Table##dev##_15BPP[i][1]
--#define LOAD_FIXED_STATE_16BPP(tbl,dev)                                 \
--    for (i = 0; i < sizeof(tbl##Table##dev##_16BPP)/8; i++)           \
--        chip->dev[tbl##Table##dev##_16BPP[i][0]] = tbl##Table##dev##_16BPP[i][1]
--#define LOAD_FIXED_STATE_32BPP(tbl,dev)                                 \
--    for (i = 0; i < sizeof(tbl##Table##dev##_32BPP)/8; i++)           \
--        chip->dev[tbl##Table##dev##_32BPP[i][0]] = tbl##Table##dev##_32BPP[i][1]
--#endif
--
- #define LOAD_FIXED_STATE(tbl,dev)                                       \
-     for (i = 0; i < sizeof(tbl##Table##dev)/8; i++)                 \
-         NV_WR32(&chip->dev[tbl##Table##dev[i][0]], 0, tbl##Table##dev[i][1])
--- 
-1.9.1
+For the workqueue one that Paul asked us to look into - we are continuing to
+discuss there if we need to move it outside the lock or not. If we decide to
+move it outside lock, we can add that as one more patch to this series and
+I'll send a v2.
+
+thanks,
+
+ - Joel
 
