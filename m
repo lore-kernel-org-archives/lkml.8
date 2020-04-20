@@ -2,151 +2,90 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E09FC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A287C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE9BA20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4D220747
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ZM90db3v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sDMoe/wD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xy8tnJGN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgDTMvC (ORCPT
+        id S1729174AbgDTMvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:51:02 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:50963 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729141AbgDTMu5 (ORCPT
+        Mon, 20 Apr 2020 08:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729543AbgDTMu7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:50:57 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 467AB457;
-        Mon, 20 Apr 2020 08:50:56 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 20 Apr 2020 08:50:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=tBOAlHqUjXoeb6fAkzGVdh0v8Dq
-        4mrwbDL50ipwyYfc=; b=ZM90db3vCr9XtIH1GMdN+sK2FnPLtn3Qc0kasZSG/Px
-        jF/8Y6lt9gWqPgFppBzrFwpst4InLd6Hu4NVgU7XfWgT1TfuwpQksCKHEU97NHvG
-        tYzCi2Koj2eUbxYG5vpLjg5GhA7pODW4BHNK8oWSDX24sfREIzocc7E5rRv4iBWf
-        cX/TcA85AMAzbf310UIJQJU5qRRcyw9AwJaTH5KOhLWVv4iX8OuYjALH+D1HlNG3
-        BWgfpOhNcZ0RXbHWlna4eQkaPTIGph3GZzh1bMoGxSPxrTilg4rAW7Xeabf2UEAz
-        bhqyJmM76arzp1EdmHdDwnVhEsmi1h/a/ZoKr5tx5QA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=tBOAlH
-        qUjXoeb6fAkzGVdh0v8Dq4mrwbDL50ipwyYfc=; b=sDMoe/wDwHoQpIqtDFp7/0
-        skscWuXgRGF7dAvgXoGqIFmrG/PkxZphE+yJjpEtIgxo8D5SUghRxdbFR//JKJcg
-        MaC7gui5PSB4eJmgQ8dQKHcjtnzFmPB+GWavgJihDFEo4qmHRjhjLem+ZxEHBORo
-        QPKi/2WGiVC1KJPMjhrrHUby6H0+4K6tBklri98lREwT4eWoMbFZ/RyyP6akuZ8J
-        5fDYp1ufjmxRnGr9KFRhw4wUVKkB+aZOKw4T7Bhu7z4YCgWE9kuX2jlrZpiAfRRH
-        pNJR2LqpNmnZIza9WB+xs/qf9JTPowMHumvBJXld6dDKhGuNe0XXKgSeAVn2JHLA
-        ==
-X-ME-Sender: <xms:r5qdXgkF3FOSW1pgDJ4gDRl6TgmfqU9oLai7Fx6_f33TCDMN8ezZKg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefgdehjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:r5qdXsfdwWyT63VBq93b3u3N9Et1z9QVzfjhVhZ2zMmV7feIpRtPXA>
-    <xmx:r5qdXqYlO3Dpygwd_tFB87AxvzcmDnwuDVVR9FHU8JgsInGO8zftGw>
-    <xmx:r5qdXgbiqBCAqRRYx-k2Ci4KlN7WcA1WUDZU8zkJw8EoNLIJAmtn2w>
-    <xmx:r5qdXgkUAlMVbC8j0r1B2GZ-c7ZFW3ZqDuOP8cptLqGFouGa93XcBA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3A3A73065C04;
-        Mon, 20 Apr 2020 08:50:55 -0400 (EDT)
-Date:   Mon, 20 Apr 2020 14:50:54 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Priit Laes <plaes@plaes.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 2/4] clk: sunxi-ng: a20: export a regmap to access the
- GMAC register
-Message-ID: <20200420125054.k3mnegy6mjgq2lcd@gilmour.lan>
-References: <20200417221730.555954-1-plaes@plaes.org>
- <20200417221730.555954-3-plaes@plaes.org>
+        Mon, 20 Apr 2020 08:50:59 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97463C061A0F;
+        Mon, 20 Apr 2020 05:50:57 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id d7so8599266oif.9;
+        Mon, 20 Apr 2020 05:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=35aqzVMMcIlOOYhLALGKxscQPUJo+RlR+stQptgOImc=;
+        b=Xy8tnJGNE6IPz8WZ/6FO3Q1inVAJSdTpoIxxV8Ux3JOU6jzoZgSo2z7XMgnEPW46N9
+         P6QxEiWKXe/FZpYWdIedsYvkjV7dQVVb4YBZX1wagT0BAfcG8106E9ivHOW67/4Y9LTA
+         LO5V8Ofjd4lLcW7yirW8B48dF5Mf+o7nZdYWcxYn8triKYf6kU5NJc8DECDek6B/dOBP
+         fc0CE8kIyjAbZoyRZNZrVd9CPs1RC5VirmUNeSnxLxzHV/OG+rFCAiXYxHfKJKl/CPIV
+         L+TFufhxIn3IQVFRYmHE3GRcMP5TuEJuUDWRIuwAjNdfkhX4sAulJvl7fFVD8R4o6b6m
+         cIBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=35aqzVMMcIlOOYhLALGKxscQPUJo+RlR+stQptgOImc=;
+        b=DGJ7UIN1yCI9flJwcZOZS+FQ8LNqgkUteNVB0vnNpHr0SAKIXupjbQP9A3LvRtNFit
+         T6SUy4dDRR1JTjECyuE3OMv26jlSZprRcBj56TcMKQVvNveqevP3+zFoLWlSWPPC+58T
+         JNYUfoQrVGdbBmFa41qplSp3M01OrYW3Rg1RyHS9jrCABgB/iE2YzT7MlnL6QEKddj/4
+         L42Te7uK6h5TrAeORhtmB8u7vJlrnM6gn1WU76sI32Fe0JoIp4ooB8QypwVY6F23rxvJ
+         MvKQDyeAMLBfpOK83pe4k6zrX4cdWxQMJyVXtalj9bJsu8Ae3Fcv/xLmiPJmpUEBgNo3
+         Q0ow==
+X-Gm-Message-State: AGi0Pubaj5KjhIvgncNKqPHR5iYLIg+ffJjww+l6pZ7PH0RYlLnM6tOr
+        S0cSGL7YxpgCjxPi/pDMMd9DJRC7pvGDTQpnZXU=
+X-Google-Smtp-Source: APiQypJQOv9Ww+7hoK/CdulOK2O+mlEVZi3+qaYbfvCToGcp+X800VBJy2czYU/s9k9AzL8Q0DF1MbReNmebyiXuhYg=
+X-Received: by 2002:aca:fc0a:: with SMTP id a10mr10490437oii.77.1587387056332;
+ Mon, 20 Apr 2020 05:50:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ahl7sjwrudp4rb5o"
-Content-Disposition: inline
-In-Reply-To: <20200417221730.555954-3-plaes@plaes.org>
+References: <20200417221341.31428-1-TheSven73@gmail.com> <20200420121542.GB6507@sirena.org.uk>
+ <CAGngYiWauBTnXDcP9UC1S7U5Ogy0B=bUZSdGs1Z9aKZ2+sB=Qw@mail.gmail.com> <20200420122534.GC6507@sirena.org.uk>
+In-Reply-To: <20200420122534.GC6507@sirena.org.uk>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 20 Apr 2020 08:50:45 -0400
+Message-ID: <CAGngYiV9MxeLrERkgU2+rucCiJ5StCXN7GXxKLMfaJ-bqSpAAw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: sound: add Microsemi ZL38060 binding
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 20, 2020 at 8:25 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> I'd expect someone with knowledge of the hardware such as yourself.
 
---ahl7sjwrudp4rb5o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I claim no expertise - I was just getting tired of dragging the
+out-of-tree vendor
+driver for this chip from kernel to kernel. AFAIK, most people using this chip
+have forked the vendor driver and adapted it to their specific needs.
 
-On Sat, Apr 18, 2020 at 01:17:28AM +0300, Priit Laes wrote:
-> Only GMAC register is allowed to be written, read access to registers
-> is not restricted.
->=20
-> Export a regmap of the CCU.
->=20
-> Signed-off-by: Priit Laes <plaes@plaes.org>
-> ---
->  drivers/clk/sunxi-ng/ccu-sun4i-a10.c | 31 ++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->=20
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/=
-ccu-sun4i-a10.c
-> index 839e9d5a1cff..cba51c2c7eba 100644
-> --- a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
-> +++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
-> @@ -1426,6 +1426,30 @@ static const struct sunxi_ccu_desc sun7i_a20_ccu_d=
-esc =3D {
->  	.num_resets	=3D ARRAY_SIZE(sunxi_a10_a20_ccu_resets),
->  };
-> =20
-> +/*
-> + * Add regmap for the GMAC driver (dwmac-sun8i) to allow access to
-> + * GMAC configuration register.
-> + */
-> +
-> +#define SUN7I_A20_GMAC_CFG_REG 0x164
-> +static bool sun7i_a20_ccu_regmap_accessible_reg(struct device *dev,
-> +						unsigned int reg)
-> +{
-> +	if (reg =3D=3D SUN7I_A20_GMAC_CFG_REG)
-> +		return true;
-> +	return false;
-> +}
-> +
-> +static struct regmap_config sun7i_a20_ccu_regmap_config =3D {
-> +	.reg_bits	=3D 32,
-> +	.val_bits	=3D 32,
-> +	.reg_stride	=3D 4,
-> +	.max_register	=3D 0x1f4, /* clk_out_b */
+If my name has to be there, I'd be keen to hand it over once someone more
+familiar with this chip comes along.
 
-As far as I know, clk_out_b is a register that is also modified through that
-clock driver. How do you handle the concurrent accesses?
-
-Maxime
-
---ahl7sjwrudp4rb5o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp2argAKCRDj7w1vZxhR
-xeXVAQDmNQz5L1EFRPYLu4y1O4Nl7C6aA+PFGDx33HStDUQvbAD/SCdOUUmrs/D3
-9HUgc0icssQhh/jpfcpB8M/MW4Fefg0=
-=eu9x
------END PGP SIGNATURE-----
-
---ahl7sjwrudp4rb5o--
+Hopefully someone from Microsemi will be monitoring this discussion.
