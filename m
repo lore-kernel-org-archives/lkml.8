@@ -2,100 +2,149 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC740C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3D8C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C2E206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25552206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgDTIVt convert rfc822-to-8bit (ORCPT
+        id S1726124AbgDTIWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:21:49 -0400
-Received: from mga18.intel.com ([134.134.136.126]:18884 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbgDTIVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:21:49 -0400
-IronPort-SDR: ZCSVViqtBsoAZLANHkyf7ooVzcAjk4CQF7s5Ib/D1uBJRZOxBn+KTVXyw1+S77SfaMCdDx0zvC
- 7NKnbPGoaALA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 01:21:48 -0700
-IronPort-SDR: VftcpKwtEeA3P5jAsD0qeY0JUB3b0ewMhuRIXm8KrqnlVNM9jTn3h1VsNeDUl2x/j132iy1XLW
- c5WLlUsKUUCA==
-X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="scan'208";a="429041855"
-Received: from jlahtine-desk.ger.corp.intel.com (HELO localhost) ([10.252.46.49])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 01:21:45 -0700
-Content-Type: text/plain; charset="utf-8"
+        Mon, 20 Apr 2020 04:22:18 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60176 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgDTIWR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:22:17 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jQRgv-0004mr-1c; Mon, 20 Apr 2020 08:22:09 +0000
+Date:   Mon, 20 Apr 2020 10:22:07 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Todd Kjos <tkjos@android.com>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Anders Pedersen <anders.pedersen@arm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        =?utf-8?B?w5hyamFu?= Eide <orjan.eide@arm.com>,
+        nd <nd@arm.com>, Martijn Coenen <maco@android.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian Brauner <christian@brauner.io>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] staging: android: ion: Skip sync if not mapped
+Message-ID: <20200420082207.ui7iyg7dsnred2vv@wittgenstein>
+References: <20200414134629.54567-1-orjan.eide@arm.com>
+ <20200414141849.55654-1-orjan.eide@arm.com>
+ <20200414142810.GA958163@kroah.com>
+ <CALAqxLX-SUhHPH6ewt-s9cEMc8DtMTgXem=JruAkLofuJf1syg@mail.gmail.com>
+ <20200416102508.GA820251@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200420052419.GA40250@sultan-box.localdomain>
-References: <20200404024156.GA10382@sultan-box.localdomain> <20200407064007.7599-1-sultan@kerneltoast.com> <20200414061312.GA90768@sultan-box.localdomain> <158685263618.16269.9317893477736764675@build.alporthouse.com> <20200414144309.GB2082@sultan-box.localdomain> <20200420052419.GA40250@sultan-box.localdomain>
-Subject: Re: [PATCH v4] drm/i915: Synchronize active and retire callbacks
-From:   Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc:     stable@vger.kernel.org, Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Sultan Alsawaf <sultan@kerneltoast.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Date:   Mon, 20 Apr 2020 11:21:42 +0300
-Message-ID: <158737090265.8380.6644489879531344891@jlahtine-desk.ger.corp.intel.com>
-User-Agent: alot/0.8.1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416102508.GA820251@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sultan Alsawaf (2020-04-20 08:24:19)
-> Chris,
+On Thu, Apr 16, 2020 at 12:25:08PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Apr 14, 2020 at 09:41:31PM -0700, John Stultz wrote:
+> > On Tue, Apr 14, 2020 at 7:28 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Apr 14, 2020 at 04:18:47PM +0200, Ørjan Eide wrote:
+> > > > Only sync the sg-list of an Ion dma-buf attachment when the attachment
+> > > > is actually mapped on the device.
+> > > >
+> > > > dma-bufs may be synced at any time. It can be reached from user space
+> > > > via DMA_BUF_IOCTL_SYNC, so there are no guarantees from callers on when
+> > > > syncs may be attempted, and dma_buf_end_cpu_access() and
+> > > > dma_buf_begin_cpu_access() may not be paired.
+> > > >
+> > > > Since the sg_list's dma_address isn't set up until the buffer is used
+> > > > on the device, and dma_map_sg() is called on it, the dma_address will be
+> > > > NULL if sync is attempted on the dma-buf before it's mapped on a device.
+> > > >
+> > > > Before v5.0 (commit 55897af63091 ("dma-direct: merge swiotlb_dma_ops
+> > > > into the dma_direct code")) this was a problem as the dma-api (at least
+> > > > the swiotlb_dma_ops on arm64) would use the potentially invalid
+> > > > dma_address. How that failed depended on how the device handled physical
+> > > > address 0. If 0 was a valid address to physical ram, that page would get
+> > > > flushed a lot, while the actual pages in the buffer would not get synced
+> > > > correctly. While if 0 is an invalid physical address it may cause a
+> > > > fault and trigger a crash.
+> > > >
+> > > > In v5.0 this was incidentally fixed by commit 55897af63091 ("dma-direct:
+> > > > merge swiotlb_dma_ops into the dma_direct code"), as this moved the
+> > > > dma-api to use the page pointer in the sg_list, and (for Ion buffers at
+> > > > least) this will always be valid if the sg_list exists at all.
+> > > >
+> > > > But, this issue is re-introduced in v5.3 with
+> > > > commit 449fa54d6815 ("dma-direct: correct the physical addr in
+> > > > dma_direct_sync_sg_for_cpu/device") moves the dma-api back to the old
+> > > > behaviour and picks the dma_address that may be invalid.
+> > > >
+> > > > dma-buf core doesn't ensure that the buffer is mapped on the device, and
+> > > > thus have a valid sg_list, before calling the exporter's
+> > > > begin_cpu_access.
+> > > >
+> > > > Signed-off-by: Ørjan Eide <orjan.eide@arm.com>
+> > > > ---
+> > > >  drivers/staging/android/ion/ion.c | 12 ++++++++++++
+> > > >  1 file changed, 12 insertions(+)
+> > > >
+> > > > Resubmit without disclaimer, sorry about that.
+> > > >
+> > > > This seems to be part of a bigger issue where dma-buf exporters assume
+> > > > that their dma-buf begin_cpu_access and end_cpu_access callbacks have a
+> > > > certain guaranteed behavior, which isn't ensured by dma-buf core.
+> > > >
+> > > > This patch fixes this in ion only, but it also needs to be fixed for
+> > > > other exporters, either handled like this in each exporter, or in
+> > > > dma-buf core before calling into the exporters.
+> > > >
+> > > > diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/android/ion/ion.c
+> > > > index 38b51eace4f9..7b752ba0cb6d 100644
+> > > > --- a/drivers/staging/android/ion/ion.c
+> > > > +++ b/drivers/staging/android/ion/ion.c
+> > >
+> > > Now that we have the dma-buff stuff in the tree, do we even need the
+> > > ion code in the kernel anymore?  Can't we delete it now?
+> > >
+> > 
+> > I agree that we shouldn't be taking further (non-security/cleanup)
+> > patches to the ION code.
+> > 
+> > I'd like to give developers a little bit of a transition period (I was
+> > thinking a year, but really just one LTS release that has both would
+> > do) where they can move their ION heaps over to dmabuf heaps and test
+> > both against the same tree.
+> > 
+> > But I do think we can mark it as deprecated and let folks know that
+> > around the end of the year it will be deleted.
 > 
-> Could you please look at this in earnest? This is a real bug that crashes my
-> laptop without any kind of provocation. It is undeniably a bug in i915, and I've
-> clearly described it in my patch. If you dont like the patch, I'm open to any
-> suggestions you have for an alternative solution. My goal here is to make i915
-> better, but it's difficult when communication only goes one way.
+> No one ever notices "depreciated" things, they only notice if the code
+> is no longer there :)
+> 
+> So I'm all for just deleting it and seeing who even notices...
 
-Hi Sultan,
-
-The patch Chris pointed out was not part of 5.4 release. The commit
-message describes that it fixes the functions to be tolerant to
-running simultaneously. In doing that zeroing of ring->vaddr is
-removed so the test to do mdelay(1) and "ring->vaddr = NULL;" is
-not correct.
-
-I think you might have used the wrong git command for checking the
-patch history:
-
-$ git describe a266bf420060
-v5.4-rc7-1996-ga266bf420060 # after -rc7 tag
-
-$ git describe --contains a266bf420060
-v5.6-rc1~34^2~21^2~326 # included in v5.6-rc1
-
-And git log to double check:
-
-$ git log --format=oneline kernel.org/stable/linux-5.4.y --grep="drm/i915/gt: Make intel_ring_unpin() safe for concurrent pint"
-$ git log --format=oneline kernel.org/stable/linux-5.5.y --grep="drm/i915/gt: Make intel_ring_unpin() safe for concurrent pint"
-0725d9a31869e6c80630e99da366ede2848295cc drm/i915/gt: Make intel_ring_unpin() safe for concurrent pint
-$ git log --format=oneline kernel.org/stable/linux-5.6.y --grep="drm/i915/gt: Make intel_ring_unpin() safe for concurrent pint"
-a754012b9f2323a5d640da7eb7b095ac3b8cd012 drm/i915/execlists: Leave resetting ring to intel_ring
-0725d9a31869e6c80630e99da366ede2848295cc drm/i915/gt: Make intel_ring_unpin() safe for concurrent pint
-a266bf42006004306dd48a9082c35dfbff153307 drm/i915/gt: Make intel_ring_unpin() safe for concurrent pint
-
-So it seems that the patch got pulled into v5.6 and has been backported
-to v5.5 but not v5.4.
-
-Could you try applying the patch to 5.4 and seeing if the problem
-persists?
-
-Regards, Joonas
+Agreed.
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
