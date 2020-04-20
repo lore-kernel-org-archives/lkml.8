@@ -2,137 +2,111 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7974C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7542EC54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA0CD20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48BB220857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:32:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SC51ozKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgDTWcg (ORCPT
+        id S1727030AbgDTWck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:32:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725918AbgDTWcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:32:35 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6478520857;
-        Mon, 20 Apr 2020 22:32:34 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 18:32:32 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH 2/2] sched: Extract the task putting code from
- pick_next_task()
-Message-ID: <20200420183232.16b83374@gandalf.local.home>
-In-Reply-To: <7c1eab789cb4b53ec5f54644c089ce27ea14088a.1587309963.git.yu.c.chen@intel.com>
-References: <cover.1587309963.git.yu.c.chen@intel.com>
-        <7c1eab789cb4b53ec5f54644c089ce27ea14088a.1587309963.git.yu.c.chen@intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 20 Apr 2020 18:32:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725918AbgDTWcj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 18:32:39 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D53C061A0C;
+        Mon, 20 Apr 2020 15:32:38 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a22so491294pjk.5;
+        Mon, 20 Apr 2020 15:32:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=noDocHhO4G8oMefT5gpQpa0JPLicJQEKjA5ekI12B1U=;
+        b=SC51ozKMnXWwNxC+FS+H5K7L8wxrpZjyqGMyZlomlkxBt36rCzlZcvsGyOdEkp0qOK
+         acaAbyVZD88rywT5ryrqu6eT6ug82y+7gOsQxfaK2UZl4rV1W9YO5V6hJpajm7qBQJ7Q
+         +Zgu3JJJ4o24eDla+44Bh00sdZjWQBXItQe7/2Enccnm6PiSL6mjJ1CohRG51qf+6FxN
+         bl7nakvc/wodoO6sEqUEBX+BYp8DehrnOpOUkHt91nVImMC4qsSRJzZblesEp+KJHHNV
+         5PYZweupEdYPotyRLOjW0WYpJccNDY8JbTC+X9oMf/lsHyRYouD/z+KyItHoy4uIgL/y
+         dq2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=noDocHhO4G8oMefT5gpQpa0JPLicJQEKjA5ekI12B1U=;
+        b=YxA5hzG27Lygikfb+NrH+3GFzFqxxcvcPNJ283ILp35NQOQhPA/mUHrJHv+qVnM2Y2
+         1OsdCPYskJOPLxaeUSc01cCWZNqwZo3US/WnpwBqXmJjZDJE8LZLOpDovDGuZqMIArdq
+         jQYW55VOBYDoGbKbXjOPJ6nbze6TJrDazUZUP48p4iK+EowDUCRdYX+Mi3Jp8I2976Cq
+         DVe68U5+5hHWpSnxZbK6lzdkvjz9dTGrLQiGzjgFZp0Vj6tPDhaPZcH2qziuMo682WHa
+         lHMQhY3GpmcTq5GDcPB9e6vOqEANxkqg624teLaejOL9rqiAYjTJS80yJaLiQKm2dXiC
+         8Tsw==
+X-Gm-Message-State: AGi0PuYnonl8NsiQybryBCIwoDYRjFx/K/vFoXpBFR41LZ3dPpE6cDFE
+        NSPiILKv9s+qb922gLnJMrNcpzr81lWFJg==
+X-Google-Smtp-Source: APiQypJlolvJeJBU5vXJhR1b+75YkPTrpnQY59XSAneQ8A2V37o0PI7hVckQTjVTNrBnofyBTzwoIA==
+X-Received: by 2002:a17:902:dc86:: with SMTP id n6mr19235047pld.198.1587421957359;
+        Mon, 20 Apr 2020 15:32:37 -0700 (PDT)
+Received: from ?IPv6:2404:7a87:83e0:f800:459a:cd47:8130:d7ac? ([2404:7a87:83e0:f800:459a:cd47:8130:d7ac])
+        by smtp.gmail.com with ESMTPSA id q63sm485622pfb.178.2020.04.20.15.32.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 15:32:36 -0700 (PDT)
+Subject: Re: [PATCH v3] exfat: replace 'time_ms' with 'time_cs'
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        'Tetsuhiro Kohada' <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        'Sungjong Seo' <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20200416085144epcas1p1527b8df86453c7566b1a4d5a85689e69@epcas1p1.samsung.com>
+ <20200416085121.57495-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+ <003601d61461$7140be60$53c23b20$@samsung.com>
+ <b250254c-3b88-9457-652d-f96c4c15e454@gmail.com>
+ <000001d616be$9f4513b0$ddcf3b10$@samsung.com>
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+Message-ID: <b1efef64-f335-2e9a-0902-b080690d6209@gmail.com>
+Date:   Tue, 21 Apr 2020 07:32:34 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <000001d616be$9f4513b0$ddcf3b10$@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 00:31:52 +0800
-Chen Yu <yu.c.chen@intel.com> wrote:
+Thanks for your advise.
 
-> Introduce a new function finish_prev_task() to do the balance
-> when necessary, and then put previous task back to the run queue.
-> This function is extracted from pick_next_task() to prepare for
-> future usage by other type of task picking logic.
+On 2020/04/20 11:51, Namjae Jeon wrote:
+>> Can you give me some advice?
+> Your address in author line of this patch seems to be different with Your Signed-off-by.
 > 
-> No functional change.
+> From: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
+> !=
+> Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 > 
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> ---
->  kernel/sched/core.c | 39 +++++++++++++++++++++++----------------
->  1 file changed, 23 insertions(+), 16 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 3a61a3b8eaa9..bf59a5cf030c 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3904,6 +3904,28 @@ static inline void schedule_debug(struct task_struct *prev, bool preempt)
->  	schedstat_inc(this_rq()->sched_count);
->  }
->  
-> +static void finish_prev_task(struct rq *rq, struct task_struct *prev,
-> +			     struct rq_flags *rf)
-> +{
-> +	const struct sched_class *class;
-> +#ifdef CONFIG_SMP
-> +	/*
-> +	 * We must do the balancing pass before put_next_task(), such
+> What is correct one between the two?
 
-I know this is just a cut and paste move, but I'm thinking that this
-comment is wrong. Shouldn't this be "put_prev_task()" as we have no
-"put_next_task()" function.
+"dc.MitsubishiElectric.co.jp" is the correct domain name.
 
+> I guess you should fix your mail address in your .gitconfig
+> Or manually add From: your address under subject in your patch like this.
 
-> +	 * that when we release the rq->lock the task is in the same
-> +	 * state as before we took rq->lock.
-> +	 *
-> +	 * We can terminate the balance pass as soon as we know there is
-> +	 * a runnable task of @class priority or higher.
-> +	 */
-> +	for_class_range(class, prev->sched_class, &idle_sched_class) {
-> +		if (class->balance(rq, prev, rf))
-> +			break;
-> +	}
-> +#endif
-> +
-> +	put_prev_task(rq, prev);
-> +}
-> +
->  /*
->   * Pick up the highest-prio task:
->   */
-> @@ -3937,22 +3959,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
->  	}
->  
->  restart:
-> -#ifdef CONFIG_SMP
-> -	/*
-> -	 * We must do the balancing pass before put_next_task(), such
-> -	 * that when we release the rq->lock the task is in the same
-> -	 * state as before we took rq->lock.
-> -	 *
-> -	 * We can terminate the balance pass as soon as we know there is
-> -	 * a runnable task of @class priority or higher.
-> -	 */
-> -	for_class_range(class, prev->sched_class, &idle_sched_class) {
-> -		if (class->balance(rq, prev, rf))
-> -			break;
-> -	}
-> -#endif
-> -
-> -	put_prev_task(rq, prev);
-> +	finish_prev_task(rq, prev, rf);
+Both user.email of .gitconfig and from field in patch use "dc.MitsubishiElectric.co.jp".
+I don't know why it changed to lower case.
 
-I'm not sure I like the name of this function. Perhaps
-"balance_and_put_prev_task()"? Something more in kind to what the function
-does.
+For now, change to private gmail and post again.
 
--- Steve
-
->  
->  	for_each_class(class) {
->  		p = class->pick_next_task(rq);
-
+Thanks.
