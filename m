@@ -2,160 +2,95 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B7BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A140C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC133206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2D02072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587387235;
+	bh=v8NLptpyVYC24OZAKei+xlXW2y89vKtkcFa3OBOY2gM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=flFCaOjNV+3YFGydHd10GvpS6kM2wpqeIZfF9WSmpB7Kzypesqk0pN+Ex2mG4ThVl
+	 QcgjiS9FhFV3Lm5M/etS257t4OqNBRk5wJowgqPDXP4T7epD7hKHlpb8+VSlV103/b
+	 b2nXbk9nBWnPzqUsYjS9WcnB4Je/1wM1do42/qk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbgDTMxp (ORCPT
+        id S1729645AbgDTMxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:53:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30556 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728950AbgDTMqf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:53:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728001AbgDTMqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 08:46:35 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCVD01029978;
-        Mon, 20 Apr 2020 08:46:11 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghu5rv4v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:46:10 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCXFxl037921;
-        Mon, 20 Apr 2020 08:46:10 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghu5rv3s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:46:10 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCdtbU022230;
-        Mon, 20 Apr 2020 12:46:09 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03wdc.us.ibm.com with ESMTP id 30fs660k79-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 12:46:09 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCk8a839977312
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 12:46:08 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E1DC136051;
-        Mon, 20 Apr 2020 12:46:08 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0BA1C13605D;
-        Mon, 20 Apr 2020 12:46:05 +0000 (GMT)
-Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 12:46:04 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
-        kirill@shutemov.name,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH v3 18/22] powerpc/kvm/book3s: Use find_kvm_host_pte in kvmppc_get_hpa
-Date:   Mon, 20 Apr 2020 18:14:30 +0530
-Message-Id: <20200420124434.47330-19-aneesh.kumar@linux.ibm.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
-References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC9C206E9;
+        Mon, 20 Apr 2020 12:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587386794;
+        bh=v8NLptpyVYC24OZAKei+xlXW2y89vKtkcFa3OBOY2gM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LUQ51uT/D9Ms3RSxpMg36MQnMnsK3O2PmBGzijy75BARpmL3R7or9YV3ngeYJYy2y
+         u8XL5F139XgTrOlHMqKuYpoCUjvSNTtGQMSqWOlOcZI0ns3UKD7svHGXUQT/2c42NO
+         xqPFmCzFME9nMge43evEpCcz8MwPda1jp11puseE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.4 29/60] clk: at91: sam9x60: fix usb clock parents
+Date:   Mon, 20 Apr 2020 14:39:07 +0200
+Message-Id: <20200420121509.214895608@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
+References: <20200420121500.490651540@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_03:2020-04-20,2020-04-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
- clxscore=1015 malwarescore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
----
- arch/powerpc/kvm/book3s_hv_rm_mmu.c | 32 ++++++++++-------------------
- 1 file changed, 11 insertions(+), 21 deletions(-)
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-diff --git a/arch/powerpc/kvm/book3s_hv_rm_mmu.c b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
-index 83e987fecf97..3b168c69d503 100644
---- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
-+++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
-@@ -878,8 +878,8 @@ long kvmppc_h_clear_mod(struct kvm_vcpu *vcpu, unsigned long flags,
- 	return ret;
- }
+commit 43b203d32b77d1b1b2209e22837f49767020553e upstream.
+
+SAM9X60's USB clock has 3 parents: plla, upll and main_osc.
+
+Fixes: 01e2113de9a5 ("clk: at91: add sam9x60 pmc driver")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lkml.kernel.org/r/1579261009-4573-3-git-send-email-claudiu.beznea@microchip.com
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/clk/at91/sam9x60.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+--- a/drivers/clk/at91/sam9x60.c
++++ b/drivers/clk/at91/sam9x60.c
+@@ -237,9 +237,8 @@ static void __init sam9x60_pmc_setup(str
  
--static int kvmppc_get_hpa(struct kvm_vcpu *vcpu, unsigned long gpa,
--			  int writing, unsigned long *hpa,
-+static int kvmppc_get_hpa(struct kvm_vcpu *vcpu, unsigned long mmu_seq,
-+			  unsigned long gpa, int writing, unsigned long *hpa,
- 			  struct kvm_memory_slot **memslot_p)
- {
- 	struct kvm *kvm = vcpu->kvm;
-@@ -898,7 +898,7 @@ static int kvmppc_get_hpa(struct kvm_vcpu *vcpu, unsigned long gpa,
- 	hva = __gfn_to_hva_memslot(memslot, gfn);
+ 	parent_names[0] = "pllack";
+ 	parent_names[1] = "upllck";
+-	parent_names[2] = "mainck";
+-	parent_names[3] = "mainck";
+-	hw = sam9x60_clk_register_usb(regmap, "usbck", parent_names, 4);
++	parent_names[2] = "main_osc";
++	hw = sam9x60_clk_register_usb(regmap, "usbck", parent_names, 3);
+ 	if (IS_ERR(hw))
+ 		goto err_free;
  
- 	/* Try to find the host pte for that virtual address */
--	ptep = __find_linux_pte(vcpu->arch.pgdir, hva, NULL, &shift);
-+	ptep = find_kvm_host_pte(kvm, mmu_seq, hva, &shift);
- 	if (!ptep)
- 		return H_TOO_HARD;
- 	pte = kvmppc_read_update_linux_pte(ptep, writing);
-@@ -933,16 +933,11 @@ static long kvmppc_do_h_page_init_zero(struct kvm_vcpu *vcpu,
- 	mmu_seq = kvm->mmu_notifier_seq;
- 	smp_rmb();
- 
--	ret = kvmppc_get_hpa(vcpu, dest, 1, &pa, &memslot);
--	if (ret != H_SUCCESS)
--		return ret;
--
--	/* Check if we've been invalidated */
- 	arch_spin_lock(&kvm->mmu_lock.rlock.raw_lock);
--	if (mmu_notifier_retry(kvm, mmu_seq)) {
--		ret = H_TOO_HARD;
-+
-+	ret = kvmppc_get_hpa(vcpu, mmu_seq, dest, 1, &pa, &memslot);
-+	if (ret != H_SUCCESS)
- 		goto out_unlock;
--	}
- 
- 	/* Zero the page */
- 	for (i = 0; i < SZ_4K; i += L1_CACHE_BYTES, pa += L1_CACHE_BYTES)
-@@ -966,19 +961,14 @@ static long kvmppc_do_h_page_init_copy(struct kvm_vcpu *vcpu,
- 	mmu_seq = kvm->mmu_notifier_seq;
- 	smp_rmb();
- 
--	ret = kvmppc_get_hpa(vcpu, dest, 1, &dest_pa, &dest_memslot);
--	if (ret != H_SUCCESS)
--		return ret;
--	ret = kvmppc_get_hpa(vcpu, src, 0, &src_pa, NULL);
-+	arch_spin_lock(&kvm->mmu_lock.rlock.raw_lock);
-+	ret = kvmppc_get_hpa(vcpu, mmu_seq, dest, 1, &dest_pa, &dest_memslot);
- 	if (ret != H_SUCCESS)
--		return ret;
-+		goto out_unlock;
- 
--	/* Check if we've been invalidated */
--	arch_spin_lock(&kvm->mmu_lock.rlock.raw_lock);
--	if (mmu_notifier_retry(kvm, mmu_seq)) {
--		ret = H_TOO_HARD;
-+	ret = kvmppc_get_hpa(vcpu, mmu_seq, src, 0, &src_pa, NULL);
-+	if (ret != H_SUCCESS)
- 		goto out_unlock;
--	}
- 
- 	/* Copy the page */
- 	memcpy((void *)dest_pa, (void *)src_pa, SZ_4K);
--- 
-2.25.3
+
 
