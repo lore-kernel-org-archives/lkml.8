@@ -2,521 +2,142 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB98BC54FC9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ED6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5ADF2074B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD1F214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:10:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SIcuoDMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgDTDG6 (ORCPT
+        id S1726099AbgDTDKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 23:06:58 -0400
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:54374 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbgDTDG6 (ORCPT
+        Sun, 19 Apr 2020 23:10:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725896AbgDTDKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 23:06:58 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.227])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id E83904E16F8;
-        Mon, 20 Apr 2020 11:06:45 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     gregkh@linuxfoundation.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     kernel@vivo.com, robh@kernel.org, Wang Wenhu <wenhu.wang@vivo.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Scott Wood <oss@buserror.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2,RESEND] misc: new driver sram_uapi for user level SRAM access
-Date:   Sun, 19 Apr 2020 20:05:38 -0700
-Message-Id: <20200420030538.101696-1-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVOQ01LS0tPT0lOS09DQ1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NlE6KCo6PzgrGg0fHh4TPU8O
-        Fk4wCUtVSlVKTkNMSE5JS0pKTUxLVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlMWVdZCAFZQUpITUpDNwY+
-X-HM-Tid: 0a71958d6f219376kuwse83904e16f8
+        Sun, 19 Apr 2020 23:10:04 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E37C061A0C;
+        Sun, 19 Apr 2020 20:10:03 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 495BWs4rCqz9sR4;
+        Mon, 20 Apr 2020 13:10:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587352201;
+        bh=IaxT8cwaTkoVkZGgMoY+Yty/92GniKebPhPt9Fxtdk4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SIcuoDMkJ9NRLQ6k0r6ECORjOnIyO+MGGIBbqPEaQHgZ+HhqPdwO84cRFn7PSq0Ku
+         y4VfIef4fyjNehfz7JNfqKMPNnL1vWEbeKRYH5C9ICLw+PF+3NqowUqke02c0Fkpoj
+         ih5HDgJs0/Eh+Effgyt9Wi3ymnHC4yAGk9OucTjnAsLRCmPP6o3KUjHt94BuPrSfsi
+         fphwIAtJy6zVvCcU3SEI5iFL9SwBSVpB/LLXLXT5DhCpyXjlu3mRf5okauKbdgtBg+
+         Ek9d99RTVPNuXRcQc59J6jqec1O3j77pb82M+r8io3SaGOWWpuuatS4ZGQxwod8zn+
+         CfLA2hxfB8Qhw==
+Date:   Mon, 20 Apr 2020 13:09:59 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Corey Minyard <cminyard@mvista.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Feng Tang <feng.tang@intel.com>
+Subject: linux-next: build failure after merge of the ipmi tree
+Message-ID: <20200420130959.489a4136@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/_Upk7c5UsB8eBIUMn1NQ16l";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A generic User-Kernel interface that allows a misc device created
-by it to support file-operations of ioctl and mmap to access SRAM
-memory from user level. Different kinds of SRAM alloction and free
-APIs could be registered by specific SRAM hardware level driver to
-the available list and then be chosen by users to allocate and map
-SRAM memory from user level.
+--Sig_/_Upk7c5UsB8eBIUMn1NQ16l
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-It is extremely helpful for the user space applications that require
-high performance memory accesses, such as embedded networking devices
-that would process data in user space, and PowerPC e500 is a case.
+Hi all,
 
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: linuxppc-dev@lists.ozlabs.org
+After merging the ipmi tree, today's linux-next build (powerpc
+allyesconfig) failed like this:
+
+drivers/char/ipmi/ipmi_msghandler.c: In function 'free_user_work':
+drivers/char/ipmi/ipmi_msghandler.c:1156:2: error: implicit declaration of =
+function 'vfree'; did you mean 'kvfree'? [-Werror=3Dimplicit-function-decla=
+ration]
+ 1156 |  vfree(user);
+      |  ^~~~~
+      |  kvfree
+drivers/char/ipmi/ipmi_msghandler.c: In function 'ipmi_create_user':
+drivers/char/ipmi/ipmi_msghandler.c:1188:13: error: implicit declaration of=
+ function 'vzalloc'; did you mean 'kvzalloc'? [-Werror=3Dimplicit-function-=
+declaration]
+ 1188 |  new_user =3D vzalloc(sizeof(*new_user));
+      |             ^~~~~~~
+      |             kvzalloc
+drivers/char/ipmi/ipmi_msghandler.c:1188:11: warning: assignment to 'struct=
+ ipmi_user *' from 'int' makes pointer from integer without a cast [-Wint-c=
+onversion]
+ 1188 |  new_user =3D vzalloc(sizeof(*new_user));
+      |           ^
+
+Caused by commit
+
+  d6850a47c933 ("ipmi: use vzalloc instead of kmalloc for user creation")
+
+I have applied the following patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 20 Apr 2020 13:03:29 +1000
+Subject: [PATCH] ipmi: vzalloc use requires vmallo.h inclusion
+
+Fixes: d6850a47c933 ("ipmi: use vzalloc instead of kmalloc for user creatio=
+n")
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
-Changes since v1: addressed comments from Arnd
- * Changed the ioctl cmd definitions using _IO micros
- * Export interfaces for HW-SRAM drivers to register apis to available list
- * Modified allocation alignment to PAGE_SIZE
- * Use phys_addr_t as type of SRAM resource size and offset
- * Support compat_ioctl
- * Misc device name:sram
+ drivers/char/ipmi/ipmi_msghandler.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Note: From this on, the SRAM_UAPI driver is independent to any hardware
-drivers, so I would only commit the patch itself as v2, while the v1 of
-it was wrapped together with patches for Freescale L2-Cache-SRAM device.
-Then after, I'd create patches for Freescale L2-Cache-SRAM device as
-another series.
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_m=
+sghandler.c
+index 96f157323646..9afd220cd824 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -33,6 +33,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/uuid.h>
+ #include <linux/nospec.h>
++#include <linux/vmalloc.h>
+=20
+ #define IPMI_DRIVER_VERSION "39.2"
+=20
+--=20
+2.25.1
 
-Link for v1:
- * https://lore.kernel.org/lkml/20200418162157.50428-5-wenhu.wang@vivo.com/
----
- drivers/misc/Kconfig      |  11 ++
- drivers/misc/Makefile     |   1 +
- drivers/misc/sram_uapi.c  | 352 ++++++++++++++++++++++++++++++++++++++
- include/linux/sram_uapi.h |  28 +++
- 4 files changed, 392 insertions(+)
- create mode 100644 drivers/misc/sram_uapi.c
- create mode 100644 include/linux/sram_uapi.h
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 99e151475d8f..b19c8b24f18e 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -465,6 +465,17 @@ config PVPANIC
- 	  a paravirtualized device provided by QEMU; it lets a virtual machine
- 	  (guest) communicate panic events to the host.
- 
-+config SRAM_UAPI
-+	bool "Generic SRAM User Level API driver"
-+	help
-+	  This driver allows you to create a misc device which could be used
-+	  as an interface to allocate SRAM memory from user level.
-+
-+	  It is extremely helpful for some user space applications that require
-+	  high performance memory accesses.
-+
-+	  If unsure, say N.
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 9abf2923d831..794447ca07ca 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
- obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
- obj-$(CONFIG_SRAM)		+= sram.o
- obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
-+obj-$(CONFIG_SRAM_UAPI)		+= sram_uapi.o
- obj-y				+= mic/
- obj-$(CONFIG_GENWQE)		+= genwqe/
- obj-$(CONFIG_ECHO)		+= echo/
-diff --git a/drivers/misc/sram_uapi.c b/drivers/misc/sram_uapi.c
-new file mode 100644
-index 000000000000..66c7b56b635f
---- /dev/null
-+++ b/drivers/misc/sram_uapi.c
-@@ -0,0 +1,352 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-+ * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
-+ * All rights reserved.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/mm.h>
-+#include <linux/fs.h>
-+#include <linux/miscdevice.h>
-+#include <linux/uaccess.h>
-+#include <linux/sram_uapi.h>
-+
-+#define DRIVER_NAME	"sram_uapi"
-+
-+struct res_info {
-+	phys_addr_t offset;
-+	phys_addr_t size;
-+};
-+
-+struct sram_resource {
-+	struct list_head	list;
-+	struct res_info		info;
-+	phys_addr_t		phys;
-+	void			*virt;
-+	struct vm_area_struct	*vma;
-+	struct sram_uapi	*parent;
-+};
-+
-+struct sram_uapi {
-+	struct list_head	res_list;
-+	struct sram_api		*sa;
-+};
-+
-+static DEFINE_MUTEX(sram_api_list_lock);
-+static LIST_HEAD(sram_api_list);
-+
-+long sram_api_register(struct sram_api *sa)
-+{
-+	struct sram_api *cur;
-+
-+	if (!sa || !sa->name || !sa->sram_alloc || !sa->sram_free)
-+		return -EINVAL;
-+
-+	mutex_lock(&sram_api_list_lock);
-+	list_for_each_entry(cur, &sram_api_list, list) {
-+		if (cur->type == sa->type) {
-+			pr_err("error sram %s type %d exists\n", sa->name,
-+			       sa->type);
-+			mutex_unlock(&sram_api_list_lock);
-+			return -EEXIST;
-+		}
-+	}
-+
-+	kref_init(&sa->kref);
-+	list_add_tail(&sa->list, &sram_api_list);
-+	pr_info("sram %s type %d registered\n", sa->name, sa->type);
-+
-+	mutex_unlock(&sram_api_list_lock);
-+
-+	return 0;
-+};
-+EXPORT_SYMBOL(sram_api_register);
-+
-+long sram_api_unregister(struct sram_api *sa)
-+{
-+	struct sram_api *cur, *tmp;
-+	long ret = -ENODEV;
-+
-+	if (!sa || !sa->name || !sa->sram_alloc || !sa->sram_free)
-+		return -EINVAL;
-+
-+	mutex_lock(&sram_api_list_lock);
-+	list_for_each_entry_safe(cur, tmp, &sram_api_list, list) {
-+		if (cur->type == sa->type && !strcmp(cur->name, sa->name)) {
-+			if (kref_read(&cur->kref)) {
-+				pr_err("error sram %s type %d is busy\n",
-+					sa->name, sa->type);
-+				ret = -EBUSY;
-+			} else {
-+				list_del(&cur->list);
-+				pr_info("sram %s type %d unregistered\n",
-+					sa->name, sa->type);
-+				ret = 0;
-+			}
-+			break;
-+		}
-+	}
-+	mutex_unlock(&sram_api_list_lock);
-+
-+	return ret;
-+};
-+EXPORT_SYMBOL(sram_api_unregister);
-+
-+static struct sram_api *get_sram_api_from_type(__u32 type)
-+{
-+	struct sram_api *cur;
-+
-+	mutex_lock(&sram_api_list_lock);
-+	list_for_each_entry(cur, &sram_api_list, list) {
-+		if (cur->type == type) {
-+			kref_get(&cur->kref);
-+			mutex_unlock(&sram_api_list_lock);
-+			return cur;
-+		}
-+	}
-+	mutex_unlock(&sram_api_list_lock);
-+
-+	return NULL;
-+}
-+
-+static void sram_uapi_res_insert(struct sram_uapi *uapi,
-+				 struct sram_resource *res)
-+{
-+	struct sram_resource *cur, *tmp;
-+	struct list_head *head = &uapi->res_list;
-+
-+	list_for_each_entry_safe(cur, tmp, head, list) {
-+		if (&tmp->list != head &&
-+		    (cur->info.offset + cur->info.size + res->info.size <=
-+		    tmp->info.offset)) {
-+			res->info.offset = cur->info.offset + cur->info.size;
-+			res->parent = uapi;
-+			list_add(&res->list, &cur->list);
-+			return;
-+		}
-+	}
-+
-+	if (list_empty(head))
-+		res->info.offset = 0;
-+	else {
-+		tmp = list_last_entry(head, struct sram_resource, list);
-+		res->info.offset = tmp->info.offset + tmp->info.size;
-+	}
-+	list_add_tail(&res->list, head);
-+}
-+
-+static struct sram_resource *sram_uapi_res_delete(struct sram_uapi *uapi,
-+						  struct res_info *info)
-+{
-+	struct sram_resource *res, *tmp;
-+
-+	list_for_each_entry_safe(res, tmp, &uapi->res_list, list) {
-+		if (res->info.offset == info->offset) {
-+			list_del(&res->list);
-+			res->parent = NULL;
-+			return res;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
-+static struct sram_resource *sram_uapi_find_res(struct sram_uapi *uapi,
-+						__u32 offset)
-+{
-+	struct sram_resource *res;
-+
-+	list_for_each_entry(res, &uapi->res_list, list) {
-+		if (res->info.offset == offset)
-+			return res;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int sram_uapi_open(struct inode *inode, struct file *filp)
-+{
-+	struct sram_uapi *uapi;
-+
-+	uapi = kzalloc(sizeof(*uapi), GFP_KERNEL);
-+	if (!uapi)
-+		return -ENOMEM;
-+
-+	INIT_LIST_HEAD(&uapi->res_list);
-+	filp->private_data = uapi;
-+
-+	return 0;
-+}
-+
-+static long sram_uapi_ioctl(struct file *filp, unsigned int cmd,
-+			    unsigned long arg)
-+{
-+	struct sram_uapi *uapi = filp->private_data;
-+	struct sram_resource *res;
-+	struct res_info info;
-+	long ret = -ENOIOCTLCMD;
-+	int size;
-+	__u32 type;
-+
-+	if (!uapi)
-+		return ret;
-+
-+	switch (cmd) {
-+	case SRAM_UAPI_IOC_SET_SRAM_TYPE:
-+		if (uapi->sa)
-+			return -EEXIST;
-+
-+		get_user(type, (const __u32 __user *)arg);
-+		uapi->sa = get_sram_api_from_type(type);
-+		if (uapi->sa)
-+			ret = 0;
-+		else
-+			ret = -ENODEV;
-+
-+		break;
-+
-+	case SRAM_UAPI_IOC_ALLOC:
-+		if (!uapi->sa)
-+			return -EINVAL;
-+
-+		res = kzalloc(sizeof(*res), GFP_KERNEL);
-+		if (!res)
-+			return -ENOMEM;
-+
-+		size = copy_from_user((void *)&res->info,
-+				      (const void __user *)arg,
-+				      sizeof(res->info));
-+		if (!PAGE_ALIGNED(res->info.size) || !res->info.size)
-+			return -EINVAL;
-+
-+		res->virt = (void *)uapi->sa->sram_alloc(res->info.size,
-+							 &res->phys,
-+							 PAGE_SIZE);
-+		if (!res->virt) {
-+			kfree(res);
-+			return -ENOMEM;
-+		}
-+
-+		sram_uapi_res_insert(uapi, res);
-+		size = copy_to_user((void __user *)arg,
-+				    (const void *)&res->info,
-+				    sizeof(res->info));
-+
-+		ret = 0;
-+		break;
-+
-+	case SRAM_UAPI_IOC_FREE:
-+		if (!uapi->sa)
-+			return -EINVAL;
-+
-+		size = copy_from_user((void *)&info, (const void __user *)arg,
-+				      sizeof(info));
-+
-+		res = sram_uapi_res_delete(uapi, &info);
-+		if (!res) {
-+			pr_err("error no sram resource found\n");
-+			return -EINVAL;
-+		}
-+
-+		uapi->sa->sram_free(res->virt);
-+		kfree(res);
-+
-+		ret = 0;
-+		break;
-+
-+	default:
-+		pr_err("error no cmd not supported\n");
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int sram_uapi_mmap(struct file *filp, struct vm_area_struct *vma)
-+{
-+	struct sram_uapi *uapi = filp->private_data;
-+	struct sram_resource *res;
-+
-+	res = sram_uapi_find_res(uapi, vma->vm_pgoff);
-+	if (!res)
-+		return -EINVAL;
-+
-+	if (vma->vm_end - vma->vm_start > res->info.size)
-+		return -EINVAL;
-+
-+	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-+
-+	return remap_pfn_range(vma, vma->vm_start,
-+			       res->phys >> PAGE_SHIFT,
-+			       vma->vm_end - vma->vm_start,
-+			       vma->vm_page_prot);
-+}
-+
-+static void sram_uapi_res_release(struct sram_uapi *uapi)
-+{
-+	struct sram_resource *res, *tmp;
-+
-+	list_for_each_entry_safe(res, tmp, &uapi->res_list, list) {
-+		list_del(&res->list);
-+		uapi->sa->sram_free(res->virt);
-+		kfree(res);
-+	}
-+}
-+
-+static int sram_uapi_release(struct inode *inodp, struct file *filp)
-+{
-+	struct sram_uapi *uapi = filp->private_data;
-+
-+	sram_uapi_res_release(uapi);
-+	if (uapi->sa)
-+		kref_put(&uapi->sa->kref, NULL);
-+
-+	kfree(uapi);
-+
-+	return 0;
-+}
-+
-+static const struct file_operations sram_uapi_ops = {
-+	.owner		= THIS_MODULE,
-+	.open		= sram_uapi_open,
-+	.unlocked_ioctl = sram_uapi_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
-+	.mmap		= sram_uapi_mmap,
-+	.release	= sram_uapi_release,
-+};
-+
-+static struct miscdevice sram_uapi_miscdev = {
-+	MISC_DYNAMIC_MINOR,
-+	"sram",
-+	&sram_uapi_ops,
-+};
-+
-+static int __init sram_uapi_init(void)
-+{
-+	int ret;
-+
-+	INIT_LIST_HEAD(&sram_api_list);
-+	mutex_init(&sram_api_list_lock);
-+
-+	ret = misc_register(&sram_uapi_miscdev);
-+	if (ret)
-+		pr_err("failed to register sram uapi misc device\n");
-+
-+	return ret;
-+}
-+
-+static void __exit sram_uapi_exit(void)
-+{
-+	misc_deregister(&sram_uapi_miscdev);
-+}
-+
-+module_init(sram_uapi_init);
-+module_exit(sram_uapi_exit);
-+
-+MODULE_AUTHOR("Wang Wenhu <wenhu.wang@vivo.com>");
-+MODULE_DESCRIPTION("SRAM User API Driver");
-+MODULE_ALIAS("platform:" DRIVER_NAME);
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/sram_uapi.h b/include/linux/sram_uapi.h
-new file mode 100644
-index 000000000000..50fbf9dc308f
---- /dev/null
-+++ b/include/linux/sram_uapi.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __SRAM_UAPI_H
-+#define __SRAM_UAPI_H
-+
-+/* Set SRAM type to be accessed */
-+#define SRAM_UAPI_IOC_SET_SRAM_TYPE	_IOW('S', 0, __u32)
-+
-+/* Allocate resource from SRAM */
-+#define SRAM_UAPI_IOC_ALLOC		_IOWR('S', 1, struct res_info)
-+
-+/* Free allocated resource of SRAM */
-+#define SRAM_UAPI_IOC_FREE		_IOW('S', 2, struct res_info)
-+
-+struct sram_api {
-+	struct list_head	list;
-+	struct kref		kref;
-+	__u32			type;
-+	const char		*name;
-+
-+	long (*sram_alloc)(__u32 size, phys_addr_t *phys, __u32 align);
-+	void (*sram_free)(void *ptr);
-+};
-+
-+extern long sram_api_register(struct sram_api *sa);
-+
-+extern long sram_api_unregister(struct sram_api *sa);
-+
-+#endif /* __SRAM_UAPI_H */
--- 
-2.17.1
+--Sig_/_Upk7c5UsB8eBIUMn1NQ16l
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6dEocACgkQAVBC80lX
+0GwQ8wf+IQQidTs8KTXtVJmm1xLySB05f3cbynBa66BgqggyFcoapXfaVIuG1634
+WFCSrqKffykHYTkkNNhNhChvqBlKFqRUQfCoI04XRmdFU1tSBXxMOU2UH6+JAAuP
+pwQ8tCxAHCwU0I5H+sFRoatpLEFqTO//xNN8kz+MMsnJ0kd9WFt4KVOeHN8iBA+M
+msJ1pXkdRibFVjqcqgElvXx/Omuh5bYRVQf2SX2kHrdsXUB1pHGeHnHqRL8vqxry
+ZON2/Vq904fTRqwTCkZKGvVva7OltocHMyNGsW3UhCc5nElMY3qAbJ93fsvVB+oL
+HDX5z4oYSld82u3TSHd3FB/0WPvPxQ==
+=wNuZ
+-----END PGP SIGNATURE-----
+
+--Sig_/_Upk7c5UsB8eBIUMn1NQ16l--
