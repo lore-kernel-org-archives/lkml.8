@@ -7,132 +7,82 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE43C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08546C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD86A2145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3EF20A8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:17:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m9/NpKD3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYtRrZdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgDTKOv (ORCPT
+        id S1726240AbgDTKRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 06:14:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38256 "EHLO
+        Mon, 20 Apr 2020 06:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726025AbgDTKOu (ORCPT
+        by vger.kernel.org with ESMTP id S1725775AbgDTKRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 06:14:50 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D81AC061A0C;
-        Mon, 20 Apr 2020 03:14:49 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id r14so4725926pfg.2;
-        Mon, 20 Apr 2020 03:14:49 -0700 (PDT)
+        Mon, 20 Apr 2020 06:17:05 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB6CC061A0C;
+        Mon, 20 Apr 2020 03:17:05 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a22so4214176pjk.5;
+        Mon, 20 Apr 2020 03:17:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+plp5dslqkbN+jJKI4p9ucxk+mSNWrqMV1KZLrKDu8E=;
-        b=m9/NpKD3YMhtt1l8zNAhqW7YCnAg0vuezB4FcJjBiW0qtvgfYxDE8Q+jH26Che+j09
-         WIiar7jYNanQupQd41XmtOfKeb6r28kYQKdmiNBRV0NGpAjyGHWYazLmy0LhvSRtG7VN
-         F/EYszmDw8mDmw/UL6hH7uM4Z2xWXP8/jMBVVAeyRk4hPBRLlBoF/zj+XzzRf3LFLIJc
-         jRVwT7FgZTBNkxmx3j/36B68OKh/Ohr8aJ4+amz189J4w+rKjuS7VI8bO2jDK465A/qP
-         YyUi8XJGibpb/IY1phIMWcFWNIt2JoWTdMiP6PUoYsPXcR53zk5yYxQCgX5G/4jFgU9Z
-         R3bw==
+        bh=FQwBgtUGJlKMOa45Jn8Rf9aNt1TP9LL5RxpacDSa9OM=;
+        b=HYtRrZdTeb5v2kfEkCPR+6rQT5fP8Y3gaiUuDtIE3OAsBfF7sVTxaklMTAYnGn5SKW
+         /xGeJGtrSZEaVdHl+gwf9cJGAZTspn5YbvOFqDszdKafBXZBoYgsjnHKXm1yyvcMRZ23
+         XbtfAnI8AAy3UW8SXzTQT/R1KdigVxLnsZ7cnKlFt7oawbLvZPNdXjhfP1TGHbrI87gU
+         kp1atExvEggE1ZhWy1HI/Z5KOTKe5R/rYmZB/BlHiQ8W/cklyVqrRWAZghT8EHNHZe6D
+         tGzK/mXt5zcN4SSFhbs+smf44hpcCBj1v1F2pSjWxKrm0QxGXn5DTp4M+ChG7DN2qSQl
+         IoKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+plp5dslqkbN+jJKI4p9ucxk+mSNWrqMV1KZLrKDu8E=;
-        b=LU5PwF+6Gg/WrxmaDCiTNgb5lFVMxYdVAajDfxQ/nWLkDDrLZKzgUiYFVj072q2/9i
-         SL4NlaagTJO23t7rl5Z940INTDX6AZq0FWn6+uMXNdwP9uDJ0lg+YFFKP2CmdH0RD0wX
-         Gg7kz9ALt7k4jG4hJdvQV6isuXoQhOrdKueUy2ms4X2mBLVNZMgfsLvOMDkxzlACbpVY
-         kGpczgHxlhjURJD9nVHRUKtQgEvn2immxTQiBrY+NDwkXM57oLnOjSbQhPmSyZ8VxUe5
-         sWlIKRckYIc8uO1LhdvBYbjYc/lbgHfVuKn+wRK6JzR+2dzME8pP35J6QZ3whMCqUhsR
-         29gw==
-X-Gm-Message-State: AGi0PuY6QMeQ59IUcCB6nE4m5N1qIHWgBO6uNRuCyvdoqcTCsXMXjWas
-        QM6WGNDe8lSp83Vm3EUgL5DoFI5CPNCsq9zvLck=
-X-Google-Smtp-Source: APiQypL5JJh3lWpj0tF/H74qWnVXLQrlL9upOg621u5MaM3c0nHwfxf/sSiqTVj423joY+7ivzMJipVARFeU3GeIT9M=
-X-Received: by 2002:aa7:8f26:: with SMTP id y6mr16420099pfr.36.1587377688814;
- Mon, 20 Apr 2020 03:14:48 -0700 (PDT)
+        bh=FQwBgtUGJlKMOa45Jn8Rf9aNt1TP9LL5RxpacDSa9OM=;
+        b=JXz66/Y7F0G0WydGppYPwlcG/9EIPneu0nyCKic3ed+MIsJhSJGD4cDFSrISnY020V
+         jIReNiDg6KzD806seW54Rq27s4y9klb4NT+lzrxX9xoNnxTP1oH2qt1Do0YUqnT5T30U
+         LtKGipmXKN697l/F7O6TMaA9OU2NljDF25FqHjgkBLxOBcsjnc8WV3eqUFb6E1eczMdW
+         CZZI+ouLjPnqQDxaFYCNXoYrgv9+aeewAf5Ckuzo3eiQZgslM+76yvtznaddDfok5bAZ
+         mHC3CS7WyU8ceGrTmdAlbT1BY9SYqUK2TqsF60NMBueLu2K7Q5m5Juz+I8X/9BGOVV+a
+         lzCA==
+X-Gm-Message-State: AGi0PubJlYjKCKYZ3db+P/+IbdEiEqmZmF+EzcFqH2+umDrkHYs/9F/+
+        QWPVXwmx1U9vIRLB1ZFH9BwgzVdm4chfkeyleoOGHPlSG8E=
+X-Google-Smtp-Source: APiQypJj+uMW4TOJ5C9KzBmk/r05SyMy64CzHhYWv5u+jl5v/HYHaaiMN5M1jlvGcee7bIhVmuCv75dKPdRzCm/3LNQ=
+X-Received: by 2002:a17:90a:364c:: with SMTP id s70mr20434411pjb.143.1587377824736;
+ Mon, 20 Apr 2020 03:17:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200418105533.477ce529@collabora.com> <20200419222040.GJ185537@smile.fi.intel.com>
- <20200420111754.5863324b@collabora.com> <CAHp75VeOH+DC362tsEo13gr9fJpeCHXok=7O19B3njbxCOzd2A@mail.gmail.com>
- <20200420115256.3a0ff647@collabora.com>
-In-Reply-To: <20200420115256.3a0ff647@collabora.com>
+References: <alpine.DEB.2.21.2004201122490.9739@felia> <DB6PR0802MB25339A9DFF7F87CB06158476E9D40@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+In-Reply-To: <DB6PR0802MB25339A9DFF7F87CB06158476E9D40@DB6PR0802MB2533.eurprd08.prod.outlook.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 20 Apr 2020 13:14:42 +0300
-Message-ID: <CAHp75Vfp_WYNR8kHVsSVumGzuVbGEGpAjfXVvJAV7t6zXXY+HA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh R <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        masonccyang@mxic.com.tw, piotrs@cadence.com,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        "hauke.mehrtens" <hauke.mehrtens@intel.com>, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com
+Date:   Mon, 20 Apr 2020 13:16:57 +0300
+Message-ID: <CAHp75VeCWDB4VOyV30fFQ5YwBuKL=W62b+A2Pr3=zH-JmxsoRg@mail.gmail.com>
+Subject: Re: MAINTAINERS: Wrong ordering in CCTRNG ARM TRUSTZONE CRYPTOCELL
+ TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
+To:     Hadar Gat <Hadar.Gat@arm.com>
+Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 12:53 PM Boris Brezillon
-<boris.brezillon@collabora.com> wrote:
-> On Mon, 20 Apr 2020 12:44:51 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->
-> > On Mon, Apr 20, 2020 at 12:21 PM Boris Brezillon
-> > <boris.brezillon@collabora.com> wrote:
-> > > On Mon, 20 Apr 2020 01:20:40 +0300
-> > > Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-> > > > On Sat, Apr 18, 2020 at 10:55:33AM +0200, Boris Brezillon wrote:
-> > > > > On Fri, 17 Apr 2020 16:21:47 +0800
-> > > > > "Ramuthevar,Vadivel MuruganX"
-> > > > > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> > > > >
-> > > > > > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> > > >
-> > > > > > +static const struct of_device_id lgm_nand_match[] = {
-> > > > > > + { .compatible = "intel,lgm-nand", },
-> > > > > > + {}
-> > > > > > +};
-> > > > > > +MODULE_DEVICE_TABLE(of, lgm_nand_match);
-> > > > >
-> > > > > You probably have a missing "depends on OF" in your Kconfig.
-> > > >
-> > > > Since it's using device property API, dependency is not needed.
-> > > >
-> > >
-> > > There's no compile-time dependency, but this driver will be pretty
-> > > useless if all its users have the NAND controller node defined in their
-> > > DT and CONFIG_OF is not enabled.
-> >
-> > No, it's not.
-> > See [1] for the details how ACPI may utilize this table.
-> >
-> > [1]: https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.html#device-tree-namespace-link-device-id
->
-> Except the NAND framework does use the OF lib when parsing common DT
-> properties (like nand-ecc-mode, etc), so it does depend on OF if you
-> want those props to be parsed, which, according to the DT binding patch,
-> is the case.
+On Mon, Apr 20, 2020 at 12:51 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
 
-I see, so, NAND framework can be transformed at some point. In any
-case, from driver perspective it's OF independent.
+
+> I was wondering why this patch was not applied.. somehow I didn't get this warning when running checkpatch.pl.
+
+It a quite recent feature, so, if you are not running linux-next on
+daily basis, you probably won't see it.
 
 -- 
 With Best Regards,
