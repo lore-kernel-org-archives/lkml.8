@@ -2,275 +2,101 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CF6C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74942C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1E920857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:11:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HgD9/j2V"
+	by mail.kernel.org (Postfix) with ESMTP id 4AD8720857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:12:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587409967;
+	bh=533btvM4regbrCyCqAmnWhPvYUQDFQSGf+Y3Cb2Nbrw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DWKGnlVF5tgOCZrpILVXwftW33ilTcQDPxNRRpQeIDaZSeGxzseDCGcTkpkLRUrWG
+	 Y+rcDSYBZYa9VqlCUr8+8/mF2bFi4Ff28n7LuBwa7w/HGWCEJmWVnBN4gUzeoNSaMN
+	 N8WilZkKhTm7sw6GPh6fBE9k7EhaGkNFsLcePJTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbgDTTL2 (ORCPT
+        id S1726503AbgDTTMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:11:28 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36469 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726039AbgDTTL2 (ORCPT
+        Mon, 20 Apr 2020 15:12:46 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41437 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbgDTTMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:11:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587409886;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eO9YXDr/mCidnJMfjRT+7Um9k0phawd3zi+O/FYIxvI=;
-        b=HgD9/j2VjXweTnX/kcF7+9M6o7y1Ie0cPzzmHRtRE5OiLzp6ogb9hv0igbG9DVQAPR56nE
-        A+fmkdy+GucGR6UeFXCbgPQLF20Bc0nN1ffkxKPQFzcLTwuDe1OVBJDWoUxNgBtkU8AyNe
-        OAkbkdwXiZxZlvPjddUYiZoIV8B+bmY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-217-tVKwHA9OOqKkWflS6Vzatw-1; Mon, 20 Apr 2020 15:11:24 -0400
-X-MC-Unique: tVKwHA9OOqKkWflS6Vzatw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77425107ACC4;
-        Mon, 20 Apr 2020 19:11:23 +0000 (UTC)
-Received: from treble (ovpn-118-158.rdu2.redhat.com [10.10.118.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EC4EE60C87;
-        Mon, 20 Apr 2020 19:11:19 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 14:11:17 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
- early
-Message-ID: <20200420191117.wrjauayeutkpvkwd@treble>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
- <20200420175751.GA13807@redhat.com>
- <20200420182516.6awwwbvoen62gwbr@treble>
- <20200420190141.GB13807@redhat.com>
+        Mon, 20 Apr 2020 15:12:46 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k9so9821515oia.8;
+        Mon, 20 Apr 2020 12:12:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mEdiyEyzF5/3OIaRLc3gV3pkykIsXa9nKV2IZYxgel4=;
+        b=krljELPBzUPq/IuOV0ijUpU0pHszIi6qAr5nxiuXGsCJUHfh3Q4A4Z3qckDfm/mOgv
+         oRw/RgYpXBre75uMZV8eV/6/b3HbnqasAnYIlJ0/wFusxNzFzAXnDsclzl0GmBC1vbOw
+         u1jV/LrhqTdQP+KjI01NWuTYVDEFmfu5iQwHnBG4qKdHqVPQ/2pvYjs3Oci9YPZEFDN9
+         t8JD8qrZBs2WosiaF9GkHNuf41aHiO7jh+g5o3SP8lqhfTzAr8M8CTOVfWiVEq4OIvlO
+         S0jq1R8jILf+vWx5ucBWPlK1rxkrvF1+hh6u4446Lm6yGASQd81tHhfWja8ygB0/IAaH
+         dDVw==
+X-Gm-Message-State: AGi0PuZEmULNMO6NIoQ/X20CD3yMMClQQQww0Qp2/d/Q5qzqlKBJ1vLh
+        X4DIUvSlbmDoZEQMttySDA==
+X-Google-Smtp-Source: APiQypIOTpxeJOVA9/QpCyaMB4NuAAYY4PvbIbTNDLbFynkqVjNurgkpjmad0ZzFxNEnYm/RIpvAMg==
+X-Received: by 2002:aca:6042:: with SMTP id u63mr688459oib.179.1587409965183;
+        Mon, 20 Apr 2020 12:12:45 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p5sm81101ooa.14.2020.04.20.12.12.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 12:12:44 -0700 (PDT)
+Received: (nullmailer pid 31561 invoked by uid 1000);
+        Mon, 20 Apr 2020 19:12:43 -0000
+Date:   Mon, 20 Apr 2020 14:12:43 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] dt-bindings: sram: convert rockchip-pmu-sram bindings
+ to yaml
+Message-ID: <20200420191243.GA31486@bogus>
+References: <20200411122507.4040-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200420190141.GB13807@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200411122507.4040-1-jbx6244@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 03:01:41PM -0400, Joe Lawrence wrote:
-> > > ... apply_relocations() is also iterating over the section headers (the
-> > > diff context doesn't show it here, but i is an incrementing index over
-> > > sechdrs[]).
-> > > 
-> > > So if there is more than one KLP relocation section, we'll process them
-> > > multiple times.  At least the x86 relocation code will detect this and
-> > > fail the module load with an invalid relocation (existing value not
-> > > zero).
-> > 
-> > Ah, yes, good catch!
-> > 
+On Sat, 11 Apr 2020 14:25:07 +0200, Johan Jonker wrote:
+> Current dts files with 'rockchip-pmu-sram' compatible nodes
+> are now verified with sram.yaml, although the original
+> text document still exists. Merge rockchip-pmu-sram.txt
+> with sram.yaml by adding it as description with an example.
+> Make #address-cells, #size-cells and ranges optional
+> if there are no child nodes to prevent yaml warnings.
 > 
-> The same test case passed with a small modification to push the foreach
-> KLP section part to a kernel/livepatch/core.c local function and
-> exposing the klp_resolve_symbols() + apply_relocate_add() for a given
-> section to kernel/module.c.  Something like following...
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+> Changes v4:
+>   Make some properties optional
+> 
+> Changes v3:
+>   Document the compatible
+> 
+> Changed v2:
+>   Merge with sram.yaml
+> ---
+>  .../devicetree/bindings/sram/rockchip-pmu-sram.txt | 16 -------------
+>  Documentation/devicetree/bindings/sram/sram.yaml   | 26 +++++++++++++++++++---
+>  2 files changed, 23 insertions(+), 19 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+> 
 
-I came up with something very similar, though I named them
-klp_apply_object_relocs() and klp_apply_section_relocs() and changed the
-argument order a bit (module first).  Since it sounds like you have a
-test, could you try this one?
+Applied, thanks.
 
-diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-index 533359e48c39..fb1a3de39726 100644
---- a/include/linux/livepatch.h
-+++ b/include/linux/livepatch.h
-@@ -231,10 +231,10 @@ void klp_shadow_free_all(unsigned long id, klp_shadow_dtor_t dtor);
- struct klp_state *klp_get_state(struct klp_patch *patch, unsigned long id);
- struct klp_state *klp_get_prev_state(unsigned long id);
- 
--int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
--			  const char *shstrtab, const char *strtab,
--			  unsigned int symindex, struct module *pmod,
--			  const char *objname);
-+int klp_apply_section_relocs(struct module *pmod, Elf_Shdr *sechdrs,
-+			     const char *shstrtab, const char *strtab,
-+			     unsigned int symindex, unsigned int secindex,
-+			     const char *objname);
- 
- #else /* !CONFIG_LIVEPATCH */
- 
-@@ -245,10 +245,10 @@ static inline void klp_update_patch_state(struct task_struct *task) {}
- static inline void klp_copy_process(struct task_struct *child) {}
- 
- static inline
--int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
--			  const char *shstrtab, const char *strtab,
--			  unsigned int symindex, struct module *pmod,
--			  const char *objname)
-+int klp_apply_section_relocs(struct module *pmod, Elf_Shdr *sechdrs,
-+			     const char *shstrtab, const char *strtab,
-+			     unsigned int symindex, unsigned int secindex,
-+			     const char *objname);
- {
- 	return 0;
- }
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 3ff886b911ae..89c5cb962c54 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -285,49 +285,37 @@ static int klp_resolve_symbols(Elf64_Shdr *sechdrs, const char *strtab,
-  *    the to-be-patched module to be loaded and patched sometime *after* the
-  *    klp module is loaded.
-  */
--int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
--			  const char *shstrtab, const char *strtab,
--			  unsigned int symndx, struct module *pmod,
--			  const char *objname)
-+int klp_apply_section_relocs(struct module *pmod, Elf_Shdr *sechdrs,
-+			     const char *shstrtab, const char *strtab,
-+			     unsigned int symndx, unsigned int secndx,
-+			     const char *objname)
- {
--	int i, cnt, ret = 0;
-+	int cnt, ret;
- 	char sec_objname[MODULE_NAME_LEN];
--	Elf_Shdr *sec;
-+	Elf_Shdr *sec = sechdrs + secndx;
- 
--	/* For each klp relocation section */
--	for (i = 1; i < ehdr->e_shnum; i++) {
--		sec = sechdrs + i;
--		if (!(sec->sh_flags & SHF_RELA_LIVEPATCH))
--			continue;
--
--		/*
--		 * Format: .klp.rela.sec_objname.section_name
--		 * See comment in klp_resolve_symbols() for an explanation
--		 * of the selected field width value.
--		 */
--		cnt = sscanf(shstrtab + sec->sh_name, ".klp.rela.%55[^.]",
--			     sec_objname);
--		if (cnt != 1) {
--			pr_err("section %s has an incorrectly formatted name\n",
--			       shstrtab + sec->sh_name);
--			ret = -EINVAL;
--			break;
--		}
--
--		if (strcmp(objname ? objname : "vmlinux", sec_objname))
--			continue;
-+	/*
-+	 * Format: .klp.rela.sec_objname.section_name
-+	 * See comment in klp_resolve_symbols() for an explanation
-+	 * of the selected field width value.
-+	 */
-+	cnt = sscanf(shstrtab + sec->sh_name, ".klp.rela.%55[^.]",
-+		     sec_objname);
-+	if (cnt != 1) {
-+		pr_err("section %s has an incorrectly formatted name\n",
-+		       shstrtab + sec->sh_name);
-+		return -EINVAL;
-+	}
- 
--		ret = klp_resolve_symbols(sechdrs, strtab, symndx, sec,
--					  sec_objname);
--		if (ret)
--			break;
-+	if (strcmp(objname ? objname : "vmlinux", sec_objname))
-+		return 0;
- 
--		ret = apply_relocate_add(sechdrs, strtab, symndx, i, pmod);
--		if (ret)
--			break;
--	}
-+	ret = klp_resolve_symbols(sechdrs, strtab, symndx, sec,
-+				  sec_objname);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	return apply_relocate_add(sechdrs, strtab, symndx, secndx, pmod);
- }
- 
- /*
-@@ -758,13 +746,34 @@ static int klp_init_func(struct klp_object *obj, struct klp_func *func)
- 			   func->old_sympos ? func->old_sympos : 1);
- }
- 
-+int klp_apply_object_relocs(struct klp_patch *patch, struct klp_object *obj)
-+{
-+	int i, ret;
-+	struct klp_modinfo *info = patch->mod->klp_info;
-+
-+	for (i = 1; i < info->hdr.e_shnum; i++) {
-+		Elf_Shdr *sec = info->sechdrs + i;
-+
-+		if (!(sec->sh_flags & SHF_RELA_LIVEPATCH))
-+			continue;
-+
-+		ret = klp_apply_section_relocs(patch->mod, info->sechdrs,
-+					       info->secstrings,
-+					       patch->mod->core_kallsyms.strtab,
-+					       info->symndx, i, obj->name);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- /* parts of the initialization that is done only when the object is loaded */
- static int klp_init_object_loaded(struct klp_patch *patch,
- 				  struct klp_object *obj)
- {
- 	struct klp_func *func;
- 	int ret;
--	struct klp_modinfo *info = patch->mod->klp_info;
- 
- 	if (klp_is_module(obj)) {
- 		/*
-@@ -773,11 +782,7 @@ static int klp_init_object_loaded(struct klp_patch *patch,
- 		 * written earlier during the initialization of the klp module
- 		 * itself.
- 		 */
--		ret = klp_write_relocations(&info->hdr, info->sechdrs,
--					    info->secstrings,
--					    patch->mod->core_kallsyms.strtab,
--					    info->symndx, patch->mod,
--					    obj->name);
-+		ret = klp_apply_object_relocs(patch, obj);
- 		if (ret)
- 			return ret;
- 	}
-diff --git a/kernel/module.c b/kernel/module.c
-index b1d30ad67e82..3ba024afe379 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2322,10 +2322,11 @@ static int apply_relocations(struct module *mod, const struct load_info *info)
- 			continue;
- 
- 		if (info->sechdrs[i].sh_flags & SHF_RELA_LIVEPATCH)
--			err = klp_write_relocations(info->hdr, info->sechdrs,
--						    info->secstrings,
--						    info->strtab,
--						    info->index.sym, mod, NULL);
-+			err = klp_apply_section_relocs(mod, info->sechdrs,
-+						       info->secstrings,
-+						       info->strtab,
-+						       info->index.sym, i,
-+						       NULL);
- 		else if (info->sechdrs[i].sh_type == SHT_REL)
- 			err = apply_relocate(info->sechdrs, info->strtab,
- 					     info->index.sym, i, mod);
-
+Rob
