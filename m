@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CA3C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85682C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4353720736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60CA920735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386518;
-	bh=3WFfkTC2VyLFMYYkexTop0RZ0E1qTf1xEmB51Q2uf1k=;
+	s=default; t=1587386521;
+	bh=HnmqgEgAcwNwn/Qv72Oo+9jHmjKAQoCbI+ksnORWjr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KO8FWpJTMlHd50CpUPxrSyFVLBoc9H26rRAH/rQbL62c81vnbwqW9wA800jIYlk7h
-	 ZXvk6eiOtkSoUzHKnKu2zZf5rdnhB8kjczA1KGIqvMdMtveWU95bQKyvaD+rYOhVpy
-	 dbucywKMtNgN7kgMDR5QSLNNMrXrreRfYThp/ft8=
+	b=CQgmZvLkUVAQ6UXP3plooMwVxxZb/pidiYPagPXFUFCDjEwKlK0NsYlw2HPzXc3dX
+	 jAG9LNE1/74P4g2SmPL4PuU7gk+LVvqRjvDa7oy/ZfW+lLa6fBklhXJ+8WJlBkGkgS
+	 mbpE3jZVt1wBsMnfza+RptBlo2GKO7b5EJQKfOuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgDTMl5 (ORCPT
+        id S1728134AbgDTMmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:41:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34568 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:42:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728094AbgDTMlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:41:49 -0400
+        id S1728107AbgDTMly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:41:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 681E120735;
-        Mon, 20 Apr 2020 12:41:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D17220735;
+        Mon, 20 Apr 2020 12:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386508;
-        bh=3WFfkTC2VyLFMYYkexTop0RZ0E1qTf1xEmB51Q2uf1k=;
+        s=default; t=1587386513;
+        bh=HnmqgEgAcwNwn/Qv72Oo+9jHmjKAQoCbI+ksnORWjr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tr+/koOszpjEeDykoqySJR3/XB58LrqKidvfFu9RbXzDKoIwO/p42l/0YM417pdr7
-         djNFE+WAVZOG5cCe/mrXiroxKHlMlgS+PIuFZsbIJYn3Q4bYzK9SqgNVSNq5NupYCm
-         cmBLBLgrwQQ/hHj8Hu23SD1H9nzWmkh1xflC7hCc=
+        b=Uliyeib8ixIH+FNI1dx8SvLVIk+LzaRv/n6ruu8nADePuifv9K55W17u+cIllGrmc
+         FEP4O7yyEqhigtZCKD1cIOgyzpkvpfidEjsjvUK4JuP01okfoOYIVxFH6ZcWtA01+q
+         woP32gmHeFOFeJuQkY7eBWfgzXJaAB9KQwEofHjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Tariq Toukan <tariqt@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 52/65] net/mlx5e: Encapsulate updating netdev queues into a function
-Date:   Mon, 20 Apr 2020 14:38:56 +0200
-Message-Id: <20200420121518.174265026@linuxfoundation.org>
+Subject: [PATCH 5.5 54/65] net/mlx5e: Use preactivate hook to set the indirection table
+Date:   Mon, 20 Apr 2020 14:38:58 +0200
+Message-Id: <20200420121518.488670378@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -63,58 +63,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit c2c95271f9f39ea9b34db2301b3b6c5105cdb447 ]
+[ Upstream commit fe867cac9e1967c553e4ac2aece5fc8675258010 ]
 
-As a preparation for one of the following commits, create a function to
-encapsulate the code that notifies the kernel about the new amount of
-RX and TX queues. The code will be called multiple times in the next
+mlx5e_ethtool_set_channels updates the indirection table before
+switching to the new channels. If the switch fails, the indirection
+table is new, but the channels are old, which is wrong. Fix it by using
+the preactivate hook of mlx5e_safe_switch_channels to update the
+indirection table at the stage when nothing can fail anymore.
+
+As the code that updates the indirection table is now encapsulated into
+a new function, use that function in the attach flow when the driver has
+to reduce the number of channels, and prepare the code for the next
 commit.
 
+Fixes: 85082dba0a ("net/mlx5e: Correctly handle RSS indirection table when changing number of channels")
 Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
 Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlx5/core/en_main.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h     |  1 +
+ .../net/ethernet/mellanox/mlx5/core/en_ethtool.c | 10 ++--------
+ .../net/ethernet/mellanox/mlx5/core/en_main.c    | 16 ++++++++++++++--
+ 3 files changed, 17 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 3cb5b4321bf93..11426f94c90c6 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -1043,6 +1043,7 @@ int mlx5e_safe_reopen_channels(struct mlx5e_priv *priv);
+ int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
+ 			       struct mlx5e_channels *new_chs,
+ 			       mlx5e_fp_preactivate preactivate);
++int mlx5e_num_channels_changed(struct mlx5e_priv *priv);
+ void mlx5e_activate_priv_channels(struct mlx5e_priv *priv);
+ void mlx5e_deactivate_priv_channels(struct mlx5e_priv *priv);
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+index c6776f308d5e6..304ddce6b0872 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -445,9 +445,7 @@ int mlx5e_ethtool_set_channels(struct mlx5e_priv *priv,
+ 
+ 	if (!test_bit(MLX5E_STATE_OPENED, &priv->state)) {
+ 		*cur_params = new_channels.params;
+-		if (!netif_is_rxfh_configured(priv->netdev))
+-			mlx5e_build_default_indir_rqt(priv->rss_params.indirection_rqt,
+-						      MLX5E_INDIR_RQT_SIZE, count);
++		mlx5e_num_channels_changed(priv);
+ 		goto out;
+ 	}
+ 
+@@ -455,12 +453,8 @@ int mlx5e_ethtool_set_channels(struct mlx5e_priv *priv,
+ 	if (arfs_enabled)
+ 		mlx5e_arfs_disable(priv);
+ 
+-	if (!netif_is_rxfh_configured(priv->netdev))
+-		mlx5e_build_default_indir_rqt(priv->rss_params.indirection_rqt,
+-					      MLX5E_INDIR_RQT_SIZE, count);
+-
+ 	/* Switch to new channels, set new parameters and close old ones */
+-	err = mlx5e_safe_switch_channels(priv, &new_channels, NULL);
++	err = mlx5e_safe_switch_channels(priv, &new_channels, mlx5e_num_channels_changed);
+ 
+ 	if (arfs_enabled) {
+ 		int err2 = mlx5e_arfs_enable(priv);
 diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 67fe002dfade5..35b0acce425f8 100644
+index 25690d52d48ed..e56088db30dfb 100644
 --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
 +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -2895,6 +2895,17 @@ static void mlx5e_netdev_set_tcs(struct net_device *netdev)
- 		netdev_set_tc_queue(netdev, tc, nch, 0);
+@@ -2906,6 +2906,17 @@ static void mlx5e_update_netdev_queues(struct mlx5e_priv *priv)
+ 	netif_set_real_num_rx_queues(netdev, num_rxqs);
  }
  
-+static void mlx5e_update_netdev_queues(struct mlx5e_priv *priv)
++int mlx5e_num_channels_changed(struct mlx5e_priv *priv)
 +{
-+	int num_txqs = priv->channels.num * priv->channels.params.num_tc;
-+	int num_rxqs = priv->channels.num * priv->profile->rq_groups;
-+	struct net_device *netdev = priv->netdev;
++	u16 count = priv->channels.params.num_channels;
 +
-+	mlx5e_netdev_set_tcs(netdev);
-+	netif_set_real_num_tx_queues(netdev, num_txqs);
-+	netif_set_real_num_rx_queues(netdev, num_rxqs);
++	if (!netif_is_rxfh_configured(priv->netdev))
++		mlx5e_build_default_indir_rqt(priv->rss_params.indirection_rqt,
++					      MLX5E_INDIR_RQT_SIZE, count);
++
++	return 0;
 +}
 +
  static void mlx5e_build_txq_maps(struct mlx5e_priv *priv)
  {
  	int i, ch;
-@@ -2916,13 +2927,7 @@ static void mlx5e_build_txq_maps(struct mlx5e_priv *priv)
+@@ -5308,9 +5319,10 @@ int mlx5e_attach_netdev(struct mlx5e_priv *priv)
+ 	max_nch = mlx5e_get_max_num_channels(priv->mdev);
+ 	if (priv->channels.params.num_channels > max_nch) {
+ 		mlx5_core_warn(priv->mdev, "MLX5E: Reducing number of channels to %d\n", max_nch);
++		/* Reducing the number of channels - RXFH has to be reset. */
++		priv->netdev->priv_flags &= ~IFF_RXFH_CONFIGURED;
+ 		priv->channels.params.num_channels = max_nch;
+-		mlx5e_build_default_indir_rqt(priv->rss_params.indirection_rqt,
+-					      MLX5E_INDIR_RQT_SIZE, max_nch);
++		mlx5e_num_channels_changed(priv);
+ 	}
  
- void mlx5e_activate_priv_channels(struct mlx5e_priv *priv)
- {
--	int num_txqs = priv->channels.num * priv->channels.params.num_tc;
--	int num_rxqs = priv->channels.num * priv->profile->rq_groups;
--	struct net_device *netdev = priv->netdev;
--
--	mlx5e_netdev_set_tcs(netdev);
--	netif_set_real_num_tx_queues(netdev, num_txqs);
--	netif_set_real_num_rx_queues(netdev, num_rxqs);
-+	mlx5e_update_netdev_queues(priv);
- 
- 	mlx5e_build_txq_maps(priv);
- 	mlx5e_activate_channels(&priv->channels);
+ 	err = profile->init_tx(priv);
 -- 
 2.20.1
 
