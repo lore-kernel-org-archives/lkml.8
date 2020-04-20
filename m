@@ -2,121 +2,96 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5461CC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A95C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E733207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:26:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MNaaf1hF"
+	by mail.kernel.org (Postfix) with ESMTP id 50B012078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgDTU02 (ORCPT
+        id S1727017AbgDTU0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:26:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgDTU0Z (ORCPT
+        Mon, 20 Apr 2020 16:26:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38436 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726899AbgDTU0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:26:25 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE104C061A0C;
-        Mon, 20 Apr 2020 13:26:24 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id u13so13849211wrp.3;
-        Mon, 20 Apr 2020 13:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m86kfkguQyuXw4Padwd/5nB4RFgQInyY94SnHr1Z+AI=;
-        b=MNaaf1hFhkSNGsG0/WejBweFAMVqbFBOqTAhKWVbiIqSizUOwh+IXdBtBdMQOCBokB
-         vv+yP9h2nNbyp6aTAwifzxnJbGPVJqTGq4LRcyJUWDGhz9jUEuWFbBWpcaXRNRmd/YMf
-         RCs6t56EELxuk4xEKs+aqdw0M8QA2xnRRU28HKvQf1dqgCP3rcnFbrALfZGdQjgadPMw
-         Uq6PKbW3wtfYIzF3QHPHCuvePPApbnd0V+z2ZGc4HpJ2tCq3EA0oAn/deiaC8+9KEanT
-         iVDYBcvbxNT142KA+Mrwyo2m3kkBUAJ8vdFRnEFZlHAcHmM1Yfs1FE53iFsveq6S5GyB
-         my8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m86kfkguQyuXw4Padwd/5nB4RFgQInyY94SnHr1Z+AI=;
-        b=kbZ2Gy/qLbltHZx4u711Wx1zLoSo8oP96cfE67fsr5EEVBLNbPrOAvAdJ0EefV6iOJ
-         AdjQvghnVXgKH/8XeEJWTve24CPfNPwDedYu7xJsESisSHbAPZeJQDiKPkblXqY7oRrN
-         7oMxeR/r/JUvqnM7Y79uKfHzT8bsp18UiFWLBxxDJCmhYoocUz54hWIq4X260ngeNEWb
-         J2DssGJic95xq+qO4ADUzCeiXpxnGt48NUiZaFS1BPdQ0s/H4Zghc3SmVp4Mg7/ApoQk
-         pJqdgb9u2bb0bgP0Fj29UiqzTU0KTVDO+DeDY7ceSYMF1YAvFHUSczAy+P8/wucF7JdK
-         g+rw==
-X-Gm-Message-State: AGi0PuZSotbhQlPAWr4nEnCO+qTPFmQxxcXpgsvXILK2DvDiytXU/BbS
-        XY2amK7YwW9dzmKVJZp/E0BE5FoZxTA=
-X-Google-Smtp-Source: APiQypKTMMF9oO9FvAFJ4xYhaXCar71+2ejW0w10+TOcqLClxYzLCLiWyqCAI3/BWVAKJrMuDVhxew==
-X-Received: by 2002:adf:ea44:: with SMTP id j4mr22176574wrn.38.1587414383380;
-        Mon, 20 Apr 2020 13:26:23 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id l19sm657846wmj.14.2020.04.20.13.26.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:26:22 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 0/4] meson-ee-pwrc: support for Meson8/8b/8m2 and GX
-Date:   Mon, 20 Apr 2020 22:26:08 +0200
-Message-Id: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.1
+        Mon, 20 Apr 2020 16:26:30 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KK624B038583;
+        Mon, 20 Apr 2020 16:26:22 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gg270bg6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 16:26:22 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KKPj3O013654;
+        Mon, 20 Apr 2020 20:26:21 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 30fs66gh6w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 20:26:21 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KKQKXX44302690
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 20:26:20 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89231AE05C;
+        Mon, 20 Apr 2020 20:26:20 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C1E7AE05F;
+        Mon, 20 Apr 2020 20:26:19 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.56.120])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 20:26:19 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
+        eajames@linux.ibm.com
+Subject: [PATCH v10 6/7] ARM: dts: Aspeed: AST2500: Add missing SCU interrupt controller include
+Date:   Mon, 20 Apr 2020 15:26:10 -0500
+Message-Id: <20200420202611.17776-7-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200420202611.17776-1-eajames@linux.ibm.com>
+References: <20200420202611.17776-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_07:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=1 spamscore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=834 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for all "older" SoCs to the meson-ee-pwrc
-driver. I wanted to compare as much as I could between my Meson8b EC-100
-(Endless Mini) and the Le Potato board so I added support for GXBB, GXL
-and GXM as well as for the SoCs that I'm actually working on. I will
-send the ARM64 dts patches once all of this is reviewed and merged.
+The XDMA node references the SCU interrupt controller interrupts which
+should be included.
 
-I successfully tested the Meson8b part on EC-100 where u-boot does not
-initialize the VPU controller. So this the board where I have been
-struggling most.
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ arch/arm/boot/dts/aspeed-g5.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-Changes since v2 at [1]:
-- don't remove the "reset-names" property from the main description
-  (only make it optional and switch from items to minItems) to fix
-  a dt_binding_check found by Rob (or his bot) - thanks and sorry!
-
-Changes since v1 at [0]:
-- rename PWRC_GXBB_ETH_ID to PWRC_GXBB_ETHERNET_MEM_ID. Spotted by
-  Neil, thanks!
-- update cover-letter since Neil confirmed (thanks!) that the "dvin"
-  reset really belongs to the VPU on GXBB, GXL and GXM
-- removed RFC status
-
-
-[0] https://patchwork.kernel.org/cover/11489163/
-[1] https://patchwork.kernel.org/cover/11496013/
-
-
-Martin Blumenstingl (4):
-  dt-bindings: power: meson-ee-pwrc: add support for Meson8/8b/8m2
-  dt-bindings: power: meson-ee-pwrc: add support for the Meson GX SoCs
-  soc: amlogic: meson-ee-pwrc: add support for Meson8/Meson8b/Meson8m2
-  soc: amlogic: meson-ee-pwrc: add support for the Meson GX SoCs
-
- .../bindings/power/amlogic,meson-ee-pwrc.yaml | 102 +++++++++++++++---
- drivers/soc/amlogic/meson-ee-pwrc.c           |  98 ++++++++++++++++-
- include/dt-bindings/power/meson-gxbb-power.h  |  13 +++
- include/dt-bindings/power/meson8-power.h      |  13 +++
- 4 files changed, 206 insertions(+), 20 deletions(-)
- create mode 100644 include/dt-bindings/power/meson-gxbb-power.h
- create mode 100644 include/dt-bindings/power/meson8-power.h
-
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 284face7de2c..04ecc8b78f7a 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ #include <dt-bindings/clock/aspeed-clock.h>
++#include <dt-bindings/interrupt-controller/aspeed-scu-ic.h>
+ 
+ / {
+ 	model = "Aspeed BMC";
 -- 
-2.26.1
+2.24.0
 
