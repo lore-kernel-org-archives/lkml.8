@@ -2,157 +2,62 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA14C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E6FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC622080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zjs6lkCZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9FED72080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgDTH1c (ORCPT
+        id S1726240AbgDTH1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:27:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726081AbgDTH1c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:27:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCFBC061A10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:27:31 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j1so5358594wrt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=fLd3utKBUqircZ8XSU/jqQ1o3HOdiOgb+Til4epkr7E=;
-        b=Zjs6lkCZP51RU1eaQIhcoO3FB2Z6jXmILC0s2D752dm7NvsQ+tleMbs3JgJ0uCOger
-         E/tjxVQyBlWGd8C8KH6qKSy877jK0dOi4ouglmI3EUeSGLveLxJsg2RtwSK7UMdZjCHW
-         wFmMR6P5iaO2QXH4ksbOgvB+J3KLMVx+AA8FAPieKGTfyyESTZnp60vvRq2mOL1n6k89
-         exxFo80LcTgKlrntlkSIIORBACYyTzHdDPArnuLiOwJFPLXem/gn0Igo6JBXWNAODiUe
-         tLRv8q8+adw+2X8p6HhK3S5Eako2xzmyRKxo0WGwjta/t8GubKM8ali0sa3m5En/fezW
-         12VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=fLd3utKBUqircZ8XSU/jqQ1o3HOdiOgb+Til4epkr7E=;
-        b=JGITGImu07P+9TTkwALEjaUpvWCWw2atkNSDnXyht2lQ9CXha9AblNnhnuaUzezhsF
-         pPz18/zo5QjN/3BgvRDAOnsOayXJXrmezDG2pBl+2B5kxeRNdWJttSxVc4fDkrL1ujnP
-         pem+3uxrn6p3em4I/wND7ExGPJXiSmwcKoojtxgCdqn8QJlxj1Kj/L6Y27Vyx/hFCJPG
-         nYgEFZoa7uH8fSTGirXkpTilLs64kM+s9ARK+oaIwYQltP9zxmZ9JTgQEMGlc76nC+Z/
-         Vk3seO+QjhbcHWlTYswcSEq2pYxY2mKqXczV3Lhgb1N1tkwcS8zt6GcAM3miOZMREHYo
-         1P2Q==
-X-Gm-Message-State: AGi0PuZDAczCRz4eRtOKttDMZLJDZs6ttX4wHYNnUEVcMjrRx1NDDaQE
-        4CvoiEdLBsZ4U0HD7sutctorZQ==
-X-Google-Smtp-Source: APiQypLZ95duN0TVR/SeVUQItXdNoeinc7W1AvPfKzE2PNLYi2bchw8ulFVhIRvX/oUlL+29V+w4Lg==
-X-Received: by 2002:a5d:5224:: with SMTP id i4mr17175368wra.1.1587367650264;
-        Mon, 20 Apr 2020 00:27:30 -0700 (PDT)
-Received: from dell ([95.149.164.107])
-        by smtp.gmail.com with ESMTPSA id v16sm188543wml.30.2020.04.20.00.27.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 00:27:29 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 08:27:27 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     kgunda@codeaurora.org
-Cc:     Rob Herring <robh@kernel.org>, bjorn.andersson@linaro.org,
-        jingoohan1@gmail.com, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH V5 1/4] backlight: qcom-wled: convert the wled bindings
- to .yaml format
-Message-ID: <20200420072727.GI3737@dell>
-References: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
- <1586274430-28402-2-git-send-email-kgunda@codeaurora.org>
- <20200415150904.GA11174@bogus>
- <557e8bd874256271174402b5faba9c90@codeaurora.org>
+        Mon, 20 Apr 2020 03:27:41 -0400
+Received: from elvis.franken.de ([193.175.24.41]:47913 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726081AbgDTH1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 03:27:40 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jQQqA-00070o-01; Mon, 20 Apr 2020 09:27:38 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id C3D0DC0181; Mon, 20 Apr 2020 09:02:40 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 09:02:40 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: MIPS ioremap cleanups v2
+Message-ID: <20200420070240.GB4627@alpha.franken.de>
+References: <20200416150011.820984-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <557e8bd874256271174402b5faba9c90@codeaurora.org>
+In-Reply-To: <20200416150011.820984-1-hch@lst.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020, kgunda@codeaurora.org wrote:
+On Thu, Apr 16, 2020 at 05:00:04PM +0200, Christoph Hellwig wrote:
+> Hi Thomas,
+> 
+> below is a bunch of cleanups for the MIPS ioremap code.  Compile tested
+> only.
+> 
+> Changes since v1:
+>  - don't remove cpu_has_64bit_gp_regs
+>  - add a new prep patch to stop txx9aclc-ac97 from poking into ioremap
+>    internals
 
-> On 2020-04-15 20:39, Rob Herring wrote:
-> > On Tue, Apr 07, 2020 at 09:17:07PM +0530, Kiran Gunda wrote:
-> > > Convert the qcom-wled bindings from .txt to .yaml format.
-> > > Also replace PM8941 to WLED3 and PMI8998 to WLED4.
-> > > 
-> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> > > Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> > > Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > > ---
-> > >  .../bindings/leds/backlight/qcom-wled.txt          | 154
-> > > ----------------
-> > >  .../bindings/leds/backlight/qcom-wled.yaml         | 201
-> > > +++++++++++++++++++++
-> > >  2 files changed, 201 insertions(+), 154 deletions(-)
-> > >  delete mode 100644
-> > > Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-[...]
+series applied to mips-next.
 
-> > > +        interrupt-names:
-> > > +          items:
-> > > +            - const: ovp
-> > > +            - const: short
-> > 
-> > Move these 2 props to the main section adding a 'minItems: 1'. Then just
-> > define 'minItems: 2' here and 'maxItems: 1' in the 'then' clause.
-> > 
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - label
-> > 
-> > Add:
-> > 
-> > additionalProperties: false
-> > 
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    backlight@d800 {
-> > > +        compatible = "qcom,pm8941-wled";
-> > > +        reg = <0xd800 0x100>;
-> > > +        label = "backlight";
-> > > +
-> > > +        qcom,cs-out;
-> > > +        qcom,current-limit = <20>;
-> > > +        qcom,current-boost-limit = <805>;
-> > > +        qcom,switching-freq = <1600>;
-> > > +        qcom,ovp = <29>;
-> > > +        qcom,num-strings = <2>;
-> > > +        qcom,enabled-strings = <0 1>;
-> > > +     };
-> Thanks for reviewing. I will submit the next revision with all the fixes.
-
-Please trim your replies.
-
-Also, if you agree with all of the review comments, there really is no
-need to reply and/or thank the reviewer.  Simply submit a subsequent
-set with a bumped version indicator.
+Thomas.
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
