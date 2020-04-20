@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582DAC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAADAC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 305EF20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4DA206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387528;
-	bh=VnYYLsz/sYIWnIIfbHRQhrU0U/h+gGUu95y/4hL63Ng=;
+	s=default; t=1587387531;
+	bh=tcAAzz3EXEsisJM9NOt1ZeTYwQanWfluG2iG9Gwhh/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWYi+xQ4lkDMG33+vzCbUDS3WO/uQAKEqzp5ppEmiWpwvWR0A32lhD3fyaNrp7Sx6
-	 PFXiVoEtaf5OTRyXKnZKQP3vOf0Ht0KmgK9UGiPv8z1yAEvjYU0T90xPRC5NLvJWwd
-	 Z5+xzY2KHCXt7KfYQ2155ymQM4i5ZMFhdN+J1ztM=
+	b=l3n5IiYovH8hjgVDcxJxNtl5UUkFRK2cFK4//yJyG+56CTQm0hJBpT0i9PnrGj7Au
+	 E7++UJH4+BtriuSLHxtubOlJ6xyeN8lcJ/+DnN8JbeJSLROgK7nOVhBfBt6yQDcjXd
+	 6nN4hltETR1AjEl7PlQ/ZTQY4alF2PHnz1kIFqlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgDTMme (ORCPT
+        id S1729531AbgDTM6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:42:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35582 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:58:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728207AbgDTMmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:42:31 -0400
+        id S1726482AbgDTMme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:42:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D0E52070B;
-        Mon, 20 Apr 2020 12:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E80102070B;
+        Mon, 20 Apr 2020 12:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386551;
-        bh=VnYYLsz/sYIWnIIfbHRQhrU0U/h+gGUu95y/4hL63Ng=;
+        s=default; t=1587386553;
+        bh=tcAAzz3EXEsisJM9NOt1ZeTYwQanWfluG2iG9Gwhh/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QNLboHzpt4bsLzPhiF6bJ5ppFZkfzYMn74qnWtzeZrY4uWWMllFEn3baG6tFUfnED
-         Ghg8X235d3Q0lXJV+xM+Xc6QxIs1oCeRjD/1ypgC0pyje/ypJpk3T1DfyvRMQoGxvt
-         9u8oyKN/D6O1Sk9te35VE9DrcG9A2IsYDbo1GZG4=
+        b=mJIagZGKzKI84QyPivPjg37fYAwgB2fbr7DPg9MhWbimpW01zVOaIOJYzP8tRcUBo
+         B5+4TQ9yOeEZ2Szsg1irtElGT/xavMUXQn7a9Oc5ZhkV7ZZWeTttnPk6KSK/9pHUyC
+         fuURewMGuHqujh2eAK2TONvmfGa97isvUewt0JzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 42/65] ALSA: usb-audio: Dont override ignore_ctl_error value from the map
-Date:   Mon, 20 Apr 2020 14:38:46 +0200
-Message-Id: <20200420121515.654247313@linuxfoundation.org>
+Subject: [PATCH 5.5 43/65] ALSA: usb-audio: Dont create jack controls for PCM terminals
+Date:   Mon, 20 Apr 2020 14:38:47 +0200
+Message-Id: <20200420121515.904545828@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -60,34 +60,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 3507245b82b4362dc9721cbc328644905a3efa22 upstream.
+commit 7dc3c5a0172e6c0449502103356c3628d05bc0e0 upstream.
 
-The mapping table may contain also ignore_ctl_error flag for devices
-that are known to behave wild.  Since this flag always writes the
-card's own ignore_ctl_error flag, it overrides the value already set
-by the module option, so it doesn't follow user's expectation.
-Let's fix the code not to clear the flag that has been set by user.
+Some funky firmwares set the connector flag even on PCM terminals
+although it doesn't make sense (and even actually the firmware doesn't
+react properly!).  Let's skip creation of jack controls in such a
+case.
 
 BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200412081331.4742-3-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200412081331.4742-4-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/mixer.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 --- a/sound/usb/mixer.c
 +++ b/sound/usb/mixer.c
-@@ -3085,7 +3085,7 @@ static int snd_usb_mixer_controls(struct
- 		if (map->id == state.chip->usb_id) {
- 			state.map = map->map;
- 			state.selector_map = map->selector_map;
--			mixer->ignore_ctl_error = map->ignore_ctl_error;
-+			mixer->ignore_ctl_error |= map->ignore_ctl_error;
- 			break;
- 		}
- 	}
+@@ -2088,7 +2088,8 @@ static int parse_audio_input_terminal(st
+ 	check_input_term(state, term_id, &iterm);
+ 
+ 	/* Check for jack detection. */
+-	if (uac_v2v3_control_is_readable(bmctls, control))
++	if ((iterm.type & 0xff00) != 0x0100 &&
++	    uac_v2v3_control_is_readable(bmctls, control))
+ 		build_connector_control(state->mixer, &iterm, true);
+ 
+ 	return 0;
+@@ -3128,7 +3129,8 @@ static int snd_usb_mixer_controls(struct
+ 			if (err < 0 && err != -EINVAL)
+ 				return err;
+ 
+-			if (uac_v2v3_control_is_readable(le16_to_cpu(desc->bmControls),
++			if ((state.oterm.type & 0xff00) != 0x0100 &&
++			    uac_v2v3_control_is_readable(le16_to_cpu(desc->bmControls),
+ 							 UAC2_TE_CONNECTOR)) {
+ 				build_connector_control(state.mixer, &state.oterm,
+ 							false);
+@@ -3153,7 +3155,8 @@ static int snd_usb_mixer_controls(struct
+ 			if (err < 0 && err != -EINVAL)
+ 				return err;
+ 
+-			if (uac_v2v3_control_is_readable(le32_to_cpu(desc->bmControls),
++			if ((state.oterm.type & 0xff00) != 0x0100 &&
++			    uac_v2v3_control_is_readable(le32_to_cpu(desc->bmControls),
+ 							 UAC3_TE_INSERTION)) {
+ 				build_connector_control(state.mixer, &state.oterm,
+ 							false);
 
 
