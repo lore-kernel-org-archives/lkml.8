@@ -2,258 +2,381 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0ABC54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC58C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF17620BED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4723E2145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:04:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gFEVKjEY"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="uALPsmZO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UKlU/dT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgDTIEH (ORCPT
+        id S1726405AbgDTIE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:04:07 -0400
-Received: from mail-vi1eur05on2073.outbound.protection.outlook.com ([40.107.21.73]:19936
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbgDTIEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:04:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jq+Rs7gHWNGWMVh8pUA/TkbMm0hQEl8Zy6S45XOYoKCOWQFAvl88UGi2kjLHzEoJee6WHB/U9PilkB+QYJ4WGEBG9/REpOuBrlL+EXtpid9NQqhszu/MxI9BPy0ZajA1tB4mscClZAYefj9GhnmBd70tQy3uR4rPT+Kac5BlvUd34zvcP/hBzmNxaOstRxgcfCpNx+9G6ISsrtoi6e+KqWg3yjHjUvjp60VoYBI4kzSJetCbhMOpJaMxlzE4lVL3NJBbwr6NOJLeUZ88mnTW4TNyyZ4+Pc8gX9Zo50rBw9aunndsRiviRFqqPvpePCFrCmh6guIV26e69vMbUcBlkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K153R9bE61aSHkhMp7YFarvDCOF93LtDU0X2NK3WEtQ=;
- b=N6qNRPd3TKu0Lw76v1jOEI7wy9//zkiSGJpuaY2r96UtCWJfxO79l0fn0mTvHYPhE4ANEzNweF2k2w2DMxLmOrsJeZb2ZwO03ZtGG+hT8FKZLI5A/Pcg2Vibn2JV2fWKXHaOyJKENdNrvnxs8yZWG8HbGsG78EKmnMGmdnGCDD2okeyDomk44sxR+suJhUE3wjsJR3k0Fmg1XH+l3Q64EkoYQDRgL8W+JDvroWRu2s7qdqjO4v26+3md3CLCXKO89nZSTBkSmuN0T8kW/t+F5wy2OZThfeXoxZKwnTbUWHXEymrQdZnKP4oBR3LmhIVc52VNYhzy0gRfVWRmBv6BWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K153R9bE61aSHkhMp7YFarvDCOF93LtDU0X2NK3WEtQ=;
- b=gFEVKjEYIW+kFgGOKPfJ305+rKFHD8CXHkd5fCk7caKucLPFqoE/15/dSZrj0nyyuNBDufBIhgp+EEbadoHho/5A+i/NAdN0nwPj3OiWu3ybxOsSJLTydl3J2pGdqfyELMtONUgNjesE1eIHTixYNCADN8O8djDOAh+bjcwlwyQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2709.eurprd04.prod.outlook.com (2603:10a6:4:97::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Mon, 20 Apr
- 2020 08:03:58 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
- 08:03:58 +0000
-From:   peng.fan@nxp.com
-To:     viresh.kumar@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, rjw@rjwysocki.net
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 2/2] cpufreq: imx-cpufreq-dt: support i.MX7ULP
-Date:   Mon, 20 Apr 2020 15:55:14 +0800
-Message-Id: <1587369314-23452-3-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587369314-23452-1-git-send-email-peng.fan@nxp.com>
-References: <1587369314-23452-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR0601CA0010.apcprd06.prod.outlook.com (2603:1096:3::20)
- To DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+        Mon, 20 Apr 2020 04:04:27 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:48945 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725815AbgDTIE0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:04:26 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 108DD5801A8;
+        Mon, 20 Apr 2020 04:04:24 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 20 Apr 2020 04:04:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=0Kri24qKAtWKY81qyS0zWGtZ64i
+        rmvGC+WYSK93rMfU=; b=uALPsmZOaL0+f9UGIFeDjKt7qZmxxJR6GHwe/TvucIz
+        EBWImZ6U5oR2N0RoVF/3lDypQCEMP2rU85cvncJvwDasOPRQvFz+4eU12vj95Nw3
+        FrvOSz7Bl5VEmz6HlLrVrfLVT5woporD6IP7KTaqtYxeoZw84tckDvAK0QfJPUHu
+        aGmAdku18KmmavhMaxhLw6Z0DhpmWDe8WwcTHAdXfyDUQ2UhhaRtgGl2Kp87ep9g
+        ki3u1KeoDvY/fiinb5plU7vIY1BHy5K/cVg0VSwM84qnuTo+ogwABrHoLgg089zT
+        KRmM2n7BRq5wVSwZkDZ4b6r7oq/6wQuZZX+bY2pAb+A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0Kri24
+        qKAtWKY81qyS0zWGtZ64irmvGC+WYSK93rMfU=; b=UKlU/dT4kJV1PCUHF4y69K
+        MWQMUQ3zJZjqsJ0cTi6Wmm7/E1Y4/l7ltphvIfLATz+M7mc46M+XihWWSDhnuAih
+        2R0U5JTW65FTDhWbHOjv1Qeov1SSUKiRCRINA29obUgEBNvm5/N42nKpK14qVett
+        4GMCqrHGfFa4r4FPqZGkg8xz7mn5KWeARoa2FmzlCpGdrVWSDt/vLmnp8D5IZIRt
+        oBVzvPOVN8mue/BLiDqcoziYCrWoz+YQ6CJ2tWWnb9GCTcTzR8NGKr6iaAA5Pt0b
+        IEmQZCxBkCWEh9f6zyI/+cdaoG0tPxN6PSDVL32BINxFMj6082FwODKPkpkAgI4A
+        ==
+X-ME-Sender: <xms:hVedXqMbFkvO3ic8WAiafn6japGnvzEIWJWReMNVoK3MaH6yU8uFgA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgedvgdduvdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:hVedXtMrp0rp5d0lgGi9cHC9PcZoa524HbdAb-JoxdXd9kgfnWeppA>
+    <xmx:hVedXsQnvBzNAoYSMtPG8GgZ347HXehCqQ9LK-dbP3tRW-wXls8b-w>
+    <xmx:hVedXvAPhveWFxl6rMOWBiAviDwqYPO4iQtKeT3suORemteqWt6u7Q>
+    <xmx:iFedXmEMIYxgUKcD1L7itKa2KN6E-Ix-reU6GeCwaMRn_E9s9aedNQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C1214328006A;
+        Mon, 20 Apr 2020 04:04:20 -0400 (EDT)
+Date:   Mon, 20 Apr 2020 10:04:19 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        James Hogan <jhogan@kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
+Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for
+ Imagination GPUs
+Message-ID: <20200420080419.yrucgndz6pblgedm@gilmour.lan>
+References: <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
+ <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
+ <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
+ <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
+ <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
+ <DC0A2DE2-3D77-46F8-8DE1-55050FDACC9B@goldelico.com>
+ <20200415162151.rwym4ioqz27migfn@gilmour.lan>
+ <45F411C0-150B-4FBA-A0E1-B863B3F36DF6@goldelico.com>
+ <20200417102500.erayf6quenp3cvn3@gilmour.lan>
+ <C8816F10-8773-4ECD-B42D-6EEF642476EB@goldelico.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.67) by SG2PR0601CA0010.apcprd06.prod.outlook.com (2603:1096:3::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2921.25 via Frontend Transport; Mon, 20 Apr 2020 08:03:55 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: aa764f64-e488-4bec-15fb-08d7e501612e
-X-MS-TrafficTypeDiagnostic: DB6PR0402MB2709:|DB6PR0402MB2709:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0402MB27092C142D0F6804F623E42888D40@DB6PR0402MB2709.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:826;
-X-Forefront-PRVS: 03793408BA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(956004)(2616005)(36756003)(316002)(186003)(86362001)(16526019)(81156014)(8676002)(8936002)(6506007)(26005)(69590400007)(52116002)(6512007)(478600001)(6486002)(5660300002)(66476007)(4326008)(66946007)(66556008)(2906002)(9686003)(6666004);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: L4IzXwoEZngwua3yxcRj5WVuXjFPOPeDvX8TTeNNI81tQTnuw8Md1Oi1ybVt0TlbI2cnSEWWU0hBZ98v9ZtgsqDlXp8aK9bSomiWaoXx7pniuGgj/SJAr4C2mP+4vNz/EFW5W+JP5F2LDdIB03MC7iQeTnwn8YVYgFSh2SscEiJb2REVPQ6WC1zQASto1pQ6otK/4ni3JZXYw091xExDKGuWykL6SpK6wRsFqWOryoBMrt/DZ3Ozf1ZMRtl954kFhgIPe850YImeZHQ1GAesQ/hWC6lqYJ1hGFddpvY/VXgxidNryk4R+D077irBauNDAjJSoI+D+cS3yL+nPxzrXL9hkr1fmolI7jxMgvM5us4ZkH6i29titwUmdEZHjte3UV2TmqPOBV3vmAZY0tvwDvgpQcs+ZprqWz/+z5vn22HlHYVyUENWWWAGV7LJNYIQv4TWWiHQDTlgHmj8Ui1KUL4VeR9tar5jEgcam3Reycy6LyOgWVm0zL9j+as3ytid
-X-MS-Exchange-AntiSpam-MessageData: c/wD1wQ3U5R6suQfIoQ+fF195FPzwQQ19UXvlxOMT8VdFoSOBbASD1BEh2eAZmDmHi6NA+p0q2yNdRbPtPNvt26nVwbHOlYhix36D7xCTQWlJA/9F9Q+rMFbOTy4zAIDx/KJy7XzLVNEJ78eqCwHzA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa764f64-e488-4bec-15fb-08d7e501612e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 08:03:58.6761
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PvdxxxvFQdl6dgUivwrrOZiVKURUOE4uqpYZw8DwJWUzwg3uXfdQqG4qOGPMTEFTVZLZl+zOh0XBbBNNO/QgzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2709
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="n2wbqupykynsjuri"
+Content-Disposition: inline
+In-Reply-To: <C8816F10-8773-4ECD-B42D-6EEF642476EB@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
 
-i.MX7ULP's ARM core clock design is totally different compared
-with i.MX7D/8M SoCs which supported by imx-cpufreq-dt. It needs
-get_intermediate and target_intermedate to configure clk MUX ready,
-before let OPP configure ARM core clk.
-                                          |---FIRC
-     |------RUN---...---SCS(MUX2) --------|
-ARM --(MUX1)                              |---SPLL_PFD0(CLK_SET_RATE_GATE)
-     |------HSRUN--...--HSRUN_SCS(MUX3)---|
-                                          |---SRIC
+--n2wbqupykynsjuri
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-FIRC is step clk, SPLL_PFD0 is the normal clk driving ARM core.
-MUX2 and MUX3 share same inputs. So if MUX2/MUX3 both sources from
-SPLL_PFD0, both MUXes will lose input when configure SPLL_PFD0.
-So the target_intermediate will configure MUX2/MUX3 to FIRC, to avoid
-ARM core lose clk when configure SPLL_PFD0.
+On Fri, Apr 17, 2020 at 02:15:44PM +0200, H. Nikolaus Schaller wrote:
+> > Am 17.04.2020 um 12:25 schrieb Maxime Ripard <maxime@cerno.tech>:
+> > On Wed, Apr 15, 2020 at 06:42:18PM +0200, H. Nikolaus Schaller wrote:
+> >>> Am 15.04.2020 um 18:21 schrieb Maxime Ripard <maxime@cerno.tech>:
+> >>>=20
+> >>> On Wed, Apr 15, 2020 at 05:09:45PM +0200, H. Nikolaus Schaller wrote:
+> >>>> Hi Maxime,
+> >>>>=20
+> >>>> Hm. Yes. We know that there likely are clocks and maybe reset
+> >>>> but for some SoC this seems to be undocumented and the reset
+> >>>> line the VHDL of the sgx gpu provides may be permanently tied
+> >>>> to "inactive".
+> >>>>=20
+> >>>> So if clocks are optional and not provided, a driver simply can assu=
+me
+> >>>> they are enabled somewhere else and does not have to care about. If
+> >>>> they are specified, the driver can enable/disable them.
+> >>>=20
+> >>> Except that at the hardware level, the clock is always going to be
+> >>> there. You can't control it, but it's there.
+> >>=20
+> >> Sure, we can deduce that from general hardware design knowledge.
+> >> But not every detail must be described in DT. Only the important
+> >> ones.
+> >>=20
+> >>>>> If OMAP is too much of a pain, you can also make
+> >>>>> a separate binding for it, and a generic one for the rest of us.
+> >>>>=20
+> >>>> No, omap isn't any pain at all.
+> >>>>=20
+> >>>> The pain is that some other SoC are most easily defined by clocks in
+> >>>> the gpu node which the omap doesn't need to explicitly specify.
+> >>>>=20
+> >>>> I would expect a much bigger nightmare if we split this into two
+> >>>> bindings variants.
+> >>>>=20
+> >>>>> I'd say that it's pretty unlikely that the clocks, interrupts (and
+> >>>>> even regulators) are optional. It might be fixed on some SoCs, but
+> >>>>> that's up to the DT to express that using fixed clocks / regulators,
+> >>>>> not the GPU binding itself.
+> >>>>=20
+> >>>> omap already has these defined them not to be part of the GPU bindin=
+g.
+> >>>> The reason seems to be that this needs special clock gating control
+> >>>> especially for idle states which is beyond simple clock-enable.
+> >>>>=20
+> >>>> This sysc target-module@56000000 node is already merged and therefore
+> >>>> we are only adding the gpu child node. Without defining clocks.
+> >>>>=20
+> >>>> For example:
+> >>>>=20
+> >>>> 		sgx_module: target-module@56000000 {
+> >>>> 			compatible =3D "ti,sysc-omap4", "ti,sysc";
+> >>>> 			reg =3D <0x5600fe00 0x4>,
+> >>>> 			      <0x5600fe10 0x4>;
+> >>>> 			reg-names =3D "rev", "sysc";
+> >>>> 			ti,sysc-midle =3D <SYSC_IDLE_FORCE>,
+> >>>> 					<SYSC_IDLE_NO>,
+> >>>> 					<SYSC_IDLE_SMART>;
+> >>>> 			ti,sysc-sidle =3D <SYSC_IDLE_FORCE>,
+> >>>> 					<SYSC_IDLE_NO>,
+> >>>> 					<SYSC_IDLE_SMART>;
+> >>>> 			clocks =3D <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
+> >>>> 			clock-names =3D "fck";
+> >>>> 			#address-cells =3D <1>;
+> >>>> 			#size-cells =3D <1>;
+> >>>> 			ranges =3D <0 0x56000000 0x2000000>;
+> >>>>=20
+> >>>> 			gpu: gpu@0 {
+> >>>> 				compatible =3D "ti,omap5-sgx544-116", "img,sgx544-116", "img,sgx=
+544";
+> >>>> 				reg =3D <0x0 0x10000>;
+> >>>> 				interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> >>>> 			};
+> >>>> 		};
+> >>>>=20
+> >>>> The jz4780 example will like this:
+> >>>>=20
+> >>>> 	gpu: gpu@13040000 {
+> >>>> 		compatible =3D "ingenic,jz4780-sgx540-130", "img,sgx540-130", "img=
+,sgx540";
+> >>>> 		reg =3D <0x13040000 0x4000>;
+> >>>>=20
+> >>>> 		clocks =3D <&cgu JZ4780_CLK_GPU>;
+> >>>> 		clock-names =3D "gpu";
+> >>>>=20
+> >>>> 		interrupt-parent =3D <&intc>;
+> >>>> 		interrupts =3D <63>;
+> >>>> 	};
+> >>>>=20
+> >>>> So the question is which one is "generic for the rest of us"?
+> >>>=20
+> >>> I'd say the latter.
+> >>=20
+> >> Why?
+> >>=20
+> >> TI SoC seem to be the broadest number of available users
+> >> of sgx5xx in the past and nowadays. Others are more the exception.
+> >=20
+> > And maybe TI has some complicated stuff around the GPU that others don'=
+t have?
+>=20
+> Looks so.
+>=20
+> > If I look quickly at the Allwinner stuff, I see nothing looking alike i=
+n the
+> > SoC, so making the binding like that for everyone just because TI did s=
+omething
+> > doesn't really make much sense.
+>=20
+> That is why I propose to make the clocks optional. This solves both
+> cases in a simple and neat way.
+>=20
+> >=20
+> >>> If your clock is optional, then you define it but don't mandate
+> >>> it. Not documenting it will only result in a mess where everyone will
+> >>> put some clock into it, possibly with different semantics each and
+> >>> every time.
+> >>=20
+> >> So you mean that we should require a dummy clock for the omap gpu node
+> >> or did I misunderstand that?
+> >>=20
+> >> Well, yes there is of course a clock connection between the
+> >> omap target-module and the sgx but it is IMHO pointless to
+> >> describe it because it can't and does not need to be controlled
+> >> separately.
+> >>=20
+> >> As said the target-module is already accepted and upstream and my
+> >> proposal is to get the gpu node described there. There is simply
+> >> no need for a clocks node for the omap.
+> >=20
+> > There is no need for a clocks property *currently* *on the OMAP*.
+>=20
+> Yes. But why "currently"? Do you think the OMAPs we already have
+> defined and tested will change?
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/cpufreq/imx-cpufreq-dt.c | 84 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 82 insertions(+), 2 deletions(-)
+Like I said, DVFS is likely to be one in the future.
 
-diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufreq-dt.c
-index de206d2745fe..b019b05940e8 100644
---- a/drivers/cpufreq/imx-cpufreq-dt.c
-+++ b/drivers/cpufreq/imx-cpufreq-dt.c
-@@ -3,7 +3,9 @@
-  * Copyright 2019 NXP
-  */
- 
-+#include <linux/clk.h>
- #include <linux/cpu.h>
-+#include <linux/cpufreq.h>
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-@@ -12,8 +14,11 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_opp.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- 
-+#include "cpufreq-dt.h"
-+
- #define OCOTP_CFG3_SPEED_GRADE_SHIFT	8
- #define OCOTP_CFG3_SPEED_GRADE_MASK	(0x3 << 8)
- #define IMX8MN_OCOTP_CFG3_SPEED_GRADE_MASK	(0xf << 8)
-@@ -22,13 +27,62 @@
- #define IMX8MP_OCOTP_CFG3_MKT_SEGMENT_SHIFT    5
- #define IMX8MP_OCOTP_CFG3_MKT_SEGMENT_MASK     (0x3 << 5)
- 
-+#define IMX7ULP_MAX_RUN_FREQ	528000
-+
- /* cpufreq-dt device registered by imx-cpufreq-dt */
- static struct platform_device *cpufreq_dt_pdev;
- static struct opp_table *cpufreq_opp_table;
-+static struct device *cpu_dev;
-+
-+enum IMX7ULP_CPUFREQ_CLKS {
-+	ARM,
-+	CORE,
-+	SCS_SEL,
-+	HSRUN_CORE,
-+	HSRUN_SCS_SEL,
-+	FIRC,
-+};
-+
-+static struct clk_bulk_data imx7ulp_clks[] = {
-+	{ .id = "arm" },
-+	{ .id = "core" },
-+	{ .id = "scs_sel" },
-+	{ .id = "hsrun_core" },
-+	{ .id = "hsrun_scs_sel" },
-+	{ .id = "firc" },
-+};
-+
-+static unsigned int imx7ulp_get_intermediate(struct cpufreq_policy *policy,
-+					     unsigned int index)
-+{
-+	return clk_get_rate(imx7ulp_clks[FIRC].clk);
-+}
-+
-+static int imx7ulp_target_intermediate(struct cpufreq_policy *policy,
-+					unsigned int index)
-+{
-+	unsigned int newfreq = policy->freq_table[index].frequency;
-+
-+	clk_set_parent(imx7ulp_clks[SCS_SEL].clk, imx7ulp_clks[FIRC].clk);
-+	clk_set_parent(imx7ulp_clks[HSRUN_SCS_SEL].clk, imx7ulp_clks[FIRC].clk);
-+
-+	if (newfreq > IMX7ULP_MAX_RUN_FREQ)
-+		clk_set_parent(imx7ulp_clks[ARM].clk,
-+			       imx7ulp_clks[HSRUN_CORE].clk);
-+	else
-+		clk_set_parent(imx7ulp_clks[ARM].clk, imx7ulp_clks[CORE].clk);
-+
-+	return 0;
-+}
-+
-+static struct cpufreq_dt_platform_data imx7ulp_data = {
-+	.target_intermediate = imx7ulp_target_intermediate,
-+	.get_intermediate = imx7ulp_get_intermediate,
-+};
- 
- static int imx_cpufreq_dt_probe(struct platform_device *pdev)
- {
--	struct device *cpu_dev = get_cpu_device(0);
-+	struct platform_device *dt_pdev;
- 	u32 cell_value, supported_hw[2];
- 	int speed_grade, mkt_segment;
- 	int ret;
-@@ -36,6 +90,29 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
- 	if (!of_find_property(cpu_dev->of_node, "cpu-supply", NULL))
- 		return -ENODEV;
- 
-+	cpu_dev = get_cpu_device(0);
-+
-+	if (of_machine_is_compatible("fsl,imx7ulp")) {
-+		ret = clk_bulk_get(cpu_dev, ARRAY_SIZE(imx7ulp_clks),
-+				   imx7ulp_clks);
-+		if (ret)
-+			return ret;
-+
-+		dt_pdev = platform_device_register_data(NULL, "cpufreq-dt",
-+							-1, &imx7ulp_data,
-+							sizeof(imx7ulp_data));
-+		if (IS_ERR(dt_pdev)) {
-+			clk_bulk_put(ARRAY_SIZE(imx7ulp_clks), imx7ulp_clks);
-+			ret = PTR_ERR(dt_pdev);
-+			dev_err(&pdev->dev, "Failed to register cpufreq-dt: %d\n", ret);
-+			return ret;
-+		}
-+
-+		cpufreq_dt_pdev = dt_pdev;
-+
-+		return 0;
-+	}
-+
- 	ret = nvmem_cell_read_u32(cpu_dev, "speed_grade", &cell_value);
- 	if (ret)
- 		return ret;
-@@ -98,7 +175,10 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
- static int imx_cpufreq_dt_remove(struct platform_device *pdev)
- {
- 	platform_device_unregister(cpufreq_dt_pdev);
--	dev_pm_opp_put_supported_hw(cpufreq_opp_table);
-+	if (!of_machine_is_compatible("fsl,imx7ulp"))
-+		dev_pm_opp_put_supported_hw(cpufreq_opp_table);
-+	else
-+		clk_bulk_put(ARRAY_SIZE(imx7ulp_clks), imx7ulp_clks);
- 
- 	return 0;
- }
--- 
-2.16.4
+> >> What I also assume is that developers of DTS know what they do.
+> >> So the risk that there is different semantics is IMHO very low.
+> >=20
+> > Well, they know what they do if you document the binding. Let's say I h=
+ave two
+> > clocks now on my SoC, and you just document that you want a clocks prop=
+erty,
+> > with a generic name in clock-names like "gpu".
+>=20
+> Yes, that is what I want to propose for v7:
+>=20
+>   clocks:
+>     maxItems: 1
+>=20
+>   clock-names:
+>     maxItems: 1
+>     items:
+>       - const: gpu
 
+If you document what the "gpu" clock is supposed to be.
+
+Is it the clock for the bus (clocking the register part of the GPU), the cl=
+ock
+for the GPU cores? Something else?
+
+> >> If you agree I can add the clocks/clock-names property as an
+> >> optional property. This should solve omap and all others.
+> >=20
+> > With the above example, what clock should I put in there? In which orde=
+r? This
+> > isn't some random example pulled out of nowhere. The Allwinner A31 has =
+(at
+> > least) 4 clocks for the GPU, 1 reset line and 1 regulator, so I can onl=
+y assume
+> > that the GPU actually needs at least that amount to be properly integra=
+ted into
+> > an SoC.
+>=20
+> Ah, now I understand your motivation: you have access and experience with
+> the A31 and you know that our proposal doesn't fit to it.
+
+Not only the A31. If you don't document what your expectations are for a ge=
+neric
+component like that, every SoC will assume that your GPU clock is something
+different and you won't be able to make any sense of it in your driver.
+
+> From what I know from your description is that the A31 is quite special w=
+ith
+> 4 GPU clocks... Are they all really for the GPU or 3 of them for the inte=
+rface
+> logic (like on OMAP which separates between "functional clocks" and "inte=
+rface
+> clocks")? Or are there 4 groups of GPU cores with a separate clock for ea=
+ch one?
+
+1 is the equivalent of the interface clock, the others seem to be for the
+functional clocks.
+
+> So what would be your proposal for the A31 DT?
+>=20
+> Then I get a chance to compare DT snippets and try to make a mixture for
+> the bindings.
+
+You'd have to know the GPU to do that, and I don't.
+
+> >>> This has nothing to do with the binding being complete. And if you use
+> >>> a binding like this one, you'll be severely limited when you'll want
+> >>> to implement things like DVFS.
+> >>=20
+> >> Now you have unhooked me... Nobody seems to know if and how DVFS can be
+> >> applied to SGX. IMHO we should bake small bread first and get initial
+> >> support into mainline.
+> >=20
+> > On the software side, yes, of course. But the discussion here doesn't h=
+ave much
+> > to do with software support, this is about the hardware. No matter if y=
+ou enable
+> > DVFS or not, you'll have those resources connected to the GPU.
+> >=20
+> > And if you want to enable the strict minimum in DT for now and expand i=
+t later
+> > as the software gains support for more stuff, then you'll have to deal =
+with the
+> > minimal stuff in software later-on to keep the backward compatibility.
+>=20
+> That is IMHO common practise everywhere. Sometimes you even have to adapt
+> years old DT to new limitations of the drivers (this happened recently for
+> combination of SPI and GPIO).
+
+To some extent, yes. But those old bindings that turn out to be wrong at le=
+ast
+contain most infos about the hardware, even though it's incomplete or flawe=
+d.
+Your proposal doesn't.
+
+> And you can still write two different drivers for a single bindings docum=
+ent
+> or use the .data field of the compatibility table. And I think clocks and=
+ regulators
+> can also be referenced by name if they are not defined in DT. This is not=
+ a
+> "single variety" style, but a potential solution.
+>=20
+> What I want to say: there are many roads to Rome.
+
+What I want to say is: all the roads you listed above are going to be painf=
+ul.
+Take your time, have a generic driver running from your generic binding you=
+ want
+to introduce on all the SoCs you want to support, and *then* start this
+discussion again.
+
+Maxime
+
+--n2wbqupykynsjuri
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp1XgwAKCRDj7w1vZxhR
+xYvmAP9KHUdB4quNWFa7siduKh9jQCUA3ovI+3VM4p8xzh0qPgEA+ZPetkVI8hGE
+xuIp0fgwWj1NWw9tW+3i+1pkI4J16Ag=
+=zM/B
+-----END PGP SIGNATURE-----
+
+--n2wbqupykynsjuri--
