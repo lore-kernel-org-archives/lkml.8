@@ -2,84 +2,155 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48718C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E24C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFAD214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA5F206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgDTECp (ORCPT
+        id S1726006AbgDTEIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 00:02:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2411 "EHLO huawei.com"
+        Mon, 20 Apr 2020 00:08:51 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:59174 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725681AbgDTECp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 00:02:45 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AAF9E83FB686C24A5816;
-        Mon, 20 Apr 2020 12:02:42 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Apr 2020
- 12:02:36 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <enwlinux@gmail.com>,
-        <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] ext4: remove unnecessary comparisons to bool
-Date:   Mon, 20 Apr 2020 12:29:18 +0800
-Message-ID: <20200420042918.19459-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        id S1725710AbgDTEIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 00:08:51 -0400
+Received: from [10.130.0.79] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj2hOIJ1eDPgpAA--.3S3;
+        Mon, 20 Apr 2020 12:08:47 +0800 (CST)
+Subject: Re: [PATCH 3/4] kmod: Return directly if module name is empty in
+ request_module()
+To:     Luis Chamberlain <mcgrof@kernel.org>, Jessica Yu <jeyu@kernel.org>
+References: <1587187200-13109-1-git-send-email-yangtiezhu@loongson.cn>
+ <1587187200-13109-3-git-send-email-yangtiezhu@loongson.cn>
+ <20200418054519.GX11244@42.do-not-panic.com>
+ <CAB=NE6XD7XCmsTAg3+mw=b8WZnKJiwha5t4DBJFt5w+b_DsNkg@mail.gmail.com>
+ <b9c6e6e6-571a-b957-755f-72f2b0f538c5@loongson.cn>
+ <20200418071905.GE11244@42.do-not-panic.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <f7dad626-ab6d-f362-acf1-d24e5f5cdf47@loongson.cn>
+Date:   Mon, 20 Apr 2020 12:08:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200418071905.GE11244@42.do-not-panic.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxj2hOIJ1eDPgpAA--.3S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr45WrW8XFyrCF4ftw4rGrg_yoW5GF1DpF
+        W5JFs5tF4rtr1jvFn2yr1kWFySgw4UJFs5X3WDur1rZFn0grnIyr1UGw15ury5ur4xKr10
+        yr4vqrW3ur15GFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE
+        67vIY487MxkIecxEwVAFwVW8XwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+        1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+        IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+        nxnUUI43ZEXa7VUjGYLDUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following coccicheck warning:
+On 04/18/2020 03:19 PM, Luis Chamberlain wrote:
+> On Sat, Apr 18, 2020 at 01:58:45PM +0800, Tiezhu Yang wrote:
+>> On 04/18/2020 01:48 PM, Luis Chamberlain wrote:
+>>> On Fri, Apr 17, 2020 at 11:45 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>>>> On Sat, Apr 18, 2020 at 01:19:59PM +0800, Tiezhu Yang wrote:
+>>>>> If module name is empty, it is better to return directly at the beginning
+>>>>> of request_module() without doing the needless call_modprobe() operation.
+>>>>>
+>>>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>>>> ---
+>>>>>    kernel/kmod.c | 5 +++++
+>>>>>    1 file changed, 5 insertions(+)
+>>>>>
+>>>>> diff --git a/kernel/kmod.c b/kernel/kmod.c
+>>>>> index 3cd075c..5851444 100644
+>>>>> --- a/kernel/kmod.c
+>>>>> +++ b/kernel/kmod.c
+>>>>> @@ -28,6 +28,8 @@
+>>>>>
+>>>>>    #include <trace/events/module.h>
+>>>>>
+>>>>> +#define MODULE_NOT_FOUND 256
+>>>>> +
+>>>>>    /*
+>>>>>     * Assuming:
+>>>>>     *
+>>>>> @@ -144,6 +146,9 @@ int __request_module(bool wait, const char *fmt, ...)
+>>>>>         if (ret >= MODULE_NAME_LEN)
+>>>>>                 return -ENAMETOOLONG;
+>>>>>
+>>>>> +     if (strlen(module_name) == 0)
+>>>>> +             return MODULE_NOT_FOUND;
+>>>> I'd rather we just use something standard like -EINVAL.
+>>>> What do we return if its not found? Then use that value.
+>>> Also, are we testing for this condition yet? If not can we add one?
+>> Yes, kmod_test_0001_driver() in tools/testing/selftests/kmod/kmod.sh tests
+>> this case and expects result MODULE_NOT_FOUND which is 256.
+> OK I see now I had put:
+>
+> errno_name_to_val()
+> {
+>          case "$1" in
+> 	# kmod calls modprobe and upon of a module not found
+> 	# modprobe returns just 1... However in the
+> 	# kernel we *sometimes* see 256...
+> 	MODULE_NOT_FOUND)
+> 		echo 256;;
+>
+> I found that through testing, however there was nothing set in stone,
+> nothing documented. While you are at it, can you find the places where
+> this is returned in the kernel code? We should clear this up and
+> se things straight. We cannot change what we gave userspace already
+> though.
 
-fs/ext4/extents_status.c:1057:5-28: WARNING: Comparison to bool
-fs/ext4/inode.c:2314:18-24: WARNING: Comparison to bool
+Call Trace:
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- fs/ext4/extents_status.c | 2 +-
- fs/ext4/inode.c          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+__request_module()
+       |
+       |
+call_modprobe()
+       |
+       |
+call_usermodehelper_exec()   -- retval = sub_info->retval;
+       |
+       |
+call_usermodehelper_exec_work()
+       |
+       |
+call_usermodehelper_exec_sync()   -- sub_info->retval = ret;
+       |
+       | --> call_usermodehelper_exec_async() --> do_execve()
+       |
+kernel_wait4(pid, (int __user *)&ret, 0, NULL);
 
-diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
-index d996b44d2265..e75171535375 100644
---- a/fs/ext4/extents_status.c
-+++ b/fs/ext4/extents_status.c
-@@ -1054,7 +1054,7 @@ static void count_rsvd(struct inode *inode, ext4_lblk_t lblk, long len,
- 	end = (end > ext4_es_end(es)) ? ext4_es_end(es) : end;
- 
- 	/* record the first block of the first delonly extent seen */
--	if (rc->first_do_lblk_found == false) {
-+	if (!rc->first_do_lblk_found) {
- 		rc->first_do_lblk = i;
- 		rc->first_do_lblk_found = true;
- 	}
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 2a4aae6acdcb..acb8fedcba76 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -2311,7 +2311,7 @@ static int mpage_map_and_submit_buffers(struct mpage_da_data *mpd)
- 			 * mapping, or maybe the page was submitted for IO.
- 			 * So we return to call further extent mapping.
- 			 */
--			if (err < 0 || map_bh == true)
-+			if (err < 0 || map_bh)
- 				goto out;
- 			/* Page fully mapped - let IO run! */
- 			err = mpage_submit_page(mpd, page);
--- 
-2.21.1
+__request_module() returns the exist status of child process, if module name
+is empty or non-exist, sub_info->retval is 256 after call kernel_wait4().
+
+Should I add this analysis to the commit message?
+
+Thanks,
+Tiezhu Yang
+
+>
+>    Luis
 
