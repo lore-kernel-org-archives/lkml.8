@@ -2,86 +2,144 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B54C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD75C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7387B2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF911221F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:59:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="o7wfvh8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgDTBlq (ORCPT
+        id S1726055AbgDTB75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 21:41:46 -0400
-Received: from mga01.intel.com ([192.55.52.88]:62195 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgDTBlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 21:41:45 -0400
-IronPort-SDR: k63PrsX+EFjpAUiRPi3dYAdXjG8EGqHL497ByXXBVIHwuWrM28wfonsSS8yAVrvCKDQ6KhXLhE
- SaDWJyhZ4Htg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 18:41:45 -0700
-IronPort-SDR: cQywvut7KlsssAmI6HgQ7kpCWGMEr1J7+8bZivrKwjlPT0m2qEsYrcVay35ImJ9Ich05Z+vfMv
- /YXBPe0W1wlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
-   d="scan'208";a="455470756"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Apr 2020 18:41:44 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <tim.c.chen@linux.intel.com>
-Subject: Re: [PATCH 4/4] mm/swapfile.c: move new_cluster to check free_clusters directly
-References: <20200419013921.14390-1-richard.weiyang@gmail.com>
-        <20200419013921.14390-4-richard.weiyang@gmail.com>
-Date:   Mon, 20 Apr 2020 09:41:43 +0800
-In-Reply-To: <20200419013921.14390-4-richard.weiyang@gmail.com> (Wei Yang's
-        message of "Sun, 19 Apr 2020 01:39:21 +0000")
-Message-ID: <87blnnszl4.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+        Sun, 19 Apr 2020 21:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726006AbgDTB74 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 21:59:56 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389A9C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 18:59:56 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id t8so2014973qvw.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 18:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=vkFQlxjluaLtrudrML7Hdba6QFiTPAjUT4zOSRXEnfM=;
+        b=o7wfvh8fln2uoxXmOPT2RWE19ikHtebxh63fRTVH7xEkORUZND3NErW0kJOV7KG7s0
+         /Ddcb8FqV9ymRmuZSAnprVbF7b70k9N95KiG0eK5a4QJj2CckeXQRoYYCi7W3TcNl37s
+         MohvOt/hPABYt7Ikozc3doiM2UYjqQrQ+ANUu6+d+giqPBpj+BWu9lwgVDzN7cveImIv
+         0o8UIN5LRwukERcKXZ5Bv4HFW1aQI2+TH5oWqpsjkrHrHqiPWK1pV3zg+iEztPSrn/am
+         8Kd3oOHfsPTCFJ38qRhr9mctMgIuojNJgQQiI9f/ZK9OtPTEtYC7IAOJzYUQXhz62GTy
+         Zqow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=vkFQlxjluaLtrudrML7Hdba6QFiTPAjUT4zOSRXEnfM=;
+        b=FM+2+eN5r41og5A6k+QYis4en2a/cWUQludupYTT79FvrmRcMy5YEohGTW799Zy5EO
+         qddUr7zw5aosZ3iwim9L4qo/eCgG8SFfkLwg+JbHTj0ihDI/YMFj6LVqv/IZJrwV1HHn
+         JAhaQBF6/peTUDVomXX7/X16G1ZCrb42KcIsIr16a1fVgO6yQONzGTpied4fWxRgngmT
+         91ou1L0om4GiqrfKh1qhBIrOEXL26I64R3eO0o7QJ62l2x/xfdZo4f/LoUXZipRK3L0Y
+         NZrWPWeTnrKARcyRjPMcR/albA5cYxwk/2fSA+VtUL43ME7szGsxSG4mMrDvFCD/3+YM
+         QdLw==
+X-Gm-Message-State: AGi0PuaityGOnZR1DGWldqscpTUC/sJAkLSdc675l3BvJ+UoG7OEvhpo
+        /Qizz0oGnpTutaGuJ/v4+hMB5g==
+X-Google-Smtp-Source: APiQypIxMDh4QJ9n6P2CvXw9d7499u5wg4jEK7Cnn3QicKR6bY7jLy5wcKE0IBi1MI1nlomxb5CCEA==
+X-Received: by 2002:a0c:b90a:: with SMTP id u10mr12965104qvf.92.1587347994341;
+        Sun, 19 Apr 2020 18:59:54 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id w10sm1228160qka.19.2020.04.19.18.59.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 Apr 2020 18:59:53 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: linux-next test error: WARNING: suspicious RCU usage in
+ ovs_ct_exit
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <CACT4Y+YR5Y8OQ4MCdCA2eoQM=GdBXN39O4HahWtL0sdqwsB=mg@mail.gmail.com>
+Date:   Sun, 19 Apr 2020 21:59:52 -0400
+Cc:     syzbot <syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>, dev@openvswitch.org,
+        kuba@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4A33114F-0173-4C12-8FD1-3F863318A4D3@lca.pw>
+References: <000000000000e642a905a0cbee6e@google.com>
+ <CACT4Y+YR5Y8OQ4MCdCA2eoQM=GdBXN39O4HahWtL0sdqwsB=mg@mail.gmail.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wei Yang <richard.weiyang@gmail.com> writes:
 
-> Each time it needs jump to new_cluster, it is sure current
-> percpu_cluster is null.
->
-> Move the new_cluster to check free_clusters directly.
->
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> ---
->  mm/swapfile.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 07b0bc095411..78e92ff14c79 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -603,9 +603,9 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
->  	struct swap_cluster_info *ci;
->  	unsigned long tmp, max;
->  
-> -new_cluster:
->  	cluster = this_cpu_ptr(si->percpu_cluster);
->  	if (cluster_is_null(&cluster->index)) {
-> +new_cluster:
->  		if (!cluster_list_empty(&si->free_clusters)) {
->  			cluster->index = si->free_clusters.head;
->  			cluster->next = cluster_next(&cluster->index) *
 
-In swap_do_scheduled_discard(), we will unlock si->lock, so the
-percpu_cluster may be changed after we releasing the lock.  Or the
-current thread may be moved to a different CPU.
+> On Apr 18, 2020, at 3:02 AM, Dmitry Vyukov <dvyukov@google.com> wrote:
+>=20
+> On Sat, Mar 14, 2020 at 8:57 AM syzbot
+> <syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com> wrote:
+>>=20
+>> Hello,
+>>=20
+>> syzbot found the following crash on:
+>>=20
+>> HEAD commit:    2e602db7 Add linux-next specific files for 20200313
+>> git tree:       linux-next
+>> console output: =
+https://syzkaller.appspot.com/x/log.txt?x=3D16669919e00000
+>> kernel config:  =
+https://syzkaller.appspot.com/x/.config?x=3Dcf2879fc1055b886
+>> dashboard link: =
+https://syzkaller.appspot.com/bug?extid=3D7ef50afd3a211f879112
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>=20
+>> Unfortunately, I don't have any reproducer for this crash yet.
+>>=20
+>> IMPORTANT: if you fix the bug, please add the following tag to the =
+commit:
+>> Reported-by: syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com
+>=20
+> +linux-next, Stephen for currently open linux-next build/boot failure
+>=20
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+>> WARNING: suspicious RCU usage
+>> 5.6.0-rc5-next-20200313-syzkaller #0 Not tainted
+>> -----------------------------
+>> net/openvswitch/conntrack.c:1898 RCU-list traversed in non-reader =
+section!
 
-Best Regards,
-Huang, Ying
+Those should be fixed by,
+
+=
+https://lore.kernel.org/netdev/1587063451-54027-1-git-send-email-xiangxia.=
+m.yue@gmail.com/
+
+
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+>> WARNING: suspicious RCU usage
+>> 5.6.0-rc5-next-20200313-syzkaller #0 Not tainted
+>> -----------------------------
+>> net/ipv4/ipmr.c:1757 RCU-list traversed in non-reader section!!
+
+and,
+
+=
+https://lore.kernel.org/netdev/20200222063835.14328-1-frextrite@gmail.com/=
+
+
+It looks like both are waiting for David to pick up.=
