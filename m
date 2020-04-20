@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A210C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EE5C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEBF2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B807C20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386845;
-	bh=X+b+QV3PvZjiosKYrqlH8COZv8vfZjJYoAlH/tuFyhE=;
+	s=default; t=1587386849;
+	bh=DSUepHg9aX4y6qRmRkTuw/85pmvXZiSkSb8A/au42ZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I748oYMFvdKvGp+BnNUdWO5/+T0HBU5MiuN5AWCfdSHv6vV9ydQgaUlqFTorVIvMk
-	 9MZZwgx4lNyRh7rfofNvRHug7gF6W2Frke1I2bdl7OU3cpYW8toh4O+vIHUYV56CLH
-	 bQ4Td7riSCarBNZprGXypQxDptVhW/ogPaOR9CC0=
+	b=EPDUXpc9iW2xlt56gCN7i8WS8N+6UKXzdhcWMxJFLwOlnl3AuQRnaQKG1+re7VMp2
+	 btqSvrEsF6LnLf81sP041RZS7TSNli8QwPpoBnETcWk+a9NPh35Xv2V8u3qlI4dsCi
+	 ZfuLqa/Pv2BOG24wl6FMOM+hB/IE8AOiruDPgsbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgDTMrY (ORCPT
+        id S1729094AbgDTMr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:47:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43276 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729071AbgDTMrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:47:21 -0400
+        id S1729082AbgDTMr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:47:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D91422242;
-        Mon, 20 Apr 2020 12:47:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5768A206DD;
+        Mon, 20 Apr 2020 12:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386840;
-        bh=X+b+QV3PvZjiosKYrqlH8COZv8vfZjJYoAlH/tuFyhE=;
+        s=default; t=1587386845;
+        bh=DSUepHg9aX4y6qRmRkTuw/85pmvXZiSkSb8A/au42ZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Oo95t4VBiyVYqmSa/u35cGd1YnJf+cZAn1n9F9J0DDu/SVgySVv5tpaEDsg764lU
-         Q+0/KkhoSTICAO94nmYS8j8eWwx2GcbJVFTM2ZxUUeHaihDVE8oQbtrxarsU1tnFx/
-         7U8lX/6ja8+9WX+vSmZGHJrYer5alcscDEziS06E=
+        b=Le/EvODU/JbjLe3VqR+wJHvn5R+u82T2W49lKV74CRczD5Eiw7adpU+NZu2eiA3nt
+         NgCLaUfbtP8r4ggcwNc7jWpQwTHYXl7qUKHwYiKLyzzGGh+y0h1ciywoQfYFtLf+Xz
+         ziZ5EcPtNkZCpr6IKHp3ObapD4ho4rVTckAqef74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Yakunin <zeil@yandex-team.ru>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        stable@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 09/60] net: revert default NAPI poll timeout to 2 jiffies
-Date:   Mon, 20 Apr 2020 14:38:47 +0200
-Message-Id: <20200420121503.672835099@linuxfoundation.org>
+Subject: [PATCH 5.4 01/60] amd-xgbe: Use __napi_schedule() in BH context
+Date:   Mon, 20 Apr 2020 14:38:39 +0200
+Message-Id: <20200420121500.708342089@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,35 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit a4837980fd9fa4c70a821d11831698901baef56b ]
+[ Upstream commit d518691cbd3be3dae218e05cca3f3fc9b2f1aa77 ]
 
-For HZ < 1000 timeout 2000us rounds up to 1 jiffy but expires randomly
-because next timer interrupt could come shortly after starting softirq.
+The driver uses __napi_schedule_irqoff() which is fine as long as it is
+invoked with disabled interrupts by everybody. Since the commit
+mentioned below the driver may invoke xgbe_isr_task() in tasklet/softirq
+context. This may lead to list corruption if another driver uses
+__napi_schedule_irqoff() in IRQ context.
 
-For commonly used CONFIG_HZ=1000 nothing changes.
+Use __napi_schedule() which safe to use from IRQ and softirq context.
 
-Fixes: 7acf8a1e8a28 ("Replace 2 jiffies with sysctl netdev_budget_usecs to enable softirq tuning")
-Reported-by: Dmitry Yakunin <zeil@yandex-team.ru>
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Fixes: 85b85c853401d ("amd-xgbe: Re-issue interrupt if interrupt status not cleared")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/dev.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/amd/xgbe/xgbe-drv.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3863,7 +3863,8 @@ EXPORT_SYMBOL(netdev_max_backlog);
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+@@ -514,7 +514,7 @@ static void xgbe_isr_task(unsigned long
+ 				xgbe_disable_rx_tx_ints(pdata);
  
- int netdev_tstamp_prequeue __read_mostly = 1;
- int netdev_budget __read_mostly = 300;
--unsigned int __read_mostly netdev_budget_usecs = 2000;
-+/* Must be at least 2 jiffes to guarantee 1 jiffy timeout */
-+unsigned int __read_mostly netdev_budget_usecs = 2 * USEC_PER_SEC / HZ;
- int weight_p __read_mostly = 64;           /* old backlog weight */
- int dev_weight_rx_bias __read_mostly = 1;  /* bias for backlog weight */
- int dev_weight_tx_bias __read_mostly = 1;  /* bias for output_queue quota */
+ 				/* Turn on polling */
+-				__napi_schedule_irqoff(&pdata->napi);
++				__napi_schedule(&pdata->napi);
+ 			}
+ 		} else {
+ 			/* Don't clear Rx/Tx status if doing per channel DMA
 
 
