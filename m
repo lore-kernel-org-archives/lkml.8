@@ -2,86 +2,99 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F66C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26E0C55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84D9620857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:32:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N5dxBH/K"
+	by mail.kernel.org (Postfix) with ESMTP id BCF3D20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgDTWct (ORCPT
+        id S1728092AbgDTWdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:32:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:56629 "EHLO ozlabs.org"
+        Mon, 20 Apr 2020 18:33:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51358 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgDTWcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:32:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 495hKT56G5z9sSG;
-        Tue, 21 Apr 2020 08:32:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587421965;
-        bh=O72eIpCf8zazYzgsrKNeUeXHmZLVFVsmnfoQj4nfRgk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=N5dxBH/KnfKMZFNwsa+mKD3p6OUnHJafx/Y+aLki50dFyZ0juEUlUINeliT3+oWr8
-         uo0aJhBCwqb49oqOYiszM19u99msYcUPkxVovCAH6zcE/x34iXfYEmMJeDMFSBDINb
-         pVj/HfqtNf+Bo9AJxSVFacv66jNrVqFvn2/qsMXahWiSK0eEvwqXN4eG0JvyJaGddk
-         AC3e6r9/e14woatkEiG17uSZDO4U/GFJW9TGIywxk2CaWzKeAXyFjnh7Zvoev/BDob
-         dzAvNZVN57YzgWgWP4IBxvTsnrKLUNQfUh/cbiiVuzRLVOnY/HnERJ7N6BJmytiM76
-         kmmFjkJFJgiCQ==
-Date:   Tue, 21 Apr 2020 08:32:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the kvm tree
-Message-ID: <20200421083238.7b2751fb@canb.auug.org.au>
+        id S1726522AbgDTWdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 18:33:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AD72CAF30;
+        Mon, 20 Apr 2020 22:33:12 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 49B5ADA72D; Tue, 21 Apr 2020 00:32:30 +0200 (CEST)
+Date:   Tue, 21 Apr 2020 00:32:29 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Filipe Manana <fdmanana@gmail.com>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, Jeff Mahoney <jeffm@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
+        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
+Subject: Re: [PATCH] btrfs: Fix refcnt leak in btrfs_recover_relocation
+Message-ID: <20200420223229.GH18421@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Filipe Manana <fdmanana@gmail.com>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+        Jeff Mahoney <jeffm@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+References: <1587361180-83334-1-git-send-email-xiyuyang19@fudan.edu.cn>
+ <CAL3q7H4hoSF6=S_ZqTCiKNed0NkFymemGZh4vrRNQ3Nrf9xwkA@mail.gmail.com>
+ <CAL3q7H4Yr2cdEgLWVAR2N_hPYEsra8yLA89meUMcvxH1VjtA6A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Lc2QxRh9WBkdpZYm6DCtmPz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL3q7H4Yr2cdEgLWVAR2N_hPYEsra8yLA89meUMcvxH1VjtA6A@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Lc2QxRh9WBkdpZYm6DCtmPz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 20, 2020 at 06:35:56PM +0100, Filipe Manana wrote:
+> On Mon, Apr 20, 2020 at 6:34 PM Filipe Manana <fdmanana@gmail.com> wrote:
+> >
+> > On Mon, Apr 20, 2020 at 6:50 AM Xiyu Yang <xiyuyang19@fudan.edu.cn> wrote:
+> > >
+> > > btrfs_recover_relocation() invokes btrfs_join_transaction(), which joins
+> > > a btrfs_trans_handle object into transactions and returns a reference of
+> > > it with increased refcount to "trans".
+> > >
+> > > When btrfs_recover_relocation() returns, "trans" becomes invalid, so the
+> > > refcount should be decreased to keep refcount balanced.
+> > >
+> > > The reference counting issue happens in one exception handling path of
+> > > btrfs_recover_relocation(). When read_fs_root() failed, the refcnt
+> > > increased by btrfs_join_transaction() is not decreased, causing a refcnt
+> > > leak.
+> > >
+> > > Fix this issue by calling btrfs_end_transaction() on this error path
+> > > when read_fs_root() failed.
+> > >
+> > > Fixes: 79787eaab461 ("btrfs: replace many BUG_ONs with proper error
+> > > handling")
+> > > Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> > > Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> >
+> > Reviewed-by: Filipe Manana <fdmanana@suse.com>
+> >
+> > Looks good, thanks.
+> 
+> Btw, the subject could be more clear.
+> Instead of
+> 
+> "btrfs: Fix refcnt leak in btrfs_recover_relocation"
+> 
+> something like
+> 
+> "btrfs: fix transaction leak in ..."
+> 
+> David can probably fixup that when he picks the patch.
 
-Hi all,
-
-Commit
-
-  afc541d07f9d ("KVM: x86: make Hyper-V PV TLB flush use tlb_flush_guest()")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Lc2QxRh9WBkdpZYm6DCtmPz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6eIwcACgkQAVBC80lX
-0Gxvxwf+OoPoEMIgMkdqUtjMpxkAYEjo6EXoBx+KwQcKyRebsjTFIU7OlSlhh0Du
-CC2bceaJzr/ObFejiL5AwR2aafqFhj2RXLBrVI4TCQegBR2lQTkM25f8np2Z2iYo
-vGdjyRO5cZmGU2cMkM/8h3KuJ7eCL9v73FlZ2m7QyvLf98ic3Zc/Y/DJrXDbvXo4
-WkmXJ1lUGE1Yb6L4W4SFCUVkV081/tFq5QJZ1DUJmQ1vHpacePJncyHP5qhybb+8
-W1hQV3e/TdpZyJXQzz8pAXYjaX8prnnLQhr+vtn37XElYPXIfSfwTESZq4ex7WpN
-LAAVciQHB77WBpKwWG3j5HD8YcHiWg==
-=r0UA
------END PGP SIGNATURE-----
-
---Sig_/Lc2QxRh9WBkdpZYm6DCtmPz--
+Yes, thanks, simple fixups are fine.
