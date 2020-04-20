@@ -2,128 +2,111 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47145C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C4BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB35206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE51F206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:44:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="TXh2XOFZ"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="bhHNMY7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgDTPo3 (ORCPT
+        id S1729108AbgDTPox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:44:29 -0400
-Received: from mail-eopbgr150040.outbound.protection.outlook.com ([40.107.15.40]:60823
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725989AbgDTPo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:44:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G1ZNt/5+icvVACrvv0kD+gig4kK44FTU12R+sagunPj7l07wjqIHXRmj36v8r3NOjPzWFT4JK4pyqT2l1mtjXDPORbiHkynFEBY+7/b/nBs+WUEYhetQ83xqYYFN4lePX/6JFjNIdxobfMEOg+i1gjj9ENI/SFEB893GzHjgiQMgK3QC4MKSFIr5HhtxgJHtcMH7ajp9EQZ4up/Coaczcuo12czNlrDQkA4rwJrHaD9WiHKh+8jcH+dwSKRQf5maHLVJxjpSvdm6o/U0uls4puyC0psQi2JFcnix6XknFgH/2hMDuk2SPJhsRGwP1+IvZ3FRnieT1N4EoYqm8x4P8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CKmi6CM6lrwXIV4zE+fnNheHW5ZNafCTDcsZL1gvaHM=;
- b=K1WLTRqlzvQDd3ki+RD39d4zRXzyEAVmvLUFjCRreMpwsvkWpsrHZgo8xvyKDEJkkW9JYfRqD9/mX2EwvjEpvVdR9XMHLQCzhuTovg3Cx+bnwbyFdEm6FlW2brYMliUQrr67LpIYOSY18Jp8KcG5dX0ULs12naVuQZfrhfmgfpbZvOeKvmIlRpOxY7Bft0XVc+CARwl7uJ48uHC92HHZ6nUzXTuq/XC8YXBCru6Uo9JTzumF5ZutdNxXZ4+Wy+1pI+nmpRet6pAZTQnlbYqpBYFGT2IeY2GPsBBQNLFHBTWgR9u97d2eeZkIrkmUSOasFmVd/udnB7Ef/QQXkfwCGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CKmi6CM6lrwXIV4zE+fnNheHW5ZNafCTDcsZL1gvaHM=;
- b=TXh2XOFZ3cdaYYX4qLqgrRzUMc2DRe412TkhHIdSuTlHMgtd/lTe7+45MUKwZ6Aiuu3ASr9fi5LQWddI1m1xWmLFR60Cke01IBE717H3lGLRZFzhSCyd5KVfWY77ynLYNlsmuWPjmZfLGxhsIAkgU3HQqM5v+qE7voJ3jkLgMBI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=calvin.johnson@oss.nxp.com; 
-Received: from AM0PR04MB5636.eurprd04.prod.outlook.com (2603:10a6:208:130::22)
- by AM0PR04MB4674.eurprd04.prod.outlook.com (2603:10a6:208:75::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Mon, 20 Apr
- 2020 15:44:25 +0000
-Received: from AM0PR04MB5636.eurprd04.prod.outlook.com
- ([fe80::c4fe:d4a4:f0e1:a75b]) by AM0PR04MB5636.eurprd04.prod.outlook.com
- ([fe80::c4fe:d4a4:f0e1:a75b%4]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
- 15:44:25 +0000
-Date:   Mon, 20 Apr 2020 21:14:13 +0530
-From:   Calvin Johnson <calvin.johnson@oss.nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     linux.cj@gmail.com, Jeremy Linton <jeremy.linton@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        netdev@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        linux-kernel@vger.kernel.org, Varun Sethi <V.Sethi@nxp.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [RFC net-next PATCH v2 1/2] net/fsl: add ACPI support for mdio
- bus
-Message-ID: <20200420154413.GC27078@lsv03152.swis.in-blr01.nxp.com>
-References: <20200418105432.11233-1-calvin.johnson@oss.nxp.com>
- <20200418105432.11233-2-calvin.johnson@oss.nxp.com>
- <20200418144606.GG804711@lunn.ch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418144606.GG804711@lunn.ch>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: SG2P153CA0016.APCP153.PROD.OUTLOOK.COM (2603:1096::26) To
- AM0PR04MB5636.eurprd04.prod.outlook.com (2603:10a6:208:130::22)
+        Mon, 20 Apr 2020 11:44:53 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:58356 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729024AbgDTPov (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:44:51 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KFc4KW020208;
+        Mon, 20 Apr 2020 10:44:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=WRLn6CcF91rM0kmmJj1O0brI6NJO4DbTXcBN3wswcwo=;
+ b=bhHNMY7S4MFDkDMkf1pjB1386hgU0x9xNuf8aGakTE1i1lyjMPKVViZsSZQFHryijXaY
+ F/bek3YWiKnG9vLQrZfo4XkwiDvc4wbAU7V2NSqVtS8cXme+OreMVIG1KzqXxtOBK93z
+ EyUWp2ppQsZYg2BTHChTtBWOyYMO6QuAd9PPFH89Rx+ulcI4xLDHp1wGpZN/T3Tc7ZD2
+ zhviE7TlqpPxe1fq8UdMB/wS7GWbVB9UYRFhuPKo7r0azI6QTsqaroK5CKFA1U16tAVr
+ zeRohLRV19d2OCR/lUVHPHS0XGVhPmEPzLyrcMerw06X7r+wNu45rTIGbAGnM0MyeBB0 BA== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 30fxy4b9hp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 20 Apr 2020 10:44:46 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 20 Apr
+ 2020 16:44:44 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Mon, 20 Apr 2020 16:44:44 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 7AEE22AB;
+        Mon, 20 Apr 2020 15:44:44 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
+        <lee.jones@linaro.org>, <broonie@kernel.org>
+CC:     <myungjoo.ham@samsung.com>, <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH 0/4] Convert Arizona DT bindings to dtschema
+Date:   Mon, 20 Apr 2020 16:44:40 +0100
+Message-ID: <20200420154444.12332-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv03152.swis.in-blr01.nxp.com (14.142.151.118) by SG2P153CA0016.APCP153.PROD.OUTLOOK.COM (2603:1096::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.2 via Frontend Transport; Mon, 20 Apr 2020 15:44:19 +0000
-X-Originating-IP: [14.142.151.118]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1e8a6f6c-ed36-4980-67a7-08d7e541b3c4
-X-MS-TrafficTypeDiagnostic: AM0PR04MB4674:|AM0PR04MB4674:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB4674188729AB4A97ED138C42D2D40@AM0PR04MB4674.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 03793408BA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5636.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(366004)(346002)(136003)(396003)(39860400002)(52116002)(54906003)(44832011)(2906002)(956004)(4326008)(1076003)(7416002)(316002)(55016002)(186003)(6916009)(33656002)(8936002)(8676002)(81156014)(4744005)(66946007)(66476007)(66556008)(16526019)(55236004)(86362001)(26005)(9686003)(1006002)(6506007)(7696005)(6666004)(5660300002)(478600001)(110426005);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FNb0fx92b4ChTKVz987kUU/gXEh84AghI5d02/4DvC7pe4tfBrLBSX4pTfnNjKSoSj8SNz2it0oPJWDKfMeWpR+lo6VbfQGAzYW4YKIx0aIHbpyZ8q6Z2JeONacWVMtvypVKS22jgFJ/r31g/cB7jHm5ULLmIDdGSa1t95W91Ob/1jtGZS7bbOUN1DiC3QY1hsPi/517wkvjWX2+UkTuRjuUs/nKhaphhYeEK3FoIirPje1xdcAQ1pOo+Kf7Ro/wnKUIgoFsZ7ZXMVpA1QPTQGuxio25PTIHN5a7cKSS/wPOuYbqU2XD3NTyBzP6dbB1kUqKC3LgMI/83apdGNGXOKlxivtllq4SX3AtMOniRHqA26Q0MlcJGmtYDQMUQgBa/NhbgXFIxPk/fGEla85SeSEUhl/oODXgp2CoPnWaZcm4VTUSEdaSdyDTD6zQ9FLq14o5AfBNAzu+kZitNbLTFW/n5Loe+gr5ACqFbebBGvAl0BSYNkJSipGSl9nJnlis
-X-MS-Exchange-AntiSpam-MessageData: E8EgMCd1mFpqvArF3OzE+hMF6MPPrg3W1j61b4mhn1iJ1kkP0XdNR6m+Xp0ln7B7fcg8+El9U5RGIRjxzCOYaRCQqwHdhx2tKuyqV3j0O2K7EIaKfctZWlGq0cAFgV+pGqKELnTDt5Q/tXG9c3hddw==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e8a6f6c-ed36-4980-67a7-08d7e541b3c4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 15:44:25.2849
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fSajlLAu5oBjSpnwtH37+c7fsbf6ntm7N3qcIWm8n1gBFVA6edDqemBRpaWwwLGbtUclAqW0Bv6NBKA9WvjTDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4674
+Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=662 malwarescore=0
+ clxscore=1011 adultscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 04:46:06PM +0200, Andrew Lunn wrote:
-> > -	ret = of_mdiobus_register(bus, np);
-> 
-> So this is the interesting part. What you really want to be doing is
-> adding a device_mdiobus_register(bus, dev) to the core. And it needs
-> to share as much as possible with the of_mdiobus_register()
-> implementation.
+Convert the bindings over, I have put all the patches in one series
+so they are easy to review, but I put all the MAINTAINER updates
+in the MFD patch (since it is the main binding document) so the
+patches can each go through their own trees with no merge issues.
 
-Sure, will take this approach and submit v3.
+Thanks,
+Charles
 
-Thanks
-Calvin
+Charles Keepax (4):
+  regulator: arizona-regulator: Move binding over to dtschema
+  extcon: arizona: Move binding over to dtschema
+  ASoC: arizona: Move binding over to dtschema
+  mfd: arizona: Move binding over to dtschema
+
+ .../devicetree/bindings/extcon/extcon-arizona.txt  |  76 ------
+ .../devicetree/bindings/extcon/wlf,arizona.yaml    | 125 +++++++++
+ Documentation/devicetree/bindings/mfd/arizona.txt  | 101 --------
+ .../devicetree/bindings/mfd/wlf,arizona.yaml       | 288 +++++++++++++++++++++
+ .../bindings/regulator/arizona-regulator.txt       |  18 --
+ .../devicetree/bindings/regulator/wlf,arizona.yaml |  37 +++
+ .../devicetree/bindings/sound/wlf,arizona.txt      |  53 ----
+ .../devicetree/bindings/sound/wlf,arizona.yaml     | 114 ++++++++
+ MAINTAINERS                                        |   8 +-
+ 9 files changed, 568 insertions(+), 252 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+ create mode 100644 Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/arizona.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+ delete mode 100644 Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/wlf,arizona.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/wlf,arizona.yaml
+
+-- 
+2.11.0
+
