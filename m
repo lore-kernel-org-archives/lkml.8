@@ -2,287 +2,135 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2769C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71463C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1A7C206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:53:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oNeMaw4Z"
+	by mail.kernel.org (Postfix) with ESMTP id 58D72206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbgDTPxp (ORCPT
+        id S1727071AbgDTP6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:53:45 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1696 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbgDTPxn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:53:43 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9dc57a0000>; Mon, 20 Apr 2020 08:53:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 20 Apr 2020 08:53:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 20 Apr 2020 08:53:43 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Apr
- 2020 15:53:42 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 20 Apr 2020 15:53:42 +0000
-Received: from sandipan-pc.nvidia.com (Not Verified[10.24.42.163]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e9dc5830000>; Mon, 20 Apr 2020 08:53:42 -0700
-From:   Sandipan Patra <spatra@nvidia.com>
-To:     <treding@nvidia.com>, <robh+dt@kernel.org>,
-        <u.kleine-koenig@pengutronix.de>, <jonathanh@nvidia.com>
-CC:     <bbasu@nvidia.com>, <ldewangan@nvidia.com>,
-        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Sandipan Patra <spatra@nvidia.com>
-Subject: [PATCH V2] pwm: tegra: dynamic clk freq configuration by PWM driver
-Date:   Mon, 20 Apr 2020 21:24:03 +0530
-Message-ID: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 20 Apr 2020 11:58:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:51470 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726151AbgDTP6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:58:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B36BD31B;
+        Mon, 20 Apr 2020 08:58:00 -0700 (PDT)
+Received: from [10.57.33.63] (unknown [10.57.33.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6403E3F73D;
+        Mon, 20 Apr 2020 08:57:58 -0700 (PDT)
+Subject: Re: [PATCHv2 2/6] iommu/arm-smmu: Allow client devices to select
+ direct mapping
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <cover.1587392905.git.saiprakash.ranjan@codeaurora.org>
+ <14539e787e6d8b7bd0a6d8f8a001baae6f691988.1587392905.git.saiprakash.ranjan@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <e35b10dc-8e58-f201-8485-9543dafbadfe@arm.com>
+Date:   Mon, 20 Apr 2020 16:57:55 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587398010; bh=LLKrRYVhJgU3tNektpkMgC8uBrNsN2ZKgfywrWWlaUM=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Type:
-         Content-Transfer-Encoding;
-        b=oNeMaw4ZTGDsQtkdC+rSFivTVQOmu2K+YfqUWS16vGAsw40OT0GJCDVoX+/eo8ugb
-         QqJGhjYwoTkZ/TV8wCcgov00k3JpCG+StZy/wAwedBodJCpNR5XUqYBhfDghyxzsrw
-         WODvJkpGPdkr1rS3d423kOPHKsmre47bF7nuoPARX0lSBqhNoEYMjmQlKr9NOkiF1K
-         qKm2CBU+xh4QRAxCPsD0wG7Iiuy886I1CZvQeW2p7bZIKeQrHnC7cQZCrXIm59RLTA
-         uFgoeoI/cwMd7hGvlZq+lGHY0VFivD3ERI74ohmZI7AePHJaQyYkXAQkPhRn8EMeWG
-         syo9Zqsjtb8Ag==
+In-Reply-To: <14539e787e6d8b7bd0a6d8f8a001baae6f691988.1587392905.git.saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added support for dynamic clock freq configuration in pwm kernel driver.
-Earlier the pwm driver used to cache boot time clock rate by pwm clock
-parent during probe. Hence dynamically changing pwm frequency was not
-possible for all the possible ranges. With this change, dynamic calculation
-is enabled and it is able to set the requested period from sysfs knob
-provided the value is supported by clock source.
+On 2020-04-20 3:37 pm, Sai Prakash Ranjan wrote:
+> From: Jordan Crouse <jcrouse@codeaurora.org>
+> 
+> Some client devices want to directly map the IOMMU themselves instead
+> of using the DMA domain. Allow those devices to opt in to direct
+> mapping by way of a list of compatible strings.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>   drivers/iommu/arm-smmu-qcom.c | 19 +++++++++++++++++++
+>   drivers/iommu/arm-smmu.h      |  1 +
+>   2 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+> index 64a4ab270ab7..0b3f159065aa 100644
+> --- a/drivers/iommu/arm-smmu-qcom.c
+> +++ b/drivers/iommu/arm-smmu-qcom.c
+> @@ -3,6 +3,7 @@
+>    * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>    */
+>   
+> +#include <linux/of_device.h>
+>   #include <linux/qcom_scm.h>
+>   
+>   #include "arm-smmu.h"
+> @@ -11,6 +12,23 @@ struct qcom_smmu {
+>   	struct arm_smmu_device smmu;
+>   };
+>   
+> +static const struct of_device_id qcom_smmu_client_of_match[] = {
+> +	{ .compatible = "qcom,adreno" },
+> +	{ .compatible = "qcom,mdp4" },
+> +	{ .compatible = "qcom,mdss" },
+> +	{ .compatible = "qcom,sc7180-mdss" },
+> +	{ .compatible = "qcom,sdm845-mdss" },
+> +	{ }
+> +};
+> +
+> +static int qcom_smmu_request_domain(struct device *dev)
+> +{
+> +	const struct of_device_id *match =
+> +		of_match_device(qcom_smmu_client_of_match, dev);
+> +
+> +	return match ? IOMMU_DOMAIN_IDENTITY : 0;
+> +}
+> +
+>   static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
+>   {
+>   	int ret;
+> @@ -41,6 +59,7 @@ static int qcom_smmu500_reset(struct arm_smmu_device *smmu)
+>   }
+>   
+>   static const struct arm_smmu_impl qcom_smmu_impl = {
+> +	.req_domain = qcom_smmu_request_domain,
+>   	.reset = qcom_smmu500_reset,
+>   };
+>   
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index 8d1cd54d82a6..662fdb4dccd2 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -386,6 +386,7 @@ struct arm_smmu_impl {
+>   	int (*init_context)(struct arm_smmu_domain *smmu_domain);
+>   	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+>   			 int status);
+> +	int (*req_domain)(struct device *dev);
 
-Changes mainly have 2 parts:
-  - T186 and later chips [1]
-  - T210 and prior chips [2]
+Nit: since the point is to implement the full iommu_ops::def_domain_type 
+interface, can we call it def_domain_type please?
 
-For [1] - Changes implemented to set pwm period dynamically and
-          also checks added to allow only if requested period(ns) is
-          below or equals to higher range.
+Robin.
 
-For [2] - Only checks if the requested period(ns) is below or equals
-          to higher range defined by max clock limit. The limitation
-          in T210 or prior chips are due to the reason of having only
-          one pwm-controller supporting multiple channels. But later
-          chips have multiple pwm controller instances each having
-	  single channel support.
-
-Signed-off-by: Sandipan Patra <spatra@nvidia.com>
----
-V2:
-1. Min period_ns calculation is moved to probe.
-2. Added descriptioins for PWM register bits and regarding behaviour
-   of the controller when new configuration is applied or pwm is disabled.
-3. Setting period with possible value when supplied period is below limit.
-4. Corrected the earlier code comment:
-   plus 1 instead of minus 1 during pwm calculation
-
- drivers/pwm/pwm-tegra.c | 110 +++++++++++++++++++++++++++++++++++++++++---=
-----
- 1 file changed, 94 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-index d26ed8f..7a36325 100644
---- a/drivers/pwm/pwm-tegra.c
-+++ b/drivers/pwm/pwm-tegra.c
-@@ -4,8 +4,39 @@
-  *
-  * Tegra pulse-width-modulation controller driver
-  *
-- * Copyright (c) 2010, NVIDIA Corporation.
-- * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.d=
-e>
-+ * Copyright (c) 2010-2020, NVIDIA Corporation.
-+ *
-+ * Overview of Tegra Pulse Width Modulator Register:
-+ * 1. 13-bit: Frequency division (SCALE)
-+ * 2. 8-bit : Puls division (DUTY)
-+ * 3. 1-bit : Enable bit
-+ *
-+ * The PWM clock frequency is divided by 256 before subdividing it based
-+ * on the programmable frequency division value to generate the required
-+ * frequency for PWM output. The maximum output frequency that can be
-+ * achieved is (max rate of source clock) / 256.
-+ * i.e. if source clock rate is 408 MHz, maximum output frequency cab be:
-+ * 408 MHz/256 =3D 1.6 MHz.
-+ * This 1.6 MHz frequency can further be divided using SCALE value in PWM.
-+ *
-+ * PWM pulse width: 8 bits are usable [23:16] for varying pulse width.
-+ * To achieve 100% duty cycle, program Bit [24] of this register to
-+ * 1=E2=80=99b1. In which case the other bits [23:16] are set to don't car=
-e.
-+ *
-+ * Limitations and known facts:
-+ * -	When PWM is disabled, the output is driven to 0.
-+ * -	It does not allow the current PWM period to complete and
-+ *	stops abruptly.
-+ *
-+ * -	If the register is reconfigured while pwm is running,
-+ *	It does not let the currently running period to complete.
-+ *
-+ * -	Pulse width of the pwm can never be out of bound.
-+ *	It's taken care at HW and SW
-+ * -	If the user input duty is below limit, then driver sets it to
-+ *	minimum possible value.
-+ * -	If anything else goes wrong for setting duty or period,
-+ *	-EINVAL is returned.
-  */
-=20
- #include <linux/clk.h>
-@@ -41,6 +72,7 @@ struct tegra_pwm_chip {
- 	struct reset_control*rst;
-=20
- 	unsigned long clk_rate;
-+	unsigned long min_period_ns;
-=20
- 	void __iomem *regs;
-=20
-@@ -67,8 +99,9 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct=
- pwm_device *pwm,
- 			    int duty_ns, int period_ns)
- {
- 	struct tegra_pwm_chip *pc =3D to_tegra_pwm_chip(chip);
--	unsigned long long c =3D duty_ns, hz;
--	unsigned long rate;
-+	unsigned long long p_width =3D duty_ns, period_hz;
-+	unsigned long rate, required_clk_rate;
-+	unsigned long pfm; /* Frequency divider */
- 	u32 val =3D 0;
- 	int err;
-=20
-@@ -77,37 +110,77 @@ static int tegra_pwm_config(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
- 	 * per (1 << PWM_DUTY_WIDTH) cycles and make sure to round to the
- 	 * nearest integer during division.
- 	 */
--	c *=3D (1 << PWM_DUTY_WIDTH);
--	c =3D DIV_ROUND_CLOSEST_ULL(c, period_ns);
-+	p_width *=3D (1 << PWM_DUTY_WIDTH);
-+	p_width =3D DIV_ROUND_CLOSEST_ULL(p_width, period_ns);
-=20
--	val =3D (u32)c << PWM_DUTY_SHIFT;
-+	val =3D (u32)p_width << PWM_DUTY_SHIFT;
-+
-+	/*
-+	 *  Period in nano second has to be <=3D highest allowed period
-+	 *  based on max clock rate of the pwm controller.
-+	 *
-+	 *  higher limit =3D max clock limit >> PWM_DUTY_WIDTH
-+	 *  lower limit =3D min clock limit >> PWM_DUTY_WIDTH >> PWM_SCALE_WIDTH
-+	 */
-+	if (period_ns < pc->min_period_ns) {
-+		period_ns =3D pc->min_period_ns;
-+		pr_warn("Period is adjusted to allowed value (%d ns)\n",
-+				period_ns);
-+	}
-=20
- 	/*
- 	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
- 	 * cycles at the PWM clock rate will take period_ns nanoseconds.
- 	 */
--	rate =3D pc->clk_rate >> PWM_DUTY_WIDTH;
-+	if (pc->soc->num_channels =3D=3D 1) {
-+		/*
-+		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
-+		 * with the hieghest applicable rate that the controller can
-+		 * provide. Any further lower value can be derived by setting
-+		 * PFM bits[0:12].
-+		 * Higher mark is taken since BPMP has round-up mechanism
-+		 * implemented.
-+		 */
-+		required_clk_rate =3D
-+			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
-+
-+		err =3D clk_set_rate(pc->clk, required_clk_rate);
-+		if (err < 0)
-+			return -EINVAL;
-+
-+		rate =3D clk_get_rate(pc->clk) >> PWM_DUTY_WIDTH;
-+	} else {
-+		/*
-+		 * This is the case for SoCs who support multiple channels:
-+		 *
-+		 * clk_set_rate() can not be called again in config because
-+		 * T210 or any prior chip supports one pwm-controller and
-+		 * multiple channels. Hence in this case cached clock rate
-+		 * will be considered which was stored during probe.
-+		 */
-+		rate =3D pc->clk_rate >> PWM_DUTY_WIDTH;
-+	}
-=20
- 	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
--	hz =3D DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
--	rate =3D DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz);
-+	period_hz =3D DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
-+	pfm =3D DIV_ROUND_CLOSEST_ULL(100ULL * rate, period_hz);
-=20
- 	/*
- 	 * Since the actual PWM divider is the register's frequency divider
--	 * field minus 1, we need to decrement to get the correct value to
-+	 * field plus 1, we need to decrement to get the correct value to
- 	 * write to the register.
- 	 */
--	if (rate > 0)
--		rate--;
-+	if (pfm > 0)
-+		pfm--;
-=20
- 	/*
--	 * Make sure that the rate will fit in the register's frequency
-+	 * Make sure that pfm will fit in the register's frequency
- 	 * divider field.
- 	 */
--	if (rate >> PWM_SCALE_WIDTH)
-+	if (pfm >> PWM_SCALE_WIDTH)
- 		return -EINVAL;
-=20
--	val |=3D rate << PWM_SCALE_SHIFT;
-+	val |=3D pfm << PWM_SCALE_SHIFT;
-=20
- 	/*
- 	 * If the PWM channel is disabled, make sure to turn on the clock
-@@ -205,6 +278,10 @@ static int tegra_pwm_probe(struct platform_device *pde=
-v)
- 	 */
- 	pwm->clk_rate =3D clk_get_rate(pwm->clk);
-=20
-+	/* Set minimum limit of PWM period for the IP */
-+	pwm->min_period_ns =3D
-+	    (NSEC_PER_SEC / (pwm->soc->max_frequency >> PWM_DUTY_WIDTH)) + 1;
-+
- 	pwm->rst =3D devm_reset_control_get_exclusive(&pdev->dev, "pwm");
- 	if (IS_ERR(pwm->rst)) {
- 		ret =3D PTR_ERR(pwm->rst);
-@@ -313,4 +390,5 @@ module_platform_driver(tegra_pwm_driver);
-=20
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("NVIDIA Corporation");
-+MODULE_AUTHOR("Sandipan Patra <spatra@nvidia.com>");
- MODULE_ALIAS("platform:tegra-pwm");
---=20
-2.7.4
-
+>   };
+>   
+>   static inline void __iomem *arm_smmu_page(struct arm_smmu_device *smmu, int n)
+> 
