@@ -7,139 +7,128 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05835C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE07C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9333206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F94120679
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:00:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qvZErNLW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q/HqtMo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgDTE7G (ORCPT
+        id S1726201AbgDTFAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 00:59:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45840 "EHLO
+        Mon, 20 Apr 2020 01:00:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgDTE7F (ORCPT
+        with ESMTP id S1725825AbgDTFA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 00:59:05 -0400
+        Mon, 20 Apr 2020 01:00:29 -0400
 Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D35C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 21:59:05 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 18so741962pfx.6
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 21:59:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35954C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:00:29 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b12so1399823pff.4
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:00:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=wAPlRWgezwhMIxEulFfKKHAsUfPFwC0PHoMBzV+JlwI=;
-        b=qvZErNLWFA0MXJfaPogJoSFPlbsjkzOdKBcpC+dBEjVp/ttD4NrntsY2Bh67whd53Q
-         QZVuESc+tpPhztFQacvq89rHOoUZSP8b1y5dCfp5JqE434zmbJCRbGxtHxZ28xxGbWtA
-         vPkwmKU/ojlORtYLz+CKQnJig9d0kdFkA+Km2qnqKuQ13aCGl/RkE4pozk+zWwYAxvI9
-         8TwwzxNZM6RzxBjEsHU/oIB6Oi463KgbGsMKGk0ieiuh1h9trvYo+i7SjLVBSs6snd12
-         LMy5FfgTyuwkgO8iZz5T0d2TGNAQ/oTBnf08bsEmP8yrfqBxK9GRLJ83MGNVkaeDhmbE
-         ApwQ==
+        bh=mpVmBINyItbN9tJRKVmVpOS+woKoJyrV26f3Xb0hHNE=;
+        b=Q/HqtMo5vgugwYLK5vfGCzNzBpiu8J4Z1fxAN6yp15Ll8JotAF3X576PMh9RlvqITs
+         OPgsqPX1s1WWPw+LkSAZkBBVzM/q3uexPnYWjCD6EM2U/UUJHknKJkMJ0nCQ/WB96HSz
+         XuwPkdK7W4A2UXjWuOwgwW/ucKlWxU/inxmxWm5vDo3kdZ2yWgC8vOhfDHoAfIad+yS/
+         lrZAmHtQKkqVLDgq/bnDeOqkaxOvrIaR+aLIluuYt7diBi+GHU5sx29dcf7xBZ4RHGSP
+         xo/0W34i0C4hy5vcf9rMgaHvTSFzCfCbM6bs0rxBGGWNjrJme2NUzFT+wVNYVe7ZS8Ai
+         P/hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=wAPlRWgezwhMIxEulFfKKHAsUfPFwC0PHoMBzV+JlwI=;
-        b=JMJN5MfZNcIhca33pGinmedERz3ELjItqBNzpLka5epyRELOkI17Z6lkWsMKUWH9Iu
-         +6H2mR08cEaI7mj8lW8cYAea8FzcN1uKL85DHgolHABG76IQMjJBgedCyKZllFfHWu9N
-         w7wS1rcOvGuVnHTv7XSVXfWqJbZtyofJ+MM3JkLoLWIXIWDl8Z2h4B/TQZGYBCJrh1Dh
-         aXzNUQdA4LStdrIw1AL/kcmeknrICmNmO73Gpiw8WNHyu+ucraCXFPocQDSmubQF4sCe
-         uOQ7LBedoCxWsAwf3nTmWJUJYRvBAwErHfzbkUqFeU0g2VQFpEJqjkIdrRzSFZC4TwUO
-         N0SA==
-X-Gm-Message-State: AGi0PubStiVU3iS7RgDesZSvkx/T4DNujEj/Fmcx4+UFrwsiletKovF/
-        pT1hWtUDPbDmvSUiy3eB4BJMnA==
-X-Google-Smtp-Source: APiQypI+Xh29Tan/fCXAwKqqgM92mQvjPxDij3ZhoXScf9xhZvC1wYM79H9afYGS/FHuHt2MKQ2cug==
-X-Received: by 2002:a63:1562:: with SMTP id 34mr14547089pgv.150.1587358744684;
-        Sun, 19 Apr 2020 21:59:04 -0700 (PDT)
+        bh=mpVmBINyItbN9tJRKVmVpOS+woKoJyrV26f3Xb0hHNE=;
+        b=Ftk5vZXS9xB1QISEP+j+Rtw2c1obMJE0fhBXWMcihfAL0sK1gxRAT89A8uxQ0Nt+gN
+         vXrAMFzIHfyKmBQ5g7v6p+dr6kUXiekUY59YqHpa57hJdhCEr0NUFbvIqroJ7Q1jR+JZ
+         ISB+JCP8teELf4STOTFADSLu3gpgTkM7I9AkTfYd1dpcSQ0JQGeHdCmgrdvGul8S1Dot
+         p5PaI34qrMv0bKyVazkGCob3iMNCtyiroBNg23a3lhQ4QJmwj3iF3Jg+08cfeMTL9CTw
+         F3ohuHJKnpdw9l5j6SKc8MTZlg28IhKV5rG0UwzXHVS+pDWjqfcqtuacCwvdrnUaGHfI
+         7LWQ==
+X-Gm-Message-State: AGi0PuaIOFtiK0PJaQi3PYY6TmDLToyPLj9IO+NMWCPMrItq/dvpV4CP
+        kyRe05cvYh+qYM7bkKW3XIBY5g==
+X-Google-Smtp-Source: APiQypJxnzX7F+q4d+VoMv2cdy9NkKlZeFbo+lrQvAe+aYism0c9YRhFVztGdMBLIshqu+vARP19sw==
+X-Received: by 2002:a63:2057:: with SMTP id r23mr15012894pgm.232.1587358828683;
+        Sun, 19 Apr 2020 22:00:28 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id fy21sm12601107pjb.25.2020.04.19.21.59.03
+        by smtp.gmail.com with ESMTPSA id v9sm3698518pju.3.2020.04.19.22.00.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 21:59:03 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 21:59:27 -0700
+        Sun, 19 Apr 2020 22:00:27 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 22:00:51 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] remoteproc: Use a local copy for the name field
-Message-ID: <20200420045927.GA1516868@builder.lan>
-References: <20200417002036.24359-1-s-anna@ti.com>
- <20200417002036.24359-3-s-anna@ti.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, s-anna@ti.com, elder@linaro.org,
+        Markus.Elfring@web.de, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/7] remoteproc: Fix IDR initialisation in
+ rproc_alloc()
+Message-ID: <20200420050051.GB1516868@builder.lan>
+References: <20200415204858.2448-1-mathieu.poirier@linaro.org>
+ <20200415204858.2448-2-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417002036.24359-3-s-anna@ti.com>
+In-Reply-To: <20200415204858.2448-2-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16 Apr 17:20 PDT 2020, Suman Anna wrote:
+On Wed 15 Apr 13:48 PDT 2020, Mathieu Poirier wrote:
 
-> The current name field used in the remoteproc structure is simply
-> a pointer to a name field supplied during the rproc_alloc() call.
-> The pointer passed in by remoteproc drivers during registration is
-> typically a dev_name pointer, but it is possible that the pointer
-> will no longer remain valid if the devices themselves were created
-> at runtime like in the case of of_platform_populate(), and were
-> deleted upon any failures within the respective remoteproc driver
-> probe function.
+> From: Alex Elder <elder@linaro.org>
 > 
-> So, allocate and maintain a local copy for this name field to
-> keep it agnostic of the logic used in the remoteproc drivers.
+> If ida_simple_get() returns an error when called in rproc_alloc(),
+> put_device() is called to clean things up.  By this time the rproc
+> device type has been assigned, with rproc_type_release() as the
+> release function.
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+> The first thing rproc_type_release() does is call:
+>     idr_destroy(&rproc->notifyids);
+> 
+> But at the time the ida_simple_get() call is made, the notifyids
+> field in the remoteproc structure has not been initialized.
+> 
+> I'm not actually sure this case causes an observable problem, but
+> it's incorrect.  Fix this by initializing the notifyids field before
+> calling ida_simple_get() in rproc_alloc().
+> 
+> Fixes: b5ab5e24e960 ("remoteproc: maintain a generic child device for each rproc")
+> Signed-off-by: Alex Elder <elder@linaro.org>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Regards,
-Bjorn
-
 > ---
-> v1:
->  - Patch baselined on top of Mathieu's rproc_alloc() refactor
->    series, and so addresses Bjorn's simplified cleanup comments
->  - Switch to {kstrdup/kfree}_const variants
-> v0: https://patchwork.kernel.org/patch/11456385/
-> 
->  drivers/remoteproc/remoteproc_core.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  drivers/remoteproc/remoteproc_core.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
 > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index e38f627059ac..3cebface3f26 100644
+> index e12a54e67588..80056513ae71 100644
 > --- a/drivers/remoteproc/remoteproc_core.c
 > +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1984,6 +1984,7 @@ static void rproc_type_release(struct device *dev)
->  
->  	kfree(rproc->firmware);
->  	kfree(rproc->ops);
-> +	kfree_const(rproc->name);
->  	kfree(rproc);
->  }
->  
-> @@ -2069,7 +2070,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->  	if (!rproc)
->  		return NULL;
->  
-> -	rproc->name = name;
->  	rproc->priv = &rproc[1];
->  	rproc->auto_boot = true;
->  	rproc->elf_class = ELFCLASS32;
-> @@ -2081,6 +2081,10 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+> @@ -2053,6 +2053,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>  	rproc->dev.type = &rproc_type;
+>  	rproc->dev.class = &rproc_class;
 >  	rproc->dev.driver_data = rproc;
->  	idr_init(&rproc->notifyids);
+> +	idr_init(&rproc->notifyids);
 >  
-> +	rproc->name = kstrdup_const(name, GFP_KERNEL);
-> +	if (!rproc->name)
-> +		goto put_device;
-> +
->  	if (rproc_alloc_firmware(rproc, name, firmware))
->  		goto put_device;
+>  	/* Assign a unique device index and name */
+>  	rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
+> @@ -2078,8 +2079,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
 >  
+>  	mutex_init(&rproc->lock);
+>  
+> -	idr_init(&rproc->notifyids);
+> -
+>  	INIT_LIST_HEAD(&rproc->carveouts);
+>  	INIT_LIST_HEAD(&rproc->mappings);
+>  	INIT_LIST_HEAD(&rproc->traces);
 > -- 
-> 2.26.0
+> 2.20.1
 > 
