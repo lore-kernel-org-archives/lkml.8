@@ -2,78 +2,197 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11485C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62037C55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC4052084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3490E2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587418075;
+	bh=tedko8nO8ian/QS0IoNSjx/P+oESCbtVk00SDWZiAFg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GS9sgWWK33PyPV+tI63XCwrSDAHJzgMv5R2viDhWkvlbLpSeR4Z5xqxAPO0l9sxGh
+	 XJJ/taqtknqcJAHyh81a8uZCEr6irPbmm/GGfZXErJ4IM0IYI+0hC2vnucyhiWG9AM
+	 VuA0ctsRoNpK+YVzXQFjYbKbJFfUVsJcKQ00feBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgDTV1b (ORCPT
+        id S1727911AbgDTV1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:27:31 -0400
-Received: from ms.lwn.net ([45.79.88.28]:53890 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbgDTV1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:27:30 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 3DE57823;
-        Mon, 20 Apr 2020 21:27:30 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 15:27:29 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/33] docs: update recommended Sphinx version to
- 2.4.4
-Message-ID: <20200420152729.40cb10e1@lwn.net>
-In-Reply-To: <498f701c618f7d0cf5f0a37e5889ee926f7c8bf4.1586881715.git.mchehab+huawei@kernel.org>
-References: <cover.1586881715.git.mchehab+huawei@kernel.org>
-        <498f701c618f7d0cf5f0a37e5889ee926f7c8bf4.1586881715.git.mchehab+huawei@kernel.org>
-Organization: LWN.net
+        Mon, 20 Apr 2020 17:27:54 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38014 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgDTV1y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 17:27:54 -0400
+Received: by mail-oi1-f196.google.com with SMTP id r66so10197232oie.5;
+        Mon, 20 Apr 2020 14:27:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XubFQFGj+oE5E81AV09uEAWEQbJMsk1LmCjakkP+xS8=;
+        b=cXXQur5XI1hPr0gk1XS4o4L08LI7Z8bpK8goE3pUPBssZBJDRH5ivIYhF5JVRmfsHR
+         E+YcIEe0UwoMdjVFUst5Am8k+A5kr9UPzUyg1INnwQX3Jac40KyAbw+y7yJ3LsQnApzG
+         P6pd15ONbzq5pRIuW4tU3grUEGmDbZPypLGrvULHQpitxpusWDiGrB2g4WBRbWNvWYpi
+         7Xt3S3/wi9aCvmdqcDk92+jDJ4n9x5s112EAvTUtDoN0Um/ZYPum4ZJAo88WXSmaEoTn
+         gDvrsvJlB4G7RvMCg4mm3OtvSAV2GIE8bDdRuJ/YuvWf0WcjEIoKziRNWiX6vk1OiSjz
+         h2pA==
+X-Gm-Message-State: AGi0PuYODOl6EvIEfyR/TxN+IdqKsqD4mRYMmup0P75hal3qJvowSBRj
+        UHPlEIpSY3Lu9ao68X1bpg==
+X-Google-Smtp-Source: APiQypKA8/DjgklKphF/q6s1sPMusvYqMqJJGh1gdjSYDDBmjDBbaTp+L99fqFcY2mwLoCgx5i9uAQ==
+X-Received: by 2002:aca:6143:: with SMTP id v64mr1039248oib.36.1587418073095;
+        Mon, 20 Apr 2020 14:27:53 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 69sm218723otm.60.2020.04.20.14.27.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 14:27:52 -0700 (PDT)
+Received: (nullmailer pid 13638 invoked by uid 1000);
+        Mon, 20 Apr 2020 21:27:51 -0000
+Date:   Mon, 20 Apr 2020 16:27:51 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 2/2] dt-bindings: watchdog: Convert i.MX7ULP to
+ json-schema
+Message-ID: <20200420212751.GA7615@bogus>
+References: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
+ <1586911211-1141-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586911211-1141-2-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 18:48:30 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-
-> The Sphinx check script is already smart enough to keep
-> working, with older versions, warning the users that
-> an upgrade is recommended (and explaining how):
+On Wed, Apr 15, 2020 at 08:40:11AM +0800, Anson Huang wrote:
+> Convert the i.MX7ULP watchdog binding to DT schema format using json-schema.
 > 
-> 	Sphinx version 1.7.9
-> 	Warning: It is recommended at least Sphinx version 2.4.4.
-> 	Detected OS: Fedora release 31 (Thirty One).
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- Add 'timeout-sec' property to avoid build error.
+> ---
+>  .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 --------
+>  .../bindings/watchdog/fsl-imx7ulp-wdt.yaml         | 65 ++++++++++++++++++++++
+>  2 files changed, 65 insertions(+), 22 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
 > 
-> 	To upgrade Sphinx, use:
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+> deleted file mode 100644
+> index f902508..0000000
+> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+> +++ /dev/null
+> @@ -1,22 +0,0 @@
+> -* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
+> -
+> -Required properties:
+> -- compatible : Should be "fsl,imx7ulp-wdt"
+> -- reg : Should contain WDT registers location and length
+> -- interrupts : Should contain WDT interrupt
+> -- clocks: Should contain a phandle pointing to the gated peripheral clock.
+> -
+> -Optional properties:
+> -- timeout-sec : Contains the watchdog timeout in seconds
+> -
+> -Examples:
+> -
+> -wdog1: watchdog@403d0000 {
+> -	compatible = "fsl,imx7ulp-wdt";
+> -	reg = <0x403d0000 0x10000>;
+> -	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+> -	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
+> -	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
+> -	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
+> -	timeout-sec = <40>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
+> new file mode 100644
+> index 0000000..86b4d93
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/fsl-imx7ulp-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale i.MX7ULP Watchdog Timer (WDT) Controller
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +allOf:
+> +  - $ref: "watchdog.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,imx7ulp-wdt
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: |
+> +      Watchdog's clock source.
+> +    maxItems: 1
+> +
+> +  assigned-clocks:
+> +    maxItems: 1
+> +
+> +  assigned-clocks-parents:
+> +    maxItems: 1
+> +
+> +  timeout-sec:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Contains the watchdog timeout in seconds.
+
+This already has a definition in watchdog.yaml, just need:
+
+timeout-sec: true
+
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/imx7ulp-clock.h>
+> +
+> +    wdog1: watchdog@403d0000 {
+> +        compatible = "fsl,imx7ulp-wdt";
+> +        reg = <0x403d0000 0x10000>;
+> +        interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
+> +        assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
+> +        assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
+> +        timeout-sec = <40>;
+> +    };
+> +
+> +...
+> -- 
+> 2.7.4
 > 
-> 		/usr/bin/virtualenv sphinx_2.4.4
-> 		. sphinx_2.4.4/bin/activate
-> 		pip install -r ./Documentation/sphinx/requirements.txt
-
-Sigh...that version is all of a month and some old.  I hate to be pushing
-people that hard on the upgrade treadmill.
-
-I'm still looking over the set, and will probably apply this, but I think
-we should consider tweaking this before 5.8:
-
- - Can we make the warning more explicit that 2.4.4 is needed *if you are
-   generating PDF*?  Most people, I think, don't do that, and can live
-   happily with an older version.
-
- - Perhaps the time has come to raise the lower bound to, say, 1.7?  That
-   might let us get rid of a bit of cruft.
-
-Thanks,
-
-jon
