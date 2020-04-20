@@ -2,126 +2,74 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AF9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BDDC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7875420857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:47:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZMpvQ8rf"
+	by mail.kernel.org (Postfix) with ESMTP id 60E38206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgDTNrH (ORCPT
+        id S1728736AbgDTNrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:47:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728700AbgDTNrE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:47:04 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79EF8C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:47:04 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f8so3975063plt.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:47:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DqScG+BXKtQJhW4TX1nkkxZN9LafUmgEzd1adCi/2tc=;
-        b=ZMpvQ8rf98UNqU8Cn6FswuUbu+1rV+dOyCH/w0/Pr/qjGmIQCmbkzTJ+Z79VtQ7o64
-         b52x2OGcVBD0Q1lJzPzhh0UQbwf1d1C6tZPI1oDohY1ZrznYeCmEf2YB3aLJI0oufe7u
-         97C02eLRWWmClKGvZjAgplz11PsskKLt5Z9C9KANt8ehgFJB7L/yoYDkxYawp2q2RctT
-         WnPOzWFyrlzy2MCwQ9qYlqm3GskOJ0j0kGos2u2Wt/TuKeUHeYHIKMZqaSjEtRjU8Fy0
-         mjWTvxex+rAfG7zXJcOu5xsBjsDb/IG7rIZsODLyr9tCw2oKYQKkumO9vAP9NOYnf97p
-         aRAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DqScG+BXKtQJhW4TX1nkkxZN9LafUmgEzd1adCi/2tc=;
-        b=kUTer66S6Pn6LE9IQO0fBOXftO76yMHI1dScUyfAZUfH1X5oGPE4/lWBiNzBAYQOta
-         fGQTZq5u9sRaccnKhw02KRzFvBSkqdHEa96AH4P2FsqtkrgDB+rvLy1bA9RS2Wzjt/XG
-         tFhnZOizbMSD0OwR6/TtBHarHy2I4y+X5WfQMDvU98DkgYkoa1Uavb0OOaFUYH64IWsy
-         qnbEz0H04+znjsDzxrkc6frgjwHKw3qf1rVE6CJVgYsvznWHGV26F2KJIN0nG0BSouBt
-         Ur/+DQZnKwIa5338OrUQBw5MlTi3GSvVAeAx/TUVjH72lscEV4WqJu3tRVINY/DthXd6
-         nwRA==
-X-Gm-Message-State: AGi0PuYqt8ADDwWwcVlClb8JEVNg7ic9B300uphZwuVUXAl9uVohe3/p
-        PFBpW1zLmylV/fj6Ayt82qY=
-X-Google-Smtp-Source: APiQypJUfrqKjyg0yehiSqaR9Wab6FClM7I/XABuD9X4NZFOgwaA+sNuh7pYZKDS+aFKMtdeM6rclA==
-X-Received: by 2002:a17:902:704b:: with SMTP id h11mr4440925plt.125.1587390424127;
-        Mon, 20 Apr 2020 06:47:04 -0700 (PDT)
-Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id g43sm1204584pje.22.2020.04.20.06.47.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Apr 2020 06:47:03 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     broonie@kernel.org
-Cc:     Markus.Elfring@web.de, linux-kernel@vger.kernel.org,
-        Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v2 2/2] regmap: Simplify implementation of the regmap_field_read_poll_timeout() macro
-Date:   Mon, 20 Apr 2020 21:46:47 +0800
-Message-Id: <20200420134647.9121-3-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200420134647.9121-1-zhengdejin5@gmail.com>
-References: <20200420134647.9121-1-zhengdejin5@gmail.com>
+        Mon, 20 Apr 2020 09:47:53 -0400
+Received: from mga11.intel.com ([192.55.52.93]:4370 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbgDTNrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 09:47:53 -0400
+IronPort-SDR: DbgNKJoHeIXuzZo19puE8KxlsvmnDz7DNhby2wpYAH8QeuYC7CJMYOtgOFVq2ieV8q4uCPtV12
+ dYr1sU9OjhAQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 06:47:53 -0700
+IronPort-SDR: jwQolS9u+4721QdJFLXFEOkkXhmo1m2C+SFHHPT0cni8hJqTPMwOlDTulPPYyhjJrhSb2AZYL8
+ yASKG9D7+w1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
+   d="scan'208";a="279244431"
+Received: from avandeve-mobl.amr.corp.intel.com (HELO [10.135.0.43]) ([10.135.0.43])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Apr 2020 06:47:52 -0700
+Subject: Re: [PATCH 9/9] module: Reorder functions
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Jessica Yu <jeyu@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-hardening@lists.openwall.com, rick.p.edgecomb@intel.com
+References: <20200415210452.27436-1-kristen@linux.intel.com>
+ <20200415210452.27436-10-kristen@linux.intel.com>
+ <CAMj1kXGbh=0nC_6SGTWjKeDPdwBrEW0_vRbjDzWyqqjY_88S7Q@mail.gmail.com>
+ <cff1fa99-c692-d9f2-f077-60d630bb40bc@linux.intel.com>
+ <CAMj1kXHtT9Ope+rcuGipK20ovAWq7Vpt17zeLuFA=acRYPyxag@mail.gmail.com>
+From:   Arjan van de Ven <arjan@linux.intel.com>
+Message-ID: <578416ef-3d1d-4b64-2be7-0ae1f5b84796@linux.intel.com>
+Date:   Mon, 20 Apr 2020 06:47:52 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMj1kXHtT9Ope+rcuGipK20ovAWq7Vpt17zeLuFA=acRYPyxag@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify the implementation of the macro regmap_field_read_poll_timeout()
-by using the macro read_poll_timeout().
+On 4/20/2020 6:43 AM, Ard Biesheuvel wrote:
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v1 -> v2:
-	- modify the commit comments by Markus's suggestion .
+> 
+> Note that arm64 does not have a decompressor, so there the fine
+> grained randomization of the core kernel is not really feasible using
+> the approach presented here.
 
- include/linux/regmap.h | 23 ++++-------------------
- 1 file changed, 4 insertions(+), 19 deletions(-)
+maybe do a "memcpy" decompressor as an option? :-)
 
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index 299c1f6a03b4..78ddf224f988 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -194,25 +194,10 @@ struct reg_sequence {
-  */
- #define regmap_field_read_poll_timeout(field, val, cond, sleep_us, timeout_us) \
- ({ \
--	u64 __timeout_us = (timeout_us); \
--	unsigned long __sleep_us = (sleep_us); \
--	ktime_t timeout = ktime_add_us(ktime_get(), __timeout_us); \
--	int pollret; \
--	might_sleep_if(__sleep_us); \
--	for (;;) { \
--		pollret = regmap_field_read((field), &(val)); \
--		if (pollret) \
--			break; \
--		if (cond) \
--			break; \
--		if (__timeout_us && ktime_compare(ktime_get(), timeout) > 0) { \
--			pollret = regmap_field_read((field), &(val)); \
--			break; \
--		} \
--		if (__sleep_us) \
--			usleep_range((__sleep_us >> 2) + 1, __sleep_us); \
--	} \
--	pollret ?: ((cond) ? 0 : -ETIMEDOUT); \
-+	int __ret, __tmp; \
-+	__tmp = read_poll_timeout(regmap_field_read, __ret, __ret || (cond), \
-+			sleep_us, timeout_us, false, (field), &(val)); \
-+	__ret ?: __tmp; \
- })
- 
- #ifdef CONFIG_REGMAP
--- 
-2.25.0
+> 
 
