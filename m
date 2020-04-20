@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBC2C54FCB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCB9C3815B
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48718206DD
+	by mail.kernel.org (Postfix) with ESMTP id 6C1E120735
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1587387474;
-	bh=GP35ms7s6eukRrP35V2qI8Cv1wypBlHoorzFyo/mSfo=;
+	bh=FCcXvTLuWCFsDQQPNpkZ4jF3bjg+075quiwNXKwV5lM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1LDkRU936rS+LGl7warPbuf+tKQuLc5sOZF3kLYHl/02NFnhYHOG88uhyuI0bZQtT
-	 MyuMexb68i3fwZtUy1EWn9570kCRJb6t/mX6XqPz9n2wLSlMDByfQ19e3bNJkwluOl
-	 caOD2nWpWV3gygNeLDG3fjvKzWjULk5NZgyBEE90=
+	b=ciY1eLRHk5+JafEtStKvv8D/HglMfFPiJAViDXqZ6MLEVt5UL4/lqZGY0myc1sKLz
+	 bCqJL4FATK54zSNWjsVB0KU8/MNjxQ5yZOm2yZlC48uE4+Gtbz3ZnvPwHqXieptn9g
+	 OnKX0NmCHtR4c5u4I7l0mGuEGNGA1B6FFh+CHXTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgDTMn4 (ORCPT
+        id S1727939AbgDTMnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37624 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728449AbgDTMnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:43:51 -0400
+        id S1727825AbgDTMns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:43:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4A842070B;
-        Mon, 20 Apr 2020 12:43:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EBE820738;
+        Mon, 20 Apr 2020 12:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386630;
-        bh=GP35ms7s6eukRrP35V2qI8Cv1wypBlHoorzFyo/mSfo=;
+        s=default; t=1587386627;
+        bh=FCcXvTLuWCFsDQQPNpkZ4jF3bjg+075quiwNXKwV5lM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IEtvW1Zs0iz6x+9PSJ5pC/1/eFVzsrV3VB2vYC7AAUZ+qoHvastMLUd9T6Vah/ilo
-         1x3x6aiQ9suKoDUTgeFkWoTcfRDmRH+oQW3MQdD8Jy1Q9YSd8AenI5KTNc+XUezBdH
-         EECKixDAL3PKysw89M5m+CAJ+UCgrxNEsg9qwFxU=
+        b=oIxR8wnGVgoapzawd7aNGUdu4r5EsSqXXRgEnMkil1G9EtBH+wh95czoI1/cm92GG
+         pMc8/Lw3c1BB3BSDVS+5vD74aMJEj8zHzqjy9P6foPwfsshB3+83jUlPe+LH8ipY54
+         USEK+rEfNpGBLUeT61ZKIRqaQjOmVN4ek4Mvzzjk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.6 34/71] HID: lg-g15: Do not fail the probe when we fail to disable F# emulation
-Date:   Mon, 20 Apr 2020 14:38:48 +0200
-Message-Id: <20200420121515.794307788@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.6 33/71] ext4: fix incorrect inodes per group in error message
+Date:   Mon, 20 Apr 2020 14:38:47 +0200
+Message-Id: <20200420121515.515234631@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,60 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Josh Triplett <josh@joshtriplett.org>
 
-commit b8a75eaddae9410767c7d95a1c5f3a547aae7b81 upstream.
+commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb upstream.
 
-By default the G1-G12 keys on the Logitech gaming keyboards send
-F1 - F12 when in "generic HID" mode.
+If ext4_fill_super detects an invalid number of inodes per group, the
+resulting error message printed the number of blocks per group, rather
+than the number of inodes per group. Fix it to print the correct value.
 
-The first thing the hid-lg-g15 driver does is disable this behavior.
-
-We have received a bugreport that this does not work when the keyboard
-is connected through an Aten KVM switch. Using a gaming keyboard with
-a KVM is a bit weird setup, but still we can try to fail a bit more
-gracefully here.
-
-On the G510 keyboards the same USB-interface which is used for the gaming
-keys is also used for the media-keys. Before this commit we would call
-hid_hw_stop() on failure to disable the F# emulation and then exit the
-probe method with an error code.
-
-This not only causes us to not handle the gaming-keys, but this also
-breaks the media keys which is a regression compared to the situation
-when these keyboards where handled by the generic hidinput driver.
-
-This commit changes the error handling to clear the hiddev drvdata
-(to disable our .raw_event handler) and then returning from the probe
-method with success.
-
-The net result of this is that, when connected through a KVM, things
-work as well as they did before the hid-lg-g15 driver was introduced.
-
-Fixes: ad4203f5a243 ("HID: lg-g15: Add support for the G510 keyboards' gaming keys")
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1806321
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
+Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-lg-g15.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/ext4/super.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hid/hid-lg-g15.c
-+++ b/drivers/hid/hid-lg-g15.c
-@@ -803,8 +803,10 @@ static int lg_g15_probe(struct hid_devic
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4157,7 +4157,7 @@ static int ext4_fill_super(struct super_
+ 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
+ 	    sbi->s_inodes_per_group > blocksize * 8) {
+ 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
+-			 sbi->s_blocks_per_group);
++			 sbi->s_inodes_per_group);
+ 		goto failed_mount;
  	}
- 
- 	if (ret < 0) {
--		hid_err(hdev, "Error disabling keyboard emulation for the G-keys\n");
--		goto error_hw_stop;
-+		hid_err(hdev, "Error %d disabling keyboard emulation for the G-keys, falling back to generic hid-input driver\n",
-+			ret);
-+		hid_set_drvdata(hdev, NULL);
-+		return 0;
- 	}
- 
- 	/* Get initial brightness levels */
+ 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
 
 
