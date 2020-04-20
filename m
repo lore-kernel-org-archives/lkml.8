@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29211C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768B2C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00CC0206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53318206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387124;
-	bh=Xw6XtnI1P4r4jz0fwH94cuSkePcfAi2Pj/GtL9L6O44=;
+	s=default; t=1587387128;
+	bh=2wn0F3Rb9BTNHNvimEOaOhQbgSSFphhXDg2fGL1HMX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e1OqcXR1oyN9s91OoJAZrg706xfFilf1JcjcRpQN2l0KDk7aiW5StnHWCb1b6bEi0
-	 1Z/WglFCAqhqNW3d+SJVbw6waM4154HzbCy80tx2BGUa7HPzwngvsO+DrB5wUHRx9P
-	 tkGvHM8w6UJSX/L2xkxITUOSikrut2cprVKZg/90=
+	b=JNi0Z3FSawKc99/q5NXUjuP5vWn0u5GpUkYHuaJphwZYPw3d1pRpHOvh7LdgycBKk
+	 3jsznWyygUYxEKFe0XSvyHEDg7cxWsd9GhPSiqmpNLmBSubJ9EjXCkLhWHvfmx1xfb
+	 OfCxeOhI2ndGhNe0u4Sav3qF1AADA1o/3+Sflx+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgDTMwD (ORCPT
+        id S1729136AbgDTMrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:52:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44202 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbgDTMrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:47:53 -0400
+        id S1728618AbgDTMri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:47:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 356E6206D4;
-        Mon, 20 Apr 2020 12:47:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C7F0206DD;
+        Mon, 20 Apr 2020 12:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386872;
-        bh=Xw6XtnI1P4r4jz0fwH94cuSkePcfAi2Pj/GtL9L6O44=;
+        s=default; t=1587386858;
+        bh=2wn0F3Rb9BTNHNvimEOaOhQbgSSFphhXDg2fGL1HMX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LMhMGvmrs5egHxY3El+zaPreA88RgfDSV17R66NztBoRj3QSF6YzbXEoqbR90TJso
-         4MMAikLsH+2+JfABGwZgy6YzQ/BZxdNndKDhrTTQCeBWjJ2lfvHU3TLxcR9J3Js5AH
-         NWeil8hl/S38ne2DUaxR9c0Apm93nFD9CK0tMXoI=
+        b=Xv/3iubbAl6bhnVKoCwmUCYE/x4pOYDhB4pQkmMfuDd79I/qco4ZXao6e9W6wRNo+
+         5Zf/HSL9p+XK0hUbHJo+I9G1K8Kd0xii4bNrw6wVR/ad43oUc1OUhJb5hIyNeb9lIy
+         qIn6Z79Vo+UGuQge3VqPWJ7bt7P/pIxPgf539j6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.4 46/60] mac80211: fix race in ieee80211_register_hw()
-Date:   Mon, 20 Apr 2020 14:39:24 +0200
-Message-Id: <20200420121512.904401756@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>
+Subject: [PATCH 5.4 56/60] x86/resctrl: Preserve CDP enable over CPU hotplug
+Date:   Mon, 20 Apr 2020 14:39:34 +0200
+Message-Id: <20200420121515.373669661@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -59,149 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumit Garg <sumit.garg@linaro.org>
+From: James Morse <james.morse@arm.com>
 
-commit 52e04b4ce5d03775b6a78f3ed1097480faacc9fd upstream.
+commit 9fe0450785abbc04b0ed5d3cf61fcdb8ab656b4b upstream.
 
-A race condition leading to a kernel crash is observed during invocation
-of ieee80211_register_hw() on a dragonboard410c device having wcn36xx
-driver built as a loadable module along with a wifi manager in user-space
-waiting for a wifi device (wlanX) to be active.
+Resctrl assumes that all CPUs are online when the filesystem is mounted,
+and that CPUs remember their CDP-enabled state over CPU hotplug.
 
-Sequence diagram for a particular kernel crash scenario:
+This goes wrong when resctrl's CDP-enabled state changes while all the
+CPUs in a domain are offline.
 
-    user-space  ieee80211_register_hw()  ieee80211_tasklet_handler()
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-       |                    |                 |
-       |<---phy0----wiphy_register()          |
-       |-----iwd if_add---->|                 |
-       |                    |<---IRQ----(RX packet)
-       |              Kernel crash            |
-       |              due to unallocated      |
-       |              workqueue.              |
-       |                    |                 |
-       |       alloc_ordered_workqueue()      |
-       |                    |                 |
-       |              Misc wiphy init.        |
-       |                    |                 |
-       |            ieee80211_if_add()        |
-       |                    |                 |
+When a domain comes online, enable (or disable!) CDP to match resctrl's
+current setting.
 
-As evident from above sequence diagram, this race condition isn't specific
-to a particular wifi driver but rather the initialization sequence in
-ieee80211_register_hw() needs to be fixed. So re-order the initialization
-sequence and the updated sequence diagram would look like:
-
-    user-space  ieee80211_register_hw()  ieee80211_tasklet_handler()
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-       |                    |                 |
-       |       alloc_ordered_workqueue()      |
-       |                    |                 |
-       |              Misc wiphy init.        |
-       |                    |                 |
-       |<---phy0----wiphy_register()          |
-       |-----iwd if_add---->|                 |
-       |                    |<---IRQ----(RX packet)
-       |                    |                 |
-       |            ieee80211_if_add()        |
-       |                    |                 |
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Link: https://lore.kernel.org/r/1586254255-28713-1-git-send-email-sumit.garg@linaro.org
-[Johannes: fix rtnl imbalances]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 5ff193fbde20 ("x86/intel_rdt: Add basic resctrl filesystem support")
+Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200221162105.154163-1-james.morse@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/main.c |   24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c     |    2 ++
+ arch/x86/kernel/cpu/resctrl/internal.h |    1 +
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c |   13 +++++++++++++
+ 3 files changed, 16 insertions(+)
 
---- a/net/mac80211/main.c
-+++ b/net/mac80211/main.c
-@@ -1045,7 +1045,7 @@ int ieee80211_register_hw(struct ieee802
- 		local->hw.wiphy->signal_type = CFG80211_SIGNAL_TYPE_UNSPEC;
- 		if (hw->max_signal <= 0) {
- 			result = -EINVAL;
--			goto fail_wiphy_register;
-+			goto fail_workqueue;
- 		}
- 	}
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -578,6 +578,8 @@ static void domain_add_cpu(int cpu, stru
+ 	d->id = id;
+ 	cpumask_set_cpu(cpu, &d->cpu_mask);
  
-@@ -1107,7 +1107,7 @@ int ieee80211_register_hw(struct ieee802
- 
- 	result = ieee80211_init_cipher_suites(local);
- 	if (result < 0)
--		goto fail_wiphy_register;
-+		goto fail_workqueue;
- 
- 	if (!local->ops->remain_on_channel)
- 		local->hw.wiphy->max_remain_on_channel_duration = 5000;
-@@ -1133,10 +1133,6 @@ int ieee80211_register_hw(struct ieee802
- 
- 	local->hw.wiphy->max_num_csa_counters = IEEE80211_MAX_CSA_COUNTERS_NUM;
- 
--	result = wiphy_register(local->hw.wiphy);
--	if (result < 0)
--		goto fail_wiphy_register;
--
- 	/*
- 	 * We use the number of queues for feature tests (QoS, HT) internally
- 	 * so restrict them appropriately.
-@@ -1192,9 +1188,9 @@ int ieee80211_register_hw(struct ieee802
- 		goto fail_flows;
- 
- 	rtnl_lock();
--
- 	result = ieee80211_init_rate_ctrl_alg(local,
- 					      hw->rate_control_algorithm);
-+	rtnl_unlock();
- 	if (result < 0) {
- 		wiphy_debug(local->hw.wiphy,
- 			    "Failed to initialize rate control algorithm\n");
-@@ -1248,6 +1244,12 @@ int ieee80211_register_hw(struct ieee802
- 		local->sband_allocated |= BIT(band);
- 	}
- 
-+	result = wiphy_register(local->hw.wiphy);
-+	if (result < 0)
-+		goto fail_wiphy_register;
++	rdt_domain_reconfigure_cdp(r);
 +
-+	rtnl_lock();
-+
- 	/* add one default STA interface if supported */
- 	if (local->hw.wiphy->interface_modes & BIT(NL80211_IFTYPE_STATION) &&
- 	    !ieee80211_hw_check(hw, NO_AUTO_VIF)) {
-@@ -1287,17 +1289,17 @@ int ieee80211_register_hw(struct ieee802
- #if defined(CONFIG_INET) || defined(CONFIG_IPV6)
-  fail_ifa:
- #endif
-+	wiphy_unregister(local->hw.wiphy);
-+ fail_wiphy_register:
- 	rtnl_lock();
- 	rate_control_deinitialize(local);
- 	ieee80211_remove_interfaces(local);
-- fail_rate:
- 	rtnl_unlock();
-+ fail_rate:
-  fail_flows:
- 	ieee80211_led_exit(local);
- 	destroy_workqueue(local->workqueue);
-  fail_workqueue:
--	wiphy_unregister(local->hw.wiphy);
-- fail_wiphy_register:
- 	if (local->wiphy_ciphers_allocated)
- 		kfree(local->hw.wiphy->cipher_suites);
- 	kfree(local->int_scan_req);
-@@ -1347,8 +1349,8 @@ void ieee80211_unregister_hw(struct ieee
- 	skb_queue_purge(&local->skb_queue_unreliable);
- 	skb_queue_purge(&local->skb_queue_tdls_chsw);
+ 	if (r->alloc_capable && domain_setup_ctrlval(r, d)) {
+ 		kfree(d);
+ 		return;
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -601,5 +601,6 @@ bool has_busy_rmid(struct rdt_resource *
+ void __check_limbo(struct rdt_domain *d, bool force_free);
+ bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
+ bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
++void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
  
--	destroy_workqueue(local->workqueue);
- 	wiphy_unregister(local->hw.wiphy);
-+	destroy_workqueue(local->workqueue);
- 	ieee80211_led_exit(local);
- 	kfree(local->int_scan_req);
+ #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1769,6 +1769,19 @@ static int set_cache_qos_cfg(int level,
+ 	return 0;
  }
+ 
++/* Restore the qos cfg state when a domain comes online */
++void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
++{
++	if (!r->alloc_capable)
++		return;
++
++	if (r == &rdt_resources_all[RDT_RESOURCE_L2DATA])
++		l2_qos_cfg_update(&r->alloc_enabled);
++
++	if (r == &rdt_resources_all[RDT_RESOURCE_L3DATA])
++		l3_qos_cfg_update(&r->alloc_enabled);
++}
++
+ /*
+  * Enable or disable the MBA software controller
+  * which helps user specify bandwidth in MBps.
 
 
