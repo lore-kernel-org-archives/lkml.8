@@ -2,70 +2,73 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B540C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ACBC54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A39620B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A1920B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:16:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zhX0gZE0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IG13ZSrT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgDTXQE (ORCPT
+        id S1728119AbgDTXQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 19:16:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48058 "EHLO
+        Mon, 20 Apr 2020 19:16:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726089AbgDTXQD (ORCPT
+        by vger.kernel.org with ESMTP id S1727787AbgDTXQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 19:16:03 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF1EC061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 16:16:03 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id g30so5719564pfr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 16:16:03 -0700 (PDT)
+        Mon, 20 Apr 2020 19:16:05 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E0FC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 16:16:05 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id h69so5851288pgc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 16:16:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4xQTgpXJ4QBqY2cydxzcuHbME8SOuNbUR7Rua/VINv0=;
-        b=zhX0gZE0wPeOPRlNj2LRe37QBMwZ1DbYDFr1dzAYqUicKa0pAnvSFSKU23Q5UVFJmb
-         3M4w8Yc6gDpKgzqaW64gc3WrYNAg+UjsBtSCusY4J6HeCpLxgDE7glF8ClMvu/N3w+x8
-         QTiueumg8N/9QAsoF2/5wDte1gN2ktpl6W5FobOC5ng+ihq7sqwkfJQZP30IsMe3Uc/2
-         fA071htgTiPv3PQKt5llNmZrqQ2KFg7sT/S9t1bcDbZi2X+HMqi8m+q+WaG/zK6CSs3Z
-         1Z1Tiki6UWkWcE5YQjVHDvRrCw3V51Uxb/W8V0VP3NnnHSZMA7tTbZcDwCoqsv4uoqIh
-         ukSg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KASPutP8+Wt/2CivAD5BVxDPcY0aTKQ2tUjRHF1fuqg=;
+        b=IG13ZSrTS4xSdhY/QebJdMqrM/vT/5xW3to2DDrjBlMngXoczlq2XfhiQFBBCmotlF
+         Gyu7pZbJejO+Jr8yqmUwxTBj0EG6HOEU7mHsGotvbNYroOHdXzZt3dIEabZS6mjMDhdt
+         gUEL/Ek5qwWEoMwrV8rE3GuVb04skEngiDYAvdUg39+Lbxy2Z9A6lXkyHCmyZEdk7Fuo
+         aum/OwPdMFsI8TD/TnqdhJBdvrgRHZc+zHhSWI1MVb8k0M49nOC3ZgMmc4cRvXNVYEeZ
+         I6P8ZfkyIe+PaEQy3rMf92IvgclRCaaaTtAxHGNDmbCAE4XwrxfG1SMqlsO/nI/yKZQG
+         in9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4xQTgpXJ4QBqY2cydxzcuHbME8SOuNbUR7Rua/VINv0=;
-        b=XytOmzmGMXpV6gGjAqbB3kYf5o/ESqEKrQBYdbb44CR9ktg7OnnHlPhfNScuDkhvFS
-         CrzPpi3lAvYkJc3m2YVx3GKJCZPVJ6ZrZUtPe7zBIeNyarVXPTkY/HpRXm+MEdb3QFXr
-         qTTC6sJ24lZ7KDqQ034r0eEOxQVyRx2PMKuSGmcA18NDeekiMqnZvr0fsuYvQT5dW8wy
-         IVXKeArqh6Dmo4bjC3qtZ764NDlyI92/3Wf3f5EGJqDrNv2EFvEyFixMTo4DFT0Scpvo
-         Uj63xEbwG4W18TtRnhOX9x0Vl/AN4C/jkYzMPOPZDKQSEMmi59ucXhdGdRBUexrVYHDd
-         M62g==
-X-Gm-Message-State: AGi0PuYjYD9j9BIUtwJ1RLOV9936AQmIoKeFoFMHl1D8cyMBWxsU9LWy
-        GE84MYH0wosxv1rk3OucyHIaJA==
-X-Google-Smtp-Source: APiQypL4a7LQVs624sxLsAvBlFJV2UTzLt9usI0l8cClcK7Cj8snnXWciF6PC1oadYbSHDGmdIAQRA==
-X-Received: by 2002:a62:7b03:: with SMTP id w3mr12591877pfc.313.1587424563272;
-        Mon, 20 Apr 2020 16:16:03 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KASPutP8+Wt/2CivAD5BVxDPcY0aTKQ2tUjRHF1fuqg=;
+        b=LlFQbKVFw9VyfV7bWBlbzmyD2q1JikceSkB8oGL3+OXROhu40IhQi/qnFmkaKUsL70
+         rnEZnnj3Axu7IPYsYbW6fYgq0FDD2VvDOEUZ5SxUxuoYJN90bnHd++trAjRA5IK+leSo
+         lQNQ9MZluML7WDKNP2cvVQAKty3XvWAtZSZeYiE9F1l+3tLwK3yVjLfjpQZM6/ATMazw
+         Jec574XMswhs7g2CHV228wsNHILx518OpvzHXrTb/5SI6IldH2T2s5be+pP3caNpo3m4
+         PSDfA6lunKugz2yo2/R1fVpwCz+ld9zOM9auWdukszOLJWBTpvR5YzpEYm9uq5kUHNA/
+         VDTA==
+X-Gm-Message-State: AGi0Pua432L1u17qC1ZIT9owrV2WTkWKnJl8n1MWf8TOmwBPb8n/9And
+        1W0xHHpquPwVozxltMFZ9sl/7p8xJ1Y=
+X-Google-Smtp-Source: APiQypJqbaUChBQV737Tz6wMqMVNrF6DfwFKPYnIC0lHRs1zJCJKHciybyFNgByZKuGHiZgmUHPmMg==
+X-Received: by 2002:a62:ea06:: with SMTP id t6mr19109437pfh.298.1587424565358;
+        Mon, 20 Apr 2020 16:16:05 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id l15sm435354pgk.59.2020.04.20.16.16.02
+        by smtp.gmail.com with ESMTPSA id l15sm435354pgk.59.2020.04.20.16.16.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 16:16:02 -0700 (PDT)
+        Mon, 20 Apr 2020 16:16:04 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     bjorn.andersson@linaro.org, ohad@wizery.com
 Cc:     elder@linaro.org, s-anna@ti.com, Markus.Elfring@web.de,
         linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/4] remoteproc: Refactor function rproc_alloc()
-Date:   Mon, 20 Apr 2020 17:15:57 -0600
-Message-Id: <20200420231601.16781-1-mathieu.poirier@linaro.org>
+Subject: [PATCH v3 2/4] remoteproc: Restructure firmware name allocation
+Date:   Mon, 20 Apr 2020 17:15:59 -0600
+Message-Id: <20200420231601.16781-3-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200420231601.16781-1-mathieu.poirier@linaro.org>
+References: <20200420231601.16781-1-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,38 +76,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are the remaining patches from the second version [1] that have
-not been applied yet.
+Improve the readability of function rproc_alloc_firmware() by using
+a non-negated condition and moving the comment out of the conditional
+block
 
-Applies cleanly on rproc-next (3898fc99d199)
+Suggested-by: Alex Elder <elder@linaro.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Alex Elder <elder@linaro.org>
+---
+ drivers/remoteproc/remoteproc_core.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Thanks,
-Mathieu
-
-New for V3:
-- Freeing firmware name allocation with kfree_const() in patch 1.
-- Get the comment out of the conditional block in patch 2. 
-- A cleaner implementation of function rproc_alloc_ops() in patch 3.
-
-New for V2:
-- Reworked title for patch 01.
-- Added "Fixes" tag to patch 01.
-- Using kasprintf() instead of complex memory allocation.
-- Using kstrdup_const() instead of kstrdup(). 
-- Reworked rproc_alloc_firmware() to use non-negative form. 
-
-[1]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=271809
-
-Mathieu Poirier (4):
-  remoteproc: Use kstrdup_const() rather than kstrdup()
-  remoteproc: Restructure firmware name allocation
-  remoteproc: Split rproc_ops allocation from rproc_alloc()
-  remoteproc: Get rid of tedious error path
-
- drivers/remoteproc/remoteproc_core.c | 70 +++++++++++++++-------------
- include/linux/remoteproc.h           |  2 +-
- 2 files changed, 39 insertions(+), 33 deletions(-)
-
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index db8a15fc1e4a..45529d40342f 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -2011,14 +2011,14 @@ static int rproc_alloc_firmware(struct rproc *rproc,
+ {
+ 	const char *p;
+ 
+-	if (!firmware)
+-		/*
+-		 * If the caller didn't pass in a firmware name then
+-		 * construct a default name.
+-		 */
+-		p = kasprintf(GFP_KERNEL, "rproc-%s-fw", name);
+-	else
++	/*
++	 * Allocate a firmware name if the caller gave us one to work
++	 * with.  Otherwise construct a new one using a default pattern.
++	 */
++	if (firmware)
+ 		p = kstrdup_const(firmware, GFP_KERNEL);
++	else
++		p = kasprintf(GFP_KERNEL, "rproc-%s-fw", name);
+ 
+ 	if (!p)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
