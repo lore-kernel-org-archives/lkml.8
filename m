@@ -2,100 +2,94 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A934C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB95C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46310206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D38206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgDTMeO (ORCPT
+        id S1726911AbgDTMfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:34:14 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:52212 "EHLO loongson.cn"
+        Mon, 20 Apr 2020 08:35:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52656 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726020AbgDTMeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:34:01 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb9uzlp1eHSgqAA--.29S3;
-        Mon, 20 Apr 2020 20:33:57 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v3 1/4] selftests: kmod: Use variable NAME in kmod_test_0001()
-Date:   Mon, 20 Apr 2020 20:33:52 +0800
-Message-Id: <1587386035-5188-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1587386035-5188-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1587386035-5188-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxb9uzlp1eHSgqAA--.29S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruF48Zry7ZrWfJr1UZF4UXFb_yoWkGwcE9r
-        42grn7Cw47AFyUAF4Iv3Z3ZF4qk3WUWr48GryjqFy3Kw12q3Z8Jwn2yr10ya1ruFW5GFZF
-        9rWvywnakw429jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbSAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
-        0Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-        x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I2
-        62IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcV
-        AFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG
-        0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ryUMxAIw28Icx
-        kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-        xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
-        IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
-        6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
-        CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUx3kZUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        id S1726020AbgDTMfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:35:02 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 42114F8280CD990CF8CC;
+        Mon, 20 Apr 2020 20:35:01 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.7) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Apr 2020
+ 20:34:59 +0800
+Subject: Re: [PATCH] staging: mt7621-pinctrl: Use correct pointer type
+ argument for sizeof
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     <gregkh@linuxfoundation.org>, <matthias.bgg@gmail.com>,
+        <nishkadg.linux@gmail.com>, <devel@driverdev.osuosl.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200420123755.4353-1-yanaijie@huawei.com>
+ <20200420121900.GD2659@kadam>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <c6b155a6-28ae-e0f9-b866-4d17e8a45706@huawei.com>
+Date:   Mon, 20 Apr 2020 20:34:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <20200420121900.GD2659@kadam>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.7]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the variable NAME instead of "\000" directly in kmod_test_0001().
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
 
-v3:
-  - no changes
+ÔÚ 2020/4/20 20:19, Dan Carpenter Ð´µÀ:
+> On Mon, Apr 20, 2020 at 08:37:55PM +0800, Jason Yan wrote:
+>> Fix the following coccicheck warning:
+>>
+>> drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c:223:14-36: WARNING: Use
+>> correct pointer type argument for sizeof
+>>
+>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>> ---
+>>   drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
+>> index d0f06790d38f..8883f2a8ea57 100644
+>> --- a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
+>> +++ b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
+>> @@ -220,7 +220,7 @@ static int rt2880_pinmux_index(struct rt2880_priv *p)
+>>   	/* allocate our function and group mapping index buffers */
+>>   	f = p->func = devm_kcalloc(p->dev,
+>>   				   p->func_count,
+>> -				   sizeof(struct rt2880_pmx_func),
+>> +				   sizeof(struct rt2880_pmx_func *),
+> 
+> Yes.  This fixes a bug.  We were allocating too much data.  But the
+> prefered style is:
+> 
+> 				sizeof(*p->func),
+> 
+> Please could you resend?
+> 
 
-v2:
-  - just add the Acked-by tag
+Sure, I will cook a new one.
 
- tools/testing/selftests/kmod/kmod.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-index 3702dbc..da60c3b 100755
---- a/tools/testing/selftests/kmod/kmod.sh
-+++ b/tools/testing/selftests/kmod/kmod.sh
-@@ -341,7 +341,7 @@ kmod_test_0001_driver()
- 
- 	kmod_defaults_driver
- 	config_num_threads 1
--	printf '\000' >"$DIR"/config_test_driver
-+	printf $NAME >"$DIR"/config_test_driver
- 	config_trigger ${FUNCNAME[0]}
- 	config_expect_result ${FUNCNAME[0]} MODULE_NOT_FOUND
- }
-@@ -352,7 +352,7 @@ kmod_test_0001_fs()
- 
- 	kmod_defaults_fs
- 	config_num_threads 1
--	printf '\000' >"$DIR"/config_test_fs
-+	printf $NAME >"$DIR"/config_test_fs
- 	config_trigger ${FUNCNAME[0]}
- 	config_expect_result ${FUNCNAME[0]} -EINVAL
- }
--- 
-2.1.0
+> regards,
+> dan carpenter
+> 
+> 
+> .
+> 
 
