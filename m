@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5107C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D1DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C56CD206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2249206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386437;
-	bh=RexPW0sUzuNzCRg2RHBHDFYUpB/jVvp7IwsrhECKk7M=;
+	s=default; t=1587386441;
+	bh=RO1VvA0TedKY/5ElciEG/QJ0CF/7C7PmxxWIipvdjA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VeXHldlRTFG/7qNzjZ6Wi7s4zep+WszoiNB0LNcVy9Tvm2qInWVSIXiu0/NjEuyXm
-	 oB9/fqItzLrFeByr/1z/nRW35JMIWkLfkmnaJvYyBb6a7oC27UuTB1vrRRIprsWo7O
-	 5KfD/SW1fu1yWtuEeMvf9QzErZ9enOf3hRNgk3xY=
+	b=SX/OOXOwmDDT1Kkr5q1m3plzv28ryH8gm+Z4bn76DJrEzPFqNQSnpcZpvnEFkBpeu
+	 2k7yN1eOwQb7+rMtSfT//DtXWQjfp2Sg098QUbkBUWHioydd/giPnduzwBUvAHI8ov
+	 0X50pkict7ahX4YlE6o15eql1n29KS45eO2Qk3vc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgDTMkg (ORCPT
+        id S1727813AbgDTMkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:40:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32820 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727780AbgDTMkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:40:33 -0400
+        id S1727780AbgDTMki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:40:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04ACA2070B;
-        Mon, 20 Apr 2020 12:40:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD14020736;
+        Mon, 20 Apr 2020 12:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386432;
-        bh=RexPW0sUzuNzCRg2RHBHDFYUpB/jVvp7IwsrhECKk7M=;
+        s=default; t=1587386437;
+        bh=RO1VvA0TedKY/5ElciEG/QJ0CF/7C7PmxxWIipvdjA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d9ySpuG1mOzkKta1188VCYved6neW//GVGKZhPKlt/brtntnX/fWcf3gErA3RXaHV
-         rIhezHxn3RTskqmqwmwNAJQoRByYStE32tzZEe+fUv0RscXeHS/MXkT20nLW4cfYQS
-         lY399/AmZqvtZNWkT+KfGACp3pOInanSpO3c0FPw=
+        b=C+QKAk6hYomRPg8nwguaSQP289/wN+17TB/DImgcitiNwiJxYXBFQZQ7UGryIBuet
+         HYOETs8sk2NgwbYnzs5jf+58Ao6PTYp5CWiSwemIwiPG9UbPQWopS2776ZuelRf/XU
+         5WY7xyl4R9iDrD38+SDNMwHbVrffYY888esYy9WU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Toralf=20F=C3=B6rster?= <toralf.foerster@gmx.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 20/65] Revert "ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()"
-Date:   Mon, 20 Apr 2020 14:38:24 +0200
-Message-Id: <20200420121510.727951157@linuxfoundation.org>
+        stable@vger.kernel.org, Hongwu Su <hongwus@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.5 22/65] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
+Date:   Mon, 20 Apr 2020 14:38:26 +0200
+Message-Id: <20200420121511.189790190@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -61,47 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Can Guo <cang@codeaurora.org>
 
-This reverts commit e8eab1acd6cdf142fb93c47201a1ae1f3dcbfc5f which is
-commit 65a691f5f8f0bb63d6a82eec7b0ffd193d8d8a5f upstream.
+commit c63d6099a7959ecc919b2549dc6b71f53521f819 upstream.
 
-Rafael writes:
-	It has not been marked for -stable or otherwise requested to be
-	included AFAICS.  Also it depends on other mainline commits that
-	have not been included into 5.6.5.
+The async version of ufshcd_hold(async == true), which is only called in
+queuecommand path as for now, is expected to work in atomic context, thus
+it should not sleep or schedule out. When it runs into the condition that
+clocks are ON but link is still in hibern8 state, it should bail out
+without flushing the clock ungate work.
 
-Reported-by: Toralf Förster <toralf.foerster@gmx.de>
-Reported-by: Rafael J. Wysocki <rafael@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>
+Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
+Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/acpi/ec.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1654,6 +1654,7 @@ static int acpi_ec_add(struct acpi_devic
- 
- 		if (boot_ec && ec->command_addr == boot_ec->command_addr &&
- 		    ec->data_addr == boot_ec->data_addr) {
-+			boot_ec_is_ecdt = false;
- 			/*
- 			 * Trust PNP0C09 namespace location rather than
- 			 * ECDT ID. But trust ECDT GPE rather than _GPE
-@@ -1673,12 +1674,9 @@ static int acpi_ec_add(struct acpi_devic
- 
- 	if (ec == boot_ec)
- 		acpi_handle_info(boot_ec->handle,
--				 "Boot %s EC initialization complete\n",
-+				 "Boot %s EC used to handle transactions and events\n",
- 				 boot_ec_is_ecdt ? "ECDT" : "DSDT");
- 
--	acpi_handle_info(ec->handle,
--			 "EC: Used to handle transactions and events\n");
--
- 	device->driver_data = ec;
- 
- 	ret = !!request_region(ec->data_addr, 1, "EC data");
+---
+ drivers/scsi/ufs/ufshcd.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1542,6 +1542,11 @@ start:
+ 		 */
+ 		if (ufshcd_can_hibern8_during_gating(hba) &&
+ 		    ufshcd_is_link_hibern8(hba)) {
++			if (async) {
++				rc = -EAGAIN;
++				hba->clk_gating.active_reqs--;
++				break;
++			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 			flush_work(&hba->clk_gating.ungate_work);
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
 
 
