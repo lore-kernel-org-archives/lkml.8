@@ -2,137 +2,236 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE98FC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E3BC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80C0C205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70718205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:53:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MQEGkVTE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="s8il7NlB";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="X2ZrHJg4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgDTKwt (ORCPT
+        id S1726284AbgDTKxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 06:52:49 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:18640 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725773AbgDTKws (ORCPT
+        Mon, 20 Apr 2020 06:53:21 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:40807 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgDTKxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 06:52:48 -0400
-X-UUID: 10f5262b28c749c5bcbed67e4ec0dd43-20200420
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=5ZSYvBnifQattuM6WwNJ4dWYpkcL8v4PWiqKlXsfHC4=;
-        b=MQEGkVTEJjor7u4n/2Ncwn0pFev7mIhXwkIn1iFmGxsdVQ+XfMW8QCKOgE413wlgZlHJD9/E/qlViXeL/UqqZjk17Kkox+fjXjzgAag0IXZAp4E9l8Nfg32vOzXyfOM59XvtcW1rnQ5gLi4ACDc+8HCFnvUdoHQtSvgCG286y1k=;
-X-UUID: 10f5262b28c749c5bcbed67e4ec0dd43-20200420
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2007460060; Mon, 20 Apr 2020 18:52:44 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 20 Apr 2020 18:52:38 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 20 Apr 2020 18:52:37 +0800
-Message-ID: <1587379959.6297.2.camel@mtksdaap41>
-Subject: Re: [PATCH v12 1/6] mfd: mt6397: Modify suspend/resume behavior
-From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>,
-        "Richard Fontana" <rfontana@redhat.com>,
-        <linux-rtc@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Josef Friedl <josef.friedl@speed.at>,
-        <srv_heupstream@mediatek.com>, Sebastian Reichel <sre@kernel.org>
-Date:   Mon, 20 Apr 2020 18:52:39 +0800
-In-Reply-To: <20200416084910.GX2167633@dell>
-References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <20200416084910.GX2167633@dell>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 20 Apr 2020 06:53:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587379999; x=1618915999;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ZuPXdwBubRWzckv0AlLDY2iKwmKwat4MlAGMlwJGTmE=;
+  b=s8il7NlBZjrx0GG/1xuPhXv9E/sl/o7NwcO09jlEBW6mDXJIb8FmhZAM
+   AMa9X2TIVcp2RMg5pIN350vqxZw2yJ+2UlXYpd/tJEXu7n/D2BEU5/f5W
+   kVMpVjk8ciqZG1xWLfbM+s7kR7vm6aCs4XOddUE77GNDPYrFwS2IVlPFT
+   ZFQSEAa5YM4KuP45wN2p32wOeJLB5DnCCpCJBFpSdqP+uP1xa8fQ2uGSc
+   XZM23IGWawdnfMvsSu9AnO0sB7FSfRIuufCZObebQm3dNP3j3cV34drLQ
+   g0dVROQaINKf3m9pClDhLXWB5lv3p41h2CADex37Gql+cmfJla2zIBB++
+   A==;
+IronPort-SDR: k1g7WKsjD+fD3FUY+ngDoKaDcgavEjgN7ZVItSI3YTcPndA2/UmvMhL79Xg6NNGhkdDNCT1Rcj
+ CLf3ntj7w3kAf0olFzlhsLMiPRoLHGvoTQ7qyiyGaUoZLGDgdY3cxArB9cuPG05FAHXQXp1O+0
+ WhOyOhCkulumPKbWf/lASxMSI8wIv8mQGS1rUrQwxTSUs2UPXiJ5GILievWVv0ik4nlsDkYGDd
+ fM7B7lGWKYXsvsoPVBHmThpCCGs0XbgaU76v29JGonKmdxbC3uiOuz9LW7zuR6BxJY2Vk9lJr2
+ 4Jk=
+X-IronPort-AV: E=Sophos;i="5.72,406,1580799600"; 
+   d="scan'208";a="73112964"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Apr 2020 03:53:16 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 20 Apr 2020 03:53:14 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Mon, 20 Apr 2020 03:53:21 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mrex+YLwjt5QkibK+uSS8sm48HnthY0vtBUgQC1WQR/nL+yaCkL0LXnt+v+x0qGmVuW5sPVGgWD+0mYr/9cVcmwI6VT4QkRWB5g0RUHfBigA48PeMrgAJ7SIDJjyajJJnoz/gGoN+gMc5J/r+j5EcNuVYQurnqnYIN7Ht4YzuO/ALKludjh1ko4Edp+gpTBe3mKkuEwhkFIzDuWngxmeJOqlnic9XJqm786KFPYO9uWnO3GRGsX74DteZs8H2wKQ5cIEVKOWQdFdFHWsvHPuPmDLgSI//+NpHQU1OiEuJ0ck+Yv2RTTFDlzJDSVN4Tk3Fp2JStDX5DEOY6uvAPgiQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xkD+CdL/4Whq3+RdNntYgEDDwsTe0zXwbgEw1lg7tVQ=;
+ b=CuKovDf+LLwhruUWm5twjXZsCQdY/BEyK5TKYn/D6s2PAj+duEW53tJSjQ/WFtxvLileTWewgfIalIATnMW/ngLUtEUhdLYd6j9o44nNk7BV8A+BXk48P2dkFPuQNXgut8n9i/NSepaA2ZhnsPdurPGwE9yUR0KK2dtP4QNzJzDh8OSCqQ/JSA7/BpxzPqPApQjceUTmhHmcUqFhxmB8owH0l5IJX3KerHcHqg3PJxIs2e9tMFmt5hf9T7g4S+4HK4/Ltoww5OSi879qiVnzaxKvFM14CBmuH06M1hMhXLsZEOVSRchewqYlj+MXjFjUB5NDG+pz7dg73KAcVrvGXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xkD+CdL/4Whq3+RdNntYgEDDwsTe0zXwbgEw1lg7tVQ=;
+ b=X2ZrHJg4gXPq1dbSSqLt/5GG/ypGXGjHzZbfikbTv4CaLTzlFOPhSID0QJlRiFOv94T5FAKkWuVCAwPeV24i1klPAyQAyhToYdJFIDp/zaocZ90eONLufsHC53073G/SwAOODidkSEjnpot7YciVCyzS+qk/dMUj6Z5l9fZIg4A=
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
+ by BY5PR11MB4323.namprd11.prod.outlook.com (2603:10b6:a03:1c2::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Mon, 20 Apr
+ 2020 10:53:11 +0000
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
+ 10:53:11 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <mantas@8devices.com>, <gch981213@gmail.com>, <robimarko@gmail.com>
+CC:     <linux-mtd@lists.infradead.org>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mtd: spi-nor: fix 4-byte opcode support for w25q256
+Thread-Topic: [PATCH] mtd: spi-nor: fix 4-byte opcode support for w25q256
+Thread-Index: AQHWFwHieCOFTav6rUeke0dD3DMEOg==
+Date:   Mon, 20 Apr 2020 10:53:11 +0000
+Message-ID: <43054851.jYS1km7NsV@192.168.0.120>
+References: <1586958510-24012-1-git-send-email-mantas@8devices.com>
+In-Reply-To: <1586958510-24012-1-git-send-email-mantas@8devices.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tudor.Ambarus@microchip.com; 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b4810fd8-757f-4c04-2a9e-08d7e51904b0
+x-ms-traffictypediagnostic: BY5PR11MB4323:
+x-microsoft-antispam-prvs: <BY5PR11MB4323BE946F401E04403EDC08F0D40@BY5PR11MB4323.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 03793408BA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:OSPM;SFTY:;SFS:(10009020)(376002)(39860400002)(396003)(136003)(366004)(346002)(2906002)(71200400001)(26005)(53546011)(6506007)(54906003)(110136005)(316002)(14286002)(8936002)(8676002)(81156014)(478600001)(76116006)(186003)(66476007)(66556008)(64756008)(66446008)(66946007)(91956017)(5660300002)(6512007)(9686003)(4326008)(86362001)(6486002)(39026012)(138113003);DIR:OUT;SFP:1501;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lIWlwxye75ihc9z9c4yL2xcxdkFXHRPuIZ2AVpHT+8QojxdJ89tyQR1QEB3Kj/sb7+m+epd79YSQotFPjoJDmohzymtNxhQbpP0nNY3ggCo6gHY9ANYhikdTRa7LuSXTKYPgpvpd6r/iG7O+w5rNMGgq0NBHmQZJbg0kvTYupHYH0mmJrNLkAU0/+RBO1xVgrwLwxyfdnZorumVkIP0kJugzbBbMJ4YHo+yrScOloVwehNz2pWK7BRgiCeaZ16bNp9VfCeUDyCtGbsnjufvvJh/MDj8/1gyDTREW3cU3xXv3MjjheLJ5cRhC68PIWtTkfjJsUdN9HxlR5dm3yFt6hoLmguWXdDguCIVX/B/85hMZi1nsnIbdDftyI4rHrxUzPWl4wXHTqzNjpniROTtNf+VxgVXuIaydnpcMHExT5TtjX5oDXax2ZZArwqNRdkBq+kOymtdP3TdaXE0QVJjDptLXZtrxa5iXsBGQnIx81f4khCgLHJVATLW8uGVfKFplKqFNqImyieYOd4Eo3E7vGQPGK8mQTZsIqRcJ/IHdXgMIBwdpvsqJvjBB8MYY/wSL5baW2RG5EkKIY+J2UBE7g2Suouk/w2ZtjufE9jCsDL4c0X5FM+5NWRkfSCCK/b0aiUyiNHIy41/W9FLRieRU7yc1x26UilurLVjMBOeKJ55weTmgXRaq1aA4qvMns9MUXRxq5fdiiEw6UYRBC04PI6nZI6dn1whkZIcE0iXzKmhhKzc66+dbmp5PmR4UYmwOSNkex7beNwWITE96rYkBkhpWAdnht4CUk40yAE2cA1U=
+x-ms-exchange-antispam-messagedata: FjHgMLFlW8lPwWa8omhyQgYBkeQaJCu3DwuREFiwyZ+/uXC1pzZ3AVq1PAcevx5gAoWHqnA+PZ6Q/5LDdDRRX4IseWWkSsmFrusQSscTGYG96GIm6Jlz2GkbVfIULh8DVUpsATlHopE9mGBsjn0kFA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F7299F304612564A84A4021D0283F456@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 665BB53A9B209DF474DE368E25DAC4D6E7703353C21B189088EF792896EB3DFD2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4810fd8-757f-4c04-2a9e-08d7e51904b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 10:53:11.0662
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yVR8gSFWLwmogusvzHuo4Oe5/qbQ+jaIag43hh/5H4EvpBenwoknmA0QkJb0U8MXndMTzSxgGP7Zri8VrP+l+rpmiPZ8tBzOH/nM3rylTOk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4323
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIFRodSwgMjAyMC0wNC0xNiBhdCAwOTo0OSArMDEwMCwgTGVlIEpvbmVzIHdyb3Rl
-Og0KPiBPbiBXZWQsIDA4IEFwciAyMDIwLCBIc2luLUhzaXVuZyBXYW5nIHdyb3RlOg0KPiANCj4g
-PiBTb21lIHBtaWNzIGRvbid0IG5lZWQgYmFja3VwIGludGVycnVwdCBzZXR0aW5ncywgc28gd2Ug
-Y2hhbmdlIHRvIHVzZQ0KPiA+IHBtIG5vdGlmaWVyIGZvciB0aGUgcG1pY3Mgd2hpY2ggYXJlIG5l
-Y2Vzc2FyeSB0byBzdG9yZSBzZXR0aW5ncy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBIc2lu
-LUhzaXVuZyBXYW5nIDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4g
-PiAgZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUuYyAgICAgICB8IDMwIC0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLQ0KPiA+ICBkcml2ZXJzL21mZC9tdDYzOTctaXJxLmMgICAgICAgIHwgMzUg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0NCj4gPiAgaW5jbHVkZS9saW51eC9t
-ZmQvbXQ2Mzk3L2NvcmUuaCB8ICAyICsrDQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0
-aW9ucygrKSwgMzEgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-bWZkL210NjM5Ny1jb3JlLmMgYi9kcml2ZXJzL21mZC9tdDYzOTctY29yZS5jDQo+ID4gaW5kZXgg
-MDQzN2M4NS4uZDJlNzBkOCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21mZC9tdDYzOTctY29y
-ZS5jDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUuYw0KPiA+IEBAIC0xMDAsMzUg
-KzEwMCw2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgbXQ2Mzk3X2RldnNbXSA9IHsN
-Cj4gPiAgCX0NCj4gPiAgfTsNCj4gPiAgDQo+ID4gLSNpZmRlZiBDT05GSUdfUE1fU0xFRVANCj4g
-PiAtc3RhdGljIGludCBtdDYzOTdfaXJxX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+
-IC17DQo+ID4gLQlzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNoaXAgPSBkZXZfZ2V0X2RydmRhdGEoZGV2
-KTsNCj4gPiAtDQo+ID4gLQlyZWdtYXBfd3JpdGUoY2hpcC0+cmVnbWFwLCBjaGlwLT5pbnRfY29u
-WzBdLCBjaGlwLT53YWtlX21hc2tbMF0pOw0KPiA+IC0JcmVnbWFwX3dyaXRlKGNoaXAtPnJlZ21h
-cCwgY2hpcC0+aW50X2NvblsxXSwgY2hpcC0+d2FrZV9tYXNrWzFdKTsNCj4gPiAtDQo+ID4gLQll
-bmFibGVfaXJxX3dha2UoY2hpcC0+aXJxKTsNCj4gPiAtDQo+ID4gLQlyZXR1cm4gMDsNCj4gPiAt
-fQ0KPiA+IC0NCj4gPiAtc3RhdGljIGludCBtdDYzOTdfaXJxX3Jlc3VtZShzdHJ1Y3QgZGV2aWNl
-ICpkZXYpDQo+ID4gLXsNCj4gPiAtCXN0cnVjdCBtdDYzOTdfY2hpcCAqY2hpcCA9IGRldl9nZXRf
-ZHJ2ZGF0YShkZXYpOw0KPiA+IC0NCj4gPiAtCXJlZ21hcF93cml0ZShjaGlwLT5yZWdtYXAsIGNo
-aXAtPmludF9jb25bMF0sIGNoaXAtPmlycV9tYXNrc19jdXJbMF0pOw0KPiA+IC0JcmVnbWFwX3dy
-aXRlKGNoaXAtPnJlZ21hcCwgY2hpcC0+aW50X2NvblsxXSwgY2hpcC0+aXJxX21hc2tzX2N1clsx
-XSk7DQo+ID4gLQ0KPiA+IC0JZGlzYWJsZV9pcnFfd2FrZShjaGlwLT5pcnEpOw0KPiA+IC0NCj4g
-PiAtCXJldHVybiAwOw0KPiA+IC19DQo+ID4gLSNlbmRpZg0KPiA+IC0NCj4gPiAtc3RhdGljIFNJ
-TVBMRV9ERVZfUE1fT1BTKG10NjM5N19wbV9vcHMsIG10NjM5N19pcnFfc3VzcGVuZCwNCj4gPiAt
-CQkJbXQ2Mzk3X2lycV9yZXN1bWUpOw0KPiA+IC0NCj4gPiAgc3RydWN0IGNoaXBfZGF0YSB7DQo+
-ID4gIAl1MzIgY2lkX2FkZHI7DQo+ID4gIAl1MzIgY2lkX3NoaWZ0Ow0KPiA+IEBAIC0yMzgsNyAr
-MjA5LDYgQEAgc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgbXQ2Mzk3X2RyaXZlciA9IHsN
-Cj4gPiAgCS5kcml2ZXIgPSB7DQo+ID4gIAkJLm5hbWUgPSAibXQ2Mzk3IiwNCj4gPiAgCQkub2Zf
-bWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIobXQ2Mzk3X29mX21hdGNoKSwNCj4gPiAtCQkucG0g
-PSAmbXQ2Mzk3X3BtX29wcywNCj4gPiAgCX0sDQo+ID4gIAkuaWRfdGFibGUgPSBtdDYzOTdfaWQs
-DQo+ID4gIH07DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL210NjM5Ny1pcnEuYyBiL2Ry
-aXZlcnMvbWZkL210NjM5Ny1pcnEuYw0KPiA+IGluZGV4IGIyZDNjZTEuLjI5MjQ5MTkgMTAwNjQ0
-DQo+ID4gLS0tIGEvZHJpdmVycy9tZmQvbXQ2Mzk3LWlycS5jDQo+ID4gKysrIGIvZHJpdmVycy9t
-ZmQvbXQ2Mzk3LWlycS5jDQo+ID4gQEAgLTksNiArOSw3IEBADQo+ID4gICNpbmNsdWRlIDxsaW51
-eC9vZl9pcnEuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+
-ICAjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9zdXNwZW5k
-Lmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tZmQvbXQ2MzIzL2NvcmUuaD4NCj4gPiAgI2luY2x1
-ZGUgPGxpbnV4L21mZC9tdDYzMjMvcmVnaXN0ZXJzLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9t
-ZmQvbXQ2Mzk3L2NvcmUuaD4NCj4gPiBAQCAtODEsNyArODIsNyBAQCBzdGF0aWMgc3RydWN0IGly
-cV9jaGlwIG10NjM5N19pcnFfY2hpcCA9IHsNCj4gPiAgc3RhdGljIHZvaWQgbXQ2Mzk3X2lycV9o
-YW5kbGVfcmVnKHN0cnVjdCBtdDYzOTdfY2hpcCAqbXQ2Mzk3LCBpbnQgcmVnLA0KPiA+ICAJCQkJ
-ICBpbnQgaXJxYmFzZSkNCj4gPiAgew0KPiA+IC0JdW5zaWduZWQgaW50IHN0YXR1czsNCj4gPiAr
-CXVuc2lnbmVkIGludCBzdGF0dXMgPSAwOw0KPiANCj4gVGhpcyBsb29rcyBsaWtlIGFuIHVucmVs
-YXRlZCBjaGFuZ2UsIG5vPw0KPiANCg0KSXQgaXMgdG8gZml4IHRoZSBjb3Zlcml0eSBkZWZlY3Qu
-DQoNCj4gPiAgCWludCBpLCBpcnEsIHJldDsNCj4gPiAgDQo+ID4gIAlyZXQgPSByZWdtYXBfcmVh
-ZChtdDYzOTctPnJlZ21hcCwgcmVnLCAmc3RhdHVzKTsNCj4gPiBAQCAtMTI4LDYgKzEyOSwzNiBA
-QCBzdGF0aWMgY29uc3Qgc3RydWN0IGlycV9kb21haW5fb3BzIG10NjM5N19pcnFfZG9tYWluX29w
-cyA9IHsNCj4gPiAgCS5tYXAgPSBtdDYzOTdfaXJxX2RvbWFpbl9tYXAsDQo+ID4gIH07DQo+IA0K
-PiBPdGhlciB0aGFuIHRoYXQuDQo+IA0KPiBGb3IgbXkgb3duIHJlZmVyZW5jZToNCj4gICBBY2tl
-ZC1mb3ItTUZELWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPg0KPiANClRoYW5r
-cyBmb3IgeW91ciByZXZpZXcuIEkgd2lsbCBhZGQgaXQgaW4gdGhlIG5leHQgdmVyc2lvbi4NCg0K
+On Wednesday, April 15, 2020 4:48:30 PM EEST Mantas Pucka wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
+e
+> content is safe
+>=20
+> There are 2 different chips (w25q256fv and w25q256jv) that share
+> the same JEDEC ID. Only w25q256jv fully supports 4-byte opcodes.
+> Use SFDP header version to differentiate between them.
+>=20
+> Signed-off-by: Mantas Pucka <mantas@8devices.com>
+> ---
+>  drivers/mtd/spi-nor/sfdp.c    |  4 ----
+>  drivers/mtd/spi-nor/sfdp.h    |  6 ++++++
+>  drivers/mtd/spi-nor/winbond.c | 30 ++++++++++++++++++++++++++++--
+>  3 files changed, 34 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
+> index f6038d3..27838f6 100644
+> --- a/drivers/mtd/spi-nor/sfdp.c
+> +++ b/drivers/mtd/spi-nor/sfdp.c
+> @@ -21,10 +21,6 @@
+>  #define SFDP_4BAIT_ID          0xff84  /* 4-byte Address Instruction Tab=
+le
+> */
+>=20
+>  #define SFDP_SIGNATURE         0x50444653U
+> -#define SFDP_JESD216_MAJOR     1
+> -#define SFDP_JESD216_MINOR     0
+> -#define SFDP_JESD216A_MINOR    5
+> -#define SFDP_JESD216B_MINOR    6
+>=20
+>  struct sfdp_header {
+>         u32             signature; /* Ox50444653U <=3D> "SFDP" */
+> diff --git a/drivers/mtd/spi-nor/sfdp.h b/drivers/mtd/spi-nor/sfdp.h
+> index e0a8ded..b84abd0 100644
+> --- a/drivers/mtd/spi-nor/sfdp.h
+> +++ b/drivers/mtd/spi-nor/sfdp.h
+> @@ -7,6 +7,12 @@
+>  #ifndef __LINUX_MTD_SFDP_H
+>  #define __LINUX_MTD_SFDP_H
+>=20
+> +/* SFDP revisions */
+> +#define SFDP_JESD216_MAJOR     1
+> +#define SFDP_JESD216_MINOR     0
+> +#define SFDP_JESD216A_MINOR    5
+> +#define SFDP_JESD216B_MINOR    6
+> +
+>  /* Basic Flash Parameter Table */
+>=20
+>  /*
+> diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.=
+c
+> index 17deaba..50b2478 100644
+> --- a/drivers/mtd/spi-nor/winbond.c
+> +++ b/drivers/mtd/spi-nor/winbond.c
+> @@ -8,6 +8,32 @@
+>=20
+>  #include "core.h"
+>=20
+> +static int
+> +w25q256_post_bfpt_fixups(struct spi_nor *nor,
+> +                        const struct sfdp_parameter_header *bfpt_header,
+> +                        const struct sfdp_bfpt *bfpt,
+> +                        struct spi_nor_flash_parameter *params)
+> +{
+> +       /*
+> +        * W25Q256JV supports 4B opcodes but W25Q256FV does not.
+> +        * Unfortunately, Winbond has re-used the same JEDEC ID for both
+> +        * variants which prevents us from defining a new entry in the pa=
+rts
+> +        * table.
+> +        * To differentiate between W25Q256JV and W25Q256FV check SFDP
+> header +        * version: only JV has JESD216A compliant structure
+> (version 5) +        */
+> +
+> +       if (bfpt_header->major =3D=3D SFDP_JESD216_MAJOR &&
+> +           bfpt_header->minor =3D=3D SFDP_JESD216A_MINOR)
+
+Not sure if this is generic enough. Are you sure that the JV version will=20
+never have an update for the sfdp tables?
+
+> +               nor->flags |=3D SNOR_F_4B_OPCODES;
+> +
+> +       return 0;
+> +}
+> +
+> +static struct spi_nor_fixups w25q256_fixups =3D {
+> +       .post_bfpt =3D w25q256_post_bfpt_fixups,
+> +};
+> +
+
+If the post_bfpt hook is called, you already have a valid bfpt table. If th=
+e=20
+differentiator between the JV and FV versions is that only the JV defines t=
+he=20
+SFDP tables, then your w25q256_post_bfpt_fixups() can look as:
+
+static int w25q256_post_bfpt_fixups()
+{
+	nor->flags |=3D SNOR_F_4B_OPCODES;
+	return 0;
+}
+
+Cheers,
+ta
 
