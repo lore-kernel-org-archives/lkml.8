@@ -5,70 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B718C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A83BC55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08E2E206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D884206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:58:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btgqUHpK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ie7iO/Nk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgDTU6N (ORCPT
+        id S1727124AbgDTU6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:58:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54952 "EHLO
+        Mon, 20 Apr 2020 16:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgDTU6K (ORCPT
+        with ESMTP id S1725897AbgDTU6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:58:10 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E35BC061A0C;
-        Mon, 20 Apr 2020 13:58:10 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x4so1136541wmj.1;
-        Mon, 20 Apr 2020 13:58:10 -0700 (PDT)
+        Mon, 20 Apr 2020 16:58:13 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C5B6C061A0F;
+        Mon, 20 Apr 2020 13:58:12 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z6so1181366wml.2;
+        Mon, 20 Apr 2020 13:58:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=u+Falpz6HHoXnu/HWvO2wa0FQA6oNcrwhc/NVvO9+xY=;
-        b=btgqUHpKOiTnw2NTzK94CX7Ft/BqvOdxadUvSiPGFeqQOXqwO3Meyqyxx/pcWbCi2K
-         baEMfAvgyt77uq84T56qlDwXsNDMhrAaaJaH/3bDMFqW7EH6QBqggrvHBvzetdmwNVWX
-         /r+dLooeXS7hFKf0U+QZAWEPtIoygUgb7G0YF4Ad2jC8gN3h6fA0UUdls65msy4mijGB
-         zJVLddn1Xh0g6zNeIL5xCt2VQKnqpmX+q/vBENFuzkI9iWtz/V9bVouueolxmaiZnpqO
-         E+HGWXz98VpR8GMBdpm7KWCoJVOiIp05nm1TxzeNqC/0qy4oXDu5hfkokxxE/bQAvv15
-         BPYA==
+        bh=SsuRVc7WTA4pLMVtIiQn6oWkigGZPsfqlgm8M8dg+ho=;
+        b=ie7iO/NkFyJGUgjcsdWwwyszVMhXJsAogoj2zqA7KrvZk6uyKVBrsbnQq+VYSGyMfv
+         yQ0dM7qHFmreoahikBU9aEBj8LMrN9gtvLJUtfs8N3oVU82MVLAOR4Odw1gqPA/RrLIs
+         EwxCDey8fSIZpfTPXyLfJfJtOZ6oNXbXsS1oaf2YEmVhQElfonVqJi3n3UQoFC7jkyYt
+         SlznkveGlnxiW7mwOTmYnBm0uRBMMgLNRfonHN5yPXq26nFE60zGUVFB4J8Zv3vDHCSY
+         pF79esxxc3KQfoDATF7jn8vk6ueIig0HOV6djdXurb5VrNhE6CqovgYMMccgoq5Lfknj
+         L6fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=u+Falpz6HHoXnu/HWvO2wa0FQA6oNcrwhc/NVvO9+xY=;
-        b=eGlXCCUbxpi21pEhpZxHWvx+hkPCrA1Lvw//1+QMTOvsK3EH8mNb/bd3/Dr7JIABxB
-         xSHDo3rLFyq9G9VC1wO3YtVujvCa0USeaOyWTFkwDsUZCh0X3nA1oUWgwn8aUuIqeeEb
-         sn9bNSlZv/xsJVm+48Nc7jTZ6RI6NKCBBNXDzWYUKJKuO8sJL6bvr5bJCDtHTAdc9KPq
-         C/eetrKwmvBGDZjw1mrRL7jmwxgU+NrJoClD3eD7DWbD0+fiybA2ZRMrn60B3X4VH7hb
-         sDbme9t4n7+baSTBrvHRGde0pNC6GbbyoAamzx66sakrMFc1xYoEg4aE8zfR+YHyYEq1
-         pwpw==
-X-Gm-Message-State: AGi0PuZgzbTOZirVGXGxffDIaYuP0IJNEq4TnCUQG8e8/+LUsMmEH1tN
-        qGk900dXCUS2YhFGhjJC+A==
-X-Google-Smtp-Source: APiQypJpilaVLxv+aiF2+DXnWaP0VP+MwWIuHa4Kz41XGL3r8lN5GAgZv+/Wtd7uEXQVgH6y1kQ+Eg==
-X-Received: by 2002:a7b:c213:: with SMTP id x19mr1239688wmi.53.1587416289069;
-        Mon, 20 Apr 2020 13:58:09 -0700 (PDT)
+        bh=SsuRVc7WTA4pLMVtIiQn6oWkigGZPsfqlgm8M8dg+ho=;
+        b=ai/T4iLUXCmABbBbpDMi1SlnvOZ/f49/c+VIVmjqkxkQWLZYBBu0pEkDiH62sfDHFY
+         CIDqz8zHYWb9Ag52H5hDbLt71ppnoEkhZ/FRgsDsa+S3dEYKCoQ0gHbFlsh8kkpohju5
+         2i27NJcZ0Jx3xUp0WFVuv6UeSo96ncmZuEF9L/rqz0OUNBF5VDa8k1FwJXZJ9p4uyl8K
+         KRLRiyCGzkebgTRZtAm+3SG5JCKcEy3A4juWEObO3k0gGbhuC26ZzyhX4HRf3/IYgvaR
+         4visqKV8Z7uXmKy+EkzC5RV1Ke0XRA95JX+5qpWX+6qaaMGco1nH9TeNYjpEtDovrZRT
+         3nSw==
+X-Gm-Message-State: AGi0PuYbueyr6MC2DgYLHRPZQogouJDeqeWzAEZSTC1eZ8TT8LGWnxbn
+        6v06zPkMYaUgVuWuLQWA1Q==
+X-Google-Smtp-Source: APiQypJbbaXXGGiKAFfI4QOGAaX0CdLbjLLTpj9mAxGJedypq4aoF3DmP+nKIPEeEPTEZPMqvo77MQ==
+X-Received: by 2002:a1c:96c6:: with SMTP id y189mr1364396wmd.106.1587416290978;
+        Mon, 20 Apr 2020 13:58:10 -0700 (PDT)
 Received: from avx2.telecom.by ([46.53.249.74])
-        by smtp.gmail.com with ESMTPSA id m8sm863069wrx.54.2020.04.20.13.58.08
+        by smtp.gmail.com with ESMTPSA id m8sm863069wrx.54.2020.04.20.13.58.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:58:08 -0700 (PDT)
+        Mon, 20 Apr 2020 13:58:10 -0700 (PDT)
 From:   Alexey Dobriyan <adobriyan@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     adobriyan@gmail.com, linux-kernel@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, pmladek@suse.com,
         rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
         andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk
-Subject: [PATCH 02/15] sched: make nr_iowait_cpu() return "unsigned int"
-Date:   Mon, 20 Apr 2020 23:57:30 +0300
-Message-Id: <20200420205743.19964-2-adobriyan@gmail.com>
+Subject: [PATCH 04/15] print_integer, proc: rewrite /proc/self via print_integer()
+Date:   Mon, 20 Apr 2020 23:57:32 +0300
+Message-Id: <20200420205743.19964-4-adobriyan@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200420205743.19964-1-adobriyan@gmail.com>
 References: <20200420205743.19964-1-adobriyan@gmail.com>
@@ -79,104 +79,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Same logic: 2^32 threads stuck waiting in runqueue implies
-2^32+ processes total which is absurd.
-
-Per-runqueue ->nr_iowait member being 32-bit hints that it is
-correct change!
-
 Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 ---
- drivers/cpuidle/governors/menu.c | 6 +++---
- fs/proc/stat.c                   | 2 +-
- include/linux/sched/stat.h       | 4 ++--
- kernel/sched/core.c              | 6 +++---
- 4 files changed, 9 insertions(+), 9 deletions(-)
+ fs/proc/internal.h | 1 +
+ fs/proc/self.c     | 8 ++++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpuidle/governors/menu.c b/drivers/cpuidle/governors/menu.c
-index b0a7ad566081..ddaaa36af290 100644
---- a/drivers/cpuidle/governors/menu.c
-+++ b/drivers/cpuidle/governors/menu.c
-@@ -117,7 +117,7 @@ struct menu_device {
- 	int		interval_ptr;
- };
+diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+index 917cc85e3466..8abfd2fa0963 100644
+--- a/fs/proc/internal.h
++++ b/fs/proc/internal.h
+@@ -13,6 +13,7 @@
+ #include <linux/binfmts.h>
+ #include <linux/sched/coredump.h>
+ #include <linux/sched/task.h>
++#include "../../lib/print-integer.h"
  
--static inline int which_bucket(u64 duration_ns, unsigned long nr_iowaiters)
-+static inline int which_bucket(u64 duration_ns, unsigned int nr_iowaiters)
+ struct ctl_table_header;
+ struct mempolicy;
+diff --git a/fs/proc/self.c b/fs/proc/self.c
+index 57c0a1047250..c8a1662e2cfd 100644
+--- a/fs/proc/self.c
++++ b/fs/proc/self.c
+@@ -14,15 +14,19 @@ static const char *proc_self_get_link(struct dentry *dentry,
  {
- 	int bucket = 0;
+ 	struct pid_namespace *ns = proc_pid_ns(inode);
+ 	pid_t tgid = task_tgid_nr_ns(current, ns);
++	char buf[10 + 1];
++	char *p = buf + sizeof(buf);
+ 	char *name;
  
-@@ -150,7 +150,7 @@ static inline int which_bucket(u64 duration_ns, unsigned long nr_iowaiters)
-  * to be, the higher this multiplier, and thus the higher
-  * the barrier to go to an expensive C state.
-  */
--static inline int performance_multiplier(unsigned long nr_iowaiters)
-+static inline int performance_multiplier(unsigned int nr_iowaiters)
- {
- 	/* for IO wait tasks (per cpu!) we add 10x each */
- 	return 1 + 10 * nr_iowaiters;
-@@ -270,7 +270,7 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 	unsigned int predicted_us;
- 	u64 predicted_ns;
- 	u64 interactivity_req;
--	unsigned long nr_iowaiters;
-+	unsigned int nr_iowaiters;
- 	ktime_t delta_next;
- 	int i, idx;
- 
-diff --git a/fs/proc/stat.c b/fs/proc/stat.c
-index 93ce344f62a5..678feb7b9949 100644
---- a/fs/proc/stat.c
-+++ b/fs/proc/stat.c
-@@ -198,7 +198,7 @@ static int show_stat(struct seq_file *p, void *v)
- 		"btime %llu\n"
- 		"processes %lu\n"
- 		"procs_running %u\n"
--		"procs_blocked %lu\n",
-+		"procs_blocked %u\n",
- 		nr_context_switches(),
- 		(unsigned long long)boottime.tv_sec,
- 		total_forks,
-diff --git a/include/linux/sched/stat.h b/include/linux/sched/stat.h
-index f3b86515bafe..c4bd2fc95219 100644
---- a/include/linux/sched/stat.h
-+++ b/include/linux/sched/stat.h
-@@ -18,8 +18,8 @@ DECLARE_PER_CPU(unsigned long, process_counts);
- extern int nr_processes(void);
- unsigned int nr_running(void);
- extern bool single_task_running(void);
--extern unsigned long nr_iowait(void);
--extern unsigned long nr_iowait_cpu(int cpu);
-+unsigned int nr_iowait(void);
-+unsigned int nr_iowait_cpu(int cpu);
- 
- static inline int sched_info_on(void)
- {
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index d9bae602966c..ec98244e9d96 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3428,7 +3428,7 @@ unsigned long long nr_context_switches(void)
-  * it does become runnable.
-  */
- 
--unsigned long nr_iowait_cpu(int cpu)
-+unsigned int nr_iowait_cpu(int cpu)
- {
- 	return atomic_read(&cpu_rq(cpu)->nr_iowait);
+ 	if (!tgid)
+ 		return ERR_PTR(-ENOENT);
+ 	/* max length of unsigned int in decimal + NULL term */
+-	name = kmalloc(10 + 1, dentry ? GFP_KERNEL : GFP_ATOMIC);
++	name = kmalloc(sizeof(buf), dentry ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (unlikely(!name))
+ 		return dentry ? ERR_PTR(-ENOMEM) : ERR_PTR(-ECHILD);
+-	sprintf(name, "%u", tgid);
++	*--p = '\0';
++	p = _print_integer_u32(p, tgid);
++	memcpy(name, p, buf + sizeof(buf) - p);
+ 	set_delayed_call(done, kfree_link, name);
+ 	return name;
  }
-@@ -3463,9 +3463,9 @@ unsigned long nr_iowait_cpu(int cpu)
-  * Task CPU affinities can make all that even more 'interesting'.
-  */
- 
--unsigned long nr_iowait(void)
-+unsigned int nr_iowait(void)
- {
--	unsigned long i, sum = 0;
-+	unsigned int i, sum = 0;
- 
- 	for_each_possible_cpu(i)
- 		sum += nr_iowait_cpu(i);
 -- 
 2.24.1
 
