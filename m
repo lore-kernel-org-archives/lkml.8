@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33258C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A750C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1492F206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3ECB2078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387485;
-	bh=jYo6b44XSM0muOLTX9c5vHpa/7SrsPs18J65+dSq6kM=;
+	s=default; t=1587387491;
+	bh=xRlMKhci3L4YAa8w5tgb5HOH0k0P3/drsVVNYVqciN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AoQZVqQ8K7UBzGYAlYGqs+RrXrnO122l3c1tR80lOZ8bEKn0LA0cAZnpPioQBoKkC
-	 sziEzLcAsQXIeloJhPf2IEdenqB1l3d/R/xQckr7gxQ5IcX9q0blVobc5IbwfEa/1Q
-	 FKNL2G4yuC3+fGIwhS+V5CTBKwyqkTwjVMKn/wlY=
+	b=QuE1CDjWTc0QR/X1zGMzGOvvVd1F5Ily8O5lCIjk5WCYW15U3Jv9d9CUl4JupQ48I
+	 098GMuhEQaLKtRz521APWyS+x2NBFlHxw4TAA6TzWz1KjHsv6gt2l11DMjJtf2fT1a
+	 TDsITZucGgFkblLUDNdK1lwTNnj0VB3ml4Y1+Jjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgDTM6E (ORCPT
+        id S1728879AbgDTM6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:58:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37146 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:58:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726697AbgDTMnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:43:31 -0400
+        id S1728376AbgDTMnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:43:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CF402075A;
-        Mon, 20 Apr 2020 12:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F96B22202;
+        Mon, 20 Apr 2020 12:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386610;
-        bh=jYo6b44XSM0muOLTX9c5vHpa/7SrsPs18J65+dSq6kM=;
+        s=default; t=1587386600;
+        bh=xRlMKhci3L4YAa8w5tgb5HOH0k0P3/drsVVNYVqciN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lIfo8JWiMhE5twVntekhft2ryL10ceTA5qtLo9ZzoGmjcIM3InAuSwa/WgH/Rw1M5
-         zmT8fw6rW7RnC/Jq95/c8KzGaVh8no8aVxmK9nPxi9eqVELxik17FAcRhgt4nIcwlU
-         yx3RV/b/vJIYeOmNijKlm+5qNepDJ5005cZXdtDc=
+        b=rOZkX4q8GZs8Y8suQhW7QiZrJ0pZKVFpfiG7azFKo0eQLTXjFYWBkupDI60an1XC+
+         dRpGd/oHEGpX6bgMSebU0pHIrlr/oTiRPrYOo59OXjcafeF/Be6hTjYaJztepnhNBY
+         Vi1PAeGbPA6apK46irUSSGiPhppiYtStwGwl5WkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 5.6 27/71] acpi/nfit: improve bounds checking for func
-Date:   Mon, 20 Apr 2020 14:38:41 +0200
-Message-Id: <20200420121513.982033898@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.6 23/71] ovl: fix value of i_ino for lower hardlink corner case
+Date:   Mon, 20 Apr 2020 14:38:37 +0200
+Message-Id: <20200420121512.992623146@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,80 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit 01091c496f920e634ea84b689f480c39016752a8 upstream.
+commit 300b124fcf6ad2cd99a7b721e0f096785e0a3134 upstream.
 
-The 'func' variable can come from the user in the __nd_ioctl().  If it's
-too high then the (1 << func) shift in acpi_nfit_clear_to_send() is
-undefined.  In acpi_nfit_ctl() we pass 'func' to test_bit(func, &dsm_mask)
-which could result in an out of bounds access.
+Commit 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more
+cases"), relaxed the condition nfs_export=on in order to set the value of
+i_ino to xino map of real ino.
 
-To fix these issues, I introduced the NVDIMM_CMD_MAX (31) define and
-updated nfit_dsm_revid() to use that define as well instead of magic
-numbers.
+Specifically, it also relaxed the pre-condition that index=on for
+consistent i_ino. This opened the corner case of lower hardlink in
+ovl_get_inode(), which calls ovl_fill_inode() with ino=0 and then
+ovl_init_inode() is called to set i_ino to lower real ino without the xino
+mapping.
 
-Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Link: https://lore.kernel.org/r/20200225161927.hvftuq7kjn547fyj@kili.mountain
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Pass the correct values of ino;fsid in this case to ovl_fill_inode(), so it
+can initialize i_ino correctly.
+
+Fixes: 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more ...")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/nfit/core.c |   10 ++++++----
- drivers/acpi/nfit/nfit.h |    1 +
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ fs/overlayfs/inode.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -360,7 +360,7 @@ static union acpi_object *acpi_label_inf
- 
- static u8 nfit_dsm_revid(unsigned family, unsigned func)
- {
--	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][32] = {
-+	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][NVDIMM_CMD_MAX+1] = {
- 		[NVDIMM_FAMILY_INTEL] = {
- 			[NVDIMM_INTEL_GET_MODES] = 2,
- 			[NVDIMM_INTEL_GET_FWINFO] = 2,
-@@ -386,7 +386,7 @@ static u8 nfit_dsm_revid(unsigned family
- 
- 	if (family > NVDIMM_FAMILY_MAX)
- 		return 0;
--	if (func > 31)
-+	if (func > NVDIMM_CMD_MAX)
- 		return 0;
- 	id = revid_table[family][func];
- 	if (id == 0)
-@@ -492,7 +492,8 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 	 * Check for a valid command.  For ND_CMD_CALL, we also have to
- 	 * make sure that the DSM function is supported.
- 	 */
--	if (cmd == ND_CMD_CALL && !test_bit(func, &dsm_mask))
-+	if (cmd == ND_CMD_CALL &&
-+	    (func > NVDIMM_CMD_MAX || !test_bit(func, &dsm_mask)))
- 		return -ENOTTY;
- 	else if (!test_bit(cmd, &cmd_mask))
- 		return -ENOTTY;
-@@ -3492,7 +3493,8 @@ static int acpi_nfit_clear_to_send(struc
- 	if (nvdimm && cmd == ND_CMD_CALL &&
- 			call_pkg->nd_family == NVDIMM_FAMILY_INTEL) {
- 		func = call_pkg->nd_command;
--		if ((1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
-+		if (func > NVDIMM_CMD_MAX ||
-+		    (1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
- 			return -EOPNOTSUPP;
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -891,7 +891,7 @@ struct inode *ovl_get_inode(struct super
+ 	struct dentry *lowerdentry = lowerpath ? lowerpath->dentry : NULL;
+ 	bool bylower = ovl_hash_bylower(sb, upperdentry, lowerdentry,
+ 					oip->index);
+-	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
++	int fsid = bylower ? lowerpath->layer->fsid : 0;
+ 	bool is_dir, metacopy = false;
+ 	unsigned long ino = 0;
+ 	int err = oip->newinode ? -EEXIST : -ENOMEM;
+@@ -941,6 +941,8 @@ struct inode *ovl_get_inode(struct super
+ 			err = -ENOMEM;
+ 			goto out_err;
+ 		}
++		ino = realinode->i_ino;
++		fsid = lowerpath->layer->fsid;
  	}
- 
---- a/drivers/acpi/nfit/nfit.h
-+++ b/drivers/acpi/nfit/nfit.h
-@@ -34,6 +34,7 @@
- 		| ACPI_NFIT_MEM_NOT_ARMED | ACPI_NFIT_MEM_MAP_FAILED)
- 
- #define NVDIMM_FAMILY_MAX NVDIMM_FAMILY_HYPERV
-+#define NVDIMM_CMD_MAX 31
- 
- #define NVDIMM_STANDARD_CMDMASK \
- (1 << ND_CMD_SMART | 1 << ND_CMD_SMART_THRESHOLD | 1 << ND_CMD_DIMM_FLAGS \
+ 	ovl_fill_inode(inode, realinode->i_mode, realinode->i_rdev, ino, fsid);
+ 	ovl_inode_init(inode, upperdentry, lowerdentry, oip->lowerdata);
 
 
