@@ -2,266 +2,410 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED0CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59BAC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7A1E206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20D220775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587397968;
+	bh=E0nW0FJuBP3gzmEQESTDXeNjxsX+m0gGCLKhMXu2bmo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eIVXdCxM48gkHS9ZKq2O4JvniTehBL1s5/y0i2orQ97F2Fs7tFLzzDrhlgI8bF1YD
+	 daj2+kOB6A/+FG7gXSTpiRKdbtFsyIRtlCsUCB4MH68iBzvWpEiYEKTekQclMalZW8
+	 1CTAg47tqQQQdG09TDRzGVuIOneMmO+ARwMW0+Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgDTPuC (ORCPT
+        id S1728493AbgDTPwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:50:02 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:39520 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725971AbgDTPuB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:50:01 -0400
-X-IronPort-AV: E=Sophos;i="5.72,406,1580742000"; 
-   d="scan'208";a="45217578"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 21 Apr 2020 00:49:59 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id D1FA4400D4A4;
-        Tue, 21 Apr 2020 00:49:57 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3] arm64: dts: renesas: r8a774c0-cat874: Add support for AISTARVISION MIPI Adapter V2.1
-Date:   Mon, 20 Apr 2020 16:49:54 +0100
-Message-Id: <1587397794-11237-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 20 Apr 2020 11:52:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbgDTPwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:52:47 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 302D7206DD;
+        Mon, 20 Apr 2020 15:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587397966;
+        bh=E0nW0FJuBP3gzmEQESTDXeNjxsX+m0gGCLKhMXu2bmo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hWi3rXvlh+j7jlO95I5Kp1E7yROWjWwMlTIX3jt4ke3XQwTolBdPhErkMxJN0tP6W
+         9Vh1OtHeUhKI9wctyBdhk1qB2HgyH8qEUAP6QM0SFggsC+ZN+SPdR+l8iOlYOt4rao
+         uSpZ+164EfDvZymJSQ4hEaTgfB1ZDsjXkGw7kSFA=
+Date:   Mon, 20 Apr 2020 08:52:45 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Sahitya Tummala <stummala@codeaurora.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent meta updates while checkpoint
+ is in progress
+Message-ID: <20200420155245.GA41096@google.com>
+References: <20200331184307.GA198665@google.com>
+ <20200401050801.GA20234@codeaurora.org>
+ <20200403171727.GB68460@google.com>
+ <20200403172750.GD68460@google.com>
+ <20200413174237.GC39092@google.com>
+ <20200414134403.GA69282@google.com>
+ <20200416214045.GB196168@google.com>
+ <e1b763bf-7f72-01eb-a368-9b70e0f46f55@huawei.com>
+ <20200417161516.GA17901@google.com>
+ <20200420113705.GF20234@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420113705.GF20234@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
-to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
-which have the camera endpoint nodes for imx219 and ov5645 so that this can
-be re-used with other G2x platforms.
+On 04/20, Sahitya Tummala wrote:
+> Hi Jaegeuk,
+> 
+> On Fri, Apr 17, 2020 at 09:15:16AM -0700, Jaegeuk Kim wrote:
+> > Hi Sahitya,
+> > 
+> > Could you please test this patch fully? I didn't test at all.
+> 
+> I have tested v5 and so far found only one problem where MAIN_SECS(sbi)
+> isn't updated properly. Fixed it as below.
 
-r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
-default ties ov5645 camera endpoint to CSI2.
+Thanks. I fixed this with one more signal error case together.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Sahitya raised an issue:
+- prevent meta updates while checkpoint is in progress
+
+allocate_segment_for_resize() can cause metapage updates if
+it requires to change the current node/data segments for resizing.
+Stop these meta updates when there is a checkpoint already
+in progress to prevent inconsistent CP data.
+
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 ---
-Changes for v3:
- * Renamed the fixed clock to osc25250_clk and reused the same for both
-   the sensors as pin 3-4 and 5-6 of J14 are short.
- * Rebased the patch on top of renesas-drivers/master
+ fs/f2fs/checkpoint.c        |   6 +-
+ fs/f2fs/f2fs.h              |   2 +-
+ fs/f2fs/file.c              |   5 +-
+ fs/f2fs/gc.c                | 116 +++++++++++++++++++++---------------
+ fs/f2fs/super.c             |   1 -
+ include/trace/events/f2fs.h |   4 +-
+ 6 files changed, 76 insertions(+), 58 deletions(-)
 
-Changes for v2:
- * Dropped #{address,size}-cells
- * Dropped unit address and reg for port
-
- arch/arm64/boot/dts/renesas/Makefile               |  3 +-
- .../dts/renesas/aistarvision-mipi-adapter-2.1.dtsi | 94 ++++++++++++++++++++++
- .../boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts   | 72 +++++++++++++++++
- 3 files changed, 168 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index a7ec7a7..d17351c 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -5,7 +5,8 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex-idk-1110wr.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
- dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
- dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
--			       r8a774c0-ek874-idk-2121wr.dtb
-+			       r8a774c0-ek874-idk-2121wr.dtb \
-+			       r8a774c0-ek874-mipi-2.1.dtb
- dtb-$(CONFIG_ARCH_R8A77950) += r8a77950-salvator-x.dtb
- dtb-$(CONFIG_ARCH_R8A77950) += r8a77950-ulcb.dtb r8a77950-ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A77951) += r8a77951-salvator-x.dtb r8a77951-salvator-xs.dtb
-diff --git a/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
-new file mode 100644
-index 0000000..dac6ff4
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
-@@ -0,0 +1,94 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the AISTARVISION MIPI Adapter V2.1
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index 5ba649e17c72b..eafe37eab5e0c 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1559,7 +1559,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+ 			return 0;
+ 		f2fs_warn(sbi, "Start checkpoint disabled!");
+ 	}
+-	mutex_lock(&sbi->cp_mutex);
++	if (cpc->reason != CP_RESIZE)
++		mutex_lock(&sbi->cp_mutex);
+ 
+ 	if (!is_sbi_flag_set(sbi, SBI_IS_DIRTY) &&
+ 		((cpc->reason & CP_FASTBOOT) || (cpc->reason & CP_SYNC) ||
+@@ -1628,7 +1629,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+ 	f2fs_update_time(sbi, CP_TIME);
+ 	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
+ out:
+-	mutex_unlock(&sbi->cp_mutex);
++	if (cpc->reason != CP_RESIZE)
++		mutex_unlock(&sbi->cp_mutex);
+ 	return err;
+ }
+ 
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 6a80016acb85b..bae8e65deed6b 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -194,6 +194,7 @@ enum {
+ #define	CP_DISCARD	0x00000010
+ #define CP_TRIMMED	0x00000020
+ #define CP_PAUSE	0x00000040
++#define CP_RESIZE 	0x00000080
+ 
+ #define MAX_DISCARD_BLOCKS(sbi)		BLKS_PER_SEC(sbi)
+ #define DEF_MAX_DISCARD_REQUEST		8	/* issue 8 discards per round */
+@@ -1435,7 +1436,6 @@ struct f2fs_sb_info {
+ 	unsigned int segs_per_sec;		/* segments per section */
+ 	unsigned int secs_per_zone;		/* sections per zone */
+ 	unsigned int total_sections;		/* total section count */
+-	struct mutex resize_mutex;		/* for resize exclusion */
+ 	unsigned int total_node_count;		/* total node block count */
+ 	unsigned int total_valid_node_count;	/* valid node block count */
+ 	loff_t max_file_blocks;			/* max block index of file */
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 1f6c7c4738e30..ea04fb4dcdbdd 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3310,7 +3310,6 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(file_inode(filp));
+ 	__u64 block_count;
+-	int ret;
+ 
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+@@ -3322,9 +3321,7 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+ 			   sizeof(block_count)))
+ 		return -EFAULT;
+ 
+-	ret = f2fs_resize_fs(sbi, block_count);
+-
+-	return ret;
++	return f2fs_resize_fs(sbi, block_count);
+ }
+ 
+ static int f2fs_ioc_enable_verity(struct file *filp, unsigned long arg)
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 28a8c79c8bdc3..8dee6cd8e4d24 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1405,12 +1405,29 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
+ 				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
+ }
+ 
+-static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+-							unsigned int end)
++static int free_segment_range(struct f2fs_sb_info *sbi,
++				unsigned int secs, bool gc_only)
+ {
+-	int type;
+-	unsigned int segno, next_inuse;
++	unsigned int segno, next_inuse, start, end;
++	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
++	int gc_mode, gc_type;
+ 	int err = 0;
++	int type;
 +
-+/ {
-+	ov5645_vdddo_1v8: 1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdddo";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
++	/* Force block allocation for GC */
++	MAIN_SECS(sbi) -= secs;
++	start = MAIN_SECS(sbi) * sbi->segs_per_sec;
++	end = MAIN_SEGS(sbi) - 1;
 +
-+	ov5645_vdda_2v8: 2p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdda";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
++	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
++	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
++		if (SIT_I(sbi)->last_victim[gc_mode] >= start)
++			SIT_I(sbi)->last_victim[gc_mode] = 0;
 +
-+	ov5645_vddd_1v5: 1p5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vddd";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+	};
++	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
++		if (sbi->next_victim_seg[gc_type] >= start)
++			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
++	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
+ 
+ 	/* Move out cursegs from the target range */
+ 	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++)
+@@ -1423,18 +1440,24 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+ 			.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
+ 		};
+ 
+-		down_write(&sbi->gc_lock);
+ 		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
+-		up_write(&sbi->gc_lock);
+ 		put_gc_inode(&gc_list);
+ 
+-		if (get_valid_blocks(sbi, segno, true))
+-			return -EAGAIN;
++		if (!gc_only && get_valid_blocks(sbi, segno, true)) {
++			err = -EAGAIN;
++			goto out;
++		}
++		if (fatal_signal_pending(current)) {
++			err = -ERESTARTSYS;
++			goto out;
++		}
+ 	}
++	if (gc_only)
++		goto out;
+ 
+-	err = f2fs_sync_fs(sbi->sb, 1);
++	err = f2fs_write_checkpoint(sbi, &cpc);
+ 	if (err)
+-		return err;
++		goto out;
+ 
+ 	next_inuse = find_next_inuse(FREE_I(sbi), end + 1, start);
+ 	if (next_inuse <= end) {
+@@ -1442,6 +1465,8 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+ 			 next_inuse);
+ 		f2fs_bug_on(sbi, 1);
+ 	}
++out:
++	MAIN_SECS(sbi) += secs;
+ 	return err;
+ }
+ 
+@@ -1487,6 +1512,7 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+ 
+ 	SM_I(sbi)->segment_count = (int)SM_I(sbi)->segment_count + segs;
+ 	MAIN_SEGS(sbi) = (int)MAIN_SEGS(sbi) + segs;
++	MAIN_SECS(sbi) += secs;
+ 	FREE_I(sbi)->free_sections = (int)FREE_I(sbi)->free_sections + secs;
+ 	FREE_I(sbi)->free_segments = (int)FREE_I(sbi)->free_segments + segs;
+ 	F2FS_CKPT(sbi)->user_block_count = cpu_to_le64(user_block_count + blks);
+@@ -1508,8 +1534,8 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ {
+ 	__u64 old_block_count, shrunk_blocks;
++	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+ 	unsigned int secs;
+-	int gc_mode, gc_type;
+ 	int err = 0;
+ 	__u32 rem;
+ 
+@@ -1544,10 +1570,27 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ 		return -EINVAL;
+ 	}
+ 
+-	freeze_bdev(sbi->sb->s_bdev);
+-
+ 	shrunk_blocks = old_block_count - block_count;
+ 	secs = div_u64(shrunk_blocks, BLKS_PER_SEC(sbi));
 +
-+	imx219_vana_2v8: 2p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vana";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
++	/* stop other GC */
++	if (!down_write_trylock(&sbi->gc_lock))
++		return -EAGAIN;
 +
-+	imx219_vdig_1v8: 1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdig";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+	};
++	/* stop CP to protect MAIN_SEC in free_segment_range */
++	f2fs_lock_op(sbi);
++	err = free_segment_range(sbi, secs, true);
++	f2fs_unlock_op(sbi);
++	up_write(&sbi->gc_lock);
++	if (err)
++		return err;
 +
-+	imx219_vddl_1v2: 1p2v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vddl";
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		regulator-always-on;
-+	};
++	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
 +
-+	osc25250_clk: osc25250_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24000000>;
-+	};
-+};
++	freeze_super(sbi->sb);
++	down_write(&sbi->gc_lock);
++	mutex_lock(&sbi->cp_mutex);
 +
-+&MIPI_PARENT_I2C {
-+	ov5645: ov5645@3c {
-+		compatible = "ovti,ov5645";
-+		reg = <0x3c>;
-+		clock-names = "xclk";
-+		clocks = <&osc25250_clk>;
-+		clock-frequency = <24000000>;
-+		vdddo-supply = <&ov5645_vdddo_1v8>;
-+		vdda-supply = <&ov5645_vdda_2v8>;
-+		vddd-supply = <&ov5645_vddd_1v5>;
-+
-+		port {
-+			ov5645_ep: endpoint {
-+			};
-+		};
-+	};
-+
-+	imx219: imx219@10 {
-+		compatible = "sony,imx219";
-+		reg = <0x10>;
-+		clocks = <&osc25250_clk>;
-+		VANA-supply = <&imx219_vana_2v8>;
-+		VDIG-supply = <&imx219_vdig_1v8>;
-+		VDDL-supply = <&imx219_vddl_1v2>;
-+
-+		port {
-+			imx219_ep: endpoint {
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-new file mode 100644
-index 0000000..f0829e9
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-@@ -0,0 +1,72 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
-+ * connected with aistarvision-mipi-v2-adapter board
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r8a774c0-ek874.dts"
-+#define MIPI_PARENT_I2C i2c3
-+#include "aistarvision-mipi-adapter-2.1.dtsi"
-+
-+/ {
-+	model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
-+	compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&vin4 {
-+	status = "okay";
-+};
-+
-+&vin5 {
-+	status = "okay";
-+};
-+
-+&csi40 {
-+	status = "okay";
-+
-+	ports {
-+		port {
-+			csi40_in: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+				remote-endpoint = <&ov5645_ep>;
-+			};
-+		};
-+	};
-+};
-+
-+&ov5645 {
-+	enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-+	reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-+
-+	port {
-+		ov5645_ep: endpoint {
-+			clock-lanes = <0>;
-+			data-lanes = <1 2>;
-+			remote-endpoint = <&csi40_in>;
-+		};
-+	};
-+};
-+
-+&imx219 {
-+	port {
-+		imx219_ep: endpoint {
-+			clock-lanes = <0>;
-+			data-lanes = <1 2>;
-+			link-frequencies = /bits/ 64 <456000000>;
-+			/* uncomment remote-endpoint property to tie imx219 to
-+			 * CSI2 also make sure remote-endpoint for ov5645 camera
-+			 * is commented and remote endpoint phandle in csi40_in
-+			 * is imx219_ep
-+			 */
-+			/* remote-endpoint = <&csi40_in>; */
-+		};
-+	};
-+};
+ 	spin_lock(&sbi->stat_lock);
+ 	if (shrunk_blocks + valid_user_blocks(sbi) +
+ 		sbi->current_reserved_blocks + sbi->unusable_block_count +
+@@ -1556,69 +1599,44 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ 	else
+ 		sbi->user_block_count -= shrunk_blocks;
+ 	spin_unlock(&sbi->stat_lock);
+-	if (err) {
+-		thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+-		return err;
+-	}
+-
+-	mutex_lock(&sbi->resize_mutex);
+-	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+-
+-	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
+-
+-	MAIN_SECS(sbi) -= secs;
+-
+-	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
+-		if (SIT_I(sbi)->last_victim[gc_mode] >=
+-					MAIN_SECS(sbi) * sbi->segs_per_sec)
+-			SIT_I(sbi)->last_victim[gc_mode] = 0;
+-
+-	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
+-		if (sbi->next_victim_seg[gc_type] >=
+-					MAIN_SECS(sbi) * sbi->segs_per_sec)
+-			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
+-
+-	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
++	if (err)
++		goto out_err;
+ 
+-	err = free_segment_range(sbi, MAIN_SECS(sbi) * sbi->segs_per_sec,
+-			MAIN_SEGS(sbi) - 1);
++	err = free_segment_range(sbi, secs, false);
+ 	if (err)
+-		goto out;
++		goto recover_out;
+ 
+ 	update_sb_metadata(sbi, -secs);
+ 
+ 	err = f2fs_commit_super(sbi, false);
+ 	if (err) {
+ 		update_sb_metadata(sbi, secs);
+-		goto out;
++		goto recover_out;
+ 	}
+ 
+-	mutex_lock(&sbi->cp_mutex);
+ 	update_fs_metadata(sbi, -secs);
+ 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+ 	set_sbi_flag(sbi, SBI_IS_DIRTY);
+-	mutex_unlock(&sbi->cp_mutex);
+ 
+-	err = f2fs_sync_fs(sbi->sb, 1);
++	err = f2fs_write_checkpoint(sbi, &cpc);
+ 	if (err) {
+-		mutex_lock(&sbi->cp_mutex);
+ 		update_fs_metadata(sbi, secs);
+-		mutex_unlock(&sbi->cp_mutex);
+ 		update_sb_metadata(sbi, secs);
+ 		f2fs_commit_super(sbi, false);
+ 	}
+-out:
++recover_out:
+ 	if (err) {
+ 		set_sbi_flag(sbi, SBI_NEED_FSCK);
+ 		f2fs_err(sbi, "resize_fs failed, should run fsck to repair!");
+ 
+-		MAIN_SECS(sbi) += secs;
+ 		spin_lock(&sbi->stat_lock);
+ 		sbi->user_block_count += shrunk_blocks;
+ 		spin_unlock(&sbi->stat_lock);
+ 	}
++out_err:
++	mutex_unlock(&sbi->cp_mutex);
++	up_write(&sbi->gc_lock);
++	thaw_super(sbi->sb);
+ 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+-	mutex_unlock(&sbi->resize_mutex);
+-	thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+ 	return err;
+ }
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index e3a323ff04c34..ad3b66c3dbe0e 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -3420,7 +3420,6 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 	init_rwsem(&sbi->gc_lock);
+ 	mutex_init(&sbi->writepages);
+ 	mutex_init(&sbi->cp_mutex);
+-	mutex_init(&sbi->resize_mutex);
+ 	init_rwsem(&sbi->node_write);
+ 	init_rwsem(&sbi->node_change);
+ 
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 757d3d6031e63..4dbcdc6d27383 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -50,6 +50,7 @@ TRACE_DEFINE_ENUM(CP_RECOVERY);
+ TRACE_DEFINE_ENUM(CP_DISCARD);
+ TRACE_DEFINE_ENUM(CP_TRIMMED);
+ TRACE_DEFINE_ENUM(CP_PAUSE);
++TRACE_DEFINE_ENUM(CP_RESIZE);
+ 
+ #define show_block_type(type)						\
+ 	__print_symbolic(type,						\
+@@ -126,7 +127,8 @@ TRACE_DEFINE_ENUM(CP_PAUSE);
+ 		{ CP_RECOVERY,	"Recovery" },				\
+ 		{ CP_DISCARD,	"Discard" },				\
+ 		{ CP_PAUSE,	"Pause" },				\
+-		{ CP_TRIMMED,	"Trimmed" })
++		{ CP_TRIMMED,	"Trimmed" },				\
++		{ CP_RESIZE,	"Resize" })
+ 
+ #define show_fsync_cpreason(type)					\
+ 	__print_symbolic(type,						\
 -- 
-2.7.4
+2.26.1.301.g55bc3eb7cb9-goog
 
