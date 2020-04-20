@@ -2,78 +2,54 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E09C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B2BC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBBB20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfHuYExQ"
+	by mail.kernel.org (Postfix) with ESMTP id 6B0F020735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587387167;
+	bh=tcAAzz3EXEsisJM9NOt1ZeTYwQanWfluG2iG9Gwhh/E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gSocl2pp07NPmMWy5kdfx6xyKhqmPOiVgoyvs6r9z7TZbLKuTDv/GFJWqQc9gSeip
+	 jiv3pzGxRd+rxRyHPCL/KkoI27EhOStF6eibb56ptUHpzhGuvaM3zA4+3zYHD3XBPg
+	 fd7C7z51S2i4leBcAkUhNsDzcsaQVz7lc9o7LBTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgDTMrC (ORCPT
+        id S1729447AbgDTMwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Apr 2020 08:52:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729002AbgDTMrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 08:47:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726726AbgDTMqm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:46:42 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26599C061A0F;
-        Mon, 20 Apr 2020 05:46:41 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id j2so11955001wrs.9;
-        Mon, 20 Apr 2020 05:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=n/ha8QAQ1qR8D+PPkPVAqbB8YM+gWp3JsCHNoS/IoFE=;
-        b=VfHuYExQZ97JSY37qYtKiIzXOvUHrwNWaDOzQk27e9rqoAuanaoWWV2xShG3NO1wdN
-         7K6HuEEHVzdCEKRVx47481DWd9e2BpWd+B//oXI3k9PFJiVJRBHTmzAPa4q+/mY+ijQ0
-         0SEcBPSsbgJYw1kqYpSxXL7adM5iPgrY9LG/4zgjAg12c23/qjBFXOLVfqpR087WVNvz
-         uEc6O2r7kbOrir8rgAZvNePdwMjsEDvu3h/B9vmBzEnWpOAQTuhrMCNXbqs10DXauygd
-         nN1muoiob6bj3y2t1VyxjXM82llz4lHaVOvCR1AhbaFDWusaoNpgrgZrD9dRcHnVVJqf
-         +xKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=n/ha8QAQ1qR8D+PPkPVAqbB8YM+gWp3JsCHNoS/IoFE=;
-        b=HARx07+jsoRVCgI+KYj41+0pGtTw1UEKRgILNO7wQS3ww1fY4b+rvxthEjU34vy1xv
-         +/PRw3PcUyTxTdULZRBxOu/GY7HK+BRYK8mSNjsiMF18QIeeLmVwh++J8fpG1x/rm29C
-         SYC019YBrsQPgA3n+hFBD3SN0rH96jZfN8NJZIt4DBXNHm10c8ENKtOUxeSeoz+z/375
-         gmGGZFP+vgJ3flYGWhvEh/a8CFOVRsgBQzxchKtjP9rI969feazVFB+itiPTIxYaF9Ng
-         14bDzAHUooMyO72azyLUVHdFcMPj8IU2Rv8Op1LNNZL6zyKrvfzsxzqd+dG5omIo0ADC
-         2OFg==
-X-Gm-Message-State: AGi0Puar/51QENYTSxgZxsAukcF2yu4G+eVWWVYkBGpdu+X3OdRhB21J
-        cFBDFejcvr/9pBBAqniT/SQ=
-X-Google-Smtp-Source: APiQypKnx33o/rJS2SWygWjCaWHRxWvOotCeldokd3D5Mero1E+X+SKoXFMzcdQhRJxrt8mqZeA+8A==
-X-Received: by 2002:adf:8162:: with SMTP id 89mr17890205wrm.387.1587386799750;
-        Mon, 20 Apr 2020 05:46:39 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:4e7:1fdd:b7c2:b3ab])
-        by smtp.gmail.com with ESMTPSA id h17sm1217802wmm.6.2020.04.20.05.46.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 05:46:39 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Ondrej Jirman <megous@megous.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 2/2] arm64: dts: allwinner: h6: Add thermal trip points/cooling map
-Date:   Mon, 20 Apr 2020 14:46:34 +0200
-Message-Id: <20200420124634.32726-3-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200420124634.32726-1-peron.clem@gmail.com>
-References: <20200420124634.32726-1-peron.clem@gmail.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2407D206D4;
+        Mon, 20 Apr 2020 12:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587386821;
+        bh=tcAAzz3EXEsisJM9NOt1ZeTYwQanWfluG2iG9Gwhh/E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cqG8c98KQ6mWAvkmVR8/2NZbtDAdwzxS3KWDgdeQy+DWkcq6c0KNXtA5DaYI5IG3N
+         wAVoS9DdVQzA5yfAAVM4pEWwlKzEWfeqiXyD3VKZC2ogbFZl+d7NPd/vekSzL47vHe
+         pEX9lUxNyrxrPA3eCfVBf01jVyATnoJCG921ihGw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 39/60] ALSA: usb-audio: Dont create jack controls for PCM terminals
+Date:   Mon, 20 Apr 2020 14:39:17 +0200
+Message-Id: <20200420121511.504341945@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
+References: <20200420121500.490651540@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -82,52 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-This enables passive cooling by down-regulating CPU voltage
-and frequency.
+commit 7dc3c5a0172e6c0449502103356c3628d05bc0e0 upstream.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Some funky firmwares set the connector flag even on PCM terminals
+although it doesn't make sense (and even actually the firmware doesn't
+react properly!).  Let's skip creation of jack controls in such a
+case.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200412081331.4742-4-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 24 ++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ sound/usb/mixer.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 370e77b86fe1..60da1627772b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -964,6 +964,30 @@
- 			polling-delay-passive = <0>;
- 			polling-delay = <0>;
- 			thermal-sensors = <&ths 0>;
-+
-+			trips {
-+				cpu_alert: cpu-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu-crit {
-+					temperature = <100000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2088,7 +2088,8 @@ static int parse_audio_input_terminal(st
+ 	check_input_term(state, term_id, &iterm);
  
- 		gpu-thermal {
--- 
-2.20.1
+ 	/* Check for jack detection. */
+-	if (uac_v2v3_control_is_readable(bmctls, control))
++	if ((iterm.type & 0xff00) != 0x0100 &&
++	    uac_v2v3_control_is_readable(bmctls, control))
+ 		build_connector_control(state->mixer, &iterm, true);
+ 
+ 	return 0;
+@@ -3128,7 +3129,8 @@ static int snd_usb_mixer_controls(struct
+ 			if (err < 0 && err != -EINVAL)
+ 				return err;
+ 
+-			if (uac_v2v3_control_is_readable(le16_to_cpu(desc->bmControls),
++			if ((state.oterm.type & 0xff00) != 0x0100 &&
++			    uac_v2v3_control_is_readable(le16_to_cpu(desc->bmControls),
+ 							 UAC2_TE_CONNECTOR)) {
+ 				build_connector_control(state.mixer, &state.oterm,
+ 							false);
+@@ -3153,7 +3155,8 @@ static int snd_usb_mixer_controls(struct
+ 			if (err < 0 && err != -EINVAL)
+ 				return err;
+ 
+-			if (uac_v2v3_control_is_readable(le32_to_cpu(desc->bmControls),
++			if ((state.oterm.type & 0xff00) != 0x0100 &&
++			    uac_v2v3_control_is_readable(le32_to_cpu(desc->bmControls),
+ 							 UAC3_TE_INSERTION)) {
+ 				build_connector_control(state.mixer, &state.oterm,
+ 							false);
+
 
