@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D8DC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C68C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C714C206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB1DF206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387354;
-	bh=mc8QGzgejHGAQSVajZ4w620iO9AXegRDU80/sbHxamI=;
+	s=default; t=1587387359;
+	bh=7/OwSy2yt7GrKmn18S23qy1KM373O/ZBmrERSye++hc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iPEe6ZhnDZZ4xoVKAd/02Q/la56zL3IIJ9+rUz+CnwemmQZJfD4aXlWLwbp5ZUspw
-	 48sjgWCYTR2N0JBUfVPB9zlsNHKpulE7mmaymb0UlzGW+fS9mYp9nwEON+gZHRznDM
-	 UVLfEKlBj/336pZRxxz1hIDrwB00b494+xu7GzCk=
+	b=ev3T06wgoJsYhjY6+Vq8t40B6XAUXQ3kDeifi4VtebZbVA6t9HY26iOF3DJB5pxll
+	 KnVwST4nmMvCGvIm3hHCl7djUZ8+HQtqGuHGCQtAhyy6vnicct4A6jPO9Mxv+oDGN5
+	 uRYzZP9buVVPhcFss4u72iW9anlCWHe26gWmUM9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbgDTMzx (ORCPT
+        id S1729727AbgDTMz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39986 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:55:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728741AbgDTMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:26 -0400
+        id S1728730AbgDTMpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF9C206E9;
-        Mon, 20 Apr 2020 12:45:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52EBD20736;
+        Mon, 20 Apr 2020 12:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386726;
-        bh=mc8QGzgejHGAQSVajZ4w620iO9AXegRDU80/sbHxamI=;
+        s=default; t=1587386723;
+        bh=7/OwSy2yt7GrKmn18S23qy1KM373O/ZBmrERSye++hc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=em2QSIIGaA/p4p3TOfpS237vDBzq+yEkGyg2v4mUb3Xy18d2XfyB6qx/yagUDJiVP
-         Z05iXR5ctBMHg/ocU3BpjaiESs20bnMXmJxjRaSU0NfmG9Lc/jTC2/7AbbbPpwcTa/
-         AeT+SFKvqr9ceJtqyvrYJUHuqT40gNZlANz7VZ9s=
+        b=MgN2esJFL5E4Y6JkpXcwNORXqpX2+4qXm6tRQBQ8/2gz0sBMPBAGMJkvBCGCQqT22
+         n+QN+MsCNClaVtxxYJu9TC18dJk8RukfbJbjaE5jlSpopECMFsN/Nw7xGF/RHeGT2w
+         oGjRlHe5a1Lc2dbSi2pMEhnf7+UQNIU3EmdRoplQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huang Rui <ray.huang@amd.com>,
+        stable@vger.kernel.org, Sergei Lopatin <magist3r@gmail.com>,
         Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.6 59/71] drm/amdgpu/gfx9: add gfxoff quirk
-Date:   Mon, 20 Apr 2020 14:39:13 +0200
-Message-Id: <20200420121520.881890837@linuxfoundation.org>
+Subject: [PATCH 5.6 58/71] drm/amd/powerplay: force the trim of the mclk dpm_levels if OD is enabled
+Date:   Mon, 20 Apr 2020 14:39:12 +0200
+Message-Id: <20200420121520.705644820@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,32 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Sergei Lopatin <magist3r@gmail.com>
 
-commit 974229db7e6c1f2ff83ceaf3022d5128bf62caca upstream.
+commit 8c7f0a44b4b4ef16df8f44fbaee6d1f5d1593c83 upstream.
 
-Fix screen corruption with firefox.
+Should prevent flicker if PP_OVERDRIVE_MASK is set.
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=207171
-Reviewed-by: Huang Rui <ray.huang@amd.com>
+bug: https://bugs.freedesktop.org/show_bug.cgi?id=102646
+bug: https://bugs.freedesktop.org/show_bug.cgi?id=108941
+bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1088
+bug: https://gitlab.freedesktop.org/drm/amd/-/issues/628
+
+Signed-off-by: Sergei Lopatin <magist3r@gmail.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -1175,6 +1175,8 @@ struct amdgpu_gfxoff_quirk {
- static const struct amdgpu_gfxoff_quirk amdgpu_gfxoff_quirk_list[] = {
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=204689 */
- 	{ 0x1002, 0x15dd, 0x1002, 0x15dd, 0xc8 },
-+	/* https://bugzilla.kernel.org/show_bug.cgi?id=207171 */
-+	{ 0x1002, 0x15dd, 0x103c, 0x83e7, 0xd3 },
- 	{ 0, 0, 0, 0, 0 },
- };
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
+@@ -3804,9 +3804,12 @@ static int smu7_trim_single_dpm_states(s
+ {
+ 	uint32_t i;
  
++	/* force the trim if mclk_switching is disabled to prevent flicker */
++	bool force_trim = (low_limit == high_limit);
+ 	for (i = 0; i < dpm_table->count; i++) {
+ 	/*skip the trim if od is enabled*/
+-		if (!hwmgr->od_enabled && (dpm_table->dpm_levels[i].value < low_limit
++		if ((!hwmgr->od_enabled || force_trim)
++			&& (dpm_table->dpm_levels[i].value < low_limit
+ 			|| dpm_table->dpm_levels[i].value > high_limit))
+ 			dpm_table->dpm_levels[i].enabled = false;
+ 		else
 
 
