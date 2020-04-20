@@ -2,251 +2,206 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CBFC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD16C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5492078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE0D21D79
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:14:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/lwwhOn"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="IDveWlOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgDTLOP (ORCPT
+        id S1726197AbgDTLOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:14:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47380 "EHLO
+        Mon, 20 Apr 2020 07:14:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726083AbgDTLOO (ORCPT
+        by vger.kernel.org with ESMTP id S1725886AbgDTLOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:14:14 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 593A8C061A0C;
-        Mon, 20 Apr 2020 04:14:13 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b11so11608675wrs.6;
-        Mon, 20 Apr 2020 04:14:13 -0700 (PDT)
+        Mon, 20 Apr 2020 07:14:30 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158D9C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 04:14:30 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id x1so7564794ejd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 04:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KEgoMrPYxOWJ3qrq0DBSK7YNiWwfwR8bYU8oJ34Cf0k=;
-        b=Z/lwwhOnGlXuY+FG0zqYQmWw/z9vSVeCJvnaKWSJuI6A8V3Rc4k5mNNCplwHT/cGir
-         wX7j3LY0pBk8V8HT85W5iqUAwdCKcDyFG24l5Wejbo86yV/rpXyhHI8g3gr7zo1KUTUZ
-         rQ5dWhCyYBFI9oyIgbbj9RzGA34sStBxZu1rCH8ibEZnbJv71UpHHint8RhjemqogEQE
-         y7VMW5YKniDG0W+inrVMqvTneTvzYowAYfzIdig/GFtv0JEsTmN/F09TDUgSxHocKHKN
-         sGalgz7OiTLmGeG4UvjMR2UphWL7nuLCafiYdzEWNIXPacITuSy+fdWKbPuNdQ6eDA6C
-         vSXQ==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=okPBkG9vtS/wVdJh/KDIc+hdg6krV+bND5agW6vUaRM=;
+        b=IDveWlOS7Tzhrdb36+hZpTST6wjOAPrAj2jj5uib3vbWbabqwzW9IWuAtw8h4eTBNA
+         9a9lkdgEJOm6Eb3fwCtOVTxrVmphaH2PGWy9bhlS9QBo4VsFK/CUgj6vV9uyCovU0arA
+         5Kj1tMT4D5sNr37XYcPWFQo9UnIzxN1guBg1w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KEgoMrPYxOWJ3qrq0DBSK7YNiWwfwR8bYU8oJ34Cf0k=;
-        b=m05YslUfaUaQtQDZePLqhczZsAppnkV6ja69tWjbe9wJhXB0DANQBSFZHuu+Es/3xE
-         ji9THG/1LZ5UtfHr1fjfKzqELeazz5l9zckUPfu8JRg/9A+HjpGzh/S1hw0hmpXkH89d
-         MqGaWgDoX5AYyahRJ9+DILDedClw+b/05EDqO8Q7TEG0ULd1vjCWhfOTxvXfBeP2RCaO
-         MObV1hPBQtGiAHefoTe5u6WTQk1O0tfT1qlXLM+3CRWumj0XF+11Y8gy4SbLy2GWcdxW
-         5+5vKQ1J24PTRlNACCkNe9Foqzx6mbfwxKGllourQlqdlxNG8miG5Cfj0E4GXG5UgI/N
-         CJ2Q==
-X-Gm-Message-State: AGi0PuYOuRA+AhJg57j6LQSm5ipApcmkYDhpZ65v2p41thPHincZUaAd
-        Xay8+2B87kWmGQb5dg9QFTZsPcHi
-X-Google-Smtp-Source: APiQypIRhXIC6GIcfhXn1iSH1AHq+HeHsCTXbNfsIyB+8CdoW/bcYZ34UD4+UPYsl8/RGMlwG78YgQ==
-X-Received: by 2002:a5d:498b:: with SMTP id r11mr18068831wrq.368.1587381251836;
-        Mon, 20 Apr 2020 04:14:11 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id i13sm761291wro.50.2020.04.20.04.14.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 04:14:09 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH man-pages 2/2] adjtimex.2: document clock_adjtime
-To:     Richard Cochran <richardcochran@gmail.com>
-References: <20171219165811.6ahuquuf5hq74zg3@localhost>
- <88e5c54201bcfc335e484e83ab66f31f48e9f504.1514787752.git.richardcochran@gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <307cff16-1e9b-c1cd-fb21-d2f07f5648ce@gmail.com>
-Date:   Mon, 20 Apr 2020 13:14:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=okPBkG9vtS/wVdJh/KDIc+hdg6krV+bND5agW6vUaRM=;
+        b=CJdQeXneYJLndkghAv7E94abE5kuWvCNkllcAu5wHQ9vXz9RsGhPrxYa694EfsbN0E
+         MyQHyziRkkasKmSWadZRAut43ocAojgtf8X+opyjCZ94uL+r3hVsvCbEjmEljjGP9hUm
+         mABHmF0xd40MTMCPO8NkZZjPLmvMWbaMANYsYSkXme0VoGtmCuHFWn1uQ+qTSbgXrZ+K
+         B/yaSuR74M7mEbwOkPIa8UuaOuYXhnf4cCU3B8daliSI5PdYrhAgplmmDYWTGXaXDVd8
+         b4JiFUSHRTTFMvn9WPomtX5WXKfUqhGFH0mVWN3ggyUttRr5p1c7HSMP68tTWRLAG/pn
+         ASuw==
+X-Gm-Message-State: AGi0PuY66Wqtv52unzz5HBapf2+NSpiKD/KmYqW65S2qJ/vDfpEhFHUw
+        jZV78aQcWrXF7RBkw1FHdh0C9GfB56wsQzoIbQtrcw==
+X-Google-Smtp-Source: APiQypIVhtjPPYqBEymAM1SkD4SYcU1V6bmTKvyt+63wSYT0tOjvuXxym8edoJZS6GcpMs4Nq+7PF2DextVY/K9Ax1g=
+X-Received: by 2002:a17:906:841a:: with SMTP id n26mr16038100ejx.43.1587381268754;
+ Mon, 20 Apr 2020 04:14:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <88e5c54201bcfc335e484e83ab66f31f48e9f504.1514787752.git.richardcochran@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200414150233.24495-1-willy@infradead.org> <20200414150233.24495-25-willy@infradead.org>
+In-Reply-To: <20200414150233.24495-25-willy@infradead.org>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Mon, 20 Apr 2020 13:14:17 +0200
+Message-ID: <CAJfpegsZF=TFQ67vABkE5ghiZoTZF+=_u8tM5U_P6jZeAmv23A@mail.gmail.com>
+Subject: Re: [PATCH v11 24/25] fuse: Convert from readpages to readahead
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        William Kucharski <william.kucharski@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Richard, Arnd,
-
-On 1/1/18 7:28 AM, Richard Cochran wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> I was experimenting with some possible changes to adjtimex(2) and
-> clock_adjtime(2) and tried to look up the man page to see what the
-> documented behavior is when I noticed that clock_adjtime() appears
-> to be the only system call that is currently undocumented.
-> 
-> Before I do any changes to it, this tries to document what I
-> understand it currently does.
-> 
-> [ RC: Add better explanations of the usage and error codes
->   and correct some typographical mistakes. ]
-
-And this patch too is now applied.
-
-Thank you!
-
-Cheers,
-
-Michael
-
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+On Tue, Apr 14, 2020 at 5:08 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>
+> Implement the new readahead operation in fuse by using __readahead_batch()
+> to fill the array of pages in fuse_args_pages directly.  This lets us
+> inline fuse_readpages_fill() into fuse_readahead().
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
 > ---
->  man2/adjtimex.2      | 63 +++++++++++++++++++++++++++++++++++++++++++++++++---
->  man2/clock_adjtime.2 |  1 +
->  2 files changed, 61 insertions(+), 3 deletions(-)
->  create mode 100644 man2/clock_adjtime.2
-> 
-> diff --git a/man2/adjtimex.2 b/man2/adjtimex.2
-> index fc6892d7e..71b5c4a5a 100644
-> --- a/man2/adjtimex.2
-> +++ b/man2/adjtimex.2
-> @@ -35,6 +35,8 @@ adjtimex, ntp_adjtime \- tune kernel clock
->  .PP
->  .BI "int adjtimex(struct timex *" "buf" );
->  .PP
-> +.BI "int clock_adjtime(clockid_t " clk_id, " struct timex *" "buf" );
-> +.PP
->  .BI "int ntp_adjtime(struct timex *" buf );
->  .fi
->  .SH DESCRIPTION
-> @@ -158,8 +160,26 @@ includes the
->  .B ADJ_NANO
->  flag, then
->  .I buf.time.tv_usec
-> -is interpreted as a nanosecond value;
-> +is interpreted as a nanosecond value,
->  otherwise it is interpreted as microseconds.
-> +.IP
-> +The value of
-> +.I buf.time
-> +is the sum of its two fields, but the
-> +field
-> +.I buf.time.tv_usec
-> +must always be non-negative.  The following example shows how to
-> +normalize a timeval with nanosecond resolution.
-> +.PP
-> +.in +12n
-> +.EX
-> +while (buf.time.tv_usec < 0) {
-> +    buf.time.tv_sec  -= 1;
-> +    buf.time.tv_usec += 1000000000;
-> +}
-> +.EE
-> +.in
-> +.PP
->  .TP
->  .BR ADJ_MICRO " (since Linux 2.6.26)"
->  .\" commit eea83d896e318bda54be2d2770d2c5d6668d11db
-> @@ -344,6 +364,12 @@ Attempts to set read-only
->  .I status
->  bits are silently ignored.
->  .\"
-> +.SS clock_adjtime ()
-> +The
-> +.BR clock_adjtime ()
-> +system call (added in Linux 2.6.39) behaves like adjtimex() but takes an additional
-> +.IR clk_id
-> +argument to specify the particular clock on which to act.
->  .SS ntp_adjtime ()
->  The
->  .BR ntp_adjtime ()
-> @@ -472,6 +498,19 @@ An attempt was made to set
->  to a value other than those listed above.
->  .TP
->  .B EINVAL
-> +The
-> +.I clk_id
-> +given to
-> +.BR clock_adjtime ()
-> +is invalid for one of two reasons.  Either the SYS-V style hard coded
-> +positive value is out of range, or the dynamic
-> +.I clk_id
-> +does not refer to a valid instance of a clock object.
-> +See
-> +.BR clock_gettime (2)
-> +for a discussion of dynamic clocks.
-> +.TP
-> +.B EINVAL
->  An attempt was made to set
->  .I buf.tick
->  to a value outside the range
-> @@ -482,6 +521,20 @@ where
->  .B HZ
->  is the system timer interrupt frequency.
->  .TP
-> +.B ENODEV
-> +The hot-plugable device (like USB for example) represented by a
-> +dynamic
-> +.I clk_id
-> +has disappeared after its character device was opened.
-> +See
-> +.BR clock_gettime (2)
-> +for a discussion of dynamic clocks.
-> +.TP
-> +.B EOPNOTSUPP
-> +The given
-> +.I clk_id
-> +does not support adjustment.
-> +.TP
->  .B EPERM
->  .I buf.modes
->  is neither 0 nor
-> @@ -503,10 +556,12 @@ T{
->  T}	Thread safety	MT-Safe
->  .TE
->  .SH CONFORMING TO
-> -Neither of these interfaces is described in POSIX.1
-> +None of these interfaces is described in POSIX.1
->  .PP
->  .BR adjtimex ()
-> -is Linux-specific and should not be used in programs
-> +and
-> +.BR clock_adjtime ()
-> +are Linux-specific and should not be used in programs
->  intended to be portable.
->  .PP
->  The preferred API for the NTP daemon is
-> @@ -533,6 +588,8 @@ is done by the kernel in timer context
->  Thus, it will take one tick into the second
->  for the leap second to be inserted or deleted.
->  .SH SEE ALSO
-> +.BR clock_gettime (2)
-> +.BR clock_settime (2)
->  .BR settimeofday (2),
->  .BR adjtime (3),
->  .BR ntp_gettime (3),
-> diff --git a/man2/clock_adjtime.2 b/man2/clock_adjtime.2
-> new file mode 100644
-> index 000000000..b08b9c801
-> --- /dev/null
-> +++ b/man2/clock_adjtime.2
-> @@ -0,0 +1 @@
-> +.so man2/adjtimex.2
-> 
+>  fs/fuse/file.c | 99 ++++++++++++++------------------------------------
+>  1 file changed, 27 insertions(+), 72 deletions(-)
+>
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 9d67b830fb7a..db82fb29dd39 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -915,84 +915,39 @@ static void fuse_send_readpages(struct fuse_io_args *ia, struct file *file)
+>         fuse_readpages_end(fc, &ap->args, err);
+>  }
+>
+> -struct fuse_fill_data {
+> -       struct fuse_io_args *ia;
+> -       struct file *file;
+> -       struct inode *inode;
+> -       unsigned int nr_pages;
+> -       unsigned int max_pages;
+> -};
+> -
+> -static int fuse_readpages_fill(void *_data, struct page *page)
+> +static void fuse_readahead(struct readahead_control *rac)
+>  {
+> -       struct fuse_fill_data *data = _data;
+> -       struct fuse_io_args *ia = data->ia;
+> -       struct fuse_args_pages *ap = &ia->ap;
+> -       struct inode *inode = data->inode;
+> +       struct inode *inode = rac->mapping->host;
+>         struct fuse_conn *fc = get_fuse_conn(inode);
+> +       unsigned int i, max_pages, nr_pages = 0;
+>
+> -       fuse_wait_on_page_writeback(inode, page->index);
+> -
+> -       if (ap->num_pages &&
+> -           (ap->num_pages == fc->max_pages ||
+> -            (ap->num_pages + 1) * PAGE_SIZE > fc->max_read ||
+> -            ap->pages[ap->num_pages - 1]->index + 1 != page->index)) {
+> -               data->max_pages = min_t(unsigned int, data->nr_pages,
+> -                                       fc->max_pages);
+> -               fuse_send_readpages(ia, data->file);
+> -               data->ia = ia = fuse_io_alloc(NULL, data->max_pages);
+> -               if (!ia) {
+> -                       unlock_page(page);
+> -                       return -ENOMEM;
+> -               }
+> -               ap = &ia->ap;
+> -       }
+> -
+> -       if (WARN_ON(ap->num_pages >= data->max_pages)) {
+> -               unlock_page(page);
+> -               fuse_io_free(ia);
+> -               return -EIO;
+> -       }
+> -
+> -       get_page(page);
+> -       ap->pages[ap->num_pages] = page;
+> -       ap->descs[ap->num_pages].length = PAGE_SIZE;
+> -       ap->num_pages++;
+> -       data->nr_pages--;
+> -       return 0;
+> -}
+> -
+> -static int fuse_readpages(struct file *file, struct address_space *mapping,
+> -                         struct list_head *pages, unsigned nr_pages)
+> -{
+> -       struct inode *inode = mapping->host;
+> -       struct fuse_conn *fc = get_fuse_conn(inode);
+> -       struct fuse_fill_data data;
+> -       int err;
+> -
+> -       err = -EIO;
+>         if (is_bad_inode(inode))
+> -               goto out;
+> +               return;
+>
+> -       data.file = file;
+> -       data.inode = inode;
+> -       data.nr_pages = nr_pages;
+> -       data.max_pages = min_t(unsigned int, nr_pages, fc->max_pages);
+> -;
+> -       data.ia = fuse_io_alloc(NULL, data.max_pages);
+> -       err = -ENOMEM;
+> -       if (!data.ia)
+> -               goto out;
+> +       max_pages = min(fc->max_pages, fc->max_read / PAGE_SIZE);
+>
+> -       err = read_cache_pages(mapping, pages, fuse_readpages_fill, &data);
+> -       if (!err) {
+> -               if (data.ia->ap.num_pages)
+> -                       fuse_send_readpages(data.ia, file);
+> -               else
+> -                       fuse_io_free(data.ia);
+> +       for (;;) {
+> +               struct fuse_io_args *ia;
+> +               struct fuse_args_pages *ap;
+> +
+> +               nr_pages = readahead_count(rac) - nr_pages;
 
+Hmm.  I see what's going on here, but it's confusing.   Why is
+__readahead_batch() decrementing the readahead count at the start,
+rather than at the end?
 
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+At the very least it needs a comment about why nr_pages is calculated this way.
+
+> +               if (nr_pages > max_pages)
+> +                       nr_pages = max_pages;
+> +               if (nr_pages == 0)
+> +                       break;
+> +               ia = fuse_io_alloc(NULL, nr_pages);
+> +               if (!ia)
+> +                       return;
+> +               ap = &ia->ap;
+> +               nr_pages = __readahead_batch(rac, ap->pages, nr_pages);
+> +               for (i = 0; i < nr_pages; i++) {
+> +                       fuse_wait_on_page_writeback(inode,
+> +                                                   readahead_index(rac) + i);
+
+What's wrong with ap->pages[i]->index?  Are we trying to wean off using ->index?
+
+Thanks,
+Miklos
