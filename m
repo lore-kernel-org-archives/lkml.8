@@ -2,121 +2,136 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563C0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AE2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33E8C21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386746;
-	bh=sI8stkZ36UF6HKksx0MXXX4JXeKJF32drXwFuQ8qWAI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gm0QvkQqnXJ/iy6Pn4EETehO9FqzvlMgrqhjUob6Gaust62Ox5gg3WToswIKYkiUG
-	 35jS8KsrKw3Mx1dSH6S2QXMhtwPiomhY6If1m3bLDGr+ADpeneqWyNbVjFiItTchYL
-	 ID08grcUyO4VYcs71/sKg8DAepw9M1Ovmpc2kSiI=
+	by mail.kernel.org (Postfix) with ESMTP id 8645520736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgDTMpp (ORCPT
+        id S1728831AbgDTMpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:45:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728803AbgDTMpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61748 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728805AbgDTMpm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 08:45:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8762E20736;
-        Mon, 20 Apr 2020 12:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386741;
-        bh=sI8stkZ36UF6HKksx0MXXX4JXeKJF32drXwFuQ8qWAI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tVhv+5jVg2jnoYZqwxr2Cv1oSAtboNVUE7gJcNFGMCwHWd1aV6ggl6m+XInQoYl+9
-         aov1TOBTICcslcl/TobLNvdJxc7BALxd2yY5H2FqaUzVRVrVUnWEF9VShWEE1FVkDp
-         IjdDOCWsdLboIYnNaLIuFo331C3AaFBJgZ3i1ZZU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 55/71] net/mlx5e: Encapsulate updating netdev queues into a function
-Date:   Mon, 20 Apr 2020 14:39:09 +0200
-Message-Id: <20200420121520.120866331@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
-References: <20200420121508.491252919@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCVs8W112069;
+        Mon, 20 Apr 2020 08:45:27 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gj22g1du-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:26 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCW4Ed113207;
+        Mon, 20 Apr 2020 08:45:26 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gj22g1d9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:26 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCduN2011897;
+        Mon, 20 Apr 2020 12:45:25 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04dal.us.ibm.com with ESMTP id 30fs664pqx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 12:45:25 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCjNRO25231660
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 12:45:23 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5B96B13605E;
+        Mon, 20 Apr 2020 12:45:23 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4054D136051;
+        Mon, 20 Apr 2020 12:45:19 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 12:45:18 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
+        kirill@shutemov.name,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Subject: [PATCH v3 08/22] powerpc/kvm/book3s: switch from raw_spin_*lock to arch_spin_lock.
+Date:   Mon, 20 Apr 2020 18:14:20 +0530
+Message-Id: <20200420124434.47330-9-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_03:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ impostorscore=0 mlxscore=0 suspectscore=0 bulkscore=0 malwarescore=0
+ phishscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maximmi@mellanox.com>
+These functions can get called in realmode. Hence use low level
+arch_spin_lock which is safe to be called in realmode.
 
-[ Upstream commit c2c95271f9f39ea9b34db2301b3b6c5105cdb447 ]
-
-As a preparation for one of the following commits, create a function to
-encapsulate the code that notifies the kernel about the new amount of
-RX and TX queues. The code will be called multiple times in the next
-commit.
-
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
- .../net/ethernet/mellanox/mlx5/core/en_main.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ arch/powerpc/kvm/book3s_hv_rm_mmu.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 4ef3dc79f73c7..8125c605780be 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -2886,6 +2886,17 @@ static void mlx5e_netdev_set_tcs(struct net_device *netdev)
- 		netdev_set_tc_queue(netdev, tc, nch, 0);
+diff --git a/arch/powerpc/kvm/book3s_hv_rm_mmu.c b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+index 220305454c23..03f8347de48b 100644
+--- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
++++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+@@ -948,7 +948,7 @@ static long kvmppc_do_h_page_init_zero(struct kvm_vcpu *vcpu,
+ 		return ret;
+ 
+ 	/* Check if we've been invalidated */
+-	raw_spin_lock(&kvm->mmu_lock.rlock);
++	arch_spin_lock(&kvm->mmu_lock.rlock.raw_lock);
+ 	if (mmu_notifier_retry(kvm, mmu_seq)) {
+ 		ret = H_TOO_HARD;
+ 		goto out_unlock;
+@@ -960,7 +960,7 @@ static long kvmppc_do_h_page_init_zero(struct kvm_vcpu *vcpu,
+ 	kvmppc_update_dirty_map(memslot, dest >> PAGE_SHIFT, PAGE_SIZE);
+ 
+ out_unlock:
+-	raw_spin_unlock(&kvm->mmu_lock.rlock);
++	arch_spin_unlock(&kvm->mmu_lock.rlock.raw_lock);
+ 	return ret;
  }
  
-+static void mlx5e_update_netdev_queues(struct mlx5e_priv *priv)
-+{
-+	int num_txqs = priv->channels.num * priv->channels.params.num_tc;
-+	int num_rxqs = priv->channels.num * priv->profile->rq_groups;
-+	struct net_device *netdev = priv->netdev;
-+
-+	mlx5e_netdev_set_tcs(netdev);
-+	netif_set_real_num_tx_queues(netdev, num_txqs);
-+	netif_set_real_num_rx_queues(netdev, num_rxqs);
-+}
-+
- static void mlx5e_build_txq_maps(struct mlx5e_priv *priv)
- {
- 	int i, ch;
-@@ -2907,13 +2918,7 @@ static void mlx5e_build_txq_maps(struct mlx5e_priv *priv)
+@@ -984,7 +984,7 @@ static long kvmppc_do_h_page_init_copy(struct kvm_vcpu *vcpu,
+ 		return ret;
  
- void mlx5e_activate_priv_channels(struct mlx5e_priv *priv)
- {
--	int num_txqs = priv->channels.num * priv->channels.params.num_tc;
--	int num_rxqs = priv->channels.num * priv->profile->rq_groups;
--	struct net_device *netdev = priv->netdev;
--
--	mlx5e_netdev_set_tcs(netdev);
--	netif_set_real_num_tx_queues(netdev, num_txqs);
--	netif_set_real_num_rx_queues(netdev, num_rxqs);
-+	mlx5e_update_netdev_queues(priv);
+ 	/* Check if we've been invalidated */
+-	raw_spin_lock(&kvm->mmu_lock.rlock);
++	arch_spin_lock(&kvm->mmu_lock.rlock.raw_lock);
+ 	if (mmu_notifier_retry(kvm, mmu_seq)) {
+ 		ret = H_TOO_HARD;
+ 		goto out_unlock;
+@@ -996,7 +996,7 @@ static long kvmppc_do_h_page_init_copy(struct kvm_vcpu *vcpu,
+ 	kvmppc_update_dirty_map(dest_memslot, dest >> PAGE_SHIFT, PAGE_SIZE);
  
- 	mlx5e_build_txq_maps(priv);
- 	mlx5e_activate_channels(&priv->channels);
+ out_unlock:
+-	raw_spin_unlock(&kvm->mmu_lock.rlock);
++	arch_spin_unlock(&kvm->mmu_lock.rlock.raw_lock);
+ 	return ret;
+ }
+ 
 -- 
-2.20.1
-
-
+2.25.3
 
