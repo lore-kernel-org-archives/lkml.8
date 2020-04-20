@@ -2,102 +2,119 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8DDC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFF3C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B5420775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:38:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tcLHAbg6"
+	by mail.kernel.org (Postfix) with ESMTP id 75BBC20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbgDTOip (ORCPT
+        id S1730039AbgDTOix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:38:45 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:53892 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729962AbgDTOin (ORCPT
+        Mon, 20 Apr 2020 10:38:53 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:56123 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730030AbgDTOiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:38:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587393523; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=3HpZuxQd/bY9D4o6QT/ss6PQlwhkRD/HPVIEW592KCg=; b=tcLHAbg6WjULPSqxVoyBpIdbH3CyyU4DByRz14iWPvyVFyU41j+YgxHcmp1DY+IG5UNv112F
- m8x6G8gnLZ7EMdcNGSGQp/OeQ44XZ+I3dESWo02IJgDmGCfg93rQAEd+/Ae77X7IeXVHPiZD
- UZ6FLiitJq+ScG0X4VzJwKXoQmM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9db3c9.7f9515e6f0d8-smtp-out-n02;
- Mon, 20 Apr 2020 14:38:01 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7286AC433D2; Mon, 20 Apr 2020 14:38:01 +0000 (UTC)
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 44A1AC433F2;
-        Mon, 20 Apr 2020 14:37:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 44A1AC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv2 6/6] arm64: dts: qcom: sdm845-cheza: Add iommus property
-Date:   Mon, 20 Apr 2020 20:07:10 +0530
-Message-Id: <cba5cf5883749035c2066992208586655f0d25f8.1587392905.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1587392905.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1587392905.git.saiprakash.ranjan@codeaurora.org>
+        Mon, 20 Apr 2020 10:38:51 -0400
+Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M5g68-1jKTp51flS-007GCE; Mon, 20 Apr 2020 16:38:49 +0200
+Received: by mail-qv1-f43.google.com with SMTP id p13so4739694qvt.12;
+        Mon, 20 Apr 2020 07:38:49 -0700 (PDT)
+X-Gm-Message-State: AGi0PubeLOHIFr+q6MdDkl4lsROusM2wrT+4cZYEpYJ85VuMcyrmcMDT
+        KklW3S3g2K8LdxeYbmezCkcjKspwlF+fcXrjwwI=
+X-Google-Smtp-Source: APiQypI3lMjarwBrOvk5z/7dRwm3+aExp21uRLy8rLXkUHXJMJ56+Iub039Oa9WO9CTS7wUa1aJc481OluDjX+031BM=
+X-Received: by 2002:a0c:eb11:: with SMTP id j17mr15247436qvp.197.1587393528146;
+ Mon, 20 Apr 2020 07:38:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200416085627.1882-1-clay@daemons.net> <6fef3a00-6c18-b775-d1b4-dfd692261bd3@ti.com>
+ <20200420093610.GA28162@arctic-shiba-lx>
+In-Reply-To: <20200420093610.GA28162@arctic-shiba-lx>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Apr 2020 16:38:32 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a36ZxNJxUS4UzrwJiMx8UrgYPkcv4X6yYw7EC4jRBbbGQ@mail.gmail.com>
+Message-ID: <CAK8P3a36ZxNJxUS4UzrwJiMx8UrgYPkcv4X6yYw7EC4jRBbbGQ@mail.gmail.com>
+Subject: Re: [PATCH] net: cpts: Condition WARN_ON on PTP_1588_CLOCK
+To:     Clay McClure <clay@daemons.net>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Networking <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Lmfro+z52/v9+PRc0aC+yIa6QG4vLVKhVAGm/vpSmVpGr58hA8V
+ NTX2p+r9e5q/P34ZBCXfCsacArwKIQjfaANvptrHm7Z4a26Gsae+G3uSFLQlRnnpf5dvbim
+ SIRd6bsCWFA1TvTksc9ps2YAcje4zwfvbCzY3UzGDbDG5XvFidAFJ1jxsFPrOFfxBVasdKi
+ x42089Ni2C2x5j/X7R9bA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:w2gl9SsonXU=:hNvQCu59NPRR1VA4T2tUWe
+ nIYuK5PQIUEoh3vp9EhTJeR0bQy1iHFhnt2CcDjl1bst5f77ker+ryoBJR6UP9f3lfYwOFCXL
+ aIXjpZHcvl/rPHswaqc8DLUuwZ6iMk64oH7mWiR3eJN6Pxw2DzyTq+ZS1J/oorSTsrLgjA+3U
+ aqgauk07rMq6ei5eevYTasZIrW56vXFLOmtoU1rPgIAoQRJ2z4OIKsqcQUzpm2USlUwtleuN7
+ t2YDlKO4s5Txy0PYDaJGT3HKyMiBax8oiaGVB4ljPKjsjK7fisV6rNc1+SprfL3QDI+wXpJFF
+ z4zLSZ4Uuf3gXz13Xf7owHlu13f3AXneTJO9bhzkD1gE0SoiOgf+AKqBGrjdJKsv40h4mzxGZ
+ H5oOZaHGxy7oT8HsnyPcSYgXmxvah8OdrI2Y35HtrTRqURi+aEUwRzbD+t61HgdUl+E7MjsVk
+ G9GxeB1Cc+evXpNISQWJolDffwXXwcIlwZukN4CAtchLxKIYt7jrFwUFpHBzl9Wj2l4P+87gq
+ VFtQjOfaddxBCCfW3yL5Hcs9ioqK83MmQ+udp08qPLGxRzwBswiP2IfZmuwlFS0LOhB6RvfL0
+ yIWaE82l8W23TlUw1gVzcjsRqCVUMxZJ6xm9MoOK/EBK66tRGD2CD7+1/J23a9jDXMH92VqJ+
+ rYVT98KFfH6p0pgFbgqWJCQt3xRePBx8rGUGUFI2HYVPRqgXPrNKfM6CMyNpH+iq6stGsexUs
+ PxjsVf1EgfBrqPBuZhFfJAzs5O+2plhi2G+eUBPcCbTYn6L15r7ZHUkdNlZTo1jqvtiAA6xNq
+ IQJi8g0XEZ6L7FLNyhNuZZfdsQSz7nRAbJxz/hnGPut84/fyUo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+On Mon, Apr 20, 2020 at 11:38 AM Clay McClure <clay@daemons.net> wrote:
+> On Thu, Apr 16, 2020 at 02:11:45PM +0300, Grygorii Strashko wrote:
+>
+> > > CPTS_MOD merely implies PTP_1588_CLOCK; it is possible to build cpts
+> > > without PTP clock support. In that case, ptp_clock_register() returns
+> > > NULL and we should not WARN_ON(cpts->clock) when downing the interface.
+> > > The ptp_*() functions are stubbed without PTP_1588_CLOCK, so it's safe
+> > > to pass them a null pointer.
+> >
+> > Could you explain the purpose of the exercise (Enabling CPTS with
+> > PTP_1588_CLOCK disabled), pls?
+>
+> Hardware timestamping with a free-running PHC _almost_ works without
+> PTP_1588_CLOCK, but since PHC rollover is handled by the PTP kworker
+> in this driver the timestamps end up not being monotonic.
+>
+> And of course the moment you want to syntonize/synchronize the PHC with
+> another clock (say, CLOCK_REALTIME), you'll need a PTP clock device. So
+> you're right, there's not much point in building CPTS_MOD without
+> PTP_1588_CLOCK.
+>
+> Given that, I wonder why all the Ethernet drivers seem to just `imply`
+> PTP_1588_CLOCK, rather than `depends on` it?
 
-Add iommus property to remoteproc modem node.
+I suspect we should move all of them back. This was an early user
+of 'imply', but the meaning of that keyword has now changed
+in the latest Kconfig.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+> diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
+> index 10ad706dda53..70b15039cd37 100644
+> --- a/drivers/net/ethernet/ti/cpts.c
+> +++ b/drivers/net/ethernet/ti/cpts.c
+> @@ -462,8 +462,8 @@ int cpts_register(struct cpts *cpts)
+>         timecounter_init(&cpts->tc, &cpts->cc, ktime_get_real_ns());
+>
+>         cpts->clock = ptp_clock_register(&cpts->info, cpts->dev);
+> -       if (IS_ERR(cpts->clock)) {
+> -               err = PTR_ERR(cpts->clock);
+> +       if (IS_ERR_OR_NULL(cpts->clock)) {
+> +               err = cpts->clock ? PTR_ERR(cpts->clock) : -EOPNOTSUPP;
+>                 cpts->clock = NULL;
+>                 goto err_ptp;
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 9070be43a309..07081da2c83e 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -631,6 +631,11 @@ ap_ts_i2c: &i2c14 {
- 	status = "okay";
- };
- 
-+&mss_pil {
-+	iommus = <&apps_smmu 0x780 0x1>,
-+		 <&apps_smmu 0x724 0x3>;
-+};
-+
- &pm8998_pwrkey {
- 	status = "disabled";
- };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Something else is wrong if you need IS_ERR_OR_NULL(). Any
+kernel interface should either return an negative error code when
+something goes wrong, or should return NULL for all errors, but
+not mix the two.
+
+        Arnd
