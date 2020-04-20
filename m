@@ -2,246 +2,217 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E08C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B17BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CED820722
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE632078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:40:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="fg7nmJ0/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d631R2gw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgDTVjS (ORCPT
+        id S1726882AbgDTVkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:39:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33074 "EHLO
+        Mon, 20 Apr 2020 17:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726017AbgDTVjS (ORCPT
+        by vger.kernel.org with ESMTP id S1726021AbgDTVkt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:39:18 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53AE7C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:39:17 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id bu9so5535670qvb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:39:17 -0700 (PDT)
+        Mon, 20 Apr 2020 17:40:49 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFAD8C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:40:48 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id t63so1226958wmt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:40:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=wzoQ8wJxvFhV344X9PJvX5TTrX/IwRx/mNK5Ox4iO9E=;
-        b=fg7nmJ0/lCD3NAGktYNMgs1Taa5sCjIqBkT+XDP8OqF52oZYyhh4fJHSekyf8ZWT7j
-         jiqI1kfyfgqRRJboQE6nxFxPLuG/ZgimOXLVIfAr/G7/kdMZog0rYRUb0hmDwSBKcewU
-         W/iAK44r6kdXwcjrfWPUnpMEZZ/QTjaWBMkmn5WOIOjzBM76aCXti4TsIQOWjmlOjuAg
-         G8777grL9z1RfqXD/A+Bf3LB7tXN4bAfv/6JLf0WI8Zyydaz0qqPKuPjg8SFp8XbixEk
-         7E54YsoXyNkeXEA4382qJOTbVd98CsnJUqE64Z7W9d+uamI1HXccoqfl+ZPKIWGklBxO
-         018Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4Gk/VYoQhPhQ7TbUJt9ppu0wX7IwMr6mSq4U87B4Pb4=;
+        b=d631R2gwMehAjcbsqcBoh4S2uRZcvSYuoWemely5PVflzq3Ass3LCUsCfgkdWtgc9F
+         TU/kozgTBVtlrpNUHjbEOMTrNAys+iW5pwg54cxSGmSkx/hQoOTACufZ8014modkhsZE
+         SXC0MGzMeMwozpMkt0xhoyZg1FPP+/p8xWJpo6ypBnSUFdq3eOLAVzqFeHBi/RJetGwZ
+         vCwyNvDg/FV4RHIrXnfaI06i5hbbyjuKfUKtND4vvWgvqIBd8sl4yQM1SC/T6rjpPUDn
+         GCaa3YJg5naB5dXMMlfzIsuxz3oBLhV45iKht+np77NGxU/ZR1zIqJ1CdkwI8C4BgCCn
+         M9IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=wzoQ8wJxvFhV344X9PJvX5TTrX/IwRx/mNK5Ox4iO9E=;
-        b=oZFrMCwm+YjnUvea1HmwE65lZwBg/a7gbdDXIS16lF6POyBLww0IUMosUrRcTJGACm
-         NbF5zt+qlyUMC0Qlx5yS4PdZjEocQIJ5YZZ7HRxE4A7rDu2maLG72opERdJVP6A5rcOV
-         39ZtPt3SoM2Kw+OjQmL0amjtYuW3b4penkrgujpnJhqJ+abFrUBVIDd57ogxzWGN/1vd
-         9fRKijbouUowpa86NcDaXMFr3Tx7psRlW4/xpJR5zr60pYTvDHaKHXVDUavqwkJCHOOm
-         kFk1Zeo6IfSy3ITreuYJkQZT93ilkHZ8mv9r9Ho/LzssVZa9PPgzUpZH+U1I8YCNPX12
-         wm0A==
-X-Gm-Message-State: AGi0PuaMMnKS10MVEEWwI2tH2FKxDgCKKTMxhsVAbuY3zH63S0wKmc1L
-        Dm4uEd160hQRuNzlbS9bHtcoxw==
-X-Google-Smtp-Source: APiQypJA+tqZbx4LxDeg1IuoG8wdPK9ozSfLBS1LcZNN3xzgp1bql+qusbdixOHygYNj9Vk/oYps0A==
-X-Received: by 2002:a0c:a9c2:: with SMTP id c2mr4283111qvb.23.1587418755936;
-        Mon, 20 Apr 2020 14:39:15 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id t75sm533471qke.127.2020.04.20.14.39.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4Gk/VYoQhPhQ7TbUJt9ppu0wX7IwMr6mSq4U87B4Pb4=;
+        b=GNQZ3Ti+lKFewy5cWLDtOjzdeOZUdmMyHK1/jNvy4EfzY5vueQdEvaroz6YIOJ6USn
+         SZUGSJq723XxACZYI44laOlp7ZC/oFOPB3qbQ4UMcBQ4Zvx1FJBHG3Ah6TR6yK2xYG8S
+         +WVk9JNK45vVR3tB3dqzkstiNdz15S8nxOCQmc5UIibDWrnLg9+f5S68CUpPpS5g8dHD
+         zlzu4x3i2uAH9gHDfECqeP4J7XFPcxHwbrMYUlPs7VDA5EPM8tT2i/3sb8dVRm1rj/YL
+         JJcmURBpl91A1TPXlxPmVwDW9d33dhIfMAx8YNMJNZylYS2YLX8+Fo6HQaXBKA71Prqv
+         rbag==
+X-Gm-Message-State: AGi0PuZ8kHDwoLzEd63rW7z/dU5V1FiOqy+9jRqv1nHgOn5XH+mtKkwj
+        Fd7kIvyRExzw2qhIJF83gd4=
+X-Google-Smtp-Source: APiQypLvpyyDBqeAgz8buD5OJjsPdNQop2mMLHkzAHCjiqgN9PjtiPL4xXegCiReIbsQ8ECaZ/lF/A==
+X-Received: by 2002:a7b:cf27:: with SMTP id m7mr1466022wmg.183.1587418847498;
+        Mon, 20 Apr 2020 14:40:47 -0700 (PDT)
+Received: from localhost.localdomain ([91.221.170.230])
+        by smtp.googlemail.com with ESMTPSA id q17sm755380wmj.45.2020.04.20.14.40.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:39:15 -0700 (PDT)
-Message-ID: <f0f3a22042bdab2cffe12600f17f1485ca71caae.camel@massaru.org>
-Subject: Re: [PATCH v2] kbuild: ensure mrproper removes
- arch/$(SUBARCH)/include/generated/
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "linux-kernel-mentees@lists.linuxfoundation.org" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>
-Date:   Mon, 20 Apr 2020 18:39:12 -0300
-In-Reply-To: <CAK7LNAQYxtcNinV7JR+c8Pn9Rp1g0TxJ7m_mOFNOJQsB=OiAoA@mail.gmail.com>
-References: <20200414012132.32721-1-vitor@massaru.org>
-         <CAK7LNAQYxtcNinV7JR+c8Pn9Rp1g0TxJ7m_mOFNOJQsB=OiAoA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 20 Apr 2020 14:40:46 -0700 (PDT)
+From:   Gregor Pintar <grpintar@gmail.com>
+To:     tiwai@suse.com, perex@perex.cz, alexander@tsoy.me
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        grpintar@gmail.com
+Subject: [PATCH v2] ALSA: usb-audio: Add quirk for Focusrite Scarlett 2i2
+Date:   Mon, 20 Apr 2020 23:40:30 +0200
+Message-Id: <20200420214030.2361-1-grpintar@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1c4b8a362761421eba0ded60bb4f0e11b7e42f3b.camel@tsoy.me>
+References: <1c4b8a362761421eba0ded60bb4f0e11b7e42f3b.camel@tsoy.me>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-04-18 at 03:12 +0900, Masahiro Yamada wrote:
-> Hi.
-> 
-> On Tue, Apr 14, 2020 at 10:21 AM Vitor Massaru Iha <vitor@massaru.org
-> > wrote:
-> > In the following use case, when compiling the kernel for the UML
-> > architecture, for example:
-> > 
-> >  * `make ARCH=um defconfig && make ARCH=um -j8`,
-> > 
-> > SUBARCH files are generated, however when we run the command:
-> > 
-> >  * `mrproper ARCH=um`
-> 
->       make ARCH=um mrproper
-> 
-> 
-> > the files `arch/$(SUBARCH)/include/generated/ aren't cleaned up.
-> > 
-> > This generates compilation errors by running the following command:
-> > 
-> >  * `make ARCH=um defconfig O=./build_um && make ARCH=um -j8
-> > O=./build_um`
-> > 
-> > This PATCH fix that problem.
-> 
->   This patch fixes ...
-> 
-> > This makes it possible to compile on different architectures that
-> > use the
-> > SUBARCH variable, in different build directories and root directory
-> > of the
-> > linux directory. This is important because we can compile without
-> > the object
-> > files being overwritten. This reduces the re-compilation time in
-> > this use case.
-> 
-> Sorry, I do not understand this paragraph.
-> 
-> 
-> Brendan Higgins just reported the build error
-> in the out-of-tree build after in-tree build.
-> 
-> 
-> [1] make ARCH=um defconfig all
-> [2] make ARCH=um mrproper
-> [3] make ARCH=um O=foo defconfig all
-> 
->   -> build error
-> 
-> Ins't it?
-> 
-> 
-> 
-> > Besides that, in the workflow of developing unit tests, using
-> > kunit, and
-> > compiling in different architectures to develop or test a PATCH,
-> > this use case
-> > applies.
-> > 
-> >  * This bug was introduced in this commit a788b2ed81abe
-> 
-> Instead, adding Fixes tag is the convention.
-> 
-> Fixes: a788b2ed81ab ("kbuild: check arch/$(SRCARCH)/include/generated
-> before out-of-tree build")
-> 
-> 
-> >  * Related bug: https://bugzilla.kernel.org/show_bug.cgi?id=205219
-> 
-> Maybe, this can be also a tag.
-> 
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=205219
-> 
-> 
-> 
-> 
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> 
-> Reported-by: Brendan Higgins <brendanhiggins@google.com>
-> 
-> 
-> 
-> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> > Tested-by: Brendan Higgins <brendanhiggins@google.com>
-> > ---
-> > v2:
-> >  * Explains what this PATCH does and the importance as suggested
-> >    by Brendan Higgins.
-> > ---
-> >  Makefile | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Makefile b/Makefile
-> > index 70def4907036..e1a79796032e 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -532,7 +532,8 @@ outputmakefile:
-> >  ifdef building_out_of_srctree
-> >         $(Q)if [ -f $(srctree)/.config -o \
-> >                  -d $(srctree)/include/config -o \
-> > -                -d $(srctree)/arch/$(SRCARCH)/include/generated ];
-> > then \
-> > +                -d $(srctree)/arch/$(SRCARCH)/include/generated -o
-> > \
-> > +                -d $(srctree)/arch/$(SUBARCH)/include/generated ];
-> > then \
-> 
-> This hunk is unneeded.
-> 
-> 
-> 
-> >                 echo >&2 "***"; \
-> >                 echo >&2 "*** The source tree is not clean, please
-> > run 'make$(if $(findstring command line, $(origin ARCH)),
-> > ARCH=$(ARCH)) mrproper'"; \
-> >                 echo >&2 "*** in $(abs_srctree)";\
-> > @@ -1388,6 +1389,7 @@ CLEAN_FILES += modules.builtin
-> > modules.builtin.modinfo modules.nsdeps
-> >  # Directories & files removed with 'make mrproper'
-> >  MRPROPER_DIRS  += include/config include/generated          \
-> >                   arch/$(SRCARCH)/include/generated .tmp_objdiff \
-> > +                 arch/$(SUBARCH)/include/generated \
-> >                   debian/ snap/ tar-install/
-> >  MRPROPER_FILES += .config .config.old .version \
-> >                   Module.symvers \
-> > --
-> > 2.25.1
-> > 
-> 
-> This problem is only related to ARCH=um builds.
-> So, it should be fixed in arch/um/Makefile.
-> 
-> 
-> 
-> 
-> diff --git a/arch/um/Makefile b/arch/um/Makefile
-> index d2daa206872d..275f5ffdf6f0 100644
-> --- a/arch/um/Makefile
-> +++ b/arch/um/Makefile
-> @@ -140,6 +140,7 @@ export CFLAGS_vmlinux := $(LINK-y) $(LINK_WRAPS)
-> $(LD_FLAGS_CMDLINE)
->  # When cleaning we don't include .config, so we don't include
->  # TT or skas makefiles and don't clean skas_ptregs.h.
->  CLEAN_FILES += linux x.i gmon.out
-> +MRPROPER_DIRS += arch/$(SUBARCH)/include/generated
-> 
->  archclean:
->         @find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
-> 
-> 
-> 
-> 
-> 
-> --
-> Best Regards
-> Masahiro Yamada
+Force it to use asynchronous playback.
 
-Thanks for review. I agree with the suggested changes.
+Same quirk has already been added for Focusrite Scarlett Solo (2nd gen)
+with a commit 46f5710f0b88 ("ALSA: usb-audio: Add quirk for Focusrite
+Scarlett Solo").
 
+This also seems to prevent regular clicks when playing at 44100Hz
+on Scarlett 2i2 (2nd gen). I did not notice any side effects.
+
+Moved both quirks to snd_usb_audioformat_attributes_quirk() as suggested.
+
+Signed-off-by: Gregor Pintar <grpintar@gmail.com>
+---
+ sound/usb/quirks-table.h | 84 ----------------------------------------
+ sound/usb/quirks.c       | 13 +++++++
+ 2 files changed, 13 insertions(+), 84 deletions(-)
+
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index e009d584e..7e06ab108 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -2756,90 +2756,6 @@ YAMAHA_DEVICE(0x7010, "UB99"),
+ 		.type = QUIRK_MIDI_NOVATION
+ 	}
+ },
+-{
+-	/*
+-	 * Focusrite Scarlett Solo 2nd generation
+-	 * Reports that playback should use Synch: Synchronous
+-	 * while still providing a feedback endpoint. Synchronous causes
+-	 * snapping on some sample rates.
+-	 * Force it to use Synch: Asynchronous.
+-	 */
+-	USB_DEVICE(0x1235, 0x8205),
+-	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) {
+-		.ifnum = QUIRK_ANY_INTERFACE,
+-		.type = QUIRK_COMPOSITE,
+-		.data = (const struct snd_usb_audio_quirk[]) {
+-			{
+-				.ifnum = 1,
+-				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
+-				.data = & (const struct audioformat) {
+-					.formats = SNDRV_PCM_FMTBIT_S32_LE,
+-					.channels = 2,
+-					.iface = 1,
+-					.altsetting = 1,
+-					.altset_idx = 1,
+-					.attributes = 0,
+-					.endpoint = 0x01,
+-					.ep_attr = USB_ENDPOINT_XFER_ISOC |
+-						   USB_ENDPOINT_SYNC_ASYNC,
+-					.protocol = UAC_VERSION_2,
+-					.rates = SNDRV_PCM_RATE_44100 |
+-						 SNDRV_PCM_RATE_48000 |
+-						 SNDRV_PCM_RATE_88200 |
+-						 SNDRV_PCM_RATE_96000 |
+-						 SNDRV_PCM_RATE_176400 |
+-						 SNDRV_PCM_RATE_192000,
+-					.rate_min = 44100,
+-					.rate_max = 192000,
+-					.nr_rates = 6,
+-					.rate_table = (unsigned int[]) {
+-						44100, 48000, 88200,
+-						96000, 176400, 192000
+-					},
+-					.clock = 41
+-				}
+-			},
+-			{
+-				.ifnum = 2,
+-				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
+-				.data = & (const struct audioformat) {
+-					.formats = SNDRV_PCM_FMTBIT_S32_LE,
+-					.channels = 2,
+-					.iface = 2,
+-					.altsetting = 1,
+-					.altset_idx = 1,
+-					.attributes = 0,
+-					.endpoint = 0x82,
+-					.ep_attr = USB_ENDPOINT_XFER_ISOC |
+-						   USB_ENDPOINT_SYNC_ASYNC |
+-						   USB_ENDPOINT_USAGE_IMPLICIT_FB,
+-					.protocol = UAC_VERSION_2,
+-					.rates = SNDRV_PCM_RATE_44100 |
+-						 SNDRV_PCM_RATE_48000 |
+-						 SNDRV_PCM_RATE_88200 |
+-						 SNDRV_PCM_RATE_96000 |
+-						 SNDRV_PCM_RATE_176400 |
+-						 SNDRV_PCM_RATE_192000,
+-					.rate_min = 44100,
+-					.rate_max = 192000,
+-					.nr_rates = 6,
+-					.rate_table = (unsigned int[]) {
+-						44100, 48000, 88200,
+-						96000, 176400, 192000
+-					},
+-					.clock = 41
+-				}
+-			},
+-			{
+-				.ifnum = 3,
+-				.type = QUIRK_IGNORE_INTERFACE
+-			},
+-			{
+-				.ifnum = -1
+-			}
+-		}
+-	}
+-},
+ 
+ /* Access Music devices */
+ {
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index a8ece1701..6c2dfd3bf 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1806,6 +1806,19 @@ void snd_usb_audioformat_attributes_quirk(struct snd_usb_audio *chip,
+ 		 */
+ 		fp->attributes &= ~UAC_EP_CS_ATTR_FILL_MAX;
+ 		break;
++	case USB_ID(0x1235, 0x8202):  /* Focusrite Scarlett 2i2 2nd gen */
++	case USB_ID(0x1235, 0x8205):  /* Focusrite Scarlett Solo 2nd gen */
++		/*
++		 * Reports that playback should use Synch: Synchronous
++		 * while still providing a feedback endpoint.
++		 * Synchronous causes snapping on some sample rates.
++		 * Force it to use Synch: Asynchronous.
++		 */
++		if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
++			fp->ep_attr &= ~USB_ENDPOINT_SYNCTYPE;
++			fp->ep_attr |= USB_ENDPOINT_SYNC_ASYNC;
++		}
++		break;
+ 	}
+ }
+ 
+-- 
+2.20.1
 
