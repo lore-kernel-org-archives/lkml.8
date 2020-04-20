@@ -2,480 +2,454 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E95C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F881C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C66A920A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3592020A8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CPdryS/p"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KJ/l6byb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgDTIxq (ORCPT
+        id S1726324AbgDTIzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:53:46 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47842 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725865AbgDTIxq (ORCPT
+        Mon, 20 Apr 2020 04:55:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25424 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726112AbgDTIzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:53:46 -0400
+        Mon, 20 Apr 2020 04:55:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587372822;
+        s=mimecast20190719; t=1587372900;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=RmrS7qkwt35t4EXFiKayHGncdq2IWr33u2Go4YZXc7c=;
-        b=CPdryS/pQWNcbZj4FSPQ6WUzKhR+TQdGEpFZXgFDdFZFDFR3NBHqeQQ+irtGNMzAdLyqzF
-        4GGWUzq0K33ztkTGDb0IunHK6QgqxvMne5UvhRujR2RoQBrHEkCQBOZNHAVmyrZ7TYtAB9
-        pdOODsEi1f+yFw/XWE/Pg/AbZjKoT1A=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-KPxVe_3uP36QuBck0lnpMQ-1; Mon, 20 Apr 2020 04:53:41 -0400
-X-MC-Unique: KPxVe_3uP36QuBck0lnpMQ-1
-Received: by mail-wm1-f72.google.com with SMTP id n127so3279965wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:53:41 -0700 (PDT)
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9cmI+d9jEGAV5B+4qxcffmxY29w2CkbBGLpMqBxDQY4=;
+        b=KJ/l6bybn9qHNeOJVd8wxo3QbPernaQ8t+13j+opcMjQ4fyHHXNyQA41/FC8mIZqNh45qB
+        /R/7lGe/VrggB2knmmZ5PmAh2D+V0CSR0Ne7tjgXzSyvq4bZc4PA6vBfKaEQg5LxsHBo5t
+        x2Vc8ibUzRu5efw1ku5KNcRbAG85lIo=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-301-3NjzvPzgNnOdvmg_WEmjYg-1; Mon, 20 Apr 2020 04:54:58 -0400
+X-MC-Unique: 3NjzvPzgNnOdvmg_WEmjYg-1
+Received: by mail-wr1-f72.google.com with SMTP id p16so5401402wro.16
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:54:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RmrS7qkwt35t4EXFiKayHGncdq2IWr33u2Go4YZXc7c=;
-        b=RM71gg6q1EtNr1l7ESHoPigUFwGL2jPbkY7OqW4v3e+KG1CPCL0wpYNZmQ5QcVREwH
-         MVLpB8qUBuM9+dlYIwUEA0QEV2+994LVS1cM0Y0357PCSSlZeI0OqCSpmvHRs1iPvBmc
-         eI9Oo4TW9DFUuLTmTJLltL6s25uJPm4G38iiU7U7Bwew85iRnMtioXmmodVio28FWd8a
-         gNdIhV6yZjyhw9Xo9vObBti3aQ0ZtkP8YvZ03DpSv4INXgYKFv3RxkxIEBa/2GtzSkJ/
-         CQ2PP1vNL0Es1E+YvslP1a1xhJ1iMWZY5GbqNDTQMjwCufpT2QLtW+RPKAyLBkXfvQO4
-         cKYA==
-X-Gm-Message-State: AGi0PuYK+FMa30DkCNeJM7b/tfSX6oIUH1pcU+X4LJZJ3AYj7LbcmQNx
-        CrWSu6PiM70CK/hrZtLKy4m6LpQ9iYeBw9dgpQTPoSV95mmwrA3s6CyW7oDsXfrsln+KeSZuppn
-        KpjvoHZgjfU2kSt/bE9LYG4d7
-X-Received: by 2002:a1c:c2d4:: with SMTP id s203mr17895861wmf.128.1587372819672;
-        Mon, 20 Apr 2020 01:53:39 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJsZyIuvWzhKvOmT0MutOJONbyQZ29IytBsY2FgimKhxRpa/HmhbKrbbJrL8oPDyc5sjsP/Aw==
-X-Received: by 2002:a1c:c2d4:: with SMTP id s203mr17895823wmf.128.1587372819224;
-        Mon, 20 Apr 2020 01:53:39 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id p16sm275792wro.21.2020.04.20.01.53.37
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=9cmI+d9jEGAV5B+4qxcffmxY29w2CkbBGLpMqBxDQY4=;
+        b=i53pVopIhcTnyYuKbZf1zzHlDb9HROArv4Ik+RQ3wTEPGychn3AlgGsSBiQZMXOYXS
+         VWN9V5WAxyRDtuPVsStv8EpsMpi0nduDkmHZ68DcmCfdwJuMcHWrDULZ88sVpIDeSqnD
+         gSvQrwqIuTy57W/xtUeUENK1U6VDS9Wix569ObDvbwSqKTJVjnsJbnn3kS/v0+Hwamx3
+         mCWSFXj+EZCUpKAQEBiABQCxMVO2evD8TZ2ioGCk/hO0UXiNXj8NR+Mf7Dnf6+fiF2G+
+         vXEwF9FzAdGv0wQuKVsXzRhpew5F8CCU5/u4uwm/MPf8QKu79suKve7wpc3alA1G9ANr
+         +VtQ==
+X-Gm-Message-State: AGi0PuZRn37ltjhen/Xnin45Mo8hGz6AQ+xOjwhHiAAr9YM1Mqwsnota
+        do37LEPq5DvIxp/wsBnjb01esfDv6oGGwZlwDzrqsN/5Cykb+T04zEq8utGhd4Mr22KPy6JUpkP
+        OUhq2JwMjztZmb1AfMfrHlUU8
+X-Received: by 2002:a05:6000:128d:: with SMTP id f13mr18290312wrx.241.1587372896940;
+        Mon, 20 Apr 2020 01:54:56 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKeRGLxf/y6pJNKdpsQC7qgLS/q4popfUP+84vRAUZ9MGRD/B/H5HBxQvPnVYUwjFN1JuIvcA==
+X-Received: by 2002:a05:6000:128d:: with SMTP id f13mr18290280wrx.241.1587372896561;
+        Mon, 20 Apr 2020 01:54:56 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id v131sm501219wmb.19.2020.04.20.01.54.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 01:53:38 -0700 (PDT)
-From:   Miklos Szeredi <mszeredi@redhat.com>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        Stefan Metzmacher <metze@samba.org>,
-        Aleksa Sarai <cyphar@cyphar.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        Eric Sandeen <sandeen@sandeen.net>
-Subject: [PATCH v2] vfs: add faccessat2 syscall
-Date:   Mon, 20 Apr 2020 10:53:36 +0200
-Message-Id: <20200420085336.21065-1-mszeredi@redhat.com>
-X-Mailer: git-send-email 2.21.1
+        Mon, 20 Apr 2020 01:54:55 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH 3/3] KVM: x86: move nested-related kvm_x86_ops to a separate struct
+In-Reply-To: <20200417164413.71885-4-pbonzini@redhat.com>
+References: <20200417164413.71885-1-pbonzini@redhat.com> <20200417164413.71885-4-pbonzini@redhat.com>
+Date:   Mon, 20 Apr 2020 10:54:54 +0200
+Message-ID: <874ktetu3l.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-POSIX defines faccessat() as having a fourth "flags" argument, while the
-linux syscall doesn't have it.  Glibc tries to emulate AT_EACCESS and
-AT_SYMLINK_NOFOLLOW, but AT_EACCESS emulation is broken.
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-Add a new faccessat(2) syscall with the added flags argument and implement
-both flags.
+> Clean up some of the patching of kvm_x86_ops, by moving kvm_x86_ops related to
+> nested virtualization into a separate struct.
+>
+> As a result, these ops will always be non-NULL on VMX.  This is not a problem:
+>
+> * check_nested_events is only called if is_guest_mode(vcpu) returns true
+>
+> * get_nested_state treats VMXOFF state the same as nested being disabled
+>
+> * set_nested_state fails if you attempt to set nested state while
+>   nesting is disabled
+>
+> * nested_enable_evmcs could already be called on a CPU without VMX enabled
+>   in CPUID.
+>
+> * nested_get_evmcs_version was fixed in the previous patch
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 29 ++++++++++++++++-------------
+>  arch/x86/kvm/hyperv.c           |  4 ++--
+>  arch/x86/kvm/svm/nested.c       |  6 +++++-
+>  arch/x86/kvm/svm/svm.c          | 13 +++++--------
+>  arch/x86/kvm/svm/svm.h          |  3 ++-
+>  arch/x86/kvm/vmx/nested.c       | 16 +++++++++-------
+>  arch/x86/kvm/vmx/nested.h       |  2 ++
+>  arch/x86/kvm/vmx/vmx.c          |  7 +------
+>  arch/x86/kvm/x86.c              | 28 ++++++++++++++--------------
+>  9 files changed, 56 insertions(+), 52 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index fc38d95e28a4..ca0d0f9b3f92 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1178,7 +1178,6 @@ struct kvm_x86_ops {
+>  			       struct x86_exception *exception);
+>  	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
+>  
+> -	int (*check_nested_events)(struct kvm_vcpu *vcpu);
+>  	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
+>  
+>  	void (*sched_in)(struct kvm_vcpu *kvm, int cpu);
+> @@ -1211,6 +1210,7 @@ struct kvm_x86_ops {
+>  
+>  	/* pmu operations of sub-arch */
+>  	const struct kvm_pmu_ops *pmu_ops;
+> +	const struct kvm_x86_nested_ops *nested_ops;
+>  
+>  	/*
+>  	 * Architecture specific hooks for vCPU blocking due to
+> @@ -1238,14 +1238,6 @@ struct kvm_x86_ops {
+>  
+>  	void (*setup_mce)(struct kvm_vcpu *vcpu);
+>  
+> -	int (*get_nested_state)(struct kvm_vcpu *vcpu,
+> -				struct kvm_nested_state __user *user_kvm_nested_state,
+> -				unsigned user_data_size);
+> -	int (*set_nested_state)(struct kvm_vcpu *vcpu,
+> -				struct kvm_nested_state __user *user_kvm_nested_state,
+> -				struct kvm_nested_state *kvm_state);
+> -	bool (*get_vmcs12_pages)(struct kvm_vcpu *vcpu);
+> -
+>  	int (*smi_allowed)(struct kvm_vcpu *vcpu);
+>  	int (*pre_enter_smm)(struct kvm_vcpu *vcpu, char *smstate);
+>  	int (*pre_leave_smm)(struct kvm_vcpu *vcpu, const char *smstate);
+> @@ -1257,16 +1249,27 @@ struct kvm_x86_ops {
+>  
+>  	int (*get_msr_feature)(struct kvm_msr_entry *entry);
+>  
+> -	int (*nested_enable_evmcs)(struct kvm_vcpu *vcpu,
+> -				   uint16_t *vmcs_version);
+> -	uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
+> -
+>  	bool (*need_emulation_on_page_fault)(struct kvm_vcpu *vcpu);
+>  
+>  	bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
+>  	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
+>  };
+>  
+> +struct kvm_x86_nested_ops {
+> +	int (*check_nested_events)(struct kvm_vcpu *vcpu);
+> +	int (*get_nested_state)(struct kvm_vcpu *vcpu,
+> +				struct kvm_nested_state __user *user_kvm_nested_state,
+> +				unsigned user_data_size);
+> +	int (*set_nested_state)(struct kvm_vcpu *vcpu,
+> +				struct kvm_nested_state __user *user_kvm_nested_state,
+> +				struct kvm_nested_state *kvm_state);
+> +	bool (*get_vmcs12_pages)(struct kvm_vcpu *vcpu);
+> +
+> +	int (*nested_enable_evmcs)(struct kvm_vcpu *vcpu,
+> +				   uint16_t *vmcs_version);
+> +	uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
 
-The value of AT_EACCESS is defined in glibc headers to be the same as
-AT_REMOVEDIR.  Use this value for the kernel interface as well, together
-with the explanatory comment.
+I think that 'nested' becomes superfluous within 'struct
+kvm_x86_nested_ops'.
 
-Also add AT_EMPTY_PATH support, which is not documented by POSIX, but can
-be useful and is trivial to implement.
+Like
+  kvm_x86_ops.nested_ops->nested_get_evmcs_version(vcpu);
+vs
+  kvm_x86_ops.nested_ops->get_evmcs_version(vcpu);
 
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
----
-v2:
- - add AT_EMPTY_PATH
 
-arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
- arch/arm/tools/syscall.tbl                  |  1 +
- arch/arm64/include/asm/unistd.h             |  2 +-
- arch/arm64/include/asm/unistd32.h           |  2 +
- arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
- arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
- arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
- arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
- arch/s390/kernel/syscalls/syscall.tbl       |  1 +
- arch/sh/kernel/syscalls/syscall.tbl         |  1 +
- arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
- arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
- arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
- fs/internal.h                               |  1 -
- fs/open.c                                   | 58 ++++++++++++++++-----
- include/linux/syscalls.h                    |  7 ++-
- include/uapi/asm-generic/unistd.h           |  4 +-
- include/uapi/linux/fcntl.h                  | 10 ++++
- 23 files changed, 82 insertions(+), 18 deletions(-)
+> +};
+> +
+>  struct kvm_x86_init_ops {
+>  	int (*cpu_has_kvm_support)(void);
+>  	int (*disabled_by_bios)(void);
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index b850f676abe4..d1a0f9294d57 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -1799,8 +1799,8 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+>  	};
+>  	int i, nent = ARRAY_SIZE(cpuid_entries);
+>  
+> -	if (kvm_x86_ops.nested_get_evmcs_version)
+> -		evmcs_ver = kvm_x86_ops.nested_get_evmcs_version(vcpu);
+> +	if (kvm_x86_ops.nested_ops->nested_get_evmcs_version)
+> +		evmcs_ver = kvm_x86_ops.nested_ops->nested_get_evmcs_version(vcpu);
+>  
+>  	/* Skip NESTED_FEATURES if eVMCS is not supported */
+>  	if (!evmcs_ver)
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index 3e5bd739a6f6..671b883fd14e 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -784,7 +784,7 @@ static bool nested_exit_on_intr(struct vcpu_svm *svm)
+>  	return (svm->nested.intercept & 1ULL);
+>  }
+>  
+> -int svm_check_nested_events(struct kvm_vcpu *vcpu)
+> +static int svm_check_nested_events(struct kvm_vcpu *vcpu)
+>  {
+>  	struct vcpu_svm *svm = to_svm(vcpu);
+>  	bool block_nested_events =
+> @@ -825,3 +825,7 @@ int nested_svm_exit_special(struct vcpu_svm *svm)
+>  
+>  	return NESTED_EXIT_CONTINUE;
+>  }
+> +
+> +struct kvm_x86_nested_ops svm_nested_ops = {
+> +	.check_nested_events = svm_check_nested_events,
+> +};
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index a6f4e1bdb045..a91e397d6750 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -3895,9 +3895,9 @@ static bool svm_apic_init_signal_blocked(struct kvm_vcpu *vcpu)
+>  	/*
+>  	 * TODO: Last condition latch INIT signals on vCPU when
+>  	 * vCPU is in guest-mode and vmcb12 defines intercept on INIT.
+> -	 * To properly emulate the INIT intercept, SVM should implement
+> -	 * kvm_x86_ops.check_nested_events() and call nested_svm_vmexit()
+> -	 * there if an INIT signal is pending.
+> +	 * To properly emulate the INIT intercept,
+> +	 * svm_check_nested_events() should call nested_svm_vmexit()
+> +	 * if an INIT signal is pending.
+>  	 */
+>  	return !gif_set(svm) ||
+>  		   (svm->vmcb->control.intercept & (1ULL << INTERCEPT_INIT));
+> @@ -4025,6 +4025,8 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
+>  	.sched_in = svm_sched_in,
+>  
+>  	.pmu_ops = &amd_pmu_ops,
+> +	.nested_ops = &svm_nested_ops,
+> +
+>  	.deliver_posted_interrupt = svm_deliver_avic_intr,
+>  	.dy_apicv_has_pending_interrupt = svm_dy_apicv_has_pending_interrupt,
+>  	.update_pi_irte = svm_update_pi_irte,
+> @@ -4039,14 +4041,9 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
+>  	.mem_enc_reg_region = svm_register_enc_region,
+>  	.mem_enc_unreg_region = svm_unregister_enc_region,
+>  
+> -	.nested_enable_evmcs = NULL,
+> -	.nested_get_evmcs_version = NULL,
+> -
+>  	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
+>  
+>  	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
+> -
+> -	.check_nested_events = svm_check_nested_events,
+>  };
+>  
+>  static struct kvm_x86_init_ops svm_init_ops __initdata = {
+> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> index ca95204f9dde..98c2890d561d 100644
+> --- a/arch/x86/kvm/svm/svm.h
+> +++ b/arch/x86/kvm/svm/svm.h
+> @@ -398,9 +398,10 @@ int nested_svm_exit_handled(struct vcpu_svm *svm);
+>  int nested_svm_check_permissions(struct vcpu_svm *svm);
+>  int nested_svm_check_exception(struct vcpu_svm *svm, unsigned nr,
+>  			       bool has_error_code, u32 error_code);
+> -int svm_check_nested_events(struct kvm_vcpu *vcpu);
+>  int nested_svm_exit_special(struct vcpu_svm *svm);
+>  
+> +extern struct kvm_x86_nested_ops svm_nested_ops;
+> +
+>  /* avic.c */
+>  
+>  #define AVIC_LOGICAL_ID_ENTRY_GUEST_PHYSICAL_ID_MASK	(0xFF)
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index f228339cd0a0..8597141bd1c7 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -6440,12 +6440,14 @@ __init int nested_vmx_hardware_setup(struct kvm_x86_ops *ops,
+>  	exit_handlers[EXIT_REASON_INVVPID]	= handle_invvpid;
+>  	exit_handlers[EXIT_REASON_VMFUNC]	= handle_vmfunc;
+>  
+> -	ops->check_nested_events = vmx_check_nested_events;
+> -	ops->get_nested_state = vmx_get_nested_state;
+> -	ops->set_nested_state = vmx_set_nested_state;
+> -	ops->get_vmcs12_pages = nested_get_vmcs12_pages;
+> -	ops->nested_enable_evmcs = nested_enable_evmcs;
+> -	ops->nested_get_evmcs_version = nested_get_evmcs_version;
+> -
+>  	return 0;
+>  }
+> +
+> +struct kvm_x86_nested_ops vmx_nested_ops = {
+> +	.check_nested_events = vmx_check_nested_events,
+> +	.get_nested_state = vmx_get_nested_state,
+> +	.set_nested_state = vmx_set_nested_state,
+> +	.get_vmcs12_pages = nested_get_vmcs12_pages,
+> +	.nested_enable_evmcs = nested_enable_evmcs,
+> +	.nested_get_evmcs_version = nested_get_evmcs_version,
+> +};
+> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+> index 1514ff4db77f..7ce9572c3d3a 100644
+> --- a/arch/x86/kvm/vmx/nested.h
+> +++ b/arch/x86/kvm/vmx/nested.h
+> @@ -278,4 +278,6 @@ static inline bool nested_cr4_valid(struct kvm_vcpu *vcpu, unsigned long val)
+>  #define nested_guest_cr4_valid	nested_cr4_valid
+>  #define nested_host_cr4_valid	nested_cr4_valid
+>  
+> +extern struct kvm_x86_nested_ops vmx_nested_ops;
+> +
+>  #endif /* __KVM_X86_VMX_NESTED_H */
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 766303b31949..455cd2c8dbce 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7862,6 +7862,7 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
+>  	.post_block = vmx_post_block,
+>  
+>  	.pmu_ops = &intel_pmu_ops,
+> +	.nested_ops = &vmx_nested_ops,
+>  
+>  	.update_pi_irte = vmx_update_pi_irte,
+>  
+> @@ -7877,12 +7878,6 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
+>  	.pre_leave_smm = vmx_pre_leave_smm,
+>  	.enable_smi_window = enable_smi_window,
+>  
+> -	.check_nested_events = NULL,
+> -	.get_nested_state = NULL,
+> -	.set_nested_state = NULL,
+> -	.get_vmcs12_pages = NULL,
+> -	.nested_enable_evmcs = NULL,
+> -	.nested_get_evmcs_version = NULL,
+>  	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
+>  	.apic_init_signal_blocked = vmx_apic_init_signal_blocked,
+>  };
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 0492baeb78ab..5bcb4569196a 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3442,14 +3442,14 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  		r = KVM_X2APIC_API_VALID_FLAGS;
+>  		break;
+>  	case KVM_CAP_NESTED_STATE:
+> -		r = kvm_x86_ops.get_nested_state ?
+> -			kvm_x86_ops.get_nested_state(NULL, NULL, 0) : 0;
+> +		r = kvm_x86_ops.nested_ops->get_nested_state ?
+> +			kvm_x86_ops.nested_ops->get_nested_state(NULL, NULL, 0) : 0;
+>  		break;
+>  	case KVM_CAP_HYPERV_DIRECT_TLBFLUSH:
+>  		r = kvm_x86_ops.enable_direct_tlbflush != NULL;
+>  		break;
+>  	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+> -		r = kvm_x86_ops.nested_enable_evmcs != NULL;
+> +		r = kvm_x86_ops.nested_ops->nested_enable_evmcs != NULL;
+>  		break;
+>  	default:
+>  		break;
+> @@ -4235,9 +4235,9 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
+>  		return kvm_hv_activate_synic(vcpu, cap->cap ==
+>  					     KVM_CAP_HYPERV_SYNIC2);
+>  	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+> -		if (!kvm_x86_ops.nested_enable_evmcs)
+> +		if (!kvm_x86_ops.nested_ops->nested_enable_evmcs)
+>  			return -ENOTTY;
+> -		r = kvm_x86_ops.nested_enable_evmcs(vcpu, &vmcs_version);
+> +		r = kvm_x86_ops.nested_ops->nested_enable_evmcs(vcpu, &vmcs_version);
+>  		if (!r) {
+>  			user_ptr = (void __user *)(uintptr_t)cap->args[0];
+>  			if (copy_to_user(user_ptr, &vmcs_version,
+> @@ -4552,7 +4552,7 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  		u32 user_data_size;
+>  
+>  		r = -EINVAL;
+> -		if (!kvm_x86_ops.get_nested_state)
+> +		if (!kvm_x86_ops.nested_ops->get_nested_state)
+>  			break;
+>  
+>  		BUILD_BUG_ON(sizeof(user_data_size) != sizeof(user_kvm_nested_state->size));
+> @@ -4560,8 +4560,8 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  		if (get_user(user_data_size, &user_kvm_nested_state->size))
+>  			break;
+>  
+> -		r = kvm_x86_ops.get_nested_state(vcpu, user_kvm_nested_state,
+> -						  user_data_size);
+> +		r = kvm_x86_ops.nested_ops->get_nested_state(vcpu, user_kvm_nested_state,
+> +							     user_data_size);
+>  		if (r < 0)
+>  			break;
+>  
+> @@ -4582,7 +4582,7 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  		int idx;
+>  
+>  		r = -EINVAL;
+> -		if (!kvm_x86_ops.set_nested_state)
+> +		if (!kvm_x86_ops.nested_ops->set_nested_state)
+>  			break;
+>  
+>  		r = -EFAULT;
+> @@ -4604,7 +4604,7 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  			break;
+>  
+>  		idx = srcu_read_lock(&vcpu->kvm->srcu);
+> -		r = kvm_x86_ops.set_nested_state(vcpu, user_kvm_nested_state, &kvm_state);
+> +		r = kvm_x86_ops.nested_ops->set_nested_state(vcpu, user_kvm_nested_state, &kvm_state);
+>  		srcu_read_unlock(&vcpu->kvm->srcu, idx);
+>  		break;
+>  	}
+> @@ -7700,7 +7700,7 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
+>  	 * from L2 to L1.
+>  	 */
+>  	if (is_guest_mode(vcpu)) {
+> -		r = kvm_x86_ops.check_nested_events(vcpu);
+> +		r = kvm_x86_ops.nested_ops->check_nested_events(vcpu);
+>  		if (r != 0)
+>  			return r;
+>  	}
+> @@ -7762,7 +7762,7 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
+>  		 * KVM_REQ_EVENT only on certain events and not unconditionally?
+>  		 */
+>  		if (is_guest_mode(vcpu)) {
+> -			r = kvm_x86_ops.check_nested_events(vcpu);
+> +			r = kvm_x86_ops.nested_ops->check_nested_events(vcpu);
+>  			if (r != 0)
+>  				return r;
+>  		}
+> @@ -8185,7 +8185,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>  
+>  	if (kvm_request_pending(vcpu)) {
+>  		if (kvm_check_request(KVM_REQ_GET_VMCS12_PAGES, vcpu)) {
+> -			if (unlikely(!kvm_x86_ops.get_vmcs12_pages(vcpu))) {
+> +			if (unlikely(!kvm_x86_ops.nested_ops->get_vmcs12_pages(vcpu))) {
+>  				r = 0;
+>  				goto out;
+>  			}
+> @@ -8528,7 +8528,7 @@ static inline int vcpu_block(struct kvm *kvm, struct kvm_vcpu *vcpu)
+>  static inline bool kvm_vcpu_running(struct kvm_vcpu *vcpu)
+>  {
+>  	if (is_guest_mode(vcpu))
+> -		kvm_x86_ops.check_nested_events(vcpu);
+> +		kvm_x86_ops.nested_ops->check_nested_events(vcpu);
+>  
+>  	return (vcpu->arch.mp_state == KVM_MP_STATE_RUNNABLE &&
+>  		!vcpu->arch.apf.halted);
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 36d42da7466a..5ddd128d4b7a 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -477,3 +477,4 @@
- # 545 reserved for clone3
- 547	common	openat2				sys_openat2
- 548	common	pidfd_getfd			sys_pidfd_getfd
-+549	common	faccessat2			sys_faccessat2
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 4d1cf74a2caa..d5cae5ffede0 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -451,3 +451,4 @@
- 435	common	clone3				sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 803039d504de..3b859596840d 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -38,7 +38,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
- 
--#define __NR_compat_syscalls		439
-+#define __NR_compat_syscalls		440
- #endif
- 
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index c1c61635f89c..6d95d0c8bf2f 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -883,6 +883,8 @@ __SYSCALL(__NR_clone3, sys_clone3)
- __SYSCALL(__NR_openat2, sys_openat2)
- #define __NR_pidfd_getfd 438
- __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
-+#define __NR_faccessat2 439
-+__SYSCALL(__NR_faccessat2, sys_faccessat2)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index 042911e670b8..49e325b604b3 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -358,3 +358,4 @@
- # 435 reserved for clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index f4f49fcb76d0..f71b1bbcc198 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -437,3 +437,4 @@
- 435	common	clone3				__sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 4c67b11f9c9e..edacc4561f2b 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -443,3 +443,4 @@
- 435	common	clone3				sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 1f9e8ad636cc..f777141f5256 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -376,3 +376,4 @@
- 435	n32	clone3				__sys_clone3
- 437	n32	openat2				sys_openat2
- 438	n32	pidfd_getfd			sys_pidfd_getfd
-+439	n32	faccessat2			sys_faccessat2
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index c0b9d802dbf6..da8c76394e17 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -352,3 +352,4 @@
- 435	n64	clone3				__sys_clone3
- 437	n64	openat2				sys_openat2
- 438	n64	pidfd_getfd			sys_pidfd_getfd
-+439	n64	faccessat2			sys_faccessat2
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index ac586774c980..13280625d312 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -425,3 +425,4 @@
- 435	o32	clone3				__sys_clone3
- 437	o32	openat2				sys_openat2
- 438	o32	pidfd_getfd			sys_pidfd_getfd
-+439	o32	faccessat2			sys_faccessat2
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index 52a15f5cd130..5a758fa6ec52 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -435,3 +435,4 @@
- 435	common	clone3				sys_clone3_wrapper
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 220ae11555f2..f833a3190822 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -527,3 +527,4 @@
- 435	spu	clone3				sys_ni_syscall
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index bd7bd3581a0f..bfdcb7633957 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -440,3 +440,4 @@
- 435  common	clone3			sys_clone3			sys_clone3
- 437  common	openat2			sys_openat2			sys_openat2
- 438  common	pidfd_getfd		sys_pidfd_getfd			sys_pidfd_getfd
-+439  common	faccessat2		sys_faccessat2			sys_faccessat2
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index c7a30fcd135f..acc35daa1b79 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -440,3 +440,4 @@
- # 435 reserved for clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index f13615ecdecc..8004a276cb74 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -483,3 +483,4 @@
- # 435 reserved for clone3
- 437	common	openat2			sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 54581ac671b4..d8f8a1a69ed1 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -442,3 +442,4 @@
- 435	i386	clone3			sys_clone3
- 437	i386	openat2			sys_openat2
- 438	i386	pidfd_getfd		sys_pidfd_getfd
-+439	i386	faccessat2		sys_faccessat2
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 37b844f839bc..78847b32e137 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -359,6 +359,7 @@
- 435	common	clone3			sys_clone3
- 437	common	openat2			sys_openat2
- 438	common	pidfd_getfd		sys_pidfd_getfd
-+439	common	faccessat2		sys_faccessat2
- 
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 85a9ab1bc04d..69d0d73876b3 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -408,3 +408,4 @@
- 435	common	clone3				sys_clone3
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
-+439	common	faccessat2			sys_faccessat2
-diff --git a/fs/internal.h b/fs/internal.h
-index aa5d45524e87..0d467e32dd7e 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -126,7 +126,6 @@ extern struct open_how build_open_how(int flags, umode_t mode);
- extern int build_open_flags(const struct open_how *how, struct open_flags *op);
- 
- long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
--long do_faccessat(int dfd, const char __user *filename, int mode);
- int do_fchmodat(int dfd, const char __user *filename, umode_t mode);
- int do_fchownat(int dfd, const char __user *filename, uid_t user, gid_t group,
- 		int flag);
-diff --git a/fs/open.c b/fs/open.c
-index 719b320ede52..6f3cdf109ec0 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -345,21 +345,14 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
-  * We do this by temporarily clearing all FS-related capabilities and
-  * switching the fsuid/fsgid around to the real ones.
-  */
--long do_faccessat(int dfd, const char __user *filename, int mode)
-+static const struct cred *access_override_creds(void)
- {
- 	const struct cred *old_cred;
- 	struct cred *override_cred;
--	struct path path;
--	struct inode *inode;
--	int res;
--	unsigned int lookup_flags = LOOKUP_FOLLOW;
--
--	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
--		return -EINVAL;
- 
- 	override_cred = prepare_creds();
- 	if (!override_cred)
--		return -ENOMEM;
-+		return NULL;
- 
- 	override_cred->fsuid = override_cred->uid;
- 	override_cred->fsgid = override_cred->gid;
-@@ -394,6 +387,38 @@ long do_faccessat(int dfd, const char __user *filename, int mode)
- 	override_cred->non_rcu = 1;
- 
- 	old_cred = override_creds(override_cred);
-+
-+	/* override_cred() gets its own ref */
-+	put_cred(override_cred);
-+
-+	return old_cred;
-+}
-+
-+long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
-+{
-+	const struct cred *old_cred = NULL;
-+	struct path path;
-+	struct inode *inode;
-+	int res;
-+	unsigned int lookup_flags = LOOKUP_FOLLOW;
-+
-+	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
-+		return -EINVAL;
-+
-+	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH))
-+		return -EINVAL;
-+
-+	if (flags & AT_SYMLINK_NOFOLLOW)
-+		lookup_flags &= ~LOOKUP_FOLLOW;
-+	if (flags & AT_EMPTY_PATH)
-+		lookup_flags |= LOOKUP_EMPTY;
-+
-+	if (!(flags & AT_EACCESS)) {
-+		old_cred = access_override_creds();
-+		if (!old_cred)
-+			return -ENOMEM;
-+	}
-+
- retry:
- 	res = user_path_at(dfd, filename, lookup_flags, &path);
- 	if (res)
-@@ -435,19 +460,26 @@ long do_faccessat(int dfd, const char __user *filename, int mode)
- 		goto retry;
- 	}
- out:
--	revert_creds(old_cred);
--	put_cred(override_cred);
-+	if (old_cred)
-+		revert_creds(old_cred);
-+
- 	return res;
- }
- 
- SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
- {
--	return do_faccessat(dfd, filename, mode);
-+	return do_faccessat(dfd, filename, mode, 0);
-+}
-+
-+SYSCALL_DEFINE4(faccessat2, int, dfd, const char __user *, filename, int, mode,
-+		int, flags)
-+{
-+	return do_faccessat(dfd, filename, mode, flags);
- }
- 
- SYSCALL_DEFINE2(access, const char __user *, filename, int, mode)
- {
--	return do_faccessat(AT_FDCWD, filename, mode);
-+	return do_faccessat(AT_FDCWD, filename, mode, 0);
- }
- 
- int ksys_chdir(const char __user *filename)
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 1815065d52f3..baec24782301 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -428,6 +428,8 @@ asmlinkage long sys_ftruncate64(unsigned int fd, loff_t length);
- #endif
- asmlinkage long sys_fallocate(int fd, int mode, loff_t offset, loff_t len);
- asmlinkage long sys_faccessat(int dfd, const char __user *filename, int mode);
-+asmlinkage long sys_faccessat2(int dfd, const char __user *filename, int mode,
-+			       int flags);
- asmlinkage long sys_chdir(const char __user *filename);
- asmlinkage long sys_fchdir(unsigned int fd);
- asmlinkage long sys_chroot(const char __user *filename);
-@@ -1333,11 +1335,12 @@ static inline int ksys_chmod(const char __user *filename, umode_t mode)
- 	return do_fchmodat(AT_FDCWD, filename, mode);
- }
- 
--extern long do_faccessat(int dfd, const char __user *filename, int mode);
-+extern long do_faccessat(int dfd, const char __user *filename, int mode,
-+			 int flags);
- 
- static inline long ksys_access(const char __user *filename, int mode)
- {
--	return do_faccessat(AT_FDCWD, filename, mode);
-+	return do_faccessat(AT_FDCWD, filename, mode, 0);
- }
- 
- extern int do_fchownat(int dfd, const char __user *filename, uid_t user,
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 3a3201e4618e..f4a01305d9a6 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -855,9 +855,11 @@ __SYSCALL(__NR_clone3, sys_clone3)
- __SYSCALL(__NR_openat2, sys_openat2)
- #define __NR_pidfd_getfd 438
- __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
-+#define __NR_faccessat2 439
-+__SYSCALL(__NR_faccessat2, sys_faccessat2)
- 
- #undef __NR_syscalls
--#define __NR_syscalls 439
-+#define __NR_syscalls 440
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index ca88b7bce553..2f86b2ad6d7e 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -84,10 +84,20 @@
- #define DN_ATTRIB	0x00000020	/* File changed attibutes */
- #define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
- 
-+/*
-+ * The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EACCESS is
-+ * meaningful only to faccessat, while AT_REMOVEDIR is meaningful only to
-+ * unlinkat.  The two functions do completely different things and therefore,
-+ * the flags can be allowed to overlap.  For example, passing AT_REMOVEDIR to
-+ * faccessat would be undefined behavior and thus treating it equivalent to
-+ * AT_EACCESS is valid undefined behavior.
-+ */
- #define AT_FDCWD		-100    /* Special value used to indicate
-                                            openat should use the current
-                                            working directory. */
- #define AT_SYMLINK_NOFOLLOW	0x100   /* Do not follow symbolic links.  */
-+#define AT_EACCESS		0x200	/* Test access permitted for
-+                                           effective IDs, not real IDs.  */
- #define AT_REMOVEDIR		0x200   /* Remove directory instead of
-                                            unlinking file.  */
- #define AT_SYMLINK_FOLLOW	0x400   /* Follow symbolic links.  */
 -- 
-2.21.1
+Vitaly
 
