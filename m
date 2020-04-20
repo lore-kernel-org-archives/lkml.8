@@ -2,139 +2,211 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D93C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5066FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5039E20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:02:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KxVEIELJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2BB2D22240
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587402155;
+	bh=plMzlobQNccyl97bdN7R33bGIDUnUZmwwqOwhihDlNY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TdNorsvDNxRO9PICJ57vtjJTJrgz0T3lx2O0Hsc2BDN+QyXDgbZTahnrSBGmktDJN
+	 JHt5b7ppz96HrfDrwlf6ixXoEVDy+BFNvaDrBNHu51MKA/W0GRRJHGnbSaGG0QvktN
+	 vWzCprpjJ0K/DsU4zOyisOj+DJt5ptPiAHGOuDjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgDTRC3 (ORCPT
+        id S1726709AbgDTRCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:02:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725784AbgDTRC2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:02:28 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14B27C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 10:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=k28rFF1aTcCuYw7F0NCXVX98o1FH/69yQlo98AqotUQ=; b=KxVEIELJ8vx2GpPVRy5cRF/cML
-        1Y8FiqyLj/fdjcmLhcxaURlyKbedo1blRlxGjZR5Pz0uizNuNQCQ4uwPPMrx0AckbbZ8rWGxqxmWo
-        KGnqk95lXpknK2scAn+1U3igIFZnudEZJwocgUWTIgawTWikkXCw3Q3zAEFZoBAOwd1Jb+1/L++Io
-        qR5rlRnt2ZkbUovfp7aN9nUQ789TpEqsD5bT2qExSKgwg5PjKLYNpIZtNCaf1PZXqK+Ku4jtbmKhH
-        P7xek5I6JrEAg5ngmpVjygngziFRM6uA1T+Jmkx7ER0glor8/U3ZewnzbFBhq9aCG9335VjGb7gmi
-        9x7pUjTw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQZo6-0003nB-0S; Mon, 20 Apr 2020 17:02:06 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 940D93010C4;
-        Mon, 20 Apr 2020 19:02:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 794FC2B9DD27F; Mon, 20 Apr 2020 19:02:03 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 19:02:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH V5 RESEND 00/14] TopDown metrics support for Icelake
-Message-ID: <20200420170203.GL20730@hirez.programming.kicks-ass.net>
-References: <20200106202919.2943-1-kan.liang@linux.intel.com>
- <20200110131749.GD2827@hirez.programming.kicks-ass.net>
- <CABPqkBTSwoCOt_pOQvX4qSTy6D5DKYvZVXJd66Vf=2mGVsOpvQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABPqkBTSwoCOt_pOQvX4qSTy6D5DKYvZVXJd66Vf=2mGVsOpvQ@mail.gmail.com>
+        Mon, 20 Apr 2020 13:02:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbgDTRCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:02:32 -0400
+Received: from localhost.localdomain (unknown [157.46.94.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60C5D221F4;
+        Mon, 20 Apr 2020 17:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587402151;
+        bh=plMzlobQNccyl97bdN7R33bGIDUnUZmwwqOwhihDlNY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SQoDVIQpN/VZy7sDK1aZIiMW9C0CDN9KdUol7rsq1Ba1n7p0dX8xxuWNbXmLsRxwu
+         huLrKf/jlWP46Vm1R0rOK539k1YpaL60iApYRnV8TgECCfppSF4vkCfNXZE0Fve6n6
+         cXHum4o73j41QL2N0V73y4yGVM+3DqG6AqPsHBX8=
+From:   mani@kernel.org
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com, andy.shevchenko@gmail.com,
+        Manivannan Sadhasivam <mani@kernel.org>
+Subject: [PATCH v3 2/2] tty: serial: Add modem control gpio support for STM32 UART
+Date:   Mon, 20 Apr 2020 22:32:04 +0530
+Message-Id: <20200420170204.24541-3-mani@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200420170204.24541-1-mani@kernel.org>
+References: <20200420170204.24541-1-mani@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 09:00:56AM -0700, Stephane Eranian wrote:
-> Hi,
-> 
-> On Fri, Jan 10, 2020 at 5:17 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Mon, Jan 06, 2020 at 12:29:05PM -0800, kan.liang@linux.intel.com wrote:
-> > > From: Kan Liang <kan.liang@linux.intel.com>
-> > >
-> > > Icelake has support for measuring the level 1 TopDown metrics
-> > > directly in hardware. This is implemented by an additional METRICS
-> > > register, and a new Fixed Counter 3 that measures pipeline SLOTS.
-> > >
-> > > New in Icelake
-> > > - Do not require generic counters. This allows to collect TopDown always
-> > >   in addition to other events.
-> > > - Measuring TopDown per thread/process instead of only per core
-> > >
-> > > For the Ice Lake implementation of performance metrics, the values in
-> > > PERF_METRICS MSR are derived from fixed counter 3. Software should start
-> > > both registers, PERF_METRICS and fixed counter 3, from zero.
-> > > Additionally, software is recommended to periodically clear both
-> > > registers in order to maintain accurate measurements. The latter is
-> > > required for certain scenarios that involve sampling metrics at high
-> > > rates. Software should always write fixed counter 3 before write to
-> > > PERF_METRICS.
-> >
-> > Do we really have to support this trainwreck? This is such ill designed
-> > hardware, I'm loath to support it, it might encourage more such
-> > 'creative' things and we really don't need that.
-> >
-> Yes, we do because it provides important information per hyper-thread.
-> 
-> I understand that the hardware is convoluted to support because it
-> introduces a new concept: a single counter computing multiple high
-> level metrics. It is difficult to abstract cleanly especially when you
-> add on top that it is connected with a new fixed counter (SLOTS).
+From: Manivannan Sadhasivam <mani@kernel.org>
 
-It's not a new concept, it's just completely idiotic. It didn't need to
-be this crazy. There is absolutely no sane reason for it to be this
-crazy.
+STM32 UART controllers have the built in modem control support using
+dedicated gpios which can be enabled using 'st,hw-flow-ctrl' flag in DT.
+But there might be cases where the board design need to use different
+gpios for modem control.
 
-The 4 counters in a single msr thing is insane because it uses a
-division.
+For supporting such cases, this commit adds modem control gpio support
+to STM32 UART controller using mctrl_gpio driver.
 
-Very much worse, it explicitly uses the exact value of another counter
-(SLOTS) to drive that division, creating a tight coupling between the
-registers and completely and utterly destroying the SLOTS counter.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+---
+ drivers/tty/serial/Kconfig       |  1 +
+ drivers/tty/serial/stm32-usart.c | 53 ++++++++++++++++++++++++++++++--
+ drivers/tty/serial/stm32-usart.h |  1 +
+ 3 files changed, 53 insertions(+), 2 deletions(-)
 
-Since it keeps internal 'shadow' counters for the 4 events anyway, it
-might as well have kept a shadow counter for the SLOTS event and driven
-it off of that, that would have kept the SLOTS counter sane, but nooo,
-gotta wreck that.
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 0aea76cd67ff..e7a6f2130684 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1462,6 +1462,7 @@ config SERIAL_STM32
+ 	tristate "STMicroelectronics STM32 serial port support"
+ 	select SERIAL_CORE
+ 	depends on ARCH_STM32 || COMPILE_TEST
++	select SERIAL_MCTRL_GPIO if GPIOLIB
+ 	help
+ 	  This driver is for the on-chip Serial Controller on
+ 	  STMicroelectronics STM32 MCUs.
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index 5e93e8d40f59..17c2f3276888 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -31,6 +31,7 @@
+ #include <linux/tty_flip.h>
+ #include <linux/tty.h>
+ 
++#include "serial_mctrl_gpio.h"
+ #include "stm32-usart.h"
+ 
+ static void stm32_stop_tx(struct uart_port *port);
+@@ -510,12 +511,29 @@ static void stm32_set_mctrl(struct uart_port *port, unsigned int mctrl)
+ 		stm32_set_bits(port, ofs->cr3, USART_CR3_RTSE);
+ 	else
+ 		stm32_clr_bits(port, ofs->cr3, USART_CR3_RTSE);
++
++	mctrl_gpio_set(stm32_port->gpios, mctrl);
+ }
+ 
+ static unsigned int stm32_get_mctrl(struct uart_port *port)
+ {
++	struct stm32_port *stm32_port = to_stm32_port(port);
++	unsigned int ret;
++
+ 	/* This routine is used to get signals of: DCD, DSR, RI, and CTS */
+-	return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
++	ret = TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
++
++	return mctrl_gpio_get(stm32_port->gpios, &ret);
++}
++
++static void stm32_enable_ms(struct uart_port *port)
++{
++	mctrl_gpio_enable_ms(to_stm32_port(port)->gpios);
++}
++
++static void stm32_disable_ms(struct uart_port *port)
++{
++	mctrl_gpio_disable_ms(to_stm32_port(port)->gpios);
+ }
+ 
+ /* Transmit stop */
+@@ -626,6 +644,9 @@ static void stm32_shutdown(struct uart_port *port)
+ 	u32 val, isr;
+ 	int ret;
+ 
++	/* Disable modem control interrupts */
++	stm32_disable_ms(port);
++
+ 	val = USART_CR1_TXEIE | USART_CR1_TE;
+ 	val |= stm32_port->cr1_irq | USART_CR1_RE;
+ 	val |= BIT(cfg->uart_enable_bit);
+@@ -764,6 +785,12 @@ static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		cr3 |= USART_CR3_CTSE | USART_CR3_RTSE;
+ 	}
+ 
++	/* Handle modem control interrupts */
++	if (UART_ENABLE_MS(port, termios->c_cflag))
++		stm32_enable_ms(port);
++	else
++		stm32_disable_ms(port);
++
+ 	usartdiv = DIV_ROUND_CLOSEST(port->uartclk, baud);
+ 
+ 	/*
+@@ -898,6 +925,7 @@ static const struct uart_ops stm32_uart_ops = {
+ 	.throttle	= stm32_throttle,
+ 	.unthrottle	= stm32_unthrottle,
+ 	.stop_rx	= stm32_stop_rx,
++	.enable_ms	= stm32_enable_ms,
+ 	.break_ctl	= stm32_break_ctl,
+ 	.startup	= stm32_startup,
+ 	.shutdown	= stm32_shutdown,
+@@ -960,10 +988,31 @@ static int stm32_init_port(struct stm32_port *stm32port,
+ 
+ 	stm32port->port.uartclk = clk_get_rate(stm32port->clk);
+ 	if (!stm32port->port.uartclk) {
+-		clk_disable_unprepare(stm32port->clk);
+ 		ret = -EINVAL;
++		goto err_clk;
++	}
++
++	stm32port->gpios = mctrl_gpio_init(&stm32port->port, 0);
++	if (IS_ERR(stm32port->gpios)) {
++		ret = PTR_ERR(stm32port->gpios);
++		goto err_clk;
+ 	}
+ 
++	/* Both CTS/RTS gpios and "st,hw-flow-ctrl" should not be specified */
++	if (stm32port->hw_flow_control) {
++		if (mctrl_gpio_to_gpiod(stm32port->gpios, UART_GPIO_CTS) ||
++		    mctrl_gpio_to_gpiod(stm32port->gpios, UART_GPIO_RTS)) {
++			dev_err(&pdev->dev, "Conflicting RTS/CTS config\n");
++			ret = -EINVAL;
++			goto err_clk;
++		}
++	}
++
++	return ret;
++
++err_clk:
++	clk_disable_unprepare(stm32port->clk);
++
+ 	return ret;
+ }
+ 
+diff --git a/drivers/tty/serial/stm32-usart.h b/drivers/tty/serial/stm32-usart.h
+index db8bf0d4982d..d4c916e78d40 100644
+--- a/drivers/tty/serial/stm32-usart.h
++++ b/drivers/tty/serial/stm32-usart.h
+@@ -274,6 +274,7 @@ struct stm32_port {
+ 	bool fifoen;
+ 	int wakeirq;
+ 	int rdr_mask;		/* receive data register mask */
++	struct mctrl_gpios *gpios; /* modem control gpios */
+ };
+ 
+ static struct stm32_port stm32_ports[STM32_MAX_PORTS];
+-- 
+2.17.1
 
-> That also helps the kernel with a single WRMSR/RDMSR for all 4 metrics.
-
-I also really don't buy that as a driver for all this insanity.
-Optimizing MSRs to not be utterly stupid expensive would've been so much
-saner and would've helped everyone.
-
-This is just creating more wreckage.
-
-What I really want to know is if future hardware is going to be as
-stupid; or if there's going to be change. I really don't want to commit
-to ABI here and then have to find out they fixed the hardware and we
-can't do sane things anymore.
-
-Obviously, future hardware is not something that is to be discussed, so
-we're at a stand-still here.
