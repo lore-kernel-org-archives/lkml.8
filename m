@@ -2,169 +2,167 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB64C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0881EC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28ED422202
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386726;
-	bh=adZoCvVGRD5MW19XD0we/VvM73YYANtTAqdQrum+WBo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LH6WkiN4Hux917szRYQpgwb4qX9VSiAXqXKEJ5ITI91yTMyiADBPjUSDr7wPKUI1l
-	 THhy/1pl187NYDiHUdTZB6fjVyOsS2pb04/Ccc/D/BZusbvPVDcsBYdJXl/VCt57/z
-	 ZfbYGrWYrufXO/k2LCJKNjqjb072edeiMU3doCSQ=
+	by mail.kernel.org (Postfix) with ESMTP id E7DE821473
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgDTMpZ (ORCPT
+        id S1728717AbgDTMp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Apr 2020 08:45:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10740 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728739AbgDTMpZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 08:45:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728717AbgDTMpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D82EF206E9;
-        Mon, 20 Apr 2020 12:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386721;
-        bh=adZoCvVGRD5MW19XD0we/VvM73YYANtTAqdQrum+WBo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dt0grlfNz9Owku7iEVzbrhyG0/4cve0Q3E74+G8eFL+nlhvmSU9Nb72/JthMIjVU4
-         wBLrSlnJJacvkqnG8ERiWvSvDem/4KJAHUWr+ZVYyx3FdYWf2KB1EeVwbgEMfysy9D
-         fxWgyFRMMdJ9916/nuObSZPtKWQMTh25XA/FI3NM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 57/71] net/mlx5e: Use preactivate hook to set the indirection table
-Date:   Mon, 20 Apr 2020 14:39:11 +0200
-Message-Id: <20200420121520.517952165@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
-References: <20200420121508.491252919@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCVmX1102136;
+        Mon, 20 Apr 2020 08:45:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gf5qusdq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:12 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KChSKg139614;
+        Mon, 20 Apr 2020 08:45:12 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gf5qusd4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:12 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCdtsD024398;
+        Mon, 20 Apr 2020 12:45:11 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma03dal.us.ibm.com with ESMTP id 30fs66cpk6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 12:45:11 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCj9oP49414460
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 12:45:09 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8680F136061;
+        Mon, 20 Apr 2020 12:45:09 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D18A136059;
+        Mon, 20 Apr 2020 12:45:05 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 12:45:04 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
+        kirill@shutemov.name,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH v3 05/22] powerpc/book3s64/hash: Use the pte_t address from the caller
+Date:   Mon, 20 Apr 2020 18:14:17 +0530
+Message-Id: <20200420124434.47330-6-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_03:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ phishscore=0 spamscore=0 priorityscore=1501 adultscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maximmi@mellanox.com>
+Don't fetch the pte value using lockless page table walk. Instead use the value from the
+caller. hash_preload is called with ptl lock held. So it is safe to use the
+pte_t address directly.
 
-[ Upstream commit fe867cac9e1967c553e4ac2aece5fc8675258010 ]
-
-mlx5e_ethtool_set_channels updates the indirection table before
-switching to the new channels. If the switch fails, the indirection
-table is new, but the channels are old, which is wrong. Fix it by using
-the preactivate hook of mlx5e_safe_switch_channels to update the
-indirection table at the stage when nothing can fail anymore.
-
-As the code that updates the indirection table is now encapsulated into
-a new function, use that function in the attach flow when the driver has
-to reduce the number of channels, and prepare the code for the next
-commit.
-
-Fixes: 85082dba0a ("net/mlx5e: Correctly handle RSS indirection table when changing number of channels")
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h     |  1 +
- .../net/ethernet/mellanox/mlx5/core/en_ethtool.c | 10 ++--------
- .../net/ethernet/mellanox/mlx5/core/en_main.c    | 16 ++++++++++++++--
- 3 files changed, 17 insertions(+), 10 deletions(-)
+ arch/powerpc/mm/book3s64/hash_utils.c | 27 +++++----------------------
+ 1 file changed, 5 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index 704bd6d5277d2..ddd2409fc8bef 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -1044,6 +1044,7 @@ int mlx5e_safe_reopen_channels(struct mlx5e_priv *priv);
- int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
- 			       struct mlx5e_channels *new_chs,
- 			       mlx5e_fp_preactivate preactivate);
-+int mlx5e_num_channels_changed(struct mlx5e_priv *priv);
- void mlx5e_activate_priv_channels(struct mlx5e_priv *priv);
- void mlx5e_deactivate_priv_channels(struct mlx5e_priv *priv);
+diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+index 525eac4ee2c2..3d727f73a8db 100644
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -1546,14 +1546,11 @@ static bool should_hash_preload(struct mm_struct *mm, unsigned long ea)
+ }
+ #endif
  
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-index d674cb6798950..d2cfa247abc86 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -432,9 +432,7 @@ int mlx5e_ethtool_set_channels(struct mlx5e_priv *priv,
+-static void hash_preload(struct mm_struct *mm, unsigned long ea,
++static void hash_preload(struct mm_struct *mm, pte_t *ptep, unsigned long ea,
+ 			 bool is_exec, unsigned long trap)
+ {
+-	int hugepage_shift;
+ 	unsigned long vsid;
+ 	pgd_t *pgdir;
+-	pte_t *ptep;
+-	unsigned long flags;
+ 	int rc, ssize, update_flags = 0;
+ 	unsigned long access = _PAGE_PRESENT | _PAGE_READ | (is_exec ? _PAGE_EXEC : 0);
  
- 	if (!test_bit(MLX5E_STATE_OPENED, &priv->state)) {
- 		*cur_params = new_channels.params;
--		if (!netif_is_rxfh_configured(priv->netdev))
--			mlx5e_build_default_indir_rqt(priv->rss_params.indirection_rqt,
--						      MLX5E_INDIR_RQT_SIZE, count);
-+		mlx5e_num_channels_changed(priv);
- 		goto out;
- 	}
+@@ -1575,30 +1572,18 @@ static void hash_preload(struct mm_struct *mm, unsigned long ea,
+ 	vsid = get_user_vsid(&mm->context, ea, ssize);
+ 	if (!vsid)
+ 		return;
+-	/*
+-	 * Hash doesn't like irqs. Walking linux page table with irq disabled
+-	 * saves us from holding multiple locks.
+-	 */
+-	local_irq_save(flags);
  
-@@ -442,12 +440,8 @@ int mlx5e_ethtool_set_channels(struct mlx5e_priv *priv,
- 	if (arfs_enabled)
- 		mlx5e_arfs_disable(priv);
- 
--	if (!netif_is_rxfh_configured(priv->netdev))
--		mlx5e_build_default_indir_rqt(priv->rss_params.indirection_rqt,
--					      MLX5E_INDIR_RQT_SIZE, count);
+-	/*
+-	 * THP pages use update_mmu_cache_pmd. We don't do
+-	 * hash preload there. Hence can ignore THP here
+-	 */
+-	ptep = find_current_mm_pte(pgdir, ea, NULL, &hugepage_shift);
+-	if (!ptep)
+-		goto out_exit;
 -
- 	/* Switch to new channels, set new parameters and close old ones */
--	err = mlx5e_safe_switch_channels(priv, &new_channels, NULL);
-+	err = mlx5e_safe_switch_channels(priv, &new_channels, mlx5e_num_channels_changed);
+-	WARN_ON(hugepage_shift);
+ #ifdef CONFIG_PPC_64K_PAGES
+ 	/* If either H_PAGE_4K_PFN or cache inhibited is set (and we are on
+ 	 * a 64K kernel), then we don't preload, hash_page() will take
+ 	 * care of it once we actually try to access the page.
+ 	 * That way we don't have to duplicate all of the logic for segment
+ 	 * page size demotion here
++	 * Called with  PTL held, hence can be sure the value won't change in
++	 * between.
+ 	 */
+ 	if ((pte_val(*ptep) & H_PAGE_4K_PFN) || pte_ci(*ptep))
+-		goto out_exit;
++		return;
+ #endif /* CONFIG_PPC_64K_PAGES */
  
- 	if (arfs_enabled) {
- 		int err2 = mlx5e_arfs_enable(priv);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 1c8a4235a48c5..2650739964326 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -2897,6 +2897,17 @@ static void mlx5e_update_netdev_queues(struct mlx5e_priv *priv)
- 	netif_set_real_num_rx_queues(netdev, num_rxqs);
+ 	/* Is that local to this CPU ? */
+@@ -1623,8 +1608,6 @@ static void hash_preload(struct mm_struct *mm, unsigned long ea,
+ 				   mm_ctx_user_psize(&mm->context),
+ 				   mm_ctx_user_psize(&mm->context),
+ 				   pte_val(*ptep));
+-out_exit:
+-	local_irq_restore(flags);
  }
  
-+int mlx5e_num_channels_changed(struct mlx5e_priv *priv)
-+{
-+	u16 count = priv->channels.params.num_channels;
-+
-+	if (!netif_is_rxfh_configured(priv->netdev))
-+		mlx5e_build_default_indir_rqt(priv->rss_params.indirection_rqt,
-+					      MLX5E_INDIR_RQT_SIZE, count);
-+
-+	return 0;
-+}
-+
- static void mlx5e_build_txq_maps(struct mlx5e_priv *priv)
- {
- 	int i, ch;
-@@ -5305,9 +5316,10 @@ int mlx5e_attach_netdev(struct mlx5e_priv *priv)
- 	max_nch = mlx5e_get_max_num_channels(priv->mdev);
- 	if (priv->channels.params.num_channels > max_nch) {
- 		mlx5_core_warn(priv->mdev, "MLX5E: Reducing number of channels to %d\n", max_nch);
-+		/* Reducing the number of channels - RXFH has to be reset. */
-+		priv->netdev->priv_flags &= ~IFF_RXFH_CONFIGURED;
- 		priv->channels.params.num_channels = max_nch;
--		mlx5e_build_default_indir_rqt(priv->rss_params.indirection_rqt,
--					      MLX5E_INDIR_RQT_SIZE, max_nch);
-+		mlx5e_num_channels_changed(priv);
+ /*
+@@ -1675,7 +1658,7 @@ void update_mmu_cache(struct vm_area_struct *vma, unsigned long address,
+ 		return;
  	}
  
- 	err = profile->init_tx(priv);
+-	hash_preload(vma->vm_mm, address, is_exec, trap);
++	hash_preload(vma->vm_mm, ptep, address, is_exec, trap);
+ }
+ 
+ #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
 -- 
-2.20.1
-
-
+2.25.3
 
