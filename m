@@ -2,82 +2,435 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B82C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AD8C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C78C220782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E02F206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:37:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="JFgTz9qe"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="Jx83Xqhd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgDTUdC (ORCPT
+        id S1726381AbgDTUhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:33:02 -0400
-Received: from plaes.org ([188.166.43.21]:36274 "EHLO plaes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgDTUdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:33:01 -0400
-Received: from plaes.org (localhost [127.0.0.1])
-        by plaes.org (Postfix) with ESMTPSA id 9908240086;
-        Mon, 20 Apr 2020 20:32:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
-        t=1587414749; bh=d7Hj4YSM+ItexsFnRjVlbilf+LuV59x0yxXoLaqX6Yw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JFgTz9qeJUl4IMms8a8wL9ia7zEMfStVPbGo86s1wI8zOPvSdr8d3OOQkfKBSAKa2
-         2cyrCGrrRn18La96SdTgeMAZqOrq4Cm8h7v0CZcLoni8T45VywhEg8K29lcGkgFJRz
-         VDVzf5hlkhZyrDEf9NvIz1s7v9EFg+f1U66S+v8m27pLm1AT3OzZ3m0foBRqjtatQ0
-         lsYGWr4yFX81V18wzG9BBopi6FfRWZmaUapt/PuABevjh/BaD0UzLsgWMWYTl/ypcW
-         fthldSfIuKzT93ot591XlVkUUDKrFD65Z7YSDIWOytaMLrQ16pj8ddeugFDuVU5UsX
-         FZU4gbRdhOXTg==
-Date:   Mon, 20 Apr 2020 20:32:28 +0000
-From:   Priit Laes <plaes@plaes.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/4] clk: sunxi-ng: a10/a20: rewrite init code to a
- platform driver
-Message-ID: <20200420203228.GA4734@plaes.org>
-References: <20200417221730.555954-1-plaes@plaes.org>
- <20200417221730.555954-2-plaes@plaes.org>
- <20200420124935.asfbgv7envb2af55@gilmour.lan>
+        Mon, 20 Apr 2020 16:37:11 -0400
+Received: from mail-40134.protonmail.ch ([185.70.40.134]:21722 "EHLO
+        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgDTUhL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:37:11 -0400
+Date:   Mon, 20 Apr 2020 20:36:57 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1587415026;
+        bh=pi0I3jcM77UFq2VH8uClbT6LRC4hcRh2g4zpQTZot1Q=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=Jx83XqhdE0MRgdP/xldvW0lmgJGF54kC/N/fXjYlrO2SOt2Jdn/kLuO7UCqUvHvaA
+         5KbSGK1TupNkR1H36vWPlzc3r8VG29xGXySLswL0AqcvLzLgRh2SsAlD5+QMgRSUpC
+         ua+Ok19dH6hpJ2rOEhb47trd36PH9jmQMkDymuhA=
+To:     Helen Koike <helen.koike@collabora.com>
+From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+        <nfraprado@protonmail.com>
+Cc:     linux-media@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+          <nfraprado@protonmail.com>
+Subject: Re: [PATCH v2 1/3] media: vimc: Support multiple media bus codes for each pixelformat
+Message-ID: <20200420203646.6hhbsb57ybwh6u76@ArchWay.local>
+In-Reply-To: <e41520f6-1d2e-9d36-3693-1e6d950ecf2f@collabora.com>
+References: <20200326214730.2449707-1-nfraprado@protonmail.com>
+ <20200326214730.2449707-2-nfraprado@protonmail.com>
+ <e41520f6-1d2e-9d36-3693-1e6d950ecf2f@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420124935.asfbgv7envb2af55@gilmour.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 02:49:35PM +0200, Maxime Ripard wrote:
-> On Sat, Apr 18, 2020 at 01:17:27AM +0300, Priit Laes wrote:
-> > In order to register regmap for sun7i CCU, there needs to be
-> > a device structure already bound to the CCU device node.
-> > 
-> > Convert the sun4i/sun7i CCU setup to platform driver to use
-> > it later as platform device.
-> > 
-> > Signed-off-by: Priit Laes <plaes@plaes.org>
-> 
-> You can't relly do that though. We have timers that need those clocks before the
-> device model is initialized.
+Hi Helen,
 
-Ok, I'm somewhat lost now... are these the affected timers on sun7i following:
-- allwinner,sun4i-a10-timer (timer@1c20c00)
-- allwinner,sun7i-a20-hstimer (hstimer@1c60000)
+thanks for the review.
 
-Any ideas on what approach I could actually use?
+Some comments below.
 
-Also, similar timer dependency would affect then sun6i-a31 and sun9i-a80
-platforms too...
+On Mon, Mar 30, 2020 at 04:36:45PM -0300, Helen Koike wrote:
+>=20
+> Hi N=C3=ADcolas,
+>=20
+> thank you for the patch.
+>=20
+> The series looks good in general, just minor comments below.
+>=20
+> On 3/26/20 6:47 PM, N=C3=ADcolas F. R. A. Prado wrote:
+> > Change vimc_pix_map_list to allow multiple media bus codes to map to th=
+e
+> > same pixelformat, making it possible to add media bus codes for which
+> > there are no pixelformat.
+> >
+> > Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
+> > ---
+> >
+> > Changes in v2:
+> > - Fix vimc_mbus_code_by_index not checking code array bounds
+> > - Fix array formatting
+> > - Rename variables
+> > - Change code array size
+> > - Add comment about vimc_mbus_code_by_index return value
+> >
+> >  drivers/media/platform/vimc/vimc-common.c | 70 ++++++++++++++---------
+> >  drivers/media/platform/vimc/vimc-common.h | 11 +++-
+> >  drivers/media/platform/vimc/vimc-scaler.c | 10 +++-
+> >  drivers/media/platform/vimc/vimc-sensor.c |  6 +-
+> >  4 files changed, 65 insertions(+), 32 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/=
+platform/vimc/vimc-common.c
+> > index c95c17c048f2..119846f3eaa5 100644
+> > --- a/drivers/media/platform/vimc/vimc-common.c
+> > +++ b/drivers/media/platform/vimc/vimc-common.c
+> > @@ -19,19 +19,19 @@ static const struct vimc_pix_map vimc_pix_map_list[=
+] =3D {
+> >
+> >  =09/* RGB formats */
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_BGR888_1X24,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_BGR888_1X24 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_BGR24,
+> >  =09=09.bpp =3D 3,
+> >  =09=09.bayer =3D false,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_RGB888_1X24,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_RGB888_1X24 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_RGB24,
+> >  =09=09.bpp =3D 3,
+> >  =09=09.bayer =3D false,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_ARGB8888_1X32,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_ARGB8888_1X32 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_ARGB32,
+> >  =09=09.bpp =3D 4,
+> >  =09=09.bayer =3D false,
+> > @@ -39,49 +39,49 @@ static const struct vimc_pix_map vimc_pix_map_list[=
+] =3D {
+> >
+> >  =09/* Bayer formats */
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SBGGR8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SBGGR8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SBGGR8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SGBRG8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SGBRG8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGBRG8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SGRBG8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SGRBG8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGRBG8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SRGGB8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SRGGB8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SRGGB8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SBGGR10_1X10,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SBGGR10_1X10 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SBGGR10,
+> >  =09=09.bpp =3D 2,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SGBRG10_1X10,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SGBRG10_1X10 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGBRG10,
+> >  =09=09.bpp =3D 2,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SGRBG10_1X10,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SGRBG10_1X10 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGRBG10,
+> >  =09=09.bpp =3D 2,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SRGGB10_1X10,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SRGGB10_1X10 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SRGGB10,
+> >  =09=09.bpp =3D 2,
+> >  =09=09.bayer =3D true,
+> > @@ -89,25 +89,25 @@ static const struct vimc_pix_map vimc_pix_map_list[=
+] =3D {
+> >
+> >  =09/* 10bit raw bayer a-law compressed to 8 bits */
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SBGGR10ALAW8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGBRG10ALAW8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGRBG10ALAW8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SRGGB10ALAW8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> > @@ -115,49 +115,49 @@ static const struct vimc_pix_map vimc_pix_map_lis=
+t[] =3D {
+> >
+> >  =09/* 10bit raw bayer DPCM compressed to 8 bits */
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SBGGR10DPCM8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGBRG10DPCM8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGRBG10DPCM8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SRGGB10DPCM8,
+> >  =09=09.bpp =3D 1,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SBGGR12_1X12,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SBGGR12_1X12 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SBGGR12,
+> >  =09=09.bpp =3D 2,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SGBRG12_1X12,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SGBRG12_1X12 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGBRG12,
+> >  =09=09.bpp =3D 2,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SGRBG12_1X12,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SGRBG12_1X12 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGRBG12,
+> >  =09=09.bpp =3D 2,
+> >  =09=09.bayer =3D true,
+> >  =09},
+> >  =09{
+> > -=09=09.code =3D MEDIA_BUS_FMT_SRGGB12_1X12,
+> > +=09=09.code =3D { MEDIA_BUS_FMT_SRGGB12_1X12 },
+> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SRGGB12,
+> >  =09=09.bpp =3D 2,
+> >  =09=09.bayer =3D true,
+> > @@ -182,13 +182,31 @@ const struct vimc_pix_map *vimc_pix_map_by_index(=
+unsigned int i)
+> >  =09return &vimc_pix_map_list[i];
+> >  }
+> >
+> > +const u32 vimc_mbus_code_by_index(unsigned int index)
+> > +{
+> > +=09unsigned int i, j;
+> > +
+> > +=09for (i =3D 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
+> > +=09=09for (j =3D 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j++) {
+> > +=09=09=09if (vimc_pix_map_list[i].code[j]) {
+>=20
+> Can this be false?
 
-> 
-> Maxime
+Actually it can, but after you asked I realized this code could be way clea=
+rer.
+
+When vimc_pix_map_list[i].code[j] is 0, it means that this is an unused val=
+ue of
+the array, so we should skip to the next pixelformat.
+I think writing it this way instead would be better, what do you think?
+
+        for (i =3D 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
+                for (j =3D 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j+=
++) {
+                        if (!vimc_pix_map_list[i].code[j])
+                                break;
+=20
+                        if (!index)
+                                return vimc_pix_map_list[i].code[j];
+                        index--;
+
+>=20
+> > +=09=09=09=09if (!index)
+> > +=09=09=09=09=09return vimc_pix_map_list[i].code[j];
+> > +=09=09=09=09index--;
+> > +=09=09=09}
+> > +=09=09}
+> > +=09}
+> > +=09return 0;
+> > +}
+> > +
+> >  const struct vimc_pix_map *vimc_pix_map_by_code(u32 code)
+> >  {
+> > -=09unsigned int i;
+> > +=09unsigned int i, j;
+> >
+> >  =09for (i =3D 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
+> > -=09=09if (vimc_pix_map_list[i].code =3D=3D code)
+> > -=09=09=09return &vimc_pix_map_list[i];
+> > +=09=09for (j =3D 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j++) {
+> > +=09=09=09if (vimc_pix_map_list[i].code[j] =3D=3D code)
+> > +=09=09=09=09return &vimc_pix_map_list[i];
+> > +=09=09}
+> >  =09}
+> >  =09return NULL;
+> >  }
+> > diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/=
+platform/vimc/vimc-common.h
+> > index 616d5a6b0754..585441694c86 100644
+> > --- a/drivers/media/platform/vimc/vimc-common.h
+> > +++ b/drivers/media/platform/vimc/vimc-common.h
+> > @@ -69,7 +69,7 @@ do {=09=09=09=09=09=09=09=09=09\
+> >   * V4L2_PIX_FMT_* fourcc pixelformat and its bytes per pixel (bpp)
+> >   */
+> >  struct vimc_pix_map {
+> > -=09unsigned int code;
+> > +=09unsigned int code[1];
+> >  =09unsigned int bpp;
+> >  =09u32 pixelformat;
+> >  =09bool bayer;
+> > @@ -172,6 +172,15 @@ void vimc_sen_release(struct vimc_ent_device *ved)=
+;
+> >   */
+> >  const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i);
+> >
+> > +/**
+> > + * vimc_mbus_code_by_index - get mbus code by its index
+> > + *
+> > + * @index:=09=09index of the mbus code in vimc_pix_map_list
+> > + *
+> > + * Returns 0 if no mbus code is found for the given index.
+> > + */
+> > +const u32 vimc_mbus_code_by_index(unsigned int index);
+> > +
+> >  /**
+> >   * vimc_pix_map_by_code - get vimc_pix_map struct by media bus code
+> >   *
+> > diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/=
+platform/vimc/vimc-scaler.c
+> > index 7521439747c5..6bac1fa65a6f 100644
+> > --- a/drivers/media/platform/vimc/vimc-scaler.c
+> > +++ b/drivers/media/platform/vimc/vimc-scaler.c
+> > @@ -110,13 +110,19 @@ static int vimc_sca_enum_mbus_code(struct v4l2_su=
+bdev *sd,
+> >  =09=09=09=09   struct v4l2_subdev_pad_config *cfg,
+> >  =09=09=09=09   struct v4l2_subdev_mbus_code_enum *code)
+> >  {
+> > -=09const struct vimc_pix_map *vpix =3D vimc_pix_map_by_index(code->ind=
+ex);
+> > +=09const u32 mbus_code =3D vimc_mbus_code_by_index(code->index);
+> > +=09const struct vimc_pix_map *vpix;
+> > +
+> > +=09if (!mbus_code)
+> > +=09=09return -EINVAL;
+> > +
+> > +=09vpix =3D vimc_pix_map_by_code(mbus_code);
+> >
+> >  =09/* We don't support bayer format */
+> >  =09if (!vpix || vpix->bayer)
+> >  =09=09return -EINVAL;
+> >
+> > -=09code->code =3D vpix->code;
+> > +=09code->code =3D mbus_code;
+>=20
+> no need to change this.
+
+This change is actually needed, because after this patch, the code property=
+ of
+vimc_pix_map_list is an array, so there isn't a 1 to 1 relation between mbu=
+s
+code and pixmap format anymore.
+Since we already got the mbus code by index through
+vimc_mbus_code_by_index(code->index), we just use it.
+
+>=20
+> >
+> >  =09return 0;
+> >  }
+> > diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/=
+platform/vimc/vimc-sensor.c
+> > index 92daee58209e..b8bd430809c1 100644
+> > --- a/drivers/media/platform/vimc/vimc-sensor.c
+> > +++ b/drivers/media/platform/vimc/vimc-sensor.c
+> > @@ -52,12 +52,12 @@ static int vimc_sen_enum_mbus_code(struct v4l2_subd=
+ev *sd,
+> >  =09=09=09=09   struct v4l2_subdev_pad_config *cfg,
+> >  =09=09=09=09   struct v4l2_subdev_mbus_code_enum *code)
+> >  {
+> > -=09const struct vimc_pix_map *vpix =3D vimc_pix_map_by_index(code->ind=
+ex);
+> > +=09const u32 mbus_code =3D vimc_mbus_code_by_index(code->index);
+> >
+> > -=09if (!vpix)
+> > +=09if (!mbus_code)
+> >  =09=09return -EINVAL;
+> >
+> > -=09code->code =3D vpix->code;
+> > +=09code->code =3D mbus_code;
+> >
+> >  =09return 0;
+> >  }
+> >
+>=20
+> With these changes
+>=20
+> Acked-by: Helen Koike <helen.koike@collabora.com>
+>=20
+> Regards,
+> Helen
+
+Thank you,
+N=C3=ADcolas
+
