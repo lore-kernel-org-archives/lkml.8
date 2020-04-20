@@ -2,128 +2,151 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7659FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE14C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7FA206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387114;
-	bh=N/agnnhyzF5Q36mOsK0wpLAkqRbRP50iniNEVeD89aU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H8xw/xdgJqF+M5i2gN3hvtZW9vN6O5oPMxertDFb0m6URJQC0c6abD5Os/oKHVZdP
-	 yBscCaqKx/Kxocx4pEEKveH8d6C1qniPkvoscXSvL2X1s+OmiovDiPvDln4Ew4GURC
-	 cjVdACYAHITn6yjOOwmkoKL7jicN1mPdttnCDT04=
+	by mail.kernel.org (Postfix) with ESMTP id 5E7C6206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HQwlnt3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgDTMvw (ORCPT
+        id S1729315AbgDTMv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:51:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729159AbgDTMrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:47:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 20 Apr 2020 08:51:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28334 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726723AbgDTMvv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:51:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587387110;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qI4LH96Te2D61UkMMiu56eI+whpozLCjxv2Sx2J1tLs=;
+        b=HQwlnt3BGgNhDPFtbUWCR8ejXgm7dyvBoqwhR1Xord4cyNXZxG5fKz2CCeguBwCvf1w/zM
+        krINWkyUau/uYUCNLLUYt/M2rupgZM3BSSI/Optp+8nSJIUlyAbvf2wCxtT6w85GJWqU8n
+        804i+h/GFowqaUiW7dHEPhW1TUqx0fs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-Ml-2KNMWM828K23lPn3ExQ-1; Mon, 20 Apr 2020 08:51:48 -0400
+X-MC-Unique: Ml-2KNMWM828K23lPn3ExQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C694206DD;
-        Mon, 20 Apr 2020 12:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386875;
-        bh=N/agnnhyzF5Q36mOsK0wpLAkqRbRP50iniNEVeD89aU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VIABUptwEwFNlCc2UuQ5VOVINXQ+XDaj5IF0N4i8LFPJ6sXiFXylfve0BqtvOapJ4
-         FsqJPIyo1K2D1dCC5waQGlJQrKrzswVkXD/jFpCOezFKSaeysqELNYmzF0hzNnz34F
-         Pk20xtQPGi+POLKnhp841+HQf4a/6o8aeSz9IMLQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6693adf1698864d21734@syzkaller.appspotmail.com,
-        syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com,
-        stable@kernel.org, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.4 47/60] mac80211_hwsim: Use kstrndup() in place of kasprintf()
-Date:   Mon, 20 Apr 2020 14:39:25 +0200
-Message-Id: <20200420121513.169566404@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
-References: <20200420121500.490651540@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 162BF1005510;
+        Mon, 20 Apr 2020 12:51:47 +0000 (UTC)
+Received: from max.home.com (ovpn-114-63.ams2.redhat.com [10.36.114.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C5EB15DA7C;
+        Mon, 20 Apr 2020 12:51:43 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "akpm@osdl.org" <akpm@osdl.org>,
+        "xiyuyang19@fudan.edu.cn" <xiyuyang19@fudan.edu.cn>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "okir@suse.de" <okir@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        "tanxin.ctf@gmail.com" <tanxin.ctf@gmail.com>,
+        "yuanxzhang@fudan.edu.cn" <yuanxzhang@fudan.edu.cn>,
+        "kjlu@umn.edu" <kjlu@umn.edu>
+Subject: Re: [PATCH] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Mon, 20 Apr 2020 14:51:41 +0200
+Message-Id: <20200420125141.18002-1-agruenba@redhat.com>
+In-Reply-To: <7b95f2ac1e65635dcb160ca20e798d95b7503e49.camel@hammerspace.com>
+References: <1587361410-83560-1-git-send-email-xiyuyang19@fudan.edu.cn> <7b95f2ac1e65635dcb160ca20e798d95b7503e49.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Am Mo., 20. Apr. 2020 um 14:15 Uhr schrieb Trond Myklebust <trondmy@hamme=
+rspace.com>:
+> I don't really see any alternative to adding a 'dfalloc' to track the
+> allocated dfacl separately.
 
-commit 7ea862048317aa76d0f22334202779a25530980c upstream.
+Something like the attached patch should work as well.
 
-syzbot reports a warning:
-
-precision 33020 too large
-WARNING: CPU: 0 PID: 9618 at lib/vsprintf.c:2471 set_precision+0x150/0x180 lib/vsprintf.c:2471
- vsnprintf+0xa7b/0x19a0 lib/vsprintf.c:2547
- kvasprintf+0xb2/0x170 lib/kasprintf.c:22
- kasprintf+0xbb/0xf0 lib/kasprintf.c:59
- hwsim_del_radio_nl+0x63a/0x7e0 drivers/net/wireless/mac80211_hwsim.c:3625
- genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
- ...
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Thus it seems that kasprintf() with "%.*s" format can not be used for
-duplicating a string with arbitrary length. Replace it with kstrndup().
-
-Note that later this string is limited to NL80211_WIPHY_NAME_MAXLEN == 64,
-but the code is simpler this way.
-
-Reported-by: syzbot+6693adf1698864d21734@syzkaller.appspotmail.com
-Reported-by: syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com
-Cc: stable@kernel.org
-Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-Link: https://lore.kernel.org/r/20200410123257.14559-1-tuomas.tynkkynen@iki.fi
-[johannes: add note about length limit]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thanks,
+Andreas
 
 ---
- drivers/net/wireless/mac80211_hwsim.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/nfs/nfs3acl.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -3575,9 +3575,9 @@ static int hwsim_new_radio_nl(struct sk_
+diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
+index c5c3fc6e6c60..f1581f11c220 100644
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -253,37 +253,41 @@ int nfs3_proc_setacls(struct inode *inode, struct p=
+osix_acl *acl,
+=20
+ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+ {
+-	struct posix_acl *alloc =3D NULL, *dfacl =3D NULL;
++	struct posix_acl *orig =3D acl, *dfacl =3D NULL;
+ 	int status;
+=20
+ 	if (S_ISDIR(inode->i_mode)) {
+ 		switch(type) {
+ 		case ACL_TYPE_ACCESS:
+-			alloc =3D dfacl =3D get_acl(inode, ACL_TYPE_DEFAULT);
+-			if (IS_ERR(alloc))
+-				goto fail;
++			dfacl =3D get_acl(inode, ACL_TYPE_DEFAULT);
++			status =3D PTR_ERR(dfacl);
++			if (IS_ERR(dfacl))
++				goto out;
+ 			break;
+=20
+ 		case ACL_TYPE_DEFAULT:
+ 			dfacl =3D acl;
+-			alloc =3D acl =3D get_acl(inode, ACL_TYPE_ACCESS);
+-			if (IS_ERR(alloc))
+-				goto fail;
++			acl =3D get_acl(inode, ACL_TYPE_ACCESS);
++			status =3D PTR_ERR(acl);
++			if (IS_ERR(acl))
++				goto out;
+ 			break;
+ 		}
  	}
- 
- 	if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
--		hwname = kasprintf(GFP_KERNEL, "%.*s",
--				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
--				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
-+		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  GFP_KERNEL);
- 		if (!hwname)
- 			return -ENOMEM;
- 		param.hwname = hwname;
-@@ -3597,9 +3597,9 @@ static int hwsim_del_radio_nl(struct sk_
- 	if (info->attrs[HWSIM_ATTR_RADIO_ID]) {
- 		idx = nla_get_u32(info->attrs[HWSIM_ATTR_RADIO_ID]);
- 	} else if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
--		hwname = kasprintf(GFP_KERNEL, "%.*s",
--				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
--				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
-+		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  GFP_KERNEL);
- 		if (!hwname)
- 			return -ENOMEM;
- 	} else
+=20
+ 	if (acl =3D=3D NULL) {
+-		alloc =3D acl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+-		if (IS_ERR(alloc))
+-			goto fail;
++		acl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
++		status =3D PTR_ERR(acl);
++		if (IS_ERR(acl))
++			goto out;
+ 	}
+ 	status =3D __nfs3_proc_setacls(inode, acl, dfacl);
+-	posix_acl_release(alloc);
++out:
++	if (acl !=3D orig)
++		posix_acl_release(acl);
++	if (dfacl !=3D orig)
++		posix_acl_release(dfacl);
+ 	return status;
+-
+-fail:
+-	return PTR_ERR(alloc);
+ }
+=20
+ const struct xattr_handler *nfs3_xattr_handlers[] =3D {
 
+base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
+--=20
+2.25.3
 
