@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD87C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788B3C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 886E020735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F64420736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386931;
-	bh=N3SYcejc4Dv4IM02RTBR2f2yjBYBu8UqWsPgUiD0uOU=;
+	s=default; t=1587386934;
+	bh=a2o+7wxm1EjJaOtWR/GTY6328eM1fT4ITgPauq9wxso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kzr6fz/+tnT2E0yFUUD8yANpXBZGpFQaTRc1LoP3BKKgx4+sMaQJzbG60WuOwqplK
-	 v6KfYXHQeCj+hmXhBXdALJpKuIFQO/5cQdC4Ie0D0WrTW6IOJjV2rXjl5PefHKbWN1
-	 q0tZVsw3wZAJb27VuB+u3W9ubif/s3uASvCOrHhM=
+	b=V6tvaYL6jDk8cBXwJQFa/HW+N41ZlztD18q0yvzD5FSGUI7+KAL0geWNUtzBTyKth
+	 GFKje+Niq6kdPchtEKtPNn3NAHpMiHeyXSP3EE+L2iP5Z+dYVvY7ab6QZz4SnzWEJ2
+	 hTeT97Cio30MJMznZL9xDbiOa/OjrU9mZSOf32iQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbgDTMsu (ORCPT
+        id S1729326AbgDTMsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:48:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45434 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbgDTMsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:48:42 -0400
+        id S1729291AbgDTMsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D35332082E;
-        Mon, 20 Apr 2020 12:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC5FE20736;
+        Mon, 20 Apr 2020 12:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386921;
-        bh=N3SYcejc4Dv4IM02RTBR2f2yjBYBu8UqWsPgUiD0uOU=;
+        s=default; t=1587386926;
+        bh=a2o+7wxm1EjJaOtWR/GTY6328eM1fT4ITgPauq9wxso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lyi1AsiVAjCLMRWGrLk13WxfsUQvjgwKikiGXbCqqf2vnqPof1y+GcT0Djt1/6T8n
-         m5/B5rs+J+PTwqRTebWJscIYf+jCdybwRgUVXgNLK00G2THgSZGSMDluBToRPSqVaG
-         F2aKy5cW050OMtSXD5XF+8z0+WYsB2k0Bt+gL2kk=
+        b=zFMyEPRJRrPKMnmiM41ZmjdJnGIAEqXC2JV7WvHNaG98iTAUH0TOQtDV2xqaublCo
+         U7U/bxWEF1L9aVhDBCHI72dWmb+sFz94t7LTbtWarl0XYWD5rfxC43EKLaq4YoiMiN
+         oWQzuudjCRL4UDnwlqqGcThtE2lciIIRn2RNf8XU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 21/40] keys: Fix proc_keys_next to increase position index
-Date:   Mon, 20 Apr 2020 14:39:31 +0200
-Message-Id: <20200420121500.246935593@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 23/40] btrfs: check commit root generation in should_ignore_root
+Date:   Mon, 20 Apr 2020 14:39:33 +0200
+Message-Id: <20200420121500.696971642@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
@@ -61,70 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 86d32f9a7c54ad74f4514d7fef7c847883207291 upstream.
+commit 4d4225fc228e46948486d8b8207955f0c031b92e upstream.
 
-If seq_file .next function does not change position index,
-read after some lseek can generate unexpected output:
+Previously we would set the reloc root's last snapshot to transid - 1.
+However there was a problem with doing this, and we changed it to
+setting the last snapshot to the generation of the commit node of the fs
+root.
 
-    $ dd if=/proc/keys bs=1  # full usual output
-    0f6bfdf5 I--Q---     2 perm 3f010000  1000  1000 user      4af2f79ab8848d0a: 740
-    1fb91b32 I--Q---     3 perm 1f3f0000  1000 65534 keyring   _uid.1000: 2
-    27589480 I--Q---     1 perm 0b0b0000     0     0 user      invocation_id: 16
-    2f33ab67 I--Q---   152 perm 3f030000     0     0 keyring   _ses: 2
-    33f1d8fa I--Q---     4 perm 3f030000  1000  1000 keyring   _ses: 1
-    3d427fda I--Q---     2 perm 3f010000  1000  1000 user      69ec44aec7678e5a: 740
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    521+0 records in
-    521+0 records out
-    521 bytes copied, 0,00123769 s, 421 kB/s
+This however broke should_ignore_root().  The assumption is that if we
+are in a generation newer than when the reloc root was created, then we
+would find the reloc root through normal backref lookups, and thus can
+ignore any fs roots we find with an old enough reloc root.
 
-But a read after lseek in middle of last line results in the partial
-last line and then a repeat of the final line:
+Now that the last snapshot could be considerably further in the past
+than before, we'd end up incorrectly ignoring an fs root.  Thus we'd
+find no nodes for the bytenr we were searching for, and we'd fail to
+relocate anything.  We'd loop through the relocate code again and see
+that there were still used space in that block group, attempt to
+relocate those bytenr's again, fail in the same way, and just loop like
+this forever.  This is tricky in that we have to not modify the fs root
+at all during this time, so we need to have a block group that has data
+in this fs root that is not shared by any other root, which is why this
+has been difficult to reproduce.
 
-    $ dd if=/proc/keys bs=500 skip=1
-    dd: /proc/keys: cannot skip to specified offset
-    g   _uid_ses.1000: 1
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    0+1 records in
-    0+1 records out
-    97 bytes copied, 0,000135035 s, 718 kB/s
-
-and a read after lseek beyond end of file results in the last line being
-shown:
-
-    $ dd if=/proc/keys bs=1000 skip=1   # read after lseek beyond end of file
-    dd: /proc/keys: cannot skip to specified offset
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    0+1 records in
-    0+1 records out
-    76 bytes copied, 0,000119981 s, 633 kB/s
-
-See https://bugzilla.kernel.org/show_bug.cgi?id=206283
-
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 054570a1dc94 ("Btrfs: fix relocation incorrectly dropping data references")
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/keys/proc.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/relocation.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/security/keys/proc.c
-+++ b/security/keys/proc.c
-@@ -144,6 +144,8 @@ static void *proc_keys_next(struct seq_f
- 	n = key_serial_next(p, v);
- 	if (n)
- 		*_pos = key_node_serial(n);
-+	else
-+		(*_pos)++;
- 	return n;
- }
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -525,8 +525,8 @@ static int should_ignore_root(struct btr
+ 	if (!reloc_root)
+ 		return 0;
  
+-	if (btrfs_root_last_snapshot(&reloc_root->root_item) ==
+-	    root->fs_info->running_transaction->transid - 1)
++	if (btrfs_header_generation(reloc_root->commit_root) ==
++	    root->fs_info->running_transaction->transid)
+ 		return 0;
+ 	/*
+ 	 * if there is reloc tree and it was created in previous
 
 
