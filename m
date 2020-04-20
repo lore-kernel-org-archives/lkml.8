@@ -2,92 +2,134 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B8DC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33D6C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD70206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA98A20782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:24:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=stwcx.xyz header.i=@stwcx.xyz header.b="TzjElGG3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dr52y4Ff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgDTUXg (ORCPT
+        id S1726707AbgDTUYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:23:36 -0400
-Received: from mga07.intel.com ([134.134.136.100]:47233 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgDTUXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:23:35 -0400
-IronPort-SDR: vlQ6p71zo0Bt3ERSVm9sWXDE92Ia/VM+onRrdWRMOcAD9MV1arrMGWQeFTUPOaKWkQ6RIGnFbB
- LjF8+KubFQUw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 13:23:34 -0700
-IronPort-SDR: dwbx/a0msG2TP6vaKuk6gKGzkILRzrBv45iy3zonm01WA2AXycd2VV41ZeD6i223Je/0lLuoIA
- PjXGlNLibkjw==
-X-IronPort-AV: E=Sophos;i="5.72,407,1580803200"; 
-   d="scan'208";a="456502146"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 13:23:34 -0700
-Date:   Mon, 20 Apr 2020 13:23:32 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Subject: Re: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
-Message-ID: <20200420202332.GA30160@agluck-desk2.amr.corp.intel.com>
-References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net>
- <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
- <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com>
- <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com>
- <CAPcyv4hrfZsg48Gw_s7xTLLhjLTk_U+PV0MsLnG+xh3652xFCQ@mail.gmail.com>
- <CAHk-=wgcc=5kiph7o+aBZoWBCbu=9nQDQtD41DvuRRrqixohUA@mail.gmail.com>
- <CAPcyv4iTaBNPMwqUwas+J4rxd867QL7JnQBYB8NKnYaTA-R_Tw@mail.gmail.com>
- <CAHk-=wgOUOveRe8=iFWw0S1LSDEjSfQ-4bM64eiXdGj4n7Omng@mail.gmail.com>
+        Mon, 20 Apr 2020 16:24:02 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:44085 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725897AbgDTUYC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:24:02 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4E3BE5C0183;
+        Mon, 20 Apr 2020 16:24:01 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Mon, 20 Apr 2020 16:24:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=q5Eo8wlEaimHxQiBLieNf+d4Xet
+        oPY+IBXSA3sy6gmg=; b=TzjElGG3ajkbnkn5XWss52v6//CrJH9X0Xs8/qQsfDQ
+        Et+C0Jd47RJ4DDo0Pmkk/PJ/dJPRrlhYc2shjZS6mWTjx2AQpxYyzFQlqCAatLaO
+        KJHuuLXnriPOcn1rnZf78dJwHsEZPZnhms0s9PENJysO58vHL7W7PT+qCt7Swi7n
+        ZQwjZoHyldN6vznEi9S7vHGv6J0Wl6U+EvubmXC+yh8akDwfVr4zbZTYyockKVLx
+        QSO6qVbSREqv4VkgQFOi3l0GiTcSTwgfJGPbKIp0ES2jXVoDDmcDy5seK43kRfq5
+        jnizsg87H1QdLqd+qcmBBeMSUEb1NqaYn0ksoJvBb/A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=q5Eo8w
+        lEaimHxQiBLieNf+d4XetoPY+IBXSA3sy6gmg=; b=dr52y4FfVHSCnHfCNkQhUK
+        gIVityk5JuuAsG/z4RvsXoEu3BQCJZcl91z8Rsc4UOSi0KzRmZJmO7Is/dqq4snn
+        D9mbWIiE+IDHj4PYzLtRcUDFik5cn8hwjkHyUjOQzh2rG4HIofTqLuqIznHE7eTA
+        PtLEEmAIPnt+7bQaQBvIeGUoN4e9IAyCfVjvvlJ0lXjLOsHIaU9NhNniVW5Y7Wok
+        o4bZxT/MjDHfbRXIT6fSU6+IJX0wj7Oi11xlYzGYxigtuTdfVcHzehQlS85fmt7z
+        IzSQTLoR6pWkSHoibgIPydR0GucRguAYfgtQiTIfwsY3PCPb2XJryvOnrIFo95+w
+        ==
+X-ME-Sender: <xms:4QSeXsUA9dWknaxRYus0ugVuMs4mfN297Jm8VP8z5hE2G8uxP48h6g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefgddugedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdljedtmdenucfjughrpeffhffvuffkfhggtggujgesghdtreertddt
+    vdenucfhrhhomheprfgrthhrihgtkhcuhghilhhlihgrmhhsuceophgrthhrihgtkhessh
+    htfigtgidrgiihiieqnecukfhppedutdejrddutdejrddukeejrdduuddtnecuvehluhhs
+    thgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhepphgrthhrihgtkhessh
+    htfigtgidrgiihii
+X-ME-Proxy: <xmx:4QSeXsFYdhoOfqOJnHNkt_qphz3_YrvJjNPSh9gy9kGWHVDSN0LctA>
+    <xmx:4QSeXmbnva9btIrtBLsbbkMEVKhmskyp0BjBVs4LYhMLaf7MrB_QFQ>
+    <xmx:4QSeXpH_UG7fJ1v_6wqKiZTxBjxHFBLQ05QYJ9c-6bPDTuoaD5Mg7A>
+    <xmx:4QSeXiIwdzOK6imJ_gh2AEWjocku91Tro2pX_m825JFpJPWMdSV2yA>
+Received: from localhost (mobile-107-107-187-110.mycingular.net [107.107.187.110])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E38AA3280059;
+        Mon, 20 Apr 2020 16:24:00 -0400 (EDT)
+Date:   Mon, 20 Apr 2020 15:24:00 -0500
+From:   Patrick Williams <patrick@stwcx.xyz>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Bjorn Ardo <bjorn.ardo@axis.com>,
+        Patrick Williams <alpawi@amazon.com>,
+        =?iso-8859-1?Q?Bj=F6rn_Ard=F6?= <bjornar@axis.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: slave-eeprom: initialize empty eeprom properly
+Message-ID: <20200420202400.GB95151@heinlein.lan.stwcx.xyz>
+References: <20191001164009.21610-1-alpawi@amazon.com>
+ <150599be-9125-4ab9-e2a6-e792b41910e6@axis.com>
+ <20200420164349.GD3721@ninjato>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgOUOveRe8=iFWw0S1LSDEjSfQ-4bM64eiXdGj4n7Omng@mail.gmail.com>
+In-Reply-To: <20200420164349.GD3721@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 01:07:09PM -0700, Linus Torvalds wrote:
-> On Mon, Apr 20, 2020 at 12:29 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> >  I didn't consider asynchronous to be
-> > better because that means there is a gap between when the data
-> > corruption is detected and when it might escape the system that some
-> > external agent could trust the result and start acting on before the
-> > asynchronous signal is delivered.
-> 
-> The thing is, absolutely nobody cares whether you start acting on the
-> wrong data or not.
 
-I think they do. If the result of the wrong data has already
-been sent out the network before you process the signal, then you
-will need far smarter application software than has ever been written
-to hunt it down and stop the spread of the bogus result.
+--A6N2fC+uXW/VQSAv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Stopping dead on the instruction before it consumes the data
-means you can "recover" by killing just one process, or just one
-VMM guest.
+On Mon, Apr 20, 2020 at 06:43:49PM +0200, Wolfram Sang wrote:
+> On Wed, Oct 02, 2019 at 08:20:53AM +0200, Bjorn Ardo wrote:
+> > Hi,
+> >=20
+> >=20
+> > I sent in another patch earlier that added support for specifying a fil=
+e in
+> > devicetree to initilize the eeprom from, corresponding to the case of
+> > pre-flashed eeprom. Maybe these two patches should be merged so this
+> > initialization is only done if no file is specified?
+>=20
+> Yes, I agree.
+>=20
 
-I'm in total agreement the machine check (especially broadcast)
-was a bad choice for how to "stop on a dime". But I can't see
-how you could possibly decide what to do if you let thousands
-of instructions retire based on a bad data value before you even
-know that it happened.
+I've been meaning to get back to this...  I'll rebase the
+commit on the latest tree.
 
--Tony
+--=20
+Patrick Williams
+
+--A6N2fC+uXW/VQSAv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAl6eBN8ACgkQqwNHzC0A
+wRnprhAAlpCNaK/xA84QR8ov/NEGutk8t0EGpqE9vhkr8gSFeQ217w5ThV/o6wzM
+EOF1LjY/K1bUTlgnF9a9pAB9vIAVY5L26LD6p1wEV6ySLWoJwRb3JwESAgsYVSeq
+q5PYqJ+ok/ARwMRXumP4sPjX1JpLdf6bk+IOOn2W+23y8r8JIVWIPO+taf/reWIp
+R+xV4k4jJLjfQoLdL9xMv067sE7/hKLqmaFuAjLueh2mvuBZwyxfKLUFH4Q+xtXp
+9bgIy2gkP8n6uQHS/uTvnNklxdTNvbpAOKCCD9daJpct5QjGFr9zdS9bxfrvEWQy
+8JD5vjcFBmxEFW3+Kw/HC0pA6YTdN0PS7cKnKdEc+OCxOFEthG1YtqDTa86baARS
+t1k5cX+rYPrzBXTQyNaJJylYN+EDRmm6yqbvoca+76q48wU3pL7Du8hFZRxbAXTg
+45xu34p1W5RnJ8aYdWqEFrQy1YWeqHr20MNmSnr78WjdIgIgFjmndc9v1Z63TaZR
+41LrsHpY0eGqMCh5ZMUQzQE8OcPZw5yMDTaG5BBqhOA7+iOkRYgTXf1cXT8C1ID8
+o93PFsSlxJFMM3NkcdAV+75t6Hlj3uVbzXrWgTrtDL48Dr7G/try6TzUIzn5I/Ko
+V11NXoo3lKKmtxr/xKtld+92SxSqqnQnXrNpSe8jSFmcPrnI12g=
+=06zP
+-----END PGP SIGNATURE-----
+
+--A6N2fC+uXW/VQSAv--
