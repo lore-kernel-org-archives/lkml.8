@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC56CC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46310C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C93FB2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2170820735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386566;
-	bh=HaUo+E5NxLGCGdFw4NKrqAONKCA3eOeOzeVolfXxgx4=;
+	s=default; t=1587386569;
+	bh=bCDq43JudMUVyE16zfPz7jVRgValKuqje5YUNUC1vdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JeDTNVGmWN/WB4NBLwNh+wPFxC5S/xyfTRjY9QmT17DYPzGH/Xs9qqu1mwz7KBW3i
-	 3w5bl7tW3m1ni5SXHuhCbwJZPWLGl+4k+ty6ku67F/MzoWojz+KuoK738f7nVJTV/e
-	 jp3SbGnXPXmYI9nGPKTbvklVoUHi6t3q8jGM+uzc=
+	b=Xgk1E5qoRlrUol3RdZfmzBiWSRv2jCjj8E+x9aXGe6qtJgfML8d0xgVFuleCDaKkV
+	 WkBn95TRmsP/TKoiYcKURatwfp6Ts2wTnCwu2lLqimuVXLAb172Sm/jejBHsn8eou2
+	 GxFrJoCMWG9DOwmCDFvJThLQFMGz6EDiF7+g0N7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgDTMmq (ORCPT
+        id S1728282AbgDTMms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:42:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35846 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728250AbgDTMml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:42:41 -0400
+        id S1727027AbgDTMmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:42:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61F942072B;
-        Mon, 20 Apr 2020 12:42:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03EC20724;
+        Mon, 20 Apr 2020 12:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386560;
-        bh=HaUo+E5NxLGCGdFw4NKrqAONKCA3eOeOzeVolfXxgx4=;
+        s=default; t=1587386563;
+        bh=bCDq43JudMUVyE16zfPz7jVRgValKuqje5YUNUC1vdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4P5VL/1iEdGJOkB2fJJw40qv5XpwS7Vo6erw935z8Yy/MqLYHB9PcJOeJXXG5hnN
-         bYfoI5xrDC5VG/pAud5LfJeAipLSx8mDMCY8B0aDe+1sigBNuv6Nlxl37offT07hBO
-         Uxia+KDOGXjWDIMknr03ZFWBhkJwMTeRY5QeW8iQ=
+        b=OdT6OaiSPipye3qWDUemA13IZXpQCUMgGF0W4qLojbu17Cb1L6i2qlN6wv9n3WbNQ
+         1Fs/FfiGG2bTWLbUUAPOOd0sZ5eN9eSgTveX5BIIuXxyj6mpCmIstjpvbPMEKObCCV
+         ojMyfoAFKUDqSlPtMGzMMRAGBdbawyelU+khux/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 46/65] keys: Fix proc_keys_next to increase position index
-Date:   Mon, 20 Apr 2020 14:38:50 +0200
-Message-Id: <20200420121516.763243061@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.5 37/65] usb: dwc3: gadget: Dont clear flags before transfer ended
+Date:   Mon, 20 Apr 2020 14:38:41 +0200
+Message-Id: <20200420121514.336991863@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -61,70 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit 86d32f9a7c54ad74f4514d7fef7c847883207291 upstream.
+commit a114c4ca64bd522aec1790c7e5c60c882f699d8f upstream.
 
-If seq_file .next function does not change position index,
-read after some lseek can generate unexpected output:
+We track END_TRANSFER command completion. Don't clear transfer
+started/ended flag prematurely. Otherwise, we'd run into the problem
+with restarting transfer before END_TRANSFER command finishes.
 
-    $ dd if=/proc/keys bs=1  # full usual output
-    0f6bfdf5 I--Q---     2 perm 3f010000  1000  1000 user      4af2f79ab8848d0a: 740
-    1fb91b32 I--Q---     3 perm 1f3f0000  1000 65534 keyring   _uid.1000: 2
-    27589480 I--Q---     1 perm 0b0b0000     0     0 user      invocation_id: 16
-    2f33ab67 I--Q---   152 perm 3f030000     0     0 keyring   _ses: 2
-    33f1d8fa I--Q---     4 perm 3f030000  1000  1000 keyring   _ses: 1
-    3d427fda I--Q---     2 perm 3f010000  1000  1000 user      69ec44aec7678e5a: 740
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    521+0 records in
-    521+0 records out
-    521 bytes copied, 0,00123769 s, 421 kB/s
-
-But a read after lseek in middle of last line results in the partial
-last line and then a repeat of the final line:
-
-    $ dd if=/proc/keys bs=500 skip=1
-    dd: /proc/keys: cannot skip to specified offset
-    g   _uid_ses.1000: 1
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    0+1 records in
-    0+1 records out
-    97 bytes copied, 0,000135035 s, 718 kB/s
-
-and a read after lseek beyond end of file results in the last line being
-shown:
-
-    $ dd if=/proc/keys bs=1000 skip=1   # read after lseek beyond end of file
-    dd: /proc/keys: cannot skip to specified offset
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    0+1 records in
-    0+1 records out
-    76 bytes copied, 0,000119981 s, 633 kB/s
-
-See https://bugzilla.kernel.org/show_bug.cgi?id=206283
-
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 6d8a019614f3 ("usb: dwc3: gadget: check for Missed Isoc from event status")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/keys/proc.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/dwc3/gadget.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/security/keys/proc.c
-+++ b/security/keys/proc.c
-@@ -139,6 +139,8 @@ static void *proc_keys_next(struct seq_f
- 	n = key_serial_next(p, v);
- 	if (n)
- 		*_pos = key_node_serial(n);
-+	else
-+		(*_pos)++;
- 	return n;
- }
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2567,10 +2567,8 @@ static void dwc3_gadget_endpoint_transfe
  
+ 	dwc3_gadget_ep_cleanup_completed_requests(dep, event, status);
+ 
+-	if (stop) {
++	if (stop)
+ 		dwc3_stop_active_transfer(dep, true, true);
+-		dep->flags = DWC3_EP_ENABLED;
+-	}
+ 
+ 	/*
+ 	 * WORKAROUND: This is the 2nd half of U1/U2 -> U0 workaround.
 
 
