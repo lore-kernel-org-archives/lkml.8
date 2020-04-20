@@ -2,121 +2,121 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34150C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3836C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0907820A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2FA20A8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D77KsTEE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6CESR/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgDTIoC (ORCPT
+        id S1726465AbgDTIom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:44:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41227 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725775AbgDTIoB (ORCPT
+        Mon, 20 Apr 2020 04:44:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgDTIom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:44:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587372240;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KEfwhizf7BkYqGUzu6WkakHWV0slETFdQNjsonsJYcs=;
-        b=D77KsTEEGXkZ6zmtg8bM9CyNaBhZ/X0RwOFkdYdPkmqz5ibDFWuVrVbNwAEnMOvpxGB8dI
-        xZmD75CORHgT44wJrYJjiYkrHzdfsfbmIhEgojycH+UshzgkF8zl7SIteqdEmYIeFF1Ehs
-        hVVOfckFNnbtfooHRSf1TyZOOssTkDM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-gzt6m-QpPCagvY6lkupELg-1; Mon, 20 Apr 2020 04:43:58 -0400
-X-MC-Unique: gzt6m-QpPCagvY6lkupELg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B14FE1005513;
-        Mon, 20 Apr 2020 08:43:56 +0000 (UTC)
-Received: from krava (unknown [10.40.192.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D5D0D11A1F7;
-        Mon, 20 Apr 2020 08:43:41 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 10:43:39 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf record: add dummy event during system wide synthesis
-Message-ID: <20200420083720.GB718574@krava>
-References: <20200416004713.192740-1-irogers@google.com>
+        Mon, 20 Apr 2020 04:44:42 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3561EC061A0C;
+        Mon, 20 Apr 2020 01:44:42 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id z2so5694438iol.11;
+        Mon, 20 Apr 2020 01:44:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NNDbSfCazHQDf7phsNR0tff/qq1UYvMg1+Ac+fjXFMk=;
+        b=f6CESR/Hb+bWxE9QsDtwL1q6oqFSwd37n8H3rPp27k2lUAO4xl1xaUVj0FV2RhAGWI
+         olbuGTOvhRwc9UzmOVwdxDpihcv3gc0PTrnkGWZjXx4SolEltn5ORi6PF8g95vaYHi9r
+         SM+xDwkLl76voT0Yz7ETwqpwJqOFTEWuD3FOj4KbtknMLxlic8Wm+LjKc7D67I3MIljA
+         HXaAkKXUs9rZBnYwKZBgl8tpxTx8JzDGWiW2QIodP7HHp92UaZ/YyDHSzUJWwWh70CGV
+         zuAk26nkOzT8xj2Wrf+dIQxY2tX26GGjkHIKpKO5cPqfnshZnl+VgjglqxifxxV2Ooku
+         bM9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NNDbSfCazHQDf7phsNR0tff/qq1UYvMg1+Ac+fjXFMk=;
+        b=KAinp5LApNrgFmjJCB+4TX+vAbajg4YjyYCXdhW+nkvwVMEOfSv8wZY1nya5BkZn9n
+         egcz1k9t6uWGaC7nCVGouf1ZfX4f1bzrQpK+Osw7Ej35M68iHt/GZ7z5TZTVVNqwApJ5
+         psS1fol2AjqUldmvc+p1dyHfl94DlVZpol2IiUh8W3gpZdvMMdHyK1GHSic5suPvB4fR
+         3nksf96RdQbHEJAPH9yRN2Lexo2j6EkW34zAjfg+UGEs6XZW3Asc1WEY4DPGt1HTqE5q
+         w0+k8P/kksQEZitZGSBLk+phDik7k5xDRKJaoI7bYqnX4Z7BWUDTZXS1VxbEvThTGXtK
+         K3UA==
+X-Gm-Message-State: AGi0PuaA9LXT1MGw8qZaOalqdNTkPuOd5g8QYVr8GHB0UTuftdQjne67
+        +1rQ6G0Gf8k+uiAUFA47zwgA7o5GfUPD638BgUQ=
+X-Google-Smtp-Source: APiQypIUtyo1F+2iDV9EYQWRG4fdmwyQuUiNFNv/WSv+f+iWJ9SaRxJdpdKRSNSTnoyJOe1KkDI9mDMybj2Lq0gb3T4=
+X-Received: by 2002:a05:6602:1545:: with SMTP id h5mr14595002iow.32.1587372281669;
+ Mon, 20 Apr 2020 01:44:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416004713.192740-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <1587361243-83431-1-git-send-email-xiyuyang19@fudan.edu.cn>
+In-Reply-To: <1587361243-83431-1-git-send-email-xiyuyang19@fudan.edu.cn>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Mon, 20 Apr 2020 10:44:37 +0200
+Message-ID: <CAOi1vP_-82vLSG6UeeLToRGjNepE--fnj8tsb4y8e7eAoH9tCA@mail.gmail.com>
+Subject: Re: [PATCH] ceph: Fix potential ceph_osd_request refcnt leak
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, yuanxzhang@fudan.edu.cn,
+        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 05:47:13PM -0700, Ian Rogers wrote:
-> During the processing of /proc during event synthesis new processes may
-> start. Add a dummy event if /proc is to be processed, to capture mmaps
-> for starting processes. This reuses the existing logic for
-> initial-delay.
-> 
-> Suggested-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Mon, Apr 20, 2020 at 7:41 AM Xiyu Yang <xiyuyang19@fudan.edu.cn> wrote:
+>
+> ceph_writepages_start() invokes ceph_osdc_start_request(), which
+> increases the refcount of the ceph_osd_request object "req" and then
+> submit the request.
+>
+> When ceph_writepages_start() returns or a new object is assigned to
+> "req", the original local reference of "req" becomes invalid, so the
+> refcount should be decreased to keep refcount balanced.
+>
+> The reference counting issue happens in a normal path of
+> ceph_writepages_start(). Before NULL assigned to "req", the function
+> forgets to decrease its refcnt increased by ceph_osdc_start_request()
+> and will cause a refcnt leak.
+>
+> Fix this issue by calling ceph_osdc_put_request() before the original
+> object pointed by "req" becomes invalid.
+>
+> Fixes: 1d3576fd10f0 ("ceph: address space operations")
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 > ---
->  tools/perf/builtin-record.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 1ab349abe904..bab4fc8568d1 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -805,16 +805,18 @@ static int record__open(struct record *rec)
->  	int rc = 0;
->  
->  	/*
-> -	 * For initial_delay we need to add a dummy event so that we can track
-> -	 * PERF_RECORD_MMAP while we wait for the initial delay to enable the
-> -	 * real events, the ones asked by the user.
-> +	 * For initial_delay or system wide, we need to add a dummy event so
-> +	 * that we can track PERF_RECORD_MMAP to cover the delay (of waiting or
-> +	 * synthesis) prior to the real user events being enabled.
->  	 */
-> -	if (opts->initial_delay) {
-> +	if (opts->initial_delay || target__has_cpu(&opts->target)) {
+>  fs/ceph/addr.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+> index 7ab616601141..b02c050a3418 100644
+> --- a/fs/ceph/addr.c
+> +++ b/fs/ceph/addr.c
+> @@ -1126,6 +1126,7 @@ static int ceph_writepages_start(struct address_space *mapping,
+>                 req->r_mtime = inode->i_mtime;
+>                 rc = ceph_osdc_start_request(&fsc->client->osdc, req, true);
+>                 BUG_ON(rc);
+> +               ceph_osdc_put_request(req);
+>                 req = NULL;
+>
+>                 wbc->nr_to_write -= i;
 
-hum, how this works for system wide? IIRC the delay works
-for monitoring tasks by setting dummy with enable_on_exec,
-and enabling the rest by ioctl after the delay.. so without
-the monitored task there's no enable_on_exec effect
+Hi Xiyu,
 
-jirka
+I think this reference is put in writepages_finish().  Putting it in
+ceph_writepages_start() will result in freed pointer dereference in
+libceph (in __complete_request() or elsewhere).
 
->  		if (perf_evlist__add_dummy(evlist))
->  			return -ENOMEM;
->  
-> +		/* Disable tracking of mmaps on lead event. */
->  		pos = evlist__first(evlist);
->  		pos->tracking = 0;
-> +		/* Activate dummy event immediately. */
->  		pos = evlist__last(evlist);
->  		pos->tracking = 1;
->  		pos->core.attr.enable_on_exec = 1;
-> -- 
-> 2.26.0.110.g2183baf09c-goog
-> 
+Thanks,
 
+                Ilya
