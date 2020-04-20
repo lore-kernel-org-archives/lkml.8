@@ -2,150 +2,251 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81113C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3850C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F05D20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A1221473
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aum878dL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oRfS56pG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgDTQkP (ORCPT
+        id S1726869AbgDTQkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41782 "EHLO
+        Mon, 20 Apr 2020 12:40:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726442AbgDTQkF (ORCPT
+        by vger.kernel.org with ESMTP id S1726832AbgDTQkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:40:05 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 271E9C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:28:30 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k11so12980471wrp.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:28:30 -0700 (PDT)
+        Mon, 20 Apr 2020 12:40:11 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD7D4C02548F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:31:37 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id d74so600465vka.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:31:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=y6BXvIfk0R/gZ0twMeBQX3iT31MGytnoVIMSO2j5UM0=;
-        b=aum878dLf5/Y73XSxFsTat47TJHjOeeg6LINMRbsCZDiJlT48QPf0++SYSxzUx6CvN
-         bP3h04KO1U856CbHH3qzKQxtE2Stix58x5qHJ4KxpWNlK7l9DFAVmhwM9jnbliYXnJmb
-         VzRvCxVX2K9PVqBCJYdvPhCKFzQBjxMWyUR+A=
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jAnCIli2Yr6myde2fOOdkWRsc4tVerEt+PIOB7fjxhI=;
+        b=oRfS56pGM/qA8QRT62tAb3ScrMRXaln3ztN21LgXLVFM2y1cEeQaa6fPTOJTKAntVf
+         VAJ9qfAYgudr92/umzOqw80IsGpTAPzTXKk+0QijMupZ7BIXigBd6X/ovODLpMgIzz5m
+         YkXWyoukzjXaxlixIdsZoTTp83C57MiCiUj6I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=y6BXvIfk0R/gZ0twMeBQX3iT31MGytnoVIMSO2j5UM0=;
-        b=ufs3qhBcjpFJda8VCSpLO/WsgoBY7UmAxEZwkoh44Acl03T2/N9Ru4s+8cwzsk+nJ1
-         hx2kM91fklUZHJ6bBCl1Lwg0xBRmjbtpEIA6YPxBL7a/xd87jutoCoQ/BEnuV+u7g9wE
-         YQdbQXf6MyqX8ZS6O43lFAtYLKK5GBdkKyZV4nwLcOhcL1jJclwrhcsXgl+lZt8qspuw
-         XpupTHyro7c73yUVgRLItsV1C9ForQhzwekpyu9In3im1gz7rJOa6nJhniWT7YBGVszQ
-         b1r7GvwtWjiCBfuow7L5zrUZ04rAQA1np4LQcESA7DSL6vsi7H5roqHx+0UhxQZ4XoTf
-         7J7A==
-X-Gm-Message-State: AGi0PuZq7adqmdD1xV9tfQ2YUg21uT2RMfpoPzfhoZahpfQoiIS1Vz13
-        sAvlXP+YX4VuJd5imruguqSQmA==
-X-Google-Smtp-Source: APiQypK0GeQ9aWgjyRkEgInVfvj7aKu6g0F7ig6yHsVbodIn5FHUwC9TJ6Lfy8OKLglWlXCBO27LYw==
-X-Received: by 2002:a05:6000:110a:: with SMTP id z10mr19362693wrw.389.1587400108867;
-        Mon, 20 Apr 2020 09:28:28 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id 36sm14882wrc.35.2020.04.20.09.28.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 09:28:27 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v3 0/7] firmware: add partial read support in request_firmware_into_buf
-Date:   Mon, 20 Apr 2020 09:28:02 -0700
-Message-Id: <20200420162809.17529-1-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jAnCIli2Yr6myde2fOOdkWRsc4tVerEt+PIOB7fjxhI=;
+        b=U4AmsbK0SaMNLHEWeOZ5uTX8VjnrhFoXqC7NMdUx0uAZb8mHYepqaxNRo/fIZnv6W2
+         F78ah9rPn7nwnDmGIVJ8YPYQ42YOY3kyN+1Qgv//9D7vUQyxsYsQMdTB9or6gNX6UT5M
+         LeYy/NqimSB/Jx1UH/fE0ECn7C/1h5twFd4ESoJceG6Hp+1MaEdxSQJIohoaB92R/549
+         9u82VPCQSCDOzJkqhoXLqVFRskfpEhjcdUQii7yKjwkCw74xSVGDYNWTQ5U/pCPdeVvy
+         x3TMai3jJWR7fVNcS8551hfkrO2mIvcdBrmAlGw0NzlRQ395f3OSyKJAyGZHGaBEetEz
+         C/tQ==
+X-Gm-Message-State: AGi0PuaYIdhavaRwkv9hPDotlcEDadjOvHjod9ZrW0PPME0fhINackDT
+        5NbXvInmYGzaALUwu/tmgUTHawM61rE=
+X-Google-Smtp-Source: APiQypK/z0CaIzQn2XRsHPDImyQG6aEe4UJ7pVJyMX4PlvT/iz+ApS3kzdJMDjTz9ruV0tysQvS11g==
+X-Received: by 2002:a1f:c504:: with SMTP id v4mr11614066vkf.21.1587400295978;
+        Mon, 20 Apr 2020 09:31:35 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id d12sm331465vke.55.2020.04.20.09.31.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 09:31:35 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id z1so6400552vsn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:31:34 -0700 (PDT)
+X-Received: by 2002:a67:c40c:: with SMTP id c12mr2498774vsk.106.1587400293976;
+ Mon, 20 Apr 2020 09:31:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200408150402.21208-1-dianders@chromium.org> <CAD=FV=Upkdz_7TG8gde9jC+iWBFHckVf3yZe5Zyz9gq27Ys0GQ@mail.gmail.com>
+ <18812f7f-abba-ba0e-5e97-695a1d97da05@kernel.dk>
+In-Reply-To: <18812f7f-abba-ba0e-5e97-695a1d97da05@kernel.dk>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 20 Apr 2020 09:31:22 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vi3H3KfU87D2D7RaRt=zjWB0-kznK_uQwpWiCw7YKF4w@mail.gmail.com>
+Message-ID: <CAD=FV=Vi3H3KfU87D2D7RaRt=zjWB0-kznK_uQwpWiCw7YKF4w@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] blk-mq: Fix two causes of IO stalls found in
+ reboot testing
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        linux-scsi@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>, Salman Qazi <sqazi@google.com>,
+        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        John Garry <john.garry@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds partial read support in request_firmware_into_buf.
-In order to accept the enhanced API it has been requested that kernel
-selftests and upstreamed driver utilize the API enhancement and so
-are included in this patch series.
+Hi,
 
-Also in this patch series is the addition of a new Broadcom VK driver
-utilizing the new request_firmware_into_buf enhanced API.
+On Mon, Apr 20, 2020 at 8:49 AM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 4/20/20 8:45 AM, Doug Anderson wrote:
+> > Hi Jens,
+> >
+> > On Wed, Apr 8, 2020 at 8:35 AM Douglas Anderson <dianders@chromium.org> wrote:
+> >>
+> >> While doing reboot testing, I found that occasionally my device would
+> >> trigger the hung task detector.  Many tasks were stuck waiting for the
+> >> a blkdev mutex, but at least one task in the system was always sitting
+> >> waiting for IO to complete (and holding the blkdev mutex).  One
+> >> example of a task that was just waiting for its IO to complete on one
+> >> reboot:
+> >>
+> >>  udevd           D    0  2177    306 0x00400209
+> >>  Call trace:
+> >>   __switch_to+0x15c/0x17c
+> >>   __schedule+0x6e0/0x928
+> >>   schedule+0x8c/0xbc
+> >>   schedule_timeout+0x9c/0xfc
+> >>   io_schedule_timeout+0x24/0x48
+> >>   do_wait_for_common+0xd0/0x160
+> >>   wait_for_completion_io_timeout+0x54/0x74
+> >>   blk_execute_rq+0x9c/0xd8
+> >>   __scsi_execute+0x104/0x198
+> >>   scsi_test_unit_ready+0xa0/0x154
+> >>   sd_check_events+0xb4/0x164
+> >>   disk_check_events+0x58/0x154
+> >>   disk_clear_events+0x74/0x110
+> >>   check_disk_change+0x28/0x6c
+> >>   sd_open+0x5c/0x130
+> >>   __blkdev_get+0x20c/0x3d4
+> >>   blkdev_get+0x74/0x170
+> >>   blkdev_open+0x94/0xa8
+> >>   do_dentry_open+0x268/0x3a0
+> >>   vfs_open+0x34/0x40
+> >>   path_openat+0x39c/0xdf4
+> >>   do_filp_open+0x90/0x10c
+> >>   do_sys_open+0x150/0x3c8
+> >>   ...
+> >>
+> >> I've reproduced this on two systems: one boots from an internal UFS
+> >> disk and one from eMMC.  Each has a card reader attached via USB with
+> >> an SD card plugged in.  On the USB-attached SD card is a disk with 12
+> >> partitions (a Chrome OS test image), if it matters.  The system
+> >> doesn't do much with the USB disk other than probe it (it's plugged in
+> >> my system to help me recover).
+> >>
+> >> From digging, I believe that there are two separate but related
+> >> issues.  Both issues relate to the SCSI code saying that there is no
+> >> budget.
+> >>
+> >> I have done testing with only one or the other of the two patches in
+> >> this series and found that I could still encounter hung tasks if only
+> >> one of the two patches was applied.  This deserves a bit of
+> >> explanation.  To me, it's fairly obvious that the first fix wouldn't
+> >> fix the problems talked about in the second patch.  However, it's less
+> >> obvious why the second patch doesn't fix the problems in
+> >> blk_mq_dispatch_rq_list().  It turns out that it _almost_ does
+> >> (problems become much more rare), but I did manage to get a single
+> >> trace where the "kick" scheduled by the second patch happened really
+> >> quickly.  The scheduled kick then ran and found nothing to do.  This
+> >> happened in parallel to a task running in blk_mq_dispatch_rq_list()
+> >> which hadn't gotten around to splicing the list back into
+> >> hctx->dispatch.  This is why we need both fixes.
+> >>
+> >> Most of my testing has been atop Chrome OS 5.4's kernel tree which
+> >> currently has v5.4.30 merged in.  The Chrome OS 5.4 tree also has a
+> >> patch by Salman Qazi, namely ("block: Limit number of items taken from
+> >> the I/O scheduler in one go").  Reverting that patch didn't make the
+> >> hung tasks go away, so I kept it in for most of my testing.
+> >>
+> >> I have also done some testing on mainline Linux (most on what git
+> >> describe calls v5.6-rc7-227-gf3e69428b5e2) even without Salman's
+> >> patch.  I found that I could reproduce the problems there and that
+> >> traces looked about the same as I saw on the downstream branch.  These
+> >> patches were also confirmed to fix the problems on mainline.
+> >>
+> >> Chrome OS is currently setup to use the BFQ scheduler and I found that
+> >> I couldn't reproduce the problems without BFQ.  As discussed in the
+> >> second patch this is believed to be because BFQ sometimes returns
+> >> "true" from has_work() but then NULL from dispatch_request().
+> >>
+> >> I'll insert my usual caveat that I'm sending patches to code that I
+> >> know very little about.  If I'm making a total bozo patch here, please
+> >> help me figure out how I should fix the problems I found in a better
+> >> way.
+> >>
+> >> If you want to see a total ridiculous amount of chatter where I
+> >> stumbled around a whole bunch trying to figure out what was wrong and
+> >> how to fix it, feel free to read <https://crbug.com/1061950>.  I
+> >> promise it will make your eyes glaze over right away if this cover
+> >> letter didn't already do that.  Specifically comment 79 in that bug
+> >> includes a link to my ugly prototype of making BFQ's has_work() more
+> >> exact (I only managed it by actually defining _both_ an exact and
+> >> inexact function to avoid circular locking problems when it was called
+> >> directly from blk_mq_hctx_has_pending()).  Comment 79 also has more
+> >> thoughts about alternatives considered.
+> >>
+> >> I don't know if these fixes represent a regression of some sort or are
+> >> new.  As per above I could only reproduce with BFQ enabled which makes
+> >> it nearly impossible to go too far back with this.  I haven't listed
+> >> any "Fixes" tags here, but if someone felt it was appropriate to
+> >> backport this to some stable trees that seems like it'd be nice.
+> >> Presumably at least 5.4 stable would make sense.
+> >>
+> >> Thanks to Salman Qazi, Paolo Valente, and Guenter Roeck who spent a
+> >> bunch of time helping me trawl through some of this code and reviewing
+> >> early versions of this patch.
+> >>
+> >> Changes in v4:
+> >> - Only kick in blk_mq_do_dispatch_ctx() / blk_mq_do_dispatch_sched().
+> >>
+> >> Changes in v3:
+> >> - Note why blk_mq_dispatch_rq_list() change is needed.
+> >> - ("blk-mq: Add blk_mq_delay_run_hw_queues() API call") new for v3
+> >> - Always kick when putting the budget.
+> >> - Delay blk_mq_do_dispatch_sched() kick by 3 ms for inexact has_work().
+> >> - Totally rewrote commit message.
+> >> - ("Revert "scsi: core: run queue...") new for v3.
+> >>
+> >> Changes in v2:
+> >> - Replace ("scsi: core: Fix stall...") w/ ("blk-mq: Rerun dispatch...")
+> >>
+> >> Douglas Anderson (4):
+> >>   blk-mq: In blk_mq_dispatch_rq_list() "no budget" is a reason to kick
+> >>   blk-mq: Add blk_mq_delay_run_hw_queues() API call
+> >>   blk-mq: Rerun dispatching in the case of budget contention
+> >>   Revert "scsi: core: run queue if SCSI device queue isn't ready and
+> >>     queue is idle"
+> >>
+> >>  block/blk-mq-sched.c    | 18 ++++++++++++++++++
+> >>  block/blk-mq.c          | 30 +++++++++++++++++++++++++++---
+> >>  drivers/scsi/scsi_lib.c |  7 +------
+> >>  include/linux/blk-mq.h  |  1 +
+> >>  4 files changed, 47 insertions(+), 9 deletions(-)
+> >
+> > Is there anything blocking this series from landing?  All has been
+> > quiet for a while.  All the patches have Ming's review and the SCSI
+> > patch has Martin's Ack.  This seems like a great time to get it into
+> > linux-next so it can get a whole bunch of testing before the next
+> > merge window.
+>
+> Current series doesn't apply - can you resend it?
 
-Changes from v2:
- - remove unnecessary code and mutex locks in lib/test_firmware.c
- - remove VK_IOCTL_ACCESS_BAR support from driver and use pci sysfs instead
- - remove bitfields
- - remove Kconfig default m
- - adjust formatting and some naming based on feedback
- - fix error handling conditions
- - use appropriate return codes
- - use memcpy_toio instead of direct access to PCIE bar
- - 
+Of course.  I've sent v5 based on 'linux_blk/block-5.7' and brought
+the collected tags forward.  The conflict I found was with
+5fe56de799ad ("blk-mq: Put driver tag in blk_mq_dispatch_rq_list()
+when no budget").  I built and booted with my rebased series but I
+didn't run a stress test since the resolution was easy.
 
-Scott Branden (7):
-  fs: introduce kernel_pread_file* support
-  firmware: add offset to request_firmware_into_buf
-  test_firmware: add partial read support for request_firmware_into_buf
-  firmware: test partial file reads of request_firmware_into_buf
-  bcm-vk: add bcm_vk UAPI
-  misc: bcm-vk: add Broadcom VK driver
-  MAINTAINERS: bcm-vk: add maintainer for Broadcom VK Driver
+Please yell if there's anything else you need from me.
 
- MAINTAINERS                                   |    7 +
- drivers/base/firmware_loader/firmware.h       |    5 +
- drivers/base/firmware_loader/main.c           |   52 +-
- drivers/misc/Kconfig                          |    1 +
- drivers/misc/Makefile                         |    1 +
- drivers/misc/bcm-vk/Kconfig                   |   41 +
- drivers/misc/bcm-vk/Makefile                  |   12 +
- drivers/misc/bcm-vk/bcm_vk.h                  |  406 +++++
- drivers/misc/bcm-vk/bcm_vk_dev.c              | 1179 ++++++++++++++
- drivers/misc/bcm-vk/bcm_vk_legacy.c           |   89 ++
- drivers/misc/bcm-vk/bcm_vk_msg.c              | 1420 +++++++++++++++++
- drivers/misc/bcm-vk/bcm_vk_msg.h              |  215 +++
- drivers/misc/bcm-vk/bcm_vk_sg.c               |  271 ++++
- drivers/misc/bcm-vk/bcm_vk_sg.h               |   60 +
- drivers/misc/bcm-vk/bcm_vk_tty.c              |  323 ++++
- drivers/soc/qcom/mdt_loader.c                 |    7 +-
- fs/exec.c                                     |   96 +-
- include/linux/firmware.h                      |    8 +-
- include/linux/fs.h                            |   20 +
- include/uapi/linux/misc/bcm_vk.h              |   99 ++
- lib/test_firmware.c                           |  144 +-
- .../selftests/firmware/fw_filesystem.sh       |   80 +
- 22 files changed, 4487 insertions(+), 49 deletions(-)
- create mode 100644 drivers/misc/bcm-vk/Kconfig
- create mode 100644 drivers/misc/bcm-vk/Makefile
- create mode 100644 drivers/misc/bcm-vk/bcm_vk.h
- create mode 100644 drivers/misc/bcm-vk/bcm_vk_dev.c
- create mode 100644 drivers/misc/bcm-vk/bcm_vk_legacy.c
- create mode 100644 drivers/misc/bcm-vk/bcm_vk_msg.c
- create mode 100644 drivers/misc/bcm-vk/bcm_vk_msg.h
- create mode 100644 drivers/misc/bcm-vk/bcm_vk_sg.c
- create mode 100644 drivers/misc/bcm-vk/bcm_vk_sg.h
- create mode 100644 drivers/misc/bcm-vk/bcm_vk_tty.c
- create mode 100644 include/uapi/linux/misc/bcm_vk.h
+Thanks!
 
--- 
-2.17.1
-
+-Doug
