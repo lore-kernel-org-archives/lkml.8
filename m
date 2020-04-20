@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193EEC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D542C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEA66206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683CB206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387579;
-	bh=BQw15EaX0H/tDEXPed4GXaY54eyMlZZmCdnxyv/tpqc=;
+	s=default; t=1587387584;
+	bh=w2SkFmHo/Ut+jRMaAS5GKrDYHKTgFsE/O5mcLf2r7iY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e6BXif8rU9a/S2QkkEWlNKdz0zYHfDulkOBciRS9yHrV9dIZm1TR7zn7M6+rUEZoy
-	 GM+0mEOFR2Yy7z8NjPK/PuaU8qAddnObDA4pqO8pnhOaSZgVAFoOvR7teTwxWTLiP7
-	 mZoX8rjpJtyj89hT0uwB6vEjkmyFcRjSVLrduh34=
+	b=ddH7JSzfcuoKdWpp9MesYKvXmxFYOTn2FoO5A0iV7reOdKf3J0iUugLV+V7B3lhcn
+	 iw/NXc27eXtewUAJ/wHJULgnp6t8VZxsZj+RI46RmXdmK/P305OKimuUixaigVa758
+	 Ez9d/9ua29n6VVRlayhDg2JofgTNHxx7pYbh8q9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgDTM7i (ORCPT
+        id S1729804AbgDTM7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:59:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34342 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:59:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728042AbgDTMlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:41:37 -0400
+        id S1727997AbgDTMlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:41:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 279A0206D4;
-        Mon, 20 Apr 2020 12:41:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03FC206D4;
+        Mon, 20 Apr 2020 12:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386496;
-        bh=BQw15EaX0H/tDEXPed4GXaY54eyMlZZmCdnxyv/tpqc=;
+        s=default; t=1587386479;
+        bh=w2SkFmHo/Ut+jRMaAS5GKrDYHKTgFsE/O5mcLf2r7iY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h1Y3lZSoUye6zvorXKX49vd5UHHLZ3a7KWqXe7jtjkIme1grEmv4/WfgY8hRdmSji
-         EgKNzWm8MHIxPln98SrQfzOQKxJLmW7/LzuPjzPOeQx3VmXf6Wa2vsBIekywm3NKYf
-         EKE4MiagVZvxpk2LUbKqwr/YLDdCUb78eotldPZI=
+        b=AIjXbkGWZu6/nqBQtCcPWoYE29pMenzQha6XdfdfxpiWhG1b36Sz6rVhkufzlhvlq
+         nZiEtZ3QVvHpA9Kl/Ni4FSLD5JDVz2jWBepXqjTajaoaD0C5ZL/DUFeuK7JMJKSAL/
+         /J3/cwy9nfLEv5MOyx2OtCYEvtnCl30B25nwrELA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.5 47/65] tracing: Fix the race between registering snapshot event trigger and triggering snapshot operation
-Date:   Mon, 20 Apr 2020 14:38:51 +0200
-Message-Id: <20200420121517.073782170@linuxfoundation.org>
+        stable@vger.kernel.org, Taras Chornyi <taras.chornyi@plvision.eu>,
+        Vadym Kochan <vadym.kochan@plvision.eu>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 05/65] net: ipv4: devinet: Fix crash when add/del multicast IP with autojoin
+Date:   Mon, 20 Apr 2020 14:38:09 +0200
+Message-Id: <20200420121507.894571396@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -59,56 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Yang <yangx.jy@cn.fujitsu.com>
+From: Taras Chornyi <taras.chornyi@plvision.eu>
 
-commit 0bbe7f719985efd9adb3454679ecef0984cb6800 upstream.
+[ Upstream commit 690cc86321eb9bcee371710252742fb16fe96824 ]
 
-Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
-or snapshot_count_trigger()) when register_snapshot_trigger() has completed
-registration but doesn't allocate buffer for 'snapshot' event trigger.  In
-the rare case, 'snapshot' operation always detects the lack of allocated
-buffer so make register_snapshot_trigger() allocate buffer first.
+When CONFIG_IP_MULTICAST is not set and multicast ip is added to the device
+with autojoin flag or when multicast ip is deleted kernel will crash.
 
-trigger-snapshot.tc in kselftest reproduces the issue on slow vm:
------------------------------------------------------------
-cat trace
-...
-ftracetest-3028  [002] ....   236.784290: sched_process_fork: comm=ftracetest pid=3028 child_comm=ftracetest child_pid=3036
-     <...>-2875  [003] ....   240.460335: tracing_snapshot_instance_cond: *** SNAPSHOT NOT ALLOCATED ***
-     <...>-2875  [003] ....   240.460338: tracing_snapshot_instance_cond: *** stopping trace here!   ***
------------------------------------------------------------
+steps to reproduce:
 
-Link: http://lkml.kernel.org/r/20200414015145.66236-1-yangx.jy@cn.fujitsu.com
+ip addr add 224.0.0.0/32 dev eth0
+ip addr del 224.0.0.0/32 dev eth0
 
-Cc: stable@vger.kernel.org
-Fixes: 93e31ffbf417a ("tracing: Add 'snapshot' event trigger command")
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+or
+
+ip addr add 224.0.0.0/32 dev eth0 autojoin
+
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000088
+ pc : _raw_write_lock_irqsave+0x1e0/0x2ac
+ lr : lock_sock_nested+0x1c/0x60
+ Call trace:
+  _raw_write_lock_irqsave+0x1e0/0x2ac
+  lock_sock_nested+0x1c/0x60
+  ip_mc_config.isra.28+0x50/0xe0
+  inet_rtm_deladdr+0x1a8/0x1f0
+  rtnetlink_rcv_msg+0x120/0x350
+  netlink_rcv_skb+0x58/0x120
+  rtnetlink_rcv+0x14/0x20
+  netlink_unicast+0x1b8/0x270
+  netlink_sendmsg+0x1a0/0x3b0
+  ____sys_sendmsg+0x248/0x290
+  ___sys_sendmsg+0x80/0xc0
+  __sys_sendmsg+0x68/0xc0
+  __arm64_sys_sendmsg+0x20/0x30
+  el0_svc_common.constprop.2+0x88/0x150
+  do_el0_svc+0x20/0x80
+ el0_sync_handler+0x118/0x190
+  el0_sync+0x140/0x180
+
+Fixes: 93a714d6b53d ("multicast: Extend ip address command to enable multicast group join/leave on")
+Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/trace/trace_events_trigger.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ net/ipv4/devinet.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -1088,14 +1088,10 @@ register_snapshot_trigger(char *glob, st
- 			  struct event_trigger_data *data,
- 			  struct trace_event_file *file)
- {
--	int ret = register_trigger(glob, ops, data, file);
-+	if (tracing_alloc_snapshot_instance(file->tr) != 0)
-+		return 0;
- 
--	if (ret > 0 && tracing_alloc_snapshot_instance(file->tr) != 0) {
--		unregister_trigger(glob, ops, data, file);
--		ret = 0;
--	}
--
--	return ret;
-+	return register_trigger(glob, ops, data, file);
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -614,12 +614,15 @@ struct in_ifaddr *inet_ifa_byprefix(stru
+ 	return NULL;
  }
  
- static int
+-static int ip_mc_config(struct sock *sk, bool join, const struct in_ifaddr *ifa)
++static int ip_mc_autojoin_config(struct net *net, bool join,
++				 const struct in_ifaddr *ifa)
+ {
++#if defined(CONFIG_IP_MULTICAST)
+ 	struct ip_mreqn mreq = {
+ 		.imr_multiaddr.s_addr = ifa->ifa_address,
+ 		.imr_ifindex = ifa->ifa_dev->dev->ifindex,
+ 	};
++	struct sock *sk = net->ipv4.mc_autojoin_sk;
+ 	int ret;
+ 
+ 	ASSERT_RTNL();
+@@ -632,6 +635,9 @@ static int ip_mc_config(struct sock *sk,
+ 	release_sock(sk);
+ 
+ 	return ret;
++#else
++	return -EOPNOTSUPP;
++#endif
+ }
+ 
+ static int inet_rtm_deladdr(struct sk_buff *skb, struct nlmsghdr *nlh,
+@@ -675,7 +681,7 @@ static int inet_rtm_deladdr(struct sk_bu
+ 			continue;
+ 
+ 		if (ipv4_is_multicast(ifa->ifa_address))
+-			ip_mc_config(net->ipv4.mc_autojoin_sk, false, ifa);
++			ip_mc_autojoin_config(net, false, ifa);
+ 		__inet_del_ifa(in_dev, ifap, 1, nlh, NETLINK_CB(skb).portid);
+ 		return 0;
+ 	}
+@@ -940,8 +946,7 @@ static int inet_rtm_newaddr(struct sk_bu
+ 		 */
+ 		set_ifa_lifetime(ifa, valid_lft, prefered_lft);
+ 		if (ifa->ifa_flags & IFA_F_MCAUTOJOIN) {
+-			int ret = ip_mc_config(net->ipv4.mc_autojoin_sk,
+-					       true, ifa);
++			int ret = ip_mc_autojoin_config(net, true, ifa);
+ 
+ 			if (ret < 0) {
+ 				inet_free_ifa(ifa);
 
 
