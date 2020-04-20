@@ -1,139 +1,72 @@
-Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BA6C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D61C55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35AA3214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 22:48:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="KYbtDyHW"
+	by mail.kernel.org (Postfix) with ESMTP id 1CDB820B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgDQWsX (ORCPT
+        id S1726644AbgDTXKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 18:48:23 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:45918 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgDQWsX (ORCPT
+        Mon, 20 Apr 2020 19:10:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726006AbgDTXKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 18:48:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587163700; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lnplkmtOlg6aQqRCemm0gncKeNcs1kJkULgCp1NFj8E=;
-        b=KYbtDyHW2xDF6OLyMVpHR10Oag/ONw+OglyvIRFt/kuSblQQMcP2nlwdF6bkil3V0JDzLX
-        ESBoxn9n5e/VmVDypGgtv244VnvAgS5G3LCDC/Lh1yOL76sviZpFuRfBB1MnlYvocjwVYC
-        /cErR2JFf+OjWI9xIBlN+ZVlnOQ5DS4=
-Date:   Sat, 18 Apr 2020 00:48:07 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick
- driver.
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <7CFY8Q.68YMS0V08F992@crapouillou.net>
-In-Reply-To: <CAHp75VfEAtqucMPdkygfBhojTJoHO5vFk_o0suiyf7i2JCMw9Q@mail.gmail.com>
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
-        <20200417202859.35427-5-contact@artur-rojek.eu>
-        <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
-        <UFBY8Q.ES4D59V22INC1@crapouillou.net>
-        <CAHp75VfEAtqucMPdkygfBhojTJoHO5vFk_o0suiyf7i2JCMw9Q@mail.gmail.com>
+        Mon, 20 Apr 2020 19:10:44 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20561C061A0E;
+        Mon, 20 Apr 2020 16:10:44 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 9FC96823;
+        Mon, 20 Apr 2020 23:10:43 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 17:10:42 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Chucheng Luo <luochucheng@vivo.com>
+Cc:     alex.shi@linux.alibaba.com, Harry Wei <harryxiyou@gmail.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: Re: [PATCH v6,RESEND] Translate debugfs.txt into Chinese and link
+ it to the index.
+Message-ID: <20200420171042.66462fe0@lwn.net>
+In-Reply-To: <20200408021528.14062-1-luochucheng@vivo.com>
+References: <20200408021528.14062-1-luochucheng@vivo.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed,  8 Apr 2020 10:15:18 +0800
+Chucheng Luo <luochucheng@vivo.com> wrote:
 
+> Translate Documentation/filesystems/debugfs.txt into Chinese.
+> 
+> Signed-off-by: Chucheng Luo <luochucheng@vivo.com>
+> ---
+> Changelog:
+> v6:
+>  - keep each line less than 80 chars, but also keep each line full
+>  - remove redundant '=' in caption and all other subheadings
+>  - send the patch with 'charset=UTF-8'
 
-Le sam. 18 avril 2020 =E0 0:49, Andy Shevchenko=20
-<andy.shevchenko@gmail.com> a =E9crit :
-> On Sat, Apr 18, 2020 at 12:24 AM Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>  Le sam. 18 avril 2020 =E0 0:10, Andy Shevchenko
->>  <andy.shevchenko@gmail.com> a =E9crit :
->>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek=20
->> <contact@artur-rojek.eu>
->>  > wrote:
->=20
-> ...
->=20
->>  >>  +#include <linux/of.h>
->>  >
->>  > Do you really need this? (See below as well)
->=20
->>  >>  +static const struct of_device_id adc_joystick_of_match[] =3D {
->>  >>  +       { .compatible =3D "adc-joystick", },
->>  >>  +       { },
->>  >>  +};
->>  >>  +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
->>  >>  +
->>  >>  +static struct platform_driver adc_joystick_driver =3D {
->>  >>  +       .driver =3D {
->>  >>  +               .name =3D "adc-joystick",
->>  >
->>  >>  +               .of_match_table =3D
->>  >> of_match_ptr(adc_joystick_of_match),
->>  >
->>  > Drop this a bit harmful of_match_ptr() macro. It should go with=20
->> ugly
->>  > #ifdeffery. Here you simple introduced a compiler warning.
->>=20
->>  I assume you mean #ifdef around the of_device_id + module table=20
->> macro?
->=20
-> Yes.
->=20
->>  > On top of that, you are using device property API, OF use in this=20
->> case
->>  > is contradictory (at lest to some extend).
->>=20
->>  I don't see why. The fact that the driver can work when probed from
->>  platform code
->=20
-> Ha-ha, tell me how. I would like to be very surprised.
+I went to apply this just now, but no such luck; this patch tries to
+create an index.rst file, but it's already there due to another patch that
+went in just over a month ago.  I really don't want to try to resolve a
+merge conflict in a file I can't read...could I ask you, please, to rebase
+this patch on top of current docs-next, then submit one more time?
 
-iio_map_array_register(),
-pinctrl_register_mappings(),
-platform_add_devices(),
+Thanks,
 
-you're welcome.
-
->>  doesn't mean that it shouldn't have a table to probe
->>  from devicetree.
->=20
-> I didn't get what you are talking about here. The idea of _unified_
-> device property API is to get rid of OF-centric code in favour of more
-> generic approach. Mixing those two can be done only in specific cases
-> (here is not the one).
-
-And how are we mixing those two here? The only OF-centric thing here is=20
-the device table, which is required if we want the driver to probe from=20
-devicetree.
-
--Paul
-
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
-
-
+jon
