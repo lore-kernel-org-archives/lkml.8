@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4483CC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AADCC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1644820736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7677B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386680;
-	bh=BQw15EaX0H/tDEXPed4GXaY54eyMlZZmCdnxyv/tpqc=;
+	s=default; t=1587386686;
+	bh=bAe1FRdeDniFj9uG2cgsWCRDVxEI8geVgSonvd04wvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQimrq0kCXx192ZE81839ybto2w/wqxd0XXwruJ8HkE5Thx7MHBl1J7sJto47+3sh
-	 7D0dOgf12RIqwbyZVB5+7u8Q88dgLMmUDkHZDYAPlnaijSM0XZqtPbswZixFGcsfWg
-	 cTBco3iDydjx3N6MDD4XKFEusE0DGhnXVG6w4uF0=
+	b=2gDKyRs23wFfVTRAiR43wmit+Q4N4AaNC3HB7w8ymnA94cGKN3oxl15J+0KKG8JOE
+	 39sGvw0vW+vKG5mVLuuAq2JCX3lKo8GvqWvs82iQkL+isLT33HGnAvARQxH3fs5/JL
+	 9G5hcjsVIJ8nBaN4hOUL/eBFH3OwT1bM2qk5O9JA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgDTMoj (ORCPT
+        id S1728616AbgDTMol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:44:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbgDTMoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:32 -0400
+        id S1728595AbgDTMof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:44:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C42B720735;
-        Mon, 20 Apr 2020 12:44:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 402D22075A;
+        Mon, 20 Apr 2020 12:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386672;
-        bh=BQw15EaX0H/tDEXPed4GXaY54eyMlZZmCdnxyv/tpqc=;
+        s=default; t=1587386674;
+        bh=bAe1FRdeDniFj9uG2cgsWCRDVxEI8geVgSonvd04wvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HHpwLGYo4rd1XYLYD0V4c6iQSqJBW8djbM6ptbmdyA5z78lfFGBfFKxBansv30ANj
-         /Emi+QQyxLtmPZJmFPFZNT6iw8XXZ4LW+q5yxdr2WNvALP1OSW/C5ST2A3NDpDMJrb
-         2zG903qky9VKDUes8GKW2kvYDOX7JKs7oEFj/ADY=
+        b=03uJ5m9qZ36z2IGfb8H/oDlh5mK2qtD6bYUEWZwQtmRaEv+Gp0jj1BwOhbqOkJK21
+         XeHxLUP1wuLLiUJaUxscnsVGSof/TqxVGRUjZ4jzCyArRCZrw84aW3oaQn8TI1JlfI
+         IlhzGz2HyCgcoFFCCdSUV71b4ndePseHfq45ozjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.6 50/71] tracing: Fix the race between registering snapshot event trigger and triggering snapshot operation
-Date:   Mon, 20 Apr 2020 14:39:04 +0200
-Message-Id: <20200420121519.286606987@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.6 51/71] btrfs: check commit root generation in should_ignore_root
+Date:   Mon, 20 Apr 2020 14:39:05 +0200
+Message-Id: <20200420121519.463459744@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,56 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Yang <yangx.jy@cn.fujitsu.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 0bbe7f719985efd9adb3454679ecef0984cb6800 upstream.
+commit 4d4225fc228e46948486d8b8207955f0c031b92e upstream.
 
-Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
-or snapshot_count_trigger()) when register_snapshot_trigger() has completed
-registration but doesn't allocate buffer for 'snapshot' event trigger.  In
-the rare case, 'snapshot' operation always detects the lack of allocated
-buffer so make register_snapshot_trigger() allocate buffer first.
+Previously we would set the reloc root's last snapshot to transid - 1.
+However there was a problem with doing this, and we changed it to
+setting the last snapshot to the generation of the commit node of the fs
+root.
 
-trigger-snapshot.tc in kselftest reproduces the issue on slow vm:
------------------------------------------------------------
-cat trace
-...
-ftracetest-3028  [002] ....   236.784290: sched_process_fork: comm=ftracetest pid=3028 child_comm=ftracetest child_pid=3036
-     <...>-2875  [003] ....   240.460335: tracing_snapshot_instance_cond: *** SNAPSHOT NOT ALLOCATED ***
-     <...>-2875  [003] ....   240.460338: tracing_snapshot_instance_cond: *** stopping trace here!   ***
------------------------------------------------------------
+This however broke should_ignore_root().  The assumption is that if we
+are in a generation newer than when the reloc root was created, then we
+would find the reloc root through normal backref lookups, and thus can
+ignore any fs roots we find with an old enough reloc root.
 
-Link: http://lkml.kernel.org/r/20200414015145.66236-1-yangx.jy@cn.fujitsu.com
+Now that the last snapshot could be considerably further in the past
+than before, we'd end up incorrectly ignoring an fs root.  Thus we'd
+find no nodes for the bytenr we were searching for, and we'd fail to
+relocate anything.  We'd loop through the relocate code again and see
+that there were still used space in that block group, attempt to
+relocate those bytenr's again, fail in the same way, and just loop like
+this forever.  This is tricky in that we have to not modify the fs root
+at all during this time, so we need to have a block group that has data
+in this fs root that is not shared by any other root, which is why this
+has been difficult to reproduce.
 
-Cc: stable@vger.kernel.org
-Fixes: 93e31ffbf417a ("tracing: Add 'snapshot' event trigger command")
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 054570a1dc94 ("Btrfs: fix relocation incorrectly dropping data references")
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_trigger.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ fs/btrfs/relocation.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -1088,14 +1088,10 @@ register_snapshot_trigger(char *glob, st
- 			  struct event_trigger_data *data,
- 			  struct trace_event_file *file)
- {
--	int ret = register_trigger(glob, ops, data, file);
-+	if (tracing_alloc_snapshot_instance(file->tr) != 0)
-+		return 0;
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -561,8 +561,8 @@ static int should_ignore_root(struct btr
+ 	if (!reloc_root)
+ 		return 0;
  
--	if (ret > 0 && tracing_alloc_snapshot_instance(file->tr) != 0) {
--		unregister_trigger(glob, ops, data, file);
--		ret = 0;
--	}
--
--	return ret;
-+	return register_trigger(glob, ops, data, file);
- }
- 
- static int
+-	if (btrfs_root_last_snapshot(&reloc_root->root_item) ==
+-	    root->fs_info->running_transaction->transid - 1)
++	if (btrfs_header_generation(reloc_root->commit_root) ==
++	    root->fs_info->running_transaction->transid)
+ 		return 0;
+ 	/*
+ 	 * if there is reloc tree and it was created in previous
 
 
