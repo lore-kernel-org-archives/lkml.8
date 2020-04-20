@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AADCC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E340C54FD2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7677B206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051E7206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386686;
-	bh=bAe1FRdeDniFj9uG2cgsWCRDVxEI8geVgSonvd04wvw=;
+	s=default; t=1587386702;
+	bh=3w05jCYjIhoDyDncLmt8aY0aq/NFMnH9Bfe0njl5I1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2gDKyRs23wFfVTRAiR43wmit+Q4N4AaNC3HB7w8ymnA94cGKN3oxl15J+0KKG8JOE
-	 39sGvw0vW+vKG5mVLuuAq2JCX3lKo8GvqWvs82iQkL+isLT33HGnAvARQxH3fs5/JL
-	 9G5hcjsVIJ8nBaN4hOUL/eBFH3OwT1bM2qk5O9JA=
+	b=i3u9dmy2jreUC3o4TE3GQAcfwg8/k1bEfdYUb91i+PzrIc4gt5xmXQ/9/Nl4Zkk1u
+	 APiiFCtuCgyAKBRqtXAL7USU2eWiNEaQfdKchbkHK2kNgtckuVyM6606/1MXL+x/gT
+	 T0qEeCitmZQ8BhJxCbhMOWKxK++KQG66H2pgu7WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgDTMol (ORCPT
+        id S1728624AbgDTMpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:44:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38570 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:45:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728595AbgDTMof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:35 -0400
+        id S1728606AbgDTMom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:44:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402D22075A;
-        Mon, 20 Apr 2020 12:44:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F6D82072B;
+        Mon, 20 Apr 2020 12:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386674;
-        bh=bAe1FRdeDniFj9uG2cgsWCRDVxEI8geVgSonvd04wvw=;
+        s=default; t=1587386682;
+        bh=3w05jCYjIhoDyDncLmt8aY0aq/NFMnH9Bfe0njl5I1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=03uJ5m9qZ36z2IGfb8H/oDlh5mK2qtD6bYUEWZwQtmRaEv+Gp0jj1BwOhbqOkJK21
-         XeHxLUP1wuLLiUJaUxscnsVGSof/TqxVGRUjZ4jzCyArRCZrw84aW3oaQn8TI1JlfI
-         IlhzGz2HyCgcoFFCCdSUV71b4ndePseHfq45ozjU=
+        b=V3bmyavaQYnmDjghg0JXBId9APbPVqTZ3eOl4sfdsIO2zODcjpI89AjkfsEqCBctW
+         TPr9PCbghBOShmJQvgr/Xe0Rb8aXxLCyoYDY3BdsoLNrLNYc3w2LylszLWrzrBq6cl
+         bpcFeeTwqX3ANbUM615fxFvMzTPqAp/jCBF0oZLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.6 51/71] btrfs: check commit root generation in should_ignore_root
-Date:   Mon, 20 Apr 2020 14:39:05 +0200
-Message-Id: <20200420121519.463459744@linuxfoundation.org>
+        stable@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.6 53/71] mac80211: fix race in ieee80211_register_hw()
+Date:   Mon, 20 Apr 2020 14:39:07 +0200
+Message-Id: <20200420121519.805021247@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -60,54 +59,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Sumit Garg <sumit.garg@linaro.org>
 
-commit 4d4225fc228e46948486d8b8207955f0c031b92e upstream.
+commit 52e04b4ce5d03775b6a78f3ed1097480faacc9fd upstream.
 
-Previously we would set the reloc root's last snapshot to transid - 1.
-However there was a problem with doing this, and we changed it to
-setting the last snapshot to the generation of the commit node of the fs
-root.
+A race condition leading to a kernel crash is observed during invocation
+of ieee80211_register_hw() on a dragonboard410c device having wcn36xx
+driver built as a loadable module along with a wifi manager in user-space
+waiting for a wifi device (wlanX) to be active.
 
-This however broke should_ignore_root().  The assumption is that if we
-are in a generation newer than when the reloc root was created, then we
-would find the reloc root through normal backref lookups, and thus can
-ignore any fs roots we find with an old enough reloc root.
+Sequence diagram for a particular kernel crash scenario:
 
-Now that the last snapshot could be considerably further in the past
-than before, we'd end up incorrectly ignoring an fs root.  Thus we'd
-find no nodes for the bytenr we were searching for, and we'd fail to
-relocate anything.  We'd loop through the relocate code again and see
-that there were still used space in that block group, attempt to
-relocate those bytenr's again, fail in the same way, and just loop like
-this forever.  This is tricky in that we have to not modify the fs root
-at all during this time, so we need to have a block group that has data
-in this fs root that is not shared by any other root, which is why this
-has been difficult to reproduce.
+    user-space  ieee80211_register_hw()  ieee80211_tasklet_handler()
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       |                    |                 |
+       |<---phy0----wiphy_register()          |
+       |-----iwd if_add---->|                 |
+       |                    |<---IRQ----(RX packet)
+       |              Kernel crash            |
+       |              due to unallocated      |
+       |              workqueue.              |
+       |                    |                 |
+       |       alloc_ordered_workqueue()      |
+       |                    |                 |
+       |              Misc wiphy init.        |
+       |                    |                 |
+       |            ieee80211_if_add()        |
+       |                    |                 |
 
-Fixes: 054570a1dc94 ("Btrfs: fix relocation incorrectly dropping data references")
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+As evident from above sequence diagram, this race condition isn't specific
+to a particular wifi driver but rather the initialization sequence in
+ieee80211_register_hw() needs to be fixed. So re-order the initialization
+sequence and the updated sequence diagram would look like:
+
+    user-space  ieee80211_register_hw()  ieee80211_tasklet_handler()
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       |                    |                 |
+       |       alloc_ordered_workqueue()      |
+       |                    |                 |
+       |              Misc wiphy init.        |
+       |                    |                 |
+       |<---phy0----wiphy_register()          |
+       |-----iwd if_add---->|                 |
+       |                    |<---IRQ----(RX packet)
+       |                    |                 |
+       |            ieee80211_if_add()        |
+       |                    |                 |
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Link: https://lore.kernel.org/r/1586254255-28713-1-git-send-email-sumit.garg@linaro.org
+[Johannes: fix rtnl imbalances]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mac80211/main.c |   24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -561,8 +561,8 @@ static int should_ignore_root(struct btr
- 	if (!reloc_root)
- 		return 0;
+--- a/net/mac80211/main.c
++++ b/net/mac80211/main.c
+@@ -1051,7 +1051,7 @@ int ieee80211_register_hw(struct ieee802
+ 		local->hw.wiphy->signal_type = CFG80211_SIGNAL_TYPE_UNSPEC;
+ 		if (hw->max_signal <= 0) {
+ 			result = -EINVAL;
+-			goto fail_wiphy_register;
++			goto fail_workqueue;
+ 		}
+ 	}
  
--	if (btrfs_root_last_snapshot(&reloc_root->root_item) ==
--	    root->fs_info->running_transaction->transid - 1)
-+	if (btrfs_header_generation(reloc_root->commit_root) ==
-+	    root->fs_info->running_transaction->transid)
- 		return 0;
+@@ -1113,7 +1113,7 @@ int ieee80211_register_hw(struct ieee802
+ 
+ 	result = ieee80211_init_cipher_suites(local);
+ 	if (result < 0)
+-		goto fail_wiphy_register;
++		goto fail_workqueue;
+ 
+ 	if (!local->ops->remain_on_channel)
+ 		local->hw.wiphy->max_remain_on_channel_duration = 5000;
+@@ -1139,10 +1139,6 @@ int ieee80211_register_hw(struct ieee802
+ 
+ 	local->hw.wiphy->max_num_csa_counters = IEEE80211_MAX_CSA_COUNTERS_NUM;
+ 
+-	result = wiphy_register(local->hw.wiphy);
+-	if (result < 0)
+-		goto fail_wiphy_register;
+-
  	/*
- 	 * if there is reloc tree and it was created in previous
+ 	 * We use the number of queues for feature tests (QoS, HT) internally
+ 	 * so restrict them appropriately.
+@@ -1198,9 +1194,9 @@ int ieee80211_register_hw(struct ieee802
+ 		goto fail_flows;
+ 
+ 	rtnl_lock();
+-
+ 	result = ieee80211_init_rate_ctrl_alg(local,
+ 					      hw->rate_control_algorithm);
++	rtnl_unlock();
+ 	if (result < 0) {
+ 		wiphy_debug(local->hw.wiphy,
+ 			    "Failed to initialize rate control algorithm\n");
+@@ -1254,6 +1250,12 @@ int ieee80211_register_hw(struct ieee802
+ 		local->sband_allocated |= BIT(band);
+ 	}
+ 
++	result = wiphy_register(local->hw.wiphy);
++	if (result < 0)
++		goto fail_wiphy_register;
++
++	rtnl_lock();
++
+ 	/* add one default STA interface if supported */
+ 	if (local->hw.wiphy->interface_modes & BIT(NL80211_IFTYPE_STATION) &&
+ 	    !ieee80211_hw_check(hw, NO_AUTO_VIF)) {
+@@ -1293,17 +1295,17 @@ int ieee80211_register_hw(struct ieee802
+ #if defined(CONFIG_INET) || defined(CONFIG_IPV6)
+  fail_ifa:
+ #endif
++	wiphy_unregister(local->hw.wiphy);
++ fail_wiphy_register:
+ 	rtnl_lock();
+ 	rate_control_deinitialize(local);
+ 	ieee80211_remove_interfaces(local);
+- fail_rate:
+ 	rtnl_unlock();
++ fail_rate:
+  fail_flows:
+ 	ieee80211_led_exit(local);
+ 	destroy_workqueue(local->workqueue);
+  fail_workqueue:
+-	wiphy_unregister(local->hw.wiphy);
+- fail_wiphy_register:
+ 	if (local->wiphy_ciphers_allocated)
+ 		kfree(local->hw.wiphy->cipher_suites);
+ 	kfree(local->int_scan_req);
+@@ -1353,8 +1355,8 @@ void ieee80211_unregister_hw(struct ieee
+ 	skb_queue_purge(&local->skb_queue_unreliable);
+ 	skb_queue_purge(&local->skb_queue_tdls_chsw);
+ 
+-	destroy_workqueue(local->workqueue);
+ 	wiphy_unregister(local->hw.wiphy);
++	destroy_workqueue(local->workqueue);
+ 	ieee80211_led_exit(local);
+ 	kfree(local->int_scan_req);
+ }
 
 
