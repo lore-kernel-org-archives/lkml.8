@@ -2,157 +2,92 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19274C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1404C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC3BA20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99CA206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="n/OQ8pJd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aaK9QPyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgDTPpH (ORCPT
+        id S1729293AbgDTPpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:45:07 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:50250 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729028AbgDTPow (ORCPT
+        Mon, 20 Apr 2020 11:45:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbgDTPps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:44:52 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KFcDWr020255;
-        Mon, 20 Apr 2020 10:44:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=qNDX1e9cmLY8++RjUuUsNUnq+t/NLjmrrD3VfGW3Akc=;
- b=n/OQ8pJdNl09gVaLnIEJm0bZb29ac7pzHN3BHlI8a+ckuMZvqSgVO28zs7b1gAqx3dqK
- ZMTktB4XLiAhpgE+J0ExxUnUuUkmf0XvMf+nRhWeTDUqPygM72q1HRAL8B337zzgL3s4
- aLkWS1slbg6uW5+uytGqDucbs92oyuD+2xQf5JV5m7Uyd2GcKHEwbc/Yan2R7PassmhG
- z5RGG9ZAi3xG+6mN1ZhQI3i65pOyj1rmpwgVcZYZzDVwbQQosbXc3iEqok0kr7UOK1Rh
- +FRO81xIwrLpoi5rGgU1VwuWmnfrJd1qsV9jrKaeTzBbsaPawrjSW2/Z95MvwIC7dHsx Ow== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 30fxy4b9hq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 20 Apr 2020 10:44:46 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 20 Apr
- 2020 16:44:44 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Mon, 20 Apr 2020 16:44:44 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 914632C6;
-        Mon, 20 Apr 2020 15:44:44 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
-        <lee.jones@linaro.org>, <broonie@kernel.org>
-CC:     <myungjoo.ham@samsung.com>, <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH 1/4] regulator: arizona-regulator: Move binding over to dtschema
-Date:   Mon, 20 Apr 2020 16:44:41 +0100
-Message-ID: <20200420154444.12332-2-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200420154444.12332-1-ckeepax@opensource.cirrus.com>
-References: <20200420154444.12332-1-ckeepax@opensource.cirrus.com>
+        Mon, 20 Apr 2020 11:45:48 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E66A6C061A0C;
+        Mon, 20 Apr 2020 08:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=fkfnAhp5CM6mmeL7Sr7+YSkpNnHA+3cpF10slzhH73s=; b=aaK9QPykvzVz29xusBdJP3YQPK
+        wRz6J5hikf5OXHuNcmcJ0qmJ2ZNJr01VQb0aL/PjypLCX7pN5GehZW1VPLRFbajaJT+pdbGUXfPdR
+        vtWNiyxss75N1xRJ1YrhBshdKfnnZITTcL7+4P7yhNLFp5w5kyR80jRjc/PZEFVcQJjsdfAsG6nR1
+        RuzlIB7RIVdltNGES5FhWrAISyUq3n0chQAoafvc4xK8vFOzYF8eOQAHRNEaNjmJgvum6CT6PCdJg
+        U1KUiTrKeND9VQ1LMNFmaAeZ7eqAT/kaezpRApsGJgNIR691i+7r/MS5gE3BXQDjKqANdo81qpIBR
+        asGo2qPQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQYcF-0004qG-Da; Mon, 20 Apr 2020 15:45:47 +0000
+Subject: Re: linux-next: Tree for Apr 20 (media Kconfig warning)
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <20200420142610.390e5922@canb.auug.org.au>
+ <c53a2fa4-1efe-07d5-6cfa-6ebc37b7d013@infradead.org>
+Message-ID: <752826b9-46d2-5fd9-4759-df5d8bfba1d0@infradead.org>
+Date:   Mon, 20 Apr 2020 08:45:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- clxscore=1015 adultscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200131
+In-Reply-To: <c53a2fa4-1efe-07d5-6cfa-6ebc37b7d013@infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- .../bindings/regulator/arizona-regulator.txt       | 18 -----------
- .../devicetree/bindings/regulator/wlf,arizona.yaml | 37 ++++++++++++++++++++++
- 2 files changed, 37 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/arizona-regulator.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
+On 4/20/20 8:21 AM, Randy Dunlap wrote:
+> On 4/19/20 9:26 PM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20200417:
+>>
+> 
+> 
+> on x86_64:
+> 
+> WARNING: unmet direct dependencies detected for PHY_ROCKCHIP_DPHY_RX0
+>   Depends on [n]: STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=y] && (ARCH_ROCKCHIP || COMPILE_TEST [=y]) && OF [=n]
+>   Selected by [y]:
+>   - VIDEO_ROCKCHIP_ISP1 [=y] && STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=y] && VIDEO_V4L2 [=y] && (ARCH_ROCKCHIP || COMPILE_TEST [=y])
+> 
+> 
+> Full randconfig file is attached.
+> 
+> thanks.
+> 
 
-diff --git a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt b/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
-deleted file mode 100644
-index 69bf41949b01f..0000000000000
---- a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--Cirrus Logic Arizona class audio SoCs
--
--These devices are audio SoCs with extensive digital capabilities and a range
--of analogue I/O.
--
--This document lists regulator specific bindings, see the primary binding
--document:
--  For Wolfson Microelectronic Arizona codecs: ../mfd/arizona.txt
--  For Cirrus Logic Madera codecs: ../mfd/madera.txt
--
--Optional properties:
--  - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
--
--Optional subnodes:
--  - ldo1 : Initial data for the LDO1 regulator, as covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
--  - micvdd : Initial data for the MICVDD regulator, as covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
-diff --git a/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml b/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
-new file mode 100644
-index 0000000000000..a0aea73bf4122
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
-@@ -0,0 +1,37 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/wlf,arizona.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cirrus Logic/Wolfson Microelectronics Arizona/Madera class audio SoCs
-+
-+maintainers:
-+  - patches@opensource.cirrus.com
-+
-+description: |
-+  These devices are audio SoCs with extensive digital capabilities and a
-+  range of analogue I/O.
-+
-+  This document lists regulator specific bindings, see the primary binding
-+  document. For Wolfson Microelectronic Arizona codecs ../mfd/wlf,arizona.yaml
-+  and for Cirrus Logic Madera codecs ../mfd/madera.txt
-+
-+properties:
-+  wlf,ldoena:
-+    description:
-+      GPIO specifier for the GPIO controlling LDOENA.
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    maxItems: 1
-+
-+  ldo1:
-+    description:
-+      Initial data for the LDO1 regulator.
-+    $ref: "regulator.yaml#"
-+    type: object
-+
-+  micvdd:
-+    description:
-+      Initial data for the MICVDD regulator.
-+    $ref: "regulator.yaml#"
-+    type: object
+This kconfig problem also causes this build error:
+
+ld: drivers/staging/media/rkisp1/rkisp1-isp.o: in function `rkisp1_mipi_csi2_start.isra.11':
+rkisp1-isp.c:(.text+0x1184): undefined reference to `phy_mipi_dphy_get_default_config'
+
+
 -- 
-2.11.0
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
