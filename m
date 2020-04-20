@@ -2,99 +2,66 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152A1C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85085C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8D12074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:49:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rz7WPWMG"
+	by mail.kernel.org (Postfix) with ESMTP id 64CC7208FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgDTTtJ (ORCPT
+        id S1726599AbgDTTtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:49:09 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38358 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725988AbgDTTtI (ORCPT
+        Mon, 20 Apr 2020 15:49:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725897AbgDTTtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:49:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587412147;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LKl1qhqv4qpwNjsYJ1wWYtjHdCV4Rr+NMYSPl4A948c=;
-        b=Rz7WPWMGNrBqjRbFZjOC4ft7sL/JvzAQNadDQVg2ngfAFK19qx9TdRSn1yX/Vu0wMcHp6/
-        uJZE/4lwwtrsoJfYohObeHx0lx5frZUKiEGYawV1tXCPmfPBd5MPGxC520QWnqP8Zv58c+
-        QlsHQ119Wk7yCQeYRx67ljsF9lIHEhQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-157-T71RdRqdMdWY1BXEe8dQGQ-1; Mon, 20 Apr 2020 15:49:03 -0400
-X-MC-Unique: T71RdRqdMdWY1BXEe8dQGQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B110A800D5B;
-        Mon, 20 Apr 2020 19:49:02 +0000 (UTC)
-Received: from redhat.com (ovpn-112-171.phx2.redhat.com [10.3.112.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 17ED7277B9;
-        Mon, 20 Apr 2020 19:49:02 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 15:49:00 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
- early
-Message-ID: <20200420194900.GC13807@redhat.com>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
- <20200420175751.GA13807@redhat.com>
- <20200420182516.6awwwbvoen62gwbr@treble>
- <20200420190141.GB13807@redhat.com>
- <20200420191117.wrjauayeutkpvkwd@treble>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420191117.wrjauayeutkpvkwd@treble>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Mon, 20 Apr 2020 15:49:39 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4CAC061A0C;
+        Mon, 20 Apr 2020 12:49:38 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 54B47127FE1D5;
+        Mon, 20 Apr 2020 12:49:38 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 12:49:37 -0700 (PDT)
+Message-Id: <20200420.124937.2260131206540617269.davem@davemloft.net>
+To:     tanhuazhong@huawei.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        linuxarm@huawei.com, kuba@kernel.org
+Subject: Re: [PATCH V2 net-next 00/10] net: hns3: misc updates for -next
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1587349055-4403-1-git-send-email-tanhuazhong@huawei.com>
+References: <1587349055-4403-1-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Apr 2020 12:49:38 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 02:11:17PM -0500, Josh Poimboeuf wrote:
-> On Mon, Apr 20, 2020 at 03:01:41PM -0400, Joe Lawrence wrote:
-> > > > ... apply_relocations() is also iterating over the section headers (the
-> > > > diff context doesn't show it here, but i is an incrementing index over
-> > > > sechdrs[]).
-> > > > 
-> > > > So if there is more than one KLP relocation section, we'll process them
-> > > > multiple times.  At least the x86 relocation code will detect this and
-> > > > fail the module load with an invalid relocation (existing value not
-> > > > zero).
-> > > 
-> > > Ah, yes, good catch!
-> > > 
-> > 
-> > The same test case passed with a small modification to push the foreach
-> > KLP section part to a kernel/livepatch/core.c local function and
-> > exposing the klp_resolve_symbols() + apply_relocate_add() for a given
-> > section to kernel/module.c.  Something like following...
+From: Huazhong Tan <tanhuazhong@huawei.com>
+Date: Mon, 20 Apr 2020 10:17:25 +0800
+
+> This patchset includes some misc updates for the HNS3 ethernet driver.
 > 
-> I came up with something very similar, though I named them
-> klp_apply_object_relocs() and klp_apply_section_relocs() and changed the
-> argument order a bit (module first).  Since it sounds like you have a
-> test, could you try this one?
+> [patch 1&2] separates two bloated function.
+> [patch 3-5] removes some redundant code.
+> [patch 6-7] cleans up some coding style issues.
+> [patch 8-10] adds some debugging information.
 > 
+> Change log:
+> V1->V2:	removes an unnecessary initialization in [patch 1] which
+> 	suggested by David Miller.
+> 	modified some print format issue and commit log in [patch 8].
 
-LGTM.  I have a few klp-convert selftests that I've been slowly
-tinkering on and they all load/run successfully with this version. :)
-
--- Joe
-
+Series applied, thank you.
