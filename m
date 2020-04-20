@@ -2,111 +2,109 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E407C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8F6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F28022078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQyaUavq"
+	by mail.kernel.org (Postfix) with ESMTP id 15BBF206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729626AbgDTMxk (ORCPT
+        id S1729295AbgDTMxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728960AbgDTMqk (ORCPT
+        Mon, 20 Apr 2020 08:53:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48842 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728952AbgDTMqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:46:40 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C23C061A0C;
-        Mon, 20 Apr 2020 05:46:38 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id v4so4541634wme.1;
-        Mon, 20 Apr 2020 05:46:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pu26cOg7Ypo8qZd3E3+gaE3VF/W7RLp9DeHS6yBo9EU=;
-        b=oQyaUavqXa3iGQJgooPh2t5s3nVk6PE6gxB0c0GlC/DfZjcLOyvYsSkta5NiIHZ5P8
-         UQBbI/p/iyBoLeuXvcqAyjemrxuT4vrJgdEq7daMz3wZjZkIoxO+Xej4LGYiE81mBki2
-         0/Nxb3YobRorIJkhJVyZTCYqydI3gZcjPjjzdqda/MLSuv7tgnAinNBTefxzkxu0aHCi
-         QhO4jzu6wvo+wedkVMaGfgyiy/TpLoj/iB3P55wOOcYXkrSIvMxlsJDrU+vI48TRxA3k
-         sRVv+hBuXVUv+0Kckejr5wuRG34nGnd7ZgFdRL5YQ97cS2DZAIIBdoax8UHBg6Q92ae6
-         BkxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pu26cOg7Ypo8qZd3E3+gaE3VF/W7RLp9DeHS6yBo9EU=;
-        b=WbX9Sdi0+DrOpfjPrEpdN2wUEsSVuiiYGCCFcxI///vV9tEdJGe0i5pAi8viWpz7eL
-         jev4UCbd/4DPZMD34TPYva4bq5pjS5dUELwUYxLMtZLEeZ8R0PmfHO/jWQMT8rhs2izb
-         hJ/QruqM+fCkjhAaRmCgsxtPDdt8eWFVIJdY9ywOKcdPNJgCMKUBeq5F5BozIdecr8uK
-         6EJIgQKeQECbi/bhlS3EZfGUgFd0Fhv8HedB61kRu6O7A5NFWxKVuS9x9Kh2Qfhyja8J
-         AvA0buM7PoXMy5I1M/gwmQpZqQE/mJqbAq6SWU7HeC9vMBD7bRXkNiE5ozD/JdTPp3xz
-         2zLg==
-X-Gm-Message-State: AGi0PuYGISGbPWsHhzqOLbLgg4D2wNNvIVZF/ctCac8xt/iUOmrgr37Q
-        Ja3+Hkr5jmmmClfHyoHmw58=
-X-Google-Smtp-Source: APiQypJ9gcFdsuDN76of2BCdFnuseMAVACiI5/xyZaIL2Ek6MR2Fx/Gsh/MUL8sNqS/VvoeZH+slNA==
-X-Received: by 2002:a05:600c:244:: with SMTP id 4mr16270764wmj.0.1587386797247;
-        Mon, 20 Apr 2020 05:46:37 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:4e7:1fdd:b7c2:b3ab])
-        by smtp.gmail.com with ESMTPSA id h17sm1217802wmm.6.2020.04.20.05.46.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 05:46:36 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 0/2] Add support for Allwinner H6 DVFS
-Date:   Mon, 20 Apr 2020 14:46:32 +0200
-Message-Id: <20200420124634.32726-1-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 20 Apr 2020 08:46:35 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCVMk6078113;
+        Mon, 20 Apr 2020 08:46:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30gcs36f84-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:46:15 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCVbwp078957;
+        Mon, 20 Apr 2020 08:46:15 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30gcs36f7t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:46:15 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCjNuH015619;
+        Mon, 20 Apr 2020 12:46:14 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma05wdc.us.ibm.com with ESMTP id 30fs668jg8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 12:46:14 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCkDjr48628122
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 12:46:13 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 002D2136059;
+        Mon, 20 Apr 2020 12:46:13 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 23153136061;
+        Mon, 20 Apr 2020 12:46:09 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 12:46:08 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
+        kirill@shutemov.name,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH v3 19/22] powerpc/kvm/book3s: Use pte_present instead of opencoding _PAGE_PRESENT check
+Date:   Mon, 20 Apr 2020 18:14:31 +0530
+Message-Id: <20200420124434.47330-20-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_03:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ impostorscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ phishscore=0 adultscore=0 clxscore=1015 spamscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+This adds _PAGE_PTE check and makes sure we validate the pte value returned via
+find_kvm_host_pte.
 
-I have sent the v3 serie with the same command as used for the v2.
+NOTE: this also considers _PAGE_INVALID to the software valid bit.
 
-$> git send-email --to=XXXX HEAD~7
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+---
+ arch/powerpc/include/asm/kvm_book3s_64.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Which is now wrong because I have introduced 2 new commits.
-
-Sorry for that I should have used:
-
-$> git send-email --to=XXXX next/master
-
-Could you apply these patches before the other DVFS patches to keep
-a clean order?
-
-Thanks to Ondrej Jirman for the catch,
-And sorry for the mistake,
-Regards,
-Clement
-
-Ondrej Jirman (1):
-  arm64: dts: allwinner: h6: Add thermal trip points/cooling map
-
-Yangtao Li (1):
-  arm64: dts: allwinner: h6: Add clock to CPU cores
-
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 32 ++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
+diff --git a/arch/powerpc/include/asm/kvm_book3s_64.h b/arch/powerpc/include/asm/kvm_book3s_64.h
+index 1ca1f6495012..c58e64a0a74f 100644
+--- a/arch/powerpc/include/asm/kvm_book3s_64.h
++++ b/arch/powerpc/include/asm/kvm_book3s_64.h
+@@ -435,7 +435,7 @@ static inline pte_t kvmppc_read_update_linux_pte(pte_t *ptep, int writing)
+ 			continue;
+ 		}
+ 		/* If pte is not present return None */
+-		if (unlikely(!(pte_val(old_pte) & _PAGE_PRESENT)))
++		if (unlikely(!pte_present(old_pte)))
+ 			return __pte(0);
+ 
+ 		new_pte = pte_mkyoung(old_pte);
 -- 
-2.20.1
+2.25.3
 
