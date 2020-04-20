@@ -2,111 +2,148 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A3BC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738A9C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D86920672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A492078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="smlPb7p2"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="leDBAAKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgDTFil (ORCPT
+        id S1726232AbgDTFjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgDTFil (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:38:41 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89A0C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:38:39 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id j7so940909pgj.13
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:38:39 -0700 (PDT)
+        Mon, 20 Apr 2020 01:39:16 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:45888 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbgDTFjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 01:39:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8DAiM3FZELhORq/Bkh+uGmRYVoaeDncRDNKlRNgM+4Y=;
-        b=smlPb7p2KjV8mhZbGKmTb4FX3kZIhWgjjinJsbrd9ObCjFQk4dwr/dBChq1xnFdwQJ
-         mO3M4fRuYB/26Gk/5Z2TaacEs7BOqzeHo1G1LtMSoEn/Ex4Darq/MNVOWTmsK/EcIc8+
-         84Re3GZDzlIFY81FVHvn8p39jLDuerjdsdvtBbikdCBKCTl6TRl7A6aS9xp7/5FpbROb
-         tBt/0mGhvCQn4gqrzZR75FvBziVFzEFb8B8vQYLF3r+xbMxmUfwq/kWLUNSEt1ZLyjIG
-         ZrJa67PV1D8ORryty0/ydOYC0IQHGaC1mTkRq53u60Q4n4AnAAYz0QJkNyjd7ZYMyCph
-         3LuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8DAiM3FZELhORq/Bkh+uGmRYVoaeDncRDNKlRNgM+4Y=;
-        b=QgHaWqtzARwrlaqCH1XrSw1LZ+lzRnhg/VM/vSQi7ZaN1+uwRG4noJxotqSs78RLs9
-         8tSDMJhotpzU51W8473fZsuw5ns6VnVmrXQxi+ZLrxlG8A/GHVG7QaXvQZimISy+fJrJ
-         My3/fel8I5f7t1d6b1MQ80VC3kQrVHV3I52iRnoe48RTM9ATffSsBqtZ6XoOWFQNBNfJ
-         eCF/U68GPgUQHP5JENyD36D5/0pJ6uUBEqub6JTL7Ru0Amt3BnkkIUfiFkXGbyI210AR
-         bAPG9mN2eXhuB/sEEm9PEdWw2Vc8Ujxw2E8sMXRTSegFtsnqjLyF1rvZeZxNwVkHBu7J
-         FiGA==
-X-Gm-Message-State: AGi0PuaTISCyjz+FXpR+8R3ZQOm2qNHwNdR439Y4ksQmH9Hif+k/VPKL
-        YyYSUp9xsk2lD7KnA3gaqbHjig==
-X-Google-Smtp-Source: APiQypIcQ5RUUaAcPqXTbhFsBCZvKcSGvCrv59l6EnBYvnD8ONdi4RqBSAZ23H/8nSSkv0dtZ1OXhg==
-X-Received: by 2002:a62:1801:: with SMTP id 1mr6338097pfy.230.1587361119235;
-        Sun, 19 Apr 2020 22:38:39 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r13sm31317pgj.9.2020.04.19.22.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 22:38:38 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 22:39:01 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, evgreen@chromium.org,
-        ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/5] remoteproc: qcom: pas: Add SC7180 Modem support
-Message-ID: <20200420053901.GH1516868@builder.lan>
-References: <20200417142605.28885-1-sibis@codeaurora.org>
- <20200417142605.28885-3-sibis@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417142605.28885-3-sibis@codeaurora.org>
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=7jeYy+0kw+BDwc27sM9Qazk8Eah3Qmvz5cfU906WJME=; b=l
+        eDBAAKMySPKhlRK1SN0tEEU24/SP82dlmZf7+5N8hjRjQxDg2/Si8IBY+xsuJmuM
+        FOaC01foEiZ9nTDfw7w1M5n1ZyYPU1McSpYJnk3p8ZcVbLYShYJ8d/dC9ebwLMPh
+        MoNKSV/JinuCkUSCOzU5u2z/DHcTlpDw6F3sDek2J0=
+Received: from localhost.localdomain (unknown [61.129.42.58])
+        by app2 (Coremail) with SMTP id XQUFCgCXn+N3NZ1elfUdAA--.15497S3;
+        Mon, 20 Apr 2020 13:39:04 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] btrfs: Fix btrfs_block_group refcnt leak
+Date:   Mon, 20 Apr 2020 13:38:40 +0800
+Message-Id: <1587361120-83160-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgCXn+N3NZ1elfUdAA--.15497S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw4DuF48Jw4fXFyDJw1DWrg_yoW5GFW3pr
+        yDKFs0gr1rCr1qva1xG390qw1Fg3WkGw4UGr98Crsaqw43JwnxZF9Iy3WYyry5tFWfXrZr
+        Xa1Yv34UAF9FkrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Cr0_Gr
+        1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+        648v4I1lc2xSY4AK67AK6r4rMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUXTmhUUUUU=
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17 Apr 07:26 PDT 2020, Sibi Sankar wrote:
+btrfs_remove_block_group() invokes btrfs_lookup_block_group(), which
+returns a local reference of the blcok group that contains the given
+bytenr to "block_group" with increased refcount.
 
-> Add support for booting the Modem DSP found on Qualcomm's SC7180 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+When btrfs_remove_block_group() returns, "block_group" becomes invalid,
+so the refcount should be decreased to keep refcount balanced.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+The reference counting issue happens in several exception handling paths
+of btrfs_remove_block_group(). When those error scenarios occur such as
+btrfs_alloc_path() returns NULL, the function forgets to decrease its
+refcnt increased by btrfs_lookup_block_group() and will cause a refcnt
+leak.
 
-Regards,
-Bjorn
+Fix this issue by jumping to "out_put_group" label and calling
+btrfs_put_block_group() when those error scenarios occur.
 
-> ---
->  drivers/remoteproc/qcom_q6v5_pas.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-> index 7a63efb854052..33b0bff770a7f 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -637,6 +637,7 @@ static const struct of_device_id adsp_of_match[] = {
->  	{ .compatible = "qcom,qcs404-adsp-pas", .data = &adsp_resource_init },
->  	{ .compatible = "qcom,qcs404-cdsp-pas", .data = &cdsp_resource_init },
->  	{ .compatible = "qcom,qcs404-wcss-pas", .data = &wcss_resource_init },
-> +	{ .compatible = "qcom,sc7180-mpss-pas", .data = &mpss_resource_init},
->  	{ .compatible = "qcom,sdm845-adsp-pas", .data = &adsp_resource_init},
->  	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &cdsp_resource_init},
->  	{ .compatible = "qcom,sm8150-adsp-pas", .data = &sm8150_adsp_resource},
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ fs/btrfs/block-group.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index 404e050ce8ee..d9f432bd3329 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -916,7 +916,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 	path = btrfs_alloc_path();
+ 	if (!path) {
+ 		ret = -ENOMEM;
+-		goto out;
++		goto out_put_group;
+ 	}
+ 
+ 	/*
+@@ -954,7 +954,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		ret = btrfs_orphan_add(trans, BTRFS_I(inode));
+ 		if (ret) {
+ 			btrfs_add_delayed_iput(inode);
+-			goto out;
++			goto out_put_group;
+ 		}
+ 		clear_nlink(inode);
+ 		/* One for the block groups ref */
+@@ -977,13 +977,13 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 
+ 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
+ 	if (ret < 0)
+-		goto out;
++		goto out_put_group;
+ 	if (ret > 0)
+ 		btrfs_release_path(path);
+ 	if (ret == 0) {
+ 		ret = btrfs_del_item(trans, tree_root, path);
+ 		if (ret)
+-			goto out;
++			goto out_put_group;
+ 		btrfs_release_path(path);
+ 	}
+ 
+@@ -1102,7 +1102,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 
+ 	ret = remove_block_group_free_space(trans, block_group);
+ 	if (ret)
+-		goto out;
++		goto out_put_group;
+ 
+ 	btrfs_put_block_group(block_group);
+ 	btrfs_put_block_group(block_group);
+@@ -1132,6 +1132,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		btrfs_delayed_refs_rsv_release(fs_info, 1);
+ 	btrfs_free_path(path);
+ 	return ret;
++out_put_group:
++	btrfs_put_block_group(block_group);
++	goto out;
+ }
+ 
+ struct btrfs_trans_handle *btrfs_start_trans_remove_block_group(
+-- 
+2.7.4
+
