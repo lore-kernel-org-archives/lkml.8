@@ -2,57 +2,112 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39477C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0C9C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCEB2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5172078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:43:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avlZ9T8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgDTIm5 (ORCPT
+        id S1726310AbgDTInF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:42:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38366 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgDTIm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:42:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E370FAE0F;
-        Mon, 20 Apr 2020 08:42:54 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 10:42:42 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>, x86 <x86@kernel.org>
-Subject: Re: [tip: ras/core] x86/mce: Add a struct mce.kflags field
-Message-ID: <20200420084242.GA20918@zn.tnic>
-References: <20200214222720.13168-4-tony.luck@intel.com>
- <158694418849.28353.16699731019695420884.tip-bot2@tip-bot2>
- <20200420080640.GB32592@infradead.org>
+        Mon, 20 Apr 2020 04:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgDTInF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:43:05 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA967C061A0C;
+        Mon, 20 Apr 2020 01:43:04 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k13so9836614wrw.7;
+        Mon, 20 Apr 2020 01:43:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FvWDhWISpGn4NECKTMbbAGhGOgcSHURkbEnrDvJMLos=;
+        b=avlZ9T8hhK+4D60c+QbITmY+PpA+oISCvv+x0+zVw0TZI2T9hRy3ezvi4EQWm5p9Yr
+         ulRTiSrqUSlB7Vh6Wzy1treFQdHNls8hEfF2gpLAS6+MkeT5iHJbFEgZ+c2W6kbY/Wnu
+         WgUFyYxWE7FHP635rcDZz02rSAdVkVLQTowgA1lra7/FwFiiGQNeNEa4rpXBJNPvlXVw
+         HUco5qQzwtWYSnBmTok31veJLWFwg1J44hBagJfK4YhoQ5mbwFyMjHsu3ru2qzpyQHZW
+         nYX2KuaZ3IHhR6qdv1GbYN73u4YUmpER8TRMhosoHsfyhmHd4zUIWOv418XrN+jExe6E
+         ksWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FvWDhWISpGn4NECKTMbbAGhGOgcSHURkbEnrDvJMLos=;
+        b=tGwb/sX/bUmNLxH4OfTzZcYxYmgd1wq5YUfIYTpfQQpj81BDxwK6GOeU4rt37DgEzV
+         VevGZcNhtHS5Pb3zZZV1amAeG+dFVp6sXMTHY3fZVva7OMV2li6pLveGb5fJq5TiUNFt
+         CgBRifVyFb+bI0VVudVtdsRvv9K6b0umvu/GeK1r7rcO/CEpGdTyDgl1tEhqbWpys+Go
+         01asEaE8zQRMSKNs23Mf01ZcLvFB5I9cEZ3WAj6EJe4ug+xtddvivcLeYvLobdC3FXsT
+         D8QusCkaNZChUr2tS+alSTnw7ZzNL09lqQgzKTeQDqmyDOtKj3dYhqTT92c+z9gxLPol
+         5YCw==
+X-Gm-Message-State: AGi0PuYrBOxCuGCLYKvrOSXFmZ1rpAqdcssWPAy6VQov0d7PBSA16Bvg
+        2S3D2gEb3OXv5uuWFbEG19k=
+X-Google-Smtp-Source: APiQypK5lrfo31xY8UUezFr4HAJ7K5iYcV+IgTMTdqw5RpA5VCYN8IlN/pUiRQPYMnHeei40rYxRqQ==
+X-Received: by 2002:a5d:6688:: with SMTP id l8mr18750767wru.179.1587372183564;
+        Mon, 20 Apr 2020 01:43:03 -0700 (PDT)
+Received: from meru.fronius.com ([2a01:cb18:832e:5f00:c546:5ea:178b:4074])
+        by smtp.gmail.com with ESMTPSA id g74sm403183wme.44.2020.04.20.01.43.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 01:43:02 -0700 (PDT)
+From:   Mathieu Othacehe <m.othacehe@gmail.com>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Othacehe <m.othacehe@gmail.com>
+Subject: [PATCH v3 0/4] iio: vcnl: Add interrupts support for VCNL4010/20.
+Date:   Mon, 20 Apr 2020 10:42:06 +0200
+Message-Id: <20200420084210.14245-1-m.othacehe@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200420080640.GB32592@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 01:06:40AM -0700, Christoph Hellwig wrote:
-> Err, how can you add a new field to an uapi structure and not break
-> things?
+Hello,
 
-By adding it to the end of the structure. The mcelog tool gets the
-record length first, before doing anything with the records.
+Here's a v3 that is rebased on top of recent additions to the vcnl4000 driver.
+
+Thanks,
+
+Mathieu
+
+Changes from v2:
+* Rebase on iio testing branch.
+* Remove useless test in vcnl4010_probe_trigger.
+
+Changes from v1:
+* Split into four different patches.
+* Use iio_device_claim_direct_mode to protect
+raw access from buffer capture.
+* Requesting a sampling frequency above the limit is no longer possible.
+* Inline read_isr and write_isr functions.
+* Remove IIO_LIGHT data from buffer capture.
+* Make sure postenable and predisable functions respect the common form.
+* Do not set the trigger by default.
+* Remove the devm_iio_triggered_buffer_setup top half.
+
+Mathieu Othacehe (4):
+  iio: vcnl4000: Factorize data reading and writing.
+  iio: vcnl4000: Add event support for VCNL4010/20.
+  iio: vcnl4000: Add sampling frequency support for VCNL4010/20.
+  iio: vcnl4000: Add buffer support for VCNL4010/20.
+
+ drivers/iio/light/Kconfig    |   2 +
+ drivers/iio/light/vcnl4000.c | 890 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 828 insertions(+), 64 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.26.0
 
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
