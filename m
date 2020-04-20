@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18A8C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5107C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B25F02070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C56CD206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386434;
-	bh=fGBeDcGkMF8qnx98mzK/4Lz582y1joSmdAPT16srA5Y=;
+	s=default; t=1587386437;
+	bh=RexPW0sUzuNzCRg2RHBHDFYUpB/jVvp7IwsrhECKk7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qI6Lv7134tSc1q/2km4EAfjcXDDRP0vZQO+1NNJfYvDw2noYEimbbx3QWKIPuAYeX
-	 z5hOuOZCUEZOr7OTCFIz7J+Gh9JY6HzIPK4hUJtRAyv/zP7jeKzWfHOdI1Qm0J1E3a
-	 JI3bK9F5xdNEcSgofmNEozjlf1/pMfFqSp4+LlVs=
+	b=VeXHldlRTFG/7qNzjZ6Wi7s4zep+WszoiNB0LNcVy9Tvm2qInWVSIXiu0/NjEuyXm
+	 oB9/fqItzLrFeByr/1z/nRW35JMIWkLfkmnaJvYyBb6a7oC27UuTB1vrRRIprsWo7O
+	 5KfD/SW1fu1yWtuEeMvf9QzErZ9enOf3hRNgk3xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgDTMkd (ORCPT
+        id S1727799AbgDTMkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:40:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60994 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:40:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbgDTMka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:40:30 -0400
+        id S1727780AbgDTMkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:40:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E09C2070B;
-        Mon, 20 Apr 2020 12:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04ACA2070B;
+        Mon, 20 Apr 2020 12:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386430;
-        bh=fGBeDcGkMF8qnx98mzK/4Lz582y1joSmdAPT16srA5Y=;
+        s=default; t=1587386432;
+        bh=RexPW0sUzuNzCRg2RHBHDFYUpB/jVvp7IwsrhECKk7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nagGELThqmJrwQJhrtU4cwJpnk9eJdMrJyZl6DGJIok+tpDm9Ik9qYGMfwC2C/Ace
-         QpaFjEQ7Ri4Pm3iK7lPl1zBDFkCqYQK7vDvztaP9KbE+6LW02RfUwgIsBe+59LBHc0
-         2UgnmuTuBzbcv4RpQdqvGVIJwGtpAzzH1fG1s2UM=
+        b=d9ySpuG1mOzkKta1188VCYved6neW//GVGKZhPKlt/brtntnX/fWcf3gErA3RXaHV
+         rIhezHxn3RTskqmqwmwNAJQoRByYStE32tzZEe+fUv0RscXeHS/MXkT20nLW4cfYQS
+         lY399/AmZqvtZNWkT+KfGACp3pOInanSpO3c0FPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 02/65] hsr: check protocol version in hsr_newlink()
-Date:   Mon, 20 Apr 2020 14:38:06 +0200
-Message-Id: <20200420121506.628904411@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Toralf=20F=C3=B6rster?= <toralf.foerster@gmx.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 20/65] Revert "ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()"
+Date:   Mon, 20 Apr 2020 14:38:24 +0200
+Message-Id: <20200420121510.727951157@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -59,53 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 4faab8c446def7667adf1f722456c2f4c304069c ]
+This reverts commit e8eab1acd6cdf142fb93c47201a1ae1f3dcbfc5f which is
+commit 65a691f5f8f0bb63d6a82eec7b0ffd193d8d8a5f upstream.
 
-In the current hsr code, only 0 and 1 protocol versions are valid.
-But current hsr code doesn't check the version, which is received by
-userspace.
+Rafael writes:
+	It has not been marked for -stable or otherwise requested to be
+	included AFAICS.  Also it depends on other mainline commits that
+	have not been included into 5.6.5.
 
-Test commands:
-    ip link add dummy0 type dummy
-    ip link add dummy1 type dummy
-    ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1 version 4
-
-In the test commands, version 4 is invalid.
-So, the command should be failed.
-
-After this patch, following error will occur.
-"Error: hsr: Only versions 0..1 are supported."
-
-Fixes: ee1c27977284 ("net/hsr: Added support for HSR v1")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Toralf Förster <toralf.foerster@gmx.de>
+Reported-by: Rafael J. Wysocki <rafael@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/hsr/hsr_netlink.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/acpi/ec.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/net/hsr/hsr_netlink.c
-+++ b/net/hsr/hsr_netlink.c
-@@ -61,10 +61,16 @@ static int hsr_newlink(struct net *src_n
- 	else
- 		multicast_spec = nla_get_u8(data[IFLA_HSR_MULTICAST_SPEC]);
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -1654,6 +1654,7 @@ static int acpi_ec_add(struct acpi_devic
  
--	if (!data[IFLA_HSR_VERSION])
-+	if (!data[IFLA_HSR_VERSION]) {
- 		hsr_version = 0;
--	else
-+	} else {
- 		hsr_version = nla_get_u8(data[IFLA_HSR_VERSION]);
-+		if (hsr_version > 1) {
-+			NL_SET_ERR_MSG_MOD(extack,
-+					   "Only versions 0..1 are supported");
-+			return -EINVAL;
-+		}
-+	}
+ 		if (boot_ec && ec->command_addr == boot_ec->command_addr &&
+ 		    ec->data_addr == boot_ec->data_addr) {
++			boot_ec_is_ecdt = false;
+ 			/*
+ 			 * Trust PNP0C09 namespace location rather than
+ 			 * ECDT ID. But trust ECDT GPE rather than _GPE
+@@ -1673,12 +1674,9 @@ static int acpi_ec_add(struct acpi_devic
  
- 	return hsr_dev_finalize(dev, link, multicast_spec, hsr_version);
- }
+ 	if (ec == boot_ec)
+ 		acpi_handle_info(boot_ec->handle,
+-				 "Boot %s EC initialization complete\n",
++				 "Boot %s EC used to handle transactions and events\n",
+ 				 boot_ec_is_ecdt ? "ECDT" : "DSDT");
+ 
+-	acpi_handle_info(ec->handle,
+-			 "EC: Used to handle transactions and events\n");
+-
+ 	device->driver_data = ec;
+ 
+ 	ret = !!request_region(ec->data_addr, 1, "EC data");
 
 
