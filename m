@@ -2,101 +2,129 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90149C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BDCC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A149206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anisinha-ca.20150623.gappssmtp.com header.i=@anisinha-ca.20150623.gappssmtp.com header.b="daZG3iGd"
+	by mail.kernel.org (Postfix) with ESMTP id 30A1B206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587387146;
+	bh=HaUo+E5NxLGCGdFw4NKrqAONKCA3eOeOzeVolfXxgx4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=z7suu+7EBFpvma2Z+0kHqLJ1ydkcbEd1GRYiIOe0Ivt1+ufVp/lzvbauBlrR5h8gi
+	 AEhPcARpatH/24g0NytmRNFPw17TBY/tHgbHO4a7cXbGDxd8a2ugh2boip/ivKtiys
+	 0rWGk47flj1da0hOygeHuaqfspf9Qq996HruE7e0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbgDTMwU (ORCPT
+        id S1729051AbgDTMrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:52:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728009AbgDTMwR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:52:17 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16736C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 05:52:17 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id g6so4986372pgs.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 05:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anisinha-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=MAn7hGAHod1EC34/XC7X7Tj9BVqJ/NY2c4VQxrVpxx4=;
-        b=daZG3iGdMhlZvCUWmVEiIQPAN6UZg2Qus2SFPnwoIfmc+BBFV+I59x3aN+XR7ZiuyC
-         uVXuH2J9d+6o0kUUSx8a9Fdfu9mELZ1pGfqiIvWfctQ+k5DHIayt/Hd80VX4oncWf0bi
-         7OaYA5rsFeBrcH6cYzSoDQ6FF/+spn5pBNcl4jIiNGjKfg7m3Ff0uD+C5jJ6OLan+EOz
-         B2SqolzEi0REFw2DdkMkTWW5ehMOY7IrcX6L4V0TUI4K0EWQsB0RST5N65TFiGKS709h
-         /5e05xO/i659emkH97AbLRoYSf2/P9AjtfM8ZgTzmVMmgE4nyasT6XiPHuz/nQ9rml6k
-         cWHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MAn7hGAHod1EC34/XC7X7Tj9BVqJ/NY2c4VQxrVpxx4=;
-        b=LfI0QAJ+z7jlHUp6f1yEmgqJkUYhnbJ4cqGRwYheUIEwpHnaRCvsMPmfvhpNDSpmqP
-         FXG2I2HRPbQzNChQ9aMgv+z/yX0BcfaziOsiSuWlXseReyQh5oz1Vnni1ad0FDWSf15A
-         nTP8/COy+ewvcsVAUVJmjqi1gM0tw1suDHRFkagZXubTdX43MemkQmXIQoAivp8ki4U2
-         KqucSY0Brmusdq3zXhbNE8+f+JSPyH8bTygR1Q7NIrbXsGPHyS2tv26YqM7NHAgnpp1x
-         kWjazNJXx7BiKT+OaYkcTAh5+xlql8Tsc2jzdffyJNhyc3k8doNlcF4HQomd7D4hgZ+p
-         kWvw==
-X-Gm-Message-State: AGi0PuZH+Pr6soOtFHQ+F+eHpoKumhXFBDyvVhH5+9+dOxxYw/BdDM0W
-        SikMqxFbzDA/f7o18jCHdJ54FtpU+bzVYA==
-X-Google-Smtp-Source: APiQypKjGYhisQKGfpwiryIzO08I2KAUmHs+YFxoaLHHjdOFdkb5X2HMDeQGuuuJMPwGpaWq1ouRpA==
-X-Received: by 2002:a62:83c3:: with SMTP id h186mr5992058pfe.192.1587387136218;
-        Mon, 20 Apr 2020 05:52:16 -0700 (PDT)
-Received: from localhost.localdomain ([203.163.233.7])
-        by smtp.gmail.com with ESMTPSA id z7sm1052038pff.47.2020.04.20.05.52.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Apr 2020 05:52:15 -0700 (PDT)
-From:   Ani Sinha <ani@anisinha.ca>
+        Mon, 20 Apr 2020 08:47:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729039AbgDTMrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:47:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A67F4206DD;
+        Mon, 20 Apr 2020 12:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587386831;
+        bh=HaUo+E5NxLGCGdFw4NKrqAONKCA3eOeOzeVolfXxgx4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CcFhuSVb+ksShl3JkuC+WsYq0aJWNJmPPHaQAiaIAI8jFF0lqPWSyyMb8JDb9JbuO
+         xocPU3Gwl7v6PpfmWdMfvz5UUDm55OYRKf4Oo9bKwQyIU/B5Wyz0KKsLTa9RnOy+E/
+         YYKFQhkrY9Fkb1pXXzCBhpLDtYmHAeWxekoYmimw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     ani@anirban.org, Ani Sinha <ani@anisinha.ca>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Denis Efremov <efremov@linux.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: pciehp: remove unused EMI() macro
-Date:   Mon, 20 Apr 2020 18:21:41 +0530
-Message-Id: <1587387114-38475-1-git-send-email-ani@anisinha.ca>
-X-Mailer: git-send-email 2.7.4
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 42/60] keys: Fix proc_keys_next to increase position index
+Date:   Mon, 20 Apr 2020 14:39:20 +0200
+Message-Id: <20200420121512.118553683@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
+References: <20200420121500.490651540@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EMI() macro seems to be unused. So removing it. Thanks
-Mika Westerberg <mika.westerberg@linux.intel.com> for
-pointing it out.
+From: Vasily Averin <vvs@virtuozzo.com>
 
-Signed-off-by: Ani Sinha <ani@anisinha.ca>
+commit 86d32f9a7c54ad74f4514d7fef7c847883207291 upstream.
+
+If seq_file .next function does not change position index,
+read after some lseek can generate unexpected output:
+
+    $ dd if=/proc/keys bs=1  # full usual output
+    0f6bfdf5 I--Q---     2 perm 3f010000  1000  1000 user      4af2f79ab8848d0a: 740
+    1fb91b32 I--Q---     3 perm 1f3f0000  1000 65534 keyring   _uid.1000: 2
+    27589480 I--Q---     1 perm 0b0b0000     0     0 user      invocation_id: 16
+    2f33ab67 I--Q---   152 perm 3f030000     0     0 keyring   _ses: 2
+    33f1d8fa I--Q---     4 perm 3f030000  1000  1000 keyring   _ses: 1
+    3d427fda I--Q---     2 perm 3f010000  1000  1000 user      69ec44aec7678e5a: 740
+    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
+    521+0 records in
+    521+0 records out
+    521 bytes copied, 0,00123769 s, 421 kB/s
+
+But a read after lseek in middle of last line results in the partial
+last line and then a repeat of the final line:
+
+    $ dd if=/proc/keys bs=500 skip=1
+    dd: /proc/keys: cannot skip to specified offset
+    g   _uid_ses.1000: 1
+    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
+    0+1 records in
+    0+1 records out
+    97 bytes copied, 0,000135035 s, 718 kB/s
+
+and a read after lseek beyond end of file results in the last line being
+shown:
+
+    $ dd if=/proc/keys bs=1000 skip=1   # read after lseek beyond end of file
+    dd: /proc/keys: cannot skip to specified offset
+    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
+    0+1 records in
+    0+1 records out
+    76 bytes copied, 0,000119981 s, 633 kB/s
+
+See https://bugzilla.kernel.org/show_bug.cgi?id=206283
+
+Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/hotplug/pciehp.h | 1 -
- 1 file changed, 1 deletion(-)
+ security/keys/proc.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index 5747967..4fd200d 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -148,7 +148,6 @@ struct controller {
- #define MRL_SENS(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_MRLSP)
- #define ATTN_LED(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_AIP)
- #define PWR_LED(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_PIP)
--#define EMI(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_EIP)
- #define NO_CMD_CMPL(ctrl)	((ctrl)->slot_cap & PCI_EXP_SLTCAP_NCCS)
- #define PSN(ctrl)		(((ctrl)->slot_cap & PCI_EXP_SLTCAP_PSN) >> 19)
+--- a/security/keys/proc.c
++++ b/security/keys/proc.c
+@@ -139,6 +139,8 @@ static void *proc_keys_next(struct seq_f
+ 	n = key_serial_next(p, v);
+ 	if (n)
+ 		*_pos = key_node_serial(n);
++	else
++		(*_pos)++;
+ 	return n;
+ }
  
--- 
-2.7.4
+
 
