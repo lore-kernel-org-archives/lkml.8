@@ -2,186 +2,68 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3C7C38A30
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F21DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1004B20BED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:43:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jQBTeSx5"
+	by mail.kernel.org (Postfix) with ESMTP id 49D16206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgDTRnn (ORCPT
+        id S1726945AbgDTRnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:43:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726752AbgDTRnk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:43:40 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712F5C061A41
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 10:43:40 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id my1so214980pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 10:43:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UbWvOzsjdwKmCuURzqakr712Hwz970Vkw5PGIrntIJg=;
-        b=jQBTeSx5RVM7KT1U22GJEb3DH2uZPfcy8Q8n8Z4yMQbR4xX77sT7UNorH68BHXQklv
-         iqyP+lyhtbiw1Z8E6mrIAOVUfrKDbExPTw1eCNreicq7+fmKaKDC0t3L5Z68emnhhiQY
-         F68qqIHfXsfIWhK8AMTQ6lJSl/wFSmFVqe+Fs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UbWvOzsjdwKmCuURzqakr712Hwz970Vkw5PGIrntIJg=;
-        b=ijRfv/DGeUW0uBuMhM7vGZuud0FQVBUofQhWQSYpHOppsOmSBVGeXgV+LRjYuDZ4f3
-         x8u/PS9u3KN3v33fkQ0BppsZobfP+aY/JnWUdPSodc8VZxWx/oL1Vd5ICy7q/rwz99vR
-         xP8ANDAqMOdHxWc26kO36yvDUt5CdB2QOy/gM9kvfU0mAMa8O5N8iO725ijOhLF+Y0/R
-         UEPpv2EFq4U3oFRioU38OFZn/YsoDyHqgafFKi5ih2RnpZN0asLGVOi3sK/DMKSWObdT
-         vJ7nginNvK7oFRG/5HNhunbbEJ0q7c3osnNqg9wFSRwFRkNhlR9RV83yILaciLHjj9lq
-         ywLQ==
-X-Gm-Message-State: AGi0PubkxoI1MpBAvoPLbMV/xskdA7ZytdnEFTm3Fhe2u8ZWBEpjRy9l
-        6rFbc4w4GJv4rs6dAjHLDdVK4w==
-X-Google-Smtp-Source: APiQypLBX8wx/oUkDoqkb/2Bm8ippA2jak1OrscI29iIv8/MVYRimaZ8XN8jTccr1R5iuIwy3W5LTA==
-X-Received: by 2002:a17:902:6b01:: with SMTP id o1mr18181334plk.100.1587404619781;
-        Mon, 20 Apr 2020 10:43:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v26sm106522pff.45.2020.04.20.10.43.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 10:43:38 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 10:43:37 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christopher Lameter <cl@linux.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        David Windsor <dave@nullcore.net>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-xfs@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Christoffer Dall <christoffer.dall@linaro.org>,
-        Dave Kleikamp <dave.kleikamp@oracle.com>,
-        Jan Kara <jack@suse.cz>,
-        Luis de Bethencourt <luisbg@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rik van Riel <riel@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Michal Kubecek <mkubecek@suse.cz>
-Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches
- as usercopy caches
-Message-ID: <202004201043.538A7B3F2@keescook>
-References: <5861936c-1fe1-4c44-d012-26efa0c8b6e7@de.ibm.com>
- <202001281457.FA11CC313A@keescook>
- <alpine.DEB.2.21.2001291640350.1546@www.lameter.com>
- <6844ea47-8e0e-4fb7-d86f-68046995a749@de.ibm.com>
- <20200129170939.GA4277@infradead.org>
- <771c5511-c5ab-3dd1-d938-5dbc40396daa@de.ibm.com>
- <202001300945.7D465B5F5@keescook>
- <CAG48ez1a4waGk9kB0WLaSbs4muSoK0AYAVk8=XYaKj4_+6e6Hg@mail.gmail.com>
- <7d810f6d-8085-ea2f-7805-47ba3842dc50@suse.cz>
- <548e6212-7b3c-5925-19f2-699af451fd16@suse.cz>
+        Mon, 20 Apr 2020 13:43:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:52850 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbgDTRnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:43:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE4A231B;
+        Mon, 20 Apr 2020 10:43:44 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46F603F73D;
+        Mon, 20 Apr 2020 10:43:43 -0700 (PDT)
+References: <cover.1587393807.git.yu.c.chen@intel.com> <34d7c9496b77c928fcbe6085213115bd4d48d5a2.1587393807.git.yu.c.chen@intel.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2][v2] sched: Make newidle_balance() static again
+In-reply-to: <34d7c9496b77c928fcbe6085213115bd4d48d5a2.1587393807.git.yu.c.chen@intel.com>
+Date:   Mon, 20 Apr 2020 18:43:37 +0100
+Message-ID: <jhjzhb6kq7q.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <548e6212-7b3c-5925-19f2-699af451fd16@suse.cz>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 09:53:20AM +0200, Jiri Slaby wrote:
-> On 07. 04. 20, 10:00, Vlastimil Babka wrote:
-> > From d5190e4e871689a530da3c3fd327be45a88f006a Mon Sep 17 00:00:00 2001
-> > From: Vlastimil Babka <vbabka@suse.cz>
-> > Date: Tue, 7 Apr 2020 09:58:00 +0200
-> > Subject: [PATCH] usercopy: Mark dma-kmalloc caches as usercopy caches
-> > 
-> > We have seen a "usercopy: Kernel memory overwrite attempt detected to SLUB
-> > object 'dma-kmalloc-1 k' (offset 0, size 11)!" error on s390x, as IUCV uses
-> > kmalloc() with __GFP_DMA because of memory address restrictions.
-> > The issue has been discussed [2] and it has been noted that if all the kmalloc
-> > caches are marked as usercopy, there's little reason not to mark dma-kmalloc
-> > caches too. The 'dma' part merely means that __GFP_DMA is used to restrict
-> > memory address range.
-> > 
-> > As Jann Horn put it [3]:
-> > 
-> > "I think dma-kmalloc slabs should be handled the same way as normal
-> > kmalloc slabs. When a dma-kmalloc allocation is freshly created, it is
-> > just normal kernel memory - even if it might later be used for DMA -,
-> > and it should be perfectly fine to copy_from_user() into such
-> > allocations at that point, and to copy_to_user() out of them at the
-> > end. If you look at the places where such allocations are created, you
-> > can see things like kmemdup(), memcpy() and so on - all normal
-> > operations that shouldn't conceptually be different from usercopy in
-> > any relevant way."
-> > 
-> > Thus this patch marks the dma-kmalloc-* caches as usercopy.
-> > 
-> > [1] https://bugzilla.suse.com/show_bug.cgi?id=1156053
-> > [2] https://lore.kernel.org/kernel-hardening/bfca96db-bbd0-d958-7732-76e36c667c68@suse.cz/
-> > [3] https://lore.kernel.org/kernel-hardening/CAG48ez1a4waGk9kB0WLaSbs4muSoK0AYAVk8=XYaKj4_+6e6Hg@mail.gmail.com/
-> > 
-> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> 
-> Friendly ping.
-> 
-> Acked-by: Jiri Slaby <jslaby@suse.cz>
 
-Should this go via -mm?
+On 20/04/20 16:01, Chen Yu wrote:
+> After Commit 6e2df0581f56 ("sched: Fix pick_next_task() vs 'change'
+> pattern race"), there is no need to expose newidle_balance() as it
+> is only used within fair.c file. Change this function back to static again.
+>
+> No functional change.
+>
 
--Kees
+That derelict 'idle_balance()' is a funny one.
 
-> 
-> > ---
-> >  mm/slab_common.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/slab_common.c b/mm/slab_common.c
-> > index 5282f881d2f5..ae9486160594 100644
-> > --- a/mm/slab_common.c
-> > +++ b/mm/slab_common.c
-> > @@ -1303,7 +1303,8 @@ void __init create_kmalloc_caches(slab_flags_t flags)
-> >  			kmalloc_caches[KMALLOC_DMA][i] = create_kmalloc_cache(
-> >  				kmalloc_info[i].name[KMALLOC_DMA],
-> >  				kmalloc_info[i].size,
-> > -				SLAB_CACHE_DMA | flags, 0, 0);
-> > +				SLAB_CACHE_DMA | flags, 0,
-> > +				kmalloc_info[i].size);
-> >  		}
-> >  	}
-> >  #endif
-> > 
-> 
-> thanks,
-> -- 
-> js
-> suse labs
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
 
--- 
-Kees Cook
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> ---
+> v2: Rename the remaining idle_balance() to newidle_balance()
+>     to fix an compile error when CONFIG_SMP is not set.
