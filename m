@@ -2,56 +2,71 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C77C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5C0C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 171D420B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4988120857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="wOR1An62"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSSpQWTq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgDTNqs (ORCPT
+        id S1728624AbgDTNqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:46:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42622 "EHLO
+        Mon, 20 Apr 2020 09:46:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726845AbgDTNqs (ORCPT
+        by vger.kernel.org with ESMTP id S1726307AbgDTNqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:46:48 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E863CC061A0C;
-        Mon, 20 Apr 2020 06:46:47 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 550A420CDB;
-        Mon, 20 Apr 2020 13:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587390407; bh=e4TY+GCk2Ucsw3BDFnVc289FhHp/EOQdRohUPJEc2V8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wOR1An62VbncU0CYW2EAw5uFVILzJ6aK7EWmFNrlxIt7UpuJ0zyJgKQb/u+1ZpXFM
-         b7aktSdXpjWh1rIoZQN36L7XIyvn4KSnoCm3scMkYMETVysA965VfcdByYQy4RgPPd
-         Zi7oGcJ1QHhkkbosMZyH0Cdr+BfQI2tePms878XWiTYEdOa5lzUYXp58Pq9xUzkLdL
-         /TDxdOThySpGXqV3MNJCK8BYiCc+DS8GkCHIfOraRUD++s/WAyCxazH3pJCCkRyaEx
-         KsafmJcxCEfNdPsY/+UKSx8U8wukUc0I7kpOVRE4PXpBi4KSDiWUNS0b2TUpTm/XX9
-         CpN8ONb3t2VXw==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/5] MIPS: DTS: Loongson64: Add ACPI Controller Node
-Date:   Mon, 20 Apr 2020 21:45:28 +0800
-Message-Id: <20200420134536.210475-4-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200420134536.210475-1-jiaxun.yang@flygoat.com>
-References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
- <20200420134536.210475-1-jiaxun.yang@flygoat.com>
+        Mon, 20 Apr 2020 09:46:52 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32EA1C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:46:52 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t40so4445542pjb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oVXo0ylRGYJ4zwuQfXiYyJn0JMdjSeEuDU/G14GSpRI=;
+        b=aSSpQWTqjHFqwRMNUGZzpNFg6nXaNN4W/AGY722ZMQ1vLO/09Mhj1CKZdp8tmcqpC6
+         S6NPwmSWHlUo1sM5YUo6eoe987jgRFw8NBYN4cvzZrg6z6zm9EVFKvIPnFTSgJt8GkMP
+         5J2TYhrpdG8fUkikFoHMfSEDcBqnOsTsXlP0ox66vBtXZVkzz7i4LFOCg5LoOaPF08MN
+         5UU5FZRP04YXxxCaUNx6eNoXLoHQ+HWUhR4/+ulaNM52VAot1LkCEaFbpD3RLhEacQyv
+         +3JcRRJvBATQLzZRF4p2b0f+iGlYo1v3S4daLCy2IsKfCznN/pyDCsplt+k39+VYwIYj
+         KGIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oVXo0ylRGYJ4zwuQfXiYyJn0JMdjSeEuDU/G14GSpRI=;
+        b=IJ6ODd74yBPrCCBkdNflYp15eNOa9sxXHbbZkO6Ba/Vw9zaSPNfxcdBkFBdoW1UIJH
+         nX200S9xXABsg4c3sgTYGaO1l3w4nrSPQ9z9vYEM7JTO1sNpYZJqXXqe487/k7+e37dQ
+         QN60P3C0PVlpcgAXZccWDwGn4m8wocm1WSXYo6A1/gRFkFBYCzJcY2wXePcqNymYlpQA
+         ALf7GfpkgMYTskIs3sUHCzAe/NlLYAWuo9Zg0jgfCqXiHCTbX0tNxntZt62E/XCLlQNO
+         Jf1uBxSni/BNwES3kbTtr8zZd5+skv68cd4TwWJ5X4OExruWIJhprsDDUi6/Aymmx/Jc
+         qiew==
+X-Gm-Message-State: AGi0PublHvS2/Uj4vOtOOe1fa1yxDtcCs4jcf1OuMNEwHGadVYjExp1c
+        sBuRRHxMhWzlLRhZ3QCpbmJjoeOs
+X-Google-Smtp-Source: APiQypLfKCWIfDLE5D9Ilqwo6/7gH0ofgASq9lgw+gOe9g3kSwo9GM6we80kF/99uNBWGFZZWsAywQ==
+X-Received: by 2002:a17:90a:9a89:: with SMTP id e9mr22316534pjp.108.1587390411732;
+        Mon, 20 Apr 2020 06:46:51 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id 135sm1154133pfx.58.2020.04.20.06.46.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Apr 2020 06:46:51 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     broonie@kernel.org
+Cc:     Markus.Elfring@web.de, linux-kernel@vger.kernel.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v2 0/2] use read_poll_timeout macro to simplify code
+Date:   Mon, 20 Apr 2020 21:46:45 +0800
+Message-Id: <20200420134647.9121-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,29 +74,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ACPI Controller Node for RS780E PCH to fit newly added driver.
+Simplify implementation of regmap_read_poll_timeout() macro and
+regmap_field_read_poll_timeout by read_poll_timeout() macro, they have
+many similar codes.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+v1 -> v2:
+	- modify the commit comments by Markus's suggestion .
 
-diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-index 45c54d555fa4..8687c4f7370a 100644
---- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-+++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-@@ -21,6 +21,11 @@ rtc0: rtc@70 {
- 				interrupts = <8>;
- 				interrupt-parent = <&htpic>;
- 			};
-+
-+			acpi@800 {
-+				compatible = "loongson,rs780e-acpi";
-+				reg = <1 0x800 0x100>;
-+			};
- 		};
- 	};
- };
+Dejin Zheng (2):
+  regmap: Simplify implementation of the regmap_read_poll_timeout()
+    macro
+  regmap: Simplify implementation of the
+    regmap_field_read_poll_timeout() macro
+
+ include/linux/regmap.h | 48 ++++++++----------------------------------
+ 1 file changed, 9 insertions(+), 39 deletions(-)
+
 -- 
-2.26.0.rc2
+2.25.0
 
