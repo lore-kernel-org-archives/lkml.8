@@ -6,73 +6,53 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DCEC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF43C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A622080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3954720BED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgDTH1p (ORCPT
+        id S1726325AbgDTH1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:27:45 -0400
-Received: from elvis.franken.de ([193.175.24.41]:47920 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726262AbgDTH1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 03:27:44 -0400
+Received: from elvis.franken.de ([193.175.24.41]:47917 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726081AbgDTH1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 03:27:42 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jQQqA-00070o-03; Mon, 20 Apr 2020 09:27:38 +0200
+        id 1jQQqA-00070o-00; Mon, 20 Apr 2020 09:27:38 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 55A92C0181; Mon, 20 Apr 2020 09:20:36 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 09:20:36 +0200
+        id 20AE4C0170; Mon, 20 Apr 2020 09:02:05 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 09:02:05 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: Re: [PATCH v8 7/7] MIPS: DTS: CI20: make DM9000 Ethernet controller
- use NVMEM to find the default MAC address
-Message-ID: <20200420072036.GD4627@alpha.franken.de>
-References: <cover.1582905653.git.hns@goldelico.com>
- <1250f496a1f0bd51e89e5a1ba7a3e92a5570b27a.1582905653.git.hns@goldelico.com>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     afzal.mohd.ma@gmail.com, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] MIPS: Netlogic: remove unneeded semicolon in
+ fmn_message_handler()
+Message-ID: <20200420070205.GA4627@alpha.franken.de>
+References: <20200418081834.41152-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1250f496a1f0bd51e89e5a1ba7a3e92a5570b27a.1582905653.git.hns@goldelico.com>
+In-Reply-To: <20200418081834.41152-1-yanaijie@huawei.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 05:00:53PM +0100, H. Nikolaus Schaller wrote:
-> There is a unique MAC address programmed into the eFuses
-> of the JZ4780 chip in the CI20 factory. By using this
-> for initializing the DM9000 Ethernet controller, every
-> CI20 board has an individual - but stable - MAC address
-> and DHCP can assign stable IP addresses.
+On Sat, Apr 18, 2020 at 04:18:34PM +0800, Jason Yan wrote:
+> Fix the following coccicheck warning:
 > 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> arch/mips/netlogic/xlr/fmn.c:106:2-3: Unneeded semicolon
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 > ---
->  arch/mips/boot/dts/ingenic/ci20.dts | 3 +++
->  1 file changed, 3 insertions(+)
+>  arch/mips/netlogic/xlr/fmn.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 applied to mips-next.
 
