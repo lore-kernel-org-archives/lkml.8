@@ -2,229 +2,139 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B070CC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F209C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88CBE2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB0E21D79
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:05:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qPMKe74A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PuBYdETi";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Emo7IH+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgDTHEq (ORCPT
+        id S1726228AbgDTHFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726023AbgDTHEq (ORCPT
+        Mon, 20 Apr 2020 03:05:06 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:21968 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgDTHFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:04:46 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EE0C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:04:45 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p8so4602947pgi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:04:45 -0700 (PDT)
+        Mon, 20 Apr 2020 03:05:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1587366306; x=1618902306;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=PdozEzjWpfuNB5nF6LcsNt6jxdbBBUR0Q5y4dibA62A=;
+  b=PuBYdETiB7NVFowDSSltnM8QbQ8C61hfvaQ7CJSlxMOMveMmcvX7/StE
+   DnmuaIhzggiHE9Ogz3kKS4KNQ/Bt5Ibt6JxcEAg6PbgWTCoPImUl52zg7
+   GS+81u1WqZJEoKQBBv7HpN3oRzMmj98tpDMro4kJLXgVuyClIX6DycUwk
+   amN3ht2SzjbdETXqAmkR02wGhcXV1TsEnesARW5QZ99noV4DU3TfKET9L
+   bcdUe5kVFOH1rRBDTX47c3b2i4/82wc9jDWHKgc0UxIK5PksVo7pmWkkq
+   GHa/91O2SDp6TitV+seLqWGuNWUiqSWd22QPLxjQIlGcSpO3s89+mQd/c
+   Q==;
+IronPort-SDR: s00gY0LB4BjGRdqARXFlhIDjo14bnCkU0nAFhVytjZe76HTt6rrFg8i8pPyP2DdGSevFgkV1DH
+ IUVs4Z1bRxB9+e36iVcWC7YlY/2wqa3nD/lnRKlI3pnqVRS0uKxDeh0fYvQugqtf6e/mxH+pY1
+ 5nzaUraIX93tMRZER8xJ0S9R/IWURSwmn4mldZAB+XuPdw9D0QZMaa97AW8hzfKntxqHNBvgye
+ i4ROpabGaFIdUoTwkjsGUsGYpwaui+ir3HUXf9C7xpfiVJTsdxO0uzxDB16uvu2G1yRdBkrtKn
+ cUU=
+X-IronPort-AV: E=Sophos;i="5.72,406,1580745600"; 
+   d="scan'208";a="137118302"
+Received: from mail-bn8nam11lp2171.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.171])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Apr 2020 15:05:04 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kY7uZrlZMmE8Vq9jUTlcuTdxV+X0GTzfTwl1nFsUeN5GXwO/B6XG4Iq0cNB26BQpawxs+8Yd2rPit1hYlrjY93hOR8q8ZHgrgly7mktaGIoRHn34QG8BSQ28ylgraO9ZDGToDZuPprdCBr4M7YeQLaiWo4ZgrR+MFY7BFfNQXqATVFIZBS+IGLFpICpDzlMQONzbHSWreK0Lhg0AVfCwDSk3bwhsqs7EzlXljsr8hktAX3j52VbTnN5DNwgwn+9dtYgyWgSpB2oJLk3FalIUJzvHuS8oyRC+Q0rlN2XGcpzHc2Xz/jYCaClfw8rkDH1zgRdfEYGO/RLRT5ti0e4HkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PdozEzjWpfuNB5nF6LcsNt6jxdbBBUR0Q5y4dibA62A=;
+ b=V8YQZrP0/d9lqXFr7VM6eYrtEVt60ptLyhhJ2l9hUkUnAhxxpYiTj3KhyJwbm9vYXd7idT/aQJuNrmrlzWXMEk6gpBRcXWiFnOuGyaDQBqw/99kDZ6iRPFTuaDIJOx5Dy6GQWsMT4W8/6skN7qMcKqCYhpQr0OvNYof2W+GVgZqrUx2wK7NjrRa62yEzmCZSrOBRVc68war2JqDQ7JOUBwnnqezsIXe32Vm6jy/GgRAXdscOv1u2NczNW38irarME4XoOVSkp0TWoFcXUvYS677lqoM6XIWaOGhXN4DrR9Z0TIfOALzkbCY08G4rKzmbnkWv/xdhrj4EbVO0/aPzzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=s11JGkMo64bkJfoSlJ3gamPmjiZWAtO5TwTvV1WpWbE=;
-        b=qPMKe74Axz3iuvAgEm5PUFr0JEzorHbSLpp+t8fsBt4zWIqblwuGPlrPdfbH6ynq+v
-         k6BnEAr7JShE83PlTATp+w5cvsu+xYZ/tiNArEksPm3hswP5df/tqzSxdiOv84S4QsHb
-         f9ytGiOWi2JvmqB9UnEjQJpi122Ewhr+DANygi5JPA2tmijZEM6/c8sIFmxgU4zO4inX
-         1rnYKlj3GulChVuLX1GF9DOpMB2e3GJ+/LNoGikipve+CdFGffqdFwVlnlR+t2QnaY7B
-         pT01gl9peG3qmgQkMCHHq0Lpa9csFASI87dKS8dfaYkXbX/+RJzg45FBbCGqpYIEm5TU
-         3gaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=s11JGkMo64bkJfoSlJ3gamPmjiZWAtO5TwTvV1WpWbE=;
-        b=RjaTdO1Wz12Tw8Kfd4Ri9G75Ff8JX6FWqXuH/csoCCsvtt4Hr2WTM7TSOzwlltxAyt
-         oJFIDEg3McszyHb2a5/xr46T5j5DQ9FvTXcSF4ScH8Qttl1lGBSbYkEBESHUSdSbK0NG
-         KmEs1/E1Pq3ah7552DJqXcJmRl/Y8m0neXE5wtPFC2VAt9lK9BNrV/CyVLvXV6Y3ShE0
-         XJgRFzZlTANGJ/SdfJripbwVHsPqCZ7zfzJQRJWskGt2PyPer5ovewg6JMYM3TPScrvm
-         2h+/HgjuaMYFUdFu7r3v1gBWcftVRBjPFAUNviFrFYb910DN5pFpBh2glqx+iqfYOjP8
-         wR+g==
-X-Gm-Message-State: AGi0PuZdinsRHAji0tRbHq6175rm2dWZsNkQ+vtnHHspe5QC27dsznd2
-        STgfsB8hzwFzg54EVI5R+KojK/oVQWU=
-X-Google-Smtp-Source: APiQypKMKQQMJ6nKIy3wz/SKsVsP3OHHyydE/bozdcBab+k1rAjW8UgKZf3BSB7G8kadD+FVNopaMQ==
-X-Received: by 2002:a05:6a00:2cb:: with SMTP id b11mr15087011pft.42.1587366285066;
-        Mon, 20 Apr 2020 00:04:45 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a22sm159630pfg.169.2020.04.20.00.04.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 00:04:44 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 00:05:07 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     agross@kernel.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org
-Subject: Re: [PATCH v2 1/6] remoteproc: sysmon: Add ability to send type of
- notification
-Message-ID: <20200420070507.GD1868936@builder.lan>
-References: <1586389003-26675-1-git-send-email-sidgup@codeaurora.org>
- <1586389003-26675-2-git-send-email-sidgup@codeaurora.org>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PdozEzjWpfuNB5nF6LcsNt6jxdbBBUR0Q5y4dibA62A=;
+ b=Emo7IH+nanzSNWSq7qhDlzsDPcPorPTvje1uzADRhDt9I+YlwvrqzklDg+5UA0fQuyWOTwV4ZJOVUNXjt7hvehlFBBX6pfNILpQ8/+begpLZFMzRzxJ7RPc7aawLEcnaVXbDHYdcPz7HI9aIomgAtY3D0kikCaW1DLIjAJYRvUk=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4446.namprd04.prod.outlook.com (2603:10b6:805:3c::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Mon, 20 Apr
+ 2020 07:05:02 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
+ 07:05:02 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        "robh@kernel.org" <robh@kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "kwmad.kim@samsung.com" <kwmad.kim@samsung.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v6 02/10] scsi: ufs: add quirk to disallow reset of
+ interrupt aggregation
+Thread-Topic: [PATCH v6 02/10] scsi: ufs: add quirk to disallow reset of
+ interrupt aggregation
+Thread-Index: AQHWFONzXdOgIo5A50O86TEJk9mR2aiBmfhQ
+Date:   Mon, 20 Apr 2020 07:05:02 +0000
+Message-ID: <SN6PR04MB4640A97F3BF5F2073878312FFCD40@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200417175944.47189-1-alim.akhtar@samsung.com>
+        <CGME20200417181010epcas5p23cb018eee5b7ae0eba87d81dbaaec3ce@epcas5p2.samsung.com>
+ <20200417175944.47189-3-alim.akhtar@samsung.com>
+In-Reply-To: <20200417175944.47189-3-alim.akhtar@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c7940835-31ba-4a31-5585-08d7e4f925b3
+x-ms-traffictypediagnostic: SN6PR04MB4446:
+x-microsoft-antispam-prvs: <SN6PR04MB4446F7F3750D2D48FEBD7DA6FCD40@SN6PR04MB4446.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 03793408BA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(376002)(136003)(396003)(39860400002)(346002)(66946007)(76116006)(66476007)(66556008)(64756008)(66446008)(5660300002)(186003)(81156014)(8676002)(52536014)(33656002)(8936002)(478600001)(26005)(6506007)(86362001)(558084003)(7696005)(9686003)(54906003)(7416002)(316002)(55016002)(2906002)(71200400001)(110136005)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: v00E52I/NyrDU5RxMQqDSZjyoEYPyg9E8fWKXnkHfUFTpUFFRLW1CIyrU+aUZ1r6UAL+CT305GPdN07YvcZrnEJ7PWa8LZRSXYc/AyM7Y96y15CjJJ28W8WxiFo1w8ogy8+f02RWGO+IpYarY9xVMXqpix/KH7liy7RRcTQ/7Aac5RUho0Ir8lKlVhIP8Lq5sDy04+7QwpnRg+7a09bTniazR0+WwkiX6AyiI/mZ/AQdLTdT7aZQIaD44JUBd/j64GnKqBR2HeE9UBj6fkpOO8lpH6a7N4QP0++Bb+j/V65KQPH2N6kOgRAzT06306+AN9pf9fkhFta2Zsk1jN2NeeMODEDEDrrHs6l7noVAZTfR7ICL/APYRdDVyYecF++VRCZ7vfeo7qyrbEd55gpW7r1FLh9xkIT6OBKgd858G0cHpVdpJ+Rrr7ulHWgEdRdm
+x-ms-exchange-antispam-messagedata: pYMiUMy5wKhkrFi8gPL0um1NWvQ0SwksVMjAFfE503EwPF3zE9gKLlip2IXtUbFSQMB9W1jZ+tGnYwKB3k9ynmdQKMMpUvN3iMy11YF64sedv+rABrRrvkHDTiUBWHL19DsQ+zI26Th3S/ja4avcfw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586389003-26675-2-git-send-email-sidgup@codeaurora.org>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7940835-31ba-4a31-5585-08d7e4f925b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 07:05:02.5744
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eidFk0tU/s77f1xNRl5QS/nRE0KXTbBJ3zfeZDa7PCbQYNbz9ecuMQi5k5YOov1ltAKY0wpdxhvNEfreyVZBzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4446
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 08 Apr 16:36 PDT 2020, Siddharth Gupta wrote:
-
-> Current implementation of the sysmon driver does not support adding
-> notifications for other remoteproc events - prepare, start, unprepare.
-> Clients on the remoteproc side might be interested in knowing when a
-> remoteproc boots up. This change adds the ability to send the notification
-> type along with the name. For example, audio DSP is interested in knowing
-> when modem has crashed so that it can perform cleanup and wait for modem to
-> boot up before it starts processing data again.
-> 
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
->  drivers/remoteproc/qcom_sysmon.c | 54 +++++++++++++++++++++++++++-------------
->  1 file changed, 37 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_sysmon.c b/drivers/remoteproc/qcom_sysmon.c
-> index faf3822..1366050 100644
-> --- a/drivers/remoteproc/qcom_sysmon.c
-> +++ b/drivers/remoteproc/qcom_sysmon.c
-> @@ -46,6 +46,25 @@ struct qcom_sysmon {
->  	struct sockaddr_qrtr ssctl;
->  };
->  
-> +enum {
-> +	SSCTL_SSR_EVENT_BEFORE_POWERUP,
-> +	SSCTL_SSR_EVENT_AFTER_POWERUP,
-> +	SSCTL_SSR_EVENT_BEFORE_SHUTDOWN,
-> +	SSCTL_SSR_EVENT_AFTER_SHUTDOWN,
-> +};
-> +
-> +static const char * const sysmon_state_string[] = {
-> +	[SSCTL_SSR_EVENT_BEFORE_POWERUP]	= "before_powerup",
-> +	[SSCTL_SSR_EVENT_AFTER_POWERUP]		= "after_powerup",
-> +	[SSCTL_SSR_EVENT_BEFORE_SHUTDOWN]	= "before_shutdown",
-> +	[SSCTL_SSR_EVENT_AFTER_SHUTDOWN]	= "after_shutdown",
-> +};
-> +
-> +struct sysmon_event {
-> +	const char *subsys_name;
-> +	u32 ssr_event;
-> +};
-> +
->  static DEFINE_MUTEX(sysmon_lock);
->  static LIST_HEAD(sysmon_list);
->  
-> @@ -54,13 +73,15 @@ static LIST_HEAD(sysmon_list);
->   * @sysmon:	sysmon context
->   * @name:	other remote's name
->   */
-> -static void sysmon_send_event(struct qcom_sysmon *sysmon, const char *name)
-> +static void sysmon_send_event(struct qcom_sysmon *sysmon,
-> +			      const struct sysmon_event *event)
->  {
->  	char req[50];
->  	int len;
->  	int ret;
->  
-> -	len = snprintf(req, sizeof(req), "ssr:%s:before_shutdown", name);
-> +	len = snprintf(req, sizeof(req), "ssr:%s:%s", event->subsys_name,
-> +		       sysmon_state_string[event->ssr_event]);
->  	if (len >= sizeof(req))
->  		return;
->  
-> @@ -149,13 +170,6 @@ static int sysmon_callback(struct rpmsg_device *rpdev, void *data, int count,
->  #define SSCTL_SUBSYS_NAME_LENGTH	15
->  
->  enum {
-> -	SSCTL_SSR_EVENT_BEFORE_POWERUP,
-> -	SSCTL_SSR_EVENT_AFTER_POWERUP,
-> -	SSCTL_SSR_EVENT_BEFORE_SHUTDOWN,
-> -	SSCTL_SSR_EVENT_AFTER_SHUTDOWN,
-> -};
-> -
-> -enum {
->  	SSCTL_SSR_EVENT_FORCED,
->  	SSCTL_SSR_EVENT_GRACEFUL,
->  };
-> @@ -331,7 +345,8 @@ static void ssctl_request_shutdown(struct qcom_sysmon *sysmon)
->   * @sysmon:	sysmon context
->   * @name:	other remote's name
->   */
-> -static void ssctl_send_event(struct qcom_sysmon *sysmon, const char *name)
-> +static void ssctl_send_event(struct qcom_sysmon *sysmon,
-> +			     const struct sysmon_event *event)
->  {
->  	struct ssctl_subsys_event_resp resp;
->  	struct ssctl_subsys_event_req req;
-> @@ -346,9 +361,9 @@ static void ssctl_send_event(struct qcom_sysmon *sysmon, const char *name)
->  	}
->  
->  	memset(&req, 0, sizeof(req));
-> -	strlcpy(req.subsys_name, name, sizeof(req.subsys_name));
-> +	strlcpy(req.subsys_name, event->subsys_name, sizeof(req.subsys_name));
->  	req.subsys_name_len = strlen(req.subsys_name);
-> -	req.event = SSCTL_SSR_EVENT_BEFORE_SHUTDOWN;
-> +	req.event = event->ssr_event;
->  	req.evt_driven_valid = true;
->  	req.evt_driven = SSCTL_SSR_EVENT_FORCED;
->  
-> @@ -432,8 +447,12 @@ static int sysmon_start(struct rproc_subdev *subdev)
->  static void sysmon_stop(struct rproc_subdev *subdev, bool crashed)
->  {
->  	struct qcom_sysmon *sysmon = container_of(subdev, struct qcom_sysmon, subdev);
-> +	struct sysmon_event event = {
-> +		.subsys_name = sysmon->name,
-> +		.ssr_event = SSCTL_SSR_EVENT_BEFORE_SHUTDOWN
-> +	};
->  
-> -	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)sysmon->name);
-> +	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)&event);
->  
->  	/* Don't request graceful shutdown if we've crashed */
->  	if (crashed)
-> @@ -456,19 +475,20 @@ static int sysmon_notify(struct notifier_block *nb, unsigned long event,
->  {
->  	struct qcom_sysmon *sysmon = container_of(nb, struct qcom_sysmon, nb);
->  	struct rproc *rproc = sysmon->rproc;
-> -	const char *ssr_name = data;
-> +	struct sysmon_event *sysmon_event = data;
->  
->  	/* Skip non-running rprocs and the originating instance */
-> -	if (rproc->state != RPROC_RUNNING || !strcmp(data, sysmon->name)) {
-> +	if (rproc->state != RPROC_RUNNING ||
-> +	    !strcmp(sysmon_event->subsys_name, sysmon->name)) {
->  		dev_dbg(sysmon->dev, "not notifying %s\n", sysmon->name);
->  		return NOTIFY_DONE;
->  	}
->  
->  	/* Only SSCTL version 2 supports SSR events */
->  	if (sysmon->ssctl_version == 2)
-> -		ssctl_send_event(sysmon, ssr_name);
-> +		ssctl_send_event(sysmon, sysmon_event);
->  	else if (sysmon->ept)
-> -		sysmon_send_event(sysmon, ssr_name);
-> +		sysmon_send_event(sysmon, sysmon_event);
->  
->  	return NOTIFY_DONE;
->  }
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+PiANCj4gU29tZSBob3N0IGNvbnRyb2xsZXJzIHN1cHBvcnQgaW50ZXJydXB0IGFnZ3JlZ2F0aW9u
+IGJ1dCBkb24ndCBhbGxvdw0KPiByZXNldHRpbmcgY291bnRlciBhbmQgdGltZXIgaW4gc29mdHdh
+cmUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBTZXVuZ3dvbiBKZW9uIDxlc3N1dWpAZ21haWwuY29t
+Pg0KPiBTaWduZWQtb2ZmLWJ5OiBBbGltIEFraHRhciA8YWxpbS5ha2h0YXJAc2Ftc3VuZy5jb20+
+DQpSZXZpZXdlZC1ieTogQXZyaSBBbHRtYW4gPGF2cmkuYWx0bWFuQHdkYy5jb20+DQo=
