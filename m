@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C26C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C008C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14912206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4BF20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386483;
-	bh=V/ZN3Ej+8SKU++Q6XvBMg7H0P2XI5oeoKBlKbwFpLp4=;
+	s=default; t=1587386487;
+	bh=wVsjuW5qeAGCM3ngUkESGHskmplY5sshpRswX7BlpvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J5PT3t4MR07TIpcD8IdyL4ji1cb5PaKigkxHoXijfFtn0+YeMB4S1Zt5DElVYuLdD
-	 olzoNnI7lNRPLZe4paqGqdlfv/WzP1K6No6+VVQTGN8rd6cwXrcfCAYgcXWRAICBfh
-	 sBMP8KKmezBKrYZNnwIz14EID32HdM0ROI4MDfhw=
+	b=kGnbuC5xoq/PQRpw9bpoPYg6jAuakWjeIU3erse0lncoEgnYI1e7mhdsYN3/sIqAh
+	 SqmvTNLq7rn7s4dnXHZixaKh2s68c9yVxzuczDWBghQFrx5DOf5mYcHwrfGSlF9LNf
+	 5O2tlcwsdLdzCGJUZRSxbDIeKJyDBYA1Ba0QdmRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgDTMlW (ORCPT
+        id S1726864AbgDTMl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:41:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33946 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:41:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727962AbgDTMlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:41:17 -0400
+        id S1728009AbgDTMlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:41:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6730320747;
-        Mon, 20 Apr 2020 12:41:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CFE82070B;
+        Mon, 20 Apr 2020 12:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386476;
-        bh=V/ZN3Ej+8SKU++Q6XvBMg7H0P2XI5oeoKBlKbwFpLp4=;
+        s=default; t=1587386481;
+        bh=wVsjuW5qeAGCM3ngUkESGHskmplY5sshpRswX7BlpvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nnjWeNGVydYRtvjmKOldrpHEVv8s/nNiadDaHH+f33lKBUI6BO9F52QQ59GryAoqQ
-         IZkMtm4PTLOxsi2c8JXRAdxmXTLUApgFxW9B4qLvX8MAP+G9IINNTnzxlzjCeZIJ52
-         nT7hFZpSWNnH781vLrsXCsY20QIJqh2X1mKQOjIQ=
+        b=EUFBj+aQC2WPpvukqx6QYDhu+IsZTyMjJkItW7XKn7K4beLBJoogI6bKdQmAPFtLY
+         TfTgm+0q3/aQOPnjfhC7gfneO9nYf17Kv30mgSUlTnHG1tEudZ3wE/3esGNUHpC3sE
+         yRHe428nhe6eMifFETtasAK+wjKfM2Belkn6pkaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, DENG Qingfang <dqfext@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+        stable@vger.kernel.org, Tim Stallard <code@timstallard.me.uk>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 04/65] net: dsa: mt7530: fix tagged frames pass-through in VLAN-unaware mode
-Date:   Mon, 20 Apr 2020 14:38:08 +0200
-Message-Id: <20200420121507.311750766@linuxfoundation.org>
+Subject: [PATCH 5.5 06/65] net: ipv6: do not consider routes via gateways for anycast address check
+Date:   Mon, 20 Apr 2020 14:38:10 +0200
+Message-Id: <20200420121508.076959889@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -61,91 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: DENG Qingfang <dqfext@gmail.com>
+From: Tim Stallard <code@timstallard.me.uk>
 
-[ Upstream commit e045124e93995fe01e42ed530003ddba5d55db4f ]
+[ Upstream commit 03e2a984b6165621f287fadf5f4b5cd8b58dcaba ]
 
-In VLAN-unaware mode, the Egress Tag (EG_TAG) field in Port VLAN
-Control register must be set to Consistent to let tagged frames pass
-through as is, otherwise their tags will be stripped.
+The behaviour for what is considered an anycast address changed in
+commit 45e4fd26683c ("ipv6: Only create RTF_CACHE routes after
+encountering pmtu exception"). This now considers the first
+address in a subnet where there is a route via a gateway
+to be an anycast address.
 
-Fixes: 83163f7dca56 ("net: dsa: mediatek: add VLAN support for MT7530")
-Signed-off-by: DENG Qingfang <dqfext@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: René van Dorst <opensource@vdorst.com>
+This breaks path MTU discovery and traceroutes when a host in a
+remote network uses the address at the start of a prefix
+(eg 2600:: advertised as 2600::/48 in the DFZ) as ICMP errors
+will not be sent to anycast addresses.
+
+This patch excludes any routes with a gateway, or via point to
+point links, like the behaviour previously from
+rt6_is_gw_or_nonexthop in net/ipv6/route.c.
+
+This can be tested with:
+ip link add v1 type veth peer name v2
+ip netns add test
+ip netns exec test ip link set lo up
+ip link set v2 netns test
+ip link set v1 up
+ip netns exec test ip link set v2 up
+ip addr add 2001:db8::1/64 dev v1 nodad
+ip addr add 2001:db8:100:: dev lo nodad
+ip netns exec test ip addr add 2001:db8::2/64 dev v2 nodad
+ip netns exec test ip route add unreachable 2001:db8:1::1
+ip netns exec test ip route add 2001:db8:100::/64 via 2001:db8::1
+ip netns exec test sysctl net.ipv6.conf.all.forwarding=1
+ip route add 2001:db8:1::1 via 2001:db8::2
+ping -I 2001:db8::1 2001:db8:1::1 -c1
+ping -I 2001:db8:100:: 2001:db8:1::1 -c1
+ip addr delete 2001:db8:100:: dev lo
+ip netns delete test
+
+Currently the first ping will get back a destination unreachable ICMP
+error, but the second will never get a response, with "icmp6_send:
+acast source" logged. After this patch, both get destination
+unreachable ICMP replies.
+
+Fixes: 45e4fd26683c ("ipv6: Only create RTF_CACHE routes after encountering pmtu exception")
+Signed-off-by: Tim Stallard <code@timstallard.me.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mt7530.c |   18 ++++++++++++------
- drivers/net/dsa/mt7530.h |    7 +++++++
- 2 files changed, 19 insertions(+), 6 deletions(-)
+ include/net/ip6_route.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -857,8 +857,9 @@ mt7530_port_set_vlan_unaware(struct dsa_
- 	 */
- 	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
- 		   MT7530_PORT_MATRIX_MODE);
--	mt7530_rmw(priv, MT7530_PVC_P(port), VLAN_ATTR_MASK,
--		   VLAN_ATTR(MT7530_VLAN_TRANSPARENT));
-+	mt7530_rmw(priv, MT7530_PVC_P(port), VLAN_ATTR_MASK | PVC_EG_TAG_MASK,
-+		   VLAN_ATTR(MT7530_VLAN_TRANSPARENT) |
-+		   PVC_EG_TAG(MT7530_VLAN_EG_CONSISTENT));
+--- a/include/net/ip6_route.h
++++ b/include/net/ip6_route.h
+@@ -254,6 +254,7 @@ static inline bool ipv6_anycast_destinat
  
- 	for (i = 0; i < MT7530_NUM_PORTS; i++) {
- 		if (dsa_is_user_port(ds, i) &&
-@@ -874,8 +875,8 @@ mt7530_port_set_vlan_unaware(struct dsa_
- 	if (all_user_ports_removed) {
- 		mt7530_write(priv, MT7530_PCR_P(MT7530_CPU_PORT),
- 			     PCR_MATRIX(dsa_user_ports(priv->ds)));
--		mt7530_write(priv, MT7530_PVC_P(MT7530_CPU_PORT),
--			     PORT_SPEC_TAG);
-+		mt7530_write(priv, MT7530_PVC_P(MT7530_CPU_PORT), PORT_SPEC_TAG
-+			     | PVC_EG_TAG(MT7530_VLAN_EG_CONSISTENT));
- 	}
+ 	return rt->rt6i_flags & RTF_ANYCAST ||
+ 		(rt->rt6i_dst.plen < 127 &&
++		 !(rt->rt6i_flags & (RTF_GATEWAY | RTF_NONEXTHOP)) &&
+ 		 ipv6_addr_equal(&rt->rt6i_dst.addr, daddr));
  }
  
-@@ -901,8 +902,9 @@ mt7530_port_set_vlan_aware(struct dsa_sw
- 	/* Set the port as a user port which is to be able to recognize VID
- 	 * from incoming packets before fetching entry within the VLAN table.
- 	 */
--	mt7530_rmw(priv, MT7530_PVC_P(port), VLAN_ATTR_MASK,
--		   VLAN_ATTR(MT7530_VLAN_USER));
-+	mt7530_rmw(priv, MT7530_PVC_P(port), VLAN_ATTR_MASK | PVC_EG_TAG_MASK,
-+		   VLAN_ATTR(MT7530_VLAN_USER) |
-+		   PVC_EG_TAG(MT7530_VLAN_EG_DISABLED));
- }
- 
- static void
-@@ -1332,6 +1334,10 @@ mt7530_setup(struct dsa_switch *ds)
- 			mt7530_cpu_port_enable(priv, i);
- 		else
- 			mt7530_port_disable(ds, i);
-+
-+		/* Enable consistent egress tag */
-+		mt7530_rmw(priv, MT7530_PVC_P(i), PVC_EG_TAG_MASK,
-+			   PVC_EG_TAG(MT7530_VLAN_EG_CONSISTENT));
- 	}
- 
- 	/* Setup port 5 */
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -167,9 +167,16 @@ enum mt7530_port_mode {
- /* Register for port vlan control */
- #define MT7530_PVC_P(x)			(0x2010 + ((x) * 0x100))
- #define  PORT_SPEC_TAG			BIT(5)
-+#define  PVC_EG_TAG(x)			(((x) & 0x7) << 8)
-+#define  PVC_EG_TAG_MASK		PVC_EG_TAG(7)
- #define  VLAN_ATTR(x)			(((x) & 0x3) << 6)
- #define  VLAN_ATTR_MASK			VLAN_ATTR(3)
- 
-+enum mt7530_vlan_port_eg_tag {
-+	MT7530_VLAN_EG_DISABLED = 0,
-+	MT7530_VLAN_EG_CONSISTENT = 1,
-+};
-+
- enum mt7530_vlan_port_attr {
- 	MT7530_VLAN_USER = 0,
- 	MT7530_VLAN_TRANSPARENT = 3,
 
 
