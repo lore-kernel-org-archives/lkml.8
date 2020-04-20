@@ -2,104 +2,138 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4CCC38A30
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE43C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 854D4205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD86A2145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bonedaddy.net header.i=@bonedaddy.net header.b="kQKORLJl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m9/NpKD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgDTKNH (ORCPT
+        id S1726181AbgDTKOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 06:13:07 -0400
-Received: from smtp.bonedaddy.net ([45.33.94.42]:49310 "EHLO
-        smtp.bonedaddy.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgDTKNH (ORCPT
+        Mon, 20 Apr 2020 06:14:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726025AbgDTKOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 06:13:07 -0400
-Received: from chianamo (n58-108-4-64.per1.wa.optusnet.com.au [58.108.4.64])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: pabs3@bonedaddy.net)
-        by smtp.bonedaddy.net (Postfix) with ESMTPSA id DBE60180043;
-        Mon, 20 Apr 2020 06:13:03 -0400 (EDT)
-Authentication-Results: smtp.bonedaddy.net; dmarc=fail (p=none dis=none) header.from=bonedaddy.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bonedaddy.net;
-        s=mail; t=1587377585;
-        bh=jod12xCYdZoqLDqiEfNqvtxkjlDlQfPOlPJo+0zFZj4=;
-        h=Subject:From:To:Cc:In-Reply-To:References:Date;
-        b=kQKORLJllYva2I4fnjPn8rv4ux1Hg1BqcOaFMVMHHC0xUvXMiUqvo/wD2TghCCN+T
-         05QlnHjg6C7Pgbmn5NkC4fr/MZJRHMgsb59rfTIdoK/SIJjccG8OcHq0I8nQEV1KSA
-         /zlbyoL6cUujLcPhGke0jOq9rFpt5k2WPEC4JjzYzNByPEnr6Yj8gnDTlaWCJi68Gi
-         NZbpKD9flv1Q1J9S41ab0pMKvkpEcIEoLisLoFmtPedtuu/naWm3hRLgxK7uTuCLa4
-         et9LcCrOC7TkKGMbFDm8YrERe+TBhcVxCPXS/Njn9fyMvY9Phu3KlrIqKcA26Cbhy0
-         lcjoaKwhvGezQ==
-Message-ID: <a0034feda1f6f598c8376a418949b48109307e67.camel@bonedaddy.net>
-Subject: Re: [dm-devel] [PATCH 0/3] dm raid/raid1: enable discard support
- when any devices support discard
-From:   Paul Wise <pabs3@bonedaddy.net>
-To:     Ondrej Kozina <okozina@redhat.com>, dm-devel@redhat.com
-Cc:     Mike Snitzer <snitzer@redhat.com>, linux-kernel@vger.kernel.org,
-        Alasdair Kergon <agk@redhat.com>
-In-Reply-To: <6bbf9d94-2fbb-f96f-ea85-a480ba109c55@redhat.com>
-References: <20200419073026.197967-1-pabs3@bonedaddy.net>
-         <20200419131908.GA22398@redhat.com>
-         <9cb6a39a43178be29af2f47a92c2e84754b62b69.camel@bonedaddy.net>
-         <6bbf9d94-2fbb-f96f-ea85-a480ba109c55@redhat.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-7gYIJ8Sm/tiyMSzyv4MA"
-Date:   Mon, 20 Apr 2020 18:13:01 +0800
+        Mon, 20 Apr 2020 06:14:50 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D81AC061A0C;
+        Mon, 20 Apr 2020 03:14:49 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id r14so4725926pfg.2;
+        Mon, 20 Apr 2020 03:14:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+plp5dslqkbN+jJKI4p9ucxk+mSNWrqMV1KZLrKDu8E=;
+        b=m9/NpKD3YMhtt1l8zNAhqW7YCnAg0vuezB4FcJjBiW0qtvgfYxDE8Q+jH26Che+j09
+         WIiar7jYNanQupQd41XmtOfKeb6r28kYQKdmiNBRV0NGpAjyGHWYazLmy0LhvSRtG7VN
+         F/EYszmDw8mDmw/UL6hH7uM4Z2xWXP8/jMBVVAeyRk4hPBRLlBoF/zj+XzzRf3LFLIJc
+         jRVwT7FgZTBNkxmx3j/36B68OKh/Ohr8aJ4+amz189J4w+rKjuS7VI8bO2jDK465A/qP
+         YyUi8XJGibpb/IY1phIMWcFWNIt2JoWTdMiP6PUoYsPXcR53zk5yYxQCgX5G/4jFgU9Z
+         R3bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+plp5dslqkbN+jJKI4p9ucxk+mSNWrqMV1KZLrKDu8E=;
+        b=LU5PwF+6Gg/WrxmaDCiTNgb5lFVMxYdVAajDfxQ/nWLkDDrLZKzgUiYFVj072q2/9i
+         SL4NlaagTJO23t7rl5Z940INTDX6AZq0FWn6+uMXNdwP9uDJ0lg+YFFKP2CmdH0RD0wX
+         Gg7kz9ALt7k4jG4hJdvQV6isuXoQhOrdKueUy2ms4X2mBLVNZMgfsLvOMDkxzlACbpVY
+         kGpczgHxlhjURJD9nVHRUKtQgEvn2immxTQiBrY+NDwkXM57oLnOjSbQhPmSyZ8VxUe5
+         sWlIKRckYIc8uO1LhdvBYbjYc/lbgHfVuKn+wRK6JzR+2dzME8pP35J6QZ3whMCqUhsR
+         29gw==
+X-Gm-Message-State: AGi0PuY6QMeQ59IUcCB6nE4m5N1qIHWgBO6uNRuCyvdoqcTCsXMXjWas
+        QM6WGNDe8lSp83Vm3EUgL5DoFI5CPNCsq9zvLck=
+X-Google-Smtp-Source: APiQypL5JJh3lWpj0tF/H74qWnVXLQrlL9upOg621u5MaM3c0nHwfxf/sSiqTVj423joY+7ivzMJipVARFeU3GeIT9M=
+X-Received: by 2002:aa7:8f26:: with SMTP id y6mr16420099pfr.36.1587377688814;
+ Mon, 20 Apr 2020 03:14:48 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Evolution 3.36.1-1 
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200418105533.477ce529@collabora.com> <20200419222040.GJ185537@smile.fi.intel.com>
+ <20200420111754.5863324b@collabora.com> <CAHp75VeOH+DC362tsEo13gr9fJpeCHXok=7O19B3njbxCOzd2A@mail.gmail.com>
+ <20200420115256.3a0ff647@collabora.com>
+In-Reply-To: <20200420115256.3a0ff647@collabora.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 20 Apr 2020 13:14:42 +0300
+Message-ID: <CAHp75Vfp_WYNR8kHVsSVumGzuVbGEGpAjfXVvJAV7t6zXXY+HA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw, piotrs@cadence.com,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        "hauke.mehrtens" <hauke.mehrtens@intel.com>, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 20, 2020 at 12:53 PM Boris Brezillon
+<boris.brezillon@collabora.com> wrote:
+> On Mon, 20 Apr 2020 12:44:51 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> > On Mon, Apr 20, 2020 at 12:21 PM Boris Brezillon
+> > <boris.brezillon@collabora.com> wrote:
+> > > On Mon, 20 Apr 2020 01:20:40 +0300
+> > > Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
+> > > > On Sat, Apr 18, 2020 at 10:55:33AM +0200, Boris Brezillon wrote:
+> > > > > On Fri, 17 Apr 2020 16:21:47 +0800
+> > > > > "Ramuthevar,Vadivel MuruganX"
+> > > > > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> > > > >
+> > > > > > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> > > >
+> > > > > > +static const struct of_device_id lgm_nand_match[] = {
+> > > > > > + { .compatible = "intel,lgm-nand", },
+> > > > > > + {}
+> > > > > > +};
+> > > > > > +MODULE_DEVICE_TABLE(of, lgm_nand_match);
+> > > > >
+> > > > > You probably have a missing "depends on OF" in your Kconfig.
+> > > >
+> > > > Since it's using device property API, dependency is not needed.
+> > > >
+> > >
+> > > There's no compile-time dependency, but this driver will be pretty
+> > > useless if all its users have the NAND controller node defined in their
+> > > DT and CONFIG_OF is not enabled.
+> >
+> > No, it's not.
+> > See [1] for the details how ACPI may utilize this table.
+> >
+> > [1]: https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.html#device-tree-namespace-link-device-id
+>
+> Except the NAND framework does use the OF lib when parsing common DT
+> properties (like nand-ecc-mode, etc), so it does depend on OF if you
+> want those props to be parsed, which, according to the DT binding patch,
+> is the case.
 
---=-7gYIJ8Sm/tiyMSzyv4MA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I see, so, NAND framework can be transformed at some point. In any
+case, from driver perspective it's OF independent.
 
-On Mon, 2020-04-20 at 09:35 +0200, Ondrej Kozina wrote:
-
-> Did you have discard allowed on both dm-crypt devices? dm-crypt
-> (kernel) does not allow discards by default.
-
-I did not, I guess that explains why I got no errors.
-
---=20
-bye,
-pabs
-
-https://bonedaddy.net/pabs3/
-
---=-7gYIJ8Sm/tiyMSzyv4MA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEYQsotVz8/kXqG1Y7MRa6Xp/6aaMFAl6ddakACgkQMRa6Xp/6
-aaMDqg/8Cj1meyJPg+ICUeg+WsYjGw/jaRrqC/UZzGwBCq/fguJ8BOwu+HtorOmM
-Kqr370rlTrjwdn4THs3So6PDSr3es270GKN0Cg1sO7z97lXUYQJA1RklOHRDw/5M
-EIw3uHHRNtutjWgyLScDBoy4kS+jzlNElwkj2M/amxTS2nlL99W5CI9sCdWwMjvm
-+ftXtELcNC8znWUBQlPJ/JnTu4/6kfKPytrzBWGvPxODgFosI8fA1K7kMoXNSvq7
-OSMCVZkq4AlhlHq+MIkXlPPE8pQoTbMTLflqD+wrusgEFGJMRYEGnndbg1vBrk5Y
-ieZ/z96mxOQ4VrFEeIC9IeY560Z/lb1MJJBYJRF7HF9ez02YAqevzmM85jzo6CMv
-7Bp8m+VcT/RcceAChWR14LOE+q3vJfhX1nu5wHatR3vTRYz5tFha+xqAypQMg504
-sVo+YzxIp/z45EDbinz7niePh8v4V04K1ne75G2R1iX++RcIurieGBS7+4OueAEl
-7anc/Evu+FPD/LDMlhGxVtiH1PqPk4ZJpD/Z6uVfKOQiOPhvF0RfPGJRE/8mW+uY
-VdECV0zqsWlTYaOmSH0FiCgq3zxW5Zw8rxYs+ioHUR/431c7zo3JLBJPEF8+3H4t
-x3hiW6iJ21Nw0ibptbIVJCg7jzqfMfe0cWHHqrynzZtfMIOzTAY=
-=GclY
------END PGP SIGNATURE-----
-
---=-7gYIJ8Sm/tiyMSzyv4MA--
-
+-- 
+With Best Regards,
+Andy Shevchenko
