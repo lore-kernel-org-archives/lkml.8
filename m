@@ -2,99 +2,144 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FFCC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F5EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2139220782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5050720782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:23:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="c5S3+Z5n"
+	dkim=pass (2048-bit key) header.d=stwcx.xyz header.i=@stwcx.xyz header.b="lQv7Xo3F";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Hf3f9tYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgDTUXL (ORCPT
+        id S1726611AbgDTUXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgDTUXK (ORCPT
+        Mon, 20 Apr 2020 16:23:16 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:45275 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725897AbgDTUXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:23:10 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1B3C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:23:10 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id u6so11540891ljl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:23:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CuRp/kkTGXEMux5bgsIo3QW+RdRZxdATUglGSRF3hAg=;
-        b=c5S3+Z5nEopbu09u5DjyVYMtQfUwx7xcO7OiL/GTmj2QqkZy/KM/OvgBGCCJQugEl7
-         s6r/w8EYr8aljdzxYprJ07sXIvRPAgw58EhTUhgUJKIavNbBiScdXVZYCXmlQ+LxxI8B
-         8luq4d1ebkxREBHZmWjpTFMo5qLJWzg5A0XYtPkRPIx4OFABhOvacveltjJc5Wdda7mx
-         3k5HfOTiJxkyjX2ZJKJi2OCmJGleHmT8Qb2ZggMD2mVFt1y9/00XrOgUhz303UrbHTTn
-         RKw3ufXsHZlocyVOTMnJ7bxflOhCfoIqXjfr6b5Qmlu9zXnhzLVXmlsnDgJ56eHRYH6S
-         5YUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CuRp/kkTGXEMux5bgsIo3QW+RdRZxdATUglGSRF3hAg=;
-        b=HZhGC2uo0nJJkS7LTUyJTBHCA+iMxZDN3tZP1Bl9k0k9t4o74wwIN0pkHojEH85RmS
-         EMYUgciOvOHI65buqyyH4vtpobzM88SjOxMscd9bYJBWkfRrwg4qeoIqIJfIKgjOJ90c
-         HzbSI5GuYGJFp//qVbkjaZqWNkGQFKpg77i7aUM3wmooPNfEJZtPm1zCM3kR98uXhRh+
-         eKPvoPA84jjxOOBSafDM7gCUjKaY6E5ziV7RImnC3n7gAN55dtqBN0WQm9ZGQewB33zz
-         ypYS6W6MqiYoJmMNsaJRVZEDHShj1JOFKGWdVSKFX/TCX9vRiolqgjiFJBi4gkhW7Yce
-         uXRA==
-X-Gm-Message-State: AGi0PuaO4nIhfAl7H7ZiyMoG/lW7xc5UoDNuVxxjugkK13LOoTN3IJO+
-        WBYq3HMM0UZmd5UPOj8vNF4I8Q==
-X-Google-Smtp-Source: APiQypIe7ofdBVgkbqdERU9/MDZTLo5v/el4i+71zRDMmRE4Q9LM7F+EC7G8sK2mDnu0mQPPmuMGzg==
-X-Received: by 2002:a2e:8805:: with SMTP id x5mr11577593ljh.223.1587414188514;
-        Mon, 20 Apr 2020 13:23:08 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id x24sm344419lfc.6.2020.04.20.13.23.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:23:07 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 07398103037; Mon, 20 Apr 2020 23:23:12 +0300 (+03)
-Date:   Mon, 20 Apr 2020 23:23:11 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Colin King <colin.king@canonical.com>
-Cc:     "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Zi Yan <ziy@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux-kselftest@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][V2][next] selftests: khugepaged: fix several spelling
- mistakes
-Message-ID: <20200420202311.srpxl7jrbdjus642@box>
-References: <20200420084241.65433-1-colin.king@canonical.com>
+        Mon, 20 Apr 2020 16:23:14 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3E4D45C00A5;
+        Mon, 20 Apr 2020 16:23:13 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Mon, 20 Apr 2020 16:23:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=j+rtBs4i+LTG85XDMivqbYA15v9
+        KeFIawbkmfnjtAW0=; b=lQv7Xo3FCSWwpKQtFtW/07XH376+sJrM1WB5Vgoq13t
+        rRW/yCevF+1Zuuvw9RRDm1iRGAC3Qy4oSd8oKI66+5uQC1Mxa7R9rQeVlFKoKUIB
+        +FrLzTUdjv+MdNfJ6RcbFdyZIx8UFaRIBtK4k8pDgUt13ocMB0jiQ5+kaQllJ1tT
+        bYEYXpO6+1IjYV+DJSIz4sBGpcOlxg+vuosNUyw/PmK1Utv7MaSNv/Dymv+R5UU7
+        oomw7BO89pCPg33s2r++0rsGnrezOnMViVsoGh/zouSjM3wN9i43N2i75hNArewv
+        PO86lMXoIm6gd5ViYaiP8ZfcmRQFqcYopNddIkV1D6g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=j+rtBs
+        4i+LTG85XDMivqbYA15v9KeFIawbkmfnjtAW0=; b=Hf3f9tYbUGtFb3r2BtNy/Q
+        lSzNPUf4XcRFeGfsMJND+HzETGV+Jdzoko52w07d0nhO4Gt5Xfqiqw7eGi9Io1zY
+        R6wWH8NGw6Sw4Kr5arjjzcUMMke262OfwB86KOvGZdoKfjoSnqO7p/iMdVRwpMHn
+        qDvkrGQHOOxPSS4VtduzDS5pUJAA65dvqvkVc6LqRPbSZqHmY8WWfpRqBP1nBL8j
+        Mrq1FsJIy1tsj8PBnoNOlEaCbF5PXRO8EFVyXhzbJvAPzWaP00XlalzHm/pgqsdk
+        7zh6LGfZ2TIQCgnzW4Bpcyhq3v99dgycIntr9WIi2BLZs47nVjsW9LbRCQ+m6bTg
+        ==
+X-ME-Sender: <xms:sASeXlRwLyiPGlyFfP_6Nd1II9Uq4Izyi55V8eB0t3o4PojH4Jrzog>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefgddugedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdlfeehmdenucfjughrpeffhffvuffkfhggtggujgesghdtreertddt
+    vdenucfhrhhomheprfgrthhrihgtkhcuhghilhhlihgrmhhsuceophgrthhrihgtkhessh
+    htfigtgidrgiihiieqnecukfhppedutdejrddutdejrddukeejrdduuddtnecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgrthhrihgtkhessh
+    htfigtgidrgiihii
+X-ME-Proxy: <xmx:sASeXslZrvlhfwekb1JCjs2zhYROfTKePadJWyyVG1khsPFdeX_CGA>
+    <xmx:sASeXlQGdLTwj57G2fP5rfvq3VxP0wpFHM8e3XtMArUJUdPwgglIFA>
+    <xmx:sASeXqN3HA9-Y8exD5U7MfkbXs6ypu0JZVZSgbrbx2Dk6Fl9fyvzFw>
+    <xmx:sQSeXi7xIRZNJoJVxNJ0M7VPbtXyZbxobguIKPTpcVRN0bmxTFsZdw>
+Received: from localhost (mobile-107-107-187-110.mycingular.net [107.107.187.110])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BBD7B328005D;
+        Mon, 20 Apr 2020 16:23:11 -0400 (EDT)
+Date:   Mon, 20 Apr 2020 15:23:10 -0500
+From:   Patrick Williams <patrick@stwcx.xyz>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Patrick Williams <alpawi@amazon.com>,
+        =?iso-8859-1?Q?Bj=F6rn_Ard=F6?= <bjorn.ardo@axis.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] i2c: slave-eeprom: support additional models
+Message-ID: <20200420202310.GA95151@heinlein.lan.stwcx.xyz>
+References: <20191001164009.21610-1-alpawi@amazon.com>
+ <20191001164009.21610-2-alpawi@amazon.com>
+ <20200420164619.GE3721@ninjato>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
 Content-Disposition: inline
-In-Reply-To: <20200420084241.65433-1-colin.king@canonical.com>
+In-Reply-To: <20200420164619.GE3721@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 09:42:41AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There a are several spelling mistakes in various messages. Fix these.
-> 
-> There are three spelling mistakes in various messages. Fix these.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Thanks a lot.
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Andrew, could you fold them in? Or should I resend?
+On Mon, Apr 20, 2020 at 06:46:19PM +0200, Wolfram Sang wrote:
+> On Tue, Oct 01, 2019 at 11:40:06AM -0500, Patrick Williams wrote:
+> > Add support for emulating the following EEPROMs:
+> >     * 24c01  - 1024 bit
+> >     * 24c128 - 128k bit
+> >     * 24c256 - 256k bit
+> >     * 24c512 - 512k bit
+> >=20
+> > The flag bits in the device id were shifted up 1 bit to make
+> > room for saving the 24c512's size.  24c512 uses the full 16-bit
+> > address space of a 2-byte addressable EEPROM.
+> >=20
+> > Signed-off-by: Patrick Williams <alpawi@amazon.com>
+>=20
+> Do you really need them or is it just nice to have?
+>=20
+> I am undecided. I definately don't want all the EEPROM types which
+> exist, but the full 16 bit address range makes sense...
+>=20
+> More opinions welcome.
+>=20
 
--- 
- Kirill A. Shutemov
+I don't remember exactly which ones we needed (and I am no longer at
+Amazon), but it was pretty trivial to add them all to the table so I
+went ahead and did it.  As long as we had one of the 2-byte addressable
+EEPROMs, anything else necessary could be handleded as a small
+out-of-tree patch.
+
+--=20
+Patrick Williams
+
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAl6eBKwACgkQqwNHzC0A
+wRm+3w/+LxsR2vMn880CT3tcUun6w0nwd9uLyu8glBEEBgpOOLFe8X89BXGNPeJP
+Kll58XbbYuOVxLG2jJwrz7K5KRW2tU+7R/hYtOV31jXDldxmEF23IbyJewxghmri
+YF4HB33xVDW2Jp9DWzwbgOjOgny6fJwUZ4Fi1OJ+xYNBIi1BRoG1url8qyVugka8
+zKumoV2Cn28E/XnSl2w/qMFSA7mqfYZlzo5ChXZMuuNDx9CiZaBmDDv3ymegmD7r
+2zvZRIweqex1xsVFWO7HJ0dAryQAez+giAkGS0b8u1pfa1m1ysNyspamJ6+ZRFtL
+Xyw2JxlEbdEHSZ+hiinUidOwv52TP8C5Zk8yirzDsVFM+ODCB8Noj3omFoFAgdLS
+sRvmzjYCZr31BlznVnF65L6e4O9+kVSU57Olu5FYZb5Wb6cEoJF+NhMxWizT6s5D
+Qym/vqSGtcU2jSzHBCTL9qkp6fZuqxdgmZ2TPMOhlgVibhnx6k1hnlnIVbbYuRUl
+EsuiTj9GQ9pGRfkpttrUuZd74mHrw8le63LOmmNJvRsEipReH0rcwqMCdQP0vy58
+/BnTDpaONj90J2IWtwLwoO1LvGUugTkx4/HiZmHfPFnih+dLjsOVAAunraDd+f8g
+0Hdjzg1CilbUJ5hECb4L+IO07K0hc+mBqpAhDUcQMDahdKOJo84=
+=6TW6
+-----END PGP SIGNATURE-----
+
+--r5Pyd7+fXNt84Ff3--
