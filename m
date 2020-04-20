@@ -2,146 +2,127 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B66C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E640EC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 182AB2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C481E2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:33:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jI6iP14b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgDTNdi (ORCPT
+        id S1727028AbgDTNdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:33:38 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56528 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726211AbgDTNdh (ORCPT
+        Mon, 20 Apr 2020 09:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726211AbgDTNdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:33:37 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jQWYJ-0008G0-Dt; Mon, 20 Apr 2020 14:33:35 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jQWYI-008In4-Vl; Mon, 20 Apr 2020 14:33:34 +0100
-Message-ID: <7fb8e9ac69a1c03a673875dc39fcd8f94407abca.camel@decadent.org.uk>
-Subject: Re: [PATCH] x86/microcode/intel: replace sync_core() with
- native_cpuid_reg(eax)
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Borislav Petkov <bp@alien8.de>,
-        Evalds Iodzevics <evalds.iodzevics@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        tglx@linutronix.de
-Date:   Mon, 20 Apr 2020 14:33:30 +0100
-In-Reply-To: <20200420093129.GA21839@zn.tnic>
-References: <20200420120037.1537-1-evalds.iodzevics@gmail.com>
-         <20200420093129.GA21839@zn.tnic>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-rO2E3TbHWeD2oFIYU2q8"
-User-Agent: Evolution 3.36.1-1 
+        Mon, 20 Apr 2020 09:33:43 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E80C061A0C;
+        Mon, 20 Apr 2020 06:33:42 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d17so12145775wrg.11;
+        Mon, 20 Apr 2020 06:33:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8BFEyEY0pQowkZqKW1UkfT7rrgGTA/DT5VZkesq580U=;
+        b=jI6iP14b7dzEFoZQvAAIUYghaAf74HD2b1ii3wq9eMvvEjaomCD7s16mvfUIQ3rDjA
+         n5zzGtHPJnqu8IG4W2z0EORu4pNg2WrZLng5F5k5QzOFEylOaUGwxN+82zE2B47vgRIQ
+         WLMY9m8uHHcghaTF0wunUg+LFTcKRF4gbhCPF5op07R8yWMAi3J69LC3QtnD3C3lkdMu
+         3ASAmvnv/2rus6HAuPIVE7WBgsN0oPVDV7aV0dqd3pBPdC18aIFKwVlmxa+v4y+UOnKU
+         eqXdkvPDSZ2DyO3uodzwMos8ejLoUotD4Zx7aoJTfF9GesOL5Hx+Mw3nbLUWgNWTRpWy
+         eNbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8BFEyEY0pQowkZqKW1UkfT7rrgGTA/DT5VZkesq580U=;
+        b=AyMQJmjaKhxNuifXQ/CuFtJfVluJmQ2AgqxOByXyckW6Xl/gLshKK0/EVFSa0uAkoK
+         EWb5ciyrVcoUKIVKdZwu4L546Llc0K/aZDJPkkCQAc2dryWznlClrAKPoVPI2jP6U6Nf
+         YXZOuzmwFWojuKi+bU/UBLXLo/o9C+laX7MUAOXYjiWV53PA2dmOtVIPmYBVrtty00MR
+         +nlgjp5vYQ08KHjQ0Bv1U0msZJtjKicecjJ6qin1TtIat+I3787EQ9NTl8N69Rn9I3xm
+         Rx9l6k0EIM67xYlMkX918py5WU0baRpFzk6TTHZrjo3jfNM068FJtoMtpO/Q5PX7UitN
+         GbUQ==
+X-Gm-Message-State: AGi0PuYxXJY0UC3e7w3DMmZq719hTSOOyHUVCheuewwmaVd+UdV1Hz6I
+        KG+3Hc/bMXvh4GoUOLTlX+M=
+X-Google-Smtp-Source: APiQypKZk4QdbUtcxcSUADGSPzH1arT+R3V9CoHvjnRas3SWIG9QuEjLf0kMSsO0onIm5RbW3IJU1g==
+X-Received: by 2002:a05:6000:f:: with SMTP id h15mr18501426wrx.408.1587389621483;
+        Mon, 20 Apr 2020 06:33:41 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id v19sm1310706wra.57.2020.04.20.06.33.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 06:33:40 -0700 (PDT)
+To:     heiko@sntech.de
+Cc:     ezequiel@collabora.com, devicetree@vger.kernel.org,
+        hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        mark.rutland@arm.com, robh@kernel.org
+References: <20200326191343.1989-1-ezequiel@collabora.com>
+Subject: Re: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to
+ json-schema
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
+Date:   Mon, 20 Apr 2020 15:33:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <20200326191343.1989-1-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Heiko,
 
---=-rO2E3TbHWeD2oFIYU2q8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This patch was applied by the media people Hans and Ezequil without note
+and test I think.
 
-On Mon, 2020-04-20 at 11:31 +0200, Borislav Petkov wrote:
-> On Mon, Apr 20, 2020 at 03:00:37PM +0300, Evalds Iodzevics wrote:
-> > sync_core() always jums past cpuid instruction on 32 bit machines
-> > because data structure boot_cpu_data are not populated so early in boot=
-.
->=20
-> I'm guessing because boot_cpu_data.cpuid_level is not properly set and
-> very early code in head_32.S sets it to -1 temporarily until the highest
-> CPUID level has been detected (or not).
->=20
-> But the microcode loading happens *before* that.
-[...]
-> Hrm, the original patch of mine did use native_cpuid_eax():
->=20
-> 4167709bbf82 ("x86/microcode/intel: Add a helper which gives the microcod=
-e revision")
->=20
-> but the backport:
->=20
-> commit 98cc1464cfd6edf9dc7fa96aaaf596aae952029b
-> Author: Borislav Petkov <bp@suse.de>
-> Date:   Mon Jan 9 12:41:45 2017 +0100
->=20
->     x86/microcode/intel: Add a helper which gives the microcode revision
->    =20
->     commit 4167709bbf826512a52ebd6aafda2be104adaec9 upstream.
->    =20
->     Since on Intel we're required to do CPUID(1) first, before reading
->     the microcode revision MSR, let's add a special helper which does the
->     required steps so that we don't forget to do them next time, when we
->     want to read the microcode revision.
->    =20
->     Signed-off-by: Borislav Petkov <bp@suse.de>
->     Link: http://lkml.kernel.org/r/20170109114147.5082-4-bp@alien8.de
->     Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->     [bwh: Backported to 4.4:
->      - Don't touch prev_rev variable in apply_microcode()
->      - Keep using sync_core(), which will alway includes the necessary CP=
-UID
->      	^^^^^^^^^^^^^^^^^^^
->=20
-> decided to use sync_core() for whatever reason. Perhaps because the
-> native_cpuid* things weren't there. Adding Ben to Cc.
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-vpu.yaml
 
-This commit didn't introduce the call to native_cpuid_eax(), but only
-moved it.  So I didn't think it made sense for the backport to change
-from sync_core().
+Errors for example:
 
-If it's important to use native_cpuid_eax() then these older branches
-should presumably get backports of:
+  DTC     arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml
+  CHECK   arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
+interrupts: [[0, 9, 4]] is too short
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
+interrupt-names: ['vdpu'] is too short
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
+interrupt-names:0: 'vepu' was expected
 
-484d0e5c7943 x86/microcode/intel: Replace sync_core() with native_cpuid()
-f3e2a51f568d x86/microcode: Use native CPUID to tickle out microcode revisi=
-on
+See:
+https://lore.kernel.org/lkml/20200403124316.5445-1-jbx6244@gmail.com/
 
-Ben.
++  interrupts:
++    minItems: 1
++    maxItems: 2
++
++  interrupt-names:
++    oneOf:
++      - const: vdpu
++      - items:
++        - const: vepu
++        - const: vdpu
 
-> I believe this is the background info Greg needed to figure out *why*
-> you're doing this.
->=20
---=20
-Ben Hutchings
-Klipstein's 4th Law of Prototyping and Production:
-                               A fail-safe circuit will destroy others.
+Vs.:
 
 
---=-rO2E3TbHWeD2oFIYU2q8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl6dpKoACgkQ57/I7JWG
-EQniqw//T43dRiR0wAcQlfqixG+5yD5o7m7mIZZtMGTN5OZKoNE8a0yIlexSEFVp
-KRd2nIHHFcFlU8TJPj0JcgSmAUJS0OprvFRVwh24/SmFblAPYZwgRv2gE7Hftt8j
-pkAQxrBwXJXdIkMNpLTXnrDoIJwx+H4sw86hoVr+jx3qofR1Li75EgBzsgZ6/hlQ
-Hx/5MvS5Qb5WvuWsqkIP2o1pUryiHFJBluZOD6R6V+JlS4CTnoXoCFyWqkrVrZ6L
-hBFfBGbOsnLT+KrYuGPW0+eMLsj9D+t/Tbpabr8prpHpz+ZQD4SEjBpC5ENE5LLI
-azrENtuATD5SpiCLzxvtIdeVikidgh3RjOFW2iWF39697tlFnrPoOOs4P9Lttl1j
-35NEEU1Iwj9uEBM7a1cL7HtagRFvBAkktOWvQ8/CNHAhodmHXUCb9K29TqD6/8Gs
-62PLlYeOK09yRX3MMtGNbQNXnluBiMp8PhaXcUO6uYeS3EAfMC7KmSqB8Yk1YFEt
-JA95Cm7jDGcRN3Kh5fnhFlCkeStrW2YQ2kyQ68QCFQo5UK4CMYpmAxBlzVfLXBUk
-WMiaUjpUEID78xDM+4qw7A6Hhe3BJIlfQYSQ78hEUpxfw4GDKgJoPr/A51MTuA9A
-dBFVZYTmmbmyAyPKlk+jsst/iJDA5LFDoheK3mNErqB469kvBhQ=
-=lBHM
------END PGP SIGNATURE-----
-
---=-rO2E3TbHWeD2oFIYU2q8--
++  interrupts:
++    maxItems: 2
++
++  interrupt-names:
++    items:
++      - const: vepu
++      - const: vdpu
