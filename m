@@ -2,69 +2,141 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D0EC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EC3C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C78920A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870E92145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:45:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Cb5vCAdq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RJPO+6LC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgDTIo4 (ORCPT
+        id S1726138AbgDTIp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:44:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40388 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgDTIoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:44:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 48CE1AB89;
-        Mon, 20 Apr 2020 08:44:54 +0000 (UTC)
-Message-ID: <1587372294.26844.24.camel@suse.cz>
-Subject: Re: [Bisected] Oops witn 5.7.0-rc1
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Harald Arnesen <harald@skogtun.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 20 Apr 2020 10:44:54 +0200
-In-Reply-To: <41ae3b90-8e14-9db5-a804-5fdb2eebac03@skogtun.org>
-References: <41ae3b90-8e14-9db5-a804-5fdb2eebac03@skogtun.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 20 Apr 2020 04:45:57 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:38617 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725865AbgDTIp4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:45:56 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 1AA4B547;
+        Mon, 20 Apr 2020 04:45:55 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 20 Apr 2020 04:45:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=iQX+Nbu9lUUYXsNcDSVwSJak4D8
+        iqDKj9Y/HcbQhFRI=; b=Cb5vCAdqrAyiC4lRxqRERI9SW5ynRvi8MfadLN2m09c
+        Erdw2VZBnEjnzPuFuZ5X4y2ATzwg4ps0ETjpslCQjoObsrzg25nErj+Ekvum1TN1
+        L3eCvibfhfxJBWQV4m4LkoJKAh1qy4LDR++xo5mjTYLO1CyvmqKkJXpcQSOlAlaa
+        hrkm38YE7hWp8Yx4K2PxV0GVSfm39XFqqPPpDOXBfy7f4WvP1TyJd3h68UnUdqCc
+        jAMAqxG/0iWe7S9of86enzLJ3xzYgK5dRBla/xtnLNAAjeKgyU/FQsnpzZrcoqib
+        Vzv0bhN2yrWtb9dDj9XEUxUivVKL8bEd2ewpcOHMp6w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=iQX+Nb
+        u9lUUYXsNcDSVwSJak4D8iqDKj9Y/HcbQhFRI=; b=RJPO+6LCm0E2Tw77x6Wh7U
+        9vUpvl1uafoY3akeLipgg21OvnEkCrKZc0TAbluRUIID9++cFwlFJHYin0KPH5Iy
+        5wHzX/BHRneFGifM84s+tS/BD9721/PAXlP2JMsMtYd05M1L6zV927Y0rpCoPcri
+        npdXITWxDswalbec2jF3nQtZwP37rL7AGg9WUAflWms4YHkpJ5bBCwQ3ILJ3xh2K
+        fDcP0z3OnMEd8kHCZArUydmMqG5RpmfpZYKk78y8fCQa7aStGIK3oDsXuSud4SiV
+        wJKDw4wEkqDu3M1G8T3DOUNypw5cKfbkVvJyc4phERFe6HLsJashLQadRvCshNgw
+        ==
+X-ME-Sender: <xms:PWGdXi5Y8er_T2GP7J4g4hYlUm-l_KOfZ2Vp5Z7Jf0B4FFkKuNhVzA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefgddtjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
+    hordhtvggthh
+X-ME-Proxy: <xmx:PWGdXjdnlpmdTjzOlruLtyDzfePgAewLqBq4Bw_DZav0OsN1q2GXmw>
+    <xmx:PWGdXua0gcXr9UBqhtsxm2COLSQNEgjxh_neIGRei3I-2oq4pVan0Q>
+    <xmx:PWGdXtGAFXTtDiVEhYdMzvpQt5pmulDtmrBkyogIznXoGg6UAGsJ-Q>
+    <xmx:QmGdXl-jakDIzXRhpEXxSycGALAY0J0tp5vgCeQ2_0-Xs7DBEkGR6w>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 857CB3280065;
+        Mon, 20 Apr 2020 04:45:49 -0400 (EDT)
+Date:   Mon, 20 Apr 2020 10:45:47 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH v3 0/7] Add support for Allwinner H6 DVFS
+Message-ID: <20200420084547.q5xqlbnmug7l45p2@gilmour.lan>
+References: <20200419135011.18010-1-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tjfbcs5ju43fnsxg"
+Content-Disposition: inline
+In-Reply-To: <20200419135011.18010-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-04-18 at 18:15 +0200, Harald Arnesen wrote:
-> Kernel 5.7.0-rc1 and later won't boot on my ThinkPad T510i.
-> 
-> The attached jpeg is all I can capture of the oops. Bisected to commit
-> 1567c3e3467cddeb019a7b53ec632f834b6a9239, but I cannot revert that to check.
-> 
-> A strange thing: The same commit is in 5.6.5, and that kernel boots
-> fine. 5.7.0-rc1 also boots fine on my desktop.
-> 
-> Screenshot and config attached. Please request any further info.
 
-Hello Harald,
+--tjfbcs5ju43fnsxg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks for the report.
+Hi,
 
-The problem you encountered is likely due to a bug where the code doesn't work
-on machines with less than 4 physical CPU cores. It is fixed by this patch
-series:
+On Sun, Apr 19, 2020 at 03:50:04PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Now that required drivers are merged we can contibute on DVFS
+> support for Allwinner H6.
+>=20
+> This serie is based on Yangtao Li serie[0] and Ond=C5=99ej Jirman work[1].
+>=20
+> Most of the OPP tables are taken from original vendor kernel[2].
+> Plus there are new CPU frequencies at 1.6GHz, 1.7GHz and 1.8GHz.
+>=20
+> I wrote a simple script to randomly set a frequency during
+> a random time[3]. This script is quite stressfull and set some high
+> frequency without checking temperature. This can result on behavior
+> that whould not occurs with the real cpufreq framework.
+> As Maxime point out I also tested with cpufreq-ljt-stress-test
+> (found here https://github.com/ssvb/cpuburn-arm).
+> This script doesn't trigger any issue.
+> I also test that that offlining CPU0 and doing DVFS on other CPUs
+> works. As CPU regulator is only set for CPU0.
+>=20
+> The GPU devfreq was drop as the regulator is still not properly
+> drive by panfrost driver[4].
+> I will re-introduce it later.
+>=20
+> Ond=C5=99ej Jirman has an Orange Pi 3, Jernej has a PineH64 and a Tanix
+> TX6 boards and I have a Beelink GS1 board so I have enable these
+> boards. But CPU Devfreq is really touchy has it depends on:
+> board design, SoC speed_grade and environement which can affect
+> thermal cooling and have different behavior for different user.
+>=20
+> If people can test this serie and give feedback, I will try to
+> introduce this in LibreElec tree, so LE community can test it.
 
-https://lore.kernel.org/lkml/20200416054745.740-1-ggherdovich@suse.cz/
+Applied all of them, thanks!
+Maxime
 
-The series has been acknowledged by the subsystem maintainers but not yet
-merged in any tree (it is expected to land in the "tip" tree and then be pulled
-by Linus).
+--tjfbcs5ju43fnsxg
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Giovanni Gherdovich
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp1hOwAKCRDj7w1vZxhR
+xZBWAPwJcHVU/m631vQHEiwdmukLTu1v8SDhAmACGUZRYKurVgD/cSE+lPELz+F5
+tn+IBhAd1orRbkBB7HgXc8PEnVef+gg=
+=JHGr
+-----END PGP SIGNATURE-----
+
+--tjfbcs5ju43fnsxg--
