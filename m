@@ -2,113 +2,221 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A982CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E29C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 846F3206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:05:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRHLRU+2"
+	by mail.kernel.org (Postfix) with ESMTP id 9073420B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgDTMFs (ORCPT
+        id S1726615AbgDTMGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:05:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726387AbgDTMFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:05:46 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12723C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 05:05:45 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id c63so10195220qke.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 05:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3A+0nM8hNKafzGk6IKdKwOoK9jYn43r9XcaFv8KjCXA=;
-        b=TRHLRU+27dFKXFhXzfUS259L0ChAhkzDhEZZXrPDLaSTDu2ILRUTA3vJDqnPkWdxLI
-         HJhFPUj90UuGRoySLRuJKG5NIxjiWJKfzboGeoYo2oau0X6f5lXYdGHya7jsTp3msAo+
-         tHf3J/jXvUNI+/keatWH00TevxAN4eIE9WZcgeLOuJX/hqCrSiufhcqp9vU3SvXNQWsc
-         RurUe+3Kamwui9w89QF/Qut8Lwipk+Tuw95TkBwRVfP27Z3EwW3Ix5LlOa1oEpgBSTxN
-         yMrXs8hsnpEAgbmqfrGMa4N11BIp9HYUBh/W93swL3H+a+8ZsKMD/9ViaqdA7Rqlidm5
-         Fdxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3A+0nM8hNKafzGk6IKdKwOoK9jYn43r9XcaFv8KjCXA=;
-        b=TcnF2PPgVuIVueCVKBjXYRtNpkvAN377mh7FkuNPRAxuzzYpJpIDovYtRqQRY6kpqY
-         Q5kmsifheM8KZIIfdx9eUaVpm0Q1+lLP3XnmNZ7/3baABtSyLX/uDb8NyFuGoB4OGDxS
-         zyS/VQwVi51sJu4tXkHXgY19Z4XxTN0Na1ucQjUn/njq3+cRgu2BPVNbb6BnlEHnx6Bj
-         EHZCrUqdN2IQMGvsjB0YewjWEvY6zRQUiBKsWzPYwZ/DfdpRb2FktGE4ZxZvWw8siOW7
-         kITYo8EuHo0sBpU9uxhKItCMCEWVmGrjKiiJPklim5A9Ofyxtw9QPOqFPCAaWDkN5+st
-         RNmw==
-X-Gm-Message-State: AGi0PubKtYIlFsaMgt0ieErd5ArmoRQtpzQWZHm+GNAxhyr4QDUQYzIY
-        mqlJ5sujO437KTlLk7pf0e4=
-X-Google-Smtp-Source: APiQypJ5UncJYBm3/6vdGxWIv7d+8JWyS0KPcmivPCH/nHuwusTkaoLLRFx4w1Wpxt/Yi4BAzWRHsQ==
-X-Received: by 2002:a37:9f4a:: with SMTP id i71mr15546268qke.132.1587384344271;
-        Mon, 20 Apr 2020 05:05:44 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id h25sm337529qto.87.2020.04.20.05.05.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 05:05:43 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C9921409A3; Mon, 20 Apr 2020 09:05:40 -0300 (-03)
-Date:   Mon, 20 Apr 2020 09:05:40 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Tommi Rantala <tommi.t.rantala@nokia.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Mon, 20 Apr 2020 08:06:11 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:48596 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726387AbgDTMGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:06:10 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxlukqkJ1eiiUqAA--.9S3;
+        Mon, 20 Apr 2020 20:06:03 +0800 (CST)
+Subject: Re: [PATCH RESEND 1/5] MIPS: Loongson64: Remove dead RTC code
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
+References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
+ <20200420073347.157230-2-jiaxun.yang@flygoat.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf cgroup: Avoid needless closing of unopened fd
-Message-ID: <20200420120540.GB14597@kernel.org>
-References: <20200417132330.119407-1-tommi.t.rantala@nokia.com>
- <20200420084847.GC718574@krava>
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <15923f8b-7278-f510-e06a-99751bd68048@loongson.cn>
+Date:   Mon, 20 Apr 2020 20:06:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420084847.GC718574@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200420073347.157230-2-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9AxlukqkJ1eiiUqAA--.9S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF1Utr43KFy8Jw4DZry3CFg_yoWrKF4kpw
+        s3Aa97Gr4akF1UCr93Cry8urWUA398trWIvF429ryYgasrZ34qqrn7tF18t3yDZFyUJ3Wx
+        ZFyrur4YkFsFvaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkvb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8GYLUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Apr 20, 2020 at 10:48:47AM +0200, Jiri Olsa escreveu:
-> On Fri, Apr 17, 2020 at 04:23:26PM +0300, Tommi Rantala wrote:
-> > Do not bother with close() if fd is not valid, just to silence valgrind:
-> > 
-> >     $ valgrind ./perf script
-> >     ==59169== Memcheck, a memory error detector
-> >     ==59169== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-> >     ==59169== Using Valgrind-3.14.0 and LibVEX; rerun with -h for copyright info
-> >     ==59169== Command: ./perf script
-> >     ==59169==
-> >     ==59169== Warning: invalid file descriptor -1 in syscall close()
-> >     ==59169== Warning: invalid file descriptor -1 in syscall close()
-> >     ==59169== Warning: invalid file descriptor -1 in syscall close()
-> >     ==59169== Warning: invalid file descriptor -1 in syscall close()
-> >     ==59169== Warning: invalid file descriptor -1 in syscall close()
-> >     ==59169== Warning: invalid file descriptor -1 in syscall close()
-> >     ==59169== Warning: invalid file descriptor -1 in syscall close()
-> >     ==59169== Warning: invalid file descriptor -1 in syscall close()
-> > 
-> > Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+
+
+On 04/20/2020 03:33 PM, Jiaxun Yang wrote:
+> RTC is now enabled by devicetree. So platform code is
+> no longer needed.
 > 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  .../include/asm/mach-loongson64/mc146818rtc.h | 36 -----------------
+>  arch/mips/loongson64/Kconfig                  |  4 --
+>  arch/mips/loongson64/Makefile                 |  1 -
+>  arch/mips/loongson64/rtc.c                    | 39 -------------------
+>  arch/mips/loongson64/time.c                   |  8 +---
+>  5 files changed, 1 insertion(+), 87 deletions(-)
+>  delete mode 100644 arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+>  delete mode 100644 arch/mips/loongson64/rtc.c
+> 
+> diff --git a/arch/mips/include/asm/mach-loongson64/mc146818rtc.h b/arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+> deleted file mode 100644
+> index ebdccfee50be..000000000000
+> --- a/arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+> +++ /dev/null
+> @@ -1,36 +0,0 @@
+> -/*
+> - * This file is subject to the terms and conditions of the GNU General Public
+> - * License.  See the file "COPYING" in the main directory of this archive
+> - * for more details.
+> - *
+> - * Copyright (C) 1998, 2001, 03, 07 by Ralf Baechle (ralf@linux-mips.org)
+> - *
+> - * RTC routines for PC style attached Dallas chip.
+> - */
+> -#ifndef __ASM_MACH_LOONGSON64_MC146818RTC_H
+> -#define __ASM_MACH_LOONGSON64_MC146818RTC_H
+> -
+> -#include <linux/io.h>
+> -
+> -#define RTC_PORT(x)	(0x70 + (x))
+> -#define RTC_IRQ		8
+> -
+> -static inline unsigned char CMOS_READ(unsigned long addr)
+> -{
+> -	outb_p(addr, RTC_PORT(0));
+> -	return inb_p(RTC_PORT(1));
+> -}
+> -
+> -static inline void CMOS_WRITE(unsigned char data, unsigned long addr)
+> -{
+> -	outb_p(addr, RTC_PORT(0));
+> -	outb_p(data, RTC_PORT(1));
+> -}
+> -
+> -#define RTC_ALWAYS_BCD	0
+> -
+> -#ifndef mc146818_decode_year
+> -#define mc146818_decode_year(year) ((year) < 70 ? (year) + 2000 : (year) + 1970)
+> -#endif
+> -
+> -#endif /* __ASM_MACH_LOONGSON64_MC146818RTC_H */
+> diff --git a/arch/mips/loongson64/Kconfig b/arch/mips/loongson64/Kconfig
+> index 48b29c198acf..c386b8a3c753 100644
+> --- a/arch/mips/loongson64/Kconfig
+> +++ b/arch/mips/loongson64/Kconfig
+> @@ -14,8 +14,4 @@ config RS780_HPET
+>  	  If unsure, say Yes.
+>  
+>  
+> -config LOONGSON_MC146818
+> -	bool
+> -	default n
+> -
+>  endif # MACH_LOONGSON64
+> diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
+> index f04461839540..102a19aa92aa 100644
+> --- a/arch/mips/loongson64/Makefile
+> +++ b/arch/mips/loongson64/Makefile
+> @@ -8,6 +8,5 @@ obj-$(CONFIG_MACH_LOONGSON64) += cop2-ex.o platform.o acpi_init.o dma.o \
+>  obj-$(CONFIG_SMP)	+= smp.o
+>  obj-$(CONFIG_NUMA)	+= numa.o
+>  obj-$(CONFIG_RS780_HPET) += hpet.o
+> -obj-$(CONFIG_LOONGSON_MC146818) += rtc.o
+>  obj-$(CONFIG_SUSPEND) += pm.o
+>  obj-$(CONFIG_PCI_QUIRKS) += vbios_quirk.o
+> diff --git a/arch/mips/loongson64/rtc.c b/arch/mips/loongson64/rtc.c
+> deleted file mode 100644
+> index 8d7628c0f513..000000000000
+> --- a/arch/mips/loongson64/rtc.c
+> +++ /dev/null
+> @@ -1,39 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-or-later
+> -/*
+> - *  Lemote Fuloong platform support
+> - *
+> - *  Copyright(c) 2010 Arnaud Patard <apatard@mandriva.com>
+> - */
+> -
+> -#include <linux/init.h>
+> -#include <linux/kernel.h>
+> -#include <linux/platform_device.h>
+> -#include <linux/mc146818rtc.h>
+> -
+> -static struct resource loongson_rtc_resources[] = {
+> -	{
+> -		.start	= RTC_PORT(0),
+> -		.end	= RTC_PORT(1),
+> -		.flags	= IORESOURCE_IO,
+> -	}, {
+> -		.start	= RTC_IRQ,
+> -		.end	= RTC_IRQ,
+> -		.flags	= IORESOURCE_IRQ,
+> -	}
+> -};
+> -
+> -static struct platform_device loongson_rtc_device = {
+> -	.name		= "rtc_cmos",
+> -	.id		= -1,
+> -	.resource	= loongson_rtc_resources,
+> -	.num_resources	= ARRAY_SIZE(loongson_rtc_resources),
+> -};
+> -
+> -
+> -static int __init loongson_rtc_platform_init(void)
+> -{
+> -	platform_device_register(&loongson_rtc_device);
+> -	return 0;
+> -}
+> -
+> -device_initcall(loongson_rtc_platform_init);
+> diff --git a/arch/mips/loongson64/time.c b/arch/mips/loongson64/time.c
+> index 1245f22cec84..91e842b58365 100644
+> --- a/arch/mips/loongson64/time.c
+> +++ b/arch/mips/loongson64/time.c
+> @@ -6,7 +6,7 @@
+>   * Copyright (C) 2009 Lemote Inc.
+>   * Author: Wu Zhangjin, wuzhangjin@gmail.com
+>   */
+> -#include <asm/mc146818-time.h>
+> +
+>  #include <asm/time.h>
+>  #include <asm/hpet.h>
+>  
+> @@ -21,9 +21,3 @@ void __init plat_time_init(void)
+>  	setup_hpet_timer();
+>  #endif
+>  }
+> -
+> -void read_persistent_clock64(struct timespec64 *ts)
+> -{
+> -	ts->tv_sec = mc146818_get_cmos_time();
+> -	ts->tv_nsec = 0;
+> -}
+> 
+Hi Jiaxun,
 
-Thanks, applied,
+Are you sure to remove function read_persistent_clock64 ? which is called in kernel/time/timekeeping.c
 
-- Arnaldo
+regards
+bibo,mao
+
