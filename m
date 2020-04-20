@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E972C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E90C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2442072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E51020724
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386627;
-	bh=7CwSGAnApzkj0TifNjJBsWcj8qqd9Xu9EoZHAW2GmvQ=;
+	s=default; t=1587386630;
+	bh=Gu0i2Pei8hae0lYc1wBuHKJsRjOIcQjmE+NHC1K3lzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cdCmhTo+ccMGo9uGVRu62BVDq4uq7vY84pkVd3CGrybfqur9DT4CWHlCIrn9qJunk
-	 e5kPlbkEALwL9WdK1+QJzPN6osg428TnxNwIx9qod++0yr/upkVjJo5RCqLArcJmE8
-	 6YnrSatXNTvZ+62UK8BqyvqBA2CzNWF031IptNWk=
+	b=ydPCxdjN84jyvkVxhLtMM4vMB19oTNRIb2i+CGhru2v2sVJ6MY6QPnhCsCWPOv+57
+	 zbWc6LxydW5HVMSQJT+2xpDIf8rl6lLMs9A/LVZrNtMFk54C13lOrQAIy1T7soWTSu
+	 Cn6NUtptodznZkWbMsrLbT38WjdbdHygIIuqh2BM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgDTMnq (ORCPT
+        id S1728454AbgDTMnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:43:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37390 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:43:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbgDTMnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:43:40 -0400
+        id S1728449AbgDTMnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:43:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03B8820724;
-        Mon, 20 Apr 2020 12:43:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8CA920724;
+        Mon, 20 Apr 2020 12:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386620;
-        bh=7CwSGAnApzkj0TifNjJBsWcj8qqd9Xu9EoZHAW2GmvQ=;
+        s=default; t=1587386625;
+        bh=Gu0i2Pei8hae0lYc1wBuHKJsRjOIcQjmE+NHC1K3lzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dau61tKXpv9Hr7WIsnWF49MyMXe9I/wE8eUCcfgwcMAS/HqBLz1GydCG0RQziNKaC
-         RCHOcag8yzsmAMSFWTiPOUkSf2ue9zIPWoyhwO4nj6Aw2eGW5KeEz8WK2W92edB9Ia
-         3Q8LnTRvuMr0mw8J9nvuEJl5DGzMFqxYFNaG6bdA=
+        b=YrVZJks/l4f90rSbwS4NefbpixUBQoi++CGRONq7kqrw+Hz3AXEI9OyqZOsiBrTOo
+         xgvLeV0N9HOIA5Pbr5PStJ6mld/aU/2vZov23u6+NEE4dVO2gNu70lzcmqgAJi+XRr
+         zRkiCrcO7lmMJO34wavrZAtCqbC+P75VdYuJiZtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bruno Meneguele <bmeneg@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 31/71] net/bpfilter: remove superfluous testing message
-Date:   Mon, 20 Apr 2020 14:38:45 +0200
-Message-Id: <20200420121514.928669975@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.6 32/71] ext4: fix incorrect group count in ext4_fill_super error message
+Date:   Mon, 20 Apr 2020 14:38:46 +0200
+Message-Id: <20200420121515.279670886@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,34 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bruno Meneguele <bmeneg@redhat.com>
+From: Josh Triplett <josh@joshtriplett.org>
 
-commit 41c55ea6c2a7ca4c663eeec05bdf54f4e2419699 upstream.
+commit df41460a21b06a76437af040d90ccee03888e8e5 upstream.
 
-A testing message was brought by 13d0f7b814d9 ("net/bpfilter: fix dprintf
-usage for /dev/kmsg") but should've been deleted before patch submission.
-Although it doesn't cause any harm to the code or functionality itself, it's
-totally unpleasant to have it displayed on every loop iteration with no real
-use case. Thus remove it unconditionally.
+ext4_fill_super doublechecks the number of groups before mounting; if
+that check fails, the resulting error message prints the group count
+from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
+computed group count instead (which at that point has just been computed
+in "blocks_count").
 
-Fixes: 13d0f7b814d9 ("net/bpfilter: fix dprintf usage for /dev/kmsg")
-Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
+Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bpfilter/main.c |    1 -
- 1 file changed, 1 deletion(-)
+ fs/ext4/super.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/bpfilter/main.c
-+++ b/net/bpfilter/main.c
-@@ -35,7 +35,6 @@ static void loop(void)
- 		struct mbox_reply reply;
- 		int n;
- 
--		fprintf(debug_f, "testing the buffer\n");
- 		n = read(0, &req, sizeof(req));
- 		if (n != sizeof(req)) {
- 			fprintf(debug_f, "invalid request %d\n", n);
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4286,9 +4286,9 @@ static int ext4_fill_super(struct super_
+ 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
+ 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
+ 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
+-		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
++		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
+ 		       "(block count %llu, first data block %u, "
+-		       "blocks per group %lu)", sbi->s_groups_count,
++		       "blocks per group %lu)", blocks_count,
+ 		       ext4_blocks_count(es),
+ 		       le32_to_cpu(es->s_first_data_block),
+ 		       EXT4_BLOCKS_PER_GROUP(sb));
 
 
