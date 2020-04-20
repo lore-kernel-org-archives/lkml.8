@@ -2,99 +2,153 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CF4C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A556EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526A020775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83DB9206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:42:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YoHC+xSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgDTOmq (ORCPT
+        id S1726644AbgDTOmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:42:46 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35492 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgDTOmp (ORCPT
+        Mon, 20 Apr 2020 10:42:54 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1048 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgDTOmx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:42:45 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e20so8306941otl.2;
-        Mon, 20 Apr 2020 07:42:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/0iPR1O3qunbIhZVQ4co+p81u1gdnBbCUAcTKszG3gQ=;
-        b=S7CWDe32yK2gUxYmCEC7wpzlK9bwOKfblkwswhUxzmlI+ww+gja/SXeir47SkNQG08
-         n5ZmC/bxclqmhdBajvCowPAbqVnpBD/qiLCSM9sgtxKSlJyzJydyUi40tZs+Bxo9FB2r
-         sdkvmcjZZ50y6TRU5SOKdyCrK7JCNmKbzWAqclfNgBENZ9Wj1MMh0yqM9RNC8h7vhIp3
-         Sbl+riuYnD5B8M+pnulveoBX2NUIPbZ4fkF86rstyk0Dvp8FYAIH+U5+cFxmkaL/rDh0
-         0Tvr6ejyTEvxOQcTyiDuSKhC8YT3NbzBr0yPJF4co/MV91tFXdPehsyE+56kwYUwk+mj
-         T0Pg==
-X-Gm-Message-State: AGi0PuaDSVth7U6waw6NJ1DyEFiAZkLetIu5RKUbxPPEQdvtyWAygtT5
-        /zsYjKiSv0nYqUNxIklj0GwBYMk7mlKcNdF7xWs=
-X-Google-Smtp-Source: APiQypJVZhEWlt61sSw6aMlHMo7uq4tg6FD+GTCFw6LUo5Dk0IkGTpzkprVW9qCB/iAUZbr73lbcHAWqiO3zQJBTGVU=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr6982682otn.107.1587393763564;
- Mon, 20 Apr 2020 07:42:43 -0700 (PDT)
+        Mon, 20 Apr 2020 10:42:53 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9db47a0000>; Mon, 20 Apr 2020 07:40:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 20 Apr 2020 07:42:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 20 Apr 2020 07:42:52 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Apr
+ 2020 14:42:52 +0000
+Received: from [10.26.73.5] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Apr
+ 2020 14:42:50 +0000
+Subject: Re: [PATCH 2/3] rtc: max77686: Make wakeup support configurable
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     <devicetree@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200417170825.2551367-1-thierry.reding@gmail.com>
+ <20200417170825.2551367-2-thierry.reding@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <03086f6b-012b-67ab-6a61-fbae1bf0c3c7@nvidia.com>
+Date:   Mon, 20 Apr 2020 15:42:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200420123844.3998746-1-arnd@arndb.de> <CAMuHMdUZR9A+nCYL_uUOJt48FQnJTJ9eMwWUuV-Z0UWJZ8SaSA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUZR9A+nCYL_uUOJt48FQnJTJ9eMwWUuV-Z0UWJZ8SaSA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 Apr 2020 16:42:32 +0200
-Message-ID: <CAMuHMdUWZ9SG_x_tEctMUTDt754kOATDTJbem0Ai-94EO8c0ZA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] sh: remove sh5 support
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux-sh list <linux-sh@vger.kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Magnus Damm <magnus.damm@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200417170825.2551367-2-thierry.reding@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587393658; bh=yn3vUFGEeKaSbo89hQOh0JOD4JoXvUZWh0Hn+nfcebA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YoHC+xSm7fcf9pCljcNNHfhhJPIsBavuwb36Om0l229okW8gmTlCCxuWYQwNOtFI/
+         JYd8IebIAUNEAL+QHM5ikslfpPZg/qCcRFIpS1HOIMqC2+S9RAWyh5s7tsADrr3VLS
+         Z0r5o/xEeqZF6sBc6N6ROV+0xunwXc9eyaXoOpnRF56nh9dPOu1IhR/UPMtT3InlUC
+         XYaG4esYbscR0t9W7VBcvHn/Y+P2yJPXHXvoblyNIWYr7XWep8Sq1lArR5SuP6ITll
+         DLUqh7ugaYgfqoGlo+4IA8Gk3IZ1Qg+Kg+Rbp8wycBaxCvYtcRCr3Lc5D7FhDJ5KnD
+         xE35upR4Lcn3w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
 
-On Mon, Apr 20, 2020 at 4:40 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Mon, Apr 20, 2020 at 2:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > sh5 never became a product and has probably never really worked.
-> >
-> > Remove it by recursively deleting all associated Kconfig options
-> > and all corresponding files.
->
-> Thanks a lot!
->
-> > For review purposes, this leaves out the files that can now be
-> > removed, in particular
-> >
-> >  arch/sh/drivers/pci/*-sh5.c
-> >  arch/sh/include/asm/*_64.h
-> >  arch/sh/include/uapi/asm/*_64.h
-> >  arch/sh/include/cpu-sh5/*
-> >  arch/sh/kernel/cpu/sh5/*
-> >  arch/sh/lib64/*
-> >  arch/sh/mm/*-sh5.c
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> A few nits below...
+On 17/04/2020 18:08, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Use the standard "wakeup-source" device tree property to determine if
+> the RTC can act as a wakeup source for the system. Note that the driver
+> by default always assumes that the RTC can act as a wakeup source, but
+> whether it can really do so or not always depends on how it is hooked
+> up.
+> 
+> In order to preserve backwards compatibility with older device trees,
+> only parse the "wakeup-source" property when a device tree node was
+> associated with the RTC device. This doesn't typically happen because
+> the top-level MFD driver doesn't list any compatible strings that can
+> be used to map child nodes to child devices. As a fallback, check if a
+> child node named "rtc" exists and use that instead.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Note that we could obviously add support to the MFD driver to match
+> subdevices to their device tree nodes by compatible string, but there
+> are side-effects, such as the driver core complaining about the lack
+> of a DMA mask for these devices. That in turn could also be fixed but
+> it ends up all being rather hacky, so just looking up a child node by
+> name seems like a good compromise, especially since there are already
+> such subnodes for some of the other subdevices of this PMIC.
+> ---
+>  drivers/rtc/rtc-max77686.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
+> index d5a0e27dd0a0..35fd74b83626 100644
+> --- a/drivers/rtc/rtc-max77686.c
+> +++ b/drivers/rtc/rtc-max77686.c
+> @@ -722,6 +722,8 @@ static int max77686_rtc_probe(struct platform_device *pdev)
+>  {
+>  	struct max77686_rtc_info *info;
+>  	const struct platform_device_id *id = platform_get_device_id(pdev);
+> +	struct device_node *np = of_node_get(pdev->dev.of_node);
+> +	bool wakeup = true;
+>  	int ret;
+>  
+>  	info = devm_kzalloc(&pdev->dev, sizeof(struct max77686_rtc_info),
+> @@ -746,7 +748,21 @@ static int max77686_rtc_probe(struct platform_device *pdev)
+>  		goto err_rtc;
+>  	}
+>  
+> -	device_init_wakeup(&pdev->dev, 1);
+> +	/*
+> +	 * Only check for the wakeup-source property if there's an actual
+> +	 * device tree node for the RTC. If no device tree node had been
+> +	 * attached during device instantiation, try looking up the "rtc"
+> +	 * child node of the parent's device tree node.
+> +	 */
+> +	if (!np && pdev->dev.parent->of_node)
+> +		np = of_get_child_by_name(pdev->dev.parent->of_node, "rtc");
+> +
+> +	if (np) {
+> +		wakeup = of_property_read_bool(np, "wakeup-source");
+> +		of_node_put(np);
+> +	}
+> +
+> +	device_init_wakeup(&pdev->dev, wakeup);
+>  
+>  	info->rtc_dev = devm_rtc_device_register(&pdev->dev, id->name,
+>  					&max77686_rtc_ops, THIS_MODULE);
+> 
 
-And you forgot to remove the tlbex_64 stuff from arch/sh/mm/Makefile.
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-Gr{oetje,eeting}s,
-
-                        Geert
+Cheers
+Jon
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+nvpublic
