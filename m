@@ -2,114 +2,239 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0CBC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81174C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C276920672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F69F20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587409569;
+	bh=V38IxocH1rfWGnbeEM+UwO1DTgwwjC7ulq+HQNhjOlQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lYi7p3BnGpz4f29Wd2gDClFlStRrk4ai7LgSKuVAxipENAxO64jK8Qg33fNG5kqMP
+	 NKE0Kt3BuOKRsMDBW/2LfFaQxuoPG+PunM359dcqVHqA5XS4Z+OVZervyhl4KhV0A1
+	 jTU8+EM6DmOkVDuSPsPJyuwJC21kLwumANzMyF6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgDTTF5 (ORCPT
+        id S1726754AbgDTTGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:05:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29224 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726017AbgDTTF5 (ORCPT
+        Mon, 20 Apr 2020 15:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726435AbgDTTGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:05:57 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KJ230V026517
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:05:57 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gj22utbj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:05:56 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 20 Apr 2020 20:05:32 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 Apr 2020 20:05:28 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KJ5oA854591690
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 19:05:50 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B9C611C070;
-        Mon, 20 Apr 2020 19:05:50 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 902F611C052;
-        Mon, 20 Apr 2020 19:05:49 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.201.119])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 19:05:49 +0000 (GMT)
-Subject: Re: IMA: policy update LSM rules failed
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Yiyang Su <suyiyang@hotmail.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "James Morris <jmorris@namei.org>" 
-        <IMCEASUPPORTER-SECURITY+20SUBSYSTEM@EURPRD10.PROD.OUTLOOK.COM>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Mon, 20 Apr 2020 15:05:49 -0400
-In-Reply-To: <AM6PR10MB240500A3E665DAA3807E0BF5C8D40@AM6PR10MB2405.EURPRD10.PROD.OUTLOOK.COM>
-References: <AM6PR10MB240500A3E665DAA3807E0BF5C8D40@AM6PR10MB2405.EURPRD10.PROD.OUTLOOK.COM>
+        Mon, 20 Apr 2020 15:06:08 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02E0DC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:06:08 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id g10so8499611lfj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:06:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iuOgcxk1XV3miYbE7wpVHuN9QYRjBAm2R22P+wf2gcE=;
+        b=L+lzdQ0+hDFUem0lsVOV5EEYL1IYLI2EyZmSOvm4b3/QX4qVY2eRGYR8Fmx43dHaxD
+         epXuGVZNXGEWLO/SYMnG05d7STOV0RHNdkoQftSAtlO9QVIUFhFPyz6oIQoNGvgRQc02
+         tzao2Bfws+6xheDrFv7gnxb7gcG2SXhJxYmUM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iuOgcxk1XV3miYbE7wpVHuN9QYRjBAm2R22P+wf2gcE=;
+        b=phsk9eVqvRE1vAiuu9Gm1sdOi22chqF/l+iz/auh5dd4nPTkqLh8gDgaORFW07UQCd
+         wZAp7Yfap7Z5OCCSYLhs8HTem5fUceuKCEtm9FHEt8VsCZim3ILTZJaNWCMM/bjhc1dn
+         b/mdD2K770PGp2xQEUBOTpA6kQ5bj+mUr3ftNXbxt84gtOTEMjNwetvJ3/cLdT77Bfwt
+         ULGhwsr/41UxGXAbWd/BZ20qQYM+1/G21GRTw/CBKQHFJGSAaBStfb3FrNDh38RzBXot
+         GUi5LvGyrSvvfruDJCjDVJ4WnpvTZignL2k3cd0+Y1628uvG/O9Kt9YRcZvgyqujLI74
+         PyBg==
+X-Gm-Message-State: AGi0PubJmOgqtQi859d5FAjJ4QKsDRUa7cxnhODzs0i5DXVBy+gTiFvf
+        DAvH8dVs3iwwFFWFtia6E3GsP2ELJGo=
+X-Google-Smtp-Source: APiQypL8/2Jz8BCA+dbFMBke4u8JRep5nNoU81N4jJgHs/N0K4M5nqZ0VHcX4VFY7ACoD2nL0BVE6w==
+X-Received: by 2002:ac2:46c4:: with SMTP id p4mr11392956lfo.37.1587409564688;
+        Mon, 20 Apr 2020 12:06:04 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id r20sm234031ljk.42.2020.04.20.12.06.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 12:06:03 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id l11so8984343lfc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:06:02 -0700 (PDT)
+X-Received: by 2002:a19:7706:: with SMTP id s6mr11379259lfc.31.1587409561755;
+ Mon, 20 Apr 2020 12:06:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net>
+ <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
+ <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com>
+ <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com> <CAPcyv4hrfZsg48Gw_s7xTLLhjLTk_U+PV0MsLnG+xh3652xFCQ@mail.gmail.com>
+In-Reply-To: <CAPcyv4hrfZsg48Gw_s7xTLLhjLTk_U+PV0MsLnG+xh3652xFCQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 20 Apr 2020 12:05:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgcc=5kiph7o+aBZoWBCbu=9nQDQtD41DvuRRrqixohUA@mail.gmail.com>
+Message-ID: <CAHk-=wgcc=5kiph7o+aBZoWBCbu=9nQDQtD41DvuRRrqixohUA@mail.gmail.com>
+Subject: Re: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042019-0012-0000-0000-000003A81DC7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042019-0013-0000-0000-000021E56885
-Message-Id: <1587409549.5446.1.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_07:2020-04-20,2020-04-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 mlxscore=0 suspectscore=0 bulkscore=0 malwarescore=0
- phishscore=0 adultscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-20 at 17:51 +0000, Yiyang Su wrote:
-> Hello,
-> 
-> Current i am using Kernel 4.14.169 and trying to add some LSM rules such as "measure subj_user=_ func=FILE_CHECK mask=MAY_READ" into ima policy, but i cannot update the policy. Same happens by updating for subj_role, subj_type, obj_user, obj_role, and obj_type.
-> 
-> The issue can be produced:
-> ###
-> echo "measure subj_user=_ func=INODE_PERM mask=MAY_READ" > /sys/kernel/security/ima/policy
-> sh: write error: Invalid argument
-> IMA: policy update failed
-> 
-> [ 1558.886333] audit: type=1805 audit(1587051889.726:28): action="measure" subj_user="_" res=0
-> [ 1558.903324] audit: type=1802 audit(1587051889.726:29): pid=255 uid=0 auid=4294967295 ses=4294967295 op="update_policy" cause="invalid-policy" comm="sh" res=0
-> [ 1558.917414] audit: type=1300 audit(1587051889.726:29): arch=40000028 syscall=4 per=800000 success=no exit=-22 a0=1 a1=aab98 a2=32 a3=0 items=0 ppid=1 pid=255 auid=4294967295 uid=0 gid=0 euid=0 suid=0 )
-> [ 1558.945176] audit: type=1327 audit(1587051889.726:29): proctitle="-sh"
-> [ 1558.951699] audit: type=1802 audit(1587051889.736:30): pid=255 uid=0 auid=4294967295 ses=4294967295 op="policy_update" cause="failed" comm="sh" res=0
-> ###
-> 
-> But there is no problem to update a rule such as "measure fowner=55"
-> ###
-> echo "measure fowner=55" > /sys/kernel/security/ima/policy
-> IMA: policy update completed
-> ###
-> 
-> The kernel option CONFIG_IMA_LSM_RULES=y is enabled.
+On Mon, Apr 20, 2020 at 11:20 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> * I'm at a loss of why you seem to be suggesting that hardware should
+> / could avoid all exceptions. What else could hardware do besides
+> throw an exception on consumption of a naturally occuring multi-bit
+> ECC error? Data is gone, and only software might know how to recover.
 
-Perhaps the difference isn't the LSM options, but the "func="
-definition?  I've never seen "func=INODE_PERM".
+This is classic bogus thinking.
 
-Mimi 
+If Intel ever makes ECC DRAM available to everybody, there would be a
+_shred_ of logic to that thinking, but right now it's some hw designer
+in their mom's basement that has told you that hardware has to throw a
+synchronous exception because hardware doesn't know any better.
 
+That hardware designer really doesn't have a _clue_ about the big issues.
+
+The fact is, a synchronous machine check exception is about the
+_worst_ thing you can ever do when you encounter something like a
+memory error.
+
+It literally means that the software cannot possibly do anything sane
+to recover, because the software is in some random place. The hardware
+designer didn't think about the fact that the low-level access is
+hidden from the software by a compiler and/or a lot of other
+infrastructure - maybe microcode, maybe the OS, maybe a scriping
+language, yadda yadda.
+
+Absolutely NOBODY can recover at the level of one instruction. The
+microcode people already proved that. At the level of "memcpy()", you
+do not have a recovery option.
+
+A hardware designer that tells you that you have to magically recover
+at an instruction boundary fundamentally DOES NOT UNDERSTAND THE
+PROBLEM.
+
+IOW, you have completely uncritically just taken that incorrect
+statement of "what else could hardware do" without questioning that
+hardware designer AT ALL.
+
+And remember, this is likely the same hardware designer that told you
+that it's a good idea to then make machine checks go to every single
+CPU in the system.
+
+And this is the same hardware designer that then didn't even give you
+enough information to recover.
+
+And this is the same hardware designer that made recovery impossible
+anyway, because if the error happened in microcode or in some other
+situation, the microcode COULDN'T HANDLE IT EITHER!
+
+In other words, you are talking to people WHO ARE KNOWN TO BE INCOMPETENT.
+
+Seriously. Question them. When they tell ytou that "it's the only
+thing we can possibly do", they do so from being incompetent, and we
+have the history to PROVE it.
+
+I don't understand why nobody else seems to be pushing back against
+the completely insane and known garbage that is the Intel machine
+checks. They are wrong.
+
+The fact is, synchronous errors are the absolute worst possible
+interface, exactly because they cause problems in various nasty corner
+cases.
+
+We _know_ a lot of those corner cases, for chrissake:
+
+ - random standard library routine like "memcpy". How the hell do you
+think a memcpy can recover? It can't.
+
+ - Unaligned handling where "one" access isn't actually a single access.
+
+ - microcode. Intel saw this problem themselves, but instead of making
+people realize "oh, synchronous exceptions don't work that well" and
+think about the problem, they wasted our time for decades, and then
+probably spent a lot of effort in trying to make them work.
+
+ - random generic code that isn't able to handle the fault, because IT
+SHOULDN'T NEED TO CARE. Low-level filesystems, user mappings, the list
+just goes on.
+
+The only thing that can recover tends to be at a *MUCH* higher level
+than one instruction access.
+
+So the next time somebody tells you "there's nothing else we can do",
+call them out on being incompetent, and call them out on the fact that
+history has _shown_ that they are incompetent and wrong. Over and over
+again.
+
+I can _trivially_ point to a number of "what else could we do" that
+are much better options.
+
+ (a) let the corrupted value through, notify things ASYNCHRONOUSLY
+that there were problems, and let people handle the issue later when
+they are ready to do so.
+
+Yeah, the data was corrupt - but not allowing the user to read it may
+mean that the whole file is now inaccessible, even if it was just a
+single ECC block that was wrong. I don't know the block-size people
+use for ECC, and the fact is, software shouldn't really even need to
+care. I may be able to recover from the situation at a higher level.
+The data may be recoverable other ways - including just a "I want even
+corrupted data, because I might have enough context that I can make
+sense of it anyway".
+
+ (b) if you have other issues so that you don't have data at all
+(maybe it was metadata that was corrupted, don't ask me how that would
+happen), just return zeroes, and notify about the problem
+ASYNCHRONOUSLY.
+
+And when notifying, give as much useful information as possible: the
+virtual and physical address of the data, please, in addition to maybe
+lower level bank information. Add a bit for "multiple errors", so that
+whoever then later tries to maybe recover, can tell if it has complete
+data or not.
+
+The OS can send a SIGBUS with that information to user land that can
+then maybe recover. Or it can say "hey, I'm in some recovery mode,
+I'll try to limp along with incomplete data". Sometimes "recover"
+means "try to limp along, notify the user that their hw is going bad,
+but try to use the data anyway".
+
+Again, what Intel engineers actually did with the synchronous
+non-recoverable thing was not "the only thing I could possibly have
+done".
+
+It was literally the ABSOLUTE WORST POSSIBLE THING they could do, with
+potentially  a dead machine as a result.
+
+And now - after years of pain - you have the gall to repeat that
+idiocy that you got from people who have shown themselves to be
+completely wrong in the past?
+
+Why?
+
+Why do you take their known wrong approach as unthinking gospel? Just
+because it's been handed down over generations on stone slabs?
+
+I really really detest the whole mcsafe garbage. And I absolutely
+*ABHOR* how nobody inside of Intel has apparently ever questioned the
+brokenness at a really fundamental level.
+
+That "I throw my hands in the air and just give up" thing is a
+disease. It's absolutely not "what else could we do".
+
+                  Linus
