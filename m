@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77201C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2A3C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 490B120735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547D22078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386896;
-	bh=1NfLBfy5ig5bHPBuxtRQkFN4mZIt4JKhzWxZE9M2dHg=;
+	s=default; t=1587386899;
+	bh=Eivq5juyMXA4AkvbRseQC8H4peMc7yxvOwgs/rLooDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K8Vm67H8MwIBBfeeAqJpiW8N2OPlej7eTsZ0uA7t1WBbqF+emBlGEwtazPuU40bMp
-	 gm+IWgRtUr0Pa3QpdapJeZfcPTFs7daXr+WS/0NdFtzCWNRnAK8BAvAReQFa9T+BVH
-	 vemjDmO5UpnECNSfYng7ufkwTFwT3/e2+GgMMMfQ=
+	b=nlQ4wqT9Ncls+WW74ECPXdA3R05/7/F92x/Ve0I33vRD8Jp5yR6MEzLCfJ6UZRqK7
+	 6SPkQkdXCHbBDQMcunxUHmIChQUUYJSeWyBUwH+hexlGTvHiPZP10BIH6/hN99Ebuy
+	 9HljN3XJI7HKEZVLE/jrzhRsEbD72RfAgOEo7BHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbgDTMsP (ORCPT
+        id S1728684AbgDTMsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:48:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44614 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:48:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729193AbgDTMsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:48:07 -0400
+        id S1728009AbgDTMsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2CB5206DD;
-        Mon, 20 Apr 2020 12:48:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FD78206DD;
+        Mon, 20 Apr 2020 12:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386887;
-        bh=1NfLBfy5ig5bHPBuxtRQkFN4mZIt4JKhzWxZE9M2dHg=;
+        s=default; t=1587386884;
+        bh=Eivq5juyMXA4AkvbRseQC8H4peMc7yxvOwgs/rLooDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DAR8zdUubllagQn25MwTRbFaKcFbqudbUta9Gt/y4rZfNgdrODkIlqo6z50SBQBSw
-         ilCcQstRY8z3S6U93rRKRC4A1qDiN7v5anbrdywH/Zq9tqaA7qOpxAjyENkPm/HMdQ
-         rNucuPbqdehXmMJ8pDz9LmxdK7rd90sJHcFG3B54=
+        b=JLCmvE9pklbDH+b+/CXvG5MlwdRCXxSdvE2Q2JYs1bXFKs+QjmHhucZHV4qPTC38k
+         KoUXT1A03slDEAnrox/0PZXTve+1SH9+UNnFAVAHWSz4T+lWTQQXt7QHUUcdiyHeMn
+         6/2OOEtUlZXXTMrYRztLPeH9TBPKR0qkG+XlToBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prike Liang <Prike.Liang@amd.com>,
-        Mengbing Wang <Mengbing.Wang@amd.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
+        stable@vger.kernel.org, Sergei Lopatin <magist3r@gmail.com>,
         Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 52/60] drm/amdgpu: fix the hw hang during perform system reboot and reset
-Date:   Mon, 20 Apr 2020 14:39:30 +0200
-Message-Id: <20200420121514.345458607@linuxfoundation.org>
+Subject: [PATCH 5.4 51/60] drm/amd/powerplay: force the trim of the mclk dpm_levels if OD is enabled
+Date:   Mon, 20 Apr 2020 14:39:29 +0200
+Message-Id: <20200420121514.095203591@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -61,37 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prike Liang <Prike.Liang@amd.com>
+From: Sergei Lopatin <magist3r@gmail.com>
 
-commit b2a7e9735ab2864330be9d00d7f38c961c28de5d upstream.
+commit 8c7f0a44b4b4ef16df8f44fbaee6d1f5d1593c83 upstream.
 
-The system reboot failed as some IP blocks enter power gate before perform
-hw resource destory. Meanwhile use unify interface to set device CGPG to ungate
-state can simplify the amdgpu poweroff or reset ungate guard.
+Should prevent flicker if PP_OVERDRIVE_MASK is set.
 
-Fixes: 487eca11a321ef ("drm/amdgpu: fix gfx hang during suspend with video playback (v2)")
-Signed-off-by: Prike Liang <Prike.Liang@amd.com>
-Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
-Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+bug: https://bugs.freedesktop.org/show_bug.cgi?id=102646
+bug: https://bugs.freedesktop.org/show_bug.cgi?id=108941
+bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1088
+bug: https://gitlab.freedesktop.org/drm/amd/-/issues/628
+
+Signed-off-by: Sergei Lopatin <magist3r@gmail.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -2176,6 +2176,8 @@ static int amdgpu_device_ip_suspend_phas
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
+@@ -3805,9 +3805,12 @@ static int smu7_trim_single_dpm_states(s
  {
- 	int i, r;
+ 	uint32_t i;
  
-+	amdgpu_device_set_pg_state(adev, AMD_PG_STATE_UNGATE);
-+	amdgpu_device_set_cg_state(adev, AMD_CG_STATE_UNGATE);
- 
- 	for (i = adev->num_ip_blocks - 1; i >= 0; i--) {
- 		if (!adev->ip_blocks[i].status.valid)
++	/* force the trim if mclk_switching is disabled to prevent flicker */
++	bool force_trim = (low_limit == high_limit);
+ 	for (i = 0; i < dpm_table->count; i++) {
+ 	/*skip the trim if od is enabled*/
+-		if (!hwmgr->od_enabled && (dpm_table->dpm_levels[i].value < low_limit
++		if ((!hwmgr->od_enabled || force_trim)
++			&& (dpm_table->dpm_levels[i].value < low_limit
+ 			|| dpm_table->dpm_levels[i].value > high_limit))
+ 			dpm_table->dpm_levels[i].enabled = false;
+ 		else
 
 
