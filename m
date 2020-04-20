@@ -2,70 +2,108 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB492C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758F1C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B007820CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53EB22145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MZrLkzLP"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="cwsjvCbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgDTJUq (ORCPT
+        id S1726116AbgDTJWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbgDTJUq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:20:46 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82957C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 02:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xsDgFULRevrMl2sYWxpKGSHmJwAeC5VY0bWDB58Zd2A=; b=MZrLkzLPpycDjQP6LwIrPimNRM
-        5L8jsbG/Mo/aSiWJWStljnn2qE06Q5cgrHi6ryTY8LuSjSGBRtHSIb1gGf65z0dZMwQ9Uv5JIGL1f
-        qK1I5blOxqykYjfzrJ7UrzcbYZAKhmeVw1JVt6216hkQUsgTdb0VZOj09iowMR5fcBkIHLWcbsqDM
-        JpsNoZWlI2Lv5MZ/y2+nFKkCimMZBfhbS4wpZEQz0NXYH/EMT1itRPifzI9AKIGAMmwx+TlF1emPf
-        Vb3SiXzESC0epAhuWHEhlvZpLuLu96rcdyY1lpgcsrebCcnz+ohepTncH84NZEtpJchv6CHhfUmDb
-        BwvjitWw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQSbd-0007ea-N1; Mon, 20 Apr 2020 09:20:45 +0000
-Date:   Mon, 20 Apr 2020 02:20:45 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: Re: [patch 00/15] x86/tlb: Unexport per-CPU tlbstate
-Message-ID: <20200420092045.GC24518@infradead.org>
-References: <20200419203137.214111265@linutronix.de>
+        Mon, 20 Apr 2020 05:22:21 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:26907 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbgDTJWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:22:21 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 495LnK5hkRz8L;
+        Mon, 20 Apr 2020 11:22:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1587374539; bh=3MXoIlRv+JlYYbnLOSIrj3nnS5x96d5V041E6lXJFOI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cwsjvCbuaOQrYT5P5a4M9+BfRlVaTvanm1BxA0zi+/gKwN/31YiRn8FEZOvu8dK/w
+         VSehcnEl0n27LX7aWsyp33krF3pDiSE+xpaqTkWXb7WH3aGZ41NV3XIK31QLrah5Tp
+         Ep8NsdRh9vS0+VdRB3UawuReVWJmHkex4WBFE1T2znu43XmXoBPQ9j9kI+jZ8F0RTH
+         cr3aQDU8RX4I+JdMQl15TqLTOSgl7vk04pzLBzD7bQMIEkTEkSpx9z6jxakIlZO6wK
+         haVUgAKxNalhz6npsMnCszbvv4OIonFEs7yXMYikUAN+S3af+qVlVw5KarNvF+310L
+         GAEXcntkfydXg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Mon, 20 Apr 2020 11:22:09 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 07/11] power: supply: core: tabularize HWMON
+ temperature labels
+Message-ID: <20200420092209.GA25831@qmqm.qmqm.pl>
+References: <29b5043db9a51ef7a0cb6e3a8c69c91e36045cd6.1585944770.git.mirq-linux@rere.qmqm.pl>
+ <202004050928.d6QhVcsQ%lkp@intel.com>
+ <CAKwvOdm5BhMdAmXR0gCLntkbvF7ajaNoWoHVCCio1CqbGzS6aQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-2
 Content-Disposition: inline
-In-Reply-To: <20200419203137.214111265@linutronix.de>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKwvOdm5BhMdAmXR0gCLntkbvF7ajaNoWoHVCCio1CqbGzS6aQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just looking over some exports at the end of the series (and thus
-ignoring bisection issues):
+On Tue, Apr 07, 2020 at 11:13:50AM -0700, Nick Desaulniers wrote:
+> On Sat, Apr 4, 2020 at 6:53 PM kbuild test robot <lkp@intel.com> wrote:
+> >
+> > Hi "Micha³,
+> >
+> > I love your patch! Perhaps something to improve:
+> >
+> > [auto build test WARNING on power-supply/for-next]
+> > [also build test WARNING on hwmon/hwmon-next linus/master v5.6 next-20200404]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help
+> > improve the system. BTW, we also suggest to use '--base' option to specify the
+> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> >
+> > url:    https://github.com/0day-ci/linux/commits/Micha-Miros-aw/extensions-and-fixes/20200405-044024
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
+> > config: x86_64-randconfig-b002-20200405 (attached as .config)
+> > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 62f3a9650a9f289a07a5f480764fb655178c2334)
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         COMPILER=clang make.cross ARCH=x86_64
+> >
+> > If you fix the issue, kindly add following tag as appropriate
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> >
+> > All warnings (new ones prefixed by >>):
+> >
+> > >> drivers/power/supply/power_supply_hwmon.o: warning: objtool: power_supply_hwmon_read_string() falls through to next function power_supply_hwmon_write()
+> 
+> I'm guessing this is from the unreachable:
+> https://github.com/0day-ci/linux/commit/b8b2d14ca46ca54257f55c9af58ea25695b9ee36
+> I'll need to play with this some more as I couldn't reproduce with a
+> simplified test case, but looks like a compiler bug.  Filed
+> https://github.com/ClangBuiltLinux/linux/issues/978 for me to track.
 
- - Is there any good reason to keep __flush_tlb_all inline vs moving it
-   out of line and kill the flush_tlb_local and flush_tlb_global exports.
-   Also there is just a single modular users in SVM, I wonder if there is
-   any way to get rid of that one as well.
+Hi,
 
-Also I think cpu_tlbstate itself could be marked static in tlb.c with
-a few more changes, I wonder if would be worth it?
+For gcc this is bug 51513 [1]. This does not affect correctness of the
+code, so I wonder if we should/need be trying to work around it.
+
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=51513
+
+Best Regards,
+Micha³ Miros³aw
