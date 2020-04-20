@@ -2,253 +2,171 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25528C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F37C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECC6E20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD2A20782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Itehx/kn"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="p6knrLkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgDTU1A (ORCPT
+        id S1728275AbgDTU0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:27:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50140 "EHLO
+        Mon, 20 Apr 2020 16:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbgDTU04 (ORCPT
+        with ESMTP id S1726878AbgDTU02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:26:56 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8FC9C061A0C;
-        Mon, 20 Apr 2020 13:26:56 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u9so5490625pfm.10;
-        Mon, 20 Apr 2020 13:26:56 -0700 (PDT)
+        Mon, 20 Apr 2020 16:26:28 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98038C061A0C;
+        Mon, 20 Apr 2020 13:26:28 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id v8so886081wma.0;
+        Mon, 20 Apr 2020 13:26:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Fu9Uhr2WUQ553mJsjojbg9oYJpUAQFW34/wi7Gm0amg=;
-        b=Itehx/knDWwHPwVe6STk6VcC+aEK0W7ooUGEb791KaDO1o/vwOdA/JN9yFNuVtdy4+
-         n0dN1Nkmzau/ARNpn+G/YI3Fjguagorp8ldTOIgQqQVPHPPh4/bmjoFvrh0J50vXjq8p
-         URpW1BpKuPjhkIoxDFzspsPzM5KbiynyR3oBXa+wqtAXeFvlug5Sx+OTMQhCl6pKlGQj
-         WjUzdRMAr97FopmwNN2FxRfR9yuqm9Vbzh4breKXDnoDuL4DiU5tolDk37r2OiDhHCa4
-         oKvMWOql1K3zGjOSClA9u+ShXFYMFZL/TheBb6w4qnqdyslWRGwFUl3d4FwZ7eOkjrEb
-         Gxvw==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6W8grtyB7pbKtLO6nZYSpUXrUqbnBG7Y9G7Qj2TNYYc=;
+        b=p6knrLkBXwqGxq6+Y8qDIGzAfcrs/wLEqwashKOOkURN4yTA94z5zf6FYUXgFl5l+A
+         sUZmWPty1XgIIpLJ3hTZO4gKR/faEocL0UrIS0nof9RS8Twbj238UkMEtj94Kz5OlpUd
+         8hQELeyceiME/J/rZZVVMoRms2EpF/5fJzag0sVaY5uAMl/5yXip4SfSyG3lZMWSEjeM
+         k14iXl5I9MZDAQS/v/frX36Orkn+PTNpt0fHnjzmF1buhsAhSk+K0WNkYkNAsy4sfAEL
+         awitjW9GwcEYdzsGz3nqeD8ILj01JO0ixWHC5/iW+BObvDHrDvKpuPvCv4X+F1l5TCIY
+         yh+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Fu9Uhr2WUQ553mJsjojbg9oYJpUAQFW34/wi7Gm0amg=;
-        b=jq5ruqMCxcNO1zhKXdA5R2P24YtX057eveL6V7IbekrOFr1Kkn9Lub0r5PEaIsIGRW
-         3Vi39vwICsd6YiLQriG1pivUIAtPkHwRXyCX93XD54hGeGyfMe3Hjg97UWNiPo7P80xF
-         aPv/gnJvwAmM8orn5gVZQkxz/+FIesH2frvZnShcx1zvmHk2ncqrOXw5HiGLDuZ/9Qm5
-         4NifBy86XuaQlA0+xU0Q/pngfLxagVAB2xXHdrYx24HZ1iybt7WJy4p6e+kGr13zPpMB
-         3IgmY4eZeZ2PyxALsKxtsWdNoDXHBGVLkEm4gxhzRxzV2qkDySrIPG3yNk11+j4rozCK
-         3yoQ==
-X-Gm-Message-State: AGi0PubrONvy8qL9m1Lav8ZCyYh06UmFv2FvlQMiGMkr5nBPkfJWGQhj
-        uvr8XRwrVe3P4WZI5+JJt7c=
-X-Google-Smtp-Source: APiQypJpug56tVoemXOW5dw56pzrYkEFCOENPtf7Pdhh01jNMlZXJtyzWZDH5fcD2MEZ9xpXjlcP3g==
-X-Received: by 2002:a63:1820:: with SMTP id y32mr17486948pgl.182.1587414416044;
-        Mon, 20 Apr 2020 13:26:56 -0700 (PDT)
-Received: from athina.mtv.corp.google.com ([2620:15c:211:0:c786:d9fd:ab91:6283])
-        by smtp.gmail.com with ESMTPSA id 141sm338899pfz.171.2020.04.20.13.26.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6W8grtyB7pbKtLO6nZYSpUXrUqbnBG7Y9G7Qj2TNYYc=;
+        b=CME10pCQEBoI1RMvw5ps/2HHknQywcxYM6VWmPsLyYjH50O2tFRMfWcwcoJVjgDlCn
+         t2qu3pLPYAOnWARhjB855ms6u34kFggkgFPDTenmBC5tQMuuIyFnWRpN95R6Hnbc80Z3
+         5wbeCNXJ6kgj5vvH6P9/Hxzfpf7sjJ1WI+y9aesShfb1+/ykOaGCjybCl+VyRYCC/0oB
+         MnYEVD8ewDBnRdQco5b21nEucMcvk5uk2sENhzOKiaPP/9UUZlzBXc+SY4bKNvTfT1MZ
+         WUb1tI0kh9Ose1t42X62LOA7TJ3OCZ4NI7vCM0ogwn3F5GefkDOdn8aL5HnCAvapBpUs
+         xWOQ==
+X-Gm-Message-State: AGi0PuYC6FooMiZjCjTCyUglHxtupi0j9rLPah4RN2gCghMQq0gy4Ga5
+        kTXR+2aq+7jUvLH4jjHiNh0=
+X-Google-Smtp-Source: APiQypLqmxKs/1t8ZCj39OTBsU0FhGL3s33M63qCSyOMn2SmgJ0ImXAQAFlCOH5BiI32aIJv+k0WsA==
+X-Received: by 2002:a1c:148:: with SMTP id 69mr1161252wmb.181.1587414387225;
+        Mon, 20 Apr 2020 13:26:27 -0700 (PDT)
+Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id l19sm657846wmj.14.2020.04.20.13.26.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:26:55 -0700 (PDT)
-From:   =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>
-To:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Linux Network Development Mailing List <netdev@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>
-Subject: [PATCH] net: bpf: add bpf_ktime_get_boot_ns()
-Date:   Mon, 20 Apr 2020 13:26:43 -0700
-Message-Id: <20200420202643.87198-1-zenczykowski@gmail.com>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+        Mon, 20 Apr 2020 13:26:26 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 4/4] soc: amlogic: meson-ee-pwrc: add support for the Meson GX SoCs
+Date:   Mon, 20 Apr 2020 22:26:12 +0200
+Message-Id: <20200420202612.369370-5-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
+References: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Żenczykowski <maze@google.com>
+Add support for the Meson GX SoCs to the meson-ee-pwrc driver.
 
-On a device like a cellphone which is constantly suspending
-and resuming CLOCK_MONOTONIC is not particularly useful for
-keeping track of or reacting to external network events.
-Instead you want to use CLOCK_BOOTTIME.
+The power domains on the GX SoCs are very similar to G12A. The only
+known differences so far are:
+- The GX SoCs do not have the HHI_VPU_MEM_PD_REG2 register (for the
+  VPU power-domain)
+- The GX SoCs have an additional reset line called "dvin"
 
-Hence add bpf_ktime_get_boot_ns() as a mirror of bpf_ktime_get_ns()
-based around CLOCK_BOOTTIME instead of CLOCK_MONOTONIC.
-
-Signed-off-by: Maciej Żenczykowski <maze@google.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/media/rc/bpf-lirc.c    |  2 ++
- include/linux/bpf.h            |  1 +
- include/uapi/linux/bpf.h       | 13 ++++++++++++-
- kernel/bpf/core.c              |  1 +
- kernel/bpf/helpers.c           | 12 ++++++++++++
- kernel/trace/bpf_trace.c       |  2 ++
- net/core/filter.c              |  2 ++
- tools/include/uapi/linux/bpf.h | 13 ++++++++++++-
- 8 files changed, 44 insertions(+), 2 deletions(-)
+ drivers/soc/amlogic/meson-ee-pwrc.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/rc/bpf-lirc.c b/drivers/media/rc/bpf-lirc.c
-index 0f3417d161b8..069c42f22a8c 100644
---- a/drivers/media/rc/bpf-lirc.c
-+++ b/drivers/media/rc/bpf-lirc.c
-@@ -103,6 +103,8 @@ lirc_mode2_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_map_peek_elem_proto;
- 	case BPF_FUNC_ktime_get_ns:
- 		return &bpf_ktime_get_ns_proto;
-+	case BPF_FUNC_ktime_get_boot_ns:
-+		return &bpf_ktime_get_boot_ns_proto;
- 	case BPF_FUNC_tail_call:
- 		return &bpf_tail_call_proto;
- 	case BPF_FUNC_get_prandom_u32:
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index fd2b2322412d..65217c52474d 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1502,6 +1502,7 @@ extern const struct bpf_func_proto bpf_get_smp_processor_id_proto;
- extern const struct bpf_func_proto bpf_get_numa_node_id_proto;
- extern const struct bpf_func_proto bpf_tail_call_proto;
- extern const struct bpf_func_proto bpf_ktime_get_ns_proto;
-+extern const struct bpf_func_proto bpf_ktime_get_boot_ns_proto;
- extern const struct bpf_func_proto bpf_get_current_pid_tgid_proto;
- extern const struct bpf_func_proto bpf_get_current_uid_gid_proto;
- extern const struct bpf_func_proto bpf_get_current_comm_proto;
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 2e29a671d67e..2e13b094438d 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -652,6 +652,16 @@ union bpf_attr {
-  * u64 bpf_ktime_get_ns(void)
-  * 	Description
-  * 		Return the time elapsed since system boot, in nanoseconds.
-+ * 		Does not include time the system was suspended.
-+ * 		See: clock_gettime(CLOCK_MONOTONIC)
-+ * 	Return
-+ * 		Current *ktime*.
-+ *
-+ * u64 bpf_ktime_get_boot_ns(void)
-+ * 	Description
-+ * 		Return the time elapsed since system boot, in nanoseconds.
-+ * 		Does include the time the system was suspended.
-+ * 		See: clock_gettime(CLOCK_BOOTTIME)
-  * 	Return
-  * 		Current *ktime*.
-  *
-@@ -3151,7 +3161,8 @@ union bpf_attr {
- 	FN(xdp_output),			\
- 	FN(get_netns_cookie),		\
- 	FN(get_current_ancestor_cgroup_id),	\
--	FN(sk_assign),
-+	FN(sk_assign),			\
-+	FN(ktime_get_boot_ns),
+diff --git a/drivers/soc/amlogic/meson-ee-pwrc.c b/drivers/soc/amlogic/meson-ee-pwrc.c
+index b30868da456a..a90572cb9c82 100644
+--- a/drivers/soc/amlogic/meson-ee-pwrc.c
++++ b/drivers/soc/amlogic/meson-ee-pwrc.c
+@@ -16,6 +16,7 @@
+ #include <linux/clk.h>
+ #include <dt-bindings/power/meson8-power.h>
+ #include <dt-bindings/power/meson-g12a-power.h>
++#include <dt-bindings/power/meson-gxbb-power.h>
+ #include <dt-bindings/power/meson-sm1-power.h>
  
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-  * function eBPF program intends to call
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 916f5132a984..d87877cd99c1 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -2151,6 +2151,7 @@ const struct bpf_func_proto bpf_get_prandom_u32_proto __weak;
- const struct bpf_func_proto bpf_get_smp_processor_id_proto __weak;
- const struct bpf_func_proto bpf_get_numa_node_id_proto __weak;
- const struct bpf_func_proto bpf_ktime_get_ns_proto __weak;
-+const struct bpf_func_proto bpf_ktime_get_boot_ns_proto __weak;
+ /* AO Offsets */
+@@ -73,7 +74,7 @@ struct meson_ee_pwrc_domain_data {
  
- const struct bpf_func_proto bpf_get_current_pid_tgid_proto __weak;
- const struct bpf_func_proto bpf_get_current_uid_gid_proto __weak;
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index a5158a179e81..fb3ecc5dee7f 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -155,6 +155,18 @@ const struct bpf_func_proto bpf_ktime_get_ns_proto = {
- 	.ret_type	= RET_INTEGER,
+ /* TOP Power Domains */
+ 
+-static struct meson_ee_pwrc_top_domain g12a_pwrc_vpu = {
++static struct meson_ee_pwrc_top_domain gxbb_pwrc_vpu = {
+ 	.sleep_reg = AO_RTI_GEN_PWR_SLEEP0,
+ 	.sleep_mask = BIT(8),
+ 	.iso_reg = AO_RTI_GEN_PWR_SLEEP0,
+@@ -138,6 +139,12 @@ static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_vpu[] = {
+ 	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
  };
  
-+BPF_CALL_0(bpf_ktime_get_boot_ns)
-+{
-+	/* NMI safe access to clock boottime */
-+	return ktime_get_boot_fast_ns();
-+}
-+
-+const struct bpf_func_proto bpf_ktime_get_boot_ns_proto = {
-+	.func		= bpf_ktime_get_boot_ns,
-+	.gpl_only	= false,
-+	.ret_type	= RET_INTEGER,
++static struct meson_ee_pwrc_mem_domain gxbb_pwrc_mem_vpu[] = {
++	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
++	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
++	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
 +};
 +
- BPF_CALL_0(bpf_get_current_pid_tgid)
- {
- 	struct task_struct *task = current;
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index ca1796747a77..e875c95d3ced 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -797,6 +797,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_map_peek_elem_proto;
- 	case BPF_FUNC_ktime_get_ns:
- 		return &bpf_ktime_get_ns_proto;
-+	case BPF_FUNC_ktime_get_boot_ns:
-+		return &bpf_ktime_get_boot_ns_proto;
- 	case BPF_FUNC_tail_call:
- 		return &bpf_tail_call_proto;
- 	case BPF_FUNC_get_current_pid_tgid:
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 755867867e57..ec567d1e6fb9 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -6009,6 +6009,8 @@ bpf_base_func_proto(enum bpf_func_id func_id)
- 		return &bpf_tail_call_proto;
- 	case BPF_FUNC_ktime_get_ns:
- 		return &bpf_ktime_get_ns_proto;
-+	case BPF_FUNC_ktime_get_boot_ns:
-+		return &bpf_ktime_get_boot_ns_proto;
- 	default:
- 		break;
- 	}
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 2e29a671d67e..2e13b094438d 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -652,6 +652,16 @@ union bpf_attr {
-  * u64 bpf_ktime_get_ns(void)
-  * 	Description
-  * 		Return the time elapsed since system boot, in nanoseconds.
-+ * 		Does not include time the system was suspended.
-+ * 		See: clock_gettime(CLOCK_MONOTONIC)
-+ * 	Return
-+ * 		Current *ktime*.
-+ *
-+ * u64 bpf_ktime_get_boot_ns(void)
-+ * 	Description
-+ * 		Return the time elapsed since system boot, in nanoseconds.
-+ * 		Does include the time the system was suspended.
-+ * 		See: clock_gettime(CLOCK_BOOTTIME)
-  * 	Return
-  * 		Current *ktime*.
-  *
-@@ -3151,7 +3161,8 @@ union bpf_attr {
- 	FN(xdp_output),			\
- 	FN(get_netns_cookie),		\
- 	FN(get_current_ancestor_cgroup_id),	\
--	FN(sk_assign),
-+	FN(sk_assign),			\
-+	FN(ktime_get_boot_ns),
+ static struct meson_ee_pwrc_mem_domain meson8_pwrc_mem_eth[] = {
+ 	{ HHI_MEM_PD_REG0, GENMASK(3, 2) },
+ };
+@@ -223,11 +230,17 @@ static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_audio[] = {
+ static bool pwrc_ee_get_power(struct meson_ee_pwrc_domain *pwrc_domain);
  
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-  * function eBPF program intends to call
+ static struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
+-	[PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &g12a_pwrc_vpu, g12a_pwrc_mem_vpu,
++	[PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &gxbb_pwrc_vpu, g12a_pwrc_mem_vpu,
+ 				     pwrc_ee_get_power, 11, 2),
+ 	[PWRC_G12A_ETH_ID] = MEM_PD("ETH", meson8_pwrc_mem_eth),
+ };
+ 
++static struct meson_ee_pwrc_domain_desc gxbb_pwrc_domains[] = {
++	[PWRC_GXBB_VPU_ID]  = VPU_PD("VPU", &gxbb_pwrc_vpu, gxbb_pwrc_mem_vpu,
++				     pwrc_ee_get_power, 12, 2),
++	[PWRC_GXBB_ETHERNET_MEM_ID] = MEM_PD("ETH", meson8_pwrc_mem_eth),
++};
++
+ static struct meson_ee_pwrc_domain_desc meson8_pwrc_domains[] = {
+ 	[PWRC_MESON8_VPU_ID]  = VPU_PD("VPU", &meson8_pwrc_vpu,
+ 				       meson8_pwrc_mem_vpu, pwrc_ee_get_power,
+@@ -514,6 +527,11 @@ static struct meson_ee_pwrc_domain_data meson_ee_g12a_pwrc_data = {
+ 	.domains = g12a_pwrc_domains,
+ };
+ 
++static struct meson_ee_pwrc_domain_data meson_ee_gxbb_pwrc_data = {
++	.count = ARRAY_SIZE(gxbb_pwrc_domains),
++	.domains = gxbb_pwrc_domains,
++};
++
+ static struct meson_ee_pwrc_domain_data meson_ee_m8_pwrc_data = {
+ 	.count = ARRAY_SIZE(meson8_pwrc_domains),
+ 	.domains = meson8_pwrc_domains,
+@@ -542,6 +560,10 @@ static const struct of_device_id meson_ee_pwrc_match_table[] = {
+ 		.compatible = "amlogic,meson8m2-pwrc",
+ 		.data = &meson_ee_m8b_pwrc_data,
+ 	},
++	{
++		.compatible = "amlogic,meson-gxbb-pwrc",
++		.data = &meson_ee_gxbb_pwrc_data,
++	},
+ 	{
+ 		.compatible = "amlogic,meson-g12a-pwrc",
+ 		.data = &meson_ee_g12a_pwrc_data,
 -- 
-2.26.1.301.g55bc3eb7cb9-goog
+2.26.1
 
