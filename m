@@ -2,179 +2,99 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BB6C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8762C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01016214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="1syIqn1f"
+	by mail.kernel.org (Postfix) with ESMTP id A1F17214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbgDTOEL (ORCPT
+        id S1729513AbgDTOEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:04:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729442AbgDTOEJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 10:04:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39096 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727919AbgDTOEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 10:04:09 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C13AEC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:04:08 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id x8so7286938qtp.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dzXoe8MRBMXE8PvmYjCZbxKjAgY1cHixeMzN7z8P8Js=;
-        b=1syIqn1ftSMUwzMqfNYLRFgC8QlOb+qFSiHn7uE8u9LZ/cK+nIOWqVav+cXFCm4QYq
-         lm1TifYtjy+i+2RI7403FF/F29xV1sxJN8FJihF+Il4sjJ8xOEYd2CJHyWFTfauwCgTk
-         I8RMpp3O0i/NXwNBXzY09ZQP+3eV8lbaW5pNUPU4peSLoWwLP1hukqf8Y0dJxnqeglh6
-         AvlMSP0k5WfAGxD5eVb6l1zgil4bYet7+Wfg+UMWTL94EreKc2bFTNxg0v8luICqSXpm
-         9/6hTpRKNcAD7uhC1CRT9lpsma6iytWee6NuJ1Pt7pp1vasjDCJlacFKLClPnj3wl7+K
-         7+1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dzXoe8MRBMXE8PvmYjCZbxKjAgY1cHixeMzN7z8P8Js=;
-        b=dXNi55/CKl64U5NdhwcuB2KAchywr9P+sZ/ck25Sf6rTxKyzMt7m44jQQP/ymAjKWz
-         csPCVkqZeBkYix//UUNrpnEk8/a/Dr0gQQdE7scWgCqZJDoJZSiycdoqUeR88s4h67z+
-         IUDAyLT+xQJo3QzpB9xpGbMwSmepDfCSiasrutkYwYxKRfIIDeaexAnp2gPxaAesfSmn
-         QFo9Ft0KAy6zxcPhgDYH66OYYOBZgmoCNxm6ZPevgnchD3P5t8LfwUmDFxyyPJfolyC1
-         2TR10pfWNkdJSc99txGUfAX7dtueqTSXJh2/ay2iaBRjegNpOdj2Zbx3wwvuwB2pzOPX
-         B04g==
-X-Gm-Message-State: AGi0PuZm5ocwYG26biyLOooLrMCvNKCjI0pStqAFx7PppQrwPSMhLJFK
-        Hgy8TC/epTBoVkn8OgsRlTrjRQ==
-X-Google-Smtp-Source: APiQypIwj9fQ3EqvpOYtWuUmbu/u4rWEzWryFT+ev+AfD+FSuHGqIH8abAhakF2m1ce4M7/fAFxQ+Q==
-X-Received: by 2002:ac8:19dd:: with SMTP id s29mr16421043qtk.164.1587391447612;
-        Mon, 20 Apr 2020 07:04:07 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id t75sm609424qke.127.2020.04.20.07.04.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 07:04:06 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     freedreno@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 8/9] drm/msm/a6xx: enable GMU log
-Date:   Mon, 20 Apr 2020 10:03:12 -0400
-Message-Id: <20200420140313.7263-9-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420140313.7263-1-jonathan@marek.ca>
-References: <20200420140313.7263-1-jonathan@marek.ca>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 16C32ABD7;
+        Mon, 20 Apr 2020 14:04:07 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 14:04:06 +0000 (UTC)
+From:   Michael Matz <matz@suse.de>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+cc:     Jakub Jelinek <jakub@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+In-Reply-To: <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
+Message-ID: <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
+References: <20200415074842.GA31016@zn.tnic> <alpine.LSU.2.21.2004151445520.11688@wotan.suse.de> <20200415231930.19755bc7@sf> <20200417075739.GA7322@zn.tnic> <20200417080726.GS2424@tucnak> <20200417084224.GB7322@zn.tnic> <20200417085859.GU2424@tucnak>
+ <20200417090909.GC7322@zn.tnic> <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com> <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com> <20200417190607.GY2424@tucnak>
+ <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is required for a650 to work.
+Hello,
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c     | 16 ++++++++++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gmu.h     |  1 +
- drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h |  4 ++++
- 3 files changed, 21 insertions(+)
+On Fri, 17 Apr 2020, Nick Desaulniers wrote:
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index b583bf6e293b..1cdb7c832b87 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -198,6 +198,12 @@ static int a6xx_gmu_start(struct a6xx_gmu *gmu)
- 	u32 val;
- 
- 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 1);
-+
-+	/* Set the log wptr index
-+	 * note: downstream saves the value in poweroff and restores it here
-+	 */
-+	gmu_write(gmu, REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_RESP, 0);
-+
- 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 0);
- 
- 	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_CM3_FW_INIT_RESULT, val,
-@@ -739,6 +745,9 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
- 
- 	gmu_write(gmu, REG_A6XX_GMU_HFI_SFR_ADDR, chipid);
- 
-+	gmu_write(gmu, REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_MSG,
-+		  gmu->log->iova | (gmu->log->size / SZ_4K - 1));
-+
- 	/* Set up the lowest idle level on the GMU */
- 	a6xx_gmu_power_config(gmu);
- 
-@@ -1416,6 +1425,7 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
- 	a6xx_gmu_memory_free(gmu, gmu->dcache);
- 	a6xx_gmu_memory_free(gmu, gmu->dummy);
- 	a6xx_gmu_memory_free(gmu, gmu->debug);
-+	a6xx_gmu_memory_free(gmu, gmu->log);
- 	a6xx_gmu_memory_free(gmu, gmu->hfi);
- 
- 	iommu_detach_device(gmu->domain, gmu->dev);
-@@ -1495,6 +1505,11 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
- 	if (IS_ERR(gmu->hfi))
- 		goto err_memory;
- 
-+	/* Allocate memory for the GMU log region */
-+	gmu->log = a6xx_gmu_memory_alloc(gmu, SZ_4K, 0);
-+	if (IS_ERR(gmu->log))
-+		goto err_memory;
-+
- 	/* Map the GMU registers */
- 	gmu->mmio = a6xx_gmu_get_mmio(pdev, "gmu");
- 	if (IS_ERR(gmu->mmio))
-@@ -1542,6 +1557,7 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
- 	a6xx_gmu_memory_free(gmu, gmu->dcache);
- 	a6xx_gmu_memory_free(gmu, gmu->dummy);
- 	a6xx_gmu_memory_free(gmu, gmu->debug);
-+	a6xx_gmu_memory_free(gmu, gmu->log);
- 	a6xx_gmu_memory_free(gmu, gmu->hfi);
- 
- 	if (gmu->domain) {
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-index abd425ca6682..589b9b0c348e 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-@@ -59,6 +59,7 @@ struct a6xx_gmu {
- 
- 	struct a6xx_gmu_bo *hfi;
- 	struct a6xx_gmu_bo *debug;
-+	struct a6xx_gmu_bo *log;
- 	struct a6xx_gmu_bo *icache;
- 	struct a6xx_gmu_bo *dcache;
- 	struct a6xx_gmu_bo *dummy;
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-index b4357ea550ec..176ae94d9fe6 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-@@ -205,6 +205,10 @@ static inline uint32_t A6XX_GMU_GPU_NAP_CTRL_SID(uint32_t val)
- 
- #define REG_A6XX_GPU_GMU_CX_GMU_CX_FAL_INTF			0x000050f0
- 
-+#define REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_MSG			0x00005100
-+
-+#define REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_RESP			0x00005101
-+
- #define REG_A6XX_GMU_BOOT_KMD_LM_HANDSHAKE			0x000051f0
- 
- #define REG_A6XX_GMU_LLM_GLM_SLEEP_CTRL				0x00005157
--- 
-2.26.1
+> Ah seems we do have __attribute__((no_selector))
+> (https://reviews.llvm.org/D46300,
+> https://releases.llvm.org/7.0.0/tools/clang/docs/AttributeReference.html#no-stack-protector-clang-no-stack-protector-clang-no-stack-protector)
+> which differs from GCC attribute name.
 
+As you will discover upthread that was tried with GCC and found 
+insufficient, as GCC is a bit surprising with optimize attributes: it 
+resets every -f option from the command line and applies only the ones 
+from the attributes.  Including a potential -fno-omit-frame-pointer, 
+causing all kinds of itches :)
+
+(The similar attribute in clang might work less surprising of course).
+
+
+Ciao,
+Michael.
+
+> 
+> I'm still catching up on the thread (and my cat is insistent about
+> sleeping on my lap while I'm trying to use my laptop), but I like
+> https://lore.kernel.org/lkml/20200417190607.GY2424@tucnak/T/#m23d197d3a66a6c7d04c5444af4f51d940895b412
+> if it additionally defined __no_stack_protector for compiler-clang.h.
+> 
+> On Fri, Apr 17, 2020 at 12:06 PM Jakub Jelinek <jakub@redhat.com> wrote:
+> >
+> > On Fri, Apr 17, 2020 at 11:22:25AM -0700, Nick Desaulniers wrote:
+> > > > Sorry, I don't quite follow.  The idea is that an empty asm statement
+> > > > in foo() should prevent foo() from being inlined into bar()?
+> > >
+> > > s/inlined/tail called/
+> >
+> > Yeah.  The thing is, the caller changes the stack protector guard base
+> > value, so at the start of the function it saves a different value then
+> > it compares at the end.  But, the function that it calls at the end
+> > actually doesn't return, so this isn't a problem.
+> > If it is tail called though, the stack protector guard checking is done
+> > before the tail call and it crashes.
+> > If the called function is marked with noreturn attribute or _Noreturn,
+> > at least GCC will also not tail call it and all is fine, but not sure
+> > what LLVM does in that case.
+> 
+> Seems fine? https://godbolt.org/z/VEoEfw
+> (try commenting out the __attribute__((noreturn)) to observe the tail calls.
+> 
