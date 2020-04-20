@@ -2,64 +2,60 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6C0C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDABC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E709206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38C2206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387331;
-	bh=SfY5VTNKawoKemxiN0t1dRyqfcEs/PSemQwySXle0ic=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=A7c9YLRvhc+J4FLKMqtLZyDXC+xjaXEoO3bOSp3qn5s8sOyKmd8MCp/7a4fXwYCwt
-	 n7VuoBgzqbxFQx5rn8KuW6X7JZq5JDjirEeXmXmaxWCEdg3XXRH9u5U0WyQxRIRG0J
-	 XV/RpH9km8XPuGaSReFXsFq/DVEhZjV43lOsk0sA=
+	s=default; t=1587387336;
+	bh=7cXOEXKgAZRL7TOLZLpqjpkyOf0AuX0bL5USTA/0Hc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eRUPzxLXwSBZAv8Rvav6k1pJAEtBjHPwqXEmWZnJ4NUaptSxihYjncFdHIB7Ai3cp
+	 SuM2fra+7C9SNsCJo518/qzDezQfcyz3jw4Rh85jz3ompe2ndEDLQQBJrN3pyeh84F
+	 24B/Xv3YSyW581DBtaoSmj8GTrYlrFcNrxMYw31M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729726AbgDTMza (ORCPT
+        id S1728794AbgDTMpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40670 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:45:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728811AbgDTMpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:44 -0400
+        id S1728249AbgDTMpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08CAB206E9;
-        Mon, 20 Apr 2020 12:45:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FE60206E9;
+        Mon, 20 Apr 2020 12:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386743;
-        bh=SfY5VTNKawoKemxiN0t1dRyqfcEs/PSemQwySXle0ic=;
-        h=From:To:Cc:Subject:Date:From;
-        b=E4jynkmCo4Jn03jSvivyzZf6FcP/kuf4PDfCe43gJAW2Tasb67C0n+ZdB28FCkYja
-         NOejPrXG5Unuw+3frDKvbkILhn0Vf2EKYtpXgMhg5IbC9+QJ17QRRiP05R/IVLkYHO
-         csJqkN8QiGzF17WoQOM/JSOll95Q+bs71oA44Gtg=
+        s=default; t=1587386736;
+        bh=7cXOEXKgAZRL7TOLZLpqjpkyOf0AuX0bL5USTA/0Hc4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bCUxpxPKFBhMWjsU76Lf7X227baU6mPL7jxK4ZB2D53cgT7b3LP0RJFl+AT7Q5XUR
+         dGHoveYbWcDwT3qyRO4al4mt0qZMjPqRLQN5Npn5BnUZ/AxqtW822QOPbkLAzvfXQC
+         hzFV0Yr7Gk4DuK+4ZQojP8aWLzKs2wPw5QRNA1N0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.4 00/60] 5.4.34-rc1 review
-Date:   Mon, 20 Apr 2020 14:38:38 +0200
-Message-Id: <20200420121500.490651540@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.6 63/71] drm/i915/perf: Do not clear pollin for small user read buffers
+Date:   Mon, 20 Apr 2020 14:39:17 +0200
+Message-Id: <20200420121521.560898369@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
-MIME-Version: 1.0
+In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
+References: <20200420121508.491252919@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.34-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.34-rc1
-X-KernelTest-Deadline: 2020-04-22T12:15+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,279 +63,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.4.34 release.
-There are 60 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Wed, 22 Apr 2020 12:10:36 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.34-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.4.34-rc1
-
-John Allen <john.allen@amd.com>
-    x86/microcode/AMD: Increase microcode PATCH_MAX_SIZE
-
-Maurizio Lombardi <mlombard@redhat.com>
-    scsi: target: fix hang when multiple threads try to destroy the same iscsi session
-
-Maurizio Lombardi <mlombard@redhat.com>
-    scsi: target: remove boilerplate code
-
-Reinette Chatre <reinette.chatre@intel.com>
-    x86/resctrl: Fix invalid attempt at removing the default resource group
-
-James Morse <james.morse@arm.com>
-    x86/resctrl: Preserve CDP enable over CPU hotplug
-
-Grygorii Strashko <grygorii.strashko@ti.com>
-    irqchip/ti-sci-inta: Fix processing of masked irqs
-
-Jan Kara <jack@suse.cz>
-    ext4: do not zeroout extents beyond i_disksize
-
-Hans de Goede <hdegoede@redhat.com>
-    i2c: designware: platdrv: Remove DPM_FLAG_SMART_SUSPEND flag on BYT and CHT
-
-Prike Liang <Prike.Liang@amd.com>
-    drm/amdgpu: fix the hw hang during perform system reboot and reset
-
-Sergei Lopatin <magist3r@gmail.com>
-    drm/amd/powerplay: force the trim of the mclk dpm_levels if OD is enabled
-
-Maxim Mikityanskiy <maximmi@mellanox.com>
-    net/mlx5e: Use preactivate hook to set the indirection table
-
-Maxim Mikityanskiy <maximmi@mellanox.com>
-    net/mlx5e: Rename hw_modify to preactivate
-
-Maxim Mikityanskiy <maximmi@mellanox.com>
-    net/mlx5e: Encapsulate updating netdev queues into a function
-
-Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-    mac80211_hwsim: Use kstrndup() in place of kasprintf()
-
-Sumit Garg <sumit.garg@linaro.org>
-    mac80211: fix race in ieee80211_register_hw()
-
-Johannes Berg <johannes.berg@intel.com>
-    nl80211: fix NL80211_ATTR_FTM_RESPONDER policy
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: check commit root generation in should_ignore_root
-
-Xiao Yang <yangx.jy@cn.fujitsu.com>
-    tracing: Fix the race between registering 'snapshot' event trigger and triggering 'snapshot' operation
-
-Vasily Averin <vvs@virtuozzo.com>
-    keys: Fix proc_keys_next to increase position index
-
-Mark Rutland <mark.rutland@arm.com>
-    arm64: vdso: don't free unallocated pages
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: usb-audio: Check mapping at creating connector controls, too
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: usb-audio: Don't create jack controls for PCM terminals
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: usb-audio: Don't override ignore_ctl_error value from the map
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: usb-audio: Filter error from connector kctl ops, too
-
-Adam Barber <barberadam995@gmail.com>
-    ALSA: hda/realtek - Enable the headset mic on Asus FX505DT
-
-Colin Ian King <colin.king@canonical.com>
-    ASoC: Intel: mrfld: return error codes when an error occurs
-
-Colin Ian King <colin.king@canonical.com>
-    ASoC: Intel: mrfld: fix incorrect check on p->sink
-
-Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-    usb: dwc3: gadget: Don't clear flags before transfer ended
-
-Angus Ainslie (Purism) <angus@akkea.ca>
-    arm64: dts: librem5-devkit: add a vbus supply to usb0
-
-Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-    ARM: dts: imx7-colibri: fix muxing of usbc_det pin
-
-Claudiu Beznea <claudiu.beznea@microchip.com>
-    clk: at91: usb: use proper usbs_mask
-
-Claudiu Beznea <claudiu.beznea@microchip.com>
-    clk: at91: sam9x60: fix usb clock parents
-
-Josh Triplett <josh@joshtriplett.org>
-    ext4: fix incorrect inodes per group in error message
-
-Josh Triplett <josh@joshtriplett.org>
-    ext4: fix incorrect group count in ext4_fill_super error message
-
-Bruno Meneguele <bmeneg@redhat.com>
-    net/bpfilter: remove superfluous testing message
-
-Sven Van Asbroeck <TheSven73@gmail.com>
-    pwm: pca9685: Fix PWM/GPIO inter-operation
-
-Jin Yao <yao.jin@linux.intel.com>
-    perf report: Fix no branch type statistics report issue
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    acpi/nfit: improve bounds checking for 'func'
-
-zhangyi (F) <yi.zhang@huawei.com>
-    jbd2: improve comments about freeing data buffers whose page mapping is NULL
-
-Pi-Hsun Shih <pihsun@chromium.org>
-    platform/chrome: cros_ec_rpmsg: Fix race with host event
-
-Can Guo <cang@codeaurora.org>
-    scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
-
-Amir Goldstein <amir73il@gmail.com>
-    ovl: fix value of i_ino for lower hardlink corner case
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()"
-
-Florian Fainelli <f.fainelli@gmail.com>
-    net: stmmac: dwmac-sunxi: Provide TX and RX fifo sizes
-
-Parav Pandit <parav@mellanox.com>
-    net/mlx5e: Fix pfnum in devlink port attribute
-
-Dmytro Linkin <dmitrolin@mellanox.com>
-    net/mlx5e: Fix nest_level for vlan pop action
-
-Eran Ben Elisha <eranbe@mellanox.com>
-    net/mlx5e: Add missing release firmware call
-
-Moshe Shemesh <moshe@mellanox.com>
-    net/mlx5: Fix frequent ioread PCI access during recovery
-
-René van Dorst <opensource@vdorst.com>
-    net: ethernet: mediatek: move mt7623 settings out off the mt7530
-
-René van Dorst <opensource@vdorst.com>
-    net: dsa: mt7530: move mt7623 settings out off the mt7530
-
-Gilberto Bertin <me@jibi.io>
-    net: tun: record RX queue in skb before do_xdp_generic()
-
-Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-    net: revert default NAPI poll timeout to 2 jiffies
-
-Wang Wenhu <wenhu.wang@vivo.com>
-    net: qrtr: send msgs from local of same id as broadcast
-
-Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-    net: phy: micrel: use genphy_read_status for KSZ9131
-
-Tim Stallard <code@timstallard.me.uk>
-    net: ipv6: do not consider routes via gateways for anycast address check
-
-Taras Chornyi <taras.chornyi@plvision.eu>
-    net: ipv4: devinet: Fix crash when add/del multicast IP with autojoin
-
-DENG Qingfang <dqfext@gmail.com>
-    net: dsa: mt7530: fix tagged frames pass-through in VLAN-unaware mode
-
-Michael Weiß <michael.weiss@aisec.fraunhofer.de>
-    l2tp: Allow management of tunnels and session in user namespace
-
-Taehee Yoo <ap420073@gmail.com>
-    hsr: check protocol version in hsr_newlink()
-
-Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-    amd-xgbe: Use __napi_schedule() in BH context
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arm/boot/dts/imx7-colibri.dtsi                |   9 +-
- .../boot/dts/freescale/imx8mq-librem5-devkit.dts   |   1 +
- arch/arm64/kernel/vdso.c                           |  13 +--
- arch/x86/include/asm/microcode_amd.h               |   2 +-
- arch/x86/kernel/cpu/resctrl/core.c                 |   2 +
- arch/x86/kernel/cpu/resctrl/internal.h             |   1 +
- arch/x86/kernel/cpu/resctrl/rdtgroup.c             |  16 +++-
- drivers/acpi/ec.c                                  |   6 +-
- drivers/acpi/nfit/core.c                           |  10 +-
- drivers/acpi/nfit/nfit.h                           |   1 +
- drivers/clk/at91/clk-usb.c                         |   2 +-
- drivers/clk/at91/sam9x60.c                         |   5 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c         |   2 +
- drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c   |   5 +-
- drivers/i2c/busses/i2c-designware-platdrv.c        |  14 ++-
- drivers/irqchip/irq-ti-sci-inta.c                  |   3 +-
- drivers/net/dsa/mt7530.c                           | 103 +++------------------
- drivers/net/dsa/mt7530.h                           |  17 ++--
- drivers/net/ethernet/amd/xgbe/xgbe-drv.c           |   2 +-
- drivers/net/ethernet/mediatek/mtk_eth_soc.c        |  24 ++++-
- drivers/net/ethernet/mediatek/mtk_eth_soc.h        |   8 ++
- drivers/net/ethernet/mellanox/mlx5/core/devlink.c  |   5 +-
- drivers/net/ethernet/mellanox/mlx5/core/en.h       |   7 +-
- .../net/ethernet/mellanox/mlx5/core/en_ethtool.c   |  10 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  49 +++++++---
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c   |   9 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c    |   5 +-
- drivers/net/ethernet/mellanox/mlx5/core/health.c   |   2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c  |   2 +
- drivers/net/phy/micrel.c                           |   2 +-
- drivers/net/tun.c                                  |   3 +-
- drivers/net/wireless/mac80211_hwsim.c              |  12 +--
- drivers/platform/chrome/cros_ec_rpmsg.c            |  16 +++-
- drivers/pwm/pwm-pca9685.c                          |  85 +++++++++--------
- drivers/scsi/ufs/ufshcd.c                          |   5 +
- drivers/target/iscsi/iscsi_target.c                |  79 +++++-----------
- drivers/target/iscsi/iscsi_target.h                |   1 -
- drivers/target/iscsi/iscsi_target_configfs.c       |   5 +-
- drivers/target/iscsi/iscsi_target_login.c          |   5 +-
- drivers/usb/dwc3/gadget.c                          |   4 +-
- fs/btrfs/relocation.c                              |   4 +-
- fs/ext4/extents.c                                  |   8 +-
- fs/ext4/super.c                                    |   6 +-
- fs/jbd2/commit.c                                   |   7 +-
- fs/overlayfs/inode.c                               |   4 +-
- include/net/ip6_route.h                            |   1 +
- include/target/iscsi/iscsi_target_core.h           |   2 +-
- kernel/trace/trace_events_trigger.c                |  10 +-
- net/bpfilter/main.c                                |   1 -
- net/core/dev.c                                     |   3 +-
- net/hsr/hsr_netlink.c                              |  10 +-
- net/ipv4/devinet.c                                 |  13 ++-
- net/l2tp/l2tp_netlink.c                            |  16 ++--
- net/mac80211/main.c                                |  24 ++---
- net/qrtr/qrtr.c                                    |   7 +-
- net/wireless/nl80211.c                             |   6 +-
- security/keys/proc.c                               |   2 +
- sound/pci/hda/patch_realtek.c                      |   1 +
- sound/soc/intel/atom/sst-atom-controls.c           |   2 +-
- sound/soc/intel/atom/sst/sst_pci.c                 |   2 +-
- sound/usb/mixer.c                                  |  31 ++++---
- sound/usb/mixer_maps.c                             |   4 +-
- tools/perf/builtin-report.c                        |   9 +-
- 64 files changed, 372 insertions(+), 357 deletions(-)
+From: Ashutosh Dixit <ashutosh.dixit@intel.com>
+
+commit bcad588dea538a4fc173d16a90a005536ec8dbf2 upstream.
+
+It is wrong to block the user thread in the next poll when OA data is
+already available which could not fit in the user buffer provided in
+the previous read. In several cases the exact user buffer size is not
+known. Blocking user space in poll can lead to data loss when the
+buffer size used is smaller than the available data.
+
+This change fixes this issue and allows user space to read all OA data
+even when using a buffer size smaller than the available data using
+multiple non-blocking reads rather than staying blocked in poll till
+the next timer interrupt.
+
+v2: Fix ret value for blocking reads (Umesh)
+v3: Mistake during patch send (Ashutosh)
+v4: Remove -EAGAIN from comment (Umesh)
+v5: Improve condition for clearing pollin and return (Lionel)
+v6: Improve blocking read loop and other cleanups (Lionel)
+v7: Added Cc stable
+
+Testcase: igt/perf/polling-small-buf
+Reviewed-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Signed-off-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
+Cc: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200403010120.3067-1-ashutosh.dixit@intel.com
+(cherry-picked from commit 6352219c39c04ed3f9a8d1cf93f87c21753a213e)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/gpu/drm/i915/i915_perf.c |   65 ++++++---------------------------------
+ 1 file changed, 11 insertions(+), 54 deletions(-)
+
+--- a/drivers/gpu/drm/i915/i915_perf.c
++++ b/drivers/gpu/drm/i915/i915_perf.c
+@@ -2910,49 +2910,6 @@ void i915_oa_init_reg_state(const struct
+ }
+ 
+ /**
+- * i915_perf_read_locked - &i915_perf_stream_ops->read with error normalisation
+- * @stream: An i915 perf stream
+- * @file: An i915 perf stream file
+- * @buf: destination buffer given by userspace
+- * @count: the number of bytes userspace wants to read
+- * @ppos: (inout) file seek position (unused)
+- *
+- * Besides wrapping &i915_perf_stream_ops->read this provides a common place to
+- * ensure that if we've successfully copied any data then reporting that takes
+- * precedence over any internal error status, so the data isn't lost.
+- *
+- * For example ret will be -ENOSPC whenever there is more buffered data than
+- * can be copied to userspace, but that's only interesting if we weren't able
+- * to copy some data because it implies the userspace buffer is too small to
+- * receive a single record (and we never split records).
+- *
+- * Another case with ret == -EFAULT is more of a grey area since it would seem
+- * like bad form for userspace to ask us to overrun its buffer, but the user
+- * knows best:
+- *
+- *   http://yarchive.net/comp/linux/partial_reads_writes.html
+- *
+- * Returns: The number of bytes copied or a negative error code on failure.
+- */
+-static ssize_t i915_perf_read_locked(struct i915_perf_stream *stream,
+-				     struct file *file,
+-				     char __user *buf,
+-				     size_t count,
+-				     loff_t *ppos)
+-{
+-	/* Note we keep the offset (aka bytes read) separate from any
+-	 * error status so that the final check for whether we return
+-	 * the bytes read with a higher precedence than any error (see
+-	 * comment below) doesn't need to be handled/duplicated in
+-	 * stream->ops->read() implementations.
+-	 */
+-	size_t offset = 0;
+-	int ret = stream->ops->read(stream, buf, count, &offset);
+-
+-	return offset ?: (ret ?: -EAGAIN);
+-}
+-
+-/**
+  * i915_perf_read - handles read() FOP for i915 perf stream FDs
+  * @file: An i915 perf stream file
+  * @buf: destination buffer given by userspace
+@@ -2977,7 +2934,8 @@ static ssize_t i915_perf_read(struct fil
+ {
+ 	struct i915_perf_stream *stream = file->private_data;
+ 	struct i915_perf *perf = stream->perf;
+-	ssize_t ret;
++	size_t offset = 0;
++	int ret;
+ 
+ 	/* To ensure it's handled consistently we simply treat all reads of a
+ 	 * disabled stream as an error. In particular it might otherwise lead
+@@ -3000,13 +2958,12 @@ static ssize_t i915_perf_read(struct fil
+ 				return ret;
+ 
+ 			mutex_lock(&perf->lock);
+-			ret = i915_perf_read_locked(stream, file,
+-						    buf, count, ppos);
++			ret = stream->ops->read(stream, buf, count, &offset);
+ 			mutex_unlock(&perf->lock);
+-		} while (ret == -EAGAIN);
++		} while (!offset && !ret);
+ 	} else {
+ 		mutex_lock(&perf->lock);
+-		ret = i915_perf_read_locked(stream, file, buf, count, ppos);
++		ret = stream->ops->read(stream, buf, count, &offset);
+ 		mutex_unlock(&perf->lock);
+ 	}
+ 
+@@ -3017,15 +2974,15 @@ static ssize_t i915_perf_read(struct fil
+ 	 * and read() returning -EAGAIN. Clearing the oa.pollin state here
+ 	 * effectively ensures we back off until the next hrtimer callback
+ 	 * before reporting another EPOLLIN event.
++	 * The exception to this is if ops->read() returned -ENOSPC which means
++	 * that more OA data is available than could fit in the user provided
++	 * buffer. In this case we want the next poll() call to not block.
+ 	 */
+-	if (ret >= 0 || ret == -EAGAIN) {
+-		/* Maybe make ->pollin per-stream state if we support multiple
+-		 * concurrent streams in the future.
+-		 */
++	if (ret != -ENOSPC)
+ 		stream->pollin = false;
+-	}
+ 
+-	return ret;
++	/* Possible values for ret are 0, -EFAULT, -ENOSPC, -EIO, ... */
++	return offset ?: (ret ?: -EAGAIN);
+ }
+ 
+ static enum hrtimer_restart oa_poll_check_timer_cb(struct hrtimer *hrtimer)
 
 
