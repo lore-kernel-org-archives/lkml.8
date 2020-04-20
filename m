@@ -2,104 +2,114 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB3CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 191E0C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11C6F20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E373820722
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2Us/jbX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P8vJiVfM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgDTVeM (ORCPT
+        id S1727786AbgDTVhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:34:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60516 "EHLO
+        Mon, 20 Apr 2020 17:37:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726017AbgDTVeL (ORCPT
+        by vger.kernel.org with ESMTP id S1726017AbgDTVhC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:34:11 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08CC0C061A0C;
-        Mon, 20 Apr 2020 14:34:10 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id w3so4441450plz.5;
-        Mon, 20 Apr 2020 14:34:09 -0700 (PDT)
+        Mon, 20 Apr 2020 17:37:02 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CA97C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:37:02 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id w29so9968516qtv.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:37:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ngBQy1ShJKeMNEcOYtB0Goj5+Rtf1XPN16PoTzN6Leg=;
-        b=W2Us/jbX10J6JgHcI+yTDBmtiIXCW2MFCTUAFrkq9lmd0IzSUCsb6VMRR3yDsW/dfu
-         GWdEUrjtMdzc+hFFsRjzH24fON/tRNB8vmtK4JNGXEWElZPD5//pUlH1+P07dvGsKmPH
-         xDFzpe2whUTSpZYCZHIgkoJQtz3Y7OxaDLbWIBIaemUZSIelJJ2ZukeLJTn0Ma0GPlDm
-         lLjn1xSDgI158rHQpq8qzCW0wTUsXdWNEBDAoB4sxJ+/x4XqBmDrEm7TmKc7dw+SiOLF
-         RwZyiBP5JWcxUP5RQsn9/OWkEiOuygonpC9C0WMg6hufuYrd6kDSYRKAv+y0Fjaymyi5
-         Vd4g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CGpR1rIaKdDduSGmslkbgwO1HLCBO6wZTx9DKYZPcys=;
+        b=P8vJiVfMaQcO0jKGtW7wH+FAbz8kXDXPqrJWejAU0NGX4Cgjg/9Cu1iHQyAMgY5kO5
+         5nhJbfjZRWuWpz41LXkq2xCBD1LcxaT3rQoQSUYKwotBwFvjroSAhYiHMc82PwQZswLg
+         UT6XCOrBFry8UdNu/tc4aC+eySS3HLPKGT0dLPMztZKg0P7s4QqmWX4fDcykPK4ne/dS
+         yCEjv/VlPjMStwqvMiZCXte/76PwTVVF//S4qhmHDJbkxsRh0Q2R/6a9KcP79PHVyqSf
+         ApGR9P0NyQ4DlduFCRO0HkQLACFqywkhdrjYEFFFT6S2QsOUxXuA3JUK2iYGHAdDLFmN
+         ysiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ngBQy1ShJKeMNEcOYtB0Goj5+Rtf1XPN16PoTzN6Leg=;
-        b=EonIEsDWnYtCo3jAzNdOdsGcgHQvfue+20uRcxPgEeC+xYwSlmsjgeFnhI68tAQ0wB
-         ukdqOfD91kpHbWArMeI5qZf56h1A66IO+fT4dmm1zuYXn7k4CCrPS4vtNrC7wVUDJXu3
-         MyQkQH4DmLBPNqgWCl1suZHKFuVF5SG94YgVF3YO3WubiZKaqkYQRrqx+JoKCENIPsoS
-         mGsSBB2ZkSfxdwV2bTNxyfIZKrwx/bjh4eAyHXgcF4uRSmTgt4uwfGxxOE57ozjwHbgU
-         4FySa2Qzz6bNT31u05eQhZr3z5MQtvMTWWXip+96YfoAXXZNH0ybqvxUB0yY1mP402H8
-         6PbA==
-X-Gm-Message-State: AGi0Puage3GKCy4R7301UaZV3RqmOVOjP34tRuaBbqc5Ej3sjBnVTk3t
-        LxspDteV4Qzq04qo7StmZ5is91wv
-X-Google-Smtp-Source: APiQypLOFKtNhGFo0UvjO6gLP4+Jh1qO0rA232c3p3m636GsPllrstk3XMhjakiQXenT8r+xhwXdHA==
-X-Received: by 2002:a17:902:8345:: with SMTP id z5mr14890188pln.97.1587418449491;
-        Mon, 20 Apr 2020 14:34:09 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id i10sm416268pfa.166.2020.04.20.14.34.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:34:08 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 14:34:06 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Clay McClure <clay@daemons.net>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: cpts: Condition WARN_ON on PTP_1588_CLOCK
-Message-ID: <20200420213406.GB20996@localhost>
-References: <20200416085627.1882-1-clay@daemons.net>
- <6fef3a00-6c18-b775-d1b4-dfd692261bd3@ti.com>
- <20200420093610.GA28162@arctic-shiba-lx>
- <CAK8P3a36ZxNJxUS4UzrwJiMx8UrgYPkcv4X6yYw7EC4jRBbbGQ@mail.gmail.com>
- <20200420170051.GB11862@localhost>
- <CAK8P3a11CqpDJzjy5QfV-ebHgRxUu8SRVTJPPmsus1O1+OL72Q@mail.gmail.com>
- <20200420211819.GA16930@localhost>
- <CAK8P3a18540y3zqR=mqKhj-goinN3c-FGKvAnTHnLgBxiPa4mA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CGpR1rIaKdDduSGmslkbgwO1HLCBO6wZTx9DKYZPcys=;
+        b=Br8BSUS2UWUh/YxsCPTerEDVAC6cZKTqobfNJ/5hHEjaJ6o465v2sEfjDVksvKAAcI
+         1qtuSsDHiOehPJ4C/t2uFergNX8xiEGs68iSiTnFQs1q4pqVHPoAz01rxhAmlcqpx8IK
+         em3Le7jcdb0hcz7lotvs3pnvcI6xnBlFGXZDQy0RhSsMCtkp98TFnSoADqc5uk7IuNDv
+         J9gLiVRSgDVTa682bwk12jvAYYSLSP4FTE/WcGRl6xntlttAVudKlOJoPqot/RsTf+6A
+         esBdc+EtrdLvm/PtUi7amyc+oxKd/N+pzx/n5BEkRoLykHZ/ggBMKn/ckHPPHu5v/ZBX
+         5EDw==
+X-Gm-Message-State: AGi0PuZ5dxumhNl7DaVUUyHbIC61cpfP6qd9+zB2OfnHfyub/aP8hvyS
+        TUwnNwhstqKvP5hHl1cdWMtAGq6Ize/gGR5UPRINqw==
+X-Google-Smtp-Source: APiQypLVUySyb08Bv9qnAioLafiJuLQTQKZ18k9/vbZvwcqAxM1HYKaPULs0p08vm88dSki28hqGRP1aymIgXeqALRk=
+X-Received: by 2002:ac8:748b:: with SMTP id v11mr18067843qtq.238.1587418621139;
+ Mon, 20 Apr 2020 14:37:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a18540y3zqR=mqKhj-goinN3c-FGKvAnTHnLgBxiPa4mA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200414150556.10920-1-qais.yousef@arm.com> <20200414150556.10920-3-qais.yousef@arm.com>
+ <20200414121956.3687d6e9@gandalf.local.home> <20200415093617.GZ20730@hirez.programming.kicks-ass.net>
+ <20200420154317.klwoztvdybmvykwe@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200420154317.klwoztvdybmvykwe@e107158-lin.cambridge.arm.com>
+From:   Josh Don <joshdon@google.com>
+Date:   Mon, 20 Apr 2020 14:36:49 -0700
+Message-ID: <CABk29NskBLS+s2J-FjzdmnrxvKR_+zQ1GxGkgiui=A1b-fvXtQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] cpumask: Make cpumask_any() truly random
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        Paul Turner <pjt@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 11:21:20PM +0200, Arnd Bergmann wrote:
-> It's not great, but we have other interfaces like this that can return NULL for
-> success when the subsystem is disabled. The problem is when there is
-> a mismatch between the caller treating NULL as failure when it is meant to
-> be "successful lack of object returned".
+On Mon, Apr 20, 2020 at 8:43 AM Qais Yousef <qais.yousef@arm.com> wrote:
+>
+> On 04/15/20 11:36, Peter Zijlstra wrote:
+> > On Tue, Apr 14, 2020 at 12:19:56PM -0400, Steven Rostedt wrote:
+> > > Do we care if this gets preempted and migrated to a new CPU where we read
+> > > "prev" from one distribute_cpu_mask_prev on one CPU and write it to another
+> > > CPU?
+> >
+> > I don't think we do; that just adds to the randomness ;-), but you do
+>
+> Yep we don't care and it should enhance the randomness.
+>
+> > raise a good point in that __this_cpu_*() ops assume preemption is
+> > already disabled, which is true of the one exiting
+> > cpumask_any_and_distribute() caller, but is no longer true after patch
+> > 1, and this patch repeats the mistake.
+> >
+> > So either we need to disable preemption across the function or
+> > transition to this_cpu_*() ops.
+>
+> Sorry wasn't aware about the preemption check in __this_cpu_write().
+>
+> Transitioning to this_cpu_write() makes sense. Unless Josh comes back it'll
+> break something he noticed.
 
-Yeah, that should be fixed.
-
-To be clear, do you all see a need to change the stubbed version of
-ptp_clock_register() or not?
-
-Thanks,
-Richard
-
-
+Yep, this_cpu_* makes sense to me.  Preemption is ok, since prev must
+always be a valid cpu id, thus we just get a little more _random_ from
+this pseudorandom implementation.
