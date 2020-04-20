@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E84C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D56C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 824D1206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08E7206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387300;
-	bh=otd2QZ8LurhFqBTT0j5u25PASA7bqvPKOXhJaz2Pir8=;
+	s=default; t=1587387303;
+	bh=A9Tv8u29FsawK3F2if2yrPSaS5hKZ42lX00SUwbB9H4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wF4vj9hPmAuPSYPi+PyG9b0GrXuRcLoQcneqVx2/e2Ll2kCmDp8Qe+jzN6zL/E4Ir
-	 FBrcqVHF8E9wU2iS/wL0GSi1DuMqyKmjsBPJ4QZJXS6pv2+jw9Df7l4gUeJpvubBGH
-	 ogTl5K3S22TSn9IVeUm2RgCGiJ7tPIuR8/g0M13g=
+	b=1W1MhbZIrHAobQ44Y/X5IyEUgQzfRNjuqHjgV9re7Xo3YL3lXi3gTc6uaESOHsrue
+	 yFJf+9PFtTAuOH7VYRQeqBMS+VBrZMIayejT2Ub+b7s+DcbEYlI64IXBD0tz9tgcN0
+	 zMKF0TIHGbfFAp9x4PJsAAw42CVaEQltREfE6Z3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgDTMy7 (ORCPT
+        id S1729716AbgDTMzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:54:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41468 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:55:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbgDTMqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:46:13 -0400
+        id S1728140AbgDTMqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:46:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59E4F20735;
-        Mon, 20 Apr 2020 12:46:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B174206DD;
+        Mon, 20 Apr 2020 12:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386772;
-        bh=otd2QZ8LurhFqBTT0j5u25PASA7bqvPKOXhJaz2Pir8=;
+        s=default; t=1587386763;
+        bh=A9Tv8u29FsawK3F2if2yrPSaS5hKZ42lX00SUwbB9H4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EccRunhjSjVEFwkRmyiOA+OWjx8grISCoKTQNJsR+Ctv2VoCTcN/JXId5dD8UUesv
-         ivZggJYLaR8pEhqXx9oc+IaZdVTa445fjcyu0ZU3puLcjO9LHHs9YbDzs23z27gnPH
-         RVeIeBuz3UDAxob3lMhaRaoozEuJiR2fVLbTxyzg=
+        b=P2fyJWCJXTqii201eTF6DmBXad1an6P6hOpLItS/BTckiVPV2HKMSLkmn2bSH3DJr
+         7V6TlNbcdjTjwuPZxAHe8K2sT9lkGlfW5V80TgLvjSlpzBR2yXq2Uki03H0NUM8KhG
+         n0IVjvuv3v29AfLXAxcFr5ibje98cBMSdPNhBVJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Michael=20Wei=C3=9F?= <michael.weiss@aisec.fraunhofer.de>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 03/60] l2tp: Allow management of tunnels and session in user namespace
-Date:   Mon, 20 Apr 2020 14:38:41 +0200
-Message-Id: <20200420121501.460823896@linuxfoundation.org>
+Subject: [PATCH 5.4 17/60] net: stmmac: dwmac-sunxi: Provide TX and RX fifo sizes
+Date:   Mon, 20 Apr 2020 14:38:55 +0200
+Message-Id: <20200420121506.210368835@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -60,95 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Michael Weiﬂ" <michael.weiss@aisec.fraunhofer.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 2abe05234f2e892728c388169631e4b99f354c86 ]
+[ Upstream commit 806fd188ce2a4f8b587e83e73c478e6484fbfa55 ]
 
-Creation and management of L2TPv3 tunnels and session through netlink
-requires CAP_NET_ADMIN. However, a process with CAP_NET_ADMIN in a
-non-initial user namespace gets an EPERM due to the use of the
-genetlink GENL_ADMIN_PERM flag. Thus, management of L2TP VPNs inside
-an unprivileged container won't work.
+After commit bfcb813203e619a8960a819bf533ad2a108d8105 ("net: dsa:
+configure the MTU for switch ports") my Lamobo R1 platform which uses
+an allwinner,sun7i-a20-gmac compatible Ethernet MAC started to fail
+by rejecting a MTU of 1536. The reason for that is that the DMA
+capabilities are not readable on this version of the IP, and there
+is also no 'tx-fifo-depth' property being provided in Device Tree. The
+property is documented as optional, and is not provided.
 
-We replaced the GENL_ADMIN_PERM by the GENL_UNS_ADMIN_PERM flag
-similar to other network modules which also had this problem, e.g.,
-openvswitch (commit 4a92602aa1cd "openvswitch: allow management from
-inside user namespaces") and nl80211 (commit 5617c6cd6f844 "nl80211:
-Allow privileged operations from user namespaces").
+Chen-Yu indicated that the FIFO sizes are 4KB for TX and 16KB for RX, so
+provide these values through platform data as an immediate fix until
+various Device Tree sources get updated accordingly.
 
-I tested this in the container runtime trustm3 (trustm3.github.io)
-and was able to create l2tp tunnels and sessions in unpriviliged
-(user namespaced) containers using a private network namespace.
-For other runtimes such as docker or lxc this should work, too.
-
-Signed-off-by: Michael Wei√ü <michael.weiss@aisec.fraunhofer.de>
+Fixes: eaf4fac47807 ("net: stmmac: Do not accept invalid MTU values")
+Suggested-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_netlink.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/l2tp/l2tp_netlink.c
-+++ b/net/l2tp/l2tp_netlink.c
-@@ -920,51 +920,51 @@ static const struct genl_ops l2tp_nl_ops
- 		.cmd = L2TP_CMD_TUNNEL_CREATE,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_tunnel_create,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_TUNNEL_DELETE,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_tunnel_delete,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_TUNNEL_MODIFY,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_tunnel_modify,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_TUNNEL_GET,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_tunnel_get,
- 		.dumpit = l2tp_nl_cmd_tunnel_dump,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_SESSION_CREATE,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_session_create,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_SESSION_DELETE,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_session_delete,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_SESSION_MODIFY,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_session_modify,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_SESSION_GET,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_session_get,
- 		.dumpit = l2tp_nl_cmd_session_dump,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- };
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+@@ -146,6 +146,8 @@ static int sun7i_gmac_probe(struct platf
+ 	plat_dat->init = sun7i_gmac_init;
+ 	plat_dat->exit = sun7i_gmac_exit;
+ 	plat_dat->fix_mac_speed = sun7i_fix_speed;
++	plat_dat->tx_fifo_size = 4096;
++	plat_dat->rx_fifo_size = 16384;
  
+ 	ret = sun7i_gmac_init(pdev, plat_dat->bsp_priv);
+ 	if (ret)
 
 
