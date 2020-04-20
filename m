@@ -2,201 +2,131 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED25C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8A0C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B34E207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587403936;
-	bh=ELExJDrsHxAW1f5Po7cKx9b1yYQLw/eUqCrMgMTSams=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FGPdr8v1pUBv2I8AxZH0xR3zZvfUtm1PEnLC1mFyTEImPs96E+ZS8RTRYGxoAk0xn
-	 VcpT9wHAUuZViOMEVXJ89x1fBCKs0LSzDkw+Vra8hrfVlDBjdhFKvV6U+CqymWJMQb
-	 Ugd3+gtq1Q7MoBUZkC0nQ+qSJAhM+SFQIEEV/K80=
+	by mail.kernel.org (Postfix) with ESMTP id 8475720782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:34:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkcOT4mj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgDTRcP (ORCPT
+        id S1726728AbgDTReT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbgDTRcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:32:14 -0400
-Received: from localhost.localdomain (unknown [157.46.94.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6547320782;
-        Mon, 20 Apr 2020 17:32:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587403934;
-        bh=ELExJDrsHxAW1f5Po7cKx9b1yYQLw/eUqCrMgMTSams=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eeDtm9R7Vj2lgcVJLc0IDHvZwr8k9g7zw9MiZhYvATtfV6QoUOtbuuWCBUBvYnCb4
-         iEZjdvAnAdcMq6lvZHJB29A89CJURyVTJtDgoRwMd0GNGy35aLlaprosVgkEOLT5bc
-         K7y+xUqPw+dIZh4Q43ISBDFrFWVA7+wo9zud7N2o=
-From:   mani@kernel.org
-To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com
-Cc:     devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH 6/6] ARM: dts: stm32mp1: Add IoT Box board support
-Date:   Mon, 20 Apr 2020 23:01:24 +0530
-Message-Id: <20200420173124.27416-7-mani@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200420173124.27416-1-mani@kernel.org>
-References: <20200420173124.27416-1-mani@kernel.org>
+        Mon, 20 Apr 2020 13:34:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725784AbgDTReT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:34:19 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28DF3C061A0C;
+        Mon, 20 Apr 2020 10:34:19 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id f59so3562261uaf.9;
+        Mon, 20 Apr 2020 10:34:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=gcB23t+jScaSb8EiQ7ZHe/5VkN2VlLAEfN9UOZ8SFc0=;
+        b=YkcOT4mjV3/A2UoHDoE9luwx2zPUDK2aNbV1JyfOBa61OpBYzbxxQYtP29Y0UPSfII
+         f4fZcvqZz0UBDUKQmUzYg8c0ciBtUduKgfj9GH9LfQLSxHYVSbrVdiaepqm7lPibNmlf
+         OaYpAiHYup4Ip9SHpQZ2SDalm1jlq+MrppsymQ/rGlqs0hVTS3L1ObZ1uW4YTe9SgK5t
+         /3k6sbyHk1JJzVOJvEXEpKSXEYaae9evx+VNdKViJ2GW9aQ8C66TnrFPaIdUKM+e6l1W
+         dTkn37zEB9A3+VgAlAUmQS8C+cD8O/PQoGBXXs1kso4v2xvjwgct/H/2CCRMiYj0VYPn
+         hhgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=gcB23t+jScaSb8EiQ7ZHe/5VkN2VlLAEfN9UOZ8SFc0=;
+        b=EZMPbPDML/knpHV9rYReEzWR5grXgrEXXbUvjJ4886e53EHkFVk3CkqFQMnywAdneV
+         TMrD3pfm7NYtVTe43ZEe9K/4fZEyW4iNw+Bed6AB0pGqEJadb9yJhJ6B9EQkVTRjdp15
+         VoSrh+aBukaRxcOYRp2vzpXt3dLyfScqSol8vhFf2I9d/fE8n1eja96z4B3Ae4hthLgF
+         QvXahtJGKoiIyvmgBsVihT2aQRcXprRhotcRVBFSI600TyxbQ55lEi2mSddh5mqsRuqO
+         y1uSMhGLnCu8FKCk5xCynVmd2LZNmdJjZRIOlPIzyBGBQI+Vgh6kxFwTssI/cQ9n8qsW
+         w1yA==
+X-Gm-Message-State: AGi0PuaYo2JbPx19IqqdnI0i/L2IgrjSH+dciJZczcIqgZ3/fQxR8r/2
+        VhpIt3A3kcU3X6Zv9nVIvQ82yvQr+1UL+9Ww9p0=
+X-Google-Smtp-Source: APiQypLNysbe9yuR0MbpWcNR+bPpOu7NAeI/3OFly57qrqiEolZbBiK8TkDqIjBP+5bAYnjml937X9skdZSZ0GofJj8=
+X-Received: by 2002:ab0:5bcc:: with SMTP id z12mr8937701uae.135.1587404058411;
+ Mon, 20 Apr 2020 10:34:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <1587361180-83334-1-git-send-email-xiyuyang19@fudan.edu.cn>
+In-Reply-To: <1587361180-83334-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Reply-To: fdmanana@gmail.com
+From:   Filipe Manana <fdmanana@gmail.com>
+Date:   Mon, 20 Apr 2020 18:34:07 +0100
+Message-ID: <CAL3q7H4hoSF6=S_ZqTCiKNed0NkFymemGZh4vrRNQ3Nrf9xwkA@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: Fix refcnt leak in btrfs_recover_relocation
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, Jeff Mahoney <jeffm@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
+        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manivannan Sadhasivam <mani@kernel.org>
+On Mon, Apr 20, 2020 at 6:50 AM Xiyu Yang <xiyuyang19@fudan.edu.cn> wrote:
+>
+> btrfs_recover_relocation() invokes btrfs_join_transaction(), which joins
+> a btrfs_trans_handle object into transactions and returns a reference of
+> it with increased refcount to "trans".
+>
+> When btrfs_recover_relocation() returns, "trans" becomes invalid, so the
+> refcount should be decreased to keep refcount balanced.
+>
+> The reference counting issue happens in one exception handling path of
+> btrfs_recover_relocation(). When read_fs_root() failed, the refcnt
+> increased by btrfs_join_transaction() is not decreased, causing a refcnt
+> leak.
+>
+> Fix this issue by calling btrfs_end_transaction() on this error path
+> when read_fs_root() failed.
+>
+> Fixes: 79787eaab461 ("btrfs: replace many BUG_ONs with proper error
+> handling")
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 
-IoT Box is an IoT gateway device based on Stinger96 board powered by
-STM32MP1 SoC, designed and manufactured by Shiratech Solutions. This
-device makes use of Stinger96 board by having it as a base board with
-one additional mezzanine on top.
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
 
-Following are the features exposed by this device in addition to the
-Stinger96 board:
+Looks good, thanks.
 
-* WiFi/BT
-* CCS811 VOC sensor
-* 2x Digital microphones IM69D130
-* 12x WS2812B LEDs
+> ---
+>  fs/btrfs/relocation.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+> index 995d4b8b1cfd..46a451594c7a 100644
+> --- a/fs/btrfs/relocation.c
+> +++ b/fs/btrfs/relocation.c
+> @@ -4606,6 +4606,7 @@ int btrfs_recover_relocation(struct btrfs_root *roo=
+t)
+>                 if (IS_ERR(fs_root)) {
+>                         err =3D PTR_ERR(fs_root);
+>                         list_add_tail(&reloc_root->root_list, &reloc_root=
+s);
+> +                       btrfs_end_transaction(trans);
+>                         goto out_free;
+>                 }
+>
+> --
+> 2.7.4
+>
 
-Following peripherals are tested and known to work:
 
-* WiFi/BT
-* CCS811
+--=20
+Filipe David Manana,
 
-More information about this device can be found in Shiratech website:
-https://www.shiratech-solutions.com/products/iot-box/
-
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- arch/arm/boot/dts/Makefile                |  1 +
- arch/arm/boot/dts/stm32mp157a-iot-box.dts | 92 +++++++++++++++++++++++
- 2 files changed, 93 insertions(+)
- create mode 100644 arch/arm/boot/dts/stm32mp157a-iot-box.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 966b81dfffd6..455ec6eb6303 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1030,6 +1030,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
- 	stm32h743i-disco.dtb \
- 	stm32mp157a-avenger96.dtb \
- 	stm32mp157a-dk1.dtb \
-+	stm32mp157a-iot-box.dtb \
- 	stm32mp157a-stinger96.dtb \
- 	stm32mp157c-dhcom-pdk2.dtb \
- 	stm32mp157c-dk2.dtb \
-diff --git a/arch/arm/boot/dts/stm32mp157a-iot-box.dts b/arch/arm/boot/dts/stm32mp157a-iot-box.dts
-new file mode 100644
-index 000000000000..fa1c006ce531
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp157a-iot-box.dts
-@@ -0,0 +1,92 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2020 Manivannan Sadhasivam
-+ */
-+
-+/dts-v1/;
-+#include "stm32mp157a-stinger96.dtsi"
-+
-+/ {
-+	model = "Shiratech STM32MP157A IoT Box";
-+	compatible = "shiratech,stm32mp157a-iot-box", "st,stm32mp157";
-+
-+	wlan_pwr: regulator-wlan {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "wl-reg";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpiog 3 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
-+
-+&i2c2 {
-+	ccs811@5b {
-+		compatible = "ams,ccs811";
-+		reg = <0x5b>;
-+		wakeup-gpios = <&gpioa 12 GPIO_ACTIVE_LOW>;
-+		reset-gpios = <&gpioa 11 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&pinctrl {
-+	/*
-+	 * Note: The SDMMC2 pins lack external pullups on data lines. Hence,
-+	 * we need to enable it in the SoC.
-+	 */
-+	sdmmc2_b4_pins_pull: sdmmc2-b4-pull {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('B', 14, AF9)>, /* SDMMC2_D0 */
-+				 <STM32_PINMUX('B', 15, AF9)>, /* SDMMC2_D1 */
-+				 <STM32_PINMUX('B', 3, AF9)>, /* SDMMC2_D2 */
-+				 <STM32_PINMUX('B', 4, AF9)>, /* SDMMC2_D3 */
-+				 <STM32_PINMUX('G', 6, AF10)>; /* SDMMC2_CMD */
-+			slew-rate = <1>;
-+			bias-pull-up;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
-+			slew-rate = <2>;
-+			drive-push-pull;
-+			bias-disable;
-+		};
-+	};
-+};
-+
-+/* WiFi */
-+&sdmmc2 {
-+	pinctrl-names = "default", "opendrain", "sleep";
-+	pinctrl-0 = <&sdmmc2_b4_pins_pull>;
-+	pinctrl-1 = <&sdmmc2_b4_od_pins_b>;
-+	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a>;
-+	broken-cd;
-+	non-removable;
-+	st,neg-edge;
-+	bus-width = <1>;
-+	vmmc-supply = <&wlan_pwr>;
-+	status = "okay";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	brcmf: bcrmf@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+/* Bluetooth */
-+&uart4 {
-+	/* Note: HW flow control is broken, hence using custom CTS/RTS gpios */
-+	/delete-property/st,hw-flow-ctrl;
-+	cts-gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
-+	rts-gpios = <&gpiob 0 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+
-+	bluetooth {
-+		shutdown-gpios = <&gpiog 2 GPIO_ACTIVE_HIGH>;
-+		compatible = "brcm,bcm43438-bt";
-+		max-speed = <115200>;
-+	};
-+};
--- 
-2.17.1
-
+=E2=80=9CWhether you think you can, or you think you can't =E2=80=94 you're=
+ right.=E2=80=9D
