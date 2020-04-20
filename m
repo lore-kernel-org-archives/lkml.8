@@ -2,578 +2,182 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9171AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8A1C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6807620782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587413779;
-	bh=+qBJWyU1XkKmL9a382qutrR7VYCKPr5ldh5zdsyF9uU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ay8vCO51r6o6sQ8PocaOlM6nRhlLNGbWUT18VuyFaW4oqsBk/NCKFWGIWkDj05jm8
-	 GjkDaziHo0iWrn3kz6PHkrqk5i4DTyGhY3RBq7ONxv+6XxsGrycs4I+G9IBpNSK//N
-	 KU7wEIjMC0hWehsNr8WjDU2SgCZpGQYjFGvJ2nhQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7173E20782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:16:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXEuLCLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgDTUQS (ORCPT
+        id S1726465AbgDTUQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:16:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgDTUQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:16:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A981420736;
-        Mon, 20 Apr 2020 20:16:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587413777;
-        bh=+qBJWyU1XkKmL9a382qutrR7VYCKPr5ldh5zdsyF9uU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g/H4QSEnF7UwyleYkaz8yfE7atk61cFKE0MGC5vv40dROhKD5hshLnOWCmvdTbmRq
-         tT/2YhdNR48xyrGpaYWuMnAp3Daq+j6sBnpvfiWW3pDNxsQygeLh070p+5DLf9YNF+
-         UKTw7IvMUTBtkc7lOpbrIQ+WDbsxrWmu3Q/GUgRk=
-Date:   Mon, 20 Apr 2020 22:16:15 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
-Message-ID: <20200420201615.GC302402@kroah.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-4-mcgrof@kernel.org>
+        Mon, 20 Apr 2020 16:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgDTUQd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:16:33 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 493C0C061A0C;
+        Mon, 20 Apr 2020 13:16:32 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 188so998108wmc.2;
+        Mon, 20 Apr 2020 13:16:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:references:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PbYGmwk9aMs7i+WwwNHmn4efpeSeAZPf38VRz09zQQ0=;
+        b=XXEuLCLCsjExglYaAm+dOqTSF09ybcDH4kP4NAl3yReg8aW8lRQ15bIoWeKmtLuD77
+         yvVglLpT3/R7zP5o7eg3UlosITXtjTIsyHMlMvfAbGZo4Xqf27U1CuUthuQpLb3w6B91
+         f7IlkH7kVtm+8w0OcN3C4EFFaPdBEX/TLwlwDWakig2Rrm4aXihEJwZj9GYlAXmHachG
+         FC75lQd5dIa56N1Jxy656JK6X0CzuAsxDujYyBK+f9AYbs46tQtAJz++5TfVok5+EP1C
+         kPIyo/rXtI1VszVxuBO4pIWpQgoXgrifqcJIfdq9E0bbBe87AwrifioKQZYRAjHzf8zJ
+         81HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PbYGmwk9aMs7i+WwwNHmn4efpeSeAZPf38VRz09zQQ0=;
+        b=E46vYKFwtjErf+as5jYCe0d4zYU8RQv0HNXe29bq9kPNvlMGkDIpmzNH4HjYy6PK7x
+         InfJLoQ4nzgdWZn77+QlNwj4QXBD3n7WXojrc+iJyQ8EFDIKJfZH1+DGJmlsK8Gh0z3J
+         i1Xw5cZ1dgUMJ5lfIwDHSrpzt+EuQrI6cG09Nmnhenr5S2qd9RQFvtGT0B+Qm5bJLHLp
+         cN7qhWnWD9DWks5/b0Otjplh9s7t7fudAmZkbF5xwjtwiC9be5h+Ps+zxSnOfUNOQsHz
+         bKkJho9OIypY1YgywVDse9xx68vpW0fop7XQ4xXcHCm7p9B4voLMQZjPCt6eVk4HUsHK
+         fqDQ==
+X-Gm-Message-State: AGi0PuZpRdbTT11xmgT6eSEPM9yaU3YVCWAsPJV9fPkspey0LKo38F+z
+        PljPLug+N/RDjK3VTel7HhRfuoNq
+X-Google-Smtp-Source: APiQypKA/WbkFBiROj8Sx8BAZ1MNEINYp1IXBM4RGEprEMHflyIphEM7jSknsZh4fRA+f29CVjBu9A==
+X-Received: by 2002:a1c:8106:: with SMTP id c6mr1130558wmd.88.1587413790528;
+        Mon, 20 Apr 2020 13:16:30 -0700 (PDT)
+Received: from [192.168.43.25] ([109.126.129.227])
+        by smtp.gmail.com with ESMTPSA id n6sm740640wrs.81.2020.04.20.13.16.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 13:16:29 -0700 (PDT)
+Subject: Re: [PATCH 1/2] io_uring: trigger timeout after any sqe->off CQEs
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1587229607.git.asml.silence@gmail.com>
+ <28005ea0de63e15dbffd87a49fe9b671f1afa87e.1587229607.git.asml.silence@gmail.com>
+ <88cbde3c-52a1-7fb3-c4a7-b548beaa5502@kernel.dk>
+ <f9c1492c-a0f6-c6ec-ec2e-82a5894060f6@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <3fe32d07-10e6-4a5a-1390-f03ec4a09c6f@gmail.com>
+Date:   Mon, 20 Apr 2020 23:15:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419194529.4872-4-mcgrof@kernel.org>
+In-Reply-To: <f9c1492c-a0f6-c6ec-ec2e-82a5894060f6@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 07:45:22PM +0000, Luis Chamberlain wrote:
-> On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
-> merged on v4.12 Omar fixed the original blktrace code for request-based
-> drivers (multiqueue). This however left in place a possible crash, if you
-> happen to abuse blktrace in a way it was not intended, and even more so
-> with our current asynchronous request_queue removal.
+On 20/04/2020 23:12, Pavel Begunkov wrote:
+> On 20/04/2020 22:40, Jens Axboe wrote:
+>> On 4/18/20 11:20 AM, Pavel Begunkov wrote:
+>>> +static void __io_flush_timeouts(struct io_ring_ctx *ctx)
+>>> +{
+>>> +	u32 end, start;
+>>> +
+>>> +	start = end = ctx->cached_cq_tail;
+>>> +	do {
+>>> +		struct io_kiocb *req = list_first_entry(&ctx->timeout_list,
+>>> +							struct io_kiocb, list);
+>>> +
+>>> +		if (req->flags & REQ_F_TIMEOUT_NOSEQ)
+>>> +			break;
+>>> +		/*
+>>> +		 * multiple timeouts may have the same target,
+>>> +		 * check that @req is in [first_tail, cur_tail]
+>>> +		 */
+>>> +		if (!io_check_in_range(req->timeout.target_cq, start, end))
+>>> +			break;
+>>> +
+>>> +		list_del_init(&req->list);
+>>> +		io_kill_timeout(req);
+>>> +		end = ctx->cached_cq_tail;
+>>> +	} while (!list_empty(&ctx->timeout_list));
+>>> +}
+>>> +
+>>>  static void io_commit_cqring(struct io_ring_ctx *ctx)
+>>>  {
+>>>  	struct io_kiocb *req;
+>>>  
+>>> -	while ((req = io_get_timeout_req(ctx)) != NULL)
+>>> -		io_kill_timeout(req);
+>>> +	if (!list_empty(&ctx->timeout_list))
+>>> +		__io_flush_timeouts(ctx);
+>>>  
+>>>  	__io_commit_cqring(ctx);
+>>>  
+>>
+>> Any chance we can do this without having to iterate timeouts on the
+>> completion path?
+>>
 > 
-> Namely, if you loop adding a device, setup the blktrace with BLKTRACESETUP,
-> forget to BLKTRACETEARDOWN, and then just remove the device you end up
-> with a panic:
-> 
-> [  107.193134] debugfs: Directory 'loop0' with parent 'block' already present!
-> [  107.254615] BUG: kernel NULL pointer dereference, address: 00000000000000a0
-> [  107.258785] #PF: supervisor write access in kernel mode
-> [  107.262035] #PF: error_code(0x0002) - not-present page
-> [  107.264106] PGD 0 P4D 0
-> [  107.264404] Oops: 0002 [#1] SMP NOPTI
-> [  107.264803] CPU: 8 PID: 674 Comm: kworker/8:2 Tainted: G            E 5.6.0-rc7-next-20200327 #1
-> [  107.265712] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> [  107.266553] Workqueue: events __blk_release_queue
-> [  107.267051] RIP: 0010:down_write+0x15/0x40
-> [  107.267488] Code: eb ca e8 ee a5 8d ff cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 55 48 89 fd e8 52 db ff ff 31 c0 ba 01 00 00 00 <f0> 48 0f b1 55 00 75 0f  65 48 8b 04 25 c0 8b 01 00 48 89 45 08 5d
-> [  107.269300] RSP: 0018:ffff9927c06efda8 EFLAGS: 00010246
-> [  107.269841] RAX: 0000000000000000 RBX: ffff8be7e73b0600 RCX: ffffff8100000000
-> [  107.270559] RDX: 0000000000000001 RSI: ffffff8100000000 RDI: 00000000000000a0
-> [  107.271281] RBP: 00000000000000a0 R08: ffff8be7ebc80fa8 R09: ffff8be7ebc80fa8
-> [  107.272001] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> [  107.272722] R13: ffff8be7efc30400 R14: ffff8be7e0571200 R15: 00000000000000a0
-> [  107.273475] FS:  0000000000000000(0000) GS:ffff8be7efc00000(0000) knlGS:0000000000000000
-> [  107.274346] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  107.274968] CR2: 00000000000000a0 CR3: 000000042abee003 CR4: 0000000000360ee0
-> [  107.275710] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  107.276465] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [  107.277214] Call Trace:
-> [  107.277532]  simple_recursive_removal+0x4e/0x2e0
-> [  107.278049]  ? debugfs_remove+0x60/0x60
-> [  107.278493]  debugfs_remove+0x40/0x60
-> [  107.278922]  blk_trace_free+0xd/0x50
-> [  107.279339]  __blk_trace_remove+0x27/0x40
-> [  107.279797]  blk_trace_shutdown+0x30/0x40
-> [  107.280256]  __blk_release_queue+0xab/0x110
-> [  107.280734]  process_one_work+0x1b4/0x380
-> [  107.281194]  worker_thread+0x50/0x3c0
-> [  107.281622]  kthread+0xf9/0x130
-> [  107.281994]  ? process_one_work+0x380/0x380
-> [  107.282467]  ? kthread_park+0x90/0x90
-> [  107.282895]  ret_from_fork+0x1f/0x40
-> [  107.283316] Modules linked in: loop(E) <etc>
-> [  107.288562] CR2: 00000000000000a0
-> [  107.288957] ---[ end trace b885d243d441bbce ]---
-> 
-> This splat happens to be very similar to the one reported via
-> kernel.org korg#205713, only that korg#205713 was for v4.19.83
-> and the above now includes the simple_recursive_removal() introduced
-> via commit a3d1e7eb5abe ("simple_recursive_removal(): kernel-side rm
-> -rf for ramfs-style filesystems") merged on v5.6.
-> 
-> korg#205713 then was used to create CVE-2019-19770 and claims that
-> the bug is in a use-after-free in the debugfs core code. The
-> implications of this being a generic UAF on debugfs would be
-> much more severe, as it would imply parent dentries can sometimes
-> not be positive, which we hold by design is just not possible.
-> 
-> Below is the splat explained with a bit more details, explaining
-> what is happening in userspace, kernel, and a print of the CPU on,
-> which the code runs on:
-> 
-> load loopback module
-> [   13.603371] == blk_mq_debugfs_register(12) start
-> [   13.604040] == blk_mq_debugfs_register(12) q->debugfs_dir created
-> [   13.604934] == blk_mq_debugfs_register(12) end
-> [   13.627382] == blk_mq_debugfs_register(12) start
-> [   13.628041] == blk_mq_debugfs_register(12) q->debugfs_dir created
-> [   13.629240] == blk_mq_debugfs_register(12) end
-> [   13.651667] == blk_mq_debugfs_register(12) start
-> [   13.652836] == blk_mq_debugfs_register(12) q->debugfs_dir created
-> [   13.655107] == blk_mq_debugfs_register(12) end
-> [   13.684917] == blk_mq_debugfs_register(12) start
-> [   13.687876] == blk_mq_debugfs_register(12) q->debugfs_dir created
-> [   13.691588] == blk_mq_debugfs_register(13) end
-> [   13.707320] == blk_mq_debugfs_register(13) start
-> [   13.707863] == blk_mq_debugfs_register(13) q->debugfs_dir created
-> [   13.708856] == blk_mq_debugfs_register(13) end
-> [   13.735623] == blk_mq_debugfs_register(13) start
-> [   13.736656] == blk_mq_debugfs_register(13) q->debugfs_dir created
-> [   13.738411] == blk_mq_debugfs_register(13) end
-> [   13.763326] == blk_mq_debugfs_register(13) start
-> [   13.763972] == blk_mq_debugfs_register(13) q->debugfs_dir created
-> [   13.765167] == blk_mq_debugfs_register(13) end
-> [   13.779510] == blk_mq_debugfs_register(13) start
-> [   13.780522] == blk_mq_debugfs_register(13) q->debugfs_dir created
-> [   13.782338] == blk_mq_debugfs_register(13) end
-> [   13.783521] loop: module loaded
-> 
-> LOOP_CTL_DEL(loop0) #1
-> [   13.803550] = __blk_release_queue(4) start
-> [   13.807772] == blk_trace_shutdown(4) start
-> [   13.810749] == blk_trace_shutdown(4) end
-> [   13.813437] = __blk_release_queue(4) calling blk_mq_debugfs_unregister()
-> [   13.817593] ==== blk_mq_debugfs_unregister(4) begin
-> [   13.817621] ==== blk_mq_debugfs_unregister(4) debugfs_remove_recursive(q->debugfs_dir)
-> [   13.821203] ==== blk_mq_debugfs_unregister(4) end q->debugfs_dir is NULL
-> [   13.826166] = __blk_release_queue(4) blk_mq_debugfs_unregister() end
-> [   13.832992] = __blk_release_queue(4) end
-> 
-> LOOP_CTL_ADD(loop0) #1
-> [   13.843742] == blk_mq_debugfs_register(7) start
-> [   13.845569] == blk_mq_debugfs_register(7) q->debugfs_dir created
-> [   13.848628] == blk_mq_debugfs_register(7) end
-> 
-> BLKTRACE_SETUP(loop0) #1
-> [   13.850924] == blk_trace_ioctl(7, BLKTRACESETUP) start
-> [   13.852852] === do_blk_trace_setup(7) start
-> [   13.854580] === do_blk_trace_setup(7) creating directory
-> [   13.856620] === do_blk_trace_setup(7) using what debugfs_lookup() gave
-> [   13.860635] === do_blk_trace_setup(7) end with ret: 0
-> [   13.862615] == blk_trace_ioctl(7, BLKTRACESETUP) end
-> 
-> LOOP_CTL_DEL(loop0) #2
-> [   13.883304] = __blk_release_queue(7) start
-> [   13.885324] == blk_trace_shutdown(7) start
-> [   13.887197] == blk_trace_shutdown(7) calling __blk_trace_remove()
-> [   13.889807] == __blk_trace_remove(7) start
-> [   13.891669] === blk_trace_cleanup(7) start
-> [   13.911656] ====== blk_trace_free(7) start
-> 
-> This is a scheduled __blk_release_queue(). Note that at this point
-> we know that the old device is gone as the gendisk removal is
-> synchronous.
-> 
-> LOOP_CTL_ADD(loop0) #2
-> [   13.912709] == blk_mq_debugfs_register(2) start
-> 
-> This is a *new* device, as we know the last one was removed synchronously.
-> 
-> ---> From LOOP_CTL_DEL(loop0) #2
-> [   13.915887] ====== blk_trace_free(7) end
-> 
-> ---> From LOOP_CTL_ADD(loop0) #2
-> [   13.918359] debugfs: Directory 'loop0' with parent 'block' already present!
-> 
-> Above we have a case where the upon LOOP_CTL_ADD(loop) #2 the
-> debugfs_create_dir() start_creating() call will have found an existing dentry,
-> and return ERR_PTR(-EEXIST), and so the q->debugfs_dir will be initialized to
-> NULL. This clash happens because an asynchronous __blk_release_queue() has
-> been scheduled from the above LOOP_CTL_DEL(loop0) #2 call, and it has not yet
-> removed the old loop0 debugfs directory.
-> 
-> [   13.926433] == blk_mq_debugfs_register(2) q->debugfs_dir created
-> 
-> This is a huge assumption, since we never check for errors on
-> blk_mq_debugfs_register(), and so the child files we need to
-> create *can* simply be created using NULL as as the parent, in
-> which case debugfs would use debugfs_mount->mnt_root as the parent.
-> 
-> [   13.930373] == blk_mq_debugfs_register(2) end
-> 
-> BLKTRACE_SETUP(loop0) #2
-> [   13.933961] == blk_trace_ioctl(2, BLKTRACESETUP) start
-> [   13.936758] === do_blk_trace_setup(2) start
-> [   13.938944] === do_blk_trace_setup(2) creating directory
-> [   13.941029] === do_blk_trace_setup(2) using what debugfs_lookup() gave
-> 
-> Here debugfs_lookup() will have found the old debugfs directory, even
-> though q->debugfs_dir was empty when initializing this device. So the
-> files created can actually be created where they should have.
-> 
-> ---> From LOOP_CTL_DEL(loop0) #2
-> [   13.971046] === blk_trace_cleanup(7) end
-> [   13.973175] == __blk_trace_remove(7) end
-> [   13.975352] == blk_trace_shutdown(7) end
-> [   13.977415] = __blk_release_queue(7) calling blk_mq_debugfs_unregister()
-> [   13.980645] ==== blk_mq_debugfs_unregister(7) begin
-> [   13.980696] ==== blk_mq_debugfs_unregister(7) debugfs_remove_recursive(q->debugfs_dir)
-> 
-> This is a continuation from the old scheduled  __blk_release_queue(). It
-> is using another request_queue structure than what the currently activated
-> blktrace setup is using.
-> 
-> Here now the dentry where the blktrace setup files were created on top
-> of is gone.  In fact, since debugfs_remove_recursive() is used, *all* of
-> those blktrace debugfs files should have been removed as well, including
-> the relay. This is despite the fact that the removal and blktrace setup
-> are working on two different request_queue structures.
-> 
-> [   13.983118] ==== blk_mq_debugfs_unregister(7) end q->debugfs_dir is NULL
-> [   13.986945] = __blk_release_queue(7) blk_mq_debugfs_unregister() end
-> [   13.993155] = __blk_release_queue(7) end
-> 
-> The scheduled __blk_release_queue completes finally.
-> 
-> ---> From BLKTRACE_SETUP(loop0) #2
-> [   13.995928] === do_blk_trace_setup(2) end with ret: 0
-> [   13.997623] == blk_trace_ioctl(2, BLKTRACESETUP) end
-> 
-> At this point the old blktrace *setup* is complete though, and let us
-> recall that the old dentry is still used. But recall that we just had
-> our old device removed, and since debugfs_remove_recursive() was used,
-> so are all of its files. This request_queue however is still active.
-> 
-> LOOP_CTL_DEL(loop0) #3
-> [   14.035119] = __blk_release_queue(2) start
-> [   14.036925] == blk_trace_shutdown(2) start
-> [   14.038518] == blk_trace_shutdown(2) calling __blk_trace_remove()
-> [   14.040829] == __blk_trace_remove(2) start
-> [   14.042413] === blk_trace_cleanup(2) start
-> 
-> This removal will cleanup the blktrace setup. Note the trap though,
-> the blktrace setup will already have been cleaned up since the
-> scheduled removal from instance #2 removed the files on the same
-> debugfs path.
-> 
-> The __blk_release_queue() is scheduled and is asynchronous so can
-> continue later, and that is where the crash happens, on CPU 2.
-> 
-> LOOP_CTL_ADD(loop0) #3
-> [   14.072522] == blk_mq_debugfs_register(6) start
-> 
-> ---> From LOOP_CTL_DEL(loop0) #3
-> [   14.075151] ====== blk_trace_free(2) start
-> 
-> ---> From LOOP_CTL_ADD(loop0) #3
-> [   14.075882] == blk_mq_debugfs_register(6) q->debugfs_dir created
-> 
-> ---> From LOOP_CTL_DEL(loop0) #3
-> The panic happens on CPU 2 when we continue with the old scheduled
-> removal of the request_queue, which will run into a blktrace setup
-> with NULL pointers.
-> 
-> [   14.078624] BUG: kernel NULL pointer dereference, address: 00000000000000a0
-> [   14.084332] == blk_mq_debugfs_register(6) end
-> [   14.086971] #PF: supervisor write access in kernel mode
-> [   14.086974] #PF: error_code(0x0002) - not-present page
-> [   14.086977] PGD 0 P4D 0
-> [   14.086984] Oops: 0002 [#1] SMP NOPTI
-> [   14.086990] CPU: 2 PID: 287 Comm: kworker/2:2 Tainted: G            E 5.6.0-next-20200403+ #54
-> [   14.086991] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> [   14.087002] Workqueue: events __blk_release_queue
-> [   14.087011] RIP: 0010:down_write+0x15/0x40
-> [   14.090300] == blk_trace_ioctl(6, BLKTRACESETUP) start
-> [   14.093277] Code: eb ca e8 3e 34 8d ff cc cc cc cc cc cc cc cc cc cc
-> cc cc cc cc 0f 1f 44 00 00 55 48 89 fd e8 52 db ff ff 31 c0 ba 01 00 00
-> 00 <f0> 48 0f b1 55 00 75 0f 65 48 8b 04 25 c0 8b 01 00 48 89 45 08 5d
-> [   14.093280] RSP: 0018:ffffc28a00533da8 EFLAGS: 00010246
-> [   14.093284] RAX: 0000000000000000 RBX: ffff9f7a24d07980 RCX: ffffff8100000000
-> [   14.093286] RDX: 0000000000000001 RSI: ffffff8100000000 RDI: 00000000000000a0
-> [   14.093287] RBP: 00000000000000a0 R08: 0000000000000000 R09: 0000000000000019
-> [   14.093289] R10: 0000000000000774 R11: 0000000000000000 R12: 0000000000000000
-> [   14.093291] R13: ffff9f7a2fab0400 R14: ffff9f7a21dd1140 R15: 00000000000000a0
-> [   14.093294] FS:  0000000000000000(0000) GS:ffff9f7a2fa80000(0000) knlGS:0000000000000000
-> [   14.093296] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   14.093298] CR2: 00000000000000a0 CR3: 00000004293d2003 CR4: 0000000000360ee0
-> [   14.093307] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   14.093308] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   14.093310] Call Trace:
-> [   14.093324]  simple_recursive_removal+0x4e/0x2e0
-> [   14.093330]  ? debugfs_remove+0x60/0x60
-> [   14.093334]  debugfs_remove+0x40/0x60
-> [   14.093339]  blk_trace_free+0x20/0x70
-> [   14.093346]  __blk_trace_remove+0x54/0x90
-> [   14.096704] === do_blk_trace_setup(6) start
-> [   14.098534]  blk_trace_shutdown+0x74/0x80
-> [   14.100958] === do_blk_trace_setup(6) creating directory
-> [   14.104575]  __blk_release_queue+0xbe/0x160
-> [   14.104580]  process_one_work+0x1b4/0x380
-> [   14.104585]  worker_thread+0x50/0x3c0
-> [   14.104589]  kthread+0xf9/0x130
-> [   14.104593]  ? process_one_work+0x380/0x380
-> [   14.104596]  ? kthread_park+0x90/0x90
-> [   14.104599]  ret_from_fork+0x1f/0x40
-> [   14.104603] Modules linked in: loop(E) xfs(E) libcrc32c(E)
-> crct10dif_pclmul(E) crc32_pclmul(E) ghash_clmulni_intel(E) joydev(E)
-> serio_raw(E) aesni_intel(E) glue_helper(E) virtio_balloon(E) evdev(E)
-> crypto_simd(E) pcspkr(E) cryptd(E) i6300esb(E) button(E) ip_tables(E)
-> x_tables(E) autofs4(E) ext4(E) crc32c_generic(E) crc16(E) mbcache(E)
-> jbd2(E) virtio_net(E) net_failover(E) failover(E) virtio_blk(E)
-> ata_generic(E) uhci_hcd(E) ata_piix(E) ehci_hcd(E) nvme(E) libata(E)
-> crc32c_intel(E) usbcore(E) psmouse(E) nvme_core(E) virtio_pci(E)
-> scsi_mod(E) virtio_ring(E) t10_pi(E) virtio(E) i2c_piix4(E) floppy(E)
-> [   14.107400] === do_blk_trace_setup(6) using what debugfs_lookup() gave
-> [   14.108939] CR2: 00000000000000a0
-> [   14.110589] === do_blk_trace_setup(6) end with ret: 0
-> [   14.111592] ---[ end trace 7a783b33b9614db9 ]---
-> 
-> The root cause to this issue is that debugfs_lookup() can find a
-> previous incarnation's dir of the same name which is about to get
-> removed from a not yet schedule work. When that happens, the the files
-> are taken underneath the nose of the blktrace, and when it comes time to
-> cleanup, these dentries are long gone because of a scheduled removal.
-> 
-> This issue is happening because of two reasons:
-> 
->   1) The request_queue is currently removed asynchronously as of commit
->      dc9edc44de6c ("block: Fix a blk_exit_rl() regression") merged on
->      v4.12, this allows races with userspace which were not possible
->      before unless as removal of a block device used to happen
->      synchronously with its request_queue. One could however still
->      parallelize blksetup calls while one loops on device addition and
->      removal.
-> 
->   2) There are no errors checks when we create the debugfs directory,
->      be it on init or for blktrace. The concept of when the directory
->      *should* really exist is further complicated by the fact that
->      we have asynchronous request_queue removal. And, we have no
->      real sanity checks to ensure we don't re-create the queue debugfs
->      directory.
-> 
-> We can fix the UAF by using a debugfs directory which moving forward
-> will always be accessible if debugfs is enabled, this way, its allocated
-> and avaialble always for both request-based block drivers or
-> make_request drivers (multiqueue) block drivers.
-> 
-> We also put sanity checks in place to ensure that if the directory is
-> found with debugfs_lookup() it is the dentry we expect. When doing a
-> blktrace against a parition, we will always be creating a temporary
-> debugfs directory, so ensure that only exists once as well to avoid
-> issues against concurrent blktrace runs.
-> 
-> Lastly, since we are now always creating the needed request_queue
-> debugfs directory upon init, we can also take the initiative to
-> proactively check against errors. We currently do not check for
-> errors on add_disk() and friends, but we shouldn't make the issue
-> any worse.
-> 
-> This also simplifies the code considerably, with the only penalty now
-> being that we're always creating the request queue debugfs directory for
-> the request-based block device drivers.
-> 
-> The UAF then is not a core debugfs issue, but instead a complex misuse
-> of debugfs, and this issue can only be triggered if you are root.
-> 
-> This issue can be reproduced with break-blktrace [2] using:
-> 
->   break-blktrace -c 10 -d -s
-> 
-> This patch fixes this issue. Note that there is also another
-> respective UAF but from the ioctl path [3], this should also fix
-> that issue.
-> 
-> This patch then also disputes the severity of CVE-2019-19770 as
-> this issue is only possible by being root and using blktrace.
-> 
-> It is not a core debugfs issue.
-> 
-> [0] https://bugzilla.kernel.org/show_bug.cgi?id=205713
-> [1] https://nvd.nist.gov/vuln/detail/CVE-2019-19770
-> [2] https://github.com/mcgrof/break-blktrace
-> [3] https://lore.kernel.org/lkml/000000000000ec635b059f752700@google.com/
-> 
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Omar Sandoval <osandov@fb.com>
-> Cc: Hannes Reinecke <hare@suse.com>
-> Cc: Nicolai Stange <nstange@suse.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: yu kuai <yukuai3@huawei.com>
-> Reported-by: syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-> Fixes: 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  block/blk-debugfs.c          | 30 +++++++++++
->  block/blk-mq-debugfs.c       |  5 --
->  block/blk-sysfs.c            |  9 ++++
->  block/blk.h                  | 11 ++++
->  include/linux/blkdev.h       |  5 +-
->  include/linux/blktrace_api.h |  1 +
->  kernel/trace/blktrace.c      | 98 +++++++++++++++++++++++++++++++++---
->  7 files changed, 146 insertions(+), 13 deletions(-)
+> If you mean the one in __io_flush_timeouts(), then no, unless we forbid timeouts
+> with identical target sequences + some extra constraints. The loop there is not
+> new, it iterates only over timeouts, that need to be completed, and removes
+> them. That's amortised O(1).
 
-This patch triggered gmail's spam detection, your changelog text is
-whack...
-
-> diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
-> index 19091e1effc0..d84038bce0a5 100644
-> --- a/block/blk-debugfs.c
-> +++ b/block/blk-debugfs.c
-> @@ -3,6 +3,9 @@
->  /*
->   * Shared request-based / make_request-based functionality
->   */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
->  #include <linux/kernel.h>
->  #include <linux/blkdev.h>
->  #include <linux/debugfs.h>
-> @@ -13,3 +16,30 @@ void blk_debugfs_register(void)
->  {
->  	blk_debugfs_root = debugfs_create_dir("block", NULL);
->  }
-> +
-> +int __must_check blk_queue_debugfs_register(struct request_queue *q)
-> +{
-> +	struct dentry *dir = NULL;
-> +
-> +	/* This can happen if we have a bug in the lower layers */
-> +	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
-> +	if (dir) {
-> +		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
-> +			kobject_name(q->kobj.parent));
-> +		dput(dir);
-> +		return -EALREADY;
-> +	}
-> +
-> +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> +					    blk_debugfs_root);
-> +	if (!q->debugfs_dir)
-> +		return -ENOMEM;
-
-Why doesn't the directory just live in the request queue, or somewhere
-else, so that you save it when it is created and then that's it.  No
-need to "look it up" anywhere else.
-
-Or do you do that in later patches?  I only see this one at the moment,
-sorry...
-
->  static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
-> +					    struct request_queue *q,
->  					    struct blk_trace *bt)
->  {
->  	struct dentry *dir = NULL;
->  
-> +	/* This can only happen if we have a bug on our lower layers */
-> +	if (!q->kobj.parent) {
-> +		pr_warn("%s: request_queue parent is gone\n", buts->name);
-
-A kobject always has a parent, unless it has not been registered yet, so
-I don't know what you are testing could ever happen.
+We can think about adding unlock/lock, if that's what you are thinking about.
 
 
+> On the other hand, there was a loop in io_timeout_fn() doing in total O(n^2),
+> and it was killed by this patch.
 
-> +		return NULL;
-> +	}
-> +
-> +	/*
-> +	 * From a sysfs kobject perspective, the request_queue sits on top of
-> +	 * the gendisk, which has the name of the disk. We always create a
-> +	 * debugfs directory upon init for this gendisk kobject, so we re-use
-> +	 * that if blktrace is going to be done for it.
-> +	 */
-> +	if (blk_trace_target_disk(buts->name, kobject_name(q->kobj.parent))) {
-> +		if (!q->debugfs_dir) {
-> +			pr_warn("%s: expected request_queue debugfs_dir is not set\n",
-> +				buts->name);
-
-What is userspace supposed to be able to do if they see this warning?
-
-> +			return NULL;
-> +		}
-> +		/*
-> +		 * debugfs_lookup() is used to ensure the directory is not
-> +		 * taken from underneath us. We must dput() it later once
-> +		 * done with it within blktrace.
-> +		 */
-> +		dir = debugfs_lookup(buts->name, blk_debugfs_root);
-> +		if (!dir) {
-> +			pr_warn("%s: expected request_queue debugfs_dir dentry is gone\n",
-> +				buts->name);
-
-Again, can't we just save the pointer when we create it and not have to
-look it up again?
-
-> +			return NULL;
-> +		}
-> +		 /*
-> +		 * This is a reaffirmation that debugfs_lookup() shall always
-> +		 * return the same dentry if it was already set.
-> +		 */
-
-I'm all for reaffirmation and the like, but really, is this needed???
-
-> +		if (dir != q->debugfs_dir) {
-> +			dput(dir);
-> +			pr_warn("%s: expected dentry dir != q->debugfs_dir\n",
-> +				buts->name);
-> +			return NULL;
-
-Why are you testing to see if debugfs really is working properly?
-SHould all users do crazy things like this (hint, rhetorical
-question...)
-
-> +		}
-> +		bt->backing_dir = q->debugfs_dir;
-> +		return bt->backing_dir;
-> +	}
-> +
-> +	/*
-> +	 * If not using blktrace on the gendisk, we are going to create a
-> +	 * temporary debugfs directory for it, however this cannot be shared
-> +	 * between two concurrent blktraces since the path is not unique, so
-> +	 * ensure this is only done once.
-> +	 */
->  	dir = debugfs_lookup(buts->name, blk_debugfs_root);
-> -	if (!dir)
-> -		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-> +	if (dir) {
-> +		pr_warn("%s: temporary blktrace debugfs directory already present\n",
-> +			buts->name);
-> +		dput(dir);
-> +		return NULL;
-> +	}
-> +
-> +	bt->dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-> +	if (!bt->dir) {
-> +		pr_warn("%s: temporary blktrace debugfs directory could not be created\n",
-> +			buts->name);
-
-Again, do not test the return value, you do not care.  I've been
-removing these checks from everywhere.
-
-thanks,
-
-greg k-h
+-- 
+Pavel Begunkov
