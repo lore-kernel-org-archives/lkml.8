@@ -2,139 +2,199 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7140DC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE5DC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CACA206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E95206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="VHLDWqIo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgDTQfR (ORCPT
+        id S1726597AbgDTQga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:35:17 -0400
-Received: from smtprelay0171.hostedemail.com ([216.40.44.171]:38196 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725287AbgDTQfR (ORCPT
+        Mon, 20 Apr 2020 12:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726532AbgDTQg0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:35:17 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id C26278384364;
-        Mon, 20 Apr 2020 16:35:15 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: lock50_4abfde65a5055
-X-Filterd-Recvd-Size: 4328
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 20 Apr 2020 16:35:13 +0000 (UTC)
-Message-ID: <7d6019da19d52c851d884731b1f16328fdbe2e3d.camel@perches.com>
-Subject: Re: [RFC PATCH bpf-next 0/6] bpf, printk: add BTF-based type
- printing
-From:   Joe Perches <joe@perches.com>
-To:     Alan Maguire <alan.maguire@oracle.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
-        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Date:   Mon, 20 Apr 2020 09:32:57 -0700
-In-Reply-To: <alpine.LRH.2.21.2004201623390.12711@localhost>
-References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com>
-         <20200418160536.4mrvqh2lasqbyk77@ast-mbp>
-         <alpine.LRH.2.21.2004201623390.12711@localhost>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 20 Apr 2020 12:36:26 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 239BBC025493
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:36:25 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id f82so10403977ilh.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HFUgOWKf4w0+Py7DhiUyoQr4H+s4BKeAe5WdiAFlPfs=;
+        b=VHLDWqIoEkcCixWyPK//br6mkLWACHyOLTnwLSW/hdEJbBu9OFINE2gwgj/AM6Dfk2
+         zsrqUkeJ7zeFiQco3kYWvIe3ppxTjKTba9QKxzfesh3GyJaPQfep3iKZxs8vRFTcU+7O
+         scdKaqHOw/cJ43JNuFWjxqQ5niVFhQXknBt+70QNJ2W4VCekk32r3MKToU+2FFdhlPTN
+         73u/W5b0Muf813GvMGSm1S2tE+PpueqXvMMY+MhUY5e7WQOO99LfzINdMgKxuUk/POA6
+         BfpQupW8cu/TEThz3BTGcbaWfGtKR6agESCM/O3F+LRPaLuvS1mU7lCie/jLdnlncvyY
+         C+0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HFUgOWKf4w0+Py7DhiUyoQr4H+s4BKeAe5WdiAFlPfs=;
+        b=gqzfV6rZu+wZubL6VQlOzeULer21WBb/VqrnFw0pCiY+EOkg/lSYbnBxXTGN0uBGOg
+         0Kt+XKAN8ezxGplbYNO61O6gbPCH2ofbQ9eCPMRoi0vxLgDGfUiFQucbSvDkFDf0rkW3
+         pwfw58ceyhFHaUIICeBQAfmMlMM8Jd8wvkwjqirg9UxeREf/zCmK3J+QV/HNn7kwKlXd
+         9cJLHIoEFcynUerNP7XFxI1lqgzSGJbe0FwYtkRyPf190G38RrV2v9lrnDCVXZ4ux71H
+         rihhS2zQy5ob3/Dtb8ZFmHK7wmjjgS0D+yHa1ocK911uLSxQCYMxqIlUMYCcrTM56mUW
+         TX2Q==
+X-Gm-Message-State: AGi0PuYqKUQHId+NWcLMA51Gn6i9UjCD84TZQzTbcVr6jCcpNgwws23x
+        Wt+BRjtv80PAoq1CjA6dZA8E5uH1Ej9qZw==
+X-Google-Smtp-Source: APiQypJWxZK3Z97CRGtXAd/5AvKBg6SWr+l25Skb33HnkR4R+0ebhHdkEhSj8wdnSlQaZ24bKOuu5Q==
+X-Received: by 2002:a92:ba51:: with SMTP id o78mr16831897ili.290.1587400583686;
+        Mon, 20 Apr 2020 09:36:23 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id f1sm423114iog.46.2020.04.20.09.36.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 09:36:23 -0700 (PDT)
+Subject: Re: [PATCH v5 0/4] blk-mq: Fix two causes of IO stalls found in
+ reboot testing
+To:     Douglas Anderson <dianders@chromium.org>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>,
+        sqazi@google.com, groeck@chromium.org,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        paolo.valente@linaro.org,
+        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        John Garry <john.garry@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
+References: <20200420162454.48679-1-dianders@chromium.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3f9a5e9d-4485-aa46-be31-f561ba5363c8@kernel.dk>
+Date:   Mon, 20 Apr 2020 10:36:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200420162454.48679-1-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-20 at 16:29 +0100, Alan Maguire wrote:
-> On Sat, 18 Apr 2020, Alexei Starovoitov wrote:
+On 4/20/20 10:24 AM, Douglas Anderson wrote:
+> While doing reboot testing, I found that occasionally my device would
+> trigger the hung task detector.  Many tasks were stuck waiting for the
+> a blkdev mutex, but at least one task in the system was always sitting
+> waiting for IO to complete (and holding the blkdev mutex).  One
+> example of a task that was just waiting for its IO to complete on one
+> reboot:
 > 
-> > On Fri, Apr 17, 2020 at 11:42:34AM +0100, Alan Maguire wrote:
-> > > The printk family of functions support printing specific pointer types
-> > > using %p format specifiers (MAC addresses, IP addresses, etc).  For
-> > > full details see Documentation/core-api/printk-formats.rst.
-> > > 
-> > > This RFC patchset proposes introducing a "print typed pointer" format
-> > > specifier "%pT<type>"; the type specified is then looked up in the BPF
-> > > Type Format (BTF) information provided for vmlinux to support display.
-> > 
-> > This is great idea! Love it.
-> > 
+>  udevd           D    0  2177    306 0x00400209
+>  Call trace:
+>   __switch_to+0x15c/0x17c
+>   __schedule+0x6e0/0x928
+>   schedule+0x8c/0xbc
+>   schedule_timeout+0x9c/0xfc
+>   io_schedule_timeout+0x24/0x48
+>   do_wait_for_common+0xd0/0x160
+>   wait_for_completion_io_timeout+0x54/0x74
+>   blk_execute_rq+0x9c/0xd8
+>   __scsi_execute+0x104/0x198
+>   scsi_test_unit_ready+0xa0/0x154
+>   sd_check_events+0xb4/0x164
+>   disk_check_events+0x58/0x154
+>   disk_clear_events+0x74/0x110
+>   check_disk_change+0x28/0x6c
+>   sd_open+0x5c/0x130
+>   __blkdev_get+0x20c/0x3d4
+>   blkdev_get+0x74/0x170
+>   blkdev_open+0x94/0xa8
+>   do_dentry_open+0x268/0x3a0
+>   vfs_open+0x34/0x40
+>   path_openat+0x39c/0xdf4
+>   do_filp_open+0x90/0x10c
+>   do_sys_open+0x150/0x3c8
+>   ...
 > 
-> Thanks for taking a look!
->  
-> > > The above potential use cases hint at a potential reply to
-> > > a reasonable objection that such typed display should be
-> > > solved by tracing programs, where the in kernel tracing records
-> > > data and the userspace program prints it out.  While this
-> > > is certainly the recommended approach for most cases, I
-> > > believe having an in-kernel mechanism would be valuable
-> > > also.
-> > 
-> > yep. This is useful for general purpose printk.
-> > The only piece that must be highlighted in the printk documentation
-> > that unlike the rest of BPF there are zero safety guarantees here.
-> > The programmer can pass wrong pointer to printk() and the kernel _will_ crash.
-> > 
+> I've reproduced this on two systems: one boots from an internal UFS
+> disk and one from eMMC.  Each has a card reader attached via USB with
+> an SD card plugged in.  On the USB-attached SD card is a disk with 12
+> partitions (a Chrome OS test image), if it matters.  The system
+> doesn't do much with the USB disk other than probe it (it's plugged in
+> my system to help me recover).
 > 
-> Good point; I'll highlight the fact that we aren't
-> executing in BPF context, no verifier etc.
+> From digging, I believe that there are two separate but related
+> issues.  Both issues relate to the SCSI code saying that there is no
+> budget.
 > 
-> > >   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
-> > > 
-> > >   pr_info("%pTN<struct sk_buff>", skb);
-> > 
-> > why follow "TN" convention?
-> > I think "%p<struct sk_buff>" is much more obvious, unambiguous, and
-> > equally easy to parse.
-> > 
+> I have done testing with only one or the other of the two patches in
+> this series and found that I could still encounter hung tasks if only
+> one of the two patches was applied.  This deserves a bit of
+> explanation.  To me, it's fairly obvious that the first fix wouldn't
+> fix the problems talked about in the second patch.  However, it's less
+> obvious why the second patch doesn't fix the problems in
+> blk_mq_dispatch_rq_list().  It turns out that it _almost_ does
+> (problems become much more rare), but I did manage to get a single
+> trace where the "kick" scheduled by the second patch happened really
+> quickly.  The scheduled kick then ran and found nothing to do.  This
+> happened in parallel to a task running in blk_mq_dispatch_rq_list()
+> which hadn't gotten around to splicing the list back into
+> hctx->dispatch.  This is why we need both fixes.
 > 
-> That was my first choice, but the first character
-> after the 'p' in the '%p' specifier signifies the
-> pointer format specifier. If we use '<', and have
-> '%p<', where do we put the modifiers? '%p<xYz struct foo>'
-> seems clunky to me.
+> Most of my testing has been atop Chrome OS 5.4's kernel tree which
+> currently has v5.4.30 merged in.  The Chrome OS 5.4 tree also has a
+> patch by Salman Qazi, namely ("block: Limit number of items taken from
+> the I/O scheduler in one go").  Reverting that patch didn't make the
+> hung tasks go away, so I kept it in for most of my testing.
+> 
+> I have also done some testing on mainline Linux (most on what git
+> describe calls v5.6-rc7-227-gf3e69428b5e2) even without Salman's
+> patch.  I found that I could reproduce the problems there and that
+> traces looked about the same as I saw on the downstream branch.  These
+> patches were also confirmed to fix the problems on mainline.
+> 
+> Chrome OS is currently setup to use the BFQ scheduler and I found that
+> I couldn't reproduce the problems without BFQ.  As discussed in the
+> second patch this is believed to be because BFQ sometimes returns
+> "true" from has_work() but then NULL from dispatch_request().
+> 
+> I'll insert my usual caveat that I'm sending patches to code that I
+> know very little about.  If I'm making a total bozo patch here, please
+> help me figure out how I should fix the problems I found in a better
+> way.
+> 
+> If you want to see a total ridiculous amount of chatter where I
+> stumbled around a whole bunch trying to figure out what was wrong and
+> how to fix it, feel free to read <https://crbug.com/1061950>.  I
+> promise it will make your eyes glaze over right away if this cover
+> letter didn't already do that.  Specifically comment 79 in that bug
+> includes a link to my ugly prototype of making BFQ's has_work() more
+> exact (I only managed it by actually defining _both_ an exact and
+> inexact function to avoid circular locking problems when it was called
+> directly from blk_mq_hctx_has_pending()).  Comment 79 also has more
+> thoughts about alternatives considered.
+> 
+> I don't know if these fixes represent a regression of some sort or are
+> new.  As per above I could only reproduce with BFQ enabled which makes
+> it nearly impossible to go too far back with this.  I haven't listed
+> any "Fixes" tags here, but if someone felt it was appropriate to
+> backport this to some stable trees that seems like it'd be nice.
+> Presumably at least 5.4 stable would make sense.
+> 
+> Thanks to Salman Qazi, Paolo Valente, and Guenter Roeck who spent a
+> bunch of time helping me trawl through some of this code and reviewing
+> early versions of this patch.
 
-While I don't really like the %p<struct type> block,
-it's at least obvious what's being attempted.
+Applied, thanks.
 
-Modifiers could easily go after the <struct type> block.
-
-It appears a %p<struct type> output might be a lot of
-total characters so another potential issue might be
-the maximum length of each individual printk.
-
-> > I like the choice of C style output, but please format it similar to drgn. Like:
-> > *(struct task_struct *)0xffff889ff8a08000 = {
-> > 	.thread_info = (struct thread_info){
-> > 		.flags = (unsigned long)0,
-> > 		.status = (u32)0,
-> > 	},
-> > 	.state = (volatile long)1,
-> > 	.stack = (void *)0xffffc9000c4dc000,
-> > 	.usage = (refcount_t){
-> > 		.refs = (atomic_t){
-> > 			.counter = (int)2,
-> > 		},
-> > 	},
-> > 	.flags = (unsigned int)4194560,
-> > 	.ptrace = (unsigned int)0,
-
-And here, the issue might be duplicating the log level
-for each line of output and/or prefixing each line with
-whatever struct type is being dumped as interleaving
-with other concurrent logging is possible.
-
-Here as well the individual field types don't contain
-enough information to determine if a field should be
-output as %x or %u.
-
+-- 
+Jens Axboe
 
