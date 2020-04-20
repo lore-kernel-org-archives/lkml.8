@@ -2,73 +2,116 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AA4C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE716C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8CA2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587362871;
-	bh=vRlhz0sSThzWyJx9IOhI/eegJBUk6Cj/zG1nKsnkmaw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SOdBN5E1SV2F7VA5LGgq2aPIAfu/QRNWLbcETt1+DDEt8e0REm84/rRPuEkqjBPIG
-	 as23IgNFI8IfxOlYqRYt0Rn4tGzHjBkzoaml7x2irsxfJ6allpjEzHh73sSLr99B7l
-	 K4vB1fbPaah+Uxy+81mPtMHw9cle3N5bqSOLUhKw=
+	by mail.kernel.org (Postfix) with ESMTP id B5F892078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgDTGHu (ORCPT
+        id S1726079AbgDTGJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 02:07:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35382 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 02:09:35 -0400
+Received: from mga17.intel.com ([192.55.52.151]:43382 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbgDTGHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 02:07:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24EA2206F6;
-        Mon, 20 Apr 2020 06:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587362868;
-        bh=vRlhz0sSThzWyJx9IOhI/eegJBUk6Cj/zG1nKsnkmaw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s7vHSaBwJ8N37qDzSwQ1YcjnLP2iNKH4h1S9VkIFdToeSZoXNNpDlBuwhnz9Y5L+p
-         ZeHad1mH2Fpvg8gPLjN4OCeUSSn7JUXoIhjbVAmt2frMpX9mtqgvX2i40BOqbbLFQV
-         PoAP3bLc06hr9aDE5Ronyxg2Yuu47rQPthhckobA=
-Date:   Mon, 20 Apr 2020 08:07:46 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Evalds Iodzevics <evalds.iodzevics@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Fixed broken microcode early loading on 32 bit
- platforms because it always jumps past cpuid in sync_core() as data
- structure boot_cpu_data are not populated so early in boot. This is for 4.4.
- Should be done for 4.9 too
-Message-ID: <20200420060746.GB3704191@kroah.com>
-References: <20200419162943.3704-1-evalds.iodzevics@gmail.com>
- <20200419162943.3704-2-evalds.iodzevics@gmail.com>
- <20200419165453.GB3697654@kroah.com>
- <CADqhmmc4S=BPTGuK2iCxD0ZwHf8cobyFq4f+jsBtHZZJtJD+5A@mail.gmail.com>
+        id S1725825AbgDTGJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 02:09:34 -0400
+IronPort-SDR: Y14szW8yJPl79FSkXJsaNYGDij5VOG/lOrh9Zv9yFIapZqzcml8ARnpTaX6FxefIb7oudYUQcb
+ pU8B7q1VFSkw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 23:09:34 -0700
+IronPort-SDR: SQHJ0sLBySw9ByQlKn3Z8vdXw2bZ5GeJdPCl37ICbWtL7AANdqyz4iwokbh8tzfH69f9t4qWmP
+ tXIB/qV2bqrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
+   d="scan'208";a="456275136"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by fmsmga006.fm.intel.com with ESMTP; 19 Apr 2020 23:09:31 -0700
+Subject: Re: [PATCH][next] sdhci: arasan: fix uninitialized value being
+ returned as error code
+To:     Colin King <colin.king@canonical.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Manish Narani <manish.narani@xilinx.com>,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200417154901.112236-1-colin.king@canonical.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <49e93e7a-1f9e-ce5b-ca68-a088069ca2b0@intel.com>
+Date:   Mon, 20 Apr 2020 09:08:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADqhmmc4S=BPTGuK2iCxD0ZwHf8cobyFq4f+jsBtHZZJtJD+5A@mail.gmail.com>
+In-Reply-To: <20200417154901.112236-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 08:52:07AM +0300, Evalds Iodzevics wrote:
-> Yeah, basically its a fix for early microcode load on x86 for 4.4 longterm
-> Just tried to say same problem exists on 4.9 too
+On 17/04/20 6:49 pm, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the error return value in variable ret is not being initialized
+> and so a successful return path is returning a garbage value. Since ret
+> is not being used the simple fix is just return 0 on a successful return.
+> 
+> Addresses-Coverity: ("Uninitialized scalar variable")
+> Fixes: f73e66a36772 ("sdhci: arasan: Add support for Versal Tap Delays")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
 
-<formletter>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+>  drivers/mmc/host/sdhci-of-arasan.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 16e26c217a77..45603ba515b2 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -735,7 +735,6 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
+>  		container_of(clk_data, struct sdhci_arasan_data, clk_data);
+>  	struct sdhci_host *host = sdhci_arasan->host;
+>  	u8 tap_delay, tap_max = 0;
+> -	int ret;
+>  
+>  	/*
+>  	 * This is applicable for SDHCI_SPEC_300 and above
+> @@ -781,7 +780,7 @@ static int sdhci_versal_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
+>  		sdhci_writel(host, regval, SDHCI_ARASAN_OTAPDLY_REGISTER);
+>  	}
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static const struct clk_ops versal_sdcardclk_ops = {
+> @@ -807,7 +806,6 @@ static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
+>  		container_of(clk_data, struct sdhci_arasan_data, clk_data);
+>  	struct sdhci_host *host = sdhci_arasan->host;
+>  	u8 tap_delay, tap_max = 0;
+> -	int ret;
+>  
+>  	/*
+>  	 * This is applicable for SDHCI_SPEC_300 and above
+> @@ -857,7 +855,7 @@ static int sdhci_versal_sampleclk_set_phase(struct clk_hw *hw, int degrees)
+>  		sdhci_writel(host, regval, SDHCI_ARASAN_ITAPDLY_REGISTER);
+>  	}
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static const struct clk_ops versal_sampleclk_ops = {
+> 
 
-</formletter>
