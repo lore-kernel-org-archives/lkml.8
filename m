@@ -2,95 +2,95 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ABFC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F2FC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBB6E206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C16120857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:31:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587396666;
+	bh=mBtAU8+++LzfANGdd4dkRTMjCsIyXYRofREjG2ceEm0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=vIZ13qDInXRXziGiGHGggmChwsqqC0HLLpD//lYG+MQxiTtCS+7LOc/F8NILQm8sP
+	 Q8XQHPoQJw9+Zw+Cb1Pkwh1Shekk5tWs5jz64UlECmkuuopsGD/g4BUu/nMaV8fWxM
+	 cvgEWlpNQY4x7CZ//lhHAay6zIMrBRbLTCn7OtpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgDTPax (ORCPT
+        id S1728181AbgDTPbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:30:53 -0400
-Received: from mga11.intel.com ([192.55.52.93]:11719 "EHLO mga11.intel.com"
+        Mon, 20 Apr 2020 11:31:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgDTPaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:30:52 -0400
-IronPort-SDR: Y0tAWSlyHjjJTXN+YkgPqloQQ/hUm1+SaMqaiR33aJLogNsHfv2MtaFxh9S5oHVGE18iy5u5PH
- nwdEoq4884NA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 08:30:52 -0700
-IronPort-SDR: xnX/m/bf2QchUzLAIJB0BnkLLrc/W6WBmNOTtXG0YOxQfxbc0uKBt82oDL6ufh2zTNFlnYKl6S
- GTXDAQE+gy2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="scan'208";a="290130187"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Apr 2020 08:30:50 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jQYNp-00243U-DL; Mon, 20 Apr 2020 18:30:53 +0300
-Date:   Mon, 20 Apr 2020 18:30:53 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org,
-        Andy Shevchenko <andy@infradead.org>
-Subject: [GIT PULL] immutable branch for properties
-Message-ID: <20200420153053.GA492228@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1725989AbgDTPbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:31:05 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7721C206F9;
+        Mon, 20 Apr 2020 15:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587396665;
+        bh=mBtAU8+++LzfANGdd4dkRTMjCsIyXYRofREjG2ceEm0=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=dpNOykOHE/RuS4HaqLkJOiavP+sLIO3YbhFMCida0C+lvlDYhxvZVBieCZm/Z/CyW
+         sdIlj3tYZmkKhjWZ6HEhWBVDrA5DKJdEF5dLfQ33T4yKWUVRCdyKVNvB/c6OsoI51U
+         H+2ZzhYggMqKpQpWvHjBT01kpp10ETZPjwSrceiM=
+Date:   Mon, 20 Apr 2020 16:31:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <87y2qqvdxu.wl-kuninori.morimoto.gx@renesas.com>
+References: <87y2qqvdxu.wl-kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH] soundwire: intel: use asoc_rtd_to_cpu() / asoc_rtd_to_codec() macro for DAI pointer
+Message-Id: <158739666242.39069.11002748203255634356.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+On 20 Apr 2020 16:01:01 +0900, Kuninori Morimoto wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> Now ALSA SoC needs to use asoc_rtd_to_codec(),
+> otherwise, it will be compile error.
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Acked-By: Vinod Koul <vkoul@kernel.org>
+> 
+> [...]
 
-Please, pull immutable branch between platform-drivers-x86 and your subsystem.
+Applied to
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
+
+Thanks!
+
+[1/1] soundwire: intel: use asoc_rtd_to_cpu() / asoc_rtd_to_codec() macro for DAI pointer
+      commit: c74a793806537d8564064cfb1b58488c3d4b70c9
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
-
-  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/linux-platform-drivers-x86.git ib-pdx86-properties
-
-for you to fetch changes up to c7582ff7ed388b803d083166514a4c8acd4ef57d:
-
-  platform/x86: intel_cht_int33fe: Fix spelling issues (2020-04-20 14:47:45 +0300)
-
-----------------------------------------------------------------
-Andy Shevchenko (6):
-      device property: export set_secondary_fwnode() to modules
-      software node: Allow register and unregister software node groups
-      platform/x86: intel_cht_int33fe: Convert software node array to group
-      platform/x86: intel_cht_int33fe: Convert to use set_secondary_fwnode()
-      platform/x86: intel_cht_int33fe: Switch to use acpi_dev_hid_uid_match()
-      platform/x86: intel_cht_int33fe: Fix spelling issues
-
- drivers/base/core.c                            |   1 +
- drivers/base/swnode.c                          |  48 +++++++++++
- drivers/platform/x86/intel_cht_int33fe_typec.c | 106 +++++++++++++------------
- include/linux/property.h                       |   3 +
- 4 files changed, 108 insertions(+), 50 deletions(-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Mark
