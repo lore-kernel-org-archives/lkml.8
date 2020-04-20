@@ -2,53 +2,51 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E4EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8CBC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC9720735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F1A206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387131;
-	bh=Hbe7QW9W/V7h7WcXvDZaceOhOyxayfXkhvMBlyiy8+s=;
+	s=default; t=1587387138;
+	bh=33fn3yXMDa+Tc5RNZdD1AuSOPIrelWV2k2G/xTBgVZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gi+oyA2zh+5icaYTZOA5/el6al3GXChk+g43833zJwtqLDA8DJnF+ig8vr1IQrb95
-	 UcPiWAvQOOm/hZjU3o8VhHQOUtKiellMilRQjrm/LAx93Wa/2W8+zGKurgHjWUpKvT
-	 O54EL3MxxjzFgOPruckWB6dVcl7jg6o0v5xXdSSU=
+	b=h49/P6mClnLMpKVIyC7AOvSY8KyuINuzOHECL0mrwo4JQg7HLl7fwsECK+J0D5UhF
+	 YpRbONp9iHzRaO3Fjtdl7ah5uCUNlApfOWIFKNQ8+VkyABzAjblo2jrH/XCdjpQLgz
+	 lXB0qmarrgk1KkrlU3Gb9PzN9tWzAwy0q7tmkKRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgDTMwK (ORCPT
+        id S1729085AbgDTMr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:52:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43920 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:47:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729128AbgDTMrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:47:43 -0400
+        id S1728436AbgDTMrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:47:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 699F4206DD;
-        Mon, 20 Apr 2020 12:47:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7AB5206DD;
+        Mon, 20 Apr 2020 12:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386862;
-        bh=Hbe7QW9W/V7h7WcXvDZaceOhOyxayfXkhvMBlyiy8+s=;
+        s=default; t=1587386843;
+        bh=33fn3yXMDa+Tc5RNZdD1AuSOPIrelWV2k2G/xTBgVZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u17q0UO9Oend+vW0ifYNZEnhAOGxYhg8X2pYwcVLmDdeEYBkN16btr1R4NPhIb4s0
-         fLijhm+bIhKVTOURLaMaTKNzs3GpcEbNbm7Cci6nRRHJhYz0RfeHzHIALYyt4vI7Rk
-         RksveEwPZ6PJHJTHYsoxAdI9q0OYuitOpQ9DWnuI=
+        b=qXB+tzKmhLizJlovnK3DqfwNxOAIDL/B6BBqecvr/zjLK/WbyGBOBf2eZvf/s73CR
+         IthG3mZdfwsth8Xnm1AdUvOLVi8TXYQx6IwY8crG7kq5h9fF74msJOF9d9SoyG7RGj
+         giSVEkB7QpsMoCgkrl5RJZDYQuwC1cYel2i7Es1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
-        Maurizio Lombardi <mlombard@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 58/60] scsi: target: remove boilerplate code
-Date:   Mon, 20 Apr 2020 14:39:36 +0200
-Message-Id: <20200420121515.859192997@linuxfoundation.org>
+        stable@vger.kernel.org, Gilberto Bertin <me@jibi.io>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 10/60] net: tun: record RX queue in skb before do_xdp_generic()
+Date:   Mon, 20 Apr 2020 14:38:48 +0200
+Message-Id: <20200420121504.321132199@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -61,101 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maurizio Lombardi <mlombard@redhat.com>
+From: Gilberto Bertin <me@jibi.io>
 
-[ Upstream commit e49a7d994379278d3353d7ffc7994672752fb0ad ]
+[ Upstream commit 3fe260e00cd0bf0be853c48fcc1e19853df615bb ]
 
-iscsit_free_session() is equivalent to iscsit_stop_session() followed by a
-call to iscsit_close_session().
+This allows netif_receive_generic_xdp() to correctly determine the RX
+queue from which the skb is coming, so that the context passed to the
+XDP program will contain the correct RX queue index.
 
-Link: https://lore.kernel.org/r/20200313170656.9716-2-mlombard@redhat.com
-Tested-by: Rahul Kundu <rahul.kundu@chelsio.com>
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Gilberto Bertin <me@jibi.io>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/target/iscsi/iscsi_target.c | 46 ++---------------------------
- drivers/target/iscsi/iscsi_target.h |  1 -
- 2 files changed, 2 insertions(+), 45 deletions(-)
+ drivers/net/tun.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index d19e051f2bc23..dda735cfb1568 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4569,49 +4569,6 @@ void iscsit_fail_session(struct iscsi_session *sess)
- 	sess->session_state = TARG_SESS_STATE_FAILED;
- }
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1925,6 +1925,7 @@ drop:
  
--int iscsit_free_session(struct iscsi_session *sess)
--{
--	u16 conn_count = atomic_read(&sess->nconn);
--	struct iscsi_conn *conn, *conn_tmp = NULL;
--	int is_last;
--
--	spin_lock_bh(&sess->conn_lock);
--	atomic_set(&sess->sleep_on_sess_wait_comp, 1);
--
--	list_for_each_entry_safe(conn, conn_tmp, &sess->sess_conn_list,
--			conn_list) {
--		if (conn_count == 0)
--			break;
--
--		if (list_is_last(&conn->conn_list, &sess->sess_conn_list)) {
--			is_last = 1;
--		} else {
--			iscsit_inc_conn_usage_count(conn_tmp);
--			is_last = 0;
--		}
--		iscsit_inc_conn_usage_count(conn);
--
--		spin_unlock_bh(&sess->conn_lock);
--		iscsit_cause_connection_reinstatement(conn, 1);
--		spin_lock_bh(&sess->conn_lock);
--
--		iscsit_dec_conn_usage_count(conn);
--		if (is_last == 0)
--			iscsit_dec_conn_usage_count(conn_tmp);
--
--		conn_count--;
--	}
--
--	if (atomic_read(&sess->nconn)) {
--		spin_unlock_bh(&sess->conn_lock);
--		wait_for_completion(&sess->session_wait_comp);
--	} else
--		spin_unlock_bh(&sess->conn_lock);
--
--	iscsit_close_session(sess);
--	return 0;
--}
--
- void iscsit_stop_session(
- 	struct iscsi_session *sess,
- 	int session_sleep,
-@@ -4696,7 +4653,8 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
- 	list_for_each_entry_safe(se_sess, se_sess_tmp, &free_list, sess_list) {
- 		sess = (struct iscsi_session *)se_sess->fabric_sess_ptr;
+ 	skb_reset_network_header(skb);
+ 	skb_probe_transport_header(skb);
++	skb_record_rx_queue(skb, tfile->queue_index);
  
--		iscsit_free_session(sess);
-+		iscsit_stop_session(sess, 1, 1);
-+		iscsit_close_session(sess);
- 		session_count++;
- 	}
+ 	if (skb_xdp) {
+ 		struct bpf_prog *xdp_prog;
+@@ -2492,6 +2493,7 @@ build:
+ 	skb->protocol = eth_type_trans(skb, tun->dev);
+ 	skb_reset_network_header(skb);
+ 	skb_probe_transport_header(skb);
++	skb_record_rx_queue(skb, tfile->queue_index);
  
-diff --git a/drivers/target/iscsi/iscsi_target.h b/drivers/target/iscsi/iscsi_target.h
-index c95f56a3ce31b..7409ce2a66078 100644
---- a/drivers/target/iscsi/iscsi_target.h
-+++ b/drivers/target/iscsi/iscsi_target.h
-@@ -43,7 +43,6 @@ extern int iscsi_target_rx_thread(void *);
- extern int iscsit_close_connection(struct iscsi_conn *);
- extern int iscsit_close_session(struct iscsi_session *);
- extern void iscsit_fail_session(struct iscsi_session *);
--extern int iscsit_free_session(struct iscsi_session *);
- extern void iscsit_stop_session(struct iscsi_session *, int, int);
- extern int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *, int);
+ 	if (skb_xdp) {
+ 		err = do_xdp_generic(xdp_prog, skb);
+@@ -2503,7 +2505,6 @@ build:
+ 	    !tfile->detached)
+ 		rxhash = __skb_get_hash_symmetric(skb);
  
--- 
-2.20.1
-
+-	skb_record_rx_queue(skb, tfile->queue_index);
+ 	netif_receive_skb(skb);
+ 
+ 	/* No need for get_cpu_ptr() here since this function is
 
 
