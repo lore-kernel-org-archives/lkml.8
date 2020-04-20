@@ -2,94 +2,107 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC738C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5D5C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78B992145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCF72078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:35:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="HW2pgeCq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULkgTSO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgDTHfN (ORCPT
+        id S1726412AbgDTHfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:35:13 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:59030 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgDTHfN (ORCPT
+        Mon, 20 Apr 2020 03:35:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46427 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726055AbgDTHfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:35:13 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 8137120CF0;
-        Mon, 20 Apr 2020 07:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587368112; bh=bDSuF4kuZpYpNlfsiSYtB4XVxy4h2Vp476P6s+KXRFk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HW2pgeCqOei8AF7Iy4NgvHPS8XAZbZ0Ei87BFcwHGFDytzJieqLuoGX575ssMDlk+
-         m5CYxBAOcqxZK1kVW9KG/stLt78tMqb0oE+kHrK0B9Q5KLZprWEEbA3iMWtdDJiS9X
-         Zk0t6KJBtg5WEsCbGUmZEnT5YVnKdNep/w+MhzemZP+sTMmXx6OucaumUblFZWrswz
-         //Q8rHXeHMqULxS68ai0itPfz0qkKTBaeiOwHNuhB2gonjLaFQupSLuL3a6xnat2Kr
-         OHhbheXb1nIWXFLreDFkViiOYUSo/KWk3oBr4VghpffVsXnt8alQGEYUypnoDsYURR
-         JAkDUSsh49vTg==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 5/5] MIPS: Loongson64: Mark RS780 HPET as broken
-Date:   Mon, 20 Apr 2020 15:33:40 +0800
-Message-Id: <20200420073347.157230-6-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
-References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
+        Mon, 20 Apr 2020 03:35:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587368150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ddEryRA8fru8sR3cTZfHtReHkDM3BB1oRAtqx9hNvis=;
+        b=ULkgTSO7Zit4YIa/TepJ8PX8CtxFbCCWSCexscJs8ppY40n50f9CH+PFBgkxZcozymRr30
+        CB6Pg4m5nZgEuAHtSG7xD3j65+nwq40llotAIXrFsXBgnTs4hIyRY1IOJbArPW8kPF3XSK
+        rp/a0lL2e2cet3Jg6YCSpvqJkMo7We0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-77-0FRc6vd3N_eWC6A3SdG2Nw-1; Mon, 20 Apr 2020 03:35:47 -0400
+X-MC-Unique: 0FRc6vd3N_eWC6A3SdG2Nw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27C56149C5;
+        Mon, 20 Apr 2020 07:35:46 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.40.194.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F8D760C63;
+        Mon, 20 Apr 2020 07:35:39 +0000 (UTC)
+Subject: Re: [dm-devel] [PATCH 0/3] dm raid/raid1: enable discard support when
+ any devices support discard
+To:     dm-devel@redhat.com
+Cc:     Paul Wise <pabs3@bonedaddy.net>, Mike Snitzer <snitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>
+References: <20200419073026.197967-1-pabs3@bonedaddy.net>
+ <20200419131908.GA22398@redhat.com>
+ <9cb6a39a43178be29af2f47a92c2e84754b62b69.camel@bonedaddy.net>
+From:   Ondrej Kozina <okozina@redhat.com>
+Message-ID: <6bbf9d94-2fbb-f96f-ea85-a480ba109c55@redhat.com>
+Date:   Mon, 20 Apr 2020 09:35:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9cb6a39a43178be29af2f47a92c2e84754b62b69.camel@bonedaddy.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver is using some dangerous hack to set MMIO address for HPET,
-which might break systems with other kinds of PCH.
+On 4/19/20 4:48 PM, Paul Wise wrote:
+> On Sun, 2020-04-19 at 09:19 -0400, Mike Snitzer wrote:
+> 
+>> You went overboard with implementation before checking to see if your
+>> work would be well received.  Your 2/3 patch header shows you're
+>> capable of analyzing past commits to explain the evolution of code,
+>> etc.  But yet you make no mention of this commit header which explicitly
+>> speaks to why what you're proposing is _not_ acceptable:
+>>
+>> commit 8a74d29d541cd86569139c6f3f44b2d210458071
+>> Author: Mike Snitzer <snitzer@redhat.com>
+>> Date:   Tue Nov 14 15:40:52 2017 -0500
+>>
+>>      dm: discard support requires all targets in a table support discards
+> 
+> I do remember seeing this commit while working on this, I guess I
+> ignored it in my attempts to get fstrim working on my rootfs, woops.
+> 
+>> I haven't looked closely at MD raid in this area but if you trully think
+>> underlying MD raid can cope with issuing discards to devices that don't
+>> support them (or that it avoids issuing them?) then please update
+>> dm-raid.c to conditionally set ti->discard_supported (if not all devices
+>> support discard).  That is how to inform DM core that the target knows
+>> better and it will manage discards issued to it.  It keeps the change
+>> local to dm-raid.c without the flag-day you're proposing.
+> 
+> On my system I have a HDD and an SSD, with /boot on MD RAID and / on
+> ext4 on DM RAID on 2 DM crypt volumes. In this setup fstrim works on
+> /boot but does not work on / and with my patches it works on / again.
+> In addition I don't see any messages in dmesg or other issues when
+> doing fstrim / with my patches.
 
-Also, as Loongson-3 cpufreq driver never appeared in mainline,
-this driver rarely got used.
+Did you have discard allowed on both dm-crypt devices? dm-crypt (kernel) 
+does not allow discards by default.
 
-So we temporarily mark it as broken until we find a better solution.
-
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/loongson64/Kconfig | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/arch/mips/loongson64/Kconfig b/arch/mips/loongson64/Kconfig
-index c386b8a3c753..16e6acab8cce 100644
---- a/arch/mips/loongson64/Kconfig
-+++ b/arch/mips/loongson64/Kconfig
-@@ -4,14 +4,12 @@ if MACH_LOONGSON64
- config RS780_HPET
- 	bool "RS780/SBX00 HPET Timer"
- 	depends on MACH_LOONGSON64
-+	depends on BROKEN
- 	select MIPS_EXTERNAL_TIMER
- 	help
- 	  This option enables the hpet timer of AMD RS780/SBX00.
- 
--	  If you want to enable the Loongson3 CPUFreq Driver, Please enable
--	  this option at first, otherwise, You will get wrong system time.
--
--	  If unsure, say Yes.
--
-+	  Note: This driver is doing some dangerous hack. Please only enable
-+	  it on RS780E systems.
- 
- endif # MACH_LOONGSON64
--- 
-2.26.0.rc2
+Regards O.
 
