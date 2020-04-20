@@ -2,435 +2,268 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AD8C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D82C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E02F206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:37:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="Jx83Xqhd"
+	by mail.kernel.org (Postfix) with ESMTP id 50D9B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587415321;
+	bh=C/H7Vqw4eLAo+bqTMZDWofBTBU9RjPsgGEVTUDrNvCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MAbCUEpydndsOOfZF0qm5OlluN2bDYkvxa5JpUF0MiGoOzBBeeq+/FWItEMe8iTf0
+	 A25ygR6Yuwy3xhctkwRUTZpnpnbA3y8eFI9h9NkvNHLsj9LB4DTMdrmE19tlJE9Q1E
+	 fS+hPk8XMJSvhpwCIpQSdwqKICUp+6oPCUSY7bLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgDTUhL (ORCPT
+        id S1726513AbgDTUmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:37:11 -0400
-Received: from mail-40134.protonmail.ch ([185.70.40.134]:21722 "EHLO
-        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTUhL (ORCPT
+        Mon, 20 Apr 2020 16:42:00 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53302 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgDTUmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:37:11 -0400
-Date:   Mon, 20 Apr 2020 20:36:57 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1587415026;
-        bh=pi0I3jcM77UFq2VH8uClbT6LRC4hcRh2g4zpQTZot1Q=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=Jx83XqhdE0MRgdP/xldvW0lmgJGF54kC/N/fXjYlrO2SOt2Jdn/kLuO7UCqUvHvaA
-         5KbSGK1TupNkR1H36vWPlzc3r8VG29xGXySLswL0AqcvLzLgRh2SsAlD5+QMgRSUpC
-         ua+Ok19dH6hpJ2rOEhb47trd36PH9jmQMkDymuhA=
-To:     Helen Koike <helen.koike@collabora.com>
-From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-        <nfraprado@protonmail.com>
-Cc:     linux-media@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-          <nfraprado@protonmail.com>
-Subject: Re: [PATCH v2 1/3] media: vimc: Support multiple media bus codes for each pixelformat
-Message-ID: <20200420203646.6hhbsb57ybwh6u76@ArchWay.local>
-In-Reply-To: <e41520f6-1d2e-9d36-3693-1e6d950ecf2f@collabora.com>
-References: <20200326214730.2449707-1-nfraprado@protonmail.com>
- <20200326214730.2449707-2-nfraprado@protonmail.com>
- <e41520f6-1d2e-9d36-3693-1e6d950ecf2f@collabora.com>
+        Mon, 20 Apr 2020 16:42:00 -0400
+Received: by mail-pj1-f66.google.com with SMTP id hi11so392321pjb.3;
+        Mon, 20 Apr 2020 13:41:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=W70HODHvPGy2tybwv11DFoJ/NeBLhWW5ThLnvqLq4jw=;
+        b=eb8zlzSL6tus+C3+TZcbLqFKdwfa5hEJDHF2PYriyHB+N2NDeZ18TBmwr+hBf7RqP9
+         qs+rJKmiwVrFZTc2g3IjLlsbnoLsrvPujOirPjKlU+x/jnyhzMrmyL1Vkf/humbuOmL4
+         qrmeuHapgqI9TLvTNE8GNicIZnKryfZTT6B8o9QhgYRCG2O1jSsNjp7Zvlmizex6wBLL
+         Ctliuil7f1Pc3Z7qxp55M83rwnZljNNh8qsooiuS2KLFzG8VjgNwmY4QZKH7bHRLZEKf
+         q0uSdV3BV6oSOlp+6FpkTzR8fnuOlNIMgidLNgZLxyrsBiXqhxhe5kooJYXKTR5qwSeM
+         4DpA==
+X-Gm-Message-State: AGi0PuZdJkxQhTKaMVsZjyED0x5mPLE4qQMnkk5Ip69wYwNeGluGYsYe
+        IhJ3mhhYPqyS9e+/13AhDYk=
+X-Google-Smtp-Source: APiQypJ4sR9R+DlVxqQS0MoSp3x92ejjwbDh/Pdx52htFHQWU9alTiU9j5K9HouA86h3GL82FtnQHQ==
+X-Received: by 2002:a17:902:8487:: with SMTP id c7mr16757665plo.251.1587415318778;
+        Mon, 20 Apr 2020 13:41:58 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id n16sm369107pfq.61.2020.04.20.13.41.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 13:41:57 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id DCAF84028E; Mon, 20 Apr 2020 20:41:56 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 20:41:56 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
+Message-ID: <20200420204156.GO11244@42.do-not-panic.com>
+References: <20200419194529.4872-1-mcgrof@kernel.org>
+ <20200419194529.4872-4-mcgrof@kernel.org>
+ <20200420201615.GC302402@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420201615.GC302402@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
+On Mon, Apr 20, 2020 at 10:16:15PM +0200, Greg KH wrote:
+> On Sun, Apr 19, 2020 at 07:45:22PM +0000, Luis Chamberlain wrote:
+> 
+> This patch triggered gmail's spam detection, your changelog text is
+> whack...
 
-thanks for the review.
+Oh? What do you think triggered it?
 
-Some comments below.
-
-On Mon, Mar 30, 2020 at 04:36:45PM -0300, Helen Koike wrote:
->=20
-> Hi N=C3=ADcolas,
->=20
-> thank you for the patch.
->=20
-> The series looks good in general, just minor comments below.
->=20
-> On 3/26/20 6:47 PM, N=C3=ADcolas F. R. A. Prado wrote:
-> > Change vimc_pix_map_list to allow multiple media bus codes to map to th=
-e
-> > same pixelformat, making it possible to add media bus codes for which
-> > there are no pixelformat.
-> >
-> > Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
-> > ---
-> >
-> > Changes in v2:
-> > - Fix vimc_mbus_code_by_index not checking code array bounds
-> > - Fix array formatting
-> > - Rename variables
-> > - Change code array size
-> > - Add comment about vimc_mbus_code_by_index return value
-> >
-> >  drivers/media/platform/vimc/vimc-common.c | 70 ++++++++++++++---------
-> >  drivers/media/platform/vimc/vimc-common.h | 11 +++-
-> >  drivers/media/platform/vimc/vimc-scaler.c | 10 +++-
-> >  drivers/media/platform/vimc/vimc-sensor.c |  6 +-
-> >  4 files changed, 65 insertions(+), 32 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/=
-platform/vimc/vimc-common.c
-> > index c95c17c048f2..119846f3eaa5 100644
-> > --- a/drivers/media/platform/vimc/vimc-common.c
-> > +++ b/drivers/media/platform/vimc/vimc-common.c
-> > @@ -19,19 +19,19 @@ static const struct vimc_pix_map vimc_pix_map_list[=
-] =3D {
-> >
-> >  =09/* RGB formats */
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_BGR888_1X24,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_BGR888_1X24 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_BGR24,
-> >  =09=09.bpp =3D 3,
-> >  =09=09.bayer =3D false,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_RGB888_1X24,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_RGB888_1X24 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_RGB24,
-> >  =09=09.bpp =3D 3,
-> >  =09=09.bayer =3D false,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_ARGB8888_1X32,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_ARGB8888_1X32 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_ARGB32,
-> >  =09=09.bpp =3D 4,
-> >  =09=09.bayer =3D false,
-> > @@ -39,49 +39,49 @@ static const struct vimc_pix_map vimc_pix_map_list[=
-] =3D {
-> >
-> >  =09/* Bayer formats */
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SBGGR8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SBGGR8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SBGGR8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SGBRG8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SGBRG8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGBRG8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SGRBG8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SGRBG8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGRBG8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SRGGB8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SRGGB8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SRGGB8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SBGGR10_1X10,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SBGGR10_1X10 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SBGGR10,
-> >  =09=09.bpp =3D 2,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SGBRG10_1X10,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SGBRG10_1X10 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGBRG10,
-> >  =09=09.bpp =3D 2,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SGRBG10_1X10,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SGRBG10_1X10 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGRBG10,
-> >  =09=09.bpp =3D 2,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SRGGB10_1X10,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SRGGB10_1X10 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SRGGB10,
-> >  =09=09.bpp =3D 2,
-> >  =09=09.bayer =3D true,
-> > @@ -89,25 +89,25 @@ static const struct vimc_pix_map vimc_pix_map_list[=
-] =3D {
-> >
-> >  =09/* 10bit raw bayer a-law compressed to 8 bits */
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SBGGR10ALAW8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGBRG10ALAW8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGRBG10ALAW8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SRGGB10ALAW8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> > @@ -115,49 +115,49 @@ static const struct vimc_pix_map vimc_pix_map_lis=
-t[] =3D {
-> >
-> >  =09/* 10bit raw bayer DPCM compressed to 8 bits */
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SBGGR10DPCM8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGBRG10DPCM8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGRBG10DPCM8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SRGGB10DPCM8,
-> >  =09=09.bpp =3D 1,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SBGGR12_1X12,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SBGGR12_1X12 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SBGGR12,
-> >  =09=09.bpp =3D 2,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SGBRG12_1X12,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SGBRG12_1X12 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGBRG12,
-> >  =09=09.bpp =3D 2,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SGRBG12_1X12,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SGRBG12_1X12 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SGRBG12,
-> >  =09=09.bpp =3D 2,
-> >  =09=09.bayer =3D true,
-> >  =09},
-> >  =09{
-> > -=09=09.code =3D MEDIA_BUS_FMT_SRGGB12_1X12,
-> > +=09=09.code =3D { MEDIA_BUS_FMT_SRGGB12_1X12 },
-> >  =09=09.pixelformat =3D V4L2_PIX_FMT_SRGGB12,
-> >  =09=09.bpp =3D 2,
-> >  =09=09.bayer =3D true,
-> > @@ -182,13 +182,31 @@ const struct vimc_pix_map *vimc_pix_map_by_index(=
-unsigned int i)
-> >  =09return &vimc_pix_map_list[i];
+> > diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
+> > index 19091e1effc0..d84038bce0a5 100644
+> > --- a/block/blk-debugfs.c
+> > +++ b/block/blk-debugfs.c
+> > @@ -3,6 +3,9 @@
+> >  /*
+> >   * Shared request-based / make_request-based functionality
+> >   */
+> > +
+> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > +
+> >  #include <linux/kernel.h>
+> >  #include <linux/blkdev.h>
+> >  #include <linux/debugfs.h>
+> > @@ -13,3 +16,30 @@ void blk_debugfs_register(void)
+> >  {
+> >  	blk_debugfs_root = debugfs_create_dir("block", NULL);
 > >  }
-> >
-> > +const u32 vimc_mbus_code_by_index(unsigned int index)
+> > +
+> > +int __must_check blk_queue_debugfs_register(struct request_queue *q)
 > > +{
-> > +=09unsigned int i, j;
+> > +	struct dentry *dir = NULL;
 > > +
-> > +=09for (i =3D 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
-> > +=09=09for (j =3D 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j++) {
-> > +=09=09=09if (vimc_pix_map_list[i].code[j]) {
->=20
-> Can this be false?
-
-Actually it can, but after you asked I realized this code could be way clea=
-rer.
-
-When vimc_pix_map_list[i].code[j] is 0, it means that this is an unused val=
-ue of
-the array, so we should skip to the next pixelformat.
-I think writing it this way instead would be better, what do you think?
-
-        for (i =3D 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
-                for (j =3D 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j+=
-+) {
-                        if (!vimc_pix_map_list[i].code[j])
-                                break;
-=20
-                        if (!index)
-                                return vimc_pix_map_list[i].code[j];
-                        index--;
-
->=20
-> > +=09=09=09=09if (!index)
-> > +=09=09=09=09=09return vimc_pix_map_list[i].code[j];
-> > +=09=09=09=09index--;
-> > +=09=09=09}
-> > +=09=09}
-> > +=09}
-> > +=09return 0;
-> > +}
+> > +	/* This can happen if we have a bug in the lower layers */
+> > +	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
+> > +	if (dir) {
+> > +		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
+> > +			kobject_name(q->kobj.parent));
+> > +		dput(dir);
+> > +		return -EALREADY;
+> > +	}
 > > +
-> >  const struct vimc_pix_map *vimc_pix_map_by_code(u32 code)
+> > +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+> > +					    blk_debugfs_root);
+> > +	if (!q->debugfs_dir)
+> > +		return -ENOMEM;
+> 
+> Why doesn't the directory just live in the request queue, or somewhere
+> else, so that you save it when it is created and then that's it.  No
+> need to "look it up" anywhere else.
+
+Its already there. And yes, after my changes it is technically possible
+to just re-use it directly. But this is complicated by a few things. One
+is that at this point in time, asynchronous request_queue removal is
+still possible, and so a race was exposed where a requeust_queue may be
+lingering but its old device is gone. That race is fixed by reverting us
+back to synchronous request_queue removal, therefore ensuring that the
+debugfs dir exists so long as the device does.
+
+I can remove the debugfs_lookup() *after* we revert to synchronous
+request_queue removal, or we just re-order the patches so that the
+revert happens first. That should simplify this patch.
+
+The code in this patch was designed to help dispute the logic behind
+the CVE, in particular it shows exactly where debugfs_dir *is* the
+one found by debugfs_lookup(), and shows the real issue behind the
+removal.
+
+But yeah, now that that is done, I hope its clear to all, and I think
+this patch can be simplified if we just revert the async requeust_queue
+removal first.
+
+> Or do you do that in later patches?  I only see this one at the moment,
+> sorry...
+> 
+> >  static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
+> > +					    struct request_queue *q,
+> >  					    struct blk_trace *bt)
 > >  {
-> > -=09unsigned int i;
-> > +=09unsigned int i, j;
-> >
-> >  =09for (i =3D 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
-> > -=09=09if (vimc_pix_map_list[i].code =3D=3D code)
-> > -=09=09=09return &vimc_pix_map_list[i];
-> > +=09=09for (j =3D 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j++) {
-> > +=09=09=09if (vimc_pix_map_list[i].code[j] =3D=3D code)
-> > +=09=09=09=09return &vimc_pix_map_list[i];
-> > +=09=09}
-> >  =09}
-> >  =09return NULL;
-> >  }
-> > diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/=
-platform/vimc/vimc-common.h
-> > index 616d5a6b0754..585441694c86 100644
-> > --- a/drivers/media/platform/vimc/vimc-common.h
-> > +++ b/drivers/media/platform/vimc/vimc-common.h
-> > @@ -69,7 +69,7 @@ do {=09=09=09=09=09=09=09=09=09\
-> >   * V4L2_PIX_FMT_* fourcc pixelformat and its bytes per pixel (bpp)
-> >   */
-> >  struct vimc_pix_map {
-> > -=09unsigned int code;
-> > +=09unsigned int code[1];
-> >  =09unsigned int bpp;
-> >  =09u32 pixelformat;
-> >  =09bool bayer;
-> > @@ -172,6 +172,15 @@ void vimc_sen_release(struct vimc_ent_device *ved)=
-;
-> >   */
-> >  const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i);
-> >
-> > +/**
-> > + * vimc_mbus_code_by_index - get mbus code by its index
-> > + *
-> > + * @index:=09=09index of the mbus code in vimc_pix_map_list
-> > + *
-> > + * Returns 0 if no mbus code is found for the given index.
-> > + */
-> > +const u32 vimc_mbus_code_by_index(unsigned int index);
+> >  	struct dentry *dir = NULL;
+> >  
+> > +	/* This can only happen if we have a bug on our lower layers */
+> > +	if (!q->kobj.parent) {
+> > +		pr_warn("%s: request_queue parent is gone\n", buts->name);
+> 
+> A kobject always has a parent, unless it has not been registered yet, so
+> I don't know what you are testing could ever happen.
+
+Or it has been kobject_del()'d?
+
+A deferred requeust_queue removal shows this is possible, the parent is
+taken underneath from us because the refcounting of this kobject is
+already kobject_del()'d, and its actual removal scheduled for later.
+The parent is taken underneath from us prior to the scheduled removal
+completing.
+
+> 
+> > +		return NULL;
+> > +	}
 > > +
-> >  /**
-> >   * vimc_pix_map_by_code - get vimc_pix_map struct by media bus code
-> >   *
-> > diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/=
-platform/vimc/vimc-scaler.c
-> > index 7521439747c5..6bac1fa65a6f 100644
-> > --- a/drivers/media/platform/vimc/vimc-scaler.c
-> > +++ b/drivers/media/platform/vimc/vimc-scaler.c
-> > @@ -110,13 +110,19 @@ static int vimc_sca_enum_mbus_code(struct v4l2_su=
-bdev *sd,
-> >  =09=09=09=09   struct v4l2_subdev_pad_config *cfg,
-> >  =09=09=09=09   struct v4l2_subdev_mbus_code_enum *code)
-> >  {
-> > -=09const struct vimc_pix_map *vpix =3D vimc_pix_map_by_index(code->ind=
-ex);
-> > +=09const u32 mbus_code =3D vimc_mbus_code_by_index(code->index);
-> > +=09const struct vimc_pix_map *vpix;
+> > +	/*
+> > +	 * From a sysfs kobject perspective, the request_queue sits on top of
+> > +	 * the gendisk, which has the name of the disk. We always create a
+> > +	 * debugfs directory upon init for this gendisk kobject, so we re-use
+> > +	 * that if blktrace is going to be done for it.
+> > +	 */
+> > +	if (blk_trace_target_disk(buts->name, kobject_name(q->kobj.parent))) {
+> > +		if (!q->debugfs_dir) {
+> > +			pr_warn("%s: expected request_queue debugfs_dir is not set\n",
+> > +				buts->name);
+> 
+> What is userspace supposed to be able to do if they see this warning?
+
+Userspace doesn't parse warnings, but the NULL ensures it won't crash
+the kernel. The warn informs the kernel of a possible block layer bug.
+
+> > +			return NULL;
+> > +		}
+> > +		/*
+> > +		 * debugfs_lookup() is used to ensure the directory is not
+> > +		 * taken from underneath us. We must dput() it later once
+> > +		 * done with it within blktrace.
+> > +		 */
+> > +		dir = debugfs_lookup(buts->name, blk_debugfs_root);
+> > +		if (!dir) {
+> > +			pr_warn("%s: expected request_queue debugfs_dir dentry is gone\n",
+> > +				buts->name);
+> 
+> Again, can't we just save the pointer when we create it and not have to
+> look it up again?
+
+Only if we do the revert of the requeust_queue removal first.
+
+> > +			return NULL;
+> > +		}
+> > +		 /*
+> > +		 * This is a reaffirmation that debugfs_lookup() shall always
+> > +		 * return the same dentry if it was already set.
+> > +		 */
+> 
+> I'm all for reaffirmation and the like, but really, is this needed???
+
+To those who were still not sure that the issue was not a debugfs issue
+I hoped this to make it clear. But indeed, if we revert back to
+synchronous request_queue removal, that should simplify this.
+
+> > +		if (dir != q->debugfs_dir) {
+> > +			dput(dir);
+> > +			pr_warn("%s: expected dentry dir != q->debugfs_dir\n",
+> > +				buts->name);
+> > +			return NULL;
+> 
+> Why are you testing to see if debugfs really is working properly?
+> SHould all users do crazy things like this (hint, rhetorical
+> question...)
+
+No, this can happen with the race I mentioned above.
+
+> > +		}
+> > +		bt->backing_dir = q->debugfs_dir;
+> > +		return bt->backing_dir;
+> > +	}
 > > +
-> > +=09if (!mbus_code)
-> > +=09=09return -EINVAL;
+> > +	/*
+> > +	 * If not using blktrace on the gendisk, we are going to create a
+> > +	 * temporary debugfs directory for it, however this cannot be shared
+> > +	 * between two concurrent blktraces since the path is not unique, so
+> > +	 * ensure this is only done once.
+> > +	 */
+> >  	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+> > -	if (!dir)
+> > -		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> > +	if (dir) {
+> > +		pr_warn("%s: temporary blktrace debugfs directory already present\n",
+> > +			buts->name);
+> > +		dput(dir);
+> > +		return NULL;
+> > +	}
 > > +
-> > +=09vpix =3D vimc_pix_map_by_code(mbus_code);
-> >
-> >  =09/* We don't support bayer format */
-> >  =09if (!vpix || vpix->bayer)
-> >  =09=09return -EINVAL;
-> >
-> > -=09code->code =3D vpix->code;
-> > +=09code->code =3D mbus_code;
->=20
-> no need to change this.
+> > +	bt->dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> > +	if (!bt->dir) {
+> > +		pr_warn("%s: temporary blktrace debugfs directory could not be created\n",
+> > +			buts->name);
+> 
+> Again, do not test the return value, you do not care.  I've been
+> removing these checks from everywhere.
 
-This change is actually needed, because after this patch, the code property=
- of
-vimc_pix_map_list is an array, so there isn't a 1 to 1 relation between mbu=
-s
-code and pixmap format anymore.
-Since we already got the mbus code by index through
-vimc_mbus_code_by_index(code->index), we just use it.
+Sure, the question still stands on what *should* the kernel do if the
+blktrace setup failed to create the debugfs files.
 
->=20
-> >
-> >  =09return 0;
-> >  }
-> > diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/=
-platform/vimc/vimc-sensor.c
-> > index 92daee58209e..b8bd430809c1 100644
-> > --- a/drivers/media/platform/vimc/vimc-sensor.c
-> > +++ b/drivers/media/platform/vimc/vimc-sensor.c
-> > @@ -52,12 +52,12 @@ static int vimc_sen_enum_mbus_code(struct v4l2_subd=
-ev *sd,
-> >  =09=09=09=09   struct v4l2_subdev_pad_config *cfg,
-> >  =09=09=09=09   struct v4l2_subdev_mbus_code_enum *code)
-> >  {
-> > -=09const struct vimc_pix_map *vpix =3D vimc_pix_map_by_index(code->ind=
-ex);
-> > +=09const u32 mbus_code =3D vimc_mbus_code_by_index(code->index);
-> >
-> > -=09if (!vpix)
-> > +=09if (!mbus_code)
-> >  =09=09return -EINVAL;
-> >
-> > -=09code->code =3D vpix->code;
-> > +=09code->code =3D mbus_code;
-> >
-> >  =09return 0;
-> >  }
-> >
->=20
-> With these changes
->=20
-> Acked-by: Helen Koike <helen.koike@collabora.com>
->=20
-> Regards,
-> Helen
-
-Thank you,
-N=C3=ADcolas
-
+  Luis
