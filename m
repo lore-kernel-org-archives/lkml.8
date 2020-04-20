@@ -2,72 +2,90 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211B2C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376DAC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05D282078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111B221927
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:29:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d2qXA6v+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgDTI2x (ORCPT
+        id S1726183AbgDTI3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:28:53 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:42642 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgDTI2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:28:53 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jQRmu-0001q2-3o; Mon, 20 Apr 2020 18:28:21 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 20 Apr 2020 18:28:19 +1000
-Date:   Mon, 20 Apr 2020 18:28:19 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
+        Mon, 20 Apr 2020 04:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgDTI3M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:29:12 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7033C061A0C;
+        Mon, 20 Apr 2020 01:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=IqO0rH/XwB4jj2Xbm/MnV+bQAuc82OBA3N+hT9MUMh0=; b=d2qXA6v+SNk5E4HWTuJcwW6zBn
+        DB1oSYdGQF1W4KKLZf9Ds+4wUNsRVg365/r3rjS/0JSpP8Vsh4xWwpOBUjf1/vp3uslgkQN80gG6h
+        yMBJFQ1pwH9iKLSriw3RG73+stuI6syQo8t9T0BIp4KRaBcmjYmKuwg4LqryDDL2X2fYVyXIRkUl0
+        7WaB1Z+4BzMMXn3uzsNjSpRav6VqCOwDAi5ZAjUAwF/5JAuEDpOqmS86f2gPR940LS5e+0fOlAnMS
+        Ml+O+FzmAu+Pqptaid6xzcjqQEpgnjNFfs9zpfvZ/LME9fc+V1v+1WJZLxJk1eX42+EGk5JwdGlGe
+        /iRiWEhw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQRnh-0002G7-Jz; Mon, 20 Apr 2020 08:29:09 +0000
+Date:   Mon, 20 Apr 2020 01:29:09 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Richard Earnshaw <Richard.Earnshaw@arm.com>,
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: hwrng: cctrng - Remove unnecessary FIPS ifdef
-Message-ID: <20200420082819.GA23022@gondor.apana.org.au>
-References: <1587155926-32663-1-git-send-email-hadar.gat@arm.com>
+        "David S. Miller" <davem@davemloft.net>,
+        Jason Wang <jasowang@redhat.com>, netdev@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v3] vhost: disable for OABI
+Message-ID: <20200420082909.GA28749@infradead.org>
+References: <20200416221902.5801-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587155926-32663-1-git-send-email-hadar.gat@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200416221902.5801-1-mst@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes the unnecessary FIPS ifdef in cctrng.
+On Thu, Apr 16, 2020 at 06:20:20PM -0400, Michael S. Tsirkin wrote:
+> vhost is currently broken on the some ARM configs.
+> 
+> The reason is that that uses apcs-gnu which is the ancient OABI that is been
+> deprecated for a long time.
+> 
+> Given that virtio support on such ancient systems is not needed in the
+> first place, let's just add something along the lines of
+> 
+> 	depends on !ARM || AEABI
+> 
+> to the virtio Kconfig declaration, and add a comment that it has to do
+> with struct member alignment.
+> 
+> Note: we can't make VHOST and VHOST_RING themselves have
+> a dependency since these are selected. Add a new symbol for that.
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+This description is horrible.  The only interesting thing for ARM OABI
+is that it has some strange padding rules, but that isn't something
+that can't be handled.   Please spend some time looking into the issue
+and add te proper __padded annotations, we've done that elsewhere in
+the kernel and it isn't too bad - in fact it helps understanding issues
+with implicit alignment.
 
-diff --git a/drivers/char/hw_random/cctrng.c b/drivers/char/hw_random/cctrng.c
-index e82716c12c3a..49fb65a221f3 100644
---- a/drivers/char/hw_random/cctrng.c
-+++ b/drivers/char/hw_random/cctrng.c
-@@ -331,13 +331,11 @@ void cc_trng_compwork_handler(struct work_struct *w)
- 	ehr_valid = CC_REG_FLD_GET(RNG_ISR, EHR_VALID, isr);
- 	dev_dbg(dev, "Got RNG_ISR=0x%08X (EHR_VALID=%u)\n", isr, ehr_valid);
- 
--#ifdef CONFIG_CRYPTO_FIPS
--	if (CC_REG_FLD_GET(RNG_ISR, CRNGT_ERR, isr) && fips_enabled) {
-+	if (fips_enabled && CC_REG_FLD_GET(RNG_ISR, CRNGT_ERR, isr)) {
- 		fips_fail_notify();
- 		/* FIPS error is fatal */
- 		panic("Got HW CRNGT error while fips is enabled!\n");
- 	}
--#endif
- 
- 	/* Clear all pending RNG interrupts */
- 	cc_iowrite(drvdata, CC_RNG_ICR_REG_OFFSET, isr);
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+And even if you have a good reason not to fix vhost (which I think you
+don't have) this changelog is just utter crap, as it fails to mention
+what the problem with ARM OABI even is.
