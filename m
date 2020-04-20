@@ -2,160 +2,146 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6235FC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B66C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4210520B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182AB2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:33:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgDTNar (ORCPT
+        id S1726707AbgDTNdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:30:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728081AbgDTNaf (ORCPT
+        Mon, 20 Apr 2020 09:33:38 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56528 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726211AbgDTNdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:30:35 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 799D7C061A10;
-        Mon, 20 Apr 2020 06:30:35 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jQWVH-0005Lj-Vk; Mon, 20 Apr 2020 15:30:28 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 82DD81C007F;
-        Mon, 20 Apr 2020 15:30:27 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 13:30:27 -0000
-From:   "tip-bot2 for Christoph Hellwig" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Unexport __cachemode2pte_tbl
-Cc:     Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@suse.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200408152745.1565832-5-hch@lst.de>
-References: <20200408152745.1565832-5-hch@lst.de>
+        Mon, 20 Apr 2020 09:33:37 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jQWYJ-0008G0-Dt; Mon, 20 Apr 2020 14:33:35 +0100
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jQWYI-008In4-Vl; Mon, 20 Apr 2020 14:33:34 +0100
+Message-ID: <7fb8e9ac69a1c03a673875dc39fcd8f94407abca.camel@decadent.org.uk>
+Subject: Re: [PATCH] x86/microcode/intel: replace sync_core() with
+ native_cpuid_reg(eax)
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Borislav Petkov <bp@alien8.de>,
+        Evalds Iodzevics <evalds.iodzevics@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de
+Date:   Mon, 20 Apr 2020 14:33:30 +0100
+In-Reply-To: <20200420093129.GA21839@zn.tnic>
+References: <20200420120037.1537-1-evalds.iodzevics@gmail.com>
+         <20200420093129.GA21839@zn.tnic>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-rO2E3TbHWeD2oFIYU2q8"
+User-Agent: Evolution 3.36.1-1 
 MIME-Version: 1.0
-Message-ID: <158738942707.28353.8973463072528927549.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     a85573f7e74191e5f5500c45fb4ec79cdfe13a08
-Gitweb:        https://git.kernel.org/tip/a85573f7e74191e5f5500c45fb4ec79cdfe13a08
-Author:        Christoph Hellwig <hch@lst.de>
-AuthorDate:    Wed, 08 Apr 2020 17:27:45 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 20 Apr 2020 12:39:31 +02:00
+--=-rO2E3TbHWeD2oFIYU2q8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-x86/mm: Unexport __cachemode2pte_tbl
+On Mon, 2020-04-20 at 11:31 +0200, Borislav Petkov wrote:
+> On Mon, Apr 20, 2020 at 03:00:37PM +0300, Evalds Iodzevics wrote:
+> > sync_core() always jums past cpuid instruction on 32 bit machines
+> > because data structure boot_cpu_data are not populated so early in boot=
+.
+>=20
+> I'm guessing because boot_cpu_data.cpuid_level is not properly set and
+> very early code in head_32.S sets it to -1 temporarily until the highest
+> CPUID level has been detected (or not).
+>=20
+> But the microcode loading happens *before* that.
+[...]
+> Hrm, the original patch of mine did use native_cpuid_eax():
+>=20
+> 4167709bbf82 ("x86/microcode/intel: Add a helper which gives the microcod=
+e revision")
+>=20
+> but the backport:
+>=20
+> commit 98cc1464cfd6edf9dc7fa96aaaf596aae952029b
+> Author: Borislav Petkov <bp@suse.de>
+> Date:   Mon Jan 9 12:41:45 2017 +0100
+>=20
+>     x86/microcode/intel: Add a helper which gives the microcode revision
+>    =20
+>     commit 4167709bbf826512a52ebd6aafda2be104adaec9 upstream.
+>    =20
+>     Since on Intel we're required to do CPUID(1) first, before reading
+>     the microcode revision MSR, let's add a special helper which does the
+>     required steps so that we don't forget to do them next time, when we
+>     want to read the microcode revision.
+>    =20
+>     Signed-off-by: Borislav Petkov <bp@suse.de>
+>     Link: http://lkml.kernel.org/r/20170109114147.5082-4-bp@alien8.de
+>     Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>     [bwh: Backported to 4.4:
+>      - Don't touch prev_rev variable in apply_microcode()
+>      - Keep using sync_core(), which will alway includes the necessary CP=
+UID
+>      	^^^^^^^^^^^^^^^^^^^
+>=20
+> decided to use sync_core() for whatever reason. Perhaps because the
+> native_cpuid* things weren't there. Adding Ben to Cc.
 
-Exporting the raw data for a table is generally a bad idea. Move
-cachemode2protval() out of line given that it isn't really used in the
-fast path, and then mark __cachemode2pte_tbl static.
+This commit didn't introduce the call to native_cpuid_eax(), but only
+moved it.  So I didn't think it made sense for the backport to change
+from sync_core().
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200408152745.1565832-5-hch@lst.de
----
- arch/x86/include/asm/pgtable_types.h | 14 ++------------
- arch/x86/mm/init.c                   | 11 +++++++++--
- arch/x86/mm/pat/set_memory.c         |  5 +++++
- 3 files changed, 16 insertions(+), 14 deletions(-)
+If it's important to use native_cpuid_eax() then these older branches
+should presumably get backports of:
 
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index a3b78d8..567abdb 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -467,8 +467,6 @@ static inline pteval_t pte_flags(pte_t pte)
- 	return native_pte_val(pte) & PTE_FLAGS_MASK;
- }
- 
--extern uint16_t __cachemode2pte_tbl[_PAGE_CACHE_MODE_NUM];
--
- #define __pte2cm_idx(cb)				\
- 	((((cb) >> (_PAGE_BIT_PAT - 2)) & 4) |		\
- 	 (((cb) >> (_PAGE_BIT_PCD - 1)) & 2) |		\
-@@ -478,16 +476,8 @@ extern uint16_t __cachemode2pte_tbl[_PAGE_CACHE_MODE_NUM];
- 	 (((i) & 2) << (_PAGE_BIT_PCD - 1)) |		\
- 	 (((i) & 1) << _PAGE_BIT_PWT))
- 
--static inline unsigned long cachemode2protval(enum page_cache_mode pcm)
--{
--	if (likely(pcm == 0))
--		return 0;
--	return __cachemode2pte_tbl[pcm];
--}
--static inline pgprot_t cachemode2pgprot(enum page_cache_mode pcm)
--{
--	return __pgprot(cachemode2protval(pcm));
--}
-+unsigned long cachemode2protval(enum page_cache_mode pcm);
-+
- static inline unsigned long protval_4k_2_large(unsigned long val)
- {
- 	return (val & ~(_PAGE_PAT | _PAGE_PAT_LARGE)) |
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 4a55d68..71720dd 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -49,7 +49,7 @@
-  *   Index into __pte2cachemode_tbl[] are the caching attribute bits of the pte
-  *   (_PAGE_PWT, _PAGE_PCD, _PAGE_PAT) at index bit positions 0, 1, 2.
-  */
--uint16_t __cachemode2pte_tbl[_PAGE_CACHE_MODE_NUM] = {
-+static uint16_t __cachemode2pte_tbl[_PAGE_CACHE_MODE_NUM] = {
- 	[_PAGE_CACHE_MODE_WB      ]	= 0         | 0        ,
- 	[_PAGE_CACHE_MODE_WC      ]	= 0         | _PAGE_PCD,
- 	[_PAGE_CACHE_MODE_UC_MINUS]	= 0         | _PAGE_PCD,
-@@ -57,7 +57,14 @@ uint16_t __cachemode2pte_tbl[_PAGE_CACHE_MODE_NUM] = {
- 	[_PAGE_CACHE_MODE_WT      ]	= 0         | _PAGE_PCD,
- 	[_PAGE_CACHE_MODE_WP      ]	= 0         | _PAGE_PCD,
- };
--EXPORT_SYMBOL(__cachemode2pte_tbl);
-+
-+unsigned long cachemode2protval(enum page_cache_mode pcm)
-+{
-+	if (likely(pcm == 0))
-+		return 0;
-+	return __cachemode2pte_tbl[pcm];
-+}
-+EXPORT_SYMBOL(cachemode2protval);
- 
- static uint8_t __pte2cachemode_tbl[8] = {
- 	[__pte2cm_idx( 0        | 0         | 0        )] = _PAGE_CACHE_MODE_WB,
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 59eca6a..a28f0c3 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -68,6 +68,11 @@ static DEFINE_SPINLOCK(cpa_lock);
- #define CPA_PAGES_ARRAY 4
- #define CPA_NO_CHECK_ALIAS 8 /* Do not search for aliases */
- 
-+static inline pgprot_t cachemode2pgprot(enum page_cache_mode pcm)
-+{
-+	return __pgprot(cachemode2protval(pcm));
-+}
-+
- #ifdef CONFIG_PROC_FS
- static unsigned long direct_pages_count[PG_LEVEL_NUM];
- 
+484d0e5c7943 x86/microcode/intel: Replace sync_core() with native_cpuid()
+f3e2a51f568d x86/microcode: Use native CPUID to tickle out microcode revisi=
+on
+
+Ben.
+
+> I believe this is the background info Greg needed to figure out *why*
+> you're doing this.
+>=20
+--=20
+Ben Hutchings
+Klipstein's 4th Law of Prototyping and Production:
+                               A fail-safe circuit will destroy others.
+
+
+--=-rO2E3TbHWeD2oFIYU2q8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl6dpKoACgkQ57/I7JWG
+EQniqw//T43dRiR0wAcQlfqixG+5yD5o7m7mIZZtMGTN5OZKoNE8a0yIlexSEFVp
+KRd2nIHHFcFlU8TJPj0JcgSmAUJS0OprvFRVwh24/SmFblAPYZwgRv2gE7Hftt8j
+pkAQxrBwXJXdIkMNpLTXnrDoIJwx+H4sw86hoVr+jx3qofR1Li75EgBzsgZ6/hlQ
+Hx/5MvS5Qb5WvuWsqkIP2o1pUryiHFJBluZOD6R6V+JlS4CTnoXoCFyWqkrVrZ6L
+hBFfBGbOsnLT+KrYuGPW0+eMLsj9D+t/Tbpabr8prpHpz+ZQD4SEjBpC5ENE5LLI
+azrENtuATD5SpiCLzxvtIdeVikidgh3RjOFW2iWF39697tlFnrPoOOs4P9Lttl1j
+35NEEU1Iwj9uEBM7a1cL7HtagRFvBAkktOWvQ8/CNHAhodmHXUCb9K29TqD6/8Gs
+62PLlYeOK09yRX3MMtGNbQNXnluBiMp8PhaXcUO6uYeS3EAfMC7KmSqB8Yk1YFEt
+JA95Cm7jDGcRN3Kh5fnhFlCkeStrW2YQ2kyQ68QCFQo5UK4CMYpmAxBlzVfLXBUk
+WMiaUjpUEID78xDM+4qw7A6Hhe3BJIlfQYSQ78hEUpxfw4GDKgJoPr/A51MTuA9A
+dBFVZYTmmbmyAyPKlk+jsst/iJDA5LFDoheK3mNErqB469kvBhQ=
+=lBHM
+-----END PGP SIGNATURE-----
+
+--=-rO2E3TbHWeD2oFIYU2q8--
