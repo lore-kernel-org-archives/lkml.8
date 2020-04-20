@@ -2,338 +2,186 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7C1C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB107C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD6082078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D042078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:19:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j2WkOi/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgDTHSO (ORCPT
+        id S1726228AbgDTHTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:18:14 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:44673 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725815AbgDTHSN (ORCPT
+        Mon, 20 Apr 2020 03:19:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726020AbgDTHTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:18:13 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0Tw1zGpr_1587367076;
-Received: from 30.27.118.66(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0Tw1zGpr_1587367076)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 20 Apr 2020 15:17:58 +0800
-Subject: Re: [PATCH 1/7] KVM: s390: clean up redundant 'kvm_run' parameters
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200419075106.16248-1-tianjia.zhang@linux.alibaba.com>
- <20200419075106.16248-2-tianjia.zhang@linux.alibaba.com>
- <7a783487-2f9b-08a6-0ff6-f57bb90495a1@de.ibm.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <e182050c-c5eb-8c83-df6e-2b46c1f15ca3@linux.alibaba.com>
-Date:   Mon, 20 Apr 2020 15:17:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 03:19:15 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C16C061A10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:19:13 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id v4so3867537wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+a5D/Go3l6kNSMlbJDlUz7E/smrjsN8BEZkxCZCPYyw=;
+        b=j2WkOi/BwuKO0264ycM/t1QGPReas21DiXLzX+1O2wHO69r4NkdP/a+D9TWB7XTU/S
+         h7Ht8uQGNR5z3nBRGDVpcE9JyM6yAL2hh47Xme4rAAuZJ1X4AMknYJNzvgemYgKTK/SQ
+         HDfySjW67EuCUellMv/FB8SxZrNhWqkFZIDlMwsbnN3H45p7+d/xDI22zqaS4wtdS1fH
+         cJsfpC6DEGo8I4nydqC6GKJyR/bzH3JoygU3N2GBwQU4VJetVikJaRlp2+lxOtNZTzw8
+         8oYM7q0Wttet5w6aDSEO8FcsPFM/A6FTcQjynbFfD31acw8WbBgOCR4yGGLiNjo56rbR
+         PCcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+a5D/Go3l6kNSMlbJDlUz7E/smrjsN8BEZkxCZCPYyw=;
+        b=ioYC8FtYP2yv1KrW4tBKAdFMheBLMrxJ9EyfFGb8wa9EstngdRFDnvy1udGvITrbUs
+         4PIuXTgyf8lMA3lDFdhRAVbXB+ieJVhCED8ug1ejGUnA2erqDDujP/g7p8n98/n5P4Op
+         dMjI7r0ivPxWBw9+x6tnA5ep31RQRV9PLyNoPDEsYO3p0i/26El72bt7ybBvgiXUpJiF
+         Uwv2vSZ5N4B+/pfZeSwgVY9xaiM9mvYQR8tXYofFsuqAwfVnaBH8k6sQu6Q+68vc0OuU
+         etLk9Oh/DFHMPboiKhbrDmcf7X5q0l0zjSDCrTdUk6+Toe7kSCxGsJpWrNgRjg0yuNti
+         icQQ==
+X-Gm-Message-State: AGi0PuaZcPwsUjCo0Slf+aR0/6GXm/i6wlFIAlh6uwVatA3gHgCGoxYY
+        Pts1c2NwEnuFLwl2u8HUkuTZS80q9Mg=
+X-Google-Smtp-Source: APiQypLv4LVvAOzvDjOb58HRVezAofHOjRpLzd4Mor7CopqOj5iXyJlmolJo63jJoVcdcrCO+1fbkQ==
+X-Received: by 2002:a1c:4d07:: with SMTP id o7mr17368816wmh.59.1587367152449;
+        Mon, 20 Apr 2020 00:19:12 -0700 (PDT)
+Received: from dell ([95.149.164.107])
+        by smtp.gmail.com with ESMTPSA id k133sm196661wma.0.2020.04.20.00.19.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 00:19:11 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 08:19:10 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     saravanan sekar <sravanhome@gmail.com>, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v10 1/6] dt-bindings: mfd: add document bindings for
+ mp2629
+Message-ID: <20200420071910.GH3737@dell>
+References: <20200417085003.6124-1-sravanhome@gmail.com>
+ <20200417085003.6124-2-sravanhome@gmail.com>
+ <20200418155308.681df38f@archlinux>
+ <50ffb42e-4080-415e-dd3d-e38f7b0a6071@gmail.com>
+ <20200418170619.155222fa@archlinux>
 MIME-Version: 1.0
-In-Reply-To: <7a783487-2f9b-08a6-0ff6-f57bb90495a1@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200418170619.155222fa@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 18 Apr 2020, Jonathan Cameron wrote:
 
+> On Sat, 18 Apr 2020 17:01:17 +0200
+> saravanan sekar <sravanhome@gmail.com> wrote:
+> 
+> > Hi Jonathan,
+> > 
+> > On 18/04/20 4:53 pm, Jonathan Cameron wrote:
+> > > On Fri, 17 Apr 2020 10:49:58 +0200
+> > > Saravanan Sekar <sravanhome@gmail.com> wrote:
+> > >  
+> > >> Add device tree binding information for mp2629 mfd driver.
+> > >>
+> > >> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > >> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > >> ---
+> > >>   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 61 +++++++++++++++++++
+> > >>   1 file changed, 61 insertions(+)
+> > >>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > >>
+> > >> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > >> new file mode 100644
+> > >> index 000000000000..b25b29259d67
+> > >> --- /dev/null
+> > >> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > >> @@ -0,0 +1,61 @@
+> > >> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > >> +%YAML 1.2
+> > >> +---
+> > >> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+> > >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > >> +
+> > >> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
+> > >> +
+> > >> +maintainers:
+> > >> +  - Saravanan Sekar <sravanhome@gmail.com>
+> > >> +
+> > >> +description: |
+> > >> +  MP2629 is a PMIC providing battery charging and power supply for smartphones,
+> > >> +  wireless camera and portable devices. Chip is controlled over I2C.
+> > >> +
+> > >> +  The battery charge management device handles battery charger controller and
+> > >> +  ADC IIO device for battery, system voltage
+> > >> +
+> > >> +properties:
+> > >> +  compatible:
+> > >> +    const: mps,mp2629
+> > >> +
+> > >> +  reg:
+> > >> +    maxItems: 1
+> > >> +
+> > >> +  interrupts:
+> > >> +    maxItems: 1
+> > >> +
+> > >> +  interrupt-controller: true
+> > >> +
+> > >> +  "#interrupt-cells":
+> > >> +    const: 2
+> > >> +    description:
+> > >> +      The first cell is the IRQ number, the second cell is the trigger type.
+> > >> +
+> > >> +required:
+> > >> +  - compatible
+> > >> +  - reg
+> > >> +  - interrupts
+> > >> +  - interrupt-controller
+> > >> +  - "#interrupt-cells"
+> > >> +
+> > >> +examples:
+> > >> +  - |
+> > >> +    #include <dt-bindings/interrupt-controller/irq.h>
+> > >> +    #include <dt-bindings/input/linux-event-codes.h>
+> > >> +    i2c@7e205000 {  
+> > > I thought the general trend for i2c devices was to leave the i2c
+> > > part 'vague'.
+> > >
+> > >      i2c {
+> > >            #address-cells = <1>;
+> > >            #size-cells = <0>;
+> > >           
+> > >            pmic@4b.. etc  
+> > I agree with you and initial patch was as like above, but Lee was 
+> > somehow unhappy and not satisfied with
+> > 
+> > my explanations. Please find more info on v4.
+> 
+> Ah. Curious.  Oh well - over to Rob for a definitive answer!
 
-On 2020/4/20 15:07, Christian Borntraeger wrote:
-> 
-> 
-> On 19.04.20 09:51, Tianjia Zhang wrote:
->> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
->> structure. Earlier than historical reasons, many kvm-related function
->> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
->> This patch does a unified cleanup of these remaining redundant parameters.
->>
->> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->> ---
->>   arch/s390/kvm/kvm-s390.c | 127 +++++++++++++++++++++------------------
->>   1 file changed, 67 insertions(+), 60 deletions(-)
->>
->> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->> index 443af3ead739..cf420d013ba3 100644
->> --- a/arch/s390/kvm/kvm-s390.c
->> +++ b/arch/s390/kvm/kvm-s390.c
->> @@ -4173,24 +4173,25 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
->>   	return rc;
->>   }
->>   
->> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
->>   {
->> +	struct kvm_run *run = vcpu->run;
-> 
-> Please use kvm_run as variable name. This makes all of the changes below go away.
-> 
+I haven't seen this spoken about before.  The comments were based
+solely on my own views of, the example should provide a solid, valid,
+potentially working block for people to use as a reference.
 
-It's OK, I will fix it in v2 patch.
+Would an I2C node missing an address be a valid DTS/DTSI entry?
 
-Thanks,
-Tianjia
-
-> 
->>   	struct runtime_instr_cb *riccb;
->>   	struct gs_cb *gscb;
->>   
->> -	riccb = (struct runtime_instr_cb *) &kvm_run->s.regs.riccb;
->> -	gscb = (struct gs_cb *) &kvm_run->s.regs.gscb;
->> -	vcpu->arch.sie_block->gpsw.mask = kvm_run->psw_mask;
->> -	vcpu->arch.sie_block->gpsw.addr = kvm_run->psw_addr;
->> -	if (kvm_run->kvm_dirty_regs & KVM_SYNC_ARCH0) {
->> -		vcpu->arch.sie_block->todpr = kvm_run->s.regs.todpr;
->> -		vcpu->arch.sie_block->pp = kvm_run->s.regs.pp;
->> -		vcpu->arch.sie_block->gbea = kvm_run->s.regs.gbea;
->> -	}
->> -	if (kvm_run->kvm_dirty_regs & KVM_SYNC_PFAULT) {
->> -		vcpu->arch.pfault_token = kvm_run->s.regs.pft;
->> -		vcpu->arch.pfault_select = kvm_run->s.regs.pfs;
->> -		vcpu->arch.pfault_compare = kvm_run->s.regs.pfc;
->> +	riccb = (struct runtime_instr_cb *) &run->s.regs.riccb;
->> +	gscb = (struct gs_cb *) &run->s.regs.gscb;
->> +	vcpu->arch.sie_block->gpsw.mask = run->psw_mask;
->> +	vcpu->arch.sie_block->gpsw.addr = run->psw_addr;
->> +	if (run->kvm_dirty_regs & KVM_SYNC_ARCH0) {
->> +		vcpu->arch.sie_block->todpr = run->s.regs.todpr;
->> +		vcpu->arch.sie_block->pp = run->s.regs.pp;
->> +		vcpu->arch.sie_block->gbea = run->s.regs.gbea;
->> +	}
->> +	if (run->kvm_dirty_regs & KVM_SYNC_PFAULT) {
->> +		vcpu->arch.pfault_token = run->s.regs.pft;
->> +		vcpu->arch.pfault_select = run->s.regs.pfs;
->> +		vcpu->arch.pfault_compare = run->s.regs.pfc;
->>   		if (vcpu->arch.pfault_token == KVM_S390_PFAULT_TOKEN_INVALID)
->>   			kvm_clear_async_pf_completion_queue(vcpu);
->>   	}
->> @@ -4198,7 +4199,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   	 * If userspace sets the riccb (e.g. after migration) to a valid state,
->>   	 * we should enable RI here instead of doing the lazy enablement.
->>   	 */
->> -	if ((kvm_run->kvm_dirty_regs & KVM_SYNC_RICCB) &&
->> +	if ((run->kvm_dirty_regs & KVM_SYNC_RICCB) &&
->>   	    test_kvm_facility(vcpu->kvm, 64) &&
->>   	    riccb->v &&
->>   	    !(vcpu->arch.sie_block->ecb3 & ECB3_RI)) {
->> @@ -4209,7 +4210,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   	 * If userspace sets the gscb (e.g. after migration) to non-zero,
->>   	 * we should enable GS here instead of doing the lazy enablement.
->>   	 */
->> -	if ((kvm_run->kvm_dirty_regs & KVM_SYNC_GSCB) &&
->> +	if ((run->kvm_dirty_regs & KVM_SYNC_GSCB) &&
->>   	    test_kvm_facility(vcpu->kvm, 133) &&
->>   	    gscb->gssm &&
->>   	    !vcpu->arch.gs_enabled) {
->> @@ -4218,10 +4219,10 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   		vcpu->arch.sie_block->ecd |= ECD_HOSTREGMGMT;
->>   		vcpu->arch.gs_enabled = 1;
->>   	}
->> -	if ((kvm_run->kvm_dirty_regs & KVM_SYNC_BPBC) &&
->> +	if ((run->kvm_dirty_regs & KVM_SYNC_BPBC) &&
->>   	    test_kvm_facility(vcpu->kvm, 82)) {
->>   		vcpu->arch.sie_block->fpf &= ~FPF_BPBC;
->> -		vcpu->arch.sie_block->fpf |= kvm_run->s.regs.bpbc ? FPF_BPBC : 0;
->> +		vcpu->arch.sie_block->fpf |= run->s.regs.bpbc ? FPF_BPBC : 0;
->>   	}
->>   	if (MACHINE_HAS_GS) {
->>   		preempt_disable();
->> @@ -4232,45 +4233,47 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   		}
->>   		if (vcpu->arch.gs_enabled) {
->>   			current->thread.gs_cb = (struct gs_cb *)
->> -						&vcpu->run->s.regs.gscb;
->> +						&run->s.regs.gscb;
->>   			restore_gs_cb(current->thread.gs_cb);
->>   		}
->>   		preempt_enable();
->>   	}
->> -	/* SIE will load etoken directly from SDNX and therefore kvm_run */
->> +	/* SIE will load etoken directly from SDNX and therefore run */
->>   }
->>   
->> -static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->> +static void sync_regs(struct kvm_vcpu *vcpu)
->>   {
->> -	if (kvm_run->kvm_dirty_regs & KVM_SYNC_PREFIX)
->> -		kvm_s390_set_prefix(vcpu, kvm_run->s.regs.prefix);
->> -	if (kvm_run->kvm_dirty_regs & KVM_SYNC_CRS) {
->> -		memcpy(&vcpu->arch.sie_block->gcr, &kvm_run->s.regs.crs, 128);
->> +	struct kvm_run *run = vcpu->run;
->> +
->> +	if (run->kvm_dirty_regs & KVM_SYNC_PREFIX)
->> +		kvm_s390_set_prefix(vcpu, run->s.regs.prefix);
->> +	if (run->kvm_dirty_regs & KVM_SYNC_CRS) {
->> +		memcpy(&vcpu->arch.sie_block->gcr, &run->s.regs.crs, 128);
->>   		/* some control register changes require a tlb flush */
->>   		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
->>   	}
->> -	if (kvm_run->kvm_dirty_regs & KVM_SYNC_ARCH0) {
->> -		kvm_s390_set_cpu_timer(vcpu, kvm_run->s.regs.cputm);
->> -		vcpu->arch.sie_block->ckc = kvm_run->s.regs.ckc;
->> +	if (run->kvm_dirty_regs & KVM_SYNC_ARCH0) {
->> +		kvm_s390_set_cpu_timer(vcpu, run->s.regs.cputm);
->> +		vcpu->arch.sie_block->ckc = run->s.regs.ckc;
->>   	}
->>   	save_access_regs(vcpu->arch.host_acrs);
->> -	restore_access_regs(vcpu->run->s.regs.acrs);
->> +	restore_access_regs(run->s.regs.acrs);
->>   	/* save host (userspace) fprs/vrs */
->>   	save_fpu_regs();
->>   	vcpu->arch.host_fpregs.fpc = current->thread.fpu.fpc;
->>   	vcpu->arch.host_fpregs.regs = current->thread.fpu.regs;
->>   	if (MACHINE_HAS_VX)
->> -		current->thread.fpu.regs = vcpu->run->s.regs.vrs;
->> +		current->thread.fpu.regs = run->s.regs.vrs;
->>   	else
->> -		current->thread.fpu.regs = vcpu->run->s.regs.fprs;
->> -	current->thread.fpu.fpc = vcpu->run->s.regs.fpc;
->> +		current->thread.fpu.regs = run->s.regs.fprs;
->> +	current->thread.fpu.fpc = run->s.regs.fpc;
->>   	if (test_fp_ctl(current->thread.fpu.fpc))
->>   		/* User space provided an invalid FPC, let's clear it */
->>   		current->thread.fpu.fpc = 0;
->>   
->>   	/* Sync fmt2 only data */
->>   	if (likely(!kvm_s390_pv_cpu_is_protected(vcpu))) {
->> -		sync_regs_fmt2(vcpu, kvm_run);
->> +		sync_regs_fmt2(vcpu);
->>   	} else {
->>   		/*
->>   		 * In several places we have to modify our internal view to
->> @@ -4282,19 +4285,21 @@ static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   		 * do only accept the condition code from userspace.
->>   		 */
->>   		vcpu->arch.sie_block->gpsw.mask &= ~PSW_MASK_CC;
->> -		vcpu->arch.sie_block->gpsw.mask |= kvm_run->psw_mask &
->> +		vcpu->arch.sie_block->gpsw.mask |= run->psw_mask &
->>   						   PSW_MASK_CC;
->>   	}
->>   
->> -	kvm_run->kvm_dirty_regs = 0;
->> +	run->kvm_dirty_regs = 0;
->>   }
->>   
->> -static void store_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->> +static void store_regs_fmt2(struct kvm_vcpu *vcpu)
->>   {
->> -	kvm_run->s.regs.todpr = vcpu->arch.sie_block->todpr;
->> -	kvm_run->s.regs.pp = vcpu->arch.sie_block->pp;
->> -	kvm_run->s.regs.gbea = vcpu->arch.sie_block->gbea;
->> -	kvm_run->s.regs.bpbc = (vcpu->arch.sie_block->fpf & FPF_BPBC) == FPF_BPBC;
->> +	struct kvm_run *run = vcpu->run;
->> +
->> +	run->s.regs.todpr = vcpu->arch.sie_block->todpr;
->> +	run->s.regs.pp = vcpu->arch.sie_block->pp;
->> +	run->s.regs.gbea = vcpu->arch.sie_block->gbea;
->> +	run->s.regs.bpbc = (vcpu->arch.sie_block->fpf & FPF_BPBC) == FPF_BPBC;
->>   	if (MACHINE_HAS_GS) {
->>   		__ctl_set_bit(2, 4);
->>   		if (vcpu->arch.gs_enabled)
->> @@ -4310,39 +4315,41 @@ static void store_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   	/* SIE will save etoken directly into SDNX and therefore kvm_run */
->>   }
->>   
->> -static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->> +static void store_regs(struct kvm_vcpu *vcpu)
->>   {
->> -	kvm_run->psw_mask = vcpu->arch.sie_block->gpsw.mask;
->> -	kvm_run->psw_addr = vcpu->arch.sie_block->gpsw.addr;
->> -	kvm_run->s.regs.prefix = kvm_s390_get_prefix(vcpu);
->> -	memcpy(&kvm_run->s.regs.crs, &vcpu->arch.sie_block->gcr, 128);
->> -	kvm_run->s.regs.cputm = kvm_s390_get_cpu_timer(vcpu);
->> -	kvm_run->s.regs.ckc = vcpu->arch.sie_block->ckc;
->> -	kvm_run->s.regs.pft = vcpu->arch.pfault_token;
->> -	kvm_run->s.regs.pfs = vcpu->arch.pfault_select;
->> -	kvm_run->s.regs.pfc = vcpu->arch.pfault_compare;
->> -	save_access_regs(vcpu->run->s.regs.acrs);
->> +	struct kvm_run *run = vcpu->run;
->> +
->> +	run->psw_mask = vcpu->arch.sie_block->gpsw.mask;
->> +	run->psw_addr = vcpu->arch.sie_block->gpsw.addr;
->> +	run->s.regs.prefix = kvm_s390_get_prefix(vcpu);
->> +	memcpy(&run->s.regs.crs, &vcpu->arch.sie_block->gcr, 128);
->> +	run->s.regs.cputm = kvm_s390_get_cpu_timer(vcpu);
->> +	run->s.regs.ckc = vcpu->arch.sie_block->ckc;
->> +	run->s.regs.pft = vcpu->arch.pfault_token;
->> +	run->s.regs.pfs = vcpu->arch.pfault_select;
->> +	run->s.regs.pfc = vcpu->arch.pfault_compare;
->> +	save_access_regs(run->s.regs.acrs);
->>   	restore_access_regs(vcpu->arch.host_acrs);
->>   	/* Save guest register state */
->>   	save_fpu_regs();
->> -	vcpu->run->s.regs.fpc = current->thread.fpu.fpc;
->> +	run->s.regs.fpc = current->thread.fpu.fpc;
->>   	/* Restore will be done lazily at return */
->>   	current->thread.fpu.fpc = vcpu->arch.host_fpregs.fpc;
->>   	current->thread.fpu.regs = vcpu->arch.host_fpregs.regs;
->>   	if (likely(!kvm_s390_pv_cpu_is_protected(vcpu)))
->> -		store_regs_fmt2(vcpu, kvm_run);
->> +		store_regs_fmt2(vcpu);
->>   }
->>   
->>   int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->>   {
->> -	struct kvm_run *kvm_run = vcpu->run;
->> +	struct kvm_run *run = vcpu->run;
->>   	int rc;
->>   
->> -	if (kvm_run->immediate_exit)
->> +	if (run->immediate_exit)
->>   		return -EINTR;
->>   
->> -	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_S390_VALID_FIELDS ||
->> -	    kvm_run->kvm_dirty_regs & ~KVM_SYNC_S390_VALID_FIELDS)
->> +	if (run->kvm_valid_regs & ~KVM_SYNC_S390_VALID_FIELDS ||
->> +	    run->kvm_dirty_regs & ~KVM_SYNC_S390_VALID_FIELDS)
->>   		return -EINVAL;
->>   
->>   	vcpu_load(vcpu);
->> @@ -4368,14 +4375,14 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->>   		goto out;
->>   	}
->>   
->> -	sync_regs(vcpu, kvm_run);
->> +	sync_regs(vcpu);
->>   	enable_cpu_timer_accounting(vcpu);
->>   
->>   	might_fault();
->>   	rc = __vcpu_run(vcpu);
->>   
->>   	if (signal_pending(current) && !rc) {
->> -		kvm_run->exit_reason = KVM_EXIT_INTR;
->> +		run->exit_reason = KVM_EXIT_INTR;
->>   		rc = -EINTR;
->>   	}
->>   
->> @@ -4390,7 +4397,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->>   	}
->>   
->>   	disable_cpu_timer_accounting(vcpu);
->> -	store_regs(vcpu, kvm_run);
->> +	store_regs(vcpu);
->>   
->>   	kvm_sigset_deactivate(vcpu);
->>   
->>
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
