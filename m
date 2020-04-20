@@ -2,228 +2,205 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76991C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24144C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 517012074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:13:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="J/HpIaZD"
+	by mail.kernel.org (Postfix) with ESMTP id 0D3462074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgDTPMC (ORCPT
+        id S1728773AbgDTPNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:12:02 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:38961 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730150AbgDTPL6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:11:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587395516; x=1618931516;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=GpF87DMmjMQqOQvV6RirKDpXW1f6XePfO9TzwePvn0U=;
-  b=J/HpIaZD+0KU4UQWk0SybbkHE+CJqA4vsxuwV3y/D2sKkFyYcH4IoYhs
-   FWPtRHKpgE6HgDDWSUE+idfWWnKuWZ1KwCmBG3fkZduwTztDSGqqsHsYy
-   aTIPdMDwbbwnIlwpEQDHxt7oXzNXlkirZFQe/A+D4LIndCK98wwO13ZSB
-   3KUOtLLJJuITVOihfueufeUvVhk30r0uYb/htHEiUvDyQ93Hq9mPRo1hp
-   IisHN0vq0hyWVjs2G313wAihvmRBuurBgm4tfay78/19CFfRYqAPf7cJO
-   IQM3kYAy4Cz0C4Z4YESOiKpN6f3do4TPc/Mhvg0u0aaepovG27XnyPDnB
-   g==;
-IronPort-SDR: LFU7JHjZEhpBl96W8mQ3xYf0itzE6ifdrEfrguN7CVpoJRsuW6SMYcYcI1jgDze6D8LqWk0jIe
- HYKFiDqGZ62fZUL1BURcIcSzu8ulnqIRli6jaqDiKzguDPVzJzL7oPHTgiatVvFEtyr1HvtU9R
- c3ty6R5pAryZbhxX7oXSvZxsAYswTNtWpPxIyS0TVIleCJ+YoTUNNIEqRletWjAhIb+UO5Tsrn
- fqhtSH06/Z5kVOIMPoDRQkHPIVkUjD7BQOwr1ngA10ne3NzTV1Gp98WyaXOk3FVzMAlzTmRfkT
- 66Q=
-X-IronPort-AV: E=Sophos;i="5.72,406,1580799600"; 
-   d="scan'208";a="72755077"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Apr 2020 08:11:56 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 20 Apr 2020 08:11:55 -0700
-Received: from soft-dev3.microsemi.net (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Mon, 20 Apr 2020 08:11:24 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
-        <jiri@resnulli.us>, <ivecera@redhat.com>, <kuba@kernel.org>,
-        <roopa@cumulusnetworks.com>, <olteanv@gmail.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next 05/13] bridge: mrp: Add MRP interface.
-Date:   Mon, 20 Apr 2020 17:09:39 +0200
-Message-ID: <20200420150947.30974-6-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200420150947.30974-1-horatiu.vultur@microchip.com>
-References: <20200420150947.30974-1-horatiu.vultur@microchip.com>
+        Mon, 20 Apr 2020 11:13:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:50702 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727862AbgDTPNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:13:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B530C31B;
+        Mon, 20 Apr 2020 08:13:46 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D4033F73D;
+        Mon, 20 Apr 2020 08:13:44 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 16:13:41 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200420151341.7zni3bwroso2kpdc@e107158-lin.cambridge.arm.com>
+References: <20200403123020.13897-1-qais.yousef@arm.com>
+ <292dbd54-e590-dc4f-41e6-5f86e478c0ee@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <292dbd54-e590-dc4f-41e6-5f86e478c0ee@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define the MRP interface.
-This interface is used by the netlink to update the MRP instances and by the MRP
-to make the calls to switchdev to offload it to HW.
+On 04/20/20 10:29, Dietmar Eggemann wrote:
+> On 03.04.20 14:30, Qais Yousef wrote:
+> 
+> [...]
+> 
+> > @@ -924,6 +945,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+> >  	return uc_req;
+> >  }
+> >  
+> > +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
+> > +{
+> > +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+> > +
+> > +	if (!uc_se->user_defined)
+> > +		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
+> > +}
+> > +
+> >  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+> >  {
+> >  	struct uclamp_se uc_eff;
+> > @@ -1030,6 +1059,12 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+> >  	if (unlikely(!p->sched_class->uclamp_enabled))
+> >  		return;
+> >  
+> > +	/*
+> > +	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
+> > +	 * user, we apply any new value on the next wakeup, which is here.
+> > +	 */
+> > +	uclamp_rt_sync_default_util_min(p);
+> > +
+> 
+> Does this have to be an extra function? Can we not reuse
+> uclamp_tg_restrict() by slightly rename it to uclamp_restrict()?
 
-It defines an MRP instance 'struct br_mrp' which is a list of MRP instances.
-Which will be part of the 'struct net_bridge'. Each instance has 2 ring ports,
-a bridge and an ID.
+Hmm the thing is that we're not restricting here. In contrary we're boosting,
+so the name would be misleading.
 
-In case the HW can't generate MRP Test frames then the SW will generate those.
+> 
+> This function will then deal with enforcing restrictions, whether system
+> and taskgroup hierarchy related or default value (latter only for rt-min
+> right now since the others are fixed) related.
+> 
+> uclamp_eff_get() -> uclamp_restrict() is called from:
+> 
+>   'enqueue_task(), uclamp_update_active() -> uclamp_rq_inc() -> uclamp_rq_inc_id()' and
+> 
+>   'task_fits_capacity() -> clamp_task_util(), rt_task_fits_capacity() -> uclamp_eff_value()' and
+> 
+>   'schedutil_cpu_util(), find_energy_efficient_cpu() -> uclamp_rq_util_with() -> uclamp_eff_value()'
+> 
+> so there would be more check-points than the one in 'enqueue_task() -> uclamp_rq_inc()' now.
 
-br_mrp_add - adds a new MRP instance.
+I think you're revolving around the same idea that Patrick was suggesting.
+I think it is possible to do something in uclamp_eff_get() too.
 
-br_mrp_del - deletes an existing MRP instance. Each instance has an ID(ring_id).
+Thanks
 
-br_mrp_set_port_state - changes the port state. The port can be in forwarding
-  state, which means that the frames can pass through or in blocked state which
-  means that the frames can't pass through except MRP frames. This will
-  eventually call the switchdev API to notify the HW. This information is used
-  also by the SW bridge to know how to forward frames in case the HW doesn't
-  have this capability.
+--
+Qais Yousef
 
-br_mrp_set_port_role - a port role can be primary or secondary. This
-  information is required to be pushed to HW in case the HW can generate
-  MRP_Test frames.  Because the MRP_Test frames contains a file with this
-  information. Otherwise the HW will not be able to generate the frames
-  correctly.
-
-br_mrp_set_ring_state - a ring can be in state open or closed. State open means
-  that the mrp port stopped receiving MRP_Test frames, while closed means that
-  the mrp port received MRP_Test frames. Similar with br_mrp_port_role, this
-  information is pushed in HW because the MRP_Test frames contain this
-  information.
-
-br_mrp_set_ring_role - a ring can have the following roles MRM or MRC. For the
-  role MRM it is expected that the HW can terminate the MRP frames, notify the
-  SW that it stopped receiving MRP_Test frames and trapp all the other MRP
-  frames.  While for MRC mode it is expected that the HW can forward the MRP
-  frames only between the MRP ports and copy MRP_Topology frames to CPU. In
-  case the HW doesn't support a role it needs to return an error code different
-  than -EOPNOTSUPP.
-
-br_mrp_start_test - this starts/stops the generation of MRP_Test frames. To stop
-  the generation of frames the interval needs to have a value of 0. In this case
-  the userspace needs to know if the HW supports this or not. Not to have
-  duplicate frames(generated by HW and SW). Because if the HW supports this then
-  the SW will not generate anymore frames and will expect that the HW will
-  notify when it stopped receiving MRP frames using the function
-  br_mrp_port_open.
-
-br_mrp_port_open - this function is used by drivers to notify the userspace via
-  a netlink callback that one of the ports stopped receiving MRP_Test frames.
-  This function is called only when the node has the role MRM. It is not
-  supposed to be called from userspace.
-
-br_mrp_port_switchdev_add - this corresponds to the function br_mrp_add,
-  and will notify the HW that a MRP instance is added. The function gets
-  as parameter the MRP instance.
-
-br_mrp_port_switchdev_del - this corresponds to the function br_mrp_del,
-  and will notify the HW that a MRP instance is removed. The function
-  gets as parameter the ID of the MRP instance that is removed.
-
-br_mrp_port_switchdev_set_state - this corresponds to the function
-  br_mrp_set_port_state. It would notify the HW if it should block or not
-  non-MRP frames.
-
-br_mrp_port_switchdev_set_port - this corresponds to the function
-  br_mrp_set_port_role. It would set the port role, primary or secondary.
-
-br_mrp_switchdev_set_role - this corresponds to the function
-  br_mrp_set_ring_role and would set one of the role MRM or MRC.
-
-br_mrp_switchdev_set_ring_state - this corresponds to the function
-  br_mrp_set_ring_state and would set the ring to be open or closed.
-
-br_mrp_switchdev_send_ring_test - this corresponds to the function
-  br_mrp_start_test. This will notify the HW to start or stop generating
-  MRP_Test frames. Value 0 for the interval parameter means to stop generating
-  the frames.
-
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- net/bridge/br_private_mrp.h | 60 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 net/bridge/br_private_mrp.h
-
-diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-new file mode 100644
-index 000000000000..5af8d13cce2b
---- /dev/null
-+++ b/net/bridge/br_private_mrp.h
-@@ -0,0 +1,60 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+
-+#ifndef _BR_PRIVATE_MRP_H_
-+#define _BR_PRIVATE_MRP_H_
-+
-+#include "br_private.h"
-+#include <uapi/linux/mrp_bridge.h>
-+
-+struct br_mrp {
-+	/* list of mrp instances */
-+	struct list_head		__rcu list;
-+
-+	struct net_bridge_port __rcu	*p_port;
-+	struct net_bridge_port __rcu	*s_port;
-+
-+	u32				ring_id;
-+
-+	enum br_mrp_ring_role_type	ring_role;
-+	u8				ring_role_offloaded;
-+	enum br_mrp_ring_state_type	ring_state;
-+	u32				ring_transitions;
-+
-+	struct delayed_work		test_work;
-+	u32				test_interval;
-+	unsigned long			test_end;
-+	u32				test_count_miss;
-+	u32				test_max_miss;
-+
-+	u32				seq_id;
-+
-+	struct rcu_head			rcu;
-+};
-+
-+/* br_mrp.c */
-+int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance);
-+int br_mrp_del(struct net_bridge *br, struct br_mrp_instance *instance);
-+int br_mrp_set_port_state(struct net_bridge_port *p,
-+			  enum br_mrp_port_state_type state);
-+int br_mrp_set_port_role(struct net_bridge_port *p,
-+			 struct br_mrp_port_role *role);
-+int br_mrp_set_ring_state(struct net_bridge *br,
-+			  struct br_mrp_ring_state *state);
-+int br_mrp_set_ring_role(struct net_bridge *br, struct br_mrp_ring_role *role);
-+int br_mrp_start_test(struct net_bridge *br, struct br_mrp_start_test *test);
-+
-+/* br_mrp_switchdev.c */
-+int br_mrp_switchdev_add(struct net_bridge *br, struct br_mrp *mrp);
-+int br_mrp_switchdev_del(struct net_bridge *br, struct br_mrp *mrp);
-+int br_mrp_switchdev_set_ring_role(struct net_bridge *br, struct br_mrp *mrp,
-+				   enum br_mrp_ring_role_type role);
-+int br_mrp_switchdev_set_ring_state(struct net_bridge *br, struct br_mrp *mrp,
-+				    enum br_mrp_ring_state_type state);
-+int br_mrp_switchdev_send_ring_test(struct net_bridge *br, struct br_mrp *mrp,
-+				    u32 interval, u8 max_miss, u32 period);
-+int br_mrp_port_switchdev_set_state(struct net_bridge_port *p,
-+				    enum br_mrp_port_state_type state);
-+int br_mrp_port_switchdev_set_role(struct net_bridge_port *p,
-+				   enum br_mrp_port_role_type role);
-+
-+#endif /* _BR_PRIVATE_MRP_H */
--- 
-2.17.1
-
+> 
+> Only lightly tested:
+> 
+> ---8<---
+> 
+> From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Date: Sun, 19 Apr 2020 01:20:17 +0200
+> Subject: [PATCH] sched/core: uclamp: Move uclamp_rt_sync_default_util_min()
+>  into uclamp_tg_restrict()
+> 
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> ---
+>  kernel/sched/core.c | 34 +++++++++++++++-------------------
+>  1 file changed, 15 insertions(+), 19 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 8f4e0d5c7daf..6802113d6d4b 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -899,12 +899,22 @@ unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+>  }
+>  
+>  static inline struct uclamp_se
+> -uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
+> +uclamp_restrict(struct task_struct *p, enum uclamp_id clamp_id)
+>  {
+> -	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
+> -#ifdef CONFIG_UCLAMP_TASK_GROUP
+> -	struct uclamp_se uc_max;
+> +	struct uclamp_se uc_req, __maybe_unused uc_max;
+> +
+> +	if (unlikely(rt_task(p)) && clamp_id == UCLAMP_MIN &&
+> +	    !uc_req.user_defined) {
+> +		struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+> +		int rt_min = sysctl_sched_rt_default_uclamp_util_min;
+> +
+> +		if (uc_se->value != rt_min)
+> +			uclamp_se_set(uc_se, rt_min, false);
+> +	}
+>  
+> +	uc_req = p->uclamp_req[clamp_id];
+> +
+> +#ifdef CONFIG_UCLAMP_TASK_GROUP
+>  	/*
+>  	 * Tasks in autogroups or root task group will be
+>  	 * restricted by system defaults.
+> @@ -933,7 +943,7 @@ uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
+>  static inline struct uclamp_se
+>  uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+>  {
+> -	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
+> +	struct uclamp_se uc_req = uclamp_restrict(p, clamp_id);
+>  	struct uclamp_se uc_max = uclamp_default[clamp_id];
+>  
+>  	/* System default restrictions always apply */
+> @@ -943,14 +953,6 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+>  	return uc_req;
+>  }
+>  
+> -static void uclamp_rt_sync_default_util_min(struct task_struct *p)
+> -{
+> -	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+> -
+> -	if (!uc_se->user_defined)
+> -		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
+> -}
+> -
+>  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+>  {
+>  	struct uclamp_se uc_eff;
+> @@ -1057,12 +1059,6 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+>  	if (unlikely(!p->sched_class->uclamp_enabled))
+>  		return;
+>  
+> -	/*
+> -	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
+> -	 * user, we apply any new value on the next wakeup, which is here.
+> -	 */
+> -	uclamp_rt_sync_default_util_min(p);
+> -
+>  	for_each_clamp_id(clamp_id)
+>  		uclamp_rq_inc_id(rq, p, clamp_id);
+>  
+> -- 
+> 2.17.1
