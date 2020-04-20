@@ -2,59 +2,109 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2951EC54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F94C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08A09214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:30:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tSYwjiYl"
+	by mail.kernel.org (Postfix) with ESMTP id 1376521D79
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgDTIar (ORCPT
+        id S1726105AbgDTIcP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:30:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbgDTIar (ORCPT
+        Mon, 20 Apr 2020 04:32:15 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:55697 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725896AbgDTIcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:30:47 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43C08C061A0C;
-        Mon, 20 Apr 2020 01:30:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vx87uFUhI244IGSEOCBnVCbVqtfJrxwHz9Z7pfAy8pA=; b=tSYwjiYljia6BZ8n2flrsC+dZp
-        OqUWt2TlmlJrOuqnKXGyK0NjEf4smAJgvQ6iWLLVL1Ic5PWXnsoOM0cusqqcfuG3coil9DjNBfIZi
-        iRs2FiWiq6BaHw9f6xuiEiZR7uOivaJydzfuvwhPI5HyCOnG7akzKUlSL8sWNyFBEynJSZL7srhNt
-        ErAcVXvVdVC/VzLqZtCH60Md9A2ct4oMyatTbZacGTIkCIwhdp2pjNJMsp5Wyf5zE6ipsN+ADRIiW
-        vjb3wug6Fo0vSw+k8OTDCTwovs+hjpShIoRAz36pgkVU0aJbz6IyNA9BNv/T+Tvufuwz5WigWzKOB
-        e2BhxTKA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQRpG-00054e-G9; Mon, 20 Apr 2020 08:30:46 +0000
-Date:   Mon, 20 Apr 2020 01:30:46 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        kernel-team@fb.com, jolsa@kernel.org, brendan.d.gregg@gmail.com,
-        andrii.nakryiko@gmail.com, ast@kernel.org
-Subject: Re: [RFC] uapi: Convert stat.h #define flags to enums
-Message-ID: <20200420083046.GB28749@infradead.org>
-References: <20200417022315.1931959-1-dxu@dxuuu.xyz>
+        Mon, 20 Apr 2020 04:32:15 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-144-ytu68FhSP0OyuLwZ_F5FAA-1; Mon, 20 Apr 2020 09:32:11 +0100
+X-MC-Unique: ytu68FhSP0OyuLwZ_F5FAA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 20 Apr 2020 09:32:10 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 20 Apr 2020 09:32:10 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Jason A. Donenfeld'" <Jason@zx2c4.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "ardb@kernel.org" <ardb@kernel.org>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
+ PAGE_SIZE chunks
+Thread-Topic: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
+ PAGE_SIZE chunks
+Thread-Index: AQHWFulYDH0V5tv/A0qK2BVsZYhuYaiBq3xQ
+Date:   Mon, 20 Apr 2020 08:32:10 +0000
+Message-ID: <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
+References: <20200420075711.2385190-1-Jason@zx2c4.com>
+In-Reply-To: <20200420075711.2385190-1-Jason@zx2c4.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417022315.1931959-1-dxu@dxuuu.xyz>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And that breaks every userspace program using ifdef to check if a
-symbolic name has been defined.
+From: Jason A. Donenfeld
+> Sent: 20 April 2020 08:57
+> 
+> The initial Zinc patchset, after some mailing list discussion, contained
+> code to ensure that kernel_fpu_enable would not be kept on for more than
+> a PAGE_SIZE chunk, since it disables preemption. The choice of PAGE_SIZE
+> isn't totally scientific, but it's not a bad guess either, and it's
+> what's used in both the x86 poly1305 and blake2s library code already.
+> Unfortunately it appears to have been left out of the final patchset
+> that actually added the glue code. So, this commit adds back the
+> PAGE_SIZE chunking.
+> 
+...
+> ---
+> Eric, Ard - I'm wondering if this was in fact just an oversight in Ard's
+> patches, or if there was actually some later discussion in which we
+> concluded that the PAGE_SIZE chunking wasn't required, perhaps because
+> of FPU changes. If that's the case, please do let me know, in which case
+> I'll submit a _different_ patch that removes the chunking from x86 poly
+> and blake. I can't find any emails that would indicate that, but I might
+> be mistaken.
+
+Maybe kernel_fp_begin() should be passed the address of somewhere
+the address of an fpu save area buffer can be written to.
+Then the pre-emption code can allocate the buffer and save the
+state into it.
+
+However that doesn't solve the problem for non-preemptive kernels.
+The may need a cond_resched() in the loop if it might take 1ms (or so).
+
+kernel_fpu_begin() ought also be passed a parameter saying which
+fpu features are required, and return which are allocated.
+On x86 this could be used to check for AVX512 (etc) which may be
+available in an ISR unless it interrupted inside a kernel_fpu_begin()
+section (etc).
+It would also allow optimisations if only 1 or 2 fpu registers are
+needed (eg for some of the crypto functions) rather than the whole
+fpu register set.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
