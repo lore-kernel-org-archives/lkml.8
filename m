@@ -2,129 +2,92 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C917C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE51C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26382206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9636F206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:17:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bc3Vkmcc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgDTQPS (ORCPT
+        id S1728191AbgDTQRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:15:18 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54897 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgDTQPS (ORCPT
+        Mon, 20 Apr 2020 12:17:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726036AbgDTQRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:15:18 -0400
-Received: by mail-pj1-f66.google.com with SMTP id np9so53109pjb.4;
-        Mon, 20 Apr 2020 09:15:17 -0700 (PDT)
+        Mon, 20 Apr 2020 12:17:25 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 067C3C061A41
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:17:24 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f13so12894786wrm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:17:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lPlsXqCGHYagVYmxec3j/xxnK3oND8ckDanm4J5g6+s=;
+        b=Bc3VkmccqsOZmy8SzqwTXHtw4ju1n3q+E8tqpZL08g24yfYOc29x2qPJOm5bPv7VMv
+         IEz+3ozJmMWTBd04ErA+L4wk/0PjyHp2gejrFY5Hp1yD2/uez5UT5BiJtnb2iaKP2/vs
+         SMSQ9qo0pSxEIrRcKZjgoiC7AmF9J9UhdaxfOXmCw9U+Z7w4klykH6tQCy/7+4as4UVZ
+         6dwxlkXGI1NYgtaY7Zu976/NOzffZXZNDeuwtcNtImP4kZT+274B4qypkT0Y1nH8llDD
+         JsBWFcA+GtHbhUA2Dcnw5yiEJEg8239BHg+veY10eVi55Nn6heaw7SXMjo2wxSsUe+mj
+         guyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=mKMIW3mEg5t1gLoJ6mz8YW5V5YHdFX18CfmBOsT8+DM=;
-        b=f7Ti89jI8mxJ++RbVIzArU4aCIEPh2c72uCntV4+3RouLxK7sEZBvt+6OnCYrx6e4c
-         MdFybnbC7fdPiafrm3LmvP1xu/0VFNOkVfnV5Y35HpjYxocBMleKj1IUrIma8cc4LYuY
-         XO67BjJrs5if1zVZGqpE23u8n10aS5YSECe3URm61+tcpnisZgsPZU2BsHcjpsYbhe9T
-         ZXvbiVZLFSJLP23APR0r6aBIujdvAfQZBLRDyqlj4rCeqoV9TkvbuIo6fN9fcZ9g0oox
-         FKqujgWDDMAitHe/ewdxdInmeJwAlBaHKl7rS9WPewzyqBZC7je0tIt+TvchrFLe1TRF
-         7pmA==
-X-Gm-Message-State: AGi0Pub8xibp06D0DzIgpYwu1wm2LyA1NuuxSHnaeNITk6Pi5CxphHwF
-        oFqZyM52QOIvakJPOxp3O6jcVnfw
-X-Google-Smtp-Source: APiQypIo65I60EmrvJr0Fn9k464/b4BsdAENW1ihErA04xVYqn/vV5ywXSVnzlYGX6PHk/VUYYyFKA==
-X-Received: by 2002:a17:90a:890a:: with SMTP id u10mr161799pjn.154.1587399317254;
-        Mon, 20 Apr 2020 09:15:17 -0700 (PDT)
-Received: from sultan-box.localdomain ([104.200.129.62])
-        by smtp.gmail.com with ESMTPSA id o1sm48749pjs.35.2020.04.20.09.15.15
+        bh=lPlsXqCGHYagVYmxec3j/xxnK3oND8ckDanm4J5g6+s=;
+        b=hF11qNYGfnWI1TrisbYrHb1f5oNrXuXXAN20INP+66fAydemluMMPlAq3ByBv8nbW+
+         0gbpI/Td0crDCKoUS1vCwyyvir3qNFJVyr8iJ//Bbx3SqWKWgfPAYGBJFK3JRXsIMzgU
+         4ikO0yxOtdrGFo4hTN0UX+I4LiP0GeUNQZaswX14Xoe+Ja8srSVZrD3i4MN/BbPQ3jVy
+         5PYRK1uhvP9nm1y7mNnxHhNKCcX1wUG8cQdoiIsG+Zz0tnn8GaVVt0C3Bj2A8piXhUe3
+         8YV53BJMHuSb+GXXHKoCzLe/sItl3CyusK/l9M8bVgTtLLrVOP7/Sc/iq2pC0B6SpOUM
+         ATqA==
+X-Gm-Message-State: AGi0PuZr+6ZkvFhrhRJiAFVZaRqw/ERK01U1uJbtTzz6w76oSPg4nytX
+        zvskDt1x74wkToCGwbA6rEsDLA==
+X-Google-Smtp-Source: APiQypKrkeOBy7c9A/9ySH8hmTQpSPXDqk6tEE5oq0yFe5+sxi9L2pzoxp9Luyj6lNrqui3ig6qFsw==
+X-Received: by 2002:adf:800e:: with SMTP id 14mr18882781wrk.369.1587399443572;
+        Mon, 20 Apr 2020 09:17:23 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id s9sm1946164wrg.27.2020.04.20.09.17.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 09:15:16 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 09:15:14 -0700
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>, stable@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] drm/i915: Synchronize active and retire callbacks
-Message-ID: <20200420161514.GB1963@sultan-box.localdomain>
-References: <20200404024156.GA10382@sultan-box.localdomain>
- <20200407064007.7599-1-sultan@kerneltoast.com>
- <20200414061312.GA90768@sultan-box.localdomain>
- <158685263618.16269.9317893477736764675@build.alporthouse.com>
- <20200414144309.GB2082@sultan-box.localdomain>
- <20200420052419.GA40250@sultan-box.localdomain>
- <158737090265.8380.6644489879531344891@jlahtine-desk.ger.corp.intel.com>
+        Mon, 20 Apr 2020 09:17:22 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 17:17:20 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V5 2/4] backlight: qcom-wled: Add callback functions
+Message-ID: <20200420161720.cuxponga4vxitrwi@holly.lan>
+References: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
+ <1586274430-28402-3-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <158737090265.8380.6644489879531344891@jlahtine-desk.ger.corp.intel.com>
+In-Reply-To: <1586274430-28402-3-git-send-email-kgunda@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 11:21:42AM +0300, Joonas Lahtinen wrote:
-> So it seems that the patch got pulled into v5.6 and has been backported
-> to v5.5 but not v5.4.
+On Tue, Apr 07, 2020 at 09:17:08PM +0530, Kiran Gunda wrote:
+> Add wled_cabc_config, wled_sync_toggle, wled_ovp_fault_status
+> and wled_ovp_delay and wled_auto_detection_required callback
+> functions to prepare the driver for adding WLED5 support.
+> 
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
 
-You're right, that's my mistake.
-
-> In doing that zeroing of ring->vaddr is removed so the test to do mdelay(1)
-> and "ring->vaddr = NULL;" is not correct.
-
-I'm not so sure about this. Look at where `ring->vaddr` is assigned:
--------------------------------------8<-----------------------------------------
-	ret = i915_vma_pin(vma, 0, 0, flags);
-	if (unlikely(ret))
-		goto err_unpin;
-
-	if (i915_vma_is_map_and_fenceable(vma))
-		addr = (void __force *)i915_vma_pin_iomap(vma);
-	else
-		addr = i915_gem_object_pin_map(vma->obj,
-					       i915_coherent_map_type(vma->vm->i915));
-	if (IS_ERR(addr)) {
-		ret = PTR_ERR(addr);
-		goto err_ring;
-	}
-
-	i915_vma_make_unshrinkable(vma);
-
-	/* Discard any unused bytes beyond that submitted to hw. */
-	intel_ring_reset(ring, ring->emit);
-
-	ring->vaddr = addr;
-------------------------------------->8-----------------------------------------
-
-And then the converse of that is done *before* my reproducer patch does
-`ring->vaddr = NULL;`:
--------------------------------------8<-----------------------------------------
-	i915_vma_unset_ggtt_write(vma);
-	if (i915_vma_is_map_and_fenceable(vma))
-		i915_vma_unpin_iomap(vma);
-	else
-		i915_gem_object_unpin_map(vma->obj);
-
-	/* mdelay(1);
-	ring->vaddr = NULL; */
-
-	i915_vma_make_purgeable(vma);
-	i915_vma_unpin(vma);
-------------------------------------->8-----------------------------------------
-
-Isn't the value assigned to `ring->vaddr` trashed by those function calls above
-where I've got the mdelay? If so, why would it be correct to let the stale value
-sit in `ring->vaddr`?
-
-My interpretation of the zeroing of ring->vaddr being removed by Chris was that
-it was an unnecessary step before the ring was getting discarded anyway.
-
-Sultan
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
