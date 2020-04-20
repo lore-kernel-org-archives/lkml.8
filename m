@@ -2,83 +2,193 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68E6C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF9EC38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C375120782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF3E20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mnzjP+p9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgDTRbV (ORCPT
+        id S1726960AbgDTRb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:31:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49762 "EHLO
+        Mon, 20 Apr 2020 13:31:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726067AbgDTRbT (ORCPT
+        by vger.kernel.org with ESMTP id S1726067AbgDTRbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:31:19 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED8BC061A0F;
-        Mon, 20 Apr 2020 10:31:19 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jQaGL-0003DP-4G; Mon, 20 Apr 2020 19:31:17 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 81C6F101623; Mon, 20 Apr 2020 19:31:16 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH 0/3] Remove setup_percpu_irq() & remove_percpu_irq
-In-Reply-To: <20200419144638.ysghqzklebkeer4z@afzalpc>
-References: <cover.1586434781.git.afzal.mohd.ma@gmail.com> <20200419144638.ysghqzklebkeer4z@afzalpc>
-Date:   Mon, 20 Apr 2020 19:31:16 +0200
-Message-ID: <87pnc2awt7.fsf@nanos.tec.linutronix.de>
+        Mon, 20 Apr 2020 13:31:24 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C84C061A0C;
+        Mon, 20 Apr 2020 10:31:23 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id u12so3959640uau.10;
+        Mon, 20 Apr 2020 10:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=iVY0Hpczvi7L5kCeZ6+GsOel+foAxGUdGDubvBbDcLM=;
+        b=mnzjP+p9p62Tt54In3kvaFAsTqnLkSsb5asmMvniKCgik1yjX1iITdNKYt2Qm+oRzJ
+         jsXH/q59g0GI7zHllzSqUzT03sasDSEXNQoGbIaIT6eK6wEEv4r6t1eDwsDRAeOhcnNj
+         JwfkB+U/0S/XAn37mHtcuZb/fvyVBETYBphzLmV5sK9vTdG1VCRvbwV3eeO/8cg0EXNo
+         HK/5ZepmYFiyakWP5dh4ME64kCyKg4zn+BocuG5z/uG/Z3S9u/TLatGIzckMDc0dw3VG
+         98dPTPxeqfKPc5IiH1tfa3TR3kOc5vYvMctJXysAW8AtJx2SvmcZhzLHuXRMa1lmN0w8
+         HhNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=iVY0Hpczvi7L5kCeZ6+GsOel+foAxGUdGDubvBbDcLM=;
+        b=oJCLipl46E46Ib8hUA7Vt0Svl3BvAkYN5HmBMdG8qMzX5N4CvVpoji18nhrMR5E9ai
+         0L46B79YZOur0WjMtPnZRuns4PlbFT3ECjtw3k/hfQAccVLyxW+R8bRFQnq6gaG7obNe
+         h1Abq1JHxxLNTWBD0ckqjGWTvc2FkB1ZizsJw7apTbdqE6f0UndfXKuLZy/jMjUeidj9
+         oMIRixV8l16rGsFuIbpLE8rKo0Mk/wiyeEvrKYk4FexaD7o2uN+quKXiZjIClIppmfKf
+         vZKQl/Gmr2W/1k5YXZ27oO1scmF0/tNCjRTKqs3eYXhyDtBNL/kNcQ+GIIf5C3cSLn50
+         UC0g==
+X-Gm-Message-State: AGi0PuZ6i7aPwfX8CGApVa2bBOwBUJl2XRdD7/jDvtjY5lbDB8XTm9dr
+        wJ0loNFMcgEBQBoPxtYO/FiP7pEid+z19XGLxHg=
+X-Google-Smtp-Source: APiQypL7+rXbzmdtDdBy5m419OAA82863CHZRkkuwAJ3GNdtPTpcRgl6s5lOBursmCBzXmMfTpd2F/AnsCiLZeFTjqk=
+X-Received: by 2002:ab0:b88:: with SMTP id c8mr7756282uak.0.1587403882279;
+ Mon, 20 Apr 2020 10:31:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <1587361120-83160-1-git-send-email-xiyuyang19@fudan.edu.cn>
+In-Reply-To: <1587361120-83160-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Reply-To: fdmanana@gmail.com
+From:   Filipe Manana <fdmanana@gmail.com>
+Date:   Mon, 20 Apr 2020 18:31:11 +0100
+Message-ID: <CAL3q7H4wE48Uqu6xLA-FYGy9qxov+26wnpXsjG=Ragi1UJx21Q@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: Fix btrfs_block_group refcnt leak
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
+        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Afzal,
-
-afzal mohammed <afzal.mohd.ma@gmail.com> writes:
-> On Sat, Apr 11, 2020 at 09:34:07PM +0530, afzal mohammed wrote:
+On Mon, Apr 20, 2020 at 6:48 AM Xiyu Yang <xiyuyang19@fudan.edu.cn> wrote:
 >
->> While doing the removal of setup_irq(), it was observed that
->> setup_percpu_irq() also can be removed similarly by replacing it w/
->> request_percpu_irq(), which does allocate memory. In the initial
->> setup_irq() removal cover letters [1], it was mentioned that
->> setup_percpu_irq() is untouched.
->> 
->> After removing setup_irq(), it does not look good to let live
->> setup_percpu_irq(), especially since it being a low hanging fruit. Hence
->> replace setup_percpu_irq() by it's allocator equivalent.
->> request_percpu_irq() cannot be used since all the users need to pass
->> IRQF_TIMER flag, which it would not allow. Thus it's variant,
->> __request_percpu_irq() is used.
->> 
->> In addition to removing setup_percpu_irq() definition,
->> remove_percpu_irq(), unused, is also removed.
+> btrfs_remove_block_group() invokes btrfs_lookup_block_group(), which
+> returns a local reference of the blcok group that contains the given
+> bytenr to "block_group" with increased refcount.
 >
-> Do you feel that this series adds value ?, if not, i will abandon this
-> series.
+> When btrfs_remove_block_group() returns, "block_group" becomes invalid,
+> so the refcount should be decreased to keep refcount balanced.
+>
+> The reference counting issue happens in several exception handling paths
+> of btrfs_remove_block_group(). When those error scenarios occur such as
+> btrfs_alloc_path() returns NULL, the function forgets to decrease its
+> refcnt increased by btrfs_lookup_block_group() and will cause a refcnt
+> leak.
+>
+> Fix this issue by jumping to "out_put_group" label and calling
+> btrfs_put_block_group() when those error scenarios occur.
+>
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 
- 7 files changed, 10 insertions(+), 75 deletions(-)
+Seems correct to me.
+I would change the subject to something more clear like: "btrfs: fix
+block group leak after failure to remove it"
 
-is definitely worth it. There is no point in having two interfaces. I'll
-have a look at the changes later today.
+One more suggestion below.
 
-Thanks,
+> ---
+>  fs/btrfs/block-group.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+> index 404e050ce8ee..d9f432bd3329 100644
+> --- a/fs/btrfs/block-group.c
+> +++ b/fs/btrfs/block-group.c
+> @@ -916,7 +916,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handl=
+e *trans,
+>         path =3D btrfs_alloc_path();
+>         if (!path) {
+>                 ret =3D -ENOMEM;
+> -               goto out;
+> +               goto out_put_group;
+>         }
+>
+>         /*
+> @@ -954,7 +954,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handl=
+e *trans,
+>                 ret =3D btrfs_orphan_add(trans, BTRFS_I(inode));
+>                 if (ret) {
+>                         btrfs_add_delayed_iput(inode);
+> -                       goto out;
+> +                       goto out_put_group;
+>                 }
+>                 clear_nlink(inode);
+>                 /* One for the block groups ref */
+> @@ -977,13 +977,13 @@ int btrfs_remove_block_group(struct btrfs_trans_han=
+dle *trans,
+>
+>         ret =3D btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
+>         if (ret < 0)
+> -               goto out;
+> +               goto out_put_group;
+>         if (ret > 0)
+>                 btrfs_release_path(path);
+>         if (ret =3D=3D 0) {
+>                 ret =3D btrfs_del_item(trans, tree_root, path);
+>                 if (ret)
+> -                       goto out;
+> +                       goto out_put_group;
+>                 btrfs_release_path(path);
+>         }
+>
+> @@ -1102,7 +1102,7 @@ int btrfs_remove_block_group(struct btrfs_trans_han=
+dle *trans,
+>
+>         ret =3D remove_block_group_free_space(trans, block_group);
+>         if (ret)
+> -               goto out;
+> +               goto out_put_group;
+>
+>         btrfs_put_block_group(block_group);
+>         btrfs_put_block_group(block_group);
+> @@ -1132,6 +1132,9 @@ int btrfs_remove_block_group(struct btrfs_trans_han=
+dle *trans,
+>                 btrfs_delayed_refs_rsv_release(fs_info, 1);
+>         btrfs_free_path(path);
+>         return ret;
+> +out_put_group:
+> +       btrfs_put_block_group(block_group);
+> +       goto out;
 
-        tglx
+Instead of this double goto, which tends to be error prone and harder to fo=
+llow,
+I suggest placing a call to btrfs_put_block_group() right after the
+'out' label, with a comment
+above it saying something like "once for the lookup reference" and
+removing one of the btrfs_put_block_group()
+calls right after calling remove_block_group_free_space(), and leaving
+a comment above the other one saying "once for the block groups
+rbtree".
+
+Thanks.
+
+>  }
+>
+>  struct btrfs_trans_handle *btrfs_start_trans_remove_block_group(
+> --
+> 2.7.4
+>
+
+
+--=20
+Filipe David Manana,
+
+=E2=80=9CWhether you think you can, or you think you can't =E2=80=94 you're=
+ right.=E2=80=9D
