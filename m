@@ -2,157 +2,229 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426A4C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D320EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD0E20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BC02078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="o/PiQFqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgDTU1K (ORCPT
+        id S1728344AbgDTU1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:27:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31384 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726766AbgDTU00 (ORCPT
+        Mon, 20 Apr 2020 16:27:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726759AbgDTU00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 16:26:26 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KK3TZe074910;
-        Mon, 20 Apr 2020 16:26:19 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30gcs3mgum-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 16:26:19 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KKPiJe013625;
-        Mon, 20 Apr 2020 20:26:19 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03dal.us.ibm.com with ESMTP id 30fs66gh6m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 20:26:19 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KKQI9040108318
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 20:26:18 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 284BCAE05C;
-        Mon, 20 Apr 2020 20:26:18 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 328A8AE05F;
-        Mon, 20 Apr 2020 20:26:17 +0000 (GMT)
-Received: from ghost4.ibm.com (unknown [9.163.56.120])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 20:26:17 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
-        eajames@linux.ibm.com
-Subject: [PATCH v10 4/7] soc: aspeed: xdma: Add reset ioctl
-Date:   Mon, 20 Apr 2020 15:26:08 -0500
-Message-Id: <20200420202611.17776-5-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200420202611.17776-1-eajames@linux.ibm.com>
-References: <20200420202611.17776-1-eajames@linux.ibm.com>
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2615C061A0C;
+        Mon, 20 Apr 2020 13:26:25 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id h2so1013048wmb.4;
+        Mon, 20 Apr 2020 13:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rnh+McsJx0RoUC/D7GUKGKHfeXKqPCTz0PtdlxFfOB4=;
+        b=o/PiQFqksFUYRPMkKFrQgndQGSJI9ciJA357NNeXzTWM8lsoquahb/EEL97Vh+UH2x
+         5cTlZIirnZjKLz3ekAkfMfpXBcSccl4hMZbGcyuOlRAkl7ol9DzoVh9o9xxZJH31dxLo
+         va3bSTHUakRiApC/nkd6pEKKDqyMyuiXzWxa8p3d2X0YnUcqDzMktzcQGKC7KwSCqtPm
+         YhoqjUVq5fCPIIi91mYg72KS5bO407J8/xuqaZ95at7DXw1AEKvioh1gAc4PDviiA64y
+         yoqWw+IzQTJFdGQZDMwwYxxYMt21LsfhG+MXDpqeZySPu6Na75Frr7gR/8bRx5gVwYFd
+         vmAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rnh+McsJx0RoUC/D7GUKGKHfeXKqPCTz0PtdlxFfOB4=;
+        b=jjB1jfQTPdlTY89p1RL4B9UTiBzHl2KbsFLBZThEqCalbjYGW0P3aNxJtrqE+8uWtX
+         loy4nkJNnfx4/A2TIezmBxXs3RDAC6YS3kHXx/aseezg9u/qC6yfbushabkjHp+yFvKj
+         dM5x+yr7tqEVbQek/74tocUGkGPtlaYmWni8JfN+Z9KhchJlLONyQH/QfADAveI4ag7+
+         HJ5g4GuO3jtN7ZMr6BSZ+FQPjMslryT1FbWJGzCLL5FSTkBwcbwEsZpbBc51lEFWyRc3
+         CkctFUZ6Mwy6cFNcsFxqDrLKXTGM2GN/KzLgl9LB1JCLQ1eVdRYeYHlVOTz/HdSuXJ5U
+         w3/Q==
+X-Gm-Message-State: AGi0PuamwRZd3xkjkjp+SFPPpQIK8Xs2QEPvsAoWr5jLaJUDORGgQAGS
+        /StobkOTbnDO6c6pZf2iN4hE50ESrC0=
+X-Google-Smtp-Source: APiQypKZQvp7B+IRpQsVNj52BY2L/RrQ0bY8cTNf87BOA6UpV1lzLCYZmUrbDf4YEkV5+FW5fNomog==
+X-Received: by 2002:a05:600c:2316:: with SMTP id 22mr1141143wmo.164.1587414384242;
+        Mon, 20 Apr 2020 13:26:24 -0700 (PDT)
+Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id l19sm657846wmj.14.2020.04.20.13.26.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 13:26:23 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 1/4] dt-bindings: power: meson-ee-pwrc: add support for Meson8/8b/8m2
+Date:   Mon, 20 Apr 2020 22:26:09 +0200
+Message-Id: <20200420202612.369370-2-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
+References: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_07:2020-04-20,2020-04-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- impostorscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- phishscore=0 adultscore=0 clxscore=1015 spamscore=0 mlxscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Users of the XDMA engine need a way to reset it if something goes wrong.
-Problems on the host side, or user error, such as incorrect host
-address, may result in the DMA operation never completing and no way to
-determine what went wrong. Therefore, add an ioctl to reset the engine
-so that users can recover in this situation.
+The power domains on the 32-bit Meson8/Meson8b/Meson8m2 SoCs are very
+similar to what G12A still uses. The (known) differences are:
+- Meson8 doesn't use any reset lines at all
+- Meson8b and Meson8m2 use the same reset lines, which are different
+  from what the 64-bit SoCs use
+- there is no "vapb" clock on the older SoCs
+- amlogic,ao-sysctrl cannot point to the whole AO sysctrl region but
+  only the power management related registers
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
+Add a new compatible string and adjust clock and reset line expectations
+for each SoC.
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/soc/aspeed/aspeed-xdma.c | 32 ++++++++++++++++++++++++++++++++
- include/uapi/linux/aspeed-xdma.h |  4 ++++
- 2 files changed, 36 insertions(+)
+ .../bindings/power/amlogic,meson-ee-pwrc.yaml | 74 +++++++++++++++----
+ include/dt-bindings/power/meson8-power.h      | 13 ++++
+ 2 files changed, 72 insertions(+), 15 deletions(-)
+ create mode 100644 include/dt-bindings/power/meson8-power.h
 
-diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
-index adfb9e13c8b9..64e1c70e046d 100644
---- a/drivers/soc/aspeed/aspeed-xdma.c
-+++ b/drivers/soc/aspeed/aspeed-xdma.c
-@@ -648,6 +648,37 @@ static __poll_t aspeed_xdma_poll(struct file *file,
- 	return mask;
- }
+diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+index 6c6079fe1351..2a1c933ae434 100644
+--- a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
++++ b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+@@ -23,13 +23,19 @@ description: |+
+ properties:
+   compatible:
+     enum:
++      - amlogic,meson8-pwrc
++      - amlogic,meson8b-pwrc
++      - amlogic,meson8m2-pwrc
+       - amlogic,meson-g12a-pwrc
+       - amlogic,meson-sm1-pwrc
  
-+static long aspeed_xdma_ioctl(struct file *file, unsigned int cmd,
-+			      unsigned long param)
-+{
-+	unsigned long flags;
-+	struct aspeed_xdma_client *client = file->private_data;
-+	struct aspeed_xdma *ctx = client->ctx;
-+
-+	switch (cmd) {
-+	case ASPEED_XDMA_IOCTL_RESET:
-+		spin_lock_irqsave(&ctx->engine_lock, flags);
-+		if (ctx->in_reset) {
-+			spin_unlock_irqrestore(&ctx->engine_lock, flags);
-+			return 0;
-+		}
-+
-+		ctx->in_reset = true;
-+		spin_unlock_irqrestore(&ctx->engine_lock, flags);
-+
-+		if (READ_ONCE(ctx->current_client))
-+			dev_warn(ctx->dev,
-+				 "User reset with transfer in progress.\n");
-+
-+		aspeed_xdma_reset(ctx);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static void aspeed_xdma_vma_close(struct vm_area_struct *vma)
- {
- 	int rc;
-@@ -742,6 +773,7 @@ static const struct file_operations aspeed_xdma_fops = {
- 	.owner			= THIS_MODULE,
- 	.write			= aspeed_xdma_write,
- 	.poll			= aspeed_xdma_poll,
-+	.unlocked_ioctl		= aspeed_xdma_ioctl,
- 	.mmap			= aspeed_xdma_mmap,
- 	.open			= aspeed_xdma_open,
- 	.release		= aspeed_xdma_release,
-diff --git a/include/uapi/linux/aspeed-xdma.h b/include/uapi/linux/aspeed-xdma.h
-index 2efaa6067c39..3a3646fd1e9e 100644
---- a/include/uapi/linux/aspeed-xdma.h
-+++ b/include/uapi/linux/aspeed-xdma.h
-@@ -4,8 +4,12 @@
- #ifndef _UAPI_LINUX_ASPEED_XDMA_H_
- #define _UAPI_LINUX_ASPEED_XDMA_H_
+   clocks:
+-    minItems: 2
++    minItems: 1
++    maxItems: 2
  
-+#include <linux/ioctl.h>
- #include <linux/types.h>
+   clock-names:
++    minItems: 1
++    maxItems: 2
+     items:
+       - const: vpu
+       - const: vapb
+@@ -38,18 +44,7 @@ properties:
+     minItems: 11
  
-+#define __ASPEED_XDMA_IOCTL_MAGIC	0xb7
-+#define ASPEED_XDMA_IOCTL_RESET		_IO(__ASPEED_XDMA_IOCTL_MAGIC, 0)
+   reset-names:
+-    items:
+-      - const: viu
+-      - const: venc
+-      - const: vcbus
+-      - const: bt656
+-      - const: rdma
+-      - const: venci
+-      - const: vencp
+-      - const: vdac
+-      - const: vdi6
+-      - const: vencl
+-      - const: vid_lock
++    minItems: 11
+ 
+   "#power-domain-cells":
+     const: 1
+@@ -59,12 +54,61 @@ properties:
+     allOf:
+       - $ref: /schemas/types.yaml#/definitions/phandle
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          enum:
++            - amlogic,meson8b-pwrc
++            - amlogic,meson8m2-pwrc
++    then:
++      properties:
++        reset-names:
++          items:
++            - const: dblk
++            - const: pic_dc
++            - const: hdmi_apb
++            - const: hdmi_system
++            - const: venci
++            - const: vencp
++            - const: vdac
++            - const: vencl
++            - const: viu
++            - const: venc
++            - const: rdma
++      required:
++        - resets
++        - reset-names
 +
- /*
-  * aspeed_xdma_direction
-  *
++  - if:
++      properties:
++        compatible:
++          enum:
++            - amlogic,meson-g12a-pwrc
++            - amlogic,meson-sm1-pwrc
++    then:
++      properties:
++        reset-names:
++          items:
++            - const: viu
++            - const: venc
++            - const: vcbus
++            - const: bt656
++            - const: rdma
++            - const: venci
++            - const: vencp
++            - const: vdac
++            - const: vdi6
++            - const: vencl
++            - const: vid_lock
++      required:
++        - resets
++        - reset-names
++
+ required:
+   - compatible
+   - clocks
+   - clock-names
+-  - resets
+-  - reset-names
+   - "#power-domain-cells"
+   - amlogic,ao-sysctrl
+ 
+diff --git a/include/dt-bindings/power/meson8-power.h b/include/dt-bindings/power/meson8-power.h
+new file mode 100644
+index 000000000000..dd8b2ddb82a7
+--- /dev/null
++++ b/include/dt-bindings/power/meson8-power.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (c) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++ */
++
++#ifndef _DT_BINDINGS_MESON8_POWER_H
++#define _DT_BINDINGS_MESON8_POWER_H
++
++#define PWRC_MESON8_VPU_ID			0
++#define PWRC_MESON8_ETHERNET_MEM_ID		1
++#define PWRC_MESON8_AUDIO_DSP_MEM_ID		2
++
++#endif /* _DT_BINDINGS_MESON8_POWER_H */
 -- 
-2.24.0
+2.26.1
 
