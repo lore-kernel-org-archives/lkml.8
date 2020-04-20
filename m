@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F9BC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEB8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19B6520735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA292070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386491;
-	bh=qKGdh4Za47dTXjFZpK413jDKrBnm5xyHnkOpBgWgldg=;
+	s=default; t=1587386498;
+	bh=3P5XFnJeToC1IM3aWVCQCFPnSxBimrHVI6wb+QQBQlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IlUEUWt10C2xjPZlF/bZu9r3JKIYdsp3ApTAFkKzcdITAbnQSQ/oa4RAF/tS5WT5t
-	 BkzaWcrZLdZex0D8UGGRmUJXSLSK/DOyL7pajYO+J4/2HSoJwQqLnIRuunc400ZmsE
-	 0n+Hc6MiH8x6d5d8gj0QB5oskN1DlEfRtPm8kVKM=
+	b=KWR34opP+K9CIEyTxAlv2UYkurOfuYrcw+td+BVFinzihIF1vY7qe/c1EUsyrG5D2
+	 xFFkd2et4HkS+HDBhVWQ2o2BdjUCR71qMofUoyo4NXzk7hBTlEMbAQWLXIyt6jGIgZ
+	 tiFq+yPUChkUmC+9tKHYOO4shVkrJZDhvPbI7cyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgDTMla (ORCPT
+        id S1728046AbgDTMlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:41:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34114 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:41:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728017AbgDTMlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:41:24 -0400
+        id S1728025AbgDTMl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:41:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9F3820724;
-        Mon, 20 Apr 2020 12:41:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3D642070B;
+        Mon, 20 Apr 2020 12:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386484;
-        bh=qKGdh4Za47dTXjFZpK413jDKrBnm5xyHnkOpBgWgldg=;
+        s=default; t=1587386489;
+        bh=3P5XFnJeToC1IM3aWVCQCFPnSxBimrHVI6wb+QQBQlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bzndnCIeGPKzNnU6EoP/etPVUJwCQu/hF+0RK+Z7m+RDm6+zahAO0qcyBJLML1y0w
-         uTsSLkIBcoP9SO1Y7lJRHPUARo7Gd7lHRBJw5Y2g7afNY8T1XhrMnlU+JXvQZVPJDp
-         g4FTE8ilPpNCIXsP0HcOw26WdfEYJ1zSLpC8ePog=
+        b=kKj4gvrwbPm3Z36L51Cck2X8HAUrWj9T3S4mGUKeNYSrjAfwIBEtMfSyDE69hatDx
+         JCS8a6gNuyl3GcYJ1A2oqjfP2i97B4qvm8EusL8WMGO4hmDcBJsN+BMkzfebne5kSs
+         fS6YqYuqx7AoMBJr0mvYDCRXbBffdemYzUisKfrA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        stable@vger.kernel.org, Dmitry Yakunin <zeil@yandex-team.ru>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 07/65] net: phy: micrel: use genphy_read_status for KSZ9131
-Date:   Mon, 20 Apr 2020 14:38:11 +0200
-Message-Id: <20200420121508.277155738@linuxfoundation.org>
+Subject: [PATCH 5.5 09/65] net: revert default NAPI poll timeout to 2 jiffies
+Date:   Mon, 20 Apr 2020 14:38:13 +0200
+Message-Id: <20200420121508.605493972@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -59,33 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 68dac3eb50be32957ae6e1e6da9281a3b7c6658b ]
+[ Upstream commit a4837980fd9fa4c70a821d11831698901baef56b ]
 
-KSZ9131 will not work with some switches due to workaround for KSZ9031
-introduced in commit d2fd719bcb0e83cb39cfee22ee800f98a56eceb3
-("net/phy: micrel: Add workaround for bad autoneg").
-Use genphy_read_status instead of dedicated ksz9031_read_status.
+For HZ < 1000 timeout 2000us rounds up to 1 jiffy but expires randomly
+because next timer interrupt could come shortly after starting softirq.
 
-Fixes: bff5b4b37372 ("net: phy: micrel: add Microchip KSZ9131 initial driver")
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+For commonly used CONFIG_HZ=1000 nothing changes.
+
+Fixes: 7acf8a1e8a28 ("Replace 2 jiffies with sysctl netdev_budget_usecs to enable softirq tuning")
+Reported-by: Dmitry Yakunin <zeil@yandex-team.ru>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/micrel.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/dev.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -1154,7 +1154,7 @@ static struct phy_driver ksphy_driver[]
- 	.driver_data	= &ksz9021_type,
- 	.probe		= kszphy_probe,
- 	.config_init	= ksz9131_config_init,
--	.read_status	= ksz9031_read_status,
-+	.read_status	= genphy_read_status,
- 	.ack_interrupt	= kszphy_ack_interrupt,
- 	.config_intr	= kszphy_config_intr,
- 	.get_sset_count = kszphy_get_sset_count,
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4090,7 +4090,8 @@ EXPORT_SYMBOL(netdev_max_backlog);
+ 
+ int netdev_tstamp_prequeue __read_mostly = 1;
+ int netdev_budget __read_mostly = 300;
+-unsigned int __read_mostly netdev_budget_usecs = 2000;
++/* Must be at least 2 jiffes to guarantee 1 jiffy timeout */
++unsigned int __read_mostly netdev_budget_usecs = 2 * USEC_PER_SEC / HZ;
+ int weight_p __read_mostly = 64;           /* old backlog weight */
+ int dev_weight_rx_bias __read_mostly = 1;  /* bias for backlog weight */
+ int dev_weight_tx_bias __read_mostly = 1;  /* bias for output_queue quota */
 
 
