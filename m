@@ -2,143 +2,134 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE79C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DB2C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C471E20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAC52078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:51:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="aB/kj+RC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lu/WVv9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgDTQt4 (ORCPT
+        id S1726262AbgDTQvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:49:56 -0400
-Received: from mail-bn7nam10on2132.outbound.protection.outlook.com ([40.107.92.132]:64417
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725774AbgDTQt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:49:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FcjKyiIF+GWzJGroIBjS65VWWhbLr4vglc+Dh9tIhKIYh0hF5Tbq1zHAc2lG4usl6QWUKkJRkQU4sRpNGwk4+Ia7jJ9yjXyo3bsm49Qg5mBqlNhFjomLE6Qz+wvcComwbit7ZtUqpcrAy5xMU149GqWFnX/8k+imdMK6NP4IDVkx2+egEMtQMDJG5J/Bn6kUFQEXeKmxiE4fCGRj1gM842BDQZH/Nh9E3iMlyc+Z6H9EbgNKrIPz8idheiLztncgQiAp3GPwJNLx20k1UilHdMZTlapDSL+n4MJOLUACX2/QXH6lN4ww1aqo7m14UFzjvTpGOuTUUMMbg8hhzKRNfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8TrsWHmGMfVK3UsEYXAjfO2qhKkDM+pHIevmr4NNyzg=;
- b=cbp2QrNfm0MWHxkVfejrJTW4qQxLa2AKTYVA/RfYRo9v/4uo2qbTrfS4elZfgsbe6JrjNg2QdEK+l9EQv3AayrJGuKnjYfUacb9htJgoJDPonAGt5fV47gvVAbb0rMII7zltm4vgjas74z7aukqJXSpj89hDOltBjSquQIIklHZi6qFJtGn3STgQebN4ysiF9DAdiaIjKg8eQEMW5gn22Bb0zUfwflRsbLgAlDgcQkZcd12va5NHBxCltyKn3uT3yFg8amOOoTWO1GaAVoLlxu0fbfMtqMMoBLr7jmntk4tqtnaDd45r4qgxbZs72A87ndFK7/0ih4zGI4ouwaqTvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8TrsWHmGMfVK3UsEYXAjfO2qhKkDM+pHIevmr4NNyzg=;
- b=aB/kj+RCCYGjAnSJeDe+VBxbzeVpjX2vEsIFKq8Gb/piWcdo3pFN/T9ZHWw/cv9IfC4aEIMjHXf91ITRX8pneODMZd645SBrw7ITbeIn1ayiPoYyxy0szpgLrG7VgwqN4SuPndzQkMpM18WCJoTpbL3t/RxXb1Ar1NvT/tQrniw=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-Received: from BN6PR21MB0178.namprd21.prod.outlook.com (2603:10b6:404:94::12)
- by BN6PR21MB0626.namprd21.prod.outlook.com (2603:10b6:404:11a::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.2; Mon, 20 Apr
- 2020 16:49:53 +0000
-Received: from BN6PR21MB0178.namprd21.prod.outlook.com
- ([fe80::a97c:360c:9ed2:12ec]) by BN6PR21MB0178.namprd21.prod.outlook.com
- ([fe80::a97c:360c:9ed2:12ec%11]) with mapi id 15.20.2958.001; Mon, 20 Apr
- 2020 16:49:53 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc:     mikelley@microsoft.com
-Subject: [PATCH 1/1] Drivers: hv: Move AEOI determination to architecture dependent code
-Date:   Mon, 20 Apr 2020 09:49:26 -0700
-Message-Id: <20200420164926.24471-1-mikelley@microsoft.com>
-X-Mailer: git-send-email 2.18.2
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR12CA0063.namprd12.prod.outlook.com
- (2603:10b6:300:103::25) To BN6PR21MB0178.namprd21.prod.outlook.com
- (2603:10b6:404:94::12)
+        Mon, 20 Apr 2020 12:51:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725773AbgDTQvl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 12:51:41 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11ECC061A10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:51:41 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id t199so9384994oif.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jqQhWBNRVhW6KQWEFBcPM7sptcfxEVerh5+7KiBxKHY=;
+        b=lu/WVv9ah7vi8Hsj9QKCh3seAPQ7I3aowGxEe1aGHyefJm9BuqyIyani6NL+hj+dcI
+         lsB39FGjDPOrd0/XVZOcH/PtFISnz7zVadFSO/HVUsmSxZeckGOs/ysRC60wLneSC0e2
+         l+BqE4Zys5B1IJu6r1RevtW3lgyVRk//eJB5v4B+totP9li4YQ+yCNfpT7PzoyKQ0gBN
+         4JTOGVr37kKQjH01oIRDN4FoLMLK+au8X0cx/4MzxHuHjeZwFA78opZWb8C2xIgkZXca
+         Hv833IfRxKrdTiZdRu3JqiyTe3+fJB9siKjPOnVRao/cTY6+T+HrVd101DcgRLycoCZg
+         VmZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jqQhWBNRVhW6KQWEFBcPM7sptcfxEVerh5+7KiBxKHY=;
+        b=seddC6v4zJnnMKBaAaWIrTXqWqFN7fezHqxi17CPHDwyxng+a+/CTr3I0LqYk8aL+n
+         tIyZ61xLY+qaH2vKmtw/f8UyPAl7Gfy0wN3zJQvdymDsx/ENvzA1mV2SXfUuU72VOo59
+         TEJHd8G6Ys2YMl4oG+3o357pxixrkUahhwbFoB3/+4F2qcTDjUFz0CnGXWPu8CVphj7e
+         qMWIkzkisQmUpYQkG9v9pM+ihEiH208KHmCVEN2iaZH5H0BZYu7xmc9/Xx3+tROaiNz6
+         JXHmF59q3swvnnRudl6WUzzhCpr0l04XN/5gGs+LhXzir8oI8SVCuMiU4NVDrf7XqWCj
+         PlAA==
+X-Gm-Message-State: AGi0PuYoEtOqBHnXqBvxD+n75nkMGE0xaL+Oipc2hqXX6mY9WyNdQsN5
+        X04rdZjkESdnkpS05nuAgotwLfISKRLaV9vrWwGtbA==
+X-Google-Smtp-Source: APiQypJYYaLHQcSVI2bZtlFq6cyMPPAVJWX+kv6+xKscU2Hlf+9c+6T/dxP1qjtyu2Yak43rF6k0r/eK/nJo/AG2egM=
+X-Received: by 2002:aca:abc6:: with SMTP id u189mr259769oie.30.1587401500754;
+ Mon, 20 Apr 2020 09:51:40 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from MHKdev.corp.microsoft.com (131.107.160.108) by MWHPR12CA0063.namprd12.prod.outlook.com (2603:10b6:300:103::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Mon, 20 Apr 2020 16:49:51 +0000
-X-Mailer: git-send-email 2.18.2
-X-Originating-IP: [131.107.160.108]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ddde19f2-bc7d-4b0a-0e44-08d7e54ad918
-X-MS-TrafficTypeDiagnostic: BN6PR21MB0626:|BN6PR21MB0626:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR21MB06268DD8A41858390973AE52D7D40@BN6PR21MB0626.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 03793408BA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0178.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(396003)(39860400002)(366004)(346002)(36756003)(5660300002)(52116002)(66476007)(66556008)(6486002)(7696005)(66946007)(10290500003)(4326008)(2906002)(478600001)(2616005)(956004)(6666004)(107886003)(8936002)(82960400001)(82950400001)(8676002)(26005)(81156014)(316002)(86362001)(1076003)(16526019)(186003)(921003);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: R8Bm5UGk5bJoWscR5lZsCApfJbmBfMSjuN8ZBumklCt5JyAtUOCBaAH6RVYrGpO81KOBTTYu4G7L1LnEC5AkVaRfcBJZBahHG81gm/ubLzCLhhH3FviaaZP2K+SkupEPgaq0QEiSJCu1CwsGN/hKFEg9Ri3a/zWB2EJNcjjt7//hLq6wqfH2vksyDfj09DAQLNZf4qNOUFIaY6NwBgZyTfGyHJ8Jk3dx/AojDmRmcoyADe1+DN04OBaMKY1Ox0XEd36TG9a5M+SwUIV3giIqCW2zIKK/fkY/JZwAcFkO3FVosyh/hqv00SjWFAdaL4bwPIItsSeRMJrxWCQypYLqTAQ4sD303jO9Gba+TY6YLZmCuAOVEf83ZI0Cf4A56ZcvMxpF2pK+Cs6KFKTkHjjyH1JhPMgbAWsmvM2Mm2NW9lXqSk4y8LievWpIXHXZYJMHz/uPKHXrugpvzSZiSBs+kvPIz+wNA0vo6GdKFBdCdyk=
-X-MS-Exchange-AntiSpam-MessageData: SBBx8QmRvzF1TqZbt4NjeO9wEX/xuByUr9ReupOY8euHcTYKpNzviEFW/uhV2PElVwKdcWK9TpZDIscqbFu1XUhz41bC4Ili2YAhT03kIhbCRmWWwox13BOcNY1ncHwgX9OQkVclkcLmHgfJoFiPFhjJCLDG+3Xplloq56vu5LAu/rBdjoj+IP//Kt5RA0zDGoIs1BPjrODlDTN857+/Q5tHp9Gt8xXPLalBJNw5fLo4gD07hdWg3/Ox23bmeZ1McWh6+Ua3d1mJhdn6APoO+Rv6p1kqTBfgcbGjHAwsrDu+12c1PyvY/42YnmspdBSFGFtXwReyJzjX/Mt56zLZ+33IU+RwxWs8Se+PEcncrDVZ6zHV8dF3vnyiLrdRXM6u5UbFeFzZzwAHNdRMZ/69wUM1DNoSHXyRTsqn+xcL1jdDtmRxilzvO8roq2zxpIU7YamDunw44pyLwMBHjvpefELW1o/VOh+nQtFpeytd39jSUFrZFE1nRX5wmG6gRuBtdzrZuq8stLcCqcH+OyGD1mxi4ywl0dlVzqadv+GqsIjbSSAt2+UjdjTFmp6VvcGdh79RpkpRfDdk3Jy++cjggYLBtgfBvq15Za8226Rm4CQ4Vo5Ikfem9E/UPyzN11n3iPldlgXHBVbwD2z0/ySk/E4uKER8E/VotqEO2gDkxAzE4WP6ZVpLrjqckvOK9GJglP+C6zSxCGmDdJiXNXw0chfrb69axXDDAJEyjgL1wovF6fCMMZw1dPFr5oRkr1V/XEMzsEJeE3hvUwFNFq4gtkgvC2XOldvKNkjtiOHVeqAX0tD/7dZ7K5lNWxNalOwb
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ddde19f2-bc7d-4b0a-0e44-08d7e54ad918
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 16:49:53.2315
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vjKkDVFuhSXZxIoCZnk7qud4n5pEvFXyEm7wH+yP7J6VOVgWlh3CmGmrXGIU4uGAUzTzRwTp1FPXE74YraLDqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0626
+References: <20200420120101.31405-1-nsaenzjulienne@suse.de> <20200420120101.31405-3-nsaenzjulienne@suse.de>
+In-Reply-To: <20200420120101.31405-3-nsaenzjulienne@suse.de>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 20 Apr 2020 09:51:03 -0700
+Message-ID: <CAGETcx-g=4FQsYZ2=4wXV2EBeTAyt6182KVW2i1qroGajLgfrw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] of: property: Do not link to disabled devices
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hyper-V on ARM64 doesn't provide a flag for the AEOI recommendation
-in ms_hyperv.hints, so having the test in architecture independent
-code doesn't work. Resolve this by moving the check of the flag
-to an architecture dependent helper function. No functionality is
-changed.
+On Mon, Apr 20, 2020 at 5:02 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> When creating a consumer/supplier relationship between two devices,
+> make sure the supplier node is actually active. Otherwise this will
+> create a link relationship that will never be fulfilled. This, in the
+> worst case scenario, will hang the system during boot.
+>
+> Note that, in practice, the fact that a device-tree represented
+> consumer/supplier relationship isn't fulfilled will not prevent devices
+> from successfully probing.
+>
+> Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from DT bindings")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>
+> ---
+>
+> Changes since v2:
+>  - Correct code comment
+>  - Use already available return handling code
+>
+> Changes since v1:
+>  - Move availability check into the compatible search code and stop if
+>    node disabled
+>
+>  drivers/of/property.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index dc034eb45defd..7bcf31ba717d8 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1045,8 +1045,20 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+>          * Find the device node that contains the supplier phandle.  It may be
+>          * @sup_np or it may be an ancestor of @sup_np.
+>          */
+> -       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
+> +       while (sup_np) {
+> +
+> +               /* Don't allow linking to a disabled supplier */
+> +               if (!of_device_is_available(sup_np)) {
+> +                       of_node_put(sup_np);
+> +                       sup_np = NULL;
+> +               }
+> +
+> +               if (of_find_property(sup_np, "compatible", NULL))
+> +                       break;
+> +
+>                 sup_np = of_get_next_parent(sup_np);
+> +       }
+> +
+>         if (!sup_np) {
+>                 dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np);
+>                 return -ENODEV;
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- arch/x86/include/asm/mshyperv.h | 2 ++
- drivers/hv/hv.c                 | 6 +-----
- 2 files changed, 3 insertions(+), 5 deletions(-)
+Thanks for the fix!
 
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 1c42ecbe75cb..d30805ed323e 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -35,6 +35,8 @@ typedef int (*hyperv_fill_flush_list_func)(
- 	rdmsrl(HV_X64_MSR_SINT0 + int_num, val)
- #define hv_set_synint_state(int_num, val) \
- 	wrmsrl(HV_X64_MSR_SINT0 + int_num, val)
-+#define hv_recommend_using_aeoi() \
-+	(!(ms_hyperv.hints & HV_DEPRECATING_AEOI_RECOMMENDED))
- 
- #define hv_get_crash_ctl(val) \
- 	rdmsrl(HV_X64_MSR_CRASH_CTL, val)
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 6098e0cbdb4b..533c8b82b344 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -184,11 +184,7 @@ void hv_synic_enable_regs(unsigned int cpu)
- 
- 	shared_sint.vector = HYPERVISOR_CALLBACK_VECTOR;
- 	shared_sint.masked = false;
--	if (ms_hyperv.hints & HV_DEPRECATING_AEOI_RECOMMENDED)
--		shared_sint.auto_eoi = false;
--	else
--		shared_sint.auto_eoi = true;
--
-+	shared_sint.auto_eoi = hv_recommend_using_aeoi();
- 	hv_set_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
- 
- 	/* Enable the global synic bit */
--- 
-2.18.2
-
+Reviewed-by: Saravana Kannan <saravanak@google.com>
