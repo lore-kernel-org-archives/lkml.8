@@ -2,138 +2,78 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09783C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96E3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB26A20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:40:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587382843;
-	bh=puYU9WIOHWq+Hgrh+zyx6scXqHgdvOkozi99sNN0Pog=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D12qW0uodKELHKEQyrXLUQNkr/pdnJtPtdBMor8rOb7AI3aVGHGWivCUzboemExrC
-	 hxTGsrlf/lBcxq0Q5kmIGg7ql0LI+riptKQY22QsHe0yBhP/Qwwh7jjZOD7THaSejv
-	 zFoZZYsewU3kKhTCBOT+vTuQb8WE+OOgxoKcW60U=
+	by mail.kernel.org (Postfix) with ESMTP id A5B9F206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgDTLkn (ORCPT
+        id S1726435AbgDTLk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:40:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbgDTLkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:40:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B254206D4;
-        Mon, 20 Apr 2020 11:40:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587382840;
-        bh=puYU9WIOHWq+Hgrh+zyx6scXqHgdvOkozi99sNN0Pog=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0qFzLT8yL6d5XnLUkMcfIVddV0ucPWMlKxCK5PWu01WNoEQ8Dx9OMoRUarC9rdG4K
-         KTmbYy+MiyyJZMtFK2b/YyvMX5uVz3oiPsCkCNr0Q4TUvNsrM++UDpTV2QQMb7eh4P
-         1MaNZn4etW6JBXajC/+CZSVlIXfmPk6wAY+wwnTc=
-Date:   Mon, 20 Apr 2020 13:40:38 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] blktrace: add checks for created debugfs files
- on setup
-Message-ID: <20200420114038.GE3906674@kroah.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-9-mcgrof@kernel.org>
- <38240225-e48e-3035-0baa-4929948b23a3@acm.org>
- <20200419230537.GG11244@42.do-not-panic.com>
- <c69b67d1-f887-600b-f3ab-54ab0b7dcb13@acm.org>
+        Mon, 20 Apr 2020 07:40:58 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:45198 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725886AbgDTLk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:40:58 -0400
+Received: from [10.130.0.79] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT91Eip1eECMqAA--.2S3;
+        Mon, 20 Apr 2020 19:40:54 +0800 (CST)
+Subject: Re: [PATCH v2 1/4] selftests: kmod: Use variable NAME in
+ kmod_test_0001()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        linux-kselftest@vger.kernel.org
+References: <1587381782-31047-1-git-send-email-yangtiezhu@loongson.cn>
+ <ff9ef06c-0607-8b8e-b80d-6a531921a67e@web.de>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <ac7bd076-8fb2-6d8b-655c-98ea7e7d2a4d@loongson.cn>
+Date:   Mon, 20 Apr 2020 19:40:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c69b67d1-f887-600b-f3ab-54ab0b7dcb13@acm.org>
+In-Reply-To: <ff9ef06c-0607-8b8e-b80d-6a531921a67e@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxT91Eip1eECMqAA--.2S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYw7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2js
+        IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+        5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeV
+        CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2
+        V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvE
+        x4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUq38nUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 04:17:46PM -0700, Bart Van Assche wrote:
-> On 4/19/20 4:05 PM, Luis Chamberlain wrote:
-> > On Sun, Apr 19, 2020 at 03:57:58PM -0700, Bart Van Assche wrote:
-> > > On 4/19/20 12:45 PM, Luis Chamberlain wrote:
-> > > > Even though debugfs can be disabled, enabling BLK_DEV_IO_TRACE will
-> > > > select DEBUG_FS, and blktrace exposes an API which userspace uses
-> > > > relying on certain files created in debugfs. If files are not created
-> > > > blktrace will not work correctly, so we do want to ensure that a
-> > > > blktrace setup creates these files properly, and otherwise inform
-> > > > userspace.
-> > > > 
-> > > > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> > > > ---
-> > > >    kernel/trace/blktrace.c | 8 +++++---
-> > > >    1 file changed, 5 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> > > > index 9cc0153849c3..fc32a8665ce8 100644
-> > > > --- a/kernel/trace/blktrace.c
-> > > > +++ b/kernel/trace/blktrace.c
-> > > > @@ -552,17 +552,19 @@ static int blk_trace_create_debugfs_files(struct blk_user_trace_setup *buts,
-> > > >    					  struct dentry *dir,
-> > > >    					  struct blk_trace *bt)
-> > > >    {
-> > > > -	int ret = -EIO;
-> > > > -
-> > > >    	bt->dropped_file = debugfs_create_file("dropped", 0444, dir, bt,
-> > > >    					       &blk_dropped_fops);
-> > > > +	if (!bt->dropped_file)
-> > > > +		return -ENOMEM;
-> > > >    	bt->msg_file = debugfs_create_file("msg", 0222, dir, bt, &blk_msg_fops);
-> > > > +	if (!bt->msg_file)
-> > > > +		return -ENOMEM;
-> > > >    	bt->rchan = relay_open("trace", dir, buts->buf_size,
-> > > >    				buts->buf_nr, &blk_relay_callbacks, bt);
-> > > >    	if (!bt->rchan)
-> > > > -		return ret;
-> > > > +		return -EIO;
-> > > >    	return 0;
-> > > >    }
-> > > 
-> > > I should have had a look at this patch before I replied to the previous
-> > > patch.
-> > > 
-> > > Do you agree that the following code can be triggered by
-> > > debugfs_create_file() and also that debugfs_create_file() never returns
-> > > NULL?
-> > 
-> > If debugfs is enabled, and not that we know it is in this blktrace code,
-> > as we select it, it can return ERR_PTR(-ERROR) if an error occurs.
-> 
-> This is what I found in include/linux/debugfs.h in case debugfs is disabled:
-> 
-> static inline struct dentry *debugfs_create_file(const char *name,
-> 	umode_t mode, struct dentry *parent, void *data,
-> 	const struct file_operations *fops)
-> {
-> 	return ERR_PTR(-ENODEV);
-> }
-> 
-> I have not found any code path that can cause debugfs_create_file() to
-> return NULL. Did I perhaps overlook something? If not, it's not clear to me
-> why the above patch adds checks that check whether debugfs_create_file()
-> returns NULL?
+On 04/20/2020 07:30 PM, Markus Elfring wrote:
+>> Use the variable NAME instead of "\000" directly in kmod_test_0001().
+> Would this patch series have been a bit nicer together with
+> a cover letter?
 
-Short answer, yes, it can return NULL.  Correct answer is, you don't
-care, don't check the value and don't do anything about it.  It's
-debugging code, userspace doesn't care, so just keep moving on.
+OK, thanks for your suggestion. I will resend it with a cover letter.
 
-thanks,
+Thanks,
+Tiezhu Yang
 
-greg k-h
+>
+> Regards,
+> Markus
+
