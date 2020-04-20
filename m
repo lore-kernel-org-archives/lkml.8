@@ -2,112 +2,268 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB8FC38A30
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B76CC38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2F32084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o2p+EPk1"
+	by mail.kernel.org (Postfix) with ESMTP id F2EEA2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587407722;
+	bh=TkZrKQj9vsqkmFr85nH7UyxBaUsQ9gILdadhMu3aJhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lx0CaSvo+Y5aWP8MRC5uU4TH5IgauV7DCAwcXtLWcgG8YxTiw1jAgpx3P02JkA3bt
+	 GSZJAIy/p5fsyp7VeKIWl6wB+sk9GIa7LabeAd2VcPRIfDMGmAekXvH7OZD2n4NmXB
+	 EZlAYdw714FT2q91Y6637jekSO9lyEwC+n6etCI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgDTSfH (ORCPT
+        id S1728077AbgDTSfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:35:07 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:52178 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728077AbgDTSfF (ORCPT
+        Mon, 20 Apr 2020 14:35:21 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44794 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgDTSfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:35:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587407705; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=LG1BzWNgEc4P/Q2YyUIsL9mmn47LWA5+bq3Cl0xGTeU=; b=o2p+EPk1rQUTpx7nL6utXz01ge6/CEJY8/zpezxOih4SBnSqUYCK24APvwH7rnD6koPkmbmd
- 8pcdXMTsw4IZPXYtuFy/ZqK8beeluuLJIebJxui2U+oJeVeZjlaHyW/KETydHVMhOJG0apoz
- MNcBCeVIPi4tvNWXZMfQTG4Rrrw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9deb47.7fc5c5f3d3e8-smtp-out-n05;
- Mon, 20 Apr 2020 18:34:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B1AC1C58A02; Mon, 20 Apr 2020 18:34:46 +0000 (UTC)
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 62299C58A02;
-        Mon, 20 Apr 2020 18:34:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 62299C58A02
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
+        Mon, 20 Apr 2020 14:35:20 -0400
+Received: by mail-oi1-f193.google.com with SMTP id a2so5085626oia.11;
+        Mon, 20 Apr 2020 11:35:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R4OQ//22u2MPOmZHKyicGJvmvsIaQtYSXsu+wdZNuM4=;
+        b=QPdqckdskbRCogJpNcYplhwYEyeqNleapgNp2sift0yoLXOFp6lH4FbM9+xuJpOJtd
+         41NdEBQuzI+XjVgkbmsMAaqN/z4X+j4UX8SRHQ7SKynz1Ui+NdjKqn/9XTkpFuOQelyX
+         tqGXT18go9wKhA18QrTL0eIOKJjKX570hspYWofReMtRyoxK0UKNnaenaxkWf8np2ki5
+         qdg9eKF3h/ufT+0VtbK3L9AwCKK5wQId+axcp+MwYwEEDKt5+MFqksCWEwFHVHAAOO66
+         ryLtajfixPIMpbFaceWW0qnLlt810pkGaO/tBpENRTgl1ysvVSdf6OIrOHPqWk0KGrrd
+         8mFg==
+X-Gm-Message-State: AGi0PuY9OwHjBZDYXNL4Wwq3xcw4+4gV1jMFogsBfhgQieU0saVdAafJ
+        /iL+Jo1QLZQyEGgrwubGTA==
+X-Google-Smtp-Source: APiQypI5iWrU/MsQnhldGps2oxwvsnjbS3ZoaH/XAT2+pSAztESGSzhH48A1n6XI4AszMbeiLRaqlg==
+X-Received: by 2002:aca:dc08:: with SMTP id t8mr521470oig.135.1587407719248;
+        Mon, 20 Apr 2020 11:35:19 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q18sm100760otl.65.2020.04.20.11.35.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 11:35:18 -0700 (PDT)
+Received: (nullmailer pid 10765 invoked by uid 1000);
+        Mon, 20 Apr 2020 18:35:12 -0000
+Date:   Mon, 20 Apr 2020 13:35:12 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv4 6/6] arm64: dts: qcom: sdm845-cheza: Add iommus property
-Date:   Tue, 21 Apr 2020 00:03:54 +0530
-Message-Id: <38c607841e81664a2db69a27260cd7dfbd653458.1587407458.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1587407458.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1587407458.git.saiprakash.ranjan@codeaurora.org>
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2] dt-bindings: thermal: Convert i.MX to json-schema
+Message-ID: <20200420183512.GA5483@bogus>
+References: <1586480844-19227-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586480844-19227-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+On Fri, Apr 10, 2020 at 09:07:24AM +0800, Anson Huang wrote:
+> Convert the i.MX thermal binding to DT schema format using json-schema
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- make clock property optional.
+> ---
+>  .../devicetree/bindings/thermal/imx-thermal.txt    | 61 --------------
+>  .../devicetree/bindings/thermal/imx-thermal.yaml   | 96 ++++++++++++++++++++++
+>  2 files changed, 96 insertions(+), 61 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
+>  create mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> deleted file mode 100644
+> index 823e417..0000000
+> --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> +++ /dev/null
+> @@ -1,61 +0,0 @@
+> -* Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
+> -
+> -Required properties:
+> -- compatible : must be one of following:
+> -  - "fsl,imx6q-tempmon" for i.MX6Q,
+> -  - "fsl,imx6sx-tempmon" for i.MX6SX,
+> -  - "fsl,imx7d-tempmon" for i.MX7S/D.
+> -- interrupts : the interrupt output of the controller:
+> -  i.MX6Q has one IRQ which will be triggered when temperature is higher than high threshold,
+> -  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
+> -  when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
+> -  is higher than panic threshold, system will auto reboot by SRC module.
+> -- fsl,tempmon : phandle pointer to system controller that contains TEMPMON
+> -  control registers, e.g. ANATOP on imx6q.
+> -- nvmem-cells: A phandle to the calibration cells provided by ocotp.
+> -- nvmem-cell-names: Should be "calib", "temp_grade".
+> -
+> -Deprecated properties:
+> -- fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
+> -  calibration data, e.g. OCOTP on imx6q.  The details about calibration data
+> -  can be found in SoC Reference Manual.
+> -
+> -Direct access to OCOTP via fsl,tempmon-data is incorrect on some newer chips
+> -because it does not handle OCOTP clock requirements.
+> -
+> -Optional properties:
+> -- clocks : thermal sensor's clock source.
+> -
+> -Example:
+> -ocotp: ocotp@21bc000 {
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -	compatible = "fsl,imx6sx-ocotp", "syscon";
+> -	reg = <0x021bc000 0x4000>;
+> -	clocks = <&clks IMX6SX_CLK_OCOTP>;
+> -
+> -	tempmon_calib: calib@38 {
+> -		reg = <0x38 4>;
+> -	};
+> -
+> -	tempmon_temp_grade: temp-grade@20 {
+> -		reg = <0x20 4>;
+> -	};
+> -};
+> -
+> -tempmon: tempmon {
+> -	compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
+> -	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> -	fsl,tempmon = <&anatop>;
+> -	nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+> -	nvmem-cell-names = "calib", "temp_grade";
+> -	clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+> -};
+> -
+> -Legacy method (Deprecated):
+> -tempmon {
+> -	compatible = "fsl,imx6q-tempmon";
+> -	fsl,tempmon = <&anatop>;
+> -	fsl,tempmon-data = <&ocotp>;
+> -	clocks = <&clks 172>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> new file mode 100644
+> index 0000000..193c7e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> @@ -0,0 +1,96 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/imx-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP i.MX Thermal Binding
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - fsl,imx6q-tempmon
+> +              - fsl,imx6sx-tempmon
+> +              - fsl,imx7d-tempmon
+> +
+> +  interrupts:
+> +    description: |
+> +      The interrupt output of the controller, the IRQ will be triggered
+> +      when temperature is higher than high threshold.
+> +    maxItems: 1
+> +
+> +  nvmem-cells:
+> +    description: |
+> +      Phandle to the calibration cells provided by ocotp for calibration
+> +      data and temperature grade.
+> +    maxItems: 2
+> +
+> +  nvmem-cell-names:
+> +    maxItems: 2
+> +    items:
+> +      - const: calib
+> +      - const: temp_grade
+> +
+> +  fsl,tempmon:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +    description: |
+> +      Phandle pointer to system controller that contains TEMPMON control
+> +      registers, e.g. ANATOP on imx6q.
 
-Add iommus property to remoteproc modem node.
+Really, this should have been a child of the system controller. Not too 
+late to do that, but you'd need to keep this for compatibility.
 
-Following SMMU global faults are seen without it.
+> +
+> +  fsl,tempmon-data:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +    description: |
+> +      Deprecated property, phandle pointer to fuse controller that contains
+> +      TEMPMON calibration data, e.g. OCOTP on imx6q. The details about
+> +      calibration data can be found in SoC Reference Manual.
 
-arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
-arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
-                         GFSYNR1 0x00000781, GFSYNR2 0x00000000
+Use 'deprecated: true' for deprecated properties.
 
-arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
-arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
-                         GFSYNR1 0x00000461, GFSYNR2 0x00000000
-
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 9070be43a309..07081da2c83e 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -631,6 +631,11 @@ ap_ts_i2c: &i2c14 {
- 	status = "okay";
- };
- 
-+&mss_pil {
-+	iommus = <&apps_smmu 0x780 0x1>,
-+		 <&apps_smmu 0x724 0x3>;
-+};
-+
- &pm8998_pwrkey {
- 	status = "disabled";
- };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> +
+> +  clocks:
+> +    description: |
+> +      Thermal sensor's clock source, it is optional.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - fsl,tempmon
+> +  - nvmem-cells
+> +  - nvmem-cell-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imx6sx-clock.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    ocotp: ocotp@21bc000 {
+> +         #address-cells = <1>;
+> +         #size-cells = <1>;
+> +         compatible = "fsl,imx6sx-ocotp", "syscon";
+> +         reg = <0x021bc000 0x4000>;
+> +         clocks = <&clks IMX6SX_CLK_OCOTP>;
+> +
+> +         tempmon_calib: calib@38 {
+> +             reg = <0x38 4>;
+> +         };
+> +
+> +         tempmon_temp_grade: temp-grade@20 {
+> +             reg = <0x20 4>;
+> +         };
+> +    };
+> +
+> +    tempmon: tempmon {
+> +         compatible = "fsl,imx6sx-tempmon";
+> +         interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +         fsl,tempmon = <&anatop>;
+> +         nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+> +         nvmem-cell-names = "calib", "temp_grade";
+> +         clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+> +    };
+> +
+> +...
+> -- 
+> 2.7.4
+> 
