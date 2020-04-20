@@ -2,150 +2,146 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D17C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8F1C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80C0120857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2533F20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="sYHDE5ie"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ceif5E5e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgDTQlH (ORCPT
+        id S1727006AbgDTQlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:41:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726671AbgDTQkG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:40:06 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF38EC025490
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:32:18 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id v4so420638wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=acWWPzmaQW27xNanSJeIRIY/L2jzIwyKS2KUn4ii4yY=;
-        b=sYHDE5ieByXI+VBlh4AwOfEMN78KnBQoGXrMdWDqHsq/d/O4WAfCG/L0sgwr5lFBAx
-         kOQQYlarB1GjYuFFWl9Oyl5RCXz0dTvFRbnIYqEBMEA9EQaGhzaU6hT5nLBBS3lH4Czu
-         z+RqfkXZkgBXpU4Rbsy9comzYVVmwZqhYBdPw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=acWWPzmaQW27xNanSJeIRIY/L2jzIwyKS2KUn4ii4yY=;
-        b=adNUrfP/T26FwRmjdBn/jwOAPfHfhTZ5DWx7+Cu4V9rqxcvrJqv0KJjZPZdLplXUxx
-         M5OsSDyTMcfqSBsKh+ZWSPlAMxRVd+NKaI+M93GV74Gt+2fRBxDstbzc/fRvCojEkPX9
-         4UMbYHbp71eJgc4mj31AliVD057enVTe3QlfWLJhOlSPU/9RQrxbxlZ1X6pvKFIpYHhI
-         XfI55W0fqdNgKzaD1RaNJS3a4EzIPSTHGmw7QQPyTPTvVBZVsoS8+36Iel1vOh+TzMRI
-         RjmH2vU3SrOWqXb793Qr/ole4SxSobWgy/9B9KKlgeLOJ+2K5XR0h3mKXOfbhDsgoCSD
-         33ZA==
-X-Gm-Message-State: AGi0Pubq935VMuDlnhsFuj5RNvv/XhQdeAL++IX0a+/C+YkOvns0vtFX
-        qmLzgEEVft70nlzCSNtMwlA2UiXPo5M=
-X-Google-Smtp-Source: APiQypKu5siu6x5z4nZE2uzrNDMPyrb7orMB0oSDjCOQwuYBMHsWxg+aZuvF6v4jB7n+81W+V5BlDQ==
-X-Received: by 2002:a05:600c:1:: with SMTP id g1mr172545wmc.142.1587400337578;
-        Mon, 20 Apr 2020 09:32:17 -0700 (PDT)
-Received: from carbon ([94.26.108.4])
-        by smtp.gmail.com with ESMTPSA id z76sm186638wmc.9.2020.04.20.09.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 09:32:16 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 19:32:15 +0300
-From:   Petko Manolov <petko.manolov@konsulko.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] WRITE_ONCE_INC() and friends
-Message-ID: <20200420163215.GA43378@carbon>
-Mail-Followup-To: "Paul E. McKenney" <paulmck@kernel.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200419094439.GA32841@carbon>
- <491f0b0bc9e4419d93a78974fd7f44c7@AcuMS.aculab.com>
- <20200419182957.GA36919@carbon>
- <8e5a0283ed76465aac19a2b97a27ff15@AcuMS.aculab.com>
- <20200420150545.GB17661@paulmck-ThinkPad-P72>
+        Mon, 20 Apr 2020 12:41:11 -0400
+Received: from mail-eopbgr1300122.outbound.protection.outlook.com ([40.107.130.122]:34400
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726620AbgDTQlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 12:41:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VQfX9tW6KmL7CGvGYqo5gtD+fQoMnvDfdADGsa9vZhdAXQVUhiTdQeGD4zSGQBDn6JU9ie9uxnO3cK+76bNRPpoio/glI2nH6gUIqSez8dSJH23Nx75T63ZtKofU7eKw2ZlTZ1FWeG8hvuZjxwmhPtI/8EBB5Xz3bgLKf3+Abahn4lsCvdVOipmEvIIPzU69cXPBgfaIrnDCCxb/8r75uSyXbvfslP39uWJ/F8AF5kGUQsFfb6Aah8LZwWw8s1htnpIQOJqfuLt28Hkme+JdDmuGCruKrzLtFQ/43FG6Gz7lmNP2FETSlA0dVjuqIO/+HtVIqSn19T0Q1Not3pZZ8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zj425DsWvodYJiPpBCxYf5VlUoVkfBWF89XmSQ8wYNc=;
+ b=IMuzwxWLRglLmSIZpwwW3VMxbAd+MUv0/zLewsBLjm/AONrR7Q/MIl6aNRmq3L+uqERKHXeDWh07BtCvNubmLLbl+kp0Bl3AbKKWagRsNhHjNiAz9kGnpycA0saLEJjkutrNne36vX8V0u5KcHQodox3V+mszYFbOCWLW0sqpv9sB9QDae6xKOZNiCqJyQDlFiQpxPL2KjXYqlUvAoH8h8hQD03+A8lAPwLF+QDUGTBOQbb1or7qOjOExcoeOZ/8sBr3V2IX/sZd7WyVyQfomhlGlNRE2RkQ7gdCNXhVn6RIsVwk+7qyi7afdsR6ICXS1GollOc1l4vLkuRVjl2E6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zj425DsWvodYJiPpBCxYf5VlUoVkfBWF89XmSQ8wYNc=;
+ b=ceif5E5erSxfE5/2l9WWl1/MZO5ZnBHGrLx6jpr5LRva65oqBKKFigp/1dUgmIsM7qHzsPlMhbNuYUkT0prfB6jNm8ZQapqFTUxaA/j3gsb25QKBGJ8vCtm3C+ERgav65iVD07DBfCCvdVRpRxJlVwQzYHyTPdfKr22YbFugW20=
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::12)
+ by HK0P153MB0115.APCP153.PROD.OUTLOOK.COM (2603:1096:203:19::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.2; Mon, 20 Apr
+ 2020 16:40:55 +0000
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2958.001; Mon, 20 Apr 2020
+ 16:40:55 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>
+CC:     "bp@alien8.de" <bp@alien8.de>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        vkuznets <vkuznets@redhat.com>
+Subject: RE: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
+ hibernation
+Thread-Topic: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
+ hibernation
+Thread-Index: AQHWFRKUfBcacZSsfESBcN86F1My4aiB7qAAgABK3nA=
+Date:   Mon, 20 Apr 2020 16:40:54 +0000
+Message-ID: <HK0P153MB027347CE9D0C35A1C53B19F6BFD40@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
+ <20200417110007.uzfo6musx2x2suw7@debian>
+ <HK0P153MB0273A04F0585524883C46B0FBFD90@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+ <20200420120822.4bncj2iwgqbpoxei@debian>
+In-Reply-To: <20200420120822.4bncj2iwgqbpoxei@debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-20T16:40:50.7568635Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ede3ca55-cff0-4120-b2a0-d6d1ef9813cb;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:8ad:e9e1:6b1b:63b1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: af748047-704d-4f23-626b-08d7e54998af
+x-ms-traffictypediagnostic: HK0P153MB0115:|HK0P153MB0115:|HK0P153MB0115:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <HK0P153MB01150C8A5B47879297C1A22EBFD40@HK0P153MB0115.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 03793408BA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(136003)(366004)(396003)(9686003)(4744005)(6916009)(81156014)(478600001)(55016002)(71200400001)(8990500004)(10290500003)(15650500001)(86362001)(64756008)(66556008)(66476007)(66946007)(6506007)(8936002)(66446008)(7696005)(33656002)(186003)(54906003)(52536014)(76116006)(316002)(5660300002)(82960400001)(2906002)(4326008)(8676002)(82950400001);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wfTTrTcIdwod2EtRGi1WYsYXRZKbmcLHqILumZ11yqvEZVl03B4OXN3TYRSGyRaECKXux+lzFWquiKJapduAQW/q4GN5yaDEKcNbMBcVVVxbS0/5q32yzc8P9kteiVlg1CX5CLaXVLEtrWj+N3HHdFZ8zpXIoAjKH8xXYNtykMQtTMiIv+4BHtpNo11vBgRRmUEru6X7V+tft1EEWDJzDjTocKTnSJzdC8t6+0ANabsw2g2hp6SfWljmu8I5BIuTlOq2Z7xmMli2JDkQNFdXdOe32sOPfXXggmYZyi2uSsVCK+5cm8oK3rVpgFNEv8bLNCDUXSUs96X5FwHY/Ex8RD7eZ8jZeeBUC55uSN62HBfy6+PMaDZNjnhNyxmv8Z/3lpje/0GEZhUvz/jlsHxUDjP6ca4g9muoHxRBJ0+R8Ny+z1pvjTVoCeH9zhsfeP/N
+x-ms-exchange-antispam-messagedata: rshdaiudfT0+AOFZU4Cbf4xRTDG4JjQZJYvtPW8sfNxAlwZYCdCCM9ag2SQcCles6qjlgic9VCVg8f1gTm41jLRNkaLnAHjcVJayItqlQ5WFuq7RWHT8+NaqeGZ8j9uoQ2J0Jkms/HPbraK9/4E1AJ/mIpc+p5yzrRlfwq/6AV+L4uP4RHmzvRmLywMgAu6vlqgS7kjIayvzcUIOaHgP52Et/iCH0wbKQYDf5k1Rn6YbazWc3WOeGhEGaNKUE/NM9grhV9fUk0G1txd/5kIPIMnJP3W7SohHL+tNuawtNiDELS6P7wDWDs0RONihKDctmbNf0740yNZDJkcjxh8Pbx2sEGj7maewoiSNebTvfjm/rOehMOQWOOP4tsZZF2OE3CIiGj4rkXi7990mCOwVbctlkTuvs46/Fe4a7WdAV1154Hkscr+np8/sqYYTbhLdhE7OcX0hQrr9MpaNnQfGnINboelfSoCYo6IuyPvQL/s1g7gQIAa7NYMqV3NISHyHgJi9GwX3ceAD7GlZjuMebVKzXcRZ7Ry9IzN8jp5id2MsliRVRBSvlORN8vCyeD8PAjhtl99EGbtdcDEZrZaHPL1Ih0cwvEWJ+t3jNISv6gDOEJUKJAOCfXfSAGw/m+GbhIDx+Upfp4QUw6NG1cUSgnnZg7JtdOQjkDfyzT8KqW3sogryUtL+oZeuhncOyMOTBKK38EOL41ze3eH4uBz1mlUKsSumzgYdOFGn/ScrblPaP7IJjig9G9asEFuh2myCPW+bgpgBR4M1Y7fhERL4DaQaoo8hrpe+C+NVn8VNu7RIo5LUDjI74ucOPfbt/cqOCl8+qObsXcOF0Un3P0ihyaEHoYMcSjZjbjwcwZHv/EI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420150545.GB17661@paulmck-ThinkPad-P72>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af748047-704d-4f23-626b-08d7e54998af
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 16:40:54.8851
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 36C6ZxQ5nok7QRiBXOFNPZm/Gpr8EhCt1dOxvocr9+wvzkpcbc0WVgNhDcrxSMYuLM0eYL67WFMUmmuEy7zORw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-04-20 08:05:45, Paul E. McKenney wrote:
-> On Sun, Apr 19, 2020 at 09:37:10PM +0000, David Laight wrote:
-> > From: Petko Manolov
-> > > Sent: 19 April 2020 19:30
-> > > 
-> > > On 20-04-19 18:02:50, David Laight wrote:
-> > > > From: Petko Manolov
-> > > > > Sent: 19 April 2020 10:45
-> > > > > Recently I started reading up on KCSAN and at some point I ran into stuff like:
-> > > > >
-> > > > > WRITE_ONCE(ssp->srcu_lock_nesting[idx], ssp->srcu_lock_nesting[idx] + 1);
-> > > > > WRITE_ONCE(p->mm->numa_scan_seq, READ_ONCE(p->mm->numa_scan_seq) + 1);
-> > > >
-> > > > If all the accesses use READ/WRITE_ONCE() why not just mark the structure
-> > > > field 'volatile'?
-> > > 
-> > > This is a bit heavy.  I guess you've read this one:
-> > > 
-> > > 	https://lwn.net/Articles/233479/
-> > 
-> > I remember reading something similar before.
-> > I also remember a very old gcc (2.95?) that did a readback
-> > after every volatile write on sparc (to flush the store buffer).
-> > That broke everything.
-> > 
-> > I suspect there is a lot more code that is attempting to be lockless
-> > these days.
-> > Ring buffers (one writer and one reader) are a typical example where
-> > you don't need locks but do need to use a consistent value.
-> > 
-> > Now you may also need ordering between accesses - which I think needs
-> > more than volatile.
-> 
-> In Petko's patch, all needed ordering is supplied by the fact that it is the 
-> same variable being read and written.  But yes, in many other cases, more 
-> ordering is required.
+> From: Wei Liu <wei.liu@kernel.org>
+> Sent: Monday, April 20, 2020 5:08 AM
+>=20
+> I would suggest make this clear in the commit message to not give the
+> impression that Hyper-V has this weird behaviour of corrupting guest
+> memory for no reason.
+>=20
+> We can replace the paragraph starting with "The issue is: ..." with:
+>=20
+> ---
+> Linux needs to update Hyper-V the correct VP assist page to prevent
+> Hyper-V from writing to a stale page, which causes guest memory
+> corruption.  The memory corruption may have caused some of the hangs and
+> triple faults we saw during non-boot CPUs resume.
+> ---
+> This What do you think?
 
-There's pros and cons, as usual.  Yet another macro(s) versus sorter/more 
-readable code.  This is why i decided to spam the list (and Paul) - in search 
-for another opinion.
+This version is much better. I'll use it. Thanks, Wei!
 
-> > > And no, i am not sure all accesses are through READ/WRITE_ONCE().  If, for
-> > > example, all others are from withing spin_lock/unlock pairs then we _may_ not
-> > > need READ/WRITE_ONCE().
-> > 
-> > The cost of volatile accesses is probably minimal unless the
-> > code is written assuming the compiler will only access things once.
-> 
-> And there are variables marked as volatile, for example, jiffies.
-> 
-> But one downside of declaring variables volatile is that it can prevent KCSAN 
-> from spotting violations of the concurrency design for those variables.
-
-Which would be unfortunate.
-
-I just wish there was C type declaration that would force the compiler to do 
-what READ/WRITE_ONCE() does now, but i also know this is too naive... :)
-
-
-		Petko
-
-
-> > > I merely proposed the _INC() variant for better readability.
-> > 
-> > More like shorter code lines :-)
-> 
-> That too!  ;-)
-> 
-> 							Thanx, Paul
+I'll post a v2 with the updated comments. I'll document Vitaly's concern ab=
+out
+nested virtualization in the comment.
+=20
+Thanks,
+-- Dexuan
