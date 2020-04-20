@@ -2,52 +2,51 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B01C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26205C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D159206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00EEB206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386942;
-	bh=D+r3/ZPsZAPbTUAkTAu0VfQ1jRA/yMEXedkNJkr1pvQ=;
+	s=default; t=1587386947;
+	bh=+D3x2s+Z7D/GrNTZJwrMut2bSkQqoNcaX/Mc2+Fvc6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q9GP+4SiUVjJSpoxa9IpvPGp9+wNJNVlNpkImR2wlEE0emWHEoXhzUkyf3ufjo6E9
-	 ToH3ISVaVzKgTClqvjQ823m7QN90wf+d3Ez1mlEMBdbj/8S45QnVVUcLe3cx+SLlo0
-	 R3F5TqQTcDKHvGNKMZODkc16s+Ycu2suWM//sDbI=
+	b=YbNSE6tSlfYlsrUyOaC380s4mmrv50r8sInNksugupCSYJQaa71hoBBvS50WG+gCB
+	 fXUy0rBo/ZS8gOh9A0riKhszSxmfCFQXLaYxTKB8uYdotdH1zCv4tNOHvP4veZReV0
+	 kXu32v7o755IbZR2cw5ZCSvKku1IahG4RqNDttSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbgDTMtB (ORCPT
+        id S1729362AbgDTMtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:49:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45632 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729321AbgDTMsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:48:51 -0400
+        id S1729333AbgDTMs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8915B20736;
-        Mon, 20 Apr 2020 12:48:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FCD3206E9;
+        Mon, 20 Apr 2020 12:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386931;
-        bh=D+r3/ZPsZAPbTUAkTAu0VfQ1jRA/yMEXedkNJkr1pvQ=;
+        s=default; t=1587386935;
+        bh=+D3x2s+Z7D/GrNTZJwrMut2bSkQqoNcaX/Mc2+Fvc6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OmFKcZ7tHU0Nrx5bY/Tui2XZ9EPD/DEQea0gNZdPFLHaGLqRE9ICD1wFB70qjrGK8
-         Hov/1uB7ADLTYnDqlx9LtvcwipQTaU9/AiEBqvgP/nRzOfHVMXLiOQWkMvyhQBs6+/
-         VBn2zNKdaWsGC+t/773LSPVjcDfp8TGccERdzCIY=
+        b=dHDG+VcUS4R1imQUFexLSCmO5a1JSe6FyIkta/J6kziFRDNPFF3kkn3vlM4fkTVnM
+         TjA9+bqcJPfPlA+ghoxYvV4SWgn3MAIusc0j3et1ygsKBPKAlcm6pUu+o3Lj/wQUYH
+         Vi7JSULDrVm1Xxlqh+lZC78h6rbH0PEl/gBb3VtE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 25/40] usb: dwc3: gadget: dont enable interrupt when disabling endpoint
-Date:   Mon, 20 Apr 2020 14:39:35 +0200
-Message-Id: <20200420121501.489818182@linuxfoundation.org>
+        stable@vger.kernel.org, Sergei Lopatin <magist3r@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.19 27/40] drm/amd/powerplay: force the trim of the mclk dpm_levels if OD is enabled
+Date:   Mon, 20 Apr 2020 14:39:37 +0200
+Message-Id: <20200420121502.624916831@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
@@ -60,76 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c5353b225df9b2d0cf881873eef6f680e43c9aa2 ]
+From: Sergei Lopatin <magist3r@gmail.com>
 
-Since we're disabling the endpoint anyway, we don't worry about
-getting endpoint command completion interrupt.
+commit 8c7f0a44b4b4ef16df8f44fbaee6d1f5d1593c83 upstream.
 
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Should prevent flicker if PP_OVERDRIVE_MASK is set.
+
+bug: https://bugs.freedesktop.org/show_bug.cgi?id=102646
+bug: https://bugs.freedesktop.org/show_bug.cgi?id=108941
+bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1088
+bug: https://gitlab.freedesktop.org/drm/amd/-/issues/628
+
+Signed-off-by: Sergei Lopatin <magist3r@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/dwc3/gadget.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 7b8b463676ad6..019aee3a79568 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -688,12 +688,13 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *dep, unsigned int action)
- 	return 0;
- }
- 
--static void dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force);
-+static void dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force,
-+		bool interrupt);
- static void dwc3_remove_requests(struct dwc3 *dwc, struct dwc3_ep *dep)
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
+@@ -3788,9 +3788,12 @@ static int smu7_trim_single_dpm_states(s
  {
- 	struct dwc3_request		*req;
+ 	uint32_t i;
  
--	dwc3_stop_active_transfer(dep, true);
-+	dwc3_stop_active_transfer(dep, true, false);
- 
- 	/* - giveback all requests to gadget driver */
- 	while (!list_empty(&dep->started_list)) {
-@@ -1416,7 +1417,7 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
- 		}
- 		if (r == req) {
- 			/* wait until it is processed */
--			dwc3_stop_active_transfer(dep, true);
-+			dwc3_stop_active_transfer(dep, true, true);
- 
- 			if (!r->trb)
- 				goto out0;
-@@ -2366,7 +2367,7 @@ static void dwc3_gadget_endpoint_transfer_in_progress(struct dwc3_ep *dep,
- 	dwc3_gadget_ep_cleanup_completed_requests(dep, event, status);
- 
- 	if (stop) {
--		dwc3_stop_active_transfer(dep, true);
-+		dwc3_stop_active_transfer(dep, true, true);
- 		dep->flags = DWC3_EP_ENABLED;
- 	}
- 
-@@ -2488,7 +2489,8 @@ static void dwc3_reset_gadget(struct dwc3 *dwc)
- 	}
- }
- 
--static void dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force)
-+static void dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force,
-+	bool interrupt)
- {
- 	struct dwc3 *dwc = dep->dwc;
- 	struct dwc3_gadget_ep_cmd_params params;
-@@ -2532,7 +2534,7 @@ static void dwc3_stop_active_transfer(struct dwc3_ep *dep, bool force)
- 
- 	cmd = DWC3_DEPCMD_ENDTRANSFER;
- 	cmd |= force ? DWC3_DEPCMD_HIPRI_FORCERM : 0;
--	cmd |= DWC3_DEPCMD_CMDIOC;
-+	cmd |= interrupt ? DWC3_DEPCMD_CMDIOC : 0;
- 	cmd |= DWC3_DEPCMD_PARAM(dep->resource_index);
- 	memset(&params, 0, sizeof(params));
- 	ret = dwc3_send_gadget_ep_cmd(dep, cmd, &params);
--- 
-2.20.1
-
++	/* force the trim if mclk_switching is disabled to prevent flicker */
++	bool force_trim = (low_limit == high_limit);
+ 	for (i = 0; i < dpm_table->count; i++) {
+ 	/*skip the trim if od is enabled*/
+-		if (!hwmgr->od_enabled && (dpm_table->dpm_levels[i].value < low_limit
++		if ((!hwmgr->od_enabled || force_trim)
++			&& (dpm_table->dpm_levels[i].value < low_limit
+ 			|| dpm_table->dpm_levels[i].value > high_limit))
+ 			dpm_table->dpm_levels[i].enabled = false;
+ 		else
 
 
