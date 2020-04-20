@@ -2,105 +2,95 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A428C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D2BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47EB2206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:19:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WnsVyX2m"
+	by mail.kernel.org (Postfix) with ESMTP id 99C4B206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgDTPTQ (ORCPT
+        id S1726968AbgDTPTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:19:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgDTPTP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:19:15 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C99DBC061A0C;
-        Mon, 20 Apr 2020 08:19:15 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id ay1so4068190plb.0;
-        Mon, 20 Apr 2020 08:19:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=P2OEB7M0ylUcoE1wgndBCjI9OKWAQ2w0wOIcSTBkJC0=;
-        b=WnsVyX2mcf3PDNma6HPk6iHi19XrsshqairTcDIuOLhJzXuFEaKv6GRX8l4zFQ++4n
-         yH3nCdXSQ75S2X06tdW8XLmqIc7QzyaXIb1/0ro2W7jv9hIGEblQTj8LfpPp3YPPD2QU
-         wF03b/qjU1Q9x9ZstHzq2whZs1EYu+h76LDGMHPFzbo23S8vBn3rSd4ZUe3oahSbGLVJ
-         BEg7u3Vf9JKr8s8EUiK+yMQTJlhjzdSikwq1ybt90HRmptUoWm1xyzbzqAqTDI7p8NLr
-         +Brngh/Ti2JVvCFgmpiklzkrdfEOAubSUIPsQbdDgLAmSP4USivxeQn7wtkNEtI4kybT
-         HuRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P2OEB7M0ylUcoE1wgndBCjI9OKWAQ2w0wOIcSTBkJC0=;
-        b=IlQCqb48tCbFBctdqbLy+Jtu0wGwucpF8i3pM9Qt2FAgjq58Tlrb4QkhHzkkofZhI5
-         mv9+cPX76Yh8pGal8eZfCjmIGSPaC7kvfqckED60VQuvNYfV20gwt80OoMEBJti1cTs0
-         5x38d7R1T/OohwKH5hsMPxQzlFmhYOea+UPaT/8lbeK+8+e5nMdeqAErZzk+VT/LePsH
-         lqGfmYu2CdmgLSstnqxPJ9OOiJ201J0TEemHDyy8j9k0BBD0leJx+cRDHjLOlcGN7r/j
-         yidys1kngbLm0lL85VRl995UoGX86R9zFgAelxF2zHqrNPkFPsWVjyyDskSAajFdgZMI
-         wkTA==
-X-Gm-Message-State: AGi0Pua2PDCxGmdLoy2+k3kx0gm/apMONXjGuI/g/wwc9LDw90v61W8T
-        +V/jNuKh5QHTgq8TaMQNwNA=
-X-Google-Smtp-Source: APiQypLFwk9EBj0++4IlA6Ssc0Aau8vBJ3gw57Ph71HZTR6YzcO4A7JJNLdjenqSVkhVbrt1bXBgcg==
-X-Received: by 2002:a17:902:a985:: with SMTP id bh5mr7152210plb.163.1587395955364;
-        Mon, 20 Apr 2020 08:19:15 -0700 (PDT)
-Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id y21sm977980pfm.219.2020.04.20.08.19.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Apr 2020 08:19:14 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 23:19:11 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [net-next v2] can: ti_hecc: convert to
- devm_platform_ioremap_resource_byname()
-Message-ID: <20200420151911.GA2698@nuc8i5>
-References: <20200420132207.8536-1-zhengdejin5@gmail.com>
- <940fcaa1-8500-e534-2380-39419f1ac5a0@web.de>
- <20200420141921.GA10880@nuc8i5>
- <3fd53b73-87b3-b788-d984-cb1c719f9e7f@web.de>
+        Mon, 20 Apr 2020 11:19:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:50846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbgDTPTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:19:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E61B931B;
+        Mon, 20 Apr 2020 08:19:46 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78A373F73D;
+        Mon, 20 Apr 2020 08:19:44 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 16:19:42 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200420151941.47ualxul5seqwdgh@e107158-lin.cambridge.arm.com>
+References: <20200403123020.13897-1-qais.yousef@arm.com>
+ <20200414182152.GB20442@darkstar>
+ <54ac2709-54e5-7a33-a6af-0a07e272365c@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3fd53b73-87b3-b788-d984-cb1c719f9e7f@web.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <54ac2709-54e5-7a33-a6af-0a07e272365c@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 04:54:22PM +0200, Markus Elfring wrote:
-> >> Example:
-> >> bgmac_probe()
-> >> https://elixir.bootlin.com/linux/v5.7-rc2/source/drivers/net/ethernet/broadcom/bgmac-platform.c#L201
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/ethernet/broadcom/bgmac-platform.c?id=ae83d0b416db002fe95601e7f97f64b59514d936#n201
-> >>
-> > Markus, Thanks very much for your info, I will do it. Thanks again.
+On 04/20/20 10:24, Dietmar Eggemann wrote:
+> >> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> >> index ad5b88a53c5a..0272ae8c6147 100644
+> >> --- a/kernel/sysctl.c
+> >> +++ b/kernel/sysctl.c
+> >> @@ -465,6 +465,13 @@ static struct ctl_table kern_table[] = {
+> >>  		.mode		= 0644,
+> >>  		.proc_handler	= sysctl_sched_uclamp_handler,
+> >>  	},
+> >> +	{
+> >> +		.procname	= "sched_rt_default_util_clamp_min",
 > 
-> If you would use another script (like for the semantic patch language),
-> you could find remaining update candidates in a convenient way,
-> couldn't you?
->
-Markus, could you share the script? Thanks very much!
+> root@h960:~# find / -name "*util_clamp*"
+> /proc/sys/kernel/sched_rt_default_util_clamp_min
+> /proc/sys/kernel/sched_util_clamp_max
+> /proc/sys/kernel/sched_util_clamp_min
+> 
+> IMHO, keeping the common 'sched_util_clamp_' would be helpful here, e.g.
+> 
+> /proc/sys/kernel/sched_util_clamp_rt_default_min
 
-BR,
-Dejin
+All RT related knobs are prefixed with 'sched_rt'. I kept the 'util_clamp_min'
+coherent with the current sysctl (sched_util_clamp_min). Quentin suggested
+adding 'default' to be more obvious, so I ended up with
 
-> Regards,
-> Markus
+	'sched_rt' + '_default' + '_util_clamp_min'.
+
+I think this is the logical and most consistent form. Given that Patrick seems
+to be okay with the 'default' now, does this look good to you too?
+
+Thanks
+
+--
+Qais Yousef
