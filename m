@@ -2,163 +2,177 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F786C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6184DC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEE2F20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:11:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587413466;
-	bh=KLlWVaAqNkpR57zpuZ37ho0Y/eR5zLBukf7yTdX44Vc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zZp0bYv5dVyQmrB0vbADtUKCKyhsjoQl3rLoikpermEiOzJ6TgbJ9RKWeXy8iSwad
-	 GaYkmK35O+3pibOB6ef5iq+MXKz0tl+FR2sj20/tBla/p4k6rsNZzdBGaLjRQSvbB2
-	 SFluegg6cv5xm65kThLT/k5L8b1xQnxz2xogj+BQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3BFE520736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:13:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gfh+BBZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgDTULG (ORCPT
+        id S1726141AbgDTUN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:11:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgDTULF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:11:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D007820736;
-        Mon, 20 Apr 2020 20:11:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587413463;
-        bh=KLlWVaAqNkpR57zpuZ37ho0Y/eR5zLBukf7yTdX44Vc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v80VgvMhfFBBd0i7hOVtPAGu8wGHazDbzENqiH4/g1SHRqDbY8fA9nxNIAzJNpZsE
-         ouLoSvUSHSEkMTIF5OjNKZ5ofeEFVQwwVNwIzdqq7Vu8DW60oa5ttJgjGj4+RrmEKp
-         ZvMmHcF94i5x8g4Hv6qf6bzoQvJHYNIr53k423Z4=
-Date:   Mon, 20 Apr 2020 22:11:01 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] blktrace: add checks for created debugfs files
- on setup
-Message-ID: <20200420201101.GB302402@kroah.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-9-mcgrof@kernel.org>
- <38240225-e48e-3035-0baa-4929948b23a3@acm.org>
- <20200419230537.GG11244@42.do-not-panic.com>
- <c69b67d1-f887-600b-f3ab-54ab0b7dcb13@acm.org>
- <20200420114038.GE3906674@kroah.com>
- <20200420184445.GK11244@42.do-not-panic.com>
+        Mon, 20 Apr 2020 16:13:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgDTUN1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:13:27 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B63C061A0C;
+        Mon, 20 Apr 2020 13:13:27 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x4so1001161wmj.1;
+        Mon, 20 Apr 2020 13:13:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=50GodmMSF+/S56DVA0SDd9Nt430QjVwnoRMP+NIP1ok=;
+        b=Gfh+BBZSc0XjC1l4hVanmuubw5EgH0Mk1C0RbXkDG2NaSZ6y8XCv1q2yTGpiV+JtML
+         oZqr1B2uFAhRFtGeR7ZETZ0HsDm6yAXan4hlUApsOytfLBARmc4ifAUjthhiBYfyUgra
+         6YszwF42vOBjJTju2zUXIFK/sbuM8VgVmUel7uyuKPcV0sHspztE9cMFk22d0UfR+XOE
+         0GreJJQDAOlxdJDRjHbIu8IT+1S/6d9cEzqHwa2tEJj6t7Nsy/soeQruoSlrT42MNa+F
+         lNAAEvDI1/oQ5VR0u/S9XLG1FpPtrlp2F3mYoKhrqcrp9luCLkRAHnpSPAPLSfV7aopc
+         zU/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=50GodmMSF+/S56DVA0SDd9Nt430QjVwnoRMP+NIP1ok=;
+        b=oYik0LxvEWgDUrJNllJ3VSmEXe+edXU7c/tVcmsty1M59g5QAY3MV2MejMISXoWw2I
+         7CJRFWcP19+AbceRAbbOuNrv6okzimRsPDLljVmFNqCz/lnSkBNY/BUVRn8CRA0rSqZl
+         tGYHV+Iu0gLJvU4qyGeDj5tgU3ElZ4cIleTIVfuln/Roe0LnOha6SMyERtU9orLknGWv
+         4jrGdhX2QoMM9uFbCg1gnfUfznSNb3x0cePP4tqVKX4ZBVGhpDc6PSdqS8sjC75/JBRS
+         QLLcxxOefpUPheAX1k0bQ3q5CaswSZfEAaCfE0QV+aitE0hRW8r16BY83c/5y1/1UZI9
+         UTIA==
+X-Gm-Message-State: AGi0PubeDfQgFZ+CpLoDee6aSid1SeiMy18kKUqDkTB0P4lZhL3GG3wT
+        dhEbKz52x062K7YtiC8Otghr4fDp
+X-Google-Smtp-Source: APiQypIvbOh+sEKuPFiRTKb5adEJSAqAU8lg77/fX/rLiN9BgTqJ1xQ3ib1Q38ECKYXnep3DWJtXhQ==
+X-Received: by 2002:a1c:154:: with SMTP id 81mr1121695wmb.48.1587413605418;
+        Mon, 20 Apr 2020 13:13:25 -0700 (PDT)
+Received: from [192.168.43.25] ([109.126.129.227])
+        by smtp.gmail.com with ESMTPSA id 91sm803086wra.37.2020.04.20.13.13.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 13:13:24 -0700 (PDT)
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1587229607.git.asml.silence@gmail.com>
+ <28005ea0de63e15dbffd87a49fe9b671f1afa87e.1587229607.git.asml.silence@gmail.com>
+ <88cbde3c-52a1-7fb3-c4a7-b548beaa5502@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH 1/2] io_uring: trigger timeout after any sqe->off CQEs
+Message-ID: <f9c1492c-a0f6-c6ec-ec2e-82a5894060f6@gmail.com>
+Date:   Mon, 20 Apr 2020 23:12:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420184445.GK11244@42.do-not-panic.com>
+In-Reply-To: <88cbde3c-52a1-7fb3-c4a7-b548beaa5502@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 06:44:45PM +0000, Luis Chamberlain wrote:
-> On Mon, Apr 20, 2020 at 01:40:38PM +0200, Greg KH wrote:
-> > On Sun, Apr 19, 2020 at 04:17:46PM -0700, Bart Van Assche wrote:
-> > > On 4/19/20 4:05 PM, Luis Chamberlain wrote:
-> > > > On Sun, Apr 19, 2020 at 03:57:58PM -0700, Bart Van Assche wrote:
-> > > > > On 4/19/20 12:45 PM, Luis Chamberlain wrote:
-> > > > > > Even though debugfs can be disabled, enabling BLK_DEV_IO_TRACE will
-> > > > > > select DEBUG_FS, and blktrace exposes an API which userspace uses
-> > > > > > relying on certain files created in debugfs. If files are not created
-> > > > > > blktrace will not work correctly, so we do want to ensure that a
-> > > > > > blktrace setup creates these files properly, and otherwise inform
-> > > > > > userspace.
-> > > > > > 
-> > > > > > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> > > > > > ---
-> > > > > >    kernel/trace/blktrace.c | 8 +++++---
-> > > > > >    1 file changed, 5 insertions(+), 3 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> > > > > > index 9cc0153849c3..fc32a8665ce8 100644
-> > > > > > --- a/kernel/trace/blktrace.c
-> > > > > > +++ b/kernel/trace/blktrace.c
-> > > > > > @@ -552,17 +552,19 @@ static int blk_trace_create_debugfs_files(struct blk_user_trace_setup *buts,
-> > > > > >    					  struct dentry *dir,
-> > > > > >    					  struct blk_trace *bt)
-> > > > > >    {
-> > > > > > -	int ret = -EIO;
-> > > > > > -
-> > > > > >    	bt->dropped_file = debugfs_create_file("dropped", 0444, dir, bt,
-> > > > > >    					       &blk_dropped_fops);
-> > > > > > +	if (!bt->dropped_file)
-> > > > > > +		return -ENOMEM;
-> > > > > >    	bt->msg_file = debugfs_create_file("msg", 0222, dir, bt, &blk_msg_fops);
-> > > > > > +	if (!bt->msg_file)
-> > > > > > +		return -ENOMEM;
-> > > > > >    	bt->rchan = relay_open("trace", dir, buts->buf_size,
-> > > > > >    				buts->buf_nr, &blk_relay_callbacks, bt);
-> > > > > >    	if (!bt->rchan)
-> > > > > > -		return ret;
-> > > > > > +		return -EIO;
-> > > > > >    	return 0;
-> > > > > >    }
-> > > > > 
-> > > > > I should have had a look at this patch before I replied to the previous
-> > > > > patch.
-> > > > > 
-> > > > > Do you agree that the following code can be triggered by
-> > > > > debugfs_create_file() and also that debugfs_create_file() never returns
-> > > > > NULL?
-> > > > 
-> > > > If debugfs is enabled, and not that we know it is in this blktrace code,
-> > > > as we select it, it can return ERR_PTR(-ERROR) if an error occurs.
-> > > 
-> > > This is what I found in include/linux/debugfs.h in case debugfs is disabled:
-> > > 
-> > > static inline struct dentry *debugfs_create_file(const char *name,
-> > > 	umode_t mode, struct dentry *parent, void *data,
-> > > 	const struct file_operations *fops)
-> > > {
-> > > 	return ERR_PTR(-ENODEV);
-> > > }
-> > > 
-> > > I have not found any code path that can cause debugfs_create_file() to
-> > > return NULL. Did I perhaps overlook something? If not, it's not clear to me
-> > > why the above patch adds checks that check whether debugfs_create_file()
-> > > returns NULL?
-> > 
-> > Short answer, yes, it can return NULL.  Correct answer is, you don't
-> > care, don't check the value and don't do anything about it.  It's
-> > debugging code, userspace doesn't care, so just keep moving on.
+On 20/04/2020 22:40, Jens Axboe wrote:
+> On 4/18/20 11:20 AM, Pavel Begunkov wrote:
+>> +static void __io_flush_timeouts(struct io_ring_ctx *ctx)
+>> +{
+>> +	u32 end, start;
+>> +
+>> +	start = end = ctx->cached_cq_tail;
+>> +	do {
+>> +		struct io_kiocb *req = list_first_entry(&ctx->timeout_list,
+>> +							struct io_kiocb, list);
+>> +
+>> +		if (req->flags & REQ_F_TIMEOUT_NOSEQ)
+>> +			break;
+>> +		/*
+>> +		 * multiple timeouts may have the same target,
+>> +		 * check that @req is in [first_tail, cur_tail]
+>> +		 */
+>> +		if (!io_check_in_range(req->timeout.target_cq, start, end))
+>> +			break;
+>> +
+>> +		list_del_init(&req->list);
+>> +		io_kill_timeout(req);
+>> +		end = ctx->cached_cq_tail;
+>> +	} while (!list_empty(&ctx->timeout_list));
+>> +}
+>> +
+>>  static void io_commit_cqring(struct io_ring_ctx *ctx)
+>>  {
+>>  	struct io_kiocb *req;
+>>  
+>> -	while ((req = io_get_timeout_req(ctx)) != NULL)
+>> -		io_kill_timeout(req);
+>> +	if (!list_empty(&ctx->timeout_list))
+>> +		__io_flush_timeouts(ctx);
+>>  
+>>  	__io_commit_cqring(ctx);
+>>  
 > 
-> Thing is this code *exposes* knobs to userspace for an API that *does*
-> exepect those files to exist. That is, blktrace *relies* on these
-> debugfs files to exist. So the kconfig which enables blktrace
-> CONFIG_BLK_DEV_IO_TRACE selects DEBUG_FS.
-
-That's nice, but again, no kernel code should do anything different
-depending on what debugfs happens to be doing at that point in time.
-
-> So typically we don't care if these files were created or not on regular
-> drivers, but in this case this code is only compiled when debugfs is
-> enabled and CONFIG_BLK_DEV_IO_TRACE, and the userspace interaction with
-> debugfs *expects* these files.
+> Any chance we can do this without having to iterate timeouts on the
+> completion path?
 > 
-> So what do you recommend?
 
-Make sure that userspace can handle the files not being there and keep
-on working properly if they aren't.
+If you mean the one in __io_flush_timeouts(), then no, unless we forbid timeouts
+with identical target sequences + some extra constraints. The loop there is not
+new, it iterates only over timeouts, that need to be completed, and removes
+them. That's amortised O(1).
 
-As you can't "recover" from debugfs failing, there's no need to check
-anything with it.
+On the other hand, there was a loop in io_timeout_fn() doing in total O(n^2),
+and it was killed by this patch.
 
-thanks,
-
-greg k-h
+-- 
+Pavel Begunkov
