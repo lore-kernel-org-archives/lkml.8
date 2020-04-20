@@ -7,124 +7,164 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B853C54FD0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAF4C55183
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA37920B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E8B20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1587416107;
-	bh=3Rft6Xo+yUX9yKXCCAXSFprstMdX0LEXPTtKv5UxrqM=;
+	bh=H4fKPJC7a8FQVdCvH42mXPtQtvuC51YO1hw2BLffYvM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FKcvtQ9PczmhqbtqZq8v31oIusEPmNIAltLGYrj460CmLwR0bi/ojAepplPKwHvQz
-	 2LrYHiTATQXIS0A1WI4RkwhXiQFwmifd3EdBkv3wxR7IkrPYxyVXJ01koc+jqnYYVq
-	 hGuM+ytvZoIzlVh1kXlikFae2YGDv/sTm9XBA1Aw=
+	b=ciyGgtOZTERrQCloOZfWHtjSRYdjAR3PYKk1nalmOHskFFvPQ3O2nuAtjTd/D6Nk8
+	 QMZQQlGkIlDkaH1pqDCX1I3QS0Uhw5G9VQtvcYjTN8t1HOxG5dWRL+X+lolxFgLCwL
+	 0qknRyJmfrzqKrR2HSOnwmwfp/DHhbPv6FotctQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgDTUzG (ORCPT
+        id S1726958AbgDTUzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 20 Apr 2020 16:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgDTUzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33866 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgDTUzF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 16:55:05 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B098206E9;
-        Mon, 20 Apr 2020 20:55:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587416104;
-        bh=3Rft6Xo+yUX9yKXCCAXSFprstMdX0LEXPTtKv5UxrqM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DCVwMIiUex03OuMbSo1VvNRl1hdp13/WfOl0GKswvu3nBoHT1SxNaGZ63K5poBEwk
-         CFbl2CKaxWkijsFgfx/uGBWozQbk3I0p+2+rK4tOQqAlDXzMS8o2pN72/mp7qypVK0
-         tGiUnz4ZcN/2NHsEiBMou/2dPAI+MKqgJ89DTi4A=
-Date:   Mon, 20 Apr 2020 21:54:58 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] arm64: entry: Enable random_kstack_offset support
-Message-ID: <20200420205458.GC29998@willie-the-truck>
-References: <20200324203231.64324-1-keescook@chromium.org>
- <20200324203231.64324-6-keescook@chromium.org>
+Received: by mail-ot1-f67.google.com with SMTP id 72so2960085otu.1;
+        Mon, 20 Apr 2020 13:55:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SuLiy9O603fJsU9Y2oKFeKGMVODig0KjDhSjaCiHNa8=;
+        b=WhCJ8pcABlLEKUNZk7E8YfATA7o+GYggiTycEZT4xlDgngsah3X7lTn/Uf6ZAyBvOB
+         r4fJfcIbGur4j316IkkHwK5UuTt4hxFye160G74e69Fdmxa76/c/sh+74Jb9sAXMH/q3
+         qsHa6V++xB9V1moKDH6pxK2gMQroFg3zqBpE/SaocuObsx60xn7E0A6V/wP+7umziqf1
+         8gKk0Swz0a8p8AXdZJ038XuqvR3u+6JPKMizho4WppoMkQgJAc4t9G3WcFKO+/M7PJ9R
+         rZKoLV/4O+kdiHIAl30HnUZv8mNAqUxoB9nC8p6ZkX+nt7yUXR+PgPUmHPOqt2mMMvia
+         ReaQ==
+X-Gm-Message-State: AGi0Pua3Mp+/3xb91BZ/KHggbVOUeGtIQMmlZSxWa76/DhUKRyCH8AhF
+        LCCb1Cmvx3Sbp0dkhbRbJQ==
+X-Google-Smtp-Source: APiQypKFw9XGmecKrAg/GYm6XBHSYat8kdqmIQFBqp92H0KedWfnamv/I/tFokx6VuauGuLaCQcpuw==
+X-Received: by 2002:a05:6830:13d4:: with SMTP id e20mr2495510otq.66.1587416103049;
+        Mon, 20 Apr 2020 13:55:03 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n38sm201485otn.26.2020.04.20.13.55.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 13:55:02 -0700 (PDT)
+Received: (nullmailer pid 12892 invoked by uid 1000);
+        Mon, 20 Apr 2020 20:55:01 -0000
+Date:   Mon, 20 Apr 2020 15:55:01 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 2/3] dt-bindings: regulator: Add document bindings for
+ max77826
+Message-ID: <20200420205501.GA6828@bogus>
+References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+ <20200413164440.1138178-3-iskren.chernev@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324203231.64324-6-keescook@chromium.org>
+In-Reply-To: <20200413164440.1138178-3-iskren.chernev@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 01:32:31PM -0700, Kees Cook wrote:
-> Allow for a randomized stack offset on a per-syscall basis, with roughly
-> 5 bits of entropy.
+On Mon, Apr 13, 2020 at 07:44:39PM +0300, Iskren Chernev wrote:
+> Add device tree binding information for max77826 regulator driver.
+> Example bindings for max77826 are added.
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
 > ---
->  arch/arm64/Kconfig          |  1 +
->  arch/arm64/kernel/syscall.c | 10 ++++++++++
->  2 files changed, 11 insertions(+)
+>  .../bindings/regulator/maxim,max77826.yaml    | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 0b30e884e088..4d5aa4959f72 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -127,6 +127,7 @@ config ARM64
->  	select HAVE_ARCH_MMAP_RND_BITS
->  	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
->  	select HAVE_ARCH_PREL32_RELOCATIONS
-> +	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
->  	select HAVE_ARCH_SECCOMP_FILTER
->  	select HAVE_ARCH_STACKLEAK
->  	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
-> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-> index a12c0c88d345..238dbd753b44 100644
-> --- a/arch/arm64/kernel/syscall.c
-> +++ b/arch/arm64/kernel/syscall.c
-> @@ -5,6 +5,7 @@
->  #include <linux/errno.h>
->  #include <linux/nospec.h>
->  #include <linux/ptrace.h>
-> +#include <linux/randomize_kstack.h>
->  #include <linux/syscalls.h>
->  
->  #include <asm/daifflags.h>
-> @@ -42,6 +43,8 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
->  {
->  	long ret;
->  
-> +	add_random_kstack_offset();
+> diff --git a/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml b/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
+> new file mode 100644
+> index 000000000000..3cd449a746b0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/maxim,max77826.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  	if (scno < sc_nr) {
->  		syscall_fn_t syscall_fn;
->  		syscall_fn = syscall_table[array_index_nospec(scno, sc_nr)];
-> @@ -51,6 +54,13 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
->  	}
->  
->  	regs->regs[0] = ret;
+> +title: Maxim Integrated MAX77826 PMIC
 > +
-> +	/*
-> +	 * Since the compiler chooses a 4 bit alignment for the stack,
-> +	 * let's save one additional bit (9 total), which gets us up
-> +	 * near 5 bits of entropy.
-> +	 */
-> +	choose_random_kstack_offset(get_random_int() & 0x1FF);
+> +maintainers:
+> +  - Iskren Chernev <iskren.chernev@gmail.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "pmic@[0-9a-f]{1,2}"
+> +  compatible:
+> +    enum:
+> +      - maxim,max77826-regulator
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  regulators:
+> +    type: object
+> +    allOf:
+> +      - $ref: regulator.yaml#
+> +    description: |
+> +      list of regulators provided by this controller, must be named
+> +      after their hardware counterparts LDO[1-15], BUCK and BUCKBOOST
+> +
+> +    patternProperties:
+> +      "^LDO([1-9]|1[0-5])$":
+> +        type: object
+> +        allOf:
+> +          - $ref: regulator.yaml#
+> +
+> +      "^BUCK|BUCKBOOST$":
+> +        type: object
+> +        allOf:
+> +          - $ref: regulator.yaml#
+> +
+> +      additionalProperties: false
 
-Hmm, this comment doesn't make any sense to me. I mean, I get that 0x1ff
-is 9 bits, and that is 4+5 but so what?
+You are defining a property called 'additionalProperties'. This one 
+should be dropped because additionalProperties doesn't work with a $ref.
 
-Will
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - regulators
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@69 {
+> +            compatible = "maxim,max77826-regulator";
+> +            reg = <0x69>;
+> +
+> +            regulators {
+> +                LDO2 {
+> +                    regulator-name = "ldo2";
+> +                    regulator-min-microvolt = <650000>;
+> +                    regulator-max-microvolt = <3587500>;
+> +                };
+> +            };
+> +       };
+> +     };
+> +...
+> -- 
+> 2.26.0
+> 
