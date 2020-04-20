@@ -2,97 +2,136 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAB8C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D99C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49C69206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5F120857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:00:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lQQHFOMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730047AbgDTO7Y (ORCPT
+        id S1728813AbgDTPAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:59:24 -0400
-Received: from mga03.intel.com ([134.134.136.65]:57430 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgDTO7Y (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:59:24 -0400
-IronPort-SDR: dmT73muuylOQ63d8se5teCMIGWiSZ9ZuJGH5VzA2e8YPKtoF2TaeiPwm8ekesgvPZQg+MQ7Jre
- PQJOX1+IF3jg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 07:59:23 -0700
-IronPort-SDR: XXK4GdzGXmrZi3l65EHShU54lESBk2xeuIS2plT+u330zClWH9A7Ks+6EFKlXps2OeJYZgezP9
- Crk8u1y7RlYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="scan'208";a="245392876"
-Received: from minliu1-mobl2.ccr.corp.intel.com (HELO [10.254.214.219]) ([10.254.214.219])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Apr 2020 07:59:19 -0700
-Subject: Re: [PATCH] perf stat: Improve runtime stat for interval mode
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200417005154.9024-1-yao.jin@linux.intel.com>
- <20200420091906.GG718574@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <84bc1330-dbcb-ea13-e1f6-db0fef214003@linux.intel.com>
-Date:   Mon, 20 Apr 2020 22:59:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 11:00:49 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:2504 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726615AbgDTPAs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:00:48 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KEwrKp027524;
+        Mon, 20 Apr 2020 17:00:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=LFbHXDYgAgs4Hcvg9/e01AWVNn3apQsBjy+Cy3nDA1c=;
+ b=lQQHFOMVMl7wYS2G9F1hLw0BI8eTx7z/+q3B3DFceEmfVXoYNKCRiGz/g/s7PYkAhuNq
+ /Dv+nZY5so2PnL6/7aTWG6oxfcEEE8kPCtRe2SrwAKWkN66hWunDWk/yyI76EkTuQFcw
+ Y8sACQw6lSJFXf8BCMP6/ERG57Bo59GOGXrHJZMe7oALD7p7K4CgSRUUa5l6W+G6cdZg
+ 3nCe5DZGqLokDoxzaMBIV6QNHgszki0ZtXt65SluBOoaYVzXveUgRfyMTvGm9vM7XaUt
+ BJjvn/VjhAoiTPWDK5acwgfEH0HT6B0khFYHu29sxxdWoi3MTmLuVoi41iXH5ThwjcAt gA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30fqaw2vn8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 17:00:35 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C2EB610002A;
+        Mon, 20 Apr 2020 17:00:34 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B52292AA282;
+        Mon, 20 Apr 2020 17:00:34 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Apr
+ 2020 17:00:34 +0200
+Date:   Mon, 20 Apr 2020 17:00:29 +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <pierre-yves.mordret@st.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 2/2] i2c: i2c-stm32f7: allows for any bus frequency
+Message-ID: <20200420150029.GA6945@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>, robh+dt@kernel.org,
+        mark.rutland@arm.com, pierre-yves.mordret@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+References: <1585226661-26262-1-git-send-email-alain.volmat@st.com>
+ <1585226661-26262-3-git-send-email-alain.volmat@st.com>
+ <20200415110916.GO1141@ninjato>
 MIME-Version: 1.0
-In-Reply-To: <20200420091906.GG718574@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200415110916.GO1141@ninjato>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_05:2020-04-20,2020-04-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+Hi Wolfram,
 
-On 4/20/2020 5:19 PM, Jiri Olsa wrote:
-> On Fri, Apr 17, 2020 at 08:51:54AM +0800, Jin Yao wrote:
+On Wed, Apr 15, 2020 at 01:09:16PM +0200, Wolfram Sang wrote:
+> Hi Alain,
 > 
-> SNIP
+> On Thu, Mar 26, 2020 at 01:44:21PM +0100, Alain Volmat wrote:
+> > Do not limitate to the 3 (100KHz, 400KHz, 1MHz) bus frequency but
+> > instead allows any frequency (if it matches timing requirements).
+> > Depending on the requested frequency, use the spec data from either
+> > Standard, Fast or Fast Plus mode.
+> > 
+> > Hardcoding of min/max bus frequencies is removed and is instead computed.
+> > 
+> > The driver do not use anymore speed identifier but instead handle
+> > directly the frequency and figure out the spec data (necessary
+> > for the computation of the timing register) based on the frequency.
 > 
->> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->> index ec053dc1e35c..d5c326ff46d0 100644
->> --- a/tools/perf/builtin-stat.c
->> +++ b/tools/perf/builtin-stat.c
->> @@ -359,6 +359,7 @@ static void process_interval(void)
->>   	clock_gettime(CLOCK_MONOTONIC, &ts);
->>   	diff_timespec(&rs, &ts, &ref_time);
->>   
->> +	perf_stat__reset_rt_stat();
+> Useful improvement!
 > 
-> could you use just existing:
+> > +static struct stm32f7_i2c_spec *get_specs(u32 rate)
 > 
-> 	perf_stat__reset_shadow_per_stat(&rt_stat)
-> 
-> or perhaps event perf_stat__reset_shadow_stats, given
-> that we init walltime_nsecs_stats just few lines below
-> 
-> jirka
->
+> This is quite a generic namespace. Can we prefix stm32f7_<sth> here?
 
-Yes, I can use the existing function to reset rt_stat, I don't need to 
-define a new one.
+Done in v3
 
-Posted v2 yet.
-
-Thanks
-Jin Yao
-
->>   	read_counters(&rs);
->>   
->>   	if (STAT_RECORD) {
 > 
-> SNIP
+> > +		if (rate <= i2c_specs[i].rate)
+> > +			return &i2c_specs[i];
 > 
+> Same for i2c_specs here?
+
+Done in v3
+
+> 
+> > +static u32 get_lower_rate(u32 rate)
+> 
+> Here, too.
+
+Done in v3
+> 
+> Rest looks good to me.
+> 
+> Regards,
+> 
+>    Wolfram
+> 
+
+Regards,
+Alain
+
+
