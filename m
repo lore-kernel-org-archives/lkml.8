@@ -2,325 +2,130 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD842C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FABC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B28A1206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 119EE206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587386718;
+	bh=cl3Wc5b4Ov99KYv9DZbIOVytmV0JrM/M92OF8LxKvL8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0UNpjurVjzRgewET0BHWAbw9h6I3avycG9WfCfVPEjBYH4oUzzf73b++XvQp22lvf
+	 yn0vZrFmzkl7dk8duLath02aSdr0OqJYMaOQEZ50uG4zSCFiiV5L4ATMbJnDxSg68P
+	 r3QtxFVyp4DRJNm9zHV/rOIQydFnwMFhQWjfyn70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgDTMpO (ORCPT
+        id S1728704AbgDTMpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Apr 2020 08:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728694AbgDTMpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 08:45:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11802 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727976AbgDTMpM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:12 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCXZxA024125;
-        Mon, 20 Apr 2020 08:44:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gfeab93y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:44:58 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCXf42024754;
-        Mon, 20 Apr 2020 08:44:58 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gfeab93h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:44:58 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCeU2n025215;
-        Mon, 20 Apr 2020 12:44:57 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma03dal.us.ibm.com with ESMTP id 30fs66cpgw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 12:44:57 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCitQ161735412
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 12:44:55 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9EDF9136055;
-        Mon, 20 Apr 2020 12:44:55 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 350BA136051;
-        Mon, 20 Apr 2020 12:44:51 +0000 (GMT)
-Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 12:44:50 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
-        kirill@shutemov.name,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Ram Pai <linuxram@linux.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>
-Subject: [PATCH v3 02/22] powerpc/pkeys: Check vma before returning key fault error to the user
-Date:   Mon, 20 Apr 2020 18:14:14 +0530
-Message-Id: <20200420124434.47330-3-aneesh.kumar@linux.ibm.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
-References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68D81206DD;
+        Mon, 20 Apr 2020 12:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587386713;
+        bh=cl3Wc5b4Ov99KYv9DZbIOVytmV0JrM/M92OF8LxKvL8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R8wQKVrKB5iHvPR9n6nTeYIj9EEZ5/XG0lQU8w0DbK07vjnwO5XPOH+7Gk+eOds2O
+         8+E6v37kIjaFQbpv9tNyfFKofrWnEGyBql42iVIxlgv+oFaW0RNP6i/TSO8Qn/MqwM
+         vf7mWqPYBWT/wKAbY3kQn2lF0cpZjWdLerwI6BOw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 5.6 69/71] x86/resctrl: Fix invalid attempt at removing the default resource group
+Date:   Mon, 20 Apr 2020 14:39:23 +0200
+Message-Id: <20200420121522.593903305@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
+References: <20200420121508.491252919@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_04:2020-04-20,2020-04-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 adultscore=0 lowpriorityscore=0 mlxlogscore=999
- spamscore=0 phishscore=0 malwarescore=0 bulkscore=0 impostorscore=0
- suspectscore=2 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If multiple threads in userspace keep changing the protection keys
-mapping a range, there can be a scenario where kernel takes a key fault
-but the pkey value found in the siginfo struct is a permissive one.
+From: Reinette Chatre <reinette.chatre@intel.com>
 
-This can confuse the userspace as shown in the below test case.
+commit b0151da52a6d4f3951ea24c083e7a95977621436 upstream.
 
-/* use this to control the number of test iterations */
+The default resource group ("rdtgroup_default") is associated with the
+root of the resctrl filesystem and should never be removed. New resource
+groups can be created as subdirectories of the resctrl filesystem and
+they can be removed from user space.
 
-static void pkeyreg_set(int pkey, unsigned long rights)
-{
-	unsigned long reg, shift;
+There exists a safeguard in the directory removal code
+(rdtgroup_rmdir()) that ensures that only subdirectories can be removed
+by testing that the directory to be removed has to be a child of the
+root directory.
 
-	shift = (NR_PKEYS - pkey - 1) * PKEY_BITS_PER_PKEY;
-	asm volatile("mfspr	%0, 0xd" : "=r"(reg));
-	reg &= ~(((unsigned long) PKEY_BITS_MASK) << shift);
-	reg |= (rights & PKEY_BITS_MASK) << shift;
-	asm volatile("mtspr	0xd, %0" : : "r"(reg));
-}
+A possible deadlock was recently fixed with
 
-static unsigned long pkeyreg_get(void)
-{
-	unsigned long reg;
+  334b0f4e9b1b ("x86/resctrl: Fix a deadlock due to inaccurate reference").
 
-	asm volatile("mfspr	%0, 0xd" : "=r"(reg));
-	return reg;
-}
+This fix involved associating the private data of the "mon_groups"
+and "mon_data" directories to the resource group to which they belong
+instead of NULL as before. A consequence of this change was that
+the original safeguard code preventing removal of "mon_groups" and
+"mon_data" found in the root directory failed resulting in attempts to
+remove the default resource group that ends in a BUG:
 
-static int sys_pkey_mprotect(void *addr, size_t len, int prot, int pkey)
-{
-	return syscall(SYS_pkey_mprotect, addr, len, prot, pkey);
-}
+  kernel BUG at mm/slub.c:3969!
+  invalid opcode: 0000 [#1] SMP PTI
 
-static int sys_pkey_alloc(unsigned long flags, unsigned long access_rights)
-{
-	return syscall(SYS_pkey_alloc, flags, access_rights);
-}
+  Call Trace:
+  rdtgroup_rmdir+0x16b/0x2c0
+  kernfs_iop_rmdir+0x5c/0x90
+  vfs_rmdir+0x7a/0x160
+  do_rmdir+0x17d/0x1e0
+  do_syscall_64+0x55/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-static int sys_pkey_free(int pkey)
-{
-	return syscall(SYS_pkey_free, pkey);
-}
+Fix this by improving the directory removal safeguard to ensure that
+subdirectories of the resctrl root directory can only be removed if they
+are a child of the resctrl filesystem's root _and_ not associated with
+the default resource group.
 
-static int faulting_pkey;
-static int permissive_pkey;
-static pthread_barrier_t pkey_set_barrier;
-static pthread_barrier_t mprotect_barrier;
+Fixes: 334b0f4e9b1b ("x86/resctrl: Fix a deadlock due to inaccurate reference")
+Reported-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/884cbe1773496b5dbec1b6bd11bb50cffa83603d.1584461853.git.reinette.chatre@intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-static void pkey_handle_fault(int signum, siginfo_t *sinfo, void *ctx)
-{
-	unsigned long pkeyreg;
-
-	/* FIXME: printf is not signal-safe but for the current purpose,
-	          it gets the job done. */
-	printf("pkey: exp = %d, got = %d\n", faulting_pkey, sinfo->si_pkey);
-	fflush(stdout);
-
-	assert(sinfo->si_code == SEGV_PKUERR);
-	assert(sinfo->si_pkey == faulting_pkey);
-
-	/* clear pkey permissions to let the faulting instruction continue */
-	pkeyreg_set(faulting_pkey, 0x0);
-}
-
-static void *do_mprotect_fault(void *p)
-{
-	unsigned long rights, pkeyreg, pgsize;
-	unsigned int i;
-	void *region;
-	int pkey;
-
-	srand(time(NULL));
-	pgsize = sysconf(_SC_PAGESIZE);
-	rights = PKEY_DISABLE_WRITE;
-	region = p;
-
-	/* allocate key, no permissions */
-	assert((pkey = sys_pkey_alloc(0, PKEY_DISABLE_ACCESS)) > 0);
-	pkeyreg_set(4, 0x0);
-
-	/* cache the pkey here as the faulting pkey for future reference
-	   in the signal handler */
-	faulting_pkey = pkey;
-	printf("%s: faulting pkey = %d\n", __func__, faulting_pkey);
-
-	/* try to allocate, mprotect and free pkeys repeatedly */
-	for (i = 0; i < NUM_ITERATIONS; i++) {
-		/* sync up with the other thread here */
-		pthread_barrier_wait(&pkey_set_barrier);
-
-		/* make sure that the pkey used by the non-faulting thread
-		   is made permissive for this thread's context too so that
-		   no faults are triggered because it still might have been
-		   set to a restrictive value */
-//		pkeyreg_set(permissive_pkey, 0x0);
-
-		/* sync up with the other thread here */
-		pthread_barrier_wait(&mprotect_barrier);
-
-		/* perform mprotect */
-		assert(!sys_pkey_mprotect(region, pgsize, PROT_READ | PROT_WRITE, pkey));
-
-		/* choose a random byte from the protected region and
-		   attempt to write to it, this will generate a fault */
-		*((char *) region + (rand() % pgsize)) = rand();
-
-		/* restore pkey permissions as the signal handler may have
-		   cleared the bit out for the sake of continuing */
-		pkeyreg_set(pkey, PKEY_DISABLE_WRITE);
-	}
-
-	/* free pkey */
-	sys_pkey_free(pkey);
-
-	return NULL;
-}
-
-static void *do_mprotect_nofault(void *p)
-{
-	unsigned long pgsize;
-	unsigned int i, j;
-	void *region;
-	int pkey;
-
-	pgsize = sysconf(_SC_PAGESIZE);
-	region = p;
-
-	/* try to allocate, mprotect and free pkeys repeatedly */
-	for (i = 0; i < NUM_ITERATIONS; i++) {
-		/* allocate pkey, all permissions */
-		assert((pkey = sys_pkey_alloc(0, 0)) > 0);
-		permissive_pkey = pkey;
-
-		/* sync up with the other thread here */
-		pthread_barrier_wait(&pkey_set_barrier);
-		pthread_barrier_wait(&mprotect_barrier);
-
-		/* perform mprotect on the common page, no faults will
-		   be triggered as this is most permissive */
-		assert(!sys_pkey_mprotect(region, pgsize, PROT_READ | PROT_WRITE, pkey));
-
-		/* free pkey */
-		assert(!sys_pkey_free(pkey));
-	}
-
-	return NULL;
-}
-
-int main(int argc, char **argv)
-{
-	pthread_t fault_thread, nofault_thread;
-	unsigned long pgsize;
-	struct sigaction act;
-	pthread_attr_t attr;
-	cpu_set_t fault_cpuset, nofault_cpuset;
-	unsigned int i;
-	void *region;
-
-	/* allocate memory region to protect */
-	pgsize = sysconf(_SC_PAGESIZE);
-	assert(region = memalign(pgsize, pgsize));
-
-	CPU_ZERO(&fault_cpuset);
-	CPU_SET(0, &fault_cpuset);
-	CPU_ZERO(&nofault_cpuset);
-	CPU_SET(8, &nofault_cpuset);
-	assert(!pthread_attr_init(&attr));
-
-	/* setup sigsegv signal handler */
-	act.sa_handler = 0;
-	act.sa_sigaction = pkey_handle_fault;
-	assert(!sigprocmask(SIG_SETMASK, 0, &act.sa_mask));
-	act.sa_flags = SA_SIGINFO;
-	act.sa_restorer = 0;
-	assert(!sigaction(SIGSEGV, &act, NULL));
-
-	/* setup barrier for the two threads */
-	pthread_barrier_init(&pkey_set_barrier, NULL, 2);
-	pthread_barrier_init(&mprotect_barrier, NULL, 2);
-
-	/* setup and start threads */
-	assert(!pthread_create(&fault_thread, &attr, &do_mprotect_fault, region));
-	assert(!pthread_setaffinity_np(fault_thread, sizeof(cpu_set_t), &fault_cpuset));
-	assert(!pthread_create(&nofault_thread, &attr, &do_mprotect_nofault, region));
-	assert(!pthread_setaffinity_np(nofault_thread, sizeof(cpu_set_t), &nofault_cpuset));
-
-	/* cleanup */
-	assert(!pthread_attr_destroy(&attr));
-	assert(!pthread_join(fault_thread, NULL));
-	assert(!pthread_join(nofault_thread, NULL));
-	assert(!pthread_barrier_destroy(&pkey_set_barrier));
-	assert(!pthread_barrier_destroy(&mprotect_barrier));
-	free(region);
-
-	puts("PASS");
-
-	return EXIT_SUCCESS;
-}
-
-The above test can result the below failure without this patch.
-
-pkey: exp = 3, got = 3
-pkey: exp = 3, got = 4
-a.out: pkey-siginfo-race.c:100: pkey_handle_fault: Assertion `sinfo->si_pkey == faulting_pkey' failed.
-Aborted
-
-Check for vma access before considering this a key fault. If vma pkey allow
-access retry the acess again.
-
-Test case is written by Sandipan Das <sandipan@linux.ibm.com> hence added SOB
-from him.
-
-Cc: Ram Pai <linuxram@linux.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
- arch/powerpc/mm/fault.c | 8 --------
- 1 file changed, 8 deletions(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index 8e529e4708e1..44457bae77a0 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -319,14 +319,6 @@ static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
- static bool access_pkey_error(bool is_write, bool is_exec, bool is_pkey,
- 			      struct vm_area_struct *vma)
- {
--	/*
--	 * Read or write was blocked by protection keys.  This is
--	 * always an unconditional error and can never result in
--	 * a follow-up action to resolve the fault, like a COW.
--	 */
--	if (is_pkey)
--		return true;
--
- 	/*
- 	 * Make sure to check the VMA so that we do not perform
- 	 * faults just to hit a pkey fault as soon as we fill in a
--- 
-2.25.3
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -3085,7 +3085,8 @@ static int rdtgroup_rmdir(struct kernfs_
+ 	 * If the rdtgroup is a mon group and parent directory
+ 	 * is a valid "mon_groups" directory, remove the mon group.
+ 	 */
+-	if (rdtgrp->type == RDTCTRL_GROUP && parent_kn == rdtgroup_default.kn) {
++	if (rdtgrp->type == RDTCTRL_GROUP && parent_kn == rdtgroup_default.kn &&
++	    rdtgrp != &rdtgroup_default) {
+ 		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP ||
+ 		    rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED) {
+ 			ret = rdtgroup_ctrl_remove(kn, rdtgrp);
+
 
