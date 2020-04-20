@@ -2,107 +2,149 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5D5C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26823C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCF72078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C022145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULkgTSO7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="st0iZapP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgDTHfz (ORCPT
+        id S1726141AbgDTHgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:35:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46427 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726055AbgDTHfv (ORCPT
+        Mon, 20 Apr 2020 03:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726006AbgDTHgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:35:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587368150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ddEryRA8fru8sR3cTZfHtReHkDM3BB1oRAtqx9hNvis=;
-        b=ULkgTSO7Zit4YIa/TepJ8PX8CtxFbCCWSCexscJs8ppY40n50f9CH+PFBgkxZcozymRr30
-        CB6Pg4m5nZgEuAHtSG7xD3j65+nwq40llotAIXrFsXBgnTs4hIyRY1IOJbArPW8kPF3XSK
-        rp/a0lL2e2cet3Jg6YCSpvqJkMo7We0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-77-0FRc6vd3N_eWC6A3SdG2Nw-1; Mon, 20 Apr 2020 03:35:47 -0400
-X-MC-Unique: 0FRc6vd3N_eWC6A3SdG2Nw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27C56149C5;
-        Mon, 20 Apr 2020 07:35:46 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.40.194.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F8D760C63;
-        Mon, 20 Apr 2020 07:35:39 +0000 (UTC)
-Subject: Re: [dm-devel] [PATCH 0/3] dm raid/raid1: enable discard support when
- any devices support discard
-To:     dm-devel@redhat.com
-Cc:     Paul Wise <pabs3@bonedaddy.net>, Mike Snitzer <snitzer@redhat.com>,
-        linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>
-References: <20200419073026.197967-1-pabs3@bonedaddy.net>
- <20200419131908.GA22398@redhat.com>
- <9cb6a39a43178be29af2f47a92c2e84754b62b69.camel@bonedaddy.net>
-From:   Ondrej Kozina <okozina@redhat.com>
-Message-ID: <6bbf9d94-2fbb-f96f-ea85-a480ba109c55@redhat.com>
-Date:   Mon, 20 Apr 2020 09:35:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 03:36:43 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E0B9C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:36:43 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id y24so10150627wma.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Mb0X0VbhAnhVtMeOXLuQ8HsuJ6uYYtL6iIOac3n0PJU=;
+        b=st0iZapP+zDcsQ4UrQb7rcM/hsGHFlairhxjzCU+eWwjjuseXuqjJPI+WXPiBeW+Ul
+         493WUgOLbd3mEM16Cz06eaR8/6bMoVqw5mTtKi8z4TMnE1oxQVpLJVVt+gfkQ+awZtBz
+         Llr3jJX2BwEJq6rwnMOXeZHh0HD0SCgTsSVh4nnX6ZlTuAdVem4zbngqA18U1cPELUZ/
+         sp8zegHh6y8ehz3646WCK8B67qgzanSNH1hLnjoluhIns84gS4L6UP74qr+2o2ZskG3I
+         UFiPAJ0w6uzb0ZGGR3YkpjjQ3s73dRbet54XvXOraKAVsFDH372JkVtKLsg+g+bV0NQf
+         x8TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Mb0X0VbhAnhVtMeOXLuQ8HsuJ6uYYtL6iIOac3n0PJU=;
+        b=KGfrgRgV3Apr1/1Fvp8TltzPBUUdok+2pRZOC4G7o/jUfqy3v/SXiOYTBRm8nnUlHx
+         vBUwmivfagrle4AGvgMyItWVofRitH/eYUjtB4nqulp/aH6j6q6nXjy+n6qfAigQxyjF
+         roWX2/vYY27IOzQN28/nR8YYJbjmt9e/0Y2/w2i+gc9bsJ9wiis7JYu2ZBoY85efuapw
+         9yE/u8tEeLBY7fQxL5s+Ig14ScMN+Ycbc1roz2haj+AyLxdLeQjFhhzaSjDMEfQjvU8/
+         L5f5Lji5MSsQBup9URHBh8ehhHkGTo13vk2HW37UIsPyG0GBbdUpZ9Hdx0HBPhkljoPE
+         StvA==
+X-Gm-Message-State: AGi0PuZhEDsHPxJ5/qaAamIXRb/zbiC+L820FoWhuWH7BFR8pDmilXNb
+        sr2m9gi4jhI7HLuhXMNrkYN4Wg==
+X-Google-Smtp-Source: APiQypJ25Kjm3y9Zgopg3qXJE7CUHbyrlxsvNzWf6js5QWhmpv4/KdDycmxZJtwyZTMEA2yfKfjtHw==
+X-Received: by 2002:a1c:40c4:: with SMTP id n187mr15810229wma.28.1587368201801;
+        Mon, 20 Apr 2020 00:36:41 -0700 (PDT)
+Received: from dell ([95.149.164.107])
+        by smtp.gmail.com with ESMTPSA id w18sm19085wrn.55.2020.04.20.00.36.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 00:36:41 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 08:36:39 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Ran Bi <ran.bi@mediatek.com>
+Cc:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v12 5/6] rtc: mt6397: Add support for the MediaTek MT6358
+ RTC
+Message-ID: <20200420073639.GL3737@dell>
+References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1586333531-21641-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <20200416091438.GA2167633@dell>
+ <1587112169.12875.2.camel@mhfsdcap03>
 MIME-Version: 1.0
-In-Reply-To: <9cb6a39a43178be29af2f47a92c2e84754b62b69.camel@bonedaddy.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1587112169.12875.2.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/20 4:48 PM, Paul Wise wrote:
-> On Sun, 2020-04-19 at 09:19 -0400, Mike Snitzer wrote:
-> 
->> You went overboard with implementation before checking to see if your
->> work would be well received.  Your 2/3 patch header shows you're
->> capable of analyzing past commits to explain the evolution of code,
->> etc.  But yet you make no mention of this commit header which explicitly
->> speaks to why what you're proposing is _not_ acceptable:
->>
->> commit 8a74d29d541cd86569139c6f3f44b2d210458071
->> Author: Mike Snitzer <snitzer@redhat.com>
->> Date:   Tue Nov 14 15:40:52 2017 -0500
->>
->>      dm: discard support requires all targets in a table support discards
-> 
-> I do remember seeing this commit while working on this, I guess I
-> ignored it in my attempts to get fstrim working on my rootfs, woops.
-> 
->> I haven't looked closely at MD raid in this area but if you trully think
->> underlying MD raid can cope with issuing discards to devices that don't
->> support them (or that it avoids issuing them?) then please update
->> dm-raid.c to conditionally set ti->discard_supported (if not all devices
->> support discard).  That is how to inform DM core that the target knows
->> better and it will manage discards issued to it.  It keeps the change
->> local to dm-raid.c without the flag-day you're proposing.
-> 
-> On my system I have a HDD and an SSD, with /boot on MD RAID and / on
-> ext4 on DM RAID on 2 DM crypt volumes. In this setup fstrim works on
-> /boot but does not work on / and with my patches it works on / again.
-> In addition I don't see any messages in dmesg or other issues when
-> doing fstrim / with my patches.
+On Fri, 17 Apr 2020, Ran Bi wrote:
 
-Did you have discard allowed on both dm-crypt devices? dm-crypt (kernel) 
-does not allow discards by default.
+> On Thu, 2020-04-16 at 10:14 +0100, Lee Jones wrote:
+> > On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
+> > 
+> > > From: Ran Bi <ran.bi@mediatek.com>
+> > > 
+> > > This add support for the MediaTek MT6358 RTC. Driver using
+> > > compatible data to store different RTC_WRTGR address offset.
+> > > This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
+> > > driver which only needed by armv7 CPU without ATF.
+> > > 
+> > > Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> > > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > > Acked-by: Sebastian Reichel <sre@kernel.org>
+> > > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> > 
+> > Please place these in chronological order.  They should provide some
+> > history, rather than a unordered slab list of random sign-offs.
+> > 
+> 
+> I suppose that you mean the order should be like below, right?
+> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> Acked-by: Sebastian Reichel <sre@kernel.org>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
 
-Regards O.
+This would imply that it was reviewed before it was written, which
+would subsequently imply time-travel, so I suggest not.
 
+Author(s)
+Review(s)/Acks(s)/Tested(s) /* ideally in the order they were received */
+Sub-maintainer sign-off     /* if applicable */
+Maintainer sign-off
+
+> > > ---
+> > >  drivers/power/reset/mt6323-poweroff.c |  2 +-
+> > >  drivers/rtc/rtc-mt6397.c              | 18 +++++++++++++++---
+> > >  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
+> > >  3 files changed, 24 insertions(+), 5 deletions(-)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
