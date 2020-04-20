@@ -2,276 +2,145 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE4AC55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0DBC55183
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 524362078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B50520724
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:30:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="NRS0c1VG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M9K+Ce0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgDTW17 (ORCPT
+        id S1726738AbgDTWaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:27:59 -0400
-Received: from mail-dm6nam10on2054.outbound.protection.outlook.com ([40.107.93.54]:39602
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727066AbgDTW16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:27:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UpiLRtsGTaFzZMAvAd3OqcelqpDNI2JfyyenhKJzKXg7AtATanVxzsMpSfv67q/wnfxIirwcBjXPE53JYuUrRxA2ZlZXW0ItWvCgSotpUre4o2TUYU0j+VK8w4f2IMaQ7Rhlrbp5VlD5xWrUVitT1PiAzK+b6VQ/1fmX2DIOLEg7QAAI7M/iyTjj9r2u0m1AoiR/QGCuxJGF5AfwLnS8/QoYrHOysq3LmixyEfPzTHI7D3YeAQx641DRWKPla9tsOSG8/lOCVDhvEZZJJR4NWKaYKEckH4DSdtz3x7JQeFmTCBsMZb9eXQu1FEc2nopD4kxLJ37J13VZdiq60t+ywA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uf62ckIJXUHEvdiJURQrlEdK1oQIW9gQCt5kukF+r1g=;
- b=Tg9N3C5qo13Wncoohdy2tYVGhq+Cp6csBGGaKLcVQbz7OH2zOI5WmrYuTmFAcTU4upavCqf0KXDaND449Sdz7vjAw3WyomcR/c1RkveCilWx2QI4iTMr0iRCXdQuKlXYm4VlNaoU1C0fQevcOu5R/jHpBw1vOXCyqOxlpLzJ077KryTuBMCA7iCZ2FOSB3r1DZBzuNFDU1fUV0Yrwm2OWxSuFl6LZ4zZNe69VOciE++YTY5474lFNbY1yaFPht6flq6n8vIH/D+lFuhhWmAsA6S6C91yZMlKnynXHa5Cy6ZlR5BgaLDY479vLTNwNsaAofzF3eCifTgyXuu+ngdGgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uf62ckIJXUHEvdiJURQrlEdK1oQIW9gQCt5kukF+r1g=;
- b=NRS0c1VGRkqZ/oH8jfak6BfriATjSxc/dnfDmGj9og2MxILRTLzA8FlnL97c/VGJ2K2rwd46n51SuClGv/F4b8IVak35cFIMjZbTIopLuuUISqGOJJU1/aTFw4AMGxEOas0HlAp0LuSP64bHXubzxYQHVrORGWAXwVExMZZxEY4=
-Received: from CY1PR03CA0018.namprd03.prod.outlook.com (2603:10b6:600::28) by
- CY4PR02MB2200.namprd02.prod.outlook.com (2603:10b6:903:13::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.27; Mon, 20 Apr 2020 22:27:20 +0000
-Received: from CY1NAM02FT039.eop-nam02.prod.protection.outlook.com
- (2603:10b6:600:0:cafe::e2) by CY1PR03CA0018.outlook.office365.com
- (2603:10b6:600::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend
- Transport; Mon, 20 Apr 2020 22:27:19 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT039.mail.protection.outlook.com (10.152.75.140) with Microsoft SMTP
- Server id 15.20.2921.25 via Frontend Transport; Mon, 20 Apr 2020 22:27:19
- +0000
-Received: from [149.199.38.66] (port=33649 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1jQers-0000Sd-2d; Mon, 20 Apr 2020 15:26:20 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1jQesp-0008OD-7k; Mon, 20 Apr 2020 15:27:19 -0700
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03KMR9gB006358;
-        Mon, 20 Apr 2020 15:27:09 -0700
-Received: from [172.19.2.206] (helo=xsjblevinsk50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1jQesf-0008MN-Cr; Mon, 20 Apr 2020 15:27:09 -0700
-From:   Ben Levinsky <ben.levinsky@xilinx.com>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org,
-        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jason Wu <j.wu@xilinx.com>,
-        Wendy Liang <jliang@xilinx.com>
-Subject: [PATCH v3 4/5] dt-bindings: remoteproc: Add documentation for ZynqMP R5 rproc bindings
-Date:   Mon, 20 Apr 2020 15:27:08 -0700
-Message-Id: <1587421629-914-5-git-send-email-ben.levinsky@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587421629-914-1-git-send-email-ben.levinsky@xilinx.com>
-References: <1587421629-914-1-git-send-email-ben.levinsky@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(346002)(39860400002)(396003)(46966005)(7696005)(9786002)(82740400003)(54906003)(356005)(4326008)(81166007)(81156014)(8676002)(44832011)(478600001)(336012)(2906002)(426003)(8936002)(107886003)(26005)(36756003)(2616005)(5660300002)(316002)(47076004)(70206006)(186003)(70586007);DIR:OUT;SFP:1101;
+        Mon, 20 Apr 2020 18:30:46 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42994 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726371AbgDTWan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 18:30:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587421841;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9q6YhDfeioGYYNbOwoNDtbd8XWXwGnM98df6kx4/308=;
+        b=M9K+Ce0pFPTIUPMmsJa/84tA2++gzQV2giT50alI0titPuGjK4zvuhG12ohwkZ4D2mbODb
+        55NO65uVc3NxVaZQm75EdMdhocDXmJ+EKK+wUH90MO81UGXpoZQwwSSqTb0kVcD5WT5Tyn
+        j0xhA7UqH0DNtzVKeLQHnsocxS1JvdU=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-223-MRZ_hrAWMt-gDjjLVhFkOA-1; Mon, 20 Apr 2020 18:30:40 -0400
+X-MC-Unique: MRZ_hrAWMt-gDjjLVhFkOA-1
+Received: by mail-qv1-f70.google.com with SMTP id p12so11869950qvm.21
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:30:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=9q6YhDfeioGYYNbOwoNDtbd8XWXwGnM98df6kx4/308=;
+        b=XqVNHuMYEVGc+siLvQey7FG1RL6GD/n0yb9fRe/bZrD7T7AzJFouEp2rId727ZuU5Z
+         if7a9/nds8QMKqnBHFVDzyLctXNwldZx0vn67p5a85rryvnYWVxr2X8mXKdTvYPGVQsI
+         re0qOPx/Qx6N/pVxCSG0jmTWiW/MJp3caSeOa+4jmpY7dRMZ+QcIAsqLuVPz7jpdgA/O
+         eh9NoxDK7ROzAX+OLN3xa5K7KYUPwMOE3bmjr42t4P51Cc8LX7V0D6ZdkklaBfqEXN1J
+         ffgbNgRLuoU/FlQEF1oZ+W2nmqV5g9+fld9xIazEZxv+EPA30hSFylcq8boLwWmmgmTY
+         3v1A==
+X-Gm-Message-State: AGi0PuZ+NTgvgMQVkTt8whOdNDPKeIv44I34sOuOiLAaSgpzJf1eKubI
+        1o7ZRfqEnVHBpl1PtnRUTKgsJvPGeUs5xd2ymTv6tj1BmltVj/1ytJ2nS1cWXYOnAHhUgTdtyb9
+        TL+62dpngWfhkchMxZC3X6uuy
+X-Received: by 2002:ac8:1a8a:: with SMTP id x10mr18266939qtj.154.1587421839479;
+        Mon, 20 Apr 2020 15:30:39 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL1XEhHKfWJ4L3lMwmFDzE2+TBxLfE0ulmEwOUTO4o7oVPQ7Klu15FdcDd0dnvjj9vSaCf+vQ==
+X-Received: by 2002:ac8:1a8a:: with SMTP id x10mr18266910qtj.154.1587421839193;
+        Mon, 20 Apr 2020 15:30:39 -0700 (PDT)
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
+        by smtp.gmail.com with ESMTPSA id m40sm545368qtc.33.2020.04.20.15.30.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 15:30:38 -0700 (PDT)
+Message-ID: <93e1141d15e44a7490d756b0a00060660306fadc.camel@redhat.com>
+Subject: Re: cifs - Race between IP address change and sget()?
+From:   Jeff Layton <jlayton@redhat.com>
+To:     David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@cjr.nz>
+Cc:     viro@zeniv.linux.org.uk, Steve French <smfrench@gmail.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
+Date:   Mon, 20 Apr 2020 18:30:37 -0400
+In-Reply-To: <1986040.1587420879@warthog.procyon.org.uk>
+References: <878siq587w.fsf@cjr.nz> <87imhvj7m6.fsf@cjr.nz>
+         <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
+         <3865908.1586874010@warthog.procyon.org.uk>
+         <927453.1587285472@warthog.procyon.org.uk>
+         <1136024.1587388420@warthog.procyon.org.uk>
+         <1986040.1587420879@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6d557720-a012-4628-f616-08d7e579fd0d
-X-MS-TrafficTypeDiagnostic: CY4PR02MB2200:
-X-Microsoft-Antispam-PRVS: <CY4PR02MB220032FFE142FC005092FFCEB5D40@CY4PR02MB2200.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03793408BA
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0+NuoUunW2uRGnL3iyTuz6jbCLoDtLF9Vsh4FpRWP/4cxuuXaklFymDsK7q4AIb99/HUCm2731CmPSXt9V4NBk7wq965OAzpSSvJp4RQyE338oz0Kx2b+rGM/uVdoc7NTqJL4J4IjMp2O7yzvvcB+K3o/pfIVev9PHltBeZbxmvzAExDGwJCGXt0y/e8MgAvUWmny9dFijebN5MChzNqSUAaGUK7isAyXdJGTili02k0/TRXwfy7dhESwjizZ5Rn8uQC/+1GK1uhCTfWb1CfcdYx0Tvs01iLdlvJGz5NkRlvr9MGQ/FtMXqqNBzG1u5hOYA0MP4KtFVILy2Hc4IJNNAnEH2ifwIRpctd6ZQjEAHkg6dBLxrVhAAcyoR2w5RtUa2o7VTqKhxMUEEyAU9d/o34hMLABvzmH6j4sZjJDfTXHPe4FbILyoAOL6MdPhpgObSAStnDH2C+F9+cbYZrFDp5TOJa6NLtBMBUZYxbYYOeH/ozqdh2TRbsUNsab1hnDW6OgQcPCyeUqHEfcY35z+opA6Wtl+rnnEJVNbOW+n1uthnPIyNvgBQ57xZtel+oBvWJzC801lGQhLtOXBhZFg==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 22:27:19.5448
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d557720-a012-4628-f616-08d7e579fd0d
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2200
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding for ZynqMP R5 OpenAMP.
+On Mon, 2020-04-20 at 23:14 +0100, David Howells wrote:
+> Paulo Alcantara <pc@cjr.nz> wrote:
+> 
+> > > > > What happens if the IP address the superblock is going to changes, then
+> > > > > another mount is made back to the original IP address?  Does the second
+> > > > > mount just pick the original superblock?
+> > > > 
+> > > > It is going to transparently reconnect to the new ip address, SMB share,
+> > > > and cifs superblock is kept unchanged.  We, however, update internal
+> > > > TCP_Server_Info structure to reflect new destination ip address.
+> > > > 
+> > > > For the second mount, since the hostname (extracted out of the UNC path
+> > > > at mount time) resolves to a new ip address and that address was saved
+> > > > earlier in TCP_Server_Info structure during reconnect, we will end up
+> > > > reusing same cifs superblock as per fs/cifs/connect.c:cifs_match_super().
+> > > 
+> > > Would that be a bug?
+> > 
+> > Probably.
+> > 
+> > I'm not sure how that code is supposed to work, TBH.
+> 
+> Hmmm...  I think there may be a race here then - but I'm not sure it can be
+> avoided or if it matters.
+> 
+> Since the address is part of the primary key to sget() for cifs, changing the
+> IP address will change the primary key.  Jeff tells me that this is governed
+> by a spinlock taken by cifs_match_super().  However, sget() may be busy
+> attaching a new mount to the old superblock under the sb_lock core vfs lock,
+> having already found a match.
+> 
 
-Represent the RPU domain resources in one device node. Each RPU
-processor is a subnode of the top RPU domain node.
+Not exactly. Both places that match TCP_Server_Info objects by address
+hold the cifs_tcp_ses_lock. The address looks like it gets changed in
+reconn_set_ipaddr, and the lock is not currently taken there, AFAICT. I
+think it probably should be (at least around the cifs_convert_address
+call).
 
-Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
-Signed-off-by: Jason Wu <j.wu@xilinx.com>
-Signed-off-by: Wendy Liang <jliang@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
-Changes since v2:
-	- update zynqmp_r5 yaml parsing to not raise warnings for extra
-	 information in children of R5 node. The warning "node has a unit
-	 name, but no reg or ranges property" will still be raised though 
-	 as this particular node is needed to describe the
-	 '#address-cells' and '#size-cells' information.
----
- .../remoteproc/xilinx,zynqmp-r5-remoteproc.yaml    | 126 +++++++++++++++++++++
- 1 file changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
+> Should the change of parameters made by cifs be effected with sb_lock held to
+> try and avoid ending up using the wrong superblock?
+> 
+> However, because the TCP_Server_Info is apparently updated, it looks like my
+> original concern is not actually a problem (the idea that if a mounted server
+> changes its IP address and then a new server comes online at the old IP
+> address, it might end up sharing superblocks because the IP address is part of
+> the key).
+> 
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
-new file mode 100644
-index 0000000..e7d1496
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Xilinx R5 remote processor controller bindings
-+
-+description:
-+  This document defines the binding for the remoteproc component that loads and
-+  boots firmwares on the Xilinx Zynqmp and Versal family chipset.
-+
-+maintainers:
-+  - Ed Mooring <ed.mooring@xilinx.com>
-+  - Ben Levinsky <ben.levinsky@xilinx.com>
-+
-+properties:
-+  compatible:
-+    const: "xlnx,zynqmp-r5-remoteproc-1.0"
-+
-+  core_conf:
-+    description:
-+      R5 core configuration (valid string - split or lock-step)
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Interrupt mapping for remoteproc IPI. It is required if the
-+      user uses the remoteproc driver with the RPMsg kernel driver.
-+    maxItems: 6
-+
-+  memory-region:
-+    maxItems: 4
-+    minItems: 4
-+  pnode-id:
-+    maxItems: 1
-+  mboxes:
-+    maxItems: 2
-+  mbox-names:
-+    maxItems: 2
-+
-+  r5@0:
-+    type: object
-+    required:
-+        - '#address-cells'
-+        - '#size-cells'
-+        - pnode-id
-+examples:
-+  - |
-+     reserved-memory {
-+          #address-cells = <1>;
-+          #size-cells = <1>;
-+          ranges;
-+          rpu0vdev0vring0: rpu0vdev0vring0@3ed40000 {
-+               no-map;
-+               reg = <0x3ed40000 0x4000>;
-+          };
-+          rpu0vdev0vring1: rpu0vdev0vring1@3ed44000 {
-+               no-map;
-+               reg = <0x3ed44000 0x4000>;
-+          };
-+          rpu0vdev0buffer: rpu0vdev0buffer@3ed48000 {
-+               no-map;
-+               reg = <0x3ed48000 0x100000>;
-+          };
-+          rproc_0_reserved: rproc@3ed000000 {
-+               no-map;
-+               reg = <0x3ed00000 0x40000>;
-+          };
-+     };
-+     rpu: rpu@ff9a0000 {
-+          compatible = "xlnx,zynqmp-r5-remoteproc-1.0";
-+          #address-cells = <1>;
-+          #size-cells = <1>;
-+          ranges;
-+          core_conf = "split";
-+          reg = <0xFF9A0000 0x10000>;
-+          r5_0: r5@0 {
-+               ranges;
-+               #address-cells = <1>;
-+               #size-cells = <1>;
-+               memory-region = <&rproc_0_reserved>, <&rpu0vdev0buffer>, <&rpu0vdev0vring0>, <&rpu0vdev0vring1>;
-+               pnode-id = <0x7>;
-+               mboxes = <&ipi_mailbox_rpu0 0>, <&ipi_mailbox_rpu0 1>;
-+               mbox-names = "tx", "rx";
-+               tcm_0_a: tcm_0@0 {
-+                    #address-cells = <1>;
-+                    #size-cells = <1>;
-+                    reg = <0xFFE00000 0x10000>;
-+                    pnode-id = <0xf>;
-+               };
-+               tcm_0_b: tcm_0@1 {
-+                    #address-cells = <2>;
-+                    #size-cells = <2>;
-+                    reg = <0xFFE20000 0x10000>;
-+                    pnode-id = <0x10>;
-+               };
-+          };
-+     };
-+
-+
-+     zynqmp_ipi1 {
-+          compatible = "xlnx,zynqmp-ipi-mailbox";
-+          interrupt-parent = <&gic>;
-+          interrupts = <0 29 4>;
-+          xlnx,ipi-id = <7>;
-+          #address-cells = <1>;
-+          #size-cells = <1>;
-+          ranges;
-+
-+          /* APU<->RPU0 IPI mailbox controller */
-+          ipi_mailbox_rpu0: mailbox@ff90000 {
-+               reg = <0xff990600 0x20>,
-+                     <0xff990620 0x20>,
-+                     <0xff9900c0 0x20>,
-+                     <0xff9900e0 0x20>;
-+               reg-names = "local_request_region",
-+                        "local_response_region",
-+                        "remote_request_region",
-+                        "remote_response_region";
-+               #mbox-cells = <1>;
-+               xlnx,ipi-id = <1>;
-+          };
-+     };
-+
-+...
+I'm not sure we should concern ourselves with much more than just not
+allowing addresses to change while matching/searching. If you're
+standing up new servers at old addresses while you still have clients
+are migrating, then you are probably Doing it Wrong.
+
 -- 
-2.7.4
+Jeff Layton <jlayton@redhat.com>
 
