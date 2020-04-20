@@ -2,195 +2,100 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20772C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C38C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0049F206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C35C206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587387328;
+	bh=HBAym8ekahvMlEeslnbCh2FaaepabcjHWf4jPxOqKYI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RyfI33sphHAnSNZ+g4zvz/fILSVqr8phx6JSG9tpRXSft/Kpb9eTh0Ex3whHbwiHp
+	 3fssloI6/CFR5Kg9W9g02Cj+7I/LwbpNe6rQsK1M2H9e7rS9X7kT3l3p7ONMuBkn72
+	 an3SY3PRKDjrkS82RVHoQ2npe+k1EdHOBMUEm09E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgDTMzV (ORCPT
+        id S1728815AbgDTMpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:55:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7734 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728827AbgDTMpu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:50 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCXXSY039390;
-        Mon, 20 Apr 2020 08:45:31 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxnsga4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:45:30 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCXWLq039378;
-        Mon, 20 Apr 2020 08:45:30 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxnsg9h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:45:30 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCdtld005947;
-        Mon, 20 Apr 2020 12:45:29 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma01wdc.us.ibm.com with ESMTP id 30fs65rj1j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 12:45:29 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCjRER37290462
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 12:45:27 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE0FA13604F;
-        Mon, 20 Apr 2020 12:45:27 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F0ABF136051;
-        Mon, 20 Apr 2020 12:45:23 +0000 (GMT)
-Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 12:45:23 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
-        kirill@shutemov.name,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH v3 09/22] powerpc/kvm/book3s: Add helper to walk partition scoped linux page table.
-Date:   Mon, 20 Apr 2020 18:14:21 +0530
-Message-Id: <20200420124434.47330-10-aneesh.kumar@linux.ibm.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
-References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+        Mon, 20 Apr 2020 08:45:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728784AbgDTMpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14210206DD;
+        Mon, 20 Apr 2020 12:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587386738;
+        bh=HBAym8ekahvMlEeslnbCh2FaaepabcjHWf4jPxOqKYI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yLFDyL805/K0OlHz1Im6XsPlIdFF6+BkDAJPv0pQpYpZAW1j5vAwBq8ym4jurn6Ce
+         uPtItv4M+X1zJF9VfXRx7VrxWN1g4w9GO20OPqMq0qg/3AoXeXx77Ec8O8GkuuYv7K
+         Q1Pfol9oiKc1fj5TZN2Mk2XL0ztrJAu8H1pW/cnw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 5.6 64/71] rcu: Dont acquire lock in NMI handler in rcu_nmi_enter_common()
+Date:   Mon, 20 Apr 2020 14:39:18 +0200
+Message-Id: <20200420121521.714417792@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
+References: <20200420121508.491252919@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_04:2020-04-20,2020-04-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- suspectscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
- priorityscore=1501 spamscore=0 malwarescore=0 adultscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The locking rules for walking partition scoped table is different from process
-scoped table. Hence add a helper for secondary linux page table walk and also
-add check whether we are holding the right locks.
+From: Paul E. McKenney <paulmck@kernel.org>
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+commit bf37da98c51825c90432d340e135cced37a7460d upstream.
+
+The rcu_nmi_enter_common() function can be invoked both in interrupt
+and NMI handlers.  If it is invoked from process context (as opposed
+to userspace or idle context) on a nohz_full CPU, it might acquire the
+CPU's leaf rcu_node structure's ->lock.  Because this lock is held only
+with interrupts disabled, this is safe from an interrupt handler, but
+doing so from an NMI handler can result in self-deadlock.
+
+This commit therefore adds "irq" to the "if" condition so as to only
+acquire the ->lock from irq handlers or process context, never from
+an NMI handler.
+
+Fixes: 5b14557b073c ("rcu: Avoid tick_dep_set_cpu() misordering")
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: <stable@vger.kernel.org> # 5.5.x
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/include/asm/kvm_book3s_64.h | 13 +++++++++++++
- arch/powerpc/kvm/book3s_64_mmu_radix.c   | 12 ++++++------
- arch/powerpc/kvm/book3s_hv_nested.c      |  2 +-
- 3 files changed, 20 insertions(+), 7 deletions(-)
+ kernel/rcu/tree.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/kvm_book3s_64.h b/arch/powerpc/include/asm/kvm_book3s_64.h
-index 04b2b927bb5a..2c2635967d6e 100644
---- a/arch/powerpc/include/asm/kvm_book3s_64.h
-+++ b/arch/powerpc/include/asm/kvm_book3s_64.h
-@@ -14,6 +14,7 @@
- #include <asm/book3s/64/mmu-hash.h>
- #include <asm/cpu_has_feature.h>
- #include <asm/ppc-opcode.h>
-+#include <asm/pte-walk.h>
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -816,7 +816,7 @@ static __always_inline void rcu_nmi_ente
+ 			rcu_cleanup_after_idle();
  
- #ifdef CONFIG_PPC_PSERIES
- static inline bool kvmhv_on_pseries(void)
-@@ -634,6 +635,18 @@ extern void kvmhv_remove_nest_rmap_range(struct kvm *kvm,
- 				unsigned long gpa, unsigned long hpa,
- 				unsigned long nbytes);
- 
-+static inline pte_t *find_kvm_secondary_pte(struct kvm *kvm, unsigned long ea,
-+					    unsigned *hshift)
-+{
-+	pte_t *pte;
-+
-+	VM_WARN(!spin_is_locked(&kvm->mmu_lock),
-+		"%s called with kvm mmu_lock not held \n", __func__);
-+	pte = __find_linux_pte(kvm->arch.pgtable, ea, NULL, hshift);
-+
-+	return pte;
-+}
-+
- #endif /* CONFIG_KVM_BOOK3S_HV_POSSIBLE */
- 
- #endif /* __ASM_KVM_BOOK3S_64_H__ */
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index 9f050064d2a2..bf8b72a274fa 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -980,11 +980,11 @@ int kvm_unmap_radix(struct kvm *kvm, struct kvm_memory_slot *memslot,
- 		return 0;
- 	}
- 
--	ptep = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
-+	ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
- 	if (ptep && pte_present(*ptep))
- 		kvmppc_unmap_pte(kvm, ptep, gpa, shift, memslot,
- 				 kvm->arch.lpid);
--	return 0;				
-+	return 0;
- }
- 
- /* Called with kvm->mmu_lock held */
-@@ -1000,7 +1000,7 @@ int kvm_age_radix(struct kvm *kvm, struct kvm_memory_slot *memslot,
- 	if (kvm->arch.secure_guest & KVMPPC_SECURE_INIT_DONE)
- 		return ref;
- 
--	ptep = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
-+	ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
- 	if (ptep && pte_present(*ptep) && pte_young(*ptep)) {
- 		old = kvmppc_radix_update_pte(kvm, ptep, _PAGE_ACCESSED, 0,
- 					      gpa, shift);
-@@ -1027,7 +1027,7 @@ int kvm_test_age_radix(struct kvm *kvm, struct kvm_memory_slot *memslot,
- 	if (kvm->arch.secure_guest & KVMPPC_SECURE_INIT_DONE)
- 		return ref;
- 
--	ptep = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
-+	ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
- 	if (ptep && pte_present(*ptep) && pte_young(*ptep))
- 		ref = 1;
- 	return ref;
-@@ -1047,7 +1047,7 @@ static int kvm_radix_test_clear_dirty(struct kvm *kvm,
- 	if (kvm->arch.secure_guest & KVMPPC_SECURE_INIT_DONE)
- 		return ret;
- 
--	ptep = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
-+	ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
- 	if (ptep && pte_present(*ptep) && pte_dirty(*ptep)) {
- 		ret = 1;
- 		if (shift)
-@@ -1108,7 +1108,7 @@ void kvmppc_radix_flush_memslot(struct kvm *kvm,
- 	gpa = memslot->base_gfn << PAGE_SHIFT;
- 	spin_lock(&kvm->mmu_lock);
- 	for (n = memslot->npages; n; --n) {
--		ptep = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
-+		ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
- 		if (ptep && pte_present(*ptep))
- 			kvmppc_unmap_pte(kvm, ptep, gpa, shift, memslot,
- 					 kvm->arch.lpid);
-diff --git a/arch/powerpc/kvm/book3s_hv_nested.c b/arch/powerpc/kvm/book3s_hv_nested.c
-index dc97e5be76f6..7f1fc5db13ea 100644
---- a/arch/powerpc/kvm/book3s_hv_nested.c
-+++ b/arch/powerpc/kvm/book3s_hv_nested.c
-@@ -1362,7 +1362,7 @@ static long int __kvmhv_nested_page_fault(struct kvm_run *run,
- 	/* See if can find translation in our partition scoped tables for L1 */
- 	pte = __pte(0);
- 	spin_lock(&kvm->mmu_lock);
--	pte_p = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
-+	pte_p = find_kvm_secondary_pte(kvm, gpa, &shift);
- 	if (!shift)
- 		shift = PAGE_SHIFT;
- 	if (pte_p)
--- 
-2.25.3
+ 		incby = 1;
+-	} else if (tick_nohz_full_cpu(rdp->cpu) &&
++	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
+ 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+ 		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
+ 		raw_spin_lock_rcu_node(rdp->mynode);
+
 
