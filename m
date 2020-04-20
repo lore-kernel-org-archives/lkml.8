@@ -2,327 +2,185 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A43FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20541C55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF4D206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD90A2078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="C6UhlHRm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XO2jZ2VT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgDTVBz (ORCPT
+        id S1726847AbgDTVDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:01:55 -0400
-Received: from mail2.protonmail.ch ([185.70.40.22]:15022 "EHLO
-        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgDTVBz (ORCPT
+        Mon, 20 Apr 2020 17:03:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726494AbgDTVC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:01:55 -0400
-Date:   Mon, 20 Apr 2020 21:01:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1587416511;
-        bh=h5rHihTOFeQtD4RPOI4YxrjlRdUOPIAKLWaqt3OXEzM=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=C6UhlHRmrVDRz3HgN4sLKBnLGwqi8jzQHLHcDjryS3M2WPo32XyJWUnzVU3yBSOtv
-         5w/oS2DfhdblPYV9ypW/Wr3JvHkRgtHte1rxj22CnL40X9+ZrGhUMf4PbjLtF99Nq+
-         rqWOXMXuRZQ2pjJciGoA+kTFPmx1CvSTE5lDbEBg=
-To:     Helen Koike <helen.koike@collabora.com>
-From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-        <nfraprado@protonmail.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-          <nfraprado@protonmail.com>
-Subject: Re: [PATCH v2 3/3] media: vimc: deb: Add support for {RGB,BGR,GBR}888 bus formats on source pad
-Message-ID: <20200420210135.bmca5qw5ilaavuo6@ArchWay.local>
-In-Reply-To: <ae9fdf85-7129-e1ad-a377-bda0808545c1@collabora.com>
-References: <20200326214730.2449707-1-nfraprado@protonmail.com>
- <20200326214730.2449707-4-nfraprado@protonmail.com>
- <b5bc6ab8-274a-adc7-9d86-a91a1efb8805@linuxfoundation.org>
- <ae9fdf85-7129-e1ad-a377-bda0808545c1@collabora.com>
+        Mon, 20 Apr 2020 17:02:59 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC19C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:02:59 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id x26so5680190pgc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:02:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MOuCbWR1ZWCZKNK9Z9cuP5OsJt0ycCa4mjaiaGRp1ds=;
+        b=XO2jZ2VT1mYJcCpprgqnN2/aKGlnLJAaEMC1BzzXRrDXDknkVMNnk9QIn6iivzSh5t
+         4Ym0060obXASln2/RhBFMQ2I3guoKiBdRF0sqjD6ooziL7Sbq5qc/PAFLJRGo6//Fq7Y
+         pZxwIMIb8uLP0htVwRIP1jdfl9RV/qPmgKS6/pxFVV2h9Dixv4jI9g3yMeeoIgCbsjZQ
+         BwlEE04CuMvT46g6kBoWgy+UzwcAHCH8fQ2z8TbbjzxBJPvdQz0nbBCTbUhhTascCrCR
+         SKUbIJXfRNYs6DG6RJDPXUWw7nIEXmAbW/L0u2sCdne9K5hLpvuZC3Ad9EP1HDPLyqiR
+         cziA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MOuCbWR1ZWCZKNK9Z9cuP5OsJt0ycCa4mjaiaGRp1ds=;
+        b=oh1EqsVcdXZ3dQZXdspK8vojUUVA4twKnTVvxz8K3kWcGii9jOr7mtv+RJSrnpopQ2
+         OY2vruAU2uQYLVY/Aq6GGVpGZQX3/h+k3bcfF+4355cq4kYdlMQdulDDPjVdYa+a8unH
+         oe3zfVzMWzudlwXRsuL5hQ59/sYBFWhy56+rtRbGF+FVrWBVeHggnIbm0ZxFBmXFegAf
+         P0bQL8Rv1+K0cIUJp+AmN+5FUg2voinMhhM/ybDZpbtas53CJ5lmTaspCjfp4kO4Xo9Z
+         /TB+3nTM/XTB+8GkC4b8ql2usbbSoa6cwikYO5Q6+dKuqGwzR/xMvzBkNUt6KAfO3NJZ
+         BMUg==
+X-Gm-Message-State: AGi0Pua6jG5bsHNnQnn7+KUyrnC6A9bPjDxa8yqS1yEEfXjBIiX1cwVM
+        iQlXKXE5HmhdDH3ZMUZHBoeh3w==
+X-Google-Smtp-Source: APiQypIMgHVUTUPobvnHOwG6fc15iKYQJP3A5rr+TWvSPKW9ADHthNBFWDrAQm0AsKYENQdckoy22g==
+X-Received: by 2002:a63:e10f:: with SMTP id z15mr18430054pgh.88.1587416578521;
+        Mon, 20 Apr 2020 14:02:58 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q200sm249475pgq.68.2020.04.20.14.02.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 14:02:57 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 14:03:22 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sm8250: Add cpufreq hw node
+Message-ID: <20200420210322.GS576963@builder.lan>
+References: <20200415061806.740965-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415061806.740965-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
+On Tue 14 Apr 23:18 PDT 2020, Bjorn Andersson wrote:
 
-thanks for the review.
+> Add cpufreq HW device node to scale 4-Silver/3-Gold/1-Gold+ cores
+> on SM8250 SoCs.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> index d7b2049f339c..e62e77ff48c2 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> @@ -41,6 +41,7 @@ CPU0: cpu@0 {
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_0>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_0: l2-cache {
+>  			      compatible = "cache";
+>  			      next-level-cache = <&L3_0>;
+> @@ -56,6 +57,7 @@ CPU1: cpu@100 {
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_100>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_100: l2-cache {
+>  			      compatible = "cache";
+>  			      next-level-cache = <&L3_0>;
+> @@ -68,6 +70,7 @@ CPU2: cpu@200 {
+>  			reg = <0x0 0x200>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_200>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_200: l2-cache {
+>  			      compatible = "cache";
+>  			      next-level-cache = <&L3_0>;
+> @@ -80,6 +83,7 @@ CPU3: cpu@300 {
+>  			reg = <0x0 0x300>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_300>;
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_300: l2-cache {
+>  			      compatible = "cache";
+>  			      next-level-cache = <&L3_0>;
+> @@ -92,6 +96,7 @@ CPU4: cpu@400 {
+>  			reg = <0x0 0x400>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_400>;
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			L2_400: l2-cache {
+>  			      compatible = "cache";
+>  			      next-level-cache = <&L3_0>;
+> @@ -104,6 +109,7 @@ CPU5: cpu@500 {
+>  			reg = <0x0 0x500>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_500>;
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			L2_500: l2-cache {
+>  			      compatible = "cache";
+>  			      next-level-cache = <&L3_0>;
+> @@ -117,6 +123,7 @@ CPU6: cpu@600 {
+>  			reg = <0x0 0x600>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_600>;
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			L2_600: l2-cache {
+>  			      compatible = "cache";
+>  			      next-level-cache = <&L3_0>;
+> @@ -129,6 +136,7 @@ CPU7: cpu@700 {
+>  			reg = <0x0 0x700>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_700>;
+> +			qcom,freq-domain = <&cpufreq_hw 2>;
+>  			L2_700: l2-cache {
+>  			      compatible = "cache";
+>  			      next-level-cache = <&L3_0>;
+> @@ -499,6 +507,19 @@ frame@17c2d000 {
+>  			};
+>  		};
+>  
+> +		cpufreq_hw: cpufreq@18591000 {
+> +			compatible = "qcom,cpufreq-hw";
 
-Some comments below.
+As pointed out by Sibi, SM8250 comes with the new EPSS block for
+frequency and voltage scaling, so this is wrong.
 
-On Mon, Mar 30, 2020 at 04:43:53PM -0300, Helen Koike wrote:
->=20
-> Hello,
->=20
-> On 3/26/20 7:06 PM, Shuah Khan wrote:
-> > On 3/26/20 3:47 PM, N=C3=ADcolas F. R. A. Prado wrote:
-> >> Add support for RGB888_*, BGR888_* and GBR888_* media bus formats on
-> >> the source pad of debayer subdevices.
-> >>
-> >> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-> >> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> >> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
-> >> ---
-> >>
-> >> Changes in v2:
-> >> - Change commit message to reflect v2 changes
-> >> - Rename variables
-> >> - Fix array formatting
-> >> - Add vimc_deb_is_src_code_valid function
-> >> - Add other BGR888 and RGB888 formats to debayer source pad supported
-> >> =C2=A0=C2=A0 formats
-> >>
-> >> =C2=A0 drivers/media/platform/vimc/vimc-debayer.c | 61 +++++++++++++++=
-++-----
-> >> =C2=A0 1 file changed, 49 insertions(+), 12 deletions(-)
-> >>
-> >> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/medi=
-a/platform/vimc/vimc-debayer.c
-> >> index baf6bf9f65b5..33a9bea770bc 100644
-> >> --- a/drivers/media/platform/vimc/vimc-debayer.c
-> >> +++ b/drivers/media/platform/vimc/vimc-debayer.c
-> >> @@ -51,6 +51,19 @@ static const struct v4l2_mbus_framefmt sink_fmt_def=
-ault =3D {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .colorspace =3D V4L2_COLORSPACE_DEFAULT=
-,
-> >> =C2=A0 };
-> >> =C2=A0 +static const u32 vimc_deb_src_mbus_codes[] =3D {
-> >> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_GBR888_1X24,
-> >> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_BGR888_1X24,
-> >> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_BGR888_3X8,
-> >> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X24,
-> >> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_2X12_BE,
-> >> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_2X12_LE,
-> >> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_3X8,
-> >> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> >> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
-> >> +=C2=A0=C2=A0=C2=A0 MEDIA_BUS_FMT_RGB888_1X32_PADHI,
-> >> +};
-> >> +
-> >> =C2=A0 static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] =
-=3D {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .code =3D MEDIA=
-_BUS_FMT_SBGGR8_1X8,
-> >> @@ -125,6 +138,17 @@ static const struct vimc_deb_pix_map *vimc_deb_pi=
-x_map_by_code(u32 code)
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NULL;
-> >> =C2=A0 }
-> >> =C2=A0 +static int vimc_deb_is_src_code_invalid(u32 code)
-> >> +{
-> >> +=C2=A0=C2=A0=C2=A0 unsigned int i;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARRAY_SIZE(vimc_deb_src_mbus_cod=
-es); i++)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (vimc_deb_src_mbus_code=
-s[i] =3D=3D code)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn 0;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 return -EINVAL;
-> >> +}
->=20
-> The naming is a bit confusing, since it checks if it is invalid, but retu=
-rns a negative number if so.
->=20
-> How about renaming to vimc_deb_src_code_is_valid ?
+Regards,
+Bjorn
 
-I also don't like that the function is called 'is_invalid', but I gave it t=
-hat
-name because I think it actually is less confusing when calling.
-For example, later in this patch I do:
-
-=C2=A0=C2=A0=C2=A0 } else if (vimc_deb_is_src_code_invalid(fse->code)) {
-        return -EINVAL;
-
-Which to me becomes very clear.
-
-Since the error values evaluate to True, the other alternative that I
-see is to call it 'is_valid', but return 0 when invalid and 1 when valid.
-But then we no longer return the -EINVAL value, which I think makes the fun=
-ction
-less clear.
-
-What do you think?
-
-Thank you,
-N=C3=ADcolas
-
->=20
-> >> +
-> >> =C2=A0 static int vimc_deb_init_cfg(struct v4l2_subdev *sd,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_subdev_pad_config *c=
-fg)
-> >> =C2=A0 {
-> >> @@ -148,14 +172,11 @@ static int vimc_deb_enum_mbus_code(struct v4l2_s=
-ubdev *sd,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_subdev_p=
-ad_config *cfg,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_subdev_m=
-bus_code_enum *code)
-> >> =C2=A0 {
-> >> -=C2=A0=C2=A0=C2=A0 /* We only support one format for source pads */
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (VIMC_IS_SRC(code->pad)) {
-> >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vimc_deb_device *vd=
-eb =3D v4l2_get_subdevdata(sd);
-> >> -
-> >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (code->index)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (code->index >=3D ARRAY=
-_SIZE(vimc_deb_src_mbus_codes))
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return -EINVAL;
-> >> =C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 code->code =3D vdeb=
-->src_code;
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 code->code =3D vimc_deb_sr=
-c_mbus_codes[code->index];
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (code->index=
- >=3D ARRAY_SIZE(vimc_deb_pix_map_list))
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return -EINVAL;
-> >> @@ -170,8 +191,6 @@ static int vimc_deb_enum_frame_size(struct v4l2_su=
-bdev *sd,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_su=
-bdev_pad_config *cfg,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_su=
-bdev_frame_size_enum *fse)
-> >> =C2=A0 {
-> >> -=C2=A0=C2=A0=C2=A0 struct vimc_deb_device *vdeb =3D v4l2_get_subdevda=
-ta(sd);
-> >> -
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (fse->index)
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
-> >> =C2=A0 @@ -181,7 +200,7 @@ static int vimc_deb_enum_frame_size(struct =
-v4l2_subdev *sd,
-> >> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vpi=
-x)
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return -EINVAL;
-> >> -=C2=A0=C2=A0=C2=A0 } else if (fse->code !=3D vdeb->src_code) {
-> >> +=C2=A0=C2=A0=C2=A0 } else if (vimc_deb_is_src_code_invalid(fse->code)=
-) {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >> =C2=A0 @@ -237,6 +256,7 @@ static int vimc_deb_set_fmt(struct v4l2_sub=
-dev *sd,
-> >> =C2=A0 {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vimc_deb_device *vdeb =3D v4l2_g=
-et_subdevdata(sd);
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_mbus_framefmt *sink_fmt;
-> >> +=C2=A0=C2=A0=C2=A0 u32 *src_code;
-> >> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (fmt->which =3D=3D V4L2_SUBDE=
-V_FORMAT_ACTIVE) {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Do not chang=
-e the format while stream is on */
-> >> @@ -244,8 +264,10 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *s=
-d,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 return -EBUSY;
-> >> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sink_fmt=
- =3D &vdeb->sink_fmt;
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 src_code =3D &vdeb->src_co=
-de;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sink_fmt =3D v4=
-l2_subdev_get_try_format(sd, cfg, 0);
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 src_code =3D &v4l2_subdev_=
-get_try_format(sd, cfg, 1)->code;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> >> @@ -253,9 +275,14 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *s=
-d,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * it is propagated from the sink
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (VIMC_IS_SRC(fmt->pad)) {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 code =3D fmt->format.c=
-ode;
-> >> +
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fmt->format =3D=
- *sink_fmt;
-> >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* TODO: Add support for o=
-ther formats */
-> >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fmt->format.code =3D vdeb-=
->src_code;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!vimc_deb_is_src_code_=
-invalid(code))
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *s=
-rc_code =3D code;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fmt->format.code =3D *src_=
-code;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Set the new =
-format in the sink pad */
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vimc_deb_adjust=
-_sink_fmt(&fmt->format);
-> >> @@ -291,11 +318,21 @@ static void vimc_deb_set_rgb_mbus_fmt_rgb888_1x2=
-4(struct vimc_deb_device *vdeb,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int col,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int rgb[3])
-> >
-> > Change this to pass a pointer and size.
->=20
-> Hi Shuah,
->=20
-> Modifying vimc_deb_set_rgb_mbus_fmt_rgb888_1x24() is not part of this pat=
-ch, or do you mean another part of the code?
->=20
-> Thanks for reviewing
-> Helen
->=20
-> >
-> >> =C2=A0 {
-> >> +=C2=A0=C2=A0=C2=A0 const struct vimc_pix_map *vpix;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int i, index;
-> >> =C2=A0 +=C2=A0=C2=A0=C2=A0 vpix =3D vimc_pix_map_by_code(vdeb->src_cod=
-e);
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 index =3D VIMC_FRAME_INDEX(lin, col, vd=
-eb->sink_fmt.width, 3);
-> >> -=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < 3; i++)
-> >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vdeb->src_frame[index + i]=
- =3D rgb[i];
-> >> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < 3; i++) {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (vpix->pixelformat)=
- {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case V4L2_PIX_FMT_RGB24:
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vd=
-eb->src_frame[index + i] =3D rgb[i];
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 br=
-eak;
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case V4L2_PIX_FMT_BGR24:
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vd=
-eb->src_frame[index + i] =3D rgb[2-i];
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 br=
-eak;
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >> +=C2=A0=C2=A0=C2=A0 }
-> >> =C2=A0 }
-> >> =C2=A0 =C2=A0 static int vimc_deb_s_stream(struct v4l2_subdev *sd, int=
- enable)
-> >>
-> >
-> > thanks,
-> > -- Shuah
-
+> +			reg = <0 0x18591000 0 0x1000>,
+> +			      <0 0x18592000 0 0x1000>,
+> +			      <0 0x18593000 0 0x1000>;
+> +			reg-names = "freq-domain0", "freq-domain1",
+> +				    "freq-domain2";
+> +
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
+> +			clock-names = "xo", "alternate";
+> +
+> +			#freq-domain-cells = <1>;
+> +		};
+>  	};
+>  
+>  	timer {
+> -- 
+> 2.24.0
+> 
