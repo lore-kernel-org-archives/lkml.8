@@ -2,211 +2,187 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5066FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB963C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB2D22240
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:02:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587402155;
-	bh=plMzlobQNccyl97bdN7R33bGIDUnUZmwwqOwhihDlNY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TdNorsvDNxRO9PICJ57vtjJTJrgz0T3lx2O0Hsc2BDN+QyXDgbZTahnrSBGmktDJN
-	 JHt5b7ppz96HrfDrwlf6ixXoEVDy+BFNvaDrBNHu51MKA/W0GRRJHGnbSaGG0QvktN
-	 vWzCprpjJ0K/DsU4zOyisOj+DJt5ptPiAHGOuDjQ=
+	by mail.kernel.org (Postfix) with ESMTP id 962D42078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:06:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QUQYVCug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgDTRCe (ORCPT
+        id S1726421AbgDTRGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbgDTRCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:02:32 -0400
-Received: from localhost.localdomain (unknown [157.46.94.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C5D221F4;
-        Mon, 20 Apr 2020 17:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587402151;
-        bh=plMzlobQNccyl97bdN7R33bGIDUnUZmwwqOwhihDlNY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQoDVIQpN/VZy7sDK1aZIiMW9C0CDN9KdUol7rsq1Ba1n7p0dX8xxuWNbXmLsRxwu
-         huLrKf/jlWP46Vm1R0rOK539k1YpaL60iApYRnV8TgECCfppSF4vkCfNXZE0Fve6n6
-         cXHum4o73j41QL2N0V73y4yGVM+3DqG6AqPsHBX8=
-From:   mani@kernel.org
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com, andy.shevchenko@gmail.com,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH v3 2/2] tty: serial: Add modem control gpio support for STM32 UART
-Date:   Mon, 20 Apr 2020 22:32:04 +0530
-Message-Id: <20200420170204.24541-3-mani@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200420170204.24541-1-mani@kernel.org>
-References: <20200420170204.24541-1-mani@kernel.org>
+        Mon, 20 Apr 2020 13:06:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725784AbgDTRGE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:06:04 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E91D2C061A0C;
+        Mon, 20 Apr 2020 10:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=rWfkeNl+tPQgsDgysGAPqfogci/QDhLeDrzw1N/HSZo=; b=QUQYVCugWbDdKvcHEcXNg1l/KP
+        ZRAYCB/7IyL34lxTlxTlaikOlyXjYOUULc8yAHxj6nf9Zprs8WpyNTKwy+rsJLuLHD9oH8pEUbrDr
+        T/EiYZ0uGs5k7DWs32dYc4RbTNDWb53SWwDcIncs0+WamwsRHgyQOLEGzRRPRDrnaxw0trnMQuZmY
+        UK4i42q47h3IxnBuIoM0Oh639W7T095DekGWNn+P9xIs3mW2sGfs+wbiJFDTEDmmNJnhrtcnbQX4F
+        AgamhDQssECFsKBdu70I7XHOCBH1pIIsk+S+qVzPayhUBTb3bOGqgNrK4DYuO36J0EmoNIdnL7qm8
+        v9Xk9PHg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQZrv-0002kf-ML; Mon, 20 Apr 2020 17:06:03 +0000
+Date:   Mon, 20 Apr 2020 10:06:03 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Manfred Spraul <manfred@colorfullife.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] ipc: Convert ipcs_idr to XArray
+Message-ID: <20200420170603.GC5820@bombadil.infradead.org>
+References: <20200326151418.27545-1-willy@infradead.org>
+ <80ab3182-5a17-7434-9007-33eb1da46d85@colorfullife.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <80ab3182-5a17-7434-9007-33eb1da46d85@colorfullife.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manivannan Sadhasivam <mani@kernel.org>
+On Mon, Apr 20, 2020 at 05:35:20PM +0200, Manfred Spraul wrote:
+> > -		max_idx = max(ids->in_use*3/2, ipc_min_cycle);
+> > -		max_idx = min(max_idx, ipc_mni);
+> > -
+> > -		/* allocate the idx, with a NULL struct kern_ipc_perm */
+> > -		idx = idr_alloc_cyclic(&ids->ipcs_idr, NULL, 0, max_idx,
+> > -					GFP_NOWAIT);
+> > -
+> > -		if (idx >= 0) {
+> > -			/*
+> > -			 * idx got allocated successfully.
+> > -			 * Now calculate the sequence number and set the
+> > -			 * pointer for real.
+> > -			 */
+> > -			if (idx <= ids->last_idx) {
+> > +		min_idx = ids->next_idx;
+> > +		new->seq = ids->seq;
+> > +
+> > +		/* Modified version of __xa_alloc */
+> > +		do {
+> > +			xas.xa_index = min_idx;
+> > +			xas_find_marked(&xas, max_idx, XA_FREE_MARK);
+> > +			if (xas.xa_node == XAS_RESTART && min_idx > 0) {
+> >   				ids->seq++;
+> >   				if (ids->seq >= ipcid_seq_max())
+> >   					ids->seq = 0;
+> > +				new->seq = ids->seq;
+> > +				xas.xa_index = 0;
+> > +				min_idx = 0;
+> > +				xas_find_marked(&xas, max_idx, XA_FREE_MARK);
+> >   			}
+> 
+> Is is nessary to have that many details of xarray in ipc/util?
+> 
+> This function is not performance critical.
+> 
+> The core requirement is that ipc_obtain_object_check() must scale.
+> 
+> Would it be possible to use something like
+> 
+>     xa_alloc(,entry=NULL,)
+> 
+>     new->seq = ...
+> 
+>     xa_store(,entry=new,);
 
-STM32 UART controllers have the built in modem control support using
-dedicated gpios which can be enabled using 'st,hw-flow-ctrl' flag in DT.
-But there might be cases where the board design need to use different
-gpios for modem control.
+Yes, that would absolutely be possible, and some users do exactly that.
+I thought that creating a new message queue / semaphore set / shared
+memory segment would be performance sensitive.
 
-For supporting such cases, this commit adds modem control gpio support
-to STM32 UART controller using mctrl_gpio driver.
+> > -			ids->last_idx = idx;
+> > -
+> > -			new->seq = ids->seq;
+> > -			/* no need for smp_wmb(), this is done
+> > -			 * inside idr_replace, as part of
+> > -			 * rcu_assign_pointer
+> > -			 */
+> 
+> Could you leave the memory barrier comments in the code?
+> 
+> The rcu_assign_pointer() is the first hands-off from semget() or msgget().
+> 
+> Before the rcu_assign_pointer, e.g. semop() calls would return -EINVAL;
+> 
+> After the rcu_assign_pointer, semwhatever() must work - and e.g. the
+> permission checks are lockless.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/tty/serial/Kconfig       |  1 +
- drivers/tty/serial/stm32-usart.c | 53 ++++++++++++++++++++++++++++++--
- drivers/tty/serial/stm32-usart.h |  1 +
- 3 files changed, 53 insertions(+), 2 deletions(-)
+How about simply:
+			/* xa_store contains a memory barrier */
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 0aea76cd67ff..e7a6f2130684 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1462,6 +1462,7 @@ config SERIAL_STM32
- 	tristate "STMicroelectronics STM32 serial port support"
- 	select SERIAL_CORE
- 	depends on ARCH_STM32 || COMPILE_TEST
-+	select SERIAL_MCTRL_GPIO if GPIOLIB
- 	help
- 	  This driver is for the on-chip Serial Controller on
- 	  STMicroelectronics STM32 MCUs.
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 5e93e8d40f59..17c2f3276888 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -31,6 +31,7 @@
- #include <linux/tty_flip.h>
- #include <linux/tty.h>
- 
-+#include "serial_mctrl_gpio.h"
- #include "stm32-usart.h"
- 
- static void stm32_stop_tx(struct uart_port *port);
-@@ -510,12 +511,29 @@ static void stm32_set_mctrl(struct uart_port *port, unsigned int mctrl)
- 		stm32_set_bits(port, ofs->cr3, USART_CR3_RTSE);
- 	else
- 		stm32_clr_bits(port, ofs->cr3, USART_CR3_RTSE);
-+
-+	mctrl_gpio_set(stm32_port->gpios, mctrl);
- }
- 
- static unsigned int stm32_get_mctrl(struct uart_port *port)
- {
-+	struct stm32_port *stm32_port = to_stm32_port(port);
-+	unsigned int ret;
-+
- 	/* This routine is used to get signals of: DCD, DSR, RI, and CTS */
--	return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
-+	ret = TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
-+
-+	return mctrl_gpio_get(stm32_port->gpios, &ret);
-+}
-+
-+static void stm32_enable_ms(struct uart_port *port)
-+{
-+	mctrl_gpio_enable_ms(to_stm32_port(port)->gpios);
-+}
-+
-+static void stm32_disable_ms(struct uart_port *port)
-+{
-+	mctrl_gpio_disable_ms(to_stm32_port(port)->gpios);
- }
- 
- /* Transmit stop */
-@@ -626,6 +644,9 @@ static void stm32_shutdown(struct uart_port *port)
- 	u32 val, isr;
- 	int ret;
- 
-+	/* Disable modem control interrupts */
-+	stm32_disable_ms(port);
-+
- 	val = USART_CR1_TXEIE | USART_CR1_TE;
- 	val |= stm32_port->cr1_irq | USART_CR1_RE;
- 	val |= BIT(cfg->uart_enable_bit);
-@@ -764,6 +785,12 @@ static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
- 		cr3 |= USART_CR3_CTSE | USART_CR3_RTSE;
- 	}
- 
-+	/* Handle modem control interrupts */
-+	if (UART_ENABLE_MS(port, termios->c_cflag))
-+		stm32_enable_ms(port);
-+	else
-+		stm32_disable_ms(port);
-+
- 	usartdiv = DIV_ROUND_CLOSEST(port->uartclk, baud);
- 
- 	/*
-@@ -898,6 +925,7 @@ static const struct uart_ops stm32_uart_ops = {
- 	.throttle	= stm32_throttle,
- 	.unthrottle	= stm32_unthrottle,
- 	.stop_rx	= stm32_stop_rx,
-+	.enable_ms	= stm32_enable_ms,
- 	.break_ctl	= stm32_break_ctl,
- 	.startup	= stm32_startup,
- 	.shutdown	= stm32_shutdown,
-@@ -960,10 +988,31 @@ static int stm32_init_port(struct stm32_port *stm32port,
- 
- 	stm32port->port.uartclk = clk_get_rate(stm32port->clk);
- 	if (!stm32port->port.uartclk) {
--		clk_disable_unprepare(stm32port->clk);
- 		ret = -EINVAL;
-+		goto err_clk;
-+	}
-+
-+	stm32port->gpios = mctrl_gpio_init(&stm32port->port, 0);
-+	if (IS_ERR(stm32port->gpios)) {
-+		ret = PTR_ERR(stm32port->gpios);
-+		goto err_clk;
- 	}
- 
-+	/* Both CTS/RTS gpios and "st,hw-flow-ctrl" should not be specified */
-+	if (stm32port->hw_flow_control) {
-+		if (mctrl_gpio_to_gpiod(stm32port->gpios, UART_GPIO_CTS) ||
-+		    mctrl_gpio_to_gpiod(stm32port->gpios, UART_GPIO_RTS)) {
-+			dev_err(&pdev->dev, "Conflicting RTS/CTS config\n");
-+			ret = -EINVAL;
-+			goto err_clk;
-+		}
-+	}
-+
-+	return ret;
-+
-+err_clk:
-+	clk_disable_unprepare(stm32port->clk);
-+
- 	return ret;
- }
- 
-diff --git a/drivers/tty/serial/stm32-usart.h b/drivers/tty/serial/stm32-usart.h
-index db8bf0d4982d..d4c916e78d40 100644
---- a/drivers/tty/serial/stm32-usart.h
-+++ b/drivers/tty/serial/stm32-usart.h
-@@ -274,6 +274,7 @@ struct stm32_port {
- 	bool fifoen;
- 	int wakeirq;
- 	int rdr_mask;		/* receive data register mask */
-+	struct mctrl_gpios *gpios; /* modem control gpios */
- };
- 
- static struct stm32_port stm32_ports[STM32_MAX_PORTS];
--- 
-2.17.1
+> > -			idr_replace(&ids->ipcs_idr, new, idx);
+> > -		}
+> > +			if (xas.xa_node == XAS_RESTART)
+> > +				xas_set_err(&xas, -ENOSPC);
+> > +			else
+> > +				new->id = (new->seq << ipcmni_seq_shift()) +
+> > +					xas.xa_index;
+> 
+> Setting new->id should remain at the end, outside any locking:
+> 
+> The variable has no special protection, access is only allowed after proper
+> locking, thus no need to have the initialization in the middle.
+> 
+> What is crucial is that the final value of new->seq is visible to all cpus
+> before a storing the pointer.
 
+The IPC locking is weird.  Most users spin_lock the xarray/idr/radix
+tree for modifications, and on the read-side use RCU to protect the
+lookup and a refcount on the object looked up in it (after which,
+RCU is unlocked).  IPC seems to hold the RCU lock much longer, and it
+has a per-object spinlock rather than refcount.  And it has an rwsem.
+It feels like it could be much simpler, but I haven't had time to dig
+into it and figure out why it's so different from all the other users.
+Maybe it's just older code.
+
+> > +			xas_store(&xas, new);
+> > +			xas_clear_mark(&xas, XA_FREE_MARK);
+> > +		} while (__xas_nomem(&xas, GFP_KERNEL));
+> > +
+> 
+> Just for my curiosity:
+> 
+> If the xas is in an invalid state, then xas_store() will not store anything.
+> Thus the loop will not store "new" multiple times, it will be stored only
+> once.
+
+Correct, although we're going to delete this loop entirely.
+
+> @@ -472,7 +487,7 @@ void ipc_rmid(struct ipc_ids *ids, struct kern_ipc_perm
+> *ipcp)
+> >   			idx--;
+> >   			if (idx == -1)
+> >   				break;
+> > -		} while (!idr_find(&ids->ipcs_idr, idx));
+> > +		} while (!xa_load(&ids->ipcs, idx));
+> >   		ids->max_idx = idx;
+> >   	}
+> >   }
+> 
+> Is there an xa_find_last() function?
+> 
+> It is outside of any hot path, I have a patch that does a binary search with
+> idr_get_next().
+> 
+> If there is no xa_find_last(), then I would rebase that patch.
+
+There is not currently an xa_find_last().  It shouldn't be too hard
+to add; start at the top of the tree and walk backwards in each node
+until finding a non-NULL entry.  Of course, it'll need documentation
+and test cases.
