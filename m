@@ -2,145 +2,89 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494F3C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D8DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A269206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C714C206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587387354;
+	bh=mc8QGzgejHGAQSVajZ4w620iO9AXegRDU80/sbHxamI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iPEe6ZhnDZZ4xoVKAd/02Q/la56zL3IIJ9+rUz+CnwemmQZJfD4aXlWLwbp5ZUspw
+	 48sjgWCYTR2N0JBUfVPB9zlsNHKpulE7mmaymb0UlzGW+fS9mYp9nwEON+gZHRznDM
+	 UVLfEKlBj/336pZRxxz1hIDrwB00b494+xu7GzCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgDTMzo (ORCPT
+        id S1729433AbgDTMzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:55:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32808 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728756AbgDTMp3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:29 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCV6Vo029466;
-        Mon, 20 Apr 2020 08:45:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghu5ru3u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:45:17 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCXPwY039011;
-        Mon, 20 Apr 2020 08:45:17 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghu5ru2m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:45:17 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCj3gE027386;
-        Mon, 20 Apr 2020 12:45:15 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03wdc.us.ibm.com with ESMTP id 30fs660k16-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 12:45:15 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCjEaM46661992
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 12:45:14 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 35FF713604F;
-        Mon, 20 Apr 2020 12:45:14 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40F53136063;
-        Mon, 20 Apr 2020 12:45:10 +0000 (GMT)
-Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 12:45:09 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
-        kirill@shutemov.name,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Subject: [PATCH v3 06/22] powerpc/mce: Don't reload pte val in addr_to_pfn
-Date:   Mon, 20 Apr 2020 18:14:18 +0530
-Message-Id: <20200420124434.47330-7-aneesh.kumar@linux.ibm.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
-References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+        Mon, 20 Apr 2020 08:55:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728741AbgDTMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFF9C206E9;
+        Mon, 20 Apr 2020 12:45:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587386726;
+        bh=mc8QGzgejHGAQSVajZ4w620iO9AXegRDU80/sbHxamI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=em2QSIIGaA/p4p3TOfpS237vDBzq+yEkGyg2v4mUb3Xy18d2XfyB6qx/yagUDJiVP
+         Z05iXR5ctBMHg/ocU3BpjaiESs20bnMXmJxjRaSU0NfmG9Lc/jTC2/7AbbbPpwcTa/
+         AeT+SFKvqr9ceJtqyvrYJUHuqT40gNZlANz7VZ9s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Huang Rui <ray.huang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.6 59/71] drm/amdgpu/gfx9: add gfxoff quirk
+Date:   Mon, 20 Apr 2020 14:39:13 +0200
+Message-Id: <20200420121520.881890837@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
+References: <20200420121508.491252919@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_03:2020-04-20,2020-04-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=860
- suspectscore=0 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
- clxscore=1015 malwarescore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A lockless page table walk should be safe against parallel THP collapse, THP
-split and madvise(MADV_DONTNEED)/parallel fault. This patch makes sure kernel
-won't reload the pteval when checking for different conditions. The patch also added
-a check for pte_present to make sure the kernel is indeed operating
-on a PTE and not a pointer to level 0 table page.
+From: Alex Deucher <alexander.deucher@amd.com>
 
-The pfn value we find here can be different from the actual pfn on which
-machine check happened. This can happen if we raced with a parallel update
-of the page table. In such a scenario we end up isolating a wrong pfn. But that
-doesn't have any other side effect.
+commit 974229db7e6c1f2ff83ceaf3022d5128bf62caca upstream.
 
-Cc: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Fix screen corruption with firefox.
+
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=207171
+Reviewed-by: Huang Rui <ray.huang@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/kernel/mce_power.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
-index 067b094bfeff..1d18991f3854 100644
---- a/arch/powerpc/kernel/mce_power.c
-+++ b/arch/powerpc/kernel/mce_power.c
-@@ -27,7 +27,7 @@
-  */
- unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
- {
--	pte_t *ptep;
-+	pte_t *ptep, pte;
- 	unsigned int shift;
- 	unsigned long pfn, flags;
- 	struct mm_struct *mm;
-@@ -39,19 +39,23 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -1175,6 +1175,8 @@ struct amdgpu_gfxoff_quirk {
+ static const struct amdgpu_gfxoff_quirk amdgpu_gfxoff_quirk_list[] = {
+ 	/* https://bugzilla.kernel.org/show_bug.cgi?id=204689 */
+ 	{ 0x1002, 0x15dd, 0x1002, 0x15dd, 0xc8 },
++	/* https://bugzilla.kernel.org/show_bug.cgi?id=207171 */
++	{ 0x1002, 0x15dd, 0x103c, 0x83e7, 0xd3 },
+ 	{ 0, 0, 0, 0, 0 },
+ };
  
- 	local_irq_save(flags);
- 	ptep = __find_linux_pte(mm->pgd, addr, NULL, &shift);
-+	if (!ptep) {
-+		pfn = ULONG_MAX;
-+		goto out;
-+	}
-+	pte = READ_ONCE(*ptep);
- 
--	if (!ptep || pte_special(*ptep)) {
-+	if (!pte_present(pte) || pte_special(pte)) {
- 		pfn = ULONG_MAX;
- 		goto out;
- 	}
- 
- 	if (shift <= PAGE_SHIFT)
--		pfn = pte_pfn(*ptep);
-+		pfn = pte_pfn(pte);
- 	else {
- 		unsigned long rpnmask = (1ul << shift) - PAGE_SIZE;
--		pfn = pte_pfn(__pte(pte_val(*ptep) | (addr & rpnmask)));
-+		pfn = pte_pfn(__pte(pte_val(pte) | (addr & rpnmask)));
- 	}
--
- out:
- 	local_irq_restore(flags);
- 	return pfn;
--- 
-2.25.3
+
 
