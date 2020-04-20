@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0103DC55182
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE9FC55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D227A2078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4619B2078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:10:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CGCbe8fz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IaLKHa1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgDTVHc (ORCPT
+        id S1726859AbgDTVKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:07:32 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47296 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727768AbgDTVHb (ORCPT
+        Mon, 20 Apr 2020 17:10:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27830 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725774AbgDTVKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:07:31 -0400
+        Mon, 20 Apr 2020 17:10:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587416850;
+        s=mimecast20190719; t=1587417005;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=T/IYN1616yr1SA6PkPQ11e2tZILCIQKcMMBO70ZP5s8=;
-        b=CGCbe8fzQqnaIQZtyklrdw7vBPMKqA5O95HUs38Zxpc9e7o4BDksmv4kPamME92LXrr2V8
-        pd83oknFwFEt5EQxe4wTtmHfW9Lyoz9KJHyIC9PiiBH7Q6sh3fU7TLcJ2fv2Hv5K7NCrHm
-        mjZjV2awCYkAtw9NdHT9HEiy6l0lOjU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-5eEsuILKMbeb7ItiefifNg-1; Mon, 20 Apr 2020 17:07:28 -0400
-X-MC-Unique: 5eEsuILKMbeb7ItiefifNg-1
-Received: by mail-wm1-f71.google.com with SMTP id o26so456910wmh.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:07:27 -0700 (PDT)
+        bh=7lDCFaFUw4R9AWRYUPjaGqLtTptNqr4/gsP5Cs91YoI=;
+        b=IaLKHa1PFuA/zjjdIBFLmKdRMKCVJ9lh0yPCN6+ZetUHxOnTosHhGYu4brxt1WnXm/oo7y
+        FRclpDVS+1/h6W22/9AgfqGkd+8lazk1c9VuZ8ORrEZXgD+Mt8C0bvqoiTbf4AJ7dPd554
+        9YU52jBnpEuTHckXhMP/vbSxbQCDe4M=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-163-SGX-p1vmMweJlmMJgTzKJA-1; Mon, 20 Apr 2020 17:09:57 -0400
+X-MC-Unique: SGX-p1vmMweJlmMJgTzKJA-1
+Received: by mail-wr1-f72.google.com with SMTP id i10so6373886wrq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:09:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=T/IYN1616yr1SA6PkPQ11e2tZILCIQKcMMBO70ZP5s8=;
-        b=WHxGw+YNh0TicW0nJ+hFEcfLNlCHhkj2v6OOgz2dY89L3KrLr9I0p2pt/uPqWOgGAL
-         bjkWTYdoIBdazqc76lP5PAJrtMLe4Y3YomsD4Bs23Z5TwyXqewLQCF5A2vzEnmhjKO0y
-         WdcSoskdZ0hmEwf54o6DsRwwl7UU9gGfxXIW/dbroN7Ids2AgDZmplD6zmWO++vG9Ou9
-         eJ4z3fmZU7Ey/imJdWrckIFRXWFAGIYsJyJDRnA55tcyXcMOIdG9o9zoVlodydTvF2mS
-         RxrTJuL8bKt5JcJFn0BlE7P5fWWjbZNiz11N4onMJpBccX0dFodQ30fhELFj76a2LrWA
-         aAgg==
-X-Gm-Message-State: AGi0PuanePso8Kzbr6YDec950uATw66d2j6I85xxY3kKuJfxXuyIRkjM
-        YWGuChj/mDuejojvJgdszcz8CCvvCP1+VQ6BeVpStSnr+RDF7vzr7BvkwBBB2T5xr+MgEDs8PEK
-        1CVFDQAXfjzI5XaJOsrMd7Vd9
-X-Received: by 2002:adf:dec9:: with SMTP id i9mr17364162wrn.197.1587416846887;
-        Mon, 20 Apr 2020 14:07:26 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJOqoIAgfv+Cg9KTxLRZbcaffpkxlufOwb7c1SleGl00WZf2mNcXeq7YYmz7qNJxCGApScq8g==
-X-Received: by 2002:adf:dec9:: with SMTP id i9mr17364149wrn.197.1587416846652;
-        Mon, 20 Apr 2020 14:07:26 -0700 (PDT)
+        bh=7lDCFaFUw4R9AWRYUPjaGqLtTptNqr4/gsP5Cs91YoI=;
+        b=b4WX2Mk+mEnH1LV3llhLOxyVQVqRSyTSto3S7y+NEZ7QEDIGaFSVStSuSKGAboKd8d
+         MBvqMBMvdoq/aWI476FUxEpYunls/QUFP/3ohbd/lMum9ee1HvWyHkaHxjxrFnM+ylVS
+         0QQ7hagKLr0ywXd5Zksb+OLT4tFFPNQnV0VUGIw3BbaptYjjnryfYvYa0/gklrX4tpqU
+         QKJbbGzzrK889NZsl+yr2kN36fBHV6lx02PWgN7sDmSxnOYAgmPtGXDtea/pNA2KGNS4
+         OsRR8uS3xtr9jNZT1afwq4h5G0LZkHhgyuMlS0sSThb7A+7QlTb0uV6H2uXz5x5cIc0w
+         5OiA==
+X-Gm-Message-State: AGi0PuYvCdSj6lBFYBIz9DsHSKvHC/d8PdObRIzefLU9zPx+zVMicfLq
+        O8rJdHJ38H3ulzn267OhGSty4Ps174z4z2gzn0ccCs5ddnTzLqTo7PBu+RFFW5nvfY/Ot2YUk1G
+        Gd+FwUlaJ7X292zEIgEZ8CvHV
+X-Received: by 2002:a1c:2e0a:: with SMTP id u10mr1274789wmu.119.1587416995501;
+        Mon, 20 Apr 2020 14:09:55 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK6od6W0dj1gZbWeyxDBs/v6PJZ1fc/3Z8V3Hi0ONmnXmb1L3h9dzlN2r24n5ADl1uYH1Bh5A==
+X-Received: by 2002:a1c:2e0a:: with SMTP id u10mr1274770wmu.119.1587416995274;
+        Mon, 20 Apr 2020 14:09:55 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:5c18:5523:c13e:fa9f? ([2001:b07:6468:f312:5c18:5523:c13e:fa9f])
-        by smtp.gmail.com with ESMTPSA id b191sm809910wmd.39.2020.04.20.14.07.25
+        by smtp.gmail.com with ESMTPSA id j13sm901220wro.51.2020.04.20.14.09.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 14:07:26 -0700 (PDT)
+        Mon, 20 Apr 2020 14:09:54 -0700 (PDT)
 Subject: Re: [PATCH] kvm: add capability for halt polling
 To:     Jon Cargille <jcargill@google.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>
@@ -79,8 +79,8 @@ References: <20200417221446.108733-1-jcargill@google.com>
  <87d083td9f.fsf@vitty.brq.redhat.com>
  <CANxmayg3ML5_w=pY3=x7_TLOqawojxYGbqMLrXJn+r0b_gvWgA@mail.gmail.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <02848f20-ecf9-550b-9b55-0260b05f6ecd@redhat.com>
-Date:   Mon, 20 Apr 2020 23:07:24 +0200
+Message-ID: <02039a7b-01b4-ea5c-bd73-100ea753bf5e@redhat.com>
+Date:   Mon, 20 Apr 2020 23:09:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
@@ -94,20 +94,14 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 20/04/20 20:47, Jon Cargille wrote:
-> Great question, Vitaly.  We actually implemented this as a per-VCPU property
-> initially; however, our user-space implementation was only using it to apply
-> the same value to all VCPUs, so we later simplified it on the advice of
-> Jim Mattson. If there is a consensus for this to go in as per-VCPU rather
-> than per-VM, I'm happy to submit that way instead. The per-VM version did
-> end up looking simpler, IMO.
+>> Is it safe to allow any value from userspace here or would it maybe make
+>> sense to only allow [0, global halt_poll_ns]?
+> I believe that any value is safe; a very large value effectively disables
+> halt-polling, which is equivalent to setting a value of zero to explicitly
+> disable it, which is legal.
 
-Yeah, I am not sure what the usecase would be for per-vCPU halt polling.
-
-You could perhaps disable halt polling for vCPUs that are not placed on
-isolated physical CPUs (devoting those vCPUs to housekeeping), but it
-seems to me that this would be quite hard to get right.  But in that
-case you would probably prefer to disable HLT vmexits completely, rather
-than use halt polling.
+Doesn't a large value make KVM poll all the time?  But you could do that
+just by running "for (;;)" so there's no reason to limit the parameter.
 
 Paolo
 
