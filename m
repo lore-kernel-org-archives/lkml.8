@@ -2,96 +2,166 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7523DC54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA68C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61238214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF5521D82
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgDTD0t (ORCPT
+        id S1726138AbgDTD2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 23:26:49 -0400
-Received: from mga12.intel.com ([192.55.52.136]:6246 "EHLO mga12.intel.com"
+        Sun, 19 Apr 2020 23:28:21 -0400
+Received: from mga09.intel.com ([134.134.136.24]:38261 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgDTD0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 23:26:49 -0400
-IronPort-SDR: 98Rb07V6QK9PPrQ0WqEam7u24KdCdJDl4CVkVMWEMOiLOPnmhsVxbLhsgCyRDQsDW8uiHMLzG4
- S/cKV03Pe/MQ==
+        id S1725865AbgDTD2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 23:28:21 -0400
+IronPort-SDR: HxJ2i4q39Vzlq9hk71piAICkRbLiE2pmH84WUcEaBnStIN0ltZ/W2OeJRiK4/xuQOQdBCSwOZj
+ b3GqoFoXcZUw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 20:26:46 -0700
-IronPort-SDR: 3ivqihb11g1hPSROSw4eMzCqTmuhzzMlOVw2DRnhT5NpR2CQeh2GG5FmuRe6jyDnydFbaMACPt
- loMEBUQ7JLnA==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 20:28:20 -0700
+IronPort-SDR: HAo3SnHSgS33uHmI/1WIj+u8MQgHZlw7cOFUr8mBDve0Oo8JvF0iK+RXOd39QJm38wIK6S1q0o
+ bGN5MbOYUoYg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
-   d="scan'208";a="245236913"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga007.fm.intel.com with ESMTP; 19 Apr 2020 20:26:41 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Mel Gorman <mgorman@techsingularity.net>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Rik van Riel <riel@surriel.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Tejun Heo <tj@kernel.org>, Dave Hansen <dave.hansen@intel.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        Aubrey Li <aubrey.li@intel.com>
-Subject: Re: [RFC] autonuma: Support to scan page table asynchronously
-References: <20200414081951.297676-1-ying.huang@intel.com>
-        <20200414120646.GN3818@techsingularity.net>
-        <20200415113226.GE20730@hirez.programming.kicks-ass.net>
-        <87o8rsxlws.fsf@yhuang-dev.intel.com>
-        <20200417100633.GU20730@hirez.programming.kicks-ass.net>
-Date:   Mon, 20 Apr 2020 11:26:40 +0800
-In-Reply-To: <20200417100633.GU20730@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Fri, 17 Apr 2020 12:06:33 +0200")
-Message-ID: <87368yu9an.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+   d="scan'208";a="333784767"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 19 Apr 2020 20:28:20 -0700
+Received: from [10.249.68.96] (vramuthx-mobl1.gar.corp.intel.com [10.249.68.96])
+        by linux.intel.com (Postfix) with ESMTP id 90C52580479;
+        Sun, 19 Apr 2020 20:28:15 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, piotrs@cadence.com, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200419222817.GK185537@smile.fi.intel.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <cee6075c-a801-a0a9-f0b7-83c0a8c4fe80@linux.intel.com>
+Date:   Mon, 20 Apr 2020 11:28:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <20200419222817.GK185537@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
+Hi Andy,
 
-> On Thu, Apr 16, 2020 at 09:24:35AM +0800, Huang, Ying wrote:
->> Peter Zijlstra <peterz@infradead.org> writes:
->> 
->> > On Tue, Apr 14, 2020 at 01:06:46PM +0100, Mel Gorman wrote:
->> >> While it's just an opinion, my preference would be to focus on reducing
->> >> the cost and amount of scanning done -- particularly for threads.
->> >
->> > This; I really don't believe in those back-charging things, esp. since
->> > not having cgroups or having multiple applications in a single cgroup is
->> > a valid setup.
->> 
->> Technically, it appears possible to back-charge the CPU time to the
->> process/thread directly (not the cgroup).
+   Thank you very much for the review comments and your time...
+
+On 20/4/2020 6:28 am, Andy Shevchenko wrote:
+> On Fri, Apr 17, 2020 at 04:21:47PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> This patch adds the new IP of Nand Flash Controller(NFC) support
+>> on Intel's Lightning Mountain(LGM) SoC.
+>>
+>> DMA is used for burst data transfer operation, also DMA HW supports
+>> aligned 32bit memory address and aligned data access by default.
+>> DMA burst of 8 supported. Data register used to support the read/write
+>> operation from/to device.
+>>
+>> NAND controller driver implements ->exec_op() to replace legacy hooks,
+>> these specific call-back method to execute NAND operations.
+> I guess untested version slipped into mailing list...
+> See below why.
+
+Sorry, This is original patch only , header files are mis-aligned so 
+looks like un-tested patch.
+
+> ...
 >
-> I've yet to see a sane proposal there. What we're not going to do is
-> make regular task accounting more expensive than it already is.
+>> +#include <linux/clk.h>
+>> +#include <linux/completion.h>
+>> +#include <linux/dmaengine.h>
+>> +#include <linux/dma-direction.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/err.h>
+>> +#include <linux/init.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/module.h>
+>> +#include <linux/resource.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/types.h>
+>> +#include <linux/mtd/mtd.h>
+>> +#include <linux/mtd/rawnand.h>
+>> +#include <linux/mtd/nand_ecc.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/of.h>
+> Do you need this?
+Noted, will check and drop if it is notnecessary.
+>> +#include <linux/mtd/partitions.h>
+>> +#include <linux/io.h>
+>> +#include <linux/slab.h>
+>> +#include <mtd/mtd-abi.h>
+>> +#include <linux/mod_devicetable.h>
+>> +#include <linux/mtd/nand.h>
+> Basically, do you need all of them?
+>
+> And maybe keep them in order?
+Sure, will update.
+> ...
+>
+>> +static int lgm_dma_init(struct device *dev, struct lgm_nand_host *lgm_host)
+>> +{
+>> +	int ret;
+>> +
+>> +	/* Prepare for TX DMA: */
+>> +	lgm_host->dma_tx = dma_request_chan(dev, "tx");
+>> +	if (IS_ERR(lgm_host->dma_tx)) {
+>> +		ret = PTR_ERR(lgm_host->dma_tx);
+>> +		dev_err(dev, "can't get the TX DMA channel, error %d!\n", ret);
+>> +		goto err;
+>> +	}
+>> +
+>> +	/* Prepare for RX: */
+>> +	lgm_host->dma_rx = dma_request_chan(dev, "rx");
+>> +	if (IS_ERR(lgm_host->dma_rx)) {
+>> +		ret = PTR_ERR(lgm_host->dma_rx);
+>> +		dev_err(dev, "can't get the RX DMA channel, error %d\n", ret);
+> I suspect this error path hasn't been tested. I don't see where tx channel
+> freeing is happening.
+Good catch, Thanks!, will update
+>> +		goto err;
+>> +	}
+>> +
+>> +	return 0;
+>> +err:
+>> +	return ret;
+> Redundant label.
+Noted.
+>> +}
+> ...
+>
+>> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
+>> +	lgm_host->nandaddr_va = res;
+>> +	nandaddr_pa = res->start;
+>> +	if (IS_ERR(lgm_host->nandaddr_va))
+>> +		return PTR_ERR(lgm_host->nandaddr_va);
+> I'm wonderig what is this.  How is it even compile?
 
-Yes.  There's overhead to back-charge.  To reduce the overhead, instead
-of back-charge immediately, we can
+Agreed!, need a correction, but it's compiled.
 
-- Add one field to task_struct, say backcharge_time, to track the
-  delayed back-charged CPU time.
-
-- When the work item completes its work, add the CPU time it spends to
-  task_struct->backcharge_time atomically
-
-- When the task account CPU regularly, e.g. in scheduler_tick(),
-  task_struct->backcharge is considered too.
-
-Although this cannot eliminate the overhead, it can reduce it.  Do you
-think this is acceptable or not?
-
-Best Regards,
-Huang, Ying
+Regards
+Vadivel
+>
