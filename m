@@ -2,139 +2,187 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD5EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABDFC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD172074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:45:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="I4RsX0Lr"
+	by mail.kernel.org (Postfix) with ESMTP id C57BB208FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:45:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587411936;
+	bh=j2NcSU4/MVE7LPAmEZdLosRKMgNJ7nOCr1OGvM6oX6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XdLeYhK6a8rETr/IvdlcYCqBvIbO8Fa1MjnlcCW0mfyHqLdLn5NMEaGXm16vlWn8S
+	 JrmrWtqtnQLFEEGdqGSBxlD6EiO+wTEcD2DGAa8GKNvk7FCgxPPx/Zdh5IrPhb4/D6
+	 3iFsWMayUfZZ1Mu9mBFibpBPiQtbYxElHRcFypEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgDTTpP (ORCPT
+        id S1726952AbgDTTpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:45:15 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51824 "EHLO vps0.lunn.ch"
+        Mon, 20 Apr 2020 15:45:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbgDTTpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:45:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=rv5fi03wTd6W6vN2TS3pT6WMDcAKEMyIH48OvO2LMy0=; b=I4RsX0LrXIEiuQhc2kVNy/dsaA
-        /z9ehA8NallHkp8hqXIcmBTU6Aoik457k600kOAA0bPKfTUO8tV0LLHw9SVPMmO0vlj52lNrJuPOU
-        YLIz3p8/RulOfqdsOnqUIO3M5qvuK/atqDmZE3nXn75QTH5t0g5jFiUuqiA03NG5ojkg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jQcLo-003tJe-RC; Mon, 20 Apr 2020 21:45:04 +0200
-Date:   Mon, 20 Apr 2020 21:45:04 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        id S1725896AbgDTTpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 15:45:35 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2E7F2084D;
+        Mon, 20 Apr 2020 19:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587411934;
+        bh=j2NcSU4/MVE7LPAmEZdLosRKMgNJ7nOCr1OGvM6oX6A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CWgxYxPRK3d5xP6TD6r9eiLCxP9cINTCPOOtBvsUWOnwQOYJKooeeIRgofPg/lwgm
+         pVsNN2Mo/B1KqZTHTDe8a7VBXlO6ufuzcig7yIsIYoQub+cQspe44u43DTzvpEb0xI
+         u8KsRyrQemtJ4vzs6vPb8oIfeZACmXkrNm6dMNE0=
+Date:   Mon, 20 Apr 2020 20:45:26 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Qian Cai <cai@lca.pw>, Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [PATCH v2 1/2] ethtool: provide UAPI for PHY master/slave
- configuration.
-Message-ID: <20200420194504.GF917792@lunn.ch>
-References: <20200420131508.1539-1-o.rempel@pengutronix.de>
- <20200420131508.1539-2-o.rempel@pengutronix.de>
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 0/4] Clean up hugetlb boot command line processing
+Message-ID: <20200420194525.GA28523@willie-the-truck>
+References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+ <5E312000-05D8-4C5D-A7C0-DDDE1842CB0E@lca.pw>
+ <4c36c6ce-3774-78fa-abc4-b7346bf24348@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200420131508.1539-2-o.rempel@pengutronix.de>
+In-Reply-To: <4c36c6ce-3774-78fa-abc4-b7346bf24348@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> --- a/drivers/net/phy/phy.c
-> +++ b/drivers/net/phy/phy.c
-> @@ -294,7 +294,7 @@ int phy_ethtool_ksettings_set(struct phy_device *phydev,
->  			 phydev->advertising, autoneg == AUTONEG_ENABLE);
->  
->  	phydev->duplex = duplex;
-> -
-> +	phydev->master_slave_set = cmd->base.master_slave;
+On Mon, Apr 20, 2020 at 11:20:23AM -0700, Mike Kravetz wrote:
+> On 4/20/20 8:34 AM, Qian Cai wrote:
+> > 
+> > 
+> >> On Apr 17, 2020, at 2:50 PM, Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> >>
+> >> Longpeng(Mike) reported a weird message from hugetlb command line processing
+> >> and proposed a solution [1].  While the proposed patch does address the
+> >> specific issue, there are other related issues in command line processing.
+> >> As hugetlbfs evolved, updates to command line processing have been made to
+> >> meet immediate needs and not necessarily in a coordinated manner.  The result
+> >> is that some processing is done in arch specific code, some is done in arch
+> >> independent code and coordination is problematic.  Semantics can vary between
+> >> architectures.
+> >>
+> >> The patch series does the following:
+> >> - Define arch specific arch_hugetlb_valid_size routine used to validate
+> >>  passed huge page sizes.
+> >> - Move hugepagesz= command line parsing out of arch specific code and into
+> >>  an arch independent routine.
+> >> - Clean up command line processing to follow desired semantics and
+> >>  document those semantics.
+> >>
+> >> [1] https://lore.kernel.org/linux-mm/20200305033014.1152-1-longpeng2@huawei.com
+> >>
+> >> Mike Kravetz (4):
+> >>  hugetlbfs: add arch_hugetlb_valid_size
+> >>  hugetlbfs: move hugepagesz= parsing to arch independent code
+> >>  hugetlbfs: remove hugetlb_add_hstate() warning for existing hstate
+> >>  hugetlbfs: clean up command line processing
+> > 
+> > Reverted this series fixed many undefined behaviors on arm64 with the config,
+> > 
+> > https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
+> > 
+> > [   54.172683][    T1] UBSAN: shift-out-of-bounds in ./include/linux/hugetlb.h:555:34
+> > [   54.180411][    T1] shift exponent 4294967285 is too large for 64-bit type 'unsigned long'
+> > [   54.188885][    T1] CPU: 130 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc2-next-20200420 #1
+> > [   54.197284][    T1] Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
+> > [   54.207888][    T1] Call trace:
+> > [   54.211100][    T1]  dump_backtrace+0x0/0x224
+> > [   54.215565][    T1]  show_stack+0x20/0x2c
+> > [   54.219651][    T1]  dump_stack+0xfc/0x184
+> > [   54.223829][    T1]  __ubsan_handle_shift_out_of_bounds+0x304/0x344
+> > [   54.230204][    T1]  hugetlb_add_hstate+0x3ec/0x414
+> > huge_page_size at include/linux/hugetlb.h:555
+> > (inlined by) hugetlb_add_hstate at mm/hugetlb.c:3301
+> > [   54.235191][    T1]  hugetlbpage_init+0x14/0x30
+> > [   54.239824][    T1]  do_one_initcall+0x6c/0x144
+> > [   54.244446][    T1]  do_initcall_level+0x158/0x1c4
+> > [   54.249336][    T1]  do_initcalls+0x68/0xb0
+> > [   54.253597][    T1]  do_basic_setup+0x28/0x30
+> > [   54.258049][    T1]  kernel_init_freeable+0x19c/0x228
+> > [   54.263188][    T1]  kernel_init+0x14/0x208
+> > [   54.267473][    T1]  ret_from_fork+0x10/0x18
+> 
+> While rearranging the code (patch 3 in series), I made the incorrect
+> assumption that CONT_XXX_SIZE == (1UL << CONT_XXX_SHIFT).  However,
+> this is not the case.  Does the following patch fix these issues?
+> 
+> From b75cb4a0852e208bee8c4eb347dc076fcaa88859 Mon Sep 17 00:00:00 2001
+> From: Mike Kravetz <mike.kravetz@oracle.com>
+> Date: Mon, 20 Apr 2020 10:41:18 -0700
+> Subject: [PATCH] arm64/hugetlb: fix hugetlb initialization
+> 
+> When calling hugetlb_add_hstate() to initialize a new hugetlb size,
+> be sure to use correct huge pages size order.
+> 
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>  arch/arm64/mm/hugetlbpage.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+> index 9ca840527296..a02411a1f19a 100644
+> --- a/arch/arm64/mm/hugetlbpage.c
+> +++ b/arch/arm64/mm/hugetlbpage.c
+> @@ -453,11 +453,11 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
+>  static int __init hugetlbpage_init(void)
+>  {
+>  #ifdef CONFIG_ARM64_4K_PAGES
+> -	hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+> +	hugetlb_add_hstate(ilog2(PUD_SIZE) - PAGE_SHIFT);
+>  #endif
+> -	hugetlb_add_hstate(CONT_PMD_SHIFT - PAGE_SHIFT);
+> -	hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
+> -	hugetlb_add_hstate(CONT_PTE_SHIFT - PAGE_SHIFT);
+> +	hugetlb_add_hstate(ilog2(CONT_PMD_SIZE) - PAGE_SHIFT);
+> +	hugetlb_add_hstate(ilog2(PMD_SIZE) - PAGE_SHIFT);
+> +	hugetlb_add_hstate(ilog2(CONT_PTE_SIZE) - PAGE_SHIFT);
 
-Shouldn't you validate what has been passed from userspace it before
-setting it?
+Might be clearer to leave the non CONT_* definitions alone and instead
+convert the CONT versions along the lines of:
 
->  	phydev->mdix_ctrl = cmd->base.eth_tp_mdix_ctrl;
->  
->  	/* Restart the PHY */
-> @@ -313,6 +313,7 @@ void phy_ethtool_ksettings_get(struct phy_device *phydev,
->  
->  	cmd->base.speed = phydev->speed;
->  	cmd->base.duplex = phydev->duplex;
-> +	cmd->base.master_slave = phydev->master_slave_get;
->  	if (phydev->interface == PHY_INTERFACE_MODE_MOCA)
->  		cmd->base.port = PORT_BNC;
->  	else
+	hugetlb_add_hstate(CONT_PMD_SHIFT + PMD_SHIFT - PAGE_SHIFT);
 
-You had me confused for a while. You are packing multiple things into
-master_slave_get. Some bits are configuration, some are current
-state. I don't like this. I think this is so you can shoe-horn this
-into the existing IOCTL API? There are limited spare bytes?
+(untested, but I think that's right...)
 
-Maybe we should not support this via the IOCTL, only the netlink
-ethtool?
+But that doesn't matter until Qian has confirmed that your patch fixes the
+issue.
 
-> --- a/include/uapi/linux/ethtool_netlink.h
-> +++ b/include/uapi/linux/ethtool_netlink.h
-> @@ -185,6 +185,7 @@ enum {
->  	ETHTOOL_A_LINKMODES_PEER,		/* bitset */
->  	ETHTOOL_A_LINKMODES_SPEED,		/* u32 */
->  	ETHTOOL_A_LINKMODES_DUPLEX,		/* u8 */
-> +	ETHTOOL_A_LINKMODES_MASTER_SLAVE,	/* u8 */
-
-We would want two enums here, one for configuration, one for state.
-
-> @@ -119,7 +121,9 @@ static int linkmodes_fill_reply(struct sk_buff *skb,
->  	}
->  
->  	if (nla_put_u32(skb, ETHTOOL_A_LINKMODES_SPEED, lsettings->speed) ||
-> -	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex))
-> +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex) ||
-> +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE,
-> +		       lsettings->master_slave))
-
-Here we return both configuration and current state.
-
->  		return -EMSGSIZE;
->  
->  	return 0;
-> @@ -248,6 +252,7 @@ linkmodes_set_policy[ETHTOOL_A_LINKMODES_MAX + 1] = {
->  	[ETHTOOL_A_LINKMODES_PEER]		= { .type = NLA_REJECT },
->  	[ETHTOOL_A_LINKMODES_SPEED]		= { .type = NLA_U32 },
->  	[ETHTOOL_A_LINKMODES_DUPLEX]		= { .type = NLA_U8 },
-> +	[ETHTOOL_A_LINKMODES_MASTER_SLAVE]	= { .type = NLA_U8 },
->  };
->  
->  /* Set advertised link modes to all supported modes matching requested speed
-> @@ -310,6 +315,8 @@ static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
->  			 mod);
->  	ethnl_update_u8(&lsettings->duplex, tb[ETHTOOL_A_LINKMODES_DUPLEX],
->  			mod);
-> +	ethnl_update_u8(&lsettings->master_slave,
-> +			tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE], mod);
-
-Here we expect just configuration.
-
-There actually is space for two fields in the ethtool_link_settings,
-so i don't see why you actually did not use two.
-
-   Andrew
+Will
