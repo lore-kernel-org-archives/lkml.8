@@ -2,151 +2,113 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B78DC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79128C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85B3C2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561B72082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:39:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="lo/nsXDi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgDTKgt (ORCPT
+        id S1726138AbgDTKja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 06:36:49 -0400
-Received: from mga14.intel.com ([192.55.52.115]:16437 "EHLO mga14.intel.com"
+        Mon, 20 Apr 2020 06:39:30 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53552 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgDTKgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 06:36:48 -0400
-IronPort-SDR: GfKZ/dBBk17DnchVmGuO4gZqdyLWHZrRBgKcW8ll2NGfyLxMbs/RfZS3452KGuCvczyUXkyMh8
- aVwc3klJlv4w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 03:36:48 -0700
-IronPort-SDR: i9SlA6S+Z9Yd3ZvP2m4PtHjqGxFXqbbarTfv3P4KSW0R1akYYp0RCjMsFYnEM8RBpcwPvqfUhS
- kWzphpIO4mHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="scan'208";a="455651402"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.105])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Apr 2020 03:36:44 -0700
-Date:   Mon, 20 Apr 2020 18:36:43 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [LKP] Re: [y2038] 412c53a680: will-it-scale.per_process_ops
- 11.7% improvement
-Message-ID: <20200420103643.GC46370@shbuild999.sh.intel.com>
-References: <20200305062138.GI5972@shao2-debian>
- <20200305195317.771bd8fd1f308172d26a51fe@linux-foundation.org>
+        id S1725773AbgDTKja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 06:39:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1587379168; bh=3JRQF0O3I0HdGeUd7K/NKhUR4du8lhknE+/rA7T8Zt8=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=lo/nsXDihOXxSgFONiiZSxKacqThKmQwRJzPH0c9i82cpOUg6AA8DobDnPl907DXK
+         yag95t79gqoJpHulcgLzU5mBN6LR7Acrlg3e5O7p9y+bYhah0hO+0DEIxnHVRIgI/F
+         83UqnrTkPe1NSo+6/f22xh4cx95o+JhPzwC2S29E=
+Date:   Mon, 20 Apr 2020 12:39:27 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH v3 0/7] Add support for Allwinner H6 DVFS
+Message-ID: <20200420103927.uvzotrolz2inz6q2@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+References: <20200419135011.18010-1-peron.clem@gmail.com>
+ <20200420084547.q5xqlbnmug7l45p2@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200305195317.771bd8fd1f308172d26a51fe@linux-foundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200420084547.q5xqlbnmug7l45p2@gilmour.lan>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Hi Maxime,
 
-On Thu, Mar 05, 2020 at 07:53:17PM -0800, Andrew Morton wrote:
-> On Thu, 5 Mar 2020 14:21:38 +0800 kernel test robot <rong.a.chen@intel.com> wrote:
+On Mon, Apr 20, 2020 at 10:45:47AM +0200, Maxime Ripard wrote:
+> Hi,
 > 
-> > FYI, we noticed a 11.7% improvement of will-it-scale.per_process_ops due to commit:
+> On Sun, Apr 19, 2020 at 03:50:04PM +0200, Clément Péron wrote:
+> > Now that required drivers are merged we can contibute on DVFS
+> > support for Allwinner H6.
 > > 
+> > This serie is based on Yangtao Li serie[0] and Ondřej Jirman work[1].
 > > 
-> > commit: 412c53a680a97cb1ae2c0ab60230e193bee86387 ("y2038: remove unused time32 interfaces")
+> > Most of the OPP tables are taken from original vendor kernel[2].
+> > Plus there are new CPU frequencies at 1.6GHz, 1.7GHz and 1.8GHz.
+> > 
+> > I wrote a simple script to randomly set a frequency during
+> > a random time[3]. This script is quite stressfull and set some high
+> > frequency without checking temperature. This can result on behavior
+> > that whould not occurs with the real cpufreq framework.
+> > As Maxime point out I also tested with cpufreq-ljt-stress-test
+> > (found here https://github.com/ssvb/cpuburn-arm).
+> > This script doesn't trigger any issue.
+> > I also test that that offlining CPU0 and doing DVFS on other CPUs
+> > works. As CPU regulator is only set for CPU0.
+> > 
+> > The GPU devfreq was drop as the regulator is still not properly
+> > drive by panfrost driver[4].
+> > I will re-introduce it later.
+> > 
+> > Ondřej Jirman has an Orange Pi 3, Jernej has a PineH64 and a Tanix
+> > TX6 boards and I have a Beelink GS1 board so I have enable these
+> > boards. But CPU Devfreq is really touchy has it depends on:
+> > board design, SoC speed_grade and environement which can affect
+> > thermal cooling and have different behavior for different user.
+> > 
+> > If people can test this serie and give feedback, I will try to
+> > introduce this in LibreElec tree, so LE community can test it.
 > 
-> That patch merely removed unused code!
+> Applied all of them, thanks!
 
-Sorry for the late response.
+Please also apply "[PATCH v2 1/7] arm64: dts: allwinner: h6: Add
+clock to CPU cores" from the v2 series, otherwise cpufreq will
+not work.
 
-Yes, we've seen similar cases for this exact micro benchmark before,
-that commit is about cpu idle driver which has no direct relation
-with mmap at all. https://lkml.org/lkml/2019/9/17/966
+I can also send a missing patch adding the trip points, and cpu
+as a cooling device, that I linked in my other reply to this patch
+series afterwards, if Clément wants.
 
-The reason could be the changed address and cache alignment of
-kernel data and code, which has been discussed for other
-micro-benchmarsk, like https://lkml.org/lkml/2020/2/5/238
+regards,
+	o.
 
-But for this test for mmap, we found very high lock contention for
-the spinlock of per-cpu counter "vm_committed_as", the perf data is: 
+> Maxime
 
-    94.14%     0.35%  [kernel.kallsyms]         [k] _raw_spin_lock_irqsave                      -      -            
-48.21% _raw_spin_lock_irqsave;percpu_counter_add_batch;__vm_enough_memory;mmap_region;do_mmap;vm_mmap_pgoff;ksys_mmap_pgoff;do_syscall_64;entry_SYSCALL_64_after_hwframe;mmap64
-45.91% _raw_spin_lock_irqsave;percpu_counter_add_batch;__do_munmap;__vm_munmap;__x64_sys_munmap;do_syscall_64;entry_SYSCALL_64_after_hwframe;munmap
-
-I think the lock contention is only necessary for accuracy of
-"vm_committed_as" when overcommit policy is OVERCOMMIT_NEVER.
-
-And with the following debug patch, the benchmark score could be
-bumped to 8X~20X, and the delta caused by this "year 2038" commit
-is reduced to 2%, delta for the cpuidle commit is reduced to 0.
-Which means the micro benchmark is much stabler.
-(the debug patch sitll has some problems)
-
-Thanks,
-Feng
-
---------------------------------------------
-mm: util: Reduce spinlock usage for vm !OVERCOMMIT_NEVER policy
-
-When debugging a will-it-scale performance regression we found
-about 94% cpu cycles are used on
-	_raw_spin_lock_irqsave <-- percpu_counter_add_batch
-which is for "vm_committed_as" inside vm_acct_memory().
-
-Actually this heavy lock contention is not always necessary. The
-spinlock is only used when percpu_counter_add_batch() needs to be
-very precise(needs a small batch number), while only when the vm
-overcommit policy is OVERCOMMIT_NEVER, the "vm_committed_as" is
-really used with high precision for sanity checking.
-
-So adjust the batch number according to vm commit policy, to
-reduce the lock contention for non OVERCOMMIT_NEVER cases.
-
-Benchmark with the same mmap case [1] on Cascade Lake sever (48C/96T)
-and Knights Mill (72C/288T) shows 1400%~2400%(10X-20X) performance
-gain.
-
-Todo: adjust the other 2 possible places which use "vm_committed_as",
-one is /proc/meminfo, the other is HyperV ballon driver.
-
-Signed-off-by: Feng Tang <feng.tang@intel.com>
----
- include/linux/mman.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/mman.h b/include/linux/mman.h
-index 4b08e9c..04d20d9 100644
---- a/include/linux/mman.h
-+++ b/include/linux/mman.h
-@@ -65,7 +65,15 @@ unsigned long vm_memory_committed(void);
- 
- static inline void vm_acct_memory(long pages)
- {
--	percpu_counter_add_batch(&vm_committed_as, pages, vm_committed_as_batch);
-+	s32 batch = vm_committed_as_batch;
-+
-+	/* choose the batch number according to vm overcommit policy */
-+	if (sysctl_overcommit_memory == OVERCOMMIT_ALWAYS)
-+		batch = totalram_pages() >> 6;
-+	else if (sysctl_overcommit_memory == OVERCOMMIT_GUESS)
-+		batch = totalram_pages() >> 8;
-+
-+	percpu_counter_add_batch(&vm_committed_as, pages, batch);
- }
- 
- static inline void vm_unacct_memory(long pages)
--- 
-2.7.4
 
