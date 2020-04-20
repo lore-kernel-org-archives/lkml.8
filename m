@@ -2,90 +2,105 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32089C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C98C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3DB206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587394070;
-	bh=1BhtoD7yNeBV/CSdizwcBae7TdOzlf7e82l/idP0VFw=;
-	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
-	b=B4L7FiOdj8wPY0holYrPBVojjR/R0FwSFtUv6nZLdei1XCB4JNaP1y+qa47k4Nn2z
-	 CJ/y9/tuvUz8NrdJjTbzha0MKTwF1woAnvQHhQL4Fl5KJj6yufSDkzw0b0MPgkaz2X
-	 OoXJ9HY4FD5ZARb6slwJAb7JdRkF9oRwprVj3rzQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3C8B9206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgDTOrt (ORCPT
+        id S1727824AbgDTOuE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:47:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgDTOrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:47:48 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B74C220775;
-        Mon, 20 Apr 2020 14:47:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587394068;
-        bh=1BhtoD7yNeBV/CSdizwcBae7TdOzlf7e82l/idP0VFw=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=xQGLNMvzS/RbJrEYY0csesMI2W2sedVdhVofRaBWXEQSdmfdCmYrFKiaBpWj+WawD
-         MJ3myJ0XlIAzaPyW1J/WJsTZxV8107IW5Ad7kf/y71c42THqFFvwZbkjm5kbOniQKv
-         DMOXTrkofvqysRo9fD7e0UcsCigCWGE0V04JYO/U=
-Date:   Mon, 20 Apr 2020 15:47:45 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dejin Zheng <zhengdejin5@gmail.com>, linux-kernel@vger.kernel.org
-In-Reply-To: <20200419135150.14741-1-zhengdejin5@gmail.com>
-References: <20200419135150.14741-1-zhengdejin5@gmail.com>
-Subject: Re: [PATCH v1 0/2] use read_poll_timeout macro to simplify code
-Message-Id: <158739405971.23005.1229137510652656489.b4-ty@kernel.org>
+        Mon, 20 Apr 2020 10:50:04 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:50426 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgDTOuE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 10:50:04 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id D316027E0867;
+        Mon, 20 Apr 2020 16:50:02 +0200 (CEST)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id HWyQpPAO5Tvb; Mon, 20 Apr 2020 16:50:02 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 6B91027E0879;
+        Mon, 20 Apr 2020 16:50:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id m5gn7ZtFqnkJ; Mon, 20 Apr 2020 16:50:02 +0200 (CEST)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 4EB7227E0868;
+        Mon, 20 Apr 2020 16:50:02 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 16:50:02 +0200 (CEST)
+From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalrayinc.com>
+To:     Tudor Ambarus <Tudor.Ambarus@microchip.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>, richard@nod.at,
+        vigneshr@ti.com, linux-mtd@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <1734428336.16421904.1587394202163.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <1950407.5XCTmqoEVg@192.168.0.120>
+References: <20200417160839.25880-1-cleger@kalray.eu> <1950407.5XCTmqoEVg@192.168.0.120>
+Subject: Re: [PATCH] mtd: spi-nor: Add support for is25lp01g
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC81 (Linux)/8.8.15_GA_3895)
+Thread-Topic: spi-nor: Add support for is25lp01g
+Thread-Index: AQHWFw0/tWJ4ISRUwk6rGADNBybaDI6HnvBZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Apr 2020 21:51:48 +0800, Dejin Zheng wrote:
-> redefined regmap_read_poll_timeout and regmap_field_read_poll_timeout
-> by read_poll_timeout to simplify code, they have many similar codes.
+Hi Tudor,
+
+----- On 20 Apr, 2020, at 14:14, Tudor Ambarus Tudor.Ambarus@microchip.com wrote:
+
+> Hi, Clement,
 > 
-> Dejin Zheng (2):
->   regmap: redefined regmap_read_poll_timeout to simplify code
->   regmap: redefined regmap_field_read_poll_timeout to simplify code
+> On Friday, April 17, 2020 7:08:39 PM EEST Clement Leger wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the
+>> content is safe
+>> 
+>> Update the issi_parts table for is25lp01g (128MB) device from ISSI.
+>> Tested on Kalray K200 board.
+>> 
+>> Signed-off-by: Clement Leger <cleger@kalray.eu>
+>> ---
+>>  drivers/mtd/spi-nor/issi.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>> 
+>> diff --git a/drivers/mtd/spi-nor/issi.c b/drivers/mtd/spi-nor/issi.c
+>> index ffcb60e54a80..c3c3438e3d08 100644
+>> --- a/drivers/mtd/spi-nor/issi.c
+>> +++ b/drivers/mtd/spi-nor/issi.c
+>> @@ -49,6 +49,8 @@ static const struct flash_info issi_parts[] = {
+>>                              SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ
+>> | SPI_NOR_4B_OPCODES)
+>>                 .fixups = &is25lp256_fixups },
+>> +       { "is25lp01g",  INFO(0x9d601b, 0, 64 * 1024, 2048,
 > 
-> [...]
+> There is a "K" flavor of this flash which has 512 Byte Page size with 256 KB
+> Block size. While the page size can be determined by parsing SFDP, I think we
+> will have some problems with sector_size because as of now, the sector_size is
+> always set to 64KB. An incorrect sector_size will affect erases and locking.
 
-Applied to
+Thanks, I did not noticed that ! If I understand, this will require to modify
+the core to handle sector size the same way as page_size and probably add a
+fixup to detect the "K" options from SFDP ?
+This is probably more changes than I can handle, and you can probably drop this
+patch since not really functional for "K" type flash.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-5.8
+But thanks for noticing it !
 
-Thanks!
+Clément
 
-[1/2] regmap: Simplify implementation of the regmap_read_poll_timeout() macro
-      commit: e44ab4e14d6f4c448ae555132090c1a116b19e5c
-[2/2] regmap: Simplify implementation of the regmap_field_read_poll_timeout() macro
-      commit: 148c01d176237115d9c2805f6d29c0b6a72fbd10
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> 
+> Cheers,
+> ta
