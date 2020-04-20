@@ -2,66 +2,77 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85085C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59427C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64CC7208FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A272074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgDTTtj (ORCPT
+        id S1726688AbgDTTuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:49:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725897AbgDTTtj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:49:39 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4CAC061A0C;
-        Mon, 20 Apr 2020 12:49:38 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 54B47127FE1D5;
-        Mon, 20 Apr 2020 12:49:38 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 12:49:37 -0700 (PDT)
-Message-Id: <20200420.124937.2260131206540617269.davem@davemloft.net>
-To:     tanhuazhong@huawei.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
-        linuxarm@huawei.com, kuba@kernel.org
-Subject: Re: [PATCH V2 net-next 00/10] net: hns3: misc updates for -next
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1587349055-4403-1-git-send-email-tanhuazhong@huawei.com>
-References: <1587349055-4403-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Apr 2020 12:49:38 -0700 (PDT)
+        Mon, 20 Apr 2020 15:50:40 -0400
+Received: from mga09.intel.com ([134.134.136.24]:25014 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbgDTTuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 15:50:40 -0400
+IronPort-SDR: 26XDzRrvTClvlbWqvrhhkyL3/gBPSTrZBtlnGRGPxgBmEGkJv3RQQg7YkdOhvlDbHNb3x202HK
+ 056H0G315Eiw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 12:50:39 -0700
+IronPort-SDR: Afwo29XKvnrplIUz8zwXLEe4WnVomTo4tMaFxgQ7z15CoJlVX45jHGJB+sBePtG36AE4nArqIM
+ eNk3Q/88JmtQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,407,1580803200"; 
+   d="scan'208";a="401946193"
+Received: from coffy.sc.intel.com ([10.3.79.166])
+  by orsmga004.jf.intel.com with ESMTP; 20 Apr 2020 12:50:39 -0700
+From:   Jithu Joseph <jithu.joseph@intel.com>
+To:     dvhart@infradead.org, andy@infradead.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maurice.ma@intel.com, ravi.p.rangarajan@intel.com,
+        sean.v.kelley@intel.com, kuo-lang.tseng@intel.com,
+        Jithu Joseph <jithu.joseph@intel.com>
+Subject: [PATCH 0/1] platform/x86: Add Slim Bootloader firmware update support
+Date:   Mon, 20 Apr 2020 12:44:04 -0700
+Message-Id: <20200420194405.8281-1-jithu.joseph@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
-Date: Mon, 20 Apr 2020 10:17:25 +0800
+Slim Bootloader(SBL) [1] is a small open-source boot firmware,
+designed for running on certain Intel platforms. SBL can be
+thought-of as fulfilling the role of a minimal BIOS
+implementation, i.e initializing the hardware and booting
+Operating System.
 
-> This patchset includes some misc updates for the HNS3 ethernet driver.
-> 
-> [patch 1&2] separates two bloated function.
-> [patch 3-5] removes some redundant code.
-> [patch 6-7] cleans up some coding style issues.
-> [patch 8-10] adds some debugging information.
-> 
-> Change log:
-> V1->V2:	removes an unnecessary initialization in [patch 1] which
-> 	suggested by David Miller.
-> 	modified some print format issue and commit log in [patch 8].
+This driver creates sysfs interfaces which allows user space entities
+to trigger update of SBL firmware.
 
-Series applied, thank you.
+Acknowledgment: Initial draft of the driver code was authored by
+Maurice Ma <maurice.ma@intel.com>
+
+[1] https://slimbootloader.github.io
+
+Jithu Joseph (1):
+  platform/x86: Add Slim Bootloader firmware update signaling driver
+
+ MAINTAINERS                        |   7 ++
+ drivers/platform/x86/Kconfig       |  10 ++
+ drivers/platform/x86/Makefile      |   1 +
+ drivers/platform/x86/sbl_fwu_wmi.c | 143 +++++++++++++++++++++++++++++
+ 4 files changed, 161 insertions(+)
+ create mode 100644 drivers/platform/x86/sbl_fwu_wmi.c
+
+
+base-commit: 8f3d9f354286745c751374f5f1fcafee6b3f3136
+-- 
+2.17.1
+
