@@ -2,103 +2,122 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B0AC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B13C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76AF220775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:38:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="unBcvliX"
+	by mail.kernel.org (Postfix) with ESMTP id 3CF6821473
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:38:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587393523;
+	bh=+DGLsi3SfobUu4UEs06d75/bKEBz2SreRY+kidIQn6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NXTe7yzJl0x53rypBEKgUUdMGCw4B7NxfwIIStCQc2d3VGT6USNKt2YizgtKFMAuN
+	 OMxKe3sUF+yhydd3DrVsgHYI8okIKigi+w47X3JB6ePPswuj0sfwrSxodbwyVWjP1U
+	 vsD8AOwGsKR05EeHRigvjGwAotJHXT9NWIHH1eKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbgDTOii (ORCPT
+        id S1730020AbgDTOim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:38:38 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:42162 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729982AbgDTOia (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:38:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587393510; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Tj2PQ/woMiwCdJuPYcUQx4SEawLDLIWZBKxuQ9AsVhE=; b=unBcvliXCdNnuDLk9prfT4yiWIVux65gqJHv+V/t488VspNopsG0RakPdvHPQj2ew/nwOZoU
- NT6R1LtQdup4oRlcv0IrtO1alg7MSRUD55PREDw6/SAROn5b+sPyjdNx6rWEBEBtxpmO+QK1
- 4lfOghYo0+14xGZWiR6v0BNgiiM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9db3c3.7f56fb84be30-smtp-out-n01;
- Mon, 20 Apr 2020 14:37:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B25EEC4478F; Mon, 20 Apr 2020 14:37:55 +0000 (UTC)
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 20 Apr 2020 10:38:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729982AbgDTOik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 10:38:40 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4018EC432C2;
-        Mon, 20 Apr 2020 14:37:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4018EC432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCHv2 5/6] dt-bindings: remoteproc: qcom: Add iommus property
-Date:   Mon, 20 Apr 2020 20:07:09 +0530
-Message-Id: <1ece7790221ef520408a7a4d5a4d6ef6443f3581.1587392905.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1587392905.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1587392905.git.saiprakash.ranjan@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id B845020735;
+        Mon, 20 Apr 2020 14:38:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587393519;
+        bh=+DGLsi3SfobUu4UEs06d75/bKEBz2SreRY+kidIQn6Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YgYrxMMOkdMkrfa20rx8C0mXWLlrggN53mVav7oRmEA41sLboek5srPajPXqshBDm
+         J92HLUex8je+lvGyjhV/zvab3y5j9/KaFqrpZilQPXW1oNTtPBpWwGQGxyXk/nl9f1
+         QsL3g3BpeEUkwHdl+glra55mcKph9rRjFuqZllCI=
+Date:   Mon, 20 Apr 2020 22:38:32 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org, eha@deif.com,
+        angelo@sysam.it, andrew.smirnov@gmail.com, gustavo@embeddedor.com,
+        weic@nvidia.com, mhosny@nvidia.com, michael@walle.cc,
+        peng.ma@nxp.com
+Subject: Re: [PATCH v5 12/12] arm64: dts: ls1028a-rdb: Add a spidev node for
+ the mikroBUS
+Message-ID: <20200420143831.GB32419@dragon>
+References: <20200318001603.9650-1-olteanv@gmail.com>
+ <20200318001603.9650-13-olteanv@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318001603.9650-13-olteanv@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+On Wed, Mar 18, 2020 at 02:16:03AM +0200, Vladimir Oltean wrote:
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> 
+> For debugging, it is useful to have access to the DSPI controller
+> signals. On the reference design board, these are exported to either the
+> mikroBUS1 or mikroBUS2 connector (according to the CPLD register
+> BRDCFG3[SPI3]).
+> 
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+> Changes in v5:
+> None.
+> 
+> Changes in v4:
+> None.
+> 
+> Changes in v3:
+> None.
+> 
+> Changes in v2:
+> Change compatible string for spidev node.
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> index 6d05b76c2c7a..0d27b5667b8c 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> @@ -83,6 +83,20 @@
+>  	};
+>  };
+>  
+> +&dspi2 {
+> +	bus-num = <2>;
+> +	status = "okay";
+> +
+> +	/* mikroBUS1 */
+> +	spidev@0 {
+> +		compatible = "rohm,dh2228fv";
 
-Add iommus property to allow Q6 modem to boot on platforms which do
-not have trustZone.
+Is the compatible documented?
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Shawn
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index 88dfa3fc15f7..130e50aab741 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -184,6 +184,9 @@ For the compatible strings below the following phandle references are required:
- 		    followed by the offset within syscon for conn_box_spare0
- 		    register.
- 
-+The Hexagon node must contain iommus property as described in ../iommu/iommu.txt
-+on platforms which do not have TrustZone.
-+
- = SUBNODES:
- The Hexagon node must contain two subnodes, named "mba" and "mpss" representing
- the memory regions used by the Hexagon firmware. Each sub-node must contain:
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> +		spi-max-frequency = <20000000>;
+> +		fsl,spi-cs-sck-delay = <100>;
+> +		fsl,spi-sck-cs-delay = <100>;
+> +		reg = <0>;
+> +	};
+> +};
+> +
+>  &esdhc {
+>  	sd-uhs-sdr104;
+>  	sd-uhs-sdr50;
+> -- 
+> 2.17.1
+> 
