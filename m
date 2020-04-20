@@ -2,104 +2,104 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AAAC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11BAC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B07B72078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9E42078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="kQyQgJig"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="ijNJwWS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgDTFky (ORCPT
+        id S1726067AbgDTFlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:40:54 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.10]:35491 "EHLO fudan.edu.cn"
+        Mon, 20 Apr 2020 01:41:21 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:53130 "EHLO fudan.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725865AbgDTFky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:40:54 -0400
+        id S1725825AbgDTFlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 01:41:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=DjbzqYNqeqnbjCD12TkNbwM+GA7agGlpqtiuflvqEeQ=; b=k
-        QyQgJig8hKn5pXyORfGGMB5fbkIDU/UUr9OUc6iZFYW6poCBKP8a+pWLSG/fOyAb
-        mUua/+BkruHG1HZE6h3rWG1wl5BUTY+BE5IVtTvL37K8RvoL3rSzx1/QKo+r2kIo
-        p5Cp77xV8SyL/bq+w90f0op7nze1W9NBqWMfiyFqyY=
+        Message-Id; bh=uzKBpRqWqrL68DjlrMLrFbymZnh9Mm1O4zM1L55rFDM=; b=i
+        jNJwWS9MAEI9JD1IO0CNdyHUIpjdCp5dQvv+ORw2Jkjxzh7t1SbxiAOXTN76OEHx
+        0m0OLF9y0UgWYedL1ITpz6MlrtmzmDOg+NyiN8VVYOmxEKftCe4gQ3rBlv6mnyMH
+        wVZxHKN3NUXlrCY8eHDipk/ySmBr3YhNixXSk5GfCk=
 Received: from localhost.localdomain (unknown [120.229.255.67])
-        by app1 (Coremail) with SMTP id XAUFCgBXSHW6NZ1evHYWAA--.63135S3;
-        Mon, 20 Apr 2020 13:40:12 +0800 (CST)
+        by app2 (Coremail) with SMTP id XQUFCgCnWOH6NZ1eM_odAA--.12310S3;
+        Mon, 20 Apr 2020 13:41:16 +0800 (CST)
 From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, Jeff Mahoney <jeffm@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
         Xiyu Yang <xiyuyang19@fudan.edu.cn>,
         Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] btrfs: Fix refcnt leak in btrfs_recover_relocation
-Date:   Mon, 20 Apr 2020 13:39:39 +0800
-Message-Id: <1587361180-83334-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Subject: [PATCH] ceph: Fix potential ceph_osd_request refcnt leak
+Date:   Mon, 20 Apr 2020 13:40:43 +0800
+Message-Id: <1587361243-83431-1-git-send-email-xiyuyang19@fudan.edu.cn>
 X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XAUFCgBXSHW6NZ1evHYWAA--.63135S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr4xKF1rKw4kKw4ruF48JFb_yoW8Gr4fpr
-        47Cw1Fgry5tw1kArsxKan5Cr1fGa1DWw18GrsYgws5Xws3J3WSya4jvwnrtry8tr1qqw4U
-        XrsY9rW5Arn8C3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID: XQUFCgCnWOH6NZ1eM_odAA--.12310S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrW5JFy5Cr47GryrJF1DKFg_yoW8Gryfpr
+        47Cw4UtrsYq3W8XF4kJ398W348ua18ZrWSyr1FgFy8CFn5Xa9IyF1Fq3sIqr47AFyxJr95
+        trs09r4DZa42yFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
         rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
         1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
         JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
         Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr
         1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-        rcIFxwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-        67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWU
-        JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-        nIWIevJa73UjIFyTuYvjfUOlksUUUUU
+        rcIFxwCY02Avz4vE14v_GrWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+        IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2
+        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+        UI43ZEXa7VU1U5r7UUUUU==
 X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-btrfs_recover_relocation() invokes btrfs_join_transaction(), which joins
-a btrfs_trans_handle object into transactions and returns a reference of
-it with increased refcount to "trans".
+ceph_writepages_start() invokes ceph_osdc_start_request(), which
+increases the refcount of the ceph_osd_request object "req" and then
+submit the request.
 
-When btrfs_recover_relocation() returns, "trans" becomes invalid, so the
+When ceph_writepages_start() returns or a new object is assigned to
+"req", the original local reference of "req" becomes invalid, so the
 refcount should be decreased to keep refcount balanced.
 
-The reference counting issue happens in one exception handling path of
-btrfs_recover_relocation(). When read_fs_root() failed, the refcnt
-increased by btrfs_join_transaction() is not decreased, causing a refcnt
-leak.
+The reference counting issue happens in a normal path of
+ceph_writepages_start(). Before NULL assigned to "req", the function
+forgets to decrease its refcnt increased by ceph_osdc_start_request()
+and will cause a refcnt leak.
 
-Fix this issue by calling btrfs_end_transaction() on this error path
-when read_fs_root() failed.
+Fix this issue by calling ceph_osdc_put_request() before the original
+object pointed by "req" becomes invalid.
 
-Fixes: 79787eaab461 ("btrfs: replace many BUG_ONs with proper error
-handling")
+Fixes: 1d3576fd10f0 ("ceph: address space operations")
 Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 ---
- fs/btrfs/relocation.c | 1 +
+ fs/ceph/addr.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index 995d4b8b1cfd..46a451594c7a 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4606,6 +4606,7 @@ int btrfs_recover_relocation(struct btrfs_root *root)
- 		if (IS_ERR(fs_root)) {
- 			err = PTR_ERR(fs_root);
- 			list_add_tail(&reloc_root->root_list, &reloc_roots);
-+			btrfs_end_transaction(trans);
- 			goto out_free;
- 		}
+diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+index 7ab616601141..b02c050a3418 100644
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -1126,6 +1126,7 @@ static int ceph_writepages_start(struct address_space *mapping,
+ 		req->r_mtime = inode->i_mtime;
+ 		rc = ceph_osdc_start_request(&fsc->client->osdc, req, true);
+ 		BUG_ON(rc);
++		ceph_osdc_put_request(req);
+ 		req = NULL;
  
+ 		wbc->nr_to_write -= i;
 -- 
 2.7.4
 
