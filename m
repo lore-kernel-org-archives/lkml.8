@@ -2,148 +2,117 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEB3C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 181CAC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE5B2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54622078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:05:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WOBxigV2"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="ZnXBz/6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgDTHFO (ORCPT
+        id S1726321AbgDTHF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:05:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34033 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726232AbgDTHFN (ORCPT
+        Mon, 20 Apr 2020 03:05:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726055AbgDTHF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:05:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587366311;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=r87o03Z4b7U+mQn3G3U0WKYTeMWWxrz4e7Dvgi+msf4=;
-        b=WOBxigV2cm0kjwhWUUVXsfx2xlvQUgWO1P+bC1z0Ekq9QfpgFWPoMAhlcmCqp978wwI20q
-        /j8U1tz/kBelBR2zWrXJJXx76/PEkwBsubmCcYuGZb/JJPcxjwFugncSlZAVcRwYywNp3T
-        FjG3A0T6/PE26MaStMN7Mf5mCW6nefk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-284-OtUMa2UPMiy5TKWMlEfQjw-1; Mon, 20 Apr 2020 03:05:06 -0400
-X-MC-Unique: OtUMa2UPMiy5TKWMlEfQjw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E4C9107ACC9;
-        Mon, 20 Apr 2020 07:05:05 +0000 (UTC)
-Received: from [10.36.114.7] (ovpn-114-7.ams2.redhat.com [10.36.114.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 884AF60C84;
-        Mon, 20 Apr 2020 07:05:02 +0000 (UTC)
-Subject: Re: [PATCH] KVM: s390: remove unneeded semicolon in
- gisa_vcpu_kicker()
-To:     Jason Yan <yanaijie@huawei.com>, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        Ulrich.Weigand@de.ibm.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hulk Robot <hulkci@huawei.com>
-References: <20200418081926.41666-1-yanaijie@huawei.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <9a70e5bb-c1b5-a096-95b7-754a2e9e6aed@redhat.com>
-Date:   Mon, 20 Apr 2020 09:05:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 20 Apr 2020 03:05:27 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44135C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:05:26 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ms17so4035549pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F73XxE2CZAkSaOwPg4Nrru11KQB4w7SYV2z/uYSccF8=;
+        b=ZnXBz/6exLkNDCi45tj//brSSbOIcNDxegDG2Gy7BHd7x+4kZZ01td6gwT5Td+oGVQ
+         e/aLC+gsEP9BfXC6f/ktEaiDRFcxCINHpgB5q4bOug9/ozCbqknymQHK9DsJWvUOyczx
+         Bn5aew5+b1GISFiklfFH1s5kbfdMRUrBJ85Q6wCHwdjWigpB1ecsgoZYkv+J8RLdz9fK
+         B3+YWhKfEEbkXozp01TF4ZE6e+CoVFljx08iAgBCY5Ny8AGHuP+asZkd2SGJyW73QtJl
+         NiGjAVIlXX8RftXB7a4rSXQYg9dyYMncyE+kYgqCENN/VpsxuWqZJk+RzzN3niAwa2Yl
+         nhtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F73XxE2CZAkSaOwPg4Nrru11KQB4w7SYV2z/uYSccF8=;
+        b=abF32YJMe4ZbR7derPUfmC0TRrb7TNbgdBE+6NpbQq+LYlvuGU6ZHcTOO2F2wgqcDd
+         sXW0GR0WoW+StXXo6NTFEdzUd6uVY45T9HQAcsweZfazHc007rZc+16JFlxyNP07/JFc
+         sVpLSNhFalgleHJTtwMn5sDdJr7h8uPBvGs1T7bKqd5cFJH+u52Xx9r+aNjN1sNkOfNV
+         0lbc9NFBEz+UagyE14thv5e1a8WsoUY2MWZNWV+CoKXgEx1wninFx0ocBgZh2XZ6SbhR
+         +ww/GURGIrN7eHF6u+wxK3BZNPVDN/mKTYSvsnCrA7q2Q7zxttF8NtmDbYR9SXuO7IIX
+         kM1g==
+X-Gm-Message-State: AGi0PuYF7If3gM0Id4wdgJfLnk8DE1NSnJmKSl5jPcMfVGn3SrckunIa
+        tN+4//OPPs0yN3sbUZKplkC6PCBKMculSQ==
+X-Google-Smtp-Source: APiQypIzoxFpnQHTzskAHP8WW70snl6cIZyREUHHk9wcHvVSLsqWQmROMJHOq/is+DekVvlPEUPjNw==
+X-Received: by 2002:a17:90a:5217:: with SMTP id v23mr19528322pjh.127.1587366325777;
+        Mon, 20 Apr 2020 00:05:25 -0700 (PDT)
+Received: from Smcdef-MBP.local.net ([103.136.220.69])
+        by smtp.gmail.com with ESMTPSA id b5sm161252pfb.190.2020.04.20.00.05.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Apr 2020 00:05:25 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        mingo@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH v2] sched/cpuacct: Fix charge cpuacct.usage_sys incorrently.
+Date:   Mon, 20 Apr 2020 15:04:53 +0800
+Message-Id: <20200420070453.76815-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-In-Reply-To: <20200418081926.41666-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.04.20 10:19, Jason Yan wrote:
-> Fix the following coccicheck warning:
-> 
-> arch/s390/kvm/interrupt.c:3085:2-3: Unneeded semicolon
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  arch/s390/kvm/interrupt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-> index 8191106bf7b9..559177123d0f 100644
-> --- a/arch/s390/kvm/interrupt.c
-> +++ b/arch/s390/kvm/interrupt.c
-> @@ -3082,7 +3082,7 @@ static enum hrtimer_restart gisa_vcpu_kicker(struct hrtimer *timer)
->  		__airqs_kick_single_vcpu(kvm, pending_mask);
->  		hrtimer_forward_now(timer, ns_to_ktime(gi->expires));
->  		return HRTIMER_RESTART;
-> -	};
-> +	}
->  
->  	return HRTIMER_NORESTART;
->  }
-> 
+The user_mode(task_pt_regs(tsk)) always return true for
+user thread, and false for kernel thread. So it means that
+the cpuacct.usage_sys is the time that kernel thread uses
+not the time that thread uses in the kernel mode. We can
+try get_irq_regs() first, if it is NULL, then we can fall
+back to task_pt_regs().
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+Changes in v2:
+    1. we use get_irq_regs() first, if it's NULL, fall back to task_pt_regs()
 
+ kernel/sched/cpuacct.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/cpuacct.c b/kernel/sched/cpuacct.c
+index 6448b0438ffb2..941c28cf97384 100644
+--- a/kernel/sched/cpuacct.c
++++ b/kernel/sched/cpuacct.c
+@@ -5,6 +5,7 @@
+  * Based on the work by Paul Menage (menage@google.com) and Balbir Singh
+  * (balbir@in.ibm.com).
+  */
++#include <asm/irq_regs.h>
+ #include "sched.h"
+ 
+ /* Time spent by the tasks of the CPU accounting group executing in ... */
+@@ -339,7 +340,7 @@ void cpuacct_charge(struct task_struct *tsk, u64 cputime)
+ {
+ 	struct cpuacct *ca;
+ 	int index = CPUACCT_STAT_SYSTEM;
+-	struct pt_regs *regs = task_pt_regs(tsk);
++	struct pt_regs *regs = get_irq_regs() ? : task_pt_regs(tsk);
+ 
+ 	if (regs && user_mode(regs))
+ 		index = CPUACCT_STAT_USER;
 -- 
-Thanks,
-
-David / dhildenb
+2.11.0
 
