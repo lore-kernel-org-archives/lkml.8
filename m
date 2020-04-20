@@ -2,212 +2,218 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FC6C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B6DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57A8D20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="xN3f3QcV"
+	by mail.kernel.org (Postfix) with ESMTP id C3347207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:26:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgDTUZB (ORCPT
+        id S1726628AbgDTU0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:25:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgDTUZA (ORCPT
+        Mon, 20 Apr 2020 16:26:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45986 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725774AbgDTU0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:25:00 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893B5C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:25:00 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id q8so9049913eja.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FAwhRihVq2R6uJ0R2DDKiV1l7P55lg1OZZw/7hP2k5M=;
-        b=xN3f3QcVRJn+kK3Y1UjLj6PPf0eNSlJqY3+2HijVJdsz1jWLLkq9JK9UJsqi0p25sx
-         moVm31FPEyj7NTI0g00U/KAFE0z3emuqNeMCoWGuAubD/A1FHqftGlQy4uj1a5EMYOpl
-         Bw+501FObFbb82du1mFx56nJGGS7I1EdsuAd51VHJjoXL/GIGq0+SeGvD9zXfZbr6V/Q
-         kWmLRB4NuyahKHtSmIwQezoeRhrSoBsp15ytxgY+JwJsrryq+M5xaUVei/B8JSZoDpXE
-         wyNztn3yeagdgyqqexKCI864A0sJ0Rn1p73jB+8M2DVhOzuV6ZRHirNF0nGEP1iuuEUq
-         bnSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FAwhRihVq2R6uJ0R2DDKiV1l7P55lg1OZZw/7hP2k5M=;
-        b=MG0KDJQF7MU2vd7t1VfFZZTvX+VDs9OKC99BKkVuSd1yX5FuEOyZZstzoN/kpgIsYD
-         91DJsJc/ehFlGrUHLu0L5xnqRMGaZWM/3UY9REr+2jHfi0FCVceOK1japFBOeCDHGk2L
-         DvIpVuuVi/xKgAla46//D2A6DI/JiqyQBSanQ5hYafxugw1VntjbGYACVThzg7OfcHhf
-         5RfHkYNG4Txx6F09I+uTPZR7S3XdZ3GBpodNqntbFF495C4O1EMslGWctv+Nx3LA9kCk
-         Ms81wYNlkZ3fkuQMXhxUDERx8vrjV+pea5hVUpZTUOWhnDU5c8pRSdkjQVyov3puySoC
-         TglA==
-X-Gm-Message-State: AGi0PubwOGwoKn/C4LtSodTmisGgP1KEhKvSKDhnE5iKpk153KnY5C2U
-        hbVp88B5HyLPxsLz2MCmCuQlhHGoHBaBSQj2K2xKJg==
-X-Google-Smtp-Source: APiQypKDxQwk+M1m/t0cQyqqqRXqFXW4laUa/hPy9nDK3FTeAd5b/Lt8ii9A4UTSuCHBXA9D1Owr5BgCn1QDhfWU8yc=
-X-Received: by 2002:a17:906:7750:: with SMTP id o16mr4977546ejn.12.1587414299078;
- Mon, 20 Apr 2020 13:24:59 -0700 (PDT)
+        Mon, 20 Apr 2020 16:26:23 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KK4Yaa074271;
+        Mon, 20 Apr 2020 16:26:16 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gf5r9tm0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 16:26:16 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KKPiT5003755;
+        Mon, 20 Apr 2020 20:26:15 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04wdc.us.ibm.com with ESMTP id 30fs663m8k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 20:26:15 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KKQEhF52691298
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 20:26:14 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8B1A1AE05F;
+        Mon, 20 Apr 2020 20:26:14 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98277AE05C;
+        Mon, 20 Apr 2020 20:26:13 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.56.120])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 20:26:13 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
+        eajames@linux.ibm.com
+Subject: [PATCH v10 1/7] dt-bindings: soc: Add Aspeed XDMA Engine
+Date:   Mon, 20 Apr 2020 15:26:05 -0500
+Message-Id: <20200420202611.17776-2-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200420202611.17776-1-eajames@linux.ibm.com>
+References: <20200420202611.17776-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
-References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net>
- <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
- <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com>
- <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com>
- <CAPcyv4hrfZsg48Gw_s7xTLLhjLTk_U+PV0MsLnG+xh3652xFCQ@mail.gmail.com>
- <CAHk-=wgcc=5kiph7o+aBZoWBCbu=9nQDQtD41DvuRRrqixohUA@mail.gmail.com>
- <CAPcyv4iTaBNPMwqUwas+J4rxd867QL7JnQBYB8NKnYaTA-R_Tw@mail.gmail.com> <CAHk-=wgOUOveRe8=iFWw0S1LSDEjSfQ-4bM64eiXdGj4n7Omng@mail.gmail.com>
-In-Reply-To: <CAHk-=wgOUOveRe8=iFWw0S1LSDEjSfQ-4bM64eiXdGj4n7Omng@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 20 Apr 2020 13:24:47 -0700
-Message-ID: <CAPcyv4hKcAvQEo+peg3MRT3j+u8UdOHVNUWCZhi0aHaiLbe8gw@mail.gmail.com>
-Subject: Re: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_07:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ phishscore=0 spamscore=0 priorityscore=1501 adultscore=0 malwarescore=0
+ impostorscore=0 suspectscore=1 mlxlogscore=999 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 1:07 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Mon, Apr 20, 2020 at 12:29 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> >  I didn't consider asynchronous to be
-> > better because that means there is a gap between when the data
-> > corruption is detected and when it might escape the system that some
-> > external agent could trust the result and start acting on before the
-> > asynchronous signal is delivered.
->
-> The thing is, absolutely nobody cares whether you start acting on the
-> wrong data or not.
->
-> Even if you use the wrong data as a pointer, and get other wrong data
-> behind it (or take an exception), that doesn't change a thing: the end
-> result is still the exact same thing "unpredictably wrong data". You
-> didn't really make things worse by continuing, and people who care
-> about some very particular case can easily add a barrier to get any
-> error before they go past some important point.
->
-> It's not like Intel hasn't done that before. It's how legacy FP
-> instructions work - and while the legacy FP unit had horrendous
-> problems, the delayed exception wasn't one of them (routing it to
-> irq13 was, but that's on IBM, not Intel). Async exception handling
-> simplifies a lot of problems, and in fact, if you then have explicit
-> "check now" points (which the Intel FPU also had, as long as you
-> didn't have that nasty irq13 routing), it simplifies software too.
+Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
 
-Ah, now it's finally sinking in, it's the fact that if the model had
-been from the beginning to require software to issue a barrier if it
-wants to resolve pending memory errors that would have freed up the
-implementation to leave error handling to a higher-level / more less
-constrained part of the software stack.
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ .../devicetree/bindings/soc/aspeed/xdma.yaml  | 108 ++++++++++++++++++
+ MAINTAINERS                                   |   6 +
+ 2 files changed, 114 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
 
->
-> So there is no _advantage_ to being synchronous to the source of the
-> problem.  There is only pain.
->
-> There are lots and lots of disadvantages, most of them being
-> variations - on many different levesl of - "it hit at a point where I
-> cannot recover".
->
-> The microcode example is one such example that Intel engineers should
-> really take to heart. But the real take-away is that it is only _one_
-> such example. And making the microcode able to recover doesn't fix all
-> the _other_ places that aren't able to recover at that point, or fix
-> the fundamental pain.
->
-> For example, for the kernel, NMI's tend to be pretty special things,
-> and we simply may not be able to handle errors inside an NMI context.
-> It's not all that unlike the intel microcode example, just at another
-> level.
->
-> But we have lots of other situations. We have random
-> compiler-generated code, and we're simply not able to take exceptions
-> at random stages and expect to recover. We have very strict rules
-> about "this might be unsafe", and a normal memory access of a trusted
-> pointer IS NOT IT.
->
-> But at a higher level, something like "strnlen()" - or any other
-> low-level library routine - isn't really all that different from
-> microcode for most programs. We don't want to have a million copies of
-> "standard library routine, except for nvram".
->
-> The whole - and ONLY - point of something like nvram is that it's
-> supposed to act like memory. It's part of the name, and it's very much
-> part of the whole argument for why it's a good idea.
+diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.yaml b/Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
+new file mode 100644
+index 000000000000..428a575da1be
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
+@@ -0,0 +1,108 @@
++# SPDX-License-Identifier: (GPL-2.0-or-later)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/aspeed/xdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Aspeed AST25XX and AST26XX XDMA Engine
++
++maintainers:
++ - Eddie James <eajames@linux.ibm.com>
++
++description: |
++  This binding describes the XDMA Engine embedded in the AST2500 and AST2600
++  SOCs. The XDMA engine can perform automatic DMA operations over PCI between
++  the SOC (acting as a BMC) and a host processor.
++
++properties:
++  compatible:
++    enum:
++      - aspeed,ast2500-xdma
++      - aspeed,ast2600-xdma
++
++  reg:
++    items:
++      - description: engine register space
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    minItems: 1
++    maxItems: 2
++
++  reset-names:
++    maxItems: 2
++    items:
++      - const: device
++      - const: root-complex
++
++  interrupts-extended:
++    maxItems: 2
++    items:
++      - description: global interrupt for the XDMA engine
++      - description: PCI-E reset or PERST interrupt
++
++  aspeed,scu:
++    description: a reference to the System Control Unit node of the Aspeed SOC.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
++
++  aspeed,pcie-device:
++    description: describes which PCI-E device the XDMA engine should use
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/string
++      - oneOf:
++        - items:
++          - const: bmc
++        - items:
++          - const: vga
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++  - interrupts-extended
++  - aspeed,scu
++  - memory-region
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: aspeed,ast2600-xdma
++then:
++  required:
++    - reset-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/ast2600-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/aspeed-scu-ic.h>
++    syscon: syscon@1e6e2000 {
++        reg = <0x1e6e2000 0x1000>;
++        ranges = <0 0x1e6e2000 0x1000>;
++        #address-cells = <1>;
++        #size-cells = <1>;
++        #clock-cells = <1>;
++        #reset-cells = <1>;
++        scu_ic0: interrupt-controller@560 {
++            reg = <0x560 0x4>;
++            interrupt-controller;
++            #interrupt-cells = <1>;
++        };
++    };
++    xdma@1e6e7000 {
++        compatible = "aspeed,ast2600-xdma";
++        reg = <0x1e6e7000 0x100>;
++        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
++        resets = <&syscon ASPEED_RESET_DEV_XDMA>, <&syscon ASPEED_RESET_RC_XDMA>;
++        reset-names = "device", "root-complex";
++        interrupts-extended = <&gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++                              <&scu_ic0 ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI>;
++        aspeed,scu = <&syscon>;
++        aspeed,pcie-device = "bmc";
++        memory-region = <&vga_memory>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ecd7def6ff4b..b1963e01a75e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2774,6 +2774,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/aspeed-video.txt
+ F:	drivers/media/platform/aspeed-video.c
+ 
++ASPEED XDMA ENGINE DRIVER
++M:	Eddie James <eajames@linux.ibm.com>
++L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
++
+ ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
+ M:	Corentin Chary <corentin.chary@gmail.com>
+ L:	acpi4asus-user@lists.sourceforge.net
+-- 
+2.24.0
 
-Right, and I had a short cry/laugh when realizing that the current
-implementation still correctly sends SIGBUS to userspace consumed
-poison, but the kernel regressed because it's special synchronous
-handling was no longer be correctly deployed.
-
->
-> And the advantage of it being memory is that you are supposed to be
-> able to do all those random operations that you just do normally on
-> any memory region - ask for string lengths, do copies, add up numbers,
-> look for patterns. Without having to do an "IO" operation for it.
->
-> Taking random synchronous faults is simply not acceptable. It breaks
-> that fundamental principle.
->
-> Maybe you have a language with a try/catch/throw model of exception
-> handling - but one where throwing exceptions is constrained to happen
-> for documented operations, not any random memory access. That's very
-> common, and kind of like what the kernel exception handling does by
-> hand.
->
-> So an allocation failure can throw an exception, but once you've
-> allocated memory, the language runtime simply depends on knowing that
-> it has pointer safety etc, and normal accesses won't throw an
-> exception.
->
-> In that kind of model, you can easily add a model where "SIGBUS sets a
-> flag, we'll handle it at catch time", but that depends on things being
-> able to just continue _despite_ the error.
->
-> So a source-synchronous error can be really hard to handle. Exception
-> handling at random points is simply really really tough in general -
-> and there are few more random and more painful points than some "I
-> accessed memory".
->
-> So no. An ECC error is nothing like a page fault. A page fault you
-> have *control* over. You can have a language without the ability to
-> generate wild pointers, or you can have a language like C where wild
-> pointers are possible, but they are a bug. So you can work on the
-> assumption that a page fault is always entirely invisible to the
-> program at hand.
->
-> A synchronous ECC error doesn't have that "entirely invisible to the
-> program at hand" behavior.
->
-> And yes, I've asked for ECC for regular memory for regular CPU's from
-> Intel for over two decades now. I do NOT want their broken machine
-> check model with it. I don't even necessarily want the "correction"
-> part of it - I want reporting of "your hardware / the results of your
-> computation is no longer reliable". I don't want a dead machine, I
-> don't want some worry about "what happens if I get an ECC error in
-> NMI", I don't want any of the problems that come from taking an
-> absolute "ECC errors are fatal" approach. I just want "an error
-> happened", with as much information about where it happened as
-> possible.
-
-...but also some kind of barrier semantic, right? Because there are
-systems that want some guarantees when they can commit or otherwise
-shoot the machine if they can not.
