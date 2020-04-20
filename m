@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086BDC5321D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4192C54F70
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0B6E22250
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D280122260
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgDTBHO (ORCPT
+        id S1726343AbgDTBHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 21:07:14 -0400
+        Sun, 19 Apr 2020 21:07:10 -0400
 Received: from mga12.intel.com ([192.55.52.136]:62984 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgDTBHM (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 21:07:12 -0400
-IronPort-SDR: Nwc4P6JhXAKM5kbvdzR9PIfp86HHctRvOeC6kAXl/R8l502AyvdHCOHBcc7ow0WxZsUxJrDBl+
- uU6HvnTGY2Bg==
+        id S1726261AbgDTBHI (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 21:07:08 -0400
+IronPort-SDR: 91B5bvN7Z7GL5xJEXzEqvP2mT1CJ+o/2obPfnFsq6sY3MnRz0KwwUXQjo/DlZVC+HmPvTb41AL
+ ge1J6m1+6Uyw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 18:07:12 -0700
-IronPort-SDR: iiU/yh8/ilkrYpz3xFLIQ6FOLoCv3fKj/VMZxfuIddM/SqxhN1mynvD6FvFf0tbDUQH2G5Gs25
- DR2SlO3xXDxA==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 18:07:06 -0700
+IronPort-SDR: sGePlQlDV69kZUNwaBxZBioslj+HQ8Imq0bDV4F2jMx3YIg2MLQRBdTPRVVRF4B0+z7Wfrh+4w
+ 01wFx/+xY06Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
-   d="scan'208";a="364855031"
+   d="scan'208";a="364855015"
 Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Apr 2020 18:07:09 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 19 Apr 2020 18:07:03 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v3 6/7] perf util: Report hot streams
-Date:   Mon, 20 Apr 2020 09:04:50 +0800
-Message-Id: <20200420010451.24405-7-yao.jin@linux.intel.com>
+Subject: [PATCH v3 4/7] perf util: Compare two streams
+Date:   Mon, 20 Apr 2020 09:04:48 +0800
+Message-Id: <20200420010451.24405-5-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200420010451.24405-1-yao.jin@linux.intel.com>
 References: <20200420010451.24405-1-yao.jin@linux.intel.com>
@@ -49,218 +49,258 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We show the streams separately. They are divided into different sections.
-
-1. "Matched hot chains between old perf data and new perf data"
-
-2. "Hot chains in old perf data but source line changed in new perf data"
-
-3. "Hot chains in old perf data only"
-
-4. "Hot chains in new perf data only".
-
-For each stream, we report the cycles and hot percent (hits%).
+If all callchain entries of one stream are fully matched with
+all entries of another stream, we think these two streams are
+matched.
 
 For example,
 
-     cycles: 2, hits: 4.08%
- --------------------------
-              main div.c:42
-      compute_flag div.c:28
+   cycles: 1, hits: 26.80%                 cycles: 1, hits: 27.30%
+   -----------------------                 -----------------------
+             main div.c:39                           main div.c:39
+             main div.c:44                           main div.c:44
+
+Above two streams are matched if div.c is not changed.
+
+But the streams are not matched if div.c is source line changed
+(e.g. div.c:39 is changed). If the source line is changed, they
+are different streams.
+
+So the challenge is how to identify the changed source lines.
+For this purpose, we use the source line mapping table (see patch
+"perf util: Create source line mapping table"). The source line
+mapping information is saved in src_list.
+
+So the matching logic is, if we can find the source lines, the
+callchain entry comparison is based on source lines. Otherwise,
+fallback to dso address comparison.
+
+Once two streams are fully matched, they will be linked as
+a pair. From the pair, we can know which streams are matched.
+The pair information will be used in next patches.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/util/callchain.c | 155 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/callchain.h |   3 +
- 2 files changed, 158 insertions(+)
+ tools/perf/util/callchain.c | 172 ++++++++++++++++++++++++++++++++++++
+ tools/perf/util/callchain.h |   8 ++
+ 2 files changed, 180 insertions(+)
 
 diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index b0c8757c2dcf..84fe8e418532 100644
+index bf66f33debd4..1619f7fa4076 100644
 --- a/tools/perf/util/callchain.c
 +++ b/tools/perf/util/callchain.c
-@@ -1777,6 +1777,9 @@ static bool chain_srclist_match(struct srclist *src_list, const char *srcline_a,
- 	struct src_node *node;
- 	struct line_pair *lp;
+@@ -1733,3 +1733,175 @@ struct callchain_streams *callchain_evsel_streams_get(struct callchain_streams *
  
-+	if (!srcline_a || !srcline_b)
-+		return false;
-+
- 	if (sscanf(srcline_a, "%[^:]:%d", file_a, &line_a) != 2)
- 		return false;
- 
-@@ -1817,6 +1820,10 @@ static bool chain_match(struct callchain_list *base_chain,
- 
- 	*src_changed = false;
- 
-+	/*
-+	 * Check sourceline first. If not matched,
-+	 * fallback to symbol match and address match.
-+	 */
- 	if (src_list && chain_srclist_match(src_list, pair_chain->srcline,
- 					    base_chain->srcline, &src_found,
- 					    src_changed)) {
-@@ -1939,3 +1946,151 @@ void callchain_match_streams(struct callchain_streams *cs_base,
- 	if (src_list)
- 		srclist__dump(src_list);
+ 	return NULL;
  }
 +
-+static s64 callchain_avg_cycles(struct callchain_node *cnode)
++static bool chain_srclist_match(struct srclist *src_list, const char *srcline_a,
++				const char *srcline_b, bool *src_found,
++				bool *src_changed)
 +{
-+	struct callchain_list *chain;
-+	s64 cycles = 0;
++	char file_a[PATH_MAX], file_b[PATH_MAX];
++	int line_a, line_b;
++	struct src_node *node;
++	struct line_pair *lp;
 +
-+	list_for_each_entry(chain, &cnode->val, list) {
-+		if (chain->srcline && chain->branch_count)
-+			cycles += chain->cycles_count / chain->branch_count;
++	if (sscanf(srcline_a, "%[^:]:%d", file_a, &line_a) != 2)
++		return false;
++
++	if (sscanf(srcline_b, "%[^:]:%d", file_b, &line_b) != 2)
++		return false;
++
++	if (strcmp(file_a, file_b))
++		return false;
++
++	node = srclist__find(src_list, file_a, true);
++	if (!node)
++		return false;
++
++	*src_found = true;
++
++	lp = srclist__line_pair(node, line_a);
++	if (!lp)
++		return false;
++
++	if (line_a == line_b && lp->b_nr == -1) {
++		*src_changed = true;
++		return true;
 +	}
 +
-+	return cycles;
++	if (lp->b_nr == line_b)
++		return true;
++
++	return false;
 +}
 +
-+static void print_callchain_pair(struct stream_node *base_node, int idx,
-+				 struct callchain_streams *cs_base,
-+				 struct callchain_streams *cs_pair)
++static bool chain_match(struct callchain_list *base_chain,
++			struct callchain_list *pair_chain,
++			struct srclist *src_list,
++			bool *src_changed)
 +{
-+	struct callchain_node *base_cnode = base_node->cnode;
-+	struct callchain_node *pair_cnode = base_node->pair_cnode;
++	enum match_result match;
++	bool src_found = false;
++
++	*src_changed = false;
++
++	if (src_list && chain_srclist_match(src_list, pair_chain->srcline,
++					    base_chain->srcline, &src_found,
++					    src_changed)) {
++		return true;
++	}
++
++	if (!src_found)  {
++		match = match_chain_strings(base_chain->srcline,
++					    pair_chain->srcline);
++		if (match != MATCH_ERROR)
++			return match == MATCH_EQ;
++
++		match = match_chain_dso_addresses(base_chain->ms.map,
++						  base_chain->ip,
++						  pair_chain->ms.map,
++						  pair_chain->ip);
++
++		return match == MATCH_EQ;
++	}
++
++	return false;
++}
++
++static bool callchain_node_matched(struct callchain_node *base_cnode,
++				   struct callchain_node *pair_cnode,
++				   struct srclist *src_list,
++				   int *nr_changed)
++{
 +	struct callchain_list *base_chain, *pair_chain;
-+	char buf1[512], buf2[512], cbuf1[256], cbuf2[256];
-+	char *s1, *s2;
-+	double pct;
-+
-+	printf("\nhot chain pair %d:\n", idx);
-+
-+	pct = (double)base_cnode->hit / (double)cs_base->chain_hits;
-+	scnprintf(buf1, sizeof(buf1), "cycles: %ld, hits: %.2f%%",
-+		  callchain_avg_cycles(base_cnode), pct * 100.0);
-+
-+	pct = (double)pair_cnode->hit / (double)cs_pair->chain_hits;
-+	scnprintf(buf2, sizeof(buf2), "cycles: %ld, hits: %.2f%%",
-+		  callchain_avg_cycles(pair_cnode), pct * 100.0);
-+
-+	printf("%35s\t%35s\n", buf1, buf2);
-+
-+	printf("%35s\t%35s\n",
-+	       "---------------------------",
-+	       "--------------------------");
++	bool match = false;
 +
 +	pair_chain = list_first_entry(&pair_cnode->val,
 +				      struct callchain_list,
 +				      list);
 +
 +	list_for_each_entry(base_chain, &base_cnode->val, list) {
++		bool src_changed;
++
 +		if (&pair_chain->list == &pair_cnode->val)
-+			return;
++			return false;
 +
-+		s1 = callchain_list__sym_name(base_chain, cbuf1, sizeof(cbuf1),
-+					      false);
-+		s2 = callchain_list__sym_name(pair_chain, cbuf2, sizeof(cbuf2),
-+					      false);
++		if (!base_chain->srcline || !pair_chain->srcline) {
++			pair_chain = list_next_entry(pair_chain, list);
++			continue;
++		}
 +
-+		if (!pair_chain->src_changed)
-+			scnprintf(buf1, sizeof(buf1), "%35s\t%35s", s1, s2);
-+		else
-+			scnprintf(buf1, sizeof(buf1), "%35s\t%35s*", s1, s2);
++		match = chain_match(base_chain, pair_chain, src_list,
++				    &src_changed);
 +
-+		printf("%s\n", buf1);
++		if (src_changed) {
++			pair_chain->src_changed = true;
++			*nr_changed += 1;
++		}
++
++		if (!match)
++			return false;
++
 +		pair_chain = list_next_entry(pair_chain, list);
 +	}
++
++	/*
++	 * Say chain1 is ABC, chain2 is ABCD, we consider they are
++	 * not fully matched.
++	 */
++	if (pair_chain && (&pair_chain->list != &pair_cnode->val))
++		return false;
++
++	return match;
 +}
 +
-+static void print_stream_callchain(struct stream_node *node, int idx,
-+				   struct callchain_streams *cs, bool pair)
++static struct stream_node *stream_node_match(struct stream_node *base_node,
++					     struct callchain_streams *cs_pair,
++					     struct srclist *src_list,
++					     bool *src_changed)
 +{
-+	struct callchain_node *cnode = node->cnode;
-+	struct callchain_list *chain;
-+	char buf[512], cbuf[256], *s;
-+	double pct;
++	*src_changed = false;
 +
-+	printf("\nhot chain %d:\n", idx);
++	for (int i = 0; i < cs_pair->nr_streams; i++) {
++		struct stream_node *pair_node = &cs_pair->streams[i];
++		int nr_changed = 0;
 +
-+	pct = (double)cnode->hit / (double)cs->chain_hits;
-+	scnprintf(buf, sizeof(buf), "cycles: %ld, hits: %.2f%%",
-+		  callchain_avg_cycles(cnode), pct * 100.0);
++		if (callchain_node_matched(base_node->cnode, pair_node->cnode,
++					   src_list, &nr_changed)) {
++			if (nr_changed)
++				*src_changed = true;
 +
-+	if (pair) {
-+		printf("%35s\t%35s\n", "", buf);
-+		printf("%35s\t%35s\n",
-+		       "", "--------------------------");
-+	} else {
-+		printf("%35s\n", buf);
-+		printf("%35s\n", "--------------------------");
++			return pair_node;
++		}
 +	}
 +
-+	list_for_each_entry(chain, &cnode->val, list) {
-+		s = callchain_list__sym_name(chain, cbuf, sizeof(cbuf), false);
++	return NULL;
++}
 +
-+		if (pair)
-+			scnprintf(buf, sizeof(buf), "%35s\t%35s", "", s);
++static void stream_nodes_link(struct stream_node *base_node,
++			      struct stream_node *pair_node,
++			      bool src_changed)
++{
++	base_node->pair_cnode = pair_node->cnode;
++	base_node->src_changed = src_changed;
++	pair_node->pair_cnode = base_node->cnode;
++}
++
++void callchain_match_streams(struct callchain_streams *cs_base,
++			     struct callchain_streams *cs_pair,
++			     struct srclist *src_list)
++{
++	for (int i = 0; i < cs_base->nr_streams; i++) {
++		struct stream_node *base_node = &cs_base->streams[i];
++		struct stream_node *pair_node;
++		bool src_changed;
++
++		pair_node = stream_node_match(base_node, cs_pair, src_list,
++					      &src_changed);
++		if (pair_node)
++			stream_nodes_link(base_node, pair_node, src_changed);
 +		else
-+			scnprintf(buf, sizeof(buf), "%35s", s);
-+
-+		printf("%s\n", buf);
-+	}
-+}
-+
-+void callchain_stream_report(struct callchain_streams *cs_base,
-+			     struct callchain_streams *cs_pair)
-+{
-+	struct stream_node *base_node;
-+	int i, idx = 0;
-+
-+	printf("[ Matched hot chains between old perf data and new perf data ]\n");
-+	for (i = 0; i < cs_base->nr_streams; i++) {
-+		base_node = &cs_base->streams[i];
-+		if (base_node->pair_cnode) {
-+			if (!base_node->src_changed) {
-+				print_callchain_pair(base_node, ++idx,
-+						     cs_base, cs_pair);
-+			}
-+		}
++			base_node->src_changed = src_changed;
 +	}
 +
-+	idx = 0;
-+	printf("\n[ Hot chains in old perf data but source line changed (*) in new perf data ]\n");
-+	for (i = 0; i < cs_base->nr_streams; i++) {
-+		base_node = &cs_base->streams[i];
-+		if (base_node->pair_cnode) {
-+			if (base_node->src_changed) {
-+				print_callchain_pair(base_node, ++idx,
-+						     cs_base, cs_pair);
-+			}
-+		}
-+	}
-+
-+	idx = 0;
-+	printf("\n[ Hot chains in old perf data only ]\n");
-+	for (i = 0; i < cs_base->nr_streams; i++) {
-+		base_node = &cs_base->streams[i];
-+		if (!base_node->pair_cnode) {
-+			print_stream_callchain(base_node, ++idx,
-+					       cs_base, false);
-+		}
-+	}
-+
-+	idx = 0;
-+	printf("\n[ Hot chains in new perf data only ]\n");
-+	for (i = 0; i < cs_pair->nr_streams; i++) {
-+		base_node = &cs_pair->streams[i];
-+		if (!base_node->pair_cnode) {
-+			print_stream_callchain(base_node, ++idx,
-+					       cs_pair, true);
-+		}
-+	}
++	if (src_list)
++		srclist__dump(src_list);
 +}
 diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index a9b20b785dc7..8835d63a212f 100644
+index 6ff9d86d74d3..52aa01b9eedf 100644
 --- a/tools/perf/util/callchain.h
 +++ b/tools/perf/util/callchain.h
-@@ -326,4 +326,7 @@ void callchain_match_streams(struct callchain_streams *cs_base,
- 			     struct callchain_streams *cs_pair,
- 			     struct srclist *src_list);
+@@ -6,6 +6,7 @@
+ #include <linux/rbtree.h>
+ #include "map_symbol.h"
+ #include "branch.h"
++#include "srclist.h"
  
-+void callchain_stream_report(struct callchain_streams *cs_base,
-+			     struct callchain_streams *cs_pair);
+ struct addr_location;
+ struct evsel;
+@@ -131,6 +132,7 @@ struct callchain_list {
+ 	u64			iter_cycles;
+ 	struct branch_type_stat brtype_stat;
+ 	const char		*srcline;
++	bool			src_changed;
+ 	struct list_head	list;
+ };
+ 
+@@ -170,6 +172,8 @@ struct callchain_cursor {
+ 
+ struct stream_node {
+ 	struct callchain_node	*cnode;
++	struct callchain_node	*pair_cnode;
++	bool			src_changed;
+ };
+ 
+ struct callchain_streams {
+@@ -317,4 +321,8 @@ struct callchain_streams *callchain_evsel_streams_get(struct callchain_streams *
+ 						      int nr_streams_max,
+ 						      int evsel_idx);
+ 
++void callchain_match_streams(struct callchain_streams *cs_base,
++			     struct callchain_streams *cs_pair,
++			     struct srclist *src_list);
 +
  #endif	/* __PERF_CALLCHAIN_H */
 -- 
