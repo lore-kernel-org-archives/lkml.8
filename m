@@ -3,81 +3,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABC7C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0A1C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCDD20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4202E20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgDTJwW (ORCPT
+        id S1726341AbgDTJxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:52:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50800 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgDTJwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:52:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1EF9AACA2;
-        Mon, 20 Apr 2020 09:52:20 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id AF6091E126F; Mon, 20 Apr 2020 11:52:18 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 11:52:18 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>,
-        axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org, tytso@mit.edu,
-        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/8] bdi: add a ->dev_name field to struct
- backing_dev_info
-Message-ID: <20200420095218.GB17130@quack2.suse.cz>
-References: <20200416165453.1080463-1-hch@lst.de>
- <20200416165453.1080463-4-hch@lst.de>
- <20200417085909.GA12234@quack2.suse.cz>
- <70f001cd-eaec-874f-9742-c44e66368a2a@acm.org>
- <20200419075809.GA12222@lst.de>
- <a37e947d-c49a-837e-e97d-647ca9d378c3@acm.org>
- <20200419160651.GA18308@lst.de>
- <20200420074801.GA30795@lst.de>
+        Mon, 20 Apr 2020 05:53:02 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47324 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgDTJxC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:53:02 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 478942A0BBF;
+        Mon, 20 Apr 2020 10:52:59 +0100 (BST)
+Date:   Mon, 20 Apr 2020 11:52:56 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw, piotrs@cadence.com,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        "hauke.mehrtens" <hauke.mehrtens@intel.com>, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200420115256.3a0ff647@collabora.com>
+In-Reply-To: <CAHp75VeOH+DC362tsEo13gr9fJpeCHXok=7O19B3njbxCOzd2A@mail.gmail.com>
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200418105533.477ce529@collabora.com>
+        <20200419222040.GJ185537@smile.fi.intel.com>
+        <20200420111754.5863324b@collabora.com>
+        <CAHp75VeOH+DC362tsEo13gr9fJpeCHXok=7O19B3njbxCOzd2A@mail.gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420074801.GA30795@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20-04-20 09:48:01, Christoph Hellwig wrote:
-> On Sun, Apr 19, 2020 at 06:06:51PM +0200, Christoph Hellwig wrote:
-> > > (https://lore.kernel.org/linux-block/20200416071519.807660-4-hch@lst.de/) 
-> > > and also to the replies to that patch? This is what I found in the replies: 
-> > > "When driver try to to re-register bdi but without release_bdi(), the old 
-> > > dev_name will be cover directly by the newer in bdi_register_va(). So, I am 
-> > > not sure whether it can cause memory leak for bdi->dev_name."
+On Mon, 20 Apr 2020 12:44:51 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+> On Mon, Apr 20, 2020 at 12:21 PM Boris Brezillon
+> <boris.brezillon@collabora.com> wrote:
+> > On Mon, 20 Apr 2020 01:20:40 +0300
+> > Andy Shevchenko <andriy.shevchenko@intel.com> wrote:  
+> > > On Sat, Apr 18, 2020 at 10:55:33AM +0200, Boris Brezillon wrote:  
+> > > > On Fri, 17 Apr 2020 16:21:47 +0800
+> > > > "Ramuthevar,Vadivel MuruganX"
+> > > > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> > > >  
+> > > > > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>  
+> > >  
+> > > > > +static const struct of_device_id lgm_nand_match[] = {
+> > > > > + { .compatible = "intel,lgm-nand", },
+> > > > > + {}
+> > > > > +};
+> > > > > +MODULE_DEVICE_TABLE(of, lgm_nand_match);  
+> > > >
+> > > > You probably have a missing "depends on OF" in your Kconfig.  
 > > >
-> > > Has it been considered to avoid that leak by freeing bdi->dev_name from 
-> > > unregister_bdi(), e.g. as follows?
-> > 
-> > We'd need some protection against concurrent accesses as unregister_bdi
-> > can race with them.  But with RCU that could be handled, so let me try
-> > that.
+> > > Since it's using device property API, dependency is not needed.
+> > >  
+> >
+> > There's no compile-time dependency, but this driver will be pretty
+> > useless if all its users have the NAND controller node defined in their
+> > DT and CONFIG_OF is not enabled.  
 > 
-> I looked into it, and while it seems doable I think this goes in the
-> wrong direction as it pushed the RCU knowledge into the callers.  I'd
-> rather get something like this series in ASAP, and then for 5.8 or 5.9
-> move the bdi pointer to the gendisk and stop re-registering it and thus
-> solve the problems root cause for real.
+> No, it's not.
+> See [1] for the details how ACPI may utilize this table.
+> 
+> [1]: https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.html#device-tree-namespace-link-device-id
 
-Yeah, if it could be done it would be a nice solution. Because
-re-registering of BDIs is a long-term source of troubles...
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Except the NAND framework does use the OF lib when parsing common DT
+properties (like nand-ecc-mode, etc), so it does depend on OF if you
+want those props to be parsed, which, according to the DT binding patch,
+is the case.
