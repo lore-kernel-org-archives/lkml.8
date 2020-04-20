@@ -2,103 +2,207 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9F0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD313C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6D0F2078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:34:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587368081;
-	bh=SvA/EF5fT57d5qmZCdKN27UQ9akEUxpAm+jdRo2RlZE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WwQ6Qfv/PgznS7B4SxF3y7Zss70U0MXvmI8OOazux7DEheiM8KWV6iP121QHbuE4u
-	 4aqTaqMEqMLGCQRCQyht1uJdwDMTIy3yXLVAMtt6unyotaxoQTCK+x83tus8u1NHRH
-	 MhrMYtD4+1J2+DO/mKLcCnhI/tGi+CmTa7ZjwYl8=
+	by mail.kernel.org (Postfix) with ESMTP id 957632078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:34:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="OHRVYWsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgDTHel (ORCPT
+        id S1726285AbgDTHem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:34:41 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40206 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgDTHek (ORCPT
+        Mon, 20 Apr 2020 03:34:42 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:58992 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgDTHek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 03:34:40 -0400
-Received: by mail-wr1-f67.google.com with SMTP id k13so9596971wrw.7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:34:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=J6rJMn+wy517qK6LezauDPAAdzw8pIiAhiJfakvu9RQ=;
-        b=CqN18lsOv7fQll9IjJqroG+4nX3gGZ9AYlVrG39JeEX1IV9H0BDz545zA3Nhs5zW5d
-         VHcEx283YbXXmoB/MI5EAIY36W+FZw0r05Em74gEAmle8jn4+R4VRkAAfQZDKpLAxfe6
-         /8V9K+zDv6/6wFvTA2umH+iAxl6VhyWWnU+zfNr9OZTqDry4+fNccbssKpXhOR9MDZQs
-         ejKA3/ntMEmJvKThIdZ1qEgfVdR4ME8LzUQyodxeu9WenSX/N8RVqr65xKn+uLiV0R8R
-         NChEc2YHqNwLOwp3E1DKfSP8rFl+ozBHglfz186hb+BLIlvIXbHyiM8ZrEZV+qyL3why
-         K9aQ==
-X-Gm-Message-State: AGi0PuaQujGAXOuK1v80CUHcWwkSjYffZWDKRLoqmalB1hsDFiqr6bxj
-        Is7n2+yxd0Q3o9W+o9J0obTecJjQ
-X-Google-Smtp-Source: APiQypLpNr3MZecJqP2+GqR3GqelU7seRMQZPFBobVF04nv7LWcIPzyQ5dbWLrvq1yrMMyhx2dsVpw==
-X-Received: by 2002:adf:ff89:: with SMTP id j9mr17118764wrr.245.1587368076910;
-        Mon, 20 Apr 2020 00:34:36 -0700 (PDT)
-Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
-        by smtp.gmail.com with ESMTPSA id v1sm41809wrv.19.2020.04.20.00.34.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 00:34:36 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 09:34:34 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v2] mm/page_alloc: fix watchdog soft lockups during
- set_zone_contiguous()
-Message-ID: <20200420073434.GE27314@dhcp22.suse.cz>
-References: <20200416073417.5003-1-david@redhat.com>
- <20200417151247.0068d5aa3f026ced2289ce31@linux-foundation.org>
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 8485D20CF0;
+        Mon, 20 Apr 2020 07:34:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587368079; bh=ks+AnriUP1l25oY8VQkkhpulfh6dFv54i7OHjhNfqJo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OHRVYWsv+WGA8CCb5VTqqJLLVFoAibZJmQN6jYEllSJFbHh4wyBh2mVt2z1jsc65p
+         ccblM093KySsJ7pErcOBQcUBMWEM+DKWBxXpwgUQ3zWumeYRCjX4FRfGOiYI1CeaEH
+         k0fwzaDW4ojHH5vXt7D0BkC5iZrk7FhBzcwzYPPDDhFzsyY+fsMM4Y36TIX8PrY1kH
+         /Xx+BCg7q9I09GO6WWHR68FrLmlu9++tFODAMhqyEOXgJrJfluzvuZ1tTLWBozfSzI
+         siRZeTroFeFnP9GAogyfmeIJApfzQs4I6jvVGFxUxHTFXo0uVEb51tpBPLPkNMgNZp
+         8iBiwT8+bF1rw==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND 1/5] MIPS: Loongson64: Remove dead RTC code
+Date:   Mon, 20 Apr 2020 15:33:36 +0800
+Message-Id: <20200420073347.157230-2-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
+References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417151247.0068d5aa3f026ced2289ce31@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17-04-20 15:12:47, Andrew Morton wrote:
-> On Thu, 16 Apr 2020 09:34:17 +0200 David Hildenbrand <david@redhat.com> wrote:
-> 
-> > Without CONFIG_PREEMPT, it can happen that we get soft lockups detected,
-> > e.g., while booting up.
-> > 
-> > ...
-> > 
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -1607,6 +1607,7 @@ void set_zone_contiguous(struct zone *zone)
-> >  		if (!__pageblock_pfn_to_page(block_start_pfn,
-> >  					     block_end_pfn, zone))
-> >  			return;
-> > +		cond_resched();
-> >  	}
-> >  
-> >  	/* We confirm that there is no hole */
-> 
-> I added cc:stable to this one.  Please let me know if that wasn't a
-> good idea.
+RTC is now enabled by devicetree. So platform code is
+no longer needed.
 
-Really large memory setups tend to run on distribution kernels so
-backporting to old kernels doesn't really harm.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ .../include/asm/mach-loongson64/mc146818rtc.h | 36 -----------------
+ arch/mips/loongson64/Kconfig                  |  4 --
+ arch/mips/loongson64/Makefile                 |  1 -
+ arch/mips/loongson64/rtc.c                    | 39 -------------------
+ arch/mips/loongson64/time.c                   |  8 +---
+ 5 files changed, 1 insertion(+), 87 deletions(-)
+ delete mode 100644 arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+ delete mode 100644 arch/mips/loongson64/rtc.c
+
+diff --git a/arch/mips/include/asm/mach-loongson64/mc146818rtc.h b/arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+deleted file mode 100644
+index ebdccfee50be..000000000000
+--- a/arch/mips/include/asm/mach-loongson64/mc146818rtc.h
++++ /dev/null
+@@ -1,36 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 1998, 2001, 03, 07 by Ralf Baechle (ralf@linux-mips.org)
+- *
+- * RTC routines for PC style attached Dallas chip.
+- */
+-#ifndef __ASM_MACH_LOONGSON64_MC146818RTC_H
+-#define __ASM_MACH_LOONGSON64_MC146818RTC_H
+-
+-#include <linux/io.h>
+-
+-#define RTC_PORT(x)	(0x70 + (x))
+-#define RTC_IRQ		8
+-
+-static inline unsigned char CMOS_READ(unsigned long addr)
+-{
+-	outb_p(addr, RTC_PORT(0));
+-	return inb_p(RTC_PORT(1));
+-}
+-
+-static inline void CMOS_WRITE(unsigned char data, unsigned long addr)
+-{
+-	outb_p(addr, RTC_PORT(0));
+-	outb_p(data, RTC_PORT(1));
+-}
+-
+-#define RTC_ALWAYS_BCD	0
+-
+-#ifndef mc146818_decode_year
+-#define mc146818_decode_year(year) ((year) < 70 ? (year) + 2000 : (year) + 1970)
+-#endif
+-
+-#endif /* __ASM_MACH_LOONGSON64_MC146818RTC_H */
+diff --git a/arch/mips/loongson64/Kconfig b/arch/mips/loongson64/Kconfig
+index 48b29c198acf..c386b8a3c753 100644
+--- a/arch/mips/loongson64/Kconfig
++++ b/arch/mips/loongson64/Kconfig
+@@ -14,8 +14,4 @@ config RS780_HPET
+ 	  If unsure, say Yes.
+ 
+ 
+-config LOONGSON_MC146818
+-	bool
+-	default n
+-
+ endif # MACH_LOONGSON64
+diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
+index f04461839540..102a19aa92aa 100644
+--- a/arch/mips/loongson64/Makefile
++++ b/arch/mips/loongson64/Makefile
+@@ -8,6 +8,5 @@ obj-$(CONFIG_MACH_LOONGSON64) += cop2-ex.o platform.o acpi_init.o dma.o \
+ obj-$(CONFIG_SMP)	+= smp.o
+ obj-$(CONFIG_NUMA)	+= numa.o
+ obj-$(CONFIG_RS780_HPET) += hpet.o
+-obj-$(CONFIG_LOONGSON_MC146818) += rtc.o
+ obj-$(CONFIG_SUSPEND) += pm.o
+ obj-$(CONFIG_PCI_QUIRKS) += vbios_quirk.o
+diff --git a/arch/mips/loongson64/rtc.c b/arch/mips/loongson64/rtc.c
+deleted file mode 100644
+index 8d7628c0f513..000000000000
+--- a/arch/mips/loongson64/rtc.c
++++ /dev/null
+@@ -1,39 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- *  Lemote Fuloong platform support
+- *
+- *  Copyright(c) 2010 Arnaud Patard <apatard@mandriva.com>
+- */
+-
+-#include <linux/init.h>
+-#include <linux/kernel.h>
+-#include <linux/platform_device.h>
+-#include <linux/mc146818rtc.h>
+-
+-static struct resource loongson_rtc_resources[] = {
+-	{
+-		.start	= RTC_PORT(0),
+-		.end	= RTC_PORT(1),
+-		.flags	= IORESOURCE_IO,
+-	}, {
+-		.start	= RTC_IRQ,
+-		.end	= RTC_IRQ,
+-		.flags	= IORESOURCE_IRQ,
+-	}
+-};
+-
+-static struct platform_device loongson_rtc_device = {
+-	.name		= "rtc_cmos",
+-	.id		= -1,
+-	.resource	= loongson_rtc_resources,
+-	.num_resources	= ARRAY_SIZE(loongson_rtc_resources),
+-};
+-
+-
+-static int __init loongson_rtc_platform_init(void)
+-{
+-	platform_device_register(&loongson_rtc_device);
+-	return 0;
+-}
+-
+-device_initcall(loongson_rtc_platform_init);
+diff --git a/arch/mips/loongson64/time.c b/arch/mips/loongson64/time.c
+index 1245f22cec84..91e842b58365 100644
+--- a/arch/mips/loongson64/time.c
++++ b/arch/mips/loongson64/time.c
+@@ -6,7 +6,7 @@
+  * Copyright (C) 2009 Lemote Inc.
+  * Author: Wu Zhangjin, wuzhangjin@gmail.com
+  */
+-#include <asm/mc146818-time.h>
++
+ #include <asm/time.h>
+ #include <asm/hpet.h>
+ 
+@@ -21,9 +21,3 @@ void __init plat_time_init(void)
+ 	setup_hpet_timer();
+ #endif
+ }
+-
+-void read_persistent_clock64(struct timespec64 *ts)
+-{
+-	ts->tv_sec = mc146818_get_cmos_time();
+-	ts->tv_nsec = 0;
+-}
 -- 
-Michal Hocko
-SUSE Labs
+2.26.0.rc2
+
