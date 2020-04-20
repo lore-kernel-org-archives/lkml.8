@@ -2,169 +2,129 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAF4C55183
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C819FC55182
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8E8B20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4C2206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587416107;
-	bh=H4fKPJC7a8FQVdCvH42mXPtQtvuC51YO1hw2BLffYvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ciyGgtOZTERrQCloOZfWHtjSRYdjAR3PYKk1nalmOHskFFvPQ3O2nuAtjTd/D6Nk8
-	 QMZQQlGkIlDkaH1pqDCX1I3QS0Uhw5G9VQtvcYjTN8t1HOxG5dWRL+X+lolxFgLCwL
-	 0qknRyJmfrzqKrR2HSOnwmwfp/DHhbPv6FotctQA=
+	s=default; t=1587416214;
+	bh=KCYA5zqgMzJkd7n2MPXzIyvvaZIa/qObgQPo4z0EmKQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=djnFx+1m5cP3wvNgrM7j/8GXNwFm99pxruOceWqKOfKbQ2/Wd5fIss62MD+mEWhPf
+	 9sb2Q1g2fjVIkiefEwIw1Cdx3lp3cz3I2akjtpN2zXI3m1frpgdypO3GpnwEauW+Fs
+	 YXAtKgK70K8jZJDVDKUiQlkrvuNuTgwBonK4+D/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgDTUzG (ORCPT
+        id S1726968AbgDTU4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:55:06 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33866 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTUzF (ORCPT
+        Mon, 20 Apr 2020 16:56:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbgDTU4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:55:05 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 72so2960085otu.1;
-        Mon, 20 Apr 2020 13:55:03 -0700 (PDT)
+        Mon, 20 Apr 2020 16:56:53 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F1E0C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:56:53 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id 131so9204296lfh.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+YMKp9wPvX7FbDR3+6WEIzSglLbYUecdGkyUsv5KulQ=;
+        b=FcXT9x/jUah+X0xgwFiqlUqBQvX1G3RiMhY/gwPoHmmY/XQlinet+aCVntYoTSXix0
+         nYnC67xrDgLTWaT5S4DrH+GUnhJL1ZtDCuTvhpZ7ZxXg/ozncV3EsUCU+SCShBpzLktB
+         /uVd+li/PDjb4APhJ2J6DiaYwIXndtCUke1hE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SuLiy9O603fJsU9Y2oKFeKGMVODig0KjDhSjaCiHNa8=;
-        b=WhCJ8pcABlLEKUNZk7E8YfATA7o+GYggiTycEZT4xlDgngsah3X7lTn/Uf6ZAyBvOB
-         r4fJfcIbGur4j316IkkHwK5UuTt4hxFye160G74e69Fdmxa76/c/sh+74Jb9sAXMH/q3
-         qsHa6V++xB9V1moKDH6pxK2gMQroFg3zqBpE/SaocuObsx60xn7E0A6V/wP+7umziqf1
-         8gKk0Swz0a8p8AXdZJ038XuqvR3u+6JPKMizho4WppoMkQgJAc4t9G3WcFKO+/M7PJ9R
-         rZKoLV/4O+kdiHIAl30HnUZv8mNAqUxoB9nC8p6ZkX+nt7yUXR+PgPUmHPOqt2mMMvia
-         ReaQ==
-X-Gm-Message-State: AGi0Pua3Mp+/3xb91BZ/KHggbVOUeGtIQMmlZSxWa76/DhUKRyCH8AhF
-        LCCb1Cmvx3Sbp0dkhbRbJQ==
-X-Google-Smtp-Source: APiQypKFw9XGmecKrAg/GYm6XBHSYat8kdqmIQFBqp92H0KedWfnamv/I/tFokx6VuauGuLaCQcpuw==
-X-Received: by 2002:a05:6830:13d4:: with SMTP id e20mr2495510otq.66.1587416103049;
-        Mon, 20 Apr 2020 13:55:03 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n38sm201485otn.26.2020.04.20.13.55.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:55:02 -0700 (PDT)
-Received: (nullmailer pid 12892 invoked by uid 1000);
-        Mon, 20 Apr 2020 20:55:01 -0000
-Date:   Mon, 20 Apr 2020 15:55:01 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Iskren Chernev <iskren.chernev@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 2/3] dt-bindings: regulator: Add document bindings for
- max77826
-Message-ID: <20200420205501.GA6828@bogus>
-References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
- <20200413164440.1138178-3-iskren.chernev@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+YMKp9wPvX7FbDR3+6WEIzSglLbYUecdGkyUsv5KulQ=;
+        b=KkdVF9jv8sozE2+zcuVJNpEM4FoHjuwiwr9YRTtRqPkb3PNmhk6IBmkj5IBOVgSNOp
+         JLKLigZB9wmlfZ/ZF9cD8U+nzn9HG1rzFm4B8aq3onthhu4vVbkKXXGiWKfYnRKgTWLl
+         zZXr9Rz6aYUZdM9HxdlFFTVVqEdli4l9YvNMtelEozrXVt4KsqEGrMHcDuXvHiNYwDiF
+         CdvEtNOC6F1kvD/rWWLbP9fpgfHRqjIH5PyevAx+aKI3lkWg9MedoQ/Czf4OXaG0149n
+         bwCidxAF56ln696uQkjDYKQsnylrC+ofvD4/8MHJbVBPUHBCb7ezWS11ZlgTHqDmQTbt
+         Wa6w==
+X-Gm-Message-State: AGi0PuYGF3Exy0pUjSFDKYGL56OvpOjod4alViLrO9owJeTs6N0uLWBq
+        +0obMpp0Iqt1/8CCXnzoqPOUfR2M7rM=
+X-Google-Smtp-Source: APiQypL/59+1EqH72UTLKWk/pLNkLOXnFRalXsovPzf+2BQu3FbwHeJEYWcFmHBLIE2iRMz26DC45Q==
+X-Received: by 2002:ac2:4105:: with SMTP id b5mr11799155lfi.94.1587416210679;
+        Mon, 20 Apr 2020 13:56:50 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id d23sm406416ljg.90.2020.04.20.13.56.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 13:56:49 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id l11so9265422lfc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:56:48 -0700 (PDT)
+X-Received: by 2002:a19:946:: with SMTP id 67mr9797282lfj.142.1587416208523;
+ Mon, 20 Apr 2020 13:56:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413164440.1138178-3-iskren.chernev@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net>
+ <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
+ <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com>
+ <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com>
+ <CAPcyv4hrfZsg48Gw_s7xTLLhjLTk_U+PV0MsLnG+xh3652xFCQ@mail.gmail.com>
+ <CAHk-=wgcc=5kiph7o+aBZoWBCbu=9nQDQtD41DvuRRrqixohUA@mail.gmail.com>
+ <CAPcyv4iTaBNPMwqUwas+J4rxd867QL7JnQBYB8NKnYaTA-R_Tw@mail.gmail.com>
+ <CAHk-=wgOUOveRe8=iFWw0S1LSDEjSfQ-4bM64eiXdGj4n7Omng@mail.gmail.com>
+ <20200420202332.GA30160@agluck-desk2.amr.corp.intel.com> <CAHk-=whNL-P71xQRsahpYrzKquvz3WwqPCUVPT+1TUmWZ+67TQ@mail.gmail.com>
+ <3908561D78D1C84285E8C5FCA982C28F7F5FB1C0@ORSMSX115.amr.corp.intel.com>
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F5FB1C0@ORSMSX115.amr.corp.intel.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 20 Apr 2020 13:56:32 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg9Qk=b5h0y=s9vUoLxAD0Nz5BrsU7g0=-ZiUFO9q3EmQ@mail.gmail.com>
+Message-ID: <CAHk-=wg9Qk=b5h0y=s9vUoLxAD0Nz5BrsU7g0=-ZiUFO9q3EmQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Tsaur, Erwin" <erwin.tsaur@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 07:44:39PM +0300, Iskren Chernev wrote:
-> Add device tree binding information for max77826 regulator driver.
-> Example bindings for max77826 are added.
-> 
-> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
-> ---
->  .../bindings/regulator/maxim,max77826.yaml    | 70 +++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml b/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
-> new file mode 100644
-> index 000000000000..3cd449a746b0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/maxim,max77826.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Maxim Integrated MAX77826 PMIC
-> +
-> +maintainers:
-> +  - Iskren Chernev <iskren.chernev@gmail.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "pmic@[0-9a-f]{1,2}"
-> +  compatible:
-> +    enum:
-> +      - maxim,max77826-regulator
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  regulators:
-> +    type: object
-> +    allOf:
-> +      - $ref: regulator.yaml#
-> +    description: |
-> +      list of regulators provided by this controller, must be named
-> +      after their hardware counterparts LDO[1-15], BUCK and BUCKBOOST
-> +
-> +    patternProperties:
-> +      "^LDO([1-9]|1[0-5])$":
-> +        type: object
-> +        allOf:
-> +          - $ref: regulator.yaml#
-> +
-> +      "^BUCK|BUCKBOOST$":
-> +        type: object
-> +        allOf:
-> +          - $ref: regulator.yaml#
-> +
-> +      additionalProperties: false
+On Mon, Apr 20, 2020 at 1:45 PM Luck, Tony <tony.luck@intel.com> wrote:
+>
+> Another X86 vendor seems to be adding something like that. See MCOMMIT
+> in https://www.amd.com/system/files/TechDocs/24594.pdf
 
-You are defining a property called 'additionalProperties'. This one 
-should be dropped because additionalProperties doesn't work with a $ref.
+That sounds potentially very expensive.
 
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - regulators
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        pmic@69 {
-> +            compatible = "maxim,max77826-regulator";
-> +            reg = <0x69>;
-> +
-> +            regulators {
-> +                LDO2 {
-> +                    regulator-name = "ldo2";
-> +                    regulator-min-microvolt = <650000>;
-> +                    regulator-max-microvolt = <3587500>;
-> +                };
-> +            };
-> +       };
-> +     };
-> +...
-> -- 
-> 2.26.0
-> 
+Particularly, as you say, something like the kernel (or
+virtualization) may want to at least test for it cheaply on entry or
+switch or whatever.
+
+I do think you want the mcommit kind of thing for writing, but I think
+the intel model of (no longer pcommit) using a writeback instruction
+with a range, and then just sfence is better than a "commit
+everything" thing.
+
+But that's just for writing things, and that's fundamentally very
+different from the read side errors.
+
+So for the read-side you'd want some kind of "lfence and report"
+instruction for the "did I see load errors". Very cheap like lfence,
+so that there wouldn't really be a cost for the people if somebody
+_really_ want to get notified immediately.
+
+And again, it might just be part of any serializing instruction. I
+don't care that much, although overloading "serializing instruction"
+even more sounds like a bad idea.
+
+               Linus
