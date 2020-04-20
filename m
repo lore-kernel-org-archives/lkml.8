@@ -2,125 +2,144 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B3CC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C019C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2A92084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:23:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K6dzNYEy"
+	by mail.kernel.org (Postfix) with ESMTP id 37A2120B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgDTTXb (ORCPT
+        id S1727817AbgDTTYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725896AbgDTTX3 (ORCPT
+        Mon, 20 Apr 2020 15:24:33 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:45059 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725896AbgDTTYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:23:29 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F38C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:23:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1YuFJrpCywKX/ru6CgGT4p1ibPU8mCdoRQpUpGvC5RA=; b=K6dzNYEyCQ5AWIZMkQIgE40HQm
-        dh/BiL/NzvNmSSvYu4w1srUOpf8aGShDFt8H3PM80RSoRI9VljkJlE76nSyoMsn8AL8cCvjHEI5Yc
-        6+bUnusFAmulLXvCXiH4xp7ce7H/AbSBSdiqi0lBPDg7Aqc/7J5z8rUWYKTGL0wpiADgkl0OlxNGW
-        mziyiqMMKZ0zFgL9YJOmg5h3AgNqHFBKXXS7LG4qKXVly3BjtSblFHdgDADXoPklfm3QBkigEXTzV
-        dMqWlSUsQnJK6J/q0EsAP5OjISyJ4xifvqF3hpkgekoC7ANT70F+ktqDj5qY8RdBBCs1Rh6N8v+6v
-        v8EYWfMg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQc0o-0003T9-7A; Mon, 20 Apr 2020 19:23:22 +0000
-Date:   Mon, 20 Apr 2020 12:23:22 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH v4 07/10] mmap locking API: add
- mmap_read_trylock_non_owner()
-Message-ID: <20200420192322.GD5820@bombadil.infradead.org>
-References: <20200415004353.130248-1-walken@google.com>
- <20200415004353.130248-8-walken@google.com>
- <20200420182211.exrzkszefraeylv2@ca-dmjordan1.us.oracle.com>
+        Mon, 20 Apr 2020 15:24:33 -0400
+Received: from [5.157.121.18] (port=47580 helo=[192.168.77.62])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jQc1o-003t9B-Rv; Mon, 20 Apr 2020 21:24:24 +0200
+Subject: Re: [PATCH v11 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem driver
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>
+References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
+ <20200409194424.45555-3-vishal.sagar@xilinx.com>
+ <20200419180222.GB8117@pendragon.ideasonboard.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
+Date:   Mon, 20 Apr 2020 21:24:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420182211.exrzkszefraeylv2@ca-dmjordan1.us.oracle.com>
+In-Reply-To: <20200419180222.GB8117@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 02:22:11PM -0400, Daniel Jordan wrote:
-> On Tue, Apr 14, 2020 at 05:43:50PM -0700, Michel Lespinasse wrote:
-> > diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> > index 11d41f0c7005..998968659892 100644
-> > --- a/kernel/bpf/stackmap.c
-> > +++ b/kernel/bpf/stackmap.c
-> > @@ -317,7 +316,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
-> >  	 * with build_id.
-> >  	 */
-> >  	if (!user || !current || !current->mm || irq_work_busy ||
-> > -	    mmap_read_trylock(current->mm) == 0) {
-> > +	    !mmap_read_trylock_non_owner(current->mm)) {
-> >  		/* cannot access current->mm, fall back to ips */
-> >  		for (i = 0; i < trace_nr; i++) {
-> >  			id_offs[i].status = BPF_STACK_BUILD_ID_IP;
-> > @@ -342,16 +341,10 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
-> >  	}
-> >  
-> >  	if (!work) {
-> > -		mmap_read_unlock(current->mm);
-> > +		mmap_read_unlock_non_owner(current->mm);
+Hi Laurent, Vishal,
+
+On 19/04/20 20:02, Laurent Pinchart wrote:
+[...]
+>> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *dev_id)
+>> +{
+>> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)dev_id;
+>> +	struct xcsi2rxss_core *core = &state->core;
+>> +	u32 status;
+>> +
+>> +	status = xcsi2rxss_read(core, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
+>> +	dev_dbg_ratelimited(core->dev, "interrupt status = 0x%08x\n", status);
 > 
-> These 'non_owner' calls are not intuitive because current _is the owner, so the
-> v3 version seems better, even if it adds a special wrapper for rwsem_release.
+> As this is expected to occur for every frame, I would drop the message,
+> even if rate-limited.
 > 
-> Though it makes some sense if you think, "we're consistently using the
-> non_owner APIs because there's a legitimate use somewhere else," so I'm fine
-> either way.
+>> +
+>> +	if (!status)
+>> +		return IRQ_NONE;
+>> +
+>> +	/* Received a short packet */
+>> +	if (status & XCSI_ISR_SPFIFONE) {
+>> +		dev_dbg_ratelimited(core->dev, "Short packet = 0x%08x\n",
+>> +				    xcsi2rxss_read(core, XCSI_SPKTR_OFFSET));
+>> +	}
+> 
+> Same here, this will occur all the time, I'd remove this message. You
+> need to read XCSI_SPKTR_OFFSET though, and you should do so in a loop
+> until the XCSI_CSR_SPFIFONE in XCSI_CSR_OFFSET is cleared in case
+> multiple short packets are received before the interrupt handler
+> executes.
+> 
+> I also wonder if it would make sense to extract the frame number from
+> the FS short packet, and make it available through the subdev API. I
+> think it should be reported through a V4L2_EVENT_FRAME_SYNC event. This
+> can be implemented later.
+> 
+>> +
+>> +	/* Short packet FIFO overflow */
+>> +	if (status & XCSI_ISR_SPFIFOF)
+>> +		dev_dbg_ratelimited(core->dev, "Short packet FIFO overflowed\n");
+>> +
+>> +	/*
+>> +	 * Stream line buffer full
+>> +	 * This means there is a backpressure from downstream IP
+>> +	 */
+>> +	if (status & XCSI_ISR_SLBF) {
+>> +		dev_alert_ratelimited(core->dev, "Stream Line Buffer Full!\n");
+>> +		xcsi2rxss_stop_stream(state);
+>> +		if (core->rst_gpio) {
+>> +			gpiod_set_value(core->rst_gpio, 1);
+>> +			/* minimum 40 dphy_clk_200M cycles */
+>> +			ndelay(250);
+>> +			gpiod_set_value(core->rst_gpio, 0);
+>> +		}
+> 
+> I don't think you should stop the core here. xcsi2rxss_stop_stream()
+> calls the source .s_stream(0) operation, which usually involves I2C
+> writes that will sleep.
+> 
+> You should instead report an event to userspace (it looks like we have
+> no error event defined in V4L2, one should be added), and rely on the
+> normal stop procedure.
 
-I'm not really a big fan of v3 nor v4.  What I'd like to see is a
-'transfer of ownership' API.  This could be to a different task, IRQ work,
-RCU, softirq, timer, ...
+FWIW, since a long time I've been using a modified version of this
+routine, where after a Stream Line Buffer Full condition I just stop and
+restart the csi2rx core and the stream continues after a minimal glitch.
+Other subdev are unaware that anything has happened and keep on streaming.
 
-That would let us track locking dependencies across complex flows, eg this
-wouldn't be warned about right now:
+Not sure this is the correct thing to do, but it's working for me. Also
+I proposed this topic in one of the previous iterations of this patch,
+but the situation was different because the stream on/off was not
+propagated back at that time.
 
-rcu_work():
-	lock(C)
-	kfree(B)
-	unlock(A)
-	unlock(C)
 
-thread 1:
-	lock(A)
-	call_rcu(B)
-
-thread 2:
-	lock(C)
-	synchronize_rcu()
-	unlock(C)
-
-but if we had an API that transferred ownership of A to RCU, then we'd
-see the C->RCU->A->C cycle.
-
-This is perhaps a bit much work to require of Laurent in order to get
-this patchset merged, but something to think about.
+-- 
+Luca
