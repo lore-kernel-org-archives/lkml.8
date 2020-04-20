@@ -2,90 +2,118 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE23C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6931C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37A692082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9777A206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pvekA+bS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgDTPgI (ORCPT
+        id S1728360AbgDTPga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:36:08 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:50087 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgDTPgH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:36:07 -0400
-Received: from mail-lj1-f170.google.com ([209.85.208.170]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MPoPd-1jdyic3HwR-00MxKe for <linux-kernel@vger.kernel.org>; Mon, 20 Apr
- 2020 17:36:05 +0200
-Received: by mail-lj1-f170.google.com with SMTP id m8so10486563lji.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:36:05 -0700 (PDT)
-X-Gm-Message-State: AGi0PubEBGpWrewN010Om9AjfxL/pIeiMiGW7oBQer8JKqWLudVIlZik
-        ueFYew1305ZcL1WHaZPDVhTP6cv7yWg8nFbecbM=
-X-Google-Smtp-Source: APiQypKHtqOOvjsZa8biIU2eZzzlTbGupmSKlmIDGVOzZJB48xQdS/SqpDK9pJJySIskbTfb/xnWOaBlZxC2oY7Y12w=
-X-Received: by 2002:a05:651c:107a:: with SMTP id y26mr5000070ljm.80.1587396965221;
- Mon, 20 Apr 2020 08:36:05 -0700 (PDT)
+        Mon, 20 Apr 2020 11:36:30 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:51110 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgDTPga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:36:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=reWbSLTLYxCFThZVNc5Xkq8Sy+cv49VQ9S3/O8E0FM0=; b=pvekA+bSWB/+gBuXVHw3N1pU64
+        dbRZDOihYQ+WWtiCzPa9p7SduB6ek3GmnfMKwd0RE5/+8XhkztDOi42tcVUTF1MCzy5TOX8kUlRq7
+        eZHZjO7y81LC95lYGQU1GviHimv4hHL3+2Dj1fW4rKK5gyHdmJn0AU/U6KonDaRJn4Cs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQYTB-003que-1N; Mon, 20 Apr 2020 17:36:25 +0200
+Date:   Mon, 20 Apr 2020 17:36:25 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 3/3] net: phy: bcm54140: add hwmon support
+Message-ID: <20200420153625.GA917792@lunn.ch>
+References: <20200417201338.GI785713@lunn.ch>
+ <84679226df03bdd8060cb95761724d3a@walle.cc>
+ <20200417212829.GJ785713@lunn.ch>
+ <4f3ff33f78472f547212f87f75a37b66@walle.cc>
+ <20200419162928.GL836632@lunn.ch>
+ <ebc026792e09d5702d031398e96d34f2@walle.cc>
+ <20200419170547.GO836632@lunn.ch>
+ <0f7ea4522a76f977f3aa3a80dd62201d@walle.cc>
+ <20200419215549.GR836632@lunn.ch>
+ <75428c5faab7fc656051ab227663e6e6@walle.cc>
 MIME-Version: 1.0
-References: <20200419171157.672999-1-lkundrak@v3.sk>
-In-Reply-To: <20200419171157.672999-1-lkundrak@v3.sk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 20 Apr 2020 17:35:48 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a17JFOD_SqF+ub+VEM_ABLzLYWFE6zj0eBXVjP3nn0g2Q@mail.gmail.com>
-Message-ID: <CAK8P3a17JFOD_SqF+ub+VEM_ABLzLYWFE6zj0eBXVjP3nn0g2Q@mail.gmail.com>
-Subject: Re: [PATCH 00/15] ARM: dts: Marvell SoC Device Tree updates (for 5.8)
-To:     Lubomir Rintel <lkundrak@v3.sk>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:zcMXKCe+bjRcKlstEchcHYfjqzNT2Vf9aeoor/+CCTENfxQW+Lg
- a10SmO5/1EbEuMs8CJEKyBeEzb2Rc8B1h317ziBBV8x2ZSjBnrJBYeCR3Xygk/tXtmfC1uC
- e8eocWAbLlfVfb9aSc8tKnjSqSlUZpV6ZfufdanCsXhpr47LMY0Xl5r95RJENHpTE9jSS3a
- iPerg96WBXoFBmNXLjLFQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9ynneOdz8Rg=:1wNaooW1A4J1vZTHjUhijg
- mYnMfIoud1JEYCIi9oQx7uSJL/nYQ3L/vvz2kkGHGNk6BCfEQOaFeFLzsMZgodDlGiINlHLam
- gkZFbzsOgKWA6OfxvV5WzA2TWdsaOfKRh9NzYrWJiUlEqWpcm1XfvJHCY7YSoYTwzUA9cen8m
- 2M3vln/AKt0GuISfCTpwn644LStuR3XU/ipWN8FEIzCXH+TGYrZDtCjC9DwkQPrQBCCQ5CaLJ
- jOUAVjrSv2YMVz+Nhi+ctzYdpr3tW6EqwlvsdmF9ybWdsjbJi10tZpLDtLCt+DrCztI3FfDRL
- BSPTYpv9WH7NGB27aOrjWdda+LhEv2m9no72vFj7SR7bDPyi6xMaHxeWc/GnIKs1KePnq1jIh
- 3ZRDyvUbm0hUPhFHM06j3S1SY5rBdrZBPz/8QZTZKAqPMA5vSDCq7GFNrH/26EZNWb+eacTUL
- Tj3vCSiwGcjUFthItXuvHRB/xdqNB8aUDU2DWCM77NziirnNvGcbSDczzJpis5VkbwiiPGojM
- rAhQJnMkQBK33oOPGLlbbm7NRxhDSK+lszJCsNV0qfT96BfBpCfKP5bqhNOestgG2+2BIzpNm
- rK87ycAO/hp0zFhJxjuAk/mPKzukdSzelWvJ6ZdRLXvKmUROaj5tYXVa8VIZ3XkSVHBCe0Eg9
- JYY+Kb7mKPo5yJNjXNfv/0eiiseOHiUxNMFCz4kfvfRqPYdO1f74e6IFaWmgqTa2+v4wQ9cjZ
- xDiV9lvJGogKeezSDG13J5IVa+ceKp9VB7u+Is58O0Kf7UVspBA/EsWrPgFNyHMayirasFLR5
- 98SPugg7ZAuWOzuY6btuaul6+lLl3rnWDSn4lZviHLzfF0gLLA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75428c5faab7fc656051ab227663e6e6@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 7:12 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> Hi,
->
-> please consider applying the patches chained to this message to arm/dt.
->
-> I've sent about the same patch set before, but there were some issues
-> and it was way too close to 5.7-rc1. Sorry for that. I decided not to
-> hurry it, because none of the fixes is really all that important.
->
-> Majority of the patches just deal with reducing DT validation noise once
-> more schemas are converted to JSON-schema. Those that actually fix
-> things relevant to older released kernels have been Cc'd to stable@.
+> Ok I see, but what locking do you have in mind? We could have something
+> like
+> 
+> __phy_package_write(struct phy_device *dev, u32 regnum, u16 val)
+> {
+>   return __mdiobus_write(phydev->mdio.bus, phydev->shared->addr,
+>                          regnum, val);
+> }
+> 
+> and its phy_package_write() equivalent. But that would just be
+> convenience functions, nothing where you actually help the user with
+> locking. Am I missing something?
 
-Can you check again which ones should perhaps be part of v5.7?
-I assume that at least anything that has a stable tag should also be
-included in the release, but I'd prefer to have you confirm that.
+In general, drivers should not be using __foo functions. We want
+drivers to make use of phy_package_write() which would do the bus
+locking. Look at a typical PHY driver. There is no locking what so
+ever. Just lots of phy_read() and phy write(). The locking is done by
+the core and so should be correct.
 
-     Arnd
+> > > > Get the core to do reference counting on the structure?
+> > > > Add helpers phy_read_shared(), phy_write_shared(), etc, which does
+> > > > MDIO accesses on the base device, taking care of the locking.
+> > > > 
+> > > The "base" access is another thing, I guess, which has nothing to do
+> > > with the shared structure.
+> > > 
+> > I'm making the assumption that all global addresses are at the base
+> > address. If we don't want to make that assumption, we need the change
+> > the API above so you pass a cookie, and all PHYs need to use the same
+> > cookie to identify the package.
+> 
+> how would a phy driver deduce a common cookie? And how would that be a
+> difference to using a PHY address.
+
+For a cookie, i don't care how the driver decides on the cookie. The
+core never uses it, other than comparing cookies to combine individual
+PHYs into a package. It could be a PHY address. It could be the PHY
+address where the global registers are. Or it could be anything else.
+
+> > Maybe base is the wrong name, since MSCC can have the base as the high
+> > address of the four, not the low?
+> 
+> I'd say it might be any of the four addresses as long as it is the same
+> across the PHYs in the same package. And in that case you can also have
+> the phy_package_read/write() functions.
+
+Yes. That is the semantics which is think is most useful. But then we
+don't have a cookie, the value has real significance, and we need to
+document what is should mean.
+
+     Andrew
+
+
