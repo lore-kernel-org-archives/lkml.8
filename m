@@ -2,180 +2,137 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA500C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A5FC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A788C20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A3720A8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s4jIYNmD"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fynmVLdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgDTJ3n (ORCPT
+        id S1726109AbgDTJbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
+        Mon, 20 Apr 2020 05:31:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725775AbgDTJ3n (ORCPT
+        by vger.kernel.org with ESMTP id S1725775AbgDTJbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:29:43 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F31C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 02:29:42 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id c24so3331622uap.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 02:29:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+bXbV2G5yAsWPdoik74HL3zT7EvaYkbi6HLAip4kCPE=;
-        b=s4jIYNmDSCSre8L1fOBe4BKz3cwsdftChktN5JBQLZjCofDyAxUTDTCrR29bQ8dwx0
-         /UULMi3OKQNpg/O5WT4mJDqSI5Hk78M1a6nm2+fLJQyRjBbAfQNz/ioFJ7RxAG8dsQe2
-         HOv+Mde3TMlgY4x2WmVmPYgzvk8jN8pKNA7iRczjLE5el78RwB7Xddsct5dPQcj/nz85
-         zFiR2pBDqDB1AMP8msDaTcEmMj1fANeYRsk7sP3SyWpg9pD9/cptg1Hx8UJuzgV7ye2f
-         j04qjnuf2cPvH1WJr+/Uox3iREXQ9C4W9RHpflU+HXxQUURDtFXPr6Ee3zxVrTGNjEWd
-         Z32A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+bXbV2G5yAsWPdoik74HL3zT7EvaYkbi6HLAip4kCPE=;
-        b=gJu25TD3zF0S6AVHEFc61IgtVFtQQCrIvuFcEWvWm8Eh5azOW0IETc0V+n/0syvwBp
-         QYyBY1UPrn30ivodOKX2G0iJj9p0uxfuPjvFoiUueaIq2L8fVnJSuYV3qJIZ+5lKAkGc
-         n8zF8930RfdfmCLJjI4Miv7W+wqaoBVh+BHllzkbbZky69uBj3mCiOPIs39QZCWj955J
-         5ggWSsU5425Ty14c0ntKq86qdOhW9t5k6RtKYaY2umJMwud1BWmdV/gT5J/K1ZCrO9Ds
-         SNiwcIfn7wFW7lPk5F2uJiMjFpVdjHvqgPBouObJ+XjaHkWvEaweQcEW+/tzE87rCIuG
-         F+8Q==
-X-Gm-Message-State: AGi0PuaiHcR+M4pSdwfdaGt9IGgLAFVHBDLqwUNKG4XUW7OMb18iS8d5
-        FaPs4xQnRws6iHDjRP/P8HCrfj/KMvKL9CUh6UfOW8fiNr0=
-X-Google-Smtp-Source: APiQypJSb26agvtaW3XUoWIUFAipBIghy203mcWakTXMxgBcN3TEPnxo9vAyT3jVrfHgyafMtr1eTIuTVfa92/Owf/U=
-X-Received: by 2002:ab0:3343:: with SMTP id h3mr517711uap.19.1587374982046;
- Mon, 20 Apr 2020 02:29:42 -0700 (PDT)
+        Mon, 20 Apr 2020 05:31:38 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC81C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 02:31:37 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F08140068F64889F873250A.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:1400:68f6:4889:f873:250a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5221D1EC0469;
+        Mon, 20 Apr 2020 11:31:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587375096;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=CXhTfvXi11xyHHW7Yd77e/vXQQSj/cvzXDUeJIedA8g=;
+        b=fynmVLdY6AUb68D6SdKAM4i7yRswJcGa/nZw0Ce5PtMXYuLkgWosT91CehApC5vMx+21lk
+        Y+mGSvvLzToXwGFDVC6oYYlClGr866kd49Yqjn0u0XdohWOiLdU/+zAdxfhrUQWPAR9v+q
+        BU2sMXvgX5YPZnaaHzu+8TASg8aaJZE=
+Date:   Mon, 20 Apr 2020 11:31:29 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Evalds Iodzevics <evalds.iodzevics@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, Ben Hutchings <ben@decadent.org.uk>
+Subject: Re: [PATCH] x86/microcode/intel: replace sync_core() with
+ native_cpuid_reg(eax)
+Message-ID: <20200420093129.GA21839@zn.tnic>
+References: <20200420120037.1537-1-evalds.iodzevics@gmail.com>
 MIME-Version: 1.0
-References: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
- <CAPDyKFqSJ4h7UvQfQzWmSq9gg97A0MXvdcuXXaY7b-YUHs=V2g@mail.gmail.com>
- <158334039680.7173.16159724456027777605@swboyd.mtv.corp.google.com>
- <CAPDyKFqecH=AsvtN+JMxdk6pY2dntWUrhUWF6LEq_DLCcPe6pw@mail.gmail.com>
- <158463974696.152100.8345578995373250448@swboyd.mtv.corp.google.com>
- <CAPDyKFrL6uWaKK1zkn6ag2ZqW7ro50VGq6DJnTNyoFS2yGMmRw@mail.gmail.com> <158690616084.105027.4255268086188981149@swboyd.mtv.corp.google.com>
-In-Reply-To: <158690616084.105027.4255268086188981149@swboyd.mtv.corp.google.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 20 Apr 2020 11:29:06 +0200
-Message-ID: <CAPDyKFqw42Vvu1n-MbL+DEr3wsk9bgrRHmOLS=t57A+1P-yLMg@mail.gmail.com>
-Subject: Re: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks
- of sdhci-msm platform driver
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Ram Prakash Gupta <rampraka@codeaurora.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200420120037.1537-1-evalds.iodzevics@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 at 01:16, Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Ulf Hansson (2020-03-20 03:22:01)
-> > On Thu, 19 Mar 2020 at 18:42, Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Ulf Hansson (2020-03-06 02:07:41)
-> > > > On Wed, 4 Mar 2020 at 17:46, Stephen Boyd <swboyd@chromium.org> wrote:
-> > > > >
-> > > > > Quoting Ulf Hansson (2020-03-04 07:34:29)
-> > > > > > On Thu, 20 Feb 2020 at 07:45, Shaik Sajida Bhanu <sbhanu@codeaurora.org> wrote:
-> > > > > > >
-> > > > > > > The existing suspend/resume callbacks of sdhci-msm driver are just
-> > > > > > > gating/un-gating the clocks. During suspend cycle more can be done
-> > > > > > > like disabling controller, disabling card detection, enabling wake-up events.
-> > > > > > >
-> > > > > > > So updating the system pm callbacks for performing these extra
-> > > > > > > actions besides controlling the clocks.
-> > > > > > >
-> > > > > > > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> > > > > > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > > > > > > ---
-> > > [...]
-> > > >
-> > > > >
-> > > > > >
-> > > > > > > +
-> > > > > > > +       ret = pm_runtime_force_suspend(dev);
-> > > > > >
-> > > > > > It looks to me that perhaps you could make use of solely
-> > > > > > pm_runtime_force_suspend(), then just skip calling
-> > > > > > sdhci_suspend|resume_host() altogether. Do you think that could work?
-> > > > >
-> > > > > Does that do all the things the commit text mentions is desired for
-> > > > > system suspend?
-> > > >
-> > > > No. :-)
-> > > >
-> > > > But why is system wakeup needed for an eMMC card?
-> > > >
-> > >
-> > > I don't know if system wakeup is needed for an eMMC card. Probably only
-> > > if you plug in a card and some daemon wants to wake up and probe the
-> > > card for auto-play or something like that? Seems possible so might as
-> > > well expose the CD gpio as a wakeup in that case and let userspace
-> > > decide if it wants to do that.
-> >
-> > Right, card detect IRQs could be useful for system wakeups.
-> >
-> > I assume you are using a GPIO IRQ for that, which is easily managed,
-> > as the runtime PM status of the mmc controller is irrelevant when
-> > configuring the GPIO IRQ as wakeup.
-> >
-> > We even have a helper for doing this, mmc_gpio_set_cd_wake().
->
-> Right. Maybe mmc_gpio_set_cd_wake() needs to be called from somewhere in
-> the sdhci core?
+On Mon, Apr 20, 2020 at 03:00:37PM +0300, Evalds Iodzevics wrote:
+> sync_core() always jums past cpuid instruction on 32 bit machines
+> because data structure boot_cpu_data are not populated so early in boot.
 
-Yes, that seems reasonable.
+I'm guessing because boot_cpu_data.cpuid_level is not properly set and
+very early code in head_32.S sets it to -1 temporarily until the highest
+CPUID level has been detected (or not).
 
->
-> >
-> > >
-> > > Is runtime suspended state the same as system suspended state here
-> > > though? The commit text seems to imply that only clks are disabled when
-> > > it's desirable to disable the entire controller. I'm still fuzzy on how
-> > > runtime PM and system PM interact because it seems to have changed since
-> > > I looked last a few years ago. If the driver can stay in a runtime
-> > > suspended state across system suspend then I'm all for it. That would
-> > > save time for system PM transitions.
-> >
-> > In most cases this should be possible. And so far, for this case, I
-> > haven't found a good reason to why it shouldn't work.
-> >
-> > Although, perhaps we need to improve some of the sdhci's library
-> > functions for PM, to better support this.
-> >
->
-> So does that mean it's all just working then? Nothing to do here except
-> make wakeup irqs for CD work?
+But the microcode loading happens *before* that.
 
-Well, if it "works " or not, I am not really sure.
+I'd probably be interested how you trigger that but since the backport
+got changed (see below) and yours is correcting it to the upstream
+variant then perhaps maybe I don't care that much. :)
 
-My point is, I think most of the things that need to be managed at
-system suspend/resume are the same things that need to be managed
-during runtime suspend/resume (except wakeups). So, rather than
-implementing a whole bunch of system suspend/resume specific things,
-why not make use of the runtime suspend/resume callbacks instead.
+> It depends on commit 5dedade6dfa243c130b85d1e4daba6f027805033 for
+> native_cpuid_reg(eax) definitions
+> 
+> This patch is for 4.4 but also should apply to 4.9
+> 
+> Signed-off-by: Evalds Iodzevics <evalds.iodzevics@gmail.com>
+> ---
+>  arch/x86/include/asm/microcode_intel.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/microcode_intel.h b/arch/x86/include/asm/microcode_intel.h
+> index 90343ba50485..92ce9c8a508b 100644
+> --- a/arch/x86/include/asm/microcode_intel.h
+> +++ b/arch/x86/include/asm/microcode_intel.h
+> @@ -60,7 +60,7 @@ static inline u32 intel_get_microcode_revision(void)
+>  	native_wrmsrl(MSR_IA32_UCODE_REV, 0);
+>  
+>  	/* As documented in the SDM: Do a CPUID 1 here */
+> -	sync_core();
+> +	native_cpuid_eax(1);
+>  
+>  	/* get the current revision from MSR 0x8B */
+>  	native_rdmsr(MSR_IA32_UCODE_REV, dummy, rev);
+> -- 
 
-Kind regards
-Uffe
+Hrm, the original patch of mine did use native_cpuid_eax():
+
+4167709bbf82 ("x86/microcode/intel: Add a helper which gives the microcode revision")
+
+but the backport:
+
+commit 98cc1464cfd6edf9dc7fa96aaaf596aae952029b
+Author: Borislav Petkov <bp@suse.de>
+Date:   Mon Jan 9 12:41:45 2017 +0100
+
+    x86/microcode/intel: Add a helper which gives the microcode revision
+    
+    commit 4167709bbf826512a52ebd6aafda2be104adaec9 upstream.
+    
+    Since on Intel we're required to do CPUID(1) first, before reading
+    the microcode revision MSR, let's add a special helper which does the
+    required steps so that we don't forget to do them next time, when we
+    want to read the microcode revision.
+    
+    Signed-off-by: Borislav Petkov <bp@suse.de>
+    Link: http://lkml.kernel.org/r/20170109114147.5082-4-bp@alien8.de
+    Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+    [bwh: Backported to 4.4:
+     - Don't touch prev_rev variable in apply_microcode()
+     - Keep using sync_core(), which will alway includes the necessary CPUID
+     	^^^^^^^^^^^^^^^^^^^
+
+decided to use sync_core() for whatever reason. Perhaps because the
+native_cpuid* things weren't there. Adding Ben to Cc.
+
+I believe this is the background info Greg needed to figure out *why*
+you're doing this.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
