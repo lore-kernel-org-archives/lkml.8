@@ -2,160 +2,162 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DDEC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB37C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 439E620736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF468206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:08:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="f3IISkMV"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="eoqWpiOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgDTFFz (ORCPT
+        id S1726195AbgDTFIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:05:55 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.100]:27081 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725710AbgDTFFy (ORCPT
+        Mon, 20 Apr 2020 01:08:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgDTFIg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:05:54 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 567976B8C53
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 23:50:39 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id QOOFj5xt78vkBQOOFjrEDG; Sun, 19 Apr 2020 23:50:39 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=CHujRiFmd5pZFVRiQTFT1RW/nzEZTJvFxnpg+9DhJxs=; b=f3IISkMVa4MjTJKhU6eqWO1lZZ
-        6UPQ90illbbtVxgUUzhL4ALrgxg3QUv4gZ3cLmkL67rNOSinBh7ZispKC+1NBF6h8qpy2aIm3YQnv
-        2GX/5qnG3vZsHveCspOJ8QDUsx1Fi+eUbTED1T2U5QsnLwsvH/9923l/kQM7EOH60K5TFA+iTL35Q
-        4Fk5GsDPkQ04lCa5BRUmn1g44yawK1h7sN93frT4xYQz+NuyicTRvlCOeRjv4B2rqmLp5rWGCsQvS
-        gLnMY7iEuDwlaC4lFJqKhSijpZ8wmFMtvgSH2AB25XUoWQL9aAVjqUCDAHcoVg082em4VxiNaHum8
-        un14IdiQ==;
-Received: from [201.162.169.27] (port=11454 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jQOOE-000i0r-Tv; Sun, 19 Apr 2020 23:50:39 -0500
-Subject: Re: [GIT PULL] flexible-array member convertion patches for 5.7-rc2
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-References: <20200418213828.GA10666@embeddedor>
- <20200420111210.50737f67@canb.auug.org.au>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <240ba9d8-e2ce-8585-e363-2feb27ee54a9@embeddedor.com>
-Date:   Sun, 19 Apr 2020 23:54:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 01:08:36 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0F3C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:08:36 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id p16so1747613edm.10
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:08:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uosnnvhWZ3yyd1hjeyEdalFBW58ozyttD3SAmZ9epkk=;
+        b=eoqWpiOwRq7oi4XyC2As+GUHLC5NEcZO1OOE4PRCK1UPnSV64nsIERwHkSaXSb1dXW
+         8ciCXTUnSaOgWRKxTBfIk/x746ztoISrwImvbu7zUF//ygyqTnbEwNtwad8pWAE0tlLF
+         804WRCHLh/Po0dTXTLal3QEkVr8WjIdRa7gF/K9a+6RXlUwuMEDBQgKPvyO9l6kBNiFQ
+         sROA4R4733K1cB+fGzkmc2I49Ou2AL4qMfdApkWJwUKs1HpyfYya8lM6KJGumgV4MRl4
+         rKnBTsXYivznrdqhvAu6F57Kt1Wj4IbjIQ1/BkGhB7vdWkBLJOEtt0vSTZFUHrXOIUX6
+         OZug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uosnnvhWZ3yyd1hjeyEdalFBW58ozyttD3SAmZ9epkk=;
+        b=ViIWyDDPNJOKGC9S9P78ts8wbvcwgO96SnXL9OSoozqk08oLNO90u+1lgxElwyXYlq
+         BLrHSbszU4ZfKKX3wERo/ES4yYomBuAD906pZyUU2Vn6CFobm6Om22HOCUe1D1j5v0Gj
+         LyBR1iLX5Xcdw6cr9NspBtm0A0YZop8QAABcEtUNIS8Ti46bbFDiMwsVUamgKLKOrCAP
+         q2CTydChgEnHQE65EOKVJclj+c4vky3tR9JCJ5SLNroPqCApuVGKmhosNxTmxnzDvhxI
+         5AJmvgzmiFpX89nOEcOrVhDS2qYhHRZRMYMeHxz2QpidTMikaZltpIjsSiUSZbdNnmMt
+         vmGQ==
+X-Gm-Message-State: AGi0PuaZkyZLJxxQpD93bHmQJFXVGI4L2figJxmzGX1nn7LMa+fUa3Ms
+        ErmdJHPnM0HyCq+PybBnb4y0kTqYmVrKOrP4sZH2Zg==
+X-Google-Smtp-Source: APiQypKvZgj9wXFg38gj+SIw0DMo/cjC6QoMNTqE70yXQ5Mpi1Piz373LSRUoNAHXo/kXfpbyB4oZQtKaQOTioBGdeE=
+X-Received: by 2002:a05:6402:2203:: with SMTP id cq3mr921641edb.154.1587359314565;
+ Sun, 19 Apr 2020 22:08:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200420111210.50737f67@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.169.27
-X-Source-L: No
-X-Exim-ID: 1jQOOE-000i0r-Tv
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.169.27]:11454
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net> <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
+In-Reply-To: <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sun, 19 Apr 2020 22:08:23 -0700
+Message-ID: <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com>
+Subject: Re: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Sat, Apr 18, 2020 at 1:52 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sat, Apr 18, 2020 at 1:30 PM Andy Lutomirski <luto@amacapital.net> wro=
+te:
+> >
+> > Maybe I=E2=80=99m missing something obvious, but what=E2=80=99s the alt=
+ernative?  The _mcsafe variants don=E2=80=99t just avoid the REP mess =E2=
+=80=94 they also tell the kernel that this particular access is recoverable=
+ via extable.
+>
+> .. which they could easily do exactly the same way the user space
+> accessors do, just with a much simplified model that doesn't even care
+> about multiple sizes, since unaligned accesses weren't valid anyway.
+>
+> The thing is, all of the MCS code has been nasty. There's no reason
+> for it what-so-ever that I can tell. The hardware has been so
+> incredibly broken that it's basically unusable, and most of the
+> software around it seems to have been about testing.
+>
+> So I absolutely abhor that thing. Everything about that code has
+> screamed "yeah, we completely mis-designed the hardware, we're pushing
+> the problems into software, and nobody even uses it or can test it so
+> there's like 5 people who care".
+>
+> And I'm pushing back on it, because I think that the least the code
+> can do is to at least be simple.
+>
+> For example, none of those optimizations should exist. That function
+> shouldn't have been inline to begin with. And if it really really
+> matters from a performance angle that it was inline (which I doubt),
+> it shouldn't have looked like a memory copy, it should have looked
+> like "get_user()" (except without all the complications of actually
+> having to test addresses or worry about different sizes).
+>
+>
+> And it almost certainly shouldn't have been done in low-level asm
+> either. It could have been a single "read aligned word" interface
+> using an inline asm, and then everything else could have been done as
+> C code around it.
 
-On 4/19/20 20:12, Stephen Rothwell wrote:
-> Hi Gustavo,
-> 
-> On Sat, 18 Apr 2020 16:38:28 -0500 "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
->>
->> Notice that all of these patches have been baking in linux-next for
->> quite a while now and, 238 more of these patches have already been
->> merged into 5.7-rc1.
-> 
-> Except that you rebased these just yesterday :-(
-> 
-> I understand why you did that (because there are still three earlier
-> patches in the linux-next version of this tree), but please try to
-> avoid this in the future.
-> 
+Do we have examples of doing exception handling from C? I thought all
+the exception handling copy routines were assembly routines?
 
-That's correct.  I'm sorry for any trouble that may have caused you.
-I will try to avoid doing that in the future.
+>
+> But no. The software side is almost as messy as the hardware side is.
+> I hate it. And since nobody sane can test it, and the broken hardware
+> is _so_ broken than nobody should ever use it, I have continually
+> pushed back against this kind of ugly nasty special code.
+>
+> We know the writes can't fault, since they are buffered. So they
+> aren't special at all.
 
-> Also, please clean up your linux-next included branch to avoid
-> conflicts in the future, thanks.
-> 
+The writes can mmu-fault now that memcpy_mcsafe() is also used by
+_copy_to_iter_mcsafe(). This allows a clean bypass of the block layer
+in fs/dax.c in addition to the pmem driver access of poisoned memory.
+Now that the fallback is a sane rep; movs; it can be considered for
+plain copy_to_iter() for other user copies so you get exception
+handling on kernel access of poison outside of persistent memory. To
+Andy's point I think a recoverable copy (for exceptions or faults) is
+generally useful.
 
-Done! :)
+> We know the acceptable reads for the broken hardware basically boil
+> down to a single simple word-size aligned read, so you need _one_
+> special inline asm for that. The rest of the cases can be handled by
+> masking and shifting if you really really need to - and done better
+> that way than with byte accesses anyway.
+>
+> Then you have _one_ C file that implements everything using that
+> single operation (ok, if people absolutely want to do sizes, I guess
+> they can if they can just hide it in that one file), and you have one
+> header file that exposes the interfaces to it, and you're done.
+>
+> And you strive hard as hell to not impact anything else, because you
+> know that the hardware is unacceptable until all those special rules
+> go away. Which they apparently finally have.
 
-Thanks
---
-Gustavo
+I understand the gripes about the mcsafe_slow() implementation, but
+how do I implement mcsafe_fast() any better than how it is currently
+organized given that, setting aside machine check handling,
+memcpy_mcsafe() is the core of a copy_to_iter*() front-end that can
+mmu-fault on either source or destination access?
