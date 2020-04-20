@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A8CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2A7C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71AC02072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDC5206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386414;
-	bh=U2p0i6iJxbqjJv9zwkydfcfuhBtbK9RPn04SIE+Dm7k=;
+	s=default; t=1587386416;
+	bh=9cG006k3LbqtUOh3C3GQ/cY8hx5/Uc58zO0Ys8/zvsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JTjAApVb+WHodJksk2vMVdzKonPXfFZkJuRWwaIJo8bWSqrhrbCZdp+PjhF5O042W
-	 F9nOWd2KgBZHKA3envYhT54M22zsL/Q2Kyrcs1maXU20MqxkjbSJFMkB05lPV/x1dq
-	 QxcFyZok/0mbMaUwU/WU1JqWaizRw+2uUsMuH2Rc=
+	b=AxPLTPkllAjy8VbCKWfWVNVq0Jg5O+o+c5X5xQcLvMYgiK2nlwYXAfy37vFqnDLkj
+	 JGbxZha9AeUUxjGcBdfdTg8ES0DH0nUIuuKeO8dkDD7V51c1JXgjL7sYPmRYEq0PH+
+	 jVxEO3r1rxDnDUm2WPptFUv44+XRkcqSl+W34hrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgDTMkN (ORCPT
+        id S1727021AbgDTMkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:40:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60416 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:40:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbgDTMkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:40:10 -0400
+        id S1727007AbgDTMkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:40:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C29ED20724;
-        Mon, 20 Apr 2020 12:40:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DC96206D4;
+        Mon, 20 Apr 2020 12:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386410;
-        bh=U2p0i6iJxbqjJv9zwkydfcfuhBtbK9RPn04SIE+Dm7k=;
+        s=default; t=1587386412;
+        bh=9cG006k3LbqtUOh3C3GQ/cY8hx5/Uc58zO0Ys8/zvsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U0CQcRivUZRDcLrs328YW3Oox4mtdMvCaLgrB1C2JVjZoHRvg9kbzqdEtFTlv1M9Z
-         u1RbOk4bzn1Ll0tOW98aUnxm4YZnHXmhhzesZqXdE9Z1kh0UFNBeLmjBKJRQuLsqTq
-         iy7BdVivqJgzCpaxiEdKVpmN99mVqcLah8agMNeE=
+        b=nrLiEjw7FRBXowl2zyeoDTC6f0sXnKLOJCtcDTAQv1kGMqhr7nPuJvEZEWfqs+Duy
+         iDPPdF68SD8jPa7QTIheUZIUTZk/PwPX++vFljbbC2ytLqu5PhWq+3P1/zZ7bZq3RK
+         hL7eU3CgfPBT2pMAj3rDALsP/vnnJWJ2WA4NZMFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 12/65] net: ethernet: mediatek: move mt7623 settings out off the mt7530
-Date:   Mon, 20 Apr 2020 14:38:16 +0200
-Message-Id: <20200420121509.124460345@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Feras Daoud <ferasda@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.5 13/65] net/mlx5: Fix frequent ioread PCI access during recovery
+Date:   Mon, 20 Apr 2020 14:38:17 +0200
+Message-Id: <20200420121509.188216905@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -60,98 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "René van Dorst" <opensource@vdorst.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit a5d75538295b06bc6ade1b9da07b9bee57d1c677 ]
+[ Upstream commit 8c702a53bb0a79bfa203ba21ef1caba43673c5b7 ]
 
-Moving mt7623 logic out off mt7530, is required to make hardware setting
-consistent after we introduce phylink to mtk driver.
+High frequency of PCI ioread calls during recovery flow may cause the
+following trace on powerpc:
 
-Fixes: b8fc9f30821e ("net: ethernet: mediatek: Add basic PHYLINK support")
-Reviewed-by: Sean Wang <sean.wang@mediatek.com>
-Tested-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: RenÃ© van Dorst <opensource@vdorst.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[ 248.670288] EEH: 2100000 reads ignored for recovering device at
+location=Slot1 driver=mlx5_core pci addr=0000:01:00.1
+[ 248.670331] EEH: Might be infinite loop in mlx5_core driver
+[ 248.670361] CPU: 2 PID: 35247 Comm: kworker/u192:11 Kdump: loaded
+Tainted: G OE ------------ 4.14.0-115.14.1.el7a.ppc64le #1
+[ 248.670425] Workqueue: mlx5_health0000:01:00.1 health_recover_work
+[mlx5_core]
+[ 248.670471] Call Trace:
+[ 248.670492] [c00020391c11b960] [c000000000c217ac] dump_stack+0xb0/0xf4
+(unreliable)
+[ 248.670548] [c00020391c11b9a0] [c000000000045818]
+eeh_check_failure+0x5c8/0x630
+[ 248.670631] [c00020391c11ba50] [c00000000068fce4]
+ioread32be+0x114/0x1c0
+[ 248.670692] [c00020391c11bac0] [c00800000dd8b400]
+mlx5_error_sw_reset+0x160/0x510 [mlx5_core]
+[ 248.670752] [c00020391c11bb60] [c00800000dd75824]
+mlx5_disable_device+0x34/0x1d0 [mlx5_core]
+[ 248.670822] [c00020391c11bbe0] [c00800000dd8affc]
+health_recover_work+0x11c/0x3c0 [mlx5_core]
+[ 248.670891] [c00020391c11bc80] [c000000000164fcc]
+process_one_work+0x1bc/0x5f0
+[ 248.670955] [c00020391c11bd20] [c000000000167f8c]
+worker_thread+0xac/0x6b0
+[ 248.671015] [c00020391c11bdc0] [c000000000171618] kthread+0x168/0x1b0
+[ 248.671067] [c00020391c11be30] [c00000000000b65c]
+ret_from_kernel_thread+0x5c/0x80
+
+Reduce the PCI ioread frequency during recovery by using msleep()
+instead of cond_resched()
+
+Fixes: 3e5b72ac2f29 ("net/mlx5: Issue SW reset on FW assert")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Reviewed-by: Feras Daoud <ferasda@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c |   24 +++++++++++++++++++++++-
- drivers/net/ethernet/mediatek/mtk_eth_soc.h |    8 ++++++++
- 2 files changed, 31 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/health.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -65,6 +65,17 @@ u32 mtk_r32(struct mtk_eth *eth, unsigne
- 	return __raw_readl(eth->base + reg);
- }
+--- a/drivers/net/ethernet/mellanox/mlx5/core/health.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/health.c
+@@ -243,7 +243,7 @@ recover_from_sw_reset:
+ 		if (mlx5_get_nic_state(dev) == MLX5_NIC_IFC_DISABLED)
+ 			break;
  
-+u32 mtk_m32(struct mtk_eth *eth, u32 mask, u32 set, unsigned reg)
-+{
-+	u32 val;
-+
-+	val = mtk_r32(eth, reg);
-+	val &= ~mask;
-+	val |= set;
-+	mtk_w32(eth, val, reg);
-+	return reg;
-+}
-+
- static int mtk_mdio_busy_wait(struct mtk_eth *eth)
- {
- 	unsigned long t_start = jiffies;
-@@ -193,7 +204,7 @@ static void mtk_mac_config(struct phylin
- 	struct mtk_mac *mac = container_of(config, struct mtk_mac,
- 					   phylink_config);
- 	struct mtk_eth *eth = mac->hw;
--	u32 mcr_cur, mcr_new, sid;
-+	u32 mcr_cur, mcr_new, sid, i;
- 	int val, ge_mode, err;
+-		cond_resched();
++		msleep(20);
+ 	} while (!time_after(jiffies, end));
  
- 	/* MT76x8 has no hardware settings between for the MAC */
-@@ -255,6 +266,17 @@ static void mtk_mac_config(struct phylin
- 				    PHY_INTERFACE_MODE_TRGMII)
- 					mtk_gmac0_rgmii_adjust(mac->hw,
- 							       state->speed);
-+
-+				/* mt7623_pad_clk_setup */
-+				for (i = 0 ; i < NUM_TRGMII_CTRL; i++)
-+					mtk_w32(mac->hw,
-+						TD_DM_DRVP(8) | TD_DM_DRVN(8),
-+						TRGMII_TD_ODT(i));
-+
-+				/* Assert/release MT7623 RXC reset */
-+				mtk_m32(mac->hw, 0, RXC_RST | RXC_DQSISEL,
-+					TRGMII_RCK_CTRL);
-+				mtk_m32(mac->hw, RXC_RST, 0, TRGMII_RCK_CTRL);
- 			}
- 		}
- 
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-@@ -352,10 +352,13 @@
- #define DQSI0(x)		((x << 0) & GENMASK(6, 0))
- #define DQSI1(x)		((x << 8) & GENMASK(14, 8))
- #define RXCTL_DMWTLAT(x)	((x << 16) & GENMASK(18, 16))
-+#define RXC_RST			BIT(31)
- #define RXC_DQSISEL		BIT(30)
- #define RCK_CTRL_RGMII_1000	(RXC_DQSISEL | RXCTL_DMWTLAT(2) | DQSI1(16))
- #define RCK_CTRL_RGMII_10_100	RXCTL_DMWTLAT(2)
- 
-+#define NUM_TRGMII_CTRL		5
-+
- /* TRGMII RXC control register */
- #define TRGMII_TCK_CTRL		0x10340
- #define TXCTL_DMWTLAT(x)	((x << 16) & GENMASK(18, 16))
-@@ -363,6 +366,11 @@
- #define TCK_CTRL_RGMII_1000	TXCTL_DMWTLAT(2)
- #define TCK_CTRL_RGMII_10_100	(TXC_INV | TXCTL_DMWTLAT(2))
- 
-+/* TRGMII TX Drive Strength */
-+#define TRGMII_TD_ODT(i)	(0x10354 + 8 * (i))
-+#define  TD_DM_DRVP(x)		((x) & 0xf)
-+#define  TD_DM_DRVN(x)		(((x) & 0xf) << 4)
-+
- /* TRGMII Interface mode register */
- #define INTF_MODE		0x10390
- #define TRGMII_INTF_DIS		BIT(0)
+ 	if (mlx5_get_nic_state(dev) != MLX5_NIC_IFC_DISABLED) {
 
 
