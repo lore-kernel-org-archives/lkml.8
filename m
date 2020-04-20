@@ -2,100 +2,112 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D115C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D929C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56E0E2078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDFC2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IDpwaVO2"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="aFSBgb9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgDTFgD (ORCPT
+        id S1726109AbgDTFgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:36:03 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:28188 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbgDTFgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:36:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 495FmC2y0Cz9tyFs;
-        Mon, 20 Apr 2020 07:35:55 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=IDpwaVO2; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id eED5noZUcD5x; Mon, 20 Apr 2020 07:35:55 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 495FmC1W0Lz9tyFq;
-        Mon, 20 Apr 2020 07:35:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587360955; bh=gbvV/0yUNCxbrnMP2PABrPUQIbZfdpXkHJe2K9NCY3M=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=IDpwaVO2uqNHZ1HQUx5DEwfo4UyoPWPh4v68CJhUA2BF960jS/IUU2ak/iFHymki1
-         6Q7Ul/t15W0eiGSL5e1zXDWNRDdEjWfxj3EXY9MkQTXpdqqn+fNxRe+wXnYsCi6buC
-         xn3Amae/bvKFx459VMc+QYMFumRdZNDKMdRf+/SM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0A68D8B776;
-        Mon, 20 Apr 2020 07:36:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 5Pu0Xd3vKtx1; Mon, 20 Apr 2020 07:35:59 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 02DC88B752;
-        Mon, 20 Apr 2020 07:35:58 +0200 (CEST)
-Subject: Re: [PATCH] powerpc/8xx: Fix STRICT_KERNEL_RWX startup test failure
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <0231963e81d6e72ff725212c14f4011d2ee36a9e.1587360530.git.christophe.leroy@c-s.fr>
-Message-ID: <37627d56-6338-768a-d82a-397c55974607@c-s.fr>
-Date:   Mon, 20 Apr 2020 07:35:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <0231963e81d6e72ff725212c14f4011d2ee36a9e.1587360530.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        Mon, 20 Apr 2020 01:36:48 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:39683 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725379AbgDTFgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 01:36:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=JGxxB+JBK0HpcebHZbn7qDbFyNSU19wTCnP6IIC4qB8=; b=a
+        FSBgb9uoaxIVUrYbg/R7Jz8D/WC46aPim0lNGUOk3OvLiKN04+SrxbZNL/Koeb7v
+        nKrfobgdSLYR1+BafisxavSuMlUwvd7Gee5Enxxl6RGu7lgFvfguLCymAm86HlfU
+        8/CYA9YKD5O2C7WRXfyDEriweI2jR+gwibuuaHN7PA=
+Received: from localhost.localdomain (unknown [61.129.42.58])
+        by app2 (Coremail) with SMTP id XQUFCgDXh+DdNJ1eYfAdAA--.6054S3;
+        Mon, 20 Apr 2020 13:36:30 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     John Johansen <john.johansen@canonical.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] apparmor: Fix aa_label refcnt leak in policy_update
+Date:   Mon, 20 Apr 2020 13:35:28 +0800
+Message-Id: <1587360928-83032-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgDXh+DdNJ1eYfAdAA--.6054S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ury7JF17tr4fCFWDXr1kXwb_yoW8WryDpr
+        WUK34qkFs8tF17Jrnxta45u3yakay7Gr1rtay3Gw1IyFs8Jw48uF1fK3s0gryrGrn5Arsr
+        ZrsIvrWrZ3WxCFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Cr0_Gr
+        1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+        648v4I1lc2xSY4AK67AK6r4rMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY
+        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUWv3bUUUUU=
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+policy_update() invokes begin_current_label_crit_section(), which
+returns a reference of the updated aa_label object to "label" with
+increased refcount.
 
+When policy_update() returns, "label" becomes invalid, so the refcount
+should be decreased to keep refcount balanced.
 
-Le 20/04/2020 à 07:29, Christophe Leroy a écrit :
-> WRITE_RO lkdtm test works.
-> 
-> But when selecting CONFIG_DEBUG_RODATA_TEST, the kernel reports
-> 	rodata_test: test data was not read only
-> 
-> This is because when rodata test runs, there are still old entries
-> in TLB.
-> 
-> Flush TLB after setting kernel pages RO or NX.
-> 
-> Fixes: d5f17ee96447 ("powerpc/8xx: don't disable large TLBs with CONFIG_STRICT_KERNEL_RWX")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->   arch/powerpc/kvm/Makefile    | 2 +-
+The reference counting issue happens in one exception handling path of
+policy_update(). When aa_may_manage_policy() returns not NULL, the
+refcnt increased by begin_current_label_crit_section() is not decreased,
+causing a refcnt leak.
 
-Oops, this change shouldn't be there. Will send v2.
+Fix this issue by jumping to "end_section" label when
+aa_may_manage_policy() returns not NULL.
 
->   arch/powerpc/mm/nohash/8xx.c | 3 +++
->   2 files changed, 4 insertions(+), 1 deletion(-)
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ security/apparmor/apparmorfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
+index 280741fc0f5f..f6a3ecfadf80 100644
+--- a/security/apparmor/apparmorfs.c
++++ b/security/apparmor/apparmorfs.c
+@@ -454,7 +454,7 @@ static ssize_t policy_update(u32 mask, const char __user *buf, size_t size,
+ 	 */
+ 	error = aa_may_manage_policy(label, ns, mask);
+ 	if (error)
+-		return error;
++		goto end_section;
+ 
+ 	data = aa_simple_write_to_buffer(buf, size, size, pos);
+ 	error = PTR_ERR(data);
+@@ -462,6 +462,7 @@ static ssize_t policy_update(u32 mask, const char __user *buf, size_t size,
+ 		error = aa_replace_profiles(ns, label, mask, data);
+ 		aa_put_loaddata(data);
+ 	}
++end_section:
+ 	end_current_label_crit_section(label);
+ 
+ 	return error;
+-- 
+2.7.4
 
-Christophe
