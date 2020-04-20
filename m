@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC4DC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AAAC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BEEE2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1844820747
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386449;
-	bh=jYo6b44XSM0muOLTX9c5vHpa/7SrsPs18J65+dSq6kM=;
+	s=default; t=1587386452;
+	bh=SgjDXtDgQGdZHYXIuByUqint4a036yOfcRxQTWh8XgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jNOFoj2mqdyPwsiMoknNM3smo411IqQBilCi+eKi+rG5mcbOlkrZ7JB/7klDWYkRw
-	 bEfLhoEkUpcK89GhHxmVN6Sjg188I9bmsxxCC0CA0alhOkoidzC46/XTLgfndPBeBd
-	 12u0m6bjgDSPe6GbczQzeNZ24jtT9qBJUc8SpNq0=
+	b=RfH/4IECqDDHPqQBI+2FWviA+feNbs3JecfLkWvtbSGBcCU+e44QDV7zxfpDhMx37
+	 fywneouyey9h21f/Io3O9zIXhG7qV6zfiP+sN/AnyYbW4I+PKv2m89tCO8IifZdpfd
+	 mJIU2ngoryf3ZRcclLluX2eDqvBH7oS1A2BhsfSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgDTMks (ORCPT
+        id S1727862AbgDTMku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:40:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33148 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:40:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727833AbgDTMkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:40:45 -0400
+        id S1727846AbgDTMks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:40:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B61320724;
-        Mon, 20 Apr 2020 12:40:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B750D20736;
+        Mon, 20 Apr 2020 12:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386444;
-        bh=jYo6b44XSM0muOLTX9c5vHpa/7SrsPs18J65+dSq6kM=;
+        s=default; t=1587386447;
+        bh=SgjDXtDgQGdZHYXIuByUqint4a036yOfcRxQTWh8XgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V6Tmts7rd1+eE/vKXuYex+d8IjduKYdE+cZQlhKMXwFV3+Gw5qNWBrH5G+RBpGArU
-         6ZXsfOaQnLqeJ+vbjVmvrfD2opNhi7v3V/VpSTaLPd0IPhw45j9m6rTJMnrO4FwPk6
-         FWZm6GpYmCxS4ldBpmjd80t/St3FtqpwkhsUP+1A=
+        b=gF93p11Pn2git7WrLZjcXf4Mj40zIBvLKGsryFROKdqjyJehrld2wIJAJFj5fxERQ
+         eMU1z8kA6FYhm8krEq1PmKBe0lxi+8yN4nmxT9hKoV44L/vA3e1KR2g215KyNp5eSA
+         yeR1jo84PmEMirSIjo8XkxbzH5H5PEBGrXzQ3f2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 5.5 25/65] acpi/nfit: improve bounds checking for func
-Date:   Mon, 20 Apr 2020 14:38:29 +0200
-Message-Id: <20200420121511.780217602@linuxfoundation.org>
+        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.5 26/65] perf report: Fix no branch type statistics report issue
+Date:   Mon, 20 Apr 2020 14:38:30 +0200
+Message-Id: <20200420121511.919805031@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -59,80 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-commit 01091c496f920e634ea84b689f480c39016752a8 upstream.
+commit c3b10649a80e9da2892c1fd3038c53abd57588f6 upstream.
 
-The 'func' variable can come from the user in the __nd_ioctl().  If it's
-too high then the (1 << func) shift in acpi_nfit_clear_to_send() is
-undefined.  In acpi_nfit_ctl() we pass 'func' to test_bit(func, &dsm_mask)
-which could result in an out of bounds access.
+Previously we could get the report of branch type statistics.
 
-To fix these issues, I introduced the NVDIMM_CMD_MAX (31) define and
-updated nfit_dsm_revid() to use that define as well instead of magic
-numbers.
+For example:
 
-Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Link: https://lore.kernel.org/r/20200225161927.hvftuq7kjn547fyj@kili.mountain
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+  # perf record -j any,save_type ...
+  # t perf report --stdio
+
+  #
+  # Branch Statistics:
+  #
+  COND_FWD:  40.6%
+  COND_BWD:   4.1%
+  CROSS_4K:  24.7%
+  CROSS_2M:  12.3%
+      COND:  44.7%
+    UNCOND:   0.0%
+       IND:   6.1%
+      CALL:  24.5%
+       RET:  24.7%
+
+But now for the recent perf, it can't report the branch type statistics.
+
+It's a regression issue caused by commit 40c39e304641 ("perf report: Fix
+a no annotate browser displayed issue"), which only counts the branch
+type statistics for browser mode.
+
+This patch moves the branch_type_count() outside of ui__has_annotation()
+checking, then branch type statistics can work for stdio mode.
+
+Fixes: 40c39e304641 ("perf report: Fix a no annotate browser displayed issue")
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20200313134607.12873-1-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/nfit/core.c |   10 ++++++----
- drivers/acpi/nfit/nfit.h |    1 +
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ tools/perf/builtin-report.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -360,7 +360,7 @@ static union acpi_object *acpi_label_inf
- 
- static u8 nfit_dsm_revid(unsigned family, unsigned func)
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -185,24 +185,23 @@ static int hist_iter__branch_callback(st
  {
--	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][32] = {
-+	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][NVDIMM_CMD_MAX+1] = {
- 		[NVDIMM_FAMILY_INTEL] = {
- 			[NVDIMM_INTEL_GET_MODES] = 2,
- 			[NVDIMM_INTEL_GET_FWINFO] = 2,
-@@ -386,7 +386,7 @@ static u8 nfit_dsm_revid(unsigned family
+ 	struct hist_entry *he = iter->he;
+ 	struct report *rep = arg;
+-	struct branch_info *bi;
++	struct branch_info *bi = he->branch_info;
+ 	struct perf_sample *sample = iter->sample;
+ 	struct evsel *evsel = iter->evsel;
+ 	int err;
  
- 	if (family > NVDIMM_FAMILY_MAX)
++	branch_type_count(&rep->brtype_stat, &bi->flags,
++			  bi->from.addr, bi->to.addr);
++
+ 	if (!ui__has_annotation() && !rep->symbol_ipc)
  		return 0;
--	if (func > 31)
-+	if (func > NVDIMM_CMD_MAX)
- 		return 0;
- 	id = revid_table[family][func];
- 	if (id == 0)
-@@ -492,7 +492,8 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 	 * Check for a valid command.  For ND_CMD_CALL, we also have to
- 	 * make sure that the DSM function is supported.
- 	 */
--	if (cmd == ND_CMD_CALL && !test_bit(func, &dsm_mask))
-+	if (cmd == ND_CMD_CALL &&
-+	    (func > NVDIMM_CMD_MAX || !test_bit(func, &dsm_mask)))
- 		return -ENOTTY;
- 	else if (!test_bit(cmd, &cmd_mask))
- 		return -ENOTTY;
-@@ -3492,7 +3493,8 @@ static int acpi_nfit_clear_to_send(struc
- 	if (nvdimm && cmd == ND_CMD_CALL &&
- 			call_pkg->nd_family == NVDIMM_FAMILY_INTEL) {
- 		func = call_pkg->nd_command;
--		if ((1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
-+		if (func > NVDIMM_CMD_MAX ||
-+		    (1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
- 			return -EOPNOTSUPP;
- 	}
  
---- a/drivers/acpi/nfit/nfit.h
-+++ b/drivers/acpi/nfit/nfit.h
-@@ -34,6 +34,7 @@
- 		| ACPI_NFIT_MEM_NOT_ARMED | ACPI_NFIT_MEM_MAP_FAILED)
+-	bi = he->branch_info;
+ 	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
+ 	if (err)
+ 		goto out;
  
- #define NVDIMM_FAMILY_MAX NVDIMM_FAMILY_HYPERV
-+#define NVDIMM_CMD_MAX 31
+ 	err = addr_map_symbol__inc_samples(&bi->to, sample, evsel);
  
- #define NVDIMM_STANDARD_CMDMASK \
- (1 << ND_CMD_SMART | 1 << ND_CMD_SMART_THRESHOLD | 1 << ND_CMD_DIMM_FLAGS \
+-	branch_type_count(&rep->brtype_stat, &bi->flags,
+-			  bi->from.addr, bi->to.addr);
+-
+ out:
+ 	return err;
+ }
 
 
