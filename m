@@ -2,186 +2,83 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8142AC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68E6C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57F2C20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="krnMdGb/"
+	by mail.kernel.org (Postfix) with ESMTP id C375120782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgDTRbS (ORCPT
+        id S1726932AbgDTRbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:31:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49756 "EHLO
+        Mon, 20 Apr 2020 13:31:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725784AbgDTRbR (ORCPT
+        by vger.kernel.org with ESMTP id S1726067AbgDTRbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:31:17 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CB5C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 10:31:17 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u6so10930457ljl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 10:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NIryELAm6gImzJkGH6fQiYjp+mAEletB7eZIJsyqgWk=;
-        b=krnMdGb/MWv2/hJFB2GXAivA1eafT/qLbqvbghWtyv7B4Zpq/GcxvHi6mOd+6FBM6C
-         IY5BdQiWf7sdkhevezJPXXQjRugRZy0mDc6xcxmSPQsM2u3cbnw+z69yM3DOOQGwzCJu
-         SSNbDvdaUQAGzazYsVocKKQJWyDeffZwnGaAUWk6PRvukjItFTuj4aVvsEWCSI685UF8
-         IJ503RbuLWh37H/qn5eVIFJK+0vQ6eNWomJ//9XsZC1rCpLVbE6i16bTzPysDUuOzYf3
-         K5lPzAN6eO9nger9P74Ws7hlToyCxgIMqr1EYuvkgky1tvewNclC/FXB24Fofob0rrID
-         IdBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NIryELAm6gImzJkGH6fQiYjp+mAEletB7eZIJsyqgWk=;
-        b=fl8GC4FmwJBc0rAuuoWyqaHTh68mk1nnnJCT9j3Hk2ub+OxAy0MGWys/FILJknkFL9
-         eCXGTaWORIoTj5a1sfBNc0TBuJwp3OITtYgkBi91/PgCcg10XeXSCR4F2r+VaLBhw1UG
-         MjpLKQaWyu5ake60LQH61c0t9uUByiTHymStUU1Cb0fXNMhBmzuMOETxZEJL+GiOyh9S
-         /+XxKk44Ys5aGShlFzAALcoxbfxXc2mlCc+cJ+e/yJ+7sSNWc3uK0R3GDFmFK5FuB+b9
-         pw3tRqJdwTNvyDNGf7vD61XJEDoAhvCu/VmBoaBCqgfgiKzyKRy0+mnJlR701GBNsCRx
-         zVkA==
-X-Gm-Message-State: AGi0PubkQh1jLCHxl1wQHY0UZymn5E726E657i2pvGcfEJbYbmtAoKO+
-        YVoY+jO5ha6y4MbvcmeA1mrqSVoarCD/Au71QPxmIQ==
-X-Google-Smtp-Source: APiQypJPD4m+tp3Womo4xhkAYM19+Ic04WM4krQ4hxUkoUaj9x6ghuqC4Zj9qVE2fQ/7SPMQH92K3u/JyQ21IzldG4k=
-X-Received: by 2002:a2e:9496:: with SMTP id c22mr9468296ljh.165.1587403875593;
- Mon, 20 Apr 2020 10:31:15 -0700 (PDT)
+        Mon, 20 Apr 2020 13:31:19 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED8BC061A0F;
+        Mon, 20 Apr 2020 10:31:19 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jQaGL-0003DP-4G; Mon, 20 Apr 2020 19:31:17 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 81C6F101623; Mon, 20 Apr 2020 19:31:16 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH 0/3] Remove setup_percpu_irq() & remove_percpu_irq
+In-Reply-To: <20200419144638.ysghqzklebkeer4z@afzalpc>
+References: <cover.1586434781.git.afzal.mohd.ma@gmail.com> <20200419144638.ysghqzklebkeer4z@afzalpc>
+Date:   Mon, 20 Apr 2020 19:31:16 +0200
+Message-ID: <87pnc2awt7.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200420121508.491252919@linuxfoundation.org>
-In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 20 Apr 2020 23:01:04 +0530
-Message-ID: <CA+G9fYscmrzf27SWRSxS5v-oYvJcRaqQw1rmDj-27kqBJXjRcQ@mail.gmail.com>
-Subject: Re: [PATCH 5.6 00/71] 5.6.6-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 at 18:13, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Afzal,
+
+afzal mohammed <afzal.mohd.ma@gmail.com> writes:
+> On Sat, Apr 11, 2020 at 09:34:07PM +0530, afzal mohammed wrote:
 >
-> This is the start of the stable review cycle for the 5.6.6 release.
-> There are 71 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+>> While doing the removal of setup_irq(), it was observed that
+>> setup_percpu_irq() also can be removed similarly by replacing it w/
+>> request_percpu_irq(), which does allocate memory. In the initial
+>> setup_irq() removal cover letters [1], it was mentioned that
+>> setup_percpu_irq() is untouched.
+>> 
+>> After removing setup_irq(), it does not look good to let live
+>> setup_percpu_irq(), especially since it being a low hanging fruit. Hence
+>> replace setup_percpu_irq() by it's allocator equivalent.
+>> request_percpu_irq() cannot be used since all the users need to pass
+>> IRQF_TIMER flag, which it would not allow. Thus it's variant,
+>> __request_percpu_irq() is used.
+>> 
+>> In addition to removing setup_percpu_irq() definition,
+>> remove_percpu_irq(), unused, is also removed.
 >
-> Responses should be made by Wed, 22 Apr 2020 12:10:36 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.6.6-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> Do you feel that this series adds value ?, if not, i will abandon this
+> series.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+ 7 files changed, 10 insertions(+), 75 deletions(-)
 
-Summary
-------------------------------------------------------------------------
+is definitely worth it. There is no point in having two interfaces. I'll
+have a look at the changes later today.
 
-kernel: 5.6.6-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.6.y
-git commit: 906ecc0031ed5fb7b4dfddb2c990f975e114829d
-git describe: v5.6.5-72-g906ecc0031ed
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
-ld/v5.6.5-72-g906ecc0031ed
+Thanks,
 
-
-No regressions (compared to build v5.6.5)
-
-No fixes (compared to build v5.6.5)
-
-
-Ran 32044 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-commands-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-sched-tests
-* v4l2-compliance
-* ltp-hugetlb-tests
-* ltp-mm-tests
-* kvm-unit-tests
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-ipc-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+        tglx
