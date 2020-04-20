@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876BDC55183
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6F0C55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC0B2078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB032206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="zOh4nR//"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="xocpHaip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgDTWMC (ORCPT
+        id S1728349AbgDTWME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:12:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38138 "EHLO
+        Mon, 20 Apr 2020 18:12:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728209AbgDTWL4 (ORCPT
+        with ESMTP id S1728267AbgDTWMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:11:56 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50C2C061A41
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:11:55 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id w29so10044260qtv.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:11:55 -0700 (PDT)
+        Mon, 20 Apr 2020 18:12:00 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBAEAC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:11:59 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l25so12587700qkk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B6Lc3E3LhxWdBCoIQ263CZTYhXxWswvkwsnvqPUoqvI=;
-        b=zOh4nR//aGqF/G3PkVQBTFQpUXaW2roAMB53HTt3TgNOo4Skb5ppokAmhVW07gKrgS
-         Iz5r3vdxlD8OBux0DOlpjHsXYTfU46y9ILOMZ+x+3ZN77/8ZkatUWSzOjZP3cHCh7IUm
-         YHGQrlRRFJZ4Sksi3PQh6eOPU7qfLoNDvw5lAJxQFEzP8GUIQ+km9ul/+/baMjnxjpUR
-         l01Mi9MKW3UZ01itSMHkJqXfR6hXne2g0igBp3ULTRt7epfQtzKpURMliuCd91FTIxsV
-         4P5LdL/TnocHc9+7FXcNilk2T0otOYFWgPHciSC3APZ4Rj7J0C15LDLbsIgvf+cA7/Gd
-         hSEQ==
+        bh=BdaTHSulpE2zzB/6JwXh0SRm1+Npp4vhHduu9et/U1A=;
+        b=xocpHaipvx0mCwme5RQ47EmCDwQi1yM3HT4rUVXaDLYLh128h4u1qiplVjhVhbrUqC
+         wVg+/YC4tXEYTAKaVexd/suB8x0QK0G7r3Lz/AYX5KO4WOTZCa6E3XSfsJXfsYExhsiq
+         qtPmOjTGmN7+QaFpwjdAT/9ox2GgFf2mB2CTOzWCJXFxy/0fFqzKXyFje0Hwust0ctMF
+         YUBONAB4URfOnaPcylTrgwLe5uFsygDWxenDouuIvb+Y8hd57kgO4SZAfVU/7Vpwm9z4
+         FoDaC2Tk2oa+gJ9FkF3niuzUpt14UxGOLgOeYCSXsP6pUBLjyb0AbZxIgd9biwiOy3GU
+         FBIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B6Lc3E3LhxWdBCoIQ263CZTYhXxWswvkwsnvqPUoqvI=;
-        b=TGD3aOEzuFz6FntK2xPud3ByIB3RwXRfxN8wQoKJolytRVvVjm/RUuJuHbP1E7J9CR
-         wm7ean1aPuq+/xiy3pWwvH9XmX6Wus5bPTXoouhUA9mBOH27aZ6+xz75LB4jZ75MHvh9
-         dtNzFyYyAKxCj1m7FtvvrpDkRvmz6C9KNPv94QThcie52NF2U14XAWAsKRgq6tDenv/6
-         ypxnVxjgqSD0Vmf02k/CTYoJbU1tv6IAHJZ12mWfFtpyxvFru2HpSrca7vjqXKqfGPiI
-         GLpEJEfajToGAkfiVvyLB7S+541VTdoP6VHXnCs/twZDAZftj2WJDZTTDTUmbbQKeRXD
-         e5hQ==
-X-Gm-Message-State: AGi0PuYcB5J0MO6yRFY3GEl31vJz1vhdNRqWtULGL2Ey7SzaQn+TZFl3
-        lv/t+MMcibFZw5/feZitWzWVaw==
-X-Google-Smtp-Source: APiQypKQ1M8wB71QSzsxAGtLLoaeIXSGYaixUWDp3ZtfOFShTelL2dkvaBwia46T8j/DXNEt0qi+wQ==
-X-Received: by 2002:aed:3b0b:: with SMTP id p11mr18236016qte.109.1587420715039;
-        Mon, 20 Apr 2020 15:11:55 -0700 (PDT)
+        bh=BdaTHSulpE2zzB/6JwXh0SRm1+Npp4vhHduu9et/U1A=;
+        b=jmgelDGaiZPEi96jmzeuGWSVPj470CSf7/cuF3EHvakxIERqJ7v+KjJhaL/QFzUqLn
+         r6amEL9ROhGtconkCfGda3BiAviqPf4j0XXgBaBe0kQBDGXqbAz8kRH9ktNF+A1/M6fr
+         3tq8hzIQXAelq2kLb2vzKQvwcb3HdUVssYY+fhLxGVcZHAy0IfbOub8XU2e8HARpZDnk
+         Ew9q8yLgfN+jObY0hDnmzWUc6UnpIPO9u7u/rYey9rYVNauRcQnDfF0GliSQ65NpWV+4
+         KcVH+6t+2VdUDrI/eZzVIq3egRintzFjl88ra2O8CmeUu4QmV2uxFtq+RAIPBS651eko
+         6JbQ==
+X-Gm-Message-State: AGi0PubAGSbCQsBi8En04fZg6Y6lYr0FlBnfyor9lqZEcaY+hDT370eW
+        4ExrRR8IXkRA1s5CUe0MxwTyig==
+X-Google-Smtp-Source: APiQypLq3RPjEYYXidJlHsDmMgeGRdsRhgYNiFhqZPobAOyPq6LL6Z5JpCDKEWPhM2gFjsQBCqRfVQ==
+X-Received: by 2002:a37:614a:: with SMTP id v71mr9999616qkb.326.1587420718979;
+        Mon, 20 Apr 2020 15:11:58 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:e6b6])
-        by smtp.gmail.com with ESMTPSA id u5sm590828qkm.116.2020.04.20.15.11.54
+        by smtp.gmail.com with ESMTPSA id b1sm585956qkf.103.2020.04.20.15.11.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 15:11:54 -0700 (PDT)
+        Mon, 20 Apr 2020 15:11:58 -0700 (PDT)
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Joonsoo Kim <js1304@gmail.com>,
         Alex Shi <alex.shi@linux.alibaba.com>
@@ -69,9 +69,9 @@ Cc:     Shakeel Butt <shakeelb@google.com>,
         Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
         cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com
-Subject: [PATCH 08/18] mm: memcontrol: prepare cgroup vmstat infrastructure for native anon counters
-Date:   Mon, 20 Apr 2020 18:11:16 -0400
-Message-Id: <20200420221126.341272-9-hannes@cmpxchg.org>
+Subject: [PATCH 10/18] mm: memcontrol: switch to native NR_ANON_MAPPED counter
+Date:   Mon, 20 Apr 2020 18:11:18 -0400
+Message-Id: <20200420221126.341272-11-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200420221126.341272-1-hannes@cmpxchg.org>
 References: <20200420221126.341272-1-hannes@cmpxchg.org>
@@ -82,85 +82,279 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anonymous compound pages can be mapped by ptes, which means that if we
-want to track NR_MAPPED_ANON, NR_ANON_THPS on a per-cgroup basis, we
-have to be prepared to see tail pages in our accounting functions.
+Memcg maintains a private MEMCG_RSS counter. This divergence from the
+generic VM accounting means unnecessary code overhead, and creates a
+dependency for memcg that page->mapping is set up at the time of
+charging, so that page types can be told apart.
 
-Make mod_lruvec_page_state() and lock_page_memcg() deal with tail
-pages correctly, namely by redirecting to the head page which has the
-page->mem_cgroup set up.
+Convert the generic accounting sites to mod_lruvec_page_state and
+friends to maintain the per-cgroup vmstat counter of
+NR_ANON_MAPPED. We use lock_page_memcg() to stabilize page->mem_cgroup
+during rmap changes, the same way we do for NR_FILE_MAPPED.
+
+With the previous patch removing MEMCG_CACHE and the private NR_SHMEM
+counter, this patch finally eliminates the need to have page->mapping
+set up at charge time.
 
 Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/memcontrol.h | 5 +++--
- mm/memcontrol.c            | 9 ++++++---
- 2 files changed, 9 insertions(+), 5 deletions(-)
+ include/linux/memcontrol.h |  3 +--
+ mm/memcontrol.c            | 27 ++++++++--------------
+ mm/rmap.c                  | 47 +++++++++++++++++++++++---------------
+ 3 files changed, 39 insertions(+), 38 deletions(-)
 
 diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 5e8b0e38f145..5a1b5a7b7728 100644
+index c44aa1ccf553..bfb1d961e346 100644
 --- a/include/linux/memcontrol.h
 +++ b/include/linux/memcontrol.h
-@@ -711,16 +711,17 @@ static inline void mod_lruvec_state(struct lruvec *lruvec,
- static inline void __mod_lruvec_page_state(struct page *page,
- 					   enum node_stat_item idx, int val)
- {
-+	struct page *head = compound_head(page); /* rmap on tail pages */
- 	pg_data_t *pgdat = page_pgdat(page);
- 	struct lruvec *lruvec;
+@@ -29,8 +29,7 @@ struct kmem_cache;
  
- 	/* Untracked pages have no memcg, no lruvec. Update only the node */
--	if (!page->mem_cgroup) {
-+	if (!head->mem_cgroup) {
- 		__mod_node_page_state(pgdat, idx, val);
- 		return;
- 	}
- 
--	lruvec = mem_cgroup_lruvec(page->mem_cgroup, pgdat);
-+	lruvec = mem_cgroup_lruvec(head->mem_cgroup, pgdat);
- 	__mod_lruvec_state(lruvec, idx, val);
- }
- 
+ /* Cgroup-specific page state, on top of universal node page state */
+ enum memcg_stat_item {
+-	MEMCG_RSS = NR_VM_NODE_STAT_ITEMS,
+-	MEMCG_RSS_HUGE,
++	MEMCG_RSS_HUGE = NR_VM_NODE_STAT_ITEMS,
+ 	MEMCG_SWAP,
+ 	MEMCG_SOCK,
+ 	/* XXX: why are these zone and not node counters? */
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ac6f2b073a5a..e9e22c86a118 100644
+index 7e77166cf10b..c87178d6219f 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -1979,6 +1979,7 @@ void mem_cgroup_print_oom_group(struct mem_cgroup *memcg)
-  */
- struct mem_cgroup *lock_page_memcg(struct page *page)
+@@ -836,13 +836,6 @@ static void mem_cgroup_charge_statistics(struct mem_cgroup *memcg,
+ 					 struct page *page,
+ 					 int nr_pages)
  {
-+	struct page *head = compound_head(page); /* rmap on tail pages */
- 	struct mem_cgroup *memcg;
- 	unsigned long flags;
+-	/*
+-	 * Here, RSS means 'mapped anon' and anon's SwapCache. Shmem/tmpfs is
+-	 * counted as CACHE even if it's on ANON LRU.
+-	 */
+-	if (PageAnon(page))
+-		__mod_memcg_state(memcg, MEMCG_RSS, nr_pages);
+-
+ 	if (abs(nr_pages) > 1) {
+ 		VM_BUG_ON_PAGE(!PageTransHuge(page), page);
+ 		__mod_memcg_state(memcg, MEMCG_RSS_HUGE, nr_pages);
+@@ -1384,7 +1377,7 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
+ 	 */
  
-@@ -1998,7 +1999,7 @@ struct mem_cgroup *lock_page_memcg(struct page *page)
+ 	seq_buf_printf(&s, "anon %llu\n",
+-		       (u64)memcg_page_state(memcg, MEMCG_RSS) *
++		       (u64)memcg_page_state(memcg, NR_ANON_MAPPED) *
+ 		       PAGE_SIZE);
+ 	seq_buf_printf(&s, "file %llu\n",
+ 		       (u64)memcg_page_state(memcg, NR_FILE_PAGES) *
+@@ -3298,7 +3291,7 @@ static unsigned long mem_cgroup_usage(struct mem_cgroup *memcg, bool swap)
+ 
+ 	if (mem_cgroup_is_root(memcg)) {
+ 		val = memcg_page_state(memcg, NR_FILE_PAGES) +
+-			memcg_page_state(memcg, MEMCG_RSS);
++			memcg_page_state(memcg, NR_ANON_MAPPED);
+ 		if (swap)
+ 			val += memcg_page_state(memcg, MEMCG_SWAP);
+ 	} else {
+@@ -3768,7 +3761,7 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
+ 
+ static const unsigned int memcg1_stats[] = {
+ 	NR_FILE_PAGES,
+-	MEMCG_RSS,
++	NR_ANON_MAPPED,
+ 	MEMCG_RSS_HUGE,
+ 	NR_SHMEM,
+ 	NR_FILE_MAPPED,
+@@ -5395,7 +5388,12 @@ static int mem_cgroup_move_account(struct page *page,
+ 
+ 	lock_page_memcg(page);
+ 
+-	if (!PageAnon(page)) {
++	if (PageAnon(page)) {
++		if (page_mapped(page)) {
++			__mod_lruvec_state(from_vec, NR_ANON_MAPPED, -nr_pages);
++			__mod_lruvec_state(to_vec, NR_ANON_MAPPED, nr_pages);
++		}
++	} else {
+ 		__mod_lruvec_state(from_vec, NR_FILE_PAGES, -nr_pages);
+ 		__mod_lruvec_state(to_vec, NR_FILE_PAGES, nr_pages);
+ 
+@@ -6529,7 +6527,6 @@ void mem_cgroup_commit_charge(struct page *page, struct mem_cgroup *memcg,
+ {
+ 	unsigned int nr_pages = hpage_nr_pages(page);
+ 
+-	VM_BUG_ON_PAGE(!page->mapping, page);
+ 	VM_BUG_ON_PAGE(PageLRU(page) && !lrucare, page);
+ 
  	if (mem_cgroup_disabled())
- 		return NULL;
- again:
--	memcg = page->mem_cgroup;
-+	memcg = head->mem_cgroup;
- 	if (unlikely(!memcg))
- 		return NULL;
+@@ -6602,8 +6599,6 @@ int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
+ 	struct mem_cgroup *memcg;
+ 	int ret;
  
-@@ -2006,7 +2007,7 @@ struct mem_cgroup *lock_page_memcg(struct page *page)
- 		return memcg;
- 
- 	spin_lock_irqsave(&memcg->move_lock, flags);
--	if (memcg != page->mem_cgroup) {
-+	if (memcg != head->mem_cgroup) {
- 		spin_unlock_irqrestore(&memcg->move_lock, flags);
- 		goto again;
+-	VM_BUG_ON_PAGE(!page->mapping, page);
+-
+ 	ret = mem_cgroup_try_charge(page, mm, gfp_mask, &memcg);
+ 	if (ret)
+ 		return ret;
+@@ -6615,7 +6610,6 @@ struct uncharge_gather {
+ 	struct mem_cgroup *memcg;
+ 	unsigned long nr_pages;
+ 	unsigned long pgpgout;
+-	unsigned long nr_anon;
+ 	unsigned long nr_kmem;
+ 	unsigned long nr_huge;
+ 	struct page *dummy_page;
+@@ -6640,7 +6634,6 @@ static void uncharge_batch(const struct uncharge_gather *ug)
  	}
-@@ -2049,7 +2050,9 @@ void __unlock_page_memcg(struct mem_cgroup *memcg)
-  */
- void unlock_page_memcg(struct page *page)
- {
--	__unlock_page_memcg(page->mem_cgroup);
-+	struct page *head = compound_head(page);
-+
-+	__unlock_page_memcg(head->mem_cgroup);
- }
- EXPORT_SYMBOL(unlock_page_memcg);
  
+ 	local_irq_save(flags);
+-	__mod_memcg_state(ug->memcg, MEMCG_RSS, -ug->nr_anon);
+ 	__mod_memcg_state(ug->memcg, MEMCG_RSS_HUGE, -ug->nr_huge);
+ 	__count_memcg_events(ug->memcg, PGPGOUT, ug->pgpgout);
+ 	__this_cpu_add(ug->memcg->vmstats_percpu->nr_page_events, ug->nr_pages);
+@@ -6682,8 +6675,6 @@ static void uncharge_page(struct page *page, struct uncharge_gather *ug)
+ 	if (!PageKmemcg(page)) {
+ 		if (PageTransHuge(page))
+ 			ug->nr_huge += nr_pages;
+-		if (PageAnon(page))
+-			ug->nr_anon += nr_pages;
+ 		ug->pgpgout++;
+ 	} else {
+ 		ug->nr_kmem += nr_pages;
+diff --git a/mm/rmap.c b/mm/rmap.c
+index f79a206b271a..150513d31efa 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1114,6 +1114,11 @@ void do_page_add_anon_rmap(struct page *page,
+ 	bool compound = flags & RMAP_COMPOUND;
+ 	bool first;
+ 
++	if (unlikely(PageKsm(page)))
++		lock_page_memcg(page);
++	else
++		VM_BUG_ON_PAGE(!PageLocked(page), page);
++
+ 	if (compound) {
+ 		atomic_t *mapcount;
+ 		VM_BUG_ON_PAGE(!PageLocked(page), page);
+@@ -1134,12 +1139,13 @@ void do_page_add_anon_rmap(struct page *page,
+ 		 */
+ 		if (compound)
+ 			__inc_node_page_state(page, NR_ANON_THPS);
+-		__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, nr);
++		__mod_lruvec_page_state(page, NR_ANON_MAPPED, nr);
+ 	}
+-	if (unlikely(PageKsm(page)))
+-		return;
+ 
+-	VM_BUG_ON_PAGE(!PageLocked(page), page);
++	if (unlikely(PageKsm(page))) {
++		unlock_page_memcg(page);
++		return;
++	}
+ 
+ 	/* address might be in next vma when migration races vma_adjust */
+ 	if (first)
+@@ -1181,7 +1187,7 @@ void page_add_new_anon_rmap(struct page *page,
+ 		/* increment count (starts at -1) */
+ 		atomic_set(&page->_mapcount, 0);
+ 	}
+-	__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, nr);
++	__mod_lruvec_page_state(page, NR_ANON_MAPPED, nr);
+ 	__page_set_anon_rmap(page, vma, address, 1);
+ }
+ 
+@@ -1230,13 +1236,12 @@ static void page_remove_file_rmap(struct page *page, bool compound)
+ 	int i, nr = 1;
+ 
+ 	VM_BUG_ON_PAGE(compound && !PageHead(page), page);
+-	lock_page_memcg(page);
+ 
+ 	/* Hugepages are not counted in NR_FILE_MAPPED for now. */
+ 	if (unlikely(PageHuge(page))) {
+ 		/* hugetlb pages are always mapped with pmds */
+ 		atomic_dec(compound_mapcount_ptr(page));
+-		goto out;
++		return;
+ 	}
+ 
+ 	/* page still mapped by someone else? */
+@@ -1246,14 +1251,14 @@ static void page_remove_file_rmap(struct page *page, bool compound)
+ 				nr++;
+ 		}
+ 		if (!atomic_add_negative(-1, compound_mapcount_ptr(page)))
+-			goto out;
++			return;
+ 		if (PageSwapBacked(page))
+ 			__dec_node_page_state(page, NR_SHMEM_PMDMAPPED);
+ 		else
+ 			__dec_node_page_state(page, NR_FILE_PMDMAPPED);
+ 	} else {
+ 		if (!atomic_add_negative(-1, &page->_mapcount))
+-			goto out;
++			return;
+ 	}
+ 
+ 	/*
+@@ -1265,8 +1270,6 @@ static void page_remove_file_rmap(struct page *page, bool compound)
+ 
+ 	if (unlikely(PageMlocked(page)))
+ 		clear_page_mlock(page);
+-out:
+-	unlock_page_memcg(page);
+ }
+ 
+ static void page_remove_anon_compound_rmap(struct page *page)
+@@ -1310,7 +1313,7 @@ static void page_remove_anon_compound_rmap(struct page *page)
+ 		clear_page_mlock(page);
+ 
+ 	if (nr)
+-		__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, -nr);
++		__mod_lruvec_page_state(page, NR_ANON_MAPPED, -nr);
+ }
+ 
+ /**
+@@ -1322,22 +1325,28 @@ static void page_remove_anon_compound_rmap(struct page *page)
+  */
+ void page_remove_rmap(struct page *page, bool compound)
+ {
+-	if (!PageAnon(page))
+-		return page_remove_file_rmap(page, compound);
++	lock_page_memcg(page);
+ 
+-	if (compound)
+-		return page_remove_anon_compound_rmap(page);
++	if (!PageAnon(page)) {
++		page_remove_file_rmap(page, compound);
++		goto out;
++	}
++
++	if (compound) {
++		page_remove_anon_compound_rmap(page);
++		goto out;
++	}
+ 
+ 	/* page still mapped by someone else? */
+ 	if (!atomic_add_negative(-1, &page->_mapcount))
+-		return;
++		goto out;
+ 
+ 	/*
+ 	 * We use the irq-unsafe __{inc|mod}_zone_page_stat because
+ 	 * these counters are not modified in interrupt context, and
+ 	 * pte lock(a spinlock) is held, which implies preemption disabled.
+ 	 */
+-	__dec_node_page_state(page, NR_ANON_MAPPED);
++	__dec_lruvec_page_state(page, NR_ANON_MAPPED);
+ 
+ 	if (unlikely(PageMlocked(page)))
+ 		clear_page_mlock(page);
+@@ -1354,6 +1363,8 @@ void page_remove_rmap(struct page *page, bool compound)
+ 	 * Leaving it set also helps swapoff to reinstate ptes
+ 	 * faster for those pages still in swapcache.
+ 	 */
++out:
++	unlock_page_memcg(page);
+ }
+ 
+ /*
 -- 
 2.26.0
 
