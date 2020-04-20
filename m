@@ -2,40 +2,39 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FA2C54FC9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC9EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 289622145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2922145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgDTCSu (ORCPT
+        id S1726489AbgDTCTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 22:18:50 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2798 "EHLO huawei.com"
+        Sun, 19 Apr 2020 22:19:16 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2803 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726337AbgDTCSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 22:18:48 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 42707F03D6D1ADFF1E80;
+        id S1726361AbgDTCSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 22:18:50 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 54469A1480C227E3EB12;
         Mon, 20 Apr 2020 10:18:45 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 20 Apr 2020 10:18:36 +0800
+ 14.3.487.0; Mon, 20 Apr 2020 10:18:35 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Yufeng Mo <moyufeng@huawei.com>,
+        Guojia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 09/10] net: hns3: add support for dumping MAC reg in debugfs
-Date:   Mon, 20 Apr 2020 10:17:34 +0800
-Message-ID: <1587349055-4403-10-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 06/10] net: hns3: modify some unsuitable type declaration
+Date:   Mon, 20 Apr 2020 10:17:31 +0800
+Message-ID: <1587349055-4403-7-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587349055-4403-1-git-send-email-tanhuazhong@huawei.com>
 References: <1587349055-4403-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,162 +47,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+From: Guojia Liao <liaoguojia@huawei.com>
 
-This patch adds support for dumping MAC reg in debugfs,
-which will be helpful for debugging.
+In hclge_set_fd_key_config(), parameter 'stage' should be
+as enum HCLGE_FD_STAGE, and in hclge_config_key(), 'tuple_size'
+should be type u8, also simplify unsigned int with u32 for 'i'.
 
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |   2 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 113 +++++++++++++++++++++
- 2 files changed, 114 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-index e1d8809..c934f32 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-@@ -270,7 +270,7 @@ static void hns3_dbg_help(struct hnae3_handle *h)
- 		" [igu egu <port_id>] [rpu <tc_queue_num>]",
- 		HNS3_DBG_BUF_LEN - strlen(printf_buf) - 1);
- 	strncat(printf_buf + strlen(printf_buf),
--		" [rtc] [ppp] [rcb] [tqp <queue_num>]]\n",
-+		" [rtc] [ppp] [rcb] [tqp <queue_num>] [mac]]\n",
- 		HNS3_DBG_BUF_LEN - strlen(printf_buf) - 1);
- 	dev_info(&h->pdev->dev, "%s", printf_buf);
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index cfc9300..66c1ad3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -173,6 +173,114 @@ static void hclge_dbg_dump_reg_common(struct hclge_dev *hdev,
- 	kfree(desc_src);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index e238a9d..9edee7d 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -4822,7 +4822,8 @@ static int hclge_get_fd_allocation(struct hclge_dev *hdev,
+ 	return ret;
  }
  
-+static void hclge_dbg_dump_mac_enable_status(struct hclge_dev *hdev)
-+{
-+	struct hclge_config_mac_mode_cmd *req;
-+	struct hclge_desc desc;
-+	u32 loop_en;
-+	int ret;
-+
-+	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_CONFIG_MAC_MODE, true);
-+
-+	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-+	if (ret) {
-+		dev_err(&hdev->pdev->dev,
-+			"failed to dump mac enable status, ret = %d\n", ret);
-+		return;
-+	}
-+
-+	req = (struct hclge_config_mac_mode_cmd *)desc.data;
-+	loop_en = le32_to_cpu(req->txrx_pad_fcs_loop_en);
-+
-+	dev_info(&hdev->pdev->dev, "config_mac_trans_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_TX_EN_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_rcv_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_RX_EN_B));
-+	dev_info(&hdev->pdev->dev, "config_pad_trans_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_PAD_TX_B));
-+	dev_info(&hdev->pdev->dev, "config_pad_rcv_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_PAD_RX_B));
-+	dev_info(&hdev->pdev->dev, "config_1588_trans_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_1588_TX_B));
-+	dev_info(&hdev->pdev->dev, "config_1588_rcv_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_1588_RX_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_app_loop_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_APP_LP_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_line_loop_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_LINE_LP_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_fcs_tx_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_FCS_TX_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_rx_oversize_truncate_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_RX_OVERSIZE_TRUNCATE_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_rx_fcs_strip_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_RX_FCS_STRIP_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_rx_fcs_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_RX_FCS_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_tx_under_min_err_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_TX_UNDER_MIN_ERR_B));
-+	dev_info(&hdev->pdev->dev, "config_mac_tx_oversize_truncate_en: %#x\n",
-+		 hnae3_get_bit(loop_en, HCLGE_MAC_TX_OVERSIZE_TRUNCATE_B));
-+}
-+
-+static void hclge_dbg_dump_mac_frame_size(struct hclge_dev *hdev)
-+{
-+	struct hclge_config_max_frm_size_cmd *req;
-+	struct hclge_desc desc;
-+	int ret;
-+
-+	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_CONFIG_MAX_FRM_SIZE, true);
-+
-+	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-+	if (ret) {
-+		dev_err(&hdev->pdev->dev,
-+			"failed to dump mac frame size, ret = %d\n", ret);
-+		return;
-+	}
-+
-+	req = (struct hclge_config_max_frm_size_cmd *)desc.data;
-+
-+	dev_info(&hdev->pdev->dev, "max_frame_size: %u\n",
-+		 le16_to_cpu(req->max_frm_size));
-+	dev_info(&hdev->pdev->dev, "min_frame_size: %u\n", req->min_frm_size);
-+}
-+
-+static void hclge_dbg_dump_mac_speed_duplex(struct hclge_dev *hdev)
-+{
-+#define HCLGE_MAC_SPEED_SHIFT	0
-+#define HCLGE_MAC_SPEED_MASK	GENMASK(5, 0)
-+#define HCLGE_MAC_DUPLEX_SHIFT	7
-+
-+	struct hclge_config_mac_speed_dup_cmd *req;
-+	struct hclge_desc desc;
-+	int ret;
-+
-+	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_CONFIG_SPEED_DUP, true);
-+
-+	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-+	if (ret) {
-+		dev_err(&hdev->pdev->dev,
-+			"failed to dump mac speed duplex, ret = %d\n", ret);
-+		return;
-+	}
-+
-+	req = (struct hclge_config_mac_speed_dup_cmd *)desc.data;
-+
-+	dev_info(&hdev->pdev->dev, "speed: %#lx\n",
-+		 hnae3_get_field(req->speed_dup, HCLGE_MAC_SPEED_MASK,
-+				 HCLGE_MAC_SPEED_SHIFT));
-+	dev_info(&hdev->pdev->dev, "duplex: %#x\n",
-+		 hnae3_get_bit(req->speed_dup, HCLGE_MAC_DUPLEX_SHIFT));
-+}
-+
-+static void hclge_dbg_dump_mac(struct hclge_dev *hdev)
-+{
-+	hclge_dbg_dump_mac_enable_status(hdev);
-+
-+	hclge_dbg_dump_mac_frame_size(hdev);
-+
-+	hclge_dbg_dump_mac_speed_duplex(hdev);
-+}
-+
- static void hclge_dbg_dump_dcb(struct hclge_dev *hdev, const char *cmd_buf)
+-static int hclge_set_fd_key_config(struct hclge_dev *hdev, int stage_num)
++static int hclge_set_fd_key_config(struct hclge_dev *hdev,
++				   enum HCLGE_FD_STAGE stage_num)
  {
- 	struct device *dev = &hdev->pdev->dev;
-@@ -304,6 +412,11 @@ static void hclge_dbg_dump_reg_cmd(struct hclge_dev *hdev, const char *cmd_buf)
- 		}
- 	}
+ 	struct hclge_set_fd_key_config_cmd *req;
+ 	struct hclge_fd_key_cfg *stage;
+@@ -5158,9 +5159,10 @@ static int hclge_config_key(struct hclge_dev *hdev, u8 stage,
+ 	struct hclge_fd_key_cfg *key_cfg = &hdev->fd_cfg.key_cfg[stage];
+ 	u8 key_x[MAX_KEY_BYTES], key_y[MAX_KEY_BYTES];
+ 	u8 *cur_key_x, *cur_key_y;
+-	unsigned int i;
+-	int ret, tuple_size;
+ 	u8 meta_data_region;
++	u8 tuple_size;
++	int ret;
++	u32 i;
  
-+	if (strncmp(cmd_buf, "mac", strlen("mac")) == 0) {
-+		hclge_dbg_dump_mac(hdev);
-+		has_dump = true;
-+	}
-+
- 	if (strncmp(cmd_buf, "dcb", 3) == 0) {
- 		hclge_dbg_dump_dcb(hdev, &cmd_buf[sizeof("dcb")]);
- 		has_dump = true;
+ 	memset(key_x, 0, sizeof(key_x));
+ 	memset(key_y, 0, sizeof(key_y));
 -- 
 2.7.4
 
