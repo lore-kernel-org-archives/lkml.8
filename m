@@ -2,103 +2,86 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FACC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A07C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416142084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98771206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587408371;
-	bh=vLJotPVJ+IWIvmV6SZePZHbxS7rJiHHTqQLq4BsCKDo=;
+	s=default; t=1587408375;
+	bh=q2n0cyEsuY7yvjCCsfASRRAFd978o5iE6AFtRW4ZuIw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YjxKB3KdCxYADVD3iuhqhUV5X2zEpCW/ZRKfT83rMTx3itIT7ZNS029t9tTzoWKfK
-	 uYstvjbcn/0ojs8JxJVV9ES7uNcpJvuTtJP8d+SwxhUzXRU//HSgAEc9Kbz/IZANc9
-	 JDQYld682vxwNzDnxtZnAnuUY06Tg8ZC+9GzmRyA=
+	b=Q/zE9+c6l86v6s6ktkErUYrRkXTYgfFyIfrLNAs/K8hQcjGYsgpNWjGzRWtKfeJ6/
+	 IhRsqtoL6WEfLVBDUBLp7PI4TySczLObNm8okRi4zPI47kCsyv1xn/ku93HL5Vb8LN
+	 VuY5Mxfirob5/HqUJKaSqFKnVUwrC9WjdSJXs02c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgDTSqK (ORCPT
+        id S1728098AbgDTSqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:46:10 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40763 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbgDTSqJ (ORCPT
+        Mon, 20 Apr 2020 14:46:14 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34405 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728012AbgDTSqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:46:09 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x3so5370391pfp.7;
-        Mon, 20 Apr 2020 11:46:09 -0700 (PDT)
+        Mon, 20 Apr 2020 14:46:11 -0400
+Received: by mail-oi1-f196.google.com with SMTP id x10so9784772oie.1;
+        Mon, 20 Apr 2020 11:46:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Io2UxyXTaCPuKOP2Bcw5aenPOuxwH4U0YvtYfrCaCI=;
-        b=X4YGDPTBKHqEefDhOrWLLqydfcx/aT4LCN3ygNUl4916NriKSbQKk4X8DDrHTrUFQx
-         me5JhrSS03ekaJsuUNJsFBrTxeG1InxTcdUZr4DCx0xi3plIP2TKtA66wLZYUV/EtKC5
-         xzzy/FvrbAmh/SA68qKoWlAPKOqBKa08PnyQk2+w75/D6ostx2t399oC/Jk2ZLRvOlse
-         BP7rihnHp7dBEPrcfTXm1BHlssKVwVZgyrfPLhI2fwf4/A27baHha+NphLBxsOJXxuS5
-         DPvri22IcgZi5NBZ4ohB7ZEKNFg8KjwWsHyGgjrK3xltFbdiC8eIMzLhcIc4pDx4MaHq
-         fY2Q==
-X-Gm-Message-State: AGi0PuYgtF78Q91Wdb0wIivJpmdPVdt7EJWlOuYYWmhtaTwJkl71rw3H
-        ZyFpqLPSnJFJqhqlJzoqW5U=
-X-Google-Smtp-Source: APiQypI6Vlthr/j9m1nHRSqAt0W3ii5OsrFyBv0qofjqF/joa/2eogFginfYqIUYfb7fmsyKSIjB/w==
-X-Received: by 2002:a63:8b44:: with SMTP id j65mr17495589pge.411.1587408368815;
-        Mon, 20 Apr 2020 11:46:08 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id g11sm86161pjs.17.2020.04.20.11.46.07
+        bh=i1mtIpawmUDhZPAqhy0kb7QS/Wj9qW3K436AJI7YPHg=;
+        b=tbU6dKQjsZZdvQpRW5EGoJdU85FjzNKXLeMDSLjtw49pGEmNw8pJ72xDHvLT10i4OP
+         IJUTOcPb5/T/UX23//WZGtqU1/VqOMtdIYVMZ9COF2YrzbraNx9K0Q8QP1j0h3umKkvS
+         ge+t8+B8jx4a/m7WuhSB0JsZZ2cNER3UOubLutRIyX4KAqTyzB+Fi6eTcX85Vxt6tcOE
+         ebGu1Xwl5KMAvkGdfATq8gbi38ZPuAykaqBXLDgplgygDWmdHyoLP0xB41jVERfAURbE
+         gk++KpWCqqWM+K54DenYHuf8lT7LkGKrVPteTzf4XwwruJGTbY/u1gyffp+iOJItC64/
+         3ZPg==
+X-Gm-Message-State: AGi0PuZZyDO7gD8Jm3Fvu4hQPlG0ZDHSPrT6amKc5JRUzeWdW+MoFD2V
+        dLYRPujMB7MtChaU/ziU4g==
+X-Google-Smtp-Source: APiQypJ+bzru4tS7dzweDo9wBO++FAsJtUDNNEFMi6WyZXxqmOC1SZ4F/P9lyBgGX0lB6tiMzTnivw==
+X-Received: by 2002:aca:3a8a:: with SMTP id h132mr572619oia.146.1587408370858;
+        Mon, 20 Apr 2020 11:46:10 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 69sm120113otv.8.2020.04.20.11.46.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 11:46:07 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 2E8454028E; Mon, 20 Apr 2020 18:46:07 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 18:46:07 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
-Message-ID: <20200420184607.GL11244@42.do-not-panic.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-4-mcgrof@kernel.org>
- <91c82e6a-24ce-0b7d-e6e4-e8aa89f3fb79@acm.org>
- <20200420000436.GI11244@42.do-not-panic.com>
- <b77a39c1-6010-24a4-0815-2f26664b6208@acm.org>
+        Mon, 20 Apr 2020 11:46:09 -0700 (PDT)
+Received: (nullmailer pid 26611 invoked by uid 1000);
+        Mon, 20 Apr 2020 18:46:08 -0000
+Date:   Mon, 20 Apr 2020 13:46:08 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: Re: [PATCH V2 2/5] dt-bindings: phy: qcom,qusb2: Add ipq8074 device
+ compatible
+Message-ID: <20200420184608.GA26579@bogus>
+References: <1586581352-27017-1-git-send-email-sivaprak@codeaurora.org>
+ <1586581352-27017-3-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b77a39c1-6010-24a4-0815-2f26664b6208@acm.org>
+In-Reply-To: <1586581352-27017-3-git-send-email-sivaprak@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 05:38:59PM -0700, Bart Van Assche wrote:
-> On 4/19/20 5:04 PM, Luis Chamberlain wrote:
-> > > Independent of what the purpose of the above code is, can that code be
-> > > rewritten such that it does not depend on the details of how names are
-> > > assigned to disks and partitions? Would disk_get_part() be useful here?
-> > 
-> > I did try, but couldn't figure out a way. I'll keep looking but likewise
-> > let me know if you find a way.
+On Sat, 11 Apr 2020 10:32:29 +0530, Sivaprakash Murugesan wrote:
+> Add ipq8074 compatible in QUSB2 PHY for high speed USB support.
 > 
-> How about making blk_trace_setup() pass the result of the following
-> expression as an additional argument to blk_trace_setup():
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+> [V2]
+>  * Added new compatible for IPQ8074
+>  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> 	bdev != bdev->bd_contains
-> 
-> I think that is a widely used approach to verify after a block device has
-> been opened whether or not 'bdev' refers to a partition (bdev !=
-> bdev->bd_contains means that 'bdev' represents a partition).
 
-Sweet, that should simplify this considerbly, thanks!
-
-  Luis
+Acked-by: Rob Herring <robh@kernel.org>
