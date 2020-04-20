@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20168C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731DFC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7FCF2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44ABE2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386468;
-	bh=GP35ms7s6eukRrP35V2qI8Cv1wypBlHoorzFyo/mSfo=;
+	s=default; t=1587386471;
+	bh=v8NLptpyVYC24OZAKei+xlXW2y89vKtkcFa3OBOY2gM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gtgIja23J+lK0ZDC/fVLF8nkAfmnh99ndcfi0ATAKmzEblK4bAQUMERAf2xRgDmXB
-	 zx7iRnLvNkxlnU0QwT4Fl/l3lASPRalMz3dnLsT82/EcD3auHJXEHP8mXoCR5H+6qd
-	 KBQc0h/8Ksweh6JNNx5e7XGTzHc7WcSf1fnfqi4U=
+	b=ScPSE6LMoJ9hsz8/FBq/wLdbGVNgkz+kNRdU1KVPI3NOzK6yFqASt2aXlBJgwCLa/
+	 yDXvt58VqZ3wiBa2ENzW7xKZ1s4rAP1Fa7SNcjTfiLCQCGn2n4Kb73rEkmlla2euDN
+	 0qOpAqX35L7DfUK1vMvKrrLoX1W2wGpug30Kc0hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgDTMlG (ORCPT
+        id S1727957AbgDTMlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:41:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33610 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:41:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727924AbgDTMlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:41:05 -0400
+        id S1727924AbgDTMlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:41:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 109AF2070B;
-        Mon, 20 Apr 2020 12:41:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 949C02070B;
+        Mon, 20 Apr 2020 12:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386464;
-        bh=GP35ms7s6eukRrP35V2qI8Cv1wypBlHoorzFyo/mSfo=;
+        s=default; t=1587386467;
+        bh=v8NLptpyVYC24OZAKei+xlXW2y89vKtkcFa3OBOY2gM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zm9X5bmObiFPiQ8hZ7KtUXe3fVdTh+xy7Tv/7BdxJuWNZeiO9fCIVe95UzxQnjda5
-         p2BdS5BbAcFK108SeAcMWeWEHw/FXlvnBkNZAcgXr+/e4oBYaPZbL4GESBwoX+LX6B
-         soonqB2ALvrRsePGJ6aJRs0qiBsmrLXeXkbtVLlg=
+        b=TQ5SEf882iIAkD82bDhEgUAQlWrupZ2GZyIBNtsSBTkbPUAT04DeDwNLbkY5sQRpX
+         TnwGxlhITaakWnA7BqPnvqmmOoY+E93L6IMZ0WMKW93H2VijGH8wW7H91eE3oJrZI6
+         JvoTPsJZNm9/o+Y1Vdw0Mz3uBehkVdSm6n2ba0Jk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.5 32/65] HID: lg-g15: Do not fail the probe when we fail to disable F# emulation
-Date:   Mon, 20 Apr 2020 14:38:36 +0200
-Message-Id: <20200420121513.180593904@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.5 33/65] clk: at91: sam9x60: fix usb clock parents
+Date:   Mon, 20 Apr 2020 14:38:37 +0200
+Message-Id: <20200420121513.427689858@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -59,60 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-commit b8a75eaddae9410767c7d95a1c5f3a547aae7b81 upstream.
+commit 43b203d32b77d1b1b2209e22837f49767020553e upstream.
 
-By default the G1-G12 keys on the Logitech gaming keyboards send
-F1 - F12 when in "generic HID" mode.
+SAM9X60's USB clock has 3 parents: plla, upll and main_osc.
 
-The first thing the hid-lg-g15 driver does is disable this behavior.
-
-We have received a bugreport that this does not work when the keyboard
-is connected through an Aten KVM switch. Using a gaming keyboard with
-a KVM is a bit weird setup, but still we can try to fail a bit more
-gracefully here.
-
-On the G510 keyboards the same USB-interface which is used for the gaming
-keys is also used for the media-keys. Before this commit we would call
-hid_hw_stop() on failure to disable the F# emulation and then exit the
-probe method with an error code.
-
-This not only causes us to not handle the gaming-keys, but this also
-breaks the media keys which is a regression compared to the situation
-when these keyboards where handled by the generic hidinput driver.
-
-This commit changes the error handling to clear the hiddev drvdata
-(to disable our .raw_event handler) and then returning from the probe
-method with success.
-
-The net result of this is that, when connected through a KVM, things
-work as well as they did before the hid-lg-g15 driver was introduced.
-
-Fixes: ad4203f5a243 ("HID: lg-g15: Add support for the G510 keyboards' gaming keys")
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1806321
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 01e2113de9a5 ("clk: at91: add sam9x60 pmc driver")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lkml.kernel.org/r/1579261009-4573-3-git-send-email-claudiu.beznea@microchip.com
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-lg-g15.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/clk/at91/sam9x60.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/hid/hid-lg-g15.c
-+++ b/drivers/hid/hid-lg-g15.c
-@@ -803,8 +803,10 @@ static int lg_g15_probe(struct hid_devic
- 	}
+--- a/drivers/clk/at91/sam9x60.c
++++ b/drivers/clk/at91/sam9x60.c
+@@ -237,9 +237,8 @@ static void __init sam9x60_pmc_setup(str
  
- 	if (ret < 0) {
--		hid_err(hdev, "Error disabling keyboard emulation for the G-keys\n");
--		goto error_hw_stop;
-+		hid_err(hdev, "Error %d disabling keyboard emulation for the G-keys, falling back to generic hid-input driver\n",
-+			ret);
-+		hid_set_drvdata(hdev, NULL);
-+		return 0;
- 	}
+ 	parent_names[0] = "pllack";
+ 	parent_names[1] = "upllck";
+-	parent_names[2] = "mainck";
+-	parent_names[3] = "mainck";
+-	hw = sam9x60_clk_register_usb(regmap, "usbck", parent_names, 4);
++	parent_names[2] = "main_osc";
++	hw = sam9x60_clk_register_usb(regmap, "usbck", parent_names, 3);
+ 	if (IS_ERR(hw))
+ 		goto err_free;
  
- 	/* Get initial brightness levels */
 
 
