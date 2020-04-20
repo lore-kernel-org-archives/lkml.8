@@ -2,67 +2,131 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEFCC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC507C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFDB2206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C0C206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:58:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lOuWEGBU"
+	dkim=pass (2048-bit key) header.d=zzywysm.com header.i=@zzywysm.com header.b="DHwk8VKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgDTT6L (ORCPT
+        id S1728123AbgDTT6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:58:11 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51876 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgDTT6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:58:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=tLugyWjcfpEvL/gdShZ4IltWicY81kM4RiZczduWvrQ=; b=lOuWEGBUrJ8J5Px7b033XRMuh8
-        f7PkSB4KMvh1ZsEFBhjRU6cnz0uO3CsjMAHCuscCL7Qvb6wg89qGo13ei1JAjZ+fa6VI/VpyRiAKR
-        pZKSJckJrmmoYlm6QQdrQ7ECcgOoh2XmQz1zC0p8E/dYtbtC/ek5IHtGyNQeKA2HFAH0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jQcYS-003tQI-Hj; Mon, 20 Apr 2020 21:58:08 +0200
-Date:   Mon, 20 Apr 2020 21:58:08 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next v3 3/3] net: phy: bcm54140: add hwmon support
-Message-ID: <20200420195808.GH917792@lunn.ch>
-References: <20200420182113.22577-1-michael@walle.cc>
- <20200420182113.22577-3-michael@walle.cc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420182113.22577-3-michael@walle.cc>
+        Mon, 20 Apr 2020 15:58:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727914AbgDTT6i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 15:58:38 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1955C0610D6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:58:36 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id n143so5352418qkn.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:58:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=zzywysm.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=1CahSbHOz6rwR75qjwbzvpk5/lxzAsXTVlJJFrluNmk=;
+        b=DHwk8VKEaaVWe6umPwn75HeYPWa4/to4TPUyIyniHa8w0VjI4jbFRgfwiJbMPyVTBF
+         XIxMCwftVuZ5LMDuVHb9gd/oo9bVOeOag3KnWsbyRKiBySEDw18VNG9po6wPOgaX+JV0
+         U696lIpKGeSvPcCzw56gqM/agX1+2/QWVes4jWwOX1kSM0DMbVae9AqQEle3/5swq1WR
+         3E0xc6MJg7TbdMO3xq2INKKP9cMKexf1GETBAnT4Wc/qvIJu4eZ79zfLThZbNisSrGcf
+         uNvuImd6aWtDGh5xTm0hSIil3sDlm0TTj3TRSR1SEsiBL/e+4Ps6DP19SkF+CcVNT33D
+         HkgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=1CahSbHOz6rwR75qjwbzvpk5/lxzAsXTVlJJFrluNmk=;
+        b=Xw/W2Fw8YRlcDombglGdm0kSZlwsJdEgH++xIfdGhzAJAOtNMED3jXjyUOzqtTGJFO
+         wLFCTUzvsne5tb3XtFRqhdbG2FluEb277SWTQzKsJFB0S6RH57aws0uqbGsui3BG3dl7
+         HTU83FADNaFjjOgvGPETHHRIJrQ/bcyiDiUUxBGk4FTJx5IZS2ka/QaAEBNSBtWW3Dt7
+         YnktaRX9c+q4rqfePWo9IdYZBRHxR3G4XCFYp06RkTmfNZAqGgn8TtVay0GVNwvS4qi4
+         P5BSZGPuP1a3hf2O0zSoUhNVgnuM3c1IGJKnvTf7Z8XmAyzJ6uO8BSyVN1b86Qkco5o1
+         eHtA==
+X-Gm-Message-State: AGi0PuYjfrvU6zUZ/n6Xtp5xr7A8yBJ1Or1pcCDwo+hW5uKeIx10BJiO
+        LudT+y1oiQ3It1+pths0RYDhIw==
+X-Google-Smtp-Source: APiQypLbKFRt3y7j9cRt5ohxKGUgZ2cg5IXsM72wAdwrD/eEvlPuY2BnSQ46fW3IHvQ9kSE9m6xMag==
+X-Received: by 2002:a37:5284:: with SMTP id g126mr18284316qkb.51.1587412716060;
+        Mon, 20 Apr 2020 12:58:36 -0700 (PDT)
+Received: from [10.19.49.2] (ec2-3-17-74-181.us-east-2.compute.amazonaws.com. [3.17.74.181])
+        by smtp.gmail.com with ESMTPSA id j2sm241058qtp.5.2020.04.20.12.58.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Apr 2020 12:58:35 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 2/9] fix empty-body warning in posix_acl.c
+From:   Zzy Wysm <zzy@zzywysm.com>
+In-Reply-To: <CAHk-=wjSzuTyyBkmMDG4fx_sXzLJsh+9Xk-ubgbpJzJq_kzPsA@mail.gmail.com>
+Date:   Mon, 20 Apr 2020 14:58:31 -0500
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        target-devel <target-devel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F8B969BE-A2B1-4E6D-8746-BBFBE6399328@zzywysm.com>
+References: <20200418184111.13401-1-rdunlap@infradead.org>
+ <20200418184111.13401-3-rdunlap@infradead.org>
+ <CAHk-=wjSzuTyyBkmMDG4fx_sXzLJsh+9Xk-ubgbpJzJq_kzPsA@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 08:21:13PM +0200, Michael Walle wrote:
-> The PHY supports monitoring its die temperature as well as two analog
-> voltages. Add support for it.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> On Apr 18, 2020, at 1:53 PM, Linus Torvalds =
+<torvalds@linux-foundation.org> wrote:
+>=20
+> Thirdly, there's a *reason* why "-Wextra" isn't used.
+>=20
+> The warnings enabled by -Wextra are usually complete garbage, and
+> trying to fix them often makes the code worse. Exactly like here.
+>=20
 
-    Andrew
+As the instigator of this warning cleanup activity, even _I_ don=E2=80=99t=
+ recommend
+building with all of -Wextra.  Doing so on an allmodconfig build =
+generates=20
+500 megabytes of warning text (not exaggerating), primarily due to=20
+-Wunused-parameter and Wmissing-field-initializers.
+
+I strongly recommend disabling them with -Wno-unused-parameter=20
+-Wno-missing-field-initializers since the spew is completely =
+unactionable.
+
+On the other hand, -Woverride-init found a legit bug that was breaking =
+DVD
+drives, fixed in commit 03264ddde2453f6877a7d637d84068079632a3c5.
+
+I believe finding a good set of compiler warning settings can lead to =
+lots of=20
+good bugs being spotted and (hopefully) fixed.  Why let syzbot do all =
+the work?
+
+zzy
+
