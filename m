@@ -6,72 +6,84 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD39C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AF1C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4F220722
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F9D20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbgDTOEx (ORCPT
+        id S1728545AbgDTOIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:04:53 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50462 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728451AbgDTOEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:04:52 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 35A7ACC59F4CA25CBBD4;
-        Mon, 20 Apr 2020 22:04:43 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Apr 2020
- 22:04:36 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <chunkuang.hu@kernel.org>, <p.zabel@pengutronix.de>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>, <matthias.bgg@gmail.com>,
-        <ck.hu@mediatek.com>, <enric.balletbo@collabora.com>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/mediatek: Fix Kconfig warning
-Date:   Mon, 20 Apr 2020 21:50:45 +0800
-Message-ID: <20200420135045.27984-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 20 Apr 2020 10:08:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43464 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727872AbgDTOIv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 10:08:51 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jQX6N-0006NI-2h; Mon, 20 Apr 2020 14:08:47 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amdgpu: fix a dereference on pointer hive before it is null checked
+Date:   Mon, 20 Apr 2020 15:08:46 +0100
+Message-Id: <20200420140846.78062-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WARNING: unmet direct dependencies detected for MTK_MMSYS
-  Depends on [n]: (ARCH_MEDIATEK [=y] || COMPILE_TEST [=n]) && COMMON_CLK_MT8173_MMSYS [=n]
-  Selected by [y]:
-  - DRM_MEDIATEK [=y] && HAS_IOMEM [=y] && DRM [=y] && (ARCH_MEDIATEK [=y] || ARM && COMPILE_TEST [=n]) && COMMON_CLK [=y] && HAVE_ARM_SMCCC [=y] && OF [=y]
+From: Colin Ian King <colin.king@canonical.com>
 
-Add missing dependcy COMMON_CLK_MT8173_MMSYS to fix this.
+Currently pointer hive is being dereferenced before it is being null
+checked and hence can lead to null pointer dereference issues. Fix this
+by only dereferencing pointer hive after it has been null checked.
 
-Fixes: 2c758e301ed9 ("soc / drm: mediatek: Move routing control to mmsys device")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 25d4275e1931 ("drm/amdgpu: fix race between pstate and remote buffer map")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/gpu/drm/mediatek/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
-index c420f5a3d33b..4d9b5540de68 100644
---- a/drivers/gpu/drm/mediatek/Kconfig
-+++ b/drivers/gpu/drm/mediatek/Kconfig
-@@ -6,6 +6,7 @@ config DRM_MEDIATEK
- 	depends on COMMON_CLK
- 	depends on HAVE_ARM_SMCCC
- 	depends on OF
-+	depends on COMMON_CLK_MT8173_MMSYS
- 	select DRM_GEM_CMA_HELPER
- 	select DRM_KMS_HELPER
- 	select DRM_MIPI_DSI
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c
+index 54d8a3e7e75c..2c0a59ba2826 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c
+@@ -389,15 +389,17 @@ int amdgpu_xgmi_set_pstate(struct amdgpu_device *adev, int pstate)
+ {
+ 	int ret = 0;
+ 	struct amdgpu_hive_info *hive = amdgpu_get_xgmi_hive(adev, 0);
+-	struct amdgpu_device *request_adev = hive->hi_req_gpu ?
+-						hive->hi_req_gpu : adev;
++	struct amdgpu_device *request_adev;
+ 	bool is_hi_req = pstate == AMDGPU_XGMI_PSTATE_MAX_VEGA20;
+-	bool init_low = hive->pstate == AMDGPU_XGMI_PSTATE_UNKNOWN;
++	bool init_low;
+ 
+ 	/* fw bug so temporarily disable pstate switching */
+ 	if (!hive || adev->asic_type == CHIP_VEGA20)
+ 		return 0;
+ 
++	request_adev = hive->hi_req_gpu ? hive->hi_req_gpu : adev;
++	init_low = hive->pstate == AMDGPU_XGMI_PSTATE_UNKNOWN;
++
+ 	mutex_lock(&hive->hive_lock);
+ 
+ 	if (is_hi_req)
 -- 
-2.17.1
-
+2.25.1
 
