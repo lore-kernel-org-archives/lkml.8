@@ -2,106 +2,211 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DF9C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E071C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A6D2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386785;
-	bh=hv4cWLPnu3sR62KqgvIlKb9q2gks5q9m242+DGUCV0w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l0dyvceN8JxPi1ykILBiACgkDhdceeoZU8iSnjl8jqXItwxDD5yifDCrhpMZE8RqK
-	 zeRJWfp+XPMxHrMyCkshxRKbiTyNaVoaJcbidnG2jAjgLm7OysTPXq+dF+NFITHIIS
-	 XEBFsbggAWGriYcV7MnO+Zxszufcu5iHUy9RlrPA=
+	by mail.kernel.org (Postfix) with ESMTP id 241672078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbgDTMqY (ORCPT
+        id S1728931AbgDTMq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:46:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbgDTMqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:46:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF5E620736;
-        Mon, 20 Apr 2020 12:46:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386765;
-        bh=hv4cWLPnu3sR62KqgvIlKb9q2gks5q9m242+DGUCV0w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0TQ9DnhZR1P9eOda0+prpByhWQSlgYR5/4QUFVDmu8irmhjeJVAC53ZvlOo9y8c7I
-         bffeif847cA0MWgtJVws9iCMw1bKMpBaEnf41IOohPRCeqsnWYfh863fFdXgB3bfcz
-         4HjnjFfxbX1E8S6aejpT2pzki8F+5/Z88cyKfeic=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Toralf=20F=C3=B6rster?= <toralf.foerster@gmx.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 18/60] Revert "ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()"
-Date:   Mon, 20 Apr 2020 14:38:56 +0200
-Message-Id: <20200420121506.546978281@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
-References: <20200420121500.490651540@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Apr 2020 08:46:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59694 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728883AbgDTMqI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:46:08 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCWZBa134815;
+        Mon, 20 Apr 2020 08:45:39 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghmb0xx4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:39 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCWbWD135016;
+        Mon, 20 Apr 2020 08:45:39 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghmb0xwn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:39 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCduKb007040;
+        Mon, 20 Apr 2020 12:45:38 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma01dal.us.ibm.com with ESMTP id 30fs66cqjw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 12:45:38 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCjatI60359036
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 12:45:36 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA98B136055;
+        Mon, 20 Apr 2020 12:45:36 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 184B6136053;
+        Mon, 20 Apr 2020 12:45:33 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 12:45:32 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
+        kirill@shutemov.name,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH v3 11/22] powerpc/kvm/book3s: Use kvm helpers to walk shadow or secondary table
+Date:   Mon, 20 Apr 2020 18:14:23 +0530
+Message-Id: <20200420124434.47330-12-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_03:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ phishscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999 malwarescore=0
+ clxscore=1015 mlxscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004200107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+update kvmppc_hv_handle_set_rc to use find_kvm_nested_guest_pte and
+find_kvm_secondary_pte
 
-This reverts commit ce7a61a0d57d2dd613941d8aef82a5b54fb2e396 which is
-commit 65a691f5f8f0bb63d6a82eec7b0ffd193d8d8a5f upstream.
-
-Rafael writes:
-	It has not been marked for -stable or otherwise requested to be
-	included AFAICS.  Also it depends on other mainline commits that
-	have not been included into 5.6.5.
-
-Reported-by: Toralf Förster <toralf.foerster@gmx.de>
-Reported-by: Rafael J. Wysocki <rafael@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
- drivers/acpi/ec.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/powerpc/include/asm/kvm_book3s.h    |  2 +-
+ arch/powerpc/include/asm/kvm_book3s_64.h |  3 +++
+ arch/powerpc/kvm/book3s_64_mmu_radix.c   | 18 +++++++++---------
+ arch/powerpc/kvm/book3s_hv_nested.c      | 13 ++++++-------
+ 4 files changed, 19 insertions(+), 17 deletions(-)
 
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1573,6 +1573,7 @@ static int acpi_ec_add(struct acpi_devic
+diff --git a/arch/powerpc/include/asm/kvm_book3s.h b/arch/powerpc/include/asm/kvm_book3s.h
+index 506e4df2d730..37c8b50cb505 100644
+--- a/arch/powerpc/include/asm/kvm_book3s.h
++++ b/arch/powerpc/include/asm/kvm_book3s.h
+@@ -198,7 +198,7 @@ extern void kvmppc_unmap_pte(struct kvm *kvm, pte_t *pte, unsigned long gpa,
+ 			unsigned int shift,
+ 			const struct kvm_memory_slot *memslot,
+ 			unsigned int lpid);
+-extern bool kvmppc_hv_handle_set_rc(struct kvm *kvm, pgd_t *pgtable,
++extern bool kvmppc_hv_handle_set_rc(struct kvm *kvm, bool nested,
+ 				    bool writing, unsigned long gpa,
+ 				    unsigned int lpid);
+ extern int kvmppc_book3s_instantiate_page(struct kvm_vcpu *vcpu,
+diff --git a/arch/powerpc/include/asm/kvm_book3s_64.h b/arch/powerpc/include/asm/kvm_book3s_64.h
+index 2c2635967d6e..2860521992b6 100644
+--- a/arch/powerpc/include/asm/kvm_book3s_64.h
++++ b/arch/powerpc/include/asm/kvm_book3s_64.h
+@@ -647,6 +647,9 @@ static inline pte_t *find_kvm_secondary_pte(struct kvm *kvm, unsigned long ea,
+ 	return pte;
+ }
  
- 		if (boot_ec && ec->command_addr == boot_ec->command_addr &&
- 		    ec->data_addr == boot_ec->data_addr) {
-+			boot_ec_is_ecdt = false;
- 			/*
- 			 * Trust PNP0C09 namespace location rather than
- 			 * ECDT ID. But trust ECDT GPE rather than _GPE
-@@ -1592,12 +1593,9 @@ static int acpi_ec_add(struct acpi_devic
++extern pte_t *find_kvm_nested_guest_pte(struct kvm *kvm, unsigned long lpid,
++					unsigned long ea, unsigned *hshift);
++
+ #endif /* CONFIG_KVM_BOOK3S_HV_POSSIBLE */
  
- 	if (ec == boot_ec)
- 		acpi_handle_info(boot_ec->handle,
--				 "Boot %s EC initialization complete\n",
-+				 "Boot %s EC used to handle transactions and events\n",
- 				 boot_ec_is_ecdt ? "ECDT" : "DSDT");
+ #endif /* __ASM_KVM_BOOK3S_64_H__ */
+diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+index bf8b72a274fa..7b18b298f513 100644
+--- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
++++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+@@ -735,7 +735,7 @@ int kvmppc_create_pte(struct kvm *kvm, pgd_t *pgtable, pte_t pte,
+ 	return ret;
+ }
  
--	acpi_handle_info(ec->handle,
--			 "EC: Used to handle transactions and events\n");
+-bool kvmppc_hv_handle_set_rc(struct kvm *kvm, pgd_t *pgtable, bool writing,
++bool kvmppc_hv_handle_set_rc(struct kvm *kvm, bool nested, bool writing,
+ 			     unsigned long gpa, unsigned int lpid)
+ {
+ 	unsigned long pgflags;
+@@ -750,12 +750,12 @@ bool kvmppc_hv_handle_set_rc(struct kvm *kvm, pgd_t *pgtable, bool writing,
+ 	pgflags = _PAGE_ACCESSED;
+ 	if (writing)
+ 		pgflags |= _PAGE_DIRTY;
+-	/*
+-	 * We are walking the secondary (partition-scoped) page table here.
+-	 * We can do this without disabling irq because the Linux MM
+-	 * subsystem doesn't do THP splits and collapses on this tree.
+-	 */
+-	ptep = __find_linux_pte(pgtable, gpa, NULL, &shift);
++
++	if (nested)
++		ptep = find_kvm_nested_guest_pte(kvm, lpid, gpa, &shift);
++	else
++		ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
++
+ 	if (ptep && pte_present(*ptep) && (!writing || pte_write(*ptep))) {
+ 		kvmppc_radix_update_pte(kvm, ptep, 0, pgflags, gpa, shift);
+ 		return true;
+@@ -948,8 +948,8 @@ int kvmppc_book3s_radix_page_fault(struct kvm_run *run, struct kvm_vcpu *vcpu,
+ 	/* Failed to set the reference/change bits */
+ 	if (dsisr & DSISR_SET_RC) {
+ 		spin_lock(&kvm->mmu_lock);
+-		if (kvmppc_hv_handle_set_rc(kvm, kvm->arch.pgtable,
+-					    writing, gpa, kvm->arch.lpid))
++		if (kvmppc_hv_handle_set_rc(kvm, false, writing,
++					    gpa, kvm->arch.lpid))
+ 			dsisr &= ~DSISR_SET_RC;
+ 		spin_unlock(&kvm->mmu_lock);
+ 
+diff --git a/arch/powerpc/kvm/book3s_hv_nested.c b/arch/powerpc/kvm/book3s_hv_nested.c
+index b2cc3eaec618..99011f1b772a 100644
+--- a/arch/powerpc/kvm/book3s_hv_nested.c
++++ b/arch/powerpc/kvm/book3s_hv_nested.c
+@@ -750,8 +750,8 @@ static struct kvm_nested_guest *kvmhv_find_nested(struct kvm *kvm, int lpid)
+ 	return kvm->arch.nested_guests[lpid];
+ }
+ 
+-static pte_t *find_kvm_nested_guest_pte(struct kvm *kvm, unsigned long lpid,
+-					unsigned long ea, unsigned *hshift)
++pte_t *find_kvm_nested_guest_pte(struct kvm *kvm, unsigned long lpid,
++				 unsigned long ea, unsigned *hshift)
+ {
+ 	struct kvm_nested_guest *gp;
+ 	pte_t *pte;
+@@ -767,7 +767,6 @@ static pte_t *find_kvm_nested_guest_pte(struct kvm *kvm, unsigned long lpid,
+ 	return pte;
+ }
+ 
 -
- 	device->driver_data = ec;
+ static inline bool kvmhv_n_rmap_is_equal(u64 rmap_1, u64 rmap_2)
+ {
+ 	return !((rmap_1 ^ rmap_2) & (RMAP_NESTED_LPID_MASK |
+@@ -1226,16 +1225,16 @@ static long kvmhv_handle_nested_set_rc(struct kvm_vcpu *vcpu,
  
- 	ret = !!request_region(ec->data_addr, 1, "EC data");
-
+ 	spin_lock(&kvm->mmu_lock);
+ 	/* Set the rc bit in the pte of our (L0) pgtable for the L1 guest */
+-	ret = kvmppc_hv_handle_set_rc(kvm, kvm->arch.pgtable, writing,
+-				     gpte.raddr, kvm->arch.lpid);
++	ret = kvmppc_hv_handle_set_rc(kvm, false, writing,
++				      gpte.raddr, kvm->arch.lpid);
+ 	if (!ret) {
+ 		ret = -EINVAL;
+ 		goto out_unlock;
+ 	}
+ 
+ 	/* Set the rc bit in the pte of the shadow_pgtable for the nest guest */
+-	ret = kvmppc_hv_handle_set_rc(kvm, gp->shadow_pgtable, writing, n_gpa,
+-				      gp->shadow_lpid);
++	ret = kvmppc_hv_handle_set_rc(kvm, true, writing,
++				      n_gpa, gp->shadow_lpid);
+ 	if (!ret)
+ 		ret = -EINVAL;
+ 	else
+-- 
+2.25.3
 
