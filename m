@@ -2,106 +2,79 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950E0C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E7BC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F36120782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95992084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Ew/qZu4s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IODJ9iDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgDTT30 (ORCPT
+        id S1726285AbgDTTdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40776 "EHLO
+        Mon, 20 Apr 2020 15:33:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726189AbgDTT3Z (ORCPT
+        by vger.kernel.org with ESMTP id S1725550AbgDTTdP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:29:25 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CE1C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:29:25 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id n4so8904924ejs.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ce20/CIQIX522RaPVTyPTfJEPqiyAriKhvUnxTulqdM=;
-        b=Ew/qZu4sDhUqxZ/TYFqRH0ERtCxbKG4Z8viu2sPjWVDAgBWlvcnLRlRx5rwXTM/Oah
-         mIYHqq0r+8iblP15rxoSx33CEyZunyDuuLZACk8dgur1ueNplknlYmcAylmjCtPf23DA
-         W9fH6ydZ1sJNeXLG+uo/C5iF+Bx7zwA18kCdy3xNxw5iz8+YxTIHSDrMrmLspd9T1TpP
-         ntKFG8X9R+1/qJUVjBuCLfLmn2FSJJekaPBY9XT3Vh9StB1/hFnewJwuLeKxA0WHVKuW
-         mtpVxRXs6eZYVS5FIIcDdh1u3GSNKMaWuB1GMxDd8IXaXWIKV6KMRQ2rSrylkdDm8eYG
-         MzqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ce20/CIQIX522RaPVTyPTfJEPqiyAriKhvUnxTulqdM=;
-        b=njpUjEK7VR7oCVJ8dTjJKvOQdDLn9uZWf3fDVMcvo5vHAMQAC3b65wsEaRxFL33Wmn
-         I3vyXHzZ6scMlB5tDIXTieN37KaCKCr75ajuDaHW00Eg7IzIfrKri7HkCE5K6onXsNRd
-         u1+NA6v4zvHT52M5kFGg/sUgNE0vUMnk75Rr+PiORcc7ohU/KPBI9PX1ciLl1OqWlxbd
-         ZAG2B2EWD395vVGqBma1ln0v88msG0CbAUCHIO8cotZ4zAr80S0VJJzMSoscO/xb51CO
-         SmwWem4mZC82XuWh/HdXOV9Bpq8+ZxUy68Y9irqj6lLiW7vePTs9qf8ABOOdzXi7zC2w
-         ia5Q==
-X-Gm-Message-State: AGi0PuYwyf6m/z2lDnevkwoisPaCryyTz690ReqEvVN0idOYH84NqUwI
-        asUh54oRu1Q9XyJxBliQMNVuuhRRrA8goqEn0/y9/g==
-X-Google-Smtp-Source: APiQypK9aQrIzZ87xSipVCdNGdFMMM1E4PzK+Awa+HpCEy9iTdMb3+e2PhmQ2RqaH5oAUbvtfE2smMIkNiOOGSkMCww=
-X-Received: by 2002:a17:906:6d8e:: with SMTP id h14mr17131940ejt.123.1587410964104;
- Mon, 20 Apr 2020 12:29:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net>
- <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
- <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com>
- <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com>
- <CAPcyv4hrfZsg48Gw_s7xTLLhjLTk_U+PV0MsLnG+xh3652xFCQ@mail.gmail.com> <CAHk-=wgcc=5kiph7o+aBZoWBCbu=9nQDQtD41DvuRRrqixohUA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgcc=5kiph7o+aBZoWBCbu=9nQDQtD41DvuRRrqixohUA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 20 Apr 2020 12:29:12 -0700
-Message-ID: <CAPcyv4iTaBNPMwqUwas+J4rxd867QL7JnQBYB8NKnYaTA-R_Tw@mail.gmail.com>
-Subject: Re: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Mon, 20 Apr 2020 15:33:15 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38B2C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:33:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Nys6FfrXrT/gkHzZ8xBczpZW1k4deji5R46CFHQSXRI=; b=IODJ9iDC6uH9h4ewqA894kbWlj
+        2fuCalRawyjjvQ9m5sOYWzRepZ1K7U6sUm3IobITEqL/SRbKCAPNvCknV6JBzAlkmwmHqU7EPdT75
+        khpcvu48gLcAPzN+9O17TqpPeSlZ76yqoEDjcemTImGY33gHHNG8Ndp/avwUUOBJhc40Ti22EaRvG
+        HyJfb0Zj23l/Q0K7w7FxkgiwHpdAGzsSqSK5N69HbcT15OLwErUhXftIEXNliptADHm+nOZO/6ekN
+        CJmvacYjNQ5wkK+HoVs6LoVOgqa5iyXwiE4CgoP2cfgl5kejlL0HJVyQdmv8Fr/tLHpOmmA0Wu8ka
+        rocxg6fA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQcAI-0002MG-PZ; Mon, 20 Apr 2020 19:33:10 +0000
+Date:   Mon, 20 Apr 2020 12:33:10 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: Re: [PATCH v4 06/10] mmap locking API: convert nested write lock
+ sites
+Message-ID: <20200420193310.GF5820@bombadil.infradead.org>
+References: <20200415004353.130248-1-walken@google.com>
+ <20200415004353.130248-7-walken@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415004353.130248-7-walken@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 12:13 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Mon, Apr 20, 2020 at 11:20 AM Dan Williams <dan.j.williams@intel.com> wrote:
-[..]
-> I really really detest the whole mcsafe garbage. And I absolutely
-> *ABHOR* how nobody inside of Intel has apparently ever questioned the
-> brokenness at a really fundamental level.
->
-> That "I throw my hands in the air and just give up" thing is a
-> disease. It's absolutely not "what else could we do".
+On Tue, Apr 14, 2020 at 05:43:49PM -0700, Michel Lespinasse wrote:
+> @@ -47,7 +48,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
+>  	 * when the new ->mm is used for the first time.
+>  	 */
+>  	__switch_mm(&new->context.id);
+> -	down_write_nested(&new->mmap_sem, 1);
+> +	mmap_write_lock_nested(new, 1);
 
-So I grew up in the early part of my career validating ARM CPUs where
-a data-abort was either precise or imprecise and the precise error
-could be handled like a page fault as you know which instruction
-faulted and how to restart the thread. So I didn't take x86 CPU
-designers' word for it, I honestly thought that "hmm the x86 machine
-check thingy looks like it's trying to implement precise vs imprecise
-data-aborts, and precise / synchronous is maybe a good thing because
-it's akin to a page fault". I didn't consider asynchronous to be
-better because that means there is a gap between when the data
-corruption is detected and when it might escape the system that some
-external agent could trust the result and start acting on before the
-asynchronous signal is delivered.
+This should have already been using SINGLE_DEPTH_NESTING.  1 is
+uninformative.
+
