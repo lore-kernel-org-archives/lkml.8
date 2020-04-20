@@ -2,125 +2,86 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78357C54FC9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B54C54FCC
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5683A221F7
+	by mail.kernel.org (Postfix) with ESMTP id 7387B2087E
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587346911;
-	bh=az85tus44NMG4SMjB0IngO85+hPz52zrrMtkhEa/4RA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=eVVaOAm8l0hzjNZUbpzZGLpPvIkgIs/ewa5XbCrqJBTcFlSMg1qkEn/Y0oaM9oMGd
-	 WxvkOViQbuFmWxSYwD1KsYXftt8ELyKwuG49AiOm/TTEY5OnMYvekC8BDoNmBmIQV8
-	 xtR7fcSA5KSLgSE7ug5lRyyhhPnQe7POcdvzGpOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgDTBlj (ORCPT
+        id S1726054AbgDTBlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 21:41:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40514 "EHLO mail.kernel.org"
+        Sun, 19 Apr 2020 21:41:46 -0400
+Received: from mga01.intel.com ([192.55.52.88]:62195 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgDTBli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 21:41:38 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B0592087E;
-        Mon, 20 Apr 2020 01:41:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587346898;
-        bh=az85tus44NMG4SMjB0IngO85+hPz52zrrMtkhEa/4RA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=VSYqKY2OT5HtsftDAocIYLAXRfFoDwWR0WgW6DWWmZmmaVMZ3rQ8BXHrNdRYDsyLw
-         y+bGFOKGZH5e0QJavheQ2doNarmdccz7piZwe74/4gaMCfEE7ti1KShLFmpAxyfZZh
-         2PHj9fnl+Ot8EG/SDE+BRagfBO7o+OTAvLypE1IY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id CE5713522C68; Sun, 19 Apr 2020 18:41:37 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 18:41:37 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
+        id S1725949AbgDTBlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 21:41:45 -0400
+IronPort-SDR: k63PrsX+EFjpAUiRPi3dYAdXjG8EGqHL497ByXXBVIHwuWrM28wfonsSS8yAVrvCKDQ6KhXLhE
+ SaDWJyhZ4Htg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 18:41:45 -0700
+IronPort-SDR: cQywvut7KlsssAmI6HgQ7kpCWGMEr1J7+8bZivrKwjlPT0m2qEsYrcVay35ImJ9Ich05Z+vfMv
+ /YXBPe0W1wlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
+   d="scan'208";a="455470756"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Apr 2020 18:41:44 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
 To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2] rcu: simplify the calculation of rcu_state.ncpus
-Message-ID: <20200420014137.GW17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200419215715.21071-1-richard.weiyang@gmail.com>
+Cc:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <tim.c.chen@linux.intel.com>
+Subject: Re: [PATCH 4/4] mm/swapfile.c: move new_cluster to check free_clusters directly
+References: <20200419013921.14390-1-richard.weiyang@gmail.com>
+        <20200419013921.14390-4-richard.weiyang@gmail.com>
+Date:   Mon, 20 Apr 2020 09:41:43 +0800
+In-Reply-To: <20200419013921.14390-4-richard.weiyang@gmail.com> (Wei Yang's
+        message of "Sun, 19 Apr 2020 01:39:21 +0000")
+Message-ID: <87blnnszl4.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419215715.21071-1-richard.weiyang@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 09:57:15PM +0000, Wei Yang wrote:
-> There is only 1 bit set in mask, which means the difference between
-> oldmask and the new one would be at the position where the bit is set in
-> mask.
-> 
-> Based on this knowledge, rcu_state.ncpus could be calculated by checking
-> whether mask is already set in rnp->expmaskinitnext.
-> 
+Wei Yang <richard.weiyang@gmail.com> writes:
+
+> Each time it needs jump to new_cluster, it is sure current
+> percpu_cluster is null.
+>
+> Move the new_cluster to check free_clusters directly.
+>
 > Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+> ---
+>  mm/swapfile.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 07b0bc095411..78e92ff14c79 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -603,9 +603,9 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+>  	struct swap_cluster_info *ci;
+>  	unsigned long tmp, max;
+>  
+> -new_cluster:
+>  	cluster = this_cpu_ptr(si->percpu_cluster);
+>  	if (cluster_is_null(&cluster->index)) {
+> +new_cluster:
+>  		if (!cluster_list_empty(&si->free_clusters)) {
+>  			cluster->index = si->free_clusters.head;
+>  			cluster->next = cluster_next(&cluster->index) *
 
-Queued, thank you!
+In swap_do_scheduled_discard(), we will unlock si->lock, so the
+percpu_cluster may be changed after we releasing the lock.  Or the
+current thread may be moved to a different CPU.
 
-I updated the commit log as shown below, so please let me know if I
-messed something up.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 2ff1b8268456b1a476f8b79672c87d32d4f59024
-Author: Wei Yang <richard.weiyang@gmail.com>
-Date:   Sun Apr 19 21:57:15 2020 +0000
-
-    rcu: Simplify the calculation of rcu_state.ncpus
-    
-    There is only 1 bit set in mask, which means that the only difference
-    between oldmask and the new one will be at the position where the bit is
-    set in mask.  This commit therefore updates rcu_state.ncpus by checking
-    whether the bit in mask is already set in rnp->expmaskinitnext.
-    
-    Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index f288477..6d39485 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3732,10 +3732,9 @@ void rcu_cpu_starting(unsigned int cpu)
- {
- 	unsigned long flags;
- 	unsigned long mask;
--	int nbits;
--	unsigned long oldmask;
- 	struct rcu_data *rdp;
- 	struct rcu_node *rnp;
-+	bool newcpu;
- 
- 	if (per_cpu(rcu_cpu_started, cpu))
- 		return;
-@@ -3747,12 +3746,10 @@ void rcu_cpu_starting(unsigned int cpu)
- 	mask = rdp->grpmask;
- 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	WRITE_ONCE(rnp->qsmaskinitnext, rnp->qsmaskinitnext | mask);
--	oldmask = rnp->expmaskinitnext;
-+	newcpu = !(rnp->expmaskinitnext & mask);
- 	rnp->expmaskinitnext |= mask;
--	oldmask ^= rnp->expmaskinitnext;
--	nbits = bitmap_weight(&oldmask, BITS_PER_LONG);
- 	/* Allow lockless access for expedited grace periods. */
--	smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + nbits); /* ^^^ */
-+	smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + newcpu); /* ^^^ */
- 	ASSERT_EXCLUSIVE_WRITER(rcu_state.ncpus);
- 	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
- 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+Best Regards,
+Huang, Ying
