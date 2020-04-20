@@ -2,150 +2,113 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C01C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F97C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC9472071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C2A2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:11:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CF9oVWum"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RQB1iEKR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgDTSKk (ORCPT
+        id S1727846AbgDTSLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:10:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbgDTSKj (ORCPT
+        Mon, 20 Apr 2020 14:11:01 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:37876 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726316AbgDTSLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:10:39 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F09C061A0C;
-        Mon, 20 Apr 2020 11:10:39 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id l3so5216018edq.13;
-        Mon, 20 Apr 2020 11:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OsEsVqFYdMSb7DvTNoLz36ojWhYP2bDeJgp2Rpv0Krk=;
-        b=CF9oVWum7P6oGqf/+o/Kfq8ccqpl/kqXKpD5Ov3s0d6NsvfIEGAmcv8qfwxjZn0zVg
-         ynvyXJBYZxaE6qa+9ImjKr17D04XIQPPy4Yhi0GtZvMcehBwVgh+am27oicRuZZBy69Y
-         0UE2jBqxbyKVjh3oWwFNvRqjhQiKr57pzRmKNO0fRLYyr1LtdquWn2zwQmk8e/fSC77+
-         DzC+16bcYwTLYolDPEl7ov14N67ELp26piJ8A+kX6zrkQsOK4pZJ4AzYDK0l+vPUoZ9R
-         vBNELc1LN+uOG3lJ4pojJI9EQbhO4dPXVorQBY3l7vszpjDGMIh9CeoZLnM5l5pUSdNU
-         Af9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OsEsVqFYdMSb7DvTNoLz36ojWhYP2bDeJgp2Rpv0Krk=;
-        b=n8q3eGWDsdxfa1oV7caEywVrmSGEoTzXroxa442+neiF8KVBOCOifLwLkDqB80mw0W
-         pkz7ZspJim46/gEoYE9fhz06e8wKLheG7QGVjRBkYABgaMaHGgc+dhms+itJ50ePiupk
-         XDW7cGwISEQHu7UDjzqS2zQlQpawrR5Y7ZSGM3BzksaOF7XZ20hT05W07Pdxm0nF6aKZ
-         Z2vyxodsHb6DwZZv9l017CtKfJhdRwIGJrHeeV2KfPEJBCX4dhcloBebnhB3jyb+8C4X
-         oKOLJ334LdI3SIelBPeTDPPzgcq5N++nTjvlJzg9/1rZ0zC+L7hCzT0eSPXL8ww1MBDC
-         Y1mg==
-X-Gm-Message-State: AGi0PuZnpm7Oi9KAepyRh8Ddsvb6+1XxOZvuFnWxCqJmH6TReymGFKlW
-        gz2UQ0BJ1JjsM+TxXng0ydE2VpuEet/WyWvt1HA=
-X-Google-Smtp-Source: APiQypKh8INZWiu0vYAwkyTSSdFKBGinZbwNyt+jZO5Euhz9Y9RwZQSR5ngPH+538R2KWSEW23JML9DVlLKeSSsbzMs=
-X-Received: by 2002:a50:9ea1:: with SMTP id a30mr16192872edf.318.1587406237905;
- Mon, 20 Apr 2020 11:10:37 -0700 (PDT)
+        Mon, 20 Apr 2020 14:11:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587406261; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=wos3Ak73xOXHzWR83+yksTYRpe5mwIS/buxq9eAwCz8=;
+ b=RQB1iEKRGcSu218jO4hi+FgvLOLmZKLvZKC5tL2RxE9MzdKkD/tmFVqKfPcPtH4Y74i7RiCq
+ HZRuLGW4yffItJy7rFirdWhT2hU8z9HfY+IhfeKk0bCKCHnpoZFyL0ODqy2PQFNjM/6RsVWC
+ xMoSklDcRGIMv/2VaBrUDZIONTE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9de5a5.7f8e56643570-smtp-out-n04;
+ Mon, 20 Apr 2020 18:10:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DB666C433F2; Mon, 20 Apr 2020 18:10:43 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5DCECC433D2;
+        Mon, 20 Apr 2020 18:10:42 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200318001603.9650-1-olteanv@gmail.com> <20200318001603.9650-13-olteanv@gmail.com>
- <CAMuHMdUDYWNOOrAXrq1Lf5_GD84Z1rr4Co5buZS-GnJvGyN5yA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUDYWNOOrAXrq1Lf5_GD84Z1rr4Co5buZS-GnJvGyN5yA@mail.gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 20 Apr 2020 21:10:27 +0300
-Message-ID: <CA+h21hpHeL08Gb36m1RNrE6agebZu7ygz9jFekOH7zGc9uLcSQ@mail.gmail.com>
-Subject: Re: [PATCH v5 12/12] arm64: dts: ls1028a-rdb: Add a spidev node for
- the mikroBUS
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Esben Haabendal <eha@deif.com>,
-        Angelo Dureghello <angelo@sysam.it>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        Michael Walle <michael@walle.cc>, peng.ma@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Apr 2020 23:40:42 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCHv3 4/6] iommu/arm-smmu-qcom: Request direct mapping for
+ modem device
+In-Reply-To: <49c8c377-961b-3f95-a99c-08528def4cb7@arm.com>
+References: <cover.1587400573.git.saiprakash.ranjan@codeaurora.org>
+ <509d88fbe7592aa15f867933c177b61bc7ba8efa.1587400573.git.saiprakash.ranjan@codeaurora.org>
+ <49c8c377-961b-3f95-a99c-08528def4cb7@arm.com>
+Message-ID: <98fa2940456ade2bd0998dfaa6386653@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Hi Robin,
 
-On Mon, 20 Apr 2020 at 21:07, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Vladimir,
->
-> On Wed, Mar 18, 2020 at 1:17 AM Vladimir Oltean <olteanv@gmail.com> wrote:
-> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> >
-> > For debugging, it is useful to have access to the DSPI controller
-> > signals. On the reference design board, these are exported to either the
-> > mikroBUS1 or mikroBUS2 connector (according to the CPLD register
-> > BRDCFG3[SPI3]).
-> >
-> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
->
-> Thanks for your patch!
->
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> > @@ -83,6 +83,20 @@
-> >         };
-> >  };
-> >
-> > +&dspi2 {
-> > +       bus-num = <2>;
-> > +       status = "okay";
-> > +
-> > +       /* mikroBUS1 */
-> > +       spidev@0 {
->
-> Please use generic node names, e.g. "dac@0".
->
+On 2020-04-20 22:39, Robin Murphy wrote:
+> On 2020-04-20 5:42 pm, Sai Prakash Ranjan wrote:
+>> From: Sibi Sankar <sibis@codeaurora.org>
+>> 
+>> Request direct mapping for modem on platforms which don't have 
+>> TrustZone
+>> (which programs the modem SIDs) to prevent the following global faults 
+>> seen
+>> on Cheza/Trogdor:
+> 
+> Not strictly true - it's patch #6/6 that prevents *those* faults (and
+> these days the driver should be reporting unmatched streams a little
+> more helpfully). This change would resolve the context faults and/or
+> weird memory corruption that might result from applying patch #6 alone
+> - this is the crazy thing where transactions sometimes go directly to
+> DRAM round the side of the SMMU so we can never safely remap anything,
+> right?
+> 
 
-It's not a DAC. It's really an unpopulated pin header. I would have
-really liked to have access to that as a char device with the default
-board DTS, via spidev. That being said, there are warnings to not use
-the "spidev" compatible in device trees. So if what I want is not
-possible, I'd rather drop the patch altogether.
+True this doesnt prevent global faults, the fault details should go to 
+patch6.
+I'll update the commit msg something like below:
 
-> > +               compatible = "rohm,dh2228fv";
-> > +               spi-max-frequency = <20000000>;
-> > +               fsl,spi-cs-sck-delay = <100>;
-> > +               fsl,spi-sck-cs-delay = <100>;
-> > +               reg = <0>;
-> > +       };
-> > +};
-> > +
-> >  &esdhc {
-> >         sd-uhs-sdr104;
-> >         sd-uhs-sdr50;
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+The Q6 modem sub-system has direct access to DDR through memnoc.
+Also SMMU is not expected to provide access control/translation for 
+these SIDs
+(sandboxing of the modem is achieved through XPUs engaged using SMC 
+calls).
 
 Thanks,
--Vladimir
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
