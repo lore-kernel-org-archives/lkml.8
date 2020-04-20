@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA94C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EF7C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6E221D82
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370C8206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:01:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeQZY3U0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dluh6E6W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgDTIA7 (ORCPT
+        id S1726444AbgDTIBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:00:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45750 "EHLO
+        Mon, 20 Apr 2020 04:01:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgDTIA5 (ORCPT
+        with ESMTP id S1725815AbgDTIBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:00:57 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9E43C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:00:57 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t11so4672790pgg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:00:57 -0700 (PDT)
+        Mon, 20 Apr 2020 04:01:02 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E57DAC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:01:01 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t40so4082543pjb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:01:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DSi8Zl5E6C8oRk/MAFIcBEqbn7/mn9+/YHmxcRg+idk=;
-        b=EeQZY3U0r7N00A0ghNyd570WI+TMBfPMdHycrThvyRNwh3vChP+6pqA3n24qK3lh3w
-         t73jEmbdP2+91Z0OxU2PicyVGliRIpZD/m3LR8xBXhwZ7iSvkWZ2jZtcuaJ8ydErrdJS
-         CmEtbz/QIUQyw9hrWt1CA3HsykMrOaiEemg4GiN39cEeSkoUyk/V7YtJGBmtuRFU8X/8
-         HOLo3OsRN3sYiEUVt/bP3C5MjKd6HaRHVoXiTezDc/Bcgv7YK7kyvyZr+wcT1TW5kFeF
-         EAYXLagqjtp5JMr+3hXW35Id2Pv9/q8Yt0HVIOt4aJJdw/vYNX5nivacF/cXhQf0oI84
-         EPJg==
+        bh=alIHvAxi8J0gI0njDpPhNJX2AYMkhsIun+mstYhBeyw=;
+        b=Dluh6E6WcvI4lCJpWZru0HsbFamltg/pDLxUXPDdcyd7U73u2Tjuy76v2EqKxIPN1D
+         8HfOy0yDAfSEDDCFo8/d107vtsHmZaPhqvlyuQC6EY7L6XeoHELvFxBJ+av+24J71Huc
+         GAFwaB5ev5fbbKZzTocmnb1TzfiI2wBFoh6YUP/5jZgdyE9z6PTenV2AJH3xF+wZOBvw
+         5+ToqCayK/FEfBPb92ENTgpdeHppCkVkswO803xRpv1Re7dpzo0T90E8rDMsjFk0qdzs
+         5SUonL8Eo+6uRoQ26ijPU006Jhx7mPwwucsRAyrOe4E8tRVDb8AuMFIVbT9R8yLx9fqx
+         GI6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=DSi8Zl5E6C8oRk/MAFIcBEqbn7/mn9+/YHmxcRg+idk=;
-        b=DINJ0hZJngXvJeIRcE7ppKUwd2zWWpUWka7vc0+Q5c9Gl3EpchgeHBbnAuX1pJT5Pe
-         usyenWcJV0sgsH4Aa9/L0YxDgANmww/lTe0ehb850sqA3/pJaNwz+e8FmiV4ArHy1sMl
-         Dl8GD0Qt+6sGYazZguuKHOWhUl6vvFywUQlC462XHFMvoFnVY7RYpeWeayN8DB+o/nqp
-         1cUmIcb/y7L8f5tyz45M/cNqQNsq48YIBFUGTWTQEHfk0djOrWMyNYAgCZrUx+RxYYna
-         9oXA9Pzx8Egj7C3bittF6RAP2bOvhkykYDXfOqqalL8yukvEhVYrBXIgMQa2jH34LrCD
-         0MRg==
-X-Gm-Message-State: AGi0PubNm5LhGvjGF4o1r5fm5g0RZTI9X6nETyrbkbhCCoFHJWyA3sum
-        DjtFZ2evApzCi3vxWZF8ZTs=
-X-Google-Smtp-Source: APiQypK7x7myCxQF8VKSUMw/wmdQndZa+A20INmkZwCxUQsaroAlqyLxW9nRCC2v0z5QL7W3rDFKXw==
-X-Received: by 2002:a62:d086:: with SMTP id p128mr16441164pfg.241.1587369657192;
-        Mon, 20 Apr 2020 01:00:57 -0700 (PDT)
+        bh=alIHvAxi8J0gI0njDpPhNJX2AYMkhsIun+mstYhBeyw=;
+        b=VQImDFxFiLWF+a3yu2Gfq5rbG4+yQI0o3Eydunbr7xYGupvpwroNVffpoRMC2EhbK4
+         cgWF+5iqLjTieM2zRgH08n6ttf/TPvKjPZQrcMXsvDBFbNOi9PIZmHU2jZFFOYzmQvtP
+         aENGYfyUkd+TPLR0uFeGovmOmi2ox0ErVqJOTolMrFvzlrfGhJDnmWVMH+24G5vUE//R
+         beLZrxA016B0HGbDGpkv8RTqlH4AizH2xIXV0NCk9wyDfuoNF6sD+n5Qc7o5gLenukm0
+         Vp2iPVWH2uUFUGgl3gNLdsRZTR8YOZiA44ANUk/51yHlyL5tYsSbGbZcRIXmR0pC69rS
+         wFkw==
+X-Gm-Message-State: AGi0PuZ5GeBttRBE/nBWw32mdPa0uk3WbGrNBK1SeM4EthHJaplp50VG
+        hT4MVDbXZAXky8z9y3lEgWk=
+X-Google-Smtp-Source: APiQypJDuKPiCH8RK1OqawZFGOeQwm51EdRyDy79rVDacXxLqIv3PWmH4AI8ZUJeDdV3IBbkNclw8Q==
+X-Received: by 2002:a17:902:968a:: with SMTP id n10mr15110926plp.74.1587369661464;
+        Mon, 20 Apr 2020 01:01:01 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id n9sm314947pjt.29.2020.04.20.01.00.53
+        by smtp.gmail.com with ESMTPSA id n9sm314947pjt.29.2020.04.20.01.00.57
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Apr 2020 01:00:56 -0700 (PDT)
+        Mon, 20 Apr 2020 01:01:01 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -77,9 +77,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Pavel Machek <pavel@ucw.cz>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH 07/10] mm/hugetlb: separate PageHighMem() and PageHighMemZone() use case
-Date:   Mon, 20 Apr 2020 16:59:39 +0900
-Message-Id: <1587369582-3882-8-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH 08/10] mm: separate PageHighMem() and PageHighMemZone() use case
+Date:   Mon, 20 Apr 2020 16:59:40 +0900
+Message-Id: <1587369582-3882-9-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587369582-3882-1-git-send-email-iamjoonsoo.kim@lge.com>
 References: <1587369582-3882-1-git-send-email-iamjoonsoo.kim@lge.com>
@@ -117,22 +117,36 @@ I apply the rule #3 for this patch.
 
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- mm/hugetlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memory_hotplug.c | 2 +-
+ mm/page_alloc.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 1c50d23..fc3a701 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -2639,7 +2639,7 @@ static void try_to_free_low(struct hstate *h, unsigned long count,
- 		list_for_each_entry_safe(page, next, freel, lru) {
- 			if (count >= h->nr_huge_pages)
- 				return;
--			if (PageHighMem(page))
-+			if (PageHighMemZone(page))
- 				continue;
- 			list_del(&page->lru);
- 			update_and_free_page(h, page);
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 8573d2fc..85361e2 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -593,7 +593,7 @@ void generic_online_page(struct page *page, unsigned int order)
+ 	__free_pages_core(page, order);
+ 	totalram_pages_add(1UL << order);
+ #ifdef CONFIG_HIGHMEM
+-	if (PageHighMem(page))
++	if (PageHighMemZone(page))
+ 		totalhigh_pages_add(1UL << order);
+ #endif
+ }
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d469384..9997f87 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7470,7 +7470,7 @@ void adjust_managed_page_count(struct page *page, long count)
+ 	atomic_long_add(count, &page_zone(page)->managed_pages);
+ 	totalram_pages_add(count);
+ #ifdef CONFIG_HIGHMEM
+-	if (PageHighMem(page))
++	if (PageHighMemZone(page))
+ 		totalhigh_pages_add(count);
+ #endif
+ }
 -- 
 2.7.4
 
