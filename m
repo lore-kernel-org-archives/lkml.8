@@ -2,192 +2,107 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C5DC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72894C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83870206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535592072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587387241;
+	bh=caw1VnqJBp4MmqQVV2viMKeXieGpJDQ6lgh7Vj0LSgM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wM4vGCQbe/llnxRwU+/Qfw+ZaajPCDu8KiN2PVK68rbpDet1VYMRzTGtd9oHtYV+8
+	 WK0DUw/1CnbRP5b2BXcjXyPK1hBpfABX0UmhAc6N4vsesj7rOBAvaI0CxlO9uwhdO0
+	 VfdXc7YpTTqOQv+zqWI+ZzJZCvPqc1FV7VQmLvpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbgDTMx5 (ORCPT
+        id S1729657AbgDTMyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:53:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17450 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728951AbgDTMqe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:46:34 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCe1bD033467;
-        Mon, 20 Apr 2020 08:46:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmu6wt7s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:46:20 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCXneI006890;
-        Mon, 20 Apr 2020 08:46:20 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmu6wt77-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:46:20 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KChHwP008911;
-        Mon, 20 Apr 2020 12:46:19 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01wdc.us.ibm.com with ESMTP id 30fs65rj6y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 12:46:19 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCkHha62325118
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 12:46:17 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6E2D113604F;
-        Mon, 20 Apr 2020 12:46:17 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9ED39136059;
-        Mon, 20 Apr 2020 12:46:13 +0000 (GMT)
-Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 12:46:13 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
-        kirill@shutemov.name,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH v3 20/22] powerpc/mm/book3s64: Avoid sending IPI on clearing PMD
-Date:   Mon, 20 Apr 2020 18:14:32 +0530
-Message-Id: <20200420124434.47330-21-aneesh.kumar@linux.ibm.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
-References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+        Mon, 20 Apr 2020 08:54:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729647AbgDTMxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:53:54 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EC8E206D5;
+        Mon, 20 Apr 2020 12:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587387234;
+        bh=caw1VnqJBp4MmqQVV2viMKeXieGpJDQ6lgh7Vj0LSgM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TewWD3QBS7jjs40MyYGUTfuWbpyyyAVRhZmUOezodYD84VT5bL/uVC7hiLSLPFrOy
+         8SYQQVx52JndV9PSdr3WR5G/BqK/8pmOohSM6SZvLBLnvc0fdrDo8c2Y50gJxADm+T
+         Ur/N8PFT2lKlInjR8r7E/nc8gfXRc09SYxLFx57Q=
+Date:   Mon, 20 Apr 2020 13:53:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: sound: add Microsemi ZL38060 binding
+Message-ID: <20200420125348.GC10045@sirena.org.uk>
+References: <20200417221341.31428-1-TheSven73@gmail.com>
+ <20200420121542.GB6507@sirena.org.uk>
+ <CAGngYiWauBTnXDcP9UC1S7U5Ogy0B=bUZSdGs1Z9aKZ2+sB=Qw@mail.gmail.com>
+ <20200420122534.GC6507@sirena.org.uk>
+ <CAGngYiV9MxeLrERkgU2+rucCiJ5StCXN7GXxKLMfaJ-bqSpAAw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_03:2020-04-20,2020-04-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0
- impostorscore=0 mlxscore=0 malwarescore=0 suspectscore=0 mlxlogscore=962
- clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200107
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LwW0XdcUbUexiWVK"
+Content-Disposition: inline
+In-Reply-To: <CAGngYiV9MxeLrERkgU2+rucCiJ5StCXN7GXxKLMfaJ-bqSpAAw@mail.gmail.com>
+X-Cookie: Hope is a waking dream.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all the lockless page table walk is careful w.r.t the PTE
-address returned, we can now revert
-commit: 13bd817bb884 ("powerpc/thp: Serialize pmd clear against a linux page table walk.")
 
-We also drop the equivalent IPI from other pte updates routines. We still keep
-IPI in hash pmdp collapse and that is to take care of parallel hash page table
-insert. The radix pmdp collapse flush can possibly be removed once I am sure
-generic code doesn't have the any expectations around parallel gup walk.
+--LwW0XdcUbUexiWVK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This speeds up Qemu guest RAM del/unplug time as below
+On Mon, Apr 20, 2020 at 08:50:45AM -0400, Sven Van Asbroeck wrote:
+> On Mon, Apr 20, 2020 at 8:25 AM Mark Brown <broonie@kernel.org> wrote:
+> >
+> > I'd expect someone with knowledge of the hardware such as yourself.
+>=20
+> I claim no expertise - I was just getting tired of dragging the
+> out-of-tree vendor
+> driver for this chip from kernel to kernel. AFAIK, most people using this=
+ chip
+> have forked the vendor driver and adapted it to their specific needs.
 
-128 core, 496GB guest:
+> If my name has to be there, I'd be keen to hand it over once someone more
+> familiar with this chip comes along.
 
-Without patch:
-munmap start: timer = 13162 ms, PID=7684
-munmap finish: timer = 95312 ms, PID=7684 - delta = 82150 ms
+I think by virtue of taking this step you have become the de facto
+upstream expert on this chip!  Like you say hopefully someone more
+familiar (ideally from Microsemi) will turn up.
 
-With patch:
-munmap start: timer = 196449 ms, PID=6681
-munmap finish: timer = 196488 ms, PID=6681 - delta = 39ms
+--LwW0XdcUbUexiWVK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
----
- arch/powerpc/mm/book3s64/hash_pgtable.c  | 11 -----------
- arch/powerpc/mm/book3s64/pgtable.c       |  8 --------
- arch/powerpc/mm/book3s64/radix_pgtable.c | 19 +++++++------------
- 3 files changed, 7 insertions(+), 31 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/arch/powerpc/mm/book3s64/hash_pgtable.c b/arch/powerpc/mm/book3s64/hash_pgtable.c
-index 64733b9cb20a..64ca375278dc 100644
---- a/arch/powerpc/mm/book3s64/hash_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/hash_pgtable.c
-@@ -363,17 +363,6 @@ pmd_t hash__pmdp_huge_get_and_clear(struct mm_struct *mm,
- 	 * hash fault look at them.
- 	 */
- 	memset(pgtable, 0, PTE_FRAG_SIZE);
--	/*
--	 * Serialize against find_current_mm_pte variants which does lock-less
--	 * lookup in page tables with local interrupts disabled. For huge pages
--	 * it casts pmd_t to pte_t. Since format of pte_t is different from
--	 * pmd_t we want to prevent transit from pmd pointing to page table
--	 * to pmd pointing to huge page (and back) while interrupts are disabled.
--	 * We clear pmd to possibly replace it with page table pointer in
--	 * different code paths. So make sure we wait for the parallel
--	 * find_curren_mm_pte to finish.
--	 */
--	serialize_against_pte_lookup(mm);
- 	return old_pmd;
- }
- 
-diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
-index e0bb69c616e4..127325ead505 100644
---- a/arch/powerpc/mm/book3s64/pgtable.c
-+++ b/arch/powerpc/mm/book3s64/pgtable.c
-@@ -109,14 +109,6 @@ pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
- 
- 	old_pmd = pmd_hugepage_update(vma->vm_mm, address, pmdp, _PAGE_PRESENT, _PAGE_INVALID);
- 	flush_pmd_tlb_range(vma, address, address + HPAGE_PMD_SIZE);
--	/*
--	 * This ensures that generic code that rely on IRQ disabling
--	 * to prevent a parallel THP split work as expected.
--	 *
--	 * Marking the entry with _PAGE_INVALID && ~_PAGE_PRESENT requires
--	 * a special case check in pmd_access_permitted.
--	 */
--	serialize_against_pte_lookup(vma->vm_mm);
- 	return __pmd(old_pmd);
- }
- 
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index 8f9edf07063a..dfb9fe92aea8 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -962,7 +962,13 @@ pmd_t radix__pmdp_collapse_flush(struct vm_area_struct *vma, unsigned long addre
- 	pmd = *pmdp;
- 	pmd_clear(pmdp);
- 
--	/*FIXME!!  Verify whether we need this kick below */
-+	/*
-+	 * pmdp collapse_flush need to ensure that there are no parallel gup
-+	 * walk after this call. This is needed so that we can have stable
-+	 * page ref count when collapsing a page. We don't allow a collapse page
-+	 * if we have gup taken on the page. We can ensure that by sending IPI
-+	 * because gup walk happens with IRQ disabled.
-+	 */
- 	serialize_against_pte_lookup(vma->vm_mm);
- 
- 	radix__flush_tlb_collapsed_pmd(vma->vm_mm, address);
-@@ -1023,17 +1029,6 @@ pmd_t radix__pmdp_huge_get_and_clear(struct mm_struct *mm,
- 
- 	old = radix__pmd_hugepage_update(mm, addr, pmdp, ~0UL, 0);
- 	old_pmd = __pmd(old);
--	/*
--	 * Serialize against find_current_mm_pte which does lock-less
--	 * lookup in page tables with local interrupts disabled. For huge pages
--	 * it casts pmd_t to pte_t. Since format of pte_t is different from
--	 * pmd_t we want to prevent transit from pmd pointing to page table
--	 * to pmd pointing to huge page (and back) while interrupts are disabled.
--	 * We clear pmd to possibly replace it with page table pointer in
--	 * different code paths. So make sure we wait for the parallel
--	 * find_current_mm_pte to finish.
--	 */
--	serialize_against_pte_lookup(mm);
- 	return old_pmd;
- }
- 
--- 
-2.25.3
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6dm1sACgkQJNaLcl1U
+h9C0kAf/VfluleklGZwAwINGUKEsAnNMMpgzkCeC04jQeANQold1WwieTBWwOlcm
+t9AoRee4bTR6kFSHkHmRfUMgC3GUl8Dy1St/+2r43UMUYbR4FP3WhrQrVNRRQUob
+AjFB/5ibXcAdnqL63YRzKl/NYT0Hpvz8m++w0++NZ0JXjvD8il1Z5kgV6HnHEZq8
+4zc9STyT0aZXjDCwBA82dGEXOEit8YOsUwEjTt9k/XzcC7EBZslzgBEMwNmnnCBJ
+PHrUFwhx4RJrynRLDDKX4j2RXbwhmiMp6CZAj0wMfNdZdFAFSVNr3ZFA/xIT0QJD
+H8Oo73IWb8FVBHM7hm/z2nGhCWl/wQ==
+=UrRl
+-----END PGP SIGNATURE-----
 
+--LwW0XdcUbUexiWVK--
