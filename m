@@ -2,87 +2,81 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8F9C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1F5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9465220724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587416738;
-	bh=CUs5EPjQHUuyXgncxvNR6RYvGFQh56NH6DCGIo23m9U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k13fo3wV774Bn4gMGXYw/57q1WUGKl5vKbfI/xU3cxDli5EEdEZoLwno2g4v0JoBA
-	 oijjTn9nNVWnqPU9CNuX4S5J5/OlJhIbHrtjbwveZ1xSn7IjObIeK61C6Bp7luym/s
-	 MtCDtUENdiCGVrPFWcNe521nQ3ntFc4Fbpa4pl0k=
+	by mail.kernel.org (Postfix) with ESMTP id D86F520B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:06:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DNIGqrjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgDTVFh (ORCPT
+        id S1728049AbgDTVGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:05:37 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:38884 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgDTVFh (ORCPT
+        Mon, 20 Apr 2020 17:06:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726722AbgDTVGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:05:37 -0400
-Received: by mail-oo1-f68.google.com with SMTP id i9so2452108ool.5;
-        Mon, 20 Apr 2020 14:05:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k25lJJuF3KD2HkG1pD42IimL7Q4T4hDTKGEAQjI4bTE=;
-        b=DsahfX5aYDaxPXyjXK1j6rfmvgRCBVNmQ3MYx553c/qM0a8fq5Ec928YG3wx+wgd9v
-         EYb/e2Db5E0chohIH3znZ7uSG263ycTL8bQQOESCU5FgfojkvAZEpS4ALL+tG33CVgOf
-         ol172uR19ZkGsZe3r3M+uXTpDXLd6JvSyWwRUVAWGrZhgro/RHzXUUTgSbF1YQwasKFV
-         9Xyp5IA8Xed3dtdz59dbGPfFLJAsgKliawCe52cHAQRW39b+jf9w3HC4PJuo4naTvi1A
-         n8JNURigBKegyi5jIrVEJYXRxQQ+zGGxAQLo7H9Oo2yLiGoMGaMkho1ElpMjuJDAuv/J
-         tAxg==
-X-Gm-Message-State: AGi0PuasiJSW/PR4wsoDn88g7dCwOpEQ6QTiRPFQ+mC61hOsVNhHo+Yy
-        dArWKZiY3K5zvR2FofgRSQ==
-X-Google-Smtp-Source: APiQypKWhsFkbrAEp3fNmGRzrhXjjhUwgl8zrrmaFlL3eoi4UBih2xLRhjbWw7AnOnqcBVKnrkYECw==
-X-Received: by 2002:a4a:c18c:: with SMTP id w12mr13776324oop.93.1587416735968;
-        Mon, 20 Apr 2020 14:05:35 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h64sm157466oia.11.2020.04.20.14.05.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:05:35 -0700 (PDT)
-Received: (nullmailer pid 27715 invoked by uid 1000);
-        Mon, 20 Apr 2020 21:05:34 -0000
-Date:   Mon, 20 Apr 2020 16:05:34 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Subject: Re: [PATCH V3 6/8] dt-bindings: mailbox: Add dt-bindings for ipq6018
- apcs global block
-Message-ID: <20200420210534.GA27676@bogus>
-References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
- <1586832922-29191-7-git-send-email-sivaprak@codeaurora.org>
+        Mon, 20 Apr 2020 17:06:02 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD879C061A0C;
+        Mon, 20 Apr 2020 14:06:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bzkBd5/DmyxuIeGg8WVcx1ykVacx8pGIZb2Q1x9nRo4=; b=DNIGqrjjXa9rfJIlYQ6/w0oTOL
+        Zc36hX2DDii8dVOYNhs5X+FwLalCu6gBAL25BNJGwZhQKZqCMvbBFtyXkAPb/GfMoyqArNR5ZEpXH
+        ihxm8GqaAGtSGf31R3h7K53d0IRvylDPBQ71hVxr29VHXbklaCkr3QlZEAlF8Ukw7ToMw8PdeJQ+s
+        kNW7oZ8wpyh5W7IvXdJ0hsLoPYItHUrRvSO41pj8WY0rMNQR/WNVm281PeZLAtkFfBaFPHfKjxcdV
+        AKqz2sfrALlIpxh4RCun4nkGSnx3BdmcHk4n6IuVHQKiHNc2FdTU3duyKsZUR2skvT9bxd2rfIvye
+        69f090gA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQdc5-0000US-Tt; Mon, 20 Apr 2020 21:05:57 +0000
+Date:   Mon, 20 Apr 2020 14:05:57 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk
+Subject: Re: [PATCH 01/15] sched: make nr_running() return "unsigned int"
+Message-ID: <20200420210557.GG5820@bombadil.infradead.org>
+References: <20200420205743.19964-1-adobriyan@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586832922-29191-7-git-send-email-sivaprak@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200420205743.19964-1-adobriyan@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Apr 2020 08:25:20 +0530, Sivaprakash Murugesan wrote:
-> Add dt-bindings for ipq6018 mailbox driver
+On Mon, Apr 20, 2020 at 11:57:29PM +0300, Alexey Dobriyan wrote:
+> I don't anyone have been crazy enough to spawn 2^32 threads.
+> It'd require absurd amounts of physical memory,  and bump into futex pid
+> limit anyway.
 > 
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
->  .../bindings/mailbox/qcom,apcs-kpss-global.yaml         | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
+> Meanwhile save few bits on REX prefixes and some stack space for upcoming
+> print_integer() stuff.
 > 
+> And remove "extern" from prototypes while I'm at it.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+It seems like there's a few more places to fix in this regard?
+
+kernel/sched/fair.c:static u64 __sched_period(unsigned long nr_running)
+kernel/sched/sched.h:   unsigned long           dl_nr_running;
+kernel/sched/core.c:unsigned long nr_iowait_cpu(int cpu)
+kernel/sched/core.c:unsigned long nr_iowait(void)
+kernel/sched/loadavg.c: long nr_active, delta = 0;
+kernel/sched/sched.h:   unsigned long           rt_nr_migratory;
+kernel/sched/sched.h:   unsigned long           rt_nr_total;
+kernel/sched/sched.h:   unsigned long           rt_nr_boosted;
+kernel/sched/sched.h:   unsigned long           dl_nr_running;
+kernel/sched/sched.h:   unsigned long           dl_nr_migratory;
+kernel/sched/sched.h:   unsigned long           nr_uninterruptible;
+
