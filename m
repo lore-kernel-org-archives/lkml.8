@@ -2,53 +2,74 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33940C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A2AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD5E206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4228521473
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="BJxFOh2E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EOHqZG5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgDTNq6 (ORCPT
+        id S1728686AbgDTNrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:46:58 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:59124 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728633AbgDTNq4 (ORCPT
+        Mon, 20 Apr 2020 09:47:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728633AbgDTNrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:46:56 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id DAEAF20CDC;
-        Mon, 20 Apr 2020 13:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587390416; bh=nCAhVn2ma9z8r8dWxnzAROBI/Q4gJteYeVtwI1Vc6vc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BJxFOh2EDvaxPBm7aU2KZJuJeqI+XsTgBv/gsCc24ctcMiVi3FDtCN8+ZiuPF3o54
-         OLGjhjRgCy5aDMABnqp1+wnfKr2g7Twn9kSeQPouMHGDxnHczqCIIjaWfDUU7ox8fZ
-         G2uuhVlRCFHjmQj6L7uKOwOu31JfKtOcnumBc90nD0lizLRx9CwzwN4/JCSY84WKIr
-         jzbqjoTzNQTKGsjU3MjoryhL5zSbPSIeXzVJm7nvXyX84mk165dAGm6bbOc63G5Wv2
-         AQWWUAh/BJrAIfwZc+t1peCbw76rtfC1HSiWYLYPE5Pyy4zjFQ9TnH239uPdOs1Z/4
-         roF8KwAjL1wlQ==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] MIPS: Loongson64: Mark RS780 HPET as broken
-Date:   Mon, 20 Apr 2020 21:45:29 +0800
-Message-Id: <20200420134536.210475-5-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200420134536.210475-1-jiaxun.yang@flygoat.com>
-References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
- <20200420134536.210475-1-jiaxun.yang@flygoat.com>
+        Mon, 20 Apr 2020 09:47:00 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AEBC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:46:59 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id g30so4965178pfr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=d2ye63/S6Lz/zFEjTlSZ5tXRcsKe+oxNcP2htE8RYF4=;
+        b=EOHqZG5HDsWj1pX7eAu15S+Na0C0+2gIjJ3Gqh44ASXY86SITSXxPYdXl3f5lMHFYb
+         vRUcuEBDYyNpVAbkTYz/pb42HnoUdjmeUgPi4uCESD0+QNOxqsk6Yx+oBAm6HOlTsI5/
+         xQkHqi82zMX4MQjWdhcEqm1fJpABIpOIYgu+Y1xYiZUHNnQRHQIZQb7G3DFo/DJu/PxX
+         8N8giBAk/FDhukW4jCruQD909i/pkrZPTCC263Yw4VAIWqoqWWF71ferxhO9WGbNUkYO
+         3JsnXQsYI9PNQr0Aw7hHJEAjh/VBYnQUHomVNKCRqlcOBEBIbSqdM4rCAkpBhQ++A1Jc
+         k9jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=d2ye63/S6Lz/zFEjTlSZ5tXRcsKe+oxNcP2htE8RYF4=;
+        b=R8INdLzBQS19bsCLWrwDALmqzChJU2niwJDoLLrSUmIMH0oose+V5KuccJT1oCpW0M
+         Y/oJOmtq8LzWfw67hQoVRoqzPr/EvgaG59wveIeCifmM85bVQwpp5FF4M5dknwJre2v+
+         0ufqocpboH3nAcBS9fNnoMWTKezW4BLhFBG4OP+xMujZl+m/+3Ybz+/Jutv5YcQV9GPp
+         oSXxilsVbEwmGo/kceWi5WE7tS8ff61eDJg93mmosloWD8T614dJbHf+WT15J6lP7c2M
+         a9m/y9+XzKJA7IAyYU62PhketFq64BsCSMwovkxvmwo63rEzPmRnhBhJivFvlXLl2qdo
+         Bp0A==
+X-Gm-Message-State: AGi0PuZFv0aLenfb4Bgqw973y8ITuNXsUSU7xksgcotM0apWTKhCFFhe
+        Wuv9O+sp5ujk8JoozRdKs8Q=
+X-Google-Smtp-Source: APiQypLnHRU5ZOxZJIoEbGVKMX+6LC/FekS9VzSNqMtEtlFWpWc9c4S55BBJnxwdnhUQfJ71Dx6Ixg==
+X-Received: by 2002:a62:1950:: with SMTP id 77mr16774806pfz.326.1587390419535;
+        Mon, 20 Apr 2020 06:46:59 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id e135sm1117203pfh.37.2020.04.20.06.46.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Apr 2020 06:46:59 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     broonie@kernel.org
+Cc:     Markus.Elfring@web.de, linux-kernel@vger.kernel.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v2 1/2] regmap: Simplify implementation of the regmap_read_poll_timeout() macro
+Date:   Mon, 20 Apr 2020 21:46:46 +0800
+Message-Id: <20200420134647.9121-2-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200420134647.9121-1-zhengdejin5@gmail.com>
+References: <20200420134647.9121-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,41 +77,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver is using some dangerous hack to set MMIO address for HPET,
-which might break systems with other kinds of PCH.
+Simplify the implementation of the macro regmap_read_poll_timeout()
+by using the macro read_poll_timeout().
 
-Also, as Loongson-3 cpufreq driver never appeared in mainline,
-this driver rarely got used.
-
-So we temporarily mark it as broken until we find a better solution.
-
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
- arch/mips/loongson64/Kconfig | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+v1 -> v2:
+	- modify the commit comments by Markus's suggestion .
 
-diff --git a/arch/mips/loongson64/Kconfig b/arch/mips/loongson64/Kconfig
-index c386b8a3c753..517f1f8e81fb 100644
---- a/arch/mips/loongson64/Kconfig
-+++ b/arch/mips/loongson64/Kconfig
-@@ -4,14 +4,12 @@ if MACH_LOONGSON64
- config RS780_HPET
- 	bool "RS780/SBX00 HPET Timer"
- 	depends on MACH_LOONGSON64
-+	depends on BROKEN
- 	select MIPS_EXTERNAL_TIMER
- 	help
- 	  This option enables the hpet timer of AMD RS780/SBX00.
+ include/linux/regmap.h | 25 +++++--------------------
+ 1 file changed, 5 insertions(+), 20 deletions(-)
+
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index 40b07168fd8e..299c1f6a03b4 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -17,6 +17,7 @@
+ #include <linux/err.h>
+ #include <linux/bug.h>
+ #include <linux/lockdep.h>
++#include <linux/iopoll.h>
  
--	  If you want to enable the Loongson3 CPUFreq Driver, Please enable
--	  this option at first, otherwise, You will get wrong system time.
--
--	  If unsure, say Yes.
--
-+	  Note: This driver is doing some dangerous hack. Please only enable
-+	  it on RS780E systems.
+ struct module;
+ struct clk;
+@@ -122,26 +123,10 @@ struct reg_sequence {
+  */
+ #define regmap_read_poll_timeout(map, addr, val, cond, sleep_us, timeout_us) \
+ ({ \
+-	u64 __timeout_us = (timeout_us); \
+-	unsigned long __sleep_us = (sleep_us); \
+-	ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
+-	int __ret; \
+-	might_sleep_if(__sleep_us); \
+-	for (;;) { \
+-		__ret = regmap_read((map), (addr), &(val)); \
+-		if (__ret) \
+-			break; \
+-		if (cond) \
+-			break; \
+-		if ((__timeout_us) && \
+-		    ktime_compare(ktime_get(), __timeout) > 0) { \
+-			__ret = regmap_read((map), (addr), &(val)); \
+-			break; \
+-		} \
+-		if (__sleep_us) \
+-			usleep_range((__sleep_us >> 2) + 1, __sleep_us); \
+-	} \
+-	__ret ?: ((cond) ? 0 : -ETIMEDOUT); \
++	int __ret, __tmp; \
++	__tmp = read_poll_timeout(regmap_read, __ret, __ret || (cond), \
++			sleep_us, timeout_us, false, (map), (addr), &(val)); \
++	__ret ?: __tmp; \
+ })
  
- endif # MACH_LOONGSON64
+ /**
 -- 
-2.26.0.rc2
+2.25.0
 
