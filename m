@@ -2,126 +2,128 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE18C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 315BAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 081412082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127A32074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bf9D+rR4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZtdkXgGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbgDTQZk (ORCPT
+        id S1729374AbgDTQ1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728998AbgDTQZ3 (ORCPT
+        Mon, 20 Apr 2020 12:27:53 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:49576 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728879AbgDTQ1u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:25:29 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C88C0610D5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:25:28 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id n24so4116067plp.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Eeish4b0dApiVROXwgSxWPD6R6u9/nVb7Rxz/mEcfI0=;
-        b=bf9D+rR4RVTl/d8EDJ4rebre5pMf0BlvggkGCYG0ek5YLxATE4clEcjGna06GBTP4w
-         7KzCuHcuZ4k5557dVd5iFpPPe7uodJpjSNuvWbApzF0x+2rntuS/MOdDuyErz1u4A38e
-         nV17RYe/ZjPw4XBZPZnhY2nMCMYSjEly/8cGI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Eeish4b0dApiVROXwgSxWPD6R6u9/nVb7Rxz/mEcfI0=;
-        b=eL0Y/v1PYpTDKth50S0fI5oQW2/4zvTYRwEJHH9vXN05YNO5Yp0fWNe4S2ZOPn74gO
-         1rPoYwa/vdKx8eiId4eT+TSM8pgX1nMhkClDZS2iSOn5kN9dRjirNSzCXd86t/Az8YmR
-         hcj6+1wWw+J+/HLBVqeEnoBfZJtgSuHd7AAG1uHzWDwdpKaAfTMVPYOiEIdwNn/Yo5kA
-         cM/rvCl+cwGmpn4Wv9u9FRp8Y5FFzSPb3vCwwXlZ+uI/y0Telv8EB4Em91IzLkzeSf3g
-         zfz3rYFe9IYwM7Dsi+5ikwDbWA0uL13p4yKxjD+/nphi6j//xZ6E91iif38ORfcSyuuo
-         4T9A==
-X-Gm-Message-State: AGi0PuYN38FzbZC62qnbKXBy7KLS0bqcZjXRiaKSIjII+yAFuL29Elna
-        5IsI5CW1djrrWUZaADXANQSfcQ==
-X-Google-Smtp-Source: APiQypJ2um6WEi/dNweSMis0tXgK55PhuM1j2i0i3wYSHB8seu03qmbLpIwN83SaTaH9ExAeqMD74Q==
-X-Received: by 2002:a17:90a:1955:: with SMTP id 21mr193496pjh.25.1587399927822;
-        Mon, 20 Apr 2020 09:25:27 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id p64sm93150pjp.7.2020.04.20.09.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 09:25:27 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>,
-        sqazi@google.com, groeck@chromium.org,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        paolo.valente@linaro.org, Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/4] Revert "scsi: core: run queue if SCSI device queue isn't ready and queue is idle"
-Date:   Mon, 20 Apr 2020 09:24:54 -0700
-Message-Id: <20200420092357.v5.4.I630e6ca4cdcf9ab13ea899274745f9e3174eb12b@changeid>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-In-Reply-To: <20200420162454.48679-1-dianders@chromium.org>
-References: <20200420162454.48679-1-dianders@chromium.org>
+        Mon, 20 Apr 2020 12:27:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587400069; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=JmEUkT/HF+RFoziT0BX0UCsQ/PoZeQDMFSY5vkJTons=;
+ b=ZtdkXgGUs9YiCzeAD/P4w/1/PabkApNwtgjTkKn+2s1u9uSkecVvrcZ5XzVBYOV1m3PEJDj2
+ XoAoN9SJ0xUGnGznIR4vGdExhk7fZkyhiYOeVq6hbDeSfB7IHQ7Kof+kPTac0hbkp8suPpwc
+ 4dJYsIynLa864ld54pZclLyGm9E=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9dcd84.7f3eee842c70-smtp-out-n01;
+ Mon, 20 Apr 2020 16:27:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 25E72C4478F; Mon, 20 Apr 2020 16:27:47 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 50479C433CB;
+        Mon, 20 Apr 2020 16:27:46 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Apr 2020 21:57:46 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCHv2 3/6] iommu/arm-smmu: Implement
+ iommu_ops->def_domain_type call-back
+In-Reply-To: <6dd26176-448a-985c-90fc-7c47088015ff@arm.com>
+References: <cover.1587392905.git.saiprakash.ranjan@codeaurora.org>
+ <558b1aee4c699a0a5b14b325178d22a79958488f.1587392905.git.saiprakash.ranjan@codeaurora.org>
+ <6dd26176-448a-985c-90fc-7c47088015ff@arm.com>
+Message-ID: <10cac2a08ae90afc88cbadff53a41ec5@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 7e70aa789d4a0c89dbfbd2c8a974a4df717475ec.
+Hi Robin,
 
-Now that we have the patches ("blk-mq: In blk_mq_dispatch_rq_list()
-"no budget" is a reason to kick") and ("blk-mq: Rerun dispatching in
-the case of budget contention") we should no longer need the fix in
-the SCSI code.  Revert it, resolving conflicts with other patches that
-have touched this code.
+On 2020-04-20 20:56, Robin Murphy wrote:
+> On 2020-04-20 3:37 pm, Sai Prakash Ranjan wrote:
+>> Implement the new def_domain_type call-back for the ARM
+>> SMMU driver. We need this to support requesting the domain
+>> type by the client devices.
+>> 
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>   drivers/iommu/arm-smmu.c | 20 ++++++++++++++++++++
+>>   1 file changed, 20 insertions(+)
+>> 
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index e622f4e33379..b5d1d52dfbb8 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -1609,6 +1609,25 @@ static void arm_smmu_get_resv_regions(struct 
+>> device *dev,
+>>   	iommu_dma_get_resv_regions(dev, head);
+>>   }
+>>   +static int arm_smmu_def_domain_type(struct device *dev)
+>> +{
+>> +	struct iommu_fwspec *fwspec;
+>> +	struct arm_smmu_device *smmu;
+>> +
+>> +	fwspec = dev_iommu_fwspec_get(dev);
+>> +	if (!fwspec || fwspec->ops != &arm_smmu_ops)
+>> +		return -ENODEV;
+>> +
+>> +	smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
+>> +	if (!smmu)
+>> +		return -ENODEV;
+>> +
+> 
+> AFAICS this should only ever be called for a device in a group, which
+> means an initial ->probe_device has succeeded and rather than
+> defensively going the long way round, we can safely assume this:
+> 
+> 	struct arm_smmu_master_cfg = dev_iommu_priv_get(dev);
+> 	struct arm_smmu_impl *impl = cfg->smmu->impl;
+> 
+> 	if (impl && impl->req_domain)
+> 		return impl->req_domain(dev);
+> 
 
-With this revert (and the two new patches) I can run the script that
-was in commit 7e70aa789d4a ("scsi: core: run queue if SCSI device
-queue isn't ready and queue is idle") in a loop with no failure.  If I
-do this revert without the two new patches I can easily get a failure.
+Yes you are right, will use this.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
----
-
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
-- ("Revert "scsi: core: run queue...") new for v3.
-
-Changes in v2: None
-
- drivers/scsi/scsi_lib.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 47835c4b4ee0..ea18f618dc66 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1610,12 +1610,7 @@ static bool scsi_mq_get_budget(struct blk_mq_hw_ctx *hctx)
- 	struct request_queue *q = hctx->queue;
- 	struct scsi_device *sdev = q->queuedata;
- 
--	if (scsi_dev_queue_ready(q, sdev))
--		return true;
--
--	if (atomic_read(&sdev->device_busy) == 0 && !scsi_device_blocked(sdev))
--		blk_mq_delay_run_hw_queue(hctx, SCSI_QUEUE_DELAY);
--	return false;
-+	return scsi_dev_queue_ready(q, sdev);
- }
- 
- static blk_status_t scsi_queue_rq(struct blk_mq_hw_ctx *hctx,
+Thanks,
+Sai
 -- 
-2.26.1.301.g55bc3eb7cb9-goog
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
