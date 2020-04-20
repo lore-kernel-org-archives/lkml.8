@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC6DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A74C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26C9C2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E43520735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387513;
-	bh=DSUepHg9aX4y6qRmRkTuw/85pmvXZiSkSb8A/au42ZQ=;
+	s=default; t=1587387515;
+	bh=fGBeDcGkMF8qnx98mzK/4Lz582y1joSmdAPT16srA5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SOn8oesF8iSbC7NInhZjqj4CNR14zHs6F6rclHXjbO1cMqK4L1j8z/80wmaxzPnLk
-	 DXPpepB2tS2a10+m0E5KY+syrRhLrxQlp/f3L2RwLaFlmkz/S1oQk/udnMTihrEQSv
-	 LCJGPluoASBNUiowkbZaunlCryqtgrQXGdZOYsFk=
+	b=R87uKM24yvJ3rRhay+p31qyP1Swqhv38DdAE0Wesd28k2rvuBzSqtApkgezK7T6Os
+	 sFwn4F1DcItapvF1I1sq/2H/Xp1u17jTbLSnWXBVRu1dqG9pq2mXfro18/xwUDclTJ
+	 nZ5T0hH/tVTu0DzIn2bWZfBCCarsKoDubVpHyr9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgDTMmy (ORCPT
+        id S1728859AbgDTM6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:42:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728275AbgDTMmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:42:46 -0400
+        id S1726498AbgDTMmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:42:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A68320724;
-        Mon, 20 Apr 2020 12:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCFE720747;
+        Mon, 20 Apr 2020 12:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386565;
-        bh=DSUepHg9aX4y6qRmRkTuw/85pmvXZiSkSb8A/au42ZQ=;
+        s=default; t=1587386573;
+        bh=fGBeDcGkMF8qnx98mzK/4Lz582y1joSmdAPT16srA5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wv5fXTsmwjOf6t4keXfUxwX6HXN36pWNoUllpuhsVhb850Br6chO1LEqJpiWLCDkQ
-         g5btrQAuI4/lJcwRiHCiFFHRev9Ojlpz8a7KRuBncWakOF93/iF3pby7VpGJ7wkINj
-         9pW8nXyJNytURYzmMIwW43Hehdp/JvByJnc3niuI=
+        b=g6nBb/4gLUGbq31KQEj81USQ8uYcTsvQ8ge3g/nr5+iIU1LBo11X10bXpagTHCvsl
+         y3ffZP0JFWg8PeTM8WUunSE5jMskQOUfvxUdmzlnmlK5npKnIdf6U45Iya86ad42e9
+         CQlf5DYi1DZqqgO0JKY441VuldmRf4cEkdmEr45I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 01/71] amd-xgbe: Use __napi_schedule() in BH context
-Date:   Mon, 20 Apr 2020 14:38:15 +0200
-Message-Id: <20200420121508.772314251@linuxfoundation.org>
+Subject: [PATCH 5.6 02/71] hsr: check protocol version in hsr_newlink()
+Date:   Mon, 20 Apr 2020 14:38:16 +0200
+Message-Id: <20200420121508.962689315@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,38 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit d518691cbd3be3dae218e05cca3f3fc9b2f1aa77 ]
+[ Upstream commit 4faab8c446def7667adf1f722456c2f4c304069c ]
 
-The driver uses __napi_schedule_irqoff() which is fine as long as it is
-invoked with disabled interrupts by everybody. Since the commit
-mentioned below the driver may invoke xgbe_isr_task() in tasklet/softirq
-context. This may lead to list corruption if another driver uses
-__napi_schedule_irqoff() in IRQ context.
+In the current hsr code, only 0 and 1 protocol versions are valid.
+But current hsr code doesn't check the version, which is received by
+userspace.
 
-Use __napi_schedule() which safe to use from IRQ and softirq context.
+Test commands:
+    ip link add dummy0 type dummy
+    ip link add dummy1 type dummy
+    ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1 version 4
 
-Fixes: 85b85c853401d ("amd-xgbe: Re-issue interrupt if interrupt status not cleared")
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
+In the test commands, version 4 is invalid.
+So, the command should be failed.
+
+After this patch, following error will occur.
+"Error: hsr: Only versions 0..1 are supported."
+
+Fixes: ee1c27977284 ("net/hsr: Added support for HSR v1")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/amd/xgbe/xgbe-drv.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/hsr/hsr_netlink.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
-+++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
-@@ -514,7 +514,7 @@ static void xgbe_isr_task(unsigned long
- 				xgbe_disable_rx_tx_ints(pdata);
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -61,10 +61,16 @@ static int hsr_newlink(struct net *src_n
+ 	else
+ 		multicast_spec = nla_get_u8(data[IFLA_HSR_MULTICAST_SPEC]);
  
- 				/* Turn on polling */
--				__napi_schedule_irqoff(&pdata->napi);
-+				__napi_schedule(&pdata->napi);
- 			}
- 		} else {
- 			/* Don't clear Rx/Tx status if doing per channel DMA
+-	if (!data[IFLA_HSR_VERSION])
++	if (!data[IFLA_HSR_VERSION]) {
+ 		hsr_version = 0;
+-	else
++	} else {
+ 		hsr_version = nla_get_u8(data[IFLA_HSR_VERSION]);
++		if (hsr_version > 1) {
++			NL_SET_ERR_MSG_MOD(extack,
++					   "Only versions 0..1 are supported");
++			return -EINVAL;
++		}
++	}
+ 
+ 	return hsr_dev_finalize(dev, link, multicast_spec, hsr_version);
+ }
 
 
