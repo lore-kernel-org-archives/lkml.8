@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC00AC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177A9C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E527221F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC60A2072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386610;
-	bh=NbH8+8pzy146C4wMp9YpqWUeZEX5f2w+yixkPV9fmYQ=;
+	s=default; t=1587386616;
+	bh=61WFqwITioEntxRH6QDaMEwXKdxo0S5pX28b3CWeGdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mHgK06bXarvJRUHdqk7p9BPKxuJdL85xAGN/HloJxBreiuRlEwst/jFNxzOt5fkG6
-	 dfA9t+gWlyHkGEesuAD/vJ2JKYa2fBj7ebjjjouYXLgA7aYYA+VL/Ua/Xx3E5N3gUM
-	 KSfb8ubVWVp7vjBIHdEu1b4iF0yoq9EsY8zu3QhE=
+	b=0KhonfIxN+TdU14X1McOeg6oElG8SxQXtR3Z5zv4Sx+HRamdectH0Sv3UqyVI2DTw
+	 7/K5xHgjD+kfdS+/VZ8s9E1xo6wG/MmT83Hv6RSkO5/KZOhuaEJkebfjUFwGb73zxs
+	 hvLEwqRWkb0QxiLfcOdJbQ3fUVVF7sQLms9bJCJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728403AbgDTMn3 (ORCPT
+        id S1728415AbgDTMnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36984 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726697AbgDTMn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:43:26 -0400
+        id S1728395AbgDTMn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:43:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DC0422202;
-        Mon, 20 Apr 2020 12:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FA3220735;
+        Mon, 20 Apr 2020 12:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386605;
-        bh=NbH8+8pzy146C4wMp9YpqWUeZEX5f2w+yixkPV9fmYQ=;
+        s=default; t=1587386608;
+        bh=61WFqwITioEntxRH6QDaMEwXKdxo0S5pX28b3CWeGdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wBl1CJQEIIj3ojpcrWS5bg9A2/W1jIFGZHKKb7MlyowSPQLRbrSfLgsiPSUaJH1C6
-         tSsnEAd4GVRkfeB1AOiPZ8WZNU7rY8d7M2Ujn40KL7WpwFzH/nqbArc+1o0iluen1r
-         XXtXNt1QRcQBVAaN4s2CUe8tE3a0Y+LJ4ZOWTOx4=
+        b=hbB2B8kcJbd8HxzRnWiUV9qm2/nvEBBUcuPTl62TUGGXgluE2kUQqMx14oaXIqfdC
+         HzKqNe9pC8emftAHBONmW2ki+pR6nqXJZsu1IwzPZimMtCB1GxsHr8Cw6HGLiT8Lzh
+         wbyDm2KROrxPQSenDrTJIACmJYDJhu4fAwXuL7hk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 5.6 25/71] platform/chrome: cros_ec_rpmsg: Fix race with host event
-Date:   Mon, 20 Apr 2020 14:38:39 +0200
-Message-Id: <20200420121513.515098905@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.6 26/71] jbd2: improve comments about freeing data buffers whose page mapping is NULL
+Date:   Mon, 20 Apr 2020 14:38:40 +0200
+Message-Id: <20200420121513.759932086@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,66 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit f775ac78fcfc6bdc96bdda07029d11f2a5e84869 upstream.
+commit 780f66e59231fcf882f36c63f287252ee47cc75a upstream.
 
-Host event can be sent by remoteproc by any time, and
-cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
-But the cros_ec_device is initialized after that, which cause host event
-handler to use cros_ec_device that are not initialized properly yet.
+Improve comments in jbd2_journal_commit_transaction() to describe why
+we don't need to clear the buffer_mapped bit for freeing file mapping
+buffers whose page mapping is NULL.
 
-Fix this by don't schedule host event handler before cros_ec_register
-returns. Instead, remember that we have a pending host event, and
-schedule host event handler after cros_ec_register.
-
-Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Link: https://lore.kernel.org/r/20200217112706.20085-1-yi.zhang@huawei.com
+Fixes: c96dceeabf76 ("jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer")
+Suggested-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/chrome/cros_ec_rpmsg.c |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ fs/jbd2/commit.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/platform/chrome/cros_ec_rpmsg.c
-+++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-@@ -44,6 +44,8 @@ struct cros_ec_rpmsg {
- 	struct completion xfer_ack;
- 	struct work_struct host_event_work;
- 	struct rpmsg_endpoint *ept;
-+	bool has_pending_host_event;
-+	bool probe_done;
- };
- 
- /**
-@@ -177,7 +179,14 @@ static int cros_ec_rpmsg_callback(struct
- 		memcpy(ec_dev->din, resp->data, len);
- 		complete(&ec_rpmsg->xfer_ack);
- 	} else if (resp->type == HOST_EVENT_MARK) {
--		schedule_work(&ec_rpmsg->host_event_work);
-+		/*
-+		 * If the host event is sent before cros_ec_register is
-+		 * finished, queue the host event.
-+		 */
-+		if (ec_rpmsg->probe_done)
-+			schedule_work(&ec_rpmsg->host_event_work);
-+		else
-+			ec_rpmsg->has_pending_host_event = true;
- 	} else {
- 		dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
- 			 resp->type);
-@@ -240,6 +249,11 @@ static int cros_ec_rpmsg_probe(struct rp
- 		return ret;
- 	}
- 
-+	ec_rpmsg->probe_done = true;
-+
-+	if (ec_rpmsg->has_pending_host_event)
-+		schedule_work(&ec_rpmsg->host_event_work);
-+
- 	return 0;
- }
- 
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -997,9 +997,10 @@ restart_loop:
+ 			 * journalled data) we need to unmap buffer and clear
+ 			 * more bits. We also need to be careful about the check
+ 			 * because the data page mapping can get cleared under
+-			 * out hands, which alse need not to clear more bits
+-			 * because the page and buffers will be freed and can
+-			 * never be reused once we are done with them.
++			 * our hands. Note that if mapping == NULL, we don't
++			 * need to make buffer unmapped because the page is
++			 * already detached from the mapping and buffers cannot
++			 * get reused.
+ 			 */
+ 			mapping = READ_ONCE(bh->b_page->mapping);
+ 			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
 
 
