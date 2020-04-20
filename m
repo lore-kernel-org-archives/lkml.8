@@ -2,95 +2,210 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F2FC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F2FC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C16120857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587396666;
-	bh=mBtAU8+++LzfANGdd4dkRTMjCsIyXYRofREjG2ceEm0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=vIZ13qDInXRXziGiGHGggmChwsqqC0HLLpD//lYG+MQxiTtCS+7LOc/F8NILQm8sP
-	 Q8XQHPoQJw9+Zw+Cb1Pkwh1Shekk5tWs5jz64UlECmkuuopsGD/g4BUu/nMaV8fWxM
-	 cvgEWlpNQY4x7CZ//lhHAay6zIMrBRbLTCn7OtpU=
+	by mail.kernel.org (Postfix) with ESMTP id 6CDED206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:32:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qM3kAztq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgDTPbF (ORCPT
+        id S1728207AbgDTPcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:31:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgDTPbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:31:05 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7721C206F9;
-        Mon, 20 Apr 2020 15:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587396665;
-        bh=mBtAU8+++LzfANGdd4dkRTMjCsIyXYRofREjG2ceEm0=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=dpNOykOHE/RuS4HaqLkJOiavP+sLIO3YbhFMCida0C+lvlDYhxvZVBieCZm/Z/CyW
-         sdIlj3tYZmkKhjWZ6HEhWBVDrA5DKJdEF5dLfQ33T4yKWUVRCdyKVNvB/c6OsoI51U
-         H+2ZzhYggMqKpQpWvHjBT01kpp10ETZPjwSrceiM=
-Date:   Mon, 20 Apr 2020 16:31:02 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <87y2qqvdxu.wl-kuninori.morimoto.gx@renesas.com>
-References: <87y2qqvdxu.wl-kuninori.morimoto.gx@renesas.com>
-Subject: Re: [PATCH] soundwire: intel: use asoc_rtd_to_cpu() / asoc_rtd_to_codec() macro for DAI pointer
-Message-Id: <158739666242.39069.11002748203255634356.b4-ty@kernel.org>
+        Mon, 20 Apr 2020 11:32:18 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52116 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbgDTPcS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:32:18 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03KFISef189074;
+        Mon, 20 Apr 2020 15:31:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=Yql0IcIqHpszKXnVsmou87K4Wd/Z21X1vdlTa/+vIIg=;
+ b=qM3kAztqgggIdXYZZ3y6FSDE7zVrMXkTvBV89ziEWf8JxRePc7xXaCA8dppDwT/NsYEI
+ d/4cZpfhy61OCWjktB+cbZoDOwQSgwqhgvMz8Hvj5I8Nb4DN9DY9cKMLYZIvqjQIJ7Vr
+ 1fdUUj6zqDZpqWw5H4+DtBPXRNwaQISadno2k+OnRAj/IB51VjcRToMg8mMRwuzGgCyl
+ r0JltMu8IP9/4qHz7wMTaII36C/1L/8DFQ0/PyYPwam2v681r6oGhe/X7yCXnRzaZMBX
+ NedzQpkamt6fiBqO3kqfgz6gZi6pvkkk7ED+LsD+aGtRlqZFbKOmJS4d5q9f0TR2ah1u Gw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30grpgcdug-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 15:31:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03KFIPF2037527;
+        Mon, 20 Apr 2020 15:29:58 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30gbbavtuc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 15:29:58 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03KFTvmn003913;
+        Mon, 20 Apr 2020 15:29:57 GMT
+Received: from dhcp-10-175-219-85.vpn.oracle.com (/10.175.219.85)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 Apr 2020 08:29:56 -0700
+Date:   Mon, 20 Apr 2020 16:29:49 +0100 (BST)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@localhost
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+cc:     Alan Maguire <alan.maguire@oracle.com>, ast@kernel.org,
+        daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
+        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH bpf-next 0/6] bpf, printk: add BTF-based type
+ printing
+In-Reply-To: <20200418160536.4mrvqh2lasqbyk77@ast-mbp>
+Message-ID: <alpine.LRH.2.21.2004201623390.12711@localhost>
+References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com> <20200418160536.4mrvqh2lasqbyk77@ast-mbp>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9596 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9596 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004200130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20 Apr 2020 16:01:01 +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On Sat, 18 Apr 2020, Alexei Starovoitov wrote:
+
+> On Fri, Apr 17, 2020 at 11:42:34AM +0100, Alan Maguire wrote:
+> > The printk family of functions support printing specific pointer types
+> > using %p format specifiers (MAC addresses, IP addresses, etc).  For
+> > full details see Documentation/core-api/printk-formats.rst.
+> > 
+> > This RFC patchset proposes introducing a "print typed pointer" format
+> > specifier "%pT<type>"; the type specified is then looked up in the BPF
+> > Type Format (BTF) information provided for vmlinux to support display.
 > 
-> Now ALSA SoC needs to use asoc_rtd_to_codec(),
-> otherwise, it will be compile error.
+> This is great idea! Love it.
+>
+
+Thanks for taking a look!
+ 
+> > The above potential use cases hint at a potential reply to
+> > a reasonable objection that such typed display should be
+> > solved by tracing programs, where the in kernel tracing records
+> > data and the userspace program prints it out.  While this
+> > is certainly the recommended approach for most cases, I
+> > believe having an in-kernel mechanism would be valuable
+> > also.
 > 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Acked-By: Vinod Koul <vkoul@kernel.org>
+> yep. This is useful for general purpose printk.
+> The only piece that must be highlighted in the printk documentation
+> that unlike the rest of BPF there are zero safety guarantees here.
+> The programmer can pass wrong pointer to printk() and the kernel _will_ crash.
 > 
-> [...]
 
-Applied to
+Good point; I'll highlight the fact that we aren't
+executing in BPF context, no verifier etc.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
+> >   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+> > 
+> >   pr_info("%pTN<struct sk_buff>", skb);
+> 
+> why follow "TN" convention?
+> I think "%p<struct sk_buff>" is much more obvious, unambiguous, and
+> equally easy to parse.
+> 
 
-Thanks!
+That was my first choice, but the first character
+after the 'p' in the '%p' specifier signifies the
+pointer format specifier. If we use '<', and have
+'%p<', where do we put the modifiers? '%p<xYz struct foo>'
+seems clunky to me.
 
-[1/1] soundwire: intel: use asoc_rtd_to_cpu() / asoc_rtd_to_codec() macro for DAI pointer
-      commit: c74a793806537d8564064cfb1b58488c3d4b70c9
+> > ...gives us:
+> > 
+> > {{{.next=00000000c7916e9c,.prev=00000000c7916e9c,{.dev=00000000c7916e9c|.dev_scratch=0}}|.rbnode={.__rb_parent_color=0,
+> 
+> This is unreadable.
+> I like the choice of C style output, but please format it similar to drgn. Like:
+> *(struct task_struct *)0xffff889ff8a08000 = {
+> 	.thread_info = (struct thread_info){
+> 		.flags = (unsigned long)0,
+> 		.status = (u32)0,
+> 	},
+> 	.state = (volatile long)1,
+> 	.stack = (void *)0xffffc9000c4dc000,
+> 	.usage = (refcount_t){
+> 		.refs = (atomic_t){
+> 			.counter = (int)2,
+> 		},
+> 	},
+> 	.flags = (unsigned int)4194560,
+> 	.ptrace = (unsigned int)0,
+> 
+> I like Arnaldo's idea as well, but I prefer zeros to be dropped by default.
+> Just like %d doesn't print leading zeros by default.
+> "%p0<struct sk_buff>" would print them.
+> 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+I'll try and match the above as closely as possible for v2
+while retaining the compact form for the verifier's use.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> > The patches are marked RFC for several reasons
+> > 
+> > - There's already an RFC patchset in flight dealing with BTF dumping;
+> > 
+> > https://www.spinics.net/lists/netdev/msg644412.html
+> > 
+> >   The reason I'm posting this is the approach is a bit different 
+> >   and there may be ways of synthesizing the approaches.
+> 
+> I see no overlap between patch sets whatsoever.
+> Why do you think there is?
+>
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Because I hadn't read through Yonghong's patchset properly ;-)
+I see potential future overlap in having a dumper support a 
+"raw" mode using BTF-based display if needed, but no actual
+overlap in what's there (and here) today.
+ 
+> > - The mechanism of vmlinux BTF initialization is not fit for purpose
+> >   in a printk() setting as I understand it (it uses mutex locking
+> >   to prevent multiple initializations of the BTF info).  A simple
+> >   approach to support printk might be to simply initialize the
+> >   BTF vmlinux case early in boot; it only needs to happen once.
+> >   Any suggestions here would be great.
+> > - BTF-based rendering is more complex than other printk() format
+> >   specifier-driven methods; that said, because of its generality it
+> >   does provide significant value I think
+> > - More tests are needed.
+> 
+> yep. Please make sure to add one to selftest/bpf as well.
+> bpf maintainers don't run printk tests as part of workflow, so
+> future BTF changes will surely break it if there are no selftests/bpf.
+> 
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Absolutely.
 
-Thanks,
-Mark
+> Patch 2 isn't quite correct. Early parse of vmlinux BTF does not compute
+> resolved_ids to save kernel memory. The trade off is execution time vs kernel
+> memory. I believe that saving memory is more important here, since execution is
+> not in critical path. There is __get_type_size(). It should be used in later
+> patches instead of btf_type_id_size() that relies on pre-computed
+> resolved_sizes and resolved_ids.
+>
+
+Thanks for the info, will fix for v2!
+
+Alan 
