@@ -6,101 +6,90 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F86FC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD0BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE70E20747
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A5F21927
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbgDTLWr (ORCPT
+        id S1726209AbgDTLXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:22:47 -0400
-Received: from lnfm1.sai.msu.ru ([93.180.26.255]:50684 "EHLO lnfm1.sai.msu.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgDTLWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:22:46 -0400
-X-Greylist: delayed 868 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Apr 2020 07:22:44 EDT
-Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
-        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id 03KB7Z7j031036;
-        Mon, 20 Apr 2020 14:07:40 +0300
-Received: from oak.local (unknown [188.123.231.136])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 8DFB349CC;
-        Mon, 20 Apr 2020 14:07:36 +0300 (MSK)
-From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
-        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Cc:     matwey.kornilov@gmail.com,
-        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
-        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ARM: dts: zynq: Fix ethernet PHY for v5 schematics
-Date:   Mon, 20 Apr 2020 14:07:15 +0300
-Message-Id: <20200420110715.12032-1-matwey@sai.msu.ru>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 20 Apr 2020 07:23:06 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:42906 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbgDTLXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:23:06 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj2sXhp1ePiEqAA--.6S2;
+        Mon, 20 Apr 2020 19:23:03 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jessica Yu <jeyu@kernel.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v2 1/4] selftests: kmod: Use variable NAME in kmod_test_0001()
+Date:   Mon, 20 Apr 2020 19:22:59 +0800
+Message-Id: <1587381782-31047-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxj2sXhp1ePiEqAA--.6S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruF48ZrW8Ww1UJw4kWr17KFg_yoWkJrXE9r
+        42grn7Aw47AFyUAr4Iv3Z3ZF4qk3WUWr48GryjqF13Kr12q3Z8Jwn2yr1jya1ruay5GFZF
+        9rW0ywnakw4jvjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbckFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8KwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUDcTQUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are at least two different versions existing for MYIR Zturn:
+Use the variable NAME instead of "\000" directly in kmod_test_0001().
 
- * v4 schematics has Atheros AR8035 PHY at 0b000
-     http://www.myirtech.com/download/Zynq7000/Z-TURNBOARD_schematic.pdf
- * v5 schematics has Micrel KSZ9031 PHY at 0b011
-     v5 schematics available at DVD disk supplied with the board
-
-Specify both PHYs to make ethernet interface working for any board
-revision. This commit relies on of_mdiobus_register() behaviour.
-
-Before the patch:
-
-[   28.295002] macb e000b000.ethernet eth0: Could not attach PHY (-19)
-
-After the patch:
-
-[   28.257365] macb e000b000.ethernet eth0: PHY [e000b000.ethernet-ffffffff:00] driver [Micrel KSZ9031 Gigabit PHY] (irq=POLL)
-[   28.257384] macb e000b000.ethernet eth0: configuring for phy/rgmii-id link mode
-
-Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/arm/boot/dts/zynq-zturn.dts | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/zynq-zturn.dts b/arch/arm/boot/dts/zynq-zturn.dts
-index 5ec616ebca08..07da9cf60d02 100644
---- a/arch/arm/boot/dts/zynq-zturn.dts
-+++ b/arch/arm/boot/dts/zynq-zturn.dts
-@@ -67,10 +67,17 @@
- &gem0 {
- 	status = "okay";
- 	phy-mode = "rgmii-id";
--	phy-handle = <&ethernet_phy>;
+v2:
+  - just add Acked-by tag
+
+ tools/testing/selftests/kmod/kmod.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
+index 3702dbc..da60c3b 100755
+--- a/tools/testing/selftests/kmod/kmod.sh
++++ b/tools/testing/selftests/kmod/kmod.sh
+@@ -341,7 +341,7 @@ kmod_test_0001_driver()
  
--	ethernet_phy: ethernet-phy@0 {
--		reg = <0x0>;
-+	ethernet-phy@0 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <0>;
-+		max-speed = <1000>;
-+	};
-+
-+	ethernet-phy@3 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <3>;
-+		max-speed = <1000>;
- 	};
- };
+ 	kmod_defaults_driver
+ 	config_num_threads 1
+-	printf '\000' >"$DIR"/config_test_driver
++	printf $NAME >"$DIR"/config_test_driver
+ 	config_trigger ${FUNCNAME[0]}
+ 	config_expect_result ${FUNCNAME[0]} MODULE_NOT_FOUND
+ }
+@@ -352,7 +352,7 @@ kmod_test_0001_fs()
  
+ 	kmod_defaults_fs
+ 	config_num_threads 1
+-	printf '\000' >"$DIR"/config_test_fs
++	printf $NAME >"$DIR"/config_test_fs
+ 	config_trigger ${FUNCNAME[0]}
+ 	config_expect_result ${FUNCNAME[0]} -EINVAL
+ }
 -- 
-2.16.4
+2.1.0
 
