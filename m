@@ -2,102 +2,186 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6476FC38A30
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3C7C38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAA5207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1004B20BED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cEqq5T80"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jQBTeSx5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgDTRki (ORCPT
+        id S1726901AbgDTRnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51216 "EHLO
+        Mon, 20 Apr 2020 13:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726711AbgDTRki (ORCPT
+        by vger.kernel.org with ESMTP id S1726752AbgDTRnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:40:38 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B5D2C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 10:40:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=o/LaYNUL2OH2fRo2sDxOcKfL/xjUaNCqaDe6bJwkfk0=; b=cEqq5T80Eq4YaLi8JxUE2AXcYw
-        nZoapZ0Oh9Ku3WwJn/b1xkvUrqJT7HFldBxXX9gVwk/DgQiP/FF9kwcYay9RTMmUzIQiZMQqOhDbp
-        lymrwuc5x6uND/9UT3Wd4F4xNE8RANaE7JsgBTAKxz1XmB22mxWX2KfW4IInrgKNAtJc71vFjnrTK
-        Lahbf64vs8M8Qo5QMRNhl2e78yWc/Nwpl735G64YsHG7arSNBClJ3vkYDWBoLeyXpGuStJNQyvP04
-        xztlOYvJ2z7KTm6OG7hceek96+XnC5gQX/qZtUmiIzXm7MwxtFZmQ9CO7SfSPZ98Gngv5oEZNUDDr
-        lu0dfJ8Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQaPJ-0004Ju-3S; Mon, 20 Apr 2020 17:40:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 890273024EA;
-        Mon, 20 Apr 2020 19:40:31 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 76AFB2B9E12C8; Mon, 20 Apr 2020 19:40:31 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 19:40:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [GIT pull] perf/urgent for 5.7-rc2
-Message-ID: <20200420174031.GM20730@hirez.programming.kicks-ass.net>
-References: <158730459860.31269.9496277256253823777.tglx@nanos.tec.linutronix.de>
- <158730460101.31269.5005570498545135614.tglx@nanos.tec.linutronix.de>
- <CAHk-=wjUS9b-B1n=OCBdqq3mdVTNGz0zqhGnrtMijoB5qT+96g@mail.gmail.com>
- <20200419200758.3xry3vn2a5caxapx@treble>
- <20200420074845.GA72554@gmail.com>
- <CAHk-=wiG=Bz57AUmbTyZYMKU6C+nZpS8P2=vFf5xAAhBzrPuTQ@mail.gmail.com>
+        Mon, 20 Apr 2020 13:43:40 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712F5C061A41
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 10:43:40 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id my1so214980pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 10:43:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UbWvOzsjdwKmCuURzqakr712Hwz970Vkw5PGIrntIJg=;
+        b=jQBTeSx5RVM7KT1U22GJEb3DH2uZPfcy8Q8n8Z4yMQbR4xX77sT7UNorH68BHXQklv
+         iqyP+lyhtbiw1Z8E6mrIAOVUfrKDbExPTw1eCNreicq7+fmKaKDC0t3L5Z68emnhhiQY
+         F68qqIHfXsfIWhK8AMTQ6lJSl/wFSmFVqe+Fs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UbWvOzsjdwKmCuURzqakr712Hwz970Vkw5PGIrntIJg=;
+        b=ijRfv/DGeUW0uBuMhM7vGZuud0FQVBUofQhWQSYpHOppsOmSBVGeXgV+LRjYuDZ4f3
+         x8u/PS9u3KN3v33fkQ0BppsZobfP+aY/JnWUdPSodc8VZxWx/oL1Vd5ICy7q/rwz99vR
+         xP8ANDAqMOdHxWc26kO36yvDUt5CdB2QOy/gM9kvfU0mAMa8O5N8iO725ijOhLF+Y0/R
+         UEPpv2EFq4U3oFRioU38OFZn/YsoDyHqgafFKi5ih2RnpZN0asLGVOi3sK/DMKSWObdT
+         vJ7nginNvK7oFRG/5HNhunbbEJ0q7c3osnNqg9wFSRwFRkNhlR9RV83yILaciLHjj9lq
+         ywLQ==
+X-Gm-Message-State: AGi0PubkxoI1MpBAvoPLbMV/xskdA7ZytdnEFTm3Fhe2u8ZWBEpjRy9l
+        6rFbc4w4GJv4rs6dAjHLDdVK4w==
+X-Google-Smtp-Source: APiQypLBX8wx/oUkDoqkb/2Bm8ippA2jak1OrscI29iIv8/MVYRimaZ8XN8jTccr1R5iuIwy3W5LTA==
+X-Received: by 2002:a17:902:6b01:: with SMTP id o1mr18181334plk.100.1587404619781;
+        Mon, 20 Apr 2020 10:43:39 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v26sm106522pff.45.2020.04.20.10.43.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 10:43:38 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 10:43:37 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        David Windsor <dave@nullcore.net>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-xfs@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rik van Riel <riel@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Michal Kubecek <mkubecek@suse.cz>
+Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches
+ as usercopy caches
+Message-ID: <202004201043.538A7B3F2@keescook>
+References: <5861936c-1fe1-4c44-d012-26efa0c8b6e7@de.ibm.com>
+ <202001281457.FA11CC313A@keescook>
+ <alpine.DEB.2.21.2001291640350.1546@www.lameter.com>
+ <6844ea47-8e0e-4fb7-d86f-68046995a749@de.ibm.com>
+ <20200129170939.GA4277@infradead.org>
+ <771c5511-c5ab-3dd1-d938-5dbc40396daa@de.ibm.com>
+ <202001300945.7D465B5F5@keescook>
+ <CAG48ez1a4waGk9kB0WLaSbs4muSoK0AYAVk8=XYaKj4_+6e6Hg@mail.gmail.com>
+ <7d810f6d-8085-ea2f-7805-47ba3842dc50@suse.cz>
+ <548e6212-7b3c-5925-19f2-699af451fd16@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiG=Bz57AUmbTyZYMKU6C+nZpS8P2=vFf5xAAhBzrPuTQ@mail.gmail.com>
+In-Reply-To: <548e6212-7b3c-5925-19f2-699af451fd16@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 09:51:55AM -0700, Linus Torvalds wrote:
-> On Mon, Apr 20, 2020 at 12:48 AM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > Fortunately, much of what objtool does against vmlinux.o can be
-> > parallelized in a rather straightforward fashion I believe, if we build
-> > with -ffunction-sections.
+On Mon, Apr 20, 2020 at 09:53:20AM +0200, Jiri Slaby wrote:
+> On 07. 04. 20, 10:00, Vlastimil Babka wrote:
+> > From d5190e4e871689a530da3c3fd327be45a88f006a Mon Sep 17 00:00:00 2001
+> > From: Vlastimil Babka <vbabka@suse.cz>
+> > Date: Tue, 7 Apr 2020 09:58:00 +0200
+> > Subject: [PATCH] usercopy: Mark dma-kmalloc caches as usercopy caches
+> > 
+> > We have seen a "usercopy: Kernel memory overwrite attempt detected to SLUB
+> > object 'dma-kmalloc-1 k' (offset 0, size 11)!" error on s390x, as IUCV uses
+> > kmalloc() with __GFP_DMA because of memory address restrictions.
+> > The issue has been discussed [2] and it has been noted that if all the kmalloc
+> > caches are marked as usercopy, there's little reason not to mark dma-kmalloc
+> > caches too. The 'dma' part merely means that __GFP_DMA is used to restrict
+> > memory address range.
+> > 
+> > As Jann Horn put it [3]:
+> > 
+> > "I think dma-kmalloc slabs should be handled the same way as normal
+> > kmalloc slabs. When a dma-kmalloc allocation is freshly created, it is
+> > just normal kernel memory - even if it might later be used for DMA -,
+> > and it should be perfectly fine to copy_from_user() into such
+> > allocations at that point, and to copy_to_user() out of them at the
+> > end. If you look at the places where such allocations are created, you
+> > can see things like kmemdup(), memcpy() and so on - all normal
+> > operations that shouldn't conceptually be different from usercopy in
+> > any relevant way."
+> > 
+> > Thus this patch marks the dma-kmalloc-* caches as usercopy.
+> > 
+> > [1] https://bugzilla.suse.com/show_bug.cgi?id=1156053
+> > [2] https://lore.kernel.org/kernel-hardening/bfca96db-bbd0-d958-7732-76e36c667c68@suse.cz/
+> > [3] https://lore.kernel.org/kernel-hardening/CAG48ez1a4waGk9kB0WLaSbs4muSoK0AYAVk8=XYaKj4_+6e6Hg@mail.gmail.com/
+> > 
+> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 > 
-> Well, I was actually thinking about a simpler model.
+> Friendly ping.
 > 
-> By "link time" I didn't mean "after final link". Yes, there may be
-> reasons to do it at that point too (to do any whole-program checks),
-> but that wasn't what I meant.
-> 
-> I meant literally doing it in the $(LD) and $(AR) phases, when you
-> still have lots of independent object files that you are just about to
-> link (or archive - do we even do that any more?) into one.
-> 
-> Then you'd parallelize exactly the same way we do now: one object file
-> at a time, and with no real change of semantics.
-> 
-> IOW, what I was thinking that instead of doing it as part of a final
-> step after the CC/AS, we'd do it as a preparatory step before the
-> LD/AR. Same exact operation, same exact target *.o files, just shifted
-> in time.
+> Acked-by: Jiri Slaby <jslaby@suse.cz>
 
-So my pet peeve is that when objtool errors, or crashes, the .o file
-gets deleted and it becomes really hard to debug the situation. I'm
-thinking that your suggestion would actually help with that too.
+Should this go via -mm?
 
-I just don't have enough Kbuild foo to even attempt this :/
+-Kees
+
+> 
+> > ---
+> >  mm/slab_common.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/slab_common.c b/mm/slab_common.c
+> > index 5282f881d2f5..ae9486160594 100644
+> > --- a/mm/slab_common.c
+> > +++ b/mm/slab_common.c
+> > @@ -1303,7 +1303,8 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+> >  			kmalloc_caches[KMALLOC_DMA][i] = create_kmalloc_cache(
+> >  				kmalloc_info[i].name[KMALLOC_DMA],
+> >  				kmalloc_info[i].size,
+> > -				SLAB_CACHE_DMA | flags, 0, 0);
+> > +				SLAB_CACHE_DMA | flags, 0,
+> > +				kmalloc_info[i].size);
+> >  		}
+> >  	}
+> >  #endif
+> > 
+> 
+> thanks,
+> -- 
+> js
+> suse labs
+
+-- 
+Kees Cook
