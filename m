@@ -2,76 +2,114 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4E6C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D634FC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 683CB20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587388039;
-	bh=V75EOkXxVvNKIKgafA+kN9m13NmYbnNqGbRSfqMMzxI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l9WLoycGjFlWDYGthJEV9QLJBDitDhxuBCPs3D0QLnW+Cn8KZ9UyJORNkLSpo3PwY
-	 5yuWKvpJRCPbAIemsNd13v+9lzaq0IRF4UWcRVlMKrxEjLziGYvK1ImaoWhY7SdxUz
-	 D3PELrj2icvL064ucruPLwbxX1tENILQy+KqbOYg=
+	by mail.kernel.org (Postfix) with ESMTP id AEF48206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:13:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWDlb6SF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgDTNHS (ORCPT
+        id S1726677AbgDTNNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:07:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgDTNHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:07:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C77E2072B;
-        Mon, 20 Apr 2020 13:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587388037;
-        bh=V75EOkXxVvNKIKgafA+kN9m13NmYbnNqGbRSfqMMzxI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m6VCfRs0mzgqJbFAus3P7cNMyRgXyNL66AXmcualloYQ1c2SumxOvsirbPz9NS9DQ
-         0bRBVBHOjM+3ulRnV701hxX7zlWgy0RIZtHk9+OVAnG0gzwN7t3mGIz7ZOE73E2f33
-         6ik8JoGMO4/6KsyzM9SGnuYXNvZ7oislsAvr8z9k=
-Date:   Mon, 20 Apr 2020 15:07:15 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     matthias.bgg@gmail.com, nishkadg.linux@gmail.com,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: mt7621-pinctrl: Use correct pointer type
- argument for sizeof
-Message-ID: <20200420130715.GA4040736@kroah.com>
-References: <20200420124151.4356-1-yanaijie@huawei.com>
+        Mon, 20 Apr 2020 09:13:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726050AbgDTNNc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 09:13:32 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFC50C061A0C;
+        Mon, 20 Apr 2020 06:13:30 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ng8so4566134pjb.2;
+        Mon, 20 Apr 2020 06:13:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1TAgcxIt86/pBZoXVfOkKX7rv0NrEGvRTPnHP44Lt+w=;
+        b=WWDlb6SFnnPcrUNjIa1hQgMf2be2Ej55anqWOXEjcohow9GEJAFR8b2vFR/+Z6b3Ay
+         ES6An7SYMLfKug3SNa/XyetLtJEmclrWAMjyWRWOP6nkoPcnCBeBl18P8Akes2xDHlYf
+         y0vPqjQrRHxOBfxM9QeY5WcBYBnidKhOAlY2mo1DI64fwJK2LAEp9MgulN/oFINeDUTQ
+         5M2MmSFQWHC2GMkIBOyf0ULo0o/m9S9qmj+NKeugqEFi3T2nxXWnBsx4RPFCw20cKMaJ
+         FJ4Ks0a7HYY4CzGfhQjFwnSbKWA6c98nn0IjRp8aCRkzAlBLj1FH3WfKtL7YgSIwqjQZ
+         PBOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1TAgcxIt86/pBZoXVfOkKX7rv0NrEGvRTPnHP44Lt+w=;
+        b=V4mtj8XeFYNc/JADQ9zMYxVhz9YkS7S1ITt7YVMnAgDSLFKXA2ZfcLzSWt7dYugJfX
+         SETF7Ej9A2KqIfB6NiXxU5cvUuAZJO+DnQtbEhWRv4ekehjTIhmUzqCPPZbfV+fJYbG0
+         tYW+//ghQ4aK1DMC/8eEyPbC8TbR4Fifk/a0pqfnWezZhcZ46f0Zv17dCsgfpke0iQSX
+         pePEA+q4Bog86928zvxXPFHhJpm180BfTEdil9YLPiGmx7YVLsFIs6n3d8nmPs3mQGGL
+         plzDaGRDkXpp8JSBxLYWPtMWJ08w9AMwwtIF08TXH79Jsas3ePsLhq3NR7SNGxIOgGBX
+         CsBQ==
+X-Gm-Message-State: AGi0PuZeBysAtgM9bsapfVOoyO1Cx/ge4vqUxhbQGcRWW/AB5gxNDd2i
+        P/WFjFaBDicPi6Rl9S3tLN4=
+X-Google-Smtp-Source: APiQypJU5VK8wVTpvE19z47A8p3kMYjIqaAA/yNAWadv9cPJFQp+9mZYnwvBoQhFFvunoy0bECEV6w==
+X-Received: by 2002:a17:90a:32ea:: with SMTP id l97mr21405427pjb.50.1587388410421;
+        Mon, 20 Apr 2020 06:13:30 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id o187sm1052194pfb.12.2020.04.20.06.13.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Apr 2020 06:13:29 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 21:13:27 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>
+Subject: Re: [PATCH net-next v1] can: ti_hecc: convert to
+ devm_platform_ioremap_resource_byname()
+Message-ID: <20200420131327.GA8103@nuc8i5>
+References: <08979629-d9b8-6656-222f-4e84667651a1@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200420124151.4356-1-yanaijie@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <08979629-d9b8-6656-222f-4e84667651a1@web.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 08:41:51PM +0800, Jason Yan wrote:
-> Fix the following coccicheck warning:
+On Sun, Apr 19, 2020 at 06:19:12PM +0200, Markus Elfring wrote:
+> > use devm_platform_ioremap_resource_byname() to simplify code,
+> > it contains platform_get_resource_byname() and
+> > devm_ioremap_resource(), and also remove some duplicate error
+> > message.
 > 
-> drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c:223:14-36: WARNING: Use
-> correct pointer type argument for sizeof
+> How do you think about a wording variant like the following?
 > 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>    Use the function “devm_platform_ioremap_resource_byname” to simplify
+>    source code which calls the functions “platform_get_resource_byname”
+>    and “devm_ioremap_resource”.
+>    Remove also a few error messages which became unnecessary with this
+>    software refactoring.
+>
+Markus, Thank you very much！yes, your comments is better. I will send
+the patch v2. Thanks again!
 
-What changed from v1?  Always put that below the --- line.
+> 
+> Will any more contributors get into the development mood to achieve
+> similar collateral evolution by the means of the semantic patch language?
+> Would you like to increase applications of the Coccinelle software?
+>
+I want, but currently I don't have much free time, sorry！
 
-Please fix up and send a v3.
-
-thanks,
-
-greg k-h
+BR,
+Dejin
+> Regards,
+> Markus
