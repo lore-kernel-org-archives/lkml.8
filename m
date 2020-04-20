@@ -2,99 +2,139 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BEBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD196C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D60320CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587405458;
-	bh=1QfeIdYAdaoPYZPVIY/AQvVUA98AZnRFonLWpP+zWZ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=JaM1GRU842W9lOuceGgoE/ohd3s+FhBkzHrq8AByjNt6sVNoyiir2MTT1wKybMdxT
-	 945BfOt41wds/gcqVL+wuVQlrVToDL+K8SWCn6i6RMsNH0LoHLcsD9leXJW76kWa2f
-	 F38Nw6rqAONjT9knmYPwKfpUXSQhMIbzvEs6BacE=
+	by mail.kernel.org (Postfix) with ESMTP id AF12820B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:58:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jCD4Q3cZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgDTR5h (ORCPT
+        id S1727096AbgDTR6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgDTR5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:57:37 -0400
-Received: from localhost (mobile-166-175-186-98.mycingular.net [166.175.186.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 20 Apr 2020 13:58:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27039 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726895AbgDTR6G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:58:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587405484;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=37Z6hANsBQ4dsxMNn94eIgKjUPnUG7LLhH5O/teSf/E=;
+        b=jCD4Q3cZdKXpRGlEQr6R9iiSjuY0g7HC8uvGJRovevwDPupy+ezIgi0gNgiRoIUaRzU6Up
+        IpMQjRgqEAJ8922lYK9EfkNhn68oSc/M/CsKMpaeNTivignAdZUBNouB4D6oQxVNT4piJU
+        4rdk+lkDD58ksm5MjtlSWpW5Lp7txmc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-Kfi4jOZsMey4R9IIxSsqFw-1; Mon, 20 Apr 2020 13:58:02 -0400
+X-MC-Unique: Kfi4jOZsMey4R9IIxSsqFw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E8E520B1F;
-        Mon, 20 Apr 2020 17:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587405456;
-        bh=1QfeIdYAdaoPYZPVIY/AQvVUA98AZnRFonLWpP+zWZ8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=isVsuct1teVVrXGWhe+smoFYkCAXLHWLHhmKq/KoBg4bf+k2drAK+0l5uReYejijn
-         nvYkJdhR17R072goe6KIZH1F/jL2+a6tlZnk3piC/Xbq8JCFRwn09DWzJeQi2lyN9E
-         UotslwHOshcxVcY+mmLz9luaeplq+d51jUDdJKOo=
-Date:   Mon, 20 Apr 2020 12:57:34 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ani Sinha <ani@anisinha.ca>
-Cc:     linux-kernel@vger.kernel.org, ani@anirban.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Denis Efremov <efremov@linux.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: pciehp: remove unused EMI() macro
-Message-ID: <20200420175734.GA53587@google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F66F1085982;
+        Mon, 20 Apr 2020 17:57:54 +0000 (UTC)
+Received: from redhat.com (ovpn-112-171.phx2.redhat.com [10.3.112.171])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C0D976E71;
+        Mon, 20 Apr 2020 17:57:53 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 13:57:51 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
+ early
+Message-ID: <20200420175751.GA13807@redhat.com>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587387114-38475-1-git-send-email-ani@anisinha.ca>
+In-Reply-To: <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ani,
-
-On Mon, Apr 20, 2020 at 06:21:41PM +0530, Ani Sinha wrote:
-> EMI() macro seems to be unused. So removing it. Thanks
-> Mika Westerberg <mika.westerberg@linux.intel.com> for
-> pointing it out.
+On Fri, Apr 17, 2020 at 09:04:27AM -0500, Josh Poimboeuf wrote:
 > 
-> Signed-off-by: Ani Sinha <ani@anisinha.ca>
-> ---
->  drivers/pci/hotplug/pciehp.h | 1 -
->  1 file changed, 1 deletion(-)
+> [ ... snip ... ]
 > 
-> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-> index 5747967..4fd200d 100644
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> @@ -148,7 +148,6 @@ struct controller {
->  #define MRL_SENS(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_MRLSP)
->  #define ATTN_LED(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_AIP)
->  #define PWR_LED(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_PIP)
-> -#define EMI(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_EIP)
-
-Thanks for the patch!  Can you squash it together with the HP_SUPR_RM
-removal (and also check for any other unused ones at the same time)?
-For trivial things like this, I'd rather merge one patch that removes
-several unused things at once instead of several patches.
-
-I like the subject of this one ("Removed unused ..."), but please
-capitalize it as you did for the HP_SUPR_RM one so it matches previous
-history.
-
-Bjorn
-
->  #define NO_CMD_CMPL(ctrl)	((ctrl)->slot_cap & PCI_EXP_SLTCAP_NCCS)
->  #define PSN(ctrl)		(((ctrl)->slot_cap & PCI_EXP_SLTCAP_PSN) >> 19)
+> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> index 40cfac8156fd..5fda3afc0285 100644
+> --- a/kernel/livepatch/core.c
+> +++ b/kernel/livepatch/core.c
+> 
+> [ ... snip ... ]
+> 
+> +int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+> +			  const char *shstrtab, const char *strtab,
+> +			  unsigned int symndx, struct module *pmod,
+> +			  const char *objname)
+>  {
+>  	int i, cnt, ret = 0;
+> -	const char *objname, *secname;
+>  	char sec_objname[MODULE_NAME_LEN];
+>  	Elf_Shdr *sec;
 >  
-> -- 
-> 2.7.4
+> -	if (WARN_ON(!klp_is_object_loaded(obj)))
+> -		return -EINVAL;
+> -
+> -	objname = klp_is_module(obj) ? obj->name : "vmlinux";
+> -
+>  	/* For each klp relocation section */
+> -	for (i = 1; i < pmod->klp_info->hdr.e_shnum; i++) {
+> -		sec = pmod->klp_info->sechdrs + i;
+> -		secname = pmod->klp_info->secstrings + sec->sh_name;
+> +	for (i = 1; i < ehdr->e_shnum; i++) {
+> +		sec = sechdrs + i;
+
+Hi Josh, minor bug:
+
+Note the for loop through the section headers in
+klp_write_relocations(), but its calling function ...
+
+> [ ... snip ... ]
 > 
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 646f1e2330d2..d36ea8a8c3ec 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -2334,11 +2334,12 @@ static int apply_relocations(struct module *mod, const struct load_info *info)
+>  		if (!(info->sechdrs[infosec].sh_flags & SHF_ALLOC))
+>  			continue;
+>  
+> -		/* Livepatch relocation sections are applied by livepatch */
+>  		if (info->sechdrs[i].sh_flags & SHF_RELA_LIVEPATCH)
+> -			continue;
+> -
+> -		if (info->sechdrs[i].sh_type == SHT_REL)
+> +			err = klp_write_relocations(info->hdr, info->sechdrs,
+> +						    info->secstrings,
+> +						    info->strtab,
+> +						    info->index.sym, mod, NULL);
+> +		else if (info->sechdrs[i].sh_type == SHT_REL)
+>  			err = apply_relocate(info->sechdrs, info->strtab,
+>  					     info->index.sym, i, mod);
+>  		else if (info->sechdrs[i].sh_type == SHT_RELA)
+
+... apply_relocations() is also iterating over the section headers (the
+diff context doesn't show it here, but i is an incrementing index over
+sechdrs[]).
+
+So if there is more than one KLP relocation section, we'll process them
+multiple times.  At least the x86 relocation code will detect this and
+fail the module load with an invalid relocation (existing value not
+zero).
+
+-- Joe
+
