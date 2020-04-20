@@ -2,73 +2,192 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76C8C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854CBC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88655206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E6E221F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:09:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p+JxAa3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgDTMI5 (ORCPT
+        id S1726829AbgDTMJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:08:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2414 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725886AbgDTMI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:08:57 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1038FDAC64B51320EB8A;
-        Mon, 20 Apr 2020 20:08:55 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Apr 2020
- 20:08:46 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] perf annotate: Remove unneeded conversion to bool
-Date:   Mon, 20 Apr 2020 20:35:28 +0800
-Message-ID: <20200420123528.11655-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        Mon, 20 Apr 2020 08:09:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726585AbgDTMJr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:09:47 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B9E1C061A0C;
+        Mon, 20 Apr 2020 05:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=R/w/fdWIc8B/K5nT4P8/UgmLyZd29J0YqIbnVwjY21s=; b=p+JxAa3U1CC19AXNdu/BH6UKzT
+        1q7bSOFDOCwo2MSYzmwDrR1nxzUJ5iaeaejdk8ebifXLpcWvIdj84wAekYtOu08W2zqTbLG5O0ycX
+        U7cxXLa9eJLcwQG+48ymcIeWndR1kYb87XpKV4dUHK1Bw44WQSItD4SmKo89ou6lE4CVTb5vcfRjj
+        vF1WtzxZRJyLQzPjGc00Ihbqfme0GHO3+ickvSm5IXmN7WccTA9LMCUpMeCIihzuhh3fIEnDByvk/
+        7oo8jr/DPu6lmDLfJkk2lVyqt0YaQJezJYsVwocQZKg6J1+sHf5Y4ewPqSViS7luzhz/HFm0H7gmz
+        MKNPdI6Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQVEl-0006YO-Da; Mon, 20 Apr 2020 12:09:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 840AE3010BC;
+        Mon, 20 Apr 2020 14:09:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 492392B8DAF90; Mon, 20 Apr 2020 14:09:16 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 14:09:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
+        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
+        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
+        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
+        broonie@kernel.org, guohanjun@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [PATCH v1 5/6] mm: tlb: Provide flush_*_tlb_range wrappers
+Message-ID: <20200420120916.GE20696@hirez.programming.kicks-ass.net>
+References: <20200403090048.938-1-yezhenyu2@huawei.com>
+ <20200403090048.938-6-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403090048.938-6-yezhenyu2@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The '>' expression itself is bool, no need to convert it to bool again.
-This fixes the following coccicheck warning:
+On Fri, Apr 03, 2020 at 05:00:47PM +0800, Zhenyu Ye wrote:
+> This patch provides flush_{pte|pmd|pud|p4d}_tlb_range() in generic
+> code, which are expressed through the mmu_gather APIs.  These
+> interface set tlb->cleared_* and finally call tlb_flush(), so we
+> can do the tlb invalidation according to the information in
+> struct mmu_gather.
+> 
+> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+> ---
+>  include/asm-generic/pgtable.h | 12 +++++++--
+>  mm/pgtable-generic.c          | 50 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 60 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+> index e2e2bef07dd2..2bedeee94131 100644
+> --- a/include/asm-generic/pgtable.h
+> +++ b/include/asm-generic/pgtable.h
+> @@ -1160,11 +1160,19 @@ static inline int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+>   * invalidate the entire TLB which is not desitable.
+>   * e.g. see arch/arc: flush_pmd_tlb_range
+>   */
+> -#define flush_pmd_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
+> -#define flush_pud_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
+> +extern void flush_pte_tlb_range(struct vm_area_struct *vma,
+> +				unsigned long addr, unsigned long end);
+> +extern void flush_pmd_tlb_range(struct vm_area_struct *vma,
+> +				unsigned long addr, unsigned long end);
+> +extern void flush_pud_tlb_range(struct vm_area_struct *vma,
+> +				unsigned long addr, unsigned long end);
+> +extern void flush_p4d_tlb_range(struct vm_area_struct *vma,
+> +				unsigned long addr, unsigned long end);
+>  #else
+> +#define flush_pte_tlb_range(vma, addr, end)	BUILD_BUG()
+>  #define flush_pmd_tlb_range(vma, addr, end)	BUILD_BUG()
+>  #define flush_pud_tlb_range(vma, addr, end)	BUILD_BUG()
+> +#define flush_p4d_tlb_range(vma, addr, end)	BUILD_BUG()
+>  #endif
+>  #endif
 
-tools/perf/ui/browsers/annotate.c:212:30-35: WARNING: conversion to bool
-not needed here
+Ideally you'd make __HAVE_ARCH_FLUSH_PMD_TLB_RANGE go away. Power
+certainly doesnt need it with the below.
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- tools/perf/ui/browsers/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+> index 3d7c01e76efc..0f5414a4a2ec 100644
+> --- a/mm/pgtable-generic.c
+> +++ b/mm/pgtable-generic.c
+> @@ -101,6 +101,56 @@ pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  
+> +#ifndef __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+> +void flush_pte_tlb_range(struct vm_area_struct *vma,
+> +			 unsigned long addr, unsigned long end)
+> +{
+> +	struct mmu_gather tlb;
+> +
+> +	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);
+> +	tlb_start_vma(&tlb, vma);
+> +	tlb_set_pte_range(&tlb, addr, end - addr);
+> +	tlb_end_vma(&tlb, vma);
+> +	tlb_finish_mmu(&tlb, addr, end);
+> +}
+> +
+> +void flush_pmd_tlb_range(struct vm_area_struct *vma,
+> +			 unsigned long addr, unsigned long end)
+> +{
+> +	struct mmu_gather tlb;
+> +
+> +	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);
+> +	tlb_start_vma(&tlb, vma);
+> +	tlb_set_pmd_range(&tlb, addr, end - addr);
+> +	tlb_end_vma(&tlb, vma);
+> +	tlb_finish_mmu(&tlb, addr, end);
+> +}
+> +
+> +void flush_pud_tlb_range(struct vm_area_struct *vma,
+> +			 unsigned long addr, unsigned long end)
+> +{
+> +	struct mmu_gather tlb;
+> +
+> +	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);
+> +	tlb_start_vma(&tlb, vma);
+> +	tlb_set_pud_range(&tlb, addr, end - addr);
+> +	tlb_end_vma(&tlb, vma);
+> +	tlb_finish_mmu(&tlb, addr, end);
+> +}
+> +
+> +void flush_p4d_tlb_range(struct vm_area_struct *vma,
+> +			 unsigned long addr, unsigned long end)
+> +{
+> +	struct mmu_gather tlb;
+> +
+> +	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);
+> +	tlb_start_vma(&tlb, vma);
+> +	tlb_set_p4d_range(&tlb, addr, end - addr);
+> +	tlb_end_vma(&tlb, vma);
+> +	tlb_finish_mmu(&tlb, addr, end);
+> +}
+> +#endif /* __HAVE_ARCH_FLUSH_PMD_TLB_RANGE */
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 9023267e5643..bd77825fd5a1 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -209,7 +209,7 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
- 		ui_browser__mark_fused(browser,
- 				       pcnt_width + 3 + notes->widths.addr + width,
- 				       from - 1,
--				       to > from ? true : false);
-+				       to > from);
- 	}
- }
- 
--- 
-2.21.1
+You're nowhere near lazy enough:
+
+#define FLUSH_Pxx_TLB_RANGE(_pxx) \
+void flush_##_pxx##_tlb_range(struct vm_area_struct *vma, \
+			      unsigned long addr, unsigned long end) \
+{ \
+	struct mmu_gather tlb; \
+	\
+	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end); \
+	tlb_start_vma(&tlb, vma); \
+	tlb_flush_##_pxx##_range(&tlb, addr, end-addr); \
+	tlb_end_vma(&tlb, vma); \
+	tlb_finish_mmu(&tlb, addr, end); \
+}
+
+FLUSH_Pxx_TLB_RANGE(pte)
+FLUSH_Pxx_TLB_RANGE(pmd)
+FLUSH_Pxx_TLB_RANGE(pud)
+FLUSH_Pxx_TLB_RANGE(p4d)
 
