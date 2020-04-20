@@ -2,93 +2,139 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADB4C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD5EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 344DB20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD172074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:45:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="I4RsX0Lr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgDTToh (ORCPT
+        id S1726756AbgDTTpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:44:37 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:48273 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbgDTTog (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:44:36 -0400
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M7sYM-1jMkSm1vDG-0053pr; Mon, 20 Apr 2020 21:44:34 +0200
-Received: by mail-qt1-f178.google.com with SMTP id w29so9661864qtv.3;
-        Mon, 20 Apr 2020 12:44:34 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYoALa4sLLrMnt1pUNuGr/C6Fz2eFN26ec64BXUS1pSSHuiE+sf
-        bw/jAlU/zbQ4fzdCtyPX0KOmWVYG/Q3mXLhmfFM=
-X-Google-Smtp-Source: APiQypIQ/d1G7kkipasQ9Xx8TSOfP/G9AkgCeJ084oCa3E5yGJoAUJ8JtONcb4zbeOgvQqIRkO6e4rHHZmSKchIZTzo=
-X-Received: by 2002:ac8:2bce:: with SMTP id n14mr6857624qtn.18.1587411873264;
- Mon, 20 Apr 2020 12:44:33 -0700 (PDT)
+        Mon, 20 Apr 2020 15:45:15 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:51824 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725896AbgDTTpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 15:45:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=rv5fi03wTd6W6vN2TS3pT6WMDcAKEMyIH48OvO2LMy0=; b=I4RsX0LrXIEiuQhc2kVNy/dsaA
+        /z9ehA8NallHkp8hqXIcmBTU6Aoik457k600kOAA0bPKfTUO8tV0LLHw9SVPMmO0vlj52lNrJuPOU
+        YLIz3p8/RulOfqdsOnqUIO3M5qvuK/atqDmZE3nXn75QTH5t0g5jFiUuqiA03NG5ojkg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQcLo-003tJe-RC; Mon, 20 Apr 2020 21:45:04 +0200
+Date:   Mon, 20 Apr 2020 21:45:04 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: Re: [PATCH v2 1/2] ethtool: provide UAPI for PHY master/slave
+ configuration.
+Message-ID: <20200420194504.GF917792@lunn.ch>
+References: <20200420131508.1539-1-o.rempel@pengutronix.de>
+ <20200420131508.1539-2-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-References: <20200420081154.597ffa59@canb.auug.org.au> <20200420081323.4fb9889b@canb.auug.org.au>
- <20200420151843.GS37466@atomide.com>
-In-Reply-To: <20200420151843.GS37466@atomide.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 20 Apr 2020 21:44:17 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1Ln+hkSQnQ8jzYSWvJ=bZ9V5juzDYcJoZvx0y-QpfrtA@mail.gmail.com>
-Message-ID: <CAK8P3a1Ln+hkSQnQ8jzYSWvJ=bZ9V5juzDYcJoZvx0y-QpfrtA@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the arm-soc tree
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Olof Johansson <olof@lixom.net>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ExlieJouP1/VpeLaoThqXQuMV7d8wotKI9pINbIO64zgCrRGTwB
- vorL1upYmxt/gVGLXHdciGrjlgddD/AU4D3KB916n3Y0rsR4k9ztGFiMB3Qt/igZR+4qGv2
- wmcCmDEUbvoFxJY6FBgF6+RssJbnoWdm9Ulgd2cdKDpBSRPBFqCvxO2sRYwKmvO21uObjGj
- 3YOtynxeeD/K8mRFLtGzw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:s7CYPavXeN8=:/j2AV2kY2iO9xeu999XoFF
- 3Elne8znV2CtqgLilfGnE/Roaiz0bQyUKH57GZZqgBz5rhbo7kGM0bSdzFDjp+egwtg8viYE8
- ekTv5M/H4Lg4Ngrrod5YCadTI0wE7Itbz0VbJ8IYtbgRqNao74YJr+TaIxMFhlgsRwDv8cRT/
- 8IQRyhdLtuzEwlJNGBPQfTb6eNdgu3AcNLRAhNEw2K7LNEMErWve+VNadnKVsZF+KcaznjpLz
- 5OjGjxCHjMTlS1Hgsc2lRe92PHpCw06uJuNWOyOIV/1HynAtJDVs2H8OSuONGqmlI2fY/FN6Y
- oRv2q75s435fc9QFMnffqILsisfagPIo9pHhT9LBTTFq9cxFRzoxYTcxGhchg3BzT7F2Gcpg1
- rBWEKwLn4hJaWQ98FBHeTmyYUZO0RKhWQjoFxVR9+tABlaZGZ8Zwte0y+3izmrUQT48PzVr/e
- S4O2gnqKF+38pIPajaMi7EhPb9LTSqdhVk4dnPPfAcb1+QCuyXxyAL4bVD28QQYET/rWytKR6
- nxCQuPY7vAZxSM2FwxAe4yffTRPcGXOlmjXVJGf3KYnA++1nLzQ+wrCDLcMS0WnF1AF4cwP1n
- ZwdDd6ktdwsjH5Pm447Z5hQ23CihHcazVLEY9eK0upqm3V18dUZtSq43y1ogchJ0HnRIU3GMG
- 7O618izAB+h3lMG7a+4b9gvvq+3kPJRJIm+e7JzMNFuySPKWOTIMJHePDceZOF2Ddm44JBrjs
- 3KgMRszmtDKlivN1UBTfLjdbwxDGHD7yxZ9L+IopL2wWV5xerTg359DbjfHsgdhHyMxj2Gd4k
- q1tHw9rXKfm9aKQ7Mf0v97fE85OMpO2uaHb6a+6fg5n+mu9/64=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420131508.1539-2-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 5:18 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Stephen Rothwell <sfr@canb.auug.org.au> [200419 22:14]:
-> > Hi all,
-> >
-> > On Mon, 20 Apr 2020 08:11:54 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > >
-> > > Commit
-> > >
-> > >   512e8d40f91d ("ARM: dts: OMAP3: disable RNG on N950/N9")
-> > >
-> > > is missing a Signed-off-by from its committer.
-> >
-> > Sorry, that is in the arm-soc-fixes tree.
->
-> Hmm so the commit I sent a pull request [0] for does have Signed-off-by
-> for commit 07bdc492cff6 ("ARM: dts: OMAP3: disable RNG on N950/N9").
->
-> Seems like some commits in arm-soc-fixes accidentally got rebased?
+> --- a/drivers/net/phy/phy.c
+> +++ b/drivers/net/phy/phy.c
+> @@ -294,7 +294,7 @@ int phy_ethtool_ksettings_set(struct phy_device *phydev,
+>  			 phydev->advertising, autoneg == AUTONEG_ENABLE);
+>  
+>  	phydev->duplex = duplex;
+> -
+> +	phydev->master_slave_set = cmd->base.master_slave;
 
-Indeed, I found my mistake now and uploaded a fixed branch.
+Shouldn't you validate what has been passed from userspace it before
+setting it?
 
-      Arnd
+>  	phydev->mdix_ctrl = cmd->base.eth_tp_mdix_ctrl;
+>  
+>  	/* Restart the PHY */
+> @@ -313,6 +313,7 @@ void phy_ethtool_ksettings_get(struct phy_device *phydev,
+>  
+>  	cmd->base.speed = phydev->speed;
+>  	cmd->base.duplex = phydev->duplex;
+> +	cmd->base.master_slave = phydev->master_slave_get;
+>  	if (phydev->interface == PHY_INTERFACE_MODE_MOCA)
+>  		cmd->base.port = PORT_BNC;
+>  	else
+
+You had me confused for a while. You are packing multiple things into
+master_slave_get. Some bits are configuration, some are current
+state. I don't like this. I think this is so you can shoe-horn this
+into the existing IOCTL API? There are limited spare bytes?
+
+Maybe we should not support this via the IOCTL, only the netlink
+ethtool?
+
+> --- a/include/uapi/linux/ethtool_netlink.h
+> +++ b/include/uapi/linux/ethtool_netlink.h
+> @@ -185,6 +185,7 @@ enum {
+>  	ETHTOOL_A_LINKMODES_PEER,		/* bitset */
+>  	ETHTOOL_A_LINKMODES_SPEED,		/* u32 */
+>  	ETHTOOL_A_LINKMODES_DUPLEX,		/* u8 */
+> +	ETHTOOL_A_LINKMODES_MASTER_SLAVE,	/* u8 */
+
+We would want two enums here, one for configuration, one for state.
+
+> @@ -119,7 +121,9 @@ static int linkmodes_fill_reply(struct sk_buff *skb,
+>  	}
+>  
+>  	if (nla_put_u32(skb, ETHTOOL_A_LINKMODES_SPEED, lsettings->speed) ||
+> -	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex))
+> +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex) ||
+> +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE,
+> +		       lsettings->master_slave))
+
+Here we return both configuration and current state.
+
+>  		return -EMSGSIZE;
+>  
+>  	return 0;
+> @@ -248,6 +252,7 @@ linkmodes_set_policy[ETHTOOL_A_LINKMODES_MAX + 1] = {
+>  	[ETHTOOL_A_LINKMODES_PEER]		= { .type = NLA_REJECT },
+>  	[ETHTOOL_A_LINKMODES_SPEED]		= { .type = NLA_U32 },
+>  	[ETHTOOL_A_LINKMODES_DUPLEX]		= { .type = NLA_U8 },
+> +	[ETHTOOL_A_LINKMODES_MASTER_SLAVE]	= { .type = NLA_U8 },
+>  };
+>  
+>  /* Set advertised link modes to all supported modes matching requested speed
+> @@ -310,6 +315,8 @@ static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
+>  			 mod);
+>  	ethnl_update_u8(&lsettings->duplex, tb[ETHTOOL_A_LINKMODES_DUPLEX],
+>  			mod);
+> +	ethnl_update_u8(&lsettings->master_slave,
+> +			tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE], mod);
+
+Here we expect just configuration.
+
+There actually is space for two fields in the ethtool_link_settings,
+so i don't see why you actually did not use two.
+
+   Andrew
