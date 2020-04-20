@@ -2,121 +2,145 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383B6C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25E5C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122932078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:36:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587382580;
-	bh=Ttxo4ShYqlkWnXjbFggOt9MCuzR3OQsdnOZ8YyHwteQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NZTLW9a7I2R68UKlvJ12h+MPvS7A/JlYEUbmlZv//azDpAk1A3n7VawJoJVXtlzHW
-	 CJ170C6y+Dm7GqG3aLVoWFD8vyqIFTFlE+YiQtyhmNBqL9WAXGz3lfn3yQyCT8SU6U
-	 6UTFumSdHOTRO7cw1KG1ROUslXaNg0GIGY3G6hbc=
+	by mail.kernel.org (Postfix) with ESMTP id CED30206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:37:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bzR+7EQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgDTLgT (ORCPT
+        id S1726358AbgDTLhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:36:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgDTLgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:36:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 20 Apr 2020 07:37:18 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:16748 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726209AbgDTLhS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:37:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587382637; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=FwkQvFRxwbLjQxAc2Z3zkT0Pkf1NFBtbxmMPO/jSwbI=; b=bzR+7EQksa4cuhMbPlAL7VgodaMSs1qlQ0jODmW8XReLlPKCUs39QeAIfyzwbrd18zy/as1N
+ UYMSn0Wvh4NjAPAUOyA+2pGg50GwSE/IpyAP9Xck2sPvNhHDZbwWHGgG5TzV3pjR7MNCHbvH
+ 9OL/ca2eVDL94s0gxNxO8PLrFcE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9d8968.7f4598a6e768-smtp-out-n02;
+ Mon, 20 Apr 2020 11:37:12 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A1B69C43636; Mon, 20 Apr 2020 11:37:11 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5BEB206D4;
-        Mon, 20 Apr 2020 11:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587382578;
-        bh=Ttxo4ShYqlkWnXjbFggOt9MCuzR3OQsdnOZ8YyHwteQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pZyvrt/ONGuKXMLNymKIUlRFlsD0HNaWXlOnui9JnS6bIFEmXyZHqV9GuDgieyS0v
-         cBo2FFAnsC1Vg0yjQU9nqQkBIvr/BkDhEd2KFbun69AzJA8kv+9wGz43GHneF/LMr1
-         uryFwmhZ3w/t3ulsRV3irbD2gs6+mTw3FD/x9+cM=
-Date:   Mon, 20 Apr 2020 13:36:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/10] blk-debugfs: upgrade warns to BUG_ON() if
- directory is already found
-Message-ID: <20200420113616.GA3906674@kroah.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-7-mcgrof@kernel.org>
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D0A63C433BA;
+        Mon, 20 Apr 2020 11:37:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D0A63C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Mon, 20 Apr 2020 17:07:05 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, stummala@codeaurora.org
+Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent meta updates while checkpoint
+ is in progress
+Message-ID: <20200420113705.GF20234@codeaurora.org>
+References: <20200331090608.GZ20234@codeaurora.org>
+ <20200331184307.GA198665@google.com>
+ <20200401050801.GA20234@codeaurora.org>
+ <20200403171727.GB68460@google.com>
+ <20200403172750.GD68460@google.com>
+ <20200413174237.GC39092@google.com>
+ <20200414134403.GA69282@google.com>
+ <20200416214045.GB196168@google.com>
+ <e1b763bf-7f72-01eb-a368-9b70e0f46f55@huawei.com>
+ <20200417161516.GA17901@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200419194529.4872-7-mcgrof@kernel.org>
+In-Reply-To: <20200417161516.GA17901@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 07:45:25PM +0000, Luis Chamberlain wrote:
-> Now that we have moved release_queue from being asynchronous to
-> synchronous, and fixed how we use the debugfs directory with blktrace
-> we should no longer have expected races with device removal/addition
-> and other operations with the debugfs directory.
-> 
-> If races do happen however, we want to be informed of *how* this races
-> happens rather than dealing with a debugfs splat, so upgrading this to a
-> BUG_ON() should capture better information about how this can happen
-> in the future.
-> 
-> This is specially true these days with funky reproducers in userspace
-> for which we have no access to, but only a bug splat.
-> 
-> Note that on addition the gendisk kobject is used as the parent for the
-> request_queue kobject, and upon removal, now that request_queue removal
-> is synchronous, blk_unregister_queue() is called prior to the gendisk
-> device_del(). This means we expect to see a sysfs clash first now prior
-> to running into a race with the debugfs dentry; so this bug would be
-> considered highly unlikely.
-> 
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  block/blk-debugfs.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
-> 
-> diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
-> index d84038bce0a5..761318dcbf40 100644
-> --- a/block/blk-debugfs.c
-> +++ b/block/blk-debugfs.c
-> @@ -19,16 +19,8 @@ void blk_debugfs_register(void)
->  
->  int __must_check blk_queue_debugfs_register(struct request_queue *q)
->  {
-> -	struct dentry *dir = NULL;
-> -
->  	/* This can happen if we have a bug in the lower layers */
-> -	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
-> -	if (dir) {
-> -		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
-> -			kobject_name(q->kobj.parent));
-> -		dput(dir);
-> -		return -EALREADY;
-> -	}
-> +	BUG_ON(debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root));
+Hi Jaegeuk,
 
-So you are willing to crash the whole kernel and throw all of
-userspace's data away if this happens?
+On Fri, Apr 17, 2020 at 09:15:16AM -0700, Jaegeuk Kim wrote:
+> Hi Sahitya,
+> 
+> Could you please test this patch fully? I didn't test at all.
 
-Ick, no, don't do that, handle the issue correctly and move on.
+I have tested v5 and so far found only one problem where MAIN_SECS(sbi)
+isn't updated properly. Fixed it as below.
 
-As proof you shouldn't be doing this, that BUG_ON will trigger if
-debugfs is not enabled, which might be a bit mean for all users of those
-kernels :(
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 603f195..a5166b1 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1450,7 +1450,7 @@ static int free_segment_range(struct f2fs_sb_info *sbi,
+                f2fs_bug_on(sbi, 1);
+        }
+ out:
+-       MAIN_SECS(sbi) -= secs;
++       MAIN_SECS(sbi) += secs;
+        return err;
+ }
 
-Hard NAK from me, sorry.
+I will let you know in case anything else shows up later.
 
-greg k-h
+Thanks,
+
+> 
+> Thanks,
+> 
+> On 04/17, Chao Yu wrote:
+> > On 2020/4/17 5:40, Jaegeuk Kim wrote:
+> > > On 04/14, Jaegeuk Kim wrote:
+> > >> On 04/13, Jaegeuk Kim wrote:
+> > >>> On 04/03, Jaegeuk Kim wrote:
+> > >>>> On 04/03, Jaegeuk Kim wrote:
+> > >>>>> On 04/01, Sahitya Tummala wrote:
+> > >>>>>> Hi Jaegeuk,
+> > >>>>>>
+> > >>>>>> Got it.
+> > >>>>>> The diff below looks good to me.
+> > >>>>>> Would you like me to test it and put a patch for this?
+> > >>>>>
+> > >>>>> Sahitya, Chao,
+> > >>>>>
+> > >>>>> Could you please take a look at this patch and test intensively?
+> > >>>>>
+> > >>>>> Thanks,
+> > > 
+> > > v5:
+> > >  - add signal handler
+> > > 
+> > > Sahitya raised an issue:
+> > > - prevent meta updates while checkpoint is in progress
+> > > 
+> > > allocate_segment_for_resize() can cause metapage updates if
+> > > it requires to change the current node/data segments for resizing.
+> > > Stop these meta updates when there is a checkpoint already
+> > > in progress to prevent inconsistent CP data.
+> > > 
+> > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > 
+> > Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> > 
+> > Thanks,
+
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
