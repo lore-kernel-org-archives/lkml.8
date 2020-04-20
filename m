@@ -2,95 +2,66 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FCEC54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA642C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49BAD2078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:04:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZwK+rrRi"
+	by mail.kernel.org (Postfix) with ESMTP id 971F2206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgDTWEa (ORCPT
+        id S1726980AbgDTWKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:04:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44555 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726648AbgDTWEa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:04:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587420269;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=koRDkKLTG8zaPUuuVy6B0Oldh6kvQLudDYsHC51m2RE=;
-        b=ZwK+rrRiFIyJKCPt6I/PaLp4FGEpJDc3OMEWjzF+PlaNBTiC0s8E/KlQVWE5SUZau9aE5y
-        JLIPalvCuy3Ehm1APK/oSiy7e6gY9USmJQ28yRUxc0lWIy9ZRMJm+Bptm8lBR4SHVXDXVY
-        X5e2kqWlTK4FIJ7N/ZeQhG0NRsPmpjI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-400-szAtL_ClPXyRciQ-e8Cplg-1; Mon, 20 Apr 2020 18:04:24 -0400
-X-MC-Unique: szAtL_ClPXyRciQ-e8Cplg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CABDF1853889;
-        Mon, 20 Apr 2020 22:04:23 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-37.ams2.redhat.com [10.36.112.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AC67C5C1B2;
-        Mon, 20 Apr 2020 22:04:22 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: surface3_power: i2c_acpi_new_device() returns a PTR_ERR
-Date:   Tue, 21 Apr 2020 00:04:21 +0200
-Message-Id: <20200420220421.171298-1-hdegoede@redhat.com>
+        Mon, 20 Apr 2020 18:10:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41062 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbgDTWKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 18:10:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2150FABC2;
+        Mon, 20 Apr 2020 22:10:45 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id C8FD0DA72D; Tue, 21 Apr 2020 00:10:03 +0200 (CEST)
+Date:   Tue, 21 Apr 2020 00:10:03 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Eugene Syromiatnikov <esyr@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        David Sterba <dsterba@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
+        Jeff Mahoney <jeffm@suse.com>, wqu@suse.com
+Subject: Re: [PATCH] btrfs: move enum btrfs_compression_type to the UAPI
+ header
+Message-ID: <20200420221003.GG18421@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        David Sterba <dsterba@suse.com>, Josef Bacik <josef@toxicpanda.com>,
+        Chris Mason <clm@fb.com>, Jeff Mahoney <jeffm@suse.com>,
+        wqu@suse.com
+References: <20200419101432.GA32249@asgard.redhat.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419101432.GA32249@asgard.redhat.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i2c_acpi_new_device() never returns NULL, it either returns an i2c_client
-or a PTR_ERR. Adjust the mshw0011_probe() error handling to take this
-into account.
+On Sun, Apr 19, 2020 at 12:14:32PM +0200, Eugene Syromiatnikov wrote:
+> It is passed in struct btrfs_ioctl_defrag_range_args.compress_type
+> to BTRFS_IOC_DEFRAG_RANGE, so it has to be a part of UAPI.
+> Also, rely on enum definition rules to get BTRFS_NR_COMPRESS_TYPES
+> value and mark it as non-ABI.
 
-Note the goto out_err will cause i2c_unregister_device() to get called
-even though the i2c_acpi_new_device() fails, this is ok as it accepts
-a NULL pointer argument (and treats it as a no-op).
+Adding the compression types makes sense for the UAPI, Qu has sent patch
+to move more code to the exported headers ("btrfs: move on-disk
+structure definitions to btrfs_tree.h"), including the compression type
+definition.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/surface3_power.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/surface3_power.c b/drivers/platform/x86=
-/surface3_power.c
-index 946ac2dc08ae..32e6e86e27dd 100644
---- a/drivers/platform/x86/surface3_power.c
-+++ b/drivers/platform/x86/surface3_power.c
-@@ -522,8 +522,10 @@ static int mshw0011_probe(struct i2c_client *client)
- 	strlcpy(board_info.type, "MSHW0011-bat0", I2C_NAME_SIZE);
-=20
- 	bat0 =3D i2c_acpi_new_device(dev, 1, &board_info);
--	if (!bat0)
--		return -ENOMEM;
-+	if (IS_ERR(bat0)) {
-+		error =3D PTR_ERR(bat0);
-+		goto out_err;
-+	}
-=20
- 	data->bat0 =3D bat0;
- 	i2c_set_clientdata(bat0, data);
---=20
-2.26.0
-
+I'd prefer to move the code in a bigger chunk than one by one, unless
+it's breaking compilation.
