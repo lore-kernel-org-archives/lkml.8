@@ -2,71 +2,114 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA61C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79FFC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A78A620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9160320679
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ro0x8c1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgDTMLe (ORCPT
+        id S1726890AbgDTMMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:11:34 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38476 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726262AbgDTMLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:11:34 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B7A27F04CFD1B40AC454;
-        Mon, 20 Apr 2020 20:11:32 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Apr 2020
- 20:11:23 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <pbonzini@redhat.com>, <peterx@redhat.com>, <tglx@linutronix.de>,
-        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] kvm/eventfd: remove unneeded conversion to bool
-Date:   Mon, 20 Apr 2020 20:38:05 +0800
-Message-ID: <20200420123805.4494-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        Mon, 20 Apr 2020 08:12:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726262AbgDTMMD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:12:03 -0400
+X-Greylist: delayed 1450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 20 Apr 2020 05:12:02 PDT
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B118BC061A0C;
+        Mon, 20 Apr 2020 05:12:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=hyyhVGnvFilfrdqHNEg1EViEFDU1g/FpAPCa//Vm+Ms=; b=Ro0x8c1X2BeWf7TvQCOYH/vp3B
+        u8UbmQW+uedKRoJDHljAHvWQiYcHgwyhXDsYpGMGpRc80vsD3ENgjZpqt4uTgcirKDrKKeGgWYAyY
+        ZdLOtoEXXnkEIIYIgtOd2v44QGGlsqtBytg1uHI4aUjAP+tySOzwCO0pMaNI4vnP8sO/U4uyY/AYw
+        d38ygCc2ptooChKwRxRBjX+o9uNLnCDhAgfbMRqM/V6UxIBMCZfakSu78Qm33nl6LrUeHJ2hefPO1
+        vEJIvFQvXjsgirK1UOM25FkhTaoPeJvqbvqpKGNGES42UZvmNSpym3h0VhGh8VlZkE+EvNJc7cHTL
+        DqHfGkfA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQVGL-0004t8-1H; Mon, 20 Apr 2020 12:10:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D050B3024EA;
+        Mon, 20 Apr 2020 14:10:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C09EF2B8DAF8C; Mon, 20 Apr 2020 14:10:55 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 14:10:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
+        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
+        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
+        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
+        broonie@kernel.org, guohanjun@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [PATCH v1 6/6] arm64: tlb: Set the TTL field in flush_tlb_range
+Message-ID: <20200420121055.GF20696@hirez.programming.kicks-ass.net>
+References: <20200403090048.938-1-yezhenyu2@huawei.com>
+ <20200403090048.938-7-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403090048.938-7-yezhenyu2@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The '==' expression itself is bool, no need to convert it to bool again.
-This fixes the following coccicheck warning:
+On Fri, Apr 03, 2020 at 05:00:48PM +0800, Zhenyu Ye wrote:
+> This patch uses the cleared_* in struct mmu_gather to set the
+> TTL field in flush_tlb_range().
+> 
+> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+> ---
+>  arch/arm64/include/asm/tlb.h      | 26 +++++++++++++++++++++++++-
+>  arch/arm64/include/asm/tlbflush.h | 14 ++++++++------
+>  2 files changed, 33 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
+> index b76df828e6b7..d5ab72eccff4 100644
+> --- a/arch/arm64/include/asm/tlb.h
+> +++ b/arch/arm64/include/asm/tlb.h
+> @@ -21,11 +21,34 @@ static void tlb_flush(struct mmu_gather *tlb);
+>  
+>  #include <asm-generic/tlb.h>
+>  
+> +/*
+> + * get the tlbi levels in arm64.  Default value is 0 if more than one
+> + * of cleared_* is set or neither is set.
+> + * Arm64 doesn't support p4ds now.
+> + */
+> +static inline int tlb_get_level(struct mmu_gather *tlb)
+> +{
+> +	int sum = tlb->cleared_ptes + tlb->cleared_pmds +
+> +		  tlb->cleared_puds + tlb->cleared_p4ds;
+> +
+> +	if (sum != 1)
+> +		return 0;
+> +	else if (tlb->cleared_ptes)
+> +		return 3;
+> +	else if (tlb->cleared_pmds)
+> +		return 2;
+> +	else if (tlb->cleared_puds)
+> +		return 1;
+> +
+> +	return 0;
+> +}
 
-virt/kvm/eventfd.c:724:38-43: WARNING: conversion to bool not needed
-here
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- virt/kvm/eventfd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index 67b6fc153e9c..0c4ede45e6bd 100644
---- a/virt/kvm/eventfd.c
-+++ b/virt/kvm/eventfd.c
-@@ -721,7 +721,7 @@ ioeventfd_in_range(struct _ioeventfd *p, gpa_t addr, int len, const void *val)
- 		return false;
- 	}
- 
--	return _val == p->datamatch ? true : false;
-+	return _val == p->datamatch;
- }
- 
- /* MMIO/PIO writes trigger an event if the addr/val match */
--- 
-2.21.1
-
+That's some mighty wonky code. Please look at the generated asm.
