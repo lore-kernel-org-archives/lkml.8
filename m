@@ -2,118 +2,124 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFE3C54FC9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23CBC54FC9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40AC320857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F1F20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:54:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="E2wPco9G"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rFPKZgkR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgDTCwz (ORCPT
+        id S1726362AbgDTCyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 22:52:55 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52155 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbgDTCwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 22:52:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 495B844GZzz9sSd;
-        Mon, 20 Apr 2020 12:52:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1587351173;
-        bh=uh9fqOT9z7bEfk7/YkplDW0UdjdPJX+o3SKRuK1QyDo=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=E2wPco9GNgNC7836Nmf61nU3MCTlGlne14R9dD+hEyU/78I9P2TI0HktTFLlxxJFm
-         HImULtkTlM1j8U2iPyXmjwATWO/EP4wtnip7hXUmYKLk9fPBIYHtDy87SY6bT4aztY
-         5qVAja1DcAviCvuXEwaFrlxZD47cVLaON6oSE9YzKIhygH7oHRJ+n7/jXqFDi0FZcd
-         AzmsgaMMmFH35Akx2wv7LPYY+SRjMVmscJpSiAliDKBvg1AYFq6BVnkQsxOT+Ps4bq
-         jYRIc+B3m2CFZx64ukRjgn9S+kBFylLDbxRAAuTwsk26eETNTTpp5+0nTVsSm39/UN
-         W9mVJlokJXjaQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "christophe.leroy\@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus\@samba.org" <paulus@samba.org>,
-        "benh\@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "oss\@buserror.net" <oss@buserror.net>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>
-Cc:     "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
-Subject: Re: [PATCH v2] powerpc/setup_64: Set cache-line-size based on cache-block-size
-In-Reply-To: <4d84f89aa682dc78bc0d3a8df2f14b0452465da4.camel@alliedtelesis.co.nz>
-References: <dd342c71e03e654a8786302d82f9662004418c6e.camel@alliedtelesis.co.nz> <20200325031854.7625-1-chris.packham@alliedtelesis.co.nz> <343c0e8b01ab74481e0b8dfbe588b1c84127a487.camel@alliedtelesis.co.nz> <87tv1jirlj.fsf@mpe.ellerman.id.au> <4d84f89aa682dc78bc0d3a8df2f14b0452465da4.camel@alliedtelesis.co.nz>
-Date:   Mon, 20 Apr 2020 12:53:03 +1000
-Message-ID: <877dyaj2b4.fsf@mpe.ellerman.id.au>
+        Sun, 19 Apr 2020 22:54:02 -0400
+Received: from mail-eopbgr30055.outbound.protection.outlook.com ([40.107.3.55]:37958
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725896AbgDTCyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 22:54:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GXK6oeFqmk+cMcx+c2Bd4QyPUe+kMMfBbPemBCBv/5eSHPOlWftDTaVtlQCYuXXfbJd5PfvN5Pdk0SKubgeuNFPdSjrsNG12J6c7zS/AjlBWLPfzfv2QVusg6hPMXtCyHIXGEahOsGUWIuU1Ob02Vhmrx1kDKu9uow50l7o6qO7UcjB9HGFc64EQ/9rTKD+V7tnNeJngwVmFNY5RPj/IWHpkw92JzefyXItf4JUY1fthsm5aiMV3SNErDVYVbZfg9H6/+TXBmwiG6FwW+N96iAJxeTnUAkVZoF8bGcdmInk879Ge4nFu3vNsIoHSSbUIxOz0SOSTI8HRu8rip7dXew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0a0cSmpQOEv3tWV1nKHiyRBzdnqnN4WnCuZfmyXXLYc=;
+ b=hHRL/RPlczl6ebS0scPYq1m2wr/sfVUKOZCvPq7q5jywTXy3Vr6lUBXlt8NtSuyRInWpbriC1qWS11W9voa5eaihHoWQXIFUe94gvtsuR6ZY2TS3HuhOcEmISodgRtNQxYmpugt3NXh6aFsDuf3BwPu96QTnsAxiN4Nr1Bhv46clM29yoEFfx2CawCWgDqFfPi5TrxOhLaylocSPUBbnzFJgmivfIUcP6s7E0Z6AOrloKML+KmBPCJFtOXQKSICwIQnH+nXmo0w1w9YPeNsMt8S3b/0A8/JHOVnReUE20w7FYkSviyMIjNE93mEd72QPEt4UUMXPqjMpjjv3e8Qw7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0a0cSmpQOEv3tWV1nKHiyRBzdnqnN4WnCuZfmyXXLYc=;
+ b=rFPKZgkRwHg12dbco60OpkGq0g8FnbiHOLz45Dbp0JF0dgZFI8ita/fui4S08vMCdGsIz0ZmitxLzSMpkvAEHf5azWRJMB5XqKBhPFcj2lys1CDVqJg72sb3kPvnf21wvc1FVbcaOClFQvTQlD3OW6LJgsSgE0VG5oAq8UWtlio=
+Received: from AM7PR04MB6885.eurprd04.prod.outlook.com (2603:10a6:20b:10d::24)
+ by AM7PR04MB6871.eurprd04.prod.outlook.com (2603:10a6:20b:109::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Mon, 20 Apr
+ 2020 02:53:59 +0000
+Received: from AM7PR04MB6885.eurprd04.prod.outlook.com
+ ([fe80::fdc0:9eff:2931:d11b]) by AM7PR04MB6885.eurprd04.prod.outlook.com
+ ([fe80::fdc0:9eff:2931:d11b%5]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
+ 02:53:59 +0000
+From:   "Y.b. Lu" <yangbo.lu@nxp.com>
+To:     David Miller <davem@davemloft.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>
+Subject: RE: [v2, 0/7] Support programmable pins for Ocelot PTP driver
+Thread-Topic: [v2, 0/7] Support programmable pins for Ocelot PTP driver
+Thread-Index: AQHWBxL03Cs51oqVYUqmHzAo138hlKhiG/oAgB9TUxA=
+Date:   Mon, 20 Apr 2020 02:53:59 +0000
+Message-ID: <AM7PR04MB6885C6159F01EC9EECB78885F8D40@AM7PR04MB6885.eurprd04.prod.outlook.com>
+References: <20200331041113.15873-1-yangbo.lu@nxp.com>
+ <20200330.213010.176136354629521349.davem@davemloft.net>
+In-Reply-To: <20200330.213010.176136354629521349.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yangbo.lu@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6b24b98a-c49c-4cf1-c1ad-08d7e4d61338
+x-ms-traffictypediagnostic: AM7PR04MB6871:|AM7PR04MB6871:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM7PR04MB68710E41E252F193F94CE679F8D40@AM7PR04MB6871.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 03793408BA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB6885.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(396003)(136003)(366004)(8676002)(316002)(55016002)(66556008)(66476007)(66946007)(64756008)(33656002)(66446008)(9686003)(5660300002)(7696005)(86362001)(478600001)(2906002)(4744005)(26005)(186003)(6506007)(52536014)(53546011)(4326008)(76116006)(54906003)(8936002)(6916009)(81156014)(71200400001);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: y0MTL+H44KS75AJuzG2UEQCEtMO5z/j501tdm4yAlVfudQH3n1uNWEyiwBuros2dfSOBjpVniMOpE3s5swlb6gRknqXM97eQ1xJVsQeMsVn/riQLzeohcFr+R4rGBzQSZIC6djFqs67pacHxkf8hWYiCKtd9pWPBKw6MEo1mvf4BZ9DX/k/EHiZLoXjEHaiYbrCu4wQUdEQlj8xsmPWTfmGuayJQ5iQGJDMUXElkxt1B1Z1B+HbHpmB7C7UaRDyNecODfxajEpq88rbevyuNq0+cU4Ow7fUp3gKZqhisJ23NVt0/pzZJlDZf+H4QJRr+D2Hx/LeqONfWjFKOnQLED2pREWj+D9BrwUqCU0xTDOnlNYxBBvSQpUzI04y/52Xy2Y1BHQAL/KjejL9MZgvh/rTERaKHv+EjkAQFVKThPuo8jwkuaOanPPexzi2j43Pa
+x-ms-exchange-antispam-messagedata: Z8dty2FN8Yu2RVMOIliH2LKuBJ/bgrjkP2NK+XIi6MbEwgeEYPiOF0gv4AEFv/LFsPTm5Obd6aQhUF9p4v29+fZ3lvgBbAaynezx1gji9gvpUngWOaZ6hE0aP4aiEHjCygcTXkLRN8MMqWW21YhWoQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b24b98a-c49c-4cf1-c1ad-08d7e4d61338
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 02:53:59.1680
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MGe4BT3GgNZfZGFmy8Qob9XyvvCFzAZG6h2kMIhBO/moamtt2Faqy+wLuIIPtjwwYwCcOoCTxl5uIDGJjBheDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6871
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
-> On Thu, 2020-04-16 at 21:43 +1000, Michael Ellerman wrote:
->> Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
->> > On Wed, 2020-03-25 at 16:18 +1300, Chris Packham wrote:
->> > > If {i,d}-cache-block-size is set and {i,d}-cache-line-size is
->> > > not,
->> > > use
->> > > the block-size value for both. Per the devicetree spec cache-
->> > > line-
->> > > size
->> > > is only needed if it differs from the block size.
->> > > 
->> > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->> > > ---
->> > > It looks as though the bsizep = lsizep is not required per the
->> > > spec
->> > > but it's
->> > > probably safer to retain it.
->> > > 
->> > > Changes in v2:
->> > > - Scott pointed out that u-boot should be filling in the cache
->> > > properties
->> > >   (which it does). But it does not specify a cache-line-size
->> > > because
->> > > it
->> > >   provides a cache-block-size and the spec says you don't have to
->> > > if
->> > > they are
->> > >   the same. So the error is in the parsing not in the devicetree
->> > > itself.
->> > > 
->> > 
->> > Ping? This thread went kind of quiet.
->> 
->> I replied in the other thread:
->> 
->>   
->> https://lore.kernel.org/linuxppc-dev/87369xx99u.fsf@mpe.ellerman.id.au/
->> 
->> But then the merge window happened which is a busy time.
->> 
->
-> Yeah I figured that was the case.
->
->> What I'd really like is a v3 that incorporates the info I wrote in
->> the
->> other thread and a Fixes tag.
->> 
->> If you feel like doing that, that would be great. Otherwise I'll do
->> it
->> tomorrow.
->
-> I'll rebase against Linus's tree and have a go a adding some more words
-> to the commit message.
+> -----Original Message-----
+> From: David Miller <davem@davemloft.net>
+> Sent: Tuesday, March 31, 2020 12:30 PM
+> To: Y.b. Lu <yangbo.lu@nxp.com>
+> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org;
+> richardcochran@gmail.com; Vladimir Oltean <vladimir.oltean@nxp.com>;
+> Claudiu Manoil <claudiu.manoil@nxp.com>; andrew@lunn.ch;
+> vivien.didelot@gmail.com; f.fainelli@gmail.com;
+> alexandre.belloni@bootlin.com; UNGLinuxDriver@microchip.com
+> Subject: Re: [v2, 0/7] Support programmable pins for Ocelot PTP driver
+>=20
+>=20
+> net-next is closed, please resubmit this when net-next opens again
 
-Thanks.
+Resubmit the patch-set as V3.
+Thanks!
 
-cheers
+>=20
+> Thank you.
