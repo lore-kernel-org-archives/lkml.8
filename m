@@ -2,126 +2,322 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A44C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5319DC55182
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 503DD20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587417292;
-	bh=I6tbGUc3GxqytdKG1l8k/J+6rt9qRtfBs15bm8wLOL8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QcbCvooJ0ih3bhciCAZRkh8RFjAIbDFr/30A4EjhY1JjSdyR3Hf7QZwLEVQE8c/d0
-	 6KM8VSmuC1f7k4sO4d8BgSkmWVDpG34o/PN+OOgK0HmEG5kCmIN8S194DG3NDB3L4f
-	 vP3GHNzV9iEO6qJOKtxuChlyZEaJ2uXrxBJcG74Q=
+	by mail.kernel.org (Postfix) with ESMTP id 2930320782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:16:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpzCCVTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgDTVOv (ORCPT
+        id S1727967AbgDTVQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:14:51 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35566 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTVOv (ORCPT
+        Mon, 20 Apr 2020 17:16:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726123AbgDTVQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:14:51 -0400
-Received: by mail-oi1-f194.google.com with SMTP id o7so8402990oif.2;
-        Mon, 20 Apr 2020 14:14:50 -0700 (PDT)
+        Mon, 20 Apr 2020 17:16:19 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34D2C061A0C;
+        Mon, 20 Apr 2020 14:16:18 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id q8so9166131eja.2;
+        Mon, 20 Apr 2020 14:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nci1m7ZJ3/XQtmJY9oFwmw6+v2b1Ys8alUwmqbqCahE=;
+        b=hpzCCVTohpPyuhHfljtICH9WboR1x1s2koV7drR8jKiWypIrQOu/k1Jou7LkBCOScf
+         1M1qYxAXnSIzNFuszGz7ss0glDl0UFaeo1E3pZmDzvDYY8GTWPrejEcYQ0hxezPKRo/5
+         G3mM6xI0ULab3mpfjVtaoYKA+HYSk7MhblTQgKbkikJN+kom3iqfQ00LnABdmUj0SazS
+         6xhZVCnYcj+anXt2QR4epgHmk4aeVrKWOsVV5a53CMvNH8VAcsO77ccRvL/74a2Rhx2U
+         9V7HqlF1/Kz4pwTArGCrgU6Iy6ixvPrZDJ2gACQgDuMuQjBtZ22gxWw6VLxmlTaSE0BY
+         T8Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D1tmHbhZ2ad6HfaZfQo7QhxzoWrXJ0tmAqtcSp3UnAM=;
-        b=nH2CRbxkPXWfzz/GD0YxPC1D5NVg+i1GZyQ4lxy8WGFT291+CSHqW7A8tTi9mKqQCt
-         GpAOW/e/gnOoZCCiyt8PqbWL7josMstTBisC9xE4mh2wU73DfhXWC+PCotOQ3yBL+aLG
-         /CI/0QWzI3CVsp2cGRrrJ5bWgFZ+xrrRjyNVzvUU3TSerugE9fqkEWYAUSHnSRk98jFl
-         hV/xeddpa0MK86mqGMScVaTNFpcPNFKJvVUI02k7aM6hfJczSO+0aA0RbBWUljFib8PP
-         ez5gzBWPY82Ct9OiFSEue3o3Fn8OzSIF26xu4eBOqBijscaheuni52aGptwfUYICy6d6
-         JVgg==
-X-Gm-Message-State: AGi0PubSfp80f2ce4WZaQikFgBoFFApHB/DdYozJ78txfwYD5K/cH5W0
-        BxW3D2IVOaZXJ+uM7Q0ag3blN8o=
-X-Google-Smtp-Source: APiQypIkgLf6iD08sZH0/MtRvDvHFkYHoX7Vn2cb2zxQrUsjpbFpA36SjP9PNXqkcKUzsyvr79uq9A==
-X-Received: by 2002:aca:c495:: with SMTP id u143mr1065353oif.72.1587417289983;
-        Mon, 20 Apr 2020 14:14:49 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t9sm154233oie.24.2020.04.20.14.14.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:14:49 -0700 (PDT)
-Received: (nullmailer pid 16562 invoked by uid 1000);
-        Mon, 20 Apr 2020 21:14:48 -0000
-Date:   Mon, 20 Apr 2020 16:14:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     daniel.lezcano@linaro.org, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/4] dt-bindings: thermal: Add the idle cooling device
-Message-ID: <20200420211448.GA16458@bogus>
-References: <20200414220837.9284-1-daniel.lezcano@linaro.org>
- <20200414220837.9284-2-daniel.lezcano@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nci1m7ZJ3/XQtmJY9oFwmw6+v2b1Ys8alUwmqbqCahE=;
+        b=WequATLzXQlN/C0riZiRNG/Fk3jZobRZpwoO22BaEIO2CcDSVKbabnnUWh6OwrHNJ5
+         tR9dnxAYjoCBejhBPSMZ7XhlX0DuPwYKyg0mwsQwNbisHZx+54ZxP4dr4S2jvoLViiAY
+         8pmZvBGSqhFW6umw7berXMXtGVQzaXGSFQHn2dUyN9rB8zvuk2FMW88UPnCUV2CVWJYU
+         TltGac8dV9Y/HNUQkQvmR20SyLruDIoZnE/PCn51hBkKq6OtMVx4tC5rYb4GRpesRWZI
+         VCINi1Tvsd+GKxE8DKa4WeAEMR64vw6ws7bMvqAmJL8qtIYMhUQtpBmzivk4Rv6bXzeH
+         46yw==
+X-Gm-Message-State: AGi0PuY8g52/H47gZ2Thzc+w4x24sXP3sg3sZS5PnIkUcF3vXtVnSGzu
+        QlDyoTCPovHVXn3njkgvUgR0Q9H3ros5qJZVquU=
+X-Google-Smtp-Source: APiQypJEHKTQ2UA07ZzijgeqTGG1dpwGc3q0aA4THHO1dUPiHki1SOItqLV7zWPzp1AijvoBsF2jckcnUkA34oAMpn0=
+X-Received: by 2002:a17:906:cec5:: with SMTP id si5mr18072383ejb.267.1587417377221;
+ Mon, 20 Apr 2020 14:16:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414220837.9284-2-daniel.lezcano@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200420140313.7263-1-jonathan@marek.ca> <20200420140313.7263-3-jonathan@marek.ca>
+ <20200420195130.GQ576963@builder.lan> <46fe8a96-c54e-2362-9a60-c27f7042089b@marek.ca>
+In-Reply-To: <46fe8a96-c54e-2362-9a60-c27f7042089b@marek.ca>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 20 Apr 2020 14:16:21 -0700
+Message-ID: <CAF6AEGscSfS58d4gYVPUsC5Y2j8TmY5zj2kZRGz7y_hfja-xLQ@mail.gmail.com>
+Subject: Re: [PATCH 2/9] Revert "drm/msm/a6xx: Use the DMA API for GMU memory objects"
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 00:08:31 +0200, Daniel Lezcano wrote:
-> Some devices are not able to cool down by reducing their voltage /
-> frequency because it could be not available or the system does not
-> allow voltage scaling. In this configuration, it is not possible to
-> use this strategy and the idle injection cooling device can be used
-> instead.
-> 
-> One idle cooling device is now present for the CPU as implemented by
-> the combination of the idle injection framework belonging to the power
-> capping framework and the thermal cooling device. The missing part is
-> the DT binding providing a way to describe how the cooling device will
-> work on the system.
-> 
-> A first iteration was done by making the cooling device to point to
-> the idle state. Unfortunately it does not make sense because it would
-> need to duplicate the idle state description for each CPU in order to
-> have a different phandle and make the thermal internal framework
-> happy.
-> 
-> It was proposed to add an cooling-cells to <3>, unfortunately the
-> thermal framework is expecting a value of <2> as stated by the
-> documentation and it is not possible from the cooling device generic
-> code to loop this third value to the back end cooling device.
-> 
-> Another proposal was to add a child 'thermal-idle' node as the SCMI
-> does. This approach allows to have a self-contained configuration for
-> the idle cooling device without colliding with the cpufreq cooling
-> device which is based on the CPU node. In addition, it allows to have
-> the cpufreq cooling device and the idle cooling device to co-exist
-> together as shown in the example.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  - V3:
->    - Removed extra line with tab inside
->  - V2:
->    - Fixed comment type
->    - Added dual license
->    - Fixed description s/begins to/should/
->    - Changed name s/duration/duration-us/
->    - Changed name s/latency/exit-latency-us/
->    - Removed types for latency / duration
->    - Fixed s/idle-thermal/thermal-idle/
-> ---
->  .../bindings/thermal/thermal-idle.yaml        | 145 ++++++++++++++++++
->  1 file changed, 145 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-> 
+On Mon, Apr 20, 2020 at 12:59 PM Jonathan Marek <jonathan@marek.ca> wrote:
+>
+> On 4/20/20 3:51 PM, Bjorn Andersson wrote:
+> > On Mon 20 Apr 07:03 PDT 2020, Jonathan Marek wrote:
+> >
+> >> This reverts commit a5fb8b918920c6f7706a8b5b8ea535a7f077a7f6.
+> >
+> > Why?
+> >
+>
+> It removes something I need for the next patches in the series, however
+> I'm open to suggestions on a better solution (Jordan said he would check
+> it out)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+when you repost (if we end up keeping this approach), please add a
+description of the reason in the commit msg of the revert.. it makes
+it easier to review and less confusing in git history
+
+BR,
+-R
+
+
+> >> ---
+> >>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 115 +++++++++++++++++++++++---
+> >>   drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   6 +-
+> >>   2 files changed, 107 insertions(+), 14 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> >> index c4e71abbdd53..748cd379065f 100644
+> >> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> >> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> >> @@ -2,7 +2,6 @@
+> >>   /* Copyright (c) 2017-2019 The Linux Foundation. All rights reserved. */
+> >>
+> >>   #include <linux/clk.h>
+> >> -#include <linux/dma-mapping.h>
+> >>   #include <linux/interconnect.h>
+> >>   #include <linux/pm_domain.h>
+> >>   #include <linux/pm_opp.h>
+> >> @@ -921,10 +920,21 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
+> >>
+> >>   static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu, struct a6xx_gmu_bo *bo)
+> >>   {
+> >> +    int count, i;
+> >> +    u64 iova;
+> >> +
+> >>      if (IS_ERR_OR_NULL(bo))
+> >>              return;
+> >>
+> >> -    dma_free_wc(gmu->dev, bo->size, bo->virt, bo->iova);
+> >> +    count = bo->size >> PAGE_SHIFT;
+> >> +    iova = bo->iova;
+> >> +
+> >> +    for (i = 0; i < count; i++, iova += PAGE_SIZE) {
+> >> +            iommu_unmap(gmu->domain, iova, PAGE_SIZE);
+> >> +            __free_pages(bo->pages[i], 0);
+> >> +    }
+> >> +
+> >> +    kfree(bo->pages);
+> >>      kfree(bo);
+> >>   }
+> >>
+> >> @@ -932,6 +942,7 @@ static struct a6xx_gmu_bo *a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
+> >>              size_t size)
+> >>   {
+> >>      struct a6xx_gmu_bo *bo;
+> >> +    int ret, count, i;
+> >>
+> >>      bo = kzalloc(sizeof(*bo), GFP_KERNEL);
+> >>      if (!bo)
+> >> @@ -939,14 +950,86 @@ static struct a6xx_gmu_bo *a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
+> >>
+> >>      bo->size = PAGE_ALIGN(size);
+> >>
+> >> -    bo->virt = dma_alloc_wc(gmu->dev, bo->size, &bo->iova, GFP_KERNEL);
+> >> +    count = bo->size >> PAGE_SHIFT;
+> >>
+> >> -    if (!bo->virt) {
+> >> +    bo->pages = kcalloc(count, sizeof(struct page *), GFP_KERNEL);
+> >> +    if (!bo->pages) {
+> >>              kfree(bo);
+> >>              return ERR_PTR(-ENOMEM);
+> >>      }
+> >>
+> >> +    for (i = 0; i < count; i++) {
+> >> +            bo->pages[i] = alloc_page(GFP_KERNEL);
+> >> +            if (!bo->pages[i])
+> >> +                    goto err;
+> >> +    }
+> >> +
+> >> +    bo->iova = gmu->uncached_iova_base;
+> >> +
+> >> +    for (i = 0; i < count; i++) {
+> >> +            ret = iommu_map(gmu->domain,
+> >> +                    bo->iova + (PAGE_SIZE * i),
+> >> +                    page_to_phys(bo->pages[i]), PAGE_SIZE,
+> >> +                    IOMMU_READ | IOMMU_WRITE);
+> >> +
+> >> +            if (ret) {
+> >> +                    DRM_DEV_ERROR(gmu->dev, "Unable to map GMU buffer object\n");
+> >> +
+> >> +                    for (i = i - 1 ; i >= 0; i--)
+> >> +                            iommu_unmap(gmu->domain,
+> >> +                                    bo->iova + (PAGE_SIZE * i),
+> >> +                                    PAGE_SIZE);
+> >> +
+> >> +                    goto err;
+> >> +            }
+> >> +    }
+> >> +
+> >> +    bo->virt = vmap(bo->pages, count, VM_IOREMAP,
+> >> +            pgprot_writecombine(PAGE_KERNEL));
+> >> +    if (!bo->virt)
+> >> +            goto err;
+> >> +
+> >> +    /* Align future IOVA addresses on 1MB boundaries */
+> >> +    gmu->uncached_iova_base += ALIGN(size, SZ_1M);
+> >> +
+> >>      return bo;
+> >> +
+> >> +err:
+> >> +    for (i = 0; i < count; i++) {
+> >> +            if (bo->pages[i])
+> >> +                    __free_pages(bo->pages[i], 0);
+> >> +    }
+> >> +
+> >> +    kfree(bo->pages);
+> >> +    kfree(bo);
+> >> +
+> >> +    return ERR_PTR(-ENOMEM);
+> >> +}
+> >> +
+> >> +static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
+> >> +{
+> >> +    int ret;
+> >> +
+> >> +    /*
+> >> +     * The GMU address space is hardcoded to treat the range
+> >> +     * 0x60000000 - 0x80000000 as un-cached memory. All buffers shared
+> >> +     * between the GMU and the CPU will live in this space
+> >> +     */
+> >> +    gmu->uncached_iova_base = 0x60000000;
+> >> +
+> >> +
+> >> +    gmu->domain = iommu_domain_alloc(&platform_bus_type);
+> >> +    if (!gmu->domain)
+> >> +            return -ENODEV;
+> >> +
+> >> +    ret = iommu_attach_device(gmu->domain, gmu->dev);
+> >> +
+> >> +    if (ret) {
+> >> +            iommu_domain_free(gmu->domain);
+> >> +            gmu->domain = NULL;
+> >> +    }
+> >> +
+> >> +    return ret;
+> >>   }
+> >>
+> >>   /* Return the 'arc-level' for the given frequency */
+> >> @@ -1206,6 +1289,10 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
+> >>
+> >>      a6xx_gmu_memory_free(gmu, gmu->hfi);
+> >>
+> >> +    iommu_detach_device(gmu->domain, gmu->dev);
+> >> +
+> >> +    iommu_domain_free(gmu->domain);
+> >> +
+> >>      free_irq(gmu->gmu_irq, gmu);
+> >>      free_irq(gmu->hfi_irq, gmu);
+> >>
+> >> @@ -1226,15 +1313,7 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+> >>
+> >>      gmu->dev = &pdev->dev;
+> >>
+> >> -    /* Pass force_dma false to require the DT to set the dma region */
+> >> -    ret = of_dma_configure(gmu->dev, node, false);
+> >> -    if (ret)
+> >> -            return ret;
+> >> -
+> >> -    /* Set the mask after the of_dma_configure() */
+> >> -    ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(31));
+> >> -    if (ret)
+> >> -            return ret;
+> >> +    of_dma_configure(gmu->dev, node, true);
+> >>
+> >>      /* Fow now, don't do anything fancy until we get our feet under us */
+> >>      gmu->idle_level = GMU_IDLE_STATE_ACTIVE;
+> >> @@ -1246,6 +1325,11 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+> >>      if (ret)
+> >>              goto err_put_device;
+> >>
+> >> +    /* Set up the IOMMU context bank */
+> >> +    ret = a6xx_gmu_memory_probe(gmu);
+> >> +    if (ret)
+> >> +            goto err_put_device;
+> >> +
+> >>      /* Allocate memory for for the HFI queues */
+> >>      gmu->hfi = a6xx_gmu_memory_alloc(gmu, SZ_16K);
+> >>      if (IS_ERR(gmu->hfi))
+> >> @@ -1291,6 +1375,11 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+> >>   err_memory:
+> >>      a6xx_gmu_memory_free(gmu, gmu->hfi);
+> >>
+> >> +    if (gmu->domain) {
+> >> +            iommu_detach_device(gmu->domain, gmu->dev);
+> >> +
+> >> +            iommu_domain_free(gmu->domain);
+> >> +    }
+> >>      ret = -ENODEV;
+> >>
+> >>   err_put_device:
+> >> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> >> index 4af65a36d5ca..2af91ed7ed0c 100644
+> >> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> >> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> >> @@ -12,7 +12,8 @@
+> >>   struct a6xx_gmu_bo {
+> >>      void *virt;
+> >>      size_t size;
+> >> -    dma_addr_t iova;
+> >> +    u64 iova;
+> >> +    struct page **pages;
+> >>   };
+> >>
+> >>   /*
+> >> @@ -48,6 +49,9 @@ struct a6xx_gmu {
+> >>      int hfi_irq;
+> >>      int gmu_irq;
+> >>
+> >> +    struct iommu_domain *domain;
+> >> +    u64 uncached_iova_base;
+> >> +
+> >>      struct device *gxpd;
+> >>
+> >>      int idle_level;
+> >> --
+> >> 2.26.1
+> >>
