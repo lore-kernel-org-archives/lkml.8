@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D4EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA39C54FD2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 175062082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721C62082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgDTQrZ (ORCPT
+        id S1726611AbgDTQrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:47:25 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:43034 "EHLO ale.deltatee.com"
+        Mon, 20 Apr 2020 12:47:24 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:43036 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726484AbgDTQrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726474AbgDTQrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 12:47:18 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1jQZZb-0008F2-BJ; Mon, 20 Apr 2020 10:47:08 -0600
+        id 1jQZZb-0008F9-BL; Mon, 20 Apr 2020 10:47:10 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1jQZZZ-0005df-VF; Mon, 20 Apr 2020 10:47:06 -0600
+        id 1jQZZa-0005e0-Kv; Mon, 20 Apr 2020 10:47:06 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
@@ -35,8 +35,8 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 20 Apr 2020 10:46:53 -0600
-Message-Id: <20200420164700.21620-3-logang@deltatee.com>
+Date:   Mon, 20 Apr 2020 10:47:00 -0600
+Message-Id: <20200420164700.21620-10-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200420164700.21620-1-logang@deltatee.com>
 References: <20200420164700.21620-1-logang@deltatee.com>
@@ -45,7 +45,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v12 2/9] nvme: Create helper function to obtain command effects
+Subject: [PATCH v12 9/9] nvmet-configfs: Introduce passthru configfs interface
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,77 +53,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Separate the code to obtain command effects from the code
-to start a passthru request and open code nvme_known_admin_effects()
-in the new helper.
+When CONFIG_NVME_TARGET_PASSTHRU as 'passthru' directory will
+be added to each subsystem. The directory is similar to a namespace
+and has two attributes: device_path and enable. The user must set the
+path to the nvme controller's char device and write '1' to enable the
+subsystem to use passthru.
 
-The new helper function will be necessary for nvmet passthru
-code to determine if we need to change out of interrupt context
-to handle the effects.
+Any given subsystem is prevented from enabling both a regular namespace
+and the passthru device. If one is enabled, enabling the other will
+produce an error.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 ---
- drivers/nvme/host/core.c | 39 ++++++++++++++++++++++-----------------
- 1 file changed, 22 insertions(+), 17 deletions(-)
+ drivers/nvme/target/configfs.c | 99 ++++++++++++++++++++++++++++++++++
+ drivers/nvme/target/nvmet.h    |  1 +
+ 2 files changed, 100 insertions(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index f5283b300e87..fedcc5f18e03 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1317,22 +1317,8 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
- 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
- }
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
+index e0ce6e5feb3a..59eb52a0d06c 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -613,6 +613,103 @@ static const struct config_item_type nvmet_namespaces_type = {
+ 	.ct_owner		= THIS_MODULE,
+ };
  
--static u32 nvme_known_admin_effects(u8 opcode)
--{
--	switch (opcode) {
--	case nvme_admin_format_nvm:
--		return NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
--					NVME_CMD_EFFECTS_CSE_MASK;
--	case nvme_admin_sanitize_nvm:
--		return NVME_CMD_EFFECTS_CSE_MASK;
--	default:
--		break;
--	}
--	return 0;
--}
--
--static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
--								u8 opcode)
-+static u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
-+				u8 opcode)
- {
- 	u32 effects = 0;
- 
-@@ -1348,7 +1334,26 @@ static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 
- 	if (ctrl->effects)
- 		effects = le32_to_cpu(ctrl->effects->acs[opcode]);
--	effects |= nvme_known_admin_effects(opcode);
++#ifdef CONFIG_NVME_TARGET_PASSTHRU
 +
-+	switch (opcode) {
-+	case nvme_admin_format_nvm:
-+		effects |= NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
-+			NVME_CMD_EFFECTS_CSE_MASK;
-+		break;
-+	case nvme_admin_sanitize_nvm:
-+		effects |= NVME_CMD_EFFECTS_CSE_MASK;
-+		break;
-+	default:
-+		break;
-+	}
++static ssize_t nvmet_passthru_device_path_show(struct config_item *item,
++		char *page)
++{
++	struct nvmet_subsys *subsys = to_subsys(item->ci_parent);
 +
-+	return effects;
++	return snprintf(page, PAGE_SIZE, "%s\n", subsys->passthru_ctrl_path);
 +}
 +
-+static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
-+			       u8 opcode)
++static ssize_t nvmet_passthru_device_path_store(struct config_item *item,
++		const char *page, size_t count)
 +{
-+	u32 effects = nvme_command_effects(ctrl, ns, opcode);
++	struct nvmet_subsys *subsys = to_subsys(item->ci_parent);
++	size_t len;
++	int ret;
++
++	mutex_lock(&subsys->lock);
++
++	ret = -EBUSY;
++	if (subsys->passthru_ctrl)
++		goto out_unlock;
++
++	ret = -EINVAL;
++	len = strcspn(page, "\n");
++	if (!len)
++		goto out_unlock;
++
++	kfree(subsys->passthru_ctrl_path);
++	ret = -ENOMEM;
++	subsys->passthru_ctrl_path = kstrndup(page, len, GFP_KERNEL);
++	if (!subsys->passthru_ctrl_path)
++		goto out_unlock;
++
++	mutex_unlock(&subsys->lock);
++
++	return count;
++out_unlock:
++	mutex_unlock(&subsys->lock);
++	return ret;
++}
++CONFIGFS_ATTR(nvmet_passthru_, device_path);
++
++static ssize_t nvmet_passthru_enable_show(struct config_item *item,
++		char *page)
++{
++	struct nvmet_subsys *subsys = to_subsys(item->ci_parent);
++
++	return sprintf(page, "%d\n", subsys->passthru_ctrl ? 1 : 0);
++}
++
++static ssize_t nvmet_passthru_enable_store(struct config_item *item,
++		const char *page, size_t count)
++{
++	struct nvmet_subsys *subsys = to_subsys(item->ci_parent);
++	bool enable;
++	int ret = 0;
++
++	if (strtobool(page, &enable))
++		return -EINVAL;
++
++	if (enable)
++		ret = nvmet_passthru_ctrl_enable(subsys);
++	else
++		nvmet_passthru_ctrl_disable(subsys);
++
++	return ret ? ret : count;
++}
++CONFIGFS_ATTR(nvmet_passthru_, enable);
++
++static struct configfs_attribute *nvmet_passthru_attrs[] = {
++	&nvmet_passthru_attr_device_path,
++	&nvmet_passthru_attr_enable,
++	NULL,
++};
++
++static const struct config_item_type nvmet_passthru_type = {
++	.ct_attrs		= nvmet_passthru_attrs,
++	.ct_owner		= THIS_MODULE,
++};
++
++static void nvmet_add_passthru_group(struct nvmet_subsys *subsys)
++{
++	config_group_init_type_name(&subsys->passthru_group,
++				    "passthru", &nvmet_passthru_type);
++	configfs_add_default_group(&subsys->passthru_group,
++				   &subsys->group);
++}
++
++#else /* CONFIG_NVME_TARGET_PASSTHRU */
++
++static void nvmet_add_passthru_group(struct nvmet_subsys *subsys)
++{
++}
++
++#endif /* CONFIG_NVME_TARGET_PASSTHRU */
++
+ static int nvmet_port_subsys_allow_link(struct config_item *parent,
+ 		struct config_item *target)
+ {
+@@ -1047,6 +1144,8 @@ static struct config_group *nvmet_subsys_make(struct config_group *group,
+ 	configfs_add_default_group(&subsys->allowed_hosts_group,
+ 			&subsys->group);
  
- 	/*
- 	 * For simplicity, IO to all namespaces is quiesced even if the command
++	nvmet_add_passthru_group(subsys);
++
+ 	return &subsys->group;
+ }
+ 
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index 76c3a7cb9c89..d40452e50212 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -243,6 +243,7 @@ struct nvmet_subsys {
+ #ifdef CONFIG_NVME_TARGET_PASSTHRU
+ 	struct nvme_ctrl	*passthru_ctrl;
+ 	char			*passthru_ctrl_path;
++	struct config_group	passthru_group;
+ #endif /* CONFIG_NVME_TARGET_PASSTHRU */
+ };
+ 
 -- 
 2.20.1
 
