@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEEEC38A30
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FFCC54FDF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9704C20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF14F20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:40:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fQU+AuwN"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LXWgkHca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgDTQks (ORCPT
+        id S1726744AbgDTQk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41794 "EHLO
+        Mon, 20 Apr 2020 12:40:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726758AbgDTQkI (ORCPT
+        by vger.kernel.org with ESMTP id S1726753AbgDTQkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:40:08 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C772C08C5F2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:28:52 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id b11so12956277wrs.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:28:52 -0700 (PDT)
+        Mon, 20 Apr 2020 12:40:07 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B6EC03C1A9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:28:41 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v8so418876wma.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:28:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JPCDjhWyTHrRtN+IrpzH/X2NJ9wHqJH6zPza8eFFddg=;
-        b=fQU+AuwN78dS8p/RffRsQD3zEibMPtZpaQi8xF9V558f5Ma++tNgxW/ul2pOIsxnpw
-         ELYOUcKGMdWB8FGbdUepTObNu813OUKjITPCNmwJif28FoUo4vVjflykZGB8le7+MCug
-         zpWNV7+Bn+bx0y5c574pwjj33mLlm+hXsbu1I=
+        bh=00YMMCWDMa7S3Ez/U3c50IrBaimzCN8AIvaOvv+kT9I=;
+        b=LXWgkHcaOFDiy/osJ9soIw1KtFE/ybJjbqdIO7ZEwlqnbjxuNQEoKxvNMSPBCWtI26
+         0XQSix6YOci+ozczJSUrh8daxLBWIOBJ27j0CGHCTwxt8QhFaF0CNYsrwHoAteqkDkWS
+         hIcwzBNdZGGECiDF4dGejVs1E28vV/L0QwNKc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=JPCDjhWyTHrRtN+IrpzH/X2NJ9wHqJH6zPza8eFFddg=;
-        b=Zqp14JqYQ4peEmveYs17FUaaGoYeBb4bQrX9Q2CmFh09wTEClglsdx2++rf7pirT/M
-         oE+sdvwg+W5XY0X5gwfoIY57hDdXhgA9kJBXo18Cvtf2F3585nHxmE50ZixY6VTweONQ
-         hXbrrsAGjtjL1QMR32IYxgTrjc+QDgDtvBNsCTsgNP9FasG1EZ7+tcuEqkL7/6unPjMU
-         B6VDgyCMq4fHZQvL3IaR3BEm3wf7gzntlnxs1SobYKG2Pgx+3hc6jLV90c5YRWiSjRbq
-         P9+u9J2yZ9qYH7X134Tf/jvjHHsP7llt/84ACk2efVBxrdJEwFExVRUcl0lMQDAFSlqS
-         ZQag==
-X-Gm-Message-State: AGi0PubZfhUvcbw1M8IEHIIhd7nkHtjuFz74hw5OOUmcWg4LZP24InjN
-        shig7g31MuIIU+IoWdhAtMr+WA==
-X-Google-Smtp-Source: APiQypJE17U7UjlhO0thwtwB3HRo9flqpaUhjXQ8JAYBeWvA+eexDk49NW2eFLMN0aesHLyAfKfb/Q==
-X-Received: by 2002:a05:6000:1044:: with SMTP id c4mr21032922wrx.57.1587400130857;
-        Mon, 20 Apr 2020 09:28:50 -0700 (PDT)
+        bh=00YMMCWDMa7S3Ez/U3c50IrBaimzCN8AIvaOvv+kT9I=;
+        b=WNP/y5aowqsUvxw8Ho80GV8hX9AXZY2utYkAe/a8lIhntpISyCgUzDOrUmngMlw93l
+         RreuBYSZynD4+6pk0BWI0m3OvPG2z1vevdMjCztRBSlgFDJso5ufqyBjQ+BXE3KkKXeR
+         GV0tOFZ+jT51mdJ/x6Gyph6BY5Ygg+47RGQxnCsmErEWSlD9YjDFJwRXKPgnR32LMOEN
+         7e+ZvULtvpqSvZv49EIE+zfnL+4fNsQbayuFG3M2KcUyTfpypXQ6Dvz/touU7GVWGd66
+         mW1Rao+/w7MS456n6aFsw+mKpGQfFNh6mN+xp9xMzi8gZjzAtJX0Fv8ZfvkHbo/szJ8N
+         SLFQ==
+X-Gm-Message-State: AGi0PuYzVuaoURXcs2wP3RIbXqcpuVQPgGXQyk051iZwPt0kUrTbkwKI
+        v9b00lYJ3LoiwhrsXymkdALdWg==
+X-Google-Smtp-Source: APiQypLrA4c5DHxPRjWv5NvjsPXwXTUGOmgBMoXFA1o7GAwKdefVsuGAEuXi+rlsOfxPJW8//6waHg==
+X-Received: by 2002:a1c:9a16:: with SMTP id c22mr175659wme.38.1587400119826;
+        Mon, 20 Apr 2020 09:28:39 -0700 (PDT)
 Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id 36sm14882wrc.35.2020.04.20.09.28.45
+        by smtp.gmail.com with ESMTPSA id 36sm14882wrc.35.2020.04.20.09.28.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 09:28:50 -0700 (PDT)
+        Mon, 20 Apr 2020 09:28:39 -0700 (PDT)
 From:   Scott Branden <scott.branden@broadcom.com>
 To:     Luis Chamberlain <mcgrof@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -75,9 +75,9 @@ Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v3 4/7] firmware: test partial file reads of request_firmware_into_buf
-Date:   Mon, 20 Apr 2020 09:28:06 -0700
-Message-Id: <20200420162809.17529-5-scott.branden@broadcom.com>
+Subject: [PATCH v3 2/7] firmware: add offset to request_firmware_into_buf
+Date:   Mon, 20 Apr 2020 09:28:04 -0700
+Message-Id: <20200420162809.17529-3-scott.branden@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200420162809.17529-1-scott.branden@broadcom.com>
 References: <20200420162809.17529-1-scott.branden@broadcom.com>
@@ -86,125 +86,293 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add firmware tests for partial file reads of request_firmware_into_buf.
+Add offset to request_firmware_into_buf to allow for portions
+of firmware file to be read into a buffer.  Necessary where firmware
+needs to be loaded in portions from file in memory constrained systems.
 
 Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 ---
- .../selftests/firmware/fw_filesystem.sh       | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
+ drivers/base/firmware_loader/firmware.h |  5 +++
+ drivers/base/firmware_loader/main.c     | 52 +++++++++++++++++--------
+ drivers/soc/qcom/mdt_loader.c           |  7 +++-
+ include/linux/firmware.h                |  8 +++-
+ lib/test_firmware.c                     |  4 +-
+ 5 files changed, 55 insertions(+), 21 deletions(-)
 
-diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/testing/selftests/firmware/fw_filesystem.sh
-index fcc281373b4d..38e89ba1b4d3 100755
---- a/tools/testing/selftests/firmware/fw_filesystem.sh
-+++ b/tools/testing/selftests/firmware/fw_filesystem.sh
-@@ -149,6 +149,26 @@ config_unset_into_buf()
- 	echo 0 >  $DIR/config_into_buf
- }
+diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firmware_loader/firmware.h
+index 25836a6afc9f..1147dae01148 100644
+--- a/drivers/base/firmware_loader/firmware.h
++++ b/drivers/base/firmware_loader/firmware.h
+@@ -32,6 +32,8 @@
+  * @FW_OPT_FALLBACK_PLATFORM: Enable fallback to device fw copy embedded in
+  *	the platform's main firmware. If both this fallback and the sysfs
+  *      fallback are enabled, then this fallback will be tried first.
++ * @FW_OPT_PARTIAL: Allow partial read of firmware instead of needing to read
++ *	entire file.
+  */
+ enum fw_opt {
+ 	FW_OPT_UEVENT			= BIT(0),
+@@ -41,6 +43,7 @@ enum fw_opt {
+ 	FW_OPT_NOCACHE			= BIT(4),
+ 	FW_OPT_NOFALLBACK_SYSFS		= BIT(5),
+ 	FW_OPT_FALLBACK_PLATFORM	= BIT(6),
++	FW_OPT_PARTIAL			= BIT(7),
+ };
  
-+config_set_buf_size()
-+{
-+	echo $1 >  $DIR/config_buf_size
-+}
-+
-+config_set_file_offset()
-+{
-+	echo $1 >  $DIR/config_file_offset
-+}
-+
-+config_set_partial()
-+{
-+	echo 1 >  $DIR/config_partial
-+}
-+
-+config_unset_partial()
-+{
-+	echo 0 >  $DIR/config_partial
-+}
-+
- config_set_sync_direct()
+ enum fw_status {
+@@ -68,6 +71,8 @@ struct fw_priv {
+ 	void *data;
+ 	size_t size;
+ 	size_t allocated_size;
++	size_t offset;
++	unsigned int flags;
+ #ifdef CONFIG_FW_LOADER_PAGED_BUF
+ 	bool is_paged_buf;
+ 	struct page **pages;
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index 76f79913916d..4552b7bb819f 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -167,7 +167,8 @@ static int fw_cache_piggyback_on_request(const char *name);
+ 
+ static struct fw_priv *__allocate_fw_priv(const char *fw_name,
+ 					  struct firmware_cache *fwc,
+-					  void *dbuf, size_t size)
++					  void *dbuf, size_t size,
++					  size_t offset, unsigned int flags)
  {
- 	echo 1 >  $DIR/config_sync_direct
-@@ -207,6 +227,35 @@ read_firmwares()
- 	done
- }
+ 	struct fw_priv *fw_priv;
  
-+read_firmwares_partial()
-+{
-+	if [ "$(cat $DIR/config_into_buf)" == "1" ]; then
-+		fwfile="${FW_INTO_BUF}"
+@@ -185,6 +186,8 @@ static struct fw_priv *__allocate_fw_priv(const char *fw_name,
+ 	fw_priv->fwc = fwc;
+ 	fw_priv->data = dbuf;
+ 	fw_priv->allocated_size = size;
++	fw_priv->offset = offset;
++	fw_priv->flags = flags;
+ 	fw_state_init(fw_priv);
+ #ifdef CONFIG_FW_LOADER_USER_HELPER
+ 	INIT_LIST_HEAD(&fw_priv->pending_list);
+@@ -210,9 +213,11 @@ static struct fw_priv *__lookup_fw_priv(const char *fw_name)
+ static int alloc_lookup_fw_priv(const char *fw_name,
+ 				struct firmware_cache *fwc,
+ 				struct fw_priv **fw_priv, void *dbuf,
+-				size_t size, enum fw_opt opt_flags)
++				size_t size, enum fw_opt opt_flags,
++				size_t offset)
+ {
+ 	struct fw_priv *tmp;
++	unsigned int pread_flags;
+ 
+ 	spin_lock(&fwc->lock);
+ 	if (!(opt_flags & FW_OPT_NOCACHE)) {
+@@ -226,7 +231,12 @@ static int alloc_lookup_fw_priv(const char *fw_name,
+ 		}
+ 	}
+ 
+-	tmp = __allocate_fw_priv(fw_name, fwc, dbuf, size);
++	if (opt_flags & FW_OPT_PARTIAL)
++		pread_flags = KERNEL_PREAD_FLAG_PART;
 +	else
-+		fwfile="${FW}"
-+	fi
++		pread_flags = KERNEL_PREAD_FLAG_WHOLE;
 +
-+	if [ "$1" = "xzonly" ]; then
-+		fwfile="${fwfile}-orig"
-+	fi
-+
-+	# Strip fwfile down to match partial offset and length
-+	partial_data="$(cat $fwfile)"
-+	partial_data="${partial_data:$2:$3}"
-+
-+	for i in $(seq 0 3); do
-+		config_set_read_fw_idx $i
-+
-+		read_firmware="$(cat $DIR/read_firmware)"
-+
-+		# Verify the contents are what we expect.
-+		if [ $read_firmware != $partial_data ]; then
-+			echo "request #$i: partial firmware was not loaded" >&2
-+			exit 1
-+		fi
-+	done
-+}
-+
- read_firmwares_expect_nofile()
++	tmp = __allocate_fw_priv(fw_name, fwc, dbuf, size, offset, pread_flags);
+ 	if (tmp) {
+ 		INIT_LIST_HEAD(&tmp->list);
+ 		if (!(opt_flags & FW_OPT_NOCACHE))
+@@ -495,8 +505,10 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
+ 		fw_priv->size = 0;
+ 
+ 		/* load firmware files from the mount namespace of init */
+-		rc = kernel_read_file_from_path_initns(path, &buffer,
+-						       &size, msize, id);
++		rc = kernel_pread_file_from_path_initns(path, &buffer,
++							&size, fw_priv->offset,
++							msize,
++							fw_priv->flags, id);
+ 		if (rc) {
+ 			if (rc != -ENOENT)
+ 				dev_warn(device, "loading %s failed with error %d\n",
+@@ -687,7 +699,7 @@ int assign_fw(struct firmware *fw, struct device *device,
+ static int
+ _request_firmware_prepare(struct firmware **firmware_p, const char *name,
+ 			  struct device *device, void *dbuf, size_t size,
+-			  enum fw_opt opt_flags)
++			  enum fw_opt opt_flags, size_t offset)
  {
- 	for i in $(seq 0 3); do
-@@ -319,6 +368,21 @@ test_batched_request_firmware_into_buf()
- 	echo "OK"
+ 	struct firmware *firmware;
+ 	struct fw_priv *fw_priv;
+@@ -706,7 +718,7 @@ _request_firmware_prepare(struct firmware **firmware_p, const char *name,
+ 	}
+ 
+ 	ret = alloc_lookup_fw_priv(name, &fw_cache, &fw_priv, dbuf, size,
+-				  opt_flags);
++				   opt_flags, offset);
+ 
+ 	/*
+ 	 * bind with 'priv' now to avoid warning in failure path
+@@ -753,7 +765,7 @@ static void fw_abort_batch_reqs(struct firmware *fw)
+ static int
+ _request_firmware(const struct firmware **firmware_p, const char *name,
+ 		  struct device *device, void *buf, size_t size,
+-		  enum fw_opt opt_flags)
++		  enum fw_opt opt_flags, size_t offset)
+ {
+ 	struct firmware *fw = NULL;
+ 	int ret;
+@@ -767,7 +779,7 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
+ 	}
+ 
+ 	ret = _request_firmware_prepare(&fw, name, device, buf, size,
+-					opt_flags);
++					opt_flags, offset);
+ 	if (ret <= 0) /* error or already assigned */
+ 		goto out;
+ 
+@@ -830,7 +842,7 @@ request_firmware(const struct firmware **firmware_p, const char *name,
+ 	/* Need to pin this module until return */
+ 	__module_get(THIS_MODULE);
+ 	ret = _request_firmware(firmware_p, name, device, NULL, 0,
+-				FW_OPT_UEVENT);
++				FW_OPT_UEVENT, 0);
+ 	module_put(THIS_MODULE);
+ 	return ret;
+ }
+@@ -857,7 +869,7 @@ int firmware_request_nowarn(const struct firmware **firmware, const char *name,
+ 	/* Need to pin this module until return */
+ 	__module_get(THIS_MODULE);
+ 	ret = _request_firmware(firmware, name, device, NULL, 0,
+-				FW_OPT_UEVENT | FW_OPT_NO_WARN);
++				FW_OPT_UEVENT | FW_OPT_NO_WARN, 0);
+ 	module_put(THIS_MODULE);
+ 	return ret;
+ }
+@@ -882,7 +894,7 @@ int request_firmware_direct(const struct firmware **firmware_p,
+ 	__module_get(THIS_MODULE);
+ 	ret = _request_firmware(firmware_p, name, device, NULL, 0,
+ 				FW_OPT_UEVENT | FW_OPT_NO_WARN |
+-				FW_OPT_NOFALLBACK_SYSFS);
++				FW_OPT_NOFALLBACK_SYSFS, 0);
+ 	module_put(THIS_MODULE);
+ 	return ret;
+ }
+@@ -906,7 +918,7 @@ int firmware_request_platform(const struct firmware **firmware,
+ 	/* Need to pin this module until return */
+ 	__module_get(THIS_MODULE);
+ 	ret = _request_firmware(firmware, name, device, NULL, 0,
+-				FW_OPT_UEVENT | FW_OPT_FALLBACK_PLATFORM);
++				FW_OPT_UEVENT | FW_OPT_FALLBACK_PLATFORM, 0);
+ 	module_put(THIS_MODULE);
+ 	return ret;
+ }
+@@ -943,6 +955,8 @@ EXPORT_SYMBOL_GPL(firmware_request_cache);
+  * @device: device for which firmware is being loaded and DMA region allocated
+  * @buf: address of buffer to load firmware into
+  * @size: size of buffer
++ * @offset: offset into file to read
++ * @pread_flags: KERNEL_PREAD_FLAG_PART to allow partial file read
+  *
+  * This function works pretty much like request_firmware(), but it doesn't
+  * allocate a buffer to hold the firmware data. Instead, the firmware
+@@ -953,16 +967,22 @@ EXPORT_SYMBOL_GPL(firmware_request_cache);
+  */
+ int
+ request_firmware_into_buf(const struct firmware **firmware_p, const char *name,
+-			  struct device *device, void *buf, size_t size)
++			  struct device *device, void *buf, size_t size,
++			  size_t offset, unsigned int pread_flags)
+ {
+ 	int ret;
++	enum fw_opt opt_flags;
+ 
+ 	if (fw_cache_is_setup(device, name))
+ 		return -EOPNOTSUPP;
+ 
+ 	__module_get(THIS_MODULE);
++	opt_flags = FW_OPT_UEVENT | FW_OPT_NOCACHE;
++	if (pread_flags & KERNEL_PREAD_FLAG_PART)
++		opt_flags |= FW_OPT_PARTIAL;
++
+ 	ret = _request_firmware(firmware_p, name, device, buf, size,
+-				FW_OPT_UEVENT | FW_OPT_NOCACHE);
++				opt_flags, offset);
+ 	module_put(THIS_MODULE);
+ 	return ret;
+ }
+@@ -1001,7 +1021,7 @@ static void request_firmware_work_func(struct work_struct *work)
+ 	fw_work = container_of(work, struct firmware_work, work);
+ 
+ 	_request_firmware(&fw, fw_work->name, fw_work->device, NULL, 0,
+-			  fw_work->opt_flags);
++			  fw_work->opt_flags, 0);
+ 	fw_work->cont(fw, fw_work->context);
+ 	put_device(fw_work->device); /* taken in request_firmware_nowait() */
+ 
+diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
+index 24cd193dec55..00f3359f4f61 100644
+--- a/drivers/soc/qcom/mdt_loader.c
++++ b/drivers/soc/qcom/mdt_loader.c
+@@ -246,8 +246,11 @@ static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
+ 		} else if (phdr->p_filesz) {
+ 			/* Firmware not large enough, load split-out segments */
+ 			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
+-			ret = request_firmware_into_buf(&seg_fw, fw_name, dev,
+-							ptr, phdr->p_filesz);
++			ret = request_firmware_into_buf
++						(&seg_fw, fw_name, dev,
++						 ptr, phdr->p_filesz,
++						 0,
++						 KERNEL_PREAD_FLAG_WHOLE);
+ 			if (ret) {
+ 				dev_err(dev, "failed to load %s\n", fw_name);
+ 				break;
+diff --git a/include/linux/firmware.h b/include/linux/firmware.h
+index 4bbd0afd91b7..b98d17fb3bd1 100644
+--- a/include/linux/firmware.h
++++ b/include/linux/firmware.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/compiler.h>
++#include <linux/fs.h>
+ #include <linux/gfp.h>
+ 
+ #define FW_ACTION_NOHOTPLUG 0
+@@ -53,7 +54,9 @@ int request_firmware_nowait(
+ int request_firmware_direct(const struct firmware **fw, const char *name,
+ 			    struct device *device);
+ int request_firmware_into_buf(const struct firmware **firmware_p,
+-	const char *name, struct device *device, void *buf, size_t size);
++			      const char *name, struct device *device,
++			      void *buf, size_t size,
++			      size_t offset, unsigned int pread_flags);
+ 
+ void release_firmware(const struct firmware *fw);
+ #else
+@@ -98,7 +101,8 @@ static inline int request_firmware_direct(const struct firmware **fw,
  }
  
-+test_batched_request_firmware_into_buf_partial()
-+{
-+	echo -n "Batched request_firmware_into_buf_partial() $2 off=$3 size=$4 try #$1: "
-+	config_reset
-+	config_set_name $TEST_FIRMWARE_INTO_BUF_FILENAME
-+	config_set_into_buf
-+	config_set_partial
-+	config_set_buf_size $4
-+	config_set_file_offset $3
-+	config_trigger_sync
-+	read_firmwares_partial $2 $3 $4
-+	release_all_firmware
-+	echo "OK"
-+}
-+
- test_batched_request_firmware_direct()
+ static inline int request_firmware_into_buf(const struct firmware **firmware_p,
+-	const char *name, struct device *device, void *buf, size_t size)
++	const char *name, struct device *device, void *buf, size_t size,
++	size_t offset, unsigned int pread_flags)
  {
- 	echo -n "Batched request_firmware_direct() $2 try #$1: "
-@@ -371,6 +435,22 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware_into_buf $i normal
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf_partial $i normal 0 10
-+done
-+
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf_partial $i normal 0 5
-+done
-+
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf_partial $i normal 1 6
-+done
-+
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf_partial $i normal 2 10
-+done
-+
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct $i normal
- done
+ 	return -EINVAL;
+ }
+diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+index 9fee2b93a8d1..55176b0a8318 100644
+--- a/lib/test_firmware.c
++++ b/lib/test_firmware.c
+@@ -654,7 +654,9 @@ static int test_fw_run_batch_request(void *data)
+ 						    req->name,
+ 						    req->dev,
+ 						    test_buf,
+-						    TEST_FIRMWARE_BUF_SIZE);
++						    TEST_FIRMWARE_BUF_SIZE,
++						    0,
++						    KERNEL_PREAD_FLAG_WHOLE);
+ 		if (!req->fw)
+ 			kfree(test_buf);
+ 	} else {
 -- 
 2.17.1
 
