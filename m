@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282CCC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E318FC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04C8C2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7A621927
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="3Vwu87CC"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="WedNlbtZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgDTFoQ (ORCPT
+        id S1726116AbgDTFo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:44:16 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:33230 "EHLO fudan.edu.cn"
+        Mon, 20 Apr 2020 01:44:27 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:49655 "EHLO fudan.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725379AbgDTFoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:44:15 -0400
+        id S1726063AbgDTFo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 01:44:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=yAOu0VUkborL/7+dqlJ4jWkJ1m2aAADVyJZ3KeTxc1w=; b=3
-        Vwu87CCBMNoOn8C3OXoqNfWk/SbXJqSw+e7lDhS92qY78pj/qLTaNn7w+ibW2IAp
-        iqTcgm5gQY7pl2PlClqregA8jJ1LD8hSO8DYT1qYWKZEoJmXUwXtmd1oY1szPuWd
-        9WOtgK+AaFI6yZZT0mLP0TFbNChzxNv4mk9FhbaV5k=
+        Message-Id; bh=Kde4d4Iskv/eESUo3kW89uQutTL1AA81UbKX+DBEwr0=; b=W
+        edNlbtZZjgiW2Kq8k8ac+CLyF4EGP7+i19/4xZApaEBNO3Wx9fyOFXDL9ZUPnIJ9
+        tCPlGpUr8EKV9xrHIQy436U9ijsoldMg+xFYHIGRiReOY82ID4wcnuLFOwkaCy4i
+        tdHmo+PT5icLN+7Fde4Y5v1nIBa83Xe9ysLpaFh88o=
 Received: from localhost.localdomain (unknown [120.229.255.67])
-        by app2 (Coremail) with SMTP id XQUFCgA3ywicNp1ePAAeAA--.3223S3;
-        Mon, 20 Apr 2020 13:43:57 +0800 (CST)
+        by app1 (Coremail) with SMTP id XAUFCgD3_8dsNp1eenwWAA--.8407S3;
+        Mon, 20 Apr 2020 13:43:09 +0800 (CST)
 From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Olaf Kirch <okir@suse.de>, Andrew Morton <akpm@osdl.org>,
-        Andreas Gruenbacher <agruen@suse.de>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
 Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
         Xiyu Yang <xiyuyang19@fudan.edu.cn>,
         Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-Date:   Mon, 20 Apr 2020 13:43:28 +0800
-Message-Id: <1587361410-83560-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Subject: [PATCH] drm/i915/selftests:  Fix i915_address_space refcnt leak
+Date:   Mon, 20 Apr 2020 13:41:54 +0800
+Message-Id: <1587361342-83494-1-git-send-email-xiyuyang19@fudan.edu.cn>
 X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgA3ywicNp1ePAAeAA--.3223S3
-X-Coremail-Antispam: 1UD129KBjvJXoWrKFW3tr4ruw1xtFykAw1DZFb_yoW8JF45pw
-        4Ikr1UtF98tFW8tas8Aw48W34kAa10qw1rKwn5Wa1SvrnxXasxCFyYqw13XFWUArW8JF18
-        Wr1Yg3y3Z3WDCaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID: XAUFCgD3_8dsNp1eenwWAA--.8407S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF43Gry7CFy3Jw4xArW3trb_yoW8Cw13pr
+        45Ca4Iyr90yw47ta9Fvws5W3WfA3WxKay8Cr1kWwn5Gr1UJa4Skr1Sgry5JFWUCrWfXry2
+        vrW2kFWava4FkaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
         rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
         1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
         6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
@@ -57,50 +63,68 @@ X-Coremail-Antispam: 1UD129KBjvJXoWrKFW3tr4ruw1xtFykAw1DZFb_yoW8JF45pw
         Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
         YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8WwCF04k20xvY0x0EwIxGrw
         CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
         IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
-        wI8IcIk0rVW8JVW3JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUO2NtUUUUU
+        wI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+        AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbfOz3UUUUU==
 X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nfs3_set_acl() invokes get_acl(), which returns a local reference of the
-posix_acl object to "alloc" with increased refcount.
+igt_ppgtt_pin_update() invokes i915_gem_context_get_vm_rcu(), which
+returns a reference of the i915_address_space object to "vm" with
+increased refcount.
 
-When nfs3_set_acl() returns or a new object is assigned to "alloc",  the
-original local reference of  "alloc" becomes invalid, so the refcount
-should be decreased to keep refcount balanced.
+When igt_ppgtt_pin_update() returns, "vm" becomes invalid, so the
+refcount should be decreased to keep refcount balanced.
 
-The reference counting issue happens in one path of nfs3_set_acl(). When
-"acl" equals to NULL but "alloc" is not NULL, the function forgets to
-decrease the refcnt increased by get_acl() and causes a refcnt leak.
+The reference counting issue happens in two exception handling paths of
+igt_ppgtt_pin_update(). When i915_gem_object_create_internal() returns
+IS_ERR, the refcnt increased by i915_gem_context_get_vm_rcu() is not
+decreased, causing a refcnt leak.
 
-Fix this issue by calling posix_acl_release() on this path when "alloc"
-is not NULL.
+Fix this issue by jumping to "out_vm" label when
+i915_gem_object_create_internal() returns IS_ERR.
 
-Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
+Fixes: 4049866f0913 ("drm/i915/selftests: huge page tests")
 Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 ---
- fs/nfs/nfs3acl.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/i915/gem/selftests/huge_pages.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
-index c5c3fc6e6c60..b5c41bcca8cf 100644
---- a/fs/nfs/nfs3acl.c
-+++ b/fs/nfs/nfs3acl.c
-@@ -274,6 +274,8 @@ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+diff --git a/drivers/gpu/drm/i915/gem/selftests/huge_pages.c b/drivers/gpu/drm/i915/gem/selftests/huge_pages.c
+index 9311250d7d6f..7a7763be6b2e 100644
+--- a/drivers/gpu/drm/i915/gem/selftests/huge_pages.c
++++ b/drivers/gpu/drm/i915/gem/selftests/huge_pages.c
+@@ -1578,8 +1578,10 @@ static int igt_ppgtt_pin_update(void *arg)
+ 		unsigned int page_size = BIT(first);
+ 
+ 		obj = i915_gem_object_create_internal(dev_priv, page_size);
+-		if (IS_ERR(obj))
+-			return PTR_ERR(obj);
++		if (IS_ERR(obj)) {
++			err = PTR_ERR(obj);
++			goto out_vm;
++		}
+ 
+ 		vma = i915_vma_instance(obj, vm, NULL);
+ 		if (IS_ERR(vma)) {
+@@ -1632,8 +1634,10 @@ static int igt_ppgtt_pin_update(void *arg)
  	}
  
- 	if (acl == NULL) {
-+		if (alloc)
-+			posix_acl_release(alloc);
- 		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
- 		if (IS_ERR(alloc))
- 			goto fail;
+ 	obj = i915_gem_object_create_internal(dev_priv, PAGE_SIZE);
+-	if (IS_ERR(obj))
+-		return PTR_ERR(obj);
++	if (IS_ERR(obj)) {
++		err = PTR_ERR(obj);
++		goto out_vm;
++	}
+ 
+ 	vma = i915_vma_instance(obj, vm, NULL);
+ 	if (IS_ERR(vma)) {
 -- 
 2.7.4
 
