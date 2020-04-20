@@ -1,126 +1,59 @@
-Return-Path: <SRS0=3W8M=6B=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6B5C38A2C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AA4C55182
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0874214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Apr 2020 21:45:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="W6E+W7Aj"
+	by mail.kernel.org (Postfix) with ESMTP id 20844206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgDQVpc (ORCPT
+        id S1726751AbgDTXGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Apr 2020 17:45:32 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:54294 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbgDQVpb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Apr 2020 17:45:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587159928; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GDrjhz1ENVMvfgoCf0EYV/5TG0WL1W6/+3LS7tljxdw=;
-        b=W6E+W7AjsDTvA3BqvTgnCcRGL1CPeI62wxw1zsG7t6+zo7rCVcLANDTVEJqzFYN3q1jSb7
-        543eXxewuQDowRtorlYn4KAHEDmsIsXrDOThx1642yIwFQYEGq9Y3t4S2NntK7Hb30WcO/
-        qFRTHyPXbUgugdrc2ghr77x1TiKBHp4=
-Date:   Fri, 17 Apr 2020 23:45:14 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [RESEND PATCH v5 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <EFCY8Q.V3Q81CTO8TBP2@crapouillou.net>
-In-Reply-To: <CAHp75VfULLBpFx-W04z+jRFv-hGZkTt1k7T9+eMurW55Mdc=+g@mail.gmail.com>
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
-        <20200417202859.35427-3-contact@artur-rojek.eu>
-        <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
-        <3KAY8Q.NNI6X4F9QRIX1@crapouillou.net>
-        <CAHp75VfxQFFnVMhGvv0GCb3gv5jTPLDqLyhihRVc2earY=aYcg@mail.gmail.com>
-        <86BY8Q.C5XO8D57M7BI1@crapouillou.net>
-        <CAHp75VfULLBpFx-W04z+jRFv-hGZkTt1k7T9+eMurW55Mdc=+g@mail.gmail.com>
+        Mon, 20 Apr 2020 19:06:44 -0400
+Received: from ms.lwn.net ([45.79.88.28]:54232 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbgDTXGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 19:06:44 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id CE8F1536;
+        Mon, 20 Apr 2020 23:06:43 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 17:06:42 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Federico Vaga <federico.vaga@vaga.pv.it>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Alessia Mantegazza <amantegazza@vaga.pv.it>
+Subject: Re: [PATCH] doc:it_IT: translation of documents in process/
+Message-ID: <20200420170642.7214aad3@lwn.net>
+In-Reply-To: <20200413163457.52669-1-federico.vaga@vaga.pv.it>
+References: <20200413163457.52669-1-federico.vaga@vaga.pv.it>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 13 Apr 2020 18:34:57 +0200
+Federico Vaga <federico.vaga@vaga.pv.it> wrote:
 
+> From: Alessia Mantegazza <amantegazza@vaga.pv.it>
+> 
+> Translations for the following documents in process/:
+>     - email-clients
+>     - management-style
+> 
+> Signed-off-by: Alessia Mantegazza <amantegazza@vaga.pv.it>
+> Signed-off-by: Federico Vaga <federico.vaga@vaga.pv.it>
 
-Le sam. 18 avril 2020 =E0 0:42, Andy Shevchenko=20
-<andy.shevchenko@gmail.com> a =E9crit :
-> On Sat, Apr 18, 2020 at 12:18 AM Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>  Le sam. 18 avril 2020 =E0 0:13, Andy Shevchenko
->>  <andy.shevchenko@gmail.com> a =E9crit :
->>  > On Sat, Apr 18, 2020 at 12:05 AM Paul Cercueil=20
->> <paul@crapouillou.net>
->>  > wrote:
->>  >>  Le ven. 17 avril 2020 =E0 23:59, Andy Shevchenko
->>  >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
->>  >> <contact@artur-rojek.eu>
->>  >>  > wrote:
->>  >
->>  > ...
->>  >
->>  >>  >>  +       irq =3D platform_get_irq(pdev, 0);
->>  >>  >
->>  >>  > Before it worked w/o IRQ, here is a regression you introduced.
->>  >>
->>  >>  Before it simply did not need the IRQ, which is provided by the
->>  >>  devicetree anyway. No regression here.
->>  >
->>  > Does it work without IRQ? Or it was a dead code till now?
->>  > For me it's clear regression. Otherwise something is really wrong=20
->> in a
->>  > process of development of this driver.
->>=20
->>  Nothing wrong here. The IRQ was not used by the driver for the
->>  functionality it provided before. It is required now to support the
->>  touchscreen channels.
->=20
-> This is exactly what's wrong.
-> Previous DTS for my (hypothetical) case has no IRQ defined. Everything
-> works, right?
-> Now, due to this change it breaks my setup. Don't you see the problem?
+Applied, thanks.
 
-The IRQ has been provided by every concerned DTS file since the=20
-introduction of this driver and the related bindings, even though it=20
-was not used by the driver.
-
--Paul
-
->>  >>  >>  +       if (irq < 0) {
->>  >>  >
->>  >>  >>  +               dev_err(dev, "Failed to get irq: %d\n",=20
->> irq);
->>  >>  >
->>  >>  > Redundant message.
->>  >>  >
->>  >>  >>  +               return irq;
->>  >>  >>  +       }
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
-
-
+jon
