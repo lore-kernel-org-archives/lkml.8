@@ -2,169 +2,90 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A743CC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE23C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 823D9206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="xH/QmMTG"
+	by mail.kernel.org (Postfix) with ESMTP id 37A692082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgDTPfy (ORCPT
+        id S1728273AbgDTPgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:35:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgDTPfy (ORCPT
+        Mon, 20 Apr 2020 11:36:08 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:50087 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgDTPgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:35:54 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B59DC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:35:54 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id m67so10960725qke.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P5AdbeASeN3LWLwAao7IPBW2Z8hbXGbMOqZhqhTsi0o=;
-        b=xH/QmMTGrRk0vg4u23/IshU43Loy0kmEdOHU6LEJwx6eLcIS3nQx+g31KY/s6njFes
-         eFpdGA7e7bgn8AdpC+HYklwRzIuGD6UXVNiT7wwaO//ei1ErR5rh3im2N2npx0XtCH5I
-         7MjCLC6WKMEnm3WT0zxCUgdOoShSJb5RDyIr6UhlStTvwIFSmgZiz9QK5w6vmP2gTElx
-         1KMCF7wdByLiQjdgU36XzxKeuqW39K5IHYgTUtlYhoJ/D3woMFjPHQJFTT80i3Pya+J6
-         IqUmeLkj/OBSz+q5jbGXEunJfZIPSYFfvxTj/yhzE3WCA2F94rWYjbgLVNtuHOR6f/8C
-         ieuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P5AdbeASeN3LWLwAao7IPBW2Z8hbXGbMOqZhqhTsi0o=;
-        b=tD9/ZgmSE82vfH7KiZ6c+V51Sned1kUq4gXDhpN0hNiWn7du/AQjAr1rmkxcbXFCBT
-         YJHIOHmvdO2dd+YF0dQ1J4iqXpHoh16bYHj/q0OaL03vBDjx3KSP31JxFkOYYzIfy3Ss
-         jqRIaCJf2LjGXo11CoaoPst/lQEc8DOhVR7+f/rpuOxQYZ2faQ1zOx1r3cnEaAa4RCLB
-         GWz4jY24cuikK6zPhBLTQBTpMsafGIC1VV+gW4tEhes3aLMKYqdaTFPYGDVEEXiGu4e7
-         sHmMQW+hhAEm51PZYd63K1woT1wtEK04ar8t3RZdfs0ndh1aWESke/5USfFB6ZO7s3/t
-         8Yvg==
-X-Gm-Message-State: AGi0PuaQlw9fbA/cEOYiL9Rnbf3ZgusnIQq3GUU94G/UVNPytAr8s/c8
-        GFec+rQOU99Lu8H7Odqo6u0v8Q==
-X-Google-Smtp-Source: APiQypKoJbJWLjg+0XysGGc0MJ3P0qgeXjQAIu8l5u0lW95JQmearXo4++Rg9AGrTzIHk3HGJC7uNg==
-X-Received: by 2002:a37:9e94:: with SMTP id h142mr15638183qke.56.1587396953312;
-        Mon, 20 Apr 2020 08:35:53 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id b11sm708373qti.50.2020.04.20.08.35.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 08:35:52 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm64: dts: qcom: fix pm8150 gpio interrupts
-Date:   Mon, 20 Apr 2020 11:35:43 -0400
-Message-Id: <20200420153543.14512-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
+        Mon, 20 Apr 2020 11:36:07 -0400
+Received: from mail-lj1-f170.google.com ([209.85.208.170]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MPoPd-1jdyic3HwR-00MxKe for <linux-kernel@vger.kernel.org>; Mon, 20 Apr
+ 2020 17:36:05 +0200
+Received: by mail-lj1-f170.google.com with SMTP id m8so10486563lji.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:36:05 -0700 (PDT)
+X-Gm-Message-State: AGi0PubEBGpWrewN010Om9AjfxL/pIeiMiGW7oBQer8JKqWLudVIlZik
+        ueFYew1305ZcL1WHaZPDVhTP6cv7yWg8nFbecbM=
+X-Google-Smtp-Source: APiQypKHtqOOvjsZa8biIU2eZzzlTbGupmSKlmIDGVOzZJB48xQdS/SqpDK9pJJySIskbTfb/xnWOaBlZxC2oY7Y12w=
+X-Received: by 2002:a05:651c:107a:: with SMTP id y26mr5000070ljm.80.1587396965221;
+ Mon, 20 Apr 2020 08:36:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200419171157.672999-1-lkundrak@v3.sk>
+In-Reply-To: <20200419171157.672999-1-lkundrak@v3.sk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Apr 2020 17:35:48 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a17JFOD_SqF+ub+VEM_ABLzLYWFE6zj0eBXVjP3nn0g2Q@mail.gmail.com>
+Message-ID: <CAK8P3a17JFOD_SqF+ub+VEM_ABLzLYWFE6zj0eBXVjP3nn0g2Q@mail.gmail.com>
+Subject: Re: [PATCH 00/15] ARM: dts: Marvell SoC Device Tree updates (for 5.8)
+To:     Lubomir Rintel <lkundrak@v3.sk>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:zcMXKCe+bjRcKlstEchcHYfjqzNT2Vf9aeoor/+CCTENfxQW+Lg
+ a10SmO5/1EbEuMs8CJEKyBeEzb2Rc8B1h317ziBBV8x2ZSjBnrJBYeCR3Xygk/tXtmfC1uC
+ e8eocWAbLlfVfb9aSc8tKnjSqSlUZpV6ZfufdanCsXhpr47LMY0Xl5r95RJENHpTE9jSS3a
+ iPerg96WBXoFBmNXLjLFQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9ynneOdz8Rg=:1wNaooW1A4J1vZTHjUhijg
+ mYnMfIoud1JEYCIi9oQx7uSJL/nYQ3L/vvz2kkGHGNk6BCfEQOaFeFLzsMZgodDlGiINlHLam
+ gkZFbzsOgKWA6OfxvV5WzA2TWdsaOfKRh9NzYrWJiUlEqWpcm1XfvJHCY7YSoYTwzUA9cen8m
+ 2M3vln/AKt0GuISfCTpwn644LStuR3XU/ipWN8FEIzCXH+TGYrZDtCjC9DwkQPrQBCCQ5CaLJ
+ jOUAVjrSv2YMVz+Nhi+ctzYdpr3tW6EqwlvsdmF9ybWdsjbJi10tZpLDtLCt+DrCztI3FfDRL
+ BSPTYpv9WH7NGB27aOrjWdda+LhEv2m9no72vFj7SR7bDPyi6xMaHxeWc/GnIKs1KePnq1jIh
+ 3ZRDyvUbm0hUPhFHM06j3S1SY5rBdrZBPz/8QZTZKAqPMA5vSDCq7GFNrH/26EZNWb+eacTUL
+ Tj3vCSiwGcjUFthItXuvHRB/xdqNB8aUDU2DWCM77NziirnNvGcbSDczzJpis5VkbwiiPGojM
+ rAhQJnMkQBK33oOPGLlbbm7NRxhDSK+lszJCsNV0qfT96BfBpCfKP5bqhNOestgG2+2BIzpNm
+ rK87ycAO/hp0zFhJxjuAk/mPKzukdSzelWvJ6ZdRLXvKmUROaj5tYXVa8VIZ3XkSVHBCe0Eg9
+ JYY+Kb7mKPo5yJNjXNfv/0eiiseOHiUxNMFCz4kfvfRqPYdO1f74e6IFaWmgqTa2+v4wQ9cjZ
+ xDiV9lvJGogKeezSDG13J5IVa+ceKp9VB7u+Is58O0Kf7UVspBA/EsWrPgFNyHMayirasFLR5
+ 98SPugg7ZAuWOzuY6btuaul6+lLl3rnWDSn4lZviHLzfF0gLLA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This was mistakenly copied from the downstream dts, however the upstream
-driver works differently.
+On Sun, Apr 19, 2020 at 7:12 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> Hi,
+>
+> please consider applying the patches chained to this message to arm/dt.
+>
+> I've sent about the same patch set before, but there were some issues
+> and it was way too close to 5.7-rc1. Sorry for that. I decided not to
+> hurry it, because none of the fixes is really all that important.
+>
+> Majority of the patches just deal with reducing DT validation noise once
+> more schemas are converted to JSON-schema. Those that actually fix
+> things relevant to older released kernels have been Cc'd to stable@.
 
-I only tested this with the pm8150_gpios node (used with volume button),
-but the 2 others should be the same.
+Can you check again which ones should perhaps be part of v5.7?
+I assume that at least anything that has a stable tag should also be
+included in the release, but I'd prefer to have you confirm that.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- arch/arm64/boot/dts/qcom/pm8150.dtsi  | 14 ++------------
- arch/arm64/boot/dts/qcom/pm8150b.dtsi | 14 ++------------
- arch/arm64/boot/dts/qcom/pm8150l.dtsi | 14 ++------------
- 3 files changed, 6 insertions(+), 36 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-index b6e304748a57..c0b197458665 100644
---- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-@@ -73,18 +73,8 @@ pm8150_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x0 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-index 322379d5c31f..40b5d75a4a1d 100644
---- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-@@ -62,18 +62,8 @@ pm8150b_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x2 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150l.dtsi b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-index eb0e9a090e42..cf05e0685d10 100644
---- a/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-@@ -56,18 +56,8 @@ pm8150l_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x4 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
- 
--- 
-2.26.1
-
+     Arnd
