@@ -2,140 +2,123 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8613C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 069D3C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7AAD214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:42:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uu3nHUdT"
+	by mail.kernel.org (Postfix) with ESMTP id E46CD21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgDTLmK (ORCPT
+        id S1726605AbgDTLme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:42:10 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52950 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725886AbgDTLmI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:42:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587382926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RaSALkv288RXYLBI4WCs7nZ9DFDMF/MzZugHq3zt0lM=;
-        b=Uu3nHUdTNX9MZ6YzX5fccQVry73OAzabjHBELpd3ILf52d2qD8W1FBQvinjyI+BckKLzJZ
-        3Y8JnK4SHbE8KFU+aGk0e8Hy3TcDrdVk+yFL0P4xlgD6zJGNJHgEOQlwHGY2CvaPqbL74r
-        mqLNM9K6Y62luINbz6mXdvmh4GDHUlY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-353-yvembTmsOlSEez0eIYxU6w-1; Mon, 20 Apr 2020 07:42:00 -0400
-X-MC-Unique: yvembTmsOlSEez0eIYxU6w-1
-Received: by mail-wm1-f70.google.com with SMTP id t62so4071403wma.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 04:42:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RaSALkv288RXYLBI4WCs7nZ9DFDMF/MzZugHq3zt0lM=;
-        b=F/NJhI06PzpDwz0AopR6B/xb6BOCV50bTp9QLZn1RCydR6Xj4yroj9OkIlC31SELxM
-         +AT5nw4gRPWw8exH1ruyP7xfnoUUrmhXYwnUwmqZxFf3p9dp/fLuMiu+gAEQON+vsn7z
-         FYf/nPDlImaVvQP+i3OOqC4LLQnRAHq/LwCdsbjZqlgUi8KW0huihlk1mnyeBnOSbuhJ
-         8RPXu2L7qlYGwhNJVfD5TA89WkaSaPmRt4BqLCoTmOj9vIG0wLDef1NlXxndZPGBwJrX
-         vGBhiG4vMg5eRNUHGrmZpe4Vtn3v5DwA7ACTLQdOSQOEkDAVNxMcF+uNyZLF/sYzmLbd
-         FLkg==
-X-Gm-Message-State: AGi0PuaN2C+qUQn1HvqP6sd81B6PqBgrnV8/dxI0KlGdYDXxX0GeT5fj
-        I/DFv7Y0WqeCuUVDK8HE05+en+yQxVVhMwnUmbInf8JldjNoa6xnTsWxBLXUi/qdMlu01P0Bt3F
-        7w7MSjef2LCSrEJ0TXQskutcc
-X-Received: by 2002:a1c:7212:: with SMTP id n18mr18176377wmc.53.1587382919085;
-        Mon, 20 Apr 2020 04:41:59 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJqDlNHMJlF9NWmfKOIMRGKyInIuywYCTbS89h6gAa9rpOj0h1WZOgcNt9hDnaKVu+UxRSztw==
-X-Received: by 2002:a1c:7212:: with SMTP id n18mr18176358wmc.53.1587382918893;
-        Mon, 20 Apr 2020 04:41:58 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id n131sm1064609wmf.35.2020.04.20.04.41.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 04:41:58 -0700 (PDT)
-Subject: Re: [PATCH 3/8] bdi: add a ->dev_name field to struct
- backing_dev_info
-To:     Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
-Cc:     axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org,
-        bvanassche@acm.org, tytso@mit.edu, gregkh@linuxfoundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200416165453.1080463-1-hch@lst.de>
- <20200416165453.1080463-4-hch@lst.de> <20200417085909.GA12234@quack2.suse.cz>
- <20200417130135.GB5053@lst.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <e02b7cdc-f29a-916c-d923-224a1b312485@redhat.com>
-Date:   Mon, 20 Apr 2020 13:41:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 20 Apr 2020 07:42:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:46866 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbgDTLmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:42:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 545301FB;
+        Mon, 20 Apr 2020 04:42:31 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2846D3F237;
+        Mon, 20 Apr 2020 04:42:30 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 12:42:25 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     zhang.lyra@gmail.com
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [RFC PATCH v1 1/2] cpuidle: allow idle state to be found as
+ deepest state for s2idle only
+Message-ID: <20200420114222.GA14343@lakrids.cambridge.arm.com>
+References: <20200413070014.12960-1-zhang.lyra@gmail.com>
+ <20200413070014.12960-2-zhang.lyra@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200417130135.GB5053@lst.de>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413070014.12960-2-zhang.lyra@gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-<A lot of context has been trimmed here before I got added to the Cc, so
-  I'm assuming that we are talking about the vboxsf code here.>
-
-On 4/17/20 3:01 PM, Christoph Hellwig wrote:
-> On Fri, Apr 17, 2020 at 10:59:09AM +0200, Jan Kara wrote:
->>> -	dev = device_create_vargs(bdi_class, NULL, MKDEV(0, 0), bdi, fmt, args);
->>> +	vsnprintf(bdi->dev_name, sizeof(bdi->dev_name), fmt, args);
->>> +	dev = device_create(bdi_class, NULL, MKDEV(0, 0), bdi, bdi->dev_name);
->>>   	if (IS_ERR(dev))
->>>   		return PTR_ERR(dev);
->>>   
->>
->> This can have a sideeffect not only bdi->dev_name will be truncated to 64
->> chars (which generally doesn't matter) but possibly also kobject name will
->> be truncated in the same way.  Which may have user visible effects. E.g.
->> for fs/vboxsf 64 chars need not be enough. So shouldn't we rather do it the
->> other way around - i.e., let device_create_vargs() create the device name
->> and then copy to bdi->dev_name whatever fits?
+On Mon, Apr 13, 2020 at 03:00:13PM +0800, zhang.lyra@gmail.com wrote:
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > 
-> I think having them mismatch is worse, as the kobject name is what
-> people look for.  Hans, do you know what fc->source typicall contains
-> and if there is much of a problem if it gets truncated/  Can we switch
-> to something else that is guranteed to be 64 charaters or less for the
-> bdi name?
+> Add a new flag CPUIDLE_FLAG_S2IDLE to allow c-state to be found as
+> deepest state for s2idle only, so that users can add a new c-state
+> for using s2idle and don't worry disturbing other use cases such as
+> play_idle() which probably don't want to enter into so much deep
+> idle state since devices are not suspended for that kind of cases.
 
-It contains the name the user has given to the shared-folder when
-exporting it from the host/hypervisor. Typically this will be the
-last element of the directory path, e.g. if I export /home/hans/projects/linux
-then the default/suggested share name and this the source name to pass to
-the host when mounting the shared-folder will be "linux". But the user can
-put anything there.
+Can you please elaborate on this?
 
-AFAICT for vboxsf the bdi-name can be anything as long as it is unique, hence
-the "vboxsf-" prefix to make this unique vs other block-devices and the
-".%d" postfix is necessary because the same export can be mounted multiple
-times (without using bind mounts), see:
-https://github.com/jwrdegoede/vboxsf/issues/3
+Why exactly are these states not suited for regular cpu idle? What
+problems do they cause? e.g. long wakeup latency?
 
-The presence of the source inside the bdi-name is only for informational
-purposes really, so truncating that should be fine, maybe switch to:
+The flag and the for-s2-idle-only DT property are encoding a policy
+rarher than a property, and as such I don't think this is the right way
+to describe this in the DT. However, if there might be porperties of the
+idle state that we could describe so that the OS can come to the same
+conclusion.
 
-"vboxsf%d-%s" as format string and swap the sbi->bdi_id and fc->source
-in the args, then if we truncate anything it will be the source (which
-as said is only there for informational purposes) and the name will
-still be guaranteed to be unique.
+Thanks,
+Mark.
 
-Regards,
-
-Hans
-
+> 
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> ---
+>  drivers/cpuidle/cpuidle.c        | 3 ++-
+>  drivers/cpuidle/dt_idle_states.c | 3 +++
+>  include/linux/cpuidle.h          | 1 +
+>  3 files changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> index de81298051b3..bb61f0c271d2 100644
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -89,7 +89,8 @@ static int find_deepest_state(struct cpuidle_driver *drv,
+>  		    s->exit_latency_ns <= latency_req ||
+>  		    s->exit_latency_ns > max_latency_ns ||
+>  		    (s->flags & forbidden_flags) ||
+> -		    (s2idle && !s->enter_s2idle))
+> +		    (s2idle && !s->enter_s2idle) ||
+> +		    (!s2idle && (s->flags & CPUIDLE_FLAG_S2ILDE)))
+>  			continue;
+>  
+>  		latency_req = s->exit_latency_ns;
+> diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
+> index 252f2a9686a6..530db2726c05 100644
+> --- a/drivers/cpuidle/dt_idle_states.c
+> +++ b/drivers/cpuidle/dt_idle_states.c
+> @@ -80,6 +80,9 @@ static int init_state_node(struct cpuidle_state *idle_state,
+>  	idle_state->flags = 0;
+>  	if (of_property_read_bool(state_node, "local-timer-stop"))
+>  		idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> +
+> +	if (of_property_read_bool(state_node, "for-s2idle-only"))
+> +		idle_state->flags |= CPUIDLE_FLAG_S2ILDE;
+>  	/*
+>  	 * TODO:
+>  	 *	replace with kstrdup and pointer assignment when name
+> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+> index ec2ef63771f0..08da701f74cd 100644
+> --- a/include/linux/cpuidle.h
+> +++ b/include/linux/cpuidle.h
+> @@ -78,6 +78,7 @@ struct cpuidle_state {
+>  #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
+>  #define CPUIDLE_FLAG_UNUSABLE	BIT(3) /* avoid using this state */
+>  #define CPUIDLE_FLAG_OFF	BIT(4) /* disable this state by default */
+> +#define CPUIDLE_FLAG_S2ILDE	BIT(5) /* state is used for s2idle only */
+>  
+>  struct cpuidle_device_kobj;
+>  struct cpuidle_state_kobj;
+> -- 
+> 2.20.1
+> 
