@@ -2,114 +2,112 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD48C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607E3C55183
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09416206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:13:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587420783;
-	bh=u8p0jHaF21T4UpqWTkdDV4RwTi3BMeCpFwuNvwfsqJU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YNgrwdBMt/yIPX2z8EyIM4Hv8RAZfMfk/+yUImIRvO+Y5S0p4I6bNVkNsVRSFjSVp
-	 1915Ucr2IXAGJflhrW/NmhE00Qc6fHUmHKG6uXLM84ktH+CbvU+X0qvkhx2f/LnYtC
-	 cqHq1osc+i9sNmxjLPQCP3f6+Ttah5I3T/G7GDh4=
+	by mail.kernel.org (Postfix) with ESMTP id 4014E2078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:14:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WeENLdUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgDTWNB (ORCPT
+        id S1726913AbgDTWOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:13:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbgDTWM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:12:59 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 20 Apr 2020 18:14:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54978 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726363AbgDTWOr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 18:14:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587420886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MiSDbiTo+2+0bF+oftBWtRobU1R64CceTEeiiGvXzRk=;
+        b=WeENLdUECtNUJblMqbb/nZmabXuDc+QE8ThLrx5QTdYx3eueUaDGnaS8dIJUB/6qUT7mOA
+        U7Pad0ZTIfXupxjIKqa07/aeew6MN84qyGRt31t3xcGxZJCWdSaBBc2pY3HCeUW5R5fhng
+        SRDZIFHRjrGcs6g9a97Nxyg/ggyTax0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-78-aoNIUofJN7OwJncvIaYdTg-1; Mon, 20 Apr 2020 18:14:44 -0400
+X-MC-Unique: aoNIUofJN7OwJncvIaYdTg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4053E206E9;
-        Mon, 20 Apr 2020 22:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587420779;
-        bh=u8p0jHaF21T4UpqWTkdDV4RwTi3BMeCpFwuNvwfsqJU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=glBJYPYaB1Kjc2rK8ALzFmYe5Y8oxFn04YU/W79os1OPzcQ9wLbQjhyZIDiybTDdj
-         yv7BaL0HUSVRelCLSKXaNZB3UIUreLhknpimvro5ePfnGawX0uZPMpoBpaXYxawf0Y
-         4ENEUpZXJmR3jX6AU4FIcV9beDga5F+fE8Gz6Mhg=
-Date:   Tue, 21 Apr 2020 00:12:55 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/33] docs: update recommended Sphinx version to
- 2.4.4
-Message-ID: <20200421001255.7c7e5065@coco.lan>
-In-Reply-To: <20200420152729.40cb10e1@lwn.net>
-References: <cover.1586881715.git.mchehab+huawei@kernel.org>
-        <498f701c618f7d0cf5f0a37e5889ee926f7c8bf4.1586881715.git.mchehab+huawei@kernel.org>
-        <20200420152729.40cb10e1@lwn.net>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 893061005509;
+        Mon, 20 Apr 2020 22:14:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D8BB676E60;
+        Mon, 20 Apr 2020 22:14:39 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <878siq587w.fsf@cjr.nz>
+References: <878siq587w.fsf@cjr.nz> <87imhvj7m6.fsf@cjr.nz> <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com> <3865908.1586874010@warthog.procyon.org.uk> <927453.1587285472@warthog.procyon.org.uk> <1136024.1587388420@warthog.procyon.org.uk>
+To:     Paulo Alcantara <pc@cjr.nz>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        Steve French <smfrench@gmail.com>, jlayton@redhat.com,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
+Subject: cifs - Race between IP address change and sget()?
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1986039.1587420879.1@warthog.procyon.org.uk>
+Date:   Mon, 20 Apr 2020 23:14:39 +0100
+Message-ID: <1986040.1587420879@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 20 Apr 2020 15:27:29 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+Paulo Alcantara <pc@cjr.nz> wrote:
 
-> On Tue, 14 Apr 2020 18:48:30 +0200
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> >> > What happens if the IP address the superblock is going to changes, then
+> >> > another mount is made back to the original IP address?  Does the second
+> >> > mount just pick the original superblock?
+> >> 
+> >> It is going to transparently reconnect to the new ip address, SMB share,
+> >> and cifs superblock is kept unchanged.  We, however, update internal
+> >> TCP_Server_Info structure to reflect new destination ip address.
+> >> 
+> >> For the second mount, since the hostname (extracted out of the UNC path
+> >> at mount time) resolves to a new ip address and that address was saved
+> >> earlier in TCP_Server_Info structure during reconnect, we will end up
+> >> reusing same cifs superblock as per fs/cifs/connect.c:cifs_match_super().
+> >
+> > Would that be a bug?
 > 
-> > The Sphinx check script is already smart enough to keep
-> > working, with older versions, warning the users that
-> > an upgrade is recommended (and explaining how):
-> > 
-> > 	Sphinx version 1.7.9
-> > 	Warning: It is recommended at least Sphinx version 2.4.4.
-> > 	Detected OS: Fedora release 31 (Thirty One).
-> > 
-> > 	To upgrade Sphinx, use:
-> > 
-> > 		/usr/bin/virtualenv sphinx_2.4.4
-> > 		. sphinx_2.4.4/bin/activate
-> > 		pip install -r ./Documentation/sphinx/requirements.txt  
+> Probably.
 > 
-> Sigh...that version is all of a month and some old.  I hate to be pushing
-> people that hard on the upgrade treadmill.
+> I'm not sure how that code is supposed to work, TBH.
 
-Yeah, I see the point. 
+Hmmm...  I think there may be a race here then - but I'm not sure it can be
+avoided or if it matters.
 
-Please notice that the above will only appear if someone calls "make htmldocs"
-and no sphinx-build is found at the patch (or if the version is below the
-lower bond - 1.4.x).
+Since the address is part of the primary key to sget() for cifs, changing the
+IP address will change the primary key.  Jeff tells me that this is governed
+by a spinlock taken by cifs_match_super().  However, sget() may be busy
+attaching a new mount to the old superblock under the sb_lock core vfs lock,
+having already found a match.
 
-> I'm still looking over the set, and will probably apply this, but I think
-> we should consider tweaking this before 5.8:
-> 
->  - Can we make the warning more explicit that 2.4.4 is needed *if you are
->    generating PDF*?  Most people, I think, don't do that, and can live
->    happily with an older version.
+Should the change of parameters made by cifs be effected with sb_lock held to
+try and avoid ending up using the wrong superblock?
 
-Sure. I can work on a patch for such purpose. 
+However, because the TCP_Server_Info is apparently updated, it looks like my
+original concern is not actually a problem (the idea that if a mounted server
+changes its IP address and then a new server comes online at the old IP
+address, it might end up sharing superblocks because the IP address is part of
+the key).
 
->  - Perhaps the time has come to raise the lower bound to, say, 1.7?  That
->    might let us get rid of a bit of cruft.
+David
 
-If we move the lower bound, it will start to refuse running "make htmldocs"
-with versions below 1.7.
-
-I'm ok on rising the lower limit. Yet, not sure if this is worth.
-I mean, last time I checked, html builds fine with older versions.
-
-Ok, if we rise the bar, we may be able to do some cleanups at the
-extensions, removing some backward-compatible code. So, I would wait
-for some future Sphinx version where the extensions would stop working,
-requiring someone to touch them.
-
-Thanks,
-Mauro
