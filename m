@@ -2,225 +2,89 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54533C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD419C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C33E21D82
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9111721D82
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:36:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WZXgiclI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgDTDbb (ORCPT
+        id S1726124AbgDTDgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 23:31:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:35291 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbgDTDba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 23:31:30 -0400
-IronPort-SDR: I07uk5suiviV70XibrfyO0m9eSbfYjbBx7INzIyPLCKW/8XjM3/ssgL+xLNeSNOqDUkVTlH0IC
- lifRZsFmy+Rw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 20:31:30 -0700
-IronPort-SDR: edhuHMjqHP9ErywtRRWHrLaytJmqVEjKvc7uIf+5na+R+BKrRYIRKDtE2lsM3pbSBKyN7z6L8e
- VL3qFI+42lnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
-   d="scan'208";a="273046498"
-Received: from glass.png.intel.com ([172.30.181.92])
-  by orsmga002.jf.intel.com with ESMTP; 19 Apr 2020 20:31:24 -0700
-From:   Wong Vee Khee <vee.khee.wong@intel.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Voon Wei Feng <weifeng.voon@intel.com>,
-        Wong Vee Khee <vee.khee.wong@intel.com>
-Subject: [PATCH net-next 1/1] net: stmmac: Add support for VLAN promiscuous mode
-Date:   Mon, 20 Apr 2020 11:33:59 +0800
-Message-Id: <20200420033359.11610-1-vee.khee.wong@intel.com>
-X-Mailer: git-send-email 2.17.0
+        Sun, 19 Apr 2020 23:36:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgDTDgL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 23:36:11 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C16AC061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 20:36:11 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k18so3441182pll.6
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 20:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8H1NUjMwWNaYbzJpijo9kPT16a39a5axF1s4naNgu3E=;
+        b=WZXgiclIG1eDxkvnwjc1k3Zzr4gy0TUdaDeugR4EpWuGKYW7hws4VBsItL6z0bnp6a
+         I6PPu8wCTlM2BsSoikRX2Cu3/pSvwrcfQW00KgvxY74Khv0cUefGkIrIiwKzFIQjdOrm
+         wYvqL/kfMEdDLcrjZ2wwbCa0Dl9I7KF+czR0MG72KNllSpMIIcIo2nNA8wayK0O72mYk
+         l1sQLTkeNFC8W7tw+y43pe74eBy4Ocs229venEfem7hgcdpky1EMrWZLEosbrXTGEi9v
+         jHrjnXZxG92Pmu1u5MiN+Uc1eLhZzqaNGiX+lVLoS1WjQU/flGs+TEQXx98+WtzAiT0h
+         Bqig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8H1NUjMwWNaYbzJpijo9kPT16a39a5axF1s4naNgu3E=;
+        b=tc7gt1N1uR3t8XF0nCD5VV9Utcm8Z4tKArOKhAD22EN8iRNq3NOqAtS4ly3b8rxN42
+         DfncipM6n9AxN3AM1vdk11Jtyxh+lro9iGFb7dTQnFWyrTXydIxjhD1JqAzAuMkuGShD
+         AMYD+OAYqF/+Bjuq3UAi3EKWRn/wD4aQRK3yBmjbuFmTR/welPy4HhaoO7u0mTaID6C1
+         StT64RJQRGV7nsAjdl/Ufxnq+7RxZUb3lpJ/jsIxJQEw6AkBECocVPIkL4qnCATX2Cvl
+         c3+HiQ4UiKH9UdORDuHtwRYiU6bSXbhu4bNt9sqi2lyGCDA0HlrsI2Q3yJWJ3SfHYMIJ
+         KokQ==
+X-Gm-Message-State: AGi0PuYkkGPmE2o+YIKUzVobWpe67zFaf7OYcEFZe6gEgAGaTh6IDm4y
+        LQjwu0Mq27fh+7QUojYkm7X2Jg==
+X-Google-Smtp-Source: APiQypLPmtlVFRC4fQpc3g0/x5O4imtV2N6XeI7jX2JLMMsPbZFwZ7CxmsczZhYf1ismWHip0KZPZw==
+X-Received: by 2002:a17:902:bc8c:: with SMTP id bb12mr14096905plb.13.1587353770635;
+        Sun, 19 Apr 2020 20:36:10 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id c15sm24108426pgk.66.2020.04.19.20.36.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 Apr 2020 20:36:09 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 09:06:07 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     sboyd@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org
+Subject: Re: [PATCH v2 00/17] DVFS for IO devices on sdm845 and sc7180
+Message-ID: <20200420033607.eci57emjzcz7jaq4@vireshk-i7>
+References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Chuah, Kim Tatt" <kim.tatt.chuah@intel.com>
+On 17-04-20, 19:34, Rajendra Nayak wrote:
+> Changes in v2:
+> 1. Added error handling for dev_pm_opp_set_clkname()
+> and dev_pm_opp_of_add_table()
+> 2. Used dev_pm_opp_put_clkname() in the cleanup path
+> 3. Dropped the OPP patch pulled in by Viresh [1]
 
-For dwmac4, enable VLAN promiscuity when MAC controller is requested to
-enter promiscuous mode.
+This is part of 5.7-rc2 now. Thanks.
 
-Signed-off-by: Chuah, Kim Tatt <kim.tatt.chuah@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Tan, Tee Min <tee.min.tan@intel.com>
-Signed-off-by: Wong Vee Khee <vee.khee.wong@intel.com>
----
- drivers/net/ethernet/stmicro/stmmac/common.h  |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h  |  1 +
- .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 67 +++++++++++++++++++
- .../net/ethernet/stmicro/stmmac/stmmac_main.c |  2 +-
- 4 files changed, 70 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 6208a68a331d..127f75862962 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -473,6 +473,7 @@ struct mac_device_info {
- 	unsigned int xlgmac;
- 	unsigned int num_vlan;
- 	u32 vlan_filter[32];
-+	unsigned int promisc;
- };
- 
- struct stmmac_rx_routing {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-index 28cac28253b8..61f3249bd724 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-@@ -90,6 +90,7 @@
- #define GMAC_VLAN_CSVL			BIT(19)
- #define GMAC_VLAN_VLC			GENMASK(17, 16)
- #define GMAC_VLAN_VLC_SHIFT		16
-+#define GMAC_VLAN_VLHT			GENMASK(15, 0)
- 
- /* MAC VLAN Tag */
- #define GMAC_VLAN_TAG_VID		GENMASK(15, 0)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 39692d15d80c..ecd834e0e121 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -450,6 +450,12 @@ static int dwmac4_add_hw_vlan_rx_fltr(struct net_device *dev,
- 	if (vid > 4095)
- 		return -EINVAL;
- 
-+	if (hw->promisc) {
-+		netdev_err(dev,
-+			   "Adding VLAN in promisc mode not supported\n");
-+		return -EPERM;
-+	}
-+
- 	/* Single Rx VLAN Filter */
- 	if (hw->num_vlan == 1) {
- 		/* For single VLAN filter, VID 0 means VLAN promiscuous */
-@@ -499,6 +505,12 @@ static int dwmac4_del_hw_vlan_rx_fltr(struct net_device *dev,
- {
- 	int i, ret = 0;
- 
-+	if (hw->promisc) {
-+		netdev_err(dev,
-+			   "Deleting VLAN in promisc mode not supported\n");
-+		return -EPERM;
-+	}
-+
- 	/* Single Rx VLAN Filter */
- 	if (hw->num_vlan == 1) {
- 		if ((hw->vlan_filter[0] & GMAC_VLAN_TAG_VID) == vid) {
-@@ -523,9 +535,45 @@ static int dwmac4_del_hw_vlan_rx_fltr(struct net_device *dev,
- 	return ret;
- }
- 
-+static void dwmac4_vlan_promisc_enable(struct net_device *dev,
-+				       struct mac_device_info *hw)
-+{
-+	void __iomem *ioaddr = hw->pcsr;
-+	u32 value;
-+	u32 hash;
-+	u32 val;
-+	int i;
-+
-+	/* Single Rx VLAN Filter */
-+	if (hw->num_vlan == 1) {
-+		dwmac4_write_single_vlan(dev, 0);
-+		return;
-+	}
-+
-+	/* Extended Rx VLAN Filter Enable */
-+	for (i = 0; i < hw->num_vlan; i++) {
-+		if (hw->vlan_filter[i] & GMAC_VLAN_TAG_DATA_VEN) {
-+			val = hw->vlan_filter[i] & ~GMAC_VLAN_TAG_DATA_VEN;
-+			dwmac4_write_vlan_filter(dev, hw, i, val);
-+		}
-+	}
-+
-+	hash = readl(ioaddr + GMAC_VLAN_HASH_TABLE);
-+	if (hash & GMAC_VLAN_VLHT) {
-+		value = readl(ioaddr + GMAC_VLAN_TAG);
-+		if (value & GMAC_VLAN_VTHM) {
-+			value &= ~GMAC_VLAN_VTHM;
-+			writel(value, ioaddr + GMAC_VLAN_TAG);
-+		}
-+	}
-+}
-+
- static void dwmac4_restore_hw_vlan_rx_fltr(struct net_device *dev,
- 					   struct mac_device_info *hw)
- {
-+	void __iomem *ioaddr = hw->pcsr;
-+	u32 value;
-+	u32 hash;
- 	u32 val;
- 	int i;
- 
-@@ -542,6 +590,13 @@ static void dwmac4_restore_hw_vlan_rx_fltr(struct net_device *dev,
- 			dwmac4_write_vlan_filter(dev, hw, i, val);
- 		}
- 	}
-+
-+	hash = readl(ioaddr + GMAC_VLAN_HASH_TABLE);
-+	if (hash & GMAC_VLAN_VLHT) {
-+		value = readl(ioaddr + GMAC_VLAN_TAG);
-+		value |= GMAC_VLAN_VTHM;
-+		writel(value, ioaddr + GMAC_VLAN_TAG);
-+	}
- }
- 
- static void dwmac4_set_filter(struct mac_device_info *hw,
-@@ -624,6 +679,18 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 		value |= GMAC_PACKET_FILTER_VTFE;
- 
- 	writel(value, ioaddr + GMAC_PACKET_FILTER);
-+
-+	if (dev->flags & IFF_PROMISC) {
-+		if (!hw->promisc) {
-+			hw->promisc = 1;
-+			dwmac4_vlan_promisc_enable(dev, hw);
-+		}
-+	} else {
-+		if (hw->promisc) {
-+			hw->promisc = 0;
-+			dwmac4_restore_hw_vlan_rx_fltr(dev, hw);
-+		}
-+	}
- }
- 
- static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index e6898fd5223f..80250c7be783 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4877,7 +4877,6 @@ int stmmac_dvr_probe(struct device *device,
- 		}
- 	}
- 
--	ndev->features |= ndev->hw_features | NETIF_F_HIGHDMA;
- 	ndev->watchdog_timeo = msecs_to_jiffies(watchdog);
- #ifdef STMMAC_VLAN_TAG_USED
- 	/* Both mac100 and gmac support receive VLAN tag detection */
-@@ -4892,6 +4891,7 @@ int stmmac_dvr_probe(struct device *device,
- 			ndev->features |= NETIF_F_HW_VLAN_STAG_TX;
- 	}
- #endif
-+	ndev->features |= ndev->hw_features | NETIF_F_HIGHDMA;
- 	priv->msg_enable = netif_msg_init(debug, default_msg_level);
- 
- 	/* Initialize RSS */
 -- 
-2.17.0
-
+viresh
