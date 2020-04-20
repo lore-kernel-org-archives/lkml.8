@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B82C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DA3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7415C21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94AC7206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386657;
-	bh=dLv/qwlL/DthhCXAYTiM1eKhBegrkHPVFlsN4z6yEAM=;
+	s=default; t=1587386660;
+	bh=aj7jSU0TCG/lF1yPRu6YAFGC5R8mSASegSlZmQ/WKYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rFn98KMV6toP3znXVSppB2C1a5ntn+WavBUMzoOzVT3MZu0fsMzYjb3iT7YauUW7S
-	 iaYtl7e8L1PDE7uaVzYm5OHUXVZoMBZ7jRtQbrvM/qJhIpogjEehTfuSITPSEdkoEF
-	 9liSdrJUFwdoLw6HtMIOWWTudpea0L395qJDeR4g=
+	b=Vi2c6/nYneDPhNFmifhhb9OE+CpdnnT9lin5Uxv5MzgCXslYHHODupwzf7cQpyj1h
+	 vKBj5ilH6UsuFn5gFGvhDQCPF3WiB9Kn4BAvzp9EM6+zXCpyC/RJTfyGiQ4ScRPbL8
+	 YVWot/ZK+Vpsp4lUqZF0qzZftmMAhR+y1Jsyri2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgDTMoQ (ORCPT
+        id S1728548AbgDTMoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:44:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38060 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:44:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbgDTMoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:13 -0400
+        id S1728536AbgDTMoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:44:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 194A220747;
-        Mon, 20 Apr 2020 12:44:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98BE120738;
+        Mon, 20 Apr 2020 12:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386652;
-        bh=dLv/qwlL/DthhCXAYTiM1eKhBegrkHPVFlsN4z6yEAM=;
+        s=default; t=1587386655;
+        bh=aj7jSU0TCG/lF1yPRu6YAFGC5R8mSASegSlZmQ/WKYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kTkncDu0zwLRDJkOd4C1io3/rHQ7OCI7OlH8mM+bDQF7xDtlFeXQQOK1UYeJ2paoc
-         QCy8+o5TLfG/YX9wQLAq8LdFdGfWmk1o6S8L4NaHkK609T1cq0VbN44u44lZ8UZJNs
-         sy89g8OVdgib6zWf3XXMmpLcwJsRK4xZGmsx26wU=
+        b=PsLtgSmK6Fr6QXeX26WCH+ZCom+6HdzdtHod61HO5kTkfcOyDRv58HB9O6JWAFIFZ
+         2EeG5VIZkAO9lPPJDfrsHNEB/HgnN366IEQur0+QrEZt2haQu2g5SIPN6akN9yXAxq
+         XUowJUbuiq9Xmmjv4SFGofGuhGzBBPjWSOR2OPKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 42/71] ALSA: hda: Allow setting preallocation again for x86
-Date:   Mon, 20 Apr 2020 14:38:56 +0200
-Message-Id: <20200420121517.831060893@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Barber <barberadam995@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 43/71] ALSA: hda/realtek - Enable the headset mic on Asus FX505DT
+Date:   Mon, 20 Apr 2020 14:38:57 +0200
+Message-Id: <20200420121518.065453817@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -58,56 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Adam Barber <barberadam995@gmail.com>
 
-commit f8e4ae10de43fbb7ce85f79e04eca2988b6b2c40 upstream.
+commit 4963d66b8a26c489958063abb6900ea6ed8e4836 upstream.
 
-The commit c31427d0d21e ("ALSA: hda: No preallocation on x86
-platforms") changed CONFIG_SND_HDA_PREALLOC_SIZE setup and its default
-to zero for x86, as the preallocation should work almost all cases.
-However, this expectation was too naive; some applications try to
-allocate as the max buffer size as possible, and it leads to the
-memory exhaustion.  More badly, the commit changed the kconfig no
-longer adjustable for x86, so you can't fix it statically (although it
-can be still adjusted via procfs).
+On Asus FX505DT with Realtek ALC233, the headset mic is connected
+to pin 0x19, with default 0x411111f0.
 
-So, practically seen, it's more recommended to set a reasonable limit
-for x86, too.  This patch follows to that experience, and changes the
-default to 2048 and allow the kconfig adjustable again.
+Enable headset mic by reconfiguring the pin to an external mic
+associated with the headphone on 0x21. Mic jack detection was also
+found to be working.
 
-Fixes: c31427d0d21e ("ALSA: hda: No preallocation on x86 platforms")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207131
+Signed-off-by: Adam Barber <barberadam995@gmail.com>
 Cc: <stable@vger.kernel.org>
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207223
-Link: https://lore.kernel.org/r/20200413201919.24241-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200410090032.2759-1-barberadam995@gmail.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/hda/Kconfig |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/hda/Kconfig
-+++ b/sound/hda/Kconfig
-@@ -21,16 +21,17 @@ config SND_HDA_EXT_CORE
-        select SND_HDA_CORE
- 
- config SND_HDA_PREALLOC_SIZE
--	int "Pre-allocated buffer size for HD-audio driver" if !SND_DMA_SGBUF
-+	int "Pre-allocated buffer size for HD-audio driver"
- 	range 0 32768
--	default 0 if SND_DMA_SGBUF
-+	default 2048 if SND_DMA_SGBUF
- 	default 64 if !SND_DMA_SGBUF
- 	help
- 	  Specifies the default pre-allocated buffer-size in kB for the
- 	  HD-audio driver.  A larger buffer (e.g. 2048) is preferred
- 	  for systems using PulseAudio.  The default 64 is chosen just
- 	  for compatibility reasons.
--	  On x86 systems, the default is zero as we need no preallocation.
-+	  On x86 systems, the default is 2048 as a reasonable value for
-+	  most of modern systems.
- 
- 	  Note that the pre-allocation size can be changed dynamically
- 	  via a proc file (/proc/asound/card*/pcm*/sub*/prealloc), too.
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7253,6 +7253,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
+ 	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_DUAL_SPK),
+ 	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1043, 0x18f1, "Asus FX505DT", ALC256_FIXUP_ASUS_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x19ce, "ASUS B9450FA", ALC294_FIXUP_ASUS_HPE),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+ 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
 
 
