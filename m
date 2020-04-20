@@ -2,102 +2,117 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EE9C55182
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0330C55182
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C51FA20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA9E20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:11:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="V3DbmNB+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgDTVLS (ORCPT
+        id S1727820AbgDTVLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:11:18 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:40292 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgDTVLR (ORCPT
+        Mon, 20 Apr 2020 17:11:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726758AbgDTVLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:11:17 -0400
-Received: by mail-pj1-f67.google.com with SMTP id a22so401176pjk.5;
-        Mon, 20 Apr 2020 14:11:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wrPH749mUN8hliBUrahYDBfQbFobH/RtFO+RluKgR0c=;
-        b=LivDrY5Ouu2czO0qIGWzXiVMlitkGzsLsQF2wFYUanuha55j6R1l/v3f6fbr5Yn97V
-         a1Nf1cKwKMlxNBx8gvh0B9TxG4lOjU8tn5EVF9NpQb6fvWIIlkndzF045ASxLmEFjgwo
-         Izmjb7PYRGKCrAHCZmYWquUI0m4pbaIP0OkP3ADy4jb/fJyqiVvA6xUqB0le0qSfKkaf
-         HGKGzxXrnYLD64A2zGsu3vVflmLlAp5HV+BJ02o4cXHRuwcObLIUWZL33s4I/kDOkUlR
-         ZMtAiHQiP9UPIibIM1t8GIN9FU7FyrXU7ilHN0xgyoMFSjZgH+hkSyJUnybkp4myk0+J
-         FtwA==
-X-Gm-Message-State: AGi0PuavJARo54tgWtDazrPA9nPgNBAIy9bluHK6W300PLR36cs+t77P
-        HZ9tmlDaRI8GylWusyvkoSCkLtEtyZs=
-X-Google-Smtp-Source: APiQypLpcT/SUkIQmuuXSrPoqK0E8Cp2xLvNfCZASPQMFboRu2ZZ34NFyvthqIVZYVdzDqs93Z4ZTg==
-X-Received: by 2002:a17:90b:3751:: with SMTP id ne17mr1574517pjb.114.1587417077115;
-        Mon, 20 Apr 2020 14:11:17 -0700 (PDT)
-Received: from [100.124.9.192] ([104.129.199.10])
-        by smtp.gmail.com with ESMTPSA id 71sm394670pfw.111.2020.04.20.14.11.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 14:11:16 -0700 (PDT)
-Subject: Re: [PATCH v2 04/10] block: revert back to synchronous request_queue
- removal
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-5-mcgrof@kernel.org>
- <749d56bd-1d66-e47b-a356-8d538e9c99b4@acm.org>
- <20200420185943.GM11244@42.do-not-panic.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <eba2a91b-62a6-839d-df54-2a1cf8262652@acm.org>
-Date:   Mon, 20 Apr 2020 14:11:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200420185943.GM11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 20 Apr 2020 17:11:35 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 927D0C061A0C;
+        Mon, 20 Apr 2020 14:11:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587417092;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=VM/1mpb9W6dJV54ZyNTgXDXYYRn4ff5iJpVvPcwV7tQ=;
+        b=V3DbmNB+/2OzYcD/ksfoGgU7TCUJp4yy6gYorp2RklGUGtZ4VE9hYISqfMMZ96PLeU
+        bI/JcsnrPG62syMuTnEnhYOVCMrKI45vfQejkc5gi7twVmG/ILKdrxccdFwLwE1EFMY5
+        mD5zziwKj+jg75hORSUFS2zPOQopCRZamvggfUgA9TPPUDW1kNed7eJM0uy1zYETdzcr
+        XiqE7p7q5vPGj4cu3agEejnMcAF629x057HJqPI3TsTLga2xVS4clfh8sAr9n1qdb/tM
+        AL8JrjW/aR+bLoAUuLHCvXCcr7Mxh/eEuccPcc7enXkm12ZEVqu/z825zgf0ZVYm7Xk/
+        Ojeg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWeXA4LPg=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.5.0 DYNA|AUTH)
+        with ESMTPSA id g06d2dw3KLBJF0M
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Mon, 20 Apr 2020 23:11:19 +0200 (CEST)
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200420150802.GR37466@atomide.com>
+Date:   Mon, 20 Apr 2020 23:11:18 +0200
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com>
+References: <20191217004048.46298-1-tony@atomide.com> <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com> <20200416184638.GI37466@atomide.com> <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com> <20200417164340.3d9043d1@aktux> <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com> <20200417150721.GL37466@atomide.com> <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com> <20200420150802.GR37466@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/20/20 11:59 AM, Luis Chamberlain wrote:
-> On Sun, Apr 19, 2020 at 03:23:31PM -0700, Bart Van Assche wrote:
->> On 4/19/20 12:45 PM, Luis Chamberlain wrote:
->>> + * Decrements the refcount to the request_queue kobject, when this reaches
->>> + * 0 we'll have blk_release_queue() called. You should avoid calling
->>> + * this function in atomic context but if you really have to ensure you
->>> + * first refcount the block device with bdgrab() / bdput() so that the
->>> + * last decrement happens in blk_cleanup_queue().
->>> + */
->>
->> Is calling bdgrab() and bdput() an option from a context in which it is not
->> guaranteed that the block device is open?
-> 
-> If the block device is not open, nope. For that blk_get_queue() can
-> be used, and is used by the block layer. This begs the question:
-> 
-> Do we have *drivers* which requires access to the request_queue from
-> atomic context when the block device is not open?
+Hi Tony,
 
-Instead of trying to answer that question, how about changing the 
-references to bdgrab() and bdput() into references to blk_get_queue() 
-and blk_put_queue()? I think if that change is made that we won't have 
-to research what the answer to the bdgrab()/bdput() question is.
+> Am 20.04.2020 um 17:08 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [200417 21:04]:
+>> To me it looks as if reading hqd too quickly after =
+omap_hdq_runtime_resume()
+>> may be part of the problem, although it is 0.4 seconds between [   =
+18.355163]
+>> and [   18.745269]. So I am not sure about my interpretation.
+>>=20
+>> A different attempt for interpretation may be that trying to read the
+>> slave triggers omap_hdq_runtime_resume() just before doing the
+>> first hdq_read_byte().
+>=20
+> Hmm so I wonder if adding msleep(100) at the end of
+> omap_hdq_runtime_resume() might help?
 
-Thanks,
+I have tried and initially it did boot and work once.
+But after the second boot/reboot the effect was back.
 
-Bart.
+This is something I have observed previously, that the issue
+is there in ca. 9 or 10 boot attempts. So I would assume
+some race condition with udev reading the uevent file of the
+bq27xxx bus client and hence through hdq.
+
+I already had noticed some hqd_read activity right after probing
+success.
+
+I had also tried to change pm_runtime_set_autosuspend_delay(, 1000)
+with no success. And I tried to call omap_hdq_runtime_resume() at the
+end of probe.
+
+The only maybe important observation was when I disabled all
+kernel modules except *hdq*.ko and *bq27*.ko. Then I did only
+get an emergency shell so that it is quite similar to the
+scenario Andreas has tested. With this setup it did work.
+
+I then tried to reenable other kernel modules but the result
+wasn't convincing that it gives a reliable result.
+
+So I have still no clear indication when the problem occurs and
+when not.
+
+BR and thanks,
+Nikolaus
+
+
+
