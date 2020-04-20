@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DEBC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D17BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27A2022202
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE012070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386593;
-	bh=qKGdh4Za47dTXjFZpK413jDKrBnm5xyHnkOpBgWgldg=;
+	s=default; t=1587386596;
+	bh=C5cBdh8kThou3Vgzq14GQWB3FYtbtmoMreyNANiwJgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0k3nvOF+ocJrm6wtIRVv0qSICj4n5RXr6dLNUM6WVu0FK5uvd4rNKUblcpE2cpjWC
-	 70A9sgvLXcOw43+MrD6GBR5SD7xCJ4hJkWrPOx/Bi53gG3b8bbWKzX3HOil4ibd/rl
-	 w43ufjudxwMf6X9zSQ11Wvyc1DZTJOcdorz8KsTQ=
+	b=H3a/358dvAOnLJh8JjeGu8ihFSj2jf76YhLJGmv3Fl0nYLwct++DjGxLdIX8WlQTq
+	 0kcSASSMnpqZCrzXMhaBpf8dXGoZGSgNo2XlR0YKyhKSy0ZOIZBchnL5M+ch4CTYT1
+	 WWH58ji/iwZ6hw9q8kbgukfF/mxGSgBP++rvcuSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgDTMnM (ORCPT
+        id S1728353AbgDTMnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:43:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36478 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbgDTMnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:43:08 -0400
+        id S1728340AbgDTMnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:43:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF9DE2072B;
-        Mon, 20 Apr 2020 12:43:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 401F820735;
+        Mon, 20 Apr 2020 12:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386588;
-        bh=qKGdh4Za47dTXjFZpK413jDKrBnm5xyHnkOpBgWgldg=;
+        s=default; t=1587386590;
+        bh=C5cBdh8kThou3Vgzq14GQWB3FYtbtmoMreyNANiwJgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FQGTUE/CiVaN13Jii9N+2BBJekK+iHMutGFAJlosUVlXUS431RLgJxPY/D0q+KANe
-         t0PMGfBtXEAWv5Y7EP9jwau3qK3FIWoPrVVL0sN04yGx9KRgkXew/ZOfAlhz9/kOlz
-         V4/AjPH1UaWvKZgHAt27rcv1LVU/Xl5P5XbMOjB0=
+        b=uoSkWWRX8qJEbZZHP45wC5f+Yh95mAHe1bSdSeAoFN0kWIm9NAERuhyyjc5pWMIpR
+         G2KQ5RGTtQe3cMmJDa0j3oCQQeNrzma4lmWB+do5JKriUucN640+NhotirI4JJSL34
+         IK9N3zThrYq6Xs/vfPyyp5fBmJXv7r/rKiedr8NM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        stable@vger.kernel.org, Wang Wenhu <wenhu.wang@vivo.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 08/71] net: phy: micrel: use genphy_read_status for KSZ9131
-Date:   Mon, 20 Apr 2020 14:38:22 +0200
-Message-Id: <20200420121510.320227733@linuxfoundation.org>
+Subject: [PATCH 5.6 09/71] net: qrtr: send msgs from local of same id as broadcast
+Date:   Mon, 20 Apr 2020 14:38:23 +0200
+Message-Id: <20200420121510.475989093@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,33 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+From: Wang Wenhu <wenhu.wang@vivo.com>
 
-[ Upstream commit 68dac3eb50be32957ae6e1e6da9281a3b7c6658b ]
+[ Upstream commit 6dbf02acef69b0742c238574583b3068afbd227c ]
 
-KSZ9131 will not work with some switches due to workaround for KSZ9031
-introduced in commit d2fd719bcb0e83cb39cfee22ee800f98a56eceb3
-("net/phy: micrel: Add workaround for bad autoneg").
-Use genphy_read_status instead of dedicated ksz9031_read_status.
+If the local node id(qrtr_local_nid) is not modified after its
+initialization, it equals to the broadcast node id(QRTR_NODE_BCAST).
+So the messages from local node should not be taken as broadcast
+and keep the process going to send them out anyway.
 
-Fixes: bff5b4b37372 ("net: phy: micrel: add Microchip KSZ9131 initial driver")
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+The definitions are as follow:
+static unsigned int qrtr_local_nid = NUMA_NO_NODE;
+
+Fixes: fdf5fd397566 ("net: qrtr: Broadcast messages only from control port")
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/micrel.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/qrtr/qrtr.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -1154,7 +1154,7 @@ static struct phy_driver ksphy_driver[]
- 	.driver_data	= &ksz9021_type,
- 	.probe		= kszphy_probe,
- 	.config_init	= ksz9131_config_init,
--	.read_status	= ksz9031_read_status,
-+	.read_status	= genphy_read_status,
- 	.ack_interrupt	= kszphy_ack_interrupt,
- 	.config_intr	= kszphy_config_intr,
- 	.get_sset_count = kszphy_get_sset_count,
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -907,20 +907,21 @@ static int qrtr_sendmsg(struct socket *s
+ 
+ 	node = NULL;
+ 	if (addr->sq_node == QRTR_NODE_BCAST) {
+-		enqueue_fn = qrtr_bcast_enqueue;
+-		if (addr->sq_port != QRTR_PORT_CTRL) {
++		if (addr->sq_port != QRTR_PORT_CTRL &&
++		    qrtr_local_nid != QRTR_NODE_BCAST) {
+ 			release_sock(sk);
+ 			return -ENOTCONN;
+ 		}
++		enqueue_fn = qrtr_bcast_enqueue;
+ 	} else if (addr->sq_node == ipc->us.sq_node) {
+ 		enqueue_fn = qrtr_local_enqueue;
+ 	} else {
+-		enqueue_fn = qrtr_node_enqueue;
+ 		node = qrtr_node_lookup(addr->sq_node);
+ 		if (!node) {
+ 			release_sock(sk);
+ 			return -ECONNRESET;
+ 		}
++		enqueue_fn = qrtr_node_enqueue;
+ 	}
+ 
+ 	plen = (len + 3) & ~3;
 
 
