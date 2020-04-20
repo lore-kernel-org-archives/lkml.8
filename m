@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40031C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C3AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 103FC206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F137206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387151;
-	bh=qKGdh4Za47dTXjFZpK413jDKrBnm5xyHnkOpBgWgldg=;
+	s=default; t=1587387157;
+	bh=w2SkFmHo/Ut+jRMaAS5GKrDYHKTgFsE/O5mcLf2r7iY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fW6fq81rW9ZG/SNOz2bgMM57Px4Zrw80pjIUASYf+059Ujd/rLt6DLn8z1EDysmSb
-	 iLzitFTxuzRt1GsPybBG520u5pJCBF1jGYomxADIVasQEuSEkmxmJY69CXu7IsDuoc
-	 y+oAGQ2lLker1jHTuOIxgOJpcA2v9MXAAIPqmxoM=
+	b=HeyeLhWdyoCqJr6XW6MFJkCIcbdcsIg/ZcH5ANUW6bi1PGPTxfoQSeYE7wVdXyTzd
+	 Ib1eMAIsW2yUAon4MuwT17Pq92UZbP00xEaZR9eDSwo/prn5uh2ZyRFH0xVJI8PY0n
+	 +rCI7HFw23d8eQ2zFgOYoom7IXZW+5cKhW95CkSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbgDTMwa (ORCPT
+        id S1729026AbgDTMwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43174 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:52:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbgDTMrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:47:16 -0400
+        id S1729018AbgDTMrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:47:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 878E92072B;
-        Mon, 20 Apr 2020 12:47:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4285206DD;
+        Mon, 20 Apr 2020 12:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386836;
-        bh=qKGdh4Za47dTXjFZpK413jDKrBnm5xyHnkOpBgWgldg=;
+        s=default; t=1587386826;
+        bh=w2SkFmHo/Ut+jRMaAS5GKrDYHKTgFsE/O5mcLf2r7iY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mtxmCcR5MCTXIq43fq1QpUfCxgHnk/K5Z0OY9R9m7Qt2Su6uDHObGXC/EJ/bbu709
-         m9dedQG+d5RGVnHsgS2RGAHjPg8xOjQOoKwJ/oZ43ejOgIuKaLq8PDjAvGUYEt8b3J
-         fELZYDvQS3pcnaEQrgvoRQHzJGi2kzHVknUT61Ls=
+        b=pBzU0NAYfhCcELCBi/etelmVwQZ6I87d/cXTLE7LPfOKSk2AKVnOuzCHACKKNTgUJ
+         akHflW5+ydGmnJD42QkJntC8F07CjVa0Fhjl3SUry/30HhvGyPqj41KTTEnnVRrajM
+         d0hwwVEl7OZgbT8yiS7yleNaSA94+Amni4vioz+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        stable@vger.kernel.org, Taras Chornyi <taras.chornyi@plvision.eu>,
+        Vadym Kochan <vadym.kochan@plvision.eu>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 07/60] net: phy: micrel: use genphy_read_status for KSZ9131
-Date:   Mon, 20 Apr 2020 14:38:45 +0200
-Message-Id: <20200420121503.007491690@linuxfoundation.org>
+Subject: [PATCH 5.4 05/60] net: ipv4: devinet: Fix crash when add/del multicast IP with autojoin
+Date:   Mon, 20 Apr 2020 14:38:43 +0200
+Message-Id: <20200420121502.351757057@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -59,33 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+From: Taras Chornyi <taras.chornyi@plvision.eu>
 
-[ Upstream commit 68dac3eb50be32957ae6e1e6da9281a3b7c6658b ]
+[ Upstream commit 690cc86321eb9bcee371710252742fb16fe96824 ]
 
-KSZ9131 will not work with some switches due to workaround for KSZ9031
-introduced in commit d2fd719bcb0e83cb39cfee22ee800f98a56eceb3
-("net/phy: micrel: Add workaround for bad autoneg").
-Use genphy_read_status instead of dedicated ksz9031_read_status.
+When CONFIG_IP_MULTICAST is not set and multicast ip is added to the device
+with autojoin flag or when multicast ip is deleted kernel will crash.
 
-Fixes: bff5b4b37372 ("net: phy: micrel: add Microchip KSZ9131 initial driver")
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+steps to reproduce:
+
+ip addr add 224.0.0.0/32 dev eth0
+ip addr del 224.0.0.0/32 dev eth0
+
+or
+
+ip addr add 224.0.0.0/32 dev eth0 autojoin
+
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000088
+ pc : _raw_write_lock_irqsave+0x1e0/0x2ac
+ lr : lock_sock_nested+0x1c/0x60
+ Call trace:
+  _raw_write_lock_irqsave+0x1e0/0x2ac
+  lock_sock_nested+0x1c/0x60
+  ip_mc_config.isra.28+0x50/0xe0
+  inet_rtm_deladdr+0x1a8/0x1f0
+  rtnetlink_rcv_msg+0x120/0x350
+  netlink_rcv_skb+0x58/0x120
+  rtnetlink_rcv+0x14/0x20
+  netlink_unicast+0x1b8/0x270
+  netlink_sendmsg+0x1a0/0x3b0
+  ____sys_sendmsg+0x248/0x290
+  ___sys_sendmsg+0x80/0xc0
+  __sys_sendmsg+0x68/0xc0
+  __arm64_sys_sendmsg+0x20/0x30
+  el0_svc_common.constprop.2+0x88/0x150
+  do_el0_svc+0x20/0x80
+ el0_sync_handler+0x118/0x190
+  el0_sync+0x140/0x180
+
+Fixes: 93a714d6b53d ("multicast: Extend ip address command to enable multicast group join/leave on")
+Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/micrel.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/devinet.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -1154,7 +1154,7 @@ static struct phy_driver ksphy_driver[]
- 	.driver_data	= &ksz9021_type,
- 	.probe		= kszphy_probe,
- 	.config_init	= ksz9131_config_init,
--	.read_status	= ksz9031_read_status,
-+	.read_status	= genphy_read_status,
- 	.ack_interrupt	= kszphy_ack_interrupt,
- 	.config_intr	= kszphy_config_intr,
- 	.get_sset_count = kszphy_get_sset_count,
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -614,12 +614,15 @@ struct in_ifaddr *inet_ifa_byprefix(stru
+ 	return NULL;
+ }
+ 
+-static int ip_mc_config(struct sock *sk, bool join, const struct in_ifaddr *ifa)
++static int ip_mc_autojoin_config(struct net *net, bool join,
++				 const struct in_ifaddr *ifa)
+ {
++#if defined(CONFIG_IP_MULTICAST)
+ 	struct ip_mreqn mreq = {
+ 		.imr_multiaddr.s_addr = ifa->ifa_address,
+ 		.imr_ifindex = ifa->ifa_dev->dev->ifindex,
+ 	};
++	struct sock *sk = net->ipv4.mc_autojoin_sk;
+ 	int ret;
+ 
+ 	ASSERT_RTNL();
+@@ -632,6 +635,9 @@ static int ip_mc_config(struct sock *sk,
+ 	release_sock(sk);
+ 
+ 	return ret;
++#else
++	return -EOPNOTSUPP;
++#endif
+ }
+ 
+ static int inet_rtm_deladdr(struct sk_buff *skb, struct nlmsghdr *nlh,
+@@ -675,7 +681,7 @@ static int inet_rtm_deladdr(struct sk_bu
+ 			continue;
+ 
+ 		if (ipv4_is_multicast(ifa->ifa_address))
+-			ip_mc_config(net->ipv4.mc_autojoin_sk, false, ifa);
++			ip_mc_autojoin_config(net, false, ifa);
+ 		__inet_del_ifa(in_dev, ifap, 1, nlh, NETLINK_CB(skb).portid);
+ 		return 0;
+ 	}
+@@ -940,8 +946,7 @@ static int inet_rtm_newaddr(struct sk_bu
+ 		 */
+ 		set_ifa_lifetime(ifa, valid_lft, prefered_lft);
+ 		if (ifa->ifa_flags & IFA_F_MCAUTOJOIN) {
+-			int ret = ip_mc_config(net->ipv4.mc_autojoin_sk,
+-					       true, ifa);
++			int ret = ip_mc_autojoin_config(net, true, ifa);
+ 
+ 			if (ret < 0) {
+ 				inet_free_ifa(ifa);
 
 
