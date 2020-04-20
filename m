@@ -2,93 +2,104 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54E7C55183
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB3CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4EB42078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587418293;
-	bh=dVy3wOmlZH1/zmu2ugX93t8GrmESbinIVXGYIlw/ufE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=POnwaCizsO71eh8K0dBtJT7aBnbRDyjJKP3RdtlAwTT4rvc4lOpnIHiPUdxTPqI3D
-	 lsaq+yZxDLvC+MfCQy1ylPAu29jehNlhfrKo6dZeymEEs3YdYvxRvxO01oOkm7LrXj
-	 suySsjJp5rBHHDx4pfcF+ufuB5/c4DetqRqBJNUY=
+	by mail.kernel.org (Postfix) with ESMTP id 11C6F20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:34:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2Us/jbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgDTVbd (ORCPT
+        id S1726960AbgDTVeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:31:33 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38414 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgDTVbc (ORCPT
+        Mon, 20 Apr 2020 17:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726017AbgDTVeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:31:32 -0400
-Received: by mail-oi1-f193.google.com with SMTP id r66so10205667oie.5;
-        Mon, 20 Apr 2020 14:31:31 -0700 (PDT)
+        Mon, 20 Apr 2020 17:34:11 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08CC0C061A0C;
+        Mon, 20 Apr 2020 14:34:10 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id w3so4441450plz.5;
+        Mon, 20 Apr 2020 14:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ngBQy1ShJKeMNEcOYtB0Goj5+Rtf1XPN16PoTzN6Leg=;
+        b=W2Us/jbX10J6JgHcI+yTDBmtiIXCW2MFCTUAFrkq9lmd0IzSUCsb6VMRR3yDsW/dfu
+         GWdEUrjtMdzc+hFFsRjzH24fON/tRNB8vmtK4JNGXEWElZPD5//pUlH1+P07dvGsKmPH
+         xDFzpe2whUTSpZYCZHIgkoJQtz3Y7OxaDLbWIBIaemUZSIelJJ2ZukeLJTn0Ma0GPlDm
+         lLjn1xSDgI158rHQpq8qzCW0wTUsXdWNEBDAoB4sxJ+/x4XqBmDrEm7TmKc7dw+SiOLF
+         RwZyiBP5JWcxUP5RQsn9/OWkEiOuygonpC9C0WMg6hufuYrd6kDSYRKAv+y0Fjaymyi5
+         Vd4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xCbMSBWE/K7CMTFoStyxNkJaPmhk/SFie0hTZQJVUuE=;
-        b=sJMjECmu0mmTTgHhyEETBQesotteG5lfuWufzJGnqs0lHdDFHFv+wbseCsPUftz91Z
-         K7Fu91EVn4YotE4SCEcpdMgKSJ7JhiKbC/qOaWfFn9x1ycWU7ipifDeZ3sYlff5KNsMu
-         DWXJan/NkVA4eBCKIKaL7mjRVR7Iy3bOagUTQSj5j/1Y+zlqS8rSMJXv4ZabGMGb94NJ
-         UEcvjcSVYGQLzwXjlW2v+guSCEMAcmJ2EM0ip1orzToahBQVHBrvxK26slqmwdpI3UAI
-         qZseXhF4nO4GKNHg+Ad6JSqBXExZrxE4vDm+rhAb3j21gUuRQPeHM58ShzyaG4+zJeXK
-         byfA==
-X-Gm-Message-State: AGi0PuYpfAGpmdEwVi1CaI2jzxA50OdeVAvxWBMFsi4hXWiF4xIS3pvW
-        0vr3nW6deOYGGd0PunfaGg==
-X-Google-Smtp-Source: APiQypKp/aMom3WcZIgx4KD9/tZ1PBp+icqSBiPeREh6uL2GtZ7nUmS6xX3EHcojP7gq2hudxYyZ2A==
-X-Received: by 2002:aca:4155:: with SMTP id o82mr1118364oia.16.1587418291457;
-        Mon, 20 Apr 2020 14:31:31 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s73sm171791oih.14.2020.04.20.14.31.29
+        bh=ngBQy1ShJKeMNEcOYtB0Goj5+Rtf1XPN16PoTzN6Leg=;
+        b=EonIEsDWnYtCo3jAzNdOdsGcgHQvfue+20uRcxPgEeC+xYwSlmsjgeFnhI68tAQ0wB
+         ukdqOfD91kpHbWArMeI5qZf56h1A66IO+fT4dmm1zuYXn7k4CCrPS4vtNrC7wVUDJXu3
+         MyQkQH4DmLBPNqgWCl1suZHKFuVF5SG94YgVF3YO3WubiZKaqkYQRrqx+JoKCENIPsoS
+         mGsSBB2ZkSfxdwV2bTNxyfIZKrwx/bjh4eAyHXgcF4uRSmTgt4uwfGxxOE57ozjwHbgU
+         4FySa2Qzz6bNT31u05eQhZr3z5MQtvMTWWXip+96YfoAXXZNH0ybqvxUB0yY1mP402H8
+         6PbA==
+X-Gm-Message-State: AGi0Puage3GKCy4R7301UaZV3RqmOVOjP34tRuaBbqc5Ej3sjBnVTk3t
+        LxspDteV4Qzq04qo7StmZ5is91wv
+X-Google-Smtp-Source: APiQypLOFKtNhGFo0UvjO6gLP4+Jh1qO0rA232c3p3m636GsPllrstk3XMhjakiQXenT8r+xhwXdHA==
+X-Received: by 2002:a17:902:8345:: with SMTP id z5mr14890188pln.97.1587418449491;
+        Mon, 20 Apr 2020 14:34:09 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id i10sm416268pfa.166.2020.04.20.14.34.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:31:30 -0700 (PDT)
-Received: (nullmailer pid 22338 invoked by uid 1000);
-        Mon, 20 Apr 2020 21:31:29 -0000
-Date:   Mon, 20 Apr 2020 16:31:29 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: Re: [PATCH v15 2/3] dt-bindings: display: mediatek: convert the
- document format from txt to yaml
-Message-ID: <20200420213129.GA22262@bogus>
-References: <20200415011319.25559-1-jitao.shi@mediatek.com>
- <20200415011319.25559-3-jitao.shi@mediatek.com>
+        Mon, 20 Apr 2020 14:34:08 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 14:34:06 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Clay McClure <clay@daemons.net>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Networking <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: cpts: Condition WARN_ON on PTP_1588_CLOCK
+Message-ID: <20200420213406.GB20996@localhost>
+References: <20200416085627.1882-1-clay@daemons.net>
+ <6fef3a00-6c18-b775-d1b4-dfd692261bd3@ti.com>
+ <20200420093610.GA28162@arctic-shiba-lx>
+ <CAK8P3a36ZxNJxUS4UzrwJiMx8UrgYPkcv4X6yYw7EC4jRBbbGQ@mail.gmail.com>
+ <20200420170051.GB11862@localhost>
+ <CAK8P3a11CqpDJzjy5QfV-ebHgRxUu8SRVTJPPmsus1O1+OL72Q@mail.gmail.com>
+ <20200420211819.GA16930@localhost>
+ <CAK8P3a18540y3zqR=mqKhj-goinN3c-FGKvAnTHnLgBxiPa4mA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415011319.25559-3-jitao.shi@mediatek.com>
+In-Reply-To: <CAK8P3a18540y3zqR=mqKhj-goinN3c-FGKvAnTHnLgBxiPa4mA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 09:13:18 +0800, Jitao Shi wrote:
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../bindings/display/mediatek/mediatek,dpi.txt     | 42 ----------
->  .../bindings/display/mediatek/mediatek,dpi.yaml    | 97 ++++++++++++++++++++++
->  2 files changed, 97 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
->  create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
-> 
+On Mon, Apr 20, 2020 at 11:21:20PM +0200, Arnd Bergmann wrote:
+> It's not great, but we have other interfaces like this that can return NULL for
+> success when the subsystem is disabled. The problem is when there is
+> a mismatch between the caller treating NULL as failure when it is meant to
+> be "successful lack of object returned".
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yeah, that should be fixed.
+
+To be clear, do you all see a need to change the stubbed version of
+ptp_clock_register() or not?
+
+Thanks,
+Richard
+
+
