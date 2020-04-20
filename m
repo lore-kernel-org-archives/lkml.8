@@ -2,179 +2,123 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3DFC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107E3C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB3B220782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30FC20782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iGiMxq0d"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="PNkN3a33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgDTTkO (ORCPT
+        id S1726563AbgDTTkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:40:14 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24522 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725550AbgDTTkO (ORCPT
+        Mon, 20 Apr 2020 15:40:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726161AbgDTTkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:40:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587411613;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gb6733bTywEo+X53Gf9DvL48p1l5FujRdQzUC56SatQ=;
-        b=iGiMxq0dXSDiMCzpNAGe78VFTXWEjxOxYB0vbxCeo6XNlH7IVzZDb9ocMe6N6RU12Af/bN
-        kPhkTcPNhXivFyb3ufsrmJT2gn8gzk4NqcGV7dCENkmaVqwSyj4jHx6wh/a2v1sGv2iJv/
-        lo9sE3ILhu/nQV5xH9CK2puG04jEpCI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-332-h-sWRbVyOS2icP-624wgIg-1; Mon, 20 Apr 2020 15:40:09 -0400
-X-MC-Unique: h-sWRbVyOS2icP-624wgIg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D3FF1B2C983;
-        Mon, 20 Apr 2020 19:40:08 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B24C910013A1;
-        Mon, 20 Apr 2020 19:40:07 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 13:40:05 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH] vfio/type1: Fix VA->PA translation for PFNMAP VMAs in
- vaddr_get_pfn()
-Message-ID: <20200420134005.456151fe@w520.home>
-In-Reply-To: <20200416225057.8449-1-sean.j.christopherson@intel.com>
-References: <20200416225057.8449-1-sean.j.christopherson@intel.com>
+        Mon, 20 Apr 2020 15:40:45 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56275C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:40:45 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id w3so4332319plz.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=crfRAQ43ge1CHQV5uG3ZCQRSUiv0vgP1i6rewJuDm8w=;
+        b=PNkN3a33VBD76bwnRlQGAdcoo4qu3vBYufcWqh9DvJiLUNX3qUhCDJur/R4f81+NyC
+         Li1t2ZcZz8PU8ATF5r1EjhFu/niv8mpCTMQJaykbL7kc9WyhYmGzMY2GD/sxLFWhnYhk
+         KnqnPQ08Fu8fGYlOC8tow8pDIiCzbNh5uqm8x+/p0lks84VDLDX2aPWhxgLr1z6dcbeD
+         vt9y01ezFHCFMzCPh2PPL+9R0icCE4zhNL3jLDam+/pXGvh3LTJGyPeGV81+uVCHIDp5
+         ZTWIX7790gMBPi4f5h4cJwVkbJpaT/tzoObaMf5nOk9eFOuHcip1labMqSKXOp/NE42a
+         p6Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=crfRAQ43ge1CHQV5uG3ZCQRSUiv0vgP1i6rewJuDm8w=;
+        b=e8TdLSoQv7N37YbObKNcWu//4yAs3LC4atM6jiIkZ0jNOlT3m4yPmLFLqRf75efqL+
+         JCiChG2c/2v6Qg8xK+cSRLGBODoxAFRy5IfUB+ClwdkbP3xpiCE8JrJ9WTh24aGLWaU6
+         LhCGHGO9jgXEXCWG/VuXMSGRCY2O0keUYCRjqHPNnzPmI9I82Gx88p4Tz7jY/XQCo6Dl
+         fsMc3gqoZDJ3VAD7NKz5F71b3eizT23hFvo58yFY8ue51IS1n9ZAadCoSAIq8I0T3tmg
+         6V5gWfzqLam6FT4PAV22NTqQ/ywGPt4I4Kc7x9j8PThbRnizzOK0sD3yHxtcfAt4wskE
+         /7uA==
+X-Gm-Message-State: AGi0PubL4E7f6tiV6XqmX1wXVeAAWSiuJf3yYg0uyPC1zNG6H4pt8Tdu
+        5I+qvinEuWx985JEx9hANSQUz1sv5dzJNw==
+X-Google-Smtp-Source: APiQypLeJdTJ2fJM1do4hReG8gEvplWurwkuXAVWnImM5hulRFvatqG5fZlyRHR9/wqsYonnONJJEw==
+X-Received: by 2002:a17:90a:ad02:: with SMTP id r2mr1158906pjq.63.1587411644566;
+        Mon, 20 Apr 2020 12:40:44 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id l30sm162213pje.34.2020.04.20.12.40.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 12:40:44 -0700 (PDT)
+Subject: Re: [PATCH 1/2] io_uring: trigger timeout after any sqe->off CQEs
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1587229607.git.asml.silence@gmail.com>
+ <28005ea0de63e15dbffd87a49fe9b671f1afa87e.1587229607.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <88cbde3c-52a1-7fb3-c4a7-b548beaa5502@kernel.dk>
+Date:   Mon, 20 Apr 2020 13:40:41 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <28005ea0de63e15dbffd87a49fe9b671f1afa87e.1587229607.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sean,
+On 4/18/20 11:20 AM, Pavel Begunkov wrote:
+> +static void __io_flush_timeouts(struct io_ring_ctx *ctx)
+> +{
+> +	u32 end, start;
+> +
+> +	start = end = ctx->cached_cq_tail;
+> +	do {
+> +		struct io_kiocb *req = list_first_entry(&ctx->timeout_list,
+> +							struct io_kiocb, list);
+> +
+> +		if (req->flags & REQ_F_TIMEOUT_NOSEQ)
+> +			break;
+> +		/*
+> +		 * multiple timeouts may have the same target,
+> +		 * check that @req is in [first_tail, cur_tail]
+> +		 */
+> +		if (!io_check_in_range(req->timeout.target_cq, start, end))
+> +			break;
+> +
+> +		list_del_init(&req->list);
+> +		io_kill_timeout(req);
+> +		end = ctx->cached_cq_tail;
+> +	} while (!list_empty(&ctx->timeout_list));
+> +}
+> +
+>  static void io_commit_cqring(struct io_ring_ctx *ctx)
+>  {
+>  	struct io_kiocb *req;
+>  
+> -	while ((req = io_get_timeout_req(ctx)) != NULL)
+> -		io_kill_timeout(req);
+> +	if (!list_empty(&ctx->timeout_list))
+> +		__io_flush_timeouts(ctx);
+>  
+>  	__io_commit_cqring(ctx);
+>  
 
-On Thu, 16 Apr 2020 15:50:57 -0700
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+Any chance we can do this without having to iterate timeouts on the
+completion path?
 
-> Use follow_pfn() to get the PFN of a PFNMAP VMA instead of assuming that
-> vma->vm_pgoff holds the base PFN of the VMA.  This fixes a bug where
-> attempting to do VFIO_IOMMU_MAP_DMA on an arbitrary PFNMAP'd region of
-> memory calculates garbage for the PFN.
-> 
-> Hilariously, this only got detected because the first "PFN" calculated
-> by vaddr_get_pfn() is PFN 0 (vma->vm_pgoff==0), and iommu_iova_to_phys()
-> uses PA==0 as an error, which triggers a WARN in vfio_unmap_unpin()
-> because the translation "failed".  PFN 0 is now unconditionally reserved
-> on x86 in order to mitigate L1TF, which causes is_invalid_reserved_pfn()
-> to return true and in turns results in vaddr_get_pfn() returning success
-> for PFN 0.  Eventually the bogus calculation runs into PFNs that aren't
-> reserved and leads to failure in vfio_pin_map_dma().  The subsequent
-> call to vfio_remove_dma() attempts to unmap PFN 0 and WARNs.
-> 
->   WARNING: CPU: 8 PID: 5130 at drivers/vfio/vfio_iommu_type1.c:750 vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
->   Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio ...
->   CPU: 8 PID: 5130 Comm: sgx Tainted: G        W         5.6.0-rc5-705d787c7fee-vfio+ #3
->   Hardware name: Intel Corporation Mehlow UP Server Platform/Moss Beach Server, BIOS CNLSE2R1.D00.X119.B49.1803010910 03/01/2018
->   RIP: 0010:vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
->   Code: <0f> 0b 49 81 c5 00 10 00 00 e9 c5 fe ff ff bb 00 10 00 00 e9 3d fe
->   RSP: 0018:ffffbeb5039ebda8 EFLAGS: 00010246
->   RAX: 0000000000000000 RBX: ffff9a55cbf8d480 RCX: 0000000000000000
->   RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9a52b771c200
->   RBP: 0000000000000000 R08: 0000000000000040 R09: 00000000fffffff2
->   R10: 0000000000000001 R11: ffff9a51fa896000 R12: 0000000184010000
->   R13: 0000000184000000 R14: 0000000000010000 R15: ffff9a55cb66ea08
->   FS:  00007f15d3830b40(0000) GS:ffff9a55d5600000(0000) knlGS:0000000000000000
->   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   CR2: 0000561cf39429e0 CR3: 000000084f75f005 CR4: 00000000003626e0
->   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->   Call Trace:
->    vfio_remove_dma+0x17/0x70 [vfio_iommu_type1]
->    vfio_iommu_type1_ioctl+0x9e3/0xa7b [vfio_iommu_type1]
->    ksys_ioctl+0x92/0xb0
->    __x64_sys_ioctl+0x16/0x20
->    do_syscall_64+0x4c/0x180
->    entry_SYSCALL_64_after_hwframe+0x44/0xa9
->   RIP: 0033:0x7f15d04c75d7
->   Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 81 48 2d 00 f7 d8 64 89 01 48
-> 
-> Fixes: 73fa0d10d077 ("vfio: Type1 IOMMU implementation")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
-> 
-> I'm mostly confident this is correct from the standpoint that it generates
-> the correct VA->PA.  I'm far less confident the end result is what VFIO
-> wants, there appears to be a fair bit of magic going on that I don't fully
-> understand, e.g. I'm a bit mystified as to how this ever worked in any
-> capacity.
-
-Yeah, that magic was copied from KVM's hva_to_pfn(), which split this
-part out into hva_to_pfn_remapped() in 92176a8ede57 and then in
-add6a0cd1c5b adopted a follow_pfn() approach, but also added forcing a
-user fault and retry mechanism, iiuc.  Cc'ing Paolo and Andrea to see
-if we should consider something similar.  We'd be forcing the fault on
-user mapping, not first access though, so I'm not sure if it's still
-useful.
- 
-> Mapping PFNMAP VMAs into the IOMMU without using a mmu_notifier also
-> seems dangerous, e.g. if the subsystem associated with the VMA
-> unmaps/remaps the VMA then the IOMMU will end up with stale
-> translations.
-
-The original use case was to support mapping MMIO ranges between
-devices to support p2p within a VM instance, so remapping the VMA was
-not a concern.  But yes, as this might be used beyond that limited
-case for something like rdma, it should be expanded.  Patches?
-
-> Last thought, using PA==0 for the error seems unnecessarily risky,
-> e.g. why not use something similar to KVM_PFN_ERR_* or an explicit
-> return code?
-
-We're just consuming what the IOMMU driver provide.  Both Intel and AMD
-return zero for a page not found.  In retrospect, yeah, we probably
-should have balked at that.
-
->  drivers/vfio/vfio_iommu_type1.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c
-> b/drivers/vfio/vfio_iommu_type1.c index 85b32c325282..c2ada190c5cb
-> 100644 --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -342,8 +342,8 @@ static int vaddr_get_pfn(struct mm_struct *mm,
-> unsigned long vaddr, vma = find_vma_intersection(mm, vaddr, vaddr +
-> 1); 
->  	if (vma && vma->vm_flags & VM_PFNMAP) {
-> -		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) +
-> vma->vm_pgoff;
-> -		if (is_invalid_reserved_pfn(*pfn))
-> +		if (!follow_pfn(vma, vaddr, pfn) &&
-> +		    is_invalid_reserved_pfn(*pfn))
->  			ret = 0;
->  	}
->  done:
-
-Should we consume that error code?
-
-	ret = follow_pfn(vma, vaddr, pfn);
-	if (!ret && !is_invalid_reserved_pfn(*pfn))
-		ret = -EINVAL;
-
-Thanks,
-Alex
+-- 
+Jens Axboe
 
