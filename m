@@ -2,106 +2,165 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80368C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07E9C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58E48206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:13:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j+oEqsfF"
+	by mail.kernel.org (Postfix) with ESMTP id A04EF2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgDTHNp (ORCPT
+        id S1726341AbgDTHOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:13:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725815AbgDTHNp (ORCPT
+        Mon, 20 Apr 2020 03:14:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23670 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725815AbgDTHOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:13:45 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7941C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:13:42 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id h2so9742168wmb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=YR76M7+QfRjvw5EtwYjnb3So/qNzKUFPYqnKSENL06s=;
-        b=j+oEqsfFSEehYdDaMCVRO5/BEh7yOsSRL4WCMgYNU4ByUFUamd/zsXe0tGibrfu0YH
-         K5w3ucNoA+y/Yq0Ndpa0YlTi62oODtwd9Jn8ew5HDISSFTANK3RTO6YgT6XCEjQ1ixNi
-         lc6VJH/qJiVZk75MbmHTBv/kiswML0390oa7SG3EX6mxjQY7ZO6HL8fXWIyG10fM/xQU
-         /E1DZgcGuK8HGwaeusM6FB+el8IttTwDpOApx+r8QzzOZOM1fJ1httF1o8g2JDuacN+o
-         W3Spv6i1aAPIMw5lzkJMUJhKvN+svV+qBjWRXsiezEOhy7ySDLL0BRS5OuFgEfn8ChhH
-         zSaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YR76M7+QfRjvw5EtwYjnb3So/qNzKUFPYqnKSENL06s=;
-        b=c2bKUO7tJ2zeFPiuioozaKK70AKiWx9FZReKThHa3qs5Ymvq3xM8nL6dY4PGBGXBDF
-         dGNk46yG6eXKWY6VWm6DCAsqymTtItfIyATJgi0vuoy0jovgya5TeOi0VY1qSX2h7BHG
-         cZYpRi+tB5yv5RNYFU5Lx7Mam7QB4rYBu8ZXdBEfzl59hlkusQfr00vJ0aRag6o59GKj
-         X+Eei2nN0/3L0rVaOfVFu1kzmH4i0xGEzH86FON1JahiB0mJwVP22QQAj8K2rqlq/Kd3
-         mjbT+rflEtFY8GBierOhoEIgECLK+YV3TZDZNhT8mN7vDBzGRJUCXHVYA/VvOmJTWDpl
-         DeRg==
-X-Gm-Message-State: AGi0Pua5OF5OPJ2t9eBdSd1VwaJV+jZSQwC/EFPbBu07c+IekO6v6PlX
-        PTxDroSaLW5DfcNG6sWn3OqIih6J1wk=
-X-Google-Smtp-Source: APiQypKpGsqOSTlQdF58ZanLLw569+NgUTeZDOfWsHb1HlqvPP5ipAf6ybVxjpNRRFSHD1D0SCM2kQ==
-X-Received: by 2002:a1c:61c2:: with SMTP id v185mr1356067wmb.92.1587366821384;
-        Mon, 20 Apr 2020 00:13:41 -0700 (PDT)
-Received: from dell ([95.149.164.107])
-        by smtp.gmail.com with ESMTPSA id e15sm41773193wrt.16.2020.04.20.00.13.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 00:13:40 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 08:13:39 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: asic3: Add error checking return in
- asic3_mfd_probe()
-Message-ID: <20200420071339.GG3737@dell>
-References: <b9626e96-4bdb-e7e1-51e7-a99210de4c32@web.de>
+        Mon, 20 Apr 2020 03:14:23 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K72k4I115310
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 03:14:22 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gcbe4f4s-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 03:14:22 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Mon, 20 Apr 2020 08:13:57 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 Apr 2020 08:13:55 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03K7D9Jh38732188
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 07:13:09 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4970E4203F;
+        Mon, 20 Apr 2020 07:14:16 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E06544204C;
+        Mon, 20 Apr 2020 07:14:15 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.158.104])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 07:14:15 +0000 (GMT)
+Subject: Re: linux-next: Tree for Apr 20
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Hadar Gat <hadar.gat@arm.com>
+References: <20200420142610.390e5922@canb.auug.org.au>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Mon, 20 Apr 2020 09:14:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200420142610.390e5922@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b9626e96-4bdb-e7e1-51e7-a99210de4c32@web.de>
+X-TM-AS-GCONF: 00
+x-cbid: 20042007-0012-0000-0000-000003A7C07F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042007-0013-0000-0000-000021E50938
+Message-Id: <2d87a4f9-9d87-e929-9b03-31f92dad5ca6@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_02:2020-04-17,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1015 suspectscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Apr 2020, Markus Elfring wrote:
 
-> > In the function asic3_mfd_probe(), when get resource or irq
-> > failed, the value returned just detected and debug error message,
-> > but there were no error checking return. So add the right error
-> > checking return.
+On 20.04.20 06:26, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I suggest to improve the commit message.
-> Would you like to adjust the patch subject?
+> Changes since 20200417:
 > 
+> My fixes tree is empty again.
 > 
-> > And remove the redundant 'ret = 0'.
+> The qcom tree still had its build failure for which I reverted a commit.
 > 
-> I propose to reconsider this interpretation of the source code here.
-> How do you think about to move the mentioned statement into an else branch
-> at the end?
+> The crypto tree still has its build failure for which I reverted 5 commits.
+> 
+> The drm-misc tree gained a build failure for which I disabled a
+> COMPILE_TEST setting.
+> 
+> The sound-asoc tree still has its build failures so I used the version from
+> next-20200414.
+> 
+> The ipmi tree gained a build failure for which I applied a patch.
+> 
+> Non-merge commits (relative to Linus' tree): 2732
+>  3544 files changed, 76515 insertions(+), 37271 deletions(-)
 
-Could you please fix your mailer.
+s390 defconfig still does not compile. While the media kconfig problem is gone I now have
 
-If you do not, your replies will be lost/discounted!
+  CC [M]  drivers/char/hw_random/cctrng.o
+drivers/char/hw_random/cctrng.c: In function ëcc_trng_compwork_handlerí:
+drivers/char/hw_random/cctrng.c:334:49: error: ëfips_enabledí undeclared (first use in this function); did you mean ëvdso_enabledí?
+  334 |  if (CC_REG_FLD_GET(RNG_ISR, CRNGT_ERR, isr) && fips_enabled) {
+      |                                                 ^~~~~~~~~~~~
+      |                                                 vdso_enabled
+drivers/char/hw_random/cctrng.c:334:49: note: each undeclared identifier is reported only once for each function it appears in
+drivers/char/hw_random/cctrng.c:335:3: error: implicit declaration of function ëfips_fail_notifyí [-Werror=implicit-function-declaration]
+  335 |   fips_fail_notify();
+      |   ^~~~~~~~~~~~~~~~
+cc1: some warnings being treated as errors
 
--- 
-Lee Jones [ÊùéÁêºÊñØ]
-Linaro Services Technical Lead
-Linaro.org ‚îÇ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Can we maybe make this driver depend on ARM?
+
