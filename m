@@ -2,129 +2,213 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E318FC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AF1C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD7A621927
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:44:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="WedNlbtZ"
+	by mail.kernel.org (Postfix) with ESMTP id E470A2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgDTFo1 (ORCPT
+        id S1726124AbgDTFpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:44:27 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.10]:49655 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726063AbgDTFo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:44:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=Kde4d4Iskv/eESUo3kW89uQutTL1AA81UbKX+DBEwr0=; b=W
-        edNlbtZZjgiW2Kq8k8ac+CLyF4EGP7+i19/4xZApaEBNO3Wx9fyOFXDL9ZUPnIJ9
-        tCPlGpUr8EKV9xrHIQy436U9ijsoldMg+xFYHIGRiReOY82ID4wcnuLFOwkaCy4i
-        tdHmo+PT5icLN+7Fde4Y5v1nIBa83Xe9ysLpaFh88o=
-Received: from localhost.localdomain (unknown [120.229.255.67])
-        by app1 (Coremail) with SMTP id XAUFCgD3_8dsNp1eenwWAA--.8407S3;
-        Mon, 20 Apr 2020 13:43:09 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] drm/i915/selftests:  Fix i915_address_space refcnt leak
-Date:   Mon, 20 Apr 2020 13:41:54 +0800
-Message-Id: <1587361342-83494-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XAUFCgD3_8dsNp1eenwWAA--.8407S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7KF43Gry7CFy3Jw4xArW3trb_yoW8Cw13pr
-        45Ca4Iyr90yw47ta9Fvws5W3WfA3WxKay8Cr1kWwn5Gr1UJa4Skr1Sgry5JFWUCrWfXry2
-        vrW2kFWava4FkaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8WwCF04k20xvY0x0EwIxGrw
-        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-        14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-        IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
-        wI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-        AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbfOz3UUUUU==
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Mon, 20 Apr 2020 01:45:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24968 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725379AbgDTFpG (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 01:45:06 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K5X1IO068502;
+        Mon, 20 Apr 2020 01:44:53 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30gc2vkd3h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 01:44:53 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03K5XF8M069065;
+        Mon, 20 Apr 2020 01:44:52 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30gc2vkd3b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 01:44:52 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03K5erVh008017;
+        Mon, 20 Apr 2020 05:44:52 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04wdc.us.ibm.com with ESMTP id 30fs65x48j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 05:44:52 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03K5ipEm49414520
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 05:44:51 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 45405BE054;
+        Mon, 20 Apr 2020 05:44:51 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B7F9BE04F;
+        Mon, 20 Apr 2020 05:44:43 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.47.165])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 05:44:43 +0000 (GMT)
+Subject: Re: [PATCH] perf stat: Improve runtime stat for interval mode
+To:     Jin Yao <yao.jin@linux.intel.com>, acme@kernel.org,
+        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200417005154.9024-1-yao.jin@linux.intel.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <d43f39d1-d673-4b18-f26e-e66df5ec0691@linux.ibm.com>
+Date:   Mon, 20 Apr 2020 11:14:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200417005154.9024-1-yao.jin@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_01:2020-04-17,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ impostorscore=0 phishscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 clxscore=1011 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004200049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-igt_ppgtt_pin_update() invokes i915_gem_context_get_vm_rcu(), which
-returns a reference of the i915_address_space object to "vm" with
-increased refcount.
 
-When igt_ppgtt_pin_update() returns, "vm" becomes invalid, so the
-refcount should be decreased to keep refcount balanced.
+On 4/17/20 6:21 AM, Jin Yao wrote:
+> For interval mode, the metric is printed after # if it exists. But
+> it's not calculated by the counts generated in this interval. See
+> following examples,
+> 
+>  root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000422803            764,809      inst_retired.any          #      2.9 CPI
+>       1.000422803          2,234,932      cycles
+>       2.001464585          1,960,061      inst_retired.any          #      1.6 CPI
+>       2.001464585          4,022,591      cycles
+> 
+> The second CPI should not be 1.6 (4,022,591/1,960,061 is 2.1)
+> 
+>  root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000429493          2,869,311      cycles
+>       1.000429493            816,875      instructions              #    0.28  insn per cycle
+>       2.001516426          9,260,973      cycles
+>       2.001516426          5,250,634      instructions              #    0.87  insn per cycle
+> 
+> The second 'insn per cycle' should not be 0.87 (5,250,634/9,260,973 is 0.57).
+> 
+> The current code uses a global variable rt_stat for tracking and
+> updating the std dev of runtime stat. Unlike the counts, rt_stat is
+> not reset for interval. While the counts are reset for interval.
+> 
+> perf_stat_process_counter()
+> {
+> 	if (config->interval)
+> 		init_stats(ps->res_stats);
+> }
+> 
+> So for interval, the rt_stat should be reset either.
+> 
+> This patch resets rt_stat before read_counters, so the runtime
+> stat is only calculated by the counts generated in this interval.
+> 
+> With this patch,
+> 
+>  root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000420924          2,408,818      inst_retired.any          #      2.1 CPI
+>       1.000420924          5,010,111      cycles
+>       2.001448579          2,798,407      inst_retired.any          #      1.6 CPI
+>       2.001448579          4,599,861      cycles
+> 
+>  root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000428555          2,769,714      cycles
+>       1.000428555            774,462      instructions              #    0.28  insn per cycle
+>       2.001471562          3,595,904      cycles
+>       2.001471562          1,243,703      instructions              #    0.35  insn per cycle
+>
 
-The reference counting issue happens in two exception handling paths of
-igt_ppgtt_pin_update(). When i915_gem_object_create_internal() returns
-IS_ERR, the refcnt increased by i915_gem_context_get_vm_rcu() is not
-decreased, causing a refcnt leak.
+Hi Jin,
+	Thanks for the patch. Was working on similar issue raised by Joakim Zhang.
+Here's link to my findings: https://lkml.org/lkml/2020/3/24/158
 
-Fix this issue by jumping to "out_vm" label when
-i915_gem_object_create_internal() returns IS_ERR.
+This patch solves the issue.
 
-Fixes: 4049866f0913 ("drm/i915/selftests: huge page tests")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- drivers/gpu/drm/i915/gem/selftests/huge_pages.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/gem/selftests/huge_pages.c b/drivers/gpu/drm/i915/gem/selftests/huge_pages.c
-index 9311250d7d6f..7a7763be6b2e 100644
---- a/drivers/gpu/drm/i915/gem/selftests/huge_pages.c
-+++ b/drivers/gpu/drm/i915/gem/selftests/huge_pages.c
-@@ -1578,8 +1578,10 @@ static int igt_ppgtt_pin_update(void *arg)
- 		unsigned int page_size = BIT(first);
+Acked-By: Kajol Jain <kjain@linux.ibm.com> and Tested-By: Kajol Jain <kjain@linux.ibm.com>
  
- 		obj = i915_gem_object_create_internal(dev_priv, page_size);
--		if (IS_ERR(obj))
--			return PTR_ERR(obj);
-+		if (IS_ERR(obj)) {
-+			err = PTR_ERR(obj);
-+			goto out_vm;
-+		}
- 
- 		vma = i915_vma_instance(obj, vm, NULL);
- 		if (IS_ERR(vma)) {
-@@ -1632,8 +1634,10 @@ static int igt_ppgtt_pin_update(void *arg)
- 	}
- 
- 	obj = i915_gem_object_create_internal(dev_priv, PAGE_SIZE);
--	if (IS_ERR(obj))
--		return PTR_ERR(obj);
-+	if (IS_ERR(obj)) {
-+		err = PTR_ERR(obj);
-+		goto out_vm;
-+	}
- 
- 	vma = i915_vma_instance(obj, vm, NULL);
- 	if (IS_ERR(vma)) {
--- 
-2.7.4
-
+> Now the second 'insn per cycle' and CPI are calculated by the counts
+> generated in this interval.> 
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> ---
+>  tools/perf/Documentation/perf-stat.txt | 2 ++
+>  tools/perf/builtin-stat.c              | 1 +
+>  tools/perf/util/stat-shadow.c          | 5 +++++
+>  tools/perf/util/stat.h                 | 1 +
+>  4 files changed, 9 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index 4d56586b2fb9..3fb5028aef08 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -176,6 +176,8 @@ Print count deltas every N milliseconds (minimum: 1ms)
+>  The overhead percentage could be high in some cases, for instance with small, sub 100ms intervals.  Use with caution.
+>  	example: 'perf stat -I 1000 -e cycles -a sleep 5'
+>  
+> +If the metric exists, it is calculated by the counts generated in this interval and the metric is printed after #.
+> +
+>  --interval-count times::
+>  Print count deltas for fixed number of times.
+>  This option should be used together with "-I" option.
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index ec053dc1e35c..d5c326ff46d0 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -359,6 +359,7 @@ static void process_interval(void)
+>  	clock_gettime(CLOCK_MONOTONIC, &ts);
+>  	diff_timespec(&rs, &ts, &ref_time);
+>  
+> +	perf_stat__reset_rt_stat();
+>  	read_counters(&rs);
+>  
+>  	if (STAT_RECORD) {
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 1ad5c5be7e97..c8f5ca6c8749 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -186,6 +186,11 @@ void perf_stat__reset_shadow_stats(void)
+>  	memset(&walltime_nsecs_stats, 0, sizeof(walltime_nsecs_stats));
+>  }
+>  
+> +void perf_stat__reset_rt_stat(void)
+> +{
+> +	reset_stat(&rt_stat);
+> +}
+> +
+>  void perf_stat__reset_shadow_per_stat(struct runtime_stat *st)
+>  {
+>  	reset_stat(st);
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index b4fdfaa7f2c0..2975494166dd 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -176,6 +176,7 @@ void runtime_stat__init(struct runtime_stat *st);
+>  void runtime_stat__exit(struct runtime_stat *st);
+>  void perf_stat__init_shadow_stats(void);
+>  void perf_stat__reset_shadow_stats(void);
+> +void perf_stat__reset_rt_stat(void);
+>  void perf_stat__reset_shadow_per_stat(struct runtime_stat *st);
+>  void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
+>  				    int cpu, struct runtime_stat *st);
+> 
