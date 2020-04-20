@@ -2,118 +2,94 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6931C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9973C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9777A206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8F1206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pvekA+bS"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="GRkRYA4n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgDTPga (ORCPT
+        id S1728134AbgDTPiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:36:30 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51110 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbgDTPga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:36:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=reWbSLTLYxCFThZVNc5Xkq8Sy+cv49VQ9S3/O8E0FM0=; b=pvekA+bSWB/+gBuXVHw3N1pU64
-        dbRZDOihYQ+WWtiCzPa9p7SduB6ek3GmnfMKwd0RE5/+8XhkztDOi42tcVUTF1MCzy5TOX8kUlRq7
-        eZHZjO7y81LC95lYGQU1GviHimv4hHL3+2Dj1fW4rKK5gyHdmJn0AU/U6KonDaRJn4Cs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jQYTB-003que-1N; Mon, 20 Apr 2020 17:36:25 +0200
-Date:   Mon, 20 Apr 2020 17:36:25 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 3/3] net: phy: bcm54140: add hwmon support
-Message-ID: <20200420153625.GA917792@lunn.ch>
-References: <20200417201338.GI785713@lunn.ch>
- <84679226df03bdd8060cb95761724d3a@walle.cc>
- <20200417212829.GJ785713@lunn.ch>
- <4f3ff33f78472f547212f87f75a37b66@walle.cc>
- <20200419162928.GL836632@lunn.ch>
- <ebc026792e09d5702d031398e96d34f2@walle.cc>
- <20200419170547.GO836632@lunn.ch>
- <0f7ea4522a76f977f3aa3a80dd62201d@walle.cc>
- <20200419215549.GR836632@lunn.ch>
- <75428c5faab7fc656051ab227663e6e6@walle.cc>
+        Mon, 20 Apr 2020 11:38:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbgDTPiy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:38:54 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22288C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:38:53 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id c16so8846672qtv.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u1kWcuYFn03hwVXwsvDY0f4HcUgS229FSxgRj7CnrJU=;
+        b=GRkRYA4nO05KIZfWUlx1Eo+x5NW3avb7hx/R/BR3G0jVgX29Pul3Nht48oJBW8fVo6
+         JMIUGRrYMOzX0e2InShPepFJHt6374ik6NwFQS04KBIebEj4hUrgH/o/CEAfO34vxEmv
+         HQf3pmSe0TqHeHdxJopHSx9bN9+Ts3u0X814g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u1kWcuYFn03hwVXwsvDY0f4HcUgS229FSxgRj7CnrJU=;
+        b=VzD2dqW3lo9EtmEDYz0Z8d3M6dSm9oRWUT4wcryfHTKjDzfT8OBqa3/mARkIdDbXo/
+         furi1jN/bzZ5Hcw28b35Fww0A6/0i5ugqcZRAMPUxsib8sWUj4ghYmtgNWXpjoBUw3zu
+         GRmDNff/Aigxs/dcxVf3d43GxJOcWzp2IcKsYV80qJNQN9sZOeJwqw1AhaFnhHw8K893
+         SjWPvMKA9yQLWcf4zSeE+D+YVv0MYfsYferUJbJnsRc5aBCb4vM1yvqJubx4ea/z2CSw
+         cdw45YTVJrIZPahBcezeyCUliyzRIEugvkAB3+w7nAFe2qY7xuFf33rh9TaKUaDYSv1q
+         4oiA==
+X-Gm-Message-State: AGi0PuZYWcNsZsim/Cxn87IY9y1z0zr1YmncoXLcKTED00v0bHJpVs9s
+        JeH0FSGd6FlaSanhpyTgQWe2VhDulFo=
+X-Google-Smtp-Source: APiQypIFwLhS3qC15R/u1QDQAimquSh3ehrcqoMeYptUaTq90YjjWzb50WK/CYBF0XbCAqTpP/xFuw==
+X-Received: by 2002:ac8:6f17:: with SMTP id g23mr16655042qtv.266.1587397131782;
+        Mon, 20 Apr 2020 08:38:51 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id v16sm765453qkf.80.2020.04.20.08.38.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 08:38:51 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        bigeasy@linutronix.de, Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, urezki@gmail.com
+Subject: [PATCH rcu/dev -fixes 0/4] 
+Date:   Mon, 20 Apr 2020 11:38:33 -0400
+Message-Id: <20200420153837.194532-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <75428c5faab7fc656051ab227663e6e6@walle.cc>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Ok I see, but what locking do you have in mind? We could have something
-> like
-> 
-> __phy_package_write(struct phy_device *dev, u32 regnum, u16 val)
-> {
->   return __mdiobus_write(phydev->mdio.bus, phydev->shared->addr,
->                          regnum, val);
-> }
-> 
-> and its phy_package_write() equivalent. But that would just be
-> convenience functions, nothing where you actually help the user with
-> locking. Am I missing something?
+Hi,
+Some of these patches would prevent breakage on PREEMPT_RT. I have marked them
+as "rcu/dev fixes". Please consider applying for v5.8. The exceptions are 3/4
+and 4/4 which some small clean-ups. Thanks!
 
-In general, drivers should not be using __foo functions. We want
-drivers to make use of phy_package_write() which would do the bus
-locking. Look at a typical PHY driver. There is no locking what so
-ever. Just lots of phy_read() and phy write(). The locking is done by
-the core and so should be correct.
+Joel Fernandes (Google) (3):
+rcu/tree: Keep kfree_rcu() awake during lock contention
+rcu/tree: Skip entry into the page allocator for PREEMPT_RT
+rcu/tree: Use consistent style for comments
 
-> > > > Get the core to do reference counting on the structure?
-> > > > Add helpers phy_read_shared(), phy_write_shared(), etc, which does
-> > > > MDIO accesses on the base device, taking care of the locking.
-> > > > 
-> > > The "base" access is another thing, I guess, which has nothing to do
-> > > with the shared structure.
-> > > 
-> > I'm making the assumption that all global addresses are at the base
-> > address. If we don't want to make that assumption, we need the change
-> > the API above so you pass a cookie, and all PHYs need to use the same
-> > cookie to identify the package.
-> 
-> how would a phy driver deduce a common cookie? And how would that be a
-> difference to using a PHY address.
+Sebastian Andrzej Siewior (1):
+rcu/tree: Avoid using xchg() in kfree_call_rcu_add_ptr_to_bulk()
 
-For a cookie, i don't care how the driver decides on the cookie. The
-core never uses it, other than comparing cookies to combine individual
-PHYs into a package. It could be a PHY address. It could be the PHY
-address where the global registers are. Or it could be anything else.
+kernel/rcu/tree.c | 61 ++++++++++++++++++++++++++++-------------------
+1 file changed, 37 insertions(+), 24 deletions(-)
 
-> > Maybe base is the wrong name, since MSCC can have the base as the high
-> > address of the four, not the low?
-> 
-> I'd say it might be any of the four addresses as long as it is the same
-> across the PHYs in the same package. And in that case you can also have
-> the phy_package_read/write() functions.
-
-Yes. That is the semantics which is think is most useful. But then we
-don't have a cookie, the value has real significance, and we need to
-document what is should mean.
-
-     Andrew
-
+--
+2.26.1.301.g55bc3eb7cb9-goog
 
