@@ -2,86 +2,133 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8426EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B47C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55256206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oksKOqpk"
+	by mail.kernel.org (Postfix) with ESMTP id B0153206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:23:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587385438;
+	bh=K0zF/6nWgKkJ9hIQ4iSVP9ZRM8xUkP5IdaMj7W1UFrI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pdsCPl/uJUnk/W6njmjD3wiJk0ehRp94QnXvCdjCk+FA/rgQ06pXj8B8N8MdWhPn0
+	 H8Suboey6kIYlrS+qHrrwuAWI0ARZunFwQdndh1RfZKriLPjb1D47mdIDcGz16TGSv
+	 JsdNiuz2CkMvrnscTO/F/+3rpP8wCmKs+Rch3ViA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgDTMXM (ORCPT
+        id S1726661AbgDTMX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726353AbgDTMXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:23:12 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81731C061A0C;
-        Mon, 20 Apr 2020 05:23:10 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id z17so7868813oto.4;
-        Mon, 20 Apr 2020 05:23:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dB5fFXDtNZJmKi5W1CbxDiopUm/CrNq1L0Xs/KI3ugA=;
-        b=oksKOqpkL5BIT0FQ3tM/1yCv9/QCkBbYAp9oHSGmnD02GSrlJ+H5X28PF7Lhp2B4+3
-         c30mxy6tvb98VsH8vSWt0ccXD77/CCm79AR2X4nbroKfgCilofvvz7aOxU3rG3BNwiRh
-         WHui24ltdhTl1ZT/EILNfr+ybZ17tMMn24RefPqYIuJchHHpYB+23fF4TC4vY4V7Unmz
-         2gqK+KawqQcldK+MKv0JoPXQSd6z+JqZssBruNIqIfA2KxDEPdMdS9N8gRTa1xTOkiqh
-         WAb+qQ29Yf+tjLq37uNTEmaXlQz7babkJUE+R2l/R4xEQMa8KJDboJQR16desRHjNAjg
-         7vrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dB5fFXDtNZJmKi5W1CbxDiopUm/CrNq1L0Xs/KI3ugA=;
-        b=UlAZBTrPvQUbz9kCF2H4A91QgqrMQgcrnrE6PTlPM4JUxFRHJAaEZ5tVffXSaq0EWt
-         f0by1AlQu0o0UzMgiajpq/yYLV9mcjkpcrgEVwP6lxP4x6tnMIU/VDgnNoluzRQEWXkx
-         4N2KI6rrpoai/lP1Fq/UUFIsdVSdW7bj8IE8q4evqUp4pyLivgwr5KUTTWBEn4gCKK8l
-         98lvt+/I7QKjtGKKm6WeKTQifqwMg+DMXmb9uJn31Q4m9DBIFF9hyidp2v7f0TWhdTzd
-         C0kqDB3YACI9ehWDjNYYWTlawOEkpI0zsRUunEaZUe+sX9a30Nq3lRFkFM/RLwKGMbOA
-         JSGg==
-X-Gm-Message-State: AGi0PuZdYlx7sHAX50FUlE3fjFZ2K1tBpABkqXraKnzN0mV9E/XY58By
-        uevGM29z9V5X155wrPBGCwNdK2Uw6wPfTx1QX8g=
-X-Google-Smtp-Source: APiQypKmSZJ8nmissvGU/pkWsPLYQA+fpHEY2Jk4ZHL3avI07b483TyKWn8igklk6qenSoDZ5w/ar4w4V/qRc8lWCLs=
-X-Received: by 2002:a9d:19ca:: with SMTP id k68mr9591231otk.232.1587385389897;
- Mon, 20 Apr 2020 05:23:09 -0700 (PDT)
+        Mon, 20 Apr 2020 08:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726318AbgDTMX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:23:57 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 782D1206D9;
+        Mon, 20 Apr 2020 12:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587385436;
+        bh=K0zF/6nWgKkJ9hIQ4iSVP9ZRM8xUkP5IdaMj7W1UFrI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HPQmN/+YKH1/wEe3gwWA7rpA+Y+IvG3pqAtV5ovFIioQl/PCiUQGoUBOWufyvRjQv
+         TVS6z6yxpmQby3PWmCB7mVyUjeVNCWHfpulmfJbAvceidSEFWLj8288ZMT+i7Tr+A6
+         oZ/IH5PpYiWKPNePjRsrpyDhLSbTA6B2yvybyNPs=
+Date:   Mon, 20 Apr 2020 13:23:51 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Alex Belits <abelits@marvell.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Prasun Kapoor <pkapoor@marvell.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "frederic@kernel.org" <frederic@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH v3 03/13] task_isolation: add instruction
+ synchronization memory barrier
+Message-ID: <20200420122350.GB12889@willie-the-truck>
+References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
+ <aed12dd15ea2981bc9554cfa8b5e273c1342c756.camel@marvell.com>
+ <07c25c246c55012981ec0296eee23e68c719333a.camel@marvell.com>
+ <d995795c731d6ecceb36bdf1c1df3d72fefd023d.camel@marvell.com>
+ <20200415124427.GB28304@C02TD0UTHF1T.local>
+ <e4d2cda6f011e80a0d8e482b85bca1c57665fcfd.camel@marvell.com>
 MIME-Version: 1.0
-References: <20200417221341.31428-1-TheSven73@gmail.com> <20200420121542.GB6507@sirena.org.uk>
-In-Reply-To: <20200420121542.GB6507@sirena.org.uk>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 20 Apr 2020 08:22:57 -0400
-Message-ID: <CAGngYiWauBTnXDcP9UC1S7U5Ogy0B=bUZSdGs1Z9aKZ2+sB=Qw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: sound: add Microsemi ZL38060 binding
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e4d2cda6f011e80a0d8e482b85bca1c57665fcfd.camel@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 8:15 AM Mark Brown <broonie@kernel.org> wrote:
->
-> > +maintainers:
-> > +  - Jaroslav Kysela <perex@perex.cz>
-> > +  - Takashi Iwai <tiwai@suse.com>
->
-> This is supposed to be people maintianing this specific binding, not the
-> subsystem.
+On Sun, Apr 19, 2020 at 05:02:01AM +0000, Alex Belits wrote:
+> On Wed, 2020-04-15 at 13:44 +0100, Mark Rutland wrote:
+> > On Thu, Apr 09, 2020 at 03:17:40PM +0000, Alex Belits wrote:
+> > > Some architectures implement memory synchronization instructions
+> > > for
+> > > instruction cache. Make a separate kind of barrier that calls them.
+> > 
+> > Modifying the instruction caches requries more than an ISB, and the
+> > 'IMB' naming implies you're trying to order against memory accesses,
+> > which isn't what ISB (generally) does.
+> > 
+> > What exactly do you want to use this for?
+> 
+> I guess, there should be different explanation and naming.
+> 
+> The intention is to have a separate barrier that causes cache
+> synchronization event, for use in architecture-independent code. I am
+> not sure, what exactly it should do to be implemented in architecture-
+> independent manner, so it probably only makes sense along with a
+> regular memory barrier.
+> 
+> The particular place where I had to use is the code that has to run
+> after isolated task returns to the kernel. In the model that I propose
+> for task isolation, remote context synchronization is skipped while
+> task is in isolated in userspace (it doesn't run kernel, and kernel
+> does not modify its userspace code, so it's harmless until entering the
+> kernel).
 
-That would be Liam and yourself?
+> So it will skip the results of kick_all_cpus_sync() that was
+> that was called from flush_icache_range() and other similar places.
+> This means that once it's out of userspace, it should only run
+> some "safe" kernel entry code, and then synchronize in some manner that
+> avoids race conditions with possible IPIs intended for context
+> synchronization that may happen at the same time. My next patch in the
+> series uses it in that one place.
+> 
+> Synchronization will have to be implemented without a mandatory
+> interrupt because it may be triggered locally, on the same CPU. On ARM,
+> ISB is definitely necessary there, however I am not sure, how this
+> should look like on x86 and other architectures. On ARM this probably
+> still should be combined with a real memory barrier and cache
+> synchronization, however I am not entirely sure about details. Would
+> it make more sense to run DMB, IC and ISB? 
+
+IIUC, we don't need to do anything on arm64 because taking an exception acts
+as a context synchronization event, so I don't think you should try to
+expose this as a new barrier macro. Instead, just make it a pre-requisite
+that architectures need to ensure this behaviour when entering the kernel
+from userspace if they are to select HAVE_ARCH_TASK_ISOLATION.
+
+That way, it's /very/ similar to what we do for MEMBARRIER_SYNC_CORE, the
+only real different being that that is concerned with return-to-user rather
+than entry-from-user.
+
+See Documentation/features/sched/membarrier-sync-core/arch-support.txt
+
+Will
