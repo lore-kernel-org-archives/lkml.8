@@ -2,180 +2,120 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB8EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635D2C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25F33206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374CE206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587395147;
+	bh=7BiXorufPKAH/HQwDAPyJlEGnPQWrcZBKYuT26mkfa4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=detpNoMx/Ey1lqdvCHtTKQdQKSNQuZGO2PQAf/7DLIONKA7sFvdTF5+jm1j+oKzJ0
+	 iWvga96SkL7diWaLS2dD51Zog19G/yFDfZCxWdeFC3ypqacEw/DAL2NbLyq9VIlcMx
+	 wkbNK0DmYSmjnPsjFg33fF4bfom4bxfiF1GpSwwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730062AbgDTPEe (ORCPT
+        id S1729203AbgDTPFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:04:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:50442 "EHLO foss.arm.com"
+        Mon, 20 Apr 2020 11:05:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbgDTPEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:04:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4562531B;
-        Mon, 20 Apr 2020 08:04:33 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA6C83F73D;
-        Mon, 20 Apr 2020 08:04:30 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 16:04:28 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200420150427.acz4nqyhlbgywi3h@e107158-lin.cambridge.arm.com>
-References: <20200403123020.13897-1-qais.yousef@arm.com>
- <20200414182152.GB20442@darkstar>
- <20200415074600.GA26984@darkstar>
+        id S1726105AbgDTPFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:05:46 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8576C206F6;
+        Mon, 20 Apr 2020 15:05:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587395145;
+        bh=7BiXorufPKAH/HQwDAPyJlEGnPQWrcZBKYuT26mkfa4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Y79zU3kE6J9vfYKflUYmHAt3XecS+mZTfm+H8HkXK3PHnSJ9yjRFZJWExU+/7OR0p
+         abbEFTGtu1H67B9XabUMY2hvw8VC8LP2BS2IZ7K7Nzcam92+0Bn3VNL5fhWlPqa2Gd
+         UzCvXt4ka5tJegHGIalhYUTCi4s2BX2ebkgTiZuM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5972F35233EC; Mon, 20 Apr 2020 08:05:45 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 08:05:45 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Petko Manolov' <petko.manolov@konsulko.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] WRITE_ONCE_INC() and friends
+Message-ID: <20200420150545.GB17661@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200419094439.GA32841@carbon>
+ <491f0b0bc9e4419d93a78974fd7f44c7@AcuMS.aculab.com>
+ <20200419182957.GA36919@carbon>
+ <8e5a0283ed76465aac19a2b97a27ff15@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415074600.GA26984@darkstar>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <8e5a0283ed76465aac19a2b97a27ff15@AcuMS.aculab.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/15/20 09:46, Patrick Bellasi wrote:
-
-[...]
-
-> > > diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-> > > index d4f6215ee03f..91204480fabc 100644
-> > > --- a/include/linux/sched/sysctl.h
-> > > +++ b/include/linux/sched/sysctl.h
-> > > @@ -59,6 +59,7 @@ extern int sysctl_sched_rt_runtime;
-> > >  #ifdef CONFIG_UCLAMP_TASK
-> > >  extern unsigned int sysctl_sched_uclamp_util_min;
-> > >  extern unsigned int sysctl_sched_uclamp_util_max;
-> > > +extern unsigned int sysctl_sched_rt_default_uclamp_util_min;
+On Sun, Apr 19, 2020 at 09:37:10PM +0000, David Laight wrote:
+> From: Petko Manolov
+> > Sent: 19 April 2020 19:30
 > > 
-> > nit-pick: I would prefer to keep the same prefix of the already
-> > exising knobs, i.e. sysctl_sched_uclamp_util_min_rt
+> > On 20-04-19 18:02:50, David Laight wrote:
+> > > From: Petko Manolov
+> > > > Sent: 19 April 2020 10:45
+> > > > Recently I started reading up on KCSAN and at some point I ran into stuff like:
+> > > >
+> > > > WRITE_ONCE(ssp->srcu_lock_nesting[idx], ssp->srcu_lock_nesting[idx] + 1);
+> > > > WRITE_ONCE(p->mm->numa_scan_seq, READ_ONCE(p->mm->numa_scan_seq) + 1);
+> > >
+> > > If all the accesses use READ/WRITE_ONCE() why not just mark the structure
+> > > field 'volatile'?
 > > 
-> > The same change for consistency should be applied to all the following
-> > symbols related to "uclamp_util_min_rt".
+> > This is a bit heavy.  I guess you've read this one:
 > > 
-> > NOTE: I would not use "default" as I think that what we are doing is
-> > exactly force setting a user_defined value for all RT tasks. More on
-> > that later...
+> > 	https://lwn.net/Articles/233479/
 > 
-> Had a second tought on that...
-
-Sorry just noticed that you had a second reply to this. I just saw the first
-initially.
-
-Still catching up after holiday..
-
-[...]
-
-> > > +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
-> > > +{
-> > > +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-> > 
-> > Don't we have to filter for RT tasks only here?
+> I remember reading something similar before.
+> I also remember a very old gcc (2.95?) that did a readback
+> after every volatile write on sparc (to flush the store buffer).
+> That broke everything.
 > 
-> I think this is still a valid point.
-
-Yep it is.
-
+> I suspect there is a lot more code that is attempting to be lockless
+> these days.
+> Ring buffers (one writer and one reader) are a typical example where
+> you don't need locks but do need to use a consistent value.
 > 
-> > > +
-> > > +	if (!uc_se->user_defined)
-> > > +		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
-> > 
-> > Here you are actually setting a user-requested value, why not marking
-> > it as that, i.e. by using true for the last parameter?
+> Now you may also need ordering between accesses - which I think needs
+> more than volatile.
+
+In Petko's patch, all needed ordering is supplied by the fact that it
+is the same variable being read and written.  But yes, in many other
+cases, more ordering is required.
+
+> > And no, i am not sure all accesses are through READ/WRITE_ONCE().  If, for
+> > example, all others are from withing spin_lock/unlock pairs then we _may_ not
+> > need READ/WRITE_ONCE().
 > 
-> I think you don't want to set user_defined to ensure we keep updating
-> the value every time the task is enqueued, in case the "default"
-> should be updated at run-time.
+> The cost of volatile accesses is probably minimal unless the
+> code is written assuming the compiler will only access things once.
 
-Yes. I'm glad we're finally on agreement about this :-)
+And there are variables marked as volatile, for example, jiffies.
 
+But one downside of declaring variables volatile is that it can prevent
+KCSAN from spotting violations of the concurrency design for those
+variables.
+
+> > I merely proposed the _INC() variant for better readability.
 > 
-> > Moreover, by keeping user_defined=false I think you are not getting
-> > what you want for RT tasks running in a nested cgroup.
-> > 
-> > Let say a subgroup is still with the util_min=1024 inherited from the
-> > system defaults, in uclamp_tg_restrict() we will still return the max
-> > value and not what you requested for. Isn't it?
-> 
-> This is also not completely true since perhaps you assume that if an
-> RT task is running in a nested group with a non tuned uclamp_max then
-> that's probably what we want.
-> 
-> There is still a small concern due to the fact we don't distinguish
-> CFS and RT tasks when it comes to cgroup clamp values, which
-> potentially could still generate the same issue. Let say for example
-> you wanna allow CFS tasks to be boosted to max (util_min=1024) but
-> still want to run RT tasks only at lower OPPs.
-> Not sure if that could be a use case tho.
+> More like shorter code lines :-)
 
-No we can't within the same cgroup. But sys admins can potentially create
-different cgroups to enforce the different policies.
+That too!  ;-)
 
-A per sched-class uclamp control could simplify userspace if they end up with
-this scenario. But given where we are now, I'm not sure how easy it would be to
-stage the change.
-
->  
-> > IOW, what about:
-> > 
-> > ---8<---
-> > static void uclamp_sync_util_min_rt(struct task_struct *p)
-> > {
-> > 	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-> > 
-> >   if (likely(uc_se->user_defined || !rt_task(p)))
-> >     return;
-> > 
-> >   uclamp_se_set(uc_se, sysctl_sched_uclamp_util_min_rt, true);
->                                                           ^^^^
->                      This should remain false as in your patch.
-> > }
-> > ---8<---
-> 
-> Still, I was thinking that perhaps it would be better to massage the
-> code above into the generation of the effective value, in uclamp_eff_get().
-> 
-> Since you wanna (possibly) update the value at each enqueue time,
-> that's what conceptually is represented by the "effective clamp
-> value": a value that is computed by definition at enqueue time by
-> aggregating all the requests and constraints.
-> 
-> Poking with the effective value instead of the requested value will
-> fix also the ambiguity above, where we set a "requested values" with
-> user-defined=false.
-
-Okay, let me have a second look at this. I just took what we had and improved
-on it. But what you say could work too. Let me try it out.
-
-Thanks
-
---
-Qais Yousef
+							Thanx, Paul
