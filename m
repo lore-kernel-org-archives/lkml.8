@@ -2,268 +2,186 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D82C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22659C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50D9B206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587415321;
-	bh=C/H7Vqw4eLAo+bqTMZDWofBTBU9RjPsgGEVTUDrNvCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MAbCUEpydndsOOfZF0qm5OlluN2bDYkvxa5JpUF0MiGoOzBBeeq+/FWItEMe8iTf0
-	 A25ygR6Yuwy3xhctkwRUTZpnpnbA3y8eFI9h9NkvNHLsj9LB4DTMdrmE19tlJE9Q1E
-	 fS+hPk8XMJSvhpwCIpQSdwqKICUp+6oPCUSY7bLw=
+	by mail.kernel.org (Postfix) with ESMTP id EBF6C206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=tsoy.me header.i=@tsoy.me header.b="hE3jjcIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgDTUmA (ORCPT
+        id S1726623AbgDTUmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:42:00 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53302 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgDTUmA (ORCPT
+        Mon, 20 Apr 2020 16:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgDTUmO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:42:00 -0400
-Received: by mail-pj1-f66.google.com with SMTP id hi11so392321pjb.3;
-        Mon, 20 Apr 2020 13:41:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W70HODHvPGy2tybwv11DFoJ/NeBLhWW5ThLnvqLq4jw=;
-        b=eb8zlzSL6tus+C3+TZcbLqFKdwfa5hEJDHF2PYriyHB+N2NDeZ18TBmwr+hBf7RqP9
-         qs+rJKmiwVrFZTc2g3IjLlsbnoLsrvPujOirPjKlU+x/jnyhzMrmyL1Vkf/humbuOmL4
-         qrmeuHapgqI9TLvTNE8GNicIZnKryfZTT6B8o9QhgYRCG2O1jSsNjp7Zvlmizex6wBLL
-         Ctliuil7f1Pc3Z7qxp55M83rwnZljNNh8qsooiuS2KLFzG8VjgNwmY4QZKH7bHRLZEKf
-         q0uSdV3BV6oSOlp+6FpkTzR8fnuOlNIMgidLNgZLxyrsBiXqhxhe5kooJYXKTR5qwSeM
-         4DpA==
-X-Gm-Message-State: AGi0PuZdJkxQhTKaMVsZjyED0x5mPLE4qQMnkk5Ip69wYwNeGluGYsYe
-        IhJ3mhhYPqyS9e+/13AhDYk=
-X-Google-Smtp-Source: APiQypJ4sR9R+DlVxqQS0MoSp3x92ejjwbDh/Pdx52htFHQWU9alTiU9j5K9HouA86h3GL82FtnQHQ==
-X-Received: by 2002:a17:902:8487:: with SMTP id c7mr16757665plo.251.1587415318778;
-        Mon, 20 Apr 2020 13:41:58 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id n16sm369107pfq.61.2020.04.20.13.41.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:41:57 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id DCAF84028E; Mon, 20 Apr 2020 20:41:56 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 20:41:56 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
-Message-ID: <20200420204156.GO11244@42.do-not-panic.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-4-mcgrof@kernel.org>
- <20200420201615.GC302402@kroah.com>
+        Mon, 20 Apr 2020 16:42:14 -0400
+X-Greylist: delayed 963 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 20 Apr 2020 13:42:13 PDT
+Received: from puleglot.ru (puleglot.ru [IPv6:2a01:4f8:1c0c:58e8::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FCFC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:42:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tsoy.me;
+        s=mymail; h=Sender:Content-Transfer-Encoding:MIME-Version:Content-Type:
+        References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+        :List-Post:List-Owner:List-Archive;
+        bh=ZKaz9g+0dN4EMZTssIuTURp7XdyfTbM9NKhYQlFDI6Q=; b=hE3jjcIicpBLRbfMdYwOm7k70P
+        O5XW9hDIULhuBkjgZqgmGtvWgiB2l2dl/LygBV9Y2pixjriADPQEQMOsukOQjl2llEGEn3s33b9hA
+        L1tr4wdWUQQpQ/WZnBvi2bhGzwdSwYSPjtrGnFOuQlLon4ZP/pxUlkLv2NfWbYKx70iI=;
+Received: from [2a00:1370:8125:3f98:890:f100:d37d:7ada] (helo=home)
+        by puleglot.ru with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <puleglot@puleglot.ru>)
+        id 1jQczO-0006SG-8n; Mon, 20 Apr 2020 23:25:58 +0300
+Message-ID: <1c4b8a362761421eba0ded60bb4f0e11b7e42f3b.camel@tsoy.me>
+Subject: Re: [PATCH] ALSA: usb-audio: Add quirk for Focusrite Scarlett 2i2
+From:   Alexander Tsoy <alexander@tsoy.me>
+To:     Gregor Pintar <grpintar@gmail.com>, tiwai@suse.com, perex@perex.cz
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Date:   Mon, 20 Apr 2020 23:25:56 +0300
+In-Reply-To: <20200420201937.12634-1-grpintar@gmail.com>
+References: <20200420201937.12634-1-grpintar@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420201615.GC302402@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 10:16:15PM +0200, Greg KH wrote:
-> On Sun, Apr 19, 2020 at 07:45:22PM +0000, Luis Chamberlain wrote:
-> 
-> This patch triggered gmail's spam detection, your changelog text is
-> whack...
+В Пн, 20/04/2020 в 22:19 +0200, Gregor Pintar пишет:
+> Force it to use asynchronous playback.
 
-Oh? What do you think triggered it?
-
-> > diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
-> > index 19091e1effc0..d84038bce0a5 100644
-> > --- a/block/blk-debugfs.c
-> > +++ b/block/blk-debugfs.c
-> > @@ -3,6 +3,9 @@
-> >  /*
-> >   * Shared request-based / make_request-based functionality
-> >   */
-> > +
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
-> >  #include <linux/kernel.h>
-> >  #include <linux/blkdev.h>
-> >  #include <linux/debugfs.h>
-> > @@ -13,3 +16,30 @@ void blk_debugfs_register(void)
-> >  {
-> >  	blk_debugfs_root = debugfs_create_dir("block", NULL);
-> >  }
-> > +
-> > +int __must_check blk_queue_debugfs_register(struct request_queue *q)
-> > +{
-> > +	struct dentry *dir = NULL;
-> > +
-> > +	/* This can happen if we have a bug in the lower layers */
-> > +	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
-> > +	if (dir) {
-> > +		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
-> > +			kobject_name(q->kobj.parent));
-> > +		dput(dir);
-> > +		return -EALREADY;
-> > +	}
-> > +
-> > +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> > +					    blk_debugfs_root);
-> > +	if (!q->debugfs_dir)
-> > +		return -ENOMEM;
-> 
-> Why doesn't the directory just live in the request queue, or somewhere
-> else, so that you save it when it is created and then that's it.  No
-> need to "look it up" anywhere else.
-
-Its already there. And yes, after my changes it is technically possible
-to just re-use it directly. But this is complicated by a few things. One
-is that at this point in time, asynchronous request_queue removal is
-still possible, and so a race was exposed where a requeust_queue may be
-lingering but its old device is gone. That race is fixed by reverting us
-back to synchronous request_queue removal, therefore ensuring that the
-debugfs dir exists so long as the device does.
-
-I can remove the debugfs_lookup() *after* we revert to synchronous
-request_queue removal, or we just re-order the patches so that the
-revert happens first. That should simplify this patch.
-
-The code in this patch was designed to help dispute the logic behind
-the CVE, in particular it shows exactly where debugfs_dir *is* the
-one found by debugfs_lookup(), and shows the real issue behind the
-removal.
-
-But yeah, now that that is done, I hope its clear to all, and I think
-this patch can be simplified if we just revert the async requeust_queue
-removal first.
-
-> Or do you do that in later patches?  I only see this one at the moment,
-> sorry...
-> 
-> >  static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
-> > +					    struct request_queue *q,
-> >  					    struct blk_trace *bt)
-> >  {
-> >  	struct dentry *dir = NULL;
-> >  
-> > +	/* This can only happen if we have a bug on our lower layers */
-> > +	if (!q->kobj.parent) {
-> > +		pr_warn("%s: request_queue parent is gone\n", buts->name);
-> 
-> A kobject always has a parent, unless it has not been registered yet, so
-> I don't know what you are testing could ever happen.
-
-Or it has been kobject_del()'d?
-
-A deferred requeust_queue removal shows this is possible, the parent is
-taken underneath from us because the refcounting of this kobject is
-already kobject_del()'d, and its actual removal scheduled for later.
-The parent is taken underneath from us prior to the scheduled removal
-completing.
+Can we use snd_usb_audioformat_attributes_quirk() for such fixes? See
+the quirk for Griffin iMic as an example.
 
 > 
-> > +		return NULL;
-> > +	}
-> > +
-> > +	/*
-> > +	 * From a sysfs kobject perspective, the request_queue sits on top of
-> > +	 * the gendisk, which has the name of the disk. We always create a
-> > +	 * debugfs directory upon init for this gendisk kobject, so we re-use
-> > +	 * that if blktrace is going to be done for it.
-> > +	 */
-> > +	if (blk_trace_target_disk(buts->name, kobject_name(q->kobj.parent))) {
-> > +		if (!q->debugfs_dir) {
-> > +			pr_warn("%s: expected request_queue debugfs_dir is not set\n",
-> > +				buts->name);
+> Same quirk has already been added for Focusrite Scarlett Solo (2nd
+> gen)
+> with a commit 46f5710f0b88 ("ALSA: usb-audio: Add quirk for Focusrite
+> Scarlett Solo").
 > 
-> What is userspace supposed to be able to do if they see this warning?
-
-Userspace doesn't parse warnings, but the NULL ensures it won't crash
-the kernel. The warn informs the kernel of a possible block layer bug.
-
-> > +			return NULL;
-> > +		}
-> > +		/*
-> > +		 * debugfs_lookup() is used to ensure the directory is not
-> > +		 * taken from underneath us. We must dput() it later once
-> > +		 * done with it within blktrace.
-> > +		 */
-> > +		dir = debugfs_lookup(buts->name, blk_debugfs_root);
-> > +		if (!dir) {
-> > +			pr_warn("%s: expected request_queue debugfs_dir dentry is gone\n",
-> > +				buts->name);
+> This also seems to prevent regular clicks when playing at 44100Hz
+> on Scarlett 2i2 (2nd gen). I did not notice any side effects.
 > 
-> Again, can't we just save the pointer when we create it and not have to
-> look it up again?
-
-Only if we do the revert of the requeust_queue removal first.
-
-> > +			return NULL;
-> > +		}
-> > +		 /*
-> > +		 * This is a reaffirmation that debugfs_lookup() shall always
-> > +		 * return the same dentry if it was already set.
-> > +		 */
+> Signed-off-by: Gregor Pintar <grpintar@gmail.com>
+> ---
+>  sound/usb/quirks-table.h | 84
+> ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
 > 
-> I'm all for reaffirmation and the like, but really, is this needed???
+> diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+> index e009d584e..bc936bf79 100644
+> --- a/sound/usb/quirks-table.h
+> +++ b/sound/usb/quirks-table.h
+> @@ -2840,6 +2840,90 @@ YAMAHA_DEVICE(0x7010, "UB99"),
+>  		}
+>  	}
+>  },
+> +{
+> +	/*
+> +	 * Focusrite Scarlett 2i2 2nd generation
+> +	 * Reports that playback should use Synch: Synchronous
+> +	 * while still providing a feedback endpoint. Synchronous
+> causes
+> +	 * snapping on some sample rates.
+> +	 * Force it to use Synch: Asynchronous.
+> +	 */
+> +	USB_DEVICE(0x1235, 0x8202),
+> +	.driver_info = (unsigned long) &(const struct
+> snd_usb_audio_quirk) {
+> +		.ifnum = QUIRK_ANY_INTERFACE,
+> +		.type = QUIRK_COMPOSITE,
+> +		.data = (const struct snd_usb_audio_quirk[]) {
+> +			{
+> +				.ifnum = 1,
+> +				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
+> +				.data = &(const struct audioformat) {
+> +					.formats =
+> SNDRV_PCM_FMTBIT_S32_LE,
+> +					.channels = 2,
+> +					.iface = 1,
+> +					.altsetting = 1,
+> +					.altset_idx = 1,
+> +					.attributes = 0,
+> +					.endpoint = 0x01,
+> +					.ep_attr =
+> USB_ENDPOINT_XFER_ISOC |
+> +						USB_ENDPOINT_SYNC_ASYNC
+> ,
+> +					.protocol = UAC_VERSION_2,
+> +					.rates = SNDRV_PCM_RATE_44100 |
+> +						SNDRV_PCM_RATE_48000 |
+> +						SNDRV_PCM_RATE_88200 |
+> +						SNDRV_PCM_RATE_96000 |
+> +						SNDRV_PCM_RATE_176400 |
+> +						SNDRV_PCM_RATE_192000,
+> +					.rate_min = 44100,
+> +					.rate_max = 192000,
+> +					.nr_rates = 6,
+> +					.rate_table = (unsigned int[])
+> {
+> +						44100, 48000, 88200,
+> +						96000, 176400, 192000
+> +					},
+> +					.clock = 41
+> +				}
+> +			},
+> +			{
+> +				.ifnum = 2,
+> +				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
+> +				.data = &(const struct audioformat) {
+> +					.formats =
+> SNDRV_PCM_FMTBIT_S32_LE,
+> +					.channels = 2,
+> +					.iface = 2,
+> +					.altsetting = 1,
+> +					.altset_idx = 1,
+> +					.attributes = 0,
+> +					.endpoint = 0x82,
+> +					.ep_attr =
+> USB_ENDPOINT_XFER_ISOC |
+> +						USB_ENDPOINT_SYNC_ASYNC
+> |
+> +						USB_ENDPOINT_USAGE_IMPL
+> ICIT_FB,
+> +					.protocol = UAC_VERSION_2,
+> +					.rates = SNDRV_PCM_RATE_44100 |
+> +						SNDRV_PCM_RATE_48000 |
+> +						SNDRV_PCM_RATE_88200 |
+> +						SNDRV_PCM_RATE_96000 |
+> +						SNDRV_PCM_RATE_176400 |
+> +						SNDRV_PCM_RATE_192000,
+> +					.rate_min = 44100,
+> +					.rate_max = 192000,
+> +					.nr_rates = 6,
+> +					.rate_table = (unsigned int[])
+> {
+> +						44100, 48000, 88200,
+> +						96000, 176400, 192000
+> +					},
+> +					.clock = 41
+> +				}
+> +			},
+> +			{
+> +				.ifnum = 3,
+> +				.type = QUIRK_IGNORE_INTERFACE
+> +			},
+> +			{
+> +				.ifnum = -1
+> +			}
+> +		}
+> +	}
+> +},
+>  
+>  /* Access Music devices */
+>  {
 
-To those who were still not sure that the issue was not a debugfs issue
-I hoped this to make it clear. But indeed, if we revert back to
-synchronous request_queue removal, that should simplify this.
-
-> > +		if (dir != q->debugfs_dir) {
-> > +			dput(dir);
-> > +			pr_warn("%s: expected dentry dir != q->debugfs_dir\n",
-> > +				buts->name);
-> > +			return NULL;
-> 
-> Why are you testing to see if debugfs really is working properly?
-> SHould all users do crazy things like this (hint, rhetorical
-> question...)
-
-No, this can happen with the race I mentioned above.
-
-> > +		}
-> > +		bt->backing_dir = q->debugfs_dir;
-> > +		return bt->backing_dir;
-> > +	}
-> > +
-> > +	/*
-> > +	 * If not using blktrace on the gendisk, we are going to create a
-> > +	 * temporary debugfs directory for it, however this cannot be shared
-> > +	 * between two concurrent blktraces since the path is not unique, so
-> > +	 * ensure this is only done once.
-> > +	 */
-> >  	dir = debugfs_lookup(buts->name, blk_debugfs_root);
-> > -	if (!dir)
-> > -		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-> > +	if (dir) {
-> > +		pr_warn("%s: temporary blktrace debugfs directory already present\n",
-> > +			buts->name);
-> > +		dput(dir);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	bt->dir = debugfs_create_dir(buts->name, blk_debugfs_root);
-> > +	if (!bt->dir) {
-> > +		pr_warn("%s: temporary blktrace debugfs directory could not be created\n",
-> > +			buts->name);
-> 
-> Again, do not test the return value, you do not care.  I've been
-> removing these checks from everywhere.
-
-Sure, the question still stands on what *should* the kernel do if the
-blktrace setup failed to create the debugfs files.
-
-  Luis
