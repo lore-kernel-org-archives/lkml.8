@@ -2,92 +2,66 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B22BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6DCC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 553F32082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9DD2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:46:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgDTQqV (ORCPT
+        id S1726410AbgDTQqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:46:21 -0400
-Received: from sauhun.de ([88.99.104.3]:47836 "EHLO pokefinder.org"
+        Mon, 20 Apr 2020 12:46:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:52096 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgDTQqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:46:21 -0400
-Received: from localhost (p54B335B8.dip0.t-ipconnect.de [84.179.53.184])
-        by pokefinder.org (Postfix) with ESMTPSA id BB8642C1F4C;
-        Mon, 20 Apr 2020 18:46:19 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 18:46:19 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Patrick Williams <alpawi@amazon.com>
-Cc:     =?utf-8?B?QmrDtnJuIEFyZMO2?= <bjorn.ardo@axis.com>,
-        Patrick Williams <patrick@stwcx.xyz>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] i2c: slave-eeprom: support additional models
-Message-ID: <20200420164619.GE3721@ninjato>
-References: <20191001164009.21610-1-alpawi@amazon.com>
- <20191001164009.21610-2-alpawi@amazon.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J4XPiPrVK1ev6Sgr"
-Content-Disposition: inline
-In-Reply-To: <20191001164009.21610-2-alpawi@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1725773AbgDTQqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 12:46:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB80F31B;
+        Mon, 20 Apr 2020 09:46:39 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E7C2C3F73D;
+        Mon, 20 Apr 2020 09:46:38 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/4] SCMI various fixes to Response handling code
+Date:   Mon, 20 Apr 2020 17:46:32 +0100
+Message-Id: <158740098699.27780.4591369317008505933.b4-ty@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200420152315.21008-1-cristian.marussi@arm.com>
+References: <20200420152315.21008-1-cristian.marussi@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 20 Apr 2020 16:23:11 +0100, Cristian Marussi wrote:
+> Hi
+>
+> This serie bring a few fixes related to handling of responses in some
+> corner cases; renaming also .clear_notification() into clear_channel(),
+> being indeed a method of general utility not strictly related to
+> notifications. (and needed by these same fixes)
+>
+> [...]
 
---J4XPiPrVK1ev6Sgr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks!
 
-On Tue, Oct 01, 2019 at 11:40:06AM -0500, Patrick Williams wrote:
-> Add support for emulating the following EEPROMs:
->     * 24c01  - 1024 bit
->     * 24c128 - 128k bit
->     * 24c256 - 256k bit
->     * 24c512 - 512k bit
->=20
-> The flag bits in the device id were shifted up 1 bit to make
-> room for saving the 24c512's size.  24c512 uses the full 16-bit
-> address space of a 2-byte addressable EEPROM.
->=20
-> Signed-off-by: Patrick Williams <alpawi@amazon.com>
+[1/4] firmware: arm_scmi: Rename .clear_notification() transport_ops
+      commit: 87dff4e63cf2910f2e4a32d1cb3e4a1a25406eb7
+[2/4] firmware: arm_scmi: Clear channel on reception of unexpected responses
+      commit: b37f5cc8d243479d7572445010fb6c9a4dff6dc4
+[3/4] firmware: arm_scmi: Clear channel for delayed responses
+      commit: d04fb2b2ddefad7c00edd29c1ed40188ce8f12a2
+[4/4] firmware: arm_scmi: Fix handling of unexpected delayed responses
+      commit: c5bceb98ce0e4ae8057a386c5171a868213fe226
 
-Do you really need them or is it just nice to have?
+--
+Regards,
+Sudeep
 
-I am undecided. I definately don't want all the EEPROM types which
-exist, but the full 16 bit address range makes sense...
-
-More opinions welcome.
-
-
---J4XPiPrVK1ev6Sgr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6d0dsACgkQFA3kzBSg
-KbZJPw/+NdXm3WE71qSKQADHq85s60wK3LSN5JMDbI9Y8JfRHwdi7aAzteGbmvm3
-sxQVvBCfpmGvZgFo+G57neBJH9DmDxM9uHyFiUWDGC5CoJNCpd2XwBHrFLYMi3IV
-MkzbNbyAbByX2snG50QkXMfsvpO0BRFWnelVKrHJ8Z920P7wNLH16ppsgsXU6pEd
-hDgLAV4xy8nJi4Yt7pHE/mb5H5XfAEd5lEPsNTOdI8DRIMgoOH0spsqc7YM+ZDWN
-/j5zVwWfJ97cSe4DFvBieH3i6uI62X/Xui6UIiu0B/VAf2oXnZXp2YaHGMySwDXS
-wji8G8xaNjxqFyqrLbOi3tPNE41gydxAO43Es1rlgx9ILotA2PQYfwr2NMf5QKVz
-9AfiHZ8IrpOD/CwKGxi3RqtXlH8EvRa6cnqfrLdPiZBu9+iZzjFXXGjxGzQ3goPm
-pPn9CdPqmHbcrKdPkMULrp0KuJTIVdWfa/zB9216dIgHcouLEalZ0p1kutAX+Cum
-8scoAe9FZcp3dgU+MTJ5hb1EJ/jLfKyAZYcYLMKxal0bRo2sCtTAC706OM0StVWP
-NBRj4LYGpjfg7AJ2umDkzWgb9vKftUJgo9JQIbUkbDQIeRmNYYWQoUH1VQE27gsG
-6QEQqirWCb1N/iI8j4zwNtWJNgiSsSBchjHz4ETCVfjmHdUN3rA=
-=cWlw
------END PGP SIGNATURE-----
-
---J4XPiPrVK1ev6Sgr--
