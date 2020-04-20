@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D542C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48A6C54FD2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 683CB206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B7D20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387584;
-	bh=w2SkFmHo/Ut+jRMaAS5GKrDYHKTgFsE/O5mcLf2r7iY=;
+	s=default; t=1587387590;
+	bh=dmfp8iJjkzItWWjRKonzZYhBJ02Aif1xYwUp0wvQUfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ddH7JSzfcuoKdWpp9MesYKvXmxFYOTn2FoO5A0iV7reOdKf3J0iUugLV+V7B3lhcn
-	 iw/NXc27eXtewUAJ/wHJULgnp6t8VZxsZj+RI46RmXdmK/P305OKimuUixaigVa758
-	 Ez9d/9ua29n6VVRlayhDg2JofgTNHxx7pYbh8q9o=
+	b=pJufPsYqJMUH/BOF9dh1PPNX36VF5+BOZ4f4hSU7JCyi18Hr0m0fOwpMlWGHRNkWI
+	 RhL60/tAwnrp8tVeYy1Ij+cCSwKdEsEYAjDkSu65BQEnxZrnMvcz4a/sXEXjlv65Ef
+	 e9iA3n4mE0+CyzWJ43s7520nK7op2ZEPS3VpMry8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbgDTM7n (ORCPT
+        id S1727930AbgDTMlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:59:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33982 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbgDTMlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:41:19 -0400
+        id S1727914AbgDTMlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:41:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D03FC206D4;
-        Mon, 20 Apr 2020 12:41:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96C8B20736;
+        Mon, 20 Apr 2020 12:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386479;
-        bh=w2SkFmHo/Ut+jRMaAS5GKrDYHKTgFsE/O5mcLf2r7iY=;
+        s=default; t=1587386462;
+        bh=dmfp8iJjkzItWWjRKonzZYhBJ02Aif1xYwUp0wvQUfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AIjXbkGWZu6/nqBQtCcPWoYE29pMenzQha6XdfdfxpiWhG1b36Sz6rVhkufzlhvlq
-         nZiEtZ3QVvHpA9Kl/Ni4FSLD5JDVz2jWBepXqjTajaoaD0C5ZL/DUFeuK7JMJKSAL/
-         /J3/cwy9nfLEv5MOyx2OtCYEvtnCl30B25nwrELA=
+        b=GMi8I1HvtK5RqRuYpPA1SfRtp5+vH+jKxUQwHPUrHCvQWgOepN7SECKv/jEpq1owH
+         yedLXnbq/7wxwRepL2ehbcyFIMl02X8MvWKW3CcmN5mAL1iMagF/UHTmohyhi/LHuU
+         KzAC8v6tfJ+MeiEb06iAx/jxGS/02bJgcCmm+TBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taras Chornyi <taras.chornyi@plvision.eu>,
-        Vadym Kochan <vadym.kochan@plvision.eu>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 05/65] net: ipv4: devinet: Fix crash when add/del multicast IP with autojoin
-Date:   Mon, 20 Apr 2020 14:38:09 +0200
-Message-Id: <20200420121507.894571396@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.5 31/65] ext4: fix incorrect inodes per group in error message
+Date:   Mon, 20 Apr 2020 14:38:35 +0200
+Message-Id: <20200420121512.931858314@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -60,100 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taras Chornyi <taras.chornyi@plvision.eu>
+From: Josh Triplett <josh@joshtriplett.org>
 
-[ Upstream commit 690cc86321eb9bcee371710252742fb16fe96824 ]
+commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb upstream.
 
-When CONFIG_IP_MULTICAST is not set and multicast ip is added to the device
-with autojoin flag or when multicast ip is deleted kernel will crash.
+If ext4_fill_super detects an invalid number of inodes per group, the
+resulting error message printed the number of blocks per group, rather
+than the number of inodes per group. Fix it to print the correct value.
 
-steps to reproduce:
-
-ip addr add 224.0.0.0/32 dev eth0
-ip addr del 224.0.0.0/32 dev eth0
-
-or
-
-ip addr add 224.0.0.0/32 dev eth0 autojoin
-
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000088
- pc : _raw_write_lock_irqsave+0x1e0/0x2ac
- lr : lock_sock_nested+0x1c/0x60
- Call trace:
-  _raw_write_lock_irqsave+0x1e0/0x2ac
-  lock_sock_nested+0x1c/0x60
-  ip_mc_config.isra.28+0x50/0xe0
-  inet_rtm_deladdr+0x1a8/0x1f0
-  rtnetlink_rcv_msg+0x120/0x350
-  netlink_rcv_skb+0x58/0x120
-  rtnetlink_rcv+0x14/0x20
-  netlink_unicast+0x1b8/0x270
-  netlink_sendmsg+0x1a0/0x3b0
-  ____sys_sendmsg+0x248/0x290
-  ___sys_sendmsg+0x80/0xc0
-  __sys_sendmsg+0x68/0xc0
-  __arm64_sys_sendmsg+0x20/0x30
-  el0_svc_common.constprop.2+0x88/0x150
-  do_el0_svc+0x20/0x80
- el0_sync_handler+0x118/0x190
-  el0_sync+0x140/0x180
-
-Fixes: 93a714d6b53d ("multicast: Extend ip address command to enable multicast group join/leave on")
-Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
-Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
+Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/devinet.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -614,12 +614,15 @@ struct in_ifaddr *inet_ifa_byprefix(stru
- 	return NULL;
- }
- 
--static int ip_mc_config(struct sock *sk, bool join, const struct in_ifaddr *ifa)
-+static int ip_mc_autojoin_config(struct net *net, bool join,
-+				 const struct in_ifaddr *ifa)
- {
-+#if defined(CONFIG_IP_MULTICAST)
- 	struct ip_mreqn mreq = {
- 		.imr_multiaddr.s_addr = ifa->ifa_address,
- 		.imr_ifindex = ifa->ifa_dev->dev->ifindex,
- 	};
-+	struct sock *sk = net->ipv4.mc_autojoin_sk;
- 	int ret;
- 
- 	ASSERT_RTNL();
-@@ -632,6 +635,9 @@ static int ip_mc_config(struct sock *sk,
- 	release_sock(sk);
- 
- 	return ret;
-+#else
-+	return -EOPNOTSUPP;
-+#endif
- }
- 
- static int inet_rtm_deladdr(struct sk_buff *skb, struct nlmsghdr *nlh,
-@@ -675,7 +681,7 @@ static int inet_rtm_deladdr(struct sk_bu
- 			continue;
- 
- 		if (ipv4_is_multicast(ifa->ifa_address))
--			ip_mc_config(net->ipv4.mc_autojoin_sk, false, ifa);
-+			ip_mc_autojoin_config(net, false, ifa);
- 		__inet_del_ifa(in_dev, ifap, 1, nlh, NETLINK_CB(skb).portid);
- 		return 0;
+---
+ fs/ext4/super.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4112,7 +4112,7 @@ static int ext4_fill_super(struct super_
+ 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
+ 	    sbi->s_inodes_per_group > blocksize * 8) {
+ 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
+-			 sbi->s_blocks_per_group);
++			 sbi->s_inodes_per_group);
+ 		goto failed_mount;
  	}
-@@ -940,8 +946,7 @@ static int inet_rtm_newaddr(struct sk_bu
- 		 */
- 		set_ifa_lifetime(ifa, valid_lft, prefered_lft);
- 		if (ifa->ifa_flags & IFA_F_MCAUTOJOIN) {
--			int ret = ip_mc_config(net->ipv4.mc_autojoin_sk,
--					       true, ifa);
-+			int ret = ip_mc_autojoin_config(net, true, ifa);
- 
- 			if (ret < 0) {
- 				inet_free_ifa(ifa);
+ 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
 
 
