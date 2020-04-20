@@ -2,135 +2,136 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD3DC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938F1C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0953E206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:30:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XMkTHZnD"
+	by mail.kernel.org (Postfix) with ESMTP id 7A65820857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgDTUap (ORCPT
+        id S1726752AbgDTUbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:30:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTUao (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:30:44 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED04C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:30:44 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id nu11so364006pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:30:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QxQOha16WOClJyIlyUv3fEO3tDnnZBhJpetgEtW3TMU=;
-        b=XMkTHZnDoCmY09Uakw1SuuDzm1l/6MENMxzIlDTiiYBvnl88IVYSESH//9K94r5M5n
-         KZcGwITH47DpVvqhSW3fvHzHcdsFbjzMmu9hrYl5O25p+J/GlEQjHMpfP8IPSVdWqK5X
-         gBwLvaFEB0O/tgZo4jZi1591aXIJi0pf6vVX5sUvn2i27eGkWxVoNRjWAb/cOQ9L/3gT
-         DB/eJ3FGScjlGJI4ID0l6lfY3R20RJIcS4K70ZW6Y/CXVW/+hXeKfC3m9+6nfnQ8G5qB
-         sMls1PogCwRbDamBjDmOfvdYR2WcMC7W5j9YAnMNivKx4WZLung4nBfi1YBEcZaHcWDA
-         62PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QxQOha16WOClJyIlyUv3fEO3tDnnZBhJpetgEtW3TMU=;
-        b=nopt5bWUhjSZmo7uBqYbyWa1FFxv30DphjOchgEOz5i57V8nfx65O8jcl19TNgn1hC
-         /wJOcoOqPZJVZ+W0eGGNjNe8OHc8pi44pyeuySMpLO15X0en5W/7cpyrc4Dy3u2Lb9OG
-         KOZ7nabfhk3TdxG7uucGl7Y1k03lNw3tNpqrymH4653eRVh4rHr9aucYeMAPoD/uYx9B
-         UQL0DkkNFi2bShYkpwPBKz2GsyPUVDQNPcBMDJ+xgpQtTsv2+FyoDa9LX9CP5eSmpl1F
-         7gPNIqLVMjNZH0WSQ0Z1nBYra0JOAYWVjfhMAbCe3UABOml0qbJyKUaJQWuHXwrfSKR2
-         4c7Q==
-X-Gm-Message-State: AGi0Pua/sPToYrDGF6bi5nWWEv7b16PTGCHZYmnAx8TJBbUG9MgLW9Om
-        tf/8P8nW6n+9kkTBrG/3fXZq6Q==
-X-Google-Smtp-Source: APiQypKJ/b0AM77PABim4P//4kMhpZZkBJR/jWMLNAth+dG5mgEtENvbpGj6UR7QzLn76ujR0wGKfQ==
-X-Received: by 2002:a17:90a:fd89:: with SMTP id cx9mr1371566pjb.64.1587414643955;
-        Mon, 20 Apr 2020 13:30:43 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x66sm336527pfb.173.2020.04.20.13.30.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:30:43 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 13:31:07 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     agross@kernel.org, swboyd@chromium.org, mkshah@codeaurora.org,
-        Evan Green <evgreen@chromium.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: rpmh: Dirt can only make you dirtier, not
- cleaner
-Message-ID: <20200420203107.GR576963@builder.lan>
-References: <20200417141531.1.Ia4b74158497213eabad7c3d474c50bfccb3f342e@changeid>
+        Mon, 20 Apr 2020 16:31:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbgDTUbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:31:19 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06C3206E9;
+        Mon, 20 Apr 2020 20:31:17 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 16:31:16 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Spin lock being taken in trace_intel_pipe_enable/disable() trace
+ events
+Message-ID: <20200420163116.4aa5eb2d@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417141531.1.Ia4b74158497213eabad7c3d474c50bfccb3f342e@changeid>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17 Apr 14:15 PDT 2020, Douglas Anderson wrote:
+When running tests on v5.4-rt, I triggered the following:
 
-> Adding an item into the cache should never be able to make the cache
-> cleaner.  Use "|=" rather than "=" to update the dirty flag.
-> 
+[  367.909200] 005: ------------[ cut here ]------------
+[  367.909203] 005: WARNING: CPU: 5 PID: 1200 at drivers/gpu/drm/drm_vblank.c:637 drm_calc_vbltimestamp_from_scanoutpos+0x2e9/0x320 [drm]
+[  367.909231] 005: Modules linked in: iptable_mangle xt_CHECKSUM tun ebtable_filter ebtables ipt_REJECT nf_reject_ipv4 iptable_filter ip6t_REJECT nf_reject_ipv6 xt_state xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c ip6table_filter ip6_tables snd_hda_codec_hdmi intel_rapl_msr snd_hda_codec_realtek snd_hda_codec_generic hp_wmi intel_rapl_common ledtrig_audio sparse_keymap iTCO_wdt mei_wdt rfkill iTCO_vendor_support wmi_bmof snd_hda_intel snd_intel_nhlt snd_hda_codec x86_pkg_temp_thermal intel_powerclamp snd_hda_core coretemp snd_hwdep joydev i915 kvm_intel snd_seq kvm irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel snd_seq_device snd_pcm intel_cstate intel_uncore snd_timer intel_gtt i2c_algo_bit snd intel_rapl_perf soundcore drm_kms_helper mei_me e1000e sr_mod mei syscopyarea sysfillrect serio_raw sysimgblt cdrom fb_sys_fops wmi drm lpc_ich i2c_i801 tpm_infineon video pcspkr ip_tables
+[  367.909265] 005: CPU: 5 PID: 1200 Comm: gnome-shell Not tainted 5.4.28-test-rt19+ #235
+[  367.909267] 005: Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
+[  367.909268] 005: RIP: 0010:drm_calc_vbltimestamp_from_scanoutpos+0x2e9/0x320 [drm]
+[  367.909282] 005: Code: 43 20 8b 80 70 01 00 00 23 43 50 a8 10 75 1b 48 8b 83 28 03 00 00 48 85 c0 0f 84 5e fd ff ff 48 83 78 28 00 0f 84 53 fd ff ff <0f> 0b e9 4f fd ff ff 48 c7 c7 c8 40 41 c0 e8 84 ea ff ff e9 3e fd
+[  367.909284] 005: RSP: 0018:ffff9f94c043f948 EFLAGS: 00010002
+[  367.909284] 005: RAX: 000000000000003b RBX: ffff8f6418fa0000 RCX: 0000000000000000
+[  367.909285] 005: RDX: 0000000000000001 RSI: ffffffffc0414100 RDI: 0000000000000001
+[  367.909286] 005: RBP: ffff9f94c043f9a8 R08: 0000000000000000 R09: ffffffffc03e7fa0
+[  367.909286] 005: R10: ffff8f64072d3e9c R11: ffffffffc082e6a0 R12: ffff8f6419ab4100
+[  367.909287] 005: R13: 0000000000000001 R14: ffff8f6419ab41d8 R15: ffff9f94c043f9bc
+[  367.909289] 005: FS:  00007f68e15bed00(0000) GS:ffff8f641a940000(0000) knlGS:0000000000000000
+[  367.909290] 005: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  367.909290] 005: CR2: 00007f68a6c57004 CR3: 000000011889e001 CR4: 00000000001606e0
+[  367.909292] 005: Call Trace:
+[  367.909296] 005:  drm_get_last_vbltimestamp+0x4d/0x80 [drm]
+[  367.909310] 005:  drm_update_vblank_count+0x85/0x250 [drm]
+[  367.909323] 005:  drm_crtc_accurate_vblank_count+0x46/0xa0 [drm]
+[  367.909336] 005:  intel_crtc_get_vblank_counter+0x3b/0x40 [i915]
+[  367.909384] 005:  trace_event_raw_event_intel_pipe_disable+0x87/0x110 [i915]
+[  367.909417] 005:  intel_disable_pipe+0x186/0x1d0 [i915]
+[  367.909450] 005:  ironlake_crtc_disable+0x88/0x700 [i915]
+[  367.909481] 005:  ? synchronize_irq+0x35/0xa0
+[  367.909484] 005:  intel_atomic_commit_tail+0x258/0x1540 [i915]
+[  367.909516] 005:  ? mutex_unlock+0x5/0x30
+[  367.909519] 005:  ? flush_workqueue+0x190/0x440
+[  367.909523] 005:  intel_atomic_commit+0x23f/0x2d0 [i915]
+[  367.909554] 005:  drm_atomic_connector_commit_dpms+0xdb/0x100 [drm]
+[  367.909567] 005:  drm_mode_obj_set_property_ioctl+0x18a/0x2b0 [drm]
+[  367.909581] 005:  ? drm_mode_obj_find_prop_id+0x40/0x40 [drm]
+[  367.909594] 005:  drm_ioctl_kernel+0xac/0xf0 [drm]
+[  367.909605] 005:  drm_ioctl+0x1f8/0x3b0 [drm]
+[  367.909616] 005:  ? drm_mode_obj_find_prop_id+0x40/0x40 [drm]
+[  367.909629] 005:  ? ring_buffer_unlock_commit+0x1e/0x120
+[  367.909631] 005:  ? trace_buffer_unlock_commit_regs+0x4c/0x220
+[  367.909633] 005:  ? ftrace_syscall_enter+0x1d0/0x2d0
+[  367.909635] 005:  do_vfs_ioctl+0xa4/0x630
+[  367.909639] 005:  ksys_ioctl+0x60/0x90
+[  367.909641] 005:  __x64_sys_ioctl+0x16/0x20
+[  367.909642] 005:  do_syscall_64+0x55/0x190
+[  367.909645] 005:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  367.909647] 005: RIP: 0033:0x7f68e510a09b
 
-This is correct...
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+And when looking into it, not only is there some race issue, I also found
+that the trace events for trace_intel_pipe_disable() (and enable) take
+spin_locks, which should *never* happen inside a trace event callback
+(TP_fast_assign()).
 
-> Fixes: bb7000677a1b ("soc: qcom: rpmh: Update dirty flag only when data changes")
-> Reported-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  drivers/soc/qcom/rpmh.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-> index 3abbb08cd6e1..d1626a1328d7 100644
-> --- a/drivers/soc/qcom/rpmh.c
-> +++ b/drivers/soc/qcom/rpmh.c
-> @@ -151,10 +151,10 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->  		break;
->  	}
->  
-> -	ctrlr->dirty = (req->sleep_val != old_sleep_val ||
-> -			req->wake_val != old_wake_val) &&
-> -			req->sleep_val != UINT_MAX &&
-> -			req->wake_val != UINT_MAX;
-> +	ctrlr->dirty |= (req->sleep_val != old_sleep_val ||
-> +			 req->wake_val != old_wake_val) &&
-> +			 req->sleep_val != UINT_MAX &&
-> +			 req->wake_val != UINT_MAX;
+The following has:
 
-...but this logic says dirty "if either sleep or wake has changed and
-both sleep and wake are requested".
+ trace_intel_pipe_disable()
 
-So what if we have an entry with only sleep wake changed, then the
-controller won't be dirty and hence the hardware won't know about this
-request - until another "fully specified" request comes in, which would
-cause the controller to be dirty and flush out the "partially specified"
-request as well.
+	    TP_fast_assign(
+			   struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
+			   struct intel_crtc *it__;
+			   for_each_intel_crtc(&dev_priv->drm, it__) {
+				   __entry->frame[it__->pipe] = intel_crtc_get_vblank_counter(it__);
+				   __entry->scanline[it__->pipe] = intel_get_crtc_scanline(it__);
+			   }
+			   __entry->pipe = crtc->pipe;
+			   ),
 
-Is this really the expected behavior?
 
-Regards,
-Bjorn
+Where we have:
 
->  
->  unlock:
->  	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
-> -- 
-> 2.26.1.301.g55bc3eb7cb9-goog
-> 
+  intel_crtc_get_vblank_counter() calls
+     drm_crtc_accurate_vblank_count() which has:
+
+spin_lock_irqsave(&dev->vblank_time_lock, flags);
+
+
+Note that the trace_event handler (code in TP_fast_assign()) is called with
+preemption disabled, and that on PREEMPT_RT, spin_lock_irqsave() turns into
+a mutex.
+
+But even without PREEMPT_RT(), its still very dangerous to have a spin lock
+taken within a trace event, because it causes spin locks to be taken in
+paths seldom tested (and often missed by lockdep). And these are a common
+source of deadlocks.
+
+Please, update this trace event (or any others that you know of), to
+prevent spin locks (or any locks for that matter) from being taken from the
+TP_fast_assign() code.
+
+-- Steve
