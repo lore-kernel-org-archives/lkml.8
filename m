@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4C6C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E972C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8756320724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2442072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386623;
-	bh=QR1PakUlj/lMWqZD6e71EiolwzkgVTbC7dDXGfQ2WCc=;
+	s=default; t=1587386627;
+	bh=7CwSGAnApzkj0TifNjJBsWcj8qqd9Xu9EoZHAW2GmvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h4u6csOgAtolTPyHM2cSGWeMI5HkP9YVn7Q97/5Q0rUyw+w9OaIATeKmWSSG8/kbC
-	 cOyga+qWzk1xY36Sr+6y+ZpgkeDwRpnEcGFiNtWl71zc0yIA52A0m+pbOBIPvA1FYI
-	 PpCE/8IgDpiSmP01u3qX2Qo0s8CUyWy8PXC3z6XI=
+	b=cdCmhTo+ccMGo9uGVRu62BVDq4uq7vY84pkVd3CGrybfqur9DT4CWHlCIrn9qJunk
+	 e5kPlbkEALwL9WdK1+QJzPN6osg428TnxNwIx9qod++0yr/upkVjJo5RCqLArcJmE8
+	 6YnrSatXNTvZ+62UK8BqyvqBA2CzNWF031IptNWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgDTMnm (ORCPT
+        id S1728450AbgDTMnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:43:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37334 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:43:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgDTMnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:43:39 -0400
+        id S1728433AbgDTMnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:43:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82D6220724;
-        Mon, 20 Apr 2020 12:43:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03B8820724;
+        Mon, 20 Apr 2020 12:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386618;
-        bh=QR1PakUlj/lMWqZD6e71EiolwzkgVTbC7dDXGfQ2WCc=;
+        s=default; t=1587386620;
+        bh=7CwSGAnApzkj0TifNjJBsWcj8qqd9Xu9EoZHAW2GmvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fr3Oja6kBNXL5zxP4/em3wA7/HTMbrUjssZeT7wt5n9WUvt5l8gajV0xtuMeSHoMt
-         cb/dPBa5PsFcCqL6PYDKVKCuCkGDIrvt5iUpO5jV+E6hLxmC+CjV6lkL6efJW9ZSJz
-         BMof/+4sA4Y70UISK8oJjsR2KyaiixOK+e6tJtA0=
+        b=dau61tKXpv9Hr7WIsnWF49MyMXe9I/wE8eUCcfgwcMAS/HqBLz1GydCG0RQziNKaC
+         RCHOcag8yzsmAMSFWTiPOUkSf2ue9zIPWoyhwO4nj6Aw2eGW5KeEz8WK2W92edB9Ia
+         3Q8LnTRvuMr0mw8J9nvuEJl5DGzMFqxYFNaG6bdA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        stable@vger.kernel.org, Bruno Meneguele <bmeneg@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 30/71] net: stmmac: xgmac: Fix VLAN register handling
-Date:   Mon, 20 Apr 2020 14:38:44 +0200
-Message-Id: <20200420121514.644286735@linuxfoundation.org>
+Subject: [PATCH 5.6 31/71] net/bpfilter: remove superfluous testing message
+Date:   Mon, 20 Apr 2020 14:38:45 +0200
+Message-Id: <20200420121514.928669975@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,60 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Bruno Meneguele <bmeneg@redhat.com>
 
-commit 21f64e72e7073199a6f8d7d8efe52cd814d7d665 upstream.
+commit 41c55ea6c2a7ca4c663eeec05bdf54f4e2419699 upstream.
 
-Commit 907a076881f1, forgot that we need to clear old values of
-XGMAC_VLAN_TAG register when we switch from VLAN perfect matching to
-HASH matching.
+A testing message was brought by 13d0f7b814d9 ("net/bpfilter: fix dprintf
+usage for /dev/kmsg") but should've been deleted before patch submission.
+Although it doesn't cause any harm to the code or functionality itself, it's
+totally unpleasant to have it displayed on every loop iteration with no real
+use case. Thus remove it unconditionally.
 
-Fix it.
-
-Fixes: 907a076881f1 ("net: stmmac: xgmac: fix incorrect XGMAC_VLAN_TAG register writting")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Fixes: 13d0f7b814d9 ("net/bpfilter: fix dprintf usage for /dev/kmsg")
+Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ net/bpfilter/main.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -576,8 +576,13 @@ static void dwxgmac2_update_vlan_hash(st
- 			value |= XGMAC_VLAN_EDVLP;
- 			value |= XGMAC_VLAN_ESVL;
- 			value |= XGMAC_VLAN_DOVLTC;
-+		} else {
-+			value &= ~XGMAC_VLAN_EDVLP;
-+			value &= ~XGMAC_VLAN_ESVL;
-+			value &= ~XGMAC_VLAN_DOVLTC;
- 		}
+--- a/net/bpfilter/main.c
++++ b/net/bpfilter/main.c
+@@ -35,7 +35,6 @@ static void loop(void)
+ 		struct mbox_reply reply;
+ 		int n;
  
-+		value &= ~XGMAC_VLAN_VID;
- 		writel(value, ioaddr + XGMAC_VLAN_TAG);
- 	} else if (perfect_match) {
- 		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
-@@ -588,13 +593,19 @@ static void dwxgmac2_update_vlan_hash(st
- 
- 		value = readl(ioaddr + XGMAC_VLAN_TAG);
- 
-+		value &= ~XGMAC_VLAN_VTHM;
- 		value |= XGMAC_VLAN_ETV;
- 		if (is_double) {
- 			value |= XGMAC_VLAN_EDVLP;
- 			value |= XGMAC_VLAN_ESVL;
- 			value |= XGMAC_VLAN_DOVLTC;
-+		} else {
-+			value &= ~XGMAC_VLAN_EDVLP;
-+			value &= ~XGMAC_VLAN_ESVL;
-+			value &= ~XGMAC_VLAN_DOVLTC;
- 		}
- 
-+		value &= ~XGMAC_VLAN_VID;
- 		writel(value | perfect_match, ioaddr + XGMAC_VLAN_TAG);
- 	} else {
- 		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
+-		fprintf(debug_f, "testing the buffer\n");
+ 		n = read(0, &req, sizeof(req));
+ 		if (n != sizeof(req)) {
+ 			fprintf(debug_f, "invalid request %d\n", n);
 
 
