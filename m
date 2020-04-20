@@ -2,98 +2,139 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122F4C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB7CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3C79206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:02:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FPbM6YGm"
+	by mail.kernel.org (Postfix) with ESMTP id 0DDA321D79
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587369741;
+	bh=3xcya7M/sEvPLWNBKP6Q1scBZdGSUS616tgCh9F9c7Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oooseVC93Ua+klSQYmaT2MKrkTqg9A5Gjn81UU5s+dXOa6UPFkKrRwkBfynPrYF1v
+	 ufXGZCrHVin6wzzFCf8L6Emi5ylaViwiJ/n1LQBtMsym7tbl8CJnfyCt0o9hAjh4Jx
+	 B4ltQOitnjP4oc97UnBYAMI1G7hIBeH05rm58zJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgDTICQ (ORCPT
+        id S1726500AbgDTICU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgDTICP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:02:15 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA6F5C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:02:14 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id u12so3253854uau.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:02:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XGNbQJnwncFtmSfnnq7BG7mTK5kM8GPjPL8s7er/Oug=;
-        b=FPbM6YGm0+2v+a7dfLD2r1xsPIdoZzsB3WLcQQpt+iiMZ0ZPr6E+Xmah4VeCnoBVwM
-         1XI9tGVqd+amR+wTuvVcSje66GPeBZyjeGx2riOIZ5WnA0cCWkSXlmOFJdYy3+7LumtF
-         LXINRU0UpApdf0FihchJuJxe9kxYFW70+mWB6Od3Fk7CyKmTnue8LmsJWXLJ87jKt7pH
-         zhpqlZ7rQaVen8QMRXBN5XO7XD2vZOggFT3VHz80jzrnbGum40+ZXcX+aR8JsRCbvWl/
-         NTVTFHylhWw+j9qoGVrOVHACsQIgRAs2mxa48rsE1VTGzlzxfi5LNYP/TNrD0oFSu+Mr
-         Qqng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XGNbQJnwncFtmSfnnq7BG7mTK5kM8GPjPL8s7er/Oug=;
-        b=j9dZodIaSfC7QyOTwzBWp75jnVKmV14GpN11MzKltRhct3ZvOMWBRyr8Nq6rbacxOV
-         sMKFlgH8w2YIu0446PxnfE5WC+Bz5fyo4ZuY/9LLjZwNoL4E2IvQIGABeLeNHis5dtYa
-         LRv9mlI0uWWjM/h4bHppYebMkxJsP8+biL/i1GdIr9noAyspIAeotCLtfiAKNVPZqkD1
-         bi6vkwuGMnEbQc64nXd98jlHdIQFGooSWTr1bBj4Ld8QRJOf+tWcu//GF1kDIBkHM7Nd
-         o+GZIBW7a6cuwqwybzUy1UfofvZE1n9bqkIUZQB9+VeHoYMxSllLvhfYoytGaXH3IkIn
-         6MOA==
-X-Gm-Message-State: AGi0PuY0xSVz4ENDbR36IR3hcU3hIGXm9Yct1EQgmDs1AOShOLeGNijo
-        6PK3HHLZHmLIuNYILEkAQCkz8/iCv35WcMvrlCe7wQ==
-X-Google-Smtp-Source: APiQypLaYCzytAomXpGw0KpBtvlb+IMYlHUaXnefkBr/mv0cHGOaEE/8DDORc8fTsMLcsoUj78yspHZlXLsrfKD9OfU=
-X-Received: by 2002:ab0:6588:: with SMTP id v8mr6202526uam.100.1587369734116;
+        Mon, 20 Apr 2020 04:02:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbgDTICR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:02:17 -0400
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8682C22202;
+        Mon, 20 Apr 2020 08:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587369736;
+        bh=3xcya7M/sEvPLWNBKP6Q1scBZdGSUS616tgCh9F9c7Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MTffXFCO//iyqq/dquWfsII+EQEvkEl1aut2+SzUn9L92VGIKyAl+Zm4GLZNl0hc4
+         TJCmR3MNkNjeRWVy80plCLzKyL2JfHIMnLkHphHzYUcoigLfmXVjVoyxaTEIz5DSVz
+         L4kzv2fjHZ7yumEV6roTQ5RKVKgOPBYyBW1eJCiY=
+Received: by mail-ed1-f50.google.com with SMTP id d16so6342413edv.8;
+        Mon, 20 Apr 2020 01:02:16 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZXmOBedT5pfLif8VBhvZdqJSQyeo2HaMN8f6kowQUePh6JAkPl
+        3tKXf4mTycR9QEnyVBW6fQ7Np0NNM5r/sB1MAL4=
+X-Google-Smtp-Source: APiQypIyOH/ryBKZyU0X7EvYrtQRDAKgyCzCYUiTcPhGkK3tSg3xJVYiTIUYCQhCbMqDcQZB/6Mjik8RwtT83/1E2cQ=
+X-Received: by 2002:aa7:c0d1:: with SMTP id j17mr12138364edp.308.1587369734880;
  Mon, 20 Apr 2020 01:02:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587363626-20413-1-git-send-email-vbadigan@codeaurora.org>
-In-Reply-To: <1587363626-20413-1-git-send-email-vbadigan@codeaurora.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 20 Apr 2020 10:01:38 +0200
-Message-ID: <CAPDyKFoOq3djNJzEppPwSUUfKYh2vrkcr3LmDEbfwPRa=Asphg@mail.gmail.com>
-Subject: Re: [PATCH V2 0/3] Minor fixes to sdhci-msm
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+References: <20200415195422.19866-1-atish.patra@wdc.com> <20200415195422.19866-6-atish.patra@wdc.com>
+ <CAMj1kXFRqTYr7_M_j6oN1-xnQ6V4uCYK49yAbjvrf1BB823Cng@mail.gmail.com>
+ <CAOnJCUK3fqsR93ewYMUkanh+x1EJN_3QwkFjSDDZZr2MjzpnUQ@mail.gmail.com>
+ <CAMj1kXFOkARJ9k81pu-LuHEd7H7AZRRrquzVN-WQ3J239JUZTw@mail.gmail.com>
+ <CAMj1kXGv8XrXJ=Tx88O38a9UYM3iuBevg5NXRpMrny1XJZGB7A@mail.gmail.com>
+ <CAOnJCUJOY_84eesRreVyEQKjL2awkehcFi5ydMv0USNeaFHd6A@mail.gmail.com>
+ <CAMj1kXHLfXOp=JQhAeFx6oazFp=kqiS0TMTV06ZthTFg6QdzWw@mail.gmail.com>
+ <b6a28d62be4d42319fca2adaad755612ef094667.camel@wdc.com> <CAMj1kXEQVdQ4ysMoyJk+ue7iZApLLgkhy65Fm7JDPOjNyETx9Q@mail.gmail.com>
+ <CAOnJCUKZUNm_0xZtFyOxQMaust79Q0_m7gUS1eQPFkK29uyJMQ@mail.gmail.com>
+In-Reply-To: <CAOnJCUKZUNm_0xZtFyOxQMaust79Q0_m7gUS1eQPFkK29uyJMQ@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 20 Apr 2020 10:02:03 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHpHnhOjYJaBvj5XhYnOzbH5MzBJePy7dDpd-S3s029CQ@mail.gmail.com>
+Message-ID: <CAMj1kXHpHnhOjYJaBvj5XhYnOzbH5MzBJePy7dDpd-S3s029CQ@mail.gmail.com>
+Subject: Re: [v3 PATCH 5/5] RISC-V: Add EFI stub support.
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     Atish Patra <Atish.Patra@wdc.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "will@kernel.org" <will@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 at 08:20, Veerabhadrarao Badiganti
-<vbadigan@codeaurora.org> wrote:
+On Mon, 20 Apr 2020 at 09:59, Atish Patra <atishp@atishpatra.org> wrote:
 >
-> Enable a couple of CAPS that qcom sd host controller supports.
-> Set a quirk for enabling support for auto cmd12.
-> And enable adma length mismatch error interrupt.
+> On Mon, Apr 20, 2020 at 12:04 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Mon, 20 Apr 2020 at 06:20, Atish Patra <Atish.Patra@wdc.com> wrote:
+> > >
+...
+> > >
+> > > "If the preferred address is set as the base of DRAM, efi_bs_call is
+> > > bound to fail as well because the base of DRAM is reserved by the
+> > > firmware. So the efi memory allocator can't allocate at that address.
+> > > Technically, it will work but it is no different than passing
+> > > ULONG_MAX. So I thought ULONG_MAX will avoid the confusion.
+> > >
+> > > We try to allocate as low as possible so I am passing dram_base as the
+> > > minimum address anyways. As the firmware reserved the first few KBs,
+> > >
+> >
+> >
+> > OK, so the preferred address *is* the base of DRAM (assuming it is 2
+> > MB aligned). However, in the general case, you keep some firmware
+> > state there (couple of KB) and so you typically end up at DRAM base
+> > plus 2 MB?
+> >
 >
-> --
-> V1: https://lore.kernel.org/linux-arm-msm/1586706808-27337-1-git-send-email-vbadigan@codeaurora.org
-> Changes since V1:
->         Squashed two caps related patches and appiled stable tag.
+> Yes.
 >
-> Veerabhadrarao Badiganti (3):
->   mmc: sdhci-msm: Enable host capabilities pertains to R1b response
->   mmc: sdhci-msm: Set SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 quirk
->   mmc: sdhci-msm: Enable ADMA length mismatch error interrupt
+> > So first question: why does the firmware put this stuff at the base of
+> > DRAM in the first place? Does it *have* to live there?
+> >
 >
->  drivers/mmc/host/sdhci-msm.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
+> The firmware includes the RISC-V specific supervisor binary interface (SBI)[[1]
+> implementation. As it is a RISC-V specific run time service provider,
+> it has to be resident in memory.
+> The arm equivalent of SBI would be PSCI.
+>
+> [1] https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
 >
 
-First patch applied for fixes, the other two for next, thanks!
-Kind regards
-Uffe
+I am not asking why it has to be resident in memory. I am asking why
+it has to be at the *base* of memory.
+
+> > Then, if the base of DRAM is guaranteed to be occupied, why not make
+> > the preferred address base of DRAM + 2 MB ? (or 4 MB for the 32-bit
+> > case)
+>
+> I guess that will work too. I was inclined to use low_alloc_above so
+> that we ensure that the kernel
+> boots from the lowest possible address given the alignment
+> restriction. If the alignment restrictions are relaxed,
+> in future, we just have to change the macro.
+>
+> However, I think calling relocate_kernel with a preferred offset
+> (dram_base + KIMG_ALIGN) is
+> better because it will always fall back to low_alloc_above anyways. I
+> will send the patch.
+
+Indeed. In the common case, it will just do the allocate_pages()
+directly, which is preferred. It will fall back to
+efi_low_alloc_aboce() [and do the memory map parsing and traversal
+etc] only if needed.
