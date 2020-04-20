@@ -7,55 +7,59 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80427C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BBDC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA17206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15D2206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587383817;
-	bh=U4eJSc8TgHW9W+/DL/Cn7uZVr23BQIsJEfDEdoHZsHk=;
+	s=default; t=1587383819;
+	bh=e1u80AUxfeDjaOrRS5L2OTwD3ObDfeg0sCBURGpc/7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y4Koh3dWaMWinDJ6Lnl1LFztUvuW+ge/pa3Tmug2x8kNzzK9sO37j0kRGVsAJ4//W
-	 UMhnOs10GuUGqboL2LF2aMtope4h3fnp4sUVbhPByMwACZTOTTPKoNLf54ER4Fqjc7
-	 o34uMstfr4pcd9XeaLjXGeNTouP4OniN9bgkpJRw=
+	b=Xa24Pd5k9No5pnvmQZtiNetSh4hbfb2TvwQqcpQCWTWsAw4HPVpL5v1eAjXWg1o7h
+	 gXztYpEqRIa9pqKbgin3gmQ+X0KZzLyZRNOyRo1nzFQiG375kmBsX0a/aWtfeRqIlu
+	 YXAxImNNgnoj9JFtQec5TguUuEpkyU0kaMC/5oN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgDTL44 (ORCPT
+        id S1727779AbgDTL47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41310 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 07:56:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgDTL4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:56:49 -0400
+        id S1726596AbgDTL4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:56:54 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28317218AC;
-        Mon, 20 Apr 2020 11:56:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EA8B21744;
+        Mon, 20 Apr 2020 11:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587383808;
-        bh=U4eJSc8TgHW9W+/DL/Cn7uZVr23BQIsJEfDEdoHZsHk=;
+        s=default; t=1587383813;
+        bh=e1u80AUxfeDjaOrRS5L2OTwD3ObDfeg0sCBURGpc/7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+x2Ul1eZi7vB9Y5bUOHpzcXbCCLStAB8+8TD7Z8z7/hM7GcTr/GcDkgyn6vfewU5
-         beozZJ+tEB92F+4K2h/rd6a1aWnd/9ufOtYtZaS8yLyUV1t294wPUhavuIAmAAkOTx
-         PXZn+dbbPizW+kZg8FJnVHbWAc56AaG7JZGR+jXM=
+        b=waxsyxhKeom4l3HP+hn2G+XUtEHwz1nOReLBw08Md2QD99niP+EhTDhKKYlLEtj+/
+         O/sk2rRa7JGJV8hVC8PvIf3SKJytFgCHjqgvNo6ObOJx6bVBjjHMzK1GqBAwH5jQAF
+         6RhTEKcWnEsrxuhXGDRm082iotVGnF9YYv8BckAM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jiri Olsa <jolsa@redhat.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Pavel Gerasimov <pavel.gerasimov@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 46/60] perf parser: Add support to specify rXXX event with pmu
-Date:   Mon, 20 Apr 2020 08:53:02 -0300
-Message-Id: <20200420115316.18781-47-acme@kernel.org>
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
+Subject: [PATCH 47/60] perf header: Support CPU PMU capabilities
+Date:   Mon, 20 Apr 2020 08:53:03 -0300
+Message-Id: <20200420115316.18781-48-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
 References: <20200420115316.18781-1-acme@kernel.org>
@@ -66,174 +70,287 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-The current rXXXX event specification creates event under PERF_TYPE_RAW
-pmu type. This change allows to use rXXXX within pmu syntax, so it's
-type is used via the following syntax:
+To stitch LBR call stack, the max LBR information is required. So the
+CPU PMU capabilities information has to be stored in perf header.
 
-  -e 'cpu/r3c/'
-  -e 'cpum_cf/r0/'
+Add a new feature HEADER_CPU_PMU_CAPS for CPU PMU capabilities.
+Retrieve all CPU PMU capabilities, not just max LBR information.
 
-The XXXX number goes directly to perf_event_attr::config the same way as
-in '-e rXXXX' event. The perf_event_attr::type is filled with pmu type.
+Add variable max_branches to facilitate future usage.
 
 Committer testing:
 
-So, lets see what goes in perf_event_attr::config for, say, the
-'instructions' PERF_TYPE_HARDWARE (0) event, first we should look at how
-to encode this event as a PERF_TYPE_RAW event for this specific CPU, an
-AMD Ryzen 5:
-
-  # cat /sys/devices/cpu/events/instructions
-  event=0xc0
+  # ls -la /sys/devices/cpu/caps/
+  total 0
+  drwxr-xr-x. 2 root root    0 Apr 17 10:53 .
+  drwxr-xr-x. 6 root root    0 Apr 17 07:02 ..
+  -r--r--r--. 1 root root 4096 Apr 17 10:53 max_precise
+  #
+  # cat /sys/devices/cpu/caps/max_precise
+  0
+  # perf record sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.033 MB perf.data (7 samples) ]
+  #
+  # perf report --header-only | egrep 'cpu(desc|.*capabilities)'
+  # cpudesc : AMD Ryzen 5 3600X 6-Core Processor
+  # cpu pmu capabilities: max_precise=0
   #
 
-Then try with it _and_ the instruction, just to see that they are close
-enough:
+And then on an Intel machine:
 
-  # perf stat -e rc0,instructions sleep 1
+  $ ls -la /sys/devices/cpu/caps/
+  total 0
+  drwxr-xr-x. 2 root root    0 Apr 17 10:51 .
+  drwxr-xr-x. 6 root root    0 Apr 17 10:04 ..
+  -r--r--r--. 1 root root 4096 Apr 17 11:37 branches
+  -r--r--r--. 1 root root 4096 Apr 17 10:51 max_precise
+  -r--r--r--. 1 root root 4096 Apr 17 11:37 pmu_name
+  $ cat /sys/devices/cpu/caps/max_precise
+  3
+  $ cat /sys/devices/cpu/caps/branches
+  32
+  $ cat /sys/devices/cpu/caps/pmu_name
+  skylake
+  $ perf record sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.001 MB perf.data (8 samples) ]
+  $ perf report --header-only | egrep 'cpu(desc|.*capabilities)'
+  # cpudesc : Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz
+  # cpu pmu capabilities: branches=32, max_precise=3, pmu_name=skylake
+  $
 
-   Performance counter stats for 'sleep 1':
-
-             919,794      rc0
-             919,898      instructions
-
-         1.000754579 seconds time elapsed
-
-         0.000715000 seconds user
-         0.000000000 seconds sys
-  #
-
-Now we should try, before this patch, the PMU event encoding:
-
-  # perf stat -e cpu/rc0/ sleep 1
-  event syntax error: 'cpu/rc0/'
-                           \___ unknown term
-
-  valid terms: event,edge,inv,umask,cmask,config,config1,config2,name,period,percore
-  #
-
-Now with this patch, the three ways of specifying the 'instructions' CPU
-counter are accepted:
-
-  # perf stat -e cpu/rc0/,rc0,instructions sleep 1
-
-   Performance counter stats for 'sleep 1':
-
-             892,948      cpu/rc0/
-             893,052      rc0
-             893,156      instructions
-
-         1.000931819 seconds time elapsed
-
-         0.000916000 seconds user
-         0.000000000 seconds sys
-
-  #
-
-Requested-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Pavel Gerasimov <pavel.gerasimov@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20200416221405.437788-1-jolsa@kernel.org
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
+Link: http://lore.kernel.org/lkml/20200319202517.23423-3-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-list.txt |  5 +++++
- tools/perf/tests/parse-events.c        | 17 ++++++++++++++++-
- tools/perf/util/parse-events.l         |  1 +
- tools/perf/util/parse-events.y         |  9 +++++++++
- 4 files changed, 31 insertions(+), 1 deletion(-)
+ .../Documentation/perf.data-file-format.txt   |  16 +++
+ tools/perf/util/env.h                         |   3 +
+ tools/perf/util/header.c                      | 108 ++++++++++++++++++
+ tools/perf/util/header.h                      |   1 +
+ 4 files changed, 128 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index cb23667531ab..376a50b3452d 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -115,6 +115,11 @@ raw encoding of 0x1A8 can be used:
-  perf stat -e r1a8 -a sleep 1
-  perf record -e r1a8 ...
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index b0152e1095c5..b6472e463284 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -373,6 +373,22 @@ struct {
+ Indicates that trace contains records of PERF_RECORD_COMPRESSED type
+ that have perf_events records in compressed form.
  
-+It's also possible to use pmu syntax:
++	HEADER_CPU_PMU_CAPS = 28,
 +
-+ perf record -e r1a8 -a sleep 1
-+ perf record -e cpu/r1a8/ ...
++	A list of cpu PMU capabilities. The format of data is as below.
 +
- You should refer to the processor specific documentation for getting these
- details. Some of them are referenced in the SEE ALSO section below.
++struct {
++	u32 nr_cpu_pmu_caps;
++	{
++		char	name[];
++		char	value[];
++	} [nr_cpu_pmu_caps]
++};
++
++
++Example:
++ cpu pmu capabilities: branches=32, max_precise=3, pmu_name=icelake
++
+ 	other bits are reserved and should ignored for now
+ 	HEADER_FEAT_BITS	= 256,
  
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 091c3aeccc27..902bd9d591a0 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -1356,6 +1356,16 @@ static int test__checkevent_complex_name(struct evlist *evlist)
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 7632075a8792..1ab2682d5d2b 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -48,6 +48,7 @@ struct perf_env {
+ 	char			*cpuid;
+ 	unsigned long long	total_mem;
+ 	unsigned int		msr_pmu_type;
++	unsigned int		max_branches;
+ 
+ 	int			nr_cmdline;
+ 	int			nr_sibling_cores;
+@@ -57,12 +58,14 @@ struct perf_env {
+ 	int			nr_memory_nodes;
+ 	int			nr_pmu_mappings;
+ 	int			nr_groups;
++	int			nr_cpu_pmu_caps;
+ 	char			*cmdline;
+ 	const char		**cmdline_argv;
+ 	char			*sibling_cores;
+ 	char			*sibling_dies;
+ 	char			*sibling_threads;
+ 	char			*pmu_mappings;
++	char			*cpu_pmu_caps;
+ 	struct cpu_topology_map	*cpu;
+ 	struct cpu_cache_level	*caches;
+ 	int			 caches_cnt;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index acbd046bf95c..28e82da04b7a 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1395,6 +1395,38 @@ static int write_compressed(struct feat_fd *ff __maybe_unused,
+ 	return do_write(ff, &(ff->ph->env.comp_mmap_len), sizeof(ff->ph->env.comp_mmap_len));
+ }
+ 
++static int write_cpu_pmu_caps(struct feat_fd *ff,
++			      struct evlist *evlist __maybe_unused)
++{
++	struct perf_pmu *cpu_pmu = perf_pmu__find("cpu");
++	struct perf_pmu_caps *caps = NULL;
++	int nr_caps;
++	int ret;
++
++	if (!cpu_pmu)
++		return -ENOENT;
++
++	nr_caps = perf_pmu__caps_parse(cpu_pmu);
++	if (nr_caps < 0)
++		return nr_caps;
++
++	ret = do_write(ff, &nr_caps, sizeof(nr_caps));
++	if (ret < 0)
++		return ret;
++
++	list_for_each_entry(caps, &cpu_pmu->caps, list) {
++		ret = do_write_string(ff, caps->name);
++		if (ret < 0)
++			return ret;
++
++		ret = do_write_string(ff, caps->value);
++		if (ret < 0)
++			return ret;
++	}
++
++	return ret;
++}
++
+ static void print_hostname(struct feat_fd *ff, FILE *fp)
+ {
+ 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
+@@ -1809,6 +1841,27 @@ static void print_compressed(struct feat_fd *ff, FILE *fp)
+ 		ff->ph->env.comp_level, ff->ph->env.comp_ratio);
+ }
+ 
++static void print_cpu_pmu_caps(struct feat_fd *ff, FILE *fp)
++{
++	const char *delimiter = "# cpu pmu capabilities: ";
++	u32 nr_caps = ff->ph->env.nr_cpu_pmu_caps;
++	char *str;
++
++	if (!nr_caps) {
++		fprintf(fp, "# cpu pmu capabilities: not available\n");
++		return;
++	}
++
++	str = ff->ph->env.cpu_pmu_caps;
++	while (nr_caps--) {
++		fprintf(fp, "%s%s", delimiter, str);
++		delimiter = ", ";
++		str += strlen(str) + 1;
++	}
++
++	fprintf(fp, "\n");
++}
++
+ static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
+ {
+ 	const char *delimiter = "# pmu mappings: ";
+@@ -2846,6 +2899,60 @@ static int process_compressed(struct feat_fd *ff,
  	return 0;
  }
  
-+static int test__checkevent_raw_pmu(struct evlist *evlist)
++static int process_cpu_pmu_caps(struct feat_fd *ff,
++				void *data __maybe_unused)
 +{
-+	struct evsel *evsel = evlist__first(evlist);
++	char *name, *value;
++	struct strbuf sb;
++	u32 nr_caps;
 +
-+	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong config", 0x1a == evsel->core.attr.config);
++	if (do_read_u32(ff, &nr_caps))
++		return -1;
++
++	if (!nr_caps) {
++		pr_debug("cpu pmu capabilities not available\n");
++		return 0;
++	}
++
++	ff->ph->env.nr_cpu_pmu_caps = nr_caps;
++
++	if (strbuf_init(&sb, 128) < 0)
++		return -1;
++
++	while (nr_caps--) {
++		name = do_read_string(ff);
++		if (!name)
++			goto error;
++
++		value = do_read_string(ff);
++		if (!value)
++			goto free_name;
++
++		if (strbuf_addf(&sb, "%s=%s", name, value) < 0)
++			goto free_value;
++
++		/* include a NULL character at the end */
++		if (strbuf_add(&sb, "", 1) < 0)
++			goto free_value;
++
++		if (!strcmp(name, "branches"))
++			ff->ph->env.max_branches = atoi(value);
++
++		free(value);
++		free(name);
++	}
++	ff->ph->env.cpu_pmu_caps = strbuf_detach(&sb, NULL);
 +	return 0;
++
++free_value:
++	free(value);
++free_name:
++	free(name);
++error:
++	strbuf_release(&sb);
++	return -1;
 +}
 +
- static int test__sym_event_slash(struct evlist *evlist)
- {
- 	struct evsel *evsel = evlist__first(evlist);
-@@ -1750,7 +1760,12 @@ static struct evlist_test test__events_pmu[] = {
- 		.name  = "cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp",
- 		.check = test__checkevent_complex_name,
- 		.id    = 3,
--	}
-+	},
-+	{
-+		.name  = "software/r1a/",
-+		.check = test__checkevent_raw_pmu,
-+		.id    = 4,
-+	},
+ #define FEAT_OPR(n, func, __full_only) \
+ 	[HEADER_##n] = {					\
+ 		.name	    = __stringify(n),			\
+@@ -2903,6 +3010,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+ 	FEAT_OPR(BPF_PROG_INFO, bpf_prog_info,  false),
+ 	FEAT_OPR(BPF_BTF,       bpf_btf,        false),
+ 	FEAT_OPR(COMPRESSED,	compressed,	false),
++	FEAT_OPR(CPU_PMU_CAPS,	cpu_pmu_caps,	false),
  };
  
- struct terms_test {
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index baa48f28d57d..c589fc42f058 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -286,6 +286,7 @@ no-overwrite		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_NOOVERWRITE); }
- percore			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_PERCORE); }
- aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
- aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
-+r{num_raw_hex}		{ return raw(yyscanner); }
- ,			{ return ','; }
- "/"			{ BEGIN(INITIAL); return '/'; }
- {name_minus}		{ return str(yyscanner, PE_NAME); }
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 94f8bcd83582..e879eb257874 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -706,6 +706,15 @@ event_term
- }
- 
- event_term:
-+PE_RAW
-+{
-+	struct parse_events_term *term;
-+
-+	ABORT_ON(parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_CONFIG,
-+					NULL, $1, false, &@1, NULL));
-+	$$ = term;
-+}
-+|
- PE_NAME '=' PE_NAME
- {
- 	struct parse_events_term *term;
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 840f95cee349..650bd1c7a99b 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -43,6 +43,7 @@ enum {
+ 	HEADER_BPF_PROG_INFO,
+ 	HEADER_BPF_BTF,
+ 	HEADER_COMPRESSED,
++	HEADER_CPU_PMU_CAPS,
+ 	HEADER_LAST_FEATURE,
+ 	HEADER_FEAT_BITS	= 256,
+ };
 -- 
 2.21.1
 
