@@ -2,187 +2,99 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABDFC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152A1C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57BB208FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:45:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587411936;
-	bh=j2NcSU4/MVE7LPAmEZdLosRKMgNJ7nOCr1OGvM6oX6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XdLeYhK6a8rETr/IvdlcYCqBvIbO8Fa1MjnlcCW0mfyHqLdLn5NMEaGXm16vlWn8S
-	 JrmrWtqtnQLFEEGdqGSBxlD6EiO+wTEcD2DGAa8GKNvk7FCgxPPx/Zdh5IrPhb4/D6
-	 3iFsWMayUfZZ1Mu9mBFibpBPiQtbYxElHRcFypEE=
+	by mail.kernel.org (Postfix) with ESMTP id DB8D12074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rz7WPWMG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgDTTpg (ORCPT
+        id S1726371AbgDTTtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:45:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbgDTTpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:45:35 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 20 Apr 2020 15:49:09 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38358 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725988AbgDTTtI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 15:49:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587412147;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LKl1qhqv4qpwNjsYJ1wWYtjHdCV4Rr+NMYSPl4A948c=;
+        b=Rz7WPWMGNrBqjRbFZjOC4ft7sL/JvzAQNadDQVg2ngfAFK19qx9TdRSn1yX/Vu0wMcHp6/
+        uJZE/4lwwtrsoJfYohObeHx0lx5frZUKiEGYawV1tXCPmfPBd5MPGxC520QWnqP8Zv58c+
+        QlsHQ119Wk7yCQeYRx67ljsF9lIHEhQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-157-T71RdRqdMdWY1BXEe8dQGQ-1; Mon, 20 Apr 2020 15:49:03 -0400
+X-MC-Unique: T71RdRqdMdWY1BXEe8dQGQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2E7F2084D;
-        Mon, 20 Apr 2020 19:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587411934;
-        bh=j2NcSU4/MVE7LPAmEZdLosRKMgNJ7nOCr1OGvM6oX6A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CWgxYxPRK3d5xP6TD6r9eiLCxP9cINTCPOOtBvsUWOnwQOYJKooeeIRgofPg/lwgm
-         pVsNN2Mo/B1KqZTHTDe8a7VBXlO6ufuzcig7yIsIYoQub+cQspe44u43DTzvpEb0xI
-         u8KsRyrQemtJ4vzs6vPb8oIfeZACmXkrNm6dMNE0=
-Date:   Mon, 20 Apr 2020 20:45:26 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Qian Cai <cai@lca.pw>, Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-doc@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S.Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mina Almasry <almasrymina@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 0/4] Clean up hugetlb boot command line processing
-Message-ID: <20200420194525.GA28523@willie-the-truck>
-References: <20200417185049.275845-1-mike.kravetz@oracle.com>
- <5E312000-05D8-4C5D-A7C0-DDDE1842CB0E@lca.pw>
- <4c36c6ce-3774-78fa-abc4-b7346bf24348@oracle.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B110A800D5B;
+        Mon, 20 Apr 2020 19:49:02 +0000 (UTC)
+Received: from redhat.com (ovpn-112-171.phx2.redhat.com [10.3.112.171])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 17ED7277B9;
+        Mon, 20 Apr 2020 19:49:02 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 15:49:00 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
+ early
+Message-ID: <20200420194900.GC13807@redhat.com>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
+ <20200420175751.GA13807@redhat.com>
+ <20200420182516.6awwwbvoen62gwbr@treble>
+ <20200420190141.GB13807@redhat.com>
+ <20200420191117.wrjauayeutkpvkwd@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4c36c6ce-3774-78fa-abc4-b7346bf24348@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200420191117.wrjauayeutkpvkwd@treble>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 11:20:23AM -0700, Mike Kravetz wrote:
-> On 4/20/20 8:34 AM, Qian Cai wrote:
+On Mon, Apr 20, 2020 at 02:11:17PM -0500, Josh Poimboeuf wrote:
+> On Mon, Apr 20, 2020 at 03:01:41PM -0400, Joe Lawrence wrote:
+> > > > ... apply_relocations() is also iterating over the section headers (the
+> > > > diff context doesn't show it here, but i is an incrementing index over
+> > > > sechdrs[]).
+> > > > 
+> > > > So if there is more than one KLP relocation section, we'll process them
+> > > > multiple times.  At least the x86 relocation code will detect this and
+> > > > fail the module load with an invalid relocation (existing value not
+> > > > zero).
+> > > 
+> > > Ah, yes, good catch!
+> > > 
 > > 
-> > 
-> >> On Apr 17, 2020, at 2:50 PM, Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> >>
-> >> Longpeng(Mike) reported a weird message from hugetlb command line processing
-> >> and proposed a solution [1].  While the proposed patch does address the
-> >> specific issue, there are other related issues in command line processing.
-> >> As hugetlbfs evolved, updates to command line processing have been made to
-> >> meet immediate needs and not necessarily in a coordinated manner.  The result
-> >> is that some processing is done in arch specific code, some is done in arch
-> >> independent code and coordination is problematic.  Semantics can vary between
-> >> architectures.
-> >>
-> >> The patch series does the following:
-> >> - Define arch specific arch_hugetlb_valid_size routine used to validate
-> >>  passed huge page sizes.
-> >> - Move hugepagesz= command line parsing out of arch specific code and into
-> >>  an arch independent routine.
-> >> - Clean up command line processing to follow desired semantics and
-> >>  document those semantics.
-> >>
-> >> [1] https://lore.kernel.org/linux-mm/20200305033014.1152-1-longpeng2@huawei.com
-> >>
-> >> Mike Kravetz (4):
-> >>  hugetlbfs: add arch_hugetlb_valid_size
-> >>  hugetlbfs: move hugepagesz= parsing to arch independent code
-> >>  hugetlbfs: remove hugetlb_add_hstate() warning for existing hstate
-> >>  hugetlbfs: clean up command line processing
-> > 
-> > Reverted this series fixed many undefined behaviors on arm64 with the config,
-> > 
-> > https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
-> > 
-> > [   54.172683][    T1] UBSAN: shift-out-of-bounds in ./include/linux/hugetlb.h:555:34
-> > [   54.180411][    T1] shift exponent 4294967285 is too large for 64-bit type 'unsigned long'
-> > [   54.188885][    T1] CPU: 130 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc2-next-20200420 #1
-> > [   54.197284][    T1] Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
-> > [   54.207888][    T1] Call trace:
-> > [   54.211100][    T1]  dump_backtrace+0x0/0x224
-> > [   54.215565][    T1]  show_stack+0x20/0x2c
-> > [   54.219651][    T1]  dump_stack+0xfc/0x184
-> > [   54.223829][    T1]  __ubsan_handle_shift_out_of_bounds+0x304/0x344
-> > [   54.230204][    T1]  hugetlb_add_hstate+0x3ec/0x414
-> > huge_page_size at include/linux/hugetlb.h:555
-> > (inlined by) hugetlb_add_hstate at mm/hugetlb.c:3301
-> > [   54.235191][    T1]  hugetlbpage_init+0x14/0x30
-> > [   54.239824][    T1]  do_one_initcall+0x6c/0x144
-> > [   54.244446][    T1]  do_initcall_level+0x158/0x1c4
-> > [   54.249336][    T1]  do_initcalls+0x68/0xb0
-> > [   54.253597][    T1]  do_basic_setup+0x28/0x30
-> > [   54.258049][    T1]  kernel_init_freeable+0x19c/0x228
-> > [   54.263188][    T1]  kernel_init+0x14/0x208
-> > [   54.267473][    T1]  ret_from_fork+0x10/0x18
+> > The same test case passed with a small modification to push the foreach
+> > KLP section part to a kernel/livepatch/core.c local function and
+> > exposing the klp_resolve_symbols() + apply_relocate_add() for a given
+> > section to kernel/module.c.  Something like following...
 > 
-> While rearranging the code (patch 3 in series), I made the incorrect
-> assumption that CONT_XXX_SIZE == (1UL << CONT_XXX_SHIFT).  However,
-> this is not the case.  Does the following patch fix these issues?
+> I came up with something very similar, though I named them
+> klp_apply_object_relocs() and klp_apply_section_relocs() and changed the
+> argument order a bit (module first).  Since it sounds like you have a
+> test, could you try this one?
 > 
-> From b75cb4a0852e208bee8c4eb347dc076fcaa88859 Mon Sep 17 00:00:00 2001
-> From: Mike Kravetz <mike.kravetz@oracle.com>
-> Date: Mon, 20 Apr 2020 10:41:18 -0700
-> Subject: [PATCH] arm64/hugetlb: fix hugetlb initialization
-> 
-> When calling hugetlb_add_hstate() to initialize a new hugetlb size,
-> be sure to use correct huge pages size order.
-> 
-> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-> ---
->  arch/arm64/mm/hugetlbpage.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> index 9ca840527296..a02411a1f19a 100644
-> --- a/arch/arm64/mm/hugetlbpage.c
-> +++ b/arch/arm64/mm/hugetlbpage.c
-> @@ -453,11 +453,11 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
->  static int __init hugetlbpage_init(void)
->  {
->  #ifdef CONFIG_ARM64_4K_PAGES
-> -	hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
-> +	hugetlb_add_hstate(ilog2(PUD_SIZE) - PAGE_SHIFT);
->  #endif
-> -	hugetlb_add_hstate(CONT_PMD_SHIFT - PAGE_SHIFT);
-> -	hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
-> -	hugetlb_add_hstate(CONT_PTE_SHIFT - PAGE_SHIFT);
-> +	hugetlb_add_hstate(ilog2(CONT_PMD_SIZE) - PAGE_SHIFT);
-> +	hugetlb_add_hstate(ilog2(PMD_SIZE) - PAGE_SHIFT);
-> +	hugetlb_add_hstate(ilog2(CONT_PTE_SIZE) - PAGE_SHIFT);
 
-Might be clearer to leave the non CONT_* definitions alone and instead
-convert the CONT versions along the lines of:
+LGTM.  I have a few klp-convert selftests that I've been slowly
+tinkering on and they all load/run successfully with this version. :)
 
-	hugetlb_add_hstate(CONT_PMD_SHIFT + PMD_SHIFT - PAGE_SHIFT);
+-- Joe
 
-(untested, but I think that's right...)
-
-But that doesn't matter until Qian has confirmed that your patch fixes the
-issue.
-
-Will
