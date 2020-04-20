@@ -2,153 +2,92 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B676C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03909C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84C9320735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5A120735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587387182;
+	bh=VnYYLsz/sYIWnIIfbHRQhrU0U/h+gGUu95y/4hL63Ng=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=txVQwrnvdPZtFueOMYTnQZRYcoO32iUSUeFDiu+dzwoNNjaFSbYCxGZxRyZSWn405
+	 NMlDRlfBKJ1sblpg6Auu2RUdyJa6uyQUe+rYzy5MVDxIuWyswX5oECkFDMTRRNFc3l
+	 2wYvkXq/FuLiROuOZQG2IUzMdCOsYfpQbXXdefDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgDTMq7 (ORCPT
+        id S1727868AbgDTMxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Apr 2020 08:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728987AbgDTMq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 08:46:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23694 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728958AbgDTMqj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:46:39 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCXXpj039417;
-        Mon, 20 Apr 2020 08:46:25 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxnshac-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:46:25 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCb6Y5050200;
-        Mon, 20 Apr 2020 08:46:25 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxnsha1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:46:24 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KChNlD028911;
-        Mon, 20 Apr 2020 12:46:24 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma03dal.us.ibm.com with ESMTP id 30fs66cpxj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 12:46:24 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCkMbl52101380
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 12:46:22 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3E6EB136051;
-        Mon, 20 Apr 2020 12:46:22 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 269EB13604F;
-        Mon, 20 Apr 2020 12:46:18 +0000 (GMT)
-Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 12:46:17 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
-        kirill@shutemov.name,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        akpm@linux-foundation.org
-Subject: [PATCH v3 21/22] mm: change pmdp_huge_get_and_clear_full take vm_area_struct as arg
-Date:   Mon, 20 Apr 2020 18:14:33 +0530
-Message-Id: <20200420124434.47330-22-aneesh.kumar@linux.ibm.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
-References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4D27206D4;
+        Mon, 20 Apr 2020 12:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587386819;
+        bh=VnYYLsz/sYIWnIIfbHRQhrU0U/h+gGUu95y/4hL63Ng=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VVY8M7S1AIGbqZkUUPi/mucvz/Sh+dSPWSBZ8JDRfyjcoC82QCE6ysg8cB3zE6Jxv
+         DalJ1CLrhs54IS5suS4yfawGGLyejaiZEWMfxjLXP+zFf958SoaGkhI0O/SuwwFd19
+         RqzMILVt2WEDSJP/K6dwhsh1mU9fcLuGu8iPIB6g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 38/60] ALSA: usb-audio: Dont override ignore_ctl_error value from the map
+Date:   Mon, 20 Apr 2020 14:39:16 +0200
+Message-Id: <20200420121511.186018233@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
+References: <20200420121500.490651540@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_04:2020-04-20,2020-04-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- suspectscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
- priorityscore=1501 spamscore=0 malwarescore=0 adultscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will use this in later patch to do tlb flush when clearing pmd entries.
+From: Takashi Iwai <tiwai@suse.de>
 
-Cc: kirill@shutemov.name
-Cc: akpm@linux-foundation.org
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+commit 3507245b82b4362dc9721cbc328644905a3efa22 upstream.
+
+The mapping table may contain also ignore_ctl_error flag for devices
+that are known to behave wild.  Since this flag always writes the
+card's own ignore_ctl_error flag, it overrides the value already set
+by the module option, so it doesn't follow user's expectation.
+Let's fix the code not to clear the flag that has been set by user.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200412081331.4742-3-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/include/asm/pgtable.h | 4 ++--
- include/asm-generic/pgtable.h   | 4 ++--
- mm/huge_memory.c                | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ sound/usb/mixer.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 6076c8c912d2..e2528e057980 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1560,7 +1560,7 @@ static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
- }
- 
- #define __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR_FULL
--static inline pmd_t pmdp_huge_get_and_clear_full(struct mm_struct *mm,
-+static inline pmd_t pmdp_huge_get_and_clear_full(struct vm_area_struct *vma,
- 						 unsigned long addr,
- 						 pmd_t *pmdp, int full)
- {
-@@ -1569,7 +1569,7 @@ static inline pmd_t pmdp_huge_get_and_clear_full(struct mm_struct *mm,
- 		*pmdp = __pmd(_SEGMENT_ENTRY_EMPTY);
- 		return pmd;
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -3085,7 +3085,7 @@ static int snd_usb_mixer_controls(struct
+ 		if (map->id == state.chip->usb_id) {
+ 			state.map = map->map;
+ 			state.selector_map = map->selector_map;
+-			mixer->ignore_ctl_error = map->ignore_ctl_error;
++			mixer->ignore_ctl_error |= map->ignore_ctl_error;
+ 			break;
+ 		}
  	}
--	return pmdp_xchg_lazy(mm, addr, pmdp, __pmd(_SEGMENT_ENTRY_EMPTY));
-+	return pmdp_xchg_lazy(vma->vm_mm, addr, pmdp, __pmd(_SEGMENT_ENTRY_EMPTY));
- }
- 
- #define __HAVE_ARCH_PMDP_HUGE_CLEAR_FLUSH
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index 329b8c8ca703..d10be362eafa 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -159,11 +159,11 @@ static inline pud_t pudp_huge_get_and_clear(struct mm_struct *mm,
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- #ifndef __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR_FULL
--static inline pmd_t pmdp_huge_get_and_clear_full(struct mm_struct *mm,
-+static inline pmd_t pmdp_huge_get_and_clear_full(struct vm_area_struct *vma,
- 					    unsigned long address, pmd_t *pmdp,
- 					    int full)
- {
--	return pmdp_huge_get_and_clear(mm, address, pmdp);
-+	return pmdp_huge_get_and_clear(vma->vm_mm, address, pmdp);
- }
- #endif
- 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 6ecd1045113b..16f2bd6f1549 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1852,8 +1852,8 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 	 * pgtable_trans_huge_withdraw after finishing pmdp related
- 	 * operations.
- 	 */
--	orig_pmd = pmdp_huge_get_and_clear_full(tlb->mm, addr, pmd,
--			tlb->fullmm);
-+	orig_pmd = pmdp_huge_get_and_clear_full(vma, addr, pmd,
-+						tlb->fullmm);
- 	tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
- 	if (vma_is_special_huge(vma)) {
- 		if (arch_needs_pgtable_deposit())
--- 
-2.25.3
+
 
