@@ -2,188 +2,209 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAB8C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DA5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E905120722
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587418155;
-	bh=VNiQsywGgzDu+UPWr62f+ikDlVnC2t5q9KRTCBukmn8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0TNdteKsVLUHV5E975WUE2Yek8dk6ZGMEw+BbvVUxvzXhocQFozSb8yM77BURo1Cn
-	 ZzPaHC519KWGpiMUUCiZceUs9xqc4LarW6ZeTb02JHXlE5bY4QUZJk95hSzDw8hxwg
-	 5Xt1poFVbDSZOBEV2A5HnFR4LkW6uSzt8X6NXv1w=
+	by mail.kernel.org (Postfix) with ESMTP id 405EF20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:29:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="btEZXQZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgDTV3O (ORCPT
+        id S1728162AbgDTV3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:29:14 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44395 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgDTV3N (ORCPT
+        Mon, 20 Apr 2020 17:29:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726748AbgDTV3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:29:13 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a2so5554992oia.11;
-        Mon, 20 Apr 2020 14:29:12 -0700 (PDT)
+        Mon, 20 Apr 2020 17:29:36 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9CFCC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:29:35 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id o127so12822133iof.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:29:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mSDaWHzMe9uROB6JLc5gJdxIqAiYObHmWWZCnpO31b4=;
+        b=btEZXQZMjfh27gEorJkra7C5siyCvtLFbsKQHzYVZvUVQk4fDPjeVeALcIS2d5MTXf
+         /nea74KdSBRj/+fkL0PPIlQnySEinJlvP+t8RCMQtmGDXbbcbUB5OwSUkPMOVrenhajZ
+         z6GGAV7I85Rdsz9DRCfuOrY3kQzIrIM9RGt7jLuEmyOHNqRWNIVhER8ZIxoSJMwrijM7
+         mSDaC1iZ4R4cgWzQmAMAf/TNo9ZjsI+jnp0f7S4mTph2xJPVZyk5UUEPYGYGOux1fwjG
+         zjVfnzJcP5jSDPmNLPwbNUbQLZRGATJywsoNkx3GYz1MDOOM6X40acbSHXovI5e3dLjT
+         fotw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pVvaPy9TriCxXUNOlVqLauolz3jDKaAdK4fSEUctuf0=;
-        b=EhU9p7YcOFSqelU8j2WjxdXSIdseLQd1/JOhYHqnAWUyEo5ygx4KRs9CmpI/jTvb5o
-         CHwk8U9RA2S9hEcucR18BDuMAqwmrmBmE9kCGuWpltzI/agKINOZzhQOrxXRbVvb8cIZ
-         huCyl5hdKRskHxt4IpHjb+o6IK/+CgmSG/2YJdlDs9+hxvZHktPRXzmB0m0qr9a5fy4l
-         tfb+6BOtaquDC2FS9HIXgXscyjJg5ppSqyMB5hsT0ORc4s2eE59XwtwX4Jong/2Y6j8/
-         itghq3Taqqka2iaE5wk2Zuwza7MYock52burp1/hSIQ16YIjDUOXHrRU4pERZnF7qjDH
-         LFmQ==
-X-Gm-Message-State: AGi0Pua23vH4fLO5beTFngf7Z1fVs4eWDtzt+3YrF1Brq9FoVetzo/sy
-        hWykvBC2I1fH6QYe4GscGQ==
-X-Google-Smtp-Source: APiQypKKosF3ptynJlahs4jhDzXsM68ALGaWcgwNZ/s1v7FiGz78riXbUIaqOwO7V7Tj/97B0k7ZMA==
-X-Received: by 2002:aca:4588:: with SMTP id s130mr1047118oia.133.1587418152449;
-        Mon, 20 Apr 2020 14:29:12 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t13sm225254otr.43.2020.04.20.14.29.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:29:11 -0700 (PDT)
-Received: (nullmailer pid 16602 invoked by uid 1000);
-        Mon, 20 Apr 2020 21:29:10 -0000
-Date:   Mon, 20 Apr 2020 16:29:10 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/2] dt-bindings: watchdog: Convert i.MX to json-schema
-Message-ID: <20200420212910.GB7615@bogus>
-References: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mSDaWHzMe9uROB6JLc5gJdxIqAiYObHmWWZCnpO31b4=;
+        b=i7EfcnEjF358+cLpaYfUg9bnd3gWsrBbPn9vT6qbsazzevwCOGAnGCj1MyFnnD7w0i
+         i0jI8eWTlVqqQEnAHPviJrxsfPLl5zAjAjMxD+bCJ+/odwQ+EdFHQe7e6vs2WuW6thGt
+         OFNihBpHJ+CV9X/Ld7z2wZBgMj0Z8k0vKJEKqTLGO72OyKZnE5kBp/DoonqCfjbzXu1r
+         FHEFWwW87JUBfTmfDKltgTk2cIZqCzewFVAQR8e0TVjOTACdr03BjVltapkXSu4Ho2ae
+         Y/mcsgbfFBQIzIRhIHMbl8GBWhueFA3sCZEaeeuaAxGCiJQVa7p/L7F33fnglY5v26qa
+         DH2Q==
+X-Gm-Message-State: AGi0PuY9YnGsnDglR/Bkmwl2+R8R1C1Yb1zX3oXn43qGwCTZdN781BUD
+        Ci7k6PaXwZP5Lo39wfvRLjBtlroMX2cChJiWP3ki4w==
+X-Google-Smtp-Source: APiQypIHktBDogLNJlNnacxM7dWBVaqZm/5SWnHa2I8cMsaNYMMolqh8ce/dKdAWisVMdPxc/PLamZCIDOgIgRbFe5I=
+X-Received: by 2002:a02:b88e:: with SMTP id p14mr11961241jam.36.1587418174992;
+ Mon, 20 Apr 2020 14:29:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200415204858.2448-1-mathieu.poirier@linaro.org>
+ <20200415204858.2448-3-mathieu.poirier@linaro.org> <e980e9e6-04d6-60b8-c921-d2fb1f2b9a1b@st.com>
+In-Reply-To: <e980e9e6-04d6-60b8-c921-d2fb1f2b9a1b@st.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 20 Apr 2020 15:29:24 -0600
+Message-ID: <CANLsYkwYFDYeG8SZ+0S_-cY7GA3iFbU5czKyKgGmkObXXpgc2w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] remoteproc: Split firmware name allocation from rproc_alloc()
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>,
+        Alex Elder <elder@linaro.org>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 08:40:10AM +0800, Anson Huang wrote:
-> Convert the i.MX watchdog binding to DT schema format using json-schema.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No change.
-> ---
->  .../devicetree/bindings/watchdog/fsl-imx-wdt.txt   | 24 ----------
->  .../devicetree/bindings/watchdog/fsl-imx-wdt.yaml  | 56 ++++++++++++++++++++++
->  2 files changed, 56 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
->  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> deleted file mode 100644
-> index adc6b76..0000000
-> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -* Freescale i.MX Watchdog Timer (WDT) Controller
-> -
-> -Required properties:
-> -- compatible : Should be "fsl,<soc>-wdt"
-> -- reg : Should contain WDT registers location and length
-> -- interrupts : Should contain WDT interrupt
-> -
-> -Optional properties:
-> -- big-endian: If present the watchdog device's registers are implemented
-> -  in big endian mode, otherwise in native mode(same with CPU), for more
-> -  detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
-> -- fsl,ext-reset-output: If present the watchdog device is configured to
-> -  assert its external reset (WDOG_B) instead of issuing a software reset.
-> -- timeout-sec : Contains the watchdog timeout in seconds
-> -
-> -Examples:
-> -
-> -wdt@73f98000 {
-> -	compatible = "fsl,imx51-wdt", "fsl,imx21-wdt";
-> -	reg = <0x73f98000 0x4000>;
-> -	interrupts = <58>;
-> -	big-endian;
-> -	timeout-sec = <20>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-> new file mode 100644
-> index 0000000..674d902
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/fsl-imx-wdt.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX Watchdog Timer (WDT) Controller
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +allOf:
-> +  - $ref: "watchdog.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,imx21-wdt
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: |
-> +      Watchdog's clock source.
+Hey,
 
-Drop this. No description needed if single entry.
+On Mon, 20 Apr 2020 at 03:24, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+>
+> Hi Mathieu,
+>
+> On 4/15/20 10:48 PM, Mathieu Poirier wrote:
+> > Make the firmware name allocation a function on its own in an
+> > effort to cleanup function rproc_alloc().
+> >
+> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > ---
+> >  drivers/remoteproc/remoteproc_core.c | 66 ++++++++++++++++------------
+> >  1 file changed, 39 insertions(+), 27 deletions(-)
+> >
+> > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> > index 80056513ae71..4dee63f319ba 100644
+> > --- a/drivers/remoteproc/remoteproc_core.c
+> > +++ b/drivers/remoteproc/remoteproc_core.c
+> > @@ -1979,6 +1979,33 @@ static const struct device_type rproc_type = {
+> >       .release        = rproc_type_release,
+> >  };
+> >
+> > +static int rproc_alloc_firmware(struct rproc *rproc,
+> > +                             const char *name, const char *firmware)
+>
+> nitpicking: here you do not allocate memory for the firmware but for its name
+> The name of the function seems to me quite confusing...
 
-> +    maxItems: 1
-> +
-> +  fsl,ext-reset-output:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: |
-> +      If present, the watchdog device is configured to assert its
-> +      external reset (WDOG_B) instead of issuing a software reset.
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/imx6qdl-clock.h>
-> +
-> +    wdog1: watchdog@20bc000 {
+Ok, I'll see if I can find something better.
 
-Drop the unused label.
+>
+> Else LGTM for the series
 
-> +        compatible = "fsl,imx21-wdt";
-> +        reg = <0x020bc000 0x4000>;
-> +        interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&clks IMX6QDL_CLK_IPG>;
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
-> 
+V3 will be out shortly and it will be fairly different from this one.
+
+>
+> Thanks,
+>
+> Arnaud
+>
+> > +{
+> > +     char *p, *template = "rproc-%s-fw";
+> > +     int name_len;
+> > +
+> > +     if (!firmware) {
+> > +             /*
+> > +              * If the caller didn't pass in a firmware name then
+> > +              * construct a default name.
+> > +              */
+> > +             name_len = strlen(name) + strlen(template) - 2 + 1;
+> > +             p = kmalloc(name_len, GFP_KERNEL);
+> > +             if (!p)
+> > +                     return -ENOMEM;
+> > +             snprintf(p, name_len, template, name);
+> > +     } else {
+> > +             p = kstrdup(firmware, GFP_KERNEL);
+> > +             if (!p)
+> > +                     return -ENOMEM;
+> > +     }
+> > +
+> > +     rproc->firmware = p;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  /**
+> >   * rproc_alloc() - allocate a remote processor handle
+> >   * @dev: the underlying device
+> > @@ -2007,42 +2034,21 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+> >                         const char *firmware, int len)
+> >  {
+> >       struct rproc *rproc;
+> > -     char *p, *template = "rproc-%s-fw";
+> > -     int name_len;
+> >
+> >       if (!dev || !name || !ops)
+> >               return NULL;
+> >
+> > -     if (!firmware) {
+> > -             /*
+> > -              * If the caller didn't pass in a firmware name then
+> > -              * construct a default name.
+> > -              */
+> > -             name_len = strlen(name) + strlen(template) - 2 + 1;
+> > -             p = kmalloc(name_len, GFP_KERNEL);
+> > -             if (!p)
+> > -                     return NULL;
+> > -             snprintf(p, name_len, template, name);
+> > -     } else {
+> > -             p = kstrdup(firmware, GFP_KERNEL);
+> > -             if (!p)
+> > -                     return NULL;
+> > -     }
+> > -
+> >       rproc = kzalloc(sizeof(struct rproc) + len, GFP_KERNEL);
+> > -     if (!rproc) {
+> > -             kfree(p);
+> > +     if (!rproc)
+> >               return NULL;
+> > -     }
+> > +
+> > +     if (rproc_alloc_firmware(rproc, name, firmware))
+> > +             goto free_rproc;
+> >
+> >       rproc->ops = kmemdup(ops, sizeof(*ops), GFP_KERNEL);
+> > -     if (!rproc->ops) {
+> > -             kfree(p);
+> > -             kfree(rproc);
+> > -             return NULL;
+> > -     }
+> > +     if (!rproc->ops)
+> > +             goto free_firmware;
+> >
+> > -     rproc->firmware = p;
+> >       rproc->name = name;
+> >       rproc->priv = &rproc[1];
+> >       rproc->auto_boot = true;
+> > @@ -2091,6 +2097,12 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+> >       rproc->state = RPROC_OFFLINE;
+> >
+> >       return rproc;
+> > +
+> > +free_firmware:
+> > +     kfree(rproc->firmware);
+> > +free_rproc:
+> > +     kfree(rproc);
+> > +     return NULL;
+> >  }
+> >  EXPORT_SYMBOL(rproc_alloc);
+> >
+> >
