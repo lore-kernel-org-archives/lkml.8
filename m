@@ -2,63 +2,197 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0D1C55182
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59C8C55183
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E0620724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81210206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587416473;
+	bh=89GZjtsx0gBsM7GfuqK3zufv8ePcIfdiv2OAnb5yE+w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LEP0zhuXlbS+JolQPLxLTKrQ8t8tKWHjwes0fkVHghJ20OZUPFPC9O0Hd/ye9J6Dt
+	 hiv8DvrEWHTH/zYJBGoNQgeAezmtCh66Q/P9xulBCVGgd92rXQPgjRA0qCt28I0blt
+	 fcvIq6PLNcoVp6qpnFLmTOk/0hZWQPWEzSEybv10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgDTVAN (ORCPT
+        id S1727101AbgDTVBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:00:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50632 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgDTVAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:00:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CAA6FAC7F;
-        Mon, 20 Apr 2020 21:00:09 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 13:56:41 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     tglx@linutronix.de, pbonzini@redhat.com, kvm@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>, peterz@infradead.org,
-        torvalds@linux-foundation.org, bigeasy@linutronix.de,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        linux-mips@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
-        joel@joelfernandes.org, will@kernel.org,
-        kvmarm@lists.cs.columbia.edu
-Subject: Re: [PATCH v2] kvm: Replace vcpu->swait with rcuwait
-Message-ID: <20200420205641.6sgsllj6pmsnwrvp@linux-p48b>
-References: <20200324044453.15733-1-dave@stgolabs.net>
- <20200324044453.15733-4-dave@stgolabs.net>
- <20200420164132.tjzk5ebx35m66yce@linux-p48b>
- <418acdb5001a9ae836095b7187338085@misterjones.org>
+        Mon, 20 Apr 2020 17:01:12 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38726 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgDTVBM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 17:01:12 -0400
+Received: by mail-oi1-f196.google.com with SMTP id r66so10127336oie.5;
+        Mon, 20 Apr 2020 14:01:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tEPqLrCHDoG9Ero5B2m0h3HZkz0IPEK75a1FjNh32kg=;
+        b=DeCcHo9T5eGFt8i7eUroCnrsadFXJtBHHv66zxtqIv2kOikNDcAobaYZH9iwjDzVE0
+         S25lNUI8A/AwqDYGv5B/azRmW8+obX4W1Gli8+A2QDCGG/7cm/sSBUa2QDJ+FrbdaiY2
+         4/PVwlViEIQxlv/1NsURrU8ilCvt33GmmrDlxczkH9T01+tvZnU5asDcQbQk3CW+qqD/
+         vRoC2kUlZemO7an0utexZuLjeEzdUjUG4ruzjUQREZYpLfFKkPbwKTxHUla7lVsqN5eL
+         vwybom/YUVAzsoyHqLYkP/jaqtAmC2VCttlwfbRFGdS76KkOgwipD2ZbyYskhzThVj8X
+         zCPA==
+X-Gm-Message-State: AGi0PuZCWJaQmTpBX+WDzXdxKcfcD5sB2D6Lu9iZ5DJ3qd8vnhuNnaAA
+        7tLib6LNzT+sjit4wENP/w==
+X-Google-Smtp-Source: APiQypLjsiY39/Nvmw1B1qa5NtEoy7MDqhH5h9uokQff++VafGJL8qiYaQOFkvSPxqPJYJff2F6rFg==
+X-Received: by 2002:aca:6042:: with SMTP id u63mr987869oib.179.1587416470793;
+        Mon, 20 Apr 2020 14:01:10 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o34sm139742ooi.46.2020.04.20.14.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 14:01:09 -0700 (PDT)
+Received: (nullmailer pid 21483 invoked by uid 1000);
+        Mon, 20 Apr 2020 21:01:08 -0000
+Date:   Mon, 20 Apr 2020 16:01:08 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 2/8] dt-bindings: clock: Add YAML schemas for QCOM A53
+ PLL
+Message-ID: <20200420210108.GA19108@bogus>
+References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
+ <1586832922-29191-3-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <418acdb5001a9ae836095b7187338085@misterjones.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1586832922-29191-3-git-send-email-sivaprak@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020, Marc Zyngier wrote:
+On Tue, Apr 14, 2020 at 08:25:16AM +0530, Sivaprakash Murugesan wrote:
+> This patch adds schema for primary CPU PLL found on few Qualcomm
+> platforms.
+> 
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+> [V3]
+>  * Fixed dt binding error in "$id" field.
+> 
+>  .../devicetree/bindings/clock/qcom,a53pll.txt      | 22 --------
+>  .../devicetree/bindings/clock/qcom,a53pll.yaml     | 60 ++++++++++++++++++++++
+>  2 files changed, 60 insertions(+), 22 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+> deleted file mode 100644
+> index e3fa811..0000000
+> --- a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+> +++ /dev/null
+> @@ -1,22 +0,0 @@
+> -Qualcomm MSM8916 A53 PLL Binding
+> ---------------------------------
+> -The A53 PLL on MSM8916 platforms is the main CPU PLL used used for frequencies
+> -above 1GHz.
+> -
+> -Required properties :
+> -- compatible : Shall contain only one of the following:
+> -
+> -		"qcom,msm8916-a53pll"
+> -
+> -- reg : shall contain base register location and length
+> -
+> -- #clock-cells : must be set to <0>
+> -
+> -Example:
+> -
+> -	a53pll: clock@b016000 {
+> -		compatible = "qcom,msm8916-a53pll";
+> -		reg = <0xb016000 0x40>;
+> -		#clock-cells = <0>;
+> -	};
+> -
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+> new file mode 100644
+> index 0000000..c865293
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,a53pll.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm A53 PLL Binding
+> +
+> +maintainers:
+> +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> +
+> +description:
+> +  The A53 PLL on few Qualcomm platforms is the main CPU PLL used used for
+> +  frequencies above 1GHz.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,msm8916-a53pll
+> +      - qcom,ipq6018-a53pll
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  clocks:
+> +    description: clocks required for this controller.
 
->This looks like a change in the semantics of the tracepoint. Before this
->change, 'waited' would have been true if the vcpu waited at all. Here, 
->you'd
->have false if it has been interrupted by a signal, even if the vcpu 
->has waited
->for a period of time.
+That's every 'clocks'. Drop.
 
-Hmm but sleeps are now uninterruptible as we're using TASK_IDLE.
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description: clock output names of required clocks.
 
-Thanks,
-Davidlohr
+Drop. 'clock-names' are the input names.
+
+> +    maxItems: 1
+
+Need to define what the names are.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#clock-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  #Example 1 - A53 PLL found on MSM8916 devices
+> +  - |
+> +    a53pll: clock@b016000 {
+> +        compatible = "qcom,msm8916-a53pll";
+> +        reg = <0xb016000 0x40>;
+> +        #clock-cells = <0>;
+> +    };
+> +
+> +  #Example 2 - A53 PLL found on IPQ6018 devices
+> +  - |
+> +    a53pll_ipq: clock@b116000 {
+> +        compatible = "qcom,ipq6018-a53pll";
+> +        reg = <0x0b116000 0x40>;
+> +        #clock-cells = <0>;
+> +        clocks = <&xo>;
+> +        clock-names = "xo";
+> +    };
+> -- 
+> 2.7.4
+> 
