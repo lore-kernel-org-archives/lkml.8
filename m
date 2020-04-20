@@ -2,78 +2,111 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6F1C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007A8C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F375D206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:47:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=tsoy.me header.i=@tsoy.me header.b="n47eY79P"
+	by mail.kernel.org (Postfix) with ESMTP id D035A207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgDTXrQ (ORCPT
+        id S1726525AbgDTXvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 19:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725550AbgDTXrQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 19:47:16 -0400
-Received: from puleglot.ru (puleglot.ru [IPv6:2a01:4f8:1c0c:58e8::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD138C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 16:47:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tsoy.me;
-        s=mymail; h=Sender:Content-Transfer-Encoding:MIME-Version:Content-Type:
-        References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-        :List-Post:List-Owner:List-Archive;
-        bh=2TEEWI9XLn5p0bcJKmRvNR+plNh0vjLKLOHSa3niukE=; b=n47eY79Pd1xGVVSZDl5bHbeR5j
-        /Q937N5cTnKp+y8gv1U0mWyywvVpiUozko0l6SWQjYGMLmUsI7oKNWGgfXa9VAA2ErUUGtXNFqyer
-        F9fxWsk1EsOcyX3LPRls/SDlbPUolKUXquKqoI2ekX3jS2DIoVpGkzU31w5A4kwGzWMA=;
-Received: from [2a00:1370:8125:3f98:890:f100:d37d:7ada] (helo=home)
-        by puleglot.ru with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <puleglot@puleglot.ru>)
-        id 1jQg83-0006yq-S9; Tue, 21 Apr 2020 02:47:08 +0300
-Message-ID: <b866b95dc3f9f92665c7826262b627ecc18ebf74.camel@tsoy.me>
-Subject: Re: [PATCH v2] ALSA: usb-audio: Add quirk for Focusrite Scarlett 2i2
-From:   Alexander Tsoy <alexander@tsoy.me>
-To:     Gregor Pintar <grpintar@gmail.com>, tiwai@suse.com, perex@perex.cz
-Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Date:   Tue, 21 Apr 2020 02:47:05 +0300
-In-Reply-To: <20200420214030.2361-1-grpintar@gmail.com>
-References: <1c4b8a362761421eba0ded60bb4f0e11b7e42f3b.camel@tsoy.me>
-         <20200420214030.2361-1-grpintar@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 
+        Mon, 20 Apr 2020 19:51:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:4341 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725550AbgDTXvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 19:51:07 -0400
+IronPort-SDR: bUMclkSmag1JzDUo+nf7oltyKpxylWDEfbwJDRV2daPZaiqGofXyJwMBZFfSG8ie+ciikR+o/V
+ Zizj4iv57O2g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 16:51:06 -0700
+IronPort-SDR: TxOk3O2Dhoc6fgNZ71oBbd5aQobkmOl/CzsllG7ZKqwTruJ1t3l3OLbyty3MAGvweDuONf9o3i
+ OJMXmyO60rTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,408,1580803200"; 
+   d="scan'208";a="290270618"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Apr 2020 16:51:03 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <tim.c.chen@linux.intel.com>
+Subject: Re: [PATCH 3/4] mm/swapfile.c: compare tmp and max after trying to iterate on swap_map
+References: <20200419013921.14390-1-richard.weiyang@gmail.com>
+        <20200419013921.14390-3-richard.weiyang@gmail.com>
+        <87ftczt1cg.fsf@yhuang-dev.intel.com>
+        <20200420213726.juehv5yr5kyhlbxv@master>
+Date:   Tue, 21 Apr 2020 07:51:02 +0800
+In-Reply-To: <20200420213726.juehv5yr5kyhlbxv@master> (Wei Yang's message of
+        "Mon, 20 Apr 2020 21:37:26 +0000")
+Message-ID: <87h7xdsom1.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-В Пн, 20/04/2020 в 23:40 +0200, Gregor Pintar пишет:
-> Force it to use asynchronous playback.
-> 
-> Same quirk has already been added for Focusrite Scarlett Solo (2nd
-> gen)
-> with a commit 46f5710f0b88 ("ALSA: usb-audio: Add quirk for Focusrite
-> Scarlett Solo").
-> 
-> This also seems to prevent regular clicks when playing at 44100Hz
-> on Scarlett 2i2 (2nd gen). I did not notice any side effects.
-> 
-> Moved both quirks to snd_usb_audioformat_attributes_quirk() as
-> suggested.
-> 
-> Signed-off-by: Gregor Pintar <grpintar@gmail.com>
+Wei Yang <richard.weiyang@gmail.com> writes:
 
-Thank you!
+> On Mon, Apr 20, 2020 at 09:03:43AM +0800, Huang, Ying wrote:
+>>Wei Yang <richard.weiyang@gmail.com> writes:
+>>
+>>> There are two duplicate code to handle the case when there is no
+>>> available swap entry. Just let the code go through and do the check at
+>>> second place.
+>>>
+>>> No functional change is expected.
+>>>
+>>> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+>>> ---
+>>>  mm/swapfile.c | 4 ----
+>>>  1 file changed, 4 deletions(-)
+>>>
+>>> diff --git a/mm/swapfile.c b/mm/swapfile.c
+>>> index 3aae700f9931..07b0bc095411 100644
+>>> --- a/mm/swapfile.c
+>>> +++ b/mm/swapfile.c
+>>> @@ -629,10 +629,6 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+>>>  	tmp = cluster->next;
+>>>  	max = min_t(unsigned long, si->max,
+>>>  		    (cluster_next(&cluster->index) + 1) * SWAPFILE_CLUSTER);
+>>> -	if (tmp >= max) {
+>>> -		cluster_set_null(&cluster->index);
+>>> -		goto new_cluster;
+>>> -	}
+>>
+>>The code is to avoid to acquire the cluster lock unnecessarily.  So I think
+>>we should keep this.
+>>
+>
+> If you really want to avoid the lock, my suggestion is to add:
+>
+>   if (tmp < max) {
+>       ci = lock_cluster(si, tmp);
+>           while (tmp < max) {
+> 	  ...
+> 	  }
+>       unlock_cluster(ci);
+>   }
+>
+> Instead of do the similar thing twice.
 
-Reviewed-by: Alexander Tsoy <alexander@tsoy.me>
+This is a coding style problem.  The original code is common to avoid
+too many nested code block.  But in this case, I think both works.
 
+Best Regards,
+Huang, Ying
+
+>>Best Regards,
+>>Huang, Ying
+>>
+>>>  	ci = lock_cluster(si, tmp);
+>>>  	while (tmp < max) {
+>>>  		if (!si->swap_map[tmp])
