@@ -7,54 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9550C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A15DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B35B206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E6F206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386905;
-	bh=PMPsZAyKkO1vYVopSB3WRyEZCJka8hrgwZwx7kCYqug=;
+	s=default; t=1587386908;
+	bh=EZ5yGlrfsdQVCydTecbgzb23GuZa16/DK90Uo8UY/bI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PqEFTYgA3puh/xrfCLZcxsZuSxcGWkHSFqmkYvwBxpXPp/wnxLX+I4K5fM2iF3xA5
-	 uIr2gGzt/JdCKL04toFsKnTnRhQ8Da8NIF5ShrYqLt9EOhO1FvfbQrCPBSDN2saT99
-	 dshsSPjZzj49c9U9VUFsjFoDlTzaBh10gG192/nY=
+	b=kSadnIdmrDxOlFIH+EA7e5r9/7xcJxT+sH/JswmoGe6M0jql1yk26Dmtf6hCI7DvW
+	 0/OUG8Ch4MVDPNEhcReMEp7/RadbXHWfD6CFyl+0WA45KwCgygs7SKFaBUzUtUXNvv
+	 pvt/Diipr4FH0TYRNjsOtn5Cwsh0UY6vxMoRQwL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgDTMsX (ORCPT
+        id S1729253AbgDTMs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:48:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44708 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:48:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729206AbgDTMsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:48:12 -0400
+        id S1729206AbgDTMsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E309206DD;
-        Mon, 20 Apr 2020 12:48:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3C87206DD;
+        Mon, 20 Apr 2020 12:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386892;
-        bh=PMPsZAyKkO1vYVopSB3WRyEZCJka8hrgwZwx7kCYqug=;
+        s=default; t=1587386904;
+        bh=EZ5yGlrfsdQVCydTecbgzb23GuZa16/DK90Uo8UY/bI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJXwV6fQ3TbUvr6OzlUnLuJrbNFHZfpBPvwbmq9dBInM492SfVfML64mBexZ+9v3e
-         ju/WuoUgvxvS9iPu2ZVs2HhXvBGyhUuviHZ0FhWv6om2q+l6wvFffO6zL/W6rqd2UK
-         nAequH2EbGM8ZoIIEQ5lI6W5ph2lE5Bjxz6FOjMw=
+        b=K/Q/d7DnbF242zZzYallml1b+3QNEG1SmSVdEqFoxVlbmBY3z1DRXjv3CDeR9+g7u
+         RDmE3Ba7fZ1WXj6YTHmLYOfIsVdosxiDNZNvuHYa9QyWHKHA1jlVM1AgbLh5XxOsUa
+         /dp4Ts94tGUQQ+TbI330gm2AQVWXolCIru+x063E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
+        stable@vger.kernel.org, Wang Wenhu <wenhu.wang@vivo.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 01/40] amd-xgbe: Use __napi_schedule() in BH context
-Date:   Mon, 20 Apr 2020 14:39:11 +0200
-Message-Id: <20200420121449.587223612@linuxfoundation.org>
+Subject: [PATCH 4.19 05/40] net: qrtr: send msgs from local of same id as broadcast
+Date:   Mon, 20 Apr 2020 14:39:15 +0200
+Message-Id: <20200420121451.945279187@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,38 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Wang Wenhu <wenhu.wang@vivo.com>
 
-[ Upstream commit d518691cbd3be3dae218e05cca3f3fc9b2f1aa77 ]
+[ Upstream commit 6dbf02acef69b0742c238574583b3068afbd227c ]
 
-The driver uses __napi_schedule_irqoff() which is fine as long as it is
-invoked with disabled interrupts by everybody. Since the commit
-mentioned below the driver may invoke xgbe_isr_task() in tasklet/softirq
-context. This may lead to list corruption if another driver uses
-__napi_schedule_irqoff() in IRQ context.
+If the local node id(qrtr_local_nid) is not modified after its
+initialization, it equals to the broadcast node id(QRTR_NODE_BCAST).
+So the messages from local node should not be taken as broadcast
+and keep the process going to send them out anyway.
 
-Use __napi_schedule() which safe to use from IRQ and softirq context.
+The definitions are as follow:
+static unsigned int qrtr_local_nid = NUMA_NO_NODE;
 
-Fixes: 85b85c853401d ("amd-xgbe: Re-issue interrupt if interrupt status not cleared")
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Fixes: fdf5fd397566 ("net: qrtr: Broadcast messages only from control port")
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/amd/xgbe/xgbe-drv.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/qrtr/qrtr.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
-+++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
-@@ -515,7 +515,7 @@ static void xgbe_isr_task(unsigned long
- 				xgbe_disable_rx_tx_ints(pdata);
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -769,20 +769,21 @@ static int qrtr_sendmsg(struct socket *s
  
- 				/* Turn on polling */
--				__napi_schedule_irqoff(&pdata->napi);
-+				__napi_schedule(&pdata->napi);
- 			}
- 		} else {
- 			/* Don't clear Rx/Tx status if doing per channel DMA
+ 	node = NULL;
+ 	if (addr->sq_node == QRTR_NODE_BCAST) {
+-		enqueue_fn = qrtr_bcast_enqueue;
+-		if (addr->sq_port != QRTR_PORT_CTRL) {
++		if (addr->sq_port != QRTR_PORT_CTRL &&
++		    qrtr_local_nid != QRTR_NODE_BCAST) {
+ 			release_sock(sk);
+ 			return -ENOTCONN;
+ 		}
++		enqueue_fn = qrtr_bcast_enqueue;
+ 	} else if (addr->sq_node == ipc->us.sq_node) {
+ 		enqueue_fn = qrtr_local_enqueue;
+ 	} else {
+-		enqueue_fn = qrtr_node_enqueue;
+ 		node = qrtr_node_lookup(addr->sq_node);
+ 		if (!node) {
+ 			release_sock(sk);
+ 			return -ECONNRESET;
+ 		}
++		enqueue_fn = qrtr_node_enqueue;
+ 	}
+ 
+ 	plen = (len + 3) & ~3;
 
 
