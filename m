@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16388C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDA8C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED39206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5D5206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386665;
-	bh=PRh9IJDdS+o73XwbAPa6itI1Z1L1fcKUk3RuRn007Zk=;
+	s=default; t=1587386670;
+	bh=Ee0rTNJ5wGbk6j/GMNwLsv1TUL2vjWg/zZsKORfPaVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yIWpnBy2BPQrZ9//8RCdgJOaDQDQ5cQARbRS6wgqZFZFXM0Txdsr1bwbE7DcBvOOq
-	 7jK90DuJBdbSUf3Eg7wVmqk+xr/z97pVoQzWVi1Zag548Aa5EnhbOUUuRzRhXBS650
-	 Z2hUj0v2xaNQKkvno6GufIBUC5TvDUzRZKdXXA7g=
+	b=wUEOcaVZTdEj00DGdlHn+pZytI7rwN678exJo3fWHYQlxg2yzEoUfLdqidSNmbrgj
+	 xqA0drSi0E24iPqcD5P1M/fB4rysX7PX2faIx7O8+8pJaiO0YoqQpKoA4JWCZFKill
+	 m2Q14EkEzdwPixf3V/P6FzYOBFMsPOkvSlj5RTts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgDTMoZ (ORCPT
+        id S1728577AbgDTMo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:44:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38172 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:44:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbgDTMoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:17 -0400
+        id S1728566AbgDTMoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:44:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FCF0206E9;
-        Mon, 20 Apr 2020 12:44:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6620C206DD;
+        Mon, 20 Apr 2020 12:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386657;
-        bh=PRh9IJDdS+o73XwbAPa6itI1Z1L1fcKUk3RuRn007Zk=;
+        s=default; t=1587386664;
+        bh=Ee0rTNJ5wGbk6j/GMNwLsv1TUL2vjWg/zZsKORfPaVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vmqFG/ee/CMWfIh+7EO7QKcciUpTm+FAhg9oXQScw13xVdCgJXd5blRtdgtJu0gTn
-         EZFP9ACgJES2nJOSWgOEvnf/sNTzZknuKteN2/bWZsJgg+6xUPMbksF/1GKjozrrkX
-         vKQKsDPtnRxS0OlymgkE/BxXKGRwHxy037TPJE3o=
+        b=YdBuwHbUoOUr2L/8gQmnTCk1RFmgXWgqRLM5k/kJGPwReziAJta8xM37y2UfPCi8I
+         HPi/eJwIvtV8gXnsug9M1WYQSy7zRnzmqOfdbno2YxamTZcCjozgCvqbfid6sYFL3g
+         lxFcCThy7wF5ypmRoDJSsltOKg7BD93rzAPDDe2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 44/71] ALSA: usb-audio: Filter error from connector kctl ops, too
-Date:   Mon, 20 Apr 2020 14:38:58 +0200
-Message-Id: <20200420121518.280267893@linuxfoundation.org>
+Subject: [PATCH 5.6 47/71] ALSA: usb-audio: Check mapping at creating connector controls, too
+Date:   Mon, 20 Apr 2020 14:39:01 +0200
+Message-Id: <20200420121518.775063938@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -60,36 +60,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 48cc42973509afac24e83d6edc23901d102872d1 upstream.
+commit 934b96594ed66b07dbc7e576d28814466df3a494 upstream.
 
-The ignore_ctl_error option should filter the error at kctl accesses,
-but there was an overlook: mixer_ctl_connector_get() returns an error
-from the request.
-
-This patch covers the forgotten code path and apply filter_error()
-properly.  The locking error is still returned since this is a fatal
-error that has to be reported even with ignore_ctl_error option.
+Add the mapping check to build_connector_control() so that the device
+specific quirk can provide the node to skip for the badly behaving
+connector controls.  As an example, ALC1220-VB-based codec implements
+the skip entry for the broken SPDIF connector detection.
 
 BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200412081331.4742-2-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200412081331.4742-5-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/mixer.c      |   18 +++++++++++-------
+ sound/usb/mixer_maps.c |    4 +++-
+ 2 files changed, 14 insertions(+), 8 deletions(-)
 
 --- a/sound/usb/mixer.c
 +++ b/sound/usb/mixer.c
-@@ -1446,7 +1446,7 @@ error:
- 		usb_audio_err(chip,
- 			"cannot get connectors status: req = %#x, wValue = %#x, wIndex = %#x, type = %d\n",
- 			UAC_GET_CUR, validx, idx, cval->val_type);
--		return ret;
-+		return filter_error(cval, ret);
+@@ -1750,11 +1750,15 @@ static void get_connector_control_name(s
+ 
+ /* Build a mixer control for a UAC connector control (jack-detect) */
+ static void build_connector_control(struct usb_mixer_interface *mixer,
++				    const struct usbmix_name_map *imap,
+ 				    struct usb_audio_term *term, bool is_input)
+ {
+ 	struct snd_kcontrol *kctl;
+ 	struct usb_mixer_elem_info *cval;
+ 
++	if (check_ignored_ctl(find_map(imap, term->id, 0)))
++		return;
++
+ 	cval = kzalloc(sizeof(*cval), GFP_KERNEL);
+ 	if (!cval)
+ 		return;
+@@ -2090,7 +2094,7 @@ static int parse_audio_input_terminal(st
+ 	/* Check for jack detection. */
+ 	if ((iterm.type & 0xff00) != 0x0100 &&
+ 	    uac_v2v3_control_is_readable(bmctls, control))
+-		build_connector_control(state->mixer, &iterm, true);
++		build_connector_control(state->mixer, state->map, &iterm, true);
+ 
+ 	return 0;
+ }
+@@ -3051,13 +3055,13 @@ static int snd_usb_mixer_controls_badd(s
+ 		memset(&iterm, 0, sizeof(iterm));
+ 		iterm.id = UAC3_BADD_IT_ID4;
+ 		iterm.type = UAC_BIDIR_TERMINAL_HEADSET;
+-		build_connector_control(mixer, &iterm, true);
++		build_connector_control(mixer, map->map, &iterm, true);
+ 
+ 		/* Output Term - Insertion control */
+ 		memset(&oterm, 0, sizeof(oterm));
+ 		oterm.id = UAC3_BADD_OT_ID3;
+ 		oterm.type = UAC_BIDIR_TERMINAL_HEADSET;
+-		build_connector_control(mixer, &oterm, false);
++		build_connector_control(mixer, map->map, &oterm, false);
  	}
  
- 	ucontrol->value.integer.value[0] = val;
+ 	return 0;
+@@ -3132,8 +3136,8 @@ static int snd_usb_mixer_controls(struct
+ 			if ((state.oterm.type & 0xff00) != 0x0100 &&
+ 			    uac_v2v3_control_is_readable(le16_to_cpu(desc->bmControls),
+ 							 UAC2_TE_CONNECTOR)) {
+-				build_connector_control(state.mixer, &state.oterm,
+-							false);
++				build_connector_control(state.mixer, state.map,
++							&state.oterm, false);
+ 			}
+ 		} else {  /* UAC_VERSION_3 */
+ 			struct uac3_output_terminal_descriptor *desc = p;
+@@ -3158,8 +3162,8 @@ static int snd_usb_mixer_controls(struct
+ 			if ((state.oterm.type & 0xff00) != 0x0100 &&
+ 			    uac_v2v3_control_is_readable(le32_to_cpu(desc->bmControls),
+ 							 UAC3_TE_INSERTION)) {
+-				build_connector_control(state.mixer, &state.oterm,
+-							false);
++				build_connector_control(state.mixer, state.map,
++							&state.oterm, false);
+ 			}
+ 		}
+ 	}
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -360,9 +360,11 @@ static const struct usbmix_name_map cors
+ };
+ 
+ /* Some mobos shipped with a dummy HD-audio show the invalid GET_MIN/GET_MAX
+- * response for Input Gain Pad (id=19, control=12).  Skip it.
++ * response for Input Gain Pad (id=19, control=12) and the connector status
++ * for SPDIF terminal (id=18).  Skip them.
+  */
+ static const struct usbmix_name_map asus_rog_map[] = {
++	{ 18, NULL }, /* OT, connector control */
+ 	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
+ 	{}
+ };
 
 
