@@ -2,199 +2,101 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE5DC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01552C38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0E95206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E3B206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:37:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="VHLDWqIo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CBIXMZhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgDTQga (ORCPT
+        id S1726666AbgDTQh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:36:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
+        Mon, 20 Apr 2020 12:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726532AbgDTQg0 (ORCPT
+        by vger.kernel.org with ESMTP id S1726396AbgDTQhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:36:26 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 239BBC025493
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:36:25 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id f82so10403977ilh.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:36:25 -0700 (PDT)
+        Mon, 20 Apr 2020 12:37:25 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2265C025493
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:37:25 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id nu11so88801pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 09:37:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HFUgOWKf4w0+Py7DhiUyoQr4H+s4BKeAe5WdiAFlPfs=;
-        b=VHLDWqIoEkcCixWyPK//br6mkLWACHyOLTnwLSW/hdEJbBu9OFINE2gwgj/AM6Dfk2
-         zsrqUkeJ7zeFiQco3kYWvIe3ppxTjKTba9QKxzfesh3GyJaPQfep3iKZxs8vRFTcU+7O
-         scdKaqHOw/cJ43JNuFWjxqQ5niVFhQXknBt+70QNJ2W4VCekk32r3MKToU+2FFdhlPTN
-         73u/W5b0Muf813GvMGSm1S2tE+PpueqXvMMY+MhUY5e7WQOO99LfzINdMgKxuUk/POA6
-         BfpQupW8cu/TEThz3BTGcbaWfGtKR6agESCM/O3F+LRPaLuvS1mU7lCie/jLdnlncvyY
-         C+0A==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jbyBhtQXovOuohU3c8+wtKegG5T8ke0e4KECHuLLxNg=;
+        b=CBIXMZhV6/MqDLrkiTD2GE+TJSt1fsk24nuP9MV9qjvnAraII1VF7DYlCrx3h2TuG7
+         VfI3zfk/34XS5OjeWqDdx5Kga+Rreu8fligEIWu7tKkWdlS6lfOhhpCl0P6iKYTO7Zr/
+         /VrV7/pHtUuR2LuvlD9Go2eAAv/M7BJoDZlSI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HFUgOWKf4w0+Py7DhiUyoQr4H+s4BKeAe5WdiAFlPfs=;
-        b=gqzfV6rZu+wZubL6VQlOzeULer21WBb/VqrnFw0pCiY+EOkg/lSYbnBxXTGN0uBGOg
-         0Kt+XKAN8ezxGplbYNO61O6gbPCH2ofbQ9eCPMRoi0vxLgDGfUiFQucbSvDkFDf0rkW3
-         pwfw58ceyhFHaUIICeBQAfmMlMM8Jd8wvkwjqirg9UxeREf/zCmK3J+QV/HNn7kwKlXd
-         9cJLHIoEFcynUerNP7XFxI1lqgzSGJbe0FwYtkRyPf190G38RrV2v9lrnDCVXZ4ux71H
-         rihhS2zQy5ob3/Dtb8ZFmHK7wmjjgS0D+yHa1ocK911uLSxQCYMxqIlUMYCcrTM56mUW
-         TX2Q==
-X-Gm-Message-State: AGi0PuYqKUQHId+NWcLMA51Gn6i9UjCD84TZQzTbcVr6jCcpNgwws23x
-        Wt+BRjtv80PAoq1CjA6dZA8E5uH1Ej9qZw==
-X-Google-Smtp-Source: APiQypJWxZK3Z97CRGtXAd/5AvKBg6SWr+l25Skb33HnkR4R+0ebhHdkEhSj8wdnSlQaZ24bKOuu5Q==
-X-Received: by 2002:a92:ba51:: with SMTP id o78mr16831897ili.290.1587400583686;
-        Mon, 20 Apr 2020 09:36:23 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f1sm423114iog.46.2020.04.20.09.36.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 09:36:23 -0700 (PDT)
-Subject: Re: [PATCH v5 0/4] blk-mq: Fix two causes of IO stalls found in
- reboot testing
-To:     Douglas Anderson <dianders@chromium.org>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>,
-        sqazi@google.com, groeck@chromium.org,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        paolo.valente@linaro.org,
-        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        John Garry <john.garry@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
-References: <20200420162454.48679-1-dianders@chromium.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3f9a5e9d-4485-aa46-be31-f561ba5363c8@kernel.dk>
-Date:   Mon, 20 Apr 2020 10:36:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        bh=jbyBhtQXovOuohU3c8+wtKegG5T8ke0e4KECHuLLxNg=;
+        b=SaAgpkqS3rTcCWzoo1poox00nzc/8FIuFrKwgc7Z0GKXkrYWTqZKQOJVp1ZOnhSmSs
+         qA1gt4OMOpVuvEp8eT6gZfxT4mbW3k9m9SjQU937PEVFK92SVNhFSVrKDDbHdNZhnEsU
+         G3e9paOZSGifGwfE2Wbyohorr1DOwdb/nWL9ptLJc3wJQvrC3gsSXy4SWmKIJCrPmedt
+         tUoBvQrGRj5LmyeDs5YTXmBf8auUCadzEQFYRWlOZ+Hn2A36eEYS7URk8M6Nusyp5LyW
+         ZB+eaXanagF1+5TI5xSSogD9t6nddt85gbDAtmn0DRKDi/u4QVfDVv4qn6sv296Bc6Av
+         vuGA==
+X-Gm-Message-State: AGi0Pua1kLXqoU7mkCSvuhSaeLw0+5O6WOOmn6/yvSnzuAEVcJhqzUbI
+        NX0wnGHBTFYtJJNafReaxXOqSwaI6QU=
+X-Google-Smtp-Source: APiQypLd5N1x6fRFN6a9H3PYT0ahd3JGW2wCx3SWRBf4T62ZoB1Za2xgPLKjku41zG8TUnQwNptRsQ==
+X-Received: by 2002:a17:90a:6782:: with SMTP id o2mr286694pjj.122.1587400644979;
+        Mon, 20 Apr 2020 09:37:24 -0700 (PDT)
+Received: from mathewk1.lan ([161.97.192.125])
+        by smtp.gmail.com with ESMTPSA id cp22sm98109pjb.28.2020.04.20.09.37.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 09:37:24 -0700 (PDT)
+From:   Mathew King <mathewk@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mathew King <mathewk@chromium.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v0 0/2] Type-C charger support using power_supply
+Date:   Mon, 20 Apr 2020 10:36:55 -0600
+Message-Id: <20200420163657.60650-1-mathewk@chromium.org>
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 MIME-Version: 1.0
-In-Reply-To: <20200420162454.48679-1-dianders@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/20/20 10:24 AM, Douglas Anderson wrote:
-> While doing reboot testing, I found that occasionally my device would
-> trigger the hung task detector.  Many tasks were stuck waiting for the
-> a blkdev mutex, but at least one task in the system was always sitting
-> waiting for IO to complete (and holding the blkdev mutex).  One
-> example of a task that was just waiting for its IO to complete on one
-> reboot:
-> 
->  udevd           D    0  2177    306 0x00400209
->  Call trace:
->   __switch_to+0x15c/0x17c
->   __schedule+0x6e0/0x928
->   schedule+0x8c/0xbc
->   schedule_timeout+0x9c/0xfc
->   io_schedule_timeout+0x24/0x48
->   do_wait_for_common+0xd0/0x160
->   wait_for_completion_io_timeout+0x54/0x74
->   blk_execute_rq+0x9c/0xd8
->   __scsi_execute+0x104/0x198
->   scsi_test_unit_ready+0xa0/0x154
->   sd_check_events+0xb4/0x164
->   disk_check_events+0x58/0x154
->   disk_clear_events+0x74/0x110
->   check_disk_change+0x28/0x6c
->   sd_open+0x5c/0x130
->   __blkdev_get+0x20c/0x3d4
->   blkdev_get+0x74/0x170
->   blkdev_open+0x94/0xa8
->   do_dentry_open+0x268/0x3a0
->   vfs_open+0x34/0x40
->   path_openat+0x39c/0xdf4
->   do_filp_open+0x90/0x10c
->   do_sys_open+0x150/0x3c8
->   ...
-> 
-> I've reproduced this on two systems: one boots from an internal UFS
-> disk and one from eMMC.  Each has a card reader attached via USB with
-> an SD card plugged in.  On the USB-attached SD card is a disk with 12
-> partitions (a Chrome OS test image), if it matters.  The system
-> doesn't do much with the USB disk other than probe it (it's plugged in
-> my system to help me recover).
-> 
-> From digging, I believe that there are two separate but related
-> issues.  Both issues relate to the SCSI code saying that there is no
-> budget.
-> 
-> I have done testing with only one or the other of the two patches in
-> this series and found that I could still encounter hung tasks if only
-> one of the two patches was applied.  This deserves a bit of
-> explanation.  To me, it's fairly obvious that the first fix wouldn't
-> fix the problems talked about in the second patch.  However, it's less
-> obvious why the second patch doesn't fix the problems in
-> blk_mq_dispatch_rq_list().  It turns out that it _almost_ does
-> (problems become much more rare), but I did manage to get a single
-> trace where the "kick" scheduled by the second patch happened really
-> quickly.  The scheduled kick then ran and found nothing to do.  This
-> happened in parallel to a task running in blk_mq_dispatch_rq_list()
-> which hadn't gotten around to splicing the list back into
-> hctx->dispatch.  This is why we need both fixes.
-> 
-> Most of my testing has been atop Chrome OS 5.4's kernel tree which
-> currently has v5.4.30 merged in.  The Chrome OS 5.4 tree also has a
-> patch by Salman Qazi, namely ("block: Limit number of items taken from
-> the I/O scheduler in one go").  Reverting that patch didn't make the
-> hung tasks go away, so I kept it in for most of my testing.
-> 
-> I have also done some testing on mainline Linux (most on what git
-> describe calls v5.6-rc7-227-gf3e69428b5e2) even without Salman's
-> patch.  I found that I could reproduce the problems there and that
-> traces looked about the same as I saw on the downstream branch.  These
-> patches were also confirmed to fix the problems on mainline.
-> 
-> Chrome OS is currently setup to use the BFQ scheduler and I found that
-> I couldn't reproduce the problems without BFQ.  As discussed in the
-> second patch this is believed to be because BFQ sometimes returns
-> "true" from has_work() but then NULL from dispatch_request().
-> 
-> I'll insert my usual caveat that I'm sending patches to code that I
-> know very little about.  If I'm making a total bozo patch here, please
-> help me figure out how I should fix the problems I found in a better
-> way.
-> 
-> If you want to see a total ridiculous amount of chatter where I
-> stumbled around a whole bunch trying to figure out what was wrong and
-> how to fix it, feel free to read <https://crbug.com/1061950>.  I
-> promise it will make your eyes glaze over right away if this cover
-> letter didn't already do that.  Specifically comment 79 in that bug
-> includes a link to my ugly prototype of making BFQ's has_work() more
-> exact (I only managed it by actually defining _both_ an exact and
-> inexact function to avoid circular locking problems when it was called
-> directly from blk_mq_hctx_has_pending()).  Comment 79 also has more
-> thoughts about alternatives considered.
-> 
-> I don't know if these fixes represent a regression of some sort or are
-> new.  As per above I could only reproduce with BFQ enabled which makes
-> it nearly impossible to go too far back with this.  I haven't listed
-> any "Fixes" tags here, but if someone felt it was appropriate to
-> backport this to some stable trees that seems like it'd be nice.
-> Presumably at least 5.4 stable would make sense.
-> 
-> Thanks to Salman Qazi, Paolo Valente, and Guenter Roeck who spent a
-> bunch of time helping me trawl through some of this code and reviewing
-> early versions of this patch.
+I am looking to expose Type-C charging ports using a power_supply class. In this
+patch series I have done this by creating a config option to enable this by
+adding support directly into the typec driver. I would like some feedback on
+this general approach.
 
-Applied, thanks.
+I have been testing on a system that uses an ACPI implementation of UCSI and
+things are working as expected.
+
+Mathew King (2):
+  typec: Move typec class structs into a header file
+  typec: Add Type-C charger
+
+ drivers/usb/typec/Kconfig   |  11 ++
+ drivers/usb/typec/Makefile  |   1 +
+ drivers/usb/typec/charger.c | 204 ++++++++++++++++++++++++++++++++++++
+ drivers/usb/typec/charger.h |  33 ++++++
+ drivers/usb/typec/class.c   | 108 ++++++++-----------
+ drivers/usb/typec/class.h   |  63 +++++++++++
+ 6 files changed, 356 insertions(+), 64 deletions(-)
+ create mode 100644 drivers/usb/typec/charger.c
+ create mode 100644 drivers/usb/typec/charger.h
+ create mode 100644 drivers/usb/typec/class.h
 
 -- 
-Jens Axboe
+2.26.1.301.g55bc3eb7cb9-goog
 
