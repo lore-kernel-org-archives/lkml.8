@@ -2,53 +2,53 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F51C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F6AC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D32CC20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0DC2072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386707;
-	bh=TIjqOHusg9Qi/arFQl33O0mlfrLq2gCJ6ZxVg3IQaMI=;
+	s=default; t=1587386709;
+	bh=2Ie6yKzF7v/mul/AuyrteBRsfgDx4BWHEpn8CwEjUOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cwme+G6TbNoYefoYdhsZd6KGt7+f0dvdmtcD8qOJTR6Hv5XKSgBB+xOXvFsZLhQpM
-	 CnfzI3FWML0+KwkGa6FZGxcsVxyzwG2FvwKqmodbj59Wep/5zdfDtXaC1uC9AZufp+
-	 nuzoDa+ZBN6xyDmX9qZdSbv5HQzfnxRYS197NQVI=
+	b=fhM94DP+a8d2LRxZQtQRVnTbKCNNGtrSecPQB0UO2TgX9xahrqxLUpSUZox4xZ+ch
+	 sDsBtceUfiKOuVckwhbHmBGw5lGhiVP3znqOwip10LrJXu6X5qIGBmDGgnB58kH+wH
+	 gvifuFGh/rOxg4weXUS8hXKUYn0v8gcun9CaiKu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgDTMpG (ORCPT
+        id S1728669AbgDTMpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:45:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39088 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:45:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbgDTMpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:02 -0400
+        id S1728638AbgDTMpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 352A42072B;
-        Mon, 20 Apr 2020 12:45:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BAEC206E9;
+        Mon, 20 Apr 2020 12:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386701;
-        bh=TIjqOHusg9Qi/arFQl33O0mlfrLq2gCJ6ZxVg3IQaMI=;
+        s=default; t=1587386706;
+        bh=2Ie6yKzF7v/mul/AuyrteBRsfgDx4BWHEpn8CwEjUOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3y/kaZuoJsXPuHs9SpskGhjWPn09P9VslHQ9crpm4aMS3K9YgvqXI1vkxMjUxqrY
-         5iskS0FsB435xp3dSzOPV60/udnIzys9Nq/m76LDN9QhS0AfCmOOwJzP7cEGfkCEWm
-         SJqSm5uCGCJKNOhd5Qz9WIZ6SS0Ylu8pUwNfKe/A=
+        b=Us0vPc2RutNEiPPCxc9PPAT7H8+4dHnArOwBTa7Jm+wH1fvuxHQuLofcmtEUeAu5W
+         xRqDEMU/4aHO7JW96gRAmO884+dMDAMIKM72Sg8K7mKXWzuy+p5tJEyQ+twglQe4SC
+         lB01+ElcpyPNywNYYCHwXtpm28GullDFWBSQjERY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 56/71] net/mlx5e: Rename hw_modify to preactivate
-Date:   Mon, 20 Apr 2020 14:39:10 +0200
-Message-Id: <20200420121520.314919570@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH 5.6 66/71] irqchip/ti-sci-inta: Fix processing of masked irqs
+Date:   Mon, 20 Apr 2020 14:39:20 +0200
+Message-Id: <20200420121522.206830941@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -61,100 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maximmi@mellanox.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit dca147b3dce5abb5284ff747211960fd2db5ec2e ]
+commit 3688b0db5c331f4ec3fa5eb9f670a4b04f530700 upstream.
 
-mlx5e_safe_switch_channels accepts a callback to be called before
-activating new channels. It is intended to configure some hardware
-parameters in cases where channels are recreated because some
-configuration has changed.
+The ti_sci_inta_irq_handler() does not take into account INTA IRQs state
+(masked/unmasked) as it uses INTA_STATUS_CLEAR_j register to get INTA IRQs
+status, which provides raw status value.
+This causes hard IRQ handlers to be called or threaded handlers to be
+scheduled many times even if corresponding INTA IRQ is masked.
+Above, first of all, affects the LEVEL interrupts processing and causes
+unexpected behavior up the system stack or crash.
 
-Recently, this callback has started being used to update the driver's
-internal MLX5E_STATE_XDP_OPEN flag, and the following patches also
-intend to use this callback for software preparations. This patch
-renames the hw_modify callback to preactivate, so that the name fits
-better.
+Fix it by using the Interrupt Masked Status INTA_STATUSM_j register which
+provides masked INTA IRQs status.
 
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+Link: https://lore.kernel.org/r/20200408191532.31252-1-grygorii.strashko@ti.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h      |  6 +++---
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 14 ++++++++------
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ drivers/irqchip/irq-ti-sci-inta.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index c9606b8ab6efd..704bd6d5277d2 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -1036,14 +1036,14 @@ int mlx5e_open_channels(struct mlx5e_priv *priv,
- 			struct mlx5e_channels *chs);
- void mlx5e_close_channels(struct mlx5e_channels *chs);
+--- a/drivers/irqchip/irq-ti-sci-inta.c
++++ b/drivers/irqchip/irq-ti-sci-inta.c
+@@ -37,6 +37,7 @@
+ #define VINT_ENABLE_SET_OFFSET	0x0
+ #define VINT_ENABLE_CLR_OFFSET	0x8
+ #define VINT_STATUS_OFFSET	0x18
++#define VINT_STATUS_MASKED_OFFSET	0x20
  
--/* Function pointer to be used to modify WH settings while
-+/* Function pointer to be used to modify HW or kernel settings while
-  * switching channels
-  */
--typedef int (*mlx5e_fp_hw_modify)(struct mlx5e_priv *priv);
-+typedef int (*mlx5e_fp_preactivate)(struct mlx5e_priv *priv);
- int mlx5e_safe_reopen_channels(struct mlx5e_priv *priv);
- int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
- 			       struct mlx5e_channels *new_chs,
--			       mlx5e_fp_hw_modify hw_modify);
-+			       mlx5e_fp_preactivate preactivate);
- void mlx5e_activate_priv_channels(struct mlx5e_priv *priv);
- void mlx5e_deactivate_priv_channels(struct mlx5e_priv *priv);
+ /**
+  * struct ti_sci_inta_event_desc - Description of an event coming to
+@@ -116,7 +117,7 @@ static void ti_sci_inta_irq_handler(stru
+ 	chained_irq_enter(irq_desc_get_chip(desc), desc);
  
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 8125c605780be..1c8a4235a48c5 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -2954,7 +2954,7 @@ void mlx5e_deactivate_priv_channels(struct mlx5e_priv *priv)
+ 	val = readq_relaxed(inta->base + vint_desc->vint_id * 0x1000 +
+-			    VINT_STATUS_OFFSET);
++			    VINT_STATUS_MASKED_OFFSET);
  
- static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
- 				       struct mlx5e_channels *new_chs,
--				       mlx5e_fp_hw_modify hw_modify)
-+				       mlx5e_fp_preactivate preactivate)
- {
- 	struct net_device *netdev = priv->netdev;
- 	int new_num_txqs;
-@@ -2973,9 +2973,11 @@ static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
- 
- 	priv->channels = *new_chs;
- 
--	/* New channels are ready to roll, modify HW settings if needed */
--	if (hw_modify)
--		hw_modify(priv);
-+	/* New channels are ready to roll, call the preactivate hook if needed
-+	 * to modify HW settings or update kernel parameters.
-+	 */
-+	if (preactivate)
-+		preactivate(priv);
- 
- 	priv->profile->update_rx(priv);
- 	mlx5e_activate_priv_channels(priv);
-@@ -2987,7 +2989,7 @@ static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
- 
- int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
- 			       struct mlx5e_channels *new_chs,
--			       mlx5e_fp_hw_modify hw_modify)
-+			       mlx5e_fp_preactivate preactivate)
- {
- 	int err;
- 
-@@ -2995,7 +2997,7 @@ int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
- 	if (err)
- 		return err;
- 
--	mlx5e_switch_priv_channels(priv, new_chs, hw_modify);
-+	mlx5e_switch_priv_channels(priv, new_chs, preactivate);
- 	return 0;
- }
- 
--- 
-2.20.1
-
+ 	for_each_set_bit(bit, &val, MAX_EVENTS_PER_VINT) {
+ 		virq = irq_find_mapping(domain, vint_desc->events[bit].hwirq);
 
 
