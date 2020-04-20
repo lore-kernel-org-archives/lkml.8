@@ -2,351 +2,676 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A24C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32162C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADDE2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E9720775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587394293;
+	bh=AF1W7Z0McyMuwV7Fj38/Vykj+JXO1ZeVb8FzboKLiEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S1kI8U24hNCWIo5EIPMNxABLCJ2f5ItPjfGJ8mrbD98jOuB0RNOvGpcDc6LyCowfK
+	 tDpbeV5oL9EYsC0qjwmNGVMbw1vfrePpy20j69v9lP22cxMsskqmVX5Cg/FXKCenpf
+	 WIvP+Purj1RBKBGDAPMKHySRs19FyAHKyD2SPi5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgDTOuX (ORCPT
+        id S1728222AbgDTOvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:50:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:50220 "EHLO foss.arm.com"
+        Mon, 20 Apr 2020 10:51:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgDTOuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:50:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3665531B;
-        Mon, 20 Apr 2020 07:50:22 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB6943F73D;
-        Mon, 20 Apr 2020 07:50:19 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 15:50:17 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200420145016.lqznren75ua27cl3@e107158-lin.cambridge.arm.com>
-References: <20200403123020.13897-1-qais.yousef@arm.com>
- <20200414182152.GB20442@darkstar>
+        id S1726102AbgDTOvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 10:51:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 339FE206F4;
+        Mon, 20 Apr 2020 14:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587394290;
+        bh=AF1W7Z0McyMuwV7Fj38/Vykj+JXO1ZeVb8FzboKLiEw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s+HQ9ifHS9g5hq3XcrF/JnV2QkFrC62kEwp1RDOZ5X22A9rL0vyS/ko/5fzhNaCve
+         8YTsSMG46Cx6tLCtLUopAjUgd3q9OnX5ZI2lAqtPo1DT4kpdUJzGWTgmsZimKNa6QL
+         m2jfzfc6Xx2iTGXp7aqLxBn78c/Mun4yTrfs3drQ=
+Date:   Mon, 20 Apr 2020 16:51:28 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wang Wenhu <wenhu.wang@vivo.com>
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, kernel@vivo.com, robh@kernel.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Scott Wood <oss@buserror.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2,RESEND] misc: new driver sram_uapi for user level SRAM
+ access
+Message-ID: <20200420145128.GA4131449@kroah.com>
+References: <20200420030538.101696-1-wenhu.wang@vivo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414182152.GB20442@darkstar>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200420030538.101696-1-wenhu.wang@vivo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrick!
+On Sun, Apr 19, 2020 at 08:05:38PM -0700, Wang Wenhu wrote:
+> A generic User-Kernel interface that allows a misc device created
+> by it to support file-operations of ioctl and mmap to access SRAM
+> memory from user level. Different kinds of SRAM alloction and free
+> APIs could be registered by specific SRAM hardware level driver to
+> the available list and then be chosen by users to allocate and map
+> SRAM memory from user level.
+> 
+> It is extremely helpful for the user space applications that require
+> high performance memory accesses, such as embedded networking devices
+> that would process data in user space, and PowerPC e500 is a case.
+> 
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Scott Wood <oss@buserror.net>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> ---
+> Changes since v1: addressed comments from Arnd
+>  * Changed the ioctl cmd definitions using _IO micros
+>  * Export interfaces for HW-SRAM drivers to register apis to available list
+>  * Modified allocation alignment to PAGE_SIZE
+>  * Use phys_addr_t as type of SRAM resource size and offset
+>  * Support compat_ioctl
+>  * Misc device name:sram
+> 
+> Note: From this on, the SRAM_UAPI driver is independent to any hardware
+> drivers, so I would only commit the patch itself as v2, while the v1 of
+> it was wrapped together with patches for Freescale L2-Cache-SRAM device.
+> Then after, I'd create patches for Freescale L2-Cache-SRAM device as
+> another series.
+> 
+> Link for v1:
+>  * https://lore.kernel.org/lkml/20200418162157.50428-5-wenhu.wang@vivo.com/
 
-On 04/14/20 20:21, Patrick Bellasi wrote:
-> Hi Qais!
-> 
-> On 03-Apr 13:30, Qais Yousef wrote:
-> 
-> [...]
-> 
-> > diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-> > index d4f6215ee03f..91204480fabc 100644
-> > --- a/include/linux/sched/sysctl.h
-> > +++ b/include/linux/sched/sysctl.h
-> > @@ -59,6 +59,7 @@ extern int sysctl_sched_rt_runtime;
-> >  #ifdef CONFIG_UCLAMP_TASK
-> >  extern unsigned int sysctl_sched_uclamp_util_min;
-> >  extern unsigned int sysctl_sched_uclamp_util_max;
-> > +extern unsigned int sysctl_sched_rt_default_uclamp_util_min;
-> 
-> nit-pick: I would prefer to keep the same prefix of the already
-> exising knobs, i.e. sysctl_sched_uclamp_util_min_rt
-> 
-> The same change for consistency should be applied to all the following
-> symbols related to "uclamp_util_min_rt".
+Why was this a RESEND?  What was wrong with the original v2 version?
 
-All rt sysctl knobs are prefixed with 'sched_rt', so I used this for
-consistency.
+Anyway, minor review comments:
 
+> ---
+>  drivers/misc/Kconfig      |  11 ++
+>  drivers/misc/Makefile     |   1 +
+>  drivers/misc/sram_uapi.c  | 352 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/sram_uapi.h |  28 +++
+>  4 files changed, 392 insertions(+)
+>  create mode 100644 drivers/misc/sram_uapi.c
+>  create mode 100644 include/linux/sram_uapi.h
 > 
-> NOTE: I would not use "default" as I think that what we are doing is
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 99e151475d8f..b19c8b24f18e 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -465,6 +465,17 @@ config PVPANIC
+>  	  a paravirtualized device provided by QEMU; it lets a virtual machine
+>  	  (guest) communicate panic events to the host.
+>  
+> +config SRAM_UAPI
+> +	bool "Generic SRAM User Level API driver"
+> +	help
+> +	  This driver allows you to create a misc device which could be used
+> +	  as an interface to allocate SRAM memory from user level.
+> +
+> +	  It is extremely helpful for some user space applications that require
+> +	  high performance memory accesses.
+> +
+> +	  If unsure, say N.
 
-The 'default' was suggested by Quentin as it felt more descriptive to him. I
-took his 'user' point of view.
+Naming is hard, but shouldn't this just be "sram" and drop the whole
+"UAPI" stuff everywhere?  That doesn't make much sense as drivers are
+just interfaces to userspace...
 
-I don't mind or care about the name ultimately. This symbol is internal and not
-exported to userspace.
 
-I just think sticking to sched_rt for consistency is better. What follows I'm
-happy to put whatever reviewers agree on. I think Dietmar has another
-suggestion for this too.
+> +
+>  source "drivers/misc/c2port/Kconfig"
+>  source "drivers/misc/eeprom/Kconfig"
+>  source "drivers/misc/cb710/Kconfig"
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index 9abf2923d831..794447ca07ca 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -46,6 +46,7 @@ obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
+>  obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
+>  obj-$(CONFIG_SRAM)		+= sram.o
+>  obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
+> +obj-$(CONFIG_SRAM_UAPI)		+= sram_uapi.o
+>  obj-y				+= mic/
+>  obj-$(CONFIG_GENWQE)		+= genwqe/
+>  obj-$(CONFIG_ECHO)		+= echo/
+> diff --git a/drivers/misc/sram_uapi.c b/drivers/misc/sram_uapi.c
+> new file mode 100644
+> index 000000000000..66c7b56b635f
+> --- /dev/null
+> +++ b/drivers/misc/sram_uapi.c
+> @@ -0,0 +1,352 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
+> + * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
+> + * All rights reserved.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/mm.h>
+> +#include <linux/fs.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/sram_uapi.h>
+> +
+> +#define DRIVER_NAME	"sram_uapi"
 
-> exactly force setting a user_defined value for all RT tasks. More on
-> that later...
+If you really need this, just use KBUILD_MODNAME instead.  But I don't
+think you need it, as most drivers do not.
 
-We are NOT force setting the user_defined value. The whole point is to have
-a variable default behavior while still allow the user to override this
-default. Exactly like it currently works, except that the __hardcoded__ value
-is no longer hardcoded and can be modifyied by sys admins at runtime.
 
-> 
-> >  #endif
-> >  
-> >  #ifdef CONFIG_CFS_BANDWIDTH
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 1a9983da4408..a726b26a5056 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -797,6 +797,27 @@ unsigned int sysctl_sched_uclamp_util_min = SCHED_CAPACITY_SCALE;
-> >  /* Max allowed maximum utilization */
-> >  unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
-> >  
-> > +/*
-> > + * By default RT tasks run at the maximum performance point/capacity of the
-> > + * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
-> > + * SCHED_CAPACITY_SCALE.
-> > + *
-> > + * This knob allows admins to change the default behavior when uclamp is being
-> > + * used. In battery powered devices, particularly, running at the maximum
-> > + * capacity and frequency will increase energy consumption and shorten the
-> > + * battery life.
-> > + *
-> > + * This knob only affects the default value RT has when a new RT task is
-> > + * forked or has just changed policy to RT, given the user hasn't modified the
-> > + * uclamp.min value of the task via sched_setattr().
-> > + *
-> > + * This knob will not override the system default sched_util_clamp_min defined
-> > + * above.
-> > + *
-> > + * Any modification is applied lazily on the next RT task wakeup.
-> > + */
-> > +unsigned int sysctl_sched_rt_default_uclamp_util_min = SCHED_CAPACITY_SCALE;
-> > +
-> >  /* All clamps are required to be less or equal than these values */
-> >  static struct uclamp_se uclamp_default[UCLAMP_CNT];
-> >  
-> > @@ -924,6 +945,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
-> >  	return uc_req;
-> >  }
-> >  
-> > +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
-> > +{
-> > +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-> 
-> Don't we have to filter for RT tasks only here?
+> +
+> +struct res_info {
+> +	phys_addr_t offset;
+> +	phys_addr_t size;
+> +};
+> +
+> +struct sram_resource {
+> +	struct list_head	list;
+> +	struct res_info		info;
+> +	phys_addr_t		phys;
+> +	void			*virt;
+> +	struct vm_area_struct	*vma;
+> +	struct sram_uapi	*parent;
+> +};
+> +
+> +struct sram_uapi {
+> +	struct list_head	res_list;
+> +	struct sram_api		*sa;
+> +};
+> +
+> +static DEFINE_MUTEX(sram_api_list_lock);
+> +static LIST_HEAD(sram_api_list);
+> +
+> +long sram_api_register(struct sram_api *sa)
 
-Indeed!
+Why are all of these functions global?
 
-> 
-> > +
-> > +	if (!uc_se->user_defined)
-> > +		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
-> 
-> Here you are actually setting a user-requested value, why not marking
-> it as that, i.e. by using true for the last parameter?
+And shouldn't this return an 'int'?
 
-I will have to bounce the question back. The original code passed false.
-So why didn't you pass true then? The fact that the value is no longer
-hardcoded with this patch doesn't mean the purpose of this code has changed.
+> +{
+> +	struct sram_api *cur;
+> +
+> +	if (!sa || !sa->name || !sa->sram_alloc || !sa->sram_free)
+> +		return -EINVAL;
 
-> 
-> Moreover, by keeping user_defined=false I think you are not getting
-> what you want for RT tasks running in a nested cgroup.
-> 
-> Let say a subgroup is still with the util_min=1024 inherited from the
-> system defaults, in uclamp_tg_restrict() we will still return the max
-> value and not what you requested for. Isn't it?
+How can any of these be true?  You control all the callers of this
+function.
 
-With the current code (without my patch) where RT tasks util_min is 1024 by
-default and user_defined=false. How is it behaving then? My patch should
-retain this behavior. I can't see how it breaks it.. :-/
+> +
+> +	mutex_lock(&sram_api_list_lock);
+> +	list_for_each_entry(cur, &sram_api_list, list) {
+> +		if (cur->type == sa->type) {
+> +			pr_err("error sram %s type %d exists\n", sa->name,
+> +			       sa->type);
+> +			mutex_unlock(&sram_api_list_lock);
+> +			return -EEXIST;
+> +		}
+> +	}
+> +
+> +	kref_init(&sa->kref);
 
-> 
-> IOW, what about:
-> 
-> ---8<---
-> static void uclamp_sync_util_min_rt(struct task_struct *p)
-> {
-> 	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-> 
->   if (likely(uc_se->user_defined || !rt_task(p)))
->     return;
-> 
->   uclamp_se_set(uc_se, sysctl_sched_uclamp_util_min_rt, true);
-> }
-> ---8<---
+So the caller has to allocate the space and set some things up, but not
+everything?  That's a mess, why not just do it either all at once with
+an "allocate" like function, or just do it all in one function.  Why is
+this a separate function anyway?
 
-See above.
+> +	list_add_tail(&sa->list, &sram_api_list);
+> +	pr_info("sram %s type %d registered\n", sa->name, sa->type);
 
-> 
-> 
-> > +}
-> > +
-> >  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
-> >  {
-> >  	struct uclamp_se uc_eff;
-> > @@ -1030,6 +1059,12 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-> >  	if (unlikely(!p->sched_class->uclamp_enabled))
-> >  		return;
-> >  
-> > +	/*
-> > +	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
-> > +	 * user, we apply any new value on the next wakeup, which is here.
-> > +	 */
-> > +	uclamp_rt_sync_default_util_min(p);
-> > +
-> >  	for_each_clamp_id(clamp_id)
-> >  		uclamp_rq_inc_id(rq, p, clamp_id);
-> >  
-> > @@ -1121,12 +1156,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-> >  				loff_t *ppos)
-> >  {
-> >  	bool update_root_tg = false;
-> > -	int old_min, old_max;
-> > +	int old_min, old_max, old_rt_min;
-> >  	int result;
-> >  
-> >  	mutex_lock(&uclamp_mutex);
-> >  	old_min = sysctl_sched_uclamp_util_min;
-> >  	old_max = sysctl_sched_uclamp_util_max;
-> > +	old_rt_min = sysctl_sched_rt_default_uclamp_util_min;
-> 
-> Perpahs it's just my OCD but, is not "old_min_rt" reading better?
+Don't leave debugging comments in the driver, if all goes well a driver
+should be totally silent.  Only log errors.
 
-:D
+> +
+> +	mutex_unlock(&sram_api_list_lock);
+> +
+> +	return 0;
+> +};
+> +EXPORT_SYMBOL(sram_api_register);
 
-> 
-> >  
-> >  	result = proc_dointvec(table, write, buffer, lenp, ppos);
-> >  	if (result)
-> > @@ -1134,12 +1170,23 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-> >  	if (!write)
-> >  		goto done;
-> >  
-> > +	/*
-> > +	 * The new value will be applied to all RT tasks the next time they
-> > +	 * wakeup, assuming the task is using the system default and not a user
-> > +	 * specified value. In the latter we shall leave the value as the user
-> > +	 * requested.
-> > +	 */
-> 
-> Should not this comment go before the next block?
+Exported for what?  This is a stand-alone driver, nothing else uses
+these symbols.
 
-+1
+> +
+> +long sram_api_unregister(struct sram_api *sa)
 
-> 
-> >  	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
-> >  	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
-> >  		result = -EINVAL;
-> >  		goto undo;
-> >  	}
-> >  
-> > +	if (sysctl_sched_rt_default_uclamp_util_min > SCHED_CAPACITY_SCALE) {
-> > +		result = -EINVAL;
-> > +		goto undo;
-> > +	}
-> > +
-> >  	if (old_min != sysctl_sched_uclamp_util_min) {
-> >  		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
-> >  			      sysctl_sched_uclamp_util_min, false);
-> > @@ -1165,6 +1212,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-> >  undo:
-> >  	sysctl_sched_uclamp_util_min = old_min;
-> >  	sysctl_sched_uclamp_util_max = old_max;
-> > +	sysctl_sched_rt_default_uclamp_util_min = old_rt_min;
-> >  done:
-> >  	mutex_unlock(&uclamp_mutex);
-> >  
-> > @@ -1207,9 +1255,13 @@ static void __setscheduler_uclamp(struct task_struct *p,
-> >  		if (uc_se->user_defined)
-> >  			continue;
-> >  
-> > -		/* By default, RT tasks always get 100% boost */
-> > +		/*
-> > +		 * By default, RT tasks always get 100% boost, which the admins
-> > +		 * are allowed to change via
-> > +		 * sysctl_sched_rt_default_uclamp_util_min knob.
-> > +		 */
-> >  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> > -			clamp_value = uclamp_none(UCLAMP_MAX);
-> > +			clamp_value = sysctl_sched_rt_default_uclamp_util_min;
-> >
-> >  		uclamp_se_set(uc_se, clamp_value, false);
-> >  	}
-> > @@ -1241,9 +1293,13 @@ static void uclamp_fork(struct task_struct *p)
-> >  	for_each_clamp_id(clamp_id) {
-> >  		unsigned int clamp_value = uclamp_none(clamp_id);
-> >  
-> > -		/* By default, RT tasks always get 100% boost */
-> > +		/*
-> > +		 * By default, RT tasks always get 100% boost, which the admins
-> > +		 * are allowed to change via
-> > +		 * sysctl_sched_rt_default_uclamp_util_min knob.
-> > +		 */
-> >  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> > -			clamp_value = uclamp_none(UCLAMP_MAX);
-> > +			clamp_value = sysctl_sched_rt_default_uclamp_util_min;
-> >  
-> 
-> This is not required, look at this Quentin's patch:
-> 
->    Message-ID: <20200414161320.251897-1-qperret@google.com>
->    https://lore.kernel.org/lkml/20200414161320.251897-1-qperret@google.com/
+Why long?
 
-Yep saw it.
+> +{
+> +	struct sram_api *cur, *tmp;
+> +	long ret = -ENODEV;
+> +
+> +	if (!sa || !sa->name || !sa->sram_alloc || !sa->sram_free)
+> +		return -EINVAL;
 
-Thanks for taking the time to review!
+Again, how can any of this be true?
 
-Cheers
+> +
+> +	mutex_lock(&sram_api_list_lock);
+> +	list_for_each_entry_safe(cur, tmp, &sram_api_list, list) {
+> +		if (cur->type == sa->type && !strcmp(cur->name, sa->name)) {
+> +			if (kref_read(&cur->kref)) {
+> +				pr_err("error sram %s type %d is busy\n",
+> +					sa->name, sa->type);
+> +				ret = -EBUSY;
+> +			} else {
+> +				list_del(&cur->list);
+> +				pr_info("sram %s type %d unregistered\n",
+> +					sa->name, sa->type);
+> +				ret = 0;
+> +			}
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&sram_api_list_lock);
+> +
+> +	return ret;
+> +};
+> +EXPORT_SYMBOL(sram_api_unregister);
+> +
+> +static struct sram_api *get_sram_api_from_type(__u32 type)
+> +{
+> +	struct sram_api *cur;
+> +
+> +	mutex_lock(&sram_api_list_lock);
+> +	list_for_each_entry(cur, &sram_api_list, list) {
+> +		if (cur->type == type) {
+> +			kref_get(&cur->kref);
+> +			mutex_unlock(&sram_api_list_lock);
+> +			return cur;
 
---
-Qais Yousef
+Document that the reference count is incremented, or someone will forget
+that.
 
-> 
-> >  		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
-> >  	}
-> > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > index ad5b88a53c5a..0272ae8c6147 100644
-> > --- a/kernel/sysctl.c
-> > +++ b/kernel/sysctl.c
-> > @@ -465,6 +465,13 @@ static struct ctl_table kern_table[] = {
-> >  		.mode		= 0644,
-> >  		.proc_handler	= sysctl_sched_uclamp_handler,
-> >  	},
-> > +	{
-> > +		.procname	= "sched_rt_default_util_clamp_min",
-> > +		.data		= &sysctl_sched_rt_default_uclamp_util_min,
-> > +		.maxlen		= sizeof(unsigned int),
-> > +		.mode		= 0644,
-> > +		.proc_handler	= sysctl_sched_uclamp_handler,
-> > +	},
-> >  #endif
-> >  #ifdef CONFIG_SCHED_AUTOGROUP
-> >  	{
-> 
-> Best,
-> Patrick
-> 
-> -- 
-> #include <best/regards.h>
-> 
-> Patrick Bellasi
+
+> +		}
+> +	}
+> +	mutex_unlock(&sram_api_list_lock);
+> +
+> +	return NULL;
+> +}
+> +
+> +static void sram_uapi_res_insert(struct sram_uapi *uapi,
+> +				 struct sram_resource *res)
+> +{
+> +	struct sram_resource *cur, *tmp;
+> +	struct list_head *head = &uapi->res_list;
+> +
+> +	list_for_each_entry_safe(cur, tmp, head, list) {
+> +		if (&tmp->list != head &&
+> +		    (cur->info.offset + cur->info.size + res->info.size <=
+> +		    tmp->info.offset)) {
+> +			res->info.offset = cur->info.offset + cur->info.size;
+
+This feels really odd, what are you doing here with this loop to try to
+find a space and then put it in and then change the resource???
+
+
+> +			res->parent = uapi;
+> +			list_add(&res->list, &cur->list);
+> +			return;
+> +		}
+> +	}
+> +
+> +	if (list_empty(head))
+> +		res->info.offset = 0;
+> +	else {
+> +		tmp = list_last_entry(head, struct sram_resource, list);
+> +		res->info.offset = tmp->info.offset + tmp->info.size;
+> +	}
+> +	list_add_tail(&res->list, head);
+
+No locking anywhere?
+
+> +}
+> +
+> +static struct sram_resource *sram_uapi_res_delete(struct sram_uapi *uapi,
+> +						  struct res_info *info)
+> +{
+> +	struct sram_resource *res, *tmp;
+> +
+> +	list_for_each_entry_safe(res, tmp, &uapi->res_list, list) {
+> +		if (res->info.offset == info->offset) {
+
+Why is the offset somehow the "key" for this?
+
+> +			list_del(&res->list);
+> +			res->parent = NULL;
+> +			return res;
+> +		}
+> +	}
+
+No locking anywhere?
+
+> +
+> +	return NULL;
+> +}
+> +
+> +static struct sram_resource *sram_uapi_find_res(struct sram_uapi *uapi,
+> +						__u32 offset)
+> +{
+> +	struct sram_resource *res;
+> +
+> +	list_for_each_entry(res, &uapi->res_list, list) {
+> +		if (res->info.offset == offset)
+> +			return res;
+> +	}
+
+No lock???  No reference counting?
+
+> +
+> +	return NULL;
+> +}
+> +
+> +static int sram_uapi_open(struct inode *inode, struct file *filp)
+> +{
+> +	struct sram_uapi *uapi;
+> +
+> +	uapi = kzalloc(sizeof(*uapi), GFP_KERNEL);
+> +	if (!uapi)
+> +		return -ENOMEM;
+> +
+> +	INIT_LIST_HEAD(&uapi->res_list);
+> +	filp->private_data = uapi;
+> +
+> +	return 0;
+> +}
+> +
+> +static long sram_uapi_ioctl(struct file *filp, unsigned int cmd,
+> +			    unsigned long arg)
+> +{
+> +	struct sram_uapi *uapi = filp->private_data;
+> +	struct sram_resource *res;
+> +	struct res_info info;
+> +	long ret = -ENOIOCTLCMD;
+
+-ENOTTY?
+
+> +	int size;
+> +	__u32 type;
+> +
+> +	if (!uapi)
+> +		return ret;
+> +
+> +	switch (cmd) {
+> +	case SRAM_UAPI_IOC_SET_SRAM_TYPE:
+> +		if (uapi->sa)
+> +			return -EEXIST;
+> +
+> +		get_user(type, (const __u32 __user *)arg);
+> +		uapi->sa = get_sram_api_from_type(type);
+> +		if (uapi->sa)
+> +			ret = 0;
+> +		else
+> +			ret = -ENODEV;
+> +
+> +		break;
+
+Why does userspace have to set the type of sram?
+
+
+> +
+> +	case SRAM_UAPI_IOC_ALLOC:
+> +		if (!uapi->sa)
+> +			return -EINVAL;
+> +
+> +		res = kzalloc(sizeof(*res), GFP_KERNEL);
+> +		if (!res)
+> +			return -ENOMEM;
+> +
+> +		size = copy_from_user((void *)&res->info,
+> +				      (const void __user *)arg,
+> +				      sizeof(res->info));
+> +		if (!PAGE_ALIGNED(res->info.size) || !res->info.size)
+> +			return -EINVAL;
+> +
+> +		res->virt = (void *)uapi->sa->sram_alloc(res->info.size,
+> +							 &res->phys,
+> +							 PAGE_SIZE);
+
+Look ma, userspace just allocated as much memory as it asked for!
+
+Remember, all input is evil, check everything.
+
+And, as is obvious now, this isn't really a "driver", it's a shim layer
+for something else.  Who sets up sram_alloc()?
+
+> +		if (!res->virt) {
+> +			kfree(res);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		sram_uapi_res_insert(uapi, res);
+> +		size = copy_to_user((void __user *)arg,
+> +				    (const void *)&res->info,
+> +				    sizeof(res->info));
+
+an alloc function copies a bunch of memory to userspace????
+
+You need to document the heck out of this new interface as it really
+does not make sense to me, sorry.
+
+> +
+> +		ret = 0;
+> +		break;
+> +
+> +	case SRAM_UAPI_IOC_FREE:
+> +		if (!uapi->sa)
+> +			return -EINVAL;
+> +
+> +		size = copy_from_user((void *)&info, (const void __user *)arg,
+> +				      sizeof(info));
+> +
+> +		res = sram_uapi_res_delete(uapi, &info);
+> +		if (!res) {
+> +			pr_err("error no sram resource found\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		uapi->sa->sram_free(res->virt);
+> +		kfree(res);
+
+Two step delete function with locking at all?  Ugh :(
+
+
+> +
+> +		ret = 0;
+> +		break;
+> +
+> +	default:
+> +		pr_err("error no cmd not supported\n");
+> +		break;
+
+Userspace now can spam the kernel log, do not do that.
+
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int sram_uapi_mmap(struct file *filp, struct vm_area_struct *vma)
+> +{
+> +	struct sram_uapi *uapi = filp->private_data;
+> +	struct sram_resource *res;
+> +
+> +	res = sram_uapi_find_res(uapi, vma->vm_pgoff);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	if (vma->vm_end - vma->vm_start > res->info.size)
+> +		return -EINVAL;
+> +
+> +	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+> +
+> +	return remap_pfn_range(vma, vma->vm_start,
+> +			       res->phys >> PAGE_SHIFT,
+> +			       vma->vm_end - vma->vm_start,
+> +			       vma->vm_page_prot);
+> +}
+> +
+> +static void sram_uapi_res_release(struct sram_uapi *uapi)
+> +{
+> +	struct sram_resource *res, *tmp;
+> +
+> +	list_for_each_entry_safe(res, tmp, &uapi->res_list, list) {
+> +		list_del(&res->list);
+> +		uapi->sa->sram_free(res->virt);
+> +		kfree(res);
+> +	}
+> +}
+> +
+> +static int sram_uapi_release(struct inode *inodp, struct file *filp)
+> +{
+> +	struct sram_uapi *uapi = filp->private_data;
+> +
+> +	sram_uapi_res_release(uapi);
+> +	if (uapi->sa)
+> +		kref_put(&uapi->sa->kref, NULL);
+
+Um, hm, how do I put this nicely.
+
+Wow, this is wrong.  So so so so so so wrong.
+
+There's documentation in the kernel tree about how wrong this is.  The
+kernel itself will warn you about how wrong this is.  Actually, no, it
+will just crash.  If this function ever gets called your kernel just
+blew up, so you really really really did not test this code at all.
+
+{sigh}
+
+Someone owes me a new bottle of whisky, this one is about to be empty...
+
+
+
+
+> +
+> +	kfree(uapi);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations sram_uapi_ops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= sram_uapi_open,
+> +	.unlocked_ioctl = sram_uapi_ioctl,
+> +	.compat_ioctl	= compat_ptr_ioctl,
+> +	.mmap		= sram_uapi_mmap,
+> +	.release	= sram_uapi_release,
+> +};
+> +
+> +static struct miscdevice sram_uapi_miscdev = {
+> +	MISC_DYNAMIC_MINOR,
+> +	"sram",
+> +	&sram_uapi_ops,
+
+named identifiers please, this isn't the 1980's.
+
+> +};
+> +
+> +static int __init sram_uapi_init(void)
+> +{
+> +	int ret;
+> +
+> +	INIT_LIST_HEAD(&sram_api_list);
+
+Why do you need a static list?
+
+> +	mutex_init(&sram_api_list_lock);
+
+Why do you need a static lock?
+
+> +
+> +	ret = misc_register(&sram_uapi_miscdev);
+> +	if (ret)
+> +		pr_err("failed to register sram uapi misc device\n");
+
+No need for the error, don't be noisy.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static void __exit sram_uapi_exit(void)
+> +{
+> +	misc_deregister(&sram_uapi_miscdev);
+> +}
+> +
+> +module_init(sram_uapi_init);
+> +module_exit(sram_uapi_exit);
+
+drop the crazy static list and lock (again, this isn't the 1990's), and
+you can get rid of the module_init/exit stuff too and just use a single
+line to register the misc device.
+
+Meta-comment here, you are trying to create a driver with a new api, but
+you have no real users of this api, so no one knows if this really is
+the correct api at all.  That's not ok, especially for one that is
+purporting to be so "generic" as to claim it is a sram driver for
+everyone.
+
+
+
+
+> +
+> +MODULE_AUTHOR("Wang Wenhu <wenhu.wang@vivo.com>");
+> +MODULE_DESCRIPTION("SRAM User API Driver");
+> +MODULE_ALIAS("platform:" DRIVER_NAME);
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/sram_uapi.h b/include/linux/sram_uapi.h
+> new file mode 100644
+> index 000000000000..50fbf9dc308f
+> --- /dev/null
+> +++ b/include/linux/sram_uapi.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __SRAM_UAPI_H
+> +#define __SRAM_UAPI_H
+> +
+> +/* Set SRAM type to be accessed */
+> +#define SRAM_UAPI_IOC_SET_SRAM_TYPE	_IOW('S', 0, __u32)
+> +
+> +/* Allocate resource from SRAM */
+> +#define SRAM_UAPI_IOC_ALLOC		_IOWR('S', 1, struct res_info)
+> +
+> +/* Free allocated resource of SRAM */
+> +#define SRAM_UAPI_IOC_FREE		_IOW('S', 2, struct res_info)
+> +
+> +struct sram_api {
+> +	struct list_head	list;
+> +	struct kref		kref;
+> +	__u32			type;
+> +	const char		*name;
+> +
+> +	long (*sram_alloc)(__u32 size, phys_addr_t *phys, __u32 align);
+> +	void (*sram_free)(void *ptr);
+> +};
+
+Why is this structure in a uapi header file?
+
+Oh wait, this isn't a uapi header file, this thing doesn't work at all.
+
+ugh, this needs _so_ much work.
+
+And again, someone owes me more whisky....
+
+greg k-h
