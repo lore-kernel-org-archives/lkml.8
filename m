@@ -2,91 +2,81 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09A8C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42B4C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90BF7206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:04:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YqIObYa8"
+	by mail.kernel.org (Postfix) with ESMTP id 92F142072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgDTNEt (ORCPT
+        id S1727801AbgDTNFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:04:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46199 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725944AbgDTNEs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:04:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587387886;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=W/bxTTX2WEiUDHSLV77/6UHjct+uk1657fsz3qpCp+I=;
-        b=YqIObYa8jCUCz0kAlQD5BKxKbBzWWt1zXjuictp2R3wvGXtjp7b1lrFmV/henszxZZd2Gj
-        kdpenHcZRMdRxug380shV5YzkOjugVL6FrugKY79YMLxcoSgnbyB1oej5mVh7UMHCs+Hk9
-        zFSnk5LrzPbUeiwj9h+IOUdUhgt1nQ0=
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
- [209.85.161.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-hLQd3EsgNh-5zB5IGFgCag-1; Mon, 20 Apr 2020 09:04:43 -0400
-X-MC-Unique: hLQd3EsgNh-5zB5IGFgCag-1
-Received: by mail-oo1-f69.google.com with SMTP id p23so1870418ook.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:04:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W/bxTTX2WEiUDHSLV77/6UHjct+uk1657fsz3qpCp+I=;
-        b=aIZqDR/kCdEZ7PMMJ8/h/Obd2ZN0jSRqrDFahh6Kg+rCSW6++wOWPD9/QuA7y5RlWY
-         7FVY6yuKjqgq7p+Wq1BQuRkWQv3ZM6tVuDm4F3LkdO0q/j0Q5MmZsTpD14LnQPC4ZEzd
-         ZtnnrmyxPJ3EwJmnlCqkzuBmbUonV/VC7VI/6XFBVp2nGjrg8ThPHWht1S8k4+w3jYYL
-         0EI78K3NvrVeALA3g4fJu9sHZ3pW9yM8+IjKt2UkwOnUk/sAWVzuvZpVVXy1wH5x971u
-         6t2xVm9ABKa8XC868O+hQVOLUBlBRO3hEvU5kTOc3pdevYkIULvkdZMxRs2opwnHP5hz
-         GkUQ==
-X-Gm-Message-State: AGi0PubNgM5w3x0f7VkLnNgHhS15EPgn/UrJ+AdtFVnzq8vqURojNYfT
-        N/4zQX7bZwIdyZLc4/WWwBj8+bTmUv1HcH/gUubBWdCyGHLWmGIL1Q9ZWXIHrF6iX32Yj84YB9T
-        l8WB32a5vM9ot27sof02kg7jVo8stSSZ5hkrErHjM
-X-Received: by 2002:aca:88d:: with SMTP id 135mr9971523oii.10.1587387883021;
-        Mon, 20 Apr 2020 06:04:43 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLY7P4yV5E3/wHnumRqm5PZKROtZDJ6lfZUbx8EURZu+U+ZcCM/EEpfnJ9UL6QjsmXOxs19CnraHACJqSY6K+E=
-X-Received: by 2002:aca:88d:: with SMTP id 135mr9971505oii.10.1587387882792;
- Mon, 20 Apr 2020 06:04:42 -0700 (PDT)
+        Mon, 20 Apr 2020 09:05:00 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56570 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727027AbgDTNE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 09:04:59 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX9n0nZ1e+SoqAA--.1S3;
+        Mon, 20 Apr 2020 21:04:52 +0800 (CST)
+Subject: Re: [PATCH RESEND 1/5] MIPS: Loongson64: Remove dead RTC code
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
+ <20200420073347.157230-2-jiaxun.yang@flygoat.com>
+ <15923f8b-7278-f510-e06a-99751bd68048@loongson.cn>
+ <20200420201312.7afe1bb7@flygoat-x1e>
+Cc:     linux-mips@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <cd4b67eb-d689-793b-93b3-1ba2b3741b5b@loongson.cn>
+Date:   Mon, 20 Apr 2020 21:04:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-References: <1587361410-83560-1-git-send-email-xiyuyang19@fudan.edu.cn>
- <7b95f2ac1e65635dcb160ca20e798d95b7503e49.camel@hammerspace.com>
- <20200420125141.18002-1-agruenba@redhat.com> <52a445020247f4dbe810ce757e48cd563a69c4ce.camel@hammerspace.com>
-In-Reply-To: <52a445020247f4dbe810ce757e48cd563a69c4ce.camel@hammerspace.com>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Mon, 20 Apr 2020 15:04:31 +0200
-Message-ID: <CAHc6FU411Eoo_E=aQiR=Vk2Tx6XCZEuiz25NykWY+dd5wKrszg@mail.gmail.com>
-Subject: Re: [PATCH] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "akpm@osdl.org" <akpm@osdl.org>,
-        "xiyuyang19@fudan.edu.cn" <xiyuyang19@fudan.edu.cn>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "okir@suse.de" <okir@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tanxin.ctf@gmail.com" <tanxin.ctf@gmail.com>,
-        "yuanxzhang@fudan.edu.cn" <yuanxzhang@fudan.edu.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200420201312.7afe1bb7@flygoat-x1e>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxX9n0nZ1e+SoqAA--.1S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY47k0a2IF6w1UM7kC6x804xWl14x267AK
+        xVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
+        A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I
+        6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr
+        1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
+        0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
+        80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IE
+        e2xFo4CEbIxvr21lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+        b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+        vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1l
+        IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+        C2KfnxnUUI43ZEXa7IU8489tUUUUU==
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 2:59 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
-> Well, that should Oops when either IS_ERR(acl) or IS_ERR(dfacl)
-> triggers, shouldn't it?
 
-Yes, checks missings. But you get the idea.
 
-Thanks,
-Andreas
+On 04/20/2020 08:13 PM, Jiaxun Yang wrote:
+> Hi Bibi,
+> 
+> Thanks for your review.
+> 
+> Pretty sure. It is mc146818 specified, it can never work on LS7A/LS2K
+> which have another RTC implementation.
+> 
+> I have performed boot test with this patch.
+> Kernel have safety fallback on platforms without this callback. 
+Although it boots ok, the wall time will be 0 for every boot since it does not read from rtc
+
+regards
+bibo, mao
 
