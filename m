@@ -2,118 +2,99 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32557C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F274C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 056E72074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:15:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jkUCF9b3"
+	by mail.kernel.org (Postfix) with ESMTP id 017D8208FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587410129;
+	bh=3YD4THGfmacXolwKreYh+0I/NXUHx9GGiPHU0TMrbN0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IKlSW4zOKfZpZUq7Z6bG2b3SxyazC0s2xreD7rNW8vXh+btbeHrcLMzOC2+PE4/Rp
+	 ib5pSHceQzqBuiatYgdtE6XrtyEBkJB4JV37my0hrb6lobQ92kePktWfWAN4XbkGG1
+	 oAWLYeJgNWcH/CnWMdE9cELKx8meufxnq/kf+M/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgDTTPX (ORCPT
+        id S1728163AbgDTTP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:15:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728072AbgDTTPW (ORCPT
+        Mon, 20 Apr 2020 15:15:28 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34944 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbgDTTPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:15:22 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F07C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:15:21 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t11so5558015pgg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=s4hrruIEfeHbnCer3L7xymo3BPcqZk1wOgCil6L4gXc=;
-        b=jkUCF9b3xkKwajGHRP14VA5YPuTR0uv9ThYOOWUiuSrrcX8fguG/qXV/ZrUEnsXGQ0
-         ve3D9RcEwHxcP8Rds85FUEIPAZPk/ZJ4MA3JL1eWCckkp9eUNXyoHxJAzOCLC0l7hJU4
-         tjDvPbpkU78tKvlJsgegIpmgqf0kxXn83VDBA=
+        Mon, 20 Apr 2020 15:15:25 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e20so9169742otl.2;
+        Mon, 20 Apr 2020 12:15:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s4hrruIEfeHbnCer3L7xymo3BPcqZk1wOgCil6L4gXc=;
-        b=Etoi7EW+6ckBCK7OAc+0/LV8903pIdyDr1Td7jm9grESqhGrBqcwTJkZ1A5BrLCBN1
-         9jaUkccKl/2I7qIBC7WhCKcczGfRWvLDuACmm8T8yTfu5NiUWdq8rjW2gKuVsoQuHzIM
-         HKb0EUna/VJAfQe8iWnWteJ3ssbXaEK/8UUqgVUv8wr9bi8IyS5D+dhYlbJIOQVSbUl6
-         aLT2qc3JDhdSi5hcVhLkrpEvd/OnHglUQKThIQFMKm5bYFE0hnv1UyFkjLYtAKnWHXaj
-         5c+19iSwj8YP00G+xozXvIR9umnjCASEfhWuf2Srwzasn7Y0yFksfTfoEKvi6XPfF2UB
-         IYzQ==
-X-Gm-Message-State: AGi0PubQhfD7dHyhujqq9OZAwqpZbu4BQ+Y+tZxW98okseoTUkaFGgAA
-        Thoy35erp8+aeLQADlLHL3gpXw==
-X-Google-Smtp-Source: APiQypJCgAQPRawkGIDVIK1DeGjLm/plSOv3ZpQojggeG3wLIJkbLMEB6AvcO7FMJg7kHrvwF6uHlg==
-X-Received: by 2002:a63:d90c:: with SMTP id r12mr17745526pgg.158.1587410121447;
-        Mon, 20 Apr 2020 12:15:21 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id l15sm96958pgk.59.2020.04.20.12.15.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 12:15:20 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 12:15:18 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Yong Mao <yong.mao@mediatek.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH 1/3] mmc: core: need do mmc_power_cycle in
- mmc_sdio_resend_if_cond
-Message-ID: <20200420191518.GG199755@google.com>
-References: <1586835611-13857-1-git-send-email-yong.mao@mediatek.com>
- <1586835611-13857-2-git-send-email-yong.mao@mediatek.com>
+        bh=/E8gPmAs5q5j5c6IF7Y5E5C7JdeQS0MYhxEcRGnaPxs=;
+        b=q72gFrhHlIVrA5mY0Sy2UWVrJoZt9je4tDLA8GnkG6PNoXOoOy0CWgbypp08yB9ETR
+         jTbRjjBjk4VobUNc68ZlJ4t40d8bBSDJB/tCjBvLnWY50JJxjDUlzvAtXUtlDOnUnjuF
+         GxAZW1XgTBgdtlY/y0Qn+AyQqJDjga1d5loMa3ZJkLVs2VbsO62oIHPCXN2Sh/AgP9QL
+         sq7ZHckVMEsOSFkpCKJppaJoYpe324NBCOs1zQqwV+f15r/yTzcLSDa8Sf6k//LL2L+n
+         kT/yaZVx5jBIaB0g7Etf7zYBWsBaZ7YlneflRpVwwxbwvw+K9qL6Gx/1+8/nxYG9jgEm
+         IqxA==
+X-Gm-Message-State: AGi0Puas7HAA1L4zKfb8fXXswkM3GFgMoxeyvzEeUBNJjiQ3ySD0CcOc
+        xi2ah5SvAA8weeZVKTbtjQ==
+X-Google-Smtp-Source: APiQypK4KWrrROkD5Z7eemFuC8Y5bdOwXzixxByT6sDywR+zGy0AuTzZVDCA0mXYc0mjjBP9d9R3jA==
+X-Received: by 2002:a9d:6a98:: with SMTP id l24mr10442730otq.133.1587410124253;
+        Mon, 20 Apr 2020 12:15:24 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s13sm71633oic.27.2020.04.20.12.15.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 12:15:23 -0700 (PDT)
+Received: (nullmailer pid 3203 invoked by uid 1000);
+        Mon, 20 Apr 2020 19:15:22 -0000
+Date:   Mon, 20 Apr 2020 14:15:22 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Qiang Yu <yuq825@gmail.com>
+Subject: Re: [PATCH v5] dt-bindings: gpu: mali-utgard: Add the #cooling-cells
+ property
+Message-ID: <20200420191522.GA3122@bogus>
+References: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586835611-13857-2-git-send-email-yong.mao@mediatek.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Apr 14, 2020 at 11:40:09AM +0800, Yong Mao wrote:
-> From: yong mao <yong.mao@mediatek.com>
+On Sat, 11 Apr 2020 18:57:00 +0200, Martin Blumenstingl wrote:
+> The GPU can be one of the big heat sources on a SoC. Allow the
+> "#cooling-cells" property to be specified for ARM Mali Utgard GPUs so
+> the GPU clock speeds (and voltages) can be reduced to prevent a SoC from
+> overheating.
 > 
-> When mmc_sdio_resned_if_cond is invoked, it indicates the SDIO
-> device is not in the right state. In this condition, the previous
-> implementation of mmc_sdio_resend_if_cond can't make sure SDIO
-> device be back to idle state. mmc_power_cycle can reset the SDIO
-> device by HW and also make sure SDIO device enter to idle state
-> correctly.
-> 
-> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+> Reviewed-by: Qiang Yu <yuq825@gmail.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  drivers/mmc/core/sdio.c | 1 +
->  1 file changed, 1 insertion(+)
+> Changes since v4 at [0]:
+> - Added Qiang's Reviewed-by (many thanks)
+> - re-send because I missed the devicetree mailing list in v4
 > 
-> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-> index ebb387a..ada0a80 100644
-> --- a/drivers/mmc/core/sdio.c
-> +++ b/drivers/mmc/core/sdio.c
-> @@ -546,6 +546,7 @@ static int mmc_sdio_init_uhs_card(struct mmc_card *card)
->  static void mmc_sdio_resend_if_cond(struct mmc_host *host,
->  				    struct mmc_card *card)
->  {
-> +	mmc_power_cycle(host, host->card->ocr);
+> 
+> [0] https://patchwork.kernel.org/patch/11448013/
+> 
+> 
+>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-My MMC/SDIO background is limited, but it seems this isn't needed for the
-vast majority of SDIO devices, otherwise it probably would have been added
-earlier. I wonder if it would make sense to make the power cycle
-conditional through a quirk, to limit it to the devices that need it.
+Applied, thanks.
 
->  	sdio_reset(host);
->  	mmc_go_idle(host);
->  	mmc_send_if_cond(host, host->ocr_avail);
-> -- 
-> 1.9.1
+Rob
