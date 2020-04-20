@@ -2,142 +2,96 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ED6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7523DC54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD1F214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SIcuoDMk"
+	by mail.kernel.org (Postfix) with ESMTP id 61238214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgDTDKE (ORCPT
+        id S1726049AbgDTD0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 23:10:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725896AbgDTDKE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 23:10:04 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E37C061A0C;
-        Sun, 19 Apr 2020 20:10:03 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 495BWs4rCqz9sR4;
-        Mon, 20 Apr 2020 13:10:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587352201;
-        bh=IaxT8cwaTkoVkZGgMoY+Yty/92GniKebPhPt9Fxtdk4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SIcuoDMkJ9NRLQ6k0r6ECORjOnIyO+MGGIBbqPEaQHgZ+HhqPdwO84cRFn7PSq0Ku
-         y4VfIef4fyjNehfz7JNfqKMPNnL1vWEbeKRYH5C9ICLw+PF+3NqowUqke02c0Fkpoj
-         ih5HDgJs0/Eh+Effgyt9Wi3ymnHC4yAGk9OucTjnAsLRCmPP6o3KUjHt94BuPrSfsi
-         fphwIAtJy6zVvCcU3SEI5iFL9SwBSVpB/LLXLXT5DhCpyXjlu3mRf5okauKbdgtBg+
-         Ek9d99RTVPNuXRcQc59J6jqec1O3j77pb82M+r8io3SaGOWWpuuatS4ZGQxwod8zn+
-         CfLA2hxfB8Qhw==
-Date:   Mon, 20 Apr 2020 13:09:59 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Corey Minyard <cminyard@mvista.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Feng Tang <feng.tang@intel.com>
-Subject: linux-next: build failure after merge of the ipmi tree
-Message-ID: <20200420130959.489a4136@canb.auug.org.au>
+        Sun, 19 Apr 2020 23:26:49 -0400
+Received: from mga12.intel.com ([192.55.52.136]:6246 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725865AbgDTD0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 23:26:49 -0400
+IronPort-SDR: 98Rb07V6QK9PPrQ0WqEam7u24KdCdJDl4CVkVMWEMOiLOPnmhsVxbLhsgCyRDQsDW8uiHMLzG4
+ S/cKV03Pe/MQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 20:26:46 -0700
+IronPort-SDR: 3ivqihb11g1hPSROSw4eMzCqTmuhzzMlOVw2DRnhT5NpR2CQeh2GG5FmuRe6jyDnydFbaMACPt
+ loMEBUQ7JLnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
+   d="scan'208";a="245236913"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by fmsmga007.fm.intel.com with ESMTP; 19 Apr 2020 20:26:41 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Mel Gorman <mgorman@techsingularity.net>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Rik van Riel <riel@surriel.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Tejun Heo <tj@kernel.org>, Dave Hansen <dave.hansen@intel.com>,
+        Tim Chen <tim.c.chen@intel.com>,
+        Aubrey Li <aubrey.li@intel.com>
+Subject: Re: [RFC] autonuma: Support to scan page table asynchronously
+References: <20200414081951.297676-1-ying.huang@intel.com>
+        <20200414120646.GN3818@techsingularity.net>
+        <20200415113226.GE20730@hirez.programming.kicks-ass.net>
+        <87o8rsxlws.fsf@yhuang-dev.intel.com>
+        <20200417100633.GU20730@hirez.programming.kicks-ass.net>
+Date:   Mon, 20 Apr 2020 11:26:40 +0800
+In-Reply-To: <20200417100633.GU20730@hirez.programming.kicks-ass.net> (Peter
+        Zijlstra's message of "Fri, 17 Apr 2020 12:06:33 +0200")
+Message-ID: <87368yu9an.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_Upk7c5UsB8eBIUMn1NQ16l";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_Upk7c5UsB8eBIUMn1NQ16l
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Peter Zijlstra <peterz@infradead.org> writes:
 
-Hi all,
+> On Thu, Apr 16, 2020 at 09:24:35AM +0800, Huang, Ying wrote:
+>> Peter Zijlstra <peterz@infradead.org> writes:
+>> 
+>> > On Tue, Apr 14, 2020 at 01:06:46PM +0100, Mel Gorman wrote:
+>> >> While it's just an opinion, my preference would be to focus on reducing
+>> >> the cost and amount of scanning done -- particularly for threads.
+>> >
+>> > This; I really don't believe in those back-charging things, esp. since
+>> > not having cgroups or having multiple applications in a single cgroup is
+>> > a valid setup.
+>> 
+>> Technically, it appears possible to back-charge the CPU time to the
+>> process/thread directly (not the cgroup).
+>
+> I've yet to see a sane proposal there. What we're not going to do is
+> make regular task accounting more expensive than it already is.
 
-After merging the ipmi tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
+Yes.  There's overhead to back-charge.  To reduce the overhead, instead
+of back-charge immediately, we can
 
-drivers/char/ipmi/ipmi_msghandler.c: In function 'free_user_work':
-drivers/char/ipmi/ipmi_msghandler.c:1156:2: error: implicit declaration of =
-function 'vfree'; did you mean 'kvfree'? [-Werror=3Dimplicit-function-decla=
-ration]
- 1156 |  vfree(user);
-      |  ^~~~~
-      |  kvfree
-drivers/char/ipmi/ipmi_msghandler.c: In function 'ipmi_create_user':
-drivers/char/ipmi/ipmi_msghandler.c:1188:13: error: implicit declaration of=
- function 'vzalloc'; did you mean 'kvzalloc'? [-Werror=3Dimplicit-function-=
-declaration]
- 1188 |  new_user =3D vzalloc(sizeof(*new_user));
-      |             ^~~~~~~
-      |             kvzalloc
-drivers/char/ipmi/ipmi_msghandler.c:1188:11: warning: assignment to 'struct=
- ipmi_user *' from 'int' makes pointer from integer without a cast [-Wint-c=
-onversion]
- 1188 |  new_user =3D vzalloc(sizeof(*new_user));
-      |           ^
+- Add one field to task_struct, say backcharge_time, to track the
+  delayed back-charged CPU time.
 
-Caused by commit
+- When the work item completes its work, add the CPU time it spends to
+  task_struct->backcharge_time atomically
 
-  d6850a47c933 ("ipmi: use vzalloc instead of kmalloc for user creation")
+- When the task account CPU regularly, e.g. in scheduler_tick(),
+  task_struct->backcharge is considered too.
 
-I have applied the following patch for today:
+Although this cannot eliminate the overhead, it can reduce it.  Do you
+think this is acceptable or not?
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 20 Apr 2020 13:03:29 +1000
-Subject: [PATCH] ipmi: vzalloc use requires vmallo.h inclusion
-
-Fixes: d6850a47c933 ("ipmi: use vzalloc instead of kmalloc for user creatio=
-n")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/char/ipmi/ipmi_msghandler.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_m=
-sghandler.c
-index 96f157323646..9afd220cd824 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -33,6 +33,7 @@
- #include <linux/workqueue.h>
- #include <linux/uuid.h>
- #include <linux/nospec.h>
-+#include <linux/vmalloc.h>
-=20
- #define IPMI_DRIVER_VERSION "39.2"
-=20
---=20
-2.25.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/_Upk7c5UsB8eBIUMn1NQ16l
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6dEocACgkQAVBC80lX
-0GwQ8wf+IQQidTs8KTXtVJmm1xLySB05f3cbynBa66BgqggyFcoapXfaVIuG1634
-WFCSrqKffykHYTkkNNhNhChvqBlKFqRUQfCoI04XRmdFU1tSBXxMOU2UH6+JAAuP
-pwQ8tCxAHCwU0I5H+sFRoatpLEFqTO//xNN8kz+MMsnJ0kd9WFt4KVOeHN8iBA+M
-msJ1pXkdRibFVjqcqgElvXx/Omuh5bYRVQf2SX2kHrdsXUB1pHGeHnHqRL8vqxry
-ZON2/Vq904fTRqwTCkZKGvVva7OltocHMyNGsW3UhCc5nElMY3qAbJ93fsvVB+oL
-HDX5z4oYSld82u3TSHd3FB/0WPvPxQ==
-=wNuZ
------END PGP SIGNATURE-----
-
---Sig_/_Upk7c5UsB8eBIUMn1NQ16l--
+Best Regards,
+Huang, Ying
