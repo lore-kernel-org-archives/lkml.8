@@ -2,139 +2,107 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B35BC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E077FC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEB5206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3C720672
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:28:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="poQyuPWb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HqCj0XD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgDTS1n (ORCPT
+        id S1727076AbgDTS2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:27:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgDTS1n (ORCPT
+        Mon, 20 Apr 2020 14:28:42 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53146 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbgDTS2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:27:43 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6F6C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:27:42 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id g30so5357439pfr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:27:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3j7I+GwBPTWoE/gepMWkNd8iIKlyP+O5Cvl6ddDtBIE=;
-        b=poQyuPWbKffKCW0Q6nE3FUGjjj9O/c5xdGoYcp6Es73N4nBCmfEhbhBe9jR2mPg6Yt
-         eZc8KCC3HNbKl6zWcLIWEBbW5fhYpWz5Tx3EoUtDDDWtr0sils+CHfTYihCyub8miFXp
-         DPAkJSzeD/1MHdDblb7jequuMEp03aKqh6jLw5bvOFt6Wipo6KxdUpIFzTREmLR5rkGE
-         Q40qX3K/Npci9Q3C5tWYBV7tywXIWei2BqN+55DoPd/dI/bYFqn4yECk6iYdWV3GCEHF
-         vLq39hy0+y3aEEuJRCQEQ4KKMmPFSo/au3pJv9k4CoSJVMxlxRjuF6q0umQFRScR23p1
-         JeeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=3j7I+GwBPTWoE/gepMWkNd8iIKlyP+O5Cvl6ddDtBIE=;
-        b=CTijmXteh8vlbyGu8TYk4nD0k/Gcyb+YKzudZkA6Q5S9RHQqUxhlLrcMev344STgj5
-         PdaTWFSUCZr+FxfbK/TYT4Q6zsRjWG9U72ZCH6NrFxwgIqwZq+q2ikD4XZbUZziW7Bz8
-         p9aFnrFaIu4ZPlBQtYMoKoQvAMJ2Mam4qlbIbf96IVvDnSdXdxE1XeQrjHbXKcsqFjY4
-         JwP1/gwFzykCG/zIaMn9i4BkA+mzKRm8srXFhPutXvwkK26sdrB2fHZ39JRzdh9+ZzUn
-         onCahJ8jpnpdgUj/WInJ/UcmMuwANfBssCurkC3UM8oMP8mVGxlNT+WHGMDPntUi7jo1
-         PziQ==
-X-Gm-Message-State: AGi0PuY1Wp8GvLb1Q7fEndfryr3W4MajqIoMcbXquAczSz7jbyEcBQUa
-        bQSm8dYc0yKECnDBwGggQ+wqRg==
-X-Google-Smtp-Source: APiQypLv50XPkHoI7VnUU30/Sn6iEsoPmL7NIe1/tSUt4S/CGGJSca5v0TQ7gj9mPAYJYoPVl9vRNw==
-X-Received: by 2002:a63:62c1:: with SMTP id w184mr16558626pgb.296.1587407262240;
-        Mon, 20 Apr 2020 11:27:42 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id j7sm61576pjy.9.2020.04.20.11.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 11:27:40 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 11:27:40 -0700 (PDT)
-X-Google-Original-Date: Mon, 20 Apr 2020 11:23:07 PDT (-0700)
-Subject:     Re: [PATCH v5 0/9] Support strict kernel memory permissions for security
-In-Reply-To: <cover.1586332296.git.zong.li@sifive.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        mhiramat@kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, zong.li@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     zong.li@sifive.com
-Message-ID: <mhng-103aea95-cf25-47c5-8e8d-56534f40c570@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Mon, 20 Apr 2020 14:28:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03KIIJF1103942;
+        Mon, 20 Apr 2020 18:28:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=oY+flJNEcT5n1C0oC85AA3bhkX+vexhCiFlAFUbreiY=;
+ b=HqCj0XD1DIyDa6ezvrf5M7Qhg+djArOCIGKo9FEqLJj0cSy5rsviL8CjSxolT8KF05Wg
+ q9jHpumWeAVtNoEkmVTz0+7YlVnnLgNQs9AW0LwtvpegfOqPxolG0D+lHpMM57ozA1Tq
+ 1Y1xkEMBbUxjVLXOlQp9EfyPPkXpa2uGLnFmxvxcx6D807zheGmTHEJT8ESGbw0Dq/5P
+ WpGKyly24uCj2cKjbWEvq8cjTun/rJMULoMImTdrg02r9vZcXFznezsjOf7HlaQz9NKQ
+ P+dVUhUmDis90W4SU6O32GRuHd+GWE6Iih6lK5P42OlFAAhDesZS9ymd61geflsdEHLP 0A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30grpgdcr4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 18:28:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03KICPl3060800;
+        Mon, 20 Apr 2020 18:28:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30gbbb9yb2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 18:28:29 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03KISRId026904;
+        Mon, 20 Apr 2020 18:28:27 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 Apr 2020 11:28:27 -0700
+Date:   Mon, 20 Apr 2020 14:28:48 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: Re: [PATCH v4 10/10] mmap locking API: rename mmap_sem to mmap_lock
+Message-ID: <20200420182848.lw3iwir2tgvt22bo@ca-dmjordan1.us.oracle.com>
+References: <20200415004353.130248-1-walken@google.com>
+ <20200415004353.130248-11-walken@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415004353.130248-11-walken@google.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9597 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=707 adultscore=0 mlxscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9597 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=769 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004200147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Apr 2020 00:56:55 PDT (-0700), zong.li@sifive.com wrote:
-> The main purpose of this patch series is changing the kernel mapping permission
-> , make sure that code is not writeable, data is not executable, and read-only
-> data is neither writable nor executable.
->
-> This patch series also supports the relevant implementations such as
-> ARCH_HAS_SET_MEMORY, ARCH_HAS_SET_DIRECT_MAP,
-> ARCH_SUPPORTS_DEBUG_PAGEALLOC and DEBUG_WX.
->
-> Changes in v5:
->  - Add lockdep_assert_held and more comments for text_mutex.
->
-> Changes in v4:
->  - Use NOKPROBE_SYMBOL instead of __kprobe annotation
->  - Use text_mutex instead of patch_lock
->  - Remove 'riscv_' prefix of function name
->
-> Changes in v3:
->  - Fix build error on nommu configuration. We already support nommu on
->    RISC-V, so we should consider nommu case and test not only rv32/64,
->    but also nommu.
->
-> Changes in v2:
->  - Use _data to specify the start of data section with write permission.
->  - Change ftrace patch text implementaion.
->  - Separate DEBUG_WX patch to another patchset.
->
-> Zong Li (9):
->   riscv: add macro to get instruction length
->   riscv: introduce interfaces to patch kernel code
->   riscv: patch code by fixmap mapping
->   riscv: add ARCH_HAS_SET_MEMORY support
->   riscv: add ARCH_HAS_SET_DIRECT_MAP support
->   riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
->   riscv: move exception table immediately after RO_DATA
->   riscv: add alignment for text, rodata and data sections
->   riscv: add STRICT_KERNEL_RWX support
->
->  arch/riscv/Kconfig                  |   6 +
->  arch/riscv/include/asm/bug.h        |   8 ++
->  arch/riscv/include/asm/fixmap.h     |   2 +
->  arch/riscv/include/asm/patch.h      |  12 ++
->  arch/riscv/include/asm/set_memory.h |  48 +++++++
->  arch/riscv/kernel/Makefile          |   4 +-
->  arch/riscv/kernel/ftrace.c          |  26 ++--
->  arch/riscv/kernel/patch.c           | 128 +++++++++++++++++++
->  arch/riscv/kernel/traps.c           |   3 +-
->  arch/riscv/kernel/vmlinux.lds.S     |  11 +-
->  arch/riscv/mm/Makefile              |   2 +-
->  arch/riscv/mm/init.c                |  44 +++++++
->  arch/riscv/mm/pageattr.c            | 187 ++++++++++++++++++++++++++++
->  13 files changed, 466 insertions(+), 15 deletions(-)
->  create mode 100644 arch/riscv/include/asm/patch.h
->  create mode 100644 arch/riscv/include/asm/set_memory.h
->  create mode 100644 arch/riscv/kernel/patch.c
->  create mode 100644 arch/riscv/mm/pageattr.c
+On Tue, Apr 14, 2020 at 05:43:53PM -0700, Michel Lespinasse wrote:
+> Rename the mmap_sem field to mmap_lock. Any new uses of this lock
+> should now go through the new mmap locking api. The mmap_lock is
+> still implemented as a rwsem, though this could change in the future.
 
-Looks like there are quite a few conflicts here.  Do you mind re-spinning the
-patch set for me?  It's a bit early to spin off for-next right now so there
-might be some more conflicts, but hopefully not too many.
+There are hundreds of stale 'mmap_sem' comments left after this.  What about
+adding a wrapper type and leaving the name as is to avoid this?  The type is
+called something like mmap_sem_struct.
 
-Thanks!
+That means the lockdep/might_lock/prefetch/etc calls have to have the
+indirection inline, but that seems ok.  The main value of the series seems to
+be paving the way for instrumentation, not making the type totally abstract.
