@@ -2,107 +2,104 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02260C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346BAC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7BAF21927
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FEA2078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgDTIXf (ORCPT
+        id S1726050AbgDTIZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:23:35 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2060 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725959AbgDTIXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:23:34 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 79AE012A1BE46888B769;
-        Mon, 20 Apr 2020 09:23:32 +0100 (IST)
-Received: from [127.0.0.1] (10.47.7.108) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 20 Apr
- 2020 09:23:31 +0100
-Subject: Re: [PATCH] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when
- no budget
-To:     Bart Van Assche <bvanassche@acm.org>, <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <ming.lei@redhat.com>
-References: <1587035931-125028-1-git-send-email-john.garry@huawei.com>
- <e5416179-2ba0-c9a8-1b86-d52eae29e146@acm.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <663d472a-5bde-4b89-3137-c7bfdf4d7b97@huawei.com>
-Date:   Mon, 20 Apr 2020 09:22:58 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 20 Apr 2020 04:25:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:44962 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbgDTIZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:25:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 291FA30E;
+        Mon, 20 Apr 2020 01:25:31 -0700 (PDT)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C41153F6CF;
+        Mon, 20 Apr 2020 01:25:25 -0700 (PDT)
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+To:     Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200403123020.13897-1-qais.yousef@arm.com>
+ <20200414182152.GB20442@darkstar>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <54ac2709-54e5-7a33-a6af-0a07e272365c@arm.com>
+Date:   Mon, 20 Apr 2020 10:24:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <e5416179-2ba0-c9a8-1b86-d52eae29e146@acm.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200414182152.GB20442@darkstar>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.7.108]
-X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/04/2020 03:43, Bart Van Assche wrote:
-> On 2020-04-16 04:18, John Garry wrote:
->> If in blk_mq_dispatch_rq_list() we find no budget, then we break of the
->> dispatch loop, but the request may keep the driver tag, evaulated
->> in 'nxt' in the previous loop iteration.
->>
->> Fix by putting the driver tag for that request.
->>
->> Signed-off-by: John Garry <john.garry@huawei.com>
->>
->> diff --git a/block/blk-mq.c b/block/blk-mq.c
->> index 8e56884fd2e9..a7785df2c944 100644
->> --- a/block/blk-mq.c
->> +++ b/block/blk-mq.c
->> @@ -1222,8 +1222,10 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
->>   		rq = list_first_entry(list, struct request, queuelist);
->>   
->>   		hctx = rq->mq_hctx;
->> -		if (!got_budget && !blk_mq_get_dispatch_budget(hctx))
->> +		if (!got_budget && !blk_mq_get_dispatch_budget(hctx)) {
->> +			blk_mq_put_driver_tag(rq);
->>   			break;
->> +		}
->>   
->>   		if (!blk_mq_get_driver_tag(rq)) {
->>   			/*
+On 14/04/2020 20:21, Patrick Bellasi wrote:
+> Hi Qais!
 > 
-> Is this something that can only happen if q->mq_ops->queue_rq(hctx, &bd)
-> returns another value than BLK_STS_OK, BLK_STS_RESOURCE and
-> BLK_STS_DEV_RESOURCE? 
+> On 03-Apr 13:30, Qais Yousef wrote:
 
-Right, as that case is handled in blk_mq_handle_dev_resource()
+[...]
 
-If so, please add a comment in the source code
-> that explains this.
-
-So important that we should now do this in an extra patch?
-
+>> @@ -924,6 +945,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+>>  	return uc_req;
+>>  }
+>>  
+>> +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
+>> +{
+>> +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
 > 
-> Is this perhaps a bug fix for 0bca799b9280 ("blk-mq: order getting
-> budget and driver tag")? If so, please mention this and add Cc tags for
-> the people who were Cc-ed on that patch.
+> Don't we have to filter for RT tasks only here?
 
-So it looks like 0bca799b9280 had a flaw, but I am not sure if anything 
-got broken there and worthy of stable backport.
+I think so. It's probably because it got moved from rt.c to core.c.
 
-I found this issue while debugging Ming's blk-mq cpu hotplug patchset, 
-which I feel is ready to merge.
+[...]
 
-Having said that, this nasty issue did take > 1 day for me to debug... 
-so let me know.
+>> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+>> index ad5b88a53c5a..0272ae8c6147 100644
+>> --- a/kernel/sysctl.c
+>> +++ b/kernel/sysctl.c
+>> @@ -465,6 +465,13 @@ static struct ctl_table kern_table[] = {
+>>  		.mode		= 0644,
+>>  		.proc_handler	= sysctl_sched_uclamp_handler,
+>>  	},
+>> +	{
+>> +		.procname	= "sched_rt_default_util_clamp_min",
 
-Thanks,
-John
+root@h960:~# find / -name "*util_clamp*"
+/proc/sys/kernel/sched_rt_default_util_clamp_min
+/proc/sys/kernel/sched_util_clamp_max
+/proc/sys/kernel/sched_util_clamp_min
+
+IMHO, keeping the common 'sched_util_clamp_' would be helpful here, e.g.
+
+/proc/sys/kernel/sched_util_clamp_rt_default_min
+
+[...]
