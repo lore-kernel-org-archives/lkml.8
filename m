@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8E4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE2DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C39C206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB2A206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387095;
-	bh=X6HHSiGPxDds4aAYE1pVBzYbDO1xRfaiocXNMNWYJgQ=;
+	s=default; t=1587387100;
+	bh=yeLSGgzR6n88LM6EkHFaw2nAdyVzgk80CaFPsnUulog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y9Ee0n/y9G6VUylEb5cjKfXP1UISaGrP76rKAyTgiBsOHT9p2ZKaf4vQY1XVC2WlA
-	 4kPjEjc2jVH87ek2HmRUkEZEJyVMPZAVN0tWJidD/M2foec60nKQEjA6ehKBf7dEqK
-	 J149kLEjrxmhPZt4q6TBVpCHuWk8AzMcS+mCntPY=
+	b=05Y/wS0Tl71Kz5SB2sPo4huBKJJyr46WpfyQeVH174u/uXpqJ4dIAw4ki0q6v02Ia
+	 Mqlt/UH/ZshVkAc4IiNBsZkdFYpvA09eyyg7Y+wiomaEEoFjRlhqzlRvY1NbYBx61z
+	 2Zpkv74TpepJFCoj5Um436fx0j+nxveNxFP7rsf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgDTMvb (ORCPT
+        id S1726939AbgDTMvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:51:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44904 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729230AbgDTMsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:48:20 -0400
+        id S1729214AbgDTMsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7B3820735;
-        Mon, 20 Apr 2020 12:48:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3FEA206E9;
+        Mon, 20 Apr 2020 12:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386899;
-        bh=X6HHSiGPxDds4aAYE1pVBzYbDO1xRfaiocXNMNWYJgQ=;
+        s=default; t=1587386894;
+        bh=yeLSGgzR6n88LM6EkHFaw2nAdyVzgk80CaFPsnUulog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Y/x+Oadogk5hmFCTPTqxe4iHNtPJ6Q7YMy1l4ZyKeshhPNuc2eB3+grIGLXlawub
-         67+dIonItYnmImE4tlc09qxg4gic5oObA1mSaCP3gQ1t1575746dYwX33DVW7aythc
-         ftg1E0A4/gnOJhdFD6LzJg64HFnJEHlRoa731maE=
+        b=nYXyezgMwB54vZEknlCh0zorXIOU0turZ3MLYj1z6RVJV4jEgv9uzmM00xj7BdFzB
+         JEdB8s+1cyL9kOStBbqfVE2givaIuoq3cAA50pWHQSW3FM5OuT4fyW+5NnRW6B8536
+         2hjQs9GKaQwERCUd8urLLGvGSShSYwfHObXqdsok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taras Chornyi <taras.chornyi@plvision.eu>,
-        Vadym Kochan <vadym.kochan@plvision.eu>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 03/40] net: ipv4: devinet: Fix crash when add/del multicast IP with autojoin
-Date:   Mon, 20 Apr 2020 14:39:13 +0200
-Message-Id: <20200420121450.667479590@linuxfoundation.org>
+        stable@vger.kernel.org, Hongwu Su <hongwus@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 10/40] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
+Date:   Mon, 20 Apr 2020 14:39:20 +0200
+Message-Id: <20200420121454.614682734@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
@@ -60,100 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taras Chornyi <taras.chornyi@plvision.eu>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit 690cc86321eb9bcee371710252742fb16fe96824 ]
+commit c63d6099a7959ecc919b2549dc6b71f53521f819 upstream.
 
-When CONFIG_IP_MULTICAST is not set and multicast ip is added to the device
-with autojoin flag or when multicast ip is deleted kernel will crash.
+The async version of ufshcd_hold(async == true), which is only called in
+queuecommand path as for now, is expected to work in atomic context, thus
+it should not sleep or schedule out. When it runs into the condition that
+clocks are ON but link is still in hibern8 state, it should bail out
+without flushing the clock ungate work.
 
-steps to reproduce:
-
-ip addr add 224.0.0.0/32 dev eth0
-ip addr del 224.0.0.0/32 dev eth0
-
-or
-
-ip addr add 224.0.0.0/32 dev eth0 autojoin
-
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000088
- pc : _raw_write_lock_irqsave+0x1e0/0x2ac
- lr : lock_sock_nested+0x1c/0x60
- Call trace:
-  _raw_write_lock_irqsave+0x1e0/0x2ac
-  lock_sock_nested+0x1c/0x60
-  ip_mc_config.isra.28+0x50/0xe0
-  inet_rtm_deladdr+0x1a8/0x1f0
-  rtnetlink_rcv_msg+0x120/0x350
-  netlink_rcv_skb+0x58/0x120
-  rtnetlink_rcv+0x14/0x20
-  netlink_unicast+0x1b8/0x270
-  netlink_sendmsg+0x1a0/0x3b0
-  ____sys_sendmsg+0x248/0x290
-  ___sys_sendmsg+0x80/0xc0
-  __sys_sendmsg+0x68/0xc0
-  __arm64_sys_sendmsg+0x20/0x30
-  el0_svc_common.constprop.2+0x88/0x150
-  do_el0_svc+0x20/0x80
- el0_sync_handler+0x118/0x190
-  el0_sync+0x140/0x180
-
-Fixes: 93a714d6b53d ("multicast: Extend ip address command to enable multicast group join/leave on")
-Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
-Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
+Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/devinet.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -587,12 +587,15 @@ struct in_ifaddr *inet_ifa_byprefix(stru
- 	return NULL;
- }
- 
--static int ip_mc_config(struct sock *sk, bool join, const struct in_ifaddr *ifa)
-+static int ip_mc_autojoin_config(struct net *net, bool join,
-+				 const struct in_ifaddr *ifa)
- {
-+#if defined(CONFIG_IP_MULTICAST)
- 	struct ip_mreqn mreq = {
- 		.imr_multiaddr.s_addr = ifa->ifa_address,
- 		.imr_ifindex = ifa->ifa_dev->dev->ifindex,
- 	};
-+	struct sock *sk = net->ipv4.mc_autojoin_sk;
- 	int ret;
- 
- 	ASSERT_RTNL();
-@@ -605,6 +608,9 @@ static int ip_mc_config(struct sock *sk,
- 	release_sock(sk);
- 
- 	return ret;
-+#else
-+	return -EOPNOTSUPP;
-+#endif
- }
- 
- static int inet_rtm_deladdr(struct sk_buff *skb, struct nlmsghdr *nlh,
-@@ -646,7 +652,7 @@ static int inet_rtm_deladdr(struct sk_bu
- 			continue;
- 
- 		if (ipv4_is_multicast(ifa->ifa_address))
--			ip_mc_config(net->ipv4.mc_autojoin_sk, false, ifa);
-+			ip_mc_autojoin_config(net, false, ifa);
- 		__inet_del_ifa(in_dev, ifap, 1, nlh, NETLINK_CB(skb).portid);
- 		return 0;
- 	}
-@@ -907,8 +913,7 @@ static int inet_rtm_newaddr(struct sk_bu
+---
+ drivers/scsi/ufs/ufshcd.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1563,6 +1563,11 @@ start:
  		 */
- 		set_ifa_lifetime(ifa, valid_lft, prefered_lft);
- 		if (ifa->ifa_flags & IFA_F_MCAUTOJOIN) {
--			int ret = ip_mc_config(net->ipv4.mc_autojoin_sk,
--					       true, ifa);
-+			int ret = ip_mc_autojoin_config(net, true, ifa);
- 
- 			if (ret < 0) {
- 				inet_free_ifa(ifa);
+ 		if (ufshcd_can_hibern8_during_gating(hba) &&
+ 		    ufshcd_is_link_hibern8(hba)) {
++			if (async) {
++				rc = -EAGAIN;
++				hba->clk_gating.active_reqs--;
++				break;
++			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 			flush_work(&hba->clk_gating.ungate_work);
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
 
 
