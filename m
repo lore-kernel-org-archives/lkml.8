@@ -2,54 +2,54 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD4CC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7659FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 661D7206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7FA206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387112;
-	bh=ggUrhodgSWBeiPmP6q/6qSOCtdu6LrCo7APzdCAwEWA=;
+	s=default; t=1587387114;
+	bh=N/agnnhyzF5Q36mOsK0wpLAkqRbRP50iniNEVeD89aU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jgRyJg7LUuzmMTXIlyqMwB+4OUhpleXF9BaCJ9qM/e7cWjpH0PAVIcrS3jbWI07j6
-	 ibMnL2xpHdweXyOMQdA1+OtxE1iCaDR7iEtHCR2+0B307UXQBJGTYEDwfvApok+Hv1
-	 dgAxjaBX0Yl5+8TtNAswC1E3nEboh4mIME32VJ4o=
+	b=H8xw/xdgJqF+M5i2gN3hvtZW9vN6O5oPMxertDFb0m6URJQC0c6abD5Os/oKHVZdP
+	 yBscCaqKx/Kxocx4pEEKveH8d6C1qniPkvoscXSvL2X1s+OmiovDiPvDln4Ew4GURC
+	 cjVdACYAHITn6yjOOwmkoKL7jicN1mPdttnCDT04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgDTMrz (ORCPT
+        id S1729214AbgDTMvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:47:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44006 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:51:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729135AbgDTMrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:47:46 -0400
+        id S1729159AbgDTMrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:47:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D74A22072B;
-        Mon, 20 Apr 2020 12:47:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C694206DD;
+        Mon, 20 Apr 2020 12:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386865;
-        bh=ggUrhodgSWBeiPmP6q/6qSOCtdu6LrCo7APzdCAwEWA=;
+        s=default; t=1587386875;
+        bh=N/agnnhyzF5Q36mOsK0wpLAkqRbRP50iniNEVeD89aU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DxWDksbxDm++YJrsEddV6HYmIdXkOIiWps+BxX5WhANVAufUJgtbPSiSi6Y5LQRKo
-         biDEoJ8qbTJjBv4oUxa3C3uJIX5MmrI+Kh8lh5ygud48Fm4VFyOvdKpd/QkzeXBy/r
-         HN+qkNuQMxxItKQ0Jpae5q+DmEorG8ujDa3glhNU=
+        b=VIABUptwEwFNlCc2UuQ5VOVINXQ+XDaj5IF0N4i8LFPJ6sXiFXylfve0BqtvOapJ4
+         FsqJPIyo1K2D1dCC5waQGlJQrKrzswVkXD/jFpCOezFKSaeysqELNYmzF0hzNnz34F
+         Pk20xtQPGi+POLKnhp841+HQf4a/6o8aeSz9IMLQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Coleman <mcoleman@datto.com>,
-        Rahul Kundu <rahul.kundu@chelsio.com>,
-        Maurizio Lombardi <mlombard@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 59/60] scsi: target: fix hang when multiple threads try to destroy the same iscsi session
-Date:   Mon, 20 Apr 2020 14:39:37 +0200
-Message-Id: <20200420121516.096028271@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6693adf1698864d21734@syzkaller.appspotmail.com,
+        syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com,
+        stable@kernel.org, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.4 47/60] mac80211_hwsim: Use kstrndup() in place of kasprintf()
+Date:   Mon, 20 Apr 2020 14:39:25 +0200
+Message-Id: <20200420121513.169566404@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -62,257 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maurizio Lombardi <mlombard@redhat.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-[ Upstream commit 57c46e9f33da530a2485fa01aa27b6d18c28c796 ]
+commit 7ea862048317aa76d0f22334202779a25530980c upstream.
 
-A number of hangs have been reported against the target driver; they are
-due to the fact that multiple threads may try to destroy the iscsi session
-at the same time. This may be reproduced for example when a "targetcli
-iscsi/iqn.../tpg1 disable" command is executed while a logout operation is
-underway.
+syzbot reports a warning:
 
-When this happens, two or more threads may end up sleeping and waiting for
-iscsit_close_connection() to execute "complete(session_wait_comp)".  Only
-one of the threads will wake up and proceed to destroy the session
-structure, the remaining threads will hang forever.
+precision 33020 too large
+WARNING: CPU: 0 PID: 9618 at lib/vsprintf.c:2471 set_precision+0x150/0x180 lib/vsprintf.c:2471
+ vsnprintf+0xa7b/0x19a0 lib/vsprintf.c:2547
+ kvasprintf+0xb2/0x170 lib/kasprintf.c:22
+ kasprintf+0xbb/0xf0 lib/kasprintf.c:59
+ hwsim_del_radio_nl+0x63a/0x7e0 drivers/net/wireless/mac80211_hwsim.c:3625
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
+ ...
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Note that if the blocked threads are somehow forced to wake up with
-complete_all(), they will try to free the same iscsi session structure
-destroyed by the first thread, causing double frees, memory corruptions
-etc...
+Thus it seems that kasprintf() with "%.*s" format can not be used for
+duplicating a string with arbitrary length. Replace it with kstrndup().
 
-With this patch, the threads that want to destroy the iscsi session will
-increase the session refcount and will set the "session_close" flag to 1;
-then they wait for the driver to close the remaining active connections.
-When the last connection is closed, iscsit_close_connection() will wake up
-all the threads and will wait for the session's refcount to reach zero;
-when this happens, iscsit_close_connection() will destroy the session
-structure because no one is referencing it anymore.
+Note that later this string is limited to NL80211_WIPHY_NAME_MAXLEN == 64,
+but the code is simpler this way.
 
- INFO: task targetcli:5971 blocked for more than 120 seconds.
-       Tainted: P           OE    4.15.0-72-generic #81~16.04.1
- "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
- targetcli       D    0  5971      1 0x00000080
- Call Trace:
-  __schedule+0x3d6/0x8b0
-  ? vprintk_func+0x44/0xe0
-  schedule+0x36/0x80
-  schedule_timeout+0x1db/0x370
-  ? __dynamic_pr_debug+0x8a/0xb0
-  wait_for_completion+0xb4/0x140
-  ? wake_up_q+0x70/0x70
-  iscsit_free_session+0x13d/0x1a0 [iscsi_target_mod]
-  iscsit_release_sessions_for_tpg+0x16b/0x1e0 [iscsi_target_mod]
-  iscsit_tpg_disable_portal_group+0xca/0x1c0 [iscsi_target_mod]
-  lio_target_tpg_enable_store+0x66/0xe0 [iscsi_target_mod]
-  configfs_write_file+0xb9/0x120
-  __vfs_write+0x1b/0x40
-  vfs_write+0xb8/0x1b0
-  SyS_write+0x5c/0xe0
-  do_syscall_64+0x73/0x130
-  entry_SYSCALL_64_after_hwframe+0x3d/0xa2
+Reported-by: syzbot+6693adf1698864d21734@syzkaller.appspotmail.com
+Reported-by: syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com
+Cc: stable@kernel.org
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Link: https://lore.kernel.org/r/20200410123257.14559-1-tuomas.tynkkynen@iki.fi
+[johannes: add note about length limit]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: https://lore.kernel.org/r/20200313170656.9716-3-mlombard@redhat.com
-Reported-by: Matt Coleman <mcoleman@datto.com>
-Tested-by: Matt Coleman <mcoleman@datto.com>
-Tested-by: Rahul Kundu <rahul.kundu@chelsio.com>
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target.c          | 35 ++++++++++++--------
- drivers/target/iscsi/iscsi_target_configfs.c |  5 ++-
- drivers/target/iscsi/iscsi_target_login.c    |  5 +--
- include/target/iscsi/iscsi_target_core.h     |  2 +-
- 4 files changed, 30 insertions(+), 17 deletions(-)
+ drivers/net/wireless/mac80211_hwsim.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index dda735cfb1568..d1ce94c608a9f 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4303,30 +4303,37 @@ int iscsit_close_connection(
- 	if (!atomic_read(&sess->session_reinstatement) &&
- 	     atomic_read(&sess->session_fall_back_to_erl0)) {
- 		spin_unlock_bh(&sess->conn_lock);
-+		complete_all(&sess->session_wait_comp);
- 		iscsit_close_session(sess);
- 
- 		return 0;
- 	} else if (atomic_read(&sess->session_logout)) {
- 		pr_debug("Moving to TARG_SESS_STATE_FREE.\n");
- 		sess->session_state = TARG_SESS_STATE_FREE;
--		spin_unlock_bh(&sess->conn_lock);
- 
--		if (atomic_read(&sess->sleep_on_sess_wait_comp))
--			complete(&sess->session_wait_comp);
-+		if (atomic_read(&sess->session_close)) {
-+			spin_unlock_bh(&sess->conn_lock);
-+			complete_all(&sess->session_wait_comp);
-+			iscsit_close_session(sess);
-+		} else {
-+			spin_unlock_bh(&sess->conn_lock);
-+		}
- 
- 		return 0;
- 	} else {
- 		pr_debug("Moving to TARG_SESS_STATE_FAILED.\n");
- 		sess->session_state = TARG_SESS_STATE_FAILED;
- 
--		if (!atomic_read(&sess->session_continuation)) {
--			spin_unlock_bh(&sess->conn_lock);
-+		if (!atomic_read(&sess->session_continuation))
- 			iscsit_start_time2retain_handler(sess);
--		} else
--			spin_unlock_bh(&sess->conn_lock);
- 
--		if (atomic_read(&sess->sleep_on_sess_wait_comp))
--			complete(&sess->session_wait_comp);
-+		if (atomic_read(&sess->session_close)) {
-+			spin_unlock_bh(&sess->conn_lock);
-+			complete_all(&sess->session_wait_comp);
-+			iscsit_close_session(sess);
-+		} else {
-+			spin_unlock_bh(&sess->conn_lock);
-+		}
- 
- 		return 0;
- 	}
-@@ -4432,9 +4439,9 @@ static void iscsit_logout_post_handler_closesession(
- 	complete(&conn->conn_logout_comp);
- 
- 	iscsit_dec_conn_usage_count(conn);
-+	atomic_set(&sess->session_close, 1);
- 	iscsit_stop_session(sess, sleep, sleep);
- 	iscsit_dec_session_usage_count(sess);
--	iscsit_close_session(sess);
- }
- 
- static void iscsit_logout_post_handler_samecid(
-@@ -4579,8 +4586,6 @@ void iscsit_stop_session(
- 	int is_last;
- 
- 	spin_lock_bh(&sess->conn_lock);
--	if (session_sleep)
--		atomic_set(&sess->sleep_on_sess_wait_comp, 1);
- 
- 	if (connection_sleep) {
- 		list_for_each_entry_safe(conn, conn_tmp, &sess->sess_conn_list,
-@@ -4638,12 +4643,15 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
- 		spin_lock(&sess->conn_lock);
- 		if (atomic_read(&sess->session_fall_back_to_erl0) ||
- 		    atomic_read(&sess->session_logout) ||
-+		    atomic_read(&sess->session_close) ||
- 		    (sess->time2retain_timer_flags & ISCSI_TF_EXPIRED)) {
- 			spin_unlock(&sess->conn_lock);
- 			continue;
- 		}
-+		iscsit_inc_session_usage_count(sess);
- 		atomic_set(&sess->session_reinstatement, 1);
- 		atomic_set(&sess->session_fall_back_to_erl0, 1);
-+		atomic_set(&sess->session_close, 1);
- 		spin_unlock(&sess->conn_lock);
- 
- 		list_move_tail(&se_sess->sess_list, &free_list);
-@@ -4653,8 +4661,9 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
- 	list_for_each_entry_safe(se_sess, se_sess_tmp, &free_list, sess_list) {
- 		sess = (struct iscsi_session *)se_sess->fabric_sess_ptr;
- 
-+		list_del_init(&se_sess->sess_list);
- 		iscsit_stop_session(sess, 1, 1);
--		iscsit_close_session(sess);
-+		iscsit_dec_session_usage_count(sess);
- 		session_count++;
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3575,9 +3575,9 @@ static int hwsim_new_radio_nl(struct sk_
  	}
  
-diff --git a/drivers/target/iscsi/iscsi_target_configfs.c b/drivers/target/iscsi/iscsi_target_configfs.c
-index 42b369fc415e0..0fa1d57b26fa8 100644
---- a/drivers/target/iscsi/iscsi_target_configfs.c
-+++ b/drivers/target/iscsi/iscsi_target_configfs.c
-@@ -1476,20 +1476,23 @@ static void lio_tpg_close_session(struct se_session *se_sess)
- 	spin_lock(&sess->conn_lock);
- 	if (atomic_read(&sess->session_fall_back_to_erl0) ||
- 	    atomic_read(&sess->session_logout) ||
-+	    atomic_read(&sess->session_close) ||
- 	    (sess->time2retain_timer_flags & ISCSI_TF_EXPIRED)) {
- 		spin_unlock(&sess->conn_lock);
- 		spin_unlock_bh(&se_tpg->session_lock);
- 		return;
- 	}
-+	iscsit_inc_session_usage_count(sess);
- 	atomic_set(&sess->session_reinstatement, 1);
- 	atomic_set(&sess->session_fall_back_to_erl0, 1);
-+	atomic_set(&sess->session_close, 1);
- 	spin_unlock(&sess->conn_lock);
- 
- 	iscsit_stop_time2retain_timer(sess);
- 	spin_unlock_bh(&se_tpg->session_lock);
- 
- 	iscsit_stop_session(sess, 1, 1);
--	iscsit_close_session(sess);
-+	iscsit_dec_session_usage_count(sess);
- }
- 
- static u32 lio_tpg_get_inst_index(struct se_portal_group *se_tpg)
-diff --git a/drivers/target/iscsi/iscsi_target_login.c b/drivers/target/iscsi/iscsi_target_login.c
-index f53330813207f..731ee67fe914b 100644
---- a/drivers/target/iscsi/iscsi_target_login.c
-+++ b/drivers/target/iscsi/iscsi_target_login.c
-@@ -156,6 +156,7 @@ int iscsi_check_for_session_reinstatement(struct iscsi_conn *conn)
- 		spin_lock(&sess_p->conn_lock);
- 		if (atomic_read(&sess_p->session_fall_back_to_erl0) ||
- 		    atomic_read(&sess_p->session_logout) ||
-+		    atomic_read(&sess_p->session_close) ||
- 		    (sess_p->time2retain_timer_flags & ISCSI_TF_EXPIRED)) {
- 			spin_unlock(&sess_p->conn_lock);
- 			continue;
-@@ -166,6 +167,7 @@ int iscsi_check_for_session_reinstatement(struct iscsi_conn *conn)
- 		   (sess_p->sess_ops->SessionType == sessiontype))) {
- 			atomic_set(&sess_p->session_reinstatement, 1);
- 			atomic_set(&sess_p->session_fall_back_to_erl0, 1);
-+			atomic_set(&sess_p->session_close, 1);
- 			spin_unlock(&sess_p->conn_lock);
- 			iscsit_inc_session_usage_count(sess_p);
- 			iscsit_stop_time2retain_timer(sess_p);
-@@ -190,7 +192,6 @@ int iscsi_check_for_session_reinstatement(struct iscsi_conn *conn)
- 	if (sess->session_state == TARG_SESS_STATE_FAILED) {
- 		spin_unlock_bh(&sess->conn_lock);
- 		iscsit_dec_session_usage_count(sess);
--		iscsit_close_session(sess);
- 		return 0;
- 	}
- 	spin_unlock_bh(&sess->conn_lock);
-@@ -198,7 +199,6 @@ int iscsi_check_for_session_reinstatement(struct iscsi_conn *conn)
- 	iscsit_stop_session(sess, 1, 1);
- 	iscsit_dec_session_usage_count(sess);
- 
--	iscsit_close_session(sess);
- 	return 0;
- }
- 
-@@ -486,6 +486,7 @@ static int iscsi_login_non_zero_tsih_s2(
- 		sess_p = (struct iscsi_session *)se_sess->fabric_sess_ptr;
- 		if (atomic_read(&sess_p->session_fall_back_to_erl0) ||
- 		    atomic_read(&sess_p->session_logout) ||
-+		    atomic_read(&sess_p->session_close) ||
- 		   (sess_p->time2retain_timer_flags & ISCSI_TF_EXPIRED))
- 			continue;
- 		if (!memcmp(sess_p->isid, pdu->isid, 6) &&
-diff --git a/include/target/iscsi/iscsi_target_core.h b/include/target/iscsi/iscsi_target_core.h
-index a49d37140a644..591cd9e4692c1 100644
---- a/include/target/iscsi/iscsi_target_core.h
-+++ b/include/target/iscsi/iscsi_target_core.h
-@@ -676,7 +676,7 @@ struct iscsi_session {
- 	atomic_t		session_logout;
- 	atomic_t		session_reinstatement;
- 	atomic_t		session_stop_active;
--	atomic_t		sleep_on_sess_wait_comp;
-+	atomic_t		session_close;
- 	/* connection list */
- 	struct list_head	sess_conn_list;
- 	struct list_head	cr_active_list;
--- 
-2.20.1
-
+ 	if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
+-		hwname = kasprintf(GFP_KERNEL, "%.*s",
+-				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
+-				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
++		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  GFP_KERNEL);
+ 		if (!hwname)
+ 			return -ENOMEM;
+ 		param.hwname = hwname;
+@@ -3597,9 +3597,9 @@ static int hwsim_del_radio_nl(struct sk_
+ 	if (info->attrs[HWSIM_ATTR_RADIO_ID]) {
+ 		idx = nla_get_u32(info->attrs[HWSIM_ATTR_RADIO_ID]);
+ 	} else if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
+-		hwname = kasprintf(GFP_KERNEL, "%.*s",
+-				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
+-				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
++		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  GFP_KERNEL);
+ 		if (!hwname)
+ 			return -ENOMEM;
+ 	} else
 
 
