@@ -2,195 +2,268 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AC9C38A30
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E423C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE4A220B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:50:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lmT9mwt1"
+	by mail.kernel.org (Postfix) with ESMTP id 5DACA20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:51:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587405107;
+	bh=7gOwHMf33I6TNw+S4FLqcaoxWx3bzdvNBzFd0fQUG90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=imCYQBwBJTKfsk3o1CegqVmB7dL10hK40q+cXDtY/hTAtSjh6KSy92LbDkN7ypAVL
+	 RcfQpRpftRodbvx4UtF6M0FLFJpyiALS4R+ZEFmpxq/k4mabT6SqQSsiZNyU/hy/An
+	 oCWUp7qd1zvbo1C6wK5e0o50bZDIIrqkv5cCElaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgDTRuH (ORCPT
+        id S1726921AbgDTRvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:50:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725784AbgDTRuF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:50:05 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0ABC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 10:50:05 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id np9so181116pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 10:50:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=LXSdkPjnzxTUAQ2gmzdrAwjLKwSSmeYYBYUwSx1ieH8=;
-        b=lmT9mwt19o9bRnq/+rGFfn4Y8RQtjYF4nfIuoML3AUmvyePPygh5CeUvHaBc1vwxbh
-         KyOX4Ul7i//EI+I0Jlv/C72Dn+anYH/lbklFTI0T9WFcax7VByCyCzoSFT/Yjq6FaCmd
-         R0jkcPc4X6opkn+C/I+a8iamdst7cuMQJyuvoh1fr47adsJfSfEzPruSB/lscoNzkpy+
-         nBqV3LvL3IliWEXzJoLHf6r7thppt8Dxx13RpUh/XBHvDOgivqmbd6fOMQK+cij0Ux70
-         hJQzJ4o+YqaHfl3L4RI+SEHNxxDbnQV025Az9Bm+HLYxABIJ6gUOq8xgTXYe+q+5jYHB
-         BKag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=LXSdkPjnzxTUAQ2gmzdrAwjLKwSSmeYYBYUwSx1ieH8=;
-        b=XdZKfgsQwlm11rc4/tx233lx1F3DKgXr1LTmRqQqk7pUpE77+L3xAm0dG6ZS/p0tko
-         iLOj7pgM/KtK+hkMgZMKQBAS2I0BMRM9ZzfMfCWY1V3L2s/ejn65qtuqg10BcjgL99eN
-         xGXK7Y1rBR1K3lnejH1oJH35wwCeiOcMFYV0+L+uniJR494wjjRjWqf7nukBlxG8iC1d
-         kWzP4J14zRrWeQ4GarhtIC0lZ4qGKyBL1Hy9bDtiCTLdRc4Cyv7FWtfPRauv2hnL3PLC
-         dZvB59Jany8npj+A7dbwTRAccbNmlQc1br5htscE+5dDnw7hPvYgZVnoA5Vzgvd2UbhO
-         h5gg==
-X-Gm-Message-State: AGi0PuZZD29Gacynml1DwMozFlDBaAskhlvJJiz/hZnz9jhn8FqXDx7a
-        eJMv+RUQpKnvVLabtAFMJRLp2A==
-X-Google-Smtp-Source: APiQypIl8kHy0vJTSgDHO3NDFuVTWIshHMvzxHXxZrmdtN+gbYl77AXGCCx7BFvBIpJU8kB7GnmXpA==
-X-Received: by 2002:a17:90a:30e7:: with SMTP id h94mr584950pjb.186.1587405004347;
-        Mon, 20 Apr 2020 10:50:04 -0700 (PDT)
-Received: from bsegall-glaptop.localhost (c-73-71-82-80.hsd1.ca.comcast.net. [73.71.82.80])
-        by smtp.gmail.com with ESMTPSA id j23sm256941pjz.13.2020.04.20.10.50.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 10:50:03 -0700 (PDT)
-From:   bsegall@google.com
-To:     Huaixin Chang <changhuaixin@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, bsegall@google.com, chiluk+linux@indeed.com,
-        vincent.guittot@linaro.org, pauld@redhead.com
-Subject: Re: [PATCH 1/2] sched: Defend cfs and rt bandwidth quota against overflow
-References: <20200420024421.22442-1-changhuaixin@linux.alibaba.com>
-        <20200420024421.22442-2-changhuaixin@linux.alibaba.com>
-Date:   Mon, 20 Apr 2020 10:50:01 -0700
-In-Reply-To: <20200420024421.22442-2-changhuaixin@linux.alibaba.com> (Huaixin
-        Chang's message of "Mon, 20 Apr 2020 10:44:20 +0800")
-Message-ID: <xm261roim4hi.fsf@google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 20 Apr 2020 13:51:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbgDTRvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:51:46 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.46.94.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F78220B1F;
+        Mon, 20 Apr 2020 17:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587405105;
+        bh=7gOwHMf33I6TNw+S4FLqcaoxWx3bzdvNBzFd0fQUG90=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fj5fEoiYs58Pu1MBZ8wiyZQCnjuuwVb01vstg2M9wgJV+RCKvH5UDUuNFi5tMnk3D
+         KxxH0CFMd1RH6BOWG5wn+zkBcqrnkDGSN4lvDhuNqwIR2vXtWklzj/PToefHP2IrJo
+         zytu2wFg1Rlgnc6dxTBpguf/6b8vaoPAzf7pnWyo=
+Date:   Mon, 20 Apr 2020 23:21:32 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        andy.shevchenko@gmail.com, Erwan LE RAY <erwan.leray@st.com>
+Subject: Re: [PATCH v2 1/2] tty: serial: Add modem control gpio support for
+ STM32 UART
+Message-ID: <20200420175132.GA22068@Mani-XPS-13-9360>
+References: <20200416175729.5550-1-mani@kernel.org>
+ <20200416175729.5550-2-mani@kernel.org>
+ <4d6d6568-aee0-be02-df88-14f4e364b598@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4d6d6568-aee0-be02-df88-14f4e364b598@st.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Huaixin Chang <changhuaixin@linux.alibaba.com> writes:
+Hi,
 
-> Kernel limitation on cpu.cfs_quota_us is insufficient. Some large
-> numbers might cause overflow in to_ratio() calculation and produce
-> unexpected results.
+On Fri, Apr 17, 2020 at 03:15:07PM +0200, Fabrice Gasnier wrote:
+> On 4/16/20 7:57 PM, mani@kernel.org wrote:
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> > 
+> > STM32 UART controllers have the built in modem control support using
+> > dedicated gpios which can be enabled using 'st,hw-flow-ctrl' flag in DT.
+> > But there might be cases where the board design need to use different
+> > gpios for modem control.
+> > 
+> > For supporting such cases, this commit adds modem control gpio support
+> > to STM32 UART controller using mctrl_gpio driver.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> > ---
+> >  drivers/tty/serial/Kconfig       |  1 +
+> >  drivers/tty/serial/stm32-usart.c | 43 +++++++++++++++++++++++++++++++-
+> >  drivers/tty/serial/stm32-usart.h |  1 +
+> >  3 files changed, 44 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> > index 0aea76cd67ff..e7a6f2130684 100644
+> > --- a/drivers/tty/serial/Kconfig
+> > +++ b/drivers/tty/serial/Kconfig
+> > @@ -1462,6 +1462,7 @@ config SERIAL_STM32
+> >  	tristate "STMicroelectronics STM32 serial port support"
+> >  	select SERIAL_CORE
+> >  	depends on ARCH_STM32 || COMPILE_TEST
+> > +	select SERIAL_MCTRL_GPIO if GPIOLIB
+> >  	help
+> >  	  This driver is for the on-chip Serial Controller on
+> >  	  STMicroelectronics STM32 MCUs.
+> > diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+> > index 5e93e8d40f59..026982259714 100644
+> > --- a/drivers/tty/serial/stm32-usart.c
+> > +++ b/drivers/tty/serial/stm32-usart.c
+> > @@ -31,6 +31,7 @@
+> >  #include <linux/tty_flip.h>
+> >  #include <linux/tty.h>
+> >  
+> > +#include "serial_mctrl_gpio.h"
+> >  #include "stm32-usart.h"
+> >  
+> >  static void stm32_stop_tx(struct uart_port *port);
+> > @@ -510,12 +511,29 @@ static void stm32_set_mctrl(struct uart_port *port, unsigned int mctrl)
+> >  		stm32_set_bits(port, ofs->cr3, USART_CR3_RTSE);
+> >  	else
+> >  		stm32_clr_bits(port, ofs->cr3, USART_CR3_RTSE);
+> > +
+> > +	mctrl_gpio_set(stm32_port->gpios, mctrl);
+> >  }
+> >  
+> >  static unsigned int stm32_get_mctrl(struct uart_port *port)
+> >  {
+> > +	struct stm32_port *stm32_port = to_stm32_port(port);
+> > +	int ret;
+> 
+> Hi Mani,
+> 
+> Please find few minor remarks and a question from my side.
+> 
+> 'ret' could be an unsigned int
 >
-> For example, if we make two cpu cgroups and then write a reasonable
-> value and a large value into child's and parent's cpu.cfs_quota_us. This
-> will cause a write error.
->
-> 	cd /sys/fs/cgroup/cpu
-> 	mkdir parent; mkdir parent/child
-> 	echo 8000 > parent/child/cpu.cfs_quota_us
-> 	# 17592186044416 is (1UL << 44)
-> 	echo 17592186044416 > parent/cpu.cfs_quota_us
->
-> In this case, quota will overflow and thus fail the __cfs_schedulable
-> check. Similar overflow also affects rt bandwidth.
 
-More to the point is that I think doing
+Ok
+ 
+> > +
+> >  	/* This routine is used to get signals of: DCD, DSR, RI, and CTS */
+> > -	return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
+> > +	ret = TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
+> > +
+> > +	return mctrl_gpio_get(stm32_port->gpios, &ret);
+> > +}
+> > +
+> > +static void stm32_enable_ms(struct uart_port *port)
+> > +{
+> 
+> Just a question here: purpose of your patch is to handle the gpio case.
+> So you may get modem control interrupts from gpios with this patch.
+> 
 
-echo 17592186044416 > parent/cpu.cfs_quota_us
-echo 8000 > parent/child/cpu.cfs_quota_us
+We will only get CTS gpio interrupt which will get handled by mctrl_gpio driver.
 
-will only fail on the second write, while with this patch it will fail
-on the first, which should be more understandable.
+> In other drivers, I can see the implementation checks gpio usage (like
+> in atmel_serial). When there's no gpio, the corresponding interrupt at
+> the serial controller level is enabled, e.g. :
+> 
+> 	if (!mctrl_gpio_to_gpiod(atmel_port->gpios, UART_GPIO_CTS))
+> 		ier |= ...
+> 
 
+Those drivers support both gpio and hardware modem control interrupts, so
+they are checking to make sure either one of them is enabled at a time. But
+on STM32 UART, modem interrupts are not enabled (USART_CR3_CTSIE etc...)
 
-to_ratio could be altered to avoid unnecessary internal overflow, but
-min_cfs_quota_period is less than 1<<BW_SHIFT, so a cutoff would still
-be needed.
+> Do you need modem control interrupts in your case ?
+> 
 
-Also tg_rt_schedulable sums a bunch of to_ratio(), and doesn't check for
-overflow on that sum, so if we consider preventing weirdness around
-schedulable checks and max quotas relevant we should probably fix that too.
+Nope. Since modem control interrupts in UART block are not enabled currently,
+I don't bother about it.
 
->
-> Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
-> ---
->  kernel/sched/core.c  | 8 ++++++++
->  kernel/sched/rt.c    | 9 +++++++++
->  kernel/sched/sched.h | 2 ++
->  3 files changed, 19 insertions(+)
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 3a61a3b8eaa9..f0a74e35c3f0 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -7390,6 +7390,8 @@ static DEFINE_MUTEX(cfs_constraints_mutex);
->  
->  const u64 max_cfs_quota_period = 1 * NSEC_PER_SEC; /* 1s */
->  static const u64 min_cfs_quota_period = 1 * NSEC_PER_MSEC; /* 1ms */
-> +/* More than 203 days if BW_SHIFT equals 20. */
-> +static const u64 max_cfs_runtime = MAX_BW_USEC * NSEC_PER_USEC;
->  
->  static int __cfs_schedulable(struct task_group *tg, u64 period, u64 runtime);
->  
-> @@ -7417,6 +7419,12 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
->  	if (period > max_cfs_quota_period)
->  		return -EINVAL;
->  
-> +	/*
-> +	 * Bound quota to defend quota against overflow during bandwidth shift.
-> +	 */
-> +	if (quota != RUNTIME_INF && quota > max_cfs_runtime)
-> +		return -EINVAL;
-> +
->  	/*
->  	 * Prevent race between setting of cfs_rq->runtime_enabled and
->  	 * unthrottle_offline_cfs_rqs().
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index df11d88c9895..f5eea19d68c4 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -2569,6 +2569,9 @@ static int __rt_schedulable(struct task_group *tg, u64 period, u64 runtime)
->  	return ret;
->  }
->  
-> +/* More than 203 days if BW_SHIFT equals 20. */
-> +static const u64 max_rt_runtime = MAX_BW_USEC * NSEC_PER_USEC;
+> In case the Stinger96 board signals gets fixed in a future revision,
+> would it be needed to enable modem control interrupts in the USART
+> controller ?
+> 
 
-It looks to me like __rt_schedulable doesn't divide by NSEC_PER_USEC, so
-to_ratio is operating on nsec, and the limit is in nsec, and MAX_BW_USEC
-should probably not be named USEC then as well.
+I don't think so. The current driver supports hardware flow control without
+using interrupts, so we are fine.
 
-> +
->  static int tg_set_rt_bandwidth(struct task_group *tg,
->  		u64 rt_period, u64 rt_runtime)
->  {
-> @@ -2585,6 +2588,12 @@ static int tg_set_rt_bandwidth(struct task_group *tg,
->  	if (rt_period == 0)
->  		return -EINVAL;
->  
-> +	/*
-> +	 * Bound quota to defend quota against overflow during bandwidth shift.
-> +	 */
-> +	if (rt_runtime != RUNTIME_INF && rt_runtime > max_rt_runtime)
-> +		return -EINVAL;
-> +
->  	mutex_lock(&rt_constraints_mutex);
->  	err = __rt_schedulable(tg, rt_period, rt_runtime);
->  	if (err)
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index db3a57675ccf..6f6b7f545557 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -1918,6 +1918,8 @@ extern void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se);
->  #define BW_SHIFT		20
->  #define BW_UNIT			(1 << BW_SHIFT)
->  #define RATIO_SHIFT		8
-> +#define MAX_BW_BITS		(64 - BW_SHIFT)
-> +#define MAX_BW_USEC		((1UL << MAX_BW_BITS) - 1)
->  unsigned long to_ratio(u64 period, u64 runtime);
->  
->  extern void init_entity_runnable_average(struct sched_entity *se);
+> > +	mctrl_gpio_enable_ms(to_stm32_port(port)->gpios);
+> > +}
+> > +
+> > +static void stm32_disable_ms(struct uart_port *port)
+> > +{
+> > +	mctrl_gpio_disable_ms(to_stm32_port(port)->gpios);
+> >  }
+> >  
+> >  /* Transmit stop */
+> > @@ -626,6 +644,9 @@ static void stm32_shutdown(struct uart_port *port)
+> >  	u32 val, isr;
+> >  	int ret;
+> >  
+> > +	/* Disable modem control interrupts */
+> > +	stm32_disable_ms(port);
+> > +
+> >  	val = USART_CR1_TXEIE | USART_CR1_TE;
+> >  	val |= stm32_port->cr1_irq | USART_CR1_RE;
+> >  	val |= BIT(cfg->uart_enable_bit);
+> > @@ -764,6 +785,12 @@ static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
+> >  		cr3 |= USART_CR3_CTSE | USART_CR3_RTSE;
+> >  	}
+> >  
+> > +	/* Handle modem control interrupts */
+> > +	if (UART_ENABLE_MS(port, termios->c_cflag))
+> > +		stm32_enable_ms(port);
+> > +	else
+> > +		stm32_disable_ms(port);
+> > +
+> >  	usartdiv = DIV_ROUND_CLOSEST(port->uartclk, baud);
+> >  
+> >  	/*
+> > @@ -898,6 +925,7 @@ static const struct uart_ops stm32_uart_ops = {
+> >  	.throttle	= stm32_throttle,
+> >  	.unthrottle	= stm32_unthrottle,
+> >  	.stop_rx	= stm32_stop_rx,
+> > +	.enable_ms	= stm32_enable_ms,
+> >  	.break_ctl	= stm32_break_ctl,
+> >  	.startup	= stm32_startup,
+> >  	.shutdown	= stm32_shutdown,
+> > @@ -964,6 +992,19 @@ static int stm32_init_port(struct stm32_port *stm32port,
+> >  		ret = -EINVAL;
+> 
+> return -EINVAL;
+> 
+> >  	}
+> >  
+> > +	stm32port->gpios = mctrl_gpio_init(&stm32port->port, 0);
+> > +	if (IS_ERR(stm32port->gpios))
+> 
+> Please add error path: add a clk_disable_unprepare() here, before the
+> return.
+> 
+
+Ok.
+
+Thanks,
+Mani
+
+> > +		return PTR_ERR(stm32port->gpios);
+> > +
+> > +	/* Both CTS/RTS gpios and "st,hw-flow-ctrl" should not be specified */
+> > +	if (stm32port->hw_flow_control) {
+> > +		if (mctrl_gpio_to_gpiod(stm32port->gpios, UART_GPIO_CTS) ||
+> > +		    mctrl_gpio_to_gpiod(stm32port->gpios, UART_GPIO_RTS)) {
+> > +			dev_err(&pdev->dev, "Conflicting RTS/CTS config\n");
+> 
+> same here
+> 
+> Best Regards,
+> Thanks,
+> Fabrice
+> 
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> >  	return ret;
+> >  }
+> >  
+> > diff --git a/drivers/tty/serial/stm32-usart.h b/drivers/tty/serial/stm32-usart.h
+> > index db8bf0d4982d..d4c916e78d40 100644
+> > --- a/drivers/tty/serial/stm32-usart.h
+> > +++ b/drivers/tty/serial/stm32-usart.h
+> > @@ -274,6 +274,7 @@ struct stm32_port {
+> >  	bool fifoen;
+> >  	int wakeirq;
+> >  	int rdr_mask;		/* receive data register mask */
+> > +	struct mctrl_gpios *gpios; /* modem control gpios */
+> >  };
+> >  
+> >  static struct stm32_port stm32_ports[STM32_MAX_PORTS];
+> > 
