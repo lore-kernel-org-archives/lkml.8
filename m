@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E90C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376FCC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E51020724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A422072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386630;
-	bh=Gu0i2Pei8hae0lYc1wBuHKJsRjOIcQjmE+NHC1K3lzk=;
+	s=default; t=1587386642;
+	bh=7+5pEKWARNc84ZkGGLnLU/rBEp2gTmMmQzl/RUdX5DU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ydPCxdjN84jyvkVxhLtMM4vMB19oTNRIb2i+CGhru2v2sVJ6MY6QPnhCsCWPOv+57
-	 zbWc6LxydW5HVMSQJT+2xpDIf8rl6lLMs9A/LVZrNtMFk54C13lOrQAIy1T7soWTSu
-	 Cn6NUtptodznZkWbMsrLbT38WjdbdHygIIuqh2BM=
+	b=T1jbGhfz0QRlslivRCDKsT/WV6HOH8wMsQwyJRH3cx3IDSneqerQXjrogNAe0OeFg
+	 Yk39cL6iMo87ljRM6IYyznVZC+8eAXpRSSwxNxI+S3y6tE7Y80tBR+wRc0NRzPczay
+	 vmgbTdbyfTxD//dVHxuLsqvfMTDsmcwTOXdiMvdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgDTMnt (ORCPT
+        id S1728501AbgDTMoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37508 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:44:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728449AbgDTMnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:43:46 -0400
+        id S1728484AbgDTMn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:43:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8CA920724;
-        Mon, 20 Apr 2020 12:43:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 414542070B;
+        Mon, 20 Apr 2020 12:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386625;
-        bh=Gu0i2Pei8hae0lYc1wBuHKJsRjOIcQjmE+NHC1K3lzk=;
+        s=default; t=1587386637;
+        bh=7+5pEKWARNc84ZkGGLnLU/rBEp2gTmMmQzl/RUdX5DU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YrVZJks/l4f90rSbwS4NefbpixUBQoi++CGRONq7kqrw+Hz3AXEI9OyqZOsiBrTOo
-         xgvLeV0N9HOIA5Pbr5PStJ6mld/aU/2vZov23u6+NEE4dVO2gNu70lzcmqgAJi+XRr
-         zRkiCrcO7lmMJO34wavrZAtCqbC+P75VdYuJiZtQ=
+        b=dXHoxOORb1EH6E72EudVi2tS+rx7Yj8iVDiQkyAF/jPFXvlW1bakD+ZVphFZhzH+l
+         mjvxfluqXS5ZNuaKgkxBsNYs5do0Eel+0M8c4X4qzkV06BrS+4Daw3E8i7trSD1apP
+         /OeIUoPEX7k9Gz3OkfayKPk8FiIJ9geJIK7YDoAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.6 32/71] ext4: fix incorrect group count in ext4_fill_super error message
-Date:   Mon, 20 Apr 2020 14:38:46 +0200
-Message-Id: <20200420121515.279670886@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.6 37/71] ARM: dts: imx7-colibri: fix muxing of usbc_det pin
+Date:   Mon, 20 Apr 2020 14:38:51 +0200
+Message-Id: <20200420121516.650346866@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,39 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-commit df41460a21b06a76437af040d90ccee03888e8e5 upstream.
+commit 7007f2eca0f258710899ca486da00546d03db0ed upstream.
 
-ext4_fill_super doublechecks the number of groups before mounting; if
-that check fails, the resulting error message prints the group count
-from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
-computed group count instead (which at that point has just been computed
-in "blocks_count").
+USB_C_DET pin shouldn't be in ethernet group.
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
-Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Creating a separate group allows one to use this pin
+as an USB ID pin.
+
+Fixes: b326629f25b7 ("ARM: dts: imx7: add Toradex Colibri iMX7S/iMX7D suppor")
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4286,9 +4286,9 @@ static int ext4_fill_super(struct super_
- 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
- 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
- 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
--		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
-+		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
- 		       "(block count %llu, first data block %u, "
--		       "blocks per group %lu)", sbi->s_groups_count,
-+		       "blocks per group %lu)", blocks_count,
- 		       ext4_blocks_count(es),
- 		       le32_to_cpu(es->s_first_data_block),
- 		       EXT4_BLOCKS_PER_GROUP(sb));
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -345,7 +345,7 @@
+ &iomuxc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4
+-		     &pinctrl_gpio7>;
++		     &pinctrl_gpio7 &pinctrl_usbc_det>;
+ 
+ 	pinctrl_gpio1: gpio1-grp {
+ 		fsl,pins = <
+@@ -450,7 +450,6 @@
+ 
+ 	pinctrl_enet1: enet1grp {
+ 		fsl,pins = <
+-			MX7D_PAD_ENET1_CRS__GPIO7_IO14			0x14
+ 			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x73
+ 			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0	0x73
+ 			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1	0x73
+@@ -648,6 +647,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_usbc_det: gpio-usbc-det {
++		fsl,pins = <
++			MX7D_PAD_ENET1_CRS__GPIO7_IO14	0x14
++		>;
++	};
++
+ 	pinctrl_usbh_reg: gpio-usbh-vbus {
+ 		fsl,pins = <
+ 			MX7D_PAD_UART3_CTS_B__GPIO4_IO7	0x14 /* SODIMM 129 USBH PEN */
 
 
