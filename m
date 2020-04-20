@@ -2,205 +2,104 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24144C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B5FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3462074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D506E206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:15:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="O62Hh01n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgDTPNs (ORCPT
+        id S1728001AbgDTPPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:13:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:50702 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727862AbgDTPNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:13:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B530C31B;
-        Mon, 20 Apr 2020 08:13:46 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D4033F73D;
-        Mon, 20 Apr 2020 08:13:44 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 16:13:41 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200420151341.7zni3bwroso2kpdc@e107158-lin.cambridge.arm.com>
-References: <20200403123020.13897-1-qais.yousef@arm.com>
- <292dbd54-e590-dc4f-41e6-5f86e478c0ee@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <292dbd54-e590-dc4f-41e6-5f86e478c0ee@arm.com>
-User-Agent: NeoMutt/20171215
+        Mon, 20 Apr 2020 11:15:20 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:33686 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725865AbgDTPPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:15:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=j04KOWK7oiQmUIJaNm9oBICc+BDi64eNQbDFosd6GAc=; b=O
+        62Hh01nRPnqzdOOXRJBwPCqr2UDY3DOTlZATbevd/ObcSAWL7KgWQL0sDcBMZ7LJ
+        kGxzdz1++TMkEI/En/EeTpEOXMQpjeZKSJ8jWioH4uONIU9GcnG6EKO21XAM3pLX
+        U3qiTCZjCtWnELGaFn90k6DnmoT0HMDAjTbn21FI6s=
+Received: from localhost.localdomain (unknown [120.229.255.67])
+        by app2 (Coremail) with SMTP id XQUFCgCHj+NwvJ1eNKwjAA--.950S3;
+        Mon, 20 Apr 2020 23:14:58 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH v2] SUNRPC: Remove unreachable error condition
+Date:   Mon, 20 Apr 2020 23:14:19 +0800
+Message-Id: <1587395659-86206-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgCHj+NwvJ1eNKwjAA--.950S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw48Kr4rAryUZry3Gr47CFg_yoWkAwc_XF
+        4IqFykX34DGF4qyFZrCr40yFy7C3y5Kr18Gwn7G34xG3Wjv3Z0vFs5CFn3ArWfurWfuF13
+        CrZrGry3Zw13tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUba8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
+        6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+        IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+        3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
+        sGvfC2KfnxnUUI43ZEXa7VUbHa0DUUUUU==
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/20/20 10:29, Dietmar Eggemann wrote:
-> On 03.04.20 14:30, Qais Yousef wrote:
-> 
-> [...]
-> 
-> > @@ -924,6 +945,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
-> >  	return uc_req;
-> >  }
-> >  
-> > +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
-> > +{
-> > +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-> > +
-> > +	if (!uc_se->user_defined)
-> > +		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
-> > +}
-> > +
-> >  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
-> >  {
-> >  	struct uclamp_se uc_eff;
-> > @@ -1030,6 +1059,12 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-> >  	if (unlikely(!p->sched_class->uclamp_enabled))
-> >  		return;
-> >  
-> > +	/*
-> > +	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
-> > +	 * user, we apply any new value on the next wakeup, which is here.
-> > +	 */
-> > +	uclamp_rt_sync_default_util_min(p);
-> > +
-> 
-> Does this have to be an extra function? Can we not reuse
-> uclamp_tg_restrict() by slightly rename it to uclamp_restrict()?
+rpc_clnt_test_and_add_xprt() invokes rpc_call_null_helper(), which
+return the value of rpc_run_task() to "task". Since rpc_run_task() is
+impossible to return an ERR pointer, there is no need to add the
+IS_ERR() condition on "task" here. So we need to remove it.
 
-Hmm the thing is that we're not restricting here. In contrary we're boosting,
-so the name would be misleading.
+Fixes: 7f554890587c ("SUNRPC: Allow addition of new transports to a
+struct rpc_clnt")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+Changes in v2:
+- Remove useless IS_ERR check instead of fixing a refcnt leak in this
+error path
+---
+ net/sunrpc/clnt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> 
-> This function will then deal with enforcing restrictions, whether system
-> and taskgroup hierarchy related or default value (latter only for rt-min
-> right now since the others are fixed) related.
-> 
-> uclamp_eff_get() -> uclamp_restrict() is called from:
-> 
->   'enqueue_task(), uclamp_update_active() -> uclamp_rq_inc() -> uclamp_rq_inc_id()' and
-> 
->   'task_fits_capacity() -> clamp_task_util(), rt_task_fits_capacity() -> uclamp_eff_value()' and
-> 
->   'schedutil_cpu_util(), find_energy_efficient_cpu() -> uclamp_rq_util_with() -> uclamp_eff_value()'
-> 
-> so there would be more check-points than the one in 'enqueue_task() -> uclamp_rq_inc()' now.
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 7324b21f923e..5957e336caf7 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2803,8 +2803,7 @@ int rpc_clnt_test_and_add_xprt(struct rpc_clnt *clnt,
+ 	task = rpc_call_null_helper(clnt, xprt, NULL,
+ 			RPC_TASK_SOFT|RPC_TASK_SOFTCONN|RPC_TASK_ASYNC|RPC_TASK_NULLCREDS,
+ 			&rpc_cb_add_xprt_call_ops, data);
+-	if (IS_ERR(task))
+-		return PTR_ERR(task);
++
+ 	rpc_put_task(task);
+ success:
+ 	return 1;
+-- 
+2.7.4
 
-I think you're revolving around the same idea that Patrick was suggesting.
-I think it is possible to do something in uclamp_eff_get() too.
-
-Thanks
-
---
-Qais Yousef
-
-> 
-> Only lightly tested:
-> 
-> ---8<---
-> 
-> From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Date: Sun, 19 Apr 2020 01:20:17 +0200
-> Subject: [PATCH] sched/core: uclamp: Move uclamp_rt_sync_default_util_min()
->  into uclamp_tg_restrict()
-> 
-> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> ---
->  kernel/sched/core.c | 34 +++++++++++++++-------------------
->  1 file changed, 15 insertions(+), 19 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 8f4e0d5c7daf..6802113d6d4b 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -899,12 +899,22 @@ unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
->  }
->  
->  static inline struct uclamp_se
-> -uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
-> +uclamp_restrict(struct task_struct *p, enum uclamp_id clamp_id)
->  {
-> -	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
-> -#ifdef CONFIG_UCLAMP_TASK_GROUP
-> -	struct uclamp_se uc_max;
-> +	struct uclamp_se uc_req, __maybe_unused uc_max;
-> +
-> +	if (unlikely(rt_task(p)) && clamp_id == UCLAMP_MIN &&
-> +	    !uc_req.user_defined) {
-> +		struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-> +		int rt_min = sysctl_sched_rt_default_uclamp_util_min;
-> +
-> +		if (uc_se->value != rt_min)
-> +			uclamp_se_set(uc_se, rt_min, false);
-> +	}
->  
-> +	uc_req = p->uclamp_req[clamp_id];
-> +
-> +#ifdef CONFIG_UCLAMP_TASK_GROUP
->  	/*
->  	 * Tasks in autogroups or root task group will be
->  	 * restricted by system defaults.
-> @@ -933,7 +943,7 @@ uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
->  static inline struct uclamp_se
->  uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
->  {
-> -	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
-> +	struct uclamp_se uc_req = uclamp_restrict(p, clamp_id);
->  	struct uclamp_se uc_max = uclamp_default[clamp_id];
->  
->  	/* System default restrictions always apply */
-> @@ -943,14 +953,6 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
->  	return uc_req;
->  }
->  
-> -static void uclamp_rt_sync_default_util_min(struct task_struct *p)
-> -{
-> -	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-> -
-> -	if (!uc_se->user_defined)
-> -		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
-> -}
-> -
->  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
->  {
->  	struct uclamp_se uc_eff;
-> @@ -1057,12 +1059,6 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
->  	if (unlikely(!p->sched_class->uclamp_enabled))
->  		return;
->  
-> -	/*
-> -	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
-> -	 * user, we apply any new value on the next wakeup, which is here.
-> -	 */
-> -	uclamp_rt_sync_default_util_min(p);
-> -
->  	for_each_clamp_id(clamp_id)
->  		uclamp_rq_inc_id(rq, p, clamp_id);
->  
-> -- 
-> 2.17.1
