@@ -2,144 +2,164 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C019C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B7AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37A2120B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831D12084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:26:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="rZQftbql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgDTTYd (ORCPT
+        id S1726947AbgDTT04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:24:33 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:45059 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725896AbgDTTYd (ORCPT
+        Mon, 20 Apr 2020 15:26:56 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:65343 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgDTT04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:24:33 -0400
-Received: from [5.157.121.18] (port=47580 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jQc1o-003t9B-Rv; Mon, 20 Apr 2020 21:24:24 +0200
-Subject: Re: [PATCH v11 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem driver
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vishal Sagar <vishal.sagar@xilinx.com>
-Cc:     Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Hyun Kwon <hyun.kwon@xilinx.com>
-References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
- <20200409194424.45555-3-vishal.sagar@xilinx.com>
- <20200419180222.GB8117@pendragon.ideasonboard.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
-Date:   Mon, 20 Apr 2020 21:24:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 15:26:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587410815; x=1618946815;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2Z2X+Oe46FhVfUNdHU2pO9fm49ctsQbX913UhF7CSVU=;
+  b=rZQftbqlAzCtG+D1KFX+CGLbJLh8ZarU+6XrlJQhiyjs0At3AzHIIS3m
+   EGcNJhBZj1y6hGplTTQLHvjf7t006WgO/5ZVo5rEuGD3bDZjCVd4Ors3G
+   3tdoobQbGquE0sC1JUbzPIl44O1PT6hOawrZDF0x6qjqe7Six+6r24Bws
+   n8mRsgNkNA37Y+/1OJCjSznMwr70/Y/cBbZ8MNINm+8+V/isi54A/eWtB
+   1cmXf6MV1+kt2s2r6BdMEVC/QwtB4WeF0RDJyeRVoDeqPo8f8PeSBVy+J
+   MWJ9i3zYY4oMD2PnOOP5y2+4THqeMBr0xZtZgGH/UcuEnaDYo/LzT4je/
+   Q==;
+IronPort-SDR: uXwx1ZizNlrmPOILo6sDsgXyGOs2wcCQQFEdYCGUS5MiyBO7HJKROvOXhkWMXlqnqerD/ZTUDC
+ Ocyiup15TJ0jP3EA9jevE/nqth0rC74riWZOeC6GvOZgzTv1E3+64uwuKASNFsPF+PQRq+FNQz
+ tI8Q3K5gJuYeosXaL8JhRCwgJc/facu6n7Dh7UF4jnKw7ZtRAbdKVMgB66DqL1AZLUcF/X1Q6/
+ iRCQfBOa3jCYEFQpN/akJ+0mq9vxlYjFHhBa+2lMsJ4ySIwMEDZAA8AQAPwJcn2x38Fa49ehnk
+ Qbo=
+X-IronPort-AV: E=Sophos;i="5.72,407,1580799600"; 
+   d="scan'208";a="72781184"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Apr 2020 12:26:55 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 20 Apr 2020 12:27:02 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 20 Apr 2020 12:26:54 -0700
+Date:   Mon, 20 Apr 2020 21:26:54 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     <davem@davemloft.net>, <jiri@resnulli.us>, <ivecera@redhat.com>,
+        <kuba@kernel.org>, <roopa@cumulusnetworks.com>,
+        <olteanv@gmail.com>, <andrew@lunn.ch>,
+        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+Subject: Re: [PATCH net-next 04/13] bridge: mrp: Expose function
+ br_mrp_port_open
+Message-ID: <20200420192654.ivar7apyv5xnzwg3@soft-dev3.microsemi.net>
+References: <20200420150947.30974-1-horatiu.vultur@microchip.com>
+ <20200420150947.30974-5-horatiu.vultur@microchip.com>
+ <cc388b70-701c-4600-791b-8170683a7666@cumulusnetworks.com>
 MIME-Version: 1.0
-In-Reply-To: <20200419180222.GB8117@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <cc388b70-701c-4600-791b-8170683a7666@cumulusnetworks.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent, Vishal,
+The 04/20/2020 20:30, Nikolay Aleksandrov wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On 20/04/2020 18:09, Horatiu Vultur wrote:
+> > In case the HW is capable to detect when the MRP ring is open or closed. It is
+> > expected that the network driver will notify the SW that the ring is open or
+> > closed.
+> >
+> > The function br_mrp_port_open is used to notify the kernel that one of the ports
+> > stopped receiving MRP_Test frames. The argument 'loc' has a value of '1' when
+> > the port stopped receiving MRP_Test and '0' when it started to receive MRP_Test.
+> >
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  include/linux/mrp_bridge.h | 27 +++++++++++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
+> >  create mode 100644 include/linux/mrp_bridge.h
+> >
+> > diff --git a/include/linux/mrp_bridge.h b/include/linux/mrp_bridge.h
+> > new file mode 100644
+> > index 000000000000..61c1f0d395c7
+> > --- /dev/null
+> > +++ b/include/linux/mrp_bridge.h
+> > @@ -0,0 +1,27 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> > +
+> > +#ifndef _LINUX_MRP_BRIDGE_H
+> > +#define _LINUX_MRO_BRIDGE_H
+> > +
+> > +#include <linux/netdevice.h>
+> > +
+> > +/* The drivers are responsible to call this function when it detects that the
+> > + * MRP port stopped receiving MRP_Test frames or it started to receive MRP_Test.
+> > + * The argument dev represents the port and loc(Lost of Continuity) has a value
+> > + * of 1 when it stopped receiving MRP_Test frames and a value of 0 when it
+> > + * started to receive frames.
+> > + * Needs to be called with rcu_read_lock().
+> > + *
+> > + * This eventually notify the userspace which is required to react on these
+> > + * changes.
+> > + */
+> > +
+> > +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
+> > +int br_mrp_port_open(struct net_device *dev, u8 loc);
+> > +#else
+> > +static inline int br_mrp_port_open(struct net_device *dev, u8 loc)
+> > +{
+> > +}
+> > +#endif
+> > +
+> > +#endif
+> >
 
-On 19/04/20 20:02, Laurent Pinchart wrote:
-[...]
->> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *dev_id)
->> +{
->> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)dev_id;
->> +	struct xcsi2rxss_core *core = &state->core;
->> +	u32 status;
->> +
->> +	status = xcsi2rxss_read(core, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
->> +	dev_dbg_ratelimited(core->dev, "interrupt status = 0x%08x\n", status);
+Hi Nik,
 > 
-> As this is expected to occur for every frame, I would drop the message,
-> even if rate-limited.
-> 
->> +
->> +	if (!status)
->> +		return IRQ_NONE;
->> +
->> +	/* Received a short packet */
->> +	if (status & XCSI_ISR_SPFIFONE) {
->> +		dev_dbg_ratelimited(core->dev, "Short packet = 0x%08x\n",
->> +				    xcsi2rxss_read(core, XCSI_SPKTR_OFFSET));
->> +	}
-> 
-> Same here, this will occur all the time, I'd remove this message. You
-> need to read XCSI_SPKTR_OFFSET though, and you should do so in a loop
-> until the XCSI_CSR_SPFIFONE in XCSI_CSR_OFFSET is cleared in case
-> multiple short packets are received before the interrupt handler
-> executes.
-> 
-> I also wonder if it would make sense to extract the frame number from
-> the FS short packet, and make it available through the subdev API. I
-> think it should be reported through a V4L2_EVENT_FRAME_SYNC event. This
-> can be implemented later.
-> 
->> +
->> +	/* Short packet FIFO overflow */
->> +	if (status & XCSI_ISR_SPFIFOF)
->> +		dev_dbg_ratelimited(core->dev, "Short packet FIFO overflowed\n");
->> +
->> +	/*
->> +	 * Stream line buffer full
->> +	 * This means there is a backpressure from downstream IP
->> +	 */
->> +	if (status & XCSI_ISR_SLBF) {
->> +		dev_alert_ratelimited(core->dev, "Stream Line Buffer Full!\n");
->> +		xcsi2rxss_stop_stream(state);
->> +		if (core->rst_gpio) {
->> +			gpiod_set_value(core->rst_gpio, 1);
->> +			/* minimum 40 dphy_clk_200M cycles */
->> +			ndelay(250);
->> +			gpiod_set_value(core->rst_gpio, 0);
->> +		}
-> 
-> I don't think you should stop the core here. xcsi2rxss_stop_stream()
-> calls the source .s_stream(0) operation, which usually involves I2C
-> writes that will sleep.
-> 
-> You should instead report an event to userspace (it looks like we have
-> no error event defined in V4L2, one should be added), and rely on the
-> normal stop procedure.
+> I see that in order to pass this "loc" to br_ifinfo_notify() you add a new port variable,
+> but it's a boolean, so you can just use the port flags for it which will simplify things a lot
+> and remove some ifdefs along the way. And please rename it to something longer (so it's easier
+> to get what it does).
 
-FWIW, since a long time I've been using a modified version of this
-routine, where after a Stream Line Buffer Full condition I just stop and
-restart the csi2rx core and the stream continues after a minimal glitch.
-Other subdev are unaware that anything has happened and keep on streaming.
+I will update to use the port flags.
 
-Not sure this is the correct thing to do, but it's working for me. Also
-I proposed this topic in one of the previous iterations of this patch,
-but the situation was different because the stream on/off was not
-propagated back at that time.
+> 
+> One question - now that it's always sent to user-space as IFLA_BRPORT_MRP_RING_OPEN attribute
+> wouldn't it be a problem, or is it read as a current state?
+> I mean you'll receive that attribute about a port even if you get a completely unrelated to MRP
+> notification (e.g. about a vlan change).
 
+It should not be a problem. The default value is 0, which means that the
+port has not lost the continuity.
+So let's say that a port lost the continuity then the userspace will
+receive a call where attribute IFLA_BRPORT_MRP_RING_OPEN will have the
+value 1. This is as expected.
+Then as you suggested, there is a vlan change, the userspace will
+receive a notification but again the attribute IFLA_BRPORT_MRP_RING_OPEN
+is 1, because the actual value is stored in the port variable, or port
+flags in the new patch). But the userspace can detect this case and just
+ignores it.
+The same will apply also if the userspace will receive multiple
+notification if the port didn't lose the continuity.
+
+> 
+> Thanks,
+>  Nik
 
 -- 
-Luca
+/Horatiu
