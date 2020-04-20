@@ -2,86 +2,106 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3BBC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950E0C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5212084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F36120782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:29:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eAkVkLKB"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Ew/qZu4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgDTT2L (ORCPT
+        id S1726836AbgDTT30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:28:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40572 "EHLO
+        Mon, 20 Apr 2020 15:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725897AbgDTT2L (ORCPT
+        by vger.kernel.org with ESMTP id S1726189AbgDTT3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:28:11 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 203A7C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:28:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=PeNgxIYdhodceyRsiQXJ9AHM++VjzL0tYm/762Y/HsI=; b=eAkVkLKBGXi0Nf6wszcH6YjhXG
-        7xTDxRFfaqpfYG3jkxcNldZqzUzdk3kS+1/rdj+N5JTshWeqUSg5m3X5/DeCn6J+Fd1rtWCkMTcpt
-        +8oYWRWM07oeWlO1kCYryg6TWNtTM5UUBcJdLSmFgzFZ4j0rWRWZzPNs9+WEsVfv3AVymMUld56Os
-        4qaWXguOzrXyZz8/VCwrvTOxX4tI4Ga3um6Npi60sTGI6NttY29ZzUX/ES35xyQTrUbUkFmPxmD2x
-        SG3u+2UVA76U6X3ulMs4sHkoHTRwvWCEaotWziw3sEPOFhokSAHd6DjmKL7hoGF4FAhkhmdijCyCI
-        bfeuD5iA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQc5P-0007df-2o; Mon, 20 Apr 2020 19:28:07 +0000
-Date:   Mon, 20 Apr 2020 12:28:06 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: Re: [PATCH v4 08/10] mmap locking API: add MMAP_LOCK_INITIALIZER
-Message-ID: <20200420192806.GE5820@bombadil.infradead.org>
-References: <20200415004353.130248-1-walken@google.com>
- <20200415004353.130248-9-walken@google.com>
+        Mon, 20 Apr 2020 15:29:25 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CE1C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:29:25 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n4so8904924ejs.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ce20/CIQIX522RaPVTyPTfJEPqiyAriKhvUnxTulqdM=;
+        b=Ew/qZu4sDhUqxZ/TYFqRH0ERtCxbKG4Z8viu2sPjWVDAgBWlvcnLRlRx5rwXTM/Oah
+         mIYHqq0r+8iblP15rxoSx33CEyZunyDuuLZACk8dgur1ueNplknlYmcAylmjCtPf23DA
+         W9fH6ydZ1sJNeXLG+uo/C5iF+Bx7zwA18kCdy3xNxw5iz8+YxTIHSDrMrmLspd9T1TpP
+         ntKFG8X9R+1/qJUVjBuCLfLmn2FSJJekaPBY9XT3Vh9StB1/hFnewJwuLeKxA0WHVKuW
+         mtpVxRXs6eZYVS5FIIcDdh1u3GSNKMaWuB1GMxDd8IXaXWIKV6KMRQ2rSrylkdDm8eYG
+         MzqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ce20/CIQIX522RaPVTyPTfJEPqiyAriKhvUnxTulqdM=;
+        b=njpUjEK7VR7oCVJ8dTjJKvOQdDLn9uZWf3fDVMcvo5vHAMQAC3b65wsEaRxFL33Wmn
+         I3vyXHzZ6scMlB5tDIXTieN37KaCKCr75ajuDaHW00Eg7IzIfrKri7HkCE5K6onXsNRd
+         u1+NA6v4zvHT52M5kFGg/sUgNE0vUMnk75Rr+PiORcc7ohU/KPBI9PX1ciLl1OqWlxbd
+         ZAG2B2EWD395vVGqBma1ln0v88msG0CbAUCHIO8cotZ4zAr80S0VJJzMSoscO/xb51CO
+         SmwWem4mZC82XuWh/HdXOV9Bpq8+ZxUy68Y9irqj6lLiW7vePTs9qf8ABOOdzXi7zC2w
+         ia5Q==
+X-Gm-Message-State: AGi0PuYwyf6m/z2lDnevkwoisPaCryyTz690ReqEvVN0idOYH84NqUwI
+        asUh54oRu1Q9XyJxBliQMNVuuhRRrA8goqEn0/y9/g==
+X-Google-Smtp-Source: APiQypK9aQrIzZ87xSipVCdNGdFMMM1E4PzK+Awa+HpCEy9iTdMb3+e2PhmQ2RqaH5oAUbvtfE2smMIkNiOOGSkMCww=
+X-Received: by 2002:a17:906:6d8e:: with SMTP id h14mr17131940ejt.123.1587410964104;
+ Mon, 20 Apr 2020 12:29:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415004353.130248-9-walken@google.com>
+References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net>
+ <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
+ <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com>
+ <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com>
+ <CAPcyv4hrfZsg48Gw_s7xTLLhjLTk_U+PV0MsLnG+xh3652xFCQ@mail.gmail.com> <CAHk-=wgcc=5kiph7o+aBZoWBCbu=9nQDQtD41DvuRRrqixohUA@mail.gmail.com>
+In-Reply-To: <CAHk-=wgcc=5kiph7o+aBZoWBCbu=9nQDQtD41DvuRRrqixohUA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 20 Apr 2020 12:29:12 -0700
+Message-ID: <CAPcyv4iTaBNPMwqUwas+J4rxd867QL7JnQBYB8NKnYaTA-R_Tw@mail.gmail.com>
+Subject: Re: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 05:43:51PM -0700, Michel Lespinasse wrote:
-> @@ -90,7 +90,7 @@ static struct mm_struct tboot_mm = {
-                                            ^^^^^^^^
->  	.pgd            = swapper_pg_dir,
->  	.mm_users       = ATOMIC_INIT(2),
->  	.mm_count       = ATOMIC_INIT(1),
-> -	.mmap_sem       = __RWSEM_INITIALIZER(init_mm.mmap_sem),
-> +	.mmap_sem       = MMAP_LOCK_INITIALIZER(init_mm.mmap_sem),
-                                                ^^^^^^^
+On Mon, Apr 20, 2020 at 12:13 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Mon, Apr 20, 2020 at 11:20 AM Dan Williams <dan.j.williams@intel.com> wrote:
+[..]
+> I really really detest the whole mcsafe garbage. And I absolutely
+> *ABHOR* how nobody inside of Intel has apparently ever questioned the
+> brokenness at a really fundamental level.
+>
+> That "I throw my hands in the air and just give up" thing is a
+> disease. It's absolutely not "what else could we do".
 
-Shome mishtake, shirley?
-
-I don't see that this particular patch buys us much.  The name 'mmap_sem'
-is still used, and I appreciate we abstract away the type of the lock,
-but wouldn't this be better?
-
--	.mmap_sem       = __RWSEM_INITIALIZER(init_mm.mmap_sem),
-+	MMAP_LOCK_INITIALIZER(tboot_mm),
-
+So I grew up in the early part of my career validating ARM CPUs where
+a data-abort was either precise or imprecise and the precise error
+could be handled like a page fault as you know which instruction
+faulted and how to restart the thread. So I didn't take x86 CPU
+designers' word for it, I honestly thought that "hmm the x86 machine
+check thingy looks like it's trying to implement precise vs imprecise
+data-aborts, and precise / synchronous is maybe a good thing because
+it's akin to a page fault". I didn't consider asynchronous to be
+better because that means there is a gap between when the data
+corruption is detected and when it might escape the system that some
+external agent could trust the result and start acting on before the
+asynchronous signal is delivered.
