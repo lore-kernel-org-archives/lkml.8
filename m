@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BDCC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40031C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A1B206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103FC206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387146;
-	bh=HaUo+E5NxLGCGdFw4NKrqAONKCA3eOeOzeVolfXxgx4=;
+	s=default; t=1587387151;
+	bh=qKGdh4Za47dTXjFZpK413jDKrBnm5xyHnkOpBgWgldg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z7suu+7EBFpvma2Z+0kHqLJ1ydkcbEd1GRYiIOe0Ivt1+ufVp/lzvbauBlrR5h8gi
-	 AEhPcARpatH/24g0NytmRNFPw17TBY/tHgbHO4a7cXbGDxd8a2ugh2boip/ivKtiys
-	 0rWGk47flj1da0hOygeHuaqfspf9Qq996HruE7e0=
+	b=fW6fq81rW9ZG/SNOz2bgMM57Px4Zrw80pjIUASYf+059Ujd/rLt6DLn8z1EDysmSb
+	 iLzitFTxuzRt1GsPybBG520u5pJCBF1jGYomxADIVasQEuSEkmxmJY69CXu7IsDuoc
+	 y+oAGQ2lLker1jHTuOIxgOJpcA2v9MXAAIPqmxoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgDTMrR (ORCPT
+        id S1729582AbgDTMwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:47:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729039AbgDTMrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:47:12 -0400
+        id S1729047AbgDTMrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:47:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A67F4206DD;
-        Mon, 20 Apr 2020 12:47:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 878E92072B;
+        Mon, 20 Apr 2020 12:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386831;
-        bh=HaUo+E5NxLGCGdFw4NKrqAONKCA3eOeOzeVolfXxgx4=;
+        s=default; t=1587386836;
+        bh=qKGdh4Za47dTXjFZpK413jDKrBnm5xyHnkOpBgWgldg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CcFhuSVb+ksShl3JkuC+WsYq0aJWNJmPPHaQAiaIAI8jFF0lqPWSyyMb8JDb9JbuO
-         xocPU3Gwl7v6PpfmWdMfvz5UUDm55OYRKf4Oo9bKwQyIU/B5Wyz0KKsLTa9RnOy+E/
-         YYKFQhkrY9Fkb1pXXzCBhpLDtYmHAeWxekoYmimw=
+        b=mtxmCcR5MCTXIq43fq1QpUfCxgHnk/K5Z0OY9R9m7Qt2Su6uDHObGXC/EJ/bbu709
+         m9dedQG+d5RGVnHsgS2RGAHjPg8xOjQOoKwJ/oZ43ejOgIuKaLq8PDjAvGUYEt8b3J
+         fELZYDvQS3pcnaEQrgvoRQHzJGi2kzHVknUT61Ls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 42/60] keys: Fix proc_keys_next to increase position index
-Date:   Mon, 20 Apr 2020 14:39:20 +0200
-Message-Id: <20200420121512.118553683@linuxfoundation.org>
+        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 07/60] net: phy: micrel: use genphy_read_status for KSZ9131
+Date:   Mon, 20 Apr 2020 14:38:45 +0200
+Message-Id: <20200420121503.007491690@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -61,70 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
 
-commit 86d32f9a7c54ad74f4514d7fef7c847883207291 upstream.
+[ Upstream commit 68dac3eb50be32957ae6e1e6da9281a3b7c6658b ]
 
-If seq_file .next function does not change position index,
-read after some lseek can generate unexpected output:
+KSZ9131 will not work with some switches due to workaround for KSZ9031
+introduced in commit d2fd719bcb0e83cb39cfee22ee800f98a56eceb3
+("net/phy: micrel: Add workaround for bad autoneg").
+Use genphy_read_status instead of dedicated ksz9031_read_status.
 
-    $ dd if=/proc/keys bs=1  # full usual output
-    0f6bfdf5 I--Q---     2 perm 3f010000  1000  1000 user      4af2f79ab8848d0a: 740
-    1fb91b32 I--Q---     3 perm 1f3f0000  1000 65534 keyring   _uid.1000: 2
-    27589480 I--Q---     1 perm 0b0b0000     0     0 user      invocation_id: 16
-    2f33ab67 I--Q---   152 perm 3f030000     0     0 keyring   _ses: 2
-    33f1d8fa I--Q---     4 perm 3f030000  1000  1000 keyring   _ses: 1
-    3d427fda I--Q---     2 perm 3f010000  1000  1000 user      69ec44aec7678e5a: 740
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    521+0 records in
-    521+0 records out
-    521 bytes copied, 0,00123769 s, 421 kB/s
-
-But a read after lseek in middle of last line results in the partial
-last line and then a repeat of the final line:
-
-    $ dd if=/proc/keys bs=500 skip=1
-    dd: /proc/keys: cannot skip to specified offset
-    g   _uid_ses.1000: 1
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    0+1 records in
-    0+1 records out
-    97 bytes copied, 0,000135035 s, 718 kB/s
-
-and a read after lseek beyond end of file results in the last line being
-shown:
-
-    $ dd if=/proc/keys bs=1000 skip=1   # read after lseek beyond end of file
-    dd: /proc/keys: cannot skip to specified offset
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    0+1 records in
-    0+1 records out
-    76 bytes copied, 0,000119981 s, 633 kB/s
-
-See https://bugzilla.kernel.org/show_bug.cgi?id=206283
-
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: bff5b4b37372 ("net: phy: micrel: add Microchip KSZ9131 initial driver")
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- security/keys/proc.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/phy/micrel.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/security/keys/proc.c
-+++ b/security/keys/proc.c
-@@ -139,6 +139,8 @@ static void *proc_keys_next(struct seq_f
- 	n = key_serial_next(p, v);
- 	if (n)
- 		*_pos = key_node_serial(n);
-+	else
-+		(*_pos)++;
- 	return n;
- }
- 
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -1154,7 +1154,7 @@ static struct phy_driver ksphy_driver[]
+ 	.driver_data	= &ksz9021_type,
+ 	.probe		= kszphy_probe,
+ 	.config_init	= ksz9131_config_init,
+-	.read_status	= ksz9031_read_status,
++	.read_status	= genphy_read_status,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+ 	.config_intr	= kszphy_config_intr,
+ 	.get_sset_count = kszphy_get_sset_count,
 
 
