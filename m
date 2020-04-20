@@ -2,158 +2,98 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00E7C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38689C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAECB20747
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BF720736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UjHOBBPP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgDTM4L (ORCPT
+        id S1729728AbgDTM4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:56:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64396 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727831AbgDTMpP (ORCPT
+        Mon, 20 Apr 2020 08:56:15 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41515 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726779AbgDTM4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:15 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCXvcG037545;
-        Mon, 20 Apr 2020 08:45:03 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmuxe3sq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:45:03 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCYfEK040498;
-        Mon, 20 Apr 2020 08:45:02 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmuxe3rh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 08:45:02 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KChbLI025816;
-        Mon, 20 Apr 2020 12:45:01 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma03wdc.us.ibm.com with ESMTP id 30fs660jxq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 12:45:01 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCj0aW52298124
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 12:45:00 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1FB2F136059;
-        Mon, 20 Apr 2020 12:45:00 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52D3D136055;
-        Mon, 20 Apr 2020 12:44:56 +0000 (GMT)
-Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 12:44:55 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
-        kirill@shutemov.name,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH v3 03/22] powerpc/mm/hash64: use _PAGE_PTE when checking for pte_present
-Date:   Mon, 20 Apr 2020 18:14:15 +0530
-Message-Id: <20200420124434.47330-4-aneesh.kumar@linux.ibm.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
-References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+        Mon, 20 Apr 2020 08:56:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587387367;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aQuiO+56fM83jue+pc8NC1/acthLiygj2WkuZrb/ns0=;
+        b=UjHOBBPPEsCK/H1ldbtsoP5PjkYnZxG7c9L/PS2Fgc6ieJXmwG4Y4PKGW81rQAw7TanUq0
+        NKdxfWYjXjHMkDmL9Nv49j6m49rKdaJ1bB8La2WnzSWXDyoa5nUt7VqADOVULOobOusW0w
+        KYMeShv/mJvoqbRbJlKyFzD7+yw5Y/k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-RY_AvQcYMPu5lZgX1_CboA-1; Mon, 20 Apr 2020 08:56:05 -0400
+X-MC-Unique: RY_AvQcYMPu5lZgX1_CboA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 811081085983;
+        Mon, 20 Apr 2020 12:56:04 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (unknown [10.3.128.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 961835C1BB;
+        Mon, 20 Apr 2020 12:56:03 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 11D06119; Mon, 20 Apr 2020 09:56:00 -0300 (BRT)
+Date:   Mon, 20 Apr 2020 09:55:59 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     jagdsh.linux@gmail.com
+Cc:     jolsa@kernel.org, ak@linux.intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] tools/lib/perf/: Remove duplicate headers
+Message-ID: <20200420125559.GA4471@redhat.com>
+References: <1587276836-17088-1-git-send-email-jagdsh.linux@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_04:2020-04-20,2020-04-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 adultscore=0 malwarescore=0
- suspectscore=0 phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200110
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587276836-17088-1-git-send-email-jagdsh.linux@gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes the pte_present check stricter by checking for additional _PAGE_PTE
-bit. A level 1 pte pointer (THP pte) can be switched to a pointer to level 0 pte
-page table page by following two operations.
+Em Sun, Apr 19, 2020 at 11:43:56AM +0530, jagdsh.linux@gmail.com escreveu:
+> From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+> 
+> Code cleanup: Remove duplicate headers which are included twice.
 
-1) THP split.
-2) madvise(MADV_DONTNEED) in parallel to page fault.
+Thanks, applied.
 
-A lockless page table walk need to make sure we can handle such changes
-gracefully.
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
----
- arch/powerpc/include/asm/book3s/64/pgtable.h | 15 ++++++++++-----
- arch/powerpc/mm/book3s64/hash_utils.c        | 11 +++++++++--
- 2 files changed, 19 insertions(+), 7 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 368b136517e0..03521a8b0292 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -553,6 +553,12 @@ static inline pte_t pte_clear_savedwrite(pte_t pte)
- }
- #endif /* CONFIG_NUMA_BALANCING */
+- Arnaldo
  
-+static inline bool pte_hw_valid(pte_t pte)
-+{
-+	return (pte_raw(pte) & cpu_to_be64(_PAGE_PRESENT | _PAGE_PTE)) ==
-+		cpu_to_be64(_PAGE_PRESENT | _PAGE_PTE);
-+}
-+
- static inline int pte_present(pte_t pte)
- {
- 	/*
-@@ -561,12 +567,11 @@ static inline int pte_present(pte_t pte)
- 	 * invalid during ptep_set_access_flags. Hence we look for _PAGE_INVALID
- 	 * if we find _PAGE_PRESENT cleared.
- 	 */
--	return !!(pte_raw(pte) & cpu_to_be64(_PAGE_PRESENT | _PAGE_INVALID));
--}
- 
--static inline bool pte_hw_valid(pte_t pte)
--{
--	return !!(pte_raw(pte) & cpu_to_be64(_PAGE_PRESENT));
-+	if (pte_hw_valid(pte))
-+		return true;
-+	return (pte_raw(pte) & cpu_to_be64(_PAGE_INVALID | _PAGE_PTE)) ==
-+		cpu_to_be64(_PAGE_INVALID | _PAGE_PTE);
- }
- 
- #ifdef CONFIG_PPC_MEM_KEYS
-diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-index e951e87a974d..525eac4ee2c2 100644
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -1350,8 +1350,15 @@ int hash_page_mm(struct mm_struct *mm, unsigned long ea,
- 		goto bail;
- 	}
- 
--	/* Add _PAGE_PRESENT to the required access perm */
--	access |= _PAGE_PRESENT;
-+	/*
-+	 * Add _PAGE_PRESENT to the required access perm. If there are parallel
-+	 * updates to the pte that can possibly clear _PAGE_PTE, catch that too.
-+	 *
-+	 * We can safely use the return pte address in rest of the function
-+	 * because we do set H_PAGE_BUSY which prevents further updates to pte
-+	 * from generic code.
-+	 */
-+	access |= _PAGE_PRESENT | _PAGE_PTE;
- 
- 	/*
- 	 * Pre-check access permissions (will be re-checked atomically
--- 
-2.25.3
+> Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+> ---
+>  tools/lib/perf/evlist.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> index 5b9f2ca..def5505 100644
+> --- a/tools/lib/perf/evlist.c
+> +++ b/tools/lib/perf/evlist.c
+> @@ -11,10 +11,8 @@
+>  #include <internal/mmap.h>
+>  #include <internal/cpumap.h>
+>  #include <internal/threadmap.h>
+> -#include <internal/xyarray.h>
+>  #include <internal/lib.h>
+>  #include <linux/zalloc.h>
+> -#include <sys/ioctl.h>
+>  #include <stdlib.h>
+>  #include <errno.h>
+>  #include <unistd.h>
+> -- 
+> 1.8.3.1
 
