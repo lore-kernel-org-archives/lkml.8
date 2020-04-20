@@ -2,236 +2,147 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5386AC55182
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A62C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1E8218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF130218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:57:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dtcP6ZU7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JJkRkP/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgDTW40 (ORCPT
+        id S1726899AbgDTW53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:56:26 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54295 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726161AbgDTW4Z (ORCPT
+        Mon, 20 Apr 2020 18:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbgDTW52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:56:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587423383;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+6rx/b7kvEOxDoffPYjKOUpjUAof+LX7RGvD23w8b8o=;
-        b=dtcP6ZU7PmBX51pp4HjfZ2a31Ku3eORhOTmlpBCs7P7w3MsJaPgCoSITiaCwdsgb5wUPdb
-        QXBbskuBrj3gL7YNuPRiviXFexHNNOvL/eyXvsFLIuqFLZVcy6lGl+Coy+LyrC0smCeEvi
-        s8dyT95Cm9ai/asprb63qRuglOk79Hw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-33-vJCMrAUjOA-zQBEbwS3yOQ-1; Mon, 20 Apr 2020 18:56:19 -0400
-X-MC-Unique: vJCMrAUjOA-zQBEbwS3yOQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A529C8017F5;
-        Mon, 20 Apr 2020 22:56:14 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7990818A85;
-        Mon, 20 Apr 2020 22:56:01 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 16:56:00 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Zeng, Xin" <xin.zeng@intel.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "dgilbert@redhat.com" <dgilbert@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
- VFIO live migration
-Message-ID: <20200420165600.4951ae82@w520.home>
-In-Reply-To: <20200420012457.GE16688@joy-OptiPlex-7040>
-References: <20200413055201.27053-1-yan.y.zhao@intel.com>
-        <20200417104450.2d2f2fa9.cohuck@redhat.com>
-        <20200417095202.GD16688@joy-OptiPlex-7040>
-        <20200417132457.45d91fe3.cohuck@redhat.com>
-        <20200420012457.GE16688@joy-OptiPlex-7040>
+        Mon, 20 Apr 2020 18:57:28 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DBCC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:57:28 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z6so1480402wml.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sHAraBxaNBhreyeFni0FWqDVB5guk3xkclwYoQz0lyU=;
+        b=JJkRkP/mOdP3Ju59IG8dR4xztQX/1hsjiNn9uKp9W9fV7L9wUDG+b3/Nrb2nNwk0R+
+         jdaBaIEImRZFkH+SgqJJ7sVlsomS817bQ0EYcQDORBlggKLCP8t/qPPEqnehFPVdUZ4o
+         S73WdwurDf1Y4kekLs59/oz6mp8QzHo90nxYDoFqUdjgTlGbD1bm5XcM2lH4Lwje8FOg
+         bM2+TPM/jzU+5YIuRWEh49p7dSA6cOfxTyv10g6o0yIlmWioABo5zArCiRTvmxLQSxEo
+         8qXurxw9Xi2O04cdWaIpx6ZBbUicavP78STYka5LIseI1dluzUxUjJBeb2gfle9isyzn
+         IlCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sHAraBxaNBhreyeFni0FWqDVB5guk3xkclwYoQz0lyU=;
+        b=bPDCtbw2fsPw16mqwDf6oRm7KU0DTV+XkvhqN1o6hQbTjAevmzd+D1eO2eNceSW8uH
+         +43wnkFGn5Bg65Imf1L6Vjm6v5BIZDb6S0KQS8OWIfCldDuQVdUUDQwxCKkwmqV5hf2I
+         rdtW2bFrRDVdnl9ILVZJjHaPQNpUv+gCsAGeoY8i0K/Nbl/gQYKEAWysI7OkP8/U/ryt
+         5U1adzhxw2Cuco6Zll5f4+yxfjVLt4CMS9F3hhShhAYe2ZBHZTPuKQOu1iAGvQsgHdv/
+         DUNtRF46sIRGLgw357LlvPb/1p1GB5raQ0/r3U4y+T/uBZl0RmlY5e52PZn5e5gjxKqK
+         J2hA==
+X-Gm-Message-State: AGi0PuajOkkGf4yi6DqH8uwP6KmOnUQNNz1jw+qnAwiV8G9jm1VXsXvL
+        rD7YOERAUzMkziN5BcT1nd8aWA==
+X-Google-Smtp-Source: APiQypLWMgYMoJtk44mftpP3EmtcC0OUdFuydtkJrgqU9fPFtjDpp0HL52GVsyoA3RWtkS3KEqZ6nQ==
+X-Received: by 2002:a1c:4e16:: with SMTP id g22mr1576385wmh.157.1587423443008;
+        Mon, 20 Apr 2020 15:57:23 -0700 (PDT)
+Received: from google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id h16sm1386461wrw.36.2020.04.20.15.57.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 15:57:22 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 00:57:15 +0200
+From:   Marco Elver <elver@google.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        'Petko Manolov' <petko.manolov@konsulko.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] WRITE_ONCE_INC() and friends
+Message-ID: <20200420225715.GA176156@google.com>
+References: <20200419094439.GA32841@carbon>
+ <491f0b0bc9e4419d93a78974fd7f44c7@AcuMS.aculab.com>
+ <20200419182957.GA36919@carbon>
+ <8e5a0283ed76465aac19a2b97a27ff15@AcuMS.aculab.com>
+ <20200420150545.GB17661@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420150545.GB17661@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Apr 2020 21:24:57 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+On Mon, 20 Apr 2020, Paul E. McKenney wrote:
 
-> On Fri, Apr 17, 2020 at 07:24:57PM +0800, Cornelia Huck wrote:
-> > On Fri, 17 Apr 2020 05:52:02 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > On Fri, Apr 17, 2020 at 04:44:50PM +0800, Cornelia Huck wrote:  
-> > > > On Mon, 13 Apr 2020 01:52:01 -0400
-> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > >     
-> > > > > This patchset introduces a migration_version attribute under sysfs of VFIO
-> > > > > Mediated devices.
-> > > > > 
-> > > > > This migration_version attribute is used to check migration compatibility
-> > > > > between two mdev devices.
-> > > > > 
-> > > > > Currently, it has two locations:
-> > > > > (1) under mdev_type node,
-> > > > >     which can be used even before device creation, but only for mdev
-> > > > >     devices of the same mdev type.
-> > > > > (2) under mdev device node,
-> > > > >     which can only be used after the mdev devices are created, but the src
-> > > > >     and target mdev devices are not necessarily be of the same mdev type
-> > > > > (The second location is newly added in v5, in order to keep consistent
-> > > > > with the migration_version node for migratable pass-though devices)    
-> > > > 
-> > > > What is the relationship between those two attributes?
-> > > >     
-> > > (1) is for mdev devices specifically, and (2) is provided to keep the same
-> > > sysfs interface as with non-mdev cases. so (2) is for both mdev devices and
-> > > non-mdev devices.
+> On Sun, Apr 19, 2020 at 09:37:10PM +0000, David Laight wrote:
+> > From: Petko Manolov
+> > > Sent: 19 April 2020 19:30
 > > > 
-> > > in future, if we enable vfio-pci vendor ops, (i.e. a non-mdev device
-> > > is binding to vfio-pci, but is able to register migration region and do
-> > > migration transactions from a vendor provided affiliate driver),
-> > > the vendor driver would export (2) directly, under device node.
-> > > It is not able to provide (1) as there're no mdev devices involved.  
+> > > On 20-04-19 18:02:50, David Laight wrote:
+> > > > From: Petko Manolov
+> > > > > Sent: 19 April 2020 10:45
+> > > > > Recently I started reading up on KCSAN and at some point I ran into stuff like:
+> > > > >
+> > > > > WRITE_ONCE(ssp->srcu_lock_nesting[idx], ssp->srcu_lock_nesting[idx] + 1);
+> > > > > WRITE_ONCE(p->mm->numa_scan_seq, READ_ONCE(p->mm->numa_scan_seq) + 1);
+> > > >
+> > > > If all the accesses use READ/WRITE_ONCE() why not just mark the structure
+> > > > field 'volatile'?
+> > > 
+> > > This is a bit heavy.  I guess you've read this one:
+> > > 
+> > > 	https://lwn.net/Articles/233479/
 > > 
-> > Ok, creating an alternate attribute for non-mdev devices makes sense.
-> > However, wouldn't that rather be a case (3)? The change here only
-> > refers to mdev devices.
-> >  
-> as you pointed below, (3) and (2) serve the same purpose. 
-> and I think a possible usage is to migrate between a non-mdev device and
-> an mdev device. so I think it's better for them both to use (2) rather
-> than creating (3).
-
-An mdev type is meant to define a software compatible interface, so in
-the case of mdev->mdev migration, doesn't migrating to a different type
-fail the most basic of compatibility tests that we expect userspace to
-perform?  IOW, if two mdev types are migration compatible, it seems a
-prerequisite to that is that they provide the same software interface,
-which means they should be the same mdev type.
-
-In the hybrid cases of mdev->phys or phys->mdev, how does a management
-tool begin to even guess what might be compatible?  Are we expecting
-libvirt to probe ever device with this attribute in the system?  Is
-there going to be a new class hierarchy created to enumerate all
-possible migrate-able devices?
-
-I agree that there was a gap in the previous proposal for non-mdev
-devices, but I think this bring a lot of questions that we need to
-puzzle through and libvirt will need to re-evaluate how they might
-decide to pick a migration target device.  For example, I'm sure
-libvirt would reject any policy decisions regarding picking a physical
-device versus an mdev device.  Had we previously left it that only a
-layer above libvirt would select a target device and libvirt only tests
-compatibility to that target device?
-
-We also need to consider that this expands the namespace.  If we no
-longer require matching types as the first level of comparison, then
-vendor migration strings can theoretically collide.  How do we
-coordinate that can't happen?  Thanks,
-
-Alex
-
-> > > > Is existence (and compatibility) of (1) a pre-req for possible
-> > > > existence (and compatibility) of (2)?
-> > > >    
-> > > no. (2) does not reply on (1).  
+> > I remember reading something similar before.
+> > I also remember a very old gcc (2.95?) that did a readback
+> > after every volatile write on sparc (to flush the store buffer).
+> > That broke everything.
 > > 
-> > Hm. Non-existence of (1) seems to imply "this type does not support
-> > migration". If an mdev created for such a type suddenly does support
-> > migration, it feels a bit odd.
-> >   
-> yes. but I think if the condition happens, it should be reported a bug
-> to vendor driver.
-> should I add a line in the doc like "vendor driver should ensure that the
-> migration compatibility from migration_version under mdev_type should be
-> consistent with that from migration_version under device node" ?
-> 
-> > (It obviously cannot be a prereq for what I called (3) above.)
-> >   
-> > >   
-> > > > Does userspace need to check (1) or can it completely rely on (2), if
-> > > > it so chooses?
-> > > >    
-> > > I think it can completely reply on (2) if compatibility check before
-> > > mdev creation is not required.
-> > >   
-> > > > If devices with a different mdev type are indeed compatible, it seems
-> > > > userspace can only find out after the devices have actually been
-> > > > created, as (1) does not apply?    
-> > > yes, I think so.   
+> > I suspect there is a lot more code that is attempting to be lockless
+> > these days.
+> > Ring buffers (one writer and one reader) are a typical example where
+> > you don't need locks but do need to use a consistent value.
 > > 
-> > How useful would it be for userspace to even look at (1) in that case?
-> > It only knows if things have a chance of working if it actually goes
-> > ahead and creates devices.
-> >  
-> hmm, is it useful for userspace to test the migration_version under mdev
-> type before it knows what mdev device to generate ?
-> like when the userspace wants to migrate an mdev device in src vm,
-> but it has not created target vm and the target mdev device.
+> > Now you may also need ordering between accesses - which I think needs
+> > more than volatile.
 > 
-> > >   
-> > > > One of my worries is that the existence of an attribute with the same
-> > > > name in two similar locations might lead to confusion. But maybe it
-> > > > isn't a problem.
-> > > >    
-> > > Yes, I have the same feeling. but as (2) is for sysfs interface
-> > > consistency, to make it transparent to userspace tools like libvirt,
-> > > I guess the same name is necessary?  
+> In Petko's patch, all needed ordering is supplied by the fact that it
+> is the same variable being read and written.  But yes, in many other
+> cases, more ordering is required.
+> 
+> > > And no, i am not sure all accesses are through READ/WRITE_ONCE().  If, for
+> > > example, all others are from withing spin_lock/unlock pairs then we _may_ not
+> > > need READ/WRITE_ONCE().
 > > 
-> > What do we actually need here, I wonder? (1) and (2) seem to serve
-> > slightly different purposes, while (2) and what I called (3) have the
-> > same purpose. Is it important to userspace that (1) and (2) have the
-> > same name?  
-> so change (1) to migration_type_version and (2) to
-> migration_instance_version?
-> But as they are under different locations, could that location imply
-> enough information?
+> > The cost of volatile accesses is probably minimal unless the
+> > code is written assuming the compiler will only access things once.
 > 
+> And there are variables marked as volatile, for example, jiffies.
 > 
-> Thanks
-> Yan
-> 
-> 
+> But one downside of declaring variables volatile is that it can prevent
+> KCSAN from spotting violations of the concurrency design for those
+> variables.
 
+Note that, KCSAN currently treats volatiles not as special, except a
+list of some known global volatiles (like jiffies). This means, that
+KCSAN will tell us about data races involving unmarked volatiles (unless
+they're in the list).
+
+As far as I can tell, this is what we want. At least according to LKMM.
+
+If, for whatever reason, volatiles should be treated differently, we'll
+have to modify the compilers to emit different instrumentation for the
+kernel.
+
+Thanks,
+-- Marco
