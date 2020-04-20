@@ -2,104 +2,124 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DEAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ED2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2441214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F195E20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:31:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="scyXYztl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k5AmKImn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgDTBMR (ORCPT
+        id S1726020AbgDTBbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 21:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39288 "EHLO
+        Sun, 19 Apr 2020 21:31:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725949AbgDTBMR (ORCPT
+        by vger.kernel.org with ESMTP id S1725949AbgDTBbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 21:12:17 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF442C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 18:12:16 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4957vx0Lm4z9s71;
-        Mon, 20 Apr 2020 11:12:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587345133;
-        bh=Zcq7i7X/WujlVV3NVDtu9cMV4w1Xz2llS4db1JSEK20=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=scyXYztle+4omR3vTQ9sokzMctckNrTRN9qLvizleV6CjyRknTAIHDCuC5VNr97ex
-         FGT8Gwu7LgVxKu4xN8s+dm+1pAORRd8VKUEVRVLezXsT/r73yIyR07xH6QlPt8CcMi
-         HRJ1wpT9srYlTk9R0aZB3z+jyLog6DhFQHKpyI3j44UFig03x61FHW1VVFen154M1E
-         CXwFYDaYAdTtd9/2ehxH1rSyQzMQMltEQzj5e2XZvhDKY8hj7uRBP8hhyCawiuR43l
-         GKek1AWgXZDud0o/dd9YMkA1OIXqfi3M98PZOsC2bT2eFKx/gQxIdgBQbhIkTkYdyZ
-         Q9Ti/B7mH39Vw==
-Date:   Mon, 20 Apr 2020 11:12:10 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] flexible-array member convertion patches for 5.7-rc2
-Message-ID: <20200420111210.50737f67@canb.auug.org.au>
-In-Reply-To: <20200418213828.GA10666@embeddedor>
-References: <20200418213828.GA10666@embeddedor>
+        Sun, 19 Apr 2020 21:31:04 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6125BC061A0C;
+        Sun, 19 Apr 2020 18:31:03 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id t9so1722031pjw.0;
+        Sun, 19 Apr 2020 18:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1qntJfTQVW2R5B/BZXP8n8jq5XEP710G+Kb7QjDlEEQ=;
+        b=k5AmKImn7KnzGnT/lWSdv8VX3CIj8spL4RyLMQd8HGJxiXy77oPkqozWBzp5ILJKoB
+         WW0eEcH2eIiOxwIC5DOVe5gCzW89E3KUq9R0MbsASNOePmn6tIhsvExsdGOU94kEaeK1
+         goV0DiyfVW98J/N1PvBAnIa9mH7PBqXEELyQNpJGXRJthAE4ECVzLJl8FOS0IvTno1vh
+         LLy9qv4lygAnjf8zzpJiExCmq+M3b6CsQPgtQrzfXp60lOqnIgZk/wwp2xry5l86ntfE
+         MjwVvT8eANo059zfDXoyxrUEBjcXMOMuFFgnCorTEzWUHXC7H0D7LePh12VsuUvqyUxa
+         8GuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1qntJfTQVW2R5B/BZXP8n8jq5XEP710G+Kb7QjDlEEQ=;
+        b=ifw2FGZ3DRLA9OkQLEnKcKiDfy18yKvL93F5aBIJM77fm8oW+lSFZNGykYSZq56syr
+         mbphCPAtTnuI5VRH6Qm4vOmnZhxLYzZUa38MOcLPUUm6cw6pnzS9auNfahjzBOJ6JP1H
+         AEqzqJJi8gxVYGL2bh9AA7u5xcBzV/dB4KWCgR6lxGQ91Y19d6/dPt/rGTNeUA64jcW4
+         m7aar6dTlSK00PeQ+kSpdR6O1vafz/eePJiuwAlGy0U2zNOVGWKLqbV0cX1ck4mEOXZP
+         PfUU1qMD5I2f0h6jfOCdh2GHsFUjWoZS6L+YQiyQTZnn54y6GWqdorbJ8mpH6X6TJMsE
+         D9RA==
+X-Gm-Message-State: AGi0PuZxVO1ZwEfSlBvTU0WuCKxinqm4p12E9JpAIQAvq6il4dfPFwNt
+        hN14UnhHiAZHlA03J5dL/yPvrF+VAMu9AQ==
+X-Google-Smtp-Source: APiQypJtGX6ti+FmScXgNNGNQDgAbN5PeCH/OOo+A6WHAH0Gh4hrHTS9FyZXO+Ifmjp6k+NAz7Jhaw==
+X-Received: by 2002:a17:90b:374f:: with SMTP id ne15mr9508017pjb.181.1587346262714;
+        Sun, 19 Apr 2020 18:31:02 -0700 (PDT)
+Received: from ?IPv6:::1? ([2404:7a87:83e0:f800:d9be:3496:1edd:1106])
+        by smtp.gmail.com with ESMTPSA id a22sm20373159pfg.169.2020.04.19.18.31.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 Apr 2020 18:31:02 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+Subject: Re: [PATCH v3] exfat: replace 'time_ms' with 'time_cs'
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        'Tetsuhiro Kohada' <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        'Sungjong Seo' <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20200416085144epcas1p1527b8df86453c7566b1a4d5a85689e69@epcas1p1.samsung.com>
+ <20200416085121.57495-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+ <003601d61461$7140be60$53c23b20$@samsung.com>
+Message-ID: <b250254c-3b88-9457-652d-f96c4c15e454@gmail.com>
+Date:   Mon, 20 Apr 2020 10:31:01 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/XwN28VMI3c_s+U=eocsa4JF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <003601d61461$7140be60$53c23b20$@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Avast (VPS 200419-0, 2020/04/19), Outbound message
+X-Antivirus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XwN28VMI3c_s+U=eocsa4JF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020/04/17 11:39, Namjae Jeon wrote:
+>> Replace "time_ms"  with "time_cs" in the file directory entry structure
+>> and related functions.
+>>
+>> The unit of create_time_ms/modify_time_ms in File Directory Entry are not
+>> 'milli-second', but 'centi-second'.
+>> The exfat specification uses the term '10ms', but instead use 'cs' as in
+>> "msdos_fs.h".
+>>
+>> Signed-off-by: Tetsuhiro Kohada
+>> <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+>> ---
+> I have run checkpatch.pl on your patch.
+> It give a following warning.
+> 
+> WARNING: Missing Signed-off-by: line by nominal patch author 'Tetsuhiro
+> Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>'
+> total: 0 errors, 1 warnings, 127 lines checked
+> 
+> Please fix it.
 
-Hi Gustavo,
+I want to fix it, but I'm not sure what's wrong.
+The my patch has the following line:
 
-On Sat, 18 Apr 2020 16:38:28 -0500 "Gustavo A. R. Silva" <gustavo@embeddedo=
-r.com> wrote:
->
-> Notice that all of these patches have been baking in linux-next for
-> quite a while now and, 238 more of these patches have already been
-> merged into 5.7-rc1.
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 
-Except that you rebased these just yesterday :-(
+Both my real name and email address are correct.
+Can you give me some advice?
 
-I understand why you did that (because there are still three earlier
-patches in the linux-next version of this tree), but please try to
-avoid this in the future.
+*** Currently I can't use office email, so I'm sending it from private email instead.
 
-Also, please clean up your linux-next included branch to avoid
-conflicts in the future, thanks.
 
---=20
-Cheers,
-Stephen Rothwell
+-- 
+このEメールはアバスト アンチウイルスによりウイルススキャンされています。
+https://www.avast.com/antivirus
 
---Sig_/XwN28VMI3c_s+U=eocsa4JF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6c9uoACgkQAVBC80lX
-0GyyMQgAoy8u4jonEyPBxWxwk0pNXRMJ7iQ407eCEaD36J7KJmqdiDC4C9Mpth6A
-7/Rb9Pt2/wiCoHu7LUAkLLREwgtQtVAoPX/kFN7DWZvywXAGXwjDR+rXHwWwjHVM
-1xQV0xrpLYkYc2rh62GbAYiyhFxqyi/h3uIYc8R61PLNjVCPeFconqCa9ohGp/Lv
-P4txcrfYB5UPZwp8Iv94ruuAXiQGkgu3oBIC+8gzog7vCIabmm3aeI/jdik08acI
-5IEaRNX8LzDR2GuDrWYsZYbo43KvxZoTfpWKPJUaKRDD8z/DX0z03YtLNTrYfm87
-nv46GlMKCSYZxwHGMoRYcqKTjx2lag==
-=G0Nt
------END PGP SIGNATURE-----
-
---Sig_/XwN28VMI3c_s+U=eocsa4JF--
