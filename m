@@ -2,164 +2,86 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B7AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3BBC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 831D12084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5212084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="rZQftbql"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eAkVkLKB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgDTT04 (ORCPT
+        id S1727900AbgDTT2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:26:56 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:65343 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgDTT04 (ORCPT
+        Mon, 20 Apr 2020 15:28:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725897AbgDTT2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:26:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587410815; x=1618946815;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2Z2X+Oe46FhVfUNdHU2pO9fm49ctsQbX913UhF7CSVU=;
-  b=rZQftbqlAzCtG+D1KFX+CGLbJLh8ZarU+6XrlJQhiyjs0At3AzHIIS3m
-   EGcNJhBZj1y6hGplTTQLHvjf7t006WgO/5ZVo5rEuGD3bDZjCVd4Ors3G
-   3tdoobQbGquE0sC1JUbzPIl44O1PT6hOawrZDF0x6qjqe7Six+6r24Bws
-   n8mRsgNkNA37Y+/1OJCjSznMwr70/Y/cBbZ8MNINm+8+V/isi54A/eWtB
-   1cmXf6MV1+kt2s2r6BdMEVC/QwtB4WeF0RDJyeRVoDeqPo8f8PeSBVy+J
-   MWJ9i3zYY4oMD2PnOOP5y2+4THqeMBr0xZtZgGH/UcuEnaDYo/LzT4je/
-   Q==;
-IronPort-SDR: uXwx1ZizNlrmPOILo6sDsgXyGOs2wcCQQFEdYCGUS5MiyBO7HJKROvOXhkWMXlqnqerD/ZTUDC
- Ocyiup15TJ0jP3EA9jevE/nqth0rC74riWZOeC6GvOZgzTv1E3+64uwuKASNFsPF+PQRq+FNQz
- tI8Q3K5gJuYeosXaL8JhRCwgJc/facu6n7Dh7UF4jnKw7ZtRAbdKVMgB66DqL1AZLUcF/X1Q6/
- iRCQfBOa3jCYEFQpN/akJ+0mq9vxlYjFHhBa+2lMsJ4ySIwMEDZAA8AQAPwJcn2x38Fa49ehnk
- Qbo=
-X-IronPort-AV: E=Sophos;i="5.72,407,1580799600"; 
-   d="scan'208";a="72781184"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Apr 2020 12:26:55 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 20 Apr 2020 12:27:02 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 20 Apr 2020 12:26:54 -0700
-Date:   Mon, 20 Apr 2020 21:26:54 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     <davem@davemloft.net>, <jiri@resnulli.us>, <ivecera@redhat.com>,
-        <kuba@kernel.org>, <roopa@cumulusnetworks.com>,
-        <olteanv@gmail.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-Subject: Re: [PATCH net-next 04/13] bridge: mrp: Expose function
- br_mrp_port_open
-Message-ID: <20200420192654.ivar7apyv5xnzwg3@soft-dev3.microsemi.net>
-References: <20200420150947.30974-1-horatiu.vultur@microchip.com>
- <20200420150947.30974-5-horatiu.vultur@microchip.com>
- <cc388b70-701c-4600-791b-8170683a7666@cumulusnetworks.com>
+        Mon, 20 Apr 2020 15:28:11 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 203A7C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:28:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PeNgxIYdhodceyRsiQXJ9AHM++VjzL0tYm/762Y/HsI=; b=eAkVkLKBGXi0Nf6wszcH6YjhXG
+        7xTDxRFfaqpfYG3jkxcNldZqzUzdk3kS+1/rdj+N5JTshWeqUSg5m3X5/DeCn6J+Fd1rtWCkMTcpt
+        +8oYWRWM07oeWlO1kCYryg6TWNtTM5UUBcJdLSmFgzFZ4j0rWRWZzPNs9+WEsVfv3AVymMUld56Os
+        4qaWXguOzrXyZz8/VCwrvTOxX4tI4Ga3um6Npi60sTGI6NttY29ZzUX/ES35xyQTrUbUkFmPxmD2x
+        SG3u+2UVA76U6X3ulMs4sHkoHTRwvWCEaotWziw3sEPOFhokSAHd6DjmKL7hoGF4FAhkhmdijCyCI
+        bfeuD5iA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQc5P-0007df-2o; Mon, 20 Apr 2020 19:28:07 +0000
+Date:   Mon, 20 Apr 2020 12:28:06 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: Re: [PATCH v4 08/10] mmap locking API: add MMAP_LOCK_INITIALIZER
+Message-ID: <20200420192806.GE5820@bombadil.infradead.org>
+References: <20200415004353.130248-1-walken@google.com>
+ <20200415004353.130248-9-walken@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cc388b70-701c-4600-791b-8170683a7666@cumulusnetworks.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200415004353.130248-9-walken@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 04/20/2020 20:30, Nikolay Aleksandrov wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On 20/04/2020 18:09, Horatiu Vultur wrote:
-> > In case the HW is capable to detect when the MRP ring is open or closed. It is
-> > expected that the network driver will notify the SW that the ring is open or
-> > closed.
-> >
-> > The function br_mrp_port_open is used to notify the kernel that one of the ports
-> > stopped receiving MRP_Test frames. The argument 'loc' has a value of '1' when
-> > the port stopped receiving MRP_Test and '0' when it started to receive MRP_Test.
-> >
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> > ---
-> >  include/linux/mrp_bridge.h | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> >  create mode 100644 include/linux/mrp_bridge.h
-> >
-> > diff --git a/include/linux/mrp_bridge.h b/include/linux/mrp_bridge.h
-> > new file mode 100644
-> > index 000000000000..61c1f0d395c7
-> > --- /dev/null
-> > +++ b/include/linux/mrp_bridge.h
-> > @@ -0,0 +1,27 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> > +
-> > +#ifndef _LINUX_MRP_BRIDGE_H
-> > +#define _LINUX_MRO_BRIDGE_H
-> > +
-> > +#include <linux/netdevice.h>
-> > +
-> > +/* The drivers are responsible to call this function when it detects that the
-> > + * MRP port stopped receiving MRP_Test frames or it started to receive MRP_Test.
-> > + * The argument dev represents the port and loc(Lost of Continuity) has a value
-> > + * of 1 when it stopped receiving MRP_Test frames and a value of 0 when it
-> > + * started to receive frames.
-> > + * Needs to be called with rcu_read_lock().
-> > + *
-> > + * This eventually notify the userspace which is required to react on these
-> > + * changes.
-> > + */
-> > +
-> > +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
-> > +int br_mrp_port_open(struct net_device *dev, u8 loc);
-> > +#else
-> > +static inline int br_mrp_port_open(struct net_device *dev, u8 loc)
-> > +{
-> > +}
-> > +#endif
-> > +
-> > +#endif
-> >
+On Tue, Apr 14, 2020 at 05:43:51PM -0700, Michel Lespinasse wrote:
+> @@ -90,7 +90,7 @@ static struct mm_struct tboot_mm = {
+                                            ^^^^^^^^
+>  	.pgd            = swapper_pg_dir,
+>  	.mm_users       = ATOMIC_INIT(2),
+>  	.mm_count       = ATOMIC_INIT(1),
+> -	.mmap_sem       = __RWSEM_INITIALIZER(init_mm.mmap_sem),
+> +	.mmap_sem       = MMAP_LOCK_INITIALIZER(init_mm.mmap_sem),
+                                                ^^^^^^^
 
-Hi Nik,
-> 
-> I see that in order to pass this "loc" to br_ifinfo_notify() you add a new port variable,
-> but it's a boolean, so you can just use the port flags for it which will simplify things a lot
-> and remove some ifdefs along the way. And please rename it to something longer (so it's easier
-> to get what it does).
+Shome mishtake, shirley?
 
-I will update to use the port flags.
+I don't see that this particular patch buys us much.  The name 'mmap_sem'
+is still used, and I appreciate we abstract away the type of the lock,
+but wouldn't this be better?
 
-> 
-> One question - now that it's always sent to user-space as IFLA_BRPORT_MRP_RING_OPEN attribute
-> wouldn't it be a problem, or is it read as a current state?
-> I mean you'll receive that attribute about a port even if you get a completely unrelated to MRP
-> notification (e.g. about a vlan change).
+-	.mmap_sem       = __RWSEM_INITIALIZER(init_mm.mmap_sem),
++	MMAP_LOCK_INITIALIZER(tboot_mm),
 
-It should not be a problem. The default value is 0, which means that the
-port has not lost the continuity.
-So let's say that a port lost the continuity then the userspace will
-receive a call where attribute IFLA_BRPORT_MRP_RING_OPEN will have the
-value 1. This is as expected.
-Then as you suggested, there is a vlan change, the userspace will
-receive a notification but again the attribute IFLA_BRPORT_MRP_RING_OPEN
-is 1, because the actual value is stored in the port variable, or port
-flags in the new patch). But the userspace can detect this case and just
-ignores it.
-The same will apply also if the userspace will receive multiple
-notification if the port didn't lose the continuity.
-
-> 
-> Thanks,
->  Nik
-
--- 
-/Horatiu
