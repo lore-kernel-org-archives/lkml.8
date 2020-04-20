@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3788C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CA3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1DE32070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4353720736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386516;
-	bh=P6Xpq1T2J2hl/E5cWmYXXXkMPPvkiK3T/FaviKoFQJs=;
+	s=default; t=1587386518;
+	bh=3WFfkTC2VyLFMYYkexTop0RZ0E1qTf1xEmB51Q2uf1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WVjgnFXMf8Aw5vAcAEvdoydHIba6UU3Gf5UHGjHEjNGMSpDS+I1LzCLpac/tpzMqu
-	 CglfPI/g1zymTxViC6v7MXw3wNVtSztA25H75hHGQhZHjsCKTrIlBn3lAJFrSHlqpl
-	 4D/FPaQFdp5Xu+neddxnzBPGeXiKMZkAzrdDL/6Q=
+	b=KO8FWpJTMlHd50CpUPxrSyFVLBoc9H26rRAH/rQbL62c81vnbwqW9wA800jIYlk7h
+	 ZXvk6eiOtkSoUzHKnKu2zZf5rdnhB8kjczA1KGIqvMdMtveWU95bQKyvaD+rYOhVpy
+	 dbucywKMtNgN7kgMDR5QSLNNMrXrreRfYThp/ft8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgDTMl4 (ORCPT
+        id S1728123AbgDTMl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:41:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34628 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:41:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbgDTMlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:41:52 -0400
+        id S1728094AbgDTMlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:41:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D49D72072B;
-        Mon, 20 Apr 2020 12:41:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 681E120735;
+        Mon, 20 Apr 2020 12:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386511;
-        bh=P6Xpq1T2J2hl/E5cWmYXXXkMPPvkiK3T/FaviKoFQJs=;
+        s=default; t=1587386508;
+        bh=3WFfkTC2VyLFMYYkexTop0RZ0E1qTf1xEmB51Q2uf1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RUAVFCycfWmsyI32XWqZGZcvWDgzOb8/xP4MjthhnpDG0+ZXqG0pPFz92dcONKgoI
-         A5W9vNLtsSfAOvnYOPeGKOc+G7QkNBI+Bpy0WxHhtwrxgjhB0qhkaWZ1lxyfbhQ3GE
-         b6tTpTI5x7Og4qZTNKTUhHv8BKnNcmMYB8Q/aKQI=
+        b=tr+/koOszpjEeDykoqySJR3/XB58LrqKidvfFu9RbXzDKoIwO/p42l/0YM417pdr7
+         djNFE+WAVZOG5cCe/mrXiroxKHlMlgS+PIuFZsbIJYn3Q4bYzK9SqgNVSNq5NupYCm
+         cmBLBLgrwQQ/hHj8Hu23SD1H9nzWmkh1xflC7hCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Tariq Toukan <tariqt@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 53/65] net/mlx5e: Rename hw_modify to preactivate
-Date:   Mon, 20 Apr 2020 14:38:57 +0200
-Message-Id: <20200420121518.351374201@linuxfoundation.org>
+Subject: [PATCH 5.5 52/65] net/mlx5e: Encapsulate updating netdev queues into a function
+Date:   Mon, 20 Apr 2020 14:38:56 +0200
+Message-Id: <20200420121518.174265026@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -63,96 +63,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit dca147b3dce5abb5284ff747211960fd2db5ec2e ]
+[ Upstream commit c2c95271f9f39ea9b34db2301b3b6c5105cdb447 ]
 
-mlx5e_safe_switch_channels accepts a callback to be called before
-activating new channels. It is intended to configure some hardware
-parameters in cases where channels are recreated because some
-configuration has changed.
-
-Recently, this callback has started being used to update the driver's
-internal MLX5E_STATE_XDP_OPEN flag, and the following patches also
-intend to use this callback for software preparations. This patch
-renames the hw_modify callback to preactivate, so that the name fits
-better.
+As a preparation for one of the following commits, create a function to
+encapsulate the code that notifies the kernel about the new amount of
+RX and TX queues. The code will be called multiple times in the next
+commit.
 
 Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
 Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h      |  6 +++---
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 14 ++++++++------
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ .../net/ethernet/mellanox/mlx5/core/en_main.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index 55ceabf077b29..3cb5b4321bf93 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -1035,14 +1035,14 @@ int mlx5e_open_channels(struct mlx5e_priv *priv,
- 			struct mlx5e_channels *chs);
- void mlx5e_close_channels(struct mlx5e_channels *chs);
- 
--/* Function pointer to be used to modify WH settings while
-+/* Function pointer to be used to modify HW or kernel settings while
-  * switching channels
-  */
--typedef int (*mlx5e_fp_hw_modify)(struct mlx5e_priv *priv);
-+typedef int (*mlx5e_fp_preactivate)(struct mlx5e_priv *priv);
- int mlx5e_safe_reopen_channels(struct mlx5e_priv *priv);
- int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
- 			       struct mlx5e_channels *new_chs,
--			       mlx5e_fp_hw_modify hw_modify);
-+			       mlx5e_fp_preactivate preactivate);
- void mlx5e_activate_priv_channels(struct mlx5e_priv *priv);
- void mlx5e_deactivate_priv_channels(struct mlx5e_priv *priv);
- 
 diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 35b0acce425f8..25690d52d48ed 100644
+index 67fe002dfade5..35b0acce425f8 100644
 --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
 +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -2963,7 +2963,7 @@ void mlx5e_deactivate_priv_channels(struct mlx5e_priv *priv)
- 
- static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
- 				       struct mlx5e_channels *new_chs,
--				       mlx5e_fp_hw_modify hw_modify)
-+				       mlx5e_fp_preactivate preactivate)
- {
- 	struct net_device *netdev = priv->netdev;
- 	int new_num_txqs;
-@@ -2982,9 +2982,11 @@ static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
- 
- 	priv->channels = *new_chs;
- 
--	/* New channels are ready to roll, modify HW settings if needed */
--	if (hw_modify)
--		hw_modify(priv);
-+	/* New channels are ready to roll, call the preactivate hook if needed
-+	 * to modify HW settings or update kernel parameters.
-+	 */
-+	if (preactivate)
-+		preactivate(priv);
- 
- 	priv->profile->update_rx(priv);
- 	mlx5e_activate_priv_channels(priv);
-@@ -2996,7 +2998,7 @@ static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
- 
- int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
- 			       struct mlx5e_channels *new_chs,
--			       mlx5e_fp_hw_modify hw_modify)
-+			       mlx5e_fp_preactivate preactivate)
- {
- 	int err;
- 
-@@ -3004,7 +3006,7 @@ int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
- 	if (err)
- 		return err;
- 
--	mlx5e_switch_priv_channels(priv, new_chs, hw_modify);
-+	mlx5e_switch_priv_channels(priv, new_chs, preactivate);
- 	return 0;
+@@ -2895,6 +2895,17 @@ static void mlx5e_netdev_set_tcs(struct net_device *netdev)
+ 		netdev_set_tc_queue(netdev, tc, nch, 0);
  }
  
++static void mlx5e_update_netdev_queues(struct mlx5e_priv *priv)
++{
++	int num_txqs = priv->channels.num * priv->channels.params.num_tc;
++	int num_rxqs = priv->channels.num * priv->profile->rq_groups;
++	struct net_device *netdev = priv->netdev;
++
++	mlx5e_netdev_set_tcs(netdev);
++	netif_set_real_num_tx_queues(netdev, num_txqs);
++	netif_set_real_num_rx_queues(netdev, num_rxqs);
++}
++
+ static void mlx5e_build_txq_maps(struct mlx5e_priv *priv)
+ {
+ 	int i, ch;
+@@ -2916,13 +2927,7 @@ static void mlx5e_build_txq_maps(struct mlx5e_priv *priv)
+ 
+ void mlx5e_activate_priv_channels(struct mlx5e_priv *priv)
+ {
+-	int num_txqs = priv->channels.num * priv->channels.params.num_tc;
+-	int num_rxqs = priv->channels.num * priv->profile->rq_groups;
+-	struct net_device *netdev = priv->netdev;
+-
+-	mlx5e_netdev_set_tcs(netdev);
+-	netif_set_real_num_tx_queues(netdev, num_txqs);
+-	netif_set_real_num_rx_queues(netdev, num_rxqs);
++	mlx5e_update_netdev_queues(priv);
+ 
+ 	mlx5e_build_txq_maps(priv);
+ 	mlx5e_activate_channels(&priv->channels);
 -- 
 2.20.1
 
