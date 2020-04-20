@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01538C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E413C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDE85214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA632214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgDTEAH (ORCPT
+        id S1726112AbgDTEA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 00:00:07 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2804 "EHLO huawei.com"
+        Mon, 20 Apr 2020 00:00:29 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2805 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725681AbgDTEAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 00:00:07 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0BE0D13B2D017AE430E6;
-        Mon, 20 Apr 2020 12:00:05 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Apr 2020
- 11:59:55 +0800
+        id S1725681AbgDTEA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 00:00:28 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 27E02A16B7C134081862;
+        Mon, 20 Apr 2020 12:00:25 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Apr 2020
+ 12:00:16 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <mathias.nyman@intel.com>, <gregkh@linuxfoundation.org>,
-        <ryan5544@gmail.com>, <linux-usb@vger.kernel.org>,
+To:     <pkshih@realtek.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <yanaijie@huawei.com>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] usb: pci-quirks: use true,false for bool variables
-Date:   Mon, 20 Apr 2020 12:26:22 +0800
-Message-ID: <20200420042622.18564-1-yanaijie@huawei.com>
+Subject: [PATCH] rtlwifi: rtl8723ae: fix warning comparison to bool
+Date:   Mon, 20 Apr 2020 12:26:58 +0800
+Message-ID: <20200420042658.18733-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -46,55 +46,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix the following coccicheck warning:
 
-drivers/usb/host/pci-quirks.c:532:1-27: WARNING: Assignment of 0/1 to
-bool variable
-drivers/usb/host/pci-quirks.c:208:1-20: WARNING: Assignment of 0/1 to
-bool variable
-drivers/usb/host/pci-quirks.c:232:2-21: WARNING: Assignment of 0/1 to
-bool variable
-drivers/usb/host/pci-quirks.c:235:2-21: WARNING: Assignment of 0/1 to
-bool variable
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c:617:14-20: WARNING:
+Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c:622:13-19: WARNING:
+Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c:627:14-20: WARNING:
+Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c:632:13-19: WARNING:
+Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c:937:5-13: WARNING:
+Comparison to bool
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/usb/host/pci-quirks.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-index beb2efa71341..92150ecdb036 100644
---- a/drivers/usb/host/pci-quirks.c
-+++ b/drivers/usb/host/pci-quirks.c
-@@ -205,7 +205,7 @@ static void usb_amd_find_chipset_info(void)
- {
- 	unsigned long flags;
- 	struct amd_chipset_info info;
--	info.need_pll_quirk = 0;
-+	info.need_pll_quirk = false;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
+index 655460f61bbc..7a46c6a9deae 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
+@@ -614,22 +614,22 @@ static bool _rtl8723e_llt_table_init(struct ieee80211_hw *hw)
  
- 	spin_lock_irqsave(&amd_lock, flags);
- 
-@@ -229,10 +229,10 @@ static void usb_amd_find_chipset_info(void)
- 	case AMD_CHIPSET_SB800:
- 	case AMD_CHIPSET_HUDSON2:
- 	case AMD_CHIPSET_BOLTON:
--		info.need_pll_quirk = 1;
-+		info.need_pll_quirk = true;
- 		break;
- 	default:
--		info.need_pll_quirk = 0;
-+		info.need_pll_quirk = false;
- 		break;
+ 	for (i = 0; i < (txpktbuf_bndy - 1); i++) {
+ 		status = _rtl8723e_llt_write(hw, i, i + 1);
+-		if (true != status)
++		if (!status)
+ 			return status;
  	}
  
-@@ -529,7 +529,7 @@ void usb_amd_dev_put(void)
- 	amd_chipset.nb_type = 0;
- 	memset(&amd_chipset.sb_type, 0, sizeof(amd_chipset.sb_type));
- 	amd_chipset.isoc_reqs = 0;
--	amd_chipset.need_pll_quirk = 0;
-+	amd_chipset.need_pll_quirk = false;
+ 	status = _rtl8723e_llt_write(hw, (txpktbuf_bndy - 1), 0xFF);
+-	if (true != status)
++	if (!status)
+ 		return status;
  
- 	spin_unlock_irqrestore(&amd_lock, flags);
+ 	for (i = txpktbuf_bndy; i < maxpage; i++) {
+ 		status = _rtl8723e_llt_write(hw, i, (i + 1));
+-		if (true != status)
++		if (!status)
+ 			return status;
+ 	}
  
+ 	status = _rtl8723e_llt_write(hw, maxpage, txpktbuf_bndy);
+-	if (true != status)
++	if (!status)
+ 		return status;
+ 
+ 	rtl_write_byte(rtlpriv, REG_CR, 0xff);
+@@ -934,7 +934,7 @@ int rtl8723e_hw_init(struct ieee80211_hw *hw)
+ 
+ 	rtlpriv->intf_ops->disable_aspm(hw);
+ 	rtstatus = _rtl8712e_init_mac(hw);
+-	if (rtstatus != true) {
++	if (!rtstatus) {
+ 		pr_err("Init MAC failed\n");
+ 		err = 1;
+ 		goto exit;
 -- 
 2.21.1
 
