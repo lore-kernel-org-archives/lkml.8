@@ -2,26 +2,26 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360FBC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 952A7C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 135E5214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD492071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgDTL6n (ORCPT
+        id S1726902AbgDTL6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:58:43 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:47408 "EHLO loongson.cn"
+        Mon, 20 Apr 2020 07:58:46 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:47452 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726341AbgDTL6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:58:42 -0400
+        id S1726673AbgDTL6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:58:44 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj2pujp1eGSQqAA--.4S2;
-        Mon, 20 Apr 2020 19:58:40 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj2pujp1eGSQqAA--.4S5;
+        Mon, 20 Apr 2020 19:58:41 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Luis Chamberlain <mcgrof@kernel.org>,
         Shuah Khan <shuah@kernel.org>,
@@ -30,45 +30,98 @@ To:     Luis Chamberlain <mcgrof@kernel.org>,
 Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
         Markus Elfring <Markus.Elfring@web.de>,
         Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [RESEND v2 0/4] Fix some issues about kmod 
-Date:   Mon, 20 Apr 2020 19:58:34 +0800
-Message-Id: <1587383918-1870-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [RESEND v2 3/4] kmod: Return directly if module name is empty in request_module()
+Date:   Mon, 20 Apr 2020 19:58:37 +0800
+Message-Id: <1587383918-1870-4-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dxj2pujp1eGSQqAA--.4S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYY7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87
-        Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-        6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72
-        CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
-        MxkIecxEwVAFwVW8KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
-        026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
-        Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20x
-        vEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv
-        67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-        uYvjfU589NDUUUU
+In-Reply-To: <1587383918-1870-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1587383918-1870-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxj2pujp1eGSQqAA--.4S5
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFW8urWkur1fGry7XF45GFg_yoW8GFy5pF
+        45AFWFqr4ftw1qya97Jr95WFyYgrZrGrsxXFs5Crs3AF90yrnFyrn8G3WYgrW5uF4rKr1j
+        yr4vqr15uryUWFUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+        x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+        8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa
+        w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrV
+        C2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
+        7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxV
+        Aaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
+        c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+        CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4U
+        MIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
+        4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBI
+        daVFxhVjvjDU0xZFpf9x0JUVyIUUUUUU=
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tiezhu Yang (4):
-  selftests: kmod: Use variable NAME in kmod_test_0001()
-  kmod: Remove redundant "be an" in the comment
-  kmod: Return directly if module name is empty in request_module()
-  test_kmod: Avoid potential double free in trigger_config_run_type()
+If module name is empty, it is better to return directly at the beginning
+of request_module() without doing the needless call_modprobe() operation.
 
- kernel/kmod.c                        | 10 +++++++---
- lib/test_kmod.c                      |  2 +-
- tools/testing/selftests/kmod/kmod.sh |  4 ++--
- 3 files changed, 10 insertions(+), 6 deletions(-)
+Call trace:
 
+request_module()
+      |
+      |
+__request_module()
+      |
+      |
+call_modprobe()
+      |
+      |
+call_usermodehelper_exec() -- retval = sub_info->retval;
+      |
+      |
+call_usermodehelper_exec_work()
+      |
+      |
+call_usermodehelper_exec_sync() -- sub_info->retval = ret;
+      |
+      | --> call_usermodehelper_exec_async() --> do_execve()
+      |
+kernel_wait4(pid, (int __user *)&ret, 0, NULL);
+
+sub_info->retval is 256 after call kernel_wait4(), the function
+call_usermodehelper_exec() returns sub_info->retval which is 256,
+then call_modprobe() and __request_module() returns 256.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+v2:
+  - update the commit message to explain the detailed reason
+
+ kernel/kmod.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/kernel/kmod.c b/kernel/kmod.c
+index 3cd075c..5851444 100644
+--- a/kernel/kmod.c
++++ b/kernel/kmod.c
+@@ -28,6 +28,8 @@
+ 
+ #include <trace/events/module.h>
+ 
++#define MODULE_NOT_FOUND 256
++
+ /*
+  * Assuming:
+  *
+@@ -144,6 +146,9 @@ int __request_module(bool wait, const char *fmt, ...)
+ 	if (ret >= MODULE_NAME_LEN)
+ 		return -ENAMETOOLONG;
+ 
++	if (strlen(module_name) == 0)
++		return MODULE_NOT_FOUND;
++
+ 	ret = security_kernel_module_request(module_name);
+ 	if (ret)
+ 		return ret;
 -- 
 2.1.0
 
