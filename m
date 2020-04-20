@@ -2,133 +2,82 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4821FC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B82C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26AF920782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C78C220782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=stwcx.xyz header.i=@stwcx.xyz header.b="VtGDLXJb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J/4OyVfJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="JFgTz9qe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgDTUbt (ORCPT
+        id S1726530AbgDTUdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:31:49 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:38991 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725774AbgDTUbs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:31:48 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id B50805C0097;
-        Mon, 20 Apr 2020 16:31:47 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Mon, 20 Apr 2020 16:31:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=JMLwYzWJFZJjSwbOPBsyhMipS7z
-        6+ryERcPhvkMB9Yw=; b=VtGDLXJb3zfGugu1hjkG1Uax9FJD6+tV6sJNQjtMxjF
-        HOSBLh0HJyvUEa8VtQc1ib9Duxm15hAKDn2q1G2GO7zeJBIytKM1VWIW1NOC264A
-        7yGmwRct8dErhAv9q8sQ52OrjuKSNO3R/PtA7U1PmtSEL2Ki87GduIwpL+/lwwLN
-        nmlLWERTkbbj5RAFYpJkOsjvVPVpk85gQmo1uj1Yg8Lph41YrQE+sSo/suzFSHMT
-        2ApRTUJGI0TTr1xcHMShetYZ6puc7xEb+fQXp66Gi6F9k7qe086gP0xchTqylwzj
-        YoRbhRysiYgqc764zTamJKAejyZ4nU4F5jHjcsarOTA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=JMLwYz
-        WJFZJjSwbOPBsyhMipS7z6+ryERcPhvkMB9Yw=; b=J/4OyVfJIs1EyhQfQGUxNV
-        RiWiBsaam5RBAvv126k7pvkPUho538rSR+TfyWU8qqvFmtVPvtu2BpA16dTDlQxi
-        E3QuSYXh5l8i/sYqQltgGCayMuhbdz+UAYqneVpaUHpEiBguwpdrgWesrml/UPHl
-        UrMxHiyptb4Mb+tJRw/mdc715p51EZC+r6fpTG017yoWc1DiLbT/xRRpjjKQmhED
-        TU9hNsCCNfwkjJ7A7HRtYkggISe3+bmGWMWzYYE/tCPHPMSpggALwcEKOPoccGNv
-        jsi480v8dQLymjSQtdeZtPFWAO3yzAegUeZm2pMvUbcnHMOidwG6KRDJPhI5ENYA
-        ==
-X-ME-Sender: <xms:swaeXiSDXj4RF1BzSD2hvHOXqTjRZHgAVzty9W8FiczINXtLcO3DDw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefgddugeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdljedtmdenucfjughrpeffhffvuffkfhggtggujgesghdtreertddt
-    vdenucfhrhhomheprfgrthhrihgtkhcuhghilhhlihgrmhhsuceophgrthhrihgtkhessh
-    htfigtgidrgiihiieqnecukfhppedutdejrddutdejrddukeejrdduuddtnecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgrthhrihgtkhessh
-    htfigtgidrgiihii
-X-ME-Proxy: <xmx:swaeXjhkzpGWYRLhKQJx4pNf1xBQ5h5956vYRCFPOdHU6pN3FnNaxQ>
-    <xmx:swaeXinN-BX8SvLIxpa9FKqj3PjXUnSFwwF7r4ucy3H_oohP-nwgrw>
-    <xmx:swaeXkAv9IITqExCudv-Ql5jqyVLZGK-9oLIDHR67DA17T_32ksiHg>
-    <xmx:swaeXlTd8NjnqiqK58apyvIHaWb9rSHpqPR0KrGFnriwJ45GCgH6rw>
-Received: from localhost (mobile-107-107-187-110.mycingular.net [107.107.187.110])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 33D4E3065C1C;
-        Mon, 20 Apr 2020 16:31:47 -0400 (EDT)
-Date:   Mon, 20 Apr 2020 15:31:46 -0500
-From:   Patrick Williams <patrick@stwcx.xyz>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Bjorn Ardo <bjorn.ardo@axis.com>,
-        Patrick Williams <alpawi@amazon.com>,
-        =?iso-8859-1?Q?Bj=F6rn_Ard=F6?= <bjornar@axis.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: slave-eeprom: initialize empty eeprom properly
-Message-ID: <20200420203146.GC95151@heinlein.lan.stwcx.xyz>
-References: <20191001164009.21610-1-alpawi@amazon.com>
- <150599be-9125-4ab9-e2a6-e792b41910e6@axis.com>
- <20200420164349.GD3721@ninjato>
+        Mon, 20 Apr 2020 16:33:02 -0400
+Received: from plaes.org ([188.166.43.21]:36274 "EHLO plaes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbgDTUdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:33:01 -0400
+Received: from plaes.org (localhost [127.0.0.1])
+        by plaes.org (Postfix) with ESMTPSA id 9908240086;
+        Mon, 20 Apr 2020 20:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
+        t=1587414749; bh=d7Hj4YSM+ItexsFnRjVlbilf+LuV59x0yxXoLaqX6Yw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JFgTz9qeJUl4IMms8a8wL9ia7zEMfStVPbGo86s1wI8zOPvSdr8d3OOQkfKBSAKa2
+         2cyrCGrrRn18La96SdTgeMAZqOrq4Cm8h7v0CZcLoni8T45VywhEg8K29lcGkgFJRz
+         VDVzf5hlkhZyrDEf9NvIz1s7v9EFg+f1U66S+v8m27pLm1AT3OzZ3m0foBRqjtatQ0
+         lsYGWr4yFX81V18wzG9BBopi6FfRWZmaUapt/PuABevjh/BaD0UzLsgWMWYTl/ypcW
+         fthldSfIuKzT93ot591XlVkUUDKrFD65Z7YSDIWOytaMLrQ16pj8ddeugFDuVU5UsX
+         FZU4gbRdhOXTg==
+Date:   Mon, 20 Apr 2020 20:32:28 +0000
+From:   Priit Laes <plaes@plaes.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/4] clk: sunxi-ng: a10/a20: rewrite init code to a
+ platform driver
+Message-ID: <20200420203228.GA4734@plaes.org>
+References: <20200417221730.555954-1-plaes@plaes.org>
+ <20200417221730.555954-2-plaes@plaes.org>
+ <20200420124935.asfbgv7envb2af55@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4ZLFUWh1odzi/v6L"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200420164349.GD3721@ninjato>
+In-Reply-To: <20200420124935.asfbgv7envb2af55@gilmour.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 20, 2020 at 02:49:35PM +0200, Maxime Ripard wrote:
+> On Sat, Apr 18, 2020 at 01:17:27AM +0300, Priit Laes wrote:
+> > In order to register regmap for sun7i CCU, there needs to be
+> > a device structure already bound to the CCU device node.
+> > 
+> > Convert the sun4i/sun7i CCU setup to platform driver to use
+> > it later as platform device.
+> > 
+> > Signed-off-by: Priit Laes <plaes@plaes.org>
+> 
+> You can't relly do that though. We have timers that need those clocks before the
+> device model is initialized.
 
---4ZLFUWh1odzi/v6L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, I'm somewhat lost now... are these the affected timers on sun7i following:
+- allwinner,sun4i-a10-timer (timer@1c20c00)
+- allwinner,sun7i-a20-hstimer (hstimer@1c60000)
 
-On Mon, Apr 20, 2020 at 06:43:49PM +0200, Wolfram Sang wrote:
-> On Wed, Oct 02, 2019 at 08:20:53AM +0200, Bjorn Ardo wrote:
-> > Hi,
-> >=20
-> >=20
-> > I sent in another patch earlier that added support for specifying a fil=
-e in
-> > devicetree to initilize the eeprom from, corresponding to the case of
-> > pre-flashed eeprom. Maybe these two patches should be merged so this
-> > initialization is only done if no file is specified?
->=20
-> Yes, I agree.
->=20
+Any ideas on what approach I could actually use?
 
-It looks like Bjorn's referenced patches are still unmerged also?
+Also, similar timer dependency would affect then sun6i-a31 and sun9i-a80
+platforms too...
 
---=20
-Patrick Williams
-
---4ZLFUWh1odzi/v6L
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAl6eBrIACgkQqwNHzC0A
-wRlalw/9HeoJesi01g2+IOPj7CAKk3h/pTnXSyzqHMkYUgNaTdhy/U+VE9B7ZvJf
-Hln/gHF0uLaXtTcfXq+ogjL+new9tnJJhQqBEvCAqJ3335agSco1/owDHTCrpKyW
-y3IGmh4Yls68I5A3YL6OniwqtP7j6qwK7BffAfqGhXiG+5qwLm5hG2Cq1o+nMUm3
-xN0y8EB7nmSVbNfUj10aUnXevop7x1pFILzkR299G8XNreI14egQj3TFkmGmRxob
-Veogw78GcH9D6D334hm0e3lEWElUMGfleuqonRZQdsm0qaZU5veJSb6s/hAy0pW3
-PNKufnYjIK2ZStlt6tcJxmsYE2Qc9uiYqFXP41DMAUCB1x5ATAwi82Gq2PDVO9XC
-NbF8MpC0xHf039YcU7LneoN97ZawVamyEyuoA4JtIan5AwBNrLj4dOJfsfZzFz6l
-Al9kVVhT4AiR7068nkEhLB1fTlQhSwrrrQhjd6A65nhbS3e3EjNKU53rriBw87KW
-aOqAM9CykHKf0fZEIks5/yje3fJ9dTQQ+BgLLoAEqzJdkrGB/kuw8NGSgAnithun
-Nsog+4pV2TkymhO9uwDmQmJAZkSIFWaZoOaYW20xauItZYA76o49tTGZnFhcWjg0
-XI3dm8EFa4XZ+lRftlzu7LsmNbcJvcbiBqAJXeplrm3gDMumwwg=
-=p8Hs
------END PGP SIGNATURE-----
-
---4ZLFUWh1odzi/v6L--
+> 
+> Maxime
