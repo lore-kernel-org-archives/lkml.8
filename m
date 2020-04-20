@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09505C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDD5C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE69B20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB082078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386862;
-	bh=JNYBM1DqjYWaI/f+MVZCYi82oRdiai3bNp++sT13rCI=;
+	s=default; t=1587386869;
+	bh=MvXeFa5FcNNRthXLPyxuyxLB4bd5gGS+Nh1stta1QhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sPuCXgO9M0a4DQwcr3BYhSqxnl6XLMosS0yKhZ3vj/w9jfBFsAQQv4Qy3HiEvE5gy
-	 UnKIMc3QVMb1Fln8azrc7CHPLhjo/kAnVXNhkfreEb8prGF3qTFOPCGr08P6Duifch
-	 +bvsarr2aBxl3zPp/iw5jnH7zdEcne+s7rU2NT8I=
+	b=v1gQwP4elJzIop62XFLB/Dzo7DjbA+t4Rh7jnR4VMFjNDcfGVvIMIHiydfPgKQ85e
+	 2TlLY0Fna0tT7HmdYg5CcymCrH2O9fVQwQwIRxw7fw9KyZdjE0qTCED2a8jPmAdKjf
+	 oo+XMXDVYiYXJucWY738vDX64ZolkaA+AwoSg4BI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgDTMrl (ORCPT
+        id S1728579AbgDTMrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43652 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729091AbgDTMrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:47:33 -0400
+        id S1729119AbgDTMrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:47:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC122072B;
-        Mon, 20 Apr 2020 12:47:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 016E52072B;
+        Mon, 20 Apr 2020 12:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386853;
-        bh=JNYBM1DqjYWaI/f+MVZCYi82oRdiai3bNp++sT13rCI=;
+        s=default; t=1587386860;
+        bh=MvXeFa5FcNNRthXLPyxuyxLB4bd5gGS+Nh1stta1QhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cz7h+WJY8Kj+y9YEvEGQip8tzf//QasqK1F2HCZzn4Vi6CyYB23xSWmBYWP/vM3bQ
-         ax6/b+44xtlRN2YmVRDl6HgjnXX1PdOKZcFYZh/9b2xrxHpp6ZSOXGO//jSKpu09O4
-         mA3XooOfMW9eVBkY3ulzxWAkxTSJyyVH2C4sY32A=
+        b=OwTw5BeEv4v1lzMcsmESz6QxVBgX6pp2feIRpHAjhgprd5khXFSKFkO9eq/FRu4mf
+         pCl1L8p5s3ojQ2sRlScqp05BPFoV5GiR+Dbnzvvbtge7IpXYIPgYAt55ne+TymuT5e
+         zErvAfl1OvWWxlY5uRODOIMCT7RPEsR7GJnPEjWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.4 54/60] ext4: do not zeroout extents beyond i_disksize
-Date:   Mon, 20 Apr 2020 14:39:32 +0200
-Message-Id: <20200420121514.830085605@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 5.4 57/60] x86/resctrl: Fix invalid attempt at removing the default resource group
+Date:   Mon, 20 Apr 2020 14:39:35 +0200
+Message-Id: <20200420121515.663594031@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -59,63 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Reinette Chatre <reinette.chatre@intel.com>
 
-commit 801674f34ecfed033b062a0f217506b93c8d5e8a upstream.
+commit b0151da52a6d4f3951ea24c083e7a95977621436 upstream.
 
-We do not want to create initialized extents beyond end of file because
-for e2fsck it is impossible to distinguish them from a case of corrupted
-file size / extent tree and so it complains like:
+The default resource group ("rdtgroup_default") is associated with the
+root of the resctrl filesystem and should never be removed. New resource
+groups can be created as subdirectories of the resctrl filesystem and
+they can be removed from user space.
 
-Inode 12, i_size is 147456, should be 163840.  Fix? no
+There exists a safeguard in the directory removal code
+(rdtgroup_rmdir()) that ensures that only subdirectories can be removed
+by testing that the directory to be removed has to be a child of the
+root directory.
 
-Code in ext4_ext_convert_to_initialized() and
-ext4_split_convert_extents() try to make sure it does not create
-initialized extents beyond inode size however they check against
-inode->i_size which is wrong. They should instead check against
-EXT4_I(inode)->i_disksize which is the current inode size on disk.
-That's what e2fsck is going to see in case of crash before all dirty
-data is written. This bug manifests as generic/456 test failure (with
-recent enough fstests where fsx got fixed to properly pass
-FALLOC_KEEP_SIZE_FL flags to the kernel) when run with dioread_lock
-mount option.
+A possible deadlock was recently fixed with
 
-CC: stable@vger.kernel.org
-Fixes: 21ca087a3891 ("ext4: Do not zero out uninitialized extents beyond i_size")
-Reviewed-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Link: https://lore.kernel.org/r/20200331105016.8674-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+  334b0f4e9b1b ("x86/resctrl: Fix a deadlock due to inaccurate reference").
+
+This fix involved associating the private data of the "mon_groups"
+and "mon_data" directories to the resource group to which they belong
+instead of NULL as before. A consequence of this change was that
+the original safeguard code preventing removal of "mon_groups" and
+"mon_data" found in the root directory failed resulting in attempts to
+remove the default resource group that ends in a BUG:
+
+  kernel BUG at mm/slub.c:3969!
+  invalid opcode: 0000 [#1] SMP PTI
+
+  Call Trace:
+  rdtgroup_rmdir+0x16b/0x2c0
+  kernfs_iop_rmdir+0x5c/0x90
+  vfs_rmdir+0x7a/0x160
+  do_rmdir+0x17d/0x1e0
+  do_syscall_64+0x55/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fix this by improving the directory removal safeguard to ensure that
+subdirectories of the resctrl root directory can only be removed if they
+are a child of the resctrl filesystem's root _and_ not associated with
+the default resource group.
+
+Fixes: 334b0f4e9b1b ("x86/resctrl: Fix a deadlock due to inaccurate reference")
+Reported-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/884cbe1773496b5dbec1b6bd11bb50cffa83603d.1584461853.git.reinette.chatre@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/extents.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -3549,8 +3549,8 @@ static int ext4_ext_convert_to_initializ
- 		(unsigned long long)map->m_lblk, map_len);
- 
- 	sbi = EXT4_SB(inode->i_sb);
--	eof_block = (inode->i_size + inode->i_sb->s_blocksize - 1) >>
--		inode->i_sb->s_blocksize_bits;
-+	eof_block = (EXT4_I(inode)->i_disksize + inode->i_sb->s_blocksize - 1)
-+			>> inode->i_sb->s_blocksize_bits;
- 	if (eof_block < map->m_lblk + map_len)
- 		eof_block = map->m_lblk + map_len;
- 
-@@ -3805,8 +3805,8 @@ static int ext4_split_convert_extents(ha
- 		  __func__, inode->i_ino,
- 		  (unsigned long long)map->m_lblk, map->m_len);
- 
--	eof_block = (inode->i_size + inode->i_sb->s_blocksize - 1) >>
--		inode->i_sb->s_blocksize_bits;
-+	eof_block = (EXT4_I(inode)->i_disksize + inode->i_sb->s_blocksize - 1)
-+			>> inode->i_sb->s_blocksize_bits;
- 	if (eof_block < map->m_lblk + map->m_len)
- 		eof_block = map->m_lblk + map->m_len;
- 	/*
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -3006,7 +3006,8 @@ static int rdtgroup_rmdir(struct kernfs_
+ 	 * If the rdtgroup is a mon group and parent directory
+ 	 * is a valid "mon_groups" directory, remove the mon group.
+ 	 */
+-	if (rdtgrp->type == RDTCTRL_GROUP && parent_kn == rdtgroup_default.kn) {
++	if (rdtgrp->type == RDTCTRL_GROUP && parent_kn == rdtgroup_default.kn &&
++	    rdtgrp != &rdtgroup_default) {
+ 		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP ||
+ 		    rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED) {
+ 			ret = rdtgroup_ctrl_remove(kn, rdtgrp);
 
 
