@@ -2,91 +2,98 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17382C38A30
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317C7C38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5EFE20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0869E21473
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:07:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p4I8LotD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgDTKGZ (ORCPT
+        id S1726138AbgDTKHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 06:06:25 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35163 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgDTKGZ (ORCPT
+        Mon, 20 Apr 2020 06:07:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725773AbgDTKHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 06:06:25 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jQTJi-00044w-Ou; Mon, 20 Apr 2020 10:06:18 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Dmitry Safonov <dima@arista.com>
-Subject: [PATCH] vdso/datapage: use correct clock mode name in comment
-Date:   Mon, 20 Apr 2020 12:06:15 +0200
-Message-Id: <20200420100615.1549804-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.26.1
+        Mon, 20 Apr 2020 06:07:49 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2837C061A0C;
+        Mon, 20 Apr 2020 03:07:48 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 495Mns3L49z9sSd;
+        Mon, 20 Apr 2020 20:07:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587377265;
+        bh=fyRE88EUmcJ/xhfP/7TaFlVcAPO2aRgIMO/l87QiN50=;
+        h=Date:From:To:Cc:Subject:From;
+        b=p4I8LotDwEanAlLDJ+bfvVjKenoLIigPRaxoK/9trQj1OsATrk0NLqKcqwn7UYGap
+         EJQ/WKBbXcNVlZ3mJ9WYe+Cihnehkye83rt5xsDOhhhRvrDHUdLLPmGcrZMcY4g9ci
+         +kcl1+mDp2xq2zxPD5iHawajZJyFSedcclR3jVXlG0ufYrRZsrvpqWFkWpzLhU0WUG
+         NiwVhJF/eMrMa7zkFaU886U/KLTiCvgDtCTNNzPFWathOdQ3bfTtqsG4643kyWL1NL
+         wpzk8ZDbKfnwWVftJG+UAjuq2deGkajbmg57UKADFCZgRneZCzBUz+y30h5P1RsT8I
+         ApiY3lkAANrmQ==
+Date:   Mon, 20 Apr 2020 20:07:44 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: linux-next: build failure after merge of the mips tree
+Message-ID: <20200420200744.620c2782@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/5md_9.eHnu1gkIW32nH6tg6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the explanation for time namespace <-> vdso interactions is very
-helpful it uses the wrong name in the comment when describing the clock
-mode making grepping a bit annoying.
+--Sig_/5md_9.eHnu1gkIW32nH6tg6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-This seems like an accidental oversight when moving from VCLOCK_TIMENS
-to VDSO_CLOCKMODE_TIMENS. It seems that
-660fd04f9317 ("lib/vdso: Prepare for time namespace support") misspelled
-VCLOCK_TIMENS as VLOCK_TIMENS which explains why it got missed when
-VCLOCK_TIMENS became VDSO_CLOCKMODE_TIMENS in
-2d6b01bd88cc ("lib/vdso: Move VCLOCK_TIMENS to vdso_clock_modes").
+Hi all,
 
-Update the commit to use VDSO_CLOCKMODE_TIMENS.
+After merging the mips tree, today's linux-next build (mips gpr_defconfig)
+failed like this:
 
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dmitry Safonov <dima@arista.com>
-Cc: Andrei Vagin <avagin@gmail.com>
-Fixes: 660fd04f9317 ("lib/vdso: Prepare for time namespace support")
-Fixes: 2d6b01bd88cc ("lib/vdso: Move VCLOCK_TIMENS to vdso_clock_modes")
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- include/vdso/datapage.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+arch/mips/alchemy/common/setup.c:99:9: error: implicit declaration of funct=
+ion =E2=80=98remap_pfn_range=E2=80=99; did you mean =E2=80=98io_remap_pfn_r=
+ange=E2=80=99? [-Werror=3Dimplicit-function-declaration]
 
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index 5cbc9fcbfd45..7955c56d6b3c 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -73,8 +73,8 @@ struct vdso_timestamp {
-  *
-  * @offset is used by the special time namespace VVAR pages which are
-  * installed instead of the real VVAR page. These namespace pages must set
-- * @seq to 1 and @clock_mode to VLOCK_TIMENS to force the code into the
-- * time namespace slow path. The namespace aware functions retrieve the
-+ * @seq to 1 and @clock_mode to VDSO_CLOCKMODE_TIMENS to force the code into
-+ * the time namespace slow path. The namespace aware functions retrieve the
-  * real system wide VVAR page, read host time and add the per clock offset.
-  * For clocks which are not affected by time namespace adjustment the
-  * offset must be zero.
+Caused by commit
 
-base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
--- 
-2.26.1
+  d399157283fb ("MIPS: cleanup fixup_bigphys_addr handling")
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/5md_9.eHnu1gkIW32nH6tg6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6ddHAACgkQAVBC80lX
+0GyhaQf/fbLKnAmxp3xCXCLNPDQZNt5sA4vQXe3ISEAF4apneFAGK+5Rs6BH0ERs
+pv2o4uyopeMiuvUza6rNRAXulUVV0bycTgr2zCaA+i98IM5RBsAePLq9VC38J8Qa
+8gTaITYQgHJ1x57780VGKbZeHkpV5SqH0Lx3GGdRe1Pi/qsThLJhebU4cr64R4en
+ezAWAUJFwiTGTfNGvoHY4BVQWssLaXpaS4TZlVkrG3oohCmpMNtyRf+pznCe/5jU
+gmLVLGkns59SQkMNkET/PH3k1UvdxzPvh/oPpbZRCvonra6e1tGRe3QJk/V4EUam
+YYdlr6kiGx2UjZrd7WFdydFL7LOJyA==
+=CDYJ
+-----END PGP SIGNATURE-----
+
+--Sig_/5md_9.eHnu1gkIW32nH6tg6--
