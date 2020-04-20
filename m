@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C971C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66886C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4180E206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EEE20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387398;
-	bh=EBRWQQduHCM/bukx5nIbdKuWlpao/AJ9LL5tMdB3pGg=;
+	s=default; t=1587387400;
+	bh=WhMu6k3YzRYYu55dKp7nGrT7kR2HXHgEVPODScMIWZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xf8gtzZR7VX7q+uHdUhBM92mpI4rCxSbt1Ulywj2P54ScesE0o3sich1lsQdr9kq2
-	 ngRVqEGf2OwIoi9Q5WiePeQwzxppEVYD1QD5tZXmpBSazVXjjBnvGxEXKuQ1TKZVT+
-	 HH4hqZ2vhAAITgmc8sMx2du8W4mQfBHGG7JNNd1Y=
+	b=jmaMZBso+iXTdd+eZfQzTRy6/k0DrqKoLDK72nz0ZpaofTv8AO1B5/KGrk2jnkUI2
+	 leMo8kCK0eXWi/mnkmm0v27XuVNDfrGJXjWcRbFlK6pJ0+v8RRPEyctG6JMJ12+bts
+	 aawot6ObhiSIjxX++pXzKVo/4lFI0Rt2HVbpBdZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbgDTMpC (ORCPT
+        id S1728632AbgDTMpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:45:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38794 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:45:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728618AbgDTMos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:48 -0400
+        id S1727962AbgDTMoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:44:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DBC82072B;
-        Mon, 20 Apr 2020 12:44:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D06720736;
+        Mon, 20 Apr 2020 12:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386687;
-        bh=EBRWQQduHCM/bukx5nIbdKuWlpao/AJ9LL5tMdB3pGg=;
+        s=default; t=1587386684;
+        bh=WhMu6k3YzRYYu55dKp7nGrT7kR2HXHgEVPODScMIWZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6L4bcyxNgQzIGJS9D05yNimSNG7rAfIVaGusHGN0sPt8CVKVpFCzl9umLyMfwKkp
-         ukgBLkR6n4dAs1Oi58UavXMThZVoKgxWt2+sCg73zyt7gKA8L7ITPoEkSx0UhAFw9Y
-         ZKTfsuyruIy0RbkpcyLPME0Sf329kF20v5b8r5mY=
+        b=BhyBOrSSY1jYX0jKHxODYUxT6IXZ2JFKHGTaW5nfvGoF1Lh1eZIR0GPNlpsawoUQk
+         b9y+o84k6hVSLhlHRrq+2/owySkda+hsedJHk8YJnccUwyp0/SkkB6Uwtysrz4RXtV
+         2Vlkh3AhUeuQ94mL6ot8hiuMLammCVwR4zikIq5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.6 17/71] net/mlx5e: Fix pfnum in devlink port attribute
-Date:   Mon, 20 Apr 2020 14:38:31 +0200
-Message-Id: <20200420121511.990985382@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6693adf1698864d21734@syzkaller.appspotmail.com,
+        syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com,
+        stable@kernel.org, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.6 54/71] mac80211_hwsim: Use kstrndup() in place of kasprintf()
+Date:   Mon, 20 Apr 2020 14:39:08 +0200
+Message-Id: <20200420121519.961151765@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -60,62 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-[ Upstream commit 7482d9cb5b974b7ad1a58fa8714f7a8c05b5d278 ]
+commit 7ea862048317aa76d0f22334202779a25530980c upstream.
 
-Cited patch missed to extract PCI pf number accurately for PF and VF
-port flavour. It considered PCI device + function number.
-Due to this, device having non zero device number shown large pfnum.
+syzbot reports a warning:
 
-Hence, use only PCI function number; to avoid similar errors, derive
-pfnum one time for all port flavours.
+precision 33020 too large
+WARNING: CPU: 0 PID: 9618 at lib/vsprintf.c:2471 set_precision+0x150/0x180 lib/vsprintf.c:2471
+ vsnprintf+0xa7b/0x19a0 lib/vsprintf.c:2547
+ kvasprintf+0xb2/0x170 lib/kasprintf.c:22
+ kasprintf+0xbb/0xf0 lib/kasprintf.c:59
+ hwsim_del_radio_nl+0x63a/0x7e0 drivers/net/wireless/mac80211_hwsim.c:3625
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
+ ...
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Fixes: f60f315d339e ("net/mlx5e: Register devlink ports for physical link, PCI PF, VFs")
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Thus it seems that kasprintf() with "%.*s" format can not be used for
+duplicating a string with arbitrary length. Replace it with kstrndup().
+
+Note that later this string is limited to NL80211_WIPHY_NAME_MAXLEN == 64,
+but the code is simpler this way.
+
+Reported-by: syzbot+6693adf1698864d21734@syzkaller.appspotmail.com
+Reported-by: syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com
+Cc: stable@kernel.org
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Link: https://lore.kernel.org/r/20200410123257.14559-1-tuomas.tynkkynen@iki.fi
+[johannes: add note about length limit]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -1969,29 +1969,30 @@ static int register_devlink_port(struct
- 	struct mlx5_eswitch_rep *rep = rpriv->rep;
- 	struct netdev_phys_item_id ppid = {};
- 	unsigned int dl_port_index = 0;
-+	u16 pfnum;
- 
- 	if (!is_devlink_port_supported(dev, rpriv))
- 		return 0;
- 
- 	mlx5e_rep_get_port_parent_id(rpriv->netdev, &ppid);
-+	pfnum = PCI_FUNC(dev->pdev->devfn);
- 
- 	if (rep->vport == MLX5_VPORT_UPLINK) {
- 		devlink_port_attrs_set(&rpriv->dl_port,
- 				       DEVLINK_PORT_FLAVOUR_PHYSICAL,
--				       PCI_FUNC(dev->pdev->devfn), false, 0,
-+				       pfnum, false, 0,
- 				       &ppid.id[0], ppid.id_len);
- 		dl_port_index = vport_to_devlink_port_index(dev, rep->vport);
- 	} else if (rep->vport == MLX5_VPORT_PF) {
- 		devlink_port_attrs_pci_pf_set(&rpriv->dl_port,
- 					      &ppid.id[0], ppid.id_len,
--					      dev->pdev->devfn);
-+					      pfnum);
- 		dl_port_index = rep->vport;
- 	} else if (mlx5_eswitch_is_vf_vport(dev->priv.eswitch,
- 					    rpriv->rep->vport)) {
- 		devlink_port_attrs_pci_vf_set(&rpriv->dl_port,
- 					      &ppid.id[0], ppid.id_len,
--					      dev->pdev->devfn,
--					      rep->vport - 1);
-+					      pfnum, rep->vport - 1);
- 		dl_port_index = vport_to_devlink_port_index(dev, rep->vport);
+---
+ drivers/net/wireless/mac80211_hwsim.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3600,9 +3600,9 @@ static int hwsim_new_radio_nl(struct sk_
  	}
  
+ 	if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
+-		hwname = kasprintf(GFP_KERNEL, "%.*s",
+-				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
+-				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
++		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  GFP_KERNEL);
+ 		if (!hwname)
+ 			return -ENOMEM;
+ 		param.hwname = hwname;
+@@ -3622,9 +3622,9 @@ static int hwsim_del_radio_nl(struct sk_
+ 	if (info->attrs[HWSIM_ATTR_RADIO_ID]) {
+ 		idx = nla_get_u32(info->attrs[HWSIM_ATTR_RADIO_ID]);
+ 	} else if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
+-		hwname = kasprintf(GFP_KERNEL, "%.*s",
+-				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
+-				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
++		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
++				  GFP_KERNEL);
+ 		if (!hwname)
+ 			return -ENOMEM;
+ 	} else
 
 
