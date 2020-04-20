@@ -2,128 +2,109 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7525CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1874AC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 540482078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B892078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QTdCHYpB"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="wQh9JKDF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgDTFiL (ORCPT
+        id S1726201AbgDTFiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgDTFiL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:38:11 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA40AC061A41
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:38:09 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id o15so3949223pgi.1
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:38:09 -0700 (PDT)
+        Mon, 20 Apr 2020 01:38:23 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:52511 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726006AbgDTFiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 01:38:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vXuywTNcLCyXfTRCxE+/gbb1J166gbMzJgknZr7hvR8=;
-        b=QTdCHYpBWRjtP0C4ZMM3bnQLyxnOq96YEAJGGD0d78YRbQeZQT8OnZbNZjwnEzHua8
-         Vknv71fXdd2Qj/rQK+wRt2jNvPa+0uPEzUFlczgphZpuDNvlkG7/dplzSHE2CU69xi0m
-         bkQKbkS5Tzf8EOz35CSAlzVUmEhuOyaRiwsG4m+/8TzyHaxfZYNtaTaTfx95Vhrr9o4K
-         UHqadDGzSpBfM5Ovg60skbf0nxGNBNltrwpLNRqkmDU3jd8mEo7yUpfX7C+JxrX/d8Nl
-         sU1BQCPyQFK5NcKr0MmerpWTLfhcomYPEp1wvxvjU+vXG8+X49UAHFUA6vVH+eMdQHsf
-         YcgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vXuywTNcLCyXfTRCxE+/gbb1J166gbMzJgknZr7hvR8=;
-        b=LbYn11JMw+QPVSoUuyemweiUS4jRdnFVIuVe5gIfU8xtQiCEmqF98g/DkIiwoACu2j
-         bvQnNJD1gMern6oOJaAVKwx1cbVrexvtLjLV42TH8j8dOxTvhS3bj5bw+KhYrCKKb3x/
-         FMBpwMJkDOdyKU2o1rX2WpvpynOPnh4w0ZceGuDKc27U8pkwTcRxzBjX1MaaT3Hkrq0a
-         akSsZGWQDLih8HCA+nbwgswOwcNcshegw0YKvpZNe6z4ydgZJCflBLMxKwlw7aQ6CNnS
-         uH2O1SLU5Ktb4BSGvSEfZECorVxxaKhbrDsfE5cIaBqVN6C518Kj5EqrScZCr4yP7FIp
-         Y7rg==
-X-Gm-Message-State: AGi0PubvBmcgH4MbT8UJgf6hKZN35IxWTQTD3teCD12lazfF6RbF+zE+
-        W3qgqgGsqRRo+tkDiCJPn1EHhw==
-X-Google-Smtp-Source: APiQypKbM9MWn5psD/g3DSNrwZ2q4sHKh/sP1sgRu/OJZVr7IHFEztIdXYyLOc0WGGxhnqioUWIZ2w==
-X-Received: by 2002:aa7:9a84:: with SMTP id w4mr15363759pfi.111.1587361089160;
-        Sun, 19 Apr 2020 22:38:09 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c80sm12136004pfb.82.2020.04.19.22.38.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 22:38:08 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 22:38:31 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, evgreen@chromium.org,
-        ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: remoteproc: qcom: Add SC7180 MPSS
- support
-Message-ID: <20200420053831.GG1516868@builder.lan>
-References: <20200417142605.28885-1-sibis@codeaurora.org>
- <20200417142605.28885-2-sibis@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417142605.28885-2-sibis@codeaurora.org>
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=kUCGUPR2szUSoGME4rVvT/WsGE7O02byhpRwaI4bLIc=; b=w
+        Qh9JKDFyEEhmQgJvt5V8IbYGb7H3dmrUJqGNKaDZ6x/DSNc6+GpYwWY99MBsmmL2
+        u8XmJ4P4qBbeeOkgHaH6f1kAqp/Rq3ow0psY9cY849WS7PfuQ1CwREXNhKVUzESk
+        cQ+VxnESOallUcCKVMgiK64Rhv2d/7qUjOCcOcfNrs=
+Received: from localhost.localdomain (unknown [61.129.42.58])
+        by app1 (Coremail) with SMTP id XAUFCgCHH3cyNZ1e8HEWAA--.213S3;
+        Mon, 20 Apr 2020 13:37:55 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antonio Quartulli <a@unstable.cc>,
+        Sven Eckelmann <sven@narfation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] batman-adv: Fix refcnt leak in batadv_v_ogm_process
+Date:   Mon, 20 Apr 2020 13:37:20 +0800
+Message-Id: <1587361040-83099-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XAUFCgCHH3cyNZ1e8HEWAA--.213S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF4UWry5uFW5Kry8tr1fWFg_yoW8Xr48pr
+        4rKryYkrs5K3WUWa9Yy3ySyF48AFs7Xr17GayYyF15ArZFq3sak3yFgryY9Fy8ZFZak3yk
+        XF1vgFW3ZFyDGFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Cr0_Gr
+        1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+        648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK67AK6r4rMxAIw28IcxkI7VAKI4
+        8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+        wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+        v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+        Y4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+        AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUXTmhUUUUU=
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17 Apr 07:26 PDT 2020, Sibi Sankar wrote:
+batadv_v_ogm_process() invokes batadv_hardif_neigh_get(), which returns
+a reference of the neighbor object to "hardif_neigh" with increased
+refcount.
 
-> Add MPSS PAS support for SC7180 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+When batadv_v_ogm_process() returns, "hardif_neigh" becomes invalid, so
+the refcount should be decreased to keep refcount balanced.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+The reference counting issue happens in one exception handling paths of
+batadv_v_ogm_process(). When batadv_v_ogm_orig_get() fails to get the
+orig node and returns NULL, the refcnt increased by
+batadv_hardif_neigh_get() is not decreased, causing a refcnt leak.
 
-Regards,
-Bjorn
+Fix this issue by jumping to "out" label when batadv_v_ogm_orig_get()
+fails to get the orig node.
 
-> ---
->  Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> index 9938918b2fea3..22604d2cd3f87 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> @@ -15,6 +15,7 @@ on the Qualcomm ADSP Hexagon core.
->  		    "qcom,qcs404-adsp-pas"
->  		    "qcom,qcs404-cdsp-pas"
->  		    "qcom,qcs404-wcss-pas"
-> +		    "qcom,sc7180-mpss-pas"
->  		    "qcom,sdm845-adsp-pas"
->  		    "qcom,sdm845-cdsp-pas"
->  		    "qcom,sm8150-adsp-pas"
-> @@ -46,6 +47,7 @@ on the Qualcomm ADSP Hexagon core.
->  	qcom,sm8150-slpi-pas:
->  		    must be "wdog", "fatal", "ready", "handover", "stop-ack"
->  	qcom,qcs404-wcss-pas:
-> +	qcom,sc7180-mpss-pas:
->  	qcom,sm8150-mpss-pas:
->  		    must be "wdog", "fatal", "ready", "handover", "stop-ack",
->  		    "shutdown-ack"
-> @@ -106,6 +108,7 @@ on the Qualcomm ADSP Hexagon core.
->  	qcom,sm8150-adsp-pas:
->  	qcom,sm8150-cdsp-pas:
->  		    must be "cx", "load_state"
-> +	qcom,sc7180-mpss-pas:
->  	qcom,sm8150-mpss-pas:
->  		    must be "cx", "load_state", "mss"
->  	qcom,sm8150-slpi-pas:
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ net/batman-adv/bat_v_ogm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
+index 969466218999..80b87b1f4e3a 100644
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -893,7 +893,7 @@ static void batadv_v_ogm_process(const struct sk_buff *skb, int ogm_offset,
+ 
+ 	orig_node = batadv_v_ogm_orig_get(bat_priv, ogm_packet->orig);
+ 	if (!orig_node)
+-		return;
++		goto out;
+ 
+ 	neigh_node = batadv_neigh_node_get_or_create(orig_node, if_incoming,
+ 						     ethhdr->h_source);
+-- 
+2.7.4
+
