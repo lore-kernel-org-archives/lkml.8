@@ -2,233 +2,219 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E864BC55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC671C55182
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04782078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587420169;
-	bh=8cbLO4usgF4bzd97d9meReAWDlt6JAv1Ojz3TB/CUYY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2hTAwTch4IEFAKav7LS7xP77ClYjF4igWBva0tgJ7mXBjm+0hCMl07D7VttCXvxkz
-	 ifdNgz2LBTcClU1e0hsY/sPtEy6uhL+tC+WUsTEQvLpjw8sfa9EiB9GnLUl8OEcBP2
-	 7w3XC0qXyIDxY/IoW0SEBmfQgCAYLJ/IvG6YUgys=
+	by mail.kernel.org (Postfix) with ESMTP id 85F53206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:03:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RLT9hDOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgDTWCt (ORCPT
+        id S1726697AbgDTWDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:02:49 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34771 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTWCs (ORCPT
+        Mon, 20 Apr 2020 18:03:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgDTWDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:02:48 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 72so3119270otu.1;
-        Mon, 20 Apr 2020 15:02:47 -0700 (PDT)
+        Mon, 20 Apr 2020 18:03:54 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 865CDC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:03:53 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d184so1233128pfd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GkO5OPMfjblm2nsbFSt6vLqg6Y5q/RvWe2WQ/AkzzSw=;
+        b=RLT9hDOhYDaVrOb3NQXEzKxLHu29Fry2nuuaORCMrniqJ6qFBrzkqExYtQsHcw+PV3
+         7O6N4Js3skiA85xYqwa4OXyxNXaoSVywnwsyGIBQPrrbuM+9qedw62FvSYonGlzH53Vp
+         1ZRz9H3HA+v1LH386c5pUp+6yQc6fYgdisIlUJGHsnvepCqAHnzS4jBNtwViMFUv8EW4
+         j5IxVqiUy04j74GBYjPPr3O8I8HZonBfK2NKdS4ew22JAAKHNLOE0aAsC1XkNJ1z2jbh
+         cgvOnISKLT1x4FXcUcTTYnqEbZpOq81T25jZLx2CWYni87ck/VIgHgmrqSacW5pVV4Oh
+         aJLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K5L6UQW35I1N2wLdBvnczZT21mI2+tpfuparcRqaXcg=;
-        b=kbOWWyKG07RmL5TH6HvG2hET8iNpKI8YVSvVvxqa5g5bDZKnitwPqfX17RYOyx6COi
-         NDh5cyixNJ8/QTap3FLPatFsjgc0UbZJ0KEbDUH4/HUU8pGdlrCMYETt3lxb3l5nVhkj
-         vpxwZi10bwan/ZQQyqB/wsuX8N8xEuzRiVczXaj+x58TPItjgrASvY9qPIsYYaaPOgva
-         3XIlWgN9s294pzitQhko9NtECanxYKYFaQgRVOiLkHcfDr3t7tS1a7D773F+SP+/u09f
-         R5m/gk6qeKz/fzLE+J72NrgxnNaq50AvCVNdHNIp7ao9rN2AoglnR8PkP9bgPYOxlxlM
-         d9cQ==
-X-Gm-Message-State: AGi0PuZNxWKWm0x9QWdKGdyRbrJjiHbBJv0C/6hhiYrCyh/vPc4Lz9Z3
-        DTEYltGFOFA83mxoymH0EA==
-X-Google-Smtp-Source: APiQypK8Fy8ojOtSADNqJzMy08M5eOTn6FPLAGyy8imAAB2qDC8Uez6oOOnaxrHsIXx+Ie0sAjhDhg==
-X-Received: by 2002:a9d:3e4b:: with SMTP id h11mr10435724otg.252.1587420166984;
-        Mon, 20 Apr 2020 15:02:46 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 204sm191218oid.18.2020.04.20.15.02.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 15:02:46 -0700 (PDT)
-Received: (nullmailer pid 9872 invoked by uid 1000);
-        Mon, 20 Apr 2020 22:02:44 -0000
-Date:   Mon, 20 Apr 2020 17:02:44 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V2 2/3] iio: adc: Add PMIC7 ADC bindings
-Message-ID: <20200420220244.GA32739@bogus>
-References: <1586942266-21480-1-git-send-email-jprakash@codeaurora.org>
- <1586942266-21480-3-git-send-email-jprakash@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GkO5OPMfjblm2nsbFSt6vLqg6Y5q/RvWe2WQ/AkzzSw=;
+        b=s/NQlbcecip6gc4scCyggv5KP83m65IRin6guB904jpK7S5IsBFbSSo/TpRt57BEme
+         vjODvQZMOSIwgRMJ1LLTvo9vy+YbwdAiMIPmHzGmYRB8lkhRKeL4tfm8uUbsc53NiKjV
+         XhjmDSQlE3gavoZlbV7mHxBfkUcPhrryegYHBYNEZyk+vVw4FWEvVcX3mU4ouNJd3Nh/
+         jIvWHfmmuUqUn9rrM1R/TWPhl8fTWIOerwndqKFg3ocZZ/wgI6dWVOO77KpvI6moLpQC
+         e23JPrpDVv+93/fTVohdX/AtoKmsGwKr3ZXLUzlzpjKMeiBWb91wN8ZyguRpYA7n8tWT
+         81wg==
+X-Gm-Message-State: AGi0PubnoSavJwE3UG5Eu8rMWoa9JA/mYVDn2nbkP7DeY+/EMuIzlLtm
+        G9/kWF6T+TjF2FLgO8JoYHag7WGSmi2+tmqfTw5XOw==
+X-Google-Smtp-Source: APiQypJGQucPtvq3CfgTMf+OFHwpcjA3gKWb5P46VJ8NpuN6PgcSGXR/Vs8ghz34ahJqfBcHm2ZuGC6xF+srQY+GuVo=
+X-Received: by 2002:a63:cf10:: with SMTP id j16mr18229361pgg.201.1587420232829;
+ Mon, 20 Apr 2020 15:03:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586942266-21480-3-git-send-email-jprakash@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200414204240.186377-1-brendanhiggins@google.com>
+ <20200415061154.GA2496263@kroah.com> <20200415084653.GM2828150@kuha.fi.intel.com>
+ <CAJZ5v0hNemTDVa_S-FfVMbrKjM-RWYoHh88asnUvTNxZinY2cw@mail.gmail.com>
+ <20200415131018.GO2828150@kuha.fi.intel.com> <20200415133122.GB3461248@kroah.com>
+ <20200417113956.GA3728594@kuha.fi.intel.com> <e946febc-a1d6-6392-bb00-bc6a65d93c5a@infradead.org>
+In-Reply-To: <e946febc-a1d6-6392-bb00-bc6a65d93c5a@infradead.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 20 Apr 2020 15:03:41 -0700
+Message-ID: <CAFd5g46AVqzQN+7eFQZV64vcZtJOS1V9QUX2zh74e=RtEmOLZg@mail.gmail.com>
+Subject: Re: [PATCH v1] kobject: make sure parent is not released before children
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:47:45PM +0530, Jishnu Prakash wrote:
-> Add documentation for PMIC7 ADC peripheral.
-> For the PMIC7-type PMICs, ADC peripheral is present in HW for the
-> following PMICs: PMK8350, PM8350, PM8350b, PMR735a and PMR735b.
-> Of these, only the ADC peripheral on PMK8350 is exposed directly to SW.
-> If SW needs to communicate with ADCs on other PMICs, it specifies the
-> PMIC to PMK8350 through the newly added SID register and communication
-> between PMK8350 ADC and other PMIC ADCs is carried out through
-> PBS(Programmable Boot Sequence) at the firmware level.
-> 
-> In addition, add definitions for ADC channels and virtual channel
-> definitions (combination of ADC channel number and PMIC SID number)
-> per PMIC, to be used by ADC clients for PMIC7.
-> 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
-> ---
->  .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 52 +++++++++++--
->  include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h    | 67 ++++++++++++++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h   | 88 ++++++++++++++++++++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h   | 46 +++++++++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h   | 28 +++++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h   | 28 +++++++
->  include/dt-bindings/iio/qcom,spmi-vadc.h           | 78 ++++++++++++++++++-
->  7 files changed, 380 insertions(+), 7 deletions(-)
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> index 8273981..62aa311 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> @@ -13,7 +13,7 @@ maintainers:
->  description: |
->    SPMI PMIC voltage ADC (VADC) provides interface to clients to read
->    voltage. The VADC is a 15-bit sigma-delta ADC.
-> -  SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
-> +  SPMI PMIC5/PMIC7 voltage ADC (ADC) provides interface to clients to read
->    voltage. The VADC is a 16-bit sigma-delta ADC.
->  
->  properties:
-> @@ -28,6 +28,7 @@ properties:
->            - qcom,spmi-vadc
->            - qcom,spmi-adc5
->            - qcom,spmi-adc-rev2
-> +          - qcom,spmi-adc7
->  
->    reg:
->      description: VADC base address in the SPMI PMIC register map
-> @@ -70,6 +71,8 @@ patternProperties:
->          description: |
->            ADC channel number.
->            See include/dt-bindings/iio/qcom,spmi-vadc.h
-> +          For PMIC7 ADC, the channel numbers are specified separately per PMIC
-> +          in the PMIC-specific files in include/dt-bindings/iio/.
->  
->        label:
->          $ref: /schemas/types.yaml#/definitions/string
-> @@ -89,6 +92,8 @@ patternProperties:
->                of 512 will be used.
->              - For compatible property "qcom,spmi-adc5", valid values are 250, 420
->                and 840. If property is not found, default value of 840 is used.
-> +            - For compatible property "qcom,spmi-adc7", valid values are 85, 340
-> +              and 1360. If property is not found, default value of 1360 is used.
+On Fri, Apr 17, 2020 at 9:08 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 4/17/20 4:39 AM, Heikki Krogerus wrote:
+> > Hi,
+> >
+> >>>> An alternative might be to define something like __kobject_del() doing
+> >>>> everything that kobject_del() does *without* the
+> >>>> kobject_put(kobj->parent).
+> >>>>
+> >>>> Then, kobject_del() could be defined as something like (pseudocode):
+> >>>>
+> >>>> kobject_del(kobj)
+> >>>> {
+> >>>>     kobject *perent = kobj->parent;
+> >>>>
+> >>>>     __kobject_del(kobj);
+> >>>>     kobject_put(parent);
+> >>>> }
+> >>>>
+> >>>> and kobject_cleanup() could call __kobject_del() instead of
+> >>>> kobject_del() and then do the last kobject_put(parent) when it is done
+> >>>> with the child.
+> >>>>
+> >>>> Would that work?
+> >>>
+> >>> I think so. Greg, what do you think?
+> >>
+> >> Hm, maybe.  Can someone test it out with the reproducer?
+> >
+> > Brendan, or Randy! Can you guys test Rafael's proposal? I think it
+> > would look like this:
+>
+> patch is whitespace-damaged. did you copy-paste it from a screen?
+>
+>
+> Anyway, it works for me. I loaded & unloaded test_printf.ko 5 times
+> without a problem.
 
-We express constraints in schema now, don't duplicate with free form 
-text.
+I just tried it as well. I also noticed some whitespace corruption,
+but it otherwise worked against the KUnit reproducer I wrote:
 
->              - For compatible property "qcom,spmi-adc-rev2", valid values are 256,
->                512 and 1024. If property is not present, default value is 1024.
->  
-> @@ -122,11 +127,11 @@ patternProperties:
->                channel calibration. If property is not found, channel will be
->                calibrated with 0.625V and 1.25V reference channels, also
->                known as absolute calibration.
-> -            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
-> -              if this property is specified VADC will use the VDD reference (1.875V)
-> -              and GND for channel calibration. If property is not found, channel
-> -              will be calibrated with 0V and 1.25V reference channels, also known
-> -              as absolute calibration.
-> +            - For compatible property "qcom,spmi-adc5", "qcom,spmi-adc7" and
-> +              "qcom,spmi-adc-rev2", if this property is specified VADC will use
-> +              the VDD reference (1.875V) and GND for channel calibration. If
-> +              property is not found, channel will be calibrated with 0V and 1.25V
-> +              reference channels, also known as absolute calibration.
->          type: boolean
->  
->        qcom,hw-settle-time:
-> @@ -149,6 +154,12 @@ patternProperties:
->                Certain controller digital versions have valid values of
->                15, 100, 200, 300, 400, 500, 600, 700, 1, 2, 4, 8, 16, 32, 64, 128 ms
->                If property is not found, channel will use 15us.
-> +            - For compatible property "qcom,spmi-adc7", delay = 15us for
-> +              value 0, 100us * (value) for values < 8, 1ms for value 8
-> +              and 2ms * (value - 8) otherwise.
-> +              Valid values are: 15, 100, 200, 300, 400, 500, 600, 700, 1000, 2000,
-> +              4000, 8000, 16000, 32000, 64000, 128000 us.
-> +              If property is not found, channel will use 15us.
->  
->        qcom,avg-samples:
->          $ref: /schemas/types.yaml#/definitions/uint32
-> @@ -160,6 +171,9 @@ patternProperties:
->              - For compatible property "qcom,spmi-vadc", valid values
->                are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
->                If property is not found, 1 sample will be used.
-> +            - For compatible property "qcom,spmi-adc5", "qcom,spmi-adc7"
-> +              and "qcom,spmi-adc-rev2", valid values are: 1, 2, 4, 8, 16.
-> +              If property is not found, 1 sample will be used.
->  
->      required:
->        - reg
-> @@ -244,6 +258,32 @@ allOf:
->                  enum: [ 1, 2, 4, 8, 16 ]
->                  default: 1
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,spmi-adc7
-> +
-> +    then:
-> +      patternProperties:
-> +        "^.*@[0-9a-fx]+$":
+https://lore.kernel.org/patchwork/patch/1224002/
 
-'x' should not be in unit-addresses.
+Thanks!
 
-> +          properties:
-> +            qcom,decimation:
-> +              items:
-
-Not an array, so 'items' doesn't make sense here.
-
-> +                enum: [ 85, 340, 1360 ]
-> +                default: 1360
-> +
-> +            qcom,hw-settle-time:
-> +              items:
-> +                enum: [ 15, 100, 200, 300, 400, 500, 600, 700, 1000, 2000, 4000,
-> +                        8000, 16000, 32000, 64000, 128000 ]
-> +                default: 15
-> +
-> +            qcom,avg-samples:
-> +              items:
-> +                enum: [ 1, 2, 4, 8, 16 ]
-> +                default: 1
-> +
->  examples:
->    - |
->      spmi_bus {
+> Thanks.
+>
+> > diff --git a/lib/kobject.c b/lib/kobject.c
+> > index 83198cb37d8d..2bd631460e18 100644
+> > --- a/lib/kobject.c
+> > +++ b/lib/kobject.c
+> > @@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
+> >  }
+> >  EXPORT_SYMBOL_GPL(kobject_move);
+> >
+> > -/**
+> > - * kobject_del() - Unlink kobject from hierarchy.
+> > - * @kobj: object.
+> > - *
+> > - * This is the function that should be called to delete an object
+> > - * successfully added via kobject_add().
+> > - */
+> > -void kobject_del(struct kobject *kobj)
+> > +static void __kobject_del(struct kobject *kobj)
+> >  {
+> >         struct kernfs_node *sd;
+> >         const struct kobj_type *ktype;
+> > @@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+> >
+> >         kobj->state_in_sysfs = 0;
+> >         kobj_kset_leave(kobj);
+> > -       kobject_put(kobj->parent);
+> >         kobj->parent = NULL;
+> >  }
+> > +
+> > +/**
+> > + * kobject_del() - Unlink kobject from hierarchy.
+> > + * @kobj: object.
+> > + *
+> > + * This is the function that should be called to delete an object
+> > + * successfully added via kobject_add().
+> > + */
+> > +void kobject_del(struct kobject *kobj)
+> > +{
+> > +       struct kobject *parent = kobj->parent;
+> > +
+> > +       __kobject_del(kobj);
+> > +       kobject_put(parent);
+> > +}
+> >  EXPORT_SYMBOL(kobject_del);
+> >
+> >  /**
+> > @@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+> >   */
+> >  static void kobject_cleanup(struct kobject *kobj)
+> >  {
+> > +       struct kobject *parent = kobj->parent;
+> >         struct kobj_type *t = get_ktype(kobj);
+> >         const char *name = kobj->name;
+> >
+> > @@ -684,7 +692,7 @@ static void kobject_cleanup(struct kobject *kobj)
+> >         if (kobj->state_in_sysfs) {
+> >                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+> >                          kobject_name(kobj), kobj);
+> > -               kobject_del(kobj);
+> > +               __kobject_del(kobj);
+> >         }
+> >
+> >         if (t && t->release) {
+> > @@ -698,6 +706,8 @@ static void kobject_cleanup(struct kobject *kobj)
+> >                 pr_debug("kobject: '%s': free name\n", name);
+> >                 kfree_const(name);
+> >         }
+> > +
+> > +       kobject_put(parent);
+> >  }
+> >
+> >  #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+> >
+> >
+> > thanks,
+> >
+>
+>
+> --
+> ~Randy
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
