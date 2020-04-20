@@ -2,134 +2,102 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB86C55182
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EE9C55182
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B693B20724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587417074;
-	bh=XtFBKIBX8MND+C9aFFqRD0T/5n4LeVJa+ZLucQpPm+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iFI4kl1zH9pPlrzj5fXq7Z7Ifx877YpIt5evP3aDUfSL6i5pUgZzvFsUs2WEhnpEU
-	 HDT9aZPP4dYgd65yu34/1Ka9eFR/11WX6GpjKgVJJ1E8LyIhSexJ7cJLDtjRlu+eVn
-	 z6/CK31bkU1XyiYFY7E4qRL2LKVfr097tDJpSnXY=
+	by mail.kernel.org (Postfix) with ESMTP id C51FA20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgDTVLO (ORCPT
+        id S1727787AbgDTVLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:11:14 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33586 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgDTVLN (ORCPT
+        Mon, 20 Apr 2020 17:11:18 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40292 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbgDTVLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:11:13 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j26so9453602ots.0;
-        Mon, 20 Apr 2020 14:11:13 -0700 (PDT)
+        Mon, 20 Apr 2020 17:11:17 -0400
+Received: by mail-pj1-f67.google.com with SMTP id a22so401176pjk.5;
+        Mon, 20 Apr 2020 14:11:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rrQbEYWwzszNqdguJ2RsCui3P5b9+iPM7VYp9zcM3Ro=;
-        b=HbVsvjmQYr619gz9TP0NL6EjK9+cab/080a+vAvYrAbdvHwIb43MMC+z13JqDaoSfu
-         MvKr40TGo5gCb7VGZeBC0neD0r7AGp1gvkFyu1IMtjDgMfVO+C5tvSqJQHQXxpXYQ51p
-         67MFAlFUpgdtmV5vNccURrIGQlQgcOiq/w2LqiyJBSIRqVkSpty8j67nM4ysJE50Kkml
-         yFrrsvP3H+2YuEjVHCy0ad/afjOLY0oMZf964Nvl8gNAZ2lmBPymoZ0z8bOpD6T9rm0I
-         bLMwI5gOTe+eberl6ey2E4DuemPOXymuyDKU+AU7cYB0x748HxWj6G6or0YQTILs4VDu
-         JgKw==
-X-Gm-Message-State: AGi0PuYI/zgCovtgZTH9wkXuw4BASg6fN7CkbroF65kxA7Ak9fOA5fie
-        9O9tpc5JotuFcIFiDc/2TCC75zk=
-X-Google-Smtp-Source: APiQypK7kvsoeDEAlVJFLzruH3SBuCc/ldyxdkjmBQzCeJggPL8JjNC8Q4RYtINDgl9EHYVK3puc/Q==
-X-Received: by 2002:a9d:7282:: with SMTP id t2mr10743537otj.302.1587417072722;
-        Mon, 20 Apr 2020 14:11:12 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a8sm206373otq.58.2020.04.20.14.11.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:11:12 -0700 (PDT)
-Received: (nullmailer pid 5880 invoked by uid 1000);
-        Mon, 20 Apr 2020 21:11:11 -0000
-Date:   Mon, 20 Apr 2020 16:11:11 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     mani@kernel.org
-Cc:     jic23@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andy.shevchenko@gmail.com
-Subject: Re: [RESEND PATCH v3 1/3] dt-bindings: iio: chemical: Add binding
- for CCS811 VOC sensor
-Message-ID: <20200420211111.GA754@bogus>
-References: <20200414184930.5576-1-mani@kernel.org>
- <20200414184930.5576-2-mani@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wrPH749mUN8hliBUrahYDBfQbFobH/RtFO+RluKgR0c=;
+        b=LivDrY5Ouu2czO0qIGWzXiVMlitkGzsLsQF2wFYUanuha55j6R1l/v3f6fbr5Yn97V
+         a1Nf1cKwKMlxNBx8gvh0B9TxG4lOjU8tn5EVF9NpQb6fvWIIlkndzF045ASxLmEFjgwo
+         Izmjb7PYRGKCrAHCZmYWquUI0m4pbaIP0OkP3ADy4jb/fJyqiVvA6xUqB0le0qSfKkaf
+         HGKGzxXrnYLD64A2zGsu3vVflmLlAp5HV+BJ02o4cXHRuwcObLIUWZL33s4I/kDOkUlR
+         ZMtAiHQiP9UPIibIM1t8GIN9FU7FyrXU7ilHN0xgyoMFSjZgH+hkSyJUnybkp4myk0+J
+         FtwA==
+X-Gm-Message-State: AGi0PuavJARo54tgWtDazrPA9nPgNBAIy9bluHK6W300PLR36cs+t77P
+        HZ9tmlDaRI8GylWusyvkoSCkLtEtyZs=
+X-Google-Smtp-Source: APiQypLpcT/SUkIQmuuXSrPoqK0E8Cp2xLvNfCZASPQMFboRu2ZZ34NFyvthqIVZYVdzDqs93Z4ZTg==
+X-Received: by 2002:a17:90b:3751:: with SMTP id ne17mr1574517pjb.114.1587417077115;
+        Mon, 20 Apr 2020 14:11:17 -0700 (PDT)
+Received: from [100.124.9.192] ([104.129.199.10])
+        by smtp.gmail.com with ESMTPSA id 71sm394670pfw.111.2020.04.20.14.11.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 14:11:16 -0700 (PDT)
+Subject: Re: [PATCH v2 04/10] block: revert back to synchronous request_queue
+ removal
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+References: <20200419194529.4872-1-mcgrof@kernel.org>
+ <20200419194529.4872-5-mcgrof@kernel.org>
+ <749d56bd-1d66-e47b-a356-8d538e9c99b4@acm.org>
+ <20200420185943.GM11244@42.do-not-panic.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <eba2a91b-62a6-839d-df54-2a1cf8262652@acm.org>
+Date:   Mon, 20 Apr 2020 14:11:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414184930.5576-2-mani@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200420185943.GM11244@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:19:28AM +0530, mani@kernel.org wrote:
-> From: Manivannan Sadhasivam <mani@kernel.org>
+On 4/20/20 11:59 AM, Luis Chamberlain wrote:
+> On Sun, Apr 19, 2020 at 03:23:31PM -0700, Bart Van Assche wrote:
+>> On 4/19/20 12:45 PM, Luis Chamberlain wrote:
+>>> + * Decrements the refcount to the request_queue kobject, when this reaches
+>>> + * 0 we'll have blk_release_queue() called. You should avoid calling
+>>> + * this function in atomic context but if you really have to ensure you
+>>> + * first refcount the block device with bdgrab() / bdput() so that the
+>>> + * last decrement happens in blk_cleanup_queue().
+>>> + */
+>>
+>> Is calling bdgrab() and bdput() an option from a context in which it is not
+>> guaranteed that the block device is open?
 > 
-> This commit adds devicetree binding for AMS CCS811 VOC sensor.
+> If the block device is not open, nope. For that blk_get_queue() can
+> be used, and is used by the block layer. This begs the question:
 > 
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> ---
->  .../bindings/iio/chemical/ams,ccs811.yaml     | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
-> new file mode 100644
-> index 000000000000..5cb068666a3e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/chemical/ams,ccs811.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AMS CCS811 VOC Sensor
-> +
-> +maintainers:
-> +  - Narcisa Vasile <narcisaanamaria12@gmail.com>
-> +
-> +description: |
-> +  Ultra-Low Power Digital Gas Sensor for Monitoring Indoor Air Quality.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ams,ccs811
-> +  reg:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    description: GPIO connected to the nRESET line. This is an active low
-> +                 input to CCS811.
-> +    maxItems: 1
-> +
-> +  wakeup-gpios:
-> +    description: GPIO connected to the nWAKE line. This is an active low
-> +                 input to CCS811.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
+> Do we have *drivers* which requires access to the request_queue from
+> atomic context when the block device is not open?
 
-Add:
+Instead of trying to answer that question, how about changing the 
+references to bdgrab() and bdput() into references to blk_get_queue() 
+and blk_put_queue()? I think if that change is made that we won't have 
+to research what the answer to the bdgrab()/bdput() question is.
 
-additionalProperties: false
+Thanks,
 
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Bart.
