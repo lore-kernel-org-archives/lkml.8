@@ -2,139 +2,355 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E8BC54FC9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D36C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E461D21D82
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:42:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1n6Hw6N"
+	by mail.kernel.org (Postfix) with ESMTP id 9CCF22223D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgDTDmp (ORCPT
+        id S1726083AbgDTDtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 23:42:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgDTDmn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 23:42:43 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 770F2C061A0C;
-        Sun, 19 Apr 2020 20:42:43 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p8so4396778pgi.5;
-        Sun, 19 Apr 2020 20:42:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=ZmbaW0s8Lq0BUJ+PzKbYmuUcRhk4c92Bhfoij2xYNoI=;
-        b=X1n6Hw6NGwunwRUFC8MS5sgsDvf+q1ReIeXVsUF9L8rYueYTn3fRNsWomjcoA+iycy
-         UTDC+Eisl6twcaiAfokSULe3KhXCbznTjVwr9Tex8wBOizSbAUDY3SUaLJ4t/clnErF1
-         LwLbSIDX8186Wa+MVr/Ik81Zku1VmzspRSSsGxegUPuEfFRaLlK9sf/Yp/zFmn8DPCg4
-         BrnrqDt+neG1aiQ7JukwCO0eS1H81flPSXT15KZ7X69r2kTjjIyygAJ4xJWaZbiIvOMm
-         3NtCoIG9D28BETa5128w8K+uV1oX0KQPSvnaNlcZ0Q+GHTVY2tXzuQT8Q3jBXqZhZw19
-         ZHoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=ZmbaW0s8Lq0BUJ+PzKbYmuUcRhk4c92Bhfoij2xYNoI=;
-        b=sEk/GHJ6pMTuWTqIzJekyD8v9bSR7vM/rjs4e26fnTnMPskqsqkGgF9RgoO4rO2yBQ
-         lFm232uLJF2mh1zFCWXMzdacdGYLNei3CLoU1XymiutpDN0TMpensTAGb0awaMs/IT2T
-         BzvgrNctr2s3a5dJXUTdci+XwhKbwTojGDIXK5OmRNatuJ2ADK9YVjorIYBUIubt2hjU
-         64nzkWwLewaT90o8PJzFrsrpwbPcp5I/l+TouvOb4muiDhQSj7Zckkyb/s/3Mdm8zIxF
-         iqFN3qmcvNArls2WmKqeUg27steRR6jok8KFXfU3Yal92fCa7yVISILulpAPSD3CCqUT
-         0/mQ==
-X-Gm-Message-State: AGi0PuZ1kzEaadiw/fLLwlurv3oogo4IuNHQtNLcCTZbEUIDbzGgDuV6
-        gGmcrxx4S7PyhATcMt1CLvk=
-X-Google-Smtp-Source: APiQypIYBAbgEjbWQ2GmqE9f6ikPln1mzkS9bKK8nNsHkjcPnusoaFvQ3lbb206N41PS5j5zjR+vkA==
-X-Received: by 2002:a63:4e1d:: with SMTP id c29mr14964791pgb.235.1587354162133;
-        Sun, 19 Apr 2020 20:42:42 -0700 (PDT)
-Received: from localhost.localdomain ([45.135.186.129])
-        by smtp.gmail.com with ESMTPSA id d21sm12467660pjs.3.2020.04.19.20.42.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 20:42:41 -0700 (PDT)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     sre@kernel.org
-Cc:     baolin.wang7@gmail.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        yuanjiang.yu@unisoc.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] power: supply: sc27xx: Add boot voltage support
-Date:   Mon, 20 Apr 2020 11:42:07 +0800
-Message-Id: <098bc90ca87402ba08cec6df81fe3465eeb10e00.1587353854.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1587353854.git.baolin.wang7@gmail.com>
-References: <cover.1587353854.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1587353854.git.baolin.wang7@gmail.com>
-References: <cover.1587353854.git.baolin.wang7@gmail.com>
+        Sun, 19 Apr 2020 23:49:19 -0400
+Received: from mga03.intel.com ([134.134.136.65]:24243 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725865AbgDTDtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 23:49:18 -0400
+IronPort-SDR: AYYnb+JpxBDsAolqsiVEuc7vRYVZSTk/np8BTmkL0TMZCXPIhOWCnbibEcQUu2LStq9UJcW2U8
+ nR5izweqp7TQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 20:49:17 -0700
+IronPort-SDR: 4UrEBGeaG8cV+J8iDtXegv6cO0gUSC0Sro0oybKE9nidysZMuV2xlK7GnOfe+sxGDZj5TASIVK
+ JyLWN20GySjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
+   d="scan'208";a="258208618"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 19 Apr 2020 20:49:17 -0700
+Received: from [10.249.68.96] (vramuthx-mobl1.gar.corp.intel.com [10.249.68.96])
+        by linux.intel.com (Postfix) with ESMTP id 7137F580479;
+        Sun, 19 Apr 2020 20:49:11 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Hauke Mehrtens <hauke@hauke-m.de>, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     cheol.yong.kim@intel.com, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, anders.roxell@linaro.org,
+        vigneshr@ti.com, arnd@arndb.de, richard@nod.at,
+        qi-ming.wu@intel.com, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org,
+        boris.brezillon@collabora.com, miquel.raynal@bootlin.com,
+        tglx@linutronix.de, masonccyang@mxic.com.tw, piotrs@cadence.com,
+        John Crispin <john@phrozen.org>
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <daee329a-b4ae-fae3-8d59-6bcf7377df22@hauke-m.de>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <fce11099-234f-5f5a-c877-095932d28975@linux.intel.com>
+Date:   Mon, 20 Apr 2020 11:49:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <daee329a-b4ae-fae3-8d59-6bcf7377df22@hauke-m.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
+Hi Hauke,
 
-Add new property to allow to get the voltage measured during boot time.
+   Thank you very much for the review comments and your time...
 
-Signed-off-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/power/supply/sc27xx_fuel_gauge.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 18/4/2020 1:05 am, Hauke Mehrtens wrote:
+> On 4/17/20 10:21 AM, Ramuthevar, Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Thanks for adding me in CC, I am using my private mail it took me too
+> long to configure Outlook.
+>
+> I compared the register description of the LGM with the VRX200, the EBU
+> and NAND block are looking very similar. I think the VRX200 also
+> supports HW ECC and DMA, nobody implimented it in the upstream driver.
+>
+> I think replacing the old XWAY dirver with this one is a good approach.
+Thank you for confirmation to replace the xway_nand.c since you are the 
+owner for that driver.
+> Then we can add feature flags to activate the extra features only on the
+> SoCs which support them.
+>
+> On older SoCs the EBU (NAND) and the PCI (not express) IP core are
+> sharing some parts like an endianess switch, this is causeing some more
+> problems.
+>
+>> This patch adds the new IP of Nand Flash Controller(NFC) support
+>> on Intel's Lightning Mountain(LGM) SoC.
+>>
+>> DMA is used for burst data transfer operation, also DMA HW supports
+>> aligned 32bit memory address and aligned data access by default.
+>> DMA burst of 8 supported. Data register used to support the read/write
+>> operation from/to device.
+>>
+>> NAND controller driver implements ->exec_op() to replace legacy hooks,
+>> these specific call-back method to execute NAND operations.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> .....
+>
+>> +config MTD_NAND_INTEL_LGM
+>> +	tristate "Support for NAND controller on Intel LGM SoC"
+>> +	depends on X86
+> Compile test should also work for other archs
+Noted, will add it.
+>> +	help
+>> +	  Enables support for NAND Flash chips on Intel's LGM SoC.
+>> +          NAND flash interfaced through the External Bus Unit.
+>> +
+>>   comment "Misc"
+> .....
+>
+>> +
+>> +#define LGM_CLC			0x000
+>> +#define LGM_CLC_RST		0x00000000u
+>> +
+>> +#define LGM_NAND_ECC_OFFSET	0x008
+> It is confusing that this is not a register but a different definition.
+> Please move it somewheer else.
+Noted, will move it.
+>> +#define LGM_ADDR_SEL(n)		(0x20 + (n) * 4)
+>> +#define LGM_ADDR_MASK		(5 << 4)
+>> +#define LGM_ADDR_SEL_REGEN	0x1
+>> +
+>> +#define LGM_BUSCON(n)		(0x60 + (n) * 4)
+>> +#define LGM_BUSCON_CMULT_V4	0x1
+>> +#define LGM_BUSCON_RECOVC(n)	((n) << 2)
+>> +#define LGM_BUSCON_HOLDC(n)	((n) << 4)
+>> +#define LGM_BUSCON_WAITRDC(n)	((n) << 6)
+>> +#define LGM_BUSCON_WAITWRC(n)	((n) << 8)
+>> +#define LGM_BUSCON_BCGEN_CS	0x0
+>> +#define LGM_BUSCON_SETUP_EN	BIT(22)
+>> +#define LGM_BUSCON_ALEC		0xC000
+>> +
+>> +#define NAND_CON		0x0B0
+>> +#define NAND_CON_NANDM_EN	BIT(0)
+>> +#define NAND_CON_NANDM_DIS	0x0
+>> +#define NAND_CON_CSMUX_E_EN	BIT(1)
+>> +#define NAND_CON_ALE_P_LOW	BIT(2)
+>> +#define NAND_CON_CLE_P_LOW	BIT(3)
+>> +#define NAND_CON_CS_P_LOW	BIT(4)
+>> +#define NAND_CON_SE_P_LOW	BIT(5)
+>> +#define NAND_CON_WP_P_LOW	BIT(6)
+>> +#define NAND_CON_PRE_P_LOW	BIT(7)
+>> +#define NAND_CON_IN_CS_S(n)	((n) << 8)
+>> +#define NAND_CON_OUT_CS_S(n)	((n) << 10)
+>> +#define NAND_CON_LAT_EN_CS_P	((0x3D) << 18)
+>> +
+>> +#define NAND_WAIT		0x0B4
+>> +#define NAND_WAIT_RDBY		BIT(0)
+>> +#define NAND_WAIT_WR_C		BIT(3)
+> The registers with the LGM_ prefix, NAND_CON and NAND_WAIT are from the
+> EBU (EBU_N) register block. I would prefer if the have the same prefix.
+> You should use a different prefix for the register definitions below
+> this comment, which are from the NAND Controller (HSNAND).
+Sure, will use as you have suggested
+>> +#define NAND_CTL1		0x110
+>> +#define NAND_CTL1_ADDR_3_SHIFT	24
+>> +
+>> +#define NAND_CTL2		0x114
+>> +#define NAND_CTL2_ADDR_5_SHIFT	8
+>> +#define NAND_CTL2_CYC_N_V5	(0x2 << 16)
+>> +
+>> +#define NAND_INT_MSK_CTL	0x124
+>> +#define NAND_INT_MSK_CTL_WR_C	BIT(4)
+>> +
+>> +#define NAND_INT_STA		0x128
+>> +#define NAND_INT_STA_WR_C	BIT(4)
+>> +
+>> +#define NAND_CTL		0x130
+>> +#define NAND_CTL_MODE_ECC	0x1
+>> +#define NAND_CTL_GO		BIT(2)
+>> +#define NAND_CTL_CE_SEL_CS(n)	BIT(3 + (n))
+>> +#define NAND_CTL_RW_READ	0x0
+>> +#define NAND_CTL_RW_WRITE	BIT(10)
+>> +#define NAND_CTL_ECC_OFF_V8TH	BIT(11)
+>> +#define NAND_CTL_CKFF_EN	0x0
+>> +#define NAND_CTL_MSG_EN		BIT(17)
+> Till here I find the same registers you use also in the VRX200
+> description. I haven't checked all the bits. Danube only has the
+> registers from the EBU, I haven't checked the SoCs in between.
+Okay, I don't have other SoC's datasheet to check, otherwise would have 
+checked it.
+>> +#define NAND_PARA0		0x13c
+>> +#define NAND_PARA0_PAGE_V8192	0x3
+>> +#define NAND_PARA0_PIB_V256	(0x3 << 4)
+>> +#define NAND_PARA0_BYP_EN_NP	0x0
+>> +#define NAND_PARA0_BYP_DEC_NP	0x0
+>> +#define NAND_PARA0_TYPE_ONFI	BIT(18)
+>> +#define NAND_PARA0_ADEP_EN	BIT(21)
+>> +
+>> +#define NAND_CMSG_0		0x150
+>> +#define NAND_CMSG_1		0x154
+>> +
+>> +#define NAND_WRITE_CMD		(NAND_CON_CS_P_LOW | NAND_CON_CLE_P_LOW)
+>> +#define NAND_WRITE_ADDR		(NAND_CON_CS_P_LOW | NAND_CON_ALE_P_LOW)
+>> +#define NAND_WRITE_DATA		NAND_CON_CS_P_LOW
+>> +#define NAND_READ_DATA		NAND_CON_CS_P_LOW
+>> +
+>> +#define NAND_CHIP_NO_SELECTION	-1
+>> +#define NAND_CHIP_SELECTION	0x0
+>> +
+> ....
+>> +static int lgm_nand_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct lgm_nand_host *lgm_host;
+>> +	struct nand_chip *nand;
+>> +	phys_addr_t nandaddr_pa;
+>> +	struct mtd_info *mtd;
+>> +	struct resource *res;
+>> +	int ret;
+>> +	u32 cs;
+>> +
+>> +	lgm_host = devm_kzalloc(dev, sizeof(*lgm_host), GFP_KERNEL);
+>> +	if (!lgm_host)
+>> +		return -ENOMEM;
+>> +
+>> +	lgm_host->dev = dev;
+>> +	nand_controller_init(&lgm_host->controller);
+>> +
+>> +	lgm_host->lgm_va =
+>> +	devm_platform_ioremap_resource_byname(pdev, "lgmnand");
+>> +	if (IS_ERR(lgm_host->lgm_va))
+>> +		return PTR_ERR(lgm_host->lgm_va);
+> lgm_va is named ebu_n in the register description. Could you rename this
+> variable to ebu. I think the _va postfix is not needed as it should be
+> clear that this is a virtual addresss.
+Noted, will rename it.
+>
+>> +	lgm_host->hsnand_va =
+>> +	devm_platform_ioremap_resource_byname(pdev, "hsnand");
+>> +	if (IS_ERR(lgm_host->hsnand_va))
+>> +		return PTR_ERR(lgm_host->hsnand_va);
+>> +
+>> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to get chip select: %d\n", ret);
+>> +		return ret;
+>> +	}
+> The cs should be validated, ifsome uses cs == 4 there will be a problem.
+> LGM supports CS 0 to 3 like the VRX200, danube for example only 0 and 1.
+Even LGM also supports 0 or 1
+>
+>> +	lgm_host->cs = cs;
+>> +
+>> +	lgm_host->cs_name = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", cs);
+> cs_name is only used locally in this function you can also use some
+> memory on the stack to generate the name.
+>
+>> +	if (IS_ERR(lgm_host->cs_name)) {
+>> +		ret = PTR_ERR(lgm_host->cs_name);
+>> +		dev_err(dev, "failed to get chip select name: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
+> This will only support one chip select at a time on the SoC. It is not
+> possible to configure the DTS in a way to talk to two NAND chips on
+> different chip selects. I think this is an uncommon scenario and I do
+> not know if other NAND drivers in Linux support this feature.
 
-diff --git a/drivers/power/supply/sc27xx_fuel_gauge.c b/drivers/power/supply/sc27xx_fuel_gauge.c
-index 82d0c64ef269..be42e814ea34 100644
---- a/drivers/power/supply/sc27xx_fuel_gauge.c
-+++ b/drivers/power/supply/sc27xx_fuel_gauge.c
-@@ -84,6 +84,7 @@
-  * @init_clbcnt: the initial coulomb counter
-  * @max_volt: the maximum constant input voltage in millivolt
-  * @min_volt: the minimum drained battery voltage in microvolt
-+ * @boot_volt: the voltage measured during boot in microvolt
-  * @table_len: the capacity table length
-  * @resist_table_len: the resistance table length
-  * @cur_1000ma_adc: ADC value corresponding to 1000 mA
-@@ -109,6 +110,7 @@ struct sc27xx_fgu_data {
- 	int init_clbcnt;
- 	int max_volt;
- 	int min_volt;
-+	int boot_volt;
- 	int table_len;
- 	int resist_table_len;
- 	int cur_1000ma_adc;
-@@ -321,6 +323,7 @@ static int sc27xx_fgu_get_boot_capacity(struct sc27xx_fgu_data *data, int *cap)
- 
- 	volt = sc27xx_fgu_adc_to_voltage(data, volt);
- 	ocv = volt * 1000 - oci * data->internal_resist;
-+	data->boot_volt = ocv;
- 
- 	/*
- 	 * Parse the capacity table to look up the correct capacity percent
-@@ -680,6 +683,10 @@ static int sc27xx_fgu_get_property(struct power_supply *psy,
- 		val->intval = value * 1000;
- 		break;
- 
-+	case POWER_SUPPLY_PROP_VOLTAGE_BOOT:
-+		val->intval = data->boot_volt;
-+		break;
-+
- 	default:
- 		ret = -EINVAL;
- 		break;
-@@ -750,6 +757,7 @@ static enum power_supply_property sc27xx_fgu_props[] = {
- 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
- 	POWER_SUPPLY_PROP_VOLTAGE_OCV,
- 	POWER_SUPPLY_PROP_VOLTAGE_AVG,
-+	POWER_SUPPLY_PROP_VOLTAGE_BOOT,
- 	POWER_SUPPLY_PROP_CURRENT_NOW,
- 	POWER_SUPPLY_PROP_CURRENT_AVG,
- 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
--- 
-2.17.1
+Yes, you are Right, LGM supports only one nand chip at a time.
 
+>> +	lgm_host->nandaddr_va = res;
+>> +	nandaddr_pa = res->start;
+>> +	if (IS_ERR(lgm_host->nandaddr_va))
+>> +		return PTR_ERR(lgm_host->nandaddr_va);
+>> +
+>> +	lgm_host->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(lgm_host->clk)) {
+>> +		ret = PTR_ERR(lgm_host->clk);
+>> +		dev_err(dev, "failed to get clock: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = clk_prepare_enable(lgm_host->clk);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to enable clock: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +	lgm_host->clk_rate = clk_get_rate(lgm_host->clk);
+>> +
+>> +	ret = lgm_dma_init(dev, lgm_host);
+>> +	if (ret)
+>> +		goto disable_clk;
+>> +
+>> +	writel(lower_32_bits(nandaddr_pa) | LGM_ADDR_SEL_REGEN | LGM_ADDR_MASK,
+>> +	       lgm_host->lgm_va + LGM_ADDR_SEL(cs));
+>> +
+>> +	writel(LGM_BUSCON_CMULT_V4 | LGM_BUSCON_RECOVC(1) |
+>> +	       LGM_BUSCON_HOLDC(1) | LGM_BUSCON_WAITRDC(2) |
+>> +	       LGM_BUSCON_WAITWRC(2) | LGM_BUSCON_BCGEN_CS | LGM_BUSCON_ALEC |
+>> +	       LGM_BUSCON_SETUP_EN, lgm_host->lgm_va + LGM_BUSCON(cs));
+>> +
+>> +	/*
+>> +	 * NAND physical address selection is based on the chip select
+>> +	 * and written to ADDR_SEL register to get Memory Region Base address.
+>> +	 * FPI Bus addresses are compared to this base address in conjunction
+>> +	 * with the mask control. Driver need to program this field!
+>> +	 * Address: 0x17400 if chip select is CS_0
+>> +	 * Address: 0x17C00 if chip select is CS_1
+>> +	 * Refer the Intel LGM SoC datasheet.
+> Could you please name the section name in the document, to make it
+> easier to find it, the number will probably change over time.
+
+okay, Noted
+
+Regards
+Vadivel
+>> +	 */
+>> +	writel(0x17400051, lgm_host->lgm_va + LGM_ADDR_SEL(0));
+>> +	writel(0x17C00051, lgm_host->lgm_va + LGM_ADDR_SEL(cs));
+> Please do not use magic values here. For example you set here the
+> LGM_ADDR_SEL_REGEN bit a mask and a base.
+Noted, will update with MACRO
+>> +	nand_set_flash_node(&lgm_host->chip, dev->of_node);
+>> +	mtd = nand_to_mtd(&lgm_host->chip);
+>> +	mtd->dev.parent = dev;
+>> +	lgm_host->dev = dev;
+>> +
+>> +	platform_set_drvdata(pdev, lgm_host);
+>> +	nand_set_controller_data(&lgm_host->chip, lgm_host);
+>> +
+>> +	nand = &lgm_host->chip;
+>> +	nand->controller = &lgm_host->controller;
+>> +	nand->controller->ops = &lgm_nand_controller_ops;
+>> +
+>> +	/* Scan to find existence of the device */
+>> +	ret = nand_scan(&lgm_host->chip, 1);
+>> +	if (ret)
+>> +		goto exit_dma;
+>> +
+>> +	ret = mtd_device_register(mtd, NULL, 0);
+>> +	if (ret)
+>> +		goto clean_nand;
+>> +
+>> +	return 0;
+>> +
+>> +clean_nand:
+>> +	nand_cleanup(&lgm_host->chip);
+>> +exit_dma:
+>> +	lgm_dma_exit(lgm_host);
+>> +disable_clk:
+>> +	clk_disable_unprepare(lgm_host->clk);
+>> +
+>> +	return ret;
+>> +}
+> Hauke
+>
