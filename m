@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1094C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77201C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C7020735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 490B120735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386894;
-	bh=BQw15EaX0H/tDEXPed4GXaY54eyMlZZmCdnxyv/tpqc=;
+	s=default; t=1587386896;
+	bh=1NfLBfy5ig5bHPBuxtRQkFN4mZIt4JKhzWxZE9M2dHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pPza0Gr4EF0j7rbRmNDeQFcVXzrZphEoiLvreUN1hm7GdDZOtgn0Zn25U2GheWCbN
-	 kpEkyL1g2oD/dlQw33Aubi1e5AUXf/H0Ks+f9U0kBMvHXFlZMUM7+cZdo51vyzmkK/
-	 7XTo0+aV2wFDw3XqKdTcrI9wMnlViH/kcZqv1eLk=
+	b=K8Vm67H8MwIBBfeeAqJpiW8N2OPlej7eTsZ0uA7t1WBbqF+emBlGEwtazPuU40bMp
+	 gm+IWgRtUr0Pa3QpdapJeZfcPTFs7daXr+WS/0NdFtzCWNRnAK8BAvAReQFa9T+BVH
+	 vemjDmO5UpnECNSfYng7ufkwTFwT3/e2+GgMMMfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgDTMsN (ORCPT
+        id S1729220AbgDTMsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:48:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44638 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729182AbgDTMsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:48:10 -0400
+        id S1729193AbgDTMsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 319FA206D4;
-        Mon, 20 Apr 2020 12:48:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2CB5206DD;
+        Mon, 20 Apr 2020 12:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386889;
-        bh=BQw15EaX0H/tDEXPed4GXaY54eyMlZZmCdnxyv/tpqc=;
+        s=default; t=1587386887;
+        bh=1NfLBfy5ig5bHPBuxtRQkFN4mZIt4JKhzWxZE9M2dHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GUuh8xoGLWz6ebkS5uzXbIZjlkcRlnE3+j+qpjX6JfsGHACoBteRN5vPxnahPp9Wp
-         0LtVrkCzAuvEWdPcs8gzZGYczydRKJW4lYNx0LO2FfzGETenuIA7Zm4i8CHty32mRX
-         +1MhYdOB63pIL53bdP5EH7SbURKnLr5m6JYjyAnA=
+        b=DAR8zdUubllagQn25MwTRbFaKcFbqudbUta9Gt/y4rZfNgdrODkIlqo6z50SBQBSw
+         ilCcQstRY8z3S6U93rRKRC4A1qDiN7v5anbrdywH/Zq9tqaA7qOpxAjyENkPm/HMdQ
+         rNucuPbqdehXmMJ8pDz9LmxdK7rd90sJHcFG3B54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.4 43/60] tracing: Fix the race between registering snapshot event trigger and triggering snapshot operation
-Date:   Mon, 20 Apr 2020 14:39:21 +0200
-Message-Id: <20200420121512.244151528@linuxfoundation.org>
+        stable@vger.kernel.org, Prike Liang <Prike.Liang@amd.com>,
+        Mengbing Wang <Mengbing.Wang@amd.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 52/60] drm/amdgpu: fix the hw hang during perform system reboot and reset
+Date:   Mon, 20 Apr 2020 14:39:30 +0200
+Message-Id: <20200420121514.345458607@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -59,56 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Yang <yangx.jy@cn.fujitsu.com>
+From: Prike Liang <Prike.Liang@amd.com>
 
-commit 0bbe7f719985efd9adb3454679ecef0984cb6800 upstream.
+commit b2a7e9735ab2864330be9d00d7f38c961c28de5d upstream.
 
-Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
-or snapshot_count_trigger()) when register_snapshot_trigger() has completed
-registration but doesn't allocate buffer for 'snapshot' event trigger.  In
-the rare case, 'snapshot' operation always detects the lack of allocated
-buffer so make register_snapshot_trigger() allocate buffer first.
+The system reboot failed as some IP blocks enter power gate before perform
+hw resource destory. Meanwhile use unify interface to set device CGPG to ungate
+state can simplify the amdgpu poweroff or reset ungate guard.
 
-trigger-snapshot.tc in kselftest reproduces the issue on slow vm:
------------------------------------------------------------
-cat trace
-...
-ftracetest-3028  [002] ....   236.784290: sched_process_fork: comm=ftracetest pid=3028 child_comm=ftracetest child_pid=3036
-     <...>-2875  [003] ....   240.460335: tracing_snapshot_instance_cond: *** SNAPSHOT NOT ALLOCATED ***
-     <...>-2875  [003] ....   240.460338: tracing_snapshot_instance_cond: *** stopping trace here!   ***
------------------------------------------------------------
-
-Link: http://lkml.kernel.org/r/20200414015145.66236-1-yangx.jy@cn.fujitsu.com
-
+Fixes: 487eca11a321ef ("drm/amdgpu: fix gfx hang during suspend with video playback (v2)")
+Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
+Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Fixes: 93e31ffbf417a ("tracing: Add 'snapshot' event trigger command")
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_trigger.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -1088,14 +1088,10 @@ register_snapshot_trigger(char *glob, st
- 			  struct event_trigger_data *data,
- 			  struct trace_event_file *file)
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -2176,6 +2176,8 @@ static int amdgpu_device_ip_suspend_phas
  {
--	int ret = register_trigger(glob, ops, data, file);
-+	if (tracing_alloc_snapshot_instance(file->tr) != 0)
-+		return 0;
+ 	int i, r;
  
--	if (ret > 0 && tracing_alloc_snapshot_instance(file->tr) != 0) {
--		unregister_trigger(glob, ops, data, file);
--		ret = 0;
--	}
--
--	return ret;
-+	return register_trigger(glob, ops, data, file);
- }
++	amdgpu_device_set_pg_state(adev, AMD_PG_STATE_UNGATE);
++	amdgpu_device_set_cg_state(adev, AMD_CG_STATE_UNGATE);
  
- static int
+ 	for (i = adev->num_ip_blocks - 1; i >= 0; i--) {
+ 		if (!adev->ip_blocks[i].status.valid)
 
 
