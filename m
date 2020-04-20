@@ -2,102 +2,99 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEB3C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993B7C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA3420B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:01:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587391299;
-	bh=JIEc9NL+YGHp5avkzPHDLltDVnHfQiZu6/QeeqDEzTE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bu8d67faoJzr4kkZi/IoDEvHMj98jq3IsY8DMqOCcvgOJVM4eqHaLwbBry8R3HcAt
-	 awGOzB/WJwT0mLjNYINtTkDtSh+TDr9Pmwx+CFAL3EpLZIxbOg4Oc98/y/jBa7/uis
-	 fKYsuD1jgjVefslZ2AcMGNr/8MIO0YqRNyogAF0c=
+	by mail.kernel.org (Postfix) with ESMTP id 6D9D620722
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:02:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=forissier-org.20150623.gappssmtp.com header.i=@forissier-org.20150623.gappssmtp.com header.b="nBKtrCgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgDTOBi (ORCPT
+        id S1729072AbgDTOCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:01:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbgDTOBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:01:38 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67E1720722;
-        Mon, 20 Apr 2020 14:01:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587391298;
-        bh=JIEc9NL+YGHp5avkzPHDLltDVnHfQiZu6/QeeqDEzTE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2ReP00+K/mNd2j2m1umhFZPjekFioKVHUMeATnOkOVVRwBvS1n8IBVHScYhlGh5fl
-         5dWzGq1ZBKB5r8komqr/siCzwONV6ndKIWgQVGQLDRjMsevbPD1i9CRHdRqiuHQhrl
-         SvOI5HuM2EF7EmMY9cxptl4lVk1JT3tPvMWhHp+8=
-Date:   Mon, 20 Apr 2020 15:01:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soundwire: intel: use asoc_rtd_to_cpu() /
- asoc_rtd_to_codec() macro for DAI pointer
-Message-ID: <20200420140135.GD10045@sirena.org.uk>
-References: <87y2qqvdxu.wl-kuninori.morimoto.gx@renesas.com>
- <20200420070816.GU72691@vkoul-mobl>
- <20200420120348.GA6507@sirena.org.uk>
- <20200420121752.GY72691@vkoul-mobl>
+        Mon, 20 Apr 2020 10:02:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726871AbgDTOCL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 10:02:11 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED51C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:02:11 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z6so11559356wml.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=forissier-org.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=C3AAiW6fB4UzASXmN81Qmx72AYCFjPIxhjt/E9LL6Tc=;
+        b=nBKtrCglOe3rthYdcp1D+92M8Fda87hw/LnYcjdq2dlJOg11Cotem+LkcQ2gSbIuO2
+         i19JtDDxfDgQ4eex2f8W7W/akRc4DnQ/x55p+rgvwTCc4rVWDcm7FFOgnymrUICraapy
+         GtNI/J05eNnuqHWm85/ehe4gzvdEGM4ZottEcgKhlZX7R5RfVE6O2UxQFXqHqwG5R2T9
+         KUYCw3GgwB/vyiIYOstcGMYkoCWydo4wyhPG5519BJZba0FfFSuZ5QhEZR7AEOdK7K83
+         3v2r1r3lTuNZdBDI6WYLMp+FDtYDjed7NZDlwalOVCsjZ5mp07JlMYQX9iwjtFjuvy+j
+         JetQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C3AAiW6fB4UzASXmN81Qmx72AYCFjPIxhjt/E9LL6Tc=;
+        b=VerQAap8S85YcJ/9vubJ8t6MfXyTjf7gPlWn5WdOQy7dbeYt98BW4H9VT5kQtY+FVZ
+         Txp7dJlzfEhy+m4CUbIJV6feCBidIRyoYdrQJOdS6Yweo3xZOcErjrYpiExPoWWWDwbC
+         8MwZLUtFJhlec+4IHlIhG6cDhFtWfv3kdRjfIFFOYv53BsW74ZBetzexf0POxBeJ894l
+         GSCwK5VccLgrfQCBkXKBeTNU1JFMDJUB2C9lbBVoo6hvB/BrjS/v63VyfV2Nq2k3bXHM
+         vK7FilqA4wPy6wq9W/bNn5UOK0is41cyZG6nmuP60JZZzBUiC0eMKhIvaSpqp2+HPSVg
+         b7gQ==
+X-Gm-Message-State: AGi0PuaNWWCQhCEv4d9D74zDvCGD0twumyYMPgf/HyhkyDfM1c/7YrUP
+        L0mz43nnaWfbXFZHlyDvZ/2cYZdyT7kjhije
+X-Google-Smtp-Source: APiQypIhqWGjovuBYxz8umFi65PmN5L+WMJC0VBHi4ZsrFQ79/Pe8bfrAwY5ZAP0eedUmgaO1dJTTA==
+X-Received: by 2002:a1c:2383:: with SMTP id j125mr17744213wmj.6.1587391330205;
+        Mon, 20 Apr 2020 07:02:10 -0700 (PDT)
+Received: from ?IPv6:2a01:e0a:3cb:7bb0:214b:4b7c:7462:3102? ([2a01:e0a:3cb:7bb0:214b:4b7c:7462:3102])
+        by smtp.gmail.com with ESMTPSA id i129sm1652954wmi.20.2020.04.20.07.02.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 07:02:09 -0700 (PDT)
+Subject: Re: [PATCH v6 2/2] tee: add private login method for kernel clients
+To:     Sumit Garg <sumit.garg@linaro.org>, jens.wiklander@linaro.org
+Cc:     tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
+        stuart.yoder@arm.com, daniel.thompson@linaro.org
+References: <1585286988-10671-1-git-send-email-sumit.garg@linaro.org>
+ <1585286988-10671-3-git-send-email-sumit.garg@linaro.org>
+From:   Jerome Forissier <jerome@forissier.org>
+Message-ID: <de12c5b1-4875-93d1-6d94-374d34f7e0b2@forissier.org>
+Date:   Mon, 20 Apr 2020 16:02:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rz+pwK2yUstbofK6"
-Content-Disposition: inline
-In-Reply-To: <20200420121752.GY72691@vkoul-mobl>
-X-Cookie: Hope is a waking dream.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1585286988-10671-3-git-send-email-sumit.garg@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/27/20 6:29 AM, Sumit Garg wrote:
+> There are use-cases where user-space shouldn't be allowed to communicate
+> directly with a TEE device which is dedicated to provide a specific
+> service for a kernel client. So add a private login method for kernel
+> clients and disallow user-space to open-session using GP implementation
+> defined login method range: (0x80000000 - 0xBFFFFFFF).
+> 
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  drivers/tee/tee_core.c   | 7 +++++++
+>  include/uapi/linux/tee.h | 9 +++++++++
+>  2 files changed, 16 insertions(+)
 
---rz+pwK2yUstbofK6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Jerome Forissier <jerome@forissier.org>
 
-On Mon, Apr 20, 2020 at 05:47:52PM +0530, Vinod Koul wrote:
-> On 20-04-20, 13:03, Mark Brown wrote:
-
-> > > Applied, thanks
-
-> > This fix is needed in the ASoC tree - are you OK with me applying it
-> > there?
-
-> Sure..
-
-> Acked-By: Vinod Koul <vkoul@kernel.org>
-
-Hrm, actually this doesn't seem to apply against the ASoC tree - looks
-like we might need a cross tree merge if there's still issues in -next.
-
---rz+pwK2yUstbofK6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6dqz4ACgkQJNaLcl1U
-h9C1OQf+MHwo1vgtr2S63TReVr+n0rVxeCKflOFkzT3yNEOHYpRgpoYgWg5iSZxM
-hdjvyUVt/ajvFDgx3rfTygqddvoYeZILb7GTmcAQ2KNy7OhtdSGIXohiZGY3+1by
-IBdzI8uteoh6Bv+FiyIsClFzez2DvPRd2oNJywKQ7lVByBlqMPscIJLXfCbY81dc
-I2m3ISJrt97mpDkoq9bweSKxgiscWJ+BsTKsB849LNU453Abim+JkC0IZ944WeUw
-LREfpN8Btfgaji/x+o6oWEDQOdN3hl8rgUdEIQMe/nqH91bE3k5q/kzq4ikPJj7W
-i3kPCrvHIcERSOadrvOV6SawOmkW3A==
-=NMpD
------END PGP SIGNATURE-----
-
---rz+pwK2yUstbofK6--
+Thanks,
+-- 
+Jerome
