@@ -2,117 +2,118 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A7FC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA42EC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F23620A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE2F20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MFO6t45a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d49h6XH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgDTIt7 (ORCPT
+        id S1726201AbgDTIvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:49:59 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35489 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725865AbgDTIt6 (ORCPT
+        Mon, 20 Apr 2020 04:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725896AbgDTIvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:49:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587372597;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=l2nctafG0roNHL3aalWgLNZ+cvN2uDJVeLDPJ2crTDE=;
-        b=MFO6t45aN2joU1WFqh42kIkEbpKm09oTwfjVZ/Rf5abxlEFLP1SGgp0Is6toxtOan7af2H
-        8HY3S7SkWFRvWo6A2LKrrwako5O+HLAQjvxdupOplG8dg8qbpSJSqpatUEKExbyt/pjSPc
-        kydpFY2gkbTUibiUju/m127rKt9y078=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-366-ftmGHH9bN06YS5MxDl2HGQ-1; Mon, 20 Apr 2020 04:49:55 -0400
-X-MC-Unique: ftmGHH9bN06YS5MxDl2HGQ-1
-Received: by mail-wr1-f69.google.com with SMTP id p2so4651743wrx.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:49:55 -0700 (PDT)
+        Mon, 20 Apr 2020 04:51:02 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F9D2C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:51:02 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id x25so10056996wmc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=/86wH7JWOB+EnbCrmjcNAfMepyHUh6K1vg0KqRTo2pQ=;
+        b=d49h6XH0HHef07FJWwhy4NfpH2mlHTezHIUUaU/Bcd/h11fjOs+P5L4/1kYgKaDgRW
+         wNPaBZJSN19VivHhR7S1/tc2jELyculFYhlLt8bHexuTkCfFKIR68hRl1GezsJFR7ir/
+         fBky+koEGhAmGTRaunAKWxej99iPb6868mMWiTsD3DNZZcUVQI1dK2Zygnf35W6xpG8T
+         H9HCIV7Bu5e89pkUQTc2CIiTB05rlF1g4auOUfdYlQH+E8ud3zE/1JcWTud4WAJjdcaJ
+         G0nBtr7DvUyzzfL+HZ80jLy8U2WwS/Wd/HGv+lHy2zPa74LucMKohfEKpECRI0+rtmld
+         P6bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=l2nctafG0roNHL3aalWgLNZ+cvN2uDJVeLDPJ2crTDE=;
-        b=FdLuds4z6MWY20qoijWd8+PVa9CMvO8X0VcAV2LSYp5nNMmU+dOXSZv+l9cA/TBxva
-         aos1EznQI/7En/2dhMxErA2oS1aZiVCDiu5HJaSwCCmj6x4hXjk/iUkH9T5zzrFVB0xB
-         sXe0/5C+QgoKoGe5i/8tIin8RgkUBWyY7ycx87msBPkZpYYyH7m0WCZAovWCMulwKQpO
-         UKxWSlRFWknvPpI1d008iYQsYClcDKtDlWVKiCkhorb+FuIr0/ihj3w0e0N4hW/5njW2
-         doBMsIJs8Pnmcf0LTQVh4DaZvQMO0pQQd3RXZms6KgTc7ucmbMOxsLJKSz77oXjAlAUW
-         eIfw==
-X-Gm-Message-State: AGi0Puayk09veObgI/rJt0YO2FCn5th8QKPzAT/KpI/F2mpAkBSC+L0K
-        0yOW6Sad1+yTnVX8bvuPu8YOCg1btYOxLGl1WDI3H136Xm2VLdPn6JnvQXxmfO3VFP7Jz5Y1ZQT
-        e6QKpUG0oRP6c/E3k1OTsCpAd
-X-Received: by 2002:a1c:7715:: with SMTP id t21mr15692071wmi.182.1587372594457;
-        Mon, 20 Apr 2020 01:49:54 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJSZR71Dv0gJg7tIqGGj+fqHotFBvTdXiQ9tKzcVP0g6w5T4JQsk88hEvQGKfSKLT9N641kaA==
-X-Received: by 2002:a1c:7715:: with SMTP id t21mr15692057wmi.182.1587372594256;
-        Mon, 20 Apr 2020 01:49:54 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id v131sm483808wmb.19.2020.04.20.01.49.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=/86wH7JWOB+EnbCrmjcNAfMepyHUh6K1vg0KqRTo2pQ=;
+        b=BTc6K8z6sSbjrtihpypYWuslccn6VQXUiAgowmkd2yiDHhn/F0uFRNv2O+eCxupJoT
+         QdVzySexZWIBDbc0chkdNV/VtcKJ708KzLDWpABKG1ToCfIkstgfcGlE1o4teGYBaCwT
+         +ce7kHTwXLVhlMe9HG84YD+L89o4mWSDUZ25JxS+148LYDn/SMiu+P8tx62zQqCQdJ5v
+         6IrtlBM/Tz1XkPcgnnYTpLr2W9o1sqTO5O43tgjzlQJmwA3StswfRhbaANyDnBD2+1LJ
+         pHP+rxKc2HIV1XfBe3tsvohKGFYp9YulOCdr8Xl4KLdD/JiH7cgQO4HxMdkY8hbPQxL9
+         CDKA==
+X-Gm-Message-State: AGi0PuakgdSoWC1dPQTitE5zGkf86ESDi9qS/ySjfpww0tk9CZl7xmm+
+        Pap2p2Mf8D0yF0XoTnpQSsZXFBK59wo=
+X-Google-Smtp-Source: APiQypJ8VJYfizc8LA+akvZJBSmsOILGofN3kS3G9v+tLbbiNZEfsoUT2A7Owm9J4aJlYKDHo+C9vg==
+X-Received: by 2002:a1c:7415:: with SMTP id p21mr16220999wmc.93.1587372660943;
+        Mon, 20 Apr 2020 01:51:00 -0700 (PDT)
+Received: from dell ([95.149.164.107])
+        by smtp.gmail.com with ESMTPSA id s6sm442863wmh.17.2020.04.20.01.50.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 01:49:53 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH 2/3] KVM: eVMCS: check if nesting is enabled
-In-Reply-To: <20200417164413.71885-3-pbonzini@redhat.com>
-References: <20200417164413.71885-1-pbonzini@redhat.com> <20200417164413.71885-3-pbonzini@redhat.com>
-Date:   Mon, 20 Apr 2020 10:49:52 +0200
-Message-ID: <877dyatubz.fsf@vitty.brq.redhat.com>
+        Mon, 20 Apr 2020 01:51:00 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 09:50:58 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: mfd: asic3: Add error checking return in asic3_mfd_probe()
+Message-ID: <20200420085058.GA3612@dell>
+References: <b9626e96-4bdb-e7e1-51e7-a99210de4c32@web.de>
+ <20200420071339.GG3737@dell>
+ <aa5f9e64-042e-21a1-d252-9856207c7511@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aa5f9e64-042e-21a1-d252-9856207c7511@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+On Mon, 20 Apr 2020, Markus Elfring wrote:
 
-> In the next patch nested_get_evmcs_version will be always set in kvm_x86_ops for
-> VMX, even if nesting is disabled.  Therefore, check whether VMX (aka nesting)
-> is available in the function, the caller will not do the check anymore.
->
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/vmx/evmcs.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
-> index 73f3e07c1852..48dc77de9337 100644
-> --- a/arch/x86/kvm/vmx/evmcs.c
-> +++ b/arch/x86/kvm/vmx/evmcs.c
-> @@ -4,6 +4,7 @@
->  #include <linux/smp.h>
->  
->  #include "../hyperv.h"
-> +#include "../cpuid.h"
->  #include "evmcs.h"
->  #include "vmcs.h"
->  #include "vmx.h"
-> @@ -333,7 +334,8 @@ uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
->          * maximum supported version. KVM supports versions from 1 to
->          * KVM_EVMCS_VERSION.
->          */
-> -       if (vmx->nested.enlightened_vmcs_enabled)
-> +       if (kvm_cpu_cap_get(X86_FEATURE_VMX) &&
-> +	   vmx->nested.enlightened_vmcs_enabled)
->                 return (KVM_EVMCS_VERSION << 8) | 1;
->  
->         return 0;
+> >>> And remove the redundant 'ret = 0'.
+> >>
+> >> I propose to reconsider this interpretation of the source code here.
+> >> How do you think about to move the mentioned statement into an else branch
+> >> at the end?
+> >
+> > Could you please fix your mailer.
+> 
+> Would you like to help with increasing software development resources
+> according to corresponding open issues?
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+You mean, do I want to contribute to fixing your mailer?
+
+No, not really. :)
+
+>mailto:tangbin%40cmss.chinamobile.com?In-Reply-To=%3C20200419091923.5728-1-tangbin@cmss.chinamobile.com%3E&Cc=lee.jones%40linaro.org%2Clinux-kernel%40vger.kernel.org%2Czhangshengju%40cmss.chinamobile.com&Subject=Re%3A%20%5BPATCH%5D%20mfd%3A%20asic3%3A%20Add%20error%20checking%20return%20in%20asic3_mfd_probe%28%29
+
+?
+
+> Can any more clarification help also around the previous update suggestion
+> “mfd: asic3: Delete redundant variable definition”?
+> https://lore.kernel.org/lkml/20200403042020.17452-1-tangbin@cmss.chinamobile.com/
+> https://lore.kernel.org/patchwork/patch/1219914/
+> https://lkml.org/lkml/2020/4/3/4
+
+Reviews for these patches are on my TODO.
+
+So, it seems this mail did the right thing.  Did you use a different
+mailer, or fix/configure your previous one?
 
 -- 
-Vitaly
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
