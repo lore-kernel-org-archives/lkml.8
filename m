@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A750C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A28C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3ECB2078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B47620736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387491;
-	bh=xRlMKhci3L4YAa8w5tgb5HOH0k0P3/drsVVNYVqciN4=;
+	s=default; t=1587387497;
+	bh=AOHe/n3kDDZTI78L9QgIyTTp24peUgU2CILtvhhe0Kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QuE1CDjWTc0QR/X1zGMzGOvvVd1F5Ily8O5lCIjk5WCYW15U3Jv9d9CUl4JupQ48I
-	 098GMuhEQaLKtRz521APWyS+x2NBFlHxw4TAA6TzWz1KjHsv6gt2l11DMjJtf2fT1a
-	 TDsITZucGgFkblLUDNdK1lwTNnj0VB3ml4Y1+Jjc=
+	b=XU7/brlgkRF/x9xtMJlBR/8mZaom31vuXUGegygV8EHBVn+mXmhNz3gkSfDDlDeX3
+	 uQkG9nEnuXvAHMe5zQXX72mCHgJkVeQGLPhc4T1LUDA2d7eI91jW8qKHQjVYsylls2
+	 c3qgR7Oml3MpH+qFp9EZT90JN8SdVD59OdOOgVJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgDTM6K (ORCPT
+        id S1729701AbgDTM6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:58:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36792 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:58:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbgDTMnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:43:21 -0400
+        id S1728359AbgDTMnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:43:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F96B22202;
-        Mon, 20 Apr 2020 12:43:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9CFC2075A;
+        Mon, 20 Apr 2020 12:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386600;
-        bh=xRlMKhci3L4YAa8w5tgb5HOH0k0P3/drsVVNYVqciN4=;
+        s=default; t=1587386598;
+        bh=AOHe/n3kDDZTI78L9QgIyTTp24peUgU2CILtvhhe0Kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rOZkX4q8GZs8Y8suQhW7QiZrJ0pZKVFpfiG7azFKo0eQLTXjFYWBkupDI60an1XC+
-         dRpGd/oHEGpX6bgMSebU0pHIrlr/oTiRPrYOo59OXjcafeF/Be6hTjYaJztepnhNBY
-         Vi1PAeGbPA6apK46irUSSGiPhppiYtStwGwl5WkI=
+        b=g5La4CT2M0i1BUE+DEjbl1EGqurpYqGNdfJRRH2UjDFCA2Vvt1222bXAV4FD9uHhB
+         bu8uvnsSRhafL1uCaM5cstX4z2D1hAUeJCKFqIxYQvW5gIjXV6pxi5Fi/u2bNWEWue
+         ryTz4ePmFIXvEvHEUdpbhLO9YcdKxwlv8OedHmrM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.6 23/71] ovl: fix value of i_ino for lower hardlink corner case
-Date:   Mon, 20 Apr 2020 14:38:37 +0200
-Message-Id: <20200420121512.992623146@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Toralf=20F=C3=B6rster?= <toralf.foerster@gmx.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 22/71] Revert "ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()"
+Date:   Mon, 20 Apr 2020 14:38:36 +0200
+Message-Id: <20200420121512.763120030@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,51 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 300b124fcf6ad2cd99a7b721e0f096785e0a3134 upstream.
+This reverts commit 281e612b4b9587c0c72e30c49ec279587b20da0f which is
+commit 65a691f5f8f0bb63d6a82eec7b0ffd193d8d8a5f upstream.
 
-Commit 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more
-cases"), relaxed the condition nfs_export=on in order to set the value of
-i_ino to xino map of real ino.
+Rafael writes:
+	It has not been marked for -stable or otherwise requested to be
+	included AFAICS.  Also it depends on other mainline commits that
+	have not been included into 5.6.5.
 
-Specifically, it also relaxed the pre-condition that index=on for
-consistent i_ino. This opened the corner case of lower hardlink in
-ovl_get_inode(), which calls ovl_fill_inode() with ino=0 and then
-ovl_init_inode() is called to set i_ino to lower real ino without the xino
-mapping.
-
-Pass the correct values of ino;fsid in this case to ovl_fill_inode(), so it
-can initialize i_ino correctly.
-
-Fixes: 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more ...")
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Reported-by: Toralf Förster <toralf.foerster@gmx.de>
+Reported-by: Rafael J. Wysocki <rafael@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/overlayfs/inode.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/acpi/ec.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -891,7 +891,7 @@ struct inode *ovl_get_inode(struct super
- 	struct dentry *lowerdentry = lowerpath ? lowerpath->dentry : NULL;
- 	bool bylower = ovl_hash_bylower(sb, upperdentry, lowerdentry,
- 					oip->index);
--	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
-+	int fsid = bylower ? lowerpath->layer->fsid : 0;
- 	bool is_dir, metacopy = false;
- 	unsigned long ino = 0;
- 	int err = oip->newinode ? -EEXIST : -ENOMEM;
-@@ -941,6 +941,8 @@ struct inode *ovl_get_inode(struct super
- 			err = -ENOMEM;
- 			goto out_err;
- 		}
-+		ino = realinode->i_ino;
-+		fsid = lowerpath->layer->fsid;
- 	}
- 	ovl_fill_inode(inode, realinode->i_mode, realinode->i_rdev, ino, fsid);
- 	ovl_inode_init(inode, upperdentry, lowerdentry, oip->lowerdata);
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -1646,6 +1646,7 @@ static int acpi_ec_add(struct acpi_devic
+ 
+ 		if (boot_ec && ec->command_addr == boot_ec->command_addr &&
+ 		    ec->data_addr == boot_ec->data_addr) {
++			boot_ec_is_ecdt = false;
+ 			/*
+ 			 * Trust PNP0C09 namespace location rather than
+ 			 * ECDT ID. But trust ECDT GPE rather than _GPE
+@@ -1665,12 +1666,9 @@ static int acpi_ec_add(struct acpi_devic
+ 
+ 	if (ec == boot_ec)
+ 		acpi_handle_info(boot_ec->handle,
+-				 "Boot %s EC initialization complete\n",
++				 "Boot %s EC used to handle transactions and events\n",
+ 				 boot_ec_is_ecdt ? "ECDT" : "DSDT");
+ 
+-	acpi_handle_info(ec->handle,
+-			 "EC: Used to handle transactions and events\n");
+-
+ 	device->driver_data = ec;
+ 
+ 	ret = !!request_region(ec->data_addr, 1, "EC data");
 
 
