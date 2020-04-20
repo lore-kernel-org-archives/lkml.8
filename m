@@ -2,238 +2,266 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2D9C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 500E3C55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E71721744
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213F820575
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:46:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9QyZnM5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HKmiqcn4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgDTUqZ (ORCPT
+        id S1726823AbgDTUqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgDTUqX (ORCPT
+        Mon, 20 Apr 2020 16:46:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43791 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726644AbgDTUq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:46:23 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CB6C061A0C;
-        Mon, 20 Apr 2020 13:46:22 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id x66so12275323qkd.9;
-        Mon, 20 Apr 2020 13:46:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nvxgsMTqVG4TNWLC+4i+8i0Jqdi4qvFfrMl4dwSRAcU=;
-        b=H9QyZnM572sPJ1t9YpaU1b7Fzit8xdn2U0ZntyFVN8XlR/RP7z1J0eMPuRnOYYjhHg
-         5q9lKAB2udjx+dOLWPGHDFrbcuC24jRRLXa41M3tY50BhiZG2zZyYrAik5OtJ5US5DWP
-         Y7o8YpXnBGue/n/us4oaO6ZLfIT/TCJ7g5lQDwy0pRKohm4CDjnxSX2gPBnepUt+Sv6Y
-         5lyd6W7FoDcgmKkq4HmooNOoXDApN4jq19bnAtogIxV91yodV0L2RVIgTdyHkCDKqik/
-         /91pp/34gvCgg5LEa8CyOIGl9uNo2zb1hvQzFbo/HQDtg8x94GFBnwduiDnrEz/KT0CK
-         jJ2A==
+        Mon, 20 Apr 2020 16:46:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587415586;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=zitm8y/YEtvxoae4RHGKvdioLUb/8tpbBBFZl1ezpPQ=;
+        b=HKmiqcn4JNRttKaPUqgLxLBkxhdo2Z/6g0AJBBrrYVEmKwXxTuQ6gqaUHMypT88PhwQgGr
+        z38mWPqTQAi7xK72X9shZPaVcLueJjd9wS8ZmdYI+JE2jZPN9JAH5w18vJ3u6k8b6nWav2
+        Gcy5p6t6mQoCyYDfAmKM12es75qPgHM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-353-WdohgEnqOH6P6F3GsuQr9A-1; Mon, 20 Apr 2020 16:46:22 -0400
+X-MC-Unique: WdohgEnqOH6P6F3GsuQr9A-1
+Received: by mail-wr1-f72.google.com with SMTP id o12so6360616wra.14
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:46:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nvxgsMTqVG4TNWLC+4i+8i0Jqdi4qvFfrMl4dwSRAcU=;
-        b=ZHxEVEDPalTEYm9xnjpaLzit0HSn34jzLWFbV2qCvZkpq4yNcwhh717lCu3A37npsU
-         c2OaafOiiaU5OkYzqOhaDkiKRa0h2BfyUQ5B6Jhl2T2zPLGv6HM90sjvjFtOBsio6y1b
-         Nl+FMTsIkKmHBp4hKcu3RE7obDxMXVKqcrCWfqAzkd857AVIuqKzwiAP00+xVhuDvokK
-         Ja+RDHtq/B+VCdxUAElyR4HWzIjELvjHvIQ8nLXeG6O++x/x7tLD4wG/8d0qmTbEqJkV
-         kWP6s/jiRlpwnIOxRK54cTJ1nwbsiFo97btV5n/XgdPJN5eVAUB7eD/ELr2zeG/D7Fc/
-         dmlw==
-X-Gm-Message-State: AGi0PuYWjzWUabhLhlZOTkJIc7jUSyQIBgrf+EAej9yhpA4C/yf7Q4lt
-        wYtepibyOnbPgkWC5bP2JoM=
-X-Google-Smtp-Source: APiQypKq/OKlS541vak86v8EShwtXrE+6f3dfVfUvpZeyRIqO3mmy/gtqbpwwZYkojOlGqJ4jk4Guw==
-X-Received: by 2002:ae9:e20d:: with SMTP id c13mr16863837qkc.241.1587415581397;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=zitm8y/YEtvxoae4RHGKvdioLUb/8tpbBBFZl1ezpPQ=;
+        b=l92tItV6w74hthM/IBGGq+E4NcYixbWbGjez0pWeo0IiLfMmJIjfI7R6M9I8eoihiz
+         6j8Bi4ccBeUgpIJS6nBNXl2xNA7q1/H1Jop6m1c5p7EdFCPD8uDviHYTu2Ts4+IJq4Bd
+         5EUiWPT4EWiOgqlfnBqGEk36fMZZA5HkvNcxU6mummXhy/EwB+sNnUUq+3iWVVSOm2i3
+         Y7GzxMNQCehuACMuKZtFAxk9yrM1D+cif5KFOYLkMF17nMee0jzWQ2zjR/5JBeBUtvsv
+         tlkmQaQlqJcEbmVWVtXYnpi6gfaDU5AbMuCPJ32q/qp2ere1M2eGhTkGEuUJGgfTae1N
+         X65w==
+X-Gm-Message-State: AGi0Pubn/d36egtpZQ7NeQvTU0ZCSaD4A7dMUgpUkZpdL7h9sbTcKV81
+        ag0URe/45AwdUsfH0eJ5uB5z9gzYQGRJ00ycKGr1NVqaRcWHGwA2d+R+ZDZKLEWTNR4vqjDzov1
+        mo5OBE8zDGybt2zkNV2FFPFvG
+X-Received: by 2002:a1c:e906:: with SMTP id q6mr1207571wmc.62.1587415581307;
         Mon, 20 Apr 2020 13:46:21 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id s14sm322129qts.70.2020.04.20.13.46.19
+X-Google-Smtp-Source: APiQypKyJsF+0b/+QmhBX/Xb7KPgYRkuoZmP6Tl3OAkh2e8A5WhnWdTS0+NP9bpkrzJ76sID8W8HIQ==
+X-Received: by 2002:a1c:e906:: with SMTP id q6mr1207549wmc.62.1587415581012;
+        Mon, 20 Apr 2020 13:46:21 -0700 (PDT)
+Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
+        by smtp.gmail.com with ESMTPSA id q187sm666370wma.41.2020.04.20.13.46.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 20 Apr 2020 13:46:20 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 54E9C409A3; Mon, 20 Apr 2020 17:46:17 -0300 (-03)
-Date:   Mon, 20 Apr 2020 17:46:17 -0300
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH] perf symbol: Fix kernel symbol address display
-Message-ID: <20200420204617.GA23638@kernel.org>
-References: <20200415070744.59919-1-tmricht@linux.ibm.com>
+Date:   Mon, 20 Apr 2020 16:46:18 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH v3] virtio: force spec specified alignment on types
+Message-ID: <20200420204448.377168-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415070744.59919-1-tmricht@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Apr 15, 2020 at 09:07:44AM +0200, Thomas Richter escreveu:
-> Running commands
-> 
->    ./perf record -e rb0000 -- find .
->    ./perf report -v
+The ring element addresses are passed between components with different
+alignments assumptions. Thus, if guest/userspace selects a pointer and
+host then gets and dereferences it, we might need to decrease the
+compiler-selected alignment to prevent compiler on the host from
+assuming pointer is aligned.
 
-Or when pressing 'V' in the TUI.
+This actually triggers on ARM with -mabi=apcs-gnu - which is a
+deprecated configuration, but it seems safer to handle this
+generally.
+
+Note that userspace that allocates the memory is actually OK and does
+not need to be fixed, but userspace that gets it from guest or another
+process does need to be fixed. The later doesn't generally talk to the
+kernel so while it might be buggy it's not talking to the kernel in the
+buggy way - it's just using the header in the buggy way - so fixing
+header and asking userspace to recompile is the best we can do.
+
+I verified that the produced kernel binary on x86 is exactly identical
+before and after the change.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+
+changes from v2:
+	add vring_used_elem_t to ensure alignment for substructures
+changes from v1:
+	swicth all __user to the new typedefs
+
+ drivers/vhost/vhost.c            |  8 +++---
+ drivers/vhost/vhost.h            |  6 ++---
+ drivers/vhost/vringh.c           |  6 ++---
+ include/linux/vringh.h           |  6 ++---
+ include/uapi/linux/virtio_ring.h | 43 ++++++++++++++++++++++++--------
+ 5 files changed, 45 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index d450e16c5c25..bc77b0f465fd 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -1244,9 +1244,9 @@ static int vhost_iotlb_miss(struct vhost_virtqueue *vq, u64 iova, int access)
+ }
  
-> reveals symbol names and its addresses. There is a mismatch between
-
-Yeah, an address that at some point was put there to help with debugging
-the symbol resolution, IIRC how it looked like when looking at
-
-  readelf -sW vmlinux
-
-Or any other DSO, for instance, for a glibc symbol here:
-
-Using 'perf report -s pid,dso,sym' then pressing 'V':
-
-   1.55%    20325:perf  /usr/lib64/libc-2.30.so   0x161825   B [.] __strlen_avx2
-
-[acme@five perf]$ readelf -sW /usr/lib64/libc-2.30.so | grep strlen_avx2
- 24371: 0000000000161810   414 FUNC    LOCAL  DEFAULT   15 __strlen_avx2
-[acme@five perf]$ 
-
-Can you check if doing in /lib/modules/.../build/vmlinux produces what
-appears when 'V' is in place?
-
-And perhaps we can also show the DSO offset and the rip as it gets laid
-out in memory in the end? So we have all the informations?
-
-- Arnaldo
-
-> kernel symbol and address. Here is an example for kernel symbol
-> check_chain_key:
-> 
->  3.55%  find /lib/modules/.../build/vmlinux  0xf11ec  v [k] check_chain_key
-> 
-> This address is off by 0xff000 as can be seen with:
-> 
-> [root@t35lp46 ~]# fgrep check_chain_key /proc/kallsyms
-> 00000000001f00d0 t check_chain_key
-> [root@t35lp46 ~]# objdump -t ~/linux/vmlinux| fgrep check_chain_key
-> 00000000001f00d0 l     F .text	00000000000001e8 check_chain_key
-> [root@t35lp46 ~]#
-> 
-> This function is located in main memory 0x1f00d0 - 0x1f02b4. It has
-> several entries in the perf data file with the correct address:
-> 
-> [root@t35lp46 perf]# ./perf report -D -i perf.data.find-bad | \
-> 				fgrep SAMPLE| fgrep 0x1f01ec
-> PERF_RECORD_SAMPLE(IP, 0x1): 22228/22228: 0x1f01ec period: 1300000 addr: 0
-> PERF_RECORD_SAMPLE(IP, 0x1): 22228/22228: 0x1f01ec period: 1300000 addr: 0
-> 
-> The root cause happens when reading symbol tables during perf report.
-> A long gdb call chain leads to
-> 
->    machine__deliver_events
->      perf_evlist__deliver_event
->        perf_evlist__deliver_sample
->          build_id__mark_dso_hits
-> 	   thread__find_map(1)      Read correct address from sample entry
-> 	     map__load
-> 	       dso__load            Some more functions to end up in
-> 	         ....
-> 		 dso__load_sym.
-> 
-> Function dso__load_syms  checks for kernel relocation and symbol
-> adjustment for the kernel and results in kernel map adjustment of
-> 	 kernel .text segment address (0x100000 on s390)
-> 	 kernel .text segment offset in file (0x1000 on s390).
-> This results in all kernel symbol addresses to be changed by subtracting
-> 0xff000 (on s390). For the symbol check_chain_key we end up with
-> 
->     0x1f00d0 - 0x100000 + 0x1000 = 0xf11d0
-> 
-> and this address is saved in the perf symbol table. This calculation is
-> also applied by the mapping functions map__mapip() and map__unmapip()
-> to map IP addresses to dso mappings.
-> 
-> During perf report processing functions
-> 
->    process_sample_event    (builtin-report.c)
->      machine__resolve
->        thread__find_map
->      hist_entry_iter_add
-> 
-> are called. Function thread__find_map(1)
-> takes the correct sample address and applies the mapping function
-> map__mapip() from the kernel dso and saves the modified address
-> in struct addr_location for further reference. From now on this address
-> is used.
-> 
-> Funktion process_sample_event() then calls hist_entry_iter_add() to save
-> the address in member ip of struct hist_entry.
-> 
-> When samples are displayed using
-> 
->     perf_evlist__tty_browse_hists
->       hists__fprintf
->         hist_entry__fprintf
-> 	  hist_entry__snprintf
-> 	    __hist_entry__snprintf
-> 	      _hist_entry__sym_snprintf()
-> 
-> This simply displays the address of the symbol and ignores the dso <-> map
-> mappings done in function thread__find_map. This leads to the address
-> mismatch.
-> 
-> Output before:
-> 
-> ot@t35lp46 perf]# ./perf report -v | fgrep check_chain_key
->      3.55%  find     /lib/modules/5.6.0d-perf+/build/vmlinux
->      						0xf11ec v [k] check_chain_key
-> [root@t35lp46 perf]#
-> 
-> Output after:
-> 
-> [root@t35lp46 perf]# ./perf report -v | fgrep check_chain_key
->      3.55%  find     /lib/modules/5.6.0d-perf+/build/vmlinux
->      						0x1f01ec v [k] check_chain_key
-> [root@t35lp46 perf]#
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> ---
->  tools/perf/util/sort.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index ab0cfd790ad0..0695b3f6460f 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -297,8 +297,14 @@ static int _hist_entry__sym_snprintf(struct map_symbol *ms,
->  
->  	if (verbose > 0) {
->  		char o = map ? dso__symtab_origin(map->dso) : '!';
-> +		u64 rip = ip;
-> +
-> +		if (map && map->dso && map->dso->kernel
-> +		    && map->dso->adjust_symbols)
-> +			rip = map->unmap_ip(map, ip);
-> +
->  		ret += repsep_snprintf(bf, size, "%-#*llx %c ",
-> -				       BITS_PER_LONG / 4 + 2, ip, o);
-> +				       BITS_PER_LONG / 4 + 2, rip, o);
->  	}
->  
->  	ret += repsep_snprintf(bf + ret, size - ret, "[%c] ", level);
-> -- 
-> 2.25.1
-> 
-
+ static bool vq_access_ok(struct vhost_virtqueue *vq, unsigned int num,
+-			 struct vring_desc __user *desc,
+-			 struct vring_avail __user *avail,
+-			 struct vring_used __user *used)
++			 vring_desc_t __user *desc,
++			 vring_avail_t __user *avail,
++			 vring_used_t __user *used)
+ 
+ {
+ 	return access_ok(desc, vhost_get_desc_size(vq, num)) &&
+@@ -2301,7 +2301,7 @@ static int __vhost_add_used_n(struct vhost_virtqueue *vq,
+ 			    struct vring_used_elem *heads,
+ 			    unsigned count)
+ {
+-	struct vring_used_elem __user *used;
++	vring_used_elem_t __user *used;
+ 	u16 old, new;
+ 	int start;
+ 
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index f8403bd46b85..60cab4c78229 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -67,9 +67,9 @@ struct vhost_virtqueue {
+ 	/* The actual ring of buffers. */
+ 	struct mutex mutex;
+ 	unsigned int num;
+-	struct vring_desc __user *desc;
+-	struct vring_avail __user *avail;
+-	struct vring_used __user *used;
++	vring_desc_t __user *desc;
++	vring_avail_t __user *avail;
++	vring_used_t __user *used;
+ 	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
+ 	struct file *kick;
+ 	struct eventfd_ctx *call_ctx;
+diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+index ba8e0d6cfd97..e059a9a47cdf 100644
+--- a/drivers/vhost/vringh.c
++++ b/drivers/vhost/vringh.c
+@@ -620,9 +620,9 @@ static inline int xfer_to_user(const struct vringh *vrh,
+  */
+ int vringh_init_user(struct vringh *vrh, u64 features,
+ 		     unsigned int num, bool weak_barriers,
+-		     struct vring_desc __user *desc,
+-		     struct vring_avail __user *avail,
+-		     struct vring_used __user *used)
++		     vring_desc_t __user *desc,
++		     vring_avail_t __user *avail,
++		     vring_used_t __user *used)
+ {
+ 	/* Sane power of 2 please! */
+ 	if (!num || num > 0xffff || (num & (num - 1))) {
+diff --git a/include/linux/vringh.h b/include/linux/vringh.h
+index 9e2763d7c159..59bd50f99291 100644
+--- a/include/linux/vringh.h
++++ b/include/linux/vringh.h
+@@ -105,9 +105,9 @@ struct vringh_kiov {
+ /* Helpers for userspace vrings. */
+ int vringh_init_user(struct vringh *vrh, u64 features,
+ 		     unsigned int num, bool weak_barriers,
+-		     struct vring_desc __user *desc,
+-		     struct vring_avail __user *avail,
+-		     struct vring_used __user *used);
++		     vring_desc_t __user *desc,
++		     vring_avail_t __user *avail,
++		     vring_used_t __user *used);
+ 
+ static inline void vringh_iov_init(struct vringh_iov *iov,
+ 				   struct iovec *iovec, unsigned num)
+diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
+index 9223c3a5c46a..b2c20f794472 100644
+--- a/include/uapi/linux/virtio_ring.h
++++ b/include/uapi/linux/virtio_ring.h
+@@ -86,6 +86,13 @@
+  * at the end of the used ring. Guest should ignore the used->flags field. */
+ #define VIRTIO_RING_F_EVENT_IDX		29
+ 
++/* Alignment requirements for vring elements.
++ * When using pre-virtio 1.0 layout, these fall out naturally.
++ */
++#define VRING_AVAIL_ALIGN_SIZE 2
++#define VRING_USED_ALIGN_SIZE 4
++#define VRING_DESC_ALIGN_SIZE 16
++
+ /* Virtio ring descriptors: 16 bytes.  These can chain together via "next". */
+ struct vring_desc {
+ 	/* Address (guest-physical). */
+@@ -112,29 +119,43 @@ struct vring_used_elem {
+ 	__virtio32 len;
+ };
+ 
++typedef struct vring_used_elem __aligned(VRING_USED_ALIGN_SIZE)
++	vring_used_elem_t;
++
+ struct vring_used {
+ 	__virtio16 flags;
+ 	__virtio16 idx;
+-	struct vring_used_elem ring[];
++	vring_used_elem_t ring[];
+ };
+ 
++/*
++ * The ring element addresses are passed between components with different
++ * alignments assumptions. Thus, we might need to decrease the compiler-selected
++ * alignment, and so must use a typedef to make sure the __aligned attribute
++ * actually takes hold:
++ *
++ * https://gcc.gnu.org/onlinedocs//gcc/Common-Type-Attributes.html#Common-Type-Attributes
++ *
++ * When used on a struct, or struct member, the aligned attribute can only
++ * increase the alignment; in order to decrease it, the packed attribute must
++ * be specified as well. When used as part of a typedef, the aligned attribute
++ * can both increase and decrease alignment, and specifying the packed
++ * attribute generates a warning.
++ */
++typedef struct vring_desc __aligned(VRING_DESC_ALIGN_SIZE) vring_desc_t;
++typedef struct vring_avail __aligned(VRING_AVAIL_ALIGN_SIZE) vring_avail_t;
++typedef struct vring_used __aligned(VRING_USED_ALIGN_SIZE) vring_used_t;
++
+ struct vring {
+ 	unsigned int num;
+ 
+-	struct vring_desc *desc;
++	vring_desc_t *desc;
+ 
+-	struct vring_avail *avail;
++	vring_avail_t *avail;
+ 
+-	struct vring_used *used;
++	vring_used_t *used;
+ };
+ 
+-/* Alignment requirements for vring elements.
+- * When using pre-virtio 1.0 layout, these fall out naturally.
+- */
+-#define VRING_AVAIL_ALIGN_SIZE 2
+-#define VRING_USED_ALIGN_SIZE 4
+-#define VRING_DESC_ALIGN_SIZE 16
+-
+ #ifndef VIRTIO_RING_NO_LEGACY
+ 
+ /* The standard layout for the ring is a continuous chunk of memory which looks
 -- 
+MST
 
-- Arnaldo
