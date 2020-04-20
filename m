@@ -2,273 +2,291 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3B5C55182
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3926C55183
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 105C22078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:59:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AC7QyTAU"
+	by mail.kernel.org (Postfix) with ESMTP id 7A691206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587416370;
+	bh=qH5apB3gpIhKZOuXA6Dr3zJBWJL+TItrqcSX1lTj5sc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vI2FF6YSCAVtq+0k85Ju2gTZyPigxUowLT5AgJ/xCNoBAoBekgduVYJ0s1hngC3an
+	 MVGWHJakPIuuEnZUvYe4DKFKMc0a9N3BnER9hodASnm1lgknZFQpWJPY7CHC7BXQmo
+	 atRiLmcD39+oAm6EXlrkjsRhJEC0HZ/3pDdbn4vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgDTU7J (ORCPT
+        id S1728419AbgDTU73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgDTU6M (ORCPT
+        Mon, 20 Apr 2020 16:59:29 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41840 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgDTU72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:58:12 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB9EC061A0E;
-        Mon, 20 Apr 2020 13:58:11 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g12so1172506wmh.3;
-        Mon, 20 Apr 2020 13:58:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=G/+6N4SY+ltsYi8Tx6jM5WzdncRVZ/zZ9Jo8Ulqxolo=;
-        b=AC7QyTAUNCvmwN6hPpkezJGocgjwuGhG6qdSYXv8PsgxF9b/Ykj6Vx246zw/+//87S
-         Nm5QVqYJkM5n8ovp11aQg0a6prKkqG94IIy3CEM0DAZIvpBKK1x9yrh+zXz8MhyQxdDF
-         iDj7vQIF9nWUJt3rnCksDOsVWH+I2+Hijgo0Uk9lrxcEmhUyEzsWCuV/nd9+N/jVMruz
-         jPyz5LQyRgFhjVNUSD+fjQL4qdtOea9qlJsnlJupPdAuFNpywB1ShfPTHVuRrWGeWLn1
-         /tfoLQ5MO1KkmizYFSeU0BW5VYaiRWN4yfkkHo7n45k3Jr8+DRVX942wwdUMwh3qTHPM
-         6TFg==
+        Mon, 20 Apr 2020 16:59:28 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k9so10103352oia.8;
+        Mon, 20 Apr 2020 13:59:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=G/+6N4SY+ltsYi8Tx6jM5WzdncRVZ/zZ9Jo8Ulqxolo=;
-        b=YQ1CpHUN5TlOJoG5dbTfjCTtFO18KPNwjL/Ue0IrY0yVuy/CMTGdi49gmrfGuhhkLn
-         gr0rYpb0iMicC8HlmvuK9CM2xwSX5P6O03XbD/LC0p/4hSZpM80/Jr8O66rc2MEH+Nxv
-         HHtRB3YCDiD7CMhvN43c/ZgpNZ52b/J66FLWiiaEVWweObMEGOBggxRMu4F1uebbnpqr
-         1bF8mD06qEyzlrC0nyutEzc6cFeBvxc7CHrDgt+n7lOs0s9FSpxNvDrhH4rUJmKRDI46
-         ge8g+55KK7BQDCCxJaQzK2Xv7eTdWqYejzjhJEn2MDOdWTm2M2BGTDWALdCpknJtMLVb
-         y+5A==
-X-Gm-Message-State: AGi0PuZECgpyrYk6FTMFowIZNSo1p2XTVlzCFN/fO2dqPH9bE3nK7xuW
-        tElv3217GCK7akSYj4o0Yg==
-X-Google-Smtp-Source: APiQypLXPYwa279TMrEJeoLpj8agbrimCd3YIt+hkSRFpM10mTghthm4A2Whvpwir3fbEI5A2eP22w==
-X-Received: by 2002:a05:600c:4102:: with SMTP id j2mr1317027wmi.159.1587416290042;
-        Mon, 20 Apr 2020 13:58:10 -0700 (PDT)
-Received: from avx2.telecom.by ([46.53.249.74])
-        by smtp.gmail.com with ESMTPSA id m8sm863069wrx.54.2020.04.20.13.58.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mOt6/FQvr6N0iPNwh5IPsr5rXWYLyfRTzfakH8R9QAo=;
+        b=lsPJ9cNO3kJAwuqSZxJMguTSVmjTbJj6sZK1agcCSsimxpzpFEE/Jbg8TM8Jgsx/8P
+         0M59aFVg1/RsSzE8imXHCtt6WfWbvKXJngYFTWtRTnjZxmPwtntfmLfNMhVEQmQaB4Gq
+         Zd6L/AKQj0TmGc2vxQZB8vMdoJTzt+mKv9/Tn9e+uAn/TQxomhHFR80aqjS9U9FRBAU6
+         zaop4ytPMOooB0kMYoCYwb57oNaX9mA4j+SWHT6CgIylNUJP0lgr0nQZ+wqsAt8ZjeF/
+         l4gvnVIatU5bnsilV/HM6iDqcL/183ysvgc1eIot9dFDhyK4YHfxlvaofMOpopkLiaFc
+         3+Tw==
+X-Gm-Message-State: AGi0PuYSFgvncHobbo41V1h3AolXKsptJDZSiQ6XDUDlqtKv2opaCGcz
+        dN25hJgYwRd36s10K0GzCL6ISEs=
+X-Google-Smtp-Source: APiQypJcuIt6JYq9J2AP7m/tfgVDCTdO54Fxa86dRVa59HUpp9C1e93ZyFzpOwKllPXlamcdWfcdLQ==
+X-Received: by 2002:aca:440a:: with SMTP id r10mr912120oia.139.1587416366372;
+        Mon, 20 Apr 2020 13:59:26 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c81sm142374oib.35.2020.04.20.13.59.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:58:09 -0700 (PDT)
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     adobriyan@gmail.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, pmladek@suse.com,
-        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
-        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk
-Subject: [PATCH 03/15] print_integer: new and improved way of printing integers
-Date:   Mon, 20 Apr 2020 23:57:31 +0300
-Message-Id: <20200420205743.19964-3-adobriyan@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200420205743.19964-1-adobriyan@gmail.com>
-References: <20200420205743.19964-1-adobriyan@gmail.com>
+        Mon, 20 Apr 2020 13:59:25 -0700 (PDT)
+Received: (nullmailer pid 18851 invoked by uid 1000);
+        Mon, 20 Apr 2020 20:59:24 -0000
+Date:   Mon, 20 Apr 2020 15:59:24 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 1/8] dt-bindings: mailbox: Add YAML schemas for QCOM
+ APCS global block
+Message-ID: <20200420205924.GA13256@bogus>
+References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
+ <1586832922-29191-2-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586832922-29191-2-git-send-email-sivaprak@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Time honored way to print integers via vsnprintf() or equivalent has
-unavoidable slowdown of parsing format string. This can't be fixed in C,
-without introducing external preprocessor.
+On Tue, Apr 14, 2020 at 08:25:15AM +0530, Sivaprakash Murugesan wrote:
+> Qualcomm APCS global block provides a bunch of generic properties which
+> are required in a device tree. Add YAML schema for these properties.
+> 
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+>  .../bindings/mailbox/qcom,apcs-kpss-global.txt     | 88 ----------------------
+>  .../bindings/mailbox/qcom,apcs-kpss-global.yaml    | 88 ++++++++++++++++++++++
+>  2 files changed, 88 insertions(+), 88 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> deleted file mode 100644
+> index beec612..0000000
+> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> +++ /dev/null
+> @@ -1,88 +0,0 @@
+> -Binding for the Qualcomm APCS global block
+> -==========================================
+> -
+> -This binding describes the APCS "global" block found in various Qualcomm
+> -platforms.
+> -
+> -- compatible:
+> -	Usage: required
+> -	Value type: <string>
+> -	Definition: must be one of:
+> -		    "qcom,msm8916-apcs-kpss-global",
+> -		    "qcom,msm8996-apcs-hmss-global"
+> -		    "qcom,msm8998-apcs-hmss-global"
+> -		    "qcom,qcs404-apcs-apps-global"
+> -		    "qcom,sc7180-apss-shared"
+> -		    "qcom,sdm845-apss-shared"
+> -		    "qcom,sm8150-apss-shared"
+> -		    "qcom,ipq8074-apcs-apps-global"
+> -
+> -- reg:
+> -	Usage: required
+> -	Value type: <prop-encoded-array>
+> -	Definition: must specify the base address and size of the global block
+> -
+> -- clocks:
+> -	Usage: required if #clock-names property is present
+> -	Value type: <phandle array>
+> -	Definition: phandles to the two parent clocks of the clock driver.
+> -
+> -- #mbox-cells:
+> -	Usage: required
+> -	Value type: <u32>
+> -	Definition: as described in mailbox.txt, must be 1
+> -
+> -- #clock-cells:
+> -	Usage: optional
+> -	Value type: <u32>
+> -	Definition: as described in clock.txt, must be 0
+> -
+> -- clock-names:
+> -	Usage: required if the platform data based clock driver needs to
+> -	retrieve the parent clock names from device tree.
+> -	This will requires two mandatory clocks to be defined.
+> -	Value type: <string-array>
+> -	Definition: must be "pll" and "aux"
+> -
+> -= EXAMPLE
+> -The following example describes the APCS HMSS found in MSM8996 and part of the
+> -GLINK RPM referencing the "rpm_hlos" doorbell therein.
+> -
+> -	apcs_glb: mailbox@9820000 {
+> -		compatible = "qcom,msm8996-apcs-hmss-global";
+> -		reg = <0x9820000 0x1000>;
+> -
+> -		#mbox-cells = <1>;
+> -	};
+> -
+> -	rpm-glink {
+> -		compatible = "qcom,glink-rpm";
+> -
+> -		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+> -
+> -		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+> -
+> -		mboxes = <&apcs_glb 0>;
+> -		mbox-names = "rpm_hlos";
+> -	};
+> -
+> -Below is another example of the APCS binding on MSM8916 platforms:
+> -
+> -	apcs: mailbox@b011000 {
+> -		compatible = "qcom,msm8916-apcs-kpss-global";
+> -		reg = <0xb011000 0x1000>;
+> -		#mbox-cells = <1>;
+> -		clocks = <&a53pll>;
+> -		#clock-cells = <0>;
+> -	};
+> -
+> -Below is another example of the APCS binding on QCS404 platforms:
+> -
+> -	apcs_glb: mailbox@b011000 {
+> -		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
+> -		reg = <0x0b011000 0x1000>;
+> -		#mbox-cells = <1>;
+> -		clocks = <&apcs_hfpll>, <&gcc GCC_GPLL0_AO_OUT_MAIN>;
+> -		clock-names = "pll", "aux";
+> -		#clock-cells = <0>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+> new file mode 100644
+> index 0000000..b46474b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+> @@ -0,0 +1,88 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/mailbox/qcom,apcs-kpss-global.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm APCS global block bindings
+> +
+> +description:
+> +  This binding describes the APCS "global" block found in various Qualcomm
+> +  platforms.
+> +
+> +maintainers:
+> +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,ipq8074-apcs-apps-global
+> +      - qcom,msm8916-apcs-kpss-global
+> +      - qcom,msm8996-apcs-hmss-global
+> +      - qcom,msm8998-apcs-hmss-global
+> +      - qcom,qcs404-apcs-apps-global
+> +      - qcom,sc7180-apss-shared
+> +      - qcom,sdm845-apss-shared
+> +      - qcom,sm8150-apss-shared
+> +
+> +  reg:
+> +    description: specifies the base address and size of the global block
 
-seq_put_decimal_ull() partially saves the day, but there are a lot of
-branches inside and overcopying still.
+Can drop this.
 
-_print_integer_*() family of functions is meant to make printing
-integers as fast as possible by deleting format string parsing and doing
-as little work as possible.
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: phandles to the parent clocks of the clock driver
 
-It is based on the following observations:
+Need to define how many and what each one is.
 
-1) memcpy is done in forward direction
-	it can be done backwards but nobody does that,
+> +
+> +  '#mbox-cells':
+> +    const: 1
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  clock-names:
+> +    description:
+> +      parent clock names, required if the platform data based clock driver
+> +      needs to retrieve the parent clock names from device tree.
 
-2) digits can be extracted in a very simple loop which costs only
-	1 multiplication and shift (division by constant is not division)
+Drop.
 
-All the above asks for the following signature, semantics and pattern of
-printing out beloved /proc files:
+> +    maxItems: 2
 
-	/* seq_printf(seq, "%u %llu\n", A, b); */
+Not needed as 'items' implies this.
 
-	char buf[10 + 1 + 20 + 1];
-	char *p = buf + sizeof(buf);
-
-	*--p = '\n';
-	p = _print_integer_u64(p, B);
-	*--p = ' ';
-	p = _print_integer_u32(p, A);
-
-	seq_write(seq, p, buf + sizeof(buf) - p);
-
-1) stack buffer capable of holding the biggest string is allocated.
-
-2) "p" is pointer to start of the string. Initially it points past
-	the end of the buffer WHICH IS NOT NUL-TERMINATED!
-
-3) _print_integer_*() actually prints an integer from right to left
-	and returns new start of the string.
-
-			     <--------|
-				123
-				^
-				|
-				+-- p
-
-4) 1 character is printed with
-
-	*--p = 'x';
-
-	It generates very efficient code as multiple writes can be
-	merged.
-
-5) fixed string is printed with
-
-	p = memcpy(p - 3, "foo", 3);
-
-	Complers know what memcpy() does and write-combine it.
-	4/8-byte writes become 1 instruction and are very efficient.
-
-6) Once everything is printed, the result is written to seq_file buffer.
-	It does only one overflow check and 1 copy.
-
-This generates very efficient code (and small!).
-
-In regular seq_printf() calls, first argument and format string are
-constantly reloaded. Format string will most likely with [rip+...] which
-is quite verbose.
-
-seq_put_decimal_ull() will do branches (and even more branches
-with "width" argument)
-
-	TODO
-	benchmark with mainline because nouveau is broken for me -(
-	vsnprintf() changes make the code slower
-
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
- MAINTAINERS         |  6 ++++++
- lib/Makefile        |  2 +-
- lib/print-integer.c | 40 ++++++++++++++++++++++++++++++++++++++++
- lib/print-integer.h | 20 ++++++++++++++++++++
- 4 files changed, 67 insertions(+), 1 deletion(-)
- create mode 100644 lib/print-integer.c
- create mode 100644 lib/print-integer.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b816a453b10e..8322125bb929 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8470,6 +8470,12 @@ L:	linux-crypto@vger.kernel.org
- S:	Maintained
- F:	drivers/crypto/inside-secure/
- 
-+INTEGER PRINTING PRESS
-+M:	Alexey Dobriyan <adobriyan@gmail.com>
-+L:	linux-kernel@vger.kernel.org
-+F:	lib/print-integer.[ch]
-+S:	Maintained
-+
- INTEGRITY MEASUREMENT ARCHITECTURE (IMA)
- M:	Mimi Zohar <zohar@linux.ibm.com>
- M:	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-diff --git a/lib/Makefile b/lib/Makefile
-index 685aee60de1d..a2f011fa6739 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -25,7 +25,7 @@ KASAN_SANITIZE_string.o := n
- CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
- endif
- 
--lib-y := ctype.o string.o vsprintf.o cmdline.o \
-+lib-y := ctype.o string.o print-integer.o vsprintf.o cmdline.o \
- 	 rbtree.o radix-tree.o timerqueue.o xarray.o \
- 	 idr.o extable.o sha1.o irq_regs.o argv_split.o \
- 	 flex_proportions.o ratelimit.o show_mem.o \
-diff --git a/lib/print-integer.c b/lib/print-integer.c
-new file mode 100644
-index 000000000000..563aaca19b8c
---- /dev/null
-+++ b/lib/print-integer.c
-@@ -0,0 +1,40 @@
-+#include <linux/compiler.h>
-+#include <linux/math64.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+
-+#include "print-integer.h"
-+
-+noinline
-+char *_print_integer_u32(char *p, u32 x)
-+{
-+	do {
-+		*--p = '0' + (x % 10);
-+	} while (x /= 10);
-+	return p;
-+}
-+
-+noinline
-+char *_print_integer_s32(char *p, s32 x)
-+{
-+	if (x < 0) {
-+		p = _print_integer_u32(p, -x);
-+		*--p = '-';
-+		return p;
-+	} else {
-+		return _print_integer_u32(p, x);
-+	}
-+}
-+
-+noinline
-+char *_print_integer_u64(char *p, u64 x)
-+{
-+	while (x >= 100 * 1000 * 1000) {
-+		u32 r;
-+
-+		x = div_u64_rem(x, 100 * 1000 * 1000, &r);
-+		p = memset(p - 8, '0', 8);
-+		(void)_print_integer_u32(p + 8, r);
-+	}
-+	return _print_integer_u32(p, x);
-+}
-diff --git a/lib/print-integer.h b/lib/print-integer.h
-new file mode 100644
-index 000000000000..a6f8e1757a6f
---- /dev/null
-+++ b/lib/print-integer.h
-@@ -0,0 +1,20 @@
-+#pragma once
-+char *_print_integer_u32(char *, u32);
-+char *_print_integer_u64(char *, u64);
-+char *_print_integer_s32(char *, s32);
-+
-+static inline char *_print_integer_ul(char *p, unsigned long x)
-+{
-+#ifdef CONFIG_64BIT
-+	return _print_integer_u64(p, x);
-+#else
-+	return _print_integer_u32(p, x);
-+#endif
-+}
-+
-+enum {
-+	LEN_U32 = 10,
-+	LEN_S32 = 1 + LEN_U32,
-+	LEN_UL = sizeof(long) * 5 / 2,
-+	LEN_U64 = 20,
-+};
--- 
-2.24.1
-
+> +    items:
+> +      - const: pll
+> +      - const: aux
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#mbox-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +
+> +  # Example apcs with msm8996
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    apcs_glb: mailbox@9820000 {
+> +        compatible = "qcom,msm8996-apcs-hmss-global";
+> +        reg = <0x9820000 0x1000>;
+> +
+> +        #mbox-cells = <1>;
+> +    };
+> +
+> +    rpm-glink {
+> +        compatible = "qcom,glink-rpm";
+> +        interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+> +        qcom,rpm-msg-ram = <&rpm_msg_ram>;
+> +        mboxes = <&apcs_glb 0>;
+> +        mbox-names = "rpm_hlos";
+> +    };
+> +
+> +  # Example apcs with qcs404
+> +  - |
+> +    #define GCC_APSS_AHB_CLK_SRC  1
+> +    #define GCC_GPLL0_AO_OUT_MAIN 123
+> +    apcs: mailbox@b011000 {
+> +        compatible = "qcom,qcs404-apcs-apps-global";
+> +        reg = <0x0b011000 0x1000>;
+> +        #mbox-cells = <1>;
+> +        clocks = <&apcs_hfpll>, <&gcc GCC_GPLL0_AO_OUT_MAIN>;
+> +        clock-names = "pll", "aux";
+> +        #clock-cells = <0>;
+> +    };
+> -- 
+> 2.7.4
+> 
