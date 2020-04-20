@@ -2,140 +2,144 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E996AC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A603C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA0D92071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587383693;
-	bh=VEov1HC8kgX2JVYBtf5NvQb82wHeJ2/NnuqpEyj7U+U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CKKLpLNa9TVjpdbBERT1LITlEyTrFTnNmcv8x5Mdd33dNOltL6S9rscvpL+Yz7nu2
-	 K0KmMa1BeYZMQmh0R8eTcLv0SNmsrlj+2kZoICpILHgFLxFErdPVOMEfqq9lLqdjeu
-	 FWj+rFAJ2+7i9bAZWvx5MelE1+yXYbtJG59aC9uc=
+	by mail.kernel.org (Postfix) with ESMTP id 039DF20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:55:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="eMGJ6i/T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgDTLyx (ORCPT
+        id S1726862AbgDTLy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:54:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbgDTLyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:54:51 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8202A21927;
-        Mon, 20 Apr 2020 11:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587383690;
-        bh=VEov1HC8kgX2JVYBtf5NvQb82wHeJ2/NnuqpEyj7U+U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K2wA/sfFxecLv7R81Z3L8nQRfJzTKMqNt+FJN7nLvkxV66mZfO5u6jy9LnBfkf7ed
-         5jEJkZFGY7O11EbRbNmJ3pqEsYFpuOjmCkheRSJjCJxnsyW0RoFGzomKUWICd6Rzqx
-         HE2UHsV3PClSWDXhumCf8dh4djMaGw2rLR076hRY=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 16/60] doc/admin-guide: update kernel.rst with CAP_PERFMON information
-Date:   Mon, 20 Apr 2020 08:52:32 -0300
-Message-Id: <20200420115316.18781-17-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
-References: <20200420115316.18781-1-acme@kernel.org>
+        Mon, 20 Apr 2020 07:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726381AbgDTLyz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:54:55 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E5CEC0610D6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 04:54:54 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a2so7677399ejx.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 04:54:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xz434+emhPfWjjKXYErvQLCog0qnyrqkr9U47Pj8EAE=;
+        b=eMGJ6i/Tp+yHljfYp7aMYd/mUsv2EnqVE+fCxu3XOH5yGdB0h61gy+ScRLFSyuRmgb
+         qURUHX6I6Ir8eepIVf+Ri2YviGMLt6DWjxys1zOQJEVUfWPlsKPJUpkbtTkdGn4w0n0B
+         1MP04jnPqpFSU10941aKvkRA4UrFsDmfSRMik=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xz434+emhPfWjjKXYErvQLCog0qnyrqkr9U47Pj8EAE=;
+        b=F7Nh/wylWwnQgfEin1ryp2xjjsfBCxJI6fD8cWOTdYK8gAERn2YRwl3uPBjUP4/J9x
+         V06poJGawnBHET9sMJp6huu4ASz9QlhFTMxOBmuyoLA0aB29BM0b9DGyKH3Y15ddjpH6
+         bL69uoNj96HtB6PGfiH5PgI8nIEqHkZpDGZeYCRLd15iAML0TcP6b0Ve4bBXroBflFoX
+         Iy6/DN0R4lgMqi/RFSMeQDTvDFsBTOhLDp21aOO0XvbM87CyaHdZUhXB+iWWbPlk65j/
+         /9rOtc5HjSYxE6g857Ttn7/v8kqyIQ72twB1lODuLTIaEgAuUDIGmbbQ32vxEL1yY/9R
+         Ktbw==
+X-Gm-Message-State: AGi0Pub42p79UykA0Rinlw1V1y6Wf+Eq/z2lGRnvR0L2tUgQmOqKW3WA
+        SjLbNA97cAw+VWSaZpuDhpZOC5KjXWi13+dwblx9dw==
+X-Google-Smtp-Source: APiQypLbTn+lSf9tXQjoSINzOkViouA+EuTM208dkpb3K/JiwqGLK/tHyeL8eS/wVDrlTm/f0ngTgrLv3Gua9FB3DGg=
+X-Received: by 2002:a17:906:8549:: with SMTP id h9mr15204554ejy.145.1587383692787;
+ Mon, 20 Apr 2020 04:54:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200414150233.24495-1-willy@infradead.org> <20200414150233.24495-25-willy@infradead.org>
+ <CAJfpegsZF=TFQ67vABkE5ghiZoTZF+=_u8tM5U_P6jZeAmv23A@mail.gmail.com> <20200420114300.GB5820@bombadil.infradead.org>
+In-Reply-To: <20200420114300.GB5820@bombadil.infradead.org>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Mon, 20 Apr 2020 13:54:41 +0200
+Message-ID: <CAJfpeguKAbE+_=ctxp+_3gtbqADevMPrRQ1XV6t8AHXbKwDKvg@mail.gmail.com>
+Subject: Re: [PATCH v11 24/25] fuse: Convert from readpages to readahead
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        William Kucharski <william.kucharski@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+On Mon, Apr 20, 2020 at 1:43 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Mon, Apr 20, 2020 at 01:14:17PM +0200, Miklos Szeredi wrote:
+> > > +       for (;;) {
+> > > +               struct fuse_io_args *ia;
+> > > +               struct fuse_args_pages *ap;
+> > > +
+> > > +               nr_pages = readahead_count(rac) - nr_pages;
+> >
+> > Hmm.  I see what's going on here, but it's confusing.   Why is
+> > __readahead_batch() decrementing the readahead count at the start,
+> > rather than at the end?
+> >
+> > At the very least it needs a comment about why nr_pages is calculated this way.
+>
+> Because usually that's what we want.  See, for example, fs/mpage.c:
+>
+>         while ((page = readahead_page(rac))) {
+>                 prefetchw(&page->flags);
+>                 args.page = page;
+>                 args.nr_pages = readahead_count(rac);
+>                 args.bio = do_mpage_readpage(&args);
+>                 put_page(page);
+>         }
+>
+> fuse is different because it's trying to allocate for the next batch,
+> not for the batch we're currently on.
+>
+> I'm a little annoyed because I posted almost this exact loop here:
+>
+> https://lore.kernel.org/linux-fsdevel/CAJfpegtrhGamoSqD-3Svfj3-iTdAbfD8TP44H_o+HE+g+CAnCA@mail.gmail.com/
+>
+> and you said "I think that's fine", modified only by your concern
+> for it not being obvious that nr_pages couldn't be decremented by
+> __readahead_batch(), so I modified the loop slightly to assign to
+> nr_pages.  The part you're now complaining about is unchanged.
 
-Update the kernel.rst documentation file with the information related to
-usage of CAP_PERFMON capability to secure performance monitoring and
-observability operations in system.
+Your annoyance is perfectly understandable.   This is something I
+noticed now, not back then.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-man@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
-Cc: selinux@vger.kernel.org
-Link: http://lore.kernel.org/lkml/84c32383-14a2-fa35-16b6-f9e59bd37240@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- Documentation/admin-guide/sysctl/kernel.rst | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+>
+> > > +               if (nr_pages > max_pages)
+> > > +                       nr_pages = max_pages;
+> > > +               if (nr_pages == 0)
+> > > +                       break;
+> > > +               ia = fuse_io_alloc(NULL, nr_pages);
+> > > +               if (!ia)
+> > > +                       return;
+> > > +               ap = &ia->ap;
+> > > +               nr_pages = __readahead_batch(rac, ap->pages, nr_pages);
+> > > +               for (i = 0; i < nr_pages; i++) {
+> > > +                       fuse_wait_on_page_writeback(inode,
+> > > +                                                   readahead_index(rac) + i);
+> >
+> > What's wrong with ap->pages[i]->index?  Are we trying to wean off using ->index?
+>
+> It saves reading from a cacheline?  I wouldn't be surprised if the
+> compiler hoisted the read from rac->_index to outside the loop and just
+> iterated from rac->_index to rac->_index + nr_pages.
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 39c95c0e13d3..7e4c28dfc9ca 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -730,7 +730,13 @@ perf_event_paranoid
- ===================
- 
- Controls use of the performance events system by unprivileged
--users (without CAP_SYS_ADMIN).  The default value is 2.
-+users (without CAP_PERFMON).  The default value is 2.
-+
-+For backward compatibility reasons access to system performance
-+monitoring and observability remains open for CAP_SYS_ADMIN
-+privileged processes but CAP_SYS_ADMIN usage for secure system
-+performance monitoring and observability operations is discouraged
-+with respect to CAP_PERFMON use cases.
- 
- ===  ==================================================================
-  -1  Allow use of (almost) all events by all users.
-@@ -739,13 +745,13 @@ users (without CAP_SYS_ADMIN).  The default value is 2.
-      ``CAP_IPC_LOCK``.
- 
- >=0  Disallow ftrace function tracepoint by users without
--     ``CAP_SYS_ADMIN``.
-+     ``CAP_PERFMON``.
- 
--     Disallow raw tracepoint access by users without ``CAP_SYS_ADMIN``.
-+     Disallow raw tracepoint access by users without ``CAP_PERFMON``.
- 
-->=1  Disallow CPU event access by users without ``CAP_SYS_ADMIN``.
-+>=1  Disallow CPU event access by users without ``CAP_PERFMON``.
- 
-->=2  Disallow kernel profiling by users without ``CAP_SYS_ADMIN``.
-+>=2  Disallow kernel profiling by users without ``CAP_PERFMON``.
- ===  ==================================================================
- 
- 
--- 
-2.21.1
+Hah, if such optimizations were worth anything with codepaths
+involving roundtrips to userspace...
 
+Anyway, I'll let these be, and maybe clean them up later.
+
+Acked-by:  Miklos Szeredi <mszeredi@redhat.com>
+
+Thanks,
+Miklos
