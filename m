@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7D0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F54C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 482DA206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D654E206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387416;
-	bh=XouSUB2txD38MHiqkRkXVgoIMazlZCnQGpTuJgqMjZg=;
+	s=default; t=1587387418;
+	bh=Hu8tgyiUBh7gWxY1nr8Tvf+Nyv6VuHNif6h6Bv101GI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mo5OD9AXpLctB+eZ5fqR0xmBbcgqTOJ6afrS2yqq1JzlvursPIs4NXlrBJ+i4RFUK
-	 WRx0yC35Hj/qYDFBHuwjc7cDv9Cko6z8gG5D3tslXneN/Pby+jtVo1NCtCTO6ECi2S
-	 CJHy6osg9lhje7eHCHMlyH0a7TcBo287G5XQi83M=
+	b=r7Tt/jiOAJcxDgfPbE8g/nrzgOiFchZWKH6bmW84nSZjiYk38IqjCyXdq92Mg6+lR
+	 ed75MJkBWGz/nom0BaagdcTej9JkbeZ9TDeTigt3fNe+kVP6p9bDx3CJhSw+8ZlVGC
+	 TBVPADEMoy+W9yFi3FnDKRVW7Ukahcoh0OS2EznI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbgDTM4z (ORCPT
+        id S1729764AbgDTM46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:56:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38946 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:56:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728623AbgDTMo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:58 -0400
+        id S1728620AbgDTMoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:44:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 484612223D;
-        Mon, 20 Apr 2020 12:44:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D04BE2072B;
+        Mon, 20 Apr 2020 12:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386696;
-        bh=XouSUB2txD38MHiqkRkXVgoIMazlZCnQGpTuJgqMjZg=;
+        s=default; t=1587386694;
+        bh=Hu8tgyiUBh7gWxY1nr8Tvf+Nyv6VuHNif6h6Bv101GI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GV5PHEqbhqa3gMbCOUKTQCIdOU9ieMUtqgHrAy9KmN2KlDDMR7e9dszamWAE3wUNF
-         WA0kmK3lI8GM9OHAHMeGzFiKibXoXPGw7snN3UdI0jNRHtollN7B2DR3iF2TREpd1I
-         CgqivS8y61FhfEFKDAnQ5RsYOvXUPpFLA72KzXGk=
+        b=oHSRENdMkJ5I/ZT4D0wv/rAAXjUrtTfbRWWNpBNLAvx9qCZFQ9ERMNmQKB9feJd1C
+         SB8yNNe5LBl/msiWR162FOxaPeLT1h7KloqvdqOxlHinGy0S1OlgMX2W+nMWOCVrg8
+         u/+x6bmP+9wi0h5yxoMtF/MOBn+jo/ecVGkrZ6S0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.6 21/71] net: phy: marvell: Fix pause frame negotiation
-Date:   Mon, 20 Apr 2020 14:38:35 +0200
-Message-Id: <20200420121512.569348523@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 20/71] net: stmmac: dwmac-sunxi: Provide TX and RX fifo sizes
+Date:   Mon, 20 Apr 2020 14:38:34 +0200
+Message-Id: <20200420121512.402748252@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -60,95 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Clemens Gruber <clemens.gruber@pqgruber.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 3b72f84f8fb65e83e85e9be58eabcf95a40b8f46 ]
+[ Upstream commit 806fd188ce2a4f8b587e83e73c478e6484fbfa55 ]
 
-The negotiation of flow control / pause frame modes was broken since
-commit fcf1f59afc67 ("net: phy: marvell: rearrange to use
-genphy_read_lpa()") moved the setting of phydev->duplex below the
-phy_resolve_aneg_pause call. Due to a check of DUPLEX_FULL in that
-function, phydev->pause was no longer set.
+After commit bfcb813203e619a8960a819bf533ad2a108d8105 ("net: dsa:
+configure the MTU for switch ports") my Lamobo R1 platform which uses
+an allwinner,sun7i-a20-gmac compatible Ethernet MAC started to fail
+by rejecting a MTU of 1536. The reason for that is that the DMA
+capabilities are not readable on this version of the IP, and there
+is also no 'tx-fifo-depth' property being provided in Device Tree. The
+property is documented as optional, and is not provided.
 
-Fix it by moving the parsing of the status variable before the blocks
-dealing with the pause frames.
+Chen-Yu indicated that the FIFO sizes are 4KB for TX and 16KB for RX, so
+provide these values through platform data as an immediate fix until
+various Device Tree sources get updated accordingly.
 
-As the Marvell 88E1510 datasheet does not specify the timing between the
-link status and the "Speed and Duplex Resolved" bit, we have to force
-the link down as long as the resolved bit is not set, to avoid reporting
-link up before we even have valid Speed/Duplex.
-
-Tested with a Marvell 88E1510 (RGMII to Copper/1000Base-T)
-
-Fixes: fcf1f59afc67 ("net: phy: marvell: rearrange to use genphy_read_lpa()")
-Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: eaf4fac47807 ("net: stmmac: Do not accept invalid MTU values")
+Suggested-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/marvell.c |   46 ++++++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -1278,6 +1278,30 @@ static int marvell_read_status_page_an(s
- 	int lpa;
- 	int err;
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+@@ -150,6 +150,8 @@ static int sun7i_gmac_probe(struct platf
+ 	plat_dat->init = sun7i_gmac_init;
+ 	plat_dat->exit = sun7i_gmac_exit;
+ 	plat_dat->fix_mac_speed = sun7i_fix_speed;
++	plat_dat->tx_fifo_size = 4096;
++	plat_dat->rx_fifo_size = 16384;
  
-+	if (!(status & MII_M1011_PHY_STATUS_RESOLVED)) {
-+		phydev->link = 0;
-+		return 0;
-+	}
-+
-+	if (status & MII_M1011_PHY_STATUS_FULLDUPLEX)
-+		phydev->duplex = DUPLEX_FULL;
-+	else
-+		phydev->duplex = DUPLEX_HALF;
-+
-+	switch (status & MII_M1011_PHY_STATUS_SPD_MASK) {
-+	case MII_M1011_PHY_STATUS_1000:
-+		phydev->speed = SPEED_1000;
-+		break;
-+
-+	case MII_M1011_PHY_STATUS_100:
-+		phydev->speed = SPEED_100;
-+		break;
-+
-+	default:
-+		phydev->speed = SPEED_10;
-+		break;
-+	}
-+
- 	if (!fiber) {
- 		err = genphy_read_lpa(phydev);
- 		if (err < 0)
-@@ -1306,28 +1330,6 @@ static int marvell_read_status_page_an(s
- 		}
- 	}
- 
--	if (!(status & MII_M1011_PHY_STATUS_RESOLVED))
--		return 0;
--
--	if (status & MII_M1011_PHY_STATUS_FULLDUPLEX)
--		phydev->duplex = DUPLEX_FULL;
--	else
--		phydev->duplex = DUPLEX_HALF;
--
--	switch (status & MII_M1011_PHY_STATUS_SPD_MASK) {
--	case MII_M1011_PHY_STATUS_1000:
--		phydev->speed = SPEED_1000;
--		break;
--
--	case MII_M1011_PHY_STATUS_100:
--		phydev->speed = SPEED_100;
--		break;
--
--	default:
--		phydev->speed = SPEED_10;
--		break;
--	}
--
- 	return 0;
- }
- 
+ 	ret = sun7i_gmac_init(pdev, plat_dat->bsp_priv);
+ 	if (ret)
 
 
