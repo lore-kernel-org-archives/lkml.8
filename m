@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10A3C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8278DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D527821D94
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6604C20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:30:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgDTNah (ORCPT
+        id S1728184AbgDTNak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:30:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40140 "EHLO
+        Mon, 20 Apr 2020 09:30:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728080AbgDTNaf (ORCPT
+        by vger.kernel.org with ESMTP id S1728080AbgDTNah (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:30:35 -0400
+        Mon, 20 Apr 2020 09:30:37 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7267EC061A0F;
-        Mon, 20 Apr 2020 06:30:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF01C061A0C;
+        Mon, 20 Apr 2020 06:30:37 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jQWVI-0005Lm-D0; Mon, 20 Apr 2020 15:30:28 +0200
+        id 1jQWVJ-0005MO-DX; Mon, 20 Apr 2020 15:30:29 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 05D681C0475;
-        Mon, 20 Apr 2020 15:30:28 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 13:30:27 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 151621C0475;
+        Mon, 20 Apr 2020 15:30:29 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 13:30:28 -0000
 From:   "tip-bot2 for Christoph Hellwig" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Cleanup pgprot_4k_2_large() and pgprot_large_2_4k()
+Subject: [tip: x86/mm] x86/mm: Add a x86_has_pat_wp() helper
 Cc:     Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@suse.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200408152745.1565832-4-hch@lst.de>
-References: <20200408152745.1565832-4-hch@lst.de>
+In-Reply-To: <20200408152745.1565832-2-hch@lst.de>
+References: <20200408152745.1565832-2-hch@lst.de>
 MIME-Version: 1.0
-Message-ID: <158738942763.28353.11067953796538874270.tip-bot2@tip-bot2>
+Message-ID: <158738942857.28353.5477632889684051929.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,111 +59,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     9e294786c89ae0904932c06d79e5e1c044864f65
-Gitweb:        https://git.kernel.org/tip/9e294786c89ae0904932c06d79e5e1c044864f65
+Commit-ID:     1f6f655e01adebf5bd5e6c3da2e843c104ded051
+Gitweb:        https://git.kernel.org/tip/1f6f655e01adebf5bd5e6c3da2e843c104ded051
 Author:        Christoph Hellwig <hch@lst.de>
-AuthorDate:    Wed, 08 Apr 2020 17:27:44 +02:00
+AuthorDate:    Wed, 08 Apr 2020 17:27:42 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 20 Apr 2020 12:39:22 +02:00
+CommitterDate: Mon, 20 Apr 2020 12:39:11 +02:00
 
-x86/mm: Cleanup pgprot_4k_2_large() and pgprot_large_2_4k()
+x86/mm: Add a x86_has_pat_wp() helper
 
-Make use of lower level helpers that operate on the raw protection
-values to make the code a little easier to understand, and to also
-avoid extra conversions in a few callers.
+Abstract the ioremap code away from the caching mode internals.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200408152745.1565832-4-hch@lst.de
+Link: https://lkml.kernel.org/r/20200408152745.1565832-2-hch@lst.de
 ---
- arch/x86/include/asm/pgtable_types.h | 26 +++++++++++++-------------
- arch/x86/mm/init_64.c                |  2 +-
- arch/x86/mm/pgtable.c                |  8 ++------
- 3 files changed, 16 insertions(+), 20 deletions(-)
+ arch/x86/include/asm/memtype.h | 2 ++
+ arch/x86/mm/init.c             | 6 ++++++
+ arch/x86/mm/ioremap.c          | 8 ++------
+ 3 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 75fe903..a3b78d8 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -488,24 +488,24 @@ static inline pgprot_t cachemode2pgprot(enum page_cache_mode pcm)
- {
- 	return __pgprot(cachemode2protval(pcm));
- }
--static inline pgprot_t pgprot_4k_2_large(pgprot_t pgprot)
-+static inline unsigned long protval_4k_2_large(unsigned long val)
- {
--	pgprotval_t val = pgprot_val(pgprot);
--	pgprot_t new;
--
--	pgprot_val(new) = (val & ~(_PAGE_PAT | _PAGE_PAT_LARGE)) |
-+	return (val & ~(_PAGE_PAT | _PAGE_PAT_LARGE)) |
- 		((val & _PAGE_PAT) << (_PAGE_BIT_PAT_LARGE - _PAGE_BIT_PAT));
--	return new;
-+}
-+static inline pgprot_t pgprot_4k_2_large(pgprot_t pgprot)
+diff --git a/arch/x86/include/asm/memtype.h b/arch/x86/include/asm/memtype.h
+index 9c2447b..1e4e99b 100644
+--- a/arch/x86/include/asm/memtype.h
++++ b/arch/x86/include/asm/memtype.h
+@@ -24,4 +24,6 @@ extern void memtype_free_io(resource_size_t start, resource_size_t end);
+ 
+ extern bool pat_pfn_immune_to_uc_mtrr(unsigned long pfn);
+ 
++bool x86_has_pat_wp(void);
++
+ #endif /* _ASM_X86_MEMTYPE_H */
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 1bba16c..6005f83 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -71,6 +71,12 @@ uint8_t __pte2cachemode_tbl[8] = {
+ };
+ EXPORT_SYMBOL(__pte2cachemode_tbl);
+ 
++/* Check that the write-protect PAT entry is set for write-protect */
++bool x86_has_pat_wp(void)
 +{
-+	return __pgprot(protval_4k_2_large(pgprot_val(pgprot)));
++	return __pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] == _PAGE_CACHE_MODE_WP;
 +}
-+static inline unsigned long protval_large_2_4k(unsigned long val)
-+{
-+	return (val & ~(_PAGE_PAT | _PAGE_PAT_LARGE)) |
-+		((val & _PAGE_PAT_LARGE) >>
-+		 (_PAGE_BIT_PAT_LARGE - _PAGE_BIT_PAT));
- }
- static inline pgprot_t pgprot_large_2_4k(pgprot_t pgprot)
++
+ static unsigned long __initdata pgt_buf_start;
+ static unsigned long __initdata pgt_buf_end;
+ static unsigned long __initdata pgt_buf_top;
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 18c637c..41536f5 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -778,10 +778,8 @@ void __init *early_memremap_encrypted(resource_size_t phys_addr,
+ void __init *early_memremap_encrypted_wp(resource_size_t phys_addr,
+ 					 unsigned long size)
  {
--	pgprotval_t val = pgprot_val(pgprot);
--	pgprot_t new;
+-	/* Be sure the write-protect PAT entry is set for write-protect */
+-	if (__pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] != _PAGE_CACHE_MODE_WP)
++	if (!x86_has_pat_wp())
+ 		return NULL;
 -
--	pgprot_val(new) = (val & ~(_PAGE_PAT | _PAGE_PAT_LARGE)) |
--			  ((val & _PAGE_PAT_LARGE) >>
--			   (_PAGE_BIT_PAT_LARGE - _PAGE_BIT_PAT));
--	return new;
-+	return __pgprot(protval_large_2_4k(pgprot_val(pgprot)));
+ 	return early_memremap_prot(phys_addr, size, __PAGE_KERNEL_ENC_WP);
  }
  
- 
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 3b289c2..9a497ba 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -367,7 +367,7 @@ static void __init __init_extra_mapping(unsigned long phys, unsigned long size,
- 	pgprot_t prot;
- 
- 	pgprot_val(prot) = pgprot_val(PAGE_KERNEL_LARGE) |
--		pgprot_val(pgprot_4k_2_large(cachemode2pgprot(cache)));
-+		protval_4k_2_large(cachemode2protval(cache));
- 	BUG_ON((phys & ~PMD_MASK) || (size & ~PMD_MASK));
- 	for (; size; phys += PMD_SIZE, size -= PMD_SIZE) {
- 		pgd = pgd_offset_k((unsigned long)__va(phys));
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 7bd2c3a..edf9cea 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -706,11 +706,9 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
- 	if (pud_present(*pud) && !pud_huge(*pud))
- 		return 0;
- 
--	prot = pgprot_4k_2_large(prot);
+@@ -799,10 +797,8 @@ void __init *early_memremap_decrypted(resource_size_t phys_addr,
+ void __init *early_memremap_decrypted_wp(resource_size_t phys_addr,
+ 					 unsigned long size)
+ {
+-	/* Be sure the write-protect PAT entry is set for write-protect */
+-	if (__pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] != _PAGE_CACHE_MODE_WP)
++	if (!x86_has_pat_wp())
+ 		return NULL;
 -
- 	set_pte((pte_t *)pud, pfn_pte(
- 		(u64)addr >> PAGE_SHIFT,
--		__pgprot(pgprot_val(prot) | _PAGE_PSE)));
-+		__pgprot(protval_4k_2_large(pgprot_val(prot) | _PAGE_PSE))));
- 
- 	return 1;
+ 	return early_memremap_prot(phys_addr, size, __PAGE_KERNEL_NOENC_WP);
  }
-@@ -738,11 +736,9 @@ int pmd_set_huge(pmd_t *pmd, phys_addr_t addr, pgprot_t prot)
- 	if (pmd_present(*pmd) && !pmd_huge(*pmd))
- 		return 0;
- 
--	prot = pgprot_4k_2_large(prot);
--
- 	set_pte((pte_t *)pmd, pfn_pte(
- 		(u64)addr >> PAGE_SHIFT,
--		__pgprot(pgprot_val(prot) | _PAGE_PSE)));
-+		__pgprot(protval_4k_2_large(pgprot_val(prot)) | _PAGE_PSE)));
- 
- 	return 1;
- }
+ #endif	/* CONFIG_AMD_MEM_ENCRYPT */
