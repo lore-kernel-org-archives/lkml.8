@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31773C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EFAC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1682078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23D22078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="M2rMcKlo"
+	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="k9EENX3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgDTHQb (ORCPT
+        id S1725959AbgDTHQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:16:31 -0400
-Received: from mail-co1nam11on2138.outbound.protection.outlook.com ([40.107.220.138]:53754
+        Mon, 20 Apr 2020 03:16:34 -0400
+Received: from mail-co1nam11on2115.outbound.protection.outlook.com ([40.107.220.115]:9664
         "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726161AbgDTHQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:16:25 -0400
+        id S1726147AbgDTHQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 03:16:23 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UBAnFg/mCOz+ErpHv2NSOBQWOptEUcUQGn7EOcENIW+lCIarPUF5LrxXfQKEAVD2V9m3Yx8gw+isTHG8tL1BCU1iXXgcXHdBC4X4yp8UzRgbJ6kaJzeTcjnS7YfOs4Tl86XHtxpGJgmIO+GBl85p2wBPg5RBTB6PKNaUb/OlNX1j75JG2fnGIWhRdPcjFrqud7S/TFhj7I+iOBfrgZG4qpuBeY0G+k1EpJF6NWvjHR5FbF0AHB9bsy+JQGyZyFKMBUTavIXq7Emu2srr8avo1wHx1BmcnGQLzX3851kONjaG21RlKhxhvnhm/wdvntVMq6IDrWcvTisu4vafNNBdwQ==
+ b=oYRtlngSVn8ezUrM5WryFSIT6hZhPdfuuiX/ktGIGMx7XpmXczJKfli6ORG7i4x6yuLtekpW7MGXa8P1qF+DtqhfGm6qks5k+ugeFrRZZ2S24yd19+uNFRayok+NybW+nLCxM2nn3Vi0m54kFpNDx7ab1w+4NLfXoZg/CRrWFdmEHyIjbYYUsKS6yD1XwTaateGi1f2iyhLX6BL/PHN6EDQAjl6wzTrHo0e0uEjvq7HJJ3gaqnc35IQXnKCxppxWYGZ6xm/ENrCrhAM0SMH7pMRkwd+951J1ooJ6ej7PnAP4EVxVW7vRFHovW3N9TGvm/ZVkqxOL4uD4cC8Rh9eINw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4yYEsRUYimhigxmNAl7hxApckYLbS26D6tFLpPrG/lo=;
- b=Zon1sozQeDM3YBIMPfViOe3LN10WhMF3SakUUohxP5ezfqhUL9s3qwkiqqWDJUqmXqk+hEP7hLXqf867h7zEwfruRdaPPlYs7bq01XrpRctEoaXc/G/p31UmGsf3QJg47WDw9adaneWqUi/qA9JsVKAp3cBBglm8EKfogp7Greff4VrCXFS5d+IGhoVXm6qFfrQvRzIZgwff0+gxIIh5smezPhi0t9i9aad1AfMtuGAU0Uc3/4xPEqCV8Zec70X+HhCRT9O+MePimuWd8JBxmdZjX146GyfFBhCbV5bLX47Rmy0uAxZY313a/4L/Lijuom7MFZzX6y97rmAKfntHrw==
+ bh=KxGBEzQn5cuKkX7mLr+s7bTq6EpNG8Hh4TggrLFv1+M=;
+ b=ITod/aAs8rFqpygPAAt9e9jX6rmKrGPNVLBWJp9gfvDBPlzBqU7oAOxcnJCQqcP51X9GcEQ6o80LGuMovOlYrlj/sPJi91Y/iY6w3I6YcgZCwFd7Oks5dXPesk++NEgcGsStsBioUCDnnqn1DG7+68CRgi9w8MiMJmVIJK4pmsNgVfkuVjN/seRnYW0CWZeE9WVktKDB9/Ia/5Z3VlJWUkWhHzkWlkG/V+8EXnc/pyyBf0GWD4RfT4Ey9YBJ7lC8qCytatKAoS1QzVbsEF/gPKQwmFSwuSOP0lTEwHjzpq8beJTmSDGaSr5gOxb8Nf7e5+HZpOX0a7phjjYM5Wg8Dw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  204.77.163.244) smtp.rcpttodomain=zeniv.linux.org.uk
  smtp.mailfrom=garmin.com; dmarc=pass (p=quarantine sp=quarantine pct=20)
@@ -37,16 +37,16 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garmin.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4yYEsRUYimhigxmNAl7hxApckYLbS26D6tFLpPrG/lo=;
- b=M2rMcKlo4LyEmZNQpHoBi/g0BzY22mToxCtY0yoGAc5rF1HaOWRD1NK9R5pZPSSwHUushgRVWnn5EBHAtEu71forlt5lzGveAPDUoClFPD7FpBGoJiS30/iTJ3OclenMMfwqM5mZ+YIspiso+7Uo09TsWJU4uZ5mcNdwuZJ9xpvt9xeUstKdB7AmF/Wb2MNtnTwKGoyJl/67inseffQoO5E6FGf95vfih38vuqFRB10V3OCS279+X3vpnFMSLsB5xEh0Ai0ddOP8mh6HdliBqLG/7SLtyYZdGF3igJvvwJ0p1K+tBFteujhgE6eR5Jppb58hjdjWxT3Zn5Gx0iPbfA==
-Received: from DM6PR03CA0044.namprd03.prod.outlook.com (2603:10b6:5:100::21)
- by BN6PR04MB1202.namprd04.prod.outlook.com (2603:10b6:404:92::17) with
+ bh=KxGBEzQn5cuKkX7mLr+s7bTq6EpNG8Hh4TggrLFv1+M=;
+ b=k9EENX3dnEjzvCQU8w4pSxPqAnh9dg+h4xshaAGwTaL/iWcbiLyRlRo+pkVA7zbL2rX0mSiyFCEe4qiuTVomoc5VOO8km8+tLm8+3igRz6uU1gW/eb8UuHYsnhZf6gxYvHJ9jAGR+L1cHBnVmU+auSJwC1SN1D9oLIcAZB7W3o2a5eR8Do39A8XChO6kb+8AHZjksGailV8OhAJsQEWQjLtLMIEa3UOZvL/Di7H5I6u5Ecnhy5qkg2EAjWOzxcEL1CqI1ldVKrSQmXb7nLB5+HlYpfHBRMbV6KgZAZwxgHU2ZMulaZRut8/+4xJYLirPUlp1BmhKMRJeP3EbfB6M4g==
+Received: from MWHPR10CA0052.namprd10.prod.outlook.com (2603:10b6:300:2c::14)
+ by BN3PR04MB2242.namprd04.prod.outlook.com (2a01:111:e400:7bb8::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Mon, 20 Apr
  2020 07:16:18 +0000
-Received: from DM6NAM10FT049.eop-nam10.prod.protection.outlook.com
- (2603:10b6:5:100:cafe::d8) by DM6PR03CA0044.outlook.office365.com
- (2603:10b6:5:100::21) with Microsoft SMTP Server (version=TLS1_2,
+Received: from MW2NAM10FT022.eop-nam10.prod.protection.outlook.com
+ (2603:10b6:300:2c:cafe::d2) by MWHPR10CA0052.outlook.office365.com
+ (2603:10b6:300:2c::14) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend
  Transport; Mon, 20 Apr 2020 07:16:18 +0000
 Authentication-Results: spf=pass (sender IP is 204.77.163.244)
@@ -57,13 +57,13 @@ Received-SPF: Pass (protection.outlook.com: domain of garmin.com designates
  204.77.163.244 as permitted sender) receiver=protection.outlook.com;
  client-ip=204.77.163.244; helo=edgetransport.garmin.com;
 Received: from edgetransport.garmin.com (204.77.163.244) by
- DM6NAM10FT049.mail.protection.outlook.com (10.13.153.121) with Microsoft SMTP
+ MW2NAM10FT022.mail.protection.outlook.com (10.13.155.101) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.2921.25 via Frontend Transport; Mon, 20 Apr 2020 07:16:17 +0000
 Received: from OLAWPA-EXMB7.ad.garmin.com (10.5.144.21) by
- olawpa-edge1.garmin.com (10.60.4.227) with Microsoft SMTP Server
+ olawpa-edge3.garmin.com (10.60.4.226) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1466.3; Mon, 20 Apr 2020 02:16:17 -0500
+ 15.1.1466.3; Mon, 20 Apr 2020 02:16:16 -0500
 Received: from ola-d01c000-vm.ad.garmin.com (10.5.84.15) by
  OLAWPA-EXMB7.ad.garmin.com (10.5.144.21) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
@@ -86,9 +86,9 @@ To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         <linux-kernel@vger.kernel.org>
 CC:     Changli Gao <xiaosuo@gmail.com>,
         Nate Karstens <nate.karstens@garmin.com>
-Subject: [PATCH 4/4] net: Add SOCK_CLOFORK
-Date:   Mon, 20 Apr 2020 02:15:48 -0500
-Message-ID: <20200420071548.62112-5-nate.karstens@garmin.com>
+Subject: [PATCH 2/4] fs: Add O_CLOFORK flag for open(2) and dup3(2)
+Date:   Mon, 20 Apr 2020 02:15:46 -0500
+Message-ID: <20200420071548.62112-3-nate.karstens@garmin.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420071548.62112-1-nate.karstens@garmin.com>
 References: <20200420071548.62112-1-nate.karstens@garmin.com>
@@ -98,130 +98,227 @@ Content-Type: text/plain
 X-ClientProxiedBy: OLAWPA-EXMB3.ad.garmin.com (10.5.144.15) To
  OLAWPA-EXMB7.ad.garmin.com (10.5.144.21)
 X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1020-25366.005
-X-TM-AS-Result: No-5.988100-8.000000-10
-X-TMASE-MatchedRID: 3IdSvgGCM2OSsyjfsjrH/tKhw1CGAxrILoFHmcx3krwAIXlMppp3Xw5a
-        yixA3COc1+Otxunw83huL3ESIrARlyHhSBQfglfsA9lly13c/gHaKQ0GLhRPDxh58BVvx3LmF5J
-        Ui8H1I3XP8poBdrWc73VybJRFpSevgRZdz333xpBJUdgxNDUXWmf6wD367VgtDs0BGU1luwj6p1
-        jlhLAJAsAhMlHsyVwnkA7KM/+6n4wylv9EjaWo1Q97mDMXdNW364sVlliWKx8fE8yM4pjsDwtuK
-        BGekqUpOlxBO2IcOBbnd1hvM4M+M/Oj3yVarJf2NRETSGY0whj9UjqKN8S2I8jQVQJrd8Qi
+X-TM-AS-Result: No-9.399500-8.000000-10
+X-TMASE-MatchedRID: 9FKQq2Ubc8b1HKFnt7/e8tKhw1CGAxrIlHLUcNM85doAZTQQTIkkc93N
+        NJQDizxeGDXccV5w1UP1q35E6lDQr2+4O3SBmLlW9u1rQ4BgXPIBmf/gD11vZAaYevV4zG3ZQBz
+        oPKhLashZ3hT8koiLOx4fZrHGL7yoEVfyWRZcVuVZMZ6MZ0H1UhACJh4BWAPePTublrdV/SPAgD
+        8QYQcBsjk4XrS69X2i0/NbBMSkGddoWWTS0CIqzlgUnyU84hcfquFC73XPA2ffc2Xd6VJ+ym9Ih
+        irTclUbTnj5SlaoRXUaH2v8HV+LCsBvT9NZRcVl4vM1YF6AJbbCCfuIMF6xLcK21zBg2KlfFAQv
+        QYa7pIOjr4CAOuztuw1Dkx0IaMzoPwR95aMFg0Nbic5W0OLHgw==
 X-TM-AS-User-Approved-Sender: No
 X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--5.988100-8.000000
+X-TMASE-Result: 10--9.399500-8.000000
 X-TMASE-Version: SMEX-12.5.0.1300-8.5.1020-25366.005
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:204.77.163.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:edgetransport.garmin.com;PTR:extedge.garmin.com;CAT:NONE;SFTY:;SFS:(10019020)(396003)(376002)(136003)(346002)(39860400002)(46966005)(478600001)(8936002)(70206006)(8676002)(70586007)(7636003)(107886003)(82740400003)(7416002)(4326008)(6666004)(316002)(7696005)(86362001)(26005)(110136005)(2906002)(44832011)(356005)(336012)(47076004)(5660300002)(1076003)(426003)(246002)(186003)(54906003)(36756003)(2616005)(921003);DIR:OUT;SFP:1102;
+X-Forefront-Antispam-Report: CIP:204.77.163.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:edgetransport.garmin.com;PTR:extedge.garmin.com;CAT:NONE;SFTY:;SFS:(10019020)(346002)(396003)(39860400002)(136003)(376002)(46966005)(2906002)(86362001)(5660300002)(4326008)(82740400003)(44832011)(1076003)(478600001)(186003)(36756003)(26005)(356005)(7636003)(426003)(2616005)(336012)(54906003)(70206006)(70586007)(6666004)(47076004)(7696005)(110136005)(8676002)(7416002)(246002)(8936002)(107886003)(316002)(921003);DIR:OUT;SFP:1102;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9ab779eb-5e35-43ed-9d80-08d7e4fab828
-X-MS-TrafficTypeDiagnostic: BN6PR04MB1202:
-X-Microsoft-Antispam-PRVS: <BN6PR04MB12023E2A07EE7DB67768D0F19CD40@BN6PR04MB1202.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Office365-Filtering-Correlation-Id: 2505f673-7eb2-4b32-c190-08d7e4fab80a
+X-MS-TrafficTypeDiagnostic: BN3PR04MB2242:
+X-Microsoft-Antispam-PRVS: <BN3PR04MB224227376F5CE68D10F125D39CD40@BN3PR04MB2242.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-Forefront-PRVS: 03793408BA
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0CcKh8Qf3FddEbi5nhFMe1VjNNcgSCdxvxgYKQ0r8QLp6udo80abRk9RAM73VPsVotqQ5hMJQ+Y9jQnYZv93duqDQj4t4HAhGnhwdZKZbrwulBDWqLHm4oFlodAX1DxEYVDFsfmRkT7zTVdzv//mDk7HYKvDA2zc5YtyrVAcxYtmkCj4V83xUnmzcp8k3Zou/Chtri2EbJ37H+3Xy3xR3Ow1l25NxHf5HLZtHFySl51u6naoWhPFm0NmTIdDlJHThvHNdqP1zhWTOaQFv4WuxRTyuaeGZrdqK0V0o3Bp2UqxKH2Yj01ylctsK+nXszGvzi8ftQnEuHrbpqgtr5ady6lYsiKe+yXOGk37Rj8xRqD3njbWF8YlfoEiupOIcNr//YR8TJhfwX8diaZ1Zrz8DFgGmvIgrX9Et/Lz/Jq1QdlIMWGUYDasnW4I4rjLSCY10yLXXL6qhHrB4BMMoUUIY1JWu/Gq46QK2Zj+aOE75r8rseRvCy4qc2sZ5z+T6duX872YkGq8ceuSUXC7KeM9HQ==
+X-Microsoft-Antispam-Message-Info: 6Znyy5NvGD3VCN/zcDlmuOhWEz7295J1Hw0NUT2P895wP7PAC7bn//oggDs3kB6EhF4+qSUr8Fzy65VyDmgNKUye7cBwdSw9CG97N5CcUMTiUqQFM1anq6SMNhcNM6+rQCgsF1YNcXJDKgNXpPfwHAShZwguNIp0bIfqdhRWER1ZQwpwMLzcsqeaOH88axEJ6L2LwN05E0RZaCWsa1WmMPRT0AZSzJfwaKsRHDpvX0fA9qCeu5UPMUWrGpGHy3pf/l7ntGTt7EHTjYBiKpUI32rw1v2Uj/351M9agkiRwasVbMoh81wX3RKl99QXLgsKLUVW3ZFnonykTjzosBkF13qSqjJ2yJfmOCYc8mbhWv8aAKXhmmTwqy6KNyh3DtRs56Gaj92+MsBvYsDpS5SJcz4zt0Y/WwG86R6sEzi0fFbEriSQFV9IHAvH4SdlR9lmQ0ieBewan2mQidqglo7SOaeKSQkOOcIAazw3TCWOrUHxG+Rwk+XhqRQYEPl2U2JSE51VYLyO0ARotpwYryzlfw==
 X-OriginatorOrg: garmin.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 07:16:17.7851
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 07:16:17.5554
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ab779eb-5e35-43ed-9d80-08d7e4fab828
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2505f673-7eb2-4b32-c190-08d7e4fab80a
 X-MS-Exchange-CrossTenant-Id: 38d0d425-ba52-4c0a-a03e-2a65c8e82e2d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38d0d425-ba52-4c0a-a03e-2a65c8e82e2d;Ip=[204.77.163.244];Helo=[edgetransport.garmin.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR04MB1202
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3PR04MB2242
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements a new socket flag that automatically sets the
-close-on-fork flag for sockets created using socket(2),
-socketpair(2), and accept4(2).
+Add the O_CLOFORK flag to open(2) and dup3(2) to automatically
+set the close-on-fork flag in the new file descriptor, saving
+a separate call to fcntl(2).
 
+Co-developed-by: Changli Gao <xiaosuo@gmail.com>
+Signed-off-by: Changli Gao <xiaosuo@gmail.com>
 Signed-off-by: Nate Karstens <nate.karstens@garmin.com>
 ---
- include/linux/net.h |  3 ++-
- net/socket.c        | 14 ++++++++------
- 2 files changed, 10 insertions(+), 7 deletions(-)
+ arch/alpha/include/uapi/asm/fcntl.h    |  2 ++
+ arch/parisc/include/uapi/asm/fcntl.h   | 39 +++++++++++++-------------
+ arch/sparc/include/uapi/asm/fcntl.h    |  1 +
+ fs/fcntl.c                             |  2 +-
+ fs/file.c                              | 10 ++++++-
+ include/linux/fcntl.h                  |  2 +-
+ include/uapi/asm-generic/fcntl.h       |  4 +++
+ tools/include/uapi/asm-generic/fcntl.h |  4 +++
+ 8 files changed, 42 insertions(+), 22 deletions(-)
 
-diff --git a/include/linux/net.h b/include/linux/net.h
-index 6451425e828f..57663c9dc8c4 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -17,7 +17,7 @@
- #include <linux/stringify.h>
- #include <linux/random.h>
- #include <linux/wait.h>
--#include <linux/fcntl.h>	/* For O_CLOEXEC and O_NONBLOCK */
-+#include <linux/fcntl.h>	/* For O_CLOEXEC, O_CLOFORK, and O_NONBLOCK */
- #include <linux/rcupdate.h>
- #include <linux/once.h>
- #include <linux/fs.h>
-@@ -73,6 +73,7 @@ enum sock_type {
+diff --git a/arch/alpha/include/uapi/asm/fcntl.h b/arch/alpha/include/uapi/asm/fcntl.h
+index 50bdc8e8a271..fbab69b15f7f 100644
+--- a/arch/alpha/include/uapi/asm/fcntl.h
++++ b/arch/alpha/include/uapi/asm/fcntl.h
+@@ -35,6 +35,8 @@
+ #define O_PATH		040000000
+ #define __O_TMPFILE	0100000000
  
- /* Flags for socket, socketpair, accept4 */
- #define SOCK_CLOEXEC	O_CLOEXEC
-+#define SOCK_CLOFORK	O_CLOFORK
- #ifndef SOCK_NONBLOCK
- #define SOCK_NONBLOCK	O_NONBLOCK
++#define O_CLOFORK	0200000000 /* set close_on_fork */
++
+ #define F_GETLK		7
+ #define F_SETLK		8
+ #define F_SETLKW	9
+diff --git a/arch/parisc/include/uapi/asm/fcntl.h b/arch/parisc/include/uapi/asm/fcntl.h
+index 03ce20e5ad7d..8f5989e75b05 100644
+--- a/arch/parisc/include/uapi/asm/fcntl.h
++++ b/arch/parisc/include/uapi/asm/fcntl.h
+@@ -2,26 +2,27 @@
+ #ifndef _PARISC_FCNTL_H
+ #define _PARISC_FCNTL_H
+ 
+-#define O_APPEND	000000010
+-#define O_BLKSEEK	000000100 /* HPUX only */
+-#define O_CREAT		000000400 /* not fcntl */
+-#define O_EXCL		000002000 /* not fcntl */
+-#define O_LARGEFILE	000004000
+-#define __O_SYNC	000100000
++#define O_APPEND	0000000010
++#define O_BLKSEEK	0000000100 /* HPUX only */
++#define O_CREAT		0000000400 /* not fcntl */
++#define O_EXCL		0000002000 /* not fcntl */
++#define O_LARGEFILE	0000004000
++#define __O_SYNC	0000100000
+ #define O_SYNC		(__O_SYNC|O_DSYNC)
+-#define O_NONBLOCK	000200004 /* HPUX has separate NDELAY & NONBLOCK */
+-#define O_NOCTTY	000400000 /* not fcntl */
+-#define O_DSYNC		001000000 /* HPUX only */
+-#define O_RSYNC		002000000 /* HPUX only */
+-#define O_NOATIME	004000000
+-#define O_CLOEXEC	010000000 /* set close_on_exec */
+-
+-#define O_DIRECTORY	000010000 /* must be a directory */
+-#define O_NOFOLLOW	000000200 /* don't follow links */
+-#define O_INVISIBLE	004000000 /* invisible I/O, for DMAPI/XDSM */
+-
+-#define O_PATH		020000000
+-#define __O_TMPFILE	040000000
++#define O_NONBLOCK	0000200004 /* HPUX has separate NDELAY & NONBLOCK */
++#define O_NOCTTY	0000400000 /* not fcntl */
++#define O_DSYNC		0001000000 /* HPUX only */
++#define O_RSYNC		0002000000 /* HPUX only */
++#define O_NOATIME	0004000000
++#define O_CLOEXEC	0010000000 /* set close_on_exec */
++
++#define O_DIRECTORY	0000010000 /* must be a directory */
++#define O_NOFOLLOW	0000000200 /* don't follow links */
++#define O_INVISIBLE	0004000000 /* invisible I/O, for DMAPI/XDSM */
++
++#define O_PATH		0020000000
++#define __O_TMPFILE	0040000000
++#define O_CLOFORK	0100000000
+ 
+ #define F_GETLK64	8
+ #define F_SETLK64	9
+diff --git a/arch/sparc/include/uapi/asm/fcntl.h b/arch/sparc/include/uapi/asm/fcntl.h
+index 67dae75e5274..d631ea13bac3 100644
+--- a/arch/sparc/include/uapi/asm/fcntl.h
++++ b/arch/sparc/include/uapi/asm/fcntl.h
+@@ -37,6 +37,7 @@
+ 
+ #define O_PATH		0x1000000
+ #define __O_TMPFILE	0x2000000
++#define O_CLOFORK	0x4000000
+ 
+ #define F_GETOWN	5	/*  for sockets. */
+ #define F_SETOWN	6	/*  for sockets. */
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index 23964abf4a1a..b59b27c3a338 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -1035,7 +1035,7 @@ static int __init fcntl_init(void)
+ 	 * Exceptions: O_NONBLOCK is a two bit define on parisc; O_NDELAY
+ 	 * is defined as O_NONBLOCK on some platforms and not on others.
+ 	 */
+-	BUILD_BUG_ON(21 - 1 /* for O_RDONLY being 0 */ !=
++	BUILD_BUG_ON(22 - 1 /* for O_RDONLY being 0 */ !=
+ 		HWEIGHT32(
+ 			(VALID_OPEN_FLAGS & ~(O_NONBLOCK | O_NDELAY)) |
+ 			__FMODE_EXEC | __FMODE_NONOTIFY));
+diff --git a/fs/file.c b/fs/file.c
+index de7260ba718d..95774b7962d1 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -544,6 +544,10 @@ int __alloc_fd(struct files_struct *files,
+ 		__set_close_on_exec(fd, fdt);
+ 	else
+ 		__clear_close_on_exec(fd, fdt);
++	if (flags & O_CLOFORK)
++		__set_close_on_fork(fd, fdt);
++	else
++		__clear_close_on_fork(fd, fdt);
+ 	error = fd;
+ #if 1
+ 	/* Sanity check */
+@@ -945,6 +949,10 @@ __releases(&files->file_lock)
+ 		__set_close_on_exec(fd, fdt);
+ 	else
+ 		__clear_close_on_exec(fd, fdt);
++	if (flags & O_CLOFORK)
++		__set_close_on_fork(fd, fdt);
++	else
++		__clear_close_on_fork(fd, fdt);
+ 	spin_unlock(&files->file_lock);
+ 
+ 	if (tofree)
+@@ -985,7 +993,7 @@ static int ksys_dup3(unsigned int oldfd, unsigned int newfd, int flags)
+ 	struct file *file;
+ 	struct files_struct *files = current->files;
+ 
+-	if ((flags & ~O_CLOEXEC) != 0)
++	if ((flags & ~(O_CLOEXEC | O_CLOFORK)) != 0)
+ 		return -EINVAL;
+ 
+ 	if (unlikely(oldfd == newfd))
+diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
+index 7bcdcf4f6ab2..cd4c625647db 100644
+--- a/include/linux/fcntl.h
++++ b/include/linux/fcntl.h
+@@ -10,7 +10,7 @@
+ 	(O_RDONLY | O_WRONLY | O_RDWR | O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | \
+ 	 O_APPEND | O_NDELAY | O_NONBLOCK | O_NDELAY | __O_SYNC | O_DSYNC | \
+ 	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
+-	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
++	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE | O_CLOFORK)
+ 
+ /* List of all valid flags for the how->upgrade_mask argument: */
+ #define VALID_UPGRADE_FLAGS \
+diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
+index 0cb7199a7743..165a0736a3aa 100644
+--- a/include/uapi/asm-generic/fcntl.h
++++ b/include/uapi/asm-generic/fcntl.h
+@@ -89,6 +89,10 @@
+ #define __O_TMPFILE	020000000
  #endif
-diff --git a/net/socket.c b/net/socket.c
-index 2eecf1517f76..ba6e971c7e78 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -1511,12 +1511,14 @@ int __sys_socket(int family, int type, int protocol)
  
- 	/* Check the SOCK_* constants for consistency.  */
- 	BUILD_BUG_ON(SOCK_CLOEXEC != O_CLOEXEC);
-+	BUILD_BUG_ON(SOCK_CLOFORK != O_CLOFORK);
- 	BUILD_BUG_ON((SOCK_MAX | SOCK_TYPE_MASK) != SOCK_TYPE_MASK);
- 	BUILD_BUG_ON(SOCK_CLOEXEC & SOCK_TYPE_MASK);
-+	BUILD_BUG_ON(SOCK_CLOFORK & SOCK_TYPE_MASK);
- 	BUILD_BUG_ON(SOCK_NONBLOCK & SOCK_TYPE_MASK);
++#ifndef O_CLOFORK
++#define O_CLOFORK	040000000	/* set close_on_fork */
++#endif
++
+ /* a horrid kludge trying to make sure that this will fail on old kernels */
+ #define O_TMPFILE (__O_TMPFILE | O_DIRECTORY)
+ #define O_TMPFILE_MASK (__O_TMPFILE | O_DIRECTORY | O_CREAT)      
+diff --git a/tools/include/uapi/asm-generic/fcntl.h b/tools/include/uapi/asm-generic/fcntl.h
+index e04a00fecb4a..69d8a000ec65 100644
+--- a/tools/include/uapi/asm-generic/fcntl.h
++++ b/tools/include/uapi/asm-generic/fcntl.h
+@@ -88,6 +88,10 @@
+ #define __O_TMPFILE	020000000
+ #endif
  
- 	flags = type & ~SOCK_TYPE_MASK;
--	if (flags & ~(SOCK_CLOEXEC | SOCK_NONBLOCK))
-+	if (flags & ~(SOCK_CLOEXEC | SOCK_CLOFORK | SOCK_NONBLOCK))
- 		return -EINVAL;
- 	type &= SOCK_TYPE_MASK;
- 
-@@ -1527,7 +1529,7 @@ int __sys_socket(int family, int type, int protocol)
- 	if (retval < 0)
- 		return retval;
- 
--	return sock_map_fd(sock, flags & (O_CLOEXEC | O_NONBLOCK));
-+	return sock_map_fd(sock, flags & (O_CLOEXEC | O_CLOFORK | O_NONBLOCK));
- }
- 
- SYSCALL_DEFINE3(socket, int, family, int, type, int, protocol)
-@@ -1547,7 +1549,7 @@ int __sys_socketpair(int family, int type, int protocol, int __user *usockvec)
- 	int flags;
- 
- 	flags = type & ~SOCK_TYPE_MASK;
--	if (flags & ~(SOCK_CLOEXEC | SOCK_NONBLOCK))
-+	if (flags & ~(SOCK_CLOEXEC | SOCK_CLOFORK | SOCK_NONBLOCK))
- 		return -EINVAL;
- 	type &= SOCK_TYPE_MASK;
- 
-@@ -1715,7 +1717,7 @@ int __sys_accept4_file(struct file *file, unsigned file_flags,
- 	int err, len, newfd;
- 	struct sockaddr_storage address;
- 
--	if (flags & ~(SOCK_CLOEXEC | SOCK_NONBLOCK))
-+	if (flags & ~(SOCK_CLOEXEC | SOCK_CLOFORK | SOCK_NONBLOCK))
- 		return -EINVAL;
- 
- 	if (SOCK_NONBLOCK != O_NONBLOCK && (flags & SOCK_NONBLOCK))
-@@ -3628,8 +3630,8 @@ EXPORT_SYMBOL(kernel_listen);
-  *	@newsock: new connected socket
-  *	@flags: flags
-  *
-- *	@flags must be SOCK_CLOEXEC, SOCK_NONBLOCK or 0.
-- *	If it fails, @newsock is guaranteed to be %NULL.
-+ *	@flags must be SOCK_CLOEXEC, SOCK_CLOFORK, SOCK_NONBLOCK,
-+ *	or 0. If it fails, @newsock is guaranteed to be %NULL.
-  *	Returns 0 or an error.
-  */
- 
++#ifndef O_CLOFORK
++#define O_CLOFORK	040000000	/* set close_on_fork */
++#endif
++
+ /* a horrid kludge trying to make sure that this will fail on old kernels */
+ #define O_TMPFILE (__O_TMPFILE | O_DIRECTORY)
+ #define O_TMPFILE_MASK (__O_TMPFILE | O_DIRECTORY | O_CREAT)
 -- 
 2.26.1
 
