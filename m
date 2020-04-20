@@ -2,186 +2,80 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22659C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE90C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBF6C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=tsoy.me header.i=@tsoy.me header.b="hE3jjcIi"
+	by mail.kernel.org (Postfix) with ESMTP id 48EEF207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587415345;
+	bh=SYmDL71+i0dxipydp4fzdeCa0qcgn3q6383QGXptJxI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Evau+uIVX5nIwrrEinJgNSf61b0v6MVMr/d44ZG6Qerpw612hidmLv789o+I7qJg4
+	 DPro7dU0xb5zT2bWdqpcRkrbFQYnnmw+/sSkYzq3qL3Or8dCZcv+5XcFW00nwrBS3p
+	 y/aESz8cqpygMWBU4cdh5QR0wRUvzUtQI1HfwqR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgDTUmO (ORCPT
+        id S1726730AbgDTUmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTUmO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:42:14 -0400
-X-Greylist: delayed 963 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 20 Apr 2020 13:42:13 PDT
-Received: from puleglot.ru (puleglot.ru [IPv6:2a01:4f8:1c0c:58e8::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FCFC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 13:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tsoy.me;
-        s=mymail; h=Sender:Content-Transfer-Encoding:MIME-Version:Content-Type:
-        References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-        :List-Post:List-Owner:List-Archive;
-        bh=ZKaz9g+0dN4EMZTssIuTURp7XdyfTbM9NKhYQlFDI6Q=; b=hE3jjcIicpBLRbfMdYwOm7k70P
-        O5XW9hDIULhuBkjgZqgmGtvWgiB2l2dl/LygBV9Y2pixjriADPQEQMOsukOQjl2llEGEn3s33b9hA
-        L1tr4wdWUQQpQ/WZnBvi2bhGzwdSwYSPjtrGnFOuQlLon4ZP/pxUlkLv2NfWbYKx70iI=;
-Received: from [2a00:1370:8125:3f98:890:f100:d37d:7ada] (helo=home)
-        by puleglot.ru with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <puleglot@puleglot.ru>)
-        id 1jQczO-0006SG-8n; Mon, 20 Apr 2020 23:25:58 +0300
-Message-ID: <1c4b8a362761421eba0ded60bb4f0e11b7e42f3b.camel@tsoy.me>
-Subject: Re: [PATCH] ALSA: usb-audio: Add quirk for Focusrite Scarlett 2i2
-From:   Alexander Tsoy <alexander@tsoy.me>
-To:     Gregor Pintar <grpintar@gmail.com>, tiwai@suse.com, perex@perex.cz
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Date:   Mon, 20 Apr 2020 23:25:56 +0300
-In-Reply-To: <20200420201937.12634-1-grpintar@gmail.com>
-References: <20200420201937.12634-1-grpintar@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 
+        Mon, 20 Apr 2020 16:42:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726644AbgDTUmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:42:24 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F259206E9;
+        Mon, 20 Apr 2020 20:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587415343;
+        bh=SYmDL71+i0dxipydp4fzdeCa0qcgn3q6383QGXptJxI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xMeM05XEdBoL/1hRghTVBJkRL92JNBsc0vONEfPdXkSjSKxdOO+hwrPBHdB/Cr1Z9
+         GOD/PkSOModeIzIKldikpS1QexS3bmWDjnQ1l890YR72ONrmjqRMU1CbRcBJio2bGZ
+         DiXKGrl9oq/t5wptbUrKeawIy93SgtP0oDiVXJH0=
+Date:   Mon, 20 Apr 2020 21:42:18 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     catalin.marinas@arm.com, alexios.zavras@intel.com,
+        tglx@linutronix.de, akpm@linux-foundation.org,
+        steven.price@arm.com, steve.capper@arm.com, mark.rutland@arm.com,
+        broonie@kernel.org, keescook@chromium.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH] arm64: add check_wx_pages debugfs for CHECK_WX
+Message-ID: <20200420204217.GA29998@willie-the-truck>
+References: <20200307093926.27145-1-tranmanphong@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200307093926.27145-1-tranmanphong@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-В Пн, 20/04/2020 в 22:19 +0200, Gregor Pintar пишет:
-> Force it to use asynchronous playback.
-
-Can we use snd_usb_audioformat_attributes_quirk() for such fixes? See
-the quirk for Griffin iMic as an example.
-
+On Sat, Mar 07, 2020 at 04:39:26PM +0700, Phong Tran wrote:
+> follow the suggestion from
+> https://github.com/KSPP/linux/issues/35
 > 
-> Same quirk has already been added for Focusrite Scarlett Solo (2nd
-> gen)
-> with a commit 46f5710f0b88 ("ALSA: usb-audio: Add quirk for Focusrite
-> Scarlett Solo").
-> 
-> This also seems to prevent regular clicks when playing at 44100Hz
-> on Scarlett 2i2 (2nd gen). I did not notice any side effects.
-> 
-> Signed-off-by: Gregor Pintar <grpintar@gmail.com>
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
 > ---
->  sound/usb/quirks-table.h | 84
-> ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
-> 
-> diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-> index e009d584e..bc936bf79 100644
-> --- a/sound/usb/quirks-table.h
-> +++ b/sound/usb/quirks-table.h
-> @@ -2840,6 +2840,90 @@ YAMAHA_DEVICE(0x7010, "UB99"),
->  		}
->  	}
->  },
-> +{
-> +	/*
-> +	 * Focusrite Scarlett 2i2 2nd generation
-> +	 * Reports that playback should use Synch: Synchronous
-> +	 * while still providing a feedback endpoint. Synchronous
-> causes
-> +	 * snapping on some sample rates.
-> +	 * Force it to use Synch: Asynchronous.
-> +	 */
-> +	USB_DEVICE(0x1235, 0x8202),
-> +	.driver_info = (unsigned long) &(const struct
-> snd_usb_audio_quirk) {
-> +		.ifnum = QUIRK_ANY_INTERFACE,
-> +		.type = QUIRK_COMPOSITE,
-> +		.data = (const struct snd_usb_audio_quirk[]) {
-> +			{
-> +				.ifnum = 1,
-> +				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
-> +				.data = &(const struct audioformat) {
-> +					.formats =
-> SNDRV_PCM_FMTBIT_S32_LE,
-> +					.channels = 2,
-> +					.iface = 1,
-> +					.altsetting = 1,
-> +					.altset_idx = 1,
-> +					.attributes = 0,
-> +					.endpoint = 0x01,
-> +					.ep_attr =
-> USB_ENDPOINT_XFER_ISOC |
-> +						USB_ENDPOINT_SYNC_ASYNC
-> ,
-> +					.protocol = UAC_VERSION_2,
-> +					.rates = SNDRV_PCM_RATE_44100 |
-> +						SNDRV_PCM_RATE_48000 |
-> +						SNDRV_PCM_RATE_88200 |
-> +						SNDRV_PCM_RATE_96000 |
-> +						SNDRV_PCM_RATE_176400 |
-> +						SNDRV_PCM_RATE_192000,
-> +					.rate_min = 44100,
-> +					.rate_max = 192000,
-> +					.nr_rates = 6,
-> +					.rate_table = (unsigned int[])
-> {
-> +						44100, 48000, 88200,
-> +						96000, 176400, 192000
-> +					},
-> +					.clock = 41
-> +				}
-> +			},
-> +			{
-> +				.ifnum = 2,
-> +				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
-> +				.data = &(const struct audioformat) {
-> +					.formats =
-> SNDRV_PCM_FMTBIT_S32_LE,
-> +					.channels = 2,
-> +					.iface = 2,
-> +					.altsetting = 1,
-> +					.altset_idx = 1,
-> +					.attributes = 0,
-> +					.endpoint = 0x82,
-> +					.ep_attr =
-> USB_ENDPOINT_XFER_ISOC |
-> +						USB_ENDPOINT_SYNC_ASYNC
-> |
-> +						USB_ENDPOINT_USAGE_IMPL
-> ICIT_FB,
-> +					.protocol = UAC_VERSION_2,
-> +					.rates = SNDRV_PCM_RATE_44100 |
-> +						SNDRV_PCM_RATE_48000 |
-> +						SNDRV_PCM_RATE_88200 |
-> +						SNDRV_PCM_RATE_96000 |
-> +						SNDRV_PCM_RATE_176400 |
-> +						SNDRV_PCM_RATE_192000,
-> +					.rate_min = 44100,
-> +					.rate_max = 192000,
-> +					.nr_rates = 6,
-> +					.rate_table = (unsigned int[])
-> {
-> +						44100, 48000, 88200,
-> +						96000, 176400, 192000
-> +					},
-> +					.clock = 41
-> +				}
-> +			},
-> +			{
-> +				.ifnum = 3,
-> +				.type = QUIRK_IGNORE_INTERFACE
-> +			},
-> +			{
-> +				.ifnum = -1
-> +			}
-> +		}
-> +	}
-> +},
->  
->  /* Access Music devices */
->  {
+>  arch/arm64/Kconfig.debug        |  3 ++-
+>  arch/arm64/include/asm/ptdump.h |  2 ++
+>  arch/arm64/mm/dump.c            |  1 +
+>  arch/arm64/mm/ptdump_debugfs.c  | 18 ++++++++++++++++++
+>  4 files changed, 23 insertions(+), 1 deletion(-)
 
+Any plans to spin an updated version of this? The review feedback all seemed
+reasonable to me.
+
+Thanks,
+
+Will
