@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F30C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF74C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E22F2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972B820747
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386455;
-	bh=YMFdLjTiqvREH9qsLeoZ6Ek6B94lsHuwlxz7QT5Acaw=;
+	s=default; t=1587386461;
+	bh=otd2QZ8LurhFqBTT0j5u25PASA7bqvPKOXhJaz2Pir8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NnfdVaoEqrRe+0Av3loJOhmjHMuyMdclHr8msVf/TIGnV/mVTRwt5FS1lwOZZcQTF
-	 rlL8Vntjl3NdBH3RAfIHJIwv1bS6K1nShzJlBvpOxRM0/Yv2Vw1y7jbl1cgZZamYOk
-	 GDbOxebXmDteYvSZnTMU9mpZFdcLTKWs/4nAo1TA=
+	b=fnCmzhWC9DDizy+3uCaKERRgQJzmM2rApLdtqkH8PoYvMbLEfubu05e0u9z900Czi
+	 o1MH25ICXh65k4Ywi/gwhjpAyYlj6V6o19vIE141lLjVqUm2Oa/DbKdBgbPTEiN1U/
+	 ZK6XSotMak1Xqn2OtOSirFQaeaBkj1OV9c9SSBQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgDTMky (ORCPT
+        id S1727905AbgDTMlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:40:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33298 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgDTMku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:40:50 -0400
+        id S1727887AbgDTMk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:40:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38F8E2070B;
-        Mon, 20 Apr 2020 12:40:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 969A52072B;
+        Mon, 20 Apr 2020 12:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386449;
-        bh=YMFdLjTiqvREH9qsLeoZ6Ek6B94lsHuwlxz7QT5Acaw=;
+        s=default; t=1587386457;
+        bh=otd2QZ8LurhFqBTT0j5u25PASA7bqvPKOXhJaz2Pir8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BnXZEfU/K+noThR4S+kFC5MxGhShg6T2nqGvT7WRVCnkbH5Vr0wujKUt8LcLuYODZ
-         LoyKGLs43zL122YqvP0li1BNonauo4DAsRJjmo5YflR/o1alwFdLj+qpQ3rdswe9vI
-         s2XYAPqBN73ESJGwmDqr/EbRDQCcg63hw7U3Umx0=
+        b=cw9P2wDqHJJcpGibkrx1mzmXURePRHXu57jMQLN4P0v10AEGf/pBo7eW/DViBOGh7
+         7w9VgCKydCkJtLAsdQ2B5O8cADsUDTCCOHsN7QKXfWb04TwJ8o7wsNN2QC2iTyiGrO
+         R5Ys3sGSYQ4H43hHb3fv7VDhvsHfGOeIPDahgUSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 5.5 27/65] pwm: pca9685: Fix PWM/GPIO inter-operation
-Date:   Mon, 20 Apr 2020 14:38:31 +0200
-Message-Id: <20200420121512.063188836@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Michael=20Wei=C3=9F?= <michael.weiss@aisec.fraunhofer.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 03/65] l2tp: Allow management of tunnels and session in user namespace
+Date:   Mon, 20 Apr 2020 14:38:07 +0200
+Message-Id: <20200420121507.052936221@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -64,201 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <TheSven73@gmail.com>
+From: "Michael Wei�" <michael.weiss@aisec.fraunhofer.de>
 
-commit 9cc5f232a4b6a0ef6e9b57876d61b88f61bdd7c2 upstream.
+[ Upstream commit 2abe05234f2e892728c388169631e4b99f354c86 ]
 
-This driver allows pwms to be requested as gpios via gpiolib. Obviously,
-it should not be allowed to request a GPIO when its corresponding PWM is
-already requested (and vice versa). So it requires some exclusion code.
+Creation and management of L2TPv3 tunnels and session through netlink
+requires CAP_NET_ADMIN. However, a process with CAP_NET_ADMIN in a
+non-initial user namespace gets an EPERM due to the use of the
+genetlink GENL_ADMIN_PERM flag. Thus, management of L2TP VPNs inside
+an unprivileged container won't work.
 
-Given that the PWMm and GPIO cores are not synchronized with respect to
-each other, this exclusion code will also require proper
-synchronization.
+We replaced the GENL_ADMIN_PERM by the GENL_UNS_ADMIN_PERM flag
+similar to other network modules which also had this problem, e.g.,
+openvswitch (commit 4a92602aa1cd "openvswitch: allow management from
+inside user namespaces") and nl80211 (commit 5617c6cd6f844 "nl80211:
+Allow privileged operations from user namespaces").
 
-Such a mechanism was in place, but was inadvertently removed by Uwe's
-clean-up in commit e926b12c611c ("pwm: Clear chip_data in pwm_put()").
+I tested this in the container runtime trustm3 (trustm3.github.io)
+and was able to create l2tp tunnels and sessions in unpriviliged
+(user namespaced) containers using a private network namespace.
+For other runtimes such as docker or lxc this should work, too.
 
-Upon revisiting the synchronization mechanism, we found that
-theoretically, it could allow two threads to successfully request
-conflicting PWMs/GPIOs.
-
-Replace with a bitmap which tracks PWMs in-use, plus a mutex. As long as
-PWM and GPIO's respective request/free functions modify the in-use
-bitmap while holding the mutex, proper synchronization will be
-guaranteed.
-
-Reported-by: YueHaibing <yuehaibing@huawei.com>
-Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Link: https://lkml.org/lkml/2019/5/31/963
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-[cg: Tested on an i.MX6Q board with two NXP PCA9685 chips]
-Tested-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com> # cg's rebase
-Link: https://lore.kernel.org/lkml/20200330160238.GD2817345@ulmo/
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Michael Weiß <michael.weiss@aisec.fraunhofer.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/pwm/pwm-pca9685.c |   85 +++++++++++++++++++++++++---------------------
- 1 file changed, 48 insertions(+), 37 deletions(-)
+ net/l2tp/l2tp_netlink.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -20,6 +20,7 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/pm_runtime.h>
-+#include <linux/bitmap.h>
- 
- /*
-  * Because the PCA9685 has only one prescaler per chip, changing the period of
-@@ -74,6 +75,7 @@ struct pca9685 {
- #if IS_ENABLED(CONFIG_GPIOLIB)
- 	struct mutex lock;
- 	struct gpio_chip gpio;
-+	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
- #endif
+--- a/net/l2tp/l2tp_netlink.c
++++ b/net/l2tp/l2tp_netlink.c
+@@ -920,51 +920,51 @@ static const struct genl_ops l2tp_nl_ops
+ 		.cmd = L2TP_CMD_TUNNEL_CREATE,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_tunnel_create,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_TUNNEL_DELETE,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_tunnel_delete,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_TUNNEL_MODIFY,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_tunnel_modify,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_TUNNEL_GET,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_tunnel_get,
+ 		.dumpit = l2tp_nl_cmd_tunnel_dump,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_SESSION_CREATE,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_session_create,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_SESSION_DELETE,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_session_delete,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_SESSION_MODIFY,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_session_modify,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_SESSION_GET,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_session_get,
+ 		.dumpit = l2tp_nl_cmd_session_dump,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
  };
  
-@@ -83,51 +85,51 @@ static inline struct pca9685 *to_pca(str
- }
- 
- #if IS_ENABLED(CONFIG_GPIOLIB)
--static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
-+static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
- {
--	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
-+	bool is_inuse;
- 
- 	mutex_lock(&pca->lock);
--
--	pwm = &pca->chip.pwms[offset];
--
--	if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
--		mutex_unlock(&pca->lock);
--		return -EBUSY;
-+	if (pwm_idx >= PCA9685_MAXCHAN) {
-+		/*
-+		 * "all LEDs" channel:
-+		 * pretend already in use if any of the PWMs are requested
-+		 */
-+		if (!bitmap_empty(pca->pwms_inuse, PCA9685_MAXCHAN)) {
-+			is_inuse = true;
-+			goto out;
-+		}
-+	} else {
-+		/*
-+		 * regular channel:
-+		 * pretend already in use if the "all LEDs" channel is requested
-+		 */
-+		if (test_bit(PCA9685_MAXCHAN, pca->pwms_inuse)) {
-+			is_inuse = true;
-+			goto out;
-+		}
- 	}
--
--	pwm_set_chip_data(pwm, (void *)1);
--
-+	is_inuse = test_and_set_bit(pwm_idx, pca->pwms_inuse);
-+out:
- 	mutex_unlock(&pca->lock);
--	pm_runtime_get_sync(pca->chip.dev);
--	return 0;
-+	return is_inuse;
- }
- 
--static bool pca9685_pwm_is_gpio(struct pca9685 *pca, struct pwm_device *pwm)
-+static void pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
- {
--	bool is_gpio = false;
--
- 	mutex_lock(&pca->lock);
-+	clear_bit(pwm_idx, pca->pwms_inuse);
-+	mutex_unlock(&pca->lock);
-+}
- 
--	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
--		unsigned int i;
--
--		/*
--		 * Check if any of the GPIOs are requested and in that case
--		 * prevent using the "all LEDs" channel.
--		 */
--		for (i = 0; i < pca->gpio.ngpio; i++)
--			if (gpiochip_is_requested(&pca->gpio, i)) {
--				is_gpio = true;
--				break;
--			}
--	} else if (pwm_get_chip_data(pwm)) {
--		is_gpio = true;
--	}
-+static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
-+{
-+	struct pca9685 *pca = gpiochip_get_data(gpio);
- 
--	mutex_unlock(&pca->lock);
--	return is_gpio;
-+	if (pca9685_pwm_test_and_set_inuse(pca, offset))
-+		return -EBUSY;
-+	pm_runtime_get_sync(pca->chip.dev);
-+	return 0;
- }
- 
- static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
-@@ -162,6 +164,7 @@ static void pca9685_pwm_gpio_free(struct
- 
- 	pca9685_pwm_gpio_set(gpio, offset, 0);
- 	pm_runtime_put(pca->chip.dev);
-+	pca9685_pwm_clear_inuse(pca, offset);
- }
- 
- static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
-@@ -213,12 +216,17 @@ static int pca9685_pwm_gpio_probe(struct
- 	return devm_gpiochip_add_data(dev, &pca->gpio, pca);
- }
- #else
--static inline bool pca9685_pwm_is_gpio(struct pca9685 *pca,
--				       struct pwm_device *pwm)
-+static inline bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca,
-+						  int pwm_idx)
- {
- 	return false;
- }
- 
-+static inline void
-+pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
-+{
-+}
-+
- static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
- {
- 	return 0;
-@@ -402,7 +410,7 @@ static int pca9685_pwm_request(struct pw
- {
- 	struct pca9685 *pca = to_pca(chip);
- 
--	if (pca9685_pwm_is_gpio(pca, pwm))
-+	if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
- 		return -EBUSY;
- 	pm_runtime_get_sync(chip->dev);
- 
-@@ -411,8 +419,11 @@ static int pca9685_pwm_request(struct pw
- 
- static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
-+	struct pca9685 *pca = to_pca(chip);
-+
- 	pca9685_pwm_disable(chip, pwm);
- 	pm_runtime_put(chip->dev);
-+	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
- }
- 
- static const struct pwm_ops pca9685_pwm_ops = {
 
 
