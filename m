@@ -2,115 +2,112 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586E8C54FC9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22255C54FC9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37180214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:06:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fGzmuMR+"
+	by mail.kernel.org (Postfix) with ESMTP id 0582A214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgDTCGp (ORCPT
+        id S1726123AbgDTCHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 22:06:45 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:38006 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725953AbgDTCGo (ORCPT
+        Sun, 19 Apr 2020 22:07:00 -0400
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:46500 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbgDTCHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 22:06:44 -0400
-X-UUID: 15895ba748b741d689787e4e72c2df8f-20200420
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=apeKneLMG1hzTxdpFAt2JSCjXRLNOpzDMxDOJ9dHZ7A=;
-        b=fGzmuMR+Truu3qv76tuPigaZ0pQwCJJio7FFkL8raPMLc4uwxHIp2LKujvWWwrievZV3O1OIGKfxwLgpq4XHzr7qrhyviSbljEadWOeGmat4Ub375ODEMSOdabJ9SLnn5YrDhVb0khviCIc4mdtKDe9+E1EGC4IfsiJKRoYjkx4=;
-X-UUID: 15895ba748b741d689787e4e72c2df8f-20200420
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <sean.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 785955110; Mon, 20 Apr 2020 10:06:40 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 20 Apr 2020 10:06:34 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 20 Apr 2020 10:06:39 +0800
-From:   <sean.wang@mediatek.com>
-To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
-        <andriy.shevchenko@linux.intel.com>, <robert.jarzmik@free.fr>,
-        <arnd@arndb.de>, <p.zabel@pengutronix.de>, <joel@jms.id.au>,
-        <david@lechnology.com>, <jan.kiszka@siemens.com>,
-        <heikki.krogerus@linux.intel.com>, <hpeter@gmail.com>,
-        <vigneshr@ti.com>, <matthias.bgg@gmail.com>,
-        <tthayer@opensource.altera.com>
-CC:     <linux-mediatek@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>,
-        Steven Liu <steven.liu@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v2] tty: serial: don't do termios for BTIF
-Date:   Mon, 20 Apr 2020 10:06:38 +0800
-Message-ID: <8c47aea3aa3cce4d7484b840ddb117cd16bcf1cc.1587347988.git.sean.wang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Sun, 19 Apr 2020 22:07:00 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4959755FpdzQlCW;
+        Mon, 20 Apr 2020 04:06:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id ViTbMQLm6i7Q; Mon, 20 Apr 2020 04:06:51 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 12:06:42 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/3] fs: openat2: Extend open_how to allow
+ userspace-selected fds
+Message-ID: <20200420020642.xzkqikia6kmslkjh@yavin.dot.cyphar.com>
+References: <cover.1586830316.git.josh@joshtriplett.org>
+ <f969e7d45a8e83efc1ca13d675efd8775f13f376.1586830316.git.josh@joshtriplett.org>
+ <20200419104404.j4e5gxdn2duvmu6s@yavin.dot.cyphar.com>
+ <b7dae79b-4c5f-65f6-0960-617070357201@kernel.dk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nl3aoloccd36jfpc"
+Content-Disposition: inline
+In-Reply-To: <b7dae79b-4c5f-65f6-0960-617070357201@kernel.dk>
+X-Rspamd-Queue-Id: 57B701756
+X-Rspamd-Score: -8.16 / 15.00 / 15.00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPg0KDQpCbHVldG9vdGggSW50
-ZXJmYWNlIChCVElGKSBpcyBkZXNpZ25lZCBkZWRpY2F0ZWRseSBmb3IgTWVkaWFUZWsgU09DIHdp
-dGgNCkJUIGluIG9yZGVyIHRvIGJlIGluc3RlYWQgb2YgdGhlIFVBUlQgaW50ZXJmYWNlIGJldHdl
-ZW4gQlQgbW9kdWxlIGFuZCBIb3N0DQpDUFUsIGFuZCBub3QgZXhwb3J0ZWQgdG8gdXNlciBzcGFj
-ZSB0byBhY2Nlc3MuDQoNCkFzIHRoZSBVQVJUIGRlc2lnbiwgQlRJRiB3aWxsIGJlIGFuIEFQQiBz
-bGF2ZSBhbmQgY2FuIHRyYW5zbWl0IG9yIHJlY2VpdmUNCmRhdGEgYnkgTUNVIGFjY2VzcywgYnV0
-IGRvZXNuJ3QgcHJvdmlkZSB0ZXJtaW9zIGZ1bmN0aW9uIGxpa2UgYmF1ZHJhdGUgYW5kDQpmbG93
-IGNvbnRyb2wgc2V0dXAuDQoNCkV2ZW4gTENSIG9uIG9mZnNldCAweEMgdGhhdCBpcyBqdXN0IGEg
-RkFLRUxDUg0KYS4gSWYgRkFLRUxDUls3XSBpcyBlcXVhbGVkIHRvIDEsIFJCUigweDAwKSwgVEhS
-KDB4MDApLCBJRVIoMHgwNCkNCiAgIHdpbGwgbm90IGJlIHJlYWRhYmxlL3dyaXRhYmxlLg0KDQpi
-LiBJZiBGQUtFTENSIGlzIGVxdWFsZWQgdG8gMHhCRiwgUkJSKDB4MDApLCBUSFIoMHgwMCksIElF
-UigweDA0KSwNCiAgIElJUigweDA4KSwgYW5kIExTUigweDE0KSB3aWxsIG5vdCBiZSByZWFkYWJs
-ZS93cml0YWJsZS4NCg0KU28gYWRkaW5nIGEgbmV3IGNhcGFiaWxpdHkgJ1VBUlRfQ0FQX05NT0Qn
-IGZvciB0aGUgdW51c3VhbCB1bnN1cHBvcnRlZA0KY2FzZS4NCg0KRml4ZXM6IDFjMTZhZTY1ZTI1
-MCAoInNlcmlhbDogODI1MDogb2Y6IEFkZCBuZXcgcG9ydCB0eXBlIGZvciBNZWRpYVRlayBCVElG
-IGNvbnRyb2xsZXIgb24gTVQ3NjIyLzIzIFNvQyIpDQpDYzogU3RldmVuIExpdSA8c3RldmVuLmxp
-dUBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBTZWFuIFdhbmcgPHNlYW4ud2FuZ0BtZWRp
-YXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBSeWRlciBMZWUgPHJ5ZGVyLmxlZUBtZWRpYXRlay5j
-b20+DQoNCi0tDQp2MS0+djI6DQpubyBjaGFuZ2Ugb24gdGVybWlvcy0+Y19jZmxhZyBhbmQgcmVm
-aW5lIGNvbW1pdCBtZXNzYWdlDQotLS0NCiBkcml2ZXJzL3R0eS9zZXJpYWwvODI1MC84MjUwLmgg
-ICAgICB8IDEgKw0KIGRyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfcG9ydC5jIHwgNSArKysr
-LQ0KIDIgZmlsZXMgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3R0eS9zZXJpYWwvODI1MC84MjUwLmggYi9kcml2ZXJzL3R0eS9z
-ZXJpYWwvODI1MC84MjUwLmgNCmluZGV4IDMzYWQ5ZDZkZTUzMi4uMjUwMzM3ZTRlN2M4IDEwMDY0
-NA0KLS0tIGEvZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1MC5oDQorKysgYi9kcml2ZXJzL3R0
-eS9zZXJpYWwvODI1MC84MjUwLmgNCkBAIC04Miw2ICs4Miw3IEBAIHN0cnVjdCBzZXJpYWw4MjUw
-X2NvbmZpZyB7DQogI2RlZmluZSBVQVJUX0NBUF9NSU5JCSgxIDw8IDE3KQkvKiBNaW5pIFVBUlQg
-b24gQkNNMjgzWCBmYW1pbHkgbGFja3M6DQogCQkJCQkgKiBTVE9QIFBBUklUWSBFUEFSIFNQQVIg
-V0xFTjUgV0xFTjYNCiAJCQkJCSAqLw0KKyNkZWZpbmUgVUFSVF9DQVBfTk1PRAkoMSA8PCAxOCkJ
-LyogVUFSVCBkb2Vzbid0IGRvIHRlcm1pb3MgKi8NCiANCiAjZGVmaW5lIFVBUlRfQlVHX1FVT1QJ
-KDEgPDwgMCkJLyogVUFSVCBoYXMgYnVnZ3kgcXVvdCBMU0IgKi8NCiAjZGVmaW5lIFVBUlRfQlVH
-X1RYRU4JKDEgPDwgMSkJLyogVUFSVCBoYXMgYnVnZ3kgVFggSUlSIHN0YXR1cyAqLw0KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfcG9ydC5jIGIvZHJpdmVycy90dHkv
-c2VyaWFsLzgyNTAvODI1MF9wb3J0LmMNCmluZGV4IDAzMjVmMmU1M2I3NC4uZGEwYTg3MTFlZTNk
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1MF9wb3J0LmMNCisrKyBi
-L2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfcG9ydC5jDQpAQCAtMjg2LDcgKzI4Niw3IEBA
-IHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc2VyaWFsODI1MF9jb25maWcgdWFydF9jb25maWdbXSA9IHsN
-CiAJCS50eF9sb2Fkc3oJPSAxNiwNCiAJCS5mY3IJCT0gVUFSVF9GQ1JfRU5BQkxFX0ZJRk8gfA0K
-IAkJCQkgIFVBUlRfRkNSX0NMRUFSX1JDVlIgfCBVQVJUX0ZDUl9DTEVBUl9YTUlULA0KLQkJLmZs
-YWdzCQk9IFVBUlRfQ0FQX0ZJRk8sDQorCQkuZmxhZ3MJCT0gVUFSVF9DQVBfRklGTyB8IFVBUlRf
-Q0FQX05NT0QsDQogCX0sDQogCVtQT1JUX05QQ01dID0gew0KIAkJLm5hbWUJCT0gIk51dm90b24g
-MTY1NTAiLA0KQEAgLTI1NDQsNiArMjU0NCw5IEBAIHNlcmlhbDgyNTBfZG9fc2V0X3Rlcm1pb3Mo
-c3RydWN0IHVhcnRfcG9ydCAqcG9ydCwgc3RydWN0IGt0ZXJtaW9zICp0ZXJtaW9zLA0KIAl1bnNp
-Z25lZCBsb25nIGZsYWdzOw0KIAl1bnNpZ25lZCBpbnQgYmF1ZCwgcXVvdCwgZnJhYyA9IDA7DQog
-DQorCWlmICh1cC0+Y2FwYWJpbGl0aWVzICYgVUFSVF9DQVBfTk1PRCkNCisJCXJldHVybjsNCisN
-CiAJaWYgKHVwLT5jYXBhYmlsaXRpZXMgJiBVQVJUX0NBUF9NSU5JKSB7DQogCQl0ZXJtaW9zLT5j
-X2NmbGFnICY9IH4oQ1NUT1BCIHwgUEFSRU5CIHwgUEFST0REIHwgQ01TUEFSKTsNCiAJCWlmICgo
-dGVybWlvcy0+Y19jZmxhZyAmIENTSVpFKSA9PSBDUzUgfHwNCi0tIA0KMi4yNS4xDQo=
 
+--nl3aoloccd36jfpc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2020-04-19, Jens Axboe <axboe@kernel.dk> wrote:
+> On 4/19/20 4:44 AM, Aleksa Sarai wrote:
+> > On 2020-04-13, Josh Triplett <josh@joshtriplett.org> wrote:
+> >> Inspired by the X protocol's handling of XIDs, allow userspace to sele=
+ct
+> >> the file descriptor opened by openat2, so that it can use the resulting
+> >> file descriptor in subsequent system calls without waiting for the
+> >> response to openat2.
+> >>
+> >> In io_uring, this allows sequences like openat2/read/close without
+> >> waiting for the openat2 to complete. Multiple such sequences can
+> >> overlap, as long as each uses a distinct file descriptor.
+> >=20
+> > I'm not sure I understand this explanation -- how can you trigger a
+> > syscall with an fd that hasn't yet been registered (unless you're just
+> > hoping the race goes in your favour)?
+>=20
+> io_uring can do chains of requests, where each link in the chain isn't
+> started until the previous one has completed. Hence if you know what fd
+> that openat2 will return, you can submit a chain ala:
+>=20
+> <open file X, give me fd Y><read from fd Y><close fd Y>
+>=20
+> as a single submission. This isn't possible to do currently, as the read
+> will depend on the output of the open, and we have no good way of
+> knowing what that fd will be.
+
+Ah! I was aware of io_uring's chaining feature but thought it had access
+to the return of the previous stage -- now this makes much more sense.
+Thanks.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--nl3aoloccd36jfpc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXp0DrwAKCRCdlLljIbnQ
+EmOYAP4lkf0v9STwr5KoDYWT6PbyBkxhHUVVy9D52d30Gd/h6gD/eZQuaYg8dEjF
+EJpgo1J1EPiK6PIgD34KjQNKv8C7fQ0=
+=hBJk
+-----END PGP SIGNATURE-----
+
+--nl3aoloccd36jfpc--
