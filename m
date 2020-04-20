@@ -2,63 +2,55 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27727C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A37AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07E0C2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F73C2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587383711;
-	bh=voRofBWt3Bg02puMqNN0CEnYZL5K/hkfznKgWIjtDkg=;
+	s=default; t=1587383715;
+	bh=kSAaJSxOkuOk04irz80sSSxupzrhqgUhuBgPGCK6hXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DD7LigLbIK+SiA99svGjgkAlyXFphZmInuZJbHYt4jqkojoTqrM0lWgPFbTmw+B6S
-	 lGG5jxBMeXO2L/r9uotOgvRev+DwRBK7pC7bs2srCANMWoI5/4znIp3mYHqaDbQZpG
-	 ui3B+dTUFeeVANdDUIQHpgGitbXjwBjQKvxZv5j8=
+	b=ipS+b008C2dLjb2vYugqiB3G035LtwHWo5JgymtyxxGY8uGBz/rPamVIjbWArueKg
+	 nlXV24cvAIE3Vq+cJJgsPgCxmZEoYYzehDPJLEDEJ6/BItKiAVv3ABhmTj0ITaLU0H
+	 CPLatNF6Q3mC/ZNlS1zk+SS7vv6t9JQJ022t3dYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgDTLzK (ORCPT
+        id S1726871AbgDTLzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:55:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38960 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 07:55:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbgDTLzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:55:07 -0400
+        id S1726821AbgDTLyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:54:55 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F7AA21927;
-        Mon, 20 Apr 2020 11:55:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CAC821D94;
+        Mon, 20 Apr 2020 11:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587383707;
-        bh=voRofBWt3Bg02puMqNN0CEnYZL5K/hkfznKgWIjtDkg=;
+        s=default; t=1587383693;
+        bh=kSAaJSxOkuOk04irz80sSSxupzrhqgUhuBgPGCK6hXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V2o6zqAwxTrlao7X1XEHuokGQYcJdudb8S8d9awyMwyoRwbX/eSdMWtyH217zTx7Q
-         K+bXCAS0jUrs5GMED+O8nlJ2j1/0FWXdaNI+OM/ExOWJMB6Vukvrf+dUH53ck4mZdR
-         Aq6aGEBSQgQnalM7WQUyeTyBU5soucS+N0IwAC1o=
+        b=zEAyarY3OEnv6KN7EdLIF+/9IF586lgejao8ZrAOxlr9SNGtCrbcXt+XGDB+WnJMS
+         +cAKIsDtIksv+CcQDwG8he9pIa4V6t6UgpraI6OUlwCwiWQ0AADmySAciH8itXva3I
+         D+xcRUCrPArAOcfMZd0X0jADu4AXUO4EPw7GbXwo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 20/60] perf synthetic-events: save 4kb from 2 stack frames
-Date:   Mon, 20 Apr 2020 08:52:36 -0300
-Message-Id: <20200420115316.18781-21-acme@kernel.org>
+Subject: [PATCH 17/60] perf script: Simplify auxiliary event printing functions
+Date:   Mon, 20 Apr 2020 08:52:33 -0300
+Message-Id: <20200420115316.18781-18-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
 References: <20200420115316.18781-1-acme@kernel.org>
@@ -69,117 +61,457 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Reuse an existing char buffer to avoid two PATH_MAX sized char buffers.
+This simplifies the print functions for the following perf script
+options:
 
-Reduces stack frame sizes by 4kb.
+	--show-task-events
+	--show-namespace-events
+	--show-cgroup-events
+	--show-mmap-events
+	--show-switch-events
+	--show-lost-events
+	--show-bpf-events
 
-perf_event__synthesize_mmap_events before 'sub $0x45b8,%rsp' after
-'sub $0x35b8,%rsp'.
+Example:
+	# perf record --switch-events -a -e cycles -c 10000 sleep 1
+ Before:
+	# perf script --show-task-events --show-namespace-events --show-cgroup-events --show-mmap-events --show-switch-events --show-lost-events --show-bpf-events > out-before.txt
+ After:
+	# perf script --show-task-events --show-namespace-events --show-cgroup-events --show-mmap-events --show-switch-events --show-lost-events --show-bpf-events > out-after.txt
+	# diff -s out-before.txt out-after.txt
+	Files out-before.txt and out-after.tx are identical
 
-perf_event__get_comm_ids before 'sub $0x2028,%rsp' after
-'sub $0x1028,%rsp'.
-
-The performance impact of this change is negligible.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrey Zhizhikin <andrey.z@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200402154357.107873-4-irogers@google.com
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20200402141548.21283-1-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/synthetic-events.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ tools/perf/builtin-script.c | 304 ++++++++----------------------------
+ 1 file changed, 66 insertions(+), 238 deletions(-)
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index a661b122d9d8..9d4aa951eaa6 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -71,7 +71,6 @@ int perf_tool__process_synth_event(struct perf_tool *tool,
- static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
- 				    pid_t *tgid, pid_t *ppid)
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 1f57a7ecdf3d..8bf3ba280312 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2040,7 +2040,7 @@ static int cleanup_scripting(void)
+ 
+ static bool filter_cpu(struct perf_sample *sample)
  {
--	char filename[PATH_MAX];
- 	char bf[4096];
- 	int fd;
- 	size_t size = 0;
-@@ -81,11 +80,11 @@ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
- 	*tgid = -1;
- 	*ppid = -1;
+-	if (cpu_list)
++	if (cpu_list && sample->cpu != (u32)-1)
+ 		return !test_bit(sample->cpu, cpu_bitmap);
+ 	return false;
+ }
+@@ -2138,41 +2138,59 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
+ 	return err;
+ }
  
--	snprintf(filename, sizeof(filename), "/proc/%d/status", pid);
-+	snprintf(bf, sizeof(bf), "/proc/%d/status", pid);
+-static int process_comm_event(struct perf_tool *tool,
+-			      union perf_event *event,
+-			      struct perf_sample *sample,
+-			      struct machine *machine)
++static int print_event_with_time(struct perf_tool *tool,
++				 union perf_event *event,
++				 struct perf_sample *sample,
++				 struct machine *machine,
++				 pid_t pid, pid_t tid, u64 timestamp)
+ {
+-	struct thread *thread;
+ 	struct perf_script *script = container_of(tool, struct perf_script, tool);
+ 	struct perf_session *session = script->session;
+ 	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+-	int ret = -1;
++	struct thread *thread = NULL;
  
--	fd = open(filename, O_RDONLY);
-+	fd = open(bf, O_RDONLY);
- 	if (fd < 0) {
--		pr_debug("couldn't open %s\n", filename);
-+		pr_debug("couldn't open %s\n", bf);
- 		return -1;
+-	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
+-	if (thread == NULL) {
+-		pr_debug("problem processing COMM event, skipping it.\n");
+-		return -1;
++	if (evsel && !evsel->core.attr.sample_id_all) {
++		sample->cpu = 0;
++		sample->time = timestamp;
++		sample->pid = pid;
++		sample->tid = tid;
  	}
  
-@@ -281,9 +280,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 				       struct machine *machine,
- 				       bool mmap_data)
+-	if (perf_event__process_comm(tool, event, sample, machine) < 0)
+-		goto out;
++	if (filter_cpu(sample))
++		return 0;
+ 
+-	if (!evsel->core.attr.sample_id_all) {
+-		sample->cpu = 0;
+-		sample->time = 0;
+-		sample->tid = event->comm.tid;
+-		sample->pid = event->comm.pid;
+-	}
+-	if (!filter_cpu(sample)) {
++	if (tid != -1)
++		thread = machine__findnew_thread(machine, pid, tid);
++
++	if (thread && evsel) {
+ 		perf_sample__fprintf_start(sample, thread, evsel,
+-				   PERF_RECORD_COMM, stdout);
+-		perf_event__fprintf(event, stdout);
++					   event->header.type, stdout);
+ 	}
+-	ret = 0;
+-out:
++
++	perf_event__fprintf(event, stdout);
++
+ 	thread__put(thread);
+-	return ret;
++
++	return 0;
++}
++
++static int print_event(struct perf_tool *tool, union perf_event *event,
++		       struct perf_sample *sample, struct machine *machine,
++		       pid_t pid, pid_t tid)
++{
++	return print_event_with_time(tool, event, sample, machine, pid, tid, 0);
++}
++
++static int process_comm_event(struct perf_tool *tool,
++			      union perf_event *event,
++			      struct perf_sample *sample,
++			      struct machine *machine)
++{
++	if (perf_event__process_comm(tool, event, sample, machine) < 0)
++		return -1;
++
++	return print_event(tool, event, sample, machine, event->comm.pid,
++			   event->comm.tid);
+ }
+ 
+ static int process_namespaces_event(struct perf_tool *tool,
+@@ -2180,37 +2198,11 @@ static int process_namespaces_event(struct perf_tool *tool,
+ 				    struct perf_sample *sample,
+ 				    struct machine *machine)
  {
--	char filename[PATH_MAX];
- 	FILE *fp;
- 	unsigned long long t;
-+	char bf[BUFSIZ];
- 	bool truncation = false;
- 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
- 	int rc = 0;
-@@ -293,15 +292,15 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 	if (machine__is_default_guest(machine))
+-	struct thread *thread;
+-	struct perf_script *script = container_of(tool, struct perf_script, tool);
+-	struct perf_session *session = script->session;
+-	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+-	int ret = -1;
+-
+-	thread = machine__findnew_thread(machine, event->namespaces.pid,
+-					 event->namespaces.tid);
+-	if (thread == NULL) {
+-		pr_debug("problem processing NAMESPACES event, skipping it.\n");
+-		return -1;
+-	}
+-
+ 	if (perf_event__process_namespaces(tool, event, sample, machine) < 0)
+-		goto out;
++		return -1;
+ 
+-	if (!evsel->core.attr.sample_id_all) {
+-		sample->cpu = 0;
+-		sample->time = 0;
+-		sample->tid = event->namespaces.tid;
+-		sample->pid = event->namespaces.pid;
+-	}
+-	if (!filter_cpu(sample)) {
+-		perf_sample__fprintf_start(sample, thread, evsel,
+-					   PERF_RECORD_NAMESPACES, stdout);
+-		perf_event__fprintf(event, stdout);
+-	}
+-	ret = 0;
+-out:
+-	thread__put(thread);
+-	return ret;
++	return print_event(tool, event, sample, machine, event->namespaces.pid,
++			   event->namespaces.tid);
+ }
+ 
+ static int process_cgroup_event(struct perf_tool *tool,
+@@ -2218,34 +2210,11 @@ static int process_cgroup_event(struct perf_tool *tool,
+ 				struct perf_sample *sample,
+ 				struct machine *machine)
+ {
+-	struct thread *thread;
+-	struct perf_script *script = container_of(tool, struct perf_script, tool);
+-	struct perf_session *session = script->session;
+-	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+-	int ret = -1;
+-
+-	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
+-	if (thread == NULL) {
+-		pr_debug("problem processing CGROUP event, skipping it.\n");
+-		return -1;
+-	}
+-
+ 	if (perf_event__process_cgroup(tool, event, sample, machine) < 0)
+-		goto out;
++		return -1;
+ 
+-	if (!evsel->core.attr.sample_id_all) {
+-		sample->cpu = 0;
+-		sample->time = 0;
+-	}
+-	if (!filter_cpu(sample)) {
+-		perf_sample__fprintf_start(sample, thread, evsel,
+-					   PERF_RECORD_CGROUP, stdout);
+-		perf_event__fprintf(event, stdout);
+-	}
+-	ret = 0;
+-out:
+-	thread__put(thread);
+-	return ret;
++	return print_event(tool, event, sample, machine, sample->pid,
++			    sample->tid);
+ }
+ 
+ static int process_fork_event(struct perf_tool *tool,
+@@ -2253,69 +2222,24 @@ static int process_fork_event(struct perf_tool *tool,
+ 			      struct perf_sample *sample,
+ 			      struct machine *machine)
+ {
+-	struct thread *thread;
+-	struct perf_script *script = container_of(tool, struct perf_script, tool);
+-	struct perf_session *session = script->session;
+-	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+-
+ 	if (perf_event__process_fork(tool, event, sample, machine) < 0)
+ 		return -1;
+ 
+-	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
+-	if (thread == NULL) {
+-		pr_debug("problem processing FORK event, skipping it.\n");
+-		return -1;
+-	}
+-
+-	if (!evsel->core.attr.sample_id_all) {
+-		sample->cpu = 0;
+-		sample->time = event->fork.time;
+-		sample->tid = event->fork.tid;
+-		sample->pid = event->fork.pid;
+-	}
+-	if (!filter_cpu(sample)) {
+-		perf_sample__fprintf_start(sample, thread, evsel,
+-					   PERF_RECORD_FORK, stdout);
+-		perf_event__fprintf(event, stdout);
+-	}
+-	thread__put(thread);
+-
+-	return 0;
++	return print_event_with_time(tool, event, sample, machine,
++				     event->fork.pid, event->fork.tid,
++				     event->fork.time);
+ }
+ static int process_exit_event(struct perf_tool *tool,
+ 			      union perf_event *event,
+ 			      struct perf_sample *sample,
+ 			      struct machine *machine)
+ {
+-	int err = 0;
+-	struct thread *thread;
+-	struct perf_script *script = container_of(tool, struct perf_script, tool);
+-	struct perf_session *session = script->session;
+-	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+-
+-	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
+-	if (thread == NULL) {
+-		pr_debug("problem processing EXIT event, skipping it.\n");
++	/* Print before 'exit' deletes anything */
++	if (print_event_with_time(tool, event, sample, machine, event->fork.pid,
++				  event->fork.tid, event->fork.time))
+ 		return -1;
+-	}
+-
+-	if (!evsel->core.attr.sample_id_all) {
+-		sample->cpu = 0;
+-		sample->time = 0;
+-		sample->tid = event->fork.tid;
+-		sample->pid = event->fork.pid;
+-	}
+-	if (!filter_cpu(sample)) {
+-		perf_sample__fprintf_start(sample, thread, evsel,
+-					   PERF_RECORD_EXIT, stdout);
+-		perf_event__fprintf(event, stdout);
+-	}
+ 
+-	if (perf_event__process_exit(tool, event, sample, machine) < 0)
+-		err = -1;
+-
+-	thread__put(thread);
+-	return err;
++	return perf_event__process_exit(tool, event, sample, machine);
+ }
+ 
+ static int process_mmap_event(struct perf_tool *tool,
+@@ -2323,33 +2247,11 @@ static int process_mmap_event(struct perf_tool *tool,
+ 			      struct perf_sample *sample,
+ 			      struct machine *machine)
+ {
+-	struct thread *thread;
+-	struct perf_script *script = container_of(tool, struct perf_script, tool);
+-	struct perf_session *session = script->session;
+-	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+-
+ 	if (perf_event__process_mmap(tool, event, sample, machine) < 0)
+ 		return -1;
+ 
+-	thread = machine__findnew_thread(machine, event->mmap.pid, event->mmap.tid);
+-	if (thread == NULL) {
+-		pr_debug("problem processing MMAP event, skipping it.\n");
+-		return -1;
+-	}
+-
+-	if (!evsel->core.attr.sample_id_all) {
+-		sample->cpu = 0;
+-		sample->time = 0;
+-		sample->tid = event->mmap.tid;
+-		sample->pid = event->mmap.pid;
+-	}
+-	if (!filter_cpu(sample)) {
+-		perf_sample__fprintf_start(sample, thread, evsel,
+-					   PERF_RECORD_MMAP, stdout);
+-		perf_event__fprintf(event, stdout);
+-	}
+-	thread__put(thread);
+-	return 0;
++	return print_event(tool, event, sample, machine, event->mmap.pid,
++			   event->mmap.tid);
+ }
+ 
+ static int process_mmap2_event(struct perf_tool *tool,
+@@ -2357,33 +2259,11 @@ static int process_mmap2_event(struct perf_tool *tool,
+ 			      struct perf_sample *sample,
+ 			      struct machine *machine)
+ {
+-	struct thread *thread;
+-	struct perf_script *script = container_of(tool, struct perf_script, tool);
+-	struct perf_session *session = script->session;
+-	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+-
+ 	if (perf_event__process_mmap2(tool, event, sample, machine) < 0)
+ 		return -1;
+ 
+-	thread = machine__findnew_thread(machine, event->mmap2.pid, event->mmap2.tid);
+-	if (thread == NULL) {
+-		pr_debug("problem processing MMAP2 event, skipping it.\n");
+-		return -1;
+-	}
+-
+-	if (!evsel->core.attr.sample_id_all) {
+-		sample->cpu = 0;
+-		sample->time = 0;
+-		sample->tid = event->mmap2.tid;
+-		sample->pid = event->mmap2.pid;
+-	}
+-	if (!filter_cpu(sample)) {
+-		perf_sample__fprintf_start(sample, thread, evsel,
+-					   PERF_RECORD_MMAP2, stdout);
+-		perf_event__fprintf(event, stdout);
+-	}
+-	thread__put(thread);
+-	return 0;
++	return print_event(tool, event, sample, machine, event->mmap2.pid,
++			   event->mmap2.tid);
+ }
+ 
+ static int process_switch_event(struct perf_tool *tool,
+@@ -2391,10 +2271,7 @@ static int process_switch_event(struct perf_tool *tool,
+ 				struct perf_sample *sample,
+ 				struct machine *machine)
+ {
+-	struct thread *thread;
+ 	struct perf_script *script = container_of(tool, struct perf_script, tool);
+-	struct perf_session *session = script->session;
+-	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+ 
+ 	if (perf_event__process_switch(tool, event, sample, machine) < 0)
+ 		return -1;
+@@ -2405,20 +2282,8 @@ static int process_switch_event(struct perf_tool *tool,
+ 	if (!script->show_switch_events)
  		return 0;
  
--	snprintf(filename, sizeof(filename), "%s/proc/%d/task/%d/maps",
--		 machine->root_dir, pid, pid);
-+	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
-+		machine->root_dir, pid, pid);
+-	thread = machine__findnew_thread(machine, sample->pid,
+-					 sample->tid);
+-	if (thread == NULL) {
+-		pr_debug("problem processing SWITCH event, skipping it.\n");
+-		return -1;
+-	}
+-
+-	if (!filter_cpu(sample)) {
+-		perf_sample__fprintf_start(sample, thread, evsel,
+-					   PERF_RECORD_SWITCH, stdout);
+-		perf_event__fprintf(event, stdout);
+-	}
+-	thread__put(thread);
+-	return 0;
++	return print_event(tool, event, sample, machine, sample->pid,
++			   sample->tid);
+ }
  
--	fp = fopen(filename, "r");
-+	fp = fopen(bf, "r");
- 	if (fp == NULL) {
- 		/*
- 		 * We raced with a task exiting - just return:
- 		 */
--		pr_debug("couldn't open %s\n", filename);
-+		pr_debug("couldn't open %s\n", bf);
+ static int
+@@ -2427,23 +2292,8 @@ process_lost_event(struct perf_tool *tool,
+ 		   struct perf_sample *sample,
+ 		   struct machine *machine)
+ {
+-	struct perf_script *script = container_of(tool, struct perf_script, tool);
+-	struct perf_session *session = script->session;
+-	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+-	struct thread *thread;
+-
+-	thread = machine__findnew_thread(machine, sample->pid,
+-					 sample->tid);
+-	if (thread == NULL)
+-		return -1;
+-
+-	if (!filter_cpu(sample)) {
+-		perf_sample__fprintf_start(sample, thread, evsel,
+-					   PERF_RECORD_LOST, stdout);
+-		perf_event__fprintf(event, stdout);
+-	}
+-	thread__put(thread);
+-	return 0;
++	return print_event(tool, event, sample, machine, sample->pid,
++			   sample->tid);
+ }
+ 
+ static int
+@@ -2462,33 +2312,11 @@ process_bpf_events(struct perf_tool *tool __maybe_unused,
+ 		   struct perf_sample *sample,
+ 		   struct machine *machine)
+ {
+-	struct thread *thread;
+-	struct perf_script *script = container_of(tool, struct perf_script, tool);
+-	struct perf_session *session = script->session;
+-	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+-
+ 	if (machine__process_ksymbol(machine, event, sample) < 0)
  		return -1;
- 	}
  
-@@ -309,7 +308,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 	t = rdclock();
+-	if (!evsel->core.attr.sample_id_all) {
+-		perf_event__fprintf(event, stdout);
+-		return 0;
+-	}
+-
+-	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
+-	if (thread == NULL) {
+-		pr_debug("problem processing MMAP event, skipping it.\n");
+-		return -1;
+-	}
+-
+-	if (!filter_cpu(sample)) {
+-		perf_sample__fprintf_start(sample, thread, evsel,
+-					   event->header.type, stdout);
+-		perf_event__fprintf(event, stdout);
+-	}
+-
+-	thread__put(thread);
+-	return 0;
++	return print_event(tool, event, sample, machine, sample->pid,
++			   sample->tid);
+ }
  
- 	while (1) {
--		char bf[BUFSIZ];
- 		char prot[5];
- 		char execname[PATH_MAX];
- 		char anonstr[] = "//anon";
-@@ -321,10 +319,10 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			break;
- 
- 		if ((rdclock() - t) > timeout) {
--			pr_warning("Reading %s time out. "
-+			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
- 				   "You may want to increase "
- 				   "the time limit by --proc-map-timeout\n",
--				   filename);
-+				   machine->root_dir, pid, pid);
- 			truncation = true;
- 			goto out;
- 		}
+ static void sig_handler(int sig __maybe_unused)
 -- 
 2.21.1
 
