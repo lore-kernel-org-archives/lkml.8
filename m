@@ -2,199 +2,157 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C250FC54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA14C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A31C82145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587367597;
-	bh=iB1xPPGrtS0kEgDBdzXPmUS9VyrArjlu9hbHLWkUKUA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pl6L4R+AeyVFsVv2xWHYmBxOa1k0Q3y+lWfgBMra7J2Hg7QRUeP24X+WowEc1QkRX
-	 keOMG3Ma/lED08p8LfCOmkwl6JxzzVAG1bVt6djX1Hq7fYgNdJSTz7Z8yGXBubvbI9
-	 e6hYqT6W8kJ7KYat4KAwQf76hNproHNtRAiF/UnU=
+	by mail.kernel.org (Postfix) with ESMTP id 6BC622080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zjs6lkCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDTH0g (ORCPT
+        id S1726189AbgDTH1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:26:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgDTH0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:26:36 -0400
-Received: from localhost (unknown [171.61.106.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EFFC2080C;
-        Mon, 20 Apr 2020 07:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587367595;
-        bh=iB1xPPGrtS0kEgDBdzXPmUS9VyrArjlu9hbHLWkUKUA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kSoj9rOSXk6ZFXbQlaiqhhBOl/Z7KscZOO8KIobvlSrQ+UcE3/PJdsOFUbV0BtedO
-         0sj/pHAlJOh/69yuvE7yMZ3MOVmmgjfMFURkPwQ3o2CiFNkyaOLw5cX7VEIslu5fsK
-         DRCh8utFhVIjO/OJG+mGvpe60pk8fPXEScZOd8ms=
-Date:   Mon, 20 Apr 2020 12:56:31 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
-        sanyog.r.kale@intel.com, slawomir.blauciak@intel.com,
-        mengdong.lin@intel.com
-Subject: Re: [RFC 1/5] soundwire: bus_type: add sdw_master_device support
-Message-ID: <20200420072631.GW72691@vkoul-mobl>
-References: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
- <20200416205524.2043-2-yung-chuan.liao@linux.intel.com>
+        Mon, 20 Apr 2020 03:27:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726081AbgDTH1c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 03:27:32 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCFBC061A10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:27:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j1so5358594wrt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=fLd3utKBUqircZ8XSU/jqQ1o3HOdiOgb+Til4epkr7E=;
+        b=Zjs6lkCZP51RU1eaQIhcoO3FB2Z6jXmILC0s2D752dm7NvsQ+tleMbs3JgJ0uCOger
+         E/tjxVQyBlWGd8C8KH6qKSy877jK0dOi4ouglmI3EUeSGLveLxJsg2RtwSK7UMdZjCHW
+         wFmMR6P5iaO2QXH4ksbOgvB+J3KLMVx+AA8FAPieKGTfyyESTZnp60vvRq2mOL1n6k89
+         exxFo80LcTgKlrntlkSIIORBACYyTzHdDPArnuLiOwJFPLXem/gn0Igo6JBXWNAODiUe
+         tLRv8q8+adw+2X8p6HhK3S5Eako2xzmyRKxo0WGwjta/t8GubKM8ali0sa3m5En/fezW
+         12VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=fLd3utKBUqircZ8XSU/jqQ1o3HOdiOgb+Til4epkr7E=;
+        b=JGITGImu07P+9TTkwALEjaUpvWCWw2atkNSDnXyht2lQ9CXha9AblNnhnuaUzezhsF
+         pPz18/zo5QjN/3BgvRDAOnsOayXJXrmezDG2pBl+2B5kxeRNdWJttSxVc4fDkrL1ujnP
+         pem+3uxrn6p3em4I/wND7ExGPJXiSmwcKoojtxgCdqn8QJlxj1Kj/L6Y27Vyx/hFCJPG
+         nYgEFZoa7uH8fSTGirXkpTilLs64kM+s9ARK+oaIwYQltP9zxmZ9JTgQEMGlc76nC+Z/
+         Vk3seO+QjhbcHWlTYswcSEq2pYxY2mKqXczV3Lhgb1N1tkwcS8zt6GcAM3miOZMREHYo
+         1P2Q==
+X-Gm-Message-State: AGi0PuZDAczCRz4eRtOKttDMZLJDZs6ttX4wHYNnUEVcMjrRx1NDDaQE
+        4CvoiEdLBsZ4U0HD7sutctorZQ==
+X-Google-Smtp-Source: APiQypLZ95duN0TVR/SeVUQItXdNoeinc7W1AvPfKzE2PNLYi2bchw8ulFVhIRvX/oUlL+29V+w4Lg==
+X-Received: by 2002:a5d:5224:: with SMTP id i4mr17175368wra.1.1587367650264;
+        Mon, 20 Apr 2020 00:27:30 -0700 (PDT)
+Received: from dell ([95.149.164.107])
+        by smtp.gmail.com with ESMTPSA id v16sm188543wml.30.2020.04.20.00.27.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 00:27:29 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 08:27:27 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kgunda@codeaurora.org
+Cc:     Rob Herring <robh@kernel.org>, bjorn.andersson@linaro.org,
+        jingoohan1@gmail.com, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V5 1/4] backlight: qcom-wled: convert the wled bindings
+ to .yaml format
+Message-ID: <20200420072727.GI3737@dell>
+References: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
+ <1586274430-28402-2-git-send-email-kgunda@codeaurora.org>
+ <20200415150904.GA11174@bogus>
+ <557e8bd874256271174402b5faba9c90@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200416205524.2043-2-yung-chuan.liao@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <557e8bd874256271174402b5faba9c90@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Bard,
+On Fri, 17 Apr 2020, kgunda@codeaurora.org wrote:
 
-On 17-04-20, 04:55, Bard Liao wrote:
-> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> 
-> In the existing SoundWire code, Master Devices are not explicitly
-> represented - only SoundWire Slave Devices are exposed (the use of
-> capital letters follows the SoundWire specification conventions).
-> 
-> The SoundWire Master Device provides the clock, synchronization
-> information and command/control channels. When multiple links are
-> supported, a Controller may expose more than one Master Device; they
-> are typically embedded inside a larger audio cluster (be it in an
-> SOC/chipset or an external audio codec), and we need to describe it
-> using the Linux device and driver model.  This will allow for
-> configuration functions to account for external dependencies such as
-> power rails, clock sources or wake-up mechanisms. This transition will
-> also allow for better sysfs support without the reference count issues
-> mentioned in the initial reviews.
+> On 2020-04-15 20:39, Rob Herring wrote:
+> > On Tue, Apr 07, 2020 at 09:17:07PM +0530, Kiran Gunda wrote:
+> > > Convert the qcom-wled bindings from .txt to .yaml format.
+> > > Also replace PM8941 to WLED3 and PMI8998 to WLED4.
+> > > 
+> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> > > Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> > > Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > ---
+> > >  .../bindings/leds/backlight/qcom-wled.txt          | 154
+> > > ----------------
+> > >  .../bindings/leds/backlight/qcom-wled.yaml         | 201
+> > > +++++++++++++++++++++
+> > >  2 files changed, 201 insertions(+), 154 deletions(-)
+> > >  delete mode 100644
+> > > Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+[...]
 
-Well the primary reason for doing sdw_master_device for creating a
-adding sysfs representation. It *also* helps some vendors due to
-inherent model should not be constructed as the primary approach for the
-sdw_master_device.
+> > > +        interrupt-names:
+> > > +          items:
+> > > +            - const: ovp
+> > > +            - const: short
+> > 
+> > Move these 2 props to the main section adding a 'minItems: 1'. Then just
+> > define 'minItems: 2' here and 'maxItems: 1' in the 'then' clause.
+> > 
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - label
+> > 
+> > Add:
+> > 
+> > additionalProperties: false
+> > 
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    backlight@d800 {
+> > > +        compatible = "qcom,pm8941-wled";
+> > > +        reg = <0xd800 0x100>;
+> > > +        label = "backlight";
+> > > +
+> > > +        qcom,cs-out;
+> > > +        qcom,current-limit = <20>;
+> > > +        qcom,current-boost-limit = <805>;
+> > > +        qcom,switching-freq = <1600>;
+> > > +        qcom,ovp = <29>;
+> > > +        qcom,num-strings = <2>;
+> > > +        qcom,enabled-strings = <0 1>;
+> > > +     };
+> Thanks for reviewing. I will submit the next revision with all the fixes.
 
-> In this patch, we convert the existing code to use an explicit
-> sdw_slave_type, then define a sdw_master_device structure.
+Please trim your replies.
 
-Please split that up, we should do the conversions required first and
-then do addition of new things.
-
-> +struct device_type sdw_master_type = {
-> +	.name =		"soundwire_master",
-> +	.release =	sdw_master_device_release,
-> +};
-> +
-> +/**
-> + * sdw_master_device_add() - create a Linux Master Device representation.
-> + * @parent: the parent Linux device (e.g. a PCI device)
-> + * @fwnode: the parent fwnode (e.g. an ACPI companion device to the parent)
-> + * @link_ops: link-specific ops (optional)
-> + * @link_id: link index as defined by MIPI DisCo specification
-> + * @pdata: private data (e.g. register base, offsets, platform quirks, etc).
-> + *
-> + * The link_ops argument can be NULL, it is only used when link-specific
-> + * initializations and power-management are required.
-> + */
-> +struct sdw_master_device
-> +*sdw_master_device_add(struct device *parent,
-> +		       struct fwnode_handle *fwnode,
-> +		       struct sdw_link_ops *link_ops,
-> +		       int link_id,
-> +		       void *pdata)
-> +{
-> +	struct sdw_master_device *md;
-> +	int ret;
-> +
-> +	md = kzalloc(sizeof(*md), GFP_KERNEL);
-> +	if (!md)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	md->link_id = link_id;
-> +	md->pdata = pdata;
-> +	md->link_ops = link_ops;
-> +
-> +	md->dev.parent = parent;
-> +	md->dev.fwnode = fwnode;
-> +	md->dev.bus = &sdw_bus_type;
-> +	md->dev.type = &sdw_master_type;
-> +	md->dev.dma_mask = md->dev.parent->dma_mask;
-> +	dev_set_name(&md->dev, "sdw-master-%d", md->link_id);
-> +
-> +	if (link_ops && link_ops->driver) {
-> +		/*
-> +		 * A driver is only needed for ASoC integration (need
-> +		 * driver->name) and for link-specific power management
-> +		 * w/ a pm_dev_ops structure.
-
-That is not true for everyone, it is only true for Intel, pls call that
-out as well...
-
-> +		 *
-> +		 * The driver needs to be registered by the parent
-> +		 */
-> +		md->dev.driver = link_ops->driver;
-> +	}
-> +
-> +	ret = device_register(&md->dev);
-> +	if (ret) {
-> +		dev_err(parent, "Failed to add master: ret %d\n", ret);
-> +		/*
-> +		 * On err, don't free but drop ref as this will be freed
-> +		 * when release method is invoked.
-> +		 */
-> +		put_device(&md->dev);
-> +		goto device_register_err;
-> +	}
-> +
-> +	if (link_ops && link_ops->add) {
-> +		ret = link_ops->add(md, pdata);
-> +		if (ret < 0) {
-> +			dev_err(&md->dev, "link_ops add callback failed: %d\n",
-> +				ret);
-> +			goto link_add_err;
-> +		}
-> +	}
-> +
-> +	return md;
-> +
-> +link_add_err:
-> +	device_unregister(&md->dev);
-> +device_register_err:
-> +	return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(sdw_master_device_add);
-
-This looks better than last version for sure. But I would like this to
-be split into two parts, a generic sdw_master_device addition without
-the link_ops parts. And then the link_ops parts..
-
-As discussed earlier with you, I see no reason why users should have two
-APIs. We should fold the sdw_master_device_add() within the
-sdw_add_bus_master() afterall as part of adding bus, we should be
-creating the sdw_master_dev as well as sdw_slave.
-
-Since you have additional link_ops, we can pass that to
-sdw_add_bus_master() (set to NULL for rest) and then call
-sdw_master_device_add() internally..
-
-As requested above, please split this to separate patches, first generic
-sdw_master_device addition and calling from sdw_add_bus_master() and
-then adding link_ops parts for Intel.
-
-Ofcourse any preparatory patches should come before that.
+Also, if you agree with all of the review comments, there really is no
+need to reply and/or thank the reviewer.  Simply submit a subsequent
+set with a bumped version indicator.
 
 -- 
-~Vinod
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
