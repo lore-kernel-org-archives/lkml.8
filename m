@@ -2,51 +2,53 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D1EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F51C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFA32206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32CC20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386705;
-	bh=D9Zh8lCgpiqB7HX8/NwmWCHrVq/g2Z7HfkRe/5ncGN8=;
+	s=default; t=1587386707;
+	bh=TIjqOHusg9Qi/arFQl33O0mlfrLq2gCJ6ZxVg3IQaMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IBmINS90bVn1LgcrBfOZWCbpFXdnLmJJIoypKf8GNJxjCW6hQkayB6igoviiCmDsQ
-	 Do+sZDd/Sz2x6V0x3wLCTOIIlcLP3Kfqc2zeuDYOeTcIrVCjQNbf7dKTVszY+F4HsR
-	 I8HHzQ16Q8BIC/TyQ1IKdhWcHoACFxHhhKxU7Cpg=
+	b=cwme+G6TbNoYefoYdhsZd6KGt7+f0dvdmtcD8qOJTR6Hv5XKSgBB+xOXvFsZLhQpM
+	 CnfzI3FWML0+KwkGa6FZGxcsVxyzwG2FvwKqmodbj59Wep/5zdfDtXaC1uC9AZufp+
+	 nuzoDa+ZBN6xyDmX9qZdSbv5HQzfnxRYS197NQVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgDTMpD (ORCPT
+        id S1728659AbgDTMpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38826 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:45:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728617AbgDTMot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:49 -0400
+        id S1728638AbgDTMpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3C2F206E9;
-        Mon, 20 Apr 2020 12:44:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 352A42072B;
+        Mon, 20 Apr 2020 12:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386689;
-        bh=D9Zh8lCgpiqB7HX8/NwmWCHrVq/g2Z7HfkRe/5ncGN8=;
+        s=default; t=1587386701;
+        bh=TIjqOHusg9Qi/arFQl33O0mlfrLq2gCJ6ZxVg3IQaMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i4EnWbvkq2Uboj8MqbDt9j6SojJp4wFArJjBohNHDA6s3QoEXRRylJyA5FXL26UWX
-         QAjoFe4DwyalbNXw7CG+ySo4r0M0BjV/I1DRaEHNURkV5IsdaOubEJ3nEEkq52uKQT
-         Xn2AK6nPrJRNnwpbwrCaCAIQDWfk9ChebjY9Dyzo=
+        b=L3y/kaZuoJsXPuHs9SpskGhjWPn09P9VslHQ9crpm4aMS3K9YgvqXI1vkxMjUxqrY
+         5iskS0FsB435xp3dSzOPV60/udnIzys9Nq/m76LDN9QhS0AfCmOOwJzP7cEGfkCEWm
+         SJqSm5uCGCJKNOhd5Qz9WIZ6SS0Ylu8pUwNfKe/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Stallard <code@timstallard.me.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 18/71] net: icmp6: do not select saddr from iif when route has prefsrc set
-Date:   Mon, 20 Apr 2020 14:38:32 +0200
-Message-Id: <20200420121512.086635523@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 56/71] net/mlx5e: Rename hw_modify to preactivate
+Date:   Mon, 20 Apr 2020 14:39:10 +0200
+Message-Id: <20200420121520.314919570@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,101 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Stallard <code@timstallard.me.uk>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit b93cfb9cd3af3adc9ba4854f178d5300f7544d3e ]
+[ Upstream commit dca147b3dce5abb5284ff747211960fd2db5ec2e ]
 
-Since commit fac6fce9bdb5 ("net: icmp6: provide input address for
-traceroute6") ICMPv6 errors have source addresses from the ingress
-interface. However, this overrides when source address selection is
-influenced by setting preferred source addresses on routes.
+mlx5e_safe_switch_channels accepts a callback to be called before
+activating new channels. It is intended to configure some hardware
+parameters in cases where channels are recreated because some
+configuration has changed.
 
-This can result in ICMP errors being lost to upstream BCP38 filters
-when the wrong source addresses are used, breaking path MTU discovery
-and traceroute.
+Recently, this callback has started being used to update the driver's
+internal MLX5E_STATE_XDP_OPEN flag, and the following patches also
+intend to use this callback for software preparations. This patch
+renames the hw_modify callback to preactivate, so that the name fits
+better.
 
-This patch sets the modified source address selection to only take place
-when the route used has no prefsrc set.
-
-It can be tested with:
-
-ip link add v1 type veth peer name v2
-ip netns add test
-ip netns exec test ip link set lo up
-ip link set v2 netns test
-ip link set v1 up
-ip netns exec test ip link set v2 up
-ip addr add 2001:db8::1/64 dev v1 nodad
-ip addr add 2001:db8::3 dev v1 nodad
-ip netns exec test ip addr add 2001:db8::2/64 dev v2 nodad
-ip netns exec test ip route add unreachable 2001:db8:1::1
-ip netns exec test ip addr add 2001:db8:100::1 dev lo
-ip netns exec test ip route add 2001:db8::1 dev v2 src 2001:db8:100::1
-ip route add 2001:db8:1000::1 via 2001:db8::2
-traceroute6 -s 2001:db8::1 2001:db8:1000::1
-traceroute6 -s 2001:db8::3 2001:db8:1000::1
-ip netns delete test
-
-Output before:
-$ traceroute6 -s 2001:db8::1 2001:db8:1000::1
-traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
- 1  2001:db8::2 (2001:db8::2)  0.843 ms !N  0.396 ms !N  0.257 ms !N
-$ traceroute6 -s 2001:db8::3 2001:db8:1000::1
-traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
- 1  2001:db8::2 (2001:db8::2)  0.772 ms !N  0.257 ms !N  0.357 ms !N
-
-After:
-$ traceroute6 -s 2001:db8::1 2001:db8:1000::1
-traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
- 1  2001:db8:100::1 (2001:db8:100::1)  8.885 ms !N  0.310 ms !N  0.174 ms !N
-$ traceroute6 -s 2001:db8::3 2001:db8:1000::1
-traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
- 1  2001:db8::2 (2001:db8::2)  1.403 ms !N  0.205 ms !N  0.313 ms !N
-
-Fixes: fac6fce9bdb5 ("net: icmp6: provide input address for traceroute6")
-Signed-off-by: Tim Stallard <code@timstallard.me.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/icmp.c |   21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h      |  6 +++---
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 14 ++++++++------
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
---- a/net/ipv6/icmp.c
-+++ b/net/ipv6/icmp.c
-@@ -229,6 +229,25 @@ static bool icmpv6_xrlim_allow(struct so
- 	return res;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index c9606b8ab6efd..704bd6d5277d2 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -1036,14 +1036,14 @@ int mlx5e_open_channels(struct mlx5e_priv *priv,
+ 			struct mlx5e_channels *chs);
+ void mlx5e_close_channels(struct mlx5e_channels *chs);
+ 
+-/* Function pointer to be used to modify WH settings while
++/* Function pointer to be used to modify HW or kernel settings while
+  * switching channels
+  */
+-typedef int (*mlx5e_fp_hw_modify)(struct mlx5e_priv *priv);
++typedef int (*mlx5e_fp_preactivate)(struct mlx5e_priv *priv);
+ int mlx5e_safe_reopen_channels(struct mlx5e_priv *priv);
+ int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
+ 			       struct mlx5e_channels *new_chs,
+-			       mlx5e_fp_hw_modify hw_modify);
++			       mlx5e_fp_preactivate preactivate);
+ void mlx5e_activate_priv_channels(struct mlx5e_priv *priv);
+ void mlx5e_deactivate_priv_channels(struct mlx5e_priv *priv);
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 8125c605780be..1c8a4235a48c5 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -2954,7 +2954,7 @@ void mlx5e_deactivate_priv_channels(struct mlx5e_priv *priv)
+ 
+ static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
+ 				       struct mlx5e_channels *new_chs,
+-				       mlx5e_fp_hw_modify hw_modify)
++				       mlx5e_fp_preactivate preactivate)
+ {
+ 	struct net_device *netdev = priv->netdev;
+ 	int new_num_txqs;
+@@ -2973,9 +2973,11 @@ static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
+ 
+ 	priv->channels = *new_chs;
+ 
+-	/* New channels are ready to roll, modify HW settings if needed */
+-	if (hw_modify)
+-		hw_modify(priv);
++	/* New channels are ready to roll, call the preactivate hook if needed
++	 * to modify HW settings or update kernel parameters.
++	 */
++	if (preactivate)
++		preactivate(priv);
+ 
+ 	priv->profile->update_rx(priv);
+ 	mlx5e_activate_priv_channels(priv);
+@@ -2987,7 +2989,7 @@ static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
+ 
+ int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
+ 			       struct mlx5e_channels *new_chs,
+-			       mlx5e_fp_hw_modify hw_modify)
++			       mlx5e_fp_preactivate preactivate)
+ {
+ 	int err;
+ 
+@@ -2995,7 +2997,7 @@ int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
+ 	if (err)
+ 		return err;
+ 
+-	mlx5e_switch_priv_channels(priv, new_chs, hw_modify);
++	mlx5e_switch_priv_channels(priv, new_chs, preactivate);
+ 	return 0;
  }
  
-+static bool icmpv6_rt_has_prefsrc(struct sock *sk, u8 type,
-+				  struct flowi6 *fl6)
-+{
-+	struct net *net = sock_net(sk);
-+	struct dst_entry *dst;
-+	bool res = false;
-+
-+	dst = ip6_route_output(net, sk, fl6);
-+	if (!dst->error) {
-+		struct rt6_info *rt = (struct rt6_info *)dst;
-+		struct in6_addr prefsrc;
-+
-+		rt6_get_prefsrc(rt, &prefsrc);
-+		res = !ipv6_addr_any(&prefsrc);
-+	}
-+	dst_release(dst);
-+	return res;
-+}
-+
- /*
-  *	an inline helper for the "simple" if statement below
-  *	checks if parameter problem report is caused by an
-@@ -527,7 +546,7 @@ static void icmp6_send(struct sk_buff *s
- 		saddr = force_saddr;
- 	if (saddr) {
- 		fl6.saddr = *saddr;
--	} else {
-+	} else if (!icmpv6_rt_has_prefsrc(sk, type, &fl6)) {
- 		/* select a more meaningful saddr from input if */
- 		struct net_device *in_netdev;
- 
+-- 
+2.20.1
+
 
 
