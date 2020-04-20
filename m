@@ -2,136 +2,79 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A45C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE47C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFE7220CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:54:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKlcqj+K"
+	by mail.kernel.org (Postfix) with ESMTP id B1F602145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587376672;
+	bh=I0h5ML7YIEwjeXZYjjpwj95iaSeLcBsR0LC61CGo8XY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ILL15sMsUXT44pDnpM3BX2k37/098cAqeIEgBPgiyjG24jJc6XAWEXLMDAmljt8V9
+	 sLlolhED8CBKFp+wmpiVxE6CEEVGQYmhTHf36wVK+kEQuQWBpEcB3eaZAch50sty+X
+	 D/h6Yvv4yt8m8HriFXwhHZXVzNNWXAmpdDJj4Tb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgDTJyJ (ORCPT
+        id S1726049AbgDTJ5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:54:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbgDTJyI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:54:08 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66EE6C061A0C;
-        Mon, 20 Apr 2020 02:54:08 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f13so11284578wrm.13;
-        Mon, 20 Apr 2020 02:54:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=IDwDem3D6NSd1YxszNY7NfHJH9Vv/3Ektc8kZiKqEDk=;
-        b=jKlcqj+KZb8sBhKM6jipwdO4Bp9kaTdO5wLSSB26edvFc/5j7qvyC/6vPNciCfNzyr
-         ZN4BFkOLxrt2p2HOvohDE/onLOYzJ65ctCWy/+lwtmIu0T1NUDOyOJGPTkb3TXY0fMkx
-         Y6DsCnzn4aGBJufve+itlXzVbxnIWeF9dW0toWeZZDKdWC5WGhSlToAXRwhDFdaqxn5e
-         qeMGvvFnfzfWqmdi0tFymt569qoq6zBMl7WfUCjVTOsJ63j8HEvCaATOpmm4rWTkZ1+T
-         gHZMshmgeEhnKulGUgu82ITq7ms6iBYpys3ASedHul8lT99zPaMmhGPpU262kIxOHmgK
-         LBtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=IDwDem3D6NSd1YxszNY7NfHJH9Vv/3Ektc8kZiKqEDk=;
-        b=GC0WsoUM/wx3BM27cAAJRA/j2kHBRibzCttwZNqTao+7U24MvdU9tUDNIoYl34+A56
-         63Xil80uLVa1+U6nrTSdOIj3q3JTWJBPDR0MeW1tL/8pd1vqnLyp9yTT4mUlkvKihEpw
-         XlVAqbvlNLCI6eDZiBPvFSNUAfVG4hjbhVr7tlKbbd3LNmII9tx78xvzZ4DyADWM+lr5
-         9icRYr8alj8jxS+RvdFc+JUhLaT0qykYCll44N48p71t0AfW59sU8Vr+IcQWwlaHlOjU
-         U5rvRG+tIybqLTMKQi72T6otLs6O28cd5sCr5BQhzcjDWc6COQxqWPTpQrhXr5irplU9
-         JojA==
-X-Gm-Message-State: AGi0PuYezhQFSL7EGWGocRz95PK085B/oY03D1xK+RV3xDoghRhxfInQ
-        gu+fN7B52pp5k7isr2JHfmUSaeH4YeX60mYQqNEz89q/xTU=
-X-Google-Smtp-Source: APiQypJfbDUiHXTdWnv5nV4T5GtUcLZ59l6oL8sLQk6fQw2osqhYeLuarReEnEbqPPK5GmFH02EHG+47udqPljcM1Tg=
-X-Received: by 2002:a5d:5745:: with SMTP id q5mr19194458wrw.351.1587376447129;
- Mon, 20 Apr 2020 02:54:07 -0700 (PDT)
+        Mon, 20 Apr 2020 05:57:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbgDTJ5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:57:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70CB120CC7;
+        Mon, 20 Apr 2020 09:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587376669;
+        bh=I0h5ML7YIEwjeXZYjjpwj95iaSeLcBsR0LC61CGo8XY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vu0MZxTXOTir/D2Dtst444gK/Cj1Y8cGedereW4ZkKwl8yd5Ic2xgaw/cVI1YCu5G
+         FU4Pr99prB5uXPEZSuJ0kJll/tQpHOHRkcaU4713fUhQZcs9QJB24+euu026ubIgQr
+         xS+M+In6BOjQbRHjk8xkmFRLLiNMhe8nJVntBieo=
+Date:   Mon, 20 Apr 2020 11:57:47 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Evalds Iodzevics <evalds.iodzevics@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH] x86/microcode/intel: replace sync_core() with
+ native_cpuid_reg(eax)
+Message-ID: <20200420095747.GA3737151@kroah.com>
+References: <20200420120037.1537-1-evalds.iodzevics@gmail.com>
 MIME-Version: 1.0
-References: <20200419180445.26722-1-natechancellor@gmail.com>
- <20200419202128.20571-1-natechancellor@gmail.com> <20200419202128.20571-2-natechancellor@gmail.com>
-In-Reply-To: <20200419202128.20571-2-natechancellor@gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 20 Apr 2020 11:53:55 +0200
-Message-ID: <CA+icZUVaLW+38WEJhqnfO7B_unHvrbSr0moKnfJ6zXGGA06CWQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] MIPS: VDSO: Move disabling the VDSO logic to Kconfig
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Dmitry Golovin <dima@golovin.in>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420120037.1537-1-evalds.iodzevics@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 10:21 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> After commit 9553d16fa671 ("init/kconfig: Add LD_VERSION Kconfig"), we
-> have access to GNU ld's version at configuration time. As a result, we
-> can make it clearer under what configuration circumstances the MIPS VDSO
-> needs to be disabled.
->
-> This is a prerequisite for getting rid of the MIPS VDSO binutils
-> warning and linking the VDSO when LD is ld.lld. Wrapping the call to
-> ld-ifversion with CONFIG_LD_IS_LLD does not work because the config
-> values are wiped away during 'make clean'.
->
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Mon, Apr 20, 2020 at 03:00:37PM +0300, Evalds Iodzevics wrote:
+> sync_core() always jums past cpuid instruction on 32 bit machines
+> because data structure boot_cpu_data are not populated so early in boot.
+> 
+> It depends on commit 5dedade6dfa243c130b85d1e4daba6f027805033 for
+> native_cpuid_reg(eax) definitions
+> 
+> This patch is for 4.4 but also should apply to 4.9
+> 
+> Signed-off-by: Evalds Iodzevics <evalds.iodzevics@gmail.com>
 > ---
->
-> v1 -> v2:
->
-> * New patch.
->
->  arch/mips/Kconfig         |  2 ++
->  arch/mips/vdso/Kconfig    | 18 ++++++++++++++++++
->  arch/mips/vdso/Makefile   | 30 ++----------------------------
->  arch/mips/vdso/vdso.lds.S |  2 +-
->  4 files changed, 23 insertions(+), 29 deletions(-)
->  create mode 100644 arch/mips/vdso/Kconfig
->
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index 690718b3701a..45220e4b8a65 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -3275,3 +3275,5 @@ endmenu
->  source "drivers/firmware/Kconfig"
->
->  source "arch/mips/kvm/Kconfig"
-> +
-> +source "arch/mips/vdso/Kconfig"
-> diff --git a/arch/mips/vdso/Kconfig b/arch/mips/vdso/Kconfig
-...
-> --- /dev/null
-> +++ b/arch/mips/vdso/Kconfig
-...
-> +config MIPS_DISABLE_VDSO
-> +       def_bool CPU_MICROMIPS || (!CPU_MIPSR6 && !MIPS_LD_CAN_LINK_VDSO)
-...
-> diff --git a/arch/mips/vdso/vdso.lds.S b/arch/mips/vdso/vdso.lds.S
-...
-> --- a/arch/mips/vdso/vdso.lds.S
-> +++ b/arch/mips/vdso/vdso.lds.S
-...
-> -#ifndef DISABLE_MIPS_VDSO
-> +#ifndef CONFIG_DISABLE_MIPS_VDSO
+>  arch/x86/include/asm/microcode_intel.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Should be s/CONFIG_DISABLE_MIPS_VDSO/CONFIG_MIPS_DISABLE_VDSO ?
 
-- Sedat -
+<formletter>
+
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
+
+</formletter>
