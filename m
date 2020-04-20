@@ -2,128 +2,153 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD2EC54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78249C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E605F206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4118F20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KQ6B7QT1"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="nISDxD3H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgDTEo0 (ORCPT
+        id S1726017AbgDTEtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 00:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43570 "EHLO
+        Mon, 20 Apr 2020 00:49:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgDTEoZ (ORCPT
+        with ESMTP id S1725825AbgDTEtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 00:44:25 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452C3C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 21:44:24 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id h11so3487556plr.11
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 21:44:24 -0700 (PDT)
+        Mon, 20 Apr 2020 00:49:17 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEFDC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 21:49:17 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id pg17so6816118ejb.9
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 21:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MJIP8pHcT300D54AAT1yN4S1w4viB7U9JXrFMLuLerE=;
-        b=KQ6B7QT1vtZae/f6saQDPC1F+hKTVP9SjEi4M5AnDFpngSbILwyCEn89QG7jMCu5x2
-         Wi5ynabHoI3D1XslyJUOkWDkMvs7GfzKLnialIPNjZw6bfo8WdcJ4VR/8gHbS/SUNSOq
-         mPTULBkLJyw8ELtdNz7i1AelUej5/0q7yCJHgvEkvCgEbJRnCegzJuzFlY3xBauIThjp
-         5kJBmdc9lL2Z88zDjhx2FREp9lFxBFvIhOFqNqhYywVpXi0tCqOuvLfIeC0HsfgZEUfA
-         eawYMjg0CijPj+YtKHyQSFdtLAHWkftnZqZ60jUsx4ahla6kFttA0a89OZP07cu8Xuyx
-         8Mqg==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bYADXM3fnqTfOLHn4Df6MYywErUdtpTsT63FwdWOqRk=;
+        b=nISDxD3HO2jVVJbdvMhiaYcZtVzlGcweDRXzQY92JFIkrrQ7r/xRLigEEOLCujOL+I
+         hG9XJbHC8L03WDMy90kKhhG5++FUfqGBeDWN7uGC4p9/ldHu9J3u74miQSCAfK7qWa0n
+         lbNvMbMpMN2lq9MDNLSr0dyqgCTQfNdzI1B5p6kZ1JGEJ3PJPohL17GTbeNDIqR+o/ah
+         /D1uxeYF+nsnbnA8wvGfsrhW0RriE5UuKNuexQ5IGSb6uwKoyeE3qodhdhtsHkfS91r/
+         d8gjqFSrkUeBH5BoicjM4RpME5ipKP9pXu6Lg9CsEtnsRcHbRGDowZN1WeYx7YLu9zwz
+         LQMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MJIP8pHcT300D54AAT1yN4S1w4viB7U9JXrFMLuLerE=;
-        b=mdxZ1JkjY2Fd4ChmAXMUrv3z6XGx7jufuh07zTwAzCHopNDb6ad6Z0s+mpnK/gPsGW
-         LrjVtgvFFXViYWunxeXi7UcgNlw0LYj3sN1Vd9FfvzJWoZ8rvoD+Ka9w+eiDzAIc9dev
-         +t8+k+a02+K07Gu+0fruV0f6aSEPgYmk8W9s4LiolYpW4OfEBYDbMVO6j3wkVPp5OEHR
-         gmh+sUPdl68bJcV0hdB/6aeSxU2aL2QH6QwG0LpycPprdj/k30emf6MPMhdkjkSSqY21
-         VSprQe5gr+tVx9gGyD3B9lpUGxb91YhE6vymGwMH+3jXVKPo/laYSIJJ2vo2UFe8GiVL
-         wvHA==
-X-Gm-Message-State: AGi0PuYx80GvDZ9Bo7YshFncnDAi2oSeEpMxgVpunuPm6fk+QFBosmTn
-        Rz8yroAyOmowRhkwLwTxH/uIdSYmu10=
-X-Google-Smtp-Source: APiQypLT4AnAfvIs1wxlQlpm/x0eJ78jMSVhHjboYPPzhpNJj5WX081j71YKvOptmveabL1vNLmO/Q==
-X-Received: by 2002:a17:90a:1f8f:: with SMTP id x15mr7116967pja.76.1587357863366;
-        Sun, 19 Apr 2020 21:44:23 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e26sm25887897pfi.84.2020.04.19.21.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 21:44:22 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 21:44:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     agross@kernel.org, wsa@the-dreams.de,
-        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: busses: remove unneeded conversion to bool
-Message-ID: <20200420044420.GG987656@yoga>
-References: <20200420042816.18989-1-yanaijie@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bYADXM3fnqTfOLHn4Df6MYywErUdtpTsT63FwdWOqRk=;
+        b=AorFdyhPmWYfft10jTCCEnjwnz6EmKE1mErm26Wk0m7nJpxC5j3ORpw89kOx8NVUxl
+         aaHErcSq+Hw1GOLCbpAqtK0ugZFRnKqQa6zvtfOsRjHLT2NLqRkzs+HH5c6OfGXKeqyR
+         9bxJMkO5kykbT99H8Dx+W/ru1FoSTZdex8yo6VKqEfzLM/daW3iwOLOdVbFC2KzL24o6
+         EGPY8U9ItIAsqpdchVW7TKIiIAWa/FjInxVOAqEm7b26tEzjwZnuVmRt+YzQcF/E1nw3
+         9tvH/k2ApITZdBBji0gJ2mtZvh2+6D0ZDKgLaWiier+1WwmjWo/0/Oqz5HBGCBiZM76A
+         5WCw==
+X-Gm-Message-State: AGi0PuZh9FZopxuOp2r9yCph84C/fsW7tsSAAr11p1RhEs5e+8uASl1n
+        SKPyQJw/J1FCXpCzgLXaq6ct29YwqY9jMmFVXzL9LA==
+X-Google-Smtp-Source: APiQypJjK+fbgyqJBENqgkXJyIItyuRieCz/uLksLTOhvGqapOfk0h8cn5GHx2HeZyprYusoat++oP3HC9G0314tHNg=
+X-Received: by 2002:a17:906:90cc:: with SMTP id v12mr14356816ejw.211.1587358155985;
+ Sun, 19 Apr 2020 21:49:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420042816.18989-1-yanaijie@huawei.com>
+References: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com>
+ <CAPcyv4goJ2jbXNVZbMUKtRUominhuMhuTKrMh=fnhrfvC4jyjw@mail.gmail.com>
+ <alpine.LRH.2.02.2004081439080.13932@file01.intranet.prod.int.rdu2.redhat.com>
+ <CAPcyv4grNHvyYEc4W6PkymhEJvLb17tXbC3JZdqvtFxmMZ8DCQ@mail.gmail.com>
+ <alpine.LRH.2.02.2004090612320.27517@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2004160411460.7833@file01.intranet.prod.int.rdu2.redhat.com>
+ <CAPcyv4gpe8u=zNrRhvd9ioVNGbOJfRUXzFZuV--be6Hbj0xXtQ@mail.gmail.com>
+ <alpine.LRH.2.02.2004170831530.16047@file01.intranet.prod.int.rdu2.redhat.com>
+ <69c2e011c5814255926f309dd50e6d67@AcuMS.aculab.com> <alpine.LRH.2.02.2004181110160.30139@file01.intranet.prod.int.rdu2.redhat.com>
+ <8452b36a07b1440a8da6d4a1623858c1@AcuMS.aculab.com>
+In-Reply-To: <8452b36a07b1440a8da6d4a1623858c1@AcuMS.aculab.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sun, 19 Apr 2020 21:49:05 -0700
+Message-ID: <CAPcyv4gP4gt7EF8q0hxSvENLATrK8ZEt3uQiUNh8zRNoJ_Ut6A@mail.gmail.com>
+Subject: Re: [PATCH] x86: introduce memcpy_flushcache_clflushopt
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Mikulas Patocka <mpatocka@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        device-mapper development <dm-devel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 19 Apr 21:28 PDT 2020, Jason Yan wrote:
+On Sun, Apr 19, 2020 at 10:49 AM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Mikulas Patocka
+> > Sent: 18 April 2020 16:21
+> >
+> > On Sat, 18 Apr 2020, David Laight wrote:
+> >
+> > > From: Mikulas Patocka
+> > > > Sent: 17 April 2020 13:47
+> > > ...
+> > > > Index: linux-2.6/drivers/md/dm-writecache.c
+> > > > ===================================================================
+> > > > --- linux-2.6.orig/drivers/md/dm-writecache.c     2020-04-17 14:06:35.139999000 +0200
+> > > > +++ linux-2.6/drivers/md/dm-writecache.c  2020-04-17 14:06:35.129999000 +0200
+> > > > @@ -1166,7 +1166,10 @@ static void bio_copy_block(struct dm_wri
+> > > >                   }
+> > > >           } else {
+> > > >                   flush_dcache_page(bio_page(bio));
+> > > > -                 memcpy_flushcache(data, buf, size);
+> > > > +                 if (likely(size > 512))
+> > > > +                         memcpy_flushcache_clflushopt(data, buf, size);
+> > > > +                 else
+> > > > +                         memcpy_flushcache(data, buf, size);
+> > >
+> > > Hmmm... have you looked at how long clflush actually takes?
+> > > It isn't too bad if you just do a small number, but using it
+> > > to flush large buffers can be very slow.
+> >
+> > Yes, I have. It's here:
+> > http://people.redhat.com/~mpatocka/testcases/pmem/microbenchmarks/pmem.txt
+> >
+> > sequential write 8 + clflush  - 0.3 GB/s on nvdimm
+> > sequential write 8 + clflushopt - 1.6 GB/s on nvdimm
+> > sequential write-nt 8 bytes   - 1.3 GB/s on nvdimm
+>
+> That table doesn't give enough information to be useful.
+> The cpu speed, memory speed and transfer lengths are all relevant.
+>
+> > > I've an Ivy bridge system where the X-server process requests the
+> > > frame buffer be flushed out every 10 seconds (no idea why).
+> > > With my 2560x1440 monitor this takes over 3ms.
+> > >
+> > > This really needs a cond_resched() every few clflush instructions.
+> > >
+> > >     David
+> >
+> > AFAIK Ivy Bridge doesn't have clflushopt, it only has clflush. clflush
+> > only allows one outstanding cacle line flush, so it's very slow.
+> > clflushopt and clwb relaxed this restriction and there can be multiple
+> > cache-invalidation requests in flight until the user serializes it with
+> > the sfence instruction.
+>
+> It isn't that simple.
+> While clflush on Ivybridge is slower than clflushopt on newer processors
+> both instructions are (relatively) fast for something like 16 or 32
+> iterations. After that they get much slower.
+> I can't remember where I found the relevant figures, even the ones I
+> found didn't show how large the transfers needed to be before the bytes/sec
+> became constant.
+>
+> > The patch checks for clflushopt with
+> > "static_cpu_has(X86_FEATURE_CLFLUSHOPT)" and if it is not present, it
+> > falls back to non-temporal stores.
+>
+> Ok, I was expecting you'd be falling back to clflush first.
 
-> The '>' expression itself is bool, no need to convert it to bool again.
-> This fixes the following coccicheck warning:
-> 
-> drivers/i2c/busses/i2c-qup.c:960:48-53: WARNING: conversion to bool not needed here
-> drivers/i2c/busses/i2c-qup.c:962:47-52: WARNING: conversion to bool not needed here
-> drivers/i2c/busses/i2c-qup.c:1531:29-34: WARNING: conversion to bool not needed here
-> drivers/i2c/busses/i2c-qup.c:1533:29-34: WARNING: conversion to bool not needed here
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> ---
->  drivers/i2c/busses/i2c-qup.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-> index 155dcde70fc9..25d5fe2f8316 100644
-> --- a/drivers/i2c/busses/i2c-qup.c
-> +++ b/drivers/i2c/busses/i2c-qup.c
-> @@ -956,10 +956,8 @@ static void qup_i2c_conf_v1(struct qup_i2c_dev *qup)
->  	u32 qup_config = I2C_MINI_CORE | I2C_N_VAL;
->  	u32 io_mode = QUP_REPACK_EN;
->  
-> -	blk->is_tx_blk_mode =
-> -		blk->total_tx_len > qup->out_fifo_sz ? true : false;
-> -	blk->is_rx_blk_mode =
-> -		blk->total_rx_len > qup->in_fifo_sz ? true : false;
-> +	blk->is_tx_blk_mode = blk->total_tx_len > qup->out_fifo_sz;
-> +	blk->is_rx_blk_mode = blk->total_rx_len > qup->in_fifo_sz;
->  
->  	if (blk->is_tx_blk_mode) {
->  		io_mode |= QUP_OUTPUT_BLK_MODE;
-> @@ -1528,9 +1526,9 @@ qup_i2c_determine_mode_v2(struct qup_i2c_dev *qup,
->  		qup->use_dma = true;
->  	} else {
->  		qup->blk.is_tx_blk_mode = max_tx_len > qup->out_fifo_sz -
-> -			QUP_MAX_TAGS_LEN ? true : false;
-> +			QUP_MAX_TAGS_LEN;
->  		qup->blk.is_rx_blk_mode = max_rx_len > qup->in_fifo_sz -
-> -			READ_RX_TAGS_LEN ? true : false;
-> +			READ_RX_TAGS_LEN;
->  	}
->  
->  	return 0;
-> -- 
-> 2.21.1
-> 
+clflush is a serializing instruction, clflushopt and non-temporal
+stores are not.
