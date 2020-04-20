@@ -2,122 +2,199 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E98C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C250FC54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1D002080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:26:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jSvDSe29"
+	by mail.kernel.org (Postfix) with ESMTP id A31C82145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587367597;
+	bh=iB1xPPGrtS0kEgDBdzXPmUS9VyrArjlu9hbHLWkUKUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pl6L4R+AeyVFsVv2xWHYmBxOa1k0Q3y+lWfgBMra7J2Hg7QRUeP24X+WowEc1QkRX
+	 keOMG3Ma/lED08p8LfCOmkwl6JxzzVAG1bVt6djX1Hq7fYgNdJSTz7Z8yGXBubvbI9
+	 e6hYqT6W8kJ7KYat4KAwQf76hNproHNtRAiF/UnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgDTH0G (ORCPT
+        id S1726112AbgDTH0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:26:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbgDTH0F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:26:05 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BCE9C061A0C;
-        Mon, 20 Apr 2020 00:26:05 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 20 Apr 2020 03:26:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbgDTH0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 03:26:36 -0400
+Received: from localhost (unknown [171.61.106.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 495JCF5ScBz9sSd;
-        Mon, 20 Apr 2020 17:26:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587367562;
-        bh=gVEKcelZ8KLJ61S5itIeAhNRDo7znw8QuNTqYb8XMKs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jSvDSe29bH34Y+E0+Qb8xT9DCSCp8HbX9DYseMkr0wIQ7bJVr88TuhAN8mZQK2GM2
-         T6I92TBgPXSbp2ali+yE9tUfXrT4zKVz6YF+hoWIxPDMxujs+X0KG2ARKwCmmrMafP
-         WM15EVPBdToJtyyb2y2RCIVXv+b+RMKTt1tLBhgQdPJEwutSqD80PmoHZnIfRY1gIB
-         nYD75kfLG4bXpxmEAXh7wP5AZ2Hl2cDKKYz1aE4+xM6yENYWDMMIydDzjYNtsACRbx
-         o6FQxVbtiWWf37KKUI45qsMXQBFCHmS04Vb2O+3bJXucyfuP+xGbwpm5Y0v+kGClOt
-         n65cM9qThtRvw==
-Date:   Mon, 20 Apr 2020 17:25:59 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Hadar Gat <hadar.gat@arm.com>
-Subject: Re: linux-next: Tree for Apr 20
-Message-ID: <20200420172559.7b6dc5f1@canb.auug.org.au>
-In-Reply-To: <2d87a4f9-9d87-e929-9b03-31f92dad5ca6@de.ibm.com>
-References: <20200420142610.390e5922@canb.auug.org.au>
-        <2d87a4f9-9d87-e929-9b03-31f92dad5ca6@de.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EFFC2080C;
+        Mon, 20 Apr 2020 07:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587367595;
+        bh=iB1xPPGrtS0kEgDBdzXPmUS9VyrArjlu9hbHLWkUKUA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kSoj9rOSXk6ZFXbQlaiqhhBOl/Z7KscZOO8KIobvlSrQ+UcE3/PJdsOFUbV0BtedO
+         0sj/pHAlJOh/69yuvE7yMZ3MOVmmgjfMFURkPwQ3o2CiFNkyaOLw5cX7VEIslu5fsK
+         DRCh8utFhVIjO/OJG+mGvpe60pk8fPXEScZOd8ms=
+Date:   Mon, 20 Apr 2020 12:56:31 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
+        sanyog.r.kale@intel.com, slawomir.blauciak@intel.com,
+        mengdong.lin@intel.com
+Subject: Re: [RFC 1/5] soundwire: bus_type: add sdw_master_device support
+Message-ID: <20200420072631.GW72691@vkoul-mobl>
+References: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
+ <20200416205524.2043-2-yung-chuan.liao@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/nsiZCIx22N7QTYaG_qWGcT.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416205524.2043-2-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/nsiZCIx22N7QTYaG_qWGcT.
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hello Bard,
 
-Hi all,
+On 17-04-20, 04:55, Bard Liao wrote:
+> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> 
+> In the existing SoundWire code, Master Devices are not explicitly
+> represented - only SoundWire Slave Devices are exposed (the use of
+> capital letters follows the SoundWire specification conventions).
+> 
+> The SoundWire Master Device provides the clock, synchronization
+> information and command/control channels. When multiple links are
+> supported, a Controller may expose more than one Master Device; they
+> are typically embedded inside a larger audio cluster (be it in an
+> SOC/chipset or an external audio codec), and we need to describe it
+> using the Linux device and driver model.  This will allow for
+> configuration functions to account for external dependencies such as
+> power rails, clock sources or wake-up mechanisms. This transition will
+> also allow for better sysfs support without the reference count issues
+> mentioned in the initial reviews.
 
-On Mon, 20 Apr 2020 09:14:15 +0200 Christian Borntraeger <borntraeger@de.ib=
-m.com> wrote:
->
-> s390 defconfig still does not compile. While the media kconfig problem is=
- gone I now have
->=20
->   CC [M]  drivers/char/hw_random/cctrng.o
-> drivers/char/hw_random/cctrng.c: In function =E2=80=98cc_trng_compwork_ha=
-ndler=E2=80=99:
-> drivers/char/hw_random/cctrng.c:334:49: error: =E2=80=98fips_enabled=E2=
-=80=99 undeclared (first use in this function); did you mean =E2=80=98vdso_=
-enabled=E2=80=99?
->   334 |  if (CC_REG_FLD_GET(RNG_ISR, CRNGT_ERR, isr) && fips_enabled) {
->       |                                                 ^~~~~~~~~~~~
->       |                                                 vdso_enabled
-> drivers/char/hw_random/cctrng.c:334:49: note: each undeclared identifier =
-is reported only once for each function it appears in
-> drivers/char/hw_random/cctrng.c:335:3: error: implicit declaration of fun=
-ction =E2=80=98fips_fail_notify=E2=80=99 [-Werror=3Dimplicit-function-decla=
-ration]
->   335 |   fips_fail_notify();
->       |   ^~~~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
->=20
-> Can we maybe make this driver depend on ARM?
+Well the primary reason for doing sdw_master_device for creating a
+adding sysfs representation. It *also* helps some vendors due to
+inherent model should not be constructed as the primary approach for the
+sdw_master_device.
 
-Caused by commit
+> In this patch, we convert the existing code to use an explicit
+> sdw_slave_type, then define a sdw_master_device structure.
 
-  a583ed310bb6 ("hwrng: cctrng - introduce Arm CryptoCell driver")
+Please split that up, we should do the conversions required first and
+then do addition of new things.
 
-which has neglected to include linux/fips.h ...
+> +struct device_type sdw_master_type = {
+> +	.name =		"soundwire_master",
+> +	.release =	sdw_master_device_release,
+> +};
+> +
+> +/**
+> + * sdw_master_device_add() - create a Linux Master Device representation.
+> + * @parent: the parent Linux device (e.g. a PCI device)
+> + * @fwnode: the parent fwnode (e.g. an ACPI companion device to the parent)
+> + * @link_ops: link-specific ops (optional)
+> + * @link_id: link index as defined by MIPI DisCo specification
+> + * @pdata: private data (e.g. register base, offsets, platform quirks, etc).
+> + *
+> + * The link_ops argument can be NULL, it is only used when link-specific
+> + * initializations and power-management are required.
+> + */
+> +struct sdw_master_device
+> +*sdw_master_device_add(struct device *parent,
+> +		       struct fwnode_handle *fwnode,
+> +		       struct sdw_link_ops *link_ops,
+> +		       int link_id,
+> +		       void *pdata)
+> +{
+> +	struct sdw_master_device *md;
+> +	int ret;
+> +
+> +	md = kzalloc(sizeof(*md), GFP_KERNEL);
+> +	if (!md)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	md->link_id = link_id;
+> +	md->pdata = pdata;
+> +	md->link_ops = link_ops;
+> +
+> +	md->dev.parent = parent;
+> +	md->dev.fwnode = fwnode;
+> +	md->dev.bus = &sdw_bus_type;
+> +	md->dev.type = &sdw_master_type;
+> +	md->dev.dma_mask = md->dev.parent->dma_mask;
+> +	dev_set_name(&md->dev, "sdw-master-%d", md->link_id);
+> +
+> +	if (link_ops && link_ops->driver) {
+> +		/*
+> +		 * A driver is only needed for ASoC integration (need
+> +		 * driver->name) and for link-specific power management
+> +		 * w/ a pm_dev_ops structure.
 
---=20
-Cheers,
-Stephen Rothwell
+That is not true for everyone, it is only true for Intel, pls call that
+out as well...
 
---Sig_/nsiZCIx22N7QTYaG_qWGcT.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> +		 *
+> +		 * The driver needs to be registered by the parent
+> +		 */
+> +		md->dev.driver = link_ops->driver;
+> +	}
+> +
+> +	ret = device_register(&md->dev);
+> +	if (ret) {
+> +		dev_err(parent, "Failed to add master: ret %d\n", ret);
+> +		/*
+> +		 * On err, don't free but drop ref as this will be freed
+> +		 * when release method is invoked.
+> +		 */
+> +		put_device(&md->dev);
+> +		goto device_register_err;
+> +	}
+> +
+> +	if (link_ops && link_ops->add) {
+> +		ret = link_ops->add(md, pdata);
+> +		if (ret < 0) {
+> +			dev_err(&md->dev, "link_ops add callback failed: %d\n",
+> +				ret);
+> +			goto link_add_err;
+> +		}
+> +	}
+> +
+> +	return md;
+> +
+> +link_add_err:
+> +	device_unregister(&md->dev);
+> +device_register_err:
+> +	return ERR_PTR(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(sdw_master_device_add);
 
------BEGIN PGP SIGNATURE-----
+This looks better than last version for sure. But I would like this to
+be split into two parts, a generic sdw_master_device addition without
+the link_ops parts. And then the link_ops parts..
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6dTocACgkQAVBC80lX
-0Gy81gf/WJ4AlMZZfY9lStGjc/+IIXvqC9ZjIuTV7NNS21twzwLU0p65Dv3ARscH
-nGIJKpCXvhMGjzrxbFJHCf4oBO+b3Q57hB2RXeCbuetpYkxFi/d8Z9zWjigALGwD
-TKMuDQUjlsV0VPra0G/YV+Qsr3xjR6q61Zz1nldhehpYkkmlQwT77hxBuqJYOjWe
-8PVao1gyoFcy3fWr6DXZRrlgRE/QTTAWoypQuGnCFg5iUgnlwXwXWE6AHnY4pxcP
-BJAsu+uKgf+lKLHsVQqdFGBTHVptKwx00SLUxhoMS8TH73H1IndUlYKKfIIopHcy
-zRBXR/Q65yhWhUj4X/pkrNJdDt1KhQ==
-=mzcp
------END PGP SIGNATURE-----
+As discussed earlier with you, I see no reason why users should have two
+APIs. We should fold the sdw_master_device_add() within the
+sdw_add_bus_master() afterall as part of adding bus, we should be
+creating the sdw_master_dev as well as sdw_slave.
 
---Sig_/nsiZCIx22N7QTYaG_qWGcT.--
+Since you have additional link_ops, we can pass that to
+sdw_add_bus_master() (set to NULL for rest) and then call
+sdw_master_device_add() internally..
+
+As requested above, please split this to separate patches, first generic
+sdw_master_device addition and calling from sdw_add_bus_master() and
+then adding link_ops parts for Intel.
+
+Ofcourse any preparatory patches should come before that.
+
+-- 
+~Vinod
