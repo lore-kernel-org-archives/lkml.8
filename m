@@ -2,208 +2,171 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488C1C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300B3C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1C52223D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE15214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:03:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="o98qigsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgDTODV (ORCPT
+        id S1729168AbgDTODk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:03:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38394 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgDTODV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:03:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 63091ABD7;
-        Mon, 20 Apr 2020 14:03:18 +0000 (UTC)
-Subject: Re: [patch 05/15] x86/tlb: Move __flush_tlb() out of line
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Mon, 20 Apr 2020 10:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726871AbgDTODj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 10:03:39 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C12C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:03:38 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id t8so2715963qvw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cJfMJ0JOsQMoUoObG+N7En7+tPmqx5/7YNi8g5sRW1M=;
+        b=o98qigsHifTZi9QVUmXstCulmu2eeGSZgUxM+GXjXYCoKqxUEb3Oj2GhiISIpGeMD2
+         GlQ6wDNLReVTfEKMbd7kJdLF/SMGky5oixcjAVM5h8YfJz0oqlvTulh4HTDwhOorieOk
+         HXIXzBD9ZnIl3Uy2BzmdtL8i9AX/8oob+wPQGGaqrf35MbbCuVvsT7XYq2OXddSAeyhd
+         CLEhpxgzWW5DMpcPT3XpOl5t07DAAn0ZqIkOQHItzfLI0ClOneh/PS9IluyDHRFYgNOe
+         RG+j8jFNuUKeuig2f+8bSTmHHDzJADFVpA5T6FXBx0lU+3I2dMWJBaRFxK9CX9VFdSXw
+         Sy9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cJfMJ0JOsQMoUoObG+N7En7+tPmqx5/7YNi8g5sRW1M=;
+        b=ufS9cHXO2ApZA00ZKt/nmakV5d6yv8343y7r5pEmpkbC/1aXtUXVKr0B373Wwb2XFi
+         GgxoeHn74AKoGUPxDP3p1X9wVQX72IylTctJmGbuLYLablUjKQJrxYBCi+m6V3YfMTj/
+         3rrhv8nvqojwd4dspuMGwmjUA8QA8ZLWXPdLbG2f6T9Pim4o7dUc4Nl0z2eK4AryoprV
+         Afo/vFkIc5CarVD7N7KnJJnsPZeosteuPcMzt3xXV1Thx4gcpQq/yR5u9DIzHNPG/giv
+         K6FNWYgbf3kSetPbtaCEAWu22pi8/MZR3n0ayDxxdzGuuvomtDUPvXd2jYr6XmvWqK24
+         PHSA==
+X-Gm-Message-State: AGi0PuY2UAYD/gocuLLNDEbH7Uink6GDAv3kskRRHGlox1ObHPBQRPOo
+        u7sPfDxiIx5WW4TtO1+kJ4BsLw==
+X-Google-Smtp-Source: APiQypLWHxFBPJUBteJVBC4MK+dBGuG33zqFEpvj6UGd6hXj1OGUpUNRQDna8XXGH/s6AP8VQpGR0g==
+X-Received: by 2002:a0c:d652:: with SMTP id e18mr9646044qvj.58.1587391417418;
+        Mon, 20 Apr 2020 07:03:37 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id t75sm609424qke.127.2020.04.20.07.03.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 07:03:36 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     freedreno@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Allison Randal <allison@lohutok.net>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <20200419203137.214111265@linutronix.de>
- <20200419203336.134117165@linutronix.de>
- <5857df01-abeb-c6cd-8e92-64eb365dc835@amd.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <fab4e80a-3df2-a177-c5fe-1ab995953727@suse.com>
-Date:   Mon, 20 Apr 2020 16:03:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/9] drm/msm/adreno: add A640/A650 to gpulist
+Date:   Mon, 20 Apr 2020 10:03:05 -0400
+Message-Id: <20200420140313.7263-2-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420140313.7263-1-jonathan@marek.ca>
+References: <20200420140313.7263-1-jonathan@marek.ca>
 MIME-Version: 1.0
-In-Reply-To: <5857df01-abeb-c6cd-8e92-64eb365dc835@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.04.20 15:48, Tom Lendacky wrote:
-> On 4/19/20 3:31 PM, Thomas Gleixner wrote:
->> cpu_tlbstate is exported because various TLB related functions need 
->> access
->> to it, but cpu_tlbstate is sensitive information which should only be
->> accessed by well contained kernel functions and not be directly 
->> exposed to
->> modules.
->>
->> The various TLB flush functions need access to cpu_tlbstate. As a first
->> step move __flush_tlb() out of line and hide the native function. The
->> latter can be static when CONFIG_PARAVIRT is disabled.
->>
->> Consolidate the name space while at it and remove the pointless extra
->> wrapper in the paravirt code.
->>
->> No functional change.
->>
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
->> Cc: Juergen Gross <jgross@suse.com>
->> ---
->>   arch/x86/include/asm/paravirt.h    |    4 +++-
->>   arch/x86/include/asm/tlbflush.h    |   29 +++++------------------------
->>   arch/x86/kernel/cpu/mtrr/generic.c |    4 ++--
->>   arch/x86/kernel/paravirt.c         |    7 +------
->>   arch/x86/mm/mem_encrypt.c          |    2 +-
->>   arch/x86/mm/tlb.c                  |   33 
->> ++++++++++++++++++++++++++++++++-
->>   arch/x86/platform/uv/tlb_uv.c      |    2 +-
->>   7 files changed, 45 insertions(+), 36 deletions(-)
->>
->> --- a/arch/x86/include/asm/paravirt.h
->> +++ b/arch/x86/include/asm/paravirt.h
->> @@ -47,7 +47,9 @@ static inline void slow_down_io(void)
->>   #endif
->>   }
->> -static inline void __flush_tlb(void)
->> +void native_flush_tlb_local(void);
->> +
->> +static inline void __flush_tlb_local(void)
->>   {
->>       PVOP_VCALL0(mmu.flush_tlb_user);
->>   }
->> --- a/arch/x86/include/asm/tlbflush.h
->> +++ b/arch/x86/include/asm/tlbflush.h
->> @@ -140,12 +140,13 @@ static inline unsigned long build_cr3_no
->>       return __sme_pa(pgd) | kern_pcid(asid) | CR3_NOFLUSH;
->>   }
->> +void flush_tlb_local(void);
->> +
->>   #ifdef CONFIG_PARAVIRT
->>   #include <asm/paravirt.h>
->>   #else
->> -#define __flush_tlb() __native_flush_tlb()
->> -#define __flush_tlb_global() __native_flush_tlb_global()
->> -#define __flush_tlb_one_user(addr) __native_flush_tlb_one_user(addr)
->> +#define __flush_tlb_global()        __native_flush_tlb_global()
->> +#define __flush_tlb_one_user(addr)    __native_flush_tlb_one_user(addr)
->>   #endif
->>   struct tlb_context {
->> @@ -371,24 +372,6 @@ static inline void invalidate_user_asid(
->>   }
->>   /*
->> - * flush the entire current user mapping
->> - */
->> -static inline void __native_flush_tlb(void)
->> -{
->> -    /*
->> -     * Preemption or interrupts must be disabled to protect the access
->> -     * to the per CPU variable and to prevent being preempted between
->> -     * read_cr3() and write_cr3().
->> -     */
->> -    WARN_ON_ONCE(preemptible());
->> -
->> -    invalidate_user_asid(this_cpu_read(cpu_tlbstate.loaded_mm_asid));
->> -
->> -    /* If current->mm == NULL then the read_cr3() "borrows" an mm */
->> -    native_write_cr3(__native_read_cr3());
->> -}
->> -
->> -/*
->>    * flush everything
->>    */
->>   static inline void __native_flush_tlb_global(void)
->> @@ -461,7 +444,7 @@ static inline void __flush_tlb_all(void)
->>           /*
->>            * !PGE -> !PCID (setup_pcid()), thus every flush is total.
->>            */
->> -        __flush_tlb();
->> +        flush_tlb_local();
->>       }
->>   }
->> @@ -537,8 +520,6 @@ struct flush_tlb_info {
->>       bool            freed_tables;
->>   };
->> -#define local_flush_tlb() __flush_tlb()
->> -
->>   #define flush_tlb_mm(mm)                        \
->>           flush_tlb_mm_range(mm, 0UL, TLB_FLUSH_ALL, 0UL, true)
->> --- a/arch/x86/kernel/cpu/mtrr/generic.c
->> +++ b/arch/x86/kernel/cpu/mtrr/generic.c
->> @@ -761,7 +761,7 @@ static void prepare_set(void) __acquires
->>       /* Flush all TLBs via a mov %cr3, %reg; mov %reg, %cr3 */
->>       count_vm_tlb_event(NR_TLB_LOCAL_FLUSH_ALL);
->> -    __flush_tlb();
->> +    flush_tlb_local();
->>       /* Save MTRR state */
->>       rdmsr(MSR_MTRRdefType, deftype_lo, deftype_hi);
->> @@ -778,7 +778,7 @@ static void post_set(void) __releases(se
->>   {
->>       /* Flush TLBs (no need to flush caches - they are disabled) */
->>       count_vm_tlb_event(NR_TLB_LOCAL_FLUSH_ALL);
->> -    __flush_tlb();
->> +    flush_tlb_local();
->>       /* Intel (P6) standard MTRRs */
->>       mtrr_wrmsr(MSR_MTRRdefType, deftype_lo, deftype_hi);
->> --- a/arch/x86/kernel/paravirt.c
->> +++ b/arch/x86/kernel/paravirt.c
->> @@ -160,11 +160,6 @@ unsigned paravirt_patch_insns(void *insn
->>       return insn_len;
->>   }
->> -static void native_flush_tlb(void)
->> -{
->> -    __native_flush_tlb();
->> -}
->> -
->>   /*
->>    * Global pages have to be flushed a bit differently. Not a real
->>    * performance problem because this does not happen often.
->> @@ -359,7 +354,7 @@ struct paravirt_patch_template pv_ops =
->>   #endif /* CONFIG_PARAVIRT_XXL */
->>       /* Mmu ops. */
->> -    .mmu.flush_tlb_user    = native_flush_tlb,
->> +    .mmu.flush_tlb_user    = native_flush_tlb_local,
->>       .mmu.flush_tlb_kernel    = native_flush_tlb_global,
->>       .mmu.flush_tlb_one_user    = native_flush_tlb_one_user,
->>       .mmu.flush_tlb_others    = native_flush_tlb_others,
->> --- a/arch/x86/mm/mem_encrypt.c
->> +++ b/arch/x86/mm/mem_encrypt.c
->> @@ -134,7 +134,7 @@ static void __init __sme_early_map_unmap
->>           size = (size <= PMD_SIZE) ? 0 : size - PMD_SIZE;
->>       } while (size);
->> -    __native_flush_tlb();
->> +    flush_tlb_local();
-> 
-> This invoked __native_flush_tlb() because of how early it is called and 
-> the paravirt ops support isn't set up yet, resulting in a crash if not 
-> invoking the native version directly. So this needs a "native" version 
-> of the tlb flush to invoke.
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ drivers/gpu/drm/msm/adreno/adreno_device.c | 24 ++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c    |  2 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h    | 10 +++++++++
+ 3 files changed, 35 insertions(+), 1 deletion(-)
 
-I don't think this is still true. With my rework of pvops to have all
-functions in one struct which is initialized statically initially
-everything should work from the time the kernel is mapped.
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+index cb3a6e597d76..1156f72532a4 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_device.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+@@ -189,6 +189,30 @@ static const struct adreno_info gpulist[] = {
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a630_zap.mdt",
++	}, {
++		.rev = ADRENO_REV(6, 4, 0, ANY_ID),
++		.revn = 640,
++		.name = "A640",
++		.fw = {
++			[ADRENO_FW_SQE] = "a630_sqe.fw",
++			[ADRENO_FW_GMU] = "a640_gmu.bin",
++		},
++		.gmem = SZ_1M,
++		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
++		.init = a6xx_gpu_init,
++		.zapfw = "a640_zap.mdt",
++	}, {
++		.rev = ADRENO_REV(6, 5, 0, ANY_ID),
++		.revn = 650,
++		.name = "A650",
++		.fw = {
++			[ADRENO_FW_SQE] = "a650_sqe.fw",
++			[ADRENO_FW_GMU] = "a650_gmu.bin",
++		},
++		.gmem = SZ_1M + SZ_128K,
++		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
++		.init = a6xx_gpu_init,
++		.zapfw = "a650_zap.mdt",
+ 	},
+ };
+ 
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index 1d5c43c22269..a7647eaacc7a 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -197,7 +197,7 @@ int adreno_get_param(struct msm_gpu *gpu, uint32_t param, uint64_t *value)
+ 		*value = adreno_gpu->gmem;
+ 		return 0;
+ 	case MSM_PARAM_GMEM_BASE:
+-		*value = 0x100000;
++		*value = !adreno_is_a650(adreno_gpu) ? 0x100000 : 0;
+ 		return 0;
+ 	case MSM_PARAM_CHIP_ID:
+ 		*value = adreno_gpu->rev.patchid |
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+index 9ff4e550e7bd..88ae1b2813ef 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+@@ -237,6 +237,16 @@ static inline int adreno_is_a630(struct adreno_gpu *gpu)
+        return gpu->revn == 630;
+ }
+ 
++static inline int adreno_is_a640(struct adreno_gpu *gpu)
++{
++       return gpu->revn == 640;
++}
++
++static inline int adreno_is_a650(struct adreno_gpu *gpu)
++{
++       return gpu->revn == 650;
++}
++
+ int adreno_get_param(struct msm_gpu *gpu, uint32_t param, uint64_t *value);
+ const struct firmware *adreno_request_fw(struct adreno_gpu *adreno_gpu,
+ 		const char *fwname);
+-- 
+2.26.1
 
-In case it doesn't there is something very wrong IMO.
-
-
-Juergen
