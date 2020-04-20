@@ -2,144 +2,115 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD75C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586E8C54FC9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF911221F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37180214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="o7wfvh8f"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fGzmuMR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgDTB75 (ORCPT
+        id S1726063AbgDTCGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 21:59:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726006AbgDTB74 (ORCPT
+        Sun, 19 Apr 2020 22:06:45 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:38006 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725953AbgDTCGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 21:59:56 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389A9C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 18:59:56 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id t8so2014973qvw.5
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 18:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=vkFQlxjluaLtrudrML7Hdba6QFiTPAjUT4zOSRXEnfM=;
-        b=o7wfvh8fln2uoxXmOPT2RWE19ikHtebxh63fRTVH7xEkORUZND3NErW0kJOV7KG7s0
-         /Ddcb8FqV9ymRmuZSAnprVbF7b70k9N95KiG0eK5a4QJj2CckeXQRoYYCi7W3TcNl37s
-         MohvOt/hPABYt7Ikozc3doiM2UYjqQrQ+ANUu6+d+giqPBpj+BWu9lwgVDzN7cveImIv
-         0o8UIN5LRwukERcKXZ5Bv4HFW1aQI2+TH5oWqpsjkrHrHqiPWK1pV3zg+iEztPSrn/am
-         8Kd3oOHfsPTCFJ38qRhr9mctMgIuojNJgQQiI9f/ZK9OtPTEtYC7IAOJzYUQXhz62GTy
-         Zqow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=vkFQlxjluaLtrudrML7Hdba6QFiTPAjUT4zOSRXEnfM=;
-        b=FM+2+eN5r41og5A6k+QYis4en2a/cWUQludupYTT79FvrmRcMy5YEohGTW799Zy5EO
-         qddUr7zw5aosZ3iwim9L4qo/eCgG8SFfkLwg+JbHTj0ihDI/YMFj6LVqv/IZJrwV1HHn
-         JAhaQBF6/peTUDVomXX7/X16G1ZCrb42KcIsIr16a1fVgO6yQONzGTpied4fWxRgngmT
-         91ou1L0om4GiqrfKh1qhBIrOEXL26I64R3eO0o7QJ62l2x/xfdZo4f/LoUXZipRK3L0Y
-         NZrWPWeTnrKARcyRjPMcR/albA5cYxwk/2fSA+VtUL43ME7szGsxSG4mMrDvFCD/3+YM
-         QdLw==
-X-Gm-Message-State: AGi0PuaityGOnZR1DGWldqscpTUC/sJAkLSdc675l3BvJ+UoG7OEvhpo
-        /Qizz0oGnpTutaGuJ/v4+hMB5g==
-X-Google-Smtp-Source: APiQypIxMDh4QJ9n6P2CvXw9d7499u5wg4jEK7Cnn3QicKR6bY7jLy5wcKE0IBi1MI1nlomxb5CCEA==
-X-Received: by 2002:a0c:b90a:: with SMTP id u10mr12965104qvf.92.1587347994341;
-        Sun, 19 Apr 2020 18:59:54 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id w10sm1228160qka.19.2020.04.19.18.59.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Apr 2020 18:59:53 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: linux-next test error: WARNING: suspicious RCU usage in
- ovs_ct_exit
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <CACT4Y+YR5Y8OQ4MCdCA2eoQM=GdBXN39O4HahWtL0sdqwsB=mg@mail.gmail.com>
-Date:   Sun, 19 Apr 2020 21:59:52 -0400
-Cc:     syzbot <syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>, dev@openvswitch.org,
-        kuba@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4A33114F-0173-4C12-8FD1-3F863318A4D3@lca.pw>
-References: <000000000000e642a905a0cbee6e@google.com>
- <CACT4Y+YR5Y8OQ4MCdCA2eoQM=GdBXN39O4HahWtL0sdqwsB=mg@mail.gmail.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Sun, 19 Apr 2020 22:06:44 -0400
+X-UUID: 15895ba748b741d689787e4e72c2df8f-20200420
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=apeKneLMG1hzTxdpFAt2JSCjXRLNOpzDMxDOJ9dHZ7A=;
+        b=fGzmuMR+Truu3qv76tuPigaZ0pQwCJJio7FFkL8raPMLc4uwxHIp2LKujvWWwrievZV3O1OIGKfxwLgpq4XHzr7qrhyviSbljEadWOeGmat4Ub375ODEMSOdabJ9SLnn5YrDhVb0khviCIc4mdtKDe9+E1EGC4IfsiJKRoYjkx4=;
+X-UUID: 15895ba748b741d689787e4e72c2df8f-20200420
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 785955110; Mon, 20 Apr 2020 10:06:40 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 20 Apr 2020 10:06:34 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 20 Apr 2020 10:06:39 +0800
+From:   <sean.wang@mediatek.com>
+To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
+        <andriy.shevchenko@linux.intel.com>, <robert.jarzmik@free.fr>,
+        <arnd@arndb.de>, <p.zabel@pengutronix.de>, <joel@jms.id.au>,
+        <david@lechnology.com>, <jan.kiszka@siemens.com>,
+        <heikki.krogerus@linux.intel.com>, <hpeter@gmail.com>,
+        <vigneshr@ti.com>, <matthias.bgg@gmail.com>,
+        <tthayer@opensource.altera.com>
+CC:     <linux-mediatek@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>,
+        Steven Liu <steven.liu@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v2] tty: serial: don't do termios for BTIF
+Date:   Mon, 20 Apr 2020 10:06:38 +0800
+Message-ID: <8c47aea3aa3cce4d7484b840ddb117cd16bcf1cc.1587347988.git.sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RnJvbTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPg0KDQpCbHVldG9vdGggSW50
+ZXJmYWNlIChCVElGKSBpcyBkZXNpZ25lZCBkZWRpY2F0ZWRseSBmb3IgTWVkaWFUZWsgU09DIHdp
+dGgNCkJUIGluIG9yZGVyIHRvIGJlIGluc3RlYWQgb2YgdGhlIFVBUlQgaW50ZXJmYWNlIGJldHdl
+ZW4gQlQgbW9kdWxlIGFuZCBIb3N0DQpDUFUsIGFuZCBub3QgZXhwb3J0ZWQgdG8gdXNlciBzcGFj
+ZSB0byBhY2Nlc3MuDQoNCkFzIHRoZSBVQVJUIGRlc2lnbiwgQlRJRiB3aWxsIGJlIGFuIEFQQiBz
+bGF2ZSBhbmQgY2FuIHRyYW5zbWl0IG9yIHJlY2VpdmUNCmRhdGEgYnkgTUNVIGFjY2VzcywgYnV0
+IGRvZXNuJ3QgcHJvdmlkZSB0ZXJtaW9zIGZ1bmN0aW9uIGxpa2UgYmF1ZHJhdGUgYW5kDQpmbG93
+IGNvbnRyb2wgc2V0dXAuDQoNCkV2ZW4gTENSIG9uIG9mZnNldCAweEMgdGhhdCBpcyBqdXN0IGEg
+RkFLRUxDUg0KYS4gSWYgRkFLRUxDUls3XSBpcyBlcXVhbGVkIHRvIDEsIFJCUigweDAwKSwgVEhS
+KDB4MDApLCBJRVIoMHgwNCkNCiAgIHdpbGwgbm90IGJlIHJlYWRhYmxlL3dyaXRhYmxlLg0KDQpi
+LiBJZiBGQUtFTENSIGlzIGVxdWFsZWQgdG8gMHhCRiwgUkJSKDB4MDApLCBUSFIoMHgwMCksIElF
+UigweDA0KSwNCiAgIElJUigweDA4KSwgYW5kIExTUigweDE0KSB3aWxsIG5vdCBiZSByZWFkYWJs
+ZS93cml0YWJsZS4NCg0KU28gYWRkaW5nIGEgbmV3IGNhcGFiaWxpdHkgJ1VBUlRfQ0FQX05NT0Qn
+IGZvciB0aGUgdW51c3VhbCB1bnN1cHBvcnRlZA0KY2FzZS4NCg0KRml4ZXM6IDFjMTZhZTY1ZTI1
+MCAoInNlcmlhbDogODI1MDogb2Y6IEFkZCBuZXcgcG9ydCB0eXBlIGZvciBNZWRpYVRlayBCVElG
+IGNvbnRyb2xsZXIgb24gTVQ3NjIyLzIzIFNvQyIpDQpDYzogU3RldmVuIExpdSA8c3RldmVuLmxp
+dUBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBTZWFuIFdhbmcgPHNlYW4ud2FuZ0BtZWRp
+YXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBSeWRlciBMZWUgPHJ5ZGVyLmxlZUBtZWRpYXRlay5j
+b20+DQoNCi0tDQp2MS0+djI6DQpubyBjaGFuZ2Ugb24gdGVybWlvcy0+Y19jZmxhZyBhbmQgcmVm
+aW5lIGNvbW1pdCBtZXNzYWdlDQotLS0NCiBkcml2ZXJzL3R0eS9zZXJpYWwvODI1MC84MjUwLmgg
+ICAgICB8IDEgKw0KIGRyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfcG9ydC5jIHwgNSArKysr
+LQ0KIDIgZmlsZXMgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3R0eS9zZXJpYWwvODI1MC84MjUwLmggYi9kcml2ZXJzL3R0eS9z
+ZXJpYWwvODI1MC84MjUwLmgNCmluZGV4IDMzYWQ5ZDZkZTUzMi4uMjUwMzM3ZTRlN2M4IDEwMDY0
+NA0KLS0tIGEvZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1MC5oDQorKysgYi9kcml2ZXJzL3R0
+eS9zZXJpYWwvODI1MC84MjUwLmgNCkBAIC04Miw2ICs4Miw3IEBAIHN0cnVjdCBzZXJpYWw4MjUw
+X2NvbmZpZyB7DQogI2RlZmluZSBVQVJUX0NBUF9NSU5JCSgxIDw8IDE3KQkvKiBNaW5pIFVBUlQg
+b24gQkNNMjgzWCBmYW1pbHkgbGFja3M6DQogCQkJCQkgKiBTVE9QIFBBUklUWSBFUEFSIFNQQVIg
+V0xFTjUgV0xFTjYNCiAJCQkJCSAqLw0KKyNkZWZpbmUgVUFSVF9DQVBfTk1PRAkoMSA8PCAxOCkJ
+LyogVUFSVCBkb2Vzbid0IGRvIHRlcm1pb3MgKi8NCiANCiAjZGVmaW5lIFVBUlRfQlVHX1FVT1QJ
+KDEgPDwgMCkJLyogVUFSVCBoYXMgYnVnZ3kgcXVvdCBMU0IgKi8NCiAjZGVmaW5lIFVBUlRfQlVH
+X1RYRU4JKDEgPDwgMSkJLyogVUFSVCBoYXMgYnVnZ3kgVFggSUlSIHN0YXR1cyAqLw0KZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfcG9ydC5jIGIvZHJpdmVycy90dHkv
+c2VyaWFsLzgyNTAvODI1MF9wb3J0LmMNCmluZGV4IDAzMjVmMmU1M2I3NC4uZGEwYTg3MTFlZTNk
+IDEwMDY0NA0KLS0tIGEvZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1MF9wb3J0LmMNCisrKyBi
+L2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfcG9ydC5jDQpAQCAtMjg2LDcgKzI4Niw3IEBA
+IHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc2VyaWFsODI1MF9jb25maWcgdWFydF9jb25maWdbXSA9IHsN
+CiAJCS50eF9sb2Fkc3oJPSAxNiwNCiAJCS5mY3IJCT0gVUFSVF9GQ1JfRU5BQkxFX0ZJRk8gfA0K
+IAkJCQkgIFVBUlRfRkNSX0NMRUFSX1JDVlIgfCBVQVJUX0ZDUl9DTEVBUl9YTUlULA0KLQkJLmZs
+YWdzCQk9IFVBUlRfQ0FQX0ZJRk8sDQorCQkuZmxhZ3MJCT0gVUFSVF9DQVBfRklGTyB8IFVBUlRf
+Q0FQX05NT0QsDQogCX0sDQogCVtQT1JUX05QQ01dID0gew0KIAkJLm5hbWUJCT0gIk51dm90b24g
+MTY1NTAiLA0KQEAgLTI1NDQsNiArMjU0NCw5IEBAIHNlcmlhbDgyNTBfZG9fc2V0X3Rlcm1pb3Mo
+c3RydWN0IHVhcnRfcG9ydCAqcG9ydCwgc3RydWN0IGt0ZXJtaW9zICp0ZXJtaW9zLA0KIAl1bnNp
+Z25lZCBsb25nIGZsYWdzOw0KIAl1bnNpZ25lZCBpbnQgYmF1ZCwgcXVvdCwgZnJhYyA9IDA7DQog
+DQorCWlmICh1cC0+Y2FwYWJpbGl0aWVzICYgVUFSVF9DQVBfTk1PRCkNCisJCXJldHVybjsNCisN
+CiAJaWYgKHVwLT5jYXBhYmlsaXRpZXMgJiBVQVJUX0NBUF9NSU5JKSB7DQogCQl0ZXJtaW9zLT5j
+X2NmbGFnICY9IH4oQ1NUT1BCIHwgUEFSRU5CIHwgUEFST0REIHwgQ01TUEFSKTsNCiAJCWlmICgo
+dGVybWlvcy0+Y19jZmxhZyAmIENTSVpFKSA9PSBDUzUgfHwNCi0tIA0KMi4yNS4xDQo=
 
-
-> On Apr 18, 2020, at 3:02 AM, Dmitry Vyukov <dvyukov@google.com> wrote:
->=20
-> On Sat, Mar 14, 2020 at 8:57 AM syzbot
-> <syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com> wrote:
->>=20
->> Hello,
->>=20
->> syzbot found the following crash on:
->>=20
->> HEAD commit:    2e602db7 Add linux-next specific files for 20200313
->> git tree:       linux-next
->> console output: =
-https://syzkaller.appspot.com/x/log.txt?x=3D16669919e00000
->> kernel config:  =
-https://syzkaller.appspot.com/x/.config?x=3Dcf2879fc1055b886
->> dashboard link: =
-https://syzkaller.appspot.com/bug?extid=3D7ef50afd3a211f879112
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->>=20
->> Unfortunately, I don't have any reproducer for this crash yet.
->>=20
->> IMPORTANT: if you fix the bug, please add the following tag to the =
-commit:
->> Reported-by: syzbot+7ef50afd3a211f879112@syzkaller.appspotmail.com
->=20
-> +linux-next, Stephen for currently open linux-next build/boot failure
->=20
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
->> WARNING: suspicious RCU usage
->> 5.6.0-rc5-next-20200313-syzkaller #0 Not tainted
->> -----------------------------
->> net/openvswitch/conntrack.c:1898 RCU-list traversed in non-reader =
-section!
-
-Those should be fixed by,
-
-=
-https://lore.kernel.org/netdev/1587063451-54027-1-git-send-email-xiangxia.=
-m.yue@gmail.com/
-
-
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
->> WARNING: suspicious RCU usage
->> 5.6.0-rc5-next-20200313-syzkaller #0 Not tainted
->> -----------------------------
->> net/ipv4/ipmr.c:1757 RCU-list traversed in non-reader section!!
-
-and,
-
-=
-https://lore.kernel.org/netdev/20200222063835.14328-1-frextrite@gmail.com/=
-
-
-It looks like both are waiting for David to pick up.=
