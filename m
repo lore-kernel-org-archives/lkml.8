@@ -2,116 +2,180 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39177C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB8EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 091B4206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:03:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="QkHS3g3p"
+	by mail.kernel.org (Postfix) with ESMTP id 25F33206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgDTPDf (ORCPT
+        id S1730062AbgDTPEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:03:35 -0400
-Received: from mout.gmx.net ([212.227.17.21]:33113 "EHLO mout.gmx.net"
+        Mon, 20 Apr 2020 11:04:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:50442 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbgDTPDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:03:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1587394970;
-        bh=UKp6RZgHShYAmKVbesztqxr3F4SKLa25qyvH+LYRqdo=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=QkHS3g3pdle4TC8kHb4WPmuDR9KemXpd9xmBW9HZHzU252e/oYWSHIA7z8ik/c6rI
-         YdX4bWgC8rSPNT5/AGoZUp9zykj7O7TuUnAkaAGK4z2TupBdLgRDqTuqHSqmkI76OM
-         sJaAoJbk1HsjuFrgcBoDXiaiEBwF08bWdjw7PXFM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MdvmY-1iqfQi2Y0E-00b29o; Mon, 20
- Apr 2020 17:02:50 +0200
-Date:   Mon, 20 Apr 2020 17:02:35 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Malcolm Priestley <tvboxspy@gmail.com>,
-        "John B . Wyatt IV" <jbwyatt4@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Colin Ian King <colin.king@canonical.com>
-Subject: Re: [PATCH] staging: vt6656: Use fls instead of for loop in
- vnt_update_top_rates
-Message-ID: <20200420150235.GA3159@ubuntu>
-References: <20200419100921.5421-1-oscar.carter@gmx.com>
- <20200420121059.GC2659@kadam>
+        id S1726105AbgDTPEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:04:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4562531B;
+        Mon, 20 Apr 2020 08:04:33 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA6C83F73D;
+        Mon, 20 Apr 2020 08:04:30 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 16:04:28 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Patrick Bellasi <patrick.bellasi@matbug.net>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200420150427.acz4nqyhlbgywi3h@e107158-lin.cambridge.arm.com>
+References: <20200403123020.13897-1-qais.yousef@arm.com>
+ <20200414182152.GB20442@darkstar>
+ <20200415074600.GA26984@darkstar>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200420121059.GC2659@kadam>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:mrdDQPBU8m/XBdil0FuPsqApP+2l8/R3mwWkslSCtwk5wfJPtYO
- P3/o9SY70LgD/gxGoyuElX+f8xR5sqe0yo1oHGSgpu0uk96/Ce8npiu9dB5xubDV572D5rj
- U5j6Mpzho8W0b5NCRnXsznrsIf6yXwD8IevkZO8UrbwlqOdeosC3skJMbBTs28bJR5Xdx17
- GInshLSu7RoWi3Azn9gEw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4isIjZ3xBHw=:+CoVJ6MmnMv3Rer7ZGBmM6
- wfCnj1/Tkjrj5qms9QEZFN7cQo8OMMixdoUUusLj8tIMKui+CEVbiHtFrtMxLUZFOTsvXFcJT
- hBvrizJI9hQyJXcSKbu72MtKt9DGr8lFXE6hZp1g/PjcrWplqgbp7kJPNTxr0OUJFqPtVbuhA
- 0PYx7gnANvoTM5oHVzhv1AMFMN+LFEw33fcBQBJgqIHG2tF+VjVXmhkXzAmsVPqp5Zi9M4Mjp
- 54s7RbNUL3YtzA0kMVDK7X9t/FmOCRXjo3DVGUWvbRYQTPmxNIk3znU8YsycySmC15M/c5bya
- /44BE15HFjLiGTa6UoSGy80Px/nnnK3QJmkv+8CoOLKuj5Ur6myCh5B57ezjDbqVdtkHV6JZk
- //I/CROuJw+cJ2vroibpirttaPn4u1nU7Sjbcrud/3CbiYP5g5o4USd9dS0VUHyYNx64ab2RV
- QH/jXU5FoKDbq+O650cVYG4QMiIKj0SgdKCBygIzVxAhj376GwWy2Tho+9kjP1aS2XQINledV
- 6yW+mSqnIhyOFV7jrDdWRHigAMV8RD3Eg1WJrnmoCE4Q9983gnG+SnFE9fzUqFiAMainoybi/
- 7A1+gEKBzytfP1Y2v0iUqoNA+nnfaodlCqGxiv0Fts1g0S2DZrDYMoXE2xoGGMdGNWigSEkNq
- NCbpdjyAvrQR8xZnkxa9sv1by8oUQT4xrauYb+ey5Q60ADFq1qvOehQLv710mR8ZkiFzj8Hb7
- eazYc5tR6M9AjKVMqBhVfNImUW0uAdT6fumgx44ial1r1F6E0r9n0VK3Zrrhs8pfh2PEfJOEN
- A9Qn7BRBfxfC7FHTBbAC9S/KqoyoxtteAc5m7rjUqHroQxCyjTd/0nSE1iHl5aQkYo9LjV4uP
- +8bglft+kmnMWQDedZrZR0LyJGHX1X/EKzq07Ypo6Zepebe6lKEFX+nqVcFLmOtpE4fr1nPPP
- V2lu6qfSGflW4RXgtBTVWCzt55iHx5mYjbAF7g6wvsvRXKuzrVQ29tGfeL3SqPzyBIEZO+bY7
- pJkHqhPXHANZgdRfLO4g2XzSA/OTCfdlZ0OM9iWgOkB3Zc7QPCW5QTEui7HMsMQ5o0gB4EdUJ
- ejx862tQvtnHj/RzAh/MAPvAEjd8xb4DM6GHVEy+y7xH3wbgC4tN/gPMsqivxem9mdVgOqJfo
- RN1yfbx2mzg2RwWEz6xh47qen05jWE8KXMReROxEx5fw63cDGOoJQ7x7jBgvaWhzY74SUozC7
- HH5FwrE+iZ6C49Ivi
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200415074600.GA26984@darkstar>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 03:10:59PM +0300, Dan Carpenter wrote:
-> On Sun, Apr 19, 2020 at 12:09:21PM +0200, Oscar Carter wrote:
-> > -	for (i =3D RATE_11M;; i--) {
-> > -		if (priv->basic_rates & (u16)(1 << i)) {
-> > -			top_cck =3D i;
-> > -			break;
-> > -		}
-> > -		if (i =3D=3D RATE_1M)
-> > -			break;
-> > -	}
-> > +	pos =3D fls(priv->basic_rates & GENMASK(RATE_54M, RATE_6M));
-> > +	priv->top_ofdm_basic_rate =3D pos ? pos-- : RATE_24M;
->                                           ^^^^^
-> Argh...  Come on.  I don't want to have to break out the C standard to
-> see if this is defined behavior and where the sequence points are.  A
-> pre-op would be clear but the most clear thing is to write it like this:
->
-> 	priv->top_ofdm_basic_rate =3D pos ? (pos - 1) : RATE_24M;
->
-Ok, I do the modification as you suggested and resend a new version.
->
-> >
-> > -	priv->top_cck_basic_rate =3D top_cck;
-> > +	pos =3D fls(priv->basic_rates & GENMASK(RATE_11M, RATE_1M));
-> > +	priv->top_cck_basic_rate =3D pos ? pos-- : RATE_1M;
->                                          ^^^^^
-> Same.
->
-> regards,
-> dan carpenter
->
-thanks,
-oscar carter
+On 04/15/20 09:46, Patrick Bellasi wrote:
+
+[...]
+
+> > > diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+> > > index d4f6215ee03f..91204480fabc 100644
+> > > --- a/include/linux/sched/sysctl.h
+> > > +++ b/include/linux/sched/sysctl.h
+> > > @@ -59,6 +59,7 @@ extern int sysctl_sched_rt_runtime;
+> > >  #ifdef CONFIG_UCLAMP_TASK
+> > >  extern unsigned int sysctl_sched_uclamp_util_min;
+> > >  extern unsigned int sysctl_sched_uclamp_util_max;
+> > > +extern unsigned int sysctl_sched_rt_default_uclamp_util_min;
+> > 
+> > nit-pick: I would prefer to keep the same prefix of the already
+> > exising knobs, i.e. sysctl_sched_uclamp_util_min_rt
+> > 
+> > The same change for consistency should be applied to all the following
+> > symbols related to "uclamp_util_min_rt".
+> > 
+> > NOTE: I would not use "default" as I think that what we are doing is
+> > exactly force setting a user_defined value for all RT tasks. More on
+> > that later...
+> 
+> Had a second tought on that...
+
+Sorry just noticed that you had a second reply to this. I just saw the first
+initially.
+
+Still catching up after holiday..
+
+[...]
+
+> > > +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
+> > > +{
+> > > +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+> > 
+> > Don't we have to filter for RT tasks only here?
+> 
+> I think this is still a valid point.
+
+Yep it is.
+
+> 
+> > > +
+> > > +	if (!uc_se->user_defined)
+> > > +		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
+> > 
+> > Here you are actually setting a user-requested value, why not marking
+> > it as that, i.e. by using true for the last parameter?
+> 
+> I think you don't want to set user_defined to ensure we keep updating
+> the value every time the task is enqueued, in case the "default"
+> should be updated at run-time.
+
+Yes. I'm glad we're finally on agreement about this :-)
+
+> 
+> > Moreover, by keeping user_defined=false I think you are not getting
+> > what you want for RT tasks running in a nested cgroup.
+> > 
+> > Let say a subgroup is still with the util_min=1024 inherited from the
+> > system defaults, in uclamp_tg_restrict() we will still return the max
+> > value and not what you requested for. Isn't it?
+> 
+> This is also not completely true since perhaps you assume that if an
+> RT task is running in a nested group with a non tuned uclamp_max then
+> that's probably what we want.
+> 
+> There is still a small concern due to the fact we don't distinguish
+> CFS and RT tasks when it comes to cgroup clamp values, which
+> potentially could still generate the same issue. Let say for example
+> you wanna allow CFS tasks to be boosted to max (util_min=1024) but
+> still want to run RT tasks only at lower OPPs.
+> Not sure if that could be a use case tho.
+
+No we can't within the same cgroup. But sys admins can potentially create
+different cgroups to enforce the different policies.
+
+A per sched-class uclamp control could simplify userspace if they end up with
+this scenario. But given where we are now, I'm not sure how easy it would be to
+stage the change.
+
+>  
+> > IOW, what about:
+> > 
+> > ---8<---
+> > static void uclamp_sync_util_min_rt(struct task_struct *p)
+> > {
+> > 	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+> > 
+> >   if (likely(uc_se->user_defined || !rt_task(p)))
+> >     return;
+> > 
+> >   uclamp_se_set(uc_se, sysctl_sched_uclamp_util_min_rt, true);
+>                                                           ^^^^
+>                      This should remain false as in your patch.
+> > }
+> > ---8<---
+> 
+> Still, I was thinking that perhaps it would be better to massage the
+> code above into the generation of the effective value, in uclamp_eff_get().
+> 
+> Since you wanna (possibly) update the value at each enqueue time,
+> that's what conceptually is represented by the "effective clamp
+> value": a value that is computed by definition at enqueue time by
+> aggregating all the requests and constraints.
+> 
+> Poking with the effective value instead of the requested value will
+> fix also the ambiguity above, where we set a "requested values" with
+> user-defined=false.
+
+Okay, let me have a second look at this. I just took what we had and improved
+on it. But what you say could work too. Let me try it out.
+
+Thanks
+
+--
+Qais Yousef
