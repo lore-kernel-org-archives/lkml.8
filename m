@@ -2,204 +2,145 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDABC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494F3C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C38C2206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387336;
-	bh=7cXOEXKgAZRL7TOLZLpqjpkyOf0AuX0bL5USTA/0Hc4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eRUPzxLXwSBZAv8Rvav6k1pJAEtBjHPwqXEmWZnJ4NUaptSxihYjncFdHIB7Ai3cp
-	 SuM2fra+7C9SNsCJo518/qzDezQfcyz3jw4Rh85jz3ompe2ndEDLQQBJrN3pyeh84F
-	 24B/Xv3YSyW581DBtaoSmj8GTrYlrFcNrxMYw31M=
+	by mail.kernel.org (Postfix) with ESMTP id 2A269206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgDTMpk (ORCPT
+        id S1729380AbgDTMzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:45:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728249AbgDTMpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FE60206E9;
-        Mon, 20 Apr 2020 12:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386736;
-        bh=7cXOEXKgAZRL7TOLZLpqjpkyOf0AuX0bL5USTA/0Hc4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCUxpxPKFBhMWjsU76Lf7X227baU6mPL7jxK4ZB2D53cgT7b3LP0RJFl+AT7Q5XUR
-         dGHoveYbWcDwT3qyRO4al4mt0qZMjPqRLQN5Npn5BnUZ/AxqtW822QOPbkLAzvfXQC
-         hzFV0Yr7Gk4DuK+4ZQojP8aWLzKs2wPw5QRNA1N0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.6 63/71] drm/i915/perf: Do not clear pollin for small user read buffers
-Date:   Mon, 20 Apr 2020 14:39:17 +0200
-Message-Id: <20200420121521.560898369@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
-References: <20200420121508.491252919@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Apr 2020 08:55:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32808 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728756AbgDTMp3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:29 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCV6Vo029466;
+        Mon, 20 Apr 2020 08:45:17 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghu5ru3u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:17 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCXPwY039011;
+        Mon, 20 Apr 2020 08:45:17 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghu5ru2m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:17 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCj3gE027386;
+        Mon, 20 Apr 2020 12:45:15 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03wdc.us.ibm.com with ESMTP id 30fs660k16-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 12:45:15 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCjEaM46661992
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 12:45:14 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 35FF713604F;
+        Mon, 20 Apr 2020 12:45:14 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 40F53136063;
+        Mon, 20 Apr 2020 12:45:10 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 12:45:09 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
+        kirill@shutemov.name,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Subject: [PATCH v3 06/22] powerpc/mce: Don't reload pte val in addr_to_pfn
+Date:   Mon, 20 Apr 2020 18:14:18 +0530
+Message-Id: <20200420124434.47330-7-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_03:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=860
+ suspectscore=0 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
+ clxscore=1015 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashutosh Dixit <ashutosh.dixit@intel.com>
+A lockless page table walk should be safe against parallel THP collapse, THP
+split and madvise(MADV_DONTNEED)/parallel fault. This patch makes sure kernel
+won't reload the pteval when checking for different conditions. The patch also added
+a check for pte_present to make sure the kernel is indeed operating
+on a PTE and not a pointer to level 0 table page.
 
-commit bcad588dea538a4fc173d16a90a005536ec8dbf2 upstream.
+The pfn value we find here can be different from the actual pfn on which
+machine check happened. This can happen if we raced with a parallel update
+of the page table. In such a scenario we end up isolating a wrong pfn. But that
+doesn't have any other side effect.
 
-It is wrong to block the user thread in the next poll when OA data is
-already available which could not fit in the user buffer provided in
-the previous read. In several cases the exact user buffer size is not
-known. Blocking user space in poll can lead to data loss when the
-buffer size used is smaller than the available data.
-
-This change fixes this issue and allows user space to read all OA data
-even when using a buffer size smaller than the available data using
-multiple non-blocking reads rather than staying blocked in poll till
-the next timer interrupt.
-
-v2: Fix ret value for blocking reads (Umesh)
-v3: Mistake during patch send (Ashutosh)
-v4: Remove -EAGAIN from comment (Umesh)
-v5: Improve condition for clearing pollin and return (Lionel)
-v6: Improve blocking read loop and other cleanups (Lionel)
-v7: Added Cc stable
-
-Testcase: igt/perf/polling-small-buf
-Reviewed-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-Signed-off-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
-Cc: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200403010120.3067-1-ashutosh.dixit@intel.com
-(cherry-picked from commit 6352219c39c04ed3f9a8d1cf93f87c21753a213e)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
- drivers/gpu/drm/i915/i915_perf.c |   65 ++++++---------------------------------
- 1 file changed, 11 insertions(+), 54 deletions(-)
+ arch/powerpc/kernel/mce_power.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_perf.c
-+++ b/drivers/gpu/drm/i915/i915_perf.c
-@@ -2910,49 +2910,6 @@ void i915_oa_init_reg_state(const struct
- }
- 
- /**
-- * i915_perf_read_locked - &i915_perf_stream_ops->read with error normalisation
-- * @stream: An i915 perf stream
-- * @file: An i915 perf stream file
-- * @buf: destination buffer given by userspace
-- * @count: the number of bytes userspace wants to read
-- * @ppos: (inout) file seek position (unused)
-- *
-- * Besides wrapping &i915_perf_stream_ops->read this provides a common place to
-- * ensure that if we've successfully copied any data then reporting that takes
-- * precedence over any internal error status, so the data isn't lost.
-- *
-- * For example ret will be -ENOSPC whenever there is more buffered data than
-- * can be copied to userspace, but that's only interesting if we weren't able
-- * to copy some data because it implies the userspace buffer is too small to
-- * receive a single record (and we never split records).
-- *
-- * Another case with ret == -EFAULT is more of a grey area since it would seem
-- * like bad form for userspace to ask us to overrun its buffer, but the user
-- * knows best:
-- *
-- *   http://yarchive.net/comp/linux/partial_reads_writes.html
-- *
-- * Returns: The number of bytes copied or a negative error code on failure.
-- */
--static ssize_t i915_perf_read_locked(struct i915_perf_stream *stream,
--				     struct file *file,
--				     char __user *buf,
--				     size_t count,
--				     loff_t *ppos)
--{
--	/* Note we keep the offset (aka bytes read) separate from any
--	 * error status so that the final check for whether we return
--	 * the bytes read with a higher precedence than any error (see
--	 * comment below) doesn't need to be handled/duplicated in
--	 * stream->ops->read() implementations.
--	 */
--	size_t offset = 0;
--	int ret = stream->ops->read(stream, buf, count, &offset);
--
--	return offset ?: (ret ?: -EAGAIN);
--}
--
--/**
-  * i915_perf_read - handles read() FOP for i915 perf stream FDs
-  * @file: An i915 perf stream file
-  * @buf: destination buffer given by userspace
-@@ -2977,7 +2934,8 @@ static ssize_t i915_perf_read(struct fil
+diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
+index 067b094bfeff..1d18991f3854 100644
+--- a/arch/powerpc/kernel/mce_power.c
++++ b/arch/powerpc/kernel/mce_power.c
+@@ -27,7 +27,7 @@
+  */
+ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
  {
- 	struct i915_perf_stream *stream = file->private_data;
- 	struct i915_perf *perf = stream->perf;
--	ssize_t ret;
-+	size_t offset = 0;
-+	int ret;
+-	pte_t *ptep;
++	pte_t *ptep, pte;
+ 	unsigned int shift;
+ 	unsigned long pfn, flags;
+ 	struct mm_struct *mm;
+@@ -39,19 +39,23 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
  
- 	/* To ensure it's handled consistently we simply treat all reads of a
- 	 * disabled stream as an error. In particular it might otherwise lead
-@@ -3000,13 +2958,12 @@ static ssize_t i915_perf_read(struct fil
- 				return ret;
+ 	local_irq_save(flags);
+ 	ptep = __find_linux_pte(mm->pgd, addr, NULL, &shift);
++	if (!ptep) {
++		pfn = ULONG_MAX;
++		goto out;
++	}
++	pte = READ_ONCE(*ptep);
  
- 			mutex_lock(&perf->lock);
--			ret = i915_perf_read_locked(stream, file,
--						    buf, count, ppos);
-+			ret = stream->ops->read(stream, buf, count, &offset);
- 			mutex_unlock(&perf->lock);
--		} while (ret == -EAGAIN);
-+		} while (!offset && !ret);
- 	} else {
- 		mutex_lock(&perf->lock);
--		ret = i915_perf_read_locked(stream, file, buf, count, ppos);
-+		ret = stream->ops->read(stream, buf, count, &offset);
- 		mutex_unlock(&perf->lock);
+-	if (!ptep || pte_special(*ptep)) {
++	if (!pte_present(pte) || pte_special(pte)) {
+ 		pfn = ULONG_MAX;
+ 		goto out;
  	}
  
-@@ -3017,15 +2974,15 @@ static ssize_t i915_perf_read(struct fil
- 	 * and read() returning -EAGAIN. Clearing the oa.pollin state here
- 	 * effectively ensures we back off until the next hrtimer callback
- 	 * before reporting another EPOLLIN event.
-+	 * The exception to this is if ops->read() returned -ENOSPC which means
-+	 * that more OA data is available than could fit in the user provided
-+	 * buffer. In this case we want the next poll() call to not block.
- 	 */
--	if (ret >= 0 || ret == -EAGAIN) {
--		/* Maybe make ->pollin per-stream state if we support multiple
--		 * concurrent streams in the future.
--		 */
-+	if (ret != -ENOSPC)
- 		stream->pollin = false;
--	}
- 
--	return ret;
-+	/* Possible values for ret are 0, -EFAULT, -ENOSPC, -EIO, ... */
-+	return offset ?: (ret ?: -EAGAIN);
- }
- 
- static enum hrtimer_restart oa_poll_check_timer_cb(struct hrtimer *hrtimer)
-
+ 	if (shift <= PAGE_SHIFT)
+-		pfn = pte_pfn(*ptep);
++		pfn = pte_pfn(pte);
+ 	else {
+ 		unsigned long rpnmask = (1ul << shift) - PAGE_SIZE;
+-		pfn = pte_pfn(__pte(pte_val(*ptep) | (addr & rpnmask)));
++		pfn = pte_pfn(__pte(pte_val(pte) | (addr & rpnmask)));
+ 	}
+-
+ out:
+ 	local_irq_restore(flags);
+ 	return pfn;
+-- 
+2.25.3
 
