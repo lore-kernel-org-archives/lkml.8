@@ -2,525 +2,80 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF48C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69430C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E182070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SFzKTM9W"
+	by mail.kernel.org (Postfix) with ESMTP id 4EEC9206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgDTNsk (ORCPT
+        id S1728288AbgDTNuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:48:40 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:15726 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726736AbgDTNsX (ORCPT
+        Mon, 20 Apr 2020 09:50:00 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35530 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgDTNuA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:48:23 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KDm2C7019854;
-        Mon, 20 Apr 2020 15:48:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=RDeGUX1kaDX+4Hwp31TbURyze55b7oE/AwyPuMTSu6o=;
- b=SFzKTM9WnH/JYHPYG+IZ2j+hU6tV2CKhksZM28aTUwhgzi1nRjIhr1JJ1c0E9fAkXFNE
- 5akrucW89YCDuDQrucqqwdyMA5CU7L15YMZnTUHQXU1BI/3XUXCB0QqghRnmGBum1Doz
- c9KKveZOBIuPWs4/ZOVelxu9mgqrgmhElNXsQVppqSUwh8MRa59xtKA/I1twDCoUNA0G
- twLRjJelJiXILoFtzKQBx0IMuUvKpnvP9iXe2Q/cXQ922pZKAEzsaw3jSs3WSGpvRvJu
- YQAZybKaMgNflbaP9KoXzbZbhgMsbgRTboKsRIJDhyHYI9uz3yV0qYD639fgSK1PJvo7 Dg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fpp8jqq1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 15:48:06 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 47008100034;
-        Mon, 20 Apr 2020 15:48:06 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 39DC52B3E2D;
-        Mon, 20 Apr 2020 15:48:06 +0200 (CEST)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Apr 2020 15:48:05
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <gregkh@linuxfoundation.org>,
-        <loic.pallardy@st.com>, <linus.walleij@linaro.org>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 2/5] bus: stm32: Introduce firewall controller helpers
-Date:   Mon, 20 Apr 2020 15:47:57 +0200
-Message-ID: <20200420134800.31604-3-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200420134800.31604-1-benjamin.gaignard@st.com>
-References: <20200420134800.31604-1-benjamin.gaignard@st.com>
+        Mon, 20 Apr 2020 09:50:00 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t11so5084095pgg.2;
+        Mon, 20 Apr 2020 06:49:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dqyDrH9kmK2QYyWvzW477WYOv3bhBEOkoTNugmt8Z9A=;
+        b=COpyHZBQ5clBBd3OLT1zfnIv/+wy9OzvWCmyXh9MQVNqXPw6OGYiP9Kd/SXWUBLHdD
+         AGsjfX56FCQfTZjl5ZdTTN0o+2a64LgTWIGfyhRbKKrLMvIXIwM2yLvbsFzKqFtdkzJF
+         zyfk2JPRMD1xaFE9OOxvq01G63ugv53Df7O+sC0FZH7xaVfCLWfK68OFAq+qA6MzaoWf
+         OIWk1tfO/ltLgYpOfDmPF8b/8no2VSgtRolCB+8QAYVo+ETGE5ldxwIQATFz6aETCFTh
+         l+s6Xpqr7nNxoLWxvMDGiT9oeg3V1bsgypkW7AiUvwVumgY9vp6M5CYwRtQ6cgoYABmd
+         aoGQ==
+X-Gm-Message-State: AGi0PubI2O4HUq+FD1pQRGsj9b/lRl/4Ijmw32GFVuX+jtiCfmpO9BN8
+        uZY8FANwDegmCHLn+rhrolI=
+X-Google-Smtp-Source: APiQypJ1hvdBWQ805lF9hZGCScgsHPzgj67vtc33+YpTsUjOhC6W/SrIjdaDC5JoovDrZWpBc0o3Rg==
+X-Received: by 2002:a62:1d48:: with SMTP id d69mr6461327pfd.102.1587390599504;
+        Mon, 20 Apr 2020 06:49:59 -0700 (PDT)
+Received: from [100.124.9.192] ([104.129.199.3])
+        by smtp.gmail.com with ESMTPSA id e22sm1248730pgh.14.2020.04.20.06.49.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 06:49:58 -0700 (PDT)
+Subject: Re: [PATCH 2/4] loop: Factor out configuring loop from status.
+To:     Martijn Coenen <maco@android.com>, axboe@kernel.dk, hch@lst.de,
+        ming.lei@redhat.com
+Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maco@google.com, Chaitanya.Kulkarni@wdc.com
+References: <20200420080409.111693-1-maco@android.com>
+ <20200420080409.111693-3-maco@android.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <888a008e-bfa0-6323-413b-5c4bf2485726@acm.org>
+Date:   Mon, 20 Apr 2020 06:49:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_04:2020-04-20,2020-04-20 signatures=0
+In-Reply-To: <20200420080409.111693-3-maco@android.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The goal of these helpers are to offer an interface for the
-hardware blocks controlling bus accesses rights.
+On 4/20/20 1:04 AM, Martijn Coenen wrote:
+>   static int
+> -loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+> +loop_set_from_status(struct loop_device *lo, const struct loop_info64 *info)
+>   {
 
-Bus firewall controllers are typically used to control if a
-hardware block can perform read or write operations on bus.
+An additional question: since this function sets the status of 'lo' 
+based on the information in 'info', would "loop_set_status" or 
+"loop_set_status_from_info" be a better name for this function?
 
-Smarter firewall controllers could be able to define accesses
-rights per hardware blocks to control where they can read
-or write.
+Thanks,
 
-Firewall controller configurations are provided in device node,
-parsed by the helpers and send to the driver to apply them.
-Each controller may need different number and type of inputs
-to configure the firewall so device-tree properties size have to
-be define by using "#firewall-cells".
-Firewall configurations properties have to be named "firewall-X"
-on device node.
-"firewall-names" keyword can also be used to give a name to
-a specific configuration.
-
-Example of device-tree:
-ctrl0: firewall@0 {
-	#firewall-cells = <2>;
-      };
-
-foo: foo@0 {
-	firewall-names = "default", "setting1";
-	firewall-0 = <&ctrl0 1 2>;
-	firewall-1 = <&ctrl0 3 4>;
-};
-
-Configurations could be applied with functions like
-firewall_set_config_by_index() or firewall_set_config_by_name().
-
-firewall_set_default_config() function will apply the
-configuration named "default" (if existing) or the configuration
-with index 0 (i.e. firewall-0).
-
-Drivers could register/unregister themselves be calling
-firewall_register/firewall_unregister functions.
-
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- drivers/bus/Kconfig          |   2 +
- drivers/bus/Makefile         |   2 +
- drivers/bus/stm32/Kconfig    |   3 +
- drivers/bus/stm32/Makefile   |   1 +
- drivers/bus/stm32/firewall.c | 266 +++++++++++++++++++++++++++++++++++++++++++
- drivers/bus/stm32/firewall.h |  75 ++++++++++++
- 6 files changed, 349 insertions(+)
- create mode 100644 drivers/bus/stm32/Kconfig
- create mode 100644 drivers/bus/stm32/Makefile
- create mode 100644 drivers/bus/stm32/firewall.c
- create mode 100644 drivers/bus/stm32/firewall.h
-
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 6d4e4497b59b..843b356322d9 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -203,4 +203,6 @@ config DA8XX_MSTPRI
- source "drivers/bus/fsl-mc/Kconfig"
- source "drivers/bus/mhi/Kconfig"
- 
-+source "drivers/bus/stm32/Kconfig"
-+
- endmenu
-diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-index 05f32cd694a4..5e0e34b10235 100644
---- a/drivers/bus/Makefile
-+++ b/drivers/bus/Makefile
-@@ -37,3 +37,5 @@ obj-$(CONFIG_DA8XX_MSTPRI)	+= da8xx-mstpri.o
- 
- # MHI
- obj-$(CONFIG_MHI_BUS)		+= mhi/
-+
-+obj-$(CONFIG_MACH_STM32MP157) 	+= stm32/
-\ No newline at end of file
-diff --git a/drivers/bus/stm32/Kconfig b/drivers/bus/stm32/Kconfig
-new file mode 100644
-index 000000000000..57221e833e2d
---- /dev/null
-+++ b/drivers/bus/stm32/Kconfig
-@@ -0,0 +1,3 @@
-+config FIREWALL_CONTROLLERS
-+	bool "Support of bus firewall controllers"
-+	depends on OF
-diff --git a/drivers/bus/stm32/Makefile b/drivers/bus/stm32/Makefile
-new file mode 100644
-index 000000000000..eb6b978d6450
---- /dev/null
-+++ b/drivers/bus/stm32/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_FIREWALL_CONTROLLERS) += firewall.o
-diff --git a/drivers/bus/stm32/firewall.c b/drivers/bus/stm32/firewall.c
-new file mode 100644
-index 000000000000..95f716cf926f
---- /dev/null
-+++ b/drivers/bus/stm32/firewall.c
-@@ -0,0 +1,266 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
-+ * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/of.h>
-+#include <linux/slab.h>
-+
-+#include "firewall.h"
-+
-+/* Mutex taken to protect firewall_list */
-+static DEFINE_MUTEX(firewall_list_mutex);
-+
-+/* Global list of firewall control devices */
-+static LIST_HEAD(firewall_list);
-+
-+struct firewall_ctrl {
-+	struct list_head list;
-+	struct firewall_ops *ops;
-+	struct device_node *np;
-+	void *priv;
-+};
-+
-+static struct firewall_ctrl *get_firewallctrl_from_node(struct device_node *np)
-+{
-+	struct firewall_ctrl *ctrl;
-+
-+	mutex_lock(&firewall_list_mutex);
-+
-+	list_for_each_entry(ctrl, &firewall_list, list) {
-+		if (ctrl->np == np) {
-+			mutex_unlock(&firewall_list_mutex);
-+			return ctrl;
-+		}
-+	}
-+
-+	mutex_unlock(&firewall_list_mutex);
-+
-+	return NULL;
-+}
-+
-+/**
-+ * firewall_dt_has_default
-+ *
-+ * Check if the device node provide firewall configuration
-+ *
-+ * @np: device node with possible firewall configuration
-+ *
-+ * Return: true is firewall-0 property exist in the device node
-+ */
-+static bool firewall_dt_has_default(struct device_node *np)
-+{
-+	struct property *prop;
-+	int size;
-+
-+	if (!np)
-+		return false;
-+
-+	prop = of_find_property(np, "firewall-0", &size);
-+
-+	return prop ? true : false;
-+}
-+
-+/**
-+ * firewall_set_config_by_index
-+ *
-+ * Set a firewall controller configuration based on given index.
-+ *
-+ * @np: device node with firewall configuration to apply.
-+ * @index: the index of the configuration in device node.
-+ *
-+ * Return: 0 if OK, -EPROBE_DEFER if waiting for firewall controller to be
-+ * registered or negative value on other errors.
-+ */
-+int firewall_set_config_by_index(struct device_node *np, int index)
-+{
-+	char *propname;
-+	int configs, i, err = 0;
-+
-+	if (!np)
-+		return 0;
-+
-+	propname = kasprintf(GFP_KERNEL, "firewall-%d", index);
-+	configs = of_count_phandle_with_args(np, propname, "#firewall-cells");
-+	if (configs < 0) {
-+		err = -EINVAL;
-+		goto error;
-+	}
-+
-+	for (i = 0; i < configs; i++) {
-+		struct firewall_ctrl *ctrl;
-+		struct of_phandle_args args;
-+
-+		err = of_parse_phandle_with_args(np, propname,
-+						 "#firewall-cells",
-+						 i, &args);
-+		if (err)
-+			goto error;
-+
-+		/* Test if the controller is (or will be) available */
-+		if (!of_device_is_available(args.np)) {
-+			of_node_put(args.np);
-+			continue;
-+		}
-+
-+		ctrl = get_firewallctrl_from_node(args.np);
-+		of_node_put(args.np);
-+
-+		/* Controller is not yet registered */
-+		if (!ctrl) {
-+			err = -EPROBE_DEFER;
-+			goto error;
-+		}
-+
-+		err = ctrl->ops->set_config(ctrl->priv, &args);
-+		if (err)
-+			goto error;
-+	}
-+
-+error:
-+	kfree(propname);
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(firewall_set_config_by_index);
-+
-+/**
-+ * firewall_set_config_by_name
-+ *
-+ * Set a firwall controller configuration based on given name.
-+ *
-+ * @np: device node with firewall configuration to apply.
-+ * @name: the name of the configuration in device node.
-+ *
-+ * Return: 0 if OK, -EPROBE_DEFER if waiting for firewall controller to be
-+ * registered or negative value on other errors.
-+ */
-+int firewall_set_config_by_name(struct device_node *np, char *name)
-+{
-+	const char *configname;
-+	int count, i;
-+
-+	count = of_property_count_strings(np, "firewall-names");
-+	for (i = 0; i < count; i++) {
-+		int err;
-+
-+		err = of_property_read_string_index(np,
-+						    "firewall-names",
-+						    i, &configname);
-+		if (err)
-+			return err;
-+
-+		if (strcmp(name, configname))
-+			continue;
-+
-+		return firewall_set_config_by_index(np, i);
-+	}
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(firewall_set_config_by_name);
-+
-+/**
-+ * firewall_set_default_config
-+ *
-+ * Set the default configuration for device.
-+ * First try to apply configuration named "default", if it fails
-+ * or doesn't exist, try to apply firewall-0 configuration.
-+ *
-+ * @np: device node with firewall configuration to apply.
-+ *
-+ * Return: 0 if OK, -EPROBE_DEFER if waiting for firewall controller to be
-+ * registered or negative value on other errors.
-+ */
-+int firewall_set_default_config(struct device_node *np)
-+{
-+	int ret;
-+
-+	/* Nothing to do if device node doesn't contain at least
-+	 * one configuration
-+	 */
-+	if (!firewall_dt_has_default(np))
-+		return 0;
-+
-+	ret = firewall_set_config_by_name(np, "default");
-+	if (!ret || (ret == -EPROBE_DEFER))
-+		return ret;
-+
-+	return firewall_set_config_by_index(np, 0);
-+}
-+EXPORT_SYMBOL_GPL(firewall_set_default_config);
-+
-+/**
-+ * firewall_register
-+ *
-+ * Register a firewall controller.
-+ *
-+ * @np: node implementing firewall controller.
-+ * @ops: firewall controller operations.
-+ * @priv: caller private data.
-+ *
-+ * Return: 0 if OK or negative value on error.
-+ */
-+int firewall_register(struct device_node *np,
-+		      struct firewall_ops *ops,
-+		      void *priv)
-+{
-+	struct firewall_ctrl *ctrl;
-+
-+	if (!np || !ops || !ops->set_config)
-+		return -EINVAL;
-+
-+	ctrl = kzalloc(sizeof(*ctrl), GFP_KERNEL);
-+	if (!ctrl)
-+		return -ENOMEM;
-+
-+	INIT_LIST_HEAD(&ctrl->list);
-+
-+	ctrl->np = np;
-+	ctrl->ops = ops;
-+	ctrl->priv = priv;
-+
-+	mutex_lock(&firewall_list_mutex);
-+	list_add_tail(&ctrl->list, &firewall_list);
-+	mutex_unlock(&firewall_list_mutex);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(firewall_register);
-+
-+/**
-+ * firewall_unregister
-+ *
-+ * Unregister a firewall controller.
-+ *
-+ * @np: node implementing firewall controller.
-+ */
-+void firewall_unregister(struct device_node *np)
-+{
-+	struct firewall_ctrl *ctrl;
-+
-+	ctrl = get_firewallctrl_from_node(np);
-+	if (!ctrl)
-+		return;
-+
-+	mutex_lock(&firewall_list_mutex);
-+	list_del(&ctrl->list);
-+	mutex_unlock(&firewall_list_mutex);
-+
-+	kfree(ctrl);
-+}
-+EXPORT_SYMBOL_GPL(firewall_unregister);
-+
-+static int __init firewall_init(void)
-+{
-+	pr_info("initialized bus firewall controller subsystem\n");
-+	return 0;
-+}
-+
-+/* Init early since drivers really need to configure firewall early */
-+core_initcall(firewall_init);
-diff --git a/drivers/bus/stm32/firewall.h b/drivers/bus/stm32/firewall.h
-new file mode 100644
-index 000000000000..d6fd720a229e
---- /dev/null
-+++ b/drivers/bus/stm32/firewall.h
-@@ -0,0 +1,75 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
-+ * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
-+ */
-+
-+#ifndef _FIREWALL_H_
-+#define _FIREWALL_H_
-+
-+#include <linux/device.h>
-+#include <linux/of.h>
-+
-+/**
-+ * struct firewall_ops
-+ *
-+ * Firewall controller operations structure to be filled by drivers.
-+ */
-+struct firewall_ops {
-+	/**
-+	 * @set_config:
-+	 *
-+	 * Driver callback to set a firewall configuration on a controller.
-+	 * Configuration arguments are provided in out_args parameter.
-+	 *
-+	 * Return: 0 on success, a negative error code on failure.
-+	 */
-+	int (*set_config)(void *priv, struct of_phandle_args *out_args);
-+};
-+
-+#ifdef CONFIG_FIREWALL_CONTROLLERS
-+
-+int firewall_set_config_by_index(struct device_node *np, int index);
-+int firewall_set_config_by_name(struct device_node *np, char *name);
-+int firewall_set_default_config(struct device_node *np);
-+
-+int firewall_register(struct device_node *np,
-+		      struct firewall_ops *ops,
-+		      void *priv);
-+
-+void firewall_unregister(struct device_node *np);
-+
-+#else
-+
-+static inline int firewall_set_config_by_index(struct device_node *np,
-+					       int index)
-+{
-+	return 0;
-+}
-+
-+static inline int firewall_set_config_by_name(struct device_node *np,
-+					      char *name)
-+{
-+	return 0;
-+}
-+
-+static inline int firewall_set_default_config(struct device_node *np)
-+{
-+	return 0;
-+}
-+
-+static inline int firewall_register(struct device_node *np,
-+				    struct firewall_ops *ops,
-+				    void *priv)
-+{
-+	return 0;
-+}
-+
-+static inline void firewall_unregister(struct device_node *np)
-+{
-+	/* Empty */
-+}
-+
-+#endif
-+
-+#endif /* _FIREWALL_H_ */
--- 
-2.15.0
-
+Bart.
