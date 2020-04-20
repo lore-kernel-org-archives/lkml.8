@@ -2,227 +2,195 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F030BC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E887CC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A6E2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:57:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gbcpG0/4"
+	by mail.kernel.org (Postfix) with ESMTP id CCF79206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726012AbgDTF5Z (ORCPT
+        id S1726023AbgDTF7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725825AbgDTF5Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:57:25 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E375CC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:57:24 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id h11so3544884plr.11
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:57:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=XOlYkW/8hIDyB8VhMd7iCQpxoA6ZLYFkm9KhScpGO1k=;
-        b=gbcpG0/49M1IDeB5++xI6+56FJK32zdttZi30hnGPyU25rr/bWEFdT94Z6yncL6veO
-         7WI8HxA5DDsukMkqiyitufF84unLtVQoDdRfy5dyPOxqMH90gLFav3vkSd5uSFodI2BG
-         fDiYFDsgyTG+WttIRKelT7RLgljHr3c0jPsjlaiMhFzb9er/ywYSbtVln8bO+flPb0xE
-         CHxoZ6XmbxK3Jn6JH4eXTQC9ASCvaqp9TSLFEt5Hh+04d1p5I9ipTo2ebJ+weQAeNSUd
-         QwbPlNxes1wukkhrlGs0O5YTrAuk3XplKr9RMgL+Hi3+rlXdIC3j/0fFc2wNK3dnM3sO
-         INLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=XOlYkW/8hIDyB8VhMd7iCQpxoA6ZLYFkm9KhScpGO1k=;
-        b=j81ilDDReNTFxMzstCHYVQTqUJjjNFUGacqAG9V3/0dKIcKNYL9wXjVDLle4lNc3fN
-         WENunE1WQ1vVtS+Xcg8XsPz81aM+4T0/ccXPE+BkeAqGCDAZ51QMO8tESGJTn+8WPkm1
-         ldDdc+v8dbsVpCuMrZ4nvuF1uhuQw1eY7zzbi4FaDLrlyDxttLGtiiA37B+d7U6akd4x
-         hJEwdihpV72Aa3USPkDytFtThfYnlRzghrS5T/RknwYpjZQ/ey6dFyf48nX5gMeTlzC2
-         xPRWkCyq98aqEYu18VPYlTlJPjbD9ubfzcViDOf01IcEIRYly+uw0btZJiJ452pS6VYd
-         /boA==
-X-Gm-Message-State: AGi0PuZRtMfziNVFcDwzGVpwS0oG2tnLdGw+qDK7jLlj/y540EKQTCaX
-        +mxPJGGpfa/MtOSbkXXiixUCuA==
-X-Google-Smtp-Source: APiQypJJsaRN2kwVAWfx+urkiVcYHFeQEbTr+tg1MzwPgOuM7o6/+A+5Vc3B1FZYuBizG6nS4DfUrg==
-X-Received: by 2002:a17:902:8ec7:: with SMTP id x7mr15277533plo.3.1587362244158;
-        Sun, 19 Apr 2020 22:57:24 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 202sm56836pgf.41.2020.04.19.22.57.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 22:57:23 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 22:57:46 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Cl?ment Leger <cleger@kalrayinc.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-stm32 <linux-stm32@st-md-mailman.stormreply.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] remoteproc: add rproc_coredump_set_elf_info
-Message-ID: <20200420055746.GJ1516868@builder.lan>
-References: <20200410102433.2672-1-cleger@kalray.eu>
- <20200410102433.2672-2-cleger@kalray.eu>
- <20200417193837.GB6797@xps15>
- <1280711269.16158926.1587152627279.JavaMail.zimbra@kalray.eu>
+        Mon, 20 Apr 2020 01:59:46 -0400
+Received: from mga09.intel.com ([134.134.136.24]:45725 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbgDTF7p (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 01:59:45 -0400
+IronPort-SDR: fMmPfR19ScC9zSb9mnKkcRZU7FG4G9qKHIYgMjiZKqJKT2uxL/f3UKK8BIWa8ncMqCfgzYlZ51
+ ctMFhXNrUfSQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 22:59:45 -0700
+IronPort-SDR: uT1v7V7Rcx6uAaoiD6cmuffkUv7dWjDLTPGLYvAHBhO2Z2XMEm14Slcprh7FpcUsf1wgMl9Vsd
+ GL/o71cHVSTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
+   d="scan'208";a="364904229"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Apr 2020 22:59:42 -0700
+Subject: Re: [PATCH] perf stat: Improve runtime stat for interval mode
+To:     kajoljain <kjain@linux.ibm.com>, acme@kernel.org, jolsa@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200417005154.9024-1-yao.jin@linux.intel.com>
+ <4950a109-ff2f-7199-c0f7-5b39ddc5afbb@linux.ibm.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <ad03237f-8cd5-260c-3926-08214ac1de92@linux.intel.com>
+Date:   Mon, 20 Apr 2020 13:59:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1280711269.16158926.1587152627279.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <4950a109-ff2f-7199-c0f7-5b39ddc5afbb@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17 Apr 12:43 PDT 2020, Cl?ment Leger wrote:
 
-> ----- On 17 Apr, 2020, at 21:38, Mathieu Poirier mathieu.poirier@linaro.org wrote:
-> 
-> > On Fri, Apr 10, 2020 at 12:24:32PM +0200, Clement Leger wrote:
-> >> This function allows drivers to correctly setup the coredump output
-> >> elf information.
-> >> 
-> >> Signed-off-by: Clement Leger <cleger@kalray.eu>
-> >> ---
-> >>  drivers/remoteproc/remoteproc_core.c       | 32 ++++++++++++++++++++--
-> >>  drivers/remoteproc/remoteproc_elf_loader.c |  3 --
-> >>  include/linux/remoteproc.h                 |  2 ++
-> >>  3 files changed, 32 insertions(+), 5 deletions(-)
-> >> 
-> >> diff --git a/drivers/remoteproc/remoteproc_core.c
-> >> b/drivers/remoteproc/remoteproc_core.c
-> >> index a9ac1d01e09b..382443bab583 100644
-> >> --- a/drivers/remoteproc/remoteproc_core.c
-> >> +++ b/drivers/remoteproc/remoteproc_core.c
-> >> @@ -1562,6 +1562,28 @@ int rproc_coredump_add_custom_segment(struct rproc
-> >> *rproc,
-> >>  }
-> >>  EXPORT_SYMBOL(rproc_coredump_add_custom_segment);
-> >>  
-> >> +/**
-> >> + * rproc_coredump_set_elf_info() - set coredump elf information
-> >> + * @rproc:	handle of a remote processor
-> >> + * @class:	elf class for coredump elf file
-> >> + * @size:	elf machine for coredump elf file
-> 
-> I just noticed that there is a typo, this should be "machine" and not "size".
-> Let me know if you'll fix it when applying.
-> 
 
-Thanks for noticing, I fixed this up and applied the two patches.
-
-Thanks,
-Bjorn
-
-> Thanks,
+On 4/20/2020 1:48 PM, kajoljain wrote:
 > 
-> Clément
 > 
-> >> + *
-> >> + * Set elf information which will be used for coredump elf file.
-> >> + *
-> >> + * Return: 0 on success, negative errno on error.
-> >> + */
-> >> +int rproc_coredump_set_elf_info(struct rproc *rproc, u8 class, u16 machine)
-> >> +{
-> >> +	if (class != ELFCLASS64 && class != ELFCLASS32)
-> >> +		return -EINVAL;
-> >> +
-> >> +	rproc->elf_class = class;
-> >> +	rproc->elf_machine = machine;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +EXPORT_SYMBOL(rproc_coredump_set_elf_info);
-> >> +
-> >>  /**
-> >>   * rproc_coredump() - perform coredump
-> >>   * @rproc:	rproc handle
-> >> @@ -1584,6 +1606,11 @@ static void rproc_coredump(struct rproc *rproc)
-> >>  	if (list_empty(&rproc->dump_segments))
-> >>  		return;
-> >>  
-> >> +	if (class == ELFCLASSNONE) {
-> >> +		dev_err(&rproc->dev, "Elf class is not set\n");
-> >> +		return;
-> >> +	}
-> >> +
-> >>  	data_size = elf_size_of_hdr(class);
-> >>  	list_for_each_entry(segment, &rproc->dump_segments, node) {
-> >>  		data_size += elf_size_of_phdr(class) + segment->size;
-> >> @@ -1602,7 +1629,7 @@ static void rproc_coredump(struct rproc *rproc)
-> >>  	elf_hdr_init_ident(ehdr, class);
-> >>  
-> >>  	elf_hdr_set_e_type(class, ehdr, ET_CORE);
-> >> -	elf_hdr_set_e_machine(class, ehdr, EM_NONE);
-> >> +	elf_hdr_set_e_machine(class, ehdr, rproc->elf_machine);
-> >>  	elf_hdr_set_e_version(class, ehdr, EV_CURRENT);
-> >>  	elf_hdr_set_e_entry(class, ehdr, rproc->bootaddr);
-> >>  	elf_hdr_set_e_phoff(class, ehdr, elf_size_of_hdr(class));
-> >> @@ -2043,7 +2070,8 @@ struct rproc *rproc_alloc(struct device *dev, const char
-> >> *name,
-> >>  	rproc->name = name;
-> >>  	rproc->priv = &rproc[1];
-> >>  	rproc->auto_boot = true;
-> >> -	rproc->elf_class = ELFCLASS32;
-> >> +	rproc->elf_class = ELFCLASSNONE;
-> >> +	rproc->elf_machine = EM_NONE;
-> >>  
-> >>  	device_initialize(&rproc->dev);
-> >>  	rproc->dev.parent = dev;
-> >> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c
-> >> b/drivers/remoteproc/remoteproc_elf_loader.c
-> >> index 16e2c496fd45..4869fb7d8fe4 100644
-> >> --- a/drivers/remoteproc/remoteproc_elf_loader.c
-> >> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
-> >> @@ -248,9 +248,6 @@ int rproc_elf_load_segments(struct rproc *rproc, const
-> >> struct firmware *fw)
-> >>  			memset(ptr + filesz, 0, memsz - filesz);
-> >>  	}
-> >>  
-> >> -	if (ret == 0)
-> >> -		rproc->elf_class = class;
-> >> -
-> >>  	return ret;
-> >>  }
-> >>  EXPORT_SYMBOL(rproc_elf_load_segments);
-> >> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> >> index ed127b2d35ca..d67eb5a40476 100644
-> >> --- a/include/linux/remoteproc.h
-> >> +++ b/include/linux/remoteproc.h
-> >> @@ -515,6 +515,7 @@ struct rproc {
-> >>  	struct list_head dump_segments;
-> >>  	int nb_vdev;
-> >>  	u8 elf_class;
-> >> +	u16 elf_machine;
-> >>  };
-> > 
-> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > 
-> >>  
-> >>  /**
-> >> @@ -619,6 +620,7 @@ int rproc_coredump_add_custom_segment(struct rproc *rproc,
-> >>  						     struct rproc_dump_segment *segment,
-> >>  						     void *dest),
-> >>  				      void *priv);
-> >> +int rproc_coredump_set_elf_info(struct rproc *rproc, u8 class, u16 machine);
-> >>  
-> >>  static inline struct rproc_vdev *vdev_to_rvdev(struct virtio_device *vdev)
-> >>  {
-> >> --
-> >> 2.17.1
+> On 4/17/20 6:21 AM, Jin Yao wrote:
+>> For interval mode, the metric is printed after # if it exists. But
+>> it's not calculated by the counts generated in this interval. See
+>> following examples,
+>>
+>>   root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
+>>   #           time             counts unit events
+>>        1.000422803            764,809      inst_retired.any          #      2.9 CPI
+>>        1.000422803          2,234,932      cycles
+>>        2.001464585          1,960,061      inst_retired.any          #      1.6 CPI
+>>        2.001464585          4,022,591      cycles
+>>
+>> The second CPI should not be 1.6 (4,022,591/1,960,061 is 2.1)
+>>
+>>   root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+>>   #           time             counts unit events
+>>        1.000429493          2,869,311      cycles
+>>        1.000429493            816,875      instructions              #    0.28  insn per cycle
+>>        2.001516426          9,260,973      cycles
+>>        2.001516426          5,250,634      instructions              #    0.87  insn per cycle
+>>
+>> The second 'insn per cycle' should not be 0.87 (5,250,634/9,260,973 is 0.57).
+>>
+>> The current code uses a global variable rt_stat for tracking and
+>> updating the std dev of runtime stat. Unlike the counts, rt_stat is
+>> not reset for interval. While the counts are reset for interval.
+>>
+>> perf_stat_process_counter()
+>> {
+>> 	if (config->interval)
+>> 		init_stats(ps->res_stats);
+>> }
+>>
+>> So for interval, the rt_stat should be reset either.
+>>
+>> This patch resets rt_stat before read_counters, so the runtime
+>> stat is only calculated by the counts generated in this interval.
+>>
+>> With this patch,
+>>
+>>   root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
+>>   #           time             counts unit events
+>>        1.000420924          2,408,818      inst_retired.any          #      2.1 CPI
+>>        1.000420924          5,010,111      cycles
+>>        2.001448579          2,798,407      inst_retired.any          #      1.6 CPI
+>>        2.001448579          4,599,861      cycles
+>>
+>>   root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+>>   #           time             counts unit events
+>>        1.000428555          2,769,714      cycles
+>>        1.000428555            774,462      instructions              #    0.28  insn per cycle
+>>        2.001471562          3,595,904      cycles
+>>        2.001471562          1,243,703      instructions              #    0.35  insn per cycle
+>>
+> 
+> Hi Jin,
+> 	Thanks for the patch. Was working on similar issue raised by Joakim Zhang.
+> Here's link to my findings: https://lkml.org/lkml/2020/3/24/158
+> 
+> This patch solves the issue.
+> 
+> Acked-By: Kajol Jain <kjain@linux.ibm.com> and Tested-By: Kajol Jain <kjain@linux.ibm.com>
+>   
+
+Thanks for testing this patch. :)
+
+Thanks
+Jin Yao
+
+>> Now the second 'insn per cycle' and CPI are calculated by the counts
+>> generated in this interval.
+>>
+>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>> ---
+>>   tools/perf/Documentation/perf-stat.txt | 2 ++
+>>   tools/perf/builtin-stat.c              | 1 +
+>>   tools/perf/util/stat-shadow.c          | 5 +++++
+>>   tools/perf/util/stat.h                 | 1 +
+>>   4 files changed, 9 insertions(+)
+>>
+>> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+>> index 4d56586b2fb9..3fb5028aef08 100644
+>> --- a/tools/perf/Documentation/perf-stat.txt
+>> +++ b/tools/perf/Documentation/perf-stat.txt
+>> @@ -176,6 +176,8 @@ Print count deltas every N milliseconds (minimum: 1ms)
+>>   The overhead percentage could be high in some cases, for instance with small, sub 100ms intervals.  Use with caution.
+>>   	example: 'perf stat -I 1000 -e cycles -a sleep 5'
+>>   
+>> +If the metric exists, it is calculated by the counts generated in this interval and the metric is printed after #.
+>> +
+>>   --interval-count times::
+>>   Print count deltas for fixed number of times.
+>>   This option should be used together with "-I" option.
+>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>> index ec053dc1e35c..d5c326ff46d0 100644
+>> --- a/tools/perf/builtin-stat.c
+>> +++ b/tools/perf/builtin-stat.c
+>> @@ -359,6 +359,7 @@ static void process_interval(void)
+>>   	clock_gettime(CLOCK_MONOTONIC, &ts);
+>>   	diff_timespec(&rs, &ts, &ref_time);
+>>   
+>> +	perf_stat__reset_rt_stat();
+>>   	read_counters(&rs);
+>>   
+>>   	if (STAT_RECORD) {
+>> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+>> index 1ad5c5be7e97..c8f5ca6c8749 100644
+>> --- a/tools/perf/util/stat-shadow.c
+>> +++ b/tools/perf/util/stat-shadow.c
+>> @@ -186,6 +186,11 @@ void perf_stat__reset_shadow_stats(void)
+>>   	memset(&walltime_nsecs_stats, 0, sizeof(walltime_nsecs_stats));
+>>   }
+>>   
+>> +void perf_stat__reset_rt_stat(void)
+>> +{
+>> +	reset_stat(&rt_stat);
+>> +}
+>> +
+>>   void perf_stat__reset_shadow_per_stat(struct runtime_stat *st)
+>>   {
+>>   	reset_stat(st);
+>> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+>> index b4fdfaa7f2c0..2975494166dd 100644
+>> --- a/tools/perf/util/stat.h
+>> +++ b/tools/perf/util/stat.h
+>> @@ -176,6 +176,7 @@ void runtime_stat__init(struct runtime_stat *st);
+>>   void runtime_stat__exit(struct runtime_stat *st);
+>>   void perf_stat__init_shadow_stats(void);
+>>   void perf_stat__reset_shadow_stats(void);
+>> +void perf_stat__reset_rt_stat(void);
+>>   void perf_stat__reset_shadow_per_stat(struct runtime_stat *st);
+>>   void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
+>>   				    int cpu, struct runtime_stat *st);
+>>
