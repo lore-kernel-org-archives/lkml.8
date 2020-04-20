@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9D7C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F77FC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7687206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B93F206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387382;
-	bh=3U4MOA2zSjanbkoh2i0PBmMVJ0JOxoR9ZqVWiBu1pGM=;
+	s=default; t=1587387391;
+	bh=OzXZ3vFDQf5L7YQhu4WBLDY9ohBbh1tyFL9MEjkOccU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MrGFcDqde0Ay54rkLshcDQmQmKUn2Wi2nColXpxzmzXezqW+CF9HgpwM2RC9RlG7d
-	 nO1iBB6paCHpN9uYKjm6uV1haZj2WJSpHgHLYba0CLek00uHX6GNMnx7zK07Cd+Ptt
-	 Ggerjt3psZYG9xMvbHFduzi9lxzbHFLW51lJrvhc=
+	b=SEIRDjdc/3YofFRVoWUCqEAlz1oh7u3UeCe5b7mHdOtmazSYl8rqTJmetbmhg4KzP
+	 pIOFlzZb4sM0tpZYGIgPOFl0K8bx1QIU9NqexTxn5nz47ZuVeYrZOre7JyWgmhXcrX
+	 GlpYWFooM544yOq1A/6frairUsuwhILtqhD7Dfsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgDTMpL (ORCPT
+        id S1729734AbgDTM43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:45:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39422 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:56:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbgDTMpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:09 -0400
+        id S1728652AbgDTMpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 875E120747;
-        Mon, 20 Apr 2020 12:45:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A456720736;
+        Mon, 20 Apr 2020 12:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386709;
-        bh=3U4MOA2zSjanbkoh2i0PBmMVJ0JOxoR9ZqVWiBu1pGM=;
+        s=default; t=1587386704;
+        bh=OzXZ3vFDQf5L7YQhu4WBLDY9ohBbh1tyFL9MEjkOccU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g2y2J8XF4e9oJjMtKXGfcQqvmdY34H4aIAufKZ+48guUrCGpJNuyzelnTy72mjCuV
-         +p0BYm6luH1c25+xEqlQr5BtZ1CWeENisiB86pFk/+JMCp2er5qvxOHHrSDpxlZMIv
-         H70bMEjYCM4BEfU+zYYi/Kopuszo90PF6nHYIz8U=
+        b=jb2VSlITQzDOMCi+ZXN+BfCg2A0KUoeDZNZuI6R8rvdvll1/kcrVC7DhkcxxA9ib4
+         nt5iy1LCbHbt7i0QACu8glOxcNJCveJPwH0VyaCffGCsQb8l25v8Xn8u7jw+eJWKiw
+         QqIYMY07np5Gz/7202+RiKFoNP4t7vaCSLz7UM44=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>
-Subject: [PATCH 5.6 67/71] proc, time/namespace: Show clock symbolic names in /proc/pid/timens_offsets
-Date:   Mon, 20 Apr 2020 14:39:21 +0200
-Message-Id: <20200420121522.296713087@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.6 65/71] ext4: do not zeroout extents beyond i_disksize
+Date:   Mon, 20 Apr 2020 14:39:19 +0200
+Message-Id: <20200420121522.051177233@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -63,102 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 94d440d618467806009c8edc70b094d64e12ee5a upstream.
+commit 801674f34ecfed033b062a0f217506b93c8d5e8a upstream.
 
-Michael Kerrisk suggested to replace numeric clock IDs with symbolic names.
+We do not want to create initialized extents beyond end of file because
+for e2fsck it is impossible to distinguish them from a case of corrupted
+file size / extent tree and so it complains like:
 
-Now the content of these files looks like this:
-$ cat /proc/774/timens_offsets
-monotonic      864000         0
-boottime      1728000         0
+Inode 12, i_size is 147456, should be 163840.  Fix? no
 
-For setting offsets, both representations of clocks (numeric and symbolic)
-can be used.
+Code in ext4_ext_convert_to_initialized() and
+ext4_split_convert_extents() try to make sure it does not create
+initialized extents beyond inode size however they check against
+inode->i_size which is wrong. They should instead check against
+EXT4_I(inode)->i_disksize which is the current inode size on disk.
+That's what e2fsck is going to see in case of crash before all dirty
+data is written. This bug manifests as generic/456 test failure (with
+recent enough fstests where fsx got fixed to properly pass
+FALLOC_KEEP_SIZE_FL flags to the kernel) when run with dioread_lock
+mount option.
 
-As for compatibility, it is acceptable to change things as long as
-userspace doesn't care. The format of timens_offsets files is very new and
-there are no userspace tools yet which rely on this format.
-
-But three projects crun, util-linux and criu rely on the interface of
-setting time offsets and this is why it's required to continue supporting
-the numeric clock IDs on write.
-
-Fixes: 04a8682a71be ("fs/proc: Introduce /proc/pid/timens_offsets")
-Suggested-by: Michael Kerrisk <mtk.manpages@gmail.com>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Michael Kerrisk <mtk.manpages@gmail.com>
-Acked-by: Michael Kerrisk <mtk.manpages@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200411154031.642557-1-avagin@gmail.com
+CC: stable@vger.kernel.org
+Fixes: 21ca087a3891 ("ext4: Do not zero out uninitialized extents beyond i_size")
+Reviewed-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/20200331105016.8674-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/proc/base.c          |   14 +++++++++++++-
- kernel/time/namespace.c |   15 ++++++++++++++-
- 2 files changed, 27 insertions(+), 2 deletions(-)
+ fs/ext4/extents.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -1573,6 +1573,7 @@ static ssize_t timens_offsets_write(stru
- 	noffsets = 0;
- 	for (pos = kbuf; pos; pos = next_line) {
- 		struct proc_timens_offset *off = &offsets[noffsets];
-+		char clock[10];
- 		int err;
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -3532,8 +3532,8 @@ static int ext4_ext_convert_to_initializ
+ 		(unsigned long long)map->m_lblk, map_len);
  
- 		/* Find the end of line and ensure we don't look past it */
-@@ -1584,10 +1585,21 @@ static ssize_t timens_offsets_write(stru
- 				next_line = NULL;
- 		}
+ 	sbi = EXT4_SB(inode->i_sb);
+-	eof_block = (inode->i_size + inode->i_sb->s_blocksize - 1) >>
+-		inode->i_sb->s_blocksize_bits;
++	eof_block = (EXT4_I(inode)->i_disksize + inode->i_sb->s_blocksize - 1)
++			>> inode->i_sb->s_blocksize_bits;
+ 	if (eof_block < map->m_lblk + map_len)
+ 		eof_block = map->m_lblk + map_len;
  
--		err = sscanf(pos, "%u %lld %lu", &off->clockid,
-+		err = sscanf(pos, "%9s %lld %lu", clock,
- 				&off->val.tv_sec, &off->val.tv_nsec);
- 		if (err != 3 || off->val.tv_nsec >= NSEC_PER_SEC)
- 			goto out;
-+
-+		clock[sizeof(clock) - 1] = 0;
-+		if (strcmp(clock, "monotonic") == 0 ||
-+		    strcmp(clock, __stringify(CLOCK_MONOTONIC)) == 0)
-+			off->clockid = CLOCK_MONOTONIC;
-+		else if (strcmp(clock, "boottime") == 0 ||
-+			 strcmp(clock, __stringify(CLOCK_BOOTTIME)) == 0)
-+			off->clockid = CLOCK_BOOTTIME;
-+		else
-+			goto out;
-+
- 		noffsets++;
- 		if (noffsets == ARRAY_SIZE(offsets)) {
- 			if (next_line)
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -337,7 +337,20 @@ static struct user_namespace *timens_own
+@@ -3785,8 +3785,8 @@ static int ext4_split_convert_extents(ha
+ 		  __func__, inode->i_ino,
+ 		  (unsigned long long)map->m_lblk, map->m_len);
  
- static void show_offset(struct seq_file *m, int clockid, struct timespec64 *ts)
- {
--	seq_printf(m, "%d %lld %ld\n", clockid, ts->tv_sec, ts->tv_nsec);
-+	char *clock;
-+
-+	switch (clockid) {
-+	case CLOCK_BOOTTIME:
-+		clock = "boottime";
-+		break;
-+	case CLOCK_MONOTONIC:
-+		clock = "monotonic";
-+		break;
-+	default:
-+		clock = "unknown";
-+		break;
-+	}
-+	seq_printf(m, "%-10s %10lld %9ld\n", clock, ts->tv_sec, ts->tv_nsec);
- }
- 
- void proc_timens_show_offsets(struct task_struct *p, struct seq_file *m)
+-	eof_block = (inode->i_size + inode->i_sb->s_blocksize - 1) >>
+-		inode->i_sb->s_blocksize_bits;
++	eof_block = (EXT4_I(inode)->i_disksize + inode->i_sb->s_blocksize - 1)
++			>> inode->i_sb->s_blocksize_bits;
+ 	if (eof_block < map->m_lblk + map->m_len)
+ 		eof_block = map->m_lblk + map->m_len;
+ 	/*
 
 
