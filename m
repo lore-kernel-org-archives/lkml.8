@@ -2,147 +2,118 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3ABC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32557C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0EB2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056E72074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="aCC3ants"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jkUCF9b3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgDTTOe (ORCPT
+        id S1728118AbgDTTPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:14:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
+        Mon, 20 Apr 2020 15:15:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725896AbgDTTOd (ORCPT
+        by vger.kernel.org with ESMTP id S1728072AbgDTTPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:14:33 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B18C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:14:33 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id n20so3311178qtp.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:14:33 -0700 (PDT)
+        Mon, 20 Apr 2020 15:15:22 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F07C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:15:21 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t11so5558015pgg.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:15:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8HGDegx+kGpjwn1/GckrWYW28OTALFvmx7Qs3hk7rBM=;
-        b=aCC3antsZfqvzj5CdafkTpV3OjDe2nl4TxRPqk3Bi5acoWuTSpuEVT/wb28db7wFR0
-         3axoAkSyoADptYw5L20w1h5mCVUFDl03Xb4o5xQX1LVmgo6hHnoXhBKf0/YKtlA/cwFI
-         DiB92+KQ2SlbLiTN5KAAi1qlgGzLcQozCjAkQ=
+         :content-disposition:in-reply-to:user-agent;
+        bh=s4hrruIEfeHbnCer3L7xymo3BPcqZk1wOgCil6L4gXc=;
+        b=jkUCF9b3xkKwajGHRP14VA5YPuTR0uv9ThYOOWUiuSrrcX8fguG/qXV/ZrUEnsXGQ0
+         ve3D9RcEwHxcP8Rds85FUEIPAZPk/ZJ4MA3JL1eWCckkp9eUNXyoHxJAzOCLC0l7hJU4
+         tjDvPbpkU78tKvlJsgegIpmgqf0kxXn83VDBA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8HGDegx+kGpjwn1/GckrWYW28OTALFvmx7Qs3hk7rBM=;
-        b=YcrLYUr0KNFI1laS9+Zrx2J1t+oYkrgLTTSpviAIPpVAyDMNJ5mGfB5s2m7LHyA7Xr
-         3noGY2JsWhlYLE3qt6CjrHtBDn9x+eohawJMAnDx7VoEMf6/lQw2maw3QLhihE0dFf9D
-         JhsmC4LN6shZL8p6gBJhWD3o6nbJG1Tei570kmPfI8BpQIp5XTVRQ2nrbyXjYW0KxbNv
-         gDgjOQt5BiibRJl581SA9VMwS36AC049I+G4SW5v0TySk4nrtuHd0SyUfPAarl2uCD/J
-         f2JBg/+ANTOvvJYr++1lCO7m1fMslI/GQ2caTR38juqKnfVG1p190wFI9wd4m7isMvI7
-         xxFA==
-X-Gm-Message-State: AGi0Pua32xBDcac/iq9eKCknJt4UxTACeAanEv7yBrXGj4JbusK01wD0
-        H0i0mpIfHPygsxS7OinO7wO33A==
-X-Google-Smtp-Source: APiQypLQkyKjCZ7v1YIJf7h+snt3BgQV1BgXq7i4tB5vQp0t9N7MDcKchLWsEB2VPPRXPt4WnYC9uw==
-X-Received: by 2002:aed:2b64:: with SMTP id p91mr17061597qtd.202.1587410072709;
-        Mon, 20 Apr 2020 12:14:32 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s15sm158958qtc.31.2020.04.20.12.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 12:14:32 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 15:14:31 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Parth Shah <parth@linux.ibm.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Glexiner <tglx@linutronix.de>,
-        steven.sistare@oracle.com, Dhaval Giani <dhaval.giani@oracle.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-Message-ID: <20200420191431.GB67569@google.com>
-References: <20190905083127.GA2332@hirez.programming.kicks-ass.net>
- <87r24v2i14.fsf@arm.com>
- <20190905104616.GD2332@hirez.programming.kicks-ass.net>
- <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
- <20190905113002.GK2349@hirez.programming.kicks-ass.net>
- <20190905114725.ehi5ea6qg3rychlz@e107158-lin.cambridge.arm.com>
- <20200416000235.GA211099@google.com>
- <730928f8-b48b-ea3a-149a-18932eb18c90@arm.com>
- <CAEXW_YTnS7Gz38Rw55M8q5NnJZJntOqxRHPC_AZ0uaQo+G4RqA@mail.gmail.com>
- <7d4637c8-da8c-463d-30c6-a55c0a173316@linux.ibm.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s4hrruIEfeHbnCer3L7xymo3BPcqZk1wOgCil6L4gXc=;
+        b=Etoi7EW+6ckBCK7OAc+0/LV8903pIdyDr1Td7jm9grESqhGrBqcwTJkZ1A5BrLCBN1
+         9jaUkccKl/2I7qIBC7WhCKcczGfRWvLDuACmm8T8yTfu5NiUWdq8rjW2gKuVsoQuHzIM
+         HKb0EUna/VJAfQe8iWnWteJ3ssbXaEK/8UUqgVUv8wr9bi8IyS5D+dhYlbJIOQVSbUl6
+         aLT2qc3JDhdSi5hcVhLkrpEvd/OnHglUQKThIQFMKm5bYFE0hnv1UyFkjLYtAKnWHXaj
+         5c+19iSwj8YP00G+xozXvIR9umnjCASEfhWuf2Srwzasn7Y0yFksfTfoEKvi6XPfF2UB
+         IYzQ==
+X-Gm-Message-State: AGi0PubQhfD7dHyhujqq9OZAwqpZbu4BQ+Y+tZxW98okseoTUkaFGgAA
+        Thoy35erp8+aeLQADlLHL3gpXw==
+X-Google-Smtp-Source: APiQypJCgAQPRawkGIDVIK1DeGjLm/plSOv3ZpQojggeG3wLIJkbLMEB6AvcO7FMJg7kHrvwF6uHlg==
+X-Received: by 2002:a63:d90c:: with SMTP id r12mr17745526pgg.158.1587410121447;
+        Mon, 20 Apr 2020 12:15:21 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id l15sm96958pgk.59.2020.04.20.12.15.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 12:15:20 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 12:15:18 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Yong Mao <yong.mao@mediatek.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH 1/3] mmc: core: need do mmc_power_cycle in
+ mmc_sdio_resend_if_cond
+Message-ID: <20200420191518.GG199755@google.com>
+References: <1586835611-13857-1-git-send-email-yong.mao@mediatek.com>
+ <1586835611-13857-2-git-send-email-yong.mao@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7d4637c8-da8c-463d-30c6-a55c0a173316@linux.ibm.com>
+In-Reply-To: <1586835611-13857-2-git-send-email-yong.mao@mediatek.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 04:56:55PM +0530, Parth Shah wrote:
+Hi,
 
-> >>
-> >> There are two presentations/discussions planned:
-> >>
-> >> "Introducing Latency Nice for Scheduler Hints and Optimizing Scheduler
-> >> Task Wakeup" and "The latency nice use case for Energy-Aware-Scheduling
-> >> (EAS) in Android Common Kernel (ACK)"
-> >>
-> >> We'll probably merge those two into one presentation/discussion.
-> >>
-> >> So far we have Parth's per-task implementation
-> >>
-> >> https://lore.kernel.org/lkml/20200228090755.22829-1-parth@linux.ibm.com
-> > 
-> > Cool, I see it has some Reviewed-by tags so that's a good sign. Will
-> > look more into that.
-> > 
-> >> What's missing is the per-taskgroup implementation, at least from the
-> >> standpoint of ACK.
-> >>
-> >> The (mainline) EAS use-case for latency nice is already in ACK
-> >> (android-5.4):
-> >>
-> >> https://android.googlesource.com/kernel/common/+/760b82c9b88d2c8125abfc5f732cc3cd460b2a54
-> > 
-> > Yes, I was aware of this. But if we use task groups, then the
-> > transition from schedtune -> uclamp means now the tasks that use
-> > uclamp would also be subjected to cpu.shares. That's why we were
-> > looking into the per-task interface and glad there's some work on this
-> > already done.
-> > 
+On Tue, Apr 14, 2020 at 11:40:09AM +0800, Yong Mao wrote:
+> From: yong mao <yong.mao@mediatek.com>
 > 
-> Yes, that series of latency_nice seems to be in good shape to be used for
-> any usecases. Hopefully, OSPM will lead to its upstreaming sooner :-)
+> When mmc_sdio_resned_if_cond is invoked, it indicates the SDIO
+> device is not in the right state. In this condition, the previous
+> implementation of mmc_sdio_resend_if_cond can't make sure SDIO
+> device be back to idle state. mmc_power_cycle can reset the SDIO
+> device by HW and also make sure SDIO device enter to idle state
+> correctly.
+> 
+> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+> ---
+>  drivers/mmc/core/sdio.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
+> index ebb387a..ada0a80 100644
+> --- a/drivers/mmc/core/sdio.c
+> +++ b/drivers/mmc/core/sdio.c
+> @@ -546,6 +546,7 @@ static int mmc_sdio_init_uhs_card(struct mmc_card *card)
+>  static void mmc_sdio_resend_if_cond(struct mmc_host *host,
+>  				    struct mmc_card *card)
+>  {
+> +	mmc_power_cycle(host, host->card->ocr);
 
-Cool :)
+My MMC/SDIO background is limited, but it seems this isn't needed for the
+vast majority of SDIO devices, otherwise it probably would have been added
+earlier. I wonder if it would make sense to make the power cycle
+conditional through a quirk, to limit it to the devices that need it.
 
-> But at the end, we aim to have both the per-task and cgroup based interface
-> to mark the latency_nice value of a task.
-
-Ok. We'd likely use the per-task interface unless we decide to assign
-cpu.shares for the groups as well.
-
-> Till, then I'm finding some generic use-cases to show benefits of such task
-> attribute to increase community interest.
-
-Ok. Feel free to add ChromeOS as a usecase as well.
-
-thanks,
-
- - Joel
-
+>  	sdio_reset(host);
+>  	mmc_go_idle(host);
+>  	mmc_send_if_cond(host, host->ocr_avail);
+> -- 
+> 1.9.1
