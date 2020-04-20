@@ -2,96 +2,83 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72403C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E36C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41DCF2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13922078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="hjvbl8XY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qzb6D4Us"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgDTI1F (ORCPT
+        id S1726061AbgDTI1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:27:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49852 "EHLO
+        Mon, 20 Apr 2020 04:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgDTI1E (ORCPT
+        with ESMTP id S1725773AbgDTI1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:27:04 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AFAC061A10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:27:03 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t14so10938502wrw.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:27:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wkEZmDKPCZqLa+I7uPirPFiS5mbiwVYc3uRVerQjM/Y=;
-        b=hjvbl8XYgTxLME9BGU7smyZ7khRszvrb6dX3Ryb89UbCXhMncwAvXaAUVsqX5IBsMG
-         /XJ0Q4xpByADyUsRWUNrfs4d22vUO7D4c1mB4PtBkfG8MaCEpHexd4HOCL09KLtpvJdP
-         uDZLtla9ZjOuYnFEI3UMt/6VA3WIYPt35+aHRzPFMALONTpE7ie0PMNYxKk/i7r5PDWp
-         pj5TOVKkZTtrqGn7b9lJ3Q/8OHt0uwP+NKg66cvp2y1S1/CU/aP1cKPys5cXS2sJyjvA
-         CcuNK0d9B6U8Co9gNV+vJExJHn7Yep2Yj62w56BH2cYZWnQUYZckCJZhVnfs+4W4rjtV
-         nA0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wkEZmDKPCZqLa+I7uPirPFiS5mbiwVYc3uRVerQjM/Y=;
-        b=Ub8umpyzPay3Oesyw4UEgd2n39x95RCK1e/k9DD7SP0Fmk/5+lDwrM0g0h1zrzLe0C
-         4d/GACQ9aSpOaU8dVxVMCNzatDlRfefiN7Vqfysx8CL6MYOF7+6PpG7aGjsi3jxZ3Kua
-         09rfCj6a3r8/1qtLqEH1yDzoiA3cx8WaLHdA8F9oJNGVGOQiGI6ZN7lNmF/AXgmGdv7E
-         LAxgub/Lnh9rNmXEi2V0/OfwtddWBwL6zAYiZUoFneLMOngoWJpGPGAeacX5nwmcpham
-         25FZ+jPTSo+Ug1VSdtF9Ll/gkNmXAIlRArQt9ECy4M0hGAgsz2fxfTrzmfwaF5jV4cSl
-         fM1g==
-X-Gm-Message-State: AGi0Pua4KCbQUdiqI5v6wh0VoktCxmxp884yrkzeQZn/8KTOxVC5jTBl
-        e/OHj9ef9VAu0RLeOwh7Ingn3qy7mnM=
-X-Google-Smtp-Source: APiQypK0fFftccsHGnmezQIyKk6jPNNWfDtYkenMG3g6vtHtAaoP/aM6TTb4Eisu3T9jYgTPOx4Z4Q==
-X-Received: by 2002:a05:6000:1007:: with SMTP id a7mr16642104wrx.279.1587371222065;
-        Mon, 20 Apr 2020 01:27:02 -0700 (PDT)
-Received: from [192.168.1.10] ([194.35.116.120])
-        by smtp.gmail.com with ESMTPSA id t16sm257756wrb.8.2020.04.20.01.27.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 01:27:01 -0700 (PDT)
-Subject: Re: [PATCH] tools/bpf/bpftool: Remove duplicate headers
-To:     jagdsh.linux@gmail.com, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org, kuba@kernel.org,
-        jolsa@kernel.org, toke@redhat.com,
-        Paul Chaigno <paul@isovalent.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1587274757-14101-1-git-send-email-jagdsh.linux@gmail.com>
-From:   Quentin Monnet <quentin@isovalent.com>
-Message-ID: <5c63c379-9b91-c134-1c23-18133ac0f88c@isovalent.com>
-Date:   Mon, 20 Apr 2020 09:27:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 04:27:54 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F66C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:27:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+ihzv2G7gl4wbywFbFfD4kmdeTyXKLjmi41Fi4pfZKE=; b=qzb6D4Usq+oxdkaVPdq/sdGYIj
+        8zeI7a9lB6gB+lPtJISBLf7QqogLLW8ULuXtzwz1H/KwsZ65Y3IRX8RB4CRtXSMIBdiWro7gaPLMP
+        R0J78KOPR2Fhr+YNmlEOBP7aNfSnzPlk5CVdbTwLLx0BOD5XXswXXRY/arcDGAaxaWF7894991rdQ
+        UJh6NHt1MOs+njcLykTTKmxxQ9n2vIC9bb2zJ2ipaWG2ubKw+9IQ4jlGxskYrWT4GnfzJRTNwQ2rL
+        lo0tJnF/lykXXp33YMowTxb6bxbvYaM4MLYVWjlabaAfau8KEfWC1fOXESB62Z+vlnWfMEQheHwD+
+        RO/QzI+w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQRm7-00015J-8r; Mon, 20 Apr 2020 08:27:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7E14E3024EA;
+        Mon, 20 Apr 2020 10:27:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6796A2B8D15BD; Mon, 20 Apr 2020 10:27:28 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 10:27:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [GIT pull] perf/urgent for 5.7-rc2
+Message-ID: <20200420082728.GA20696@hirez.programming.kicks-ass.net>
+References: <158730459860.31269.9496277256253823777.tglx@nanos.tec.linutronix.de>
+ <158730460101.31269.5005570498545135614.tglx@nanos.tec.linutronix.de>
+ <CAHk-=wjUS9b-B1n=OCBdqq3mdVTNGz0zqhGnrtMijoB5qT+96g@mail.gmail.com>
+ <20200419200758.3xry3vn2a5caxapx@treble>
+ <20200420074845.GA72554@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1587274757-14101-1-git-send-email-jagdsh.linux@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420074845.GA72554@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-04-19 11:09 UTC+0530 ~ jagdsh.linux@gmail.com
-> From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-> 
-> Code cleanup: Remove duplicate headers which are included twice.
-> 
-> Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+On Mon, Apr 20, 2020 at 09:48:45AM +0200, Ingo Molnar wrote:
+> Fortunately, much of what objtool does against vmlinux.o can be 
+> parallelized in a rather straightforward fashion I believe, if we build 
+> with -ffunction-sections.
 
-Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+So that FGKASLR is going to get us -ffunction-sections, but
+parallelizing objtool isn't going to be trivial, it's data structures
+aren't really build for that, esp. decode_instructions() which actively
+generates data.
 
-Thank you!
+Still, it's probably doable.
 
