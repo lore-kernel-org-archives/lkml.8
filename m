@@ -2,102 +2,85 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8640C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA8AC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2083206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hYlw2D1t"
+	by mail.kernel.org (Postfix) with ESMTP id 12A74205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgDTNNx (ORCPT
+        id S1726849AbgDTNP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:13:53 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39897 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726814AbgDTNNv (ORCPT
+        Mon, 20 Apr 2020 09:15:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725773AbgDTNPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:13:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587388430;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IYew2ybNbEYlxnWhOLAX8rprgalSjY8htLDKj7llLh0=;
-        b=hYlw2D1tV44WpLt5dXs6nFhk03CyswctRpY8v7IMRCIJydF0IJihJiFE3j8Gl1M1Z5hKkf
-        RYfmrjxWC1E21Q6hqCCoPSVVNIiyqQF3ysUVW6BFkXmDWI7lCfrO74eQo+EoQDm9xgYRwm
-        PDZdszXjI9u2GH7EAT2+B1Tq4XobJMQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-109-8q1U0xdCNU2fff9u2tmIGQ-1; Mon, 20 Apr 2020 09:13:45 -0400
-X-MC-Unique: 8q1U0xdCNU2fff9u2tmIGQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80352149C1;
-        Mon, 20 Apr 2020 13:13:43 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BDD510013A1;
-        Mon, 20 Apr 2020 13:13:40 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <87imhvj7m6.fsf@cjr.nz>
-References: <87imhvj7m6.fsf@cjr.nz> <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com> <3865908.1586874010@warthog.procyon.org.uk> <927453.1587285472@warthog.procyon.org.uk>
-To:     Paulo Alcantara <pc@cjr.nz>
-Cc:     dhowells@redhat.com, Steve French <smfrench@gmail.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
-Subject: Re: What's a good default TTL for DNS keys in the kernel
+        Mon, 20 Apr 2020 09:15:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882CBC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 06:15:25 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jQWGb-0002xz-IM; Mon, 20 Apr 2020 15:15:17 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jQWGX-0002NM-BJ; Mon, 20 Apr 2020 15:15:13 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: [PATCH v2 0/2] provide support for PHY master/slave configuration
+Date:   Mon, 20 Apr 2020 15:15:05 +0200
+Message-Id: <20200420131508.1539-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1136023.1587388420.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 20 Apr 2020 14:13:40 +0100
-Message-ID: <1136024.1587388420@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paulo Alcantara <pc@cjr.nz> wrote:
+changes v2:
+- change names. Use MASTER_PREFERRED instead of MULTIPORT
+- configure master/slave only on request. Default configuration can be
+  provided by PHY or eeprom
+- status and configuration to the user space.
 
-> >> For SMB3/CIFS mounts, Paulo added support last year for automatic
-> >> reconnect if the IP address of the server changes.  It also is helpfu=
-l
-> >> when DFS (global name space) addresses change.
-> >
-> > What happens if the IP address the superblock is going to changes, the=
-n
-> > another mount is made back to the original IP address?  Does the secon=
-d mount
-> > just pick the original superblock?
-> =
+Oleksij Rempel (2):
+  ethtool: provide UAPI for PHY master/slave configuration.
+  net: phy: tja11xx: add support for master-slave configuration
 
-> It is going to transparently reconnect to the new ip address, SMB share,
-> and cifs superblock is kept unchanged.  We, however, update internal
-> TCP_Server_Info structure to reflect new destination ip address.
-> =
+ Documentation/networking/ethtool-netlink.rst |  2 +
+ drivers/net/phy/nxp-tja11xx.c                | 56 ++++++++++++-
+ drivers/net/phy/phy.c                        |  3 +-
+ drivers/net/phy/phy_device.c                 | 88 ++++++++++++++++++++
+ include/linux/phy.h                          |  2 +
+ include/uapi/linux/ethtool.h                 | 17 +++-
+ include/uapi/linux/ethtool_netlink.h         |  1 +
+ include/uapi/linux/mii.h                     |  2 +
+ net/ethtool/linkmodes.c                      |  9 +-
+ 9 files changed, 176 insertions(+), 4 deletions(-)
 
-> For the second mount, since the hostname (extracted out of the UNC path
-> at mount time) resolves to a new ip address and that address was saved e=
-arlier
-> in TCP_Server_Info structure during reconnect, we will end up
-> reusing same cifs superblock as per fs/cifs/connect.c:cifs_match_super()=
-.
-
-Would that be a bug?
-
-David
+-- 
+2.26.1
 
