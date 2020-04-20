@@ -2,145 +2,137 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0DBC55183
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7974C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B50520724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M9K+Ce0p"
+	by mail.kernel.org (Postfix) with ESMTP id BA0CD20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgDTWaq (ORCPT
+        id S1726599AbgDTWcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:30:46 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42994 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726371AbgDTWan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:30:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587421841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9q6YhDfeioGYYNbOwoNDtbd8XWXwGnM98df6kx4/308=;
-        b=M9K+Ce0pFPTIUPMmsJa/84tA2++gzQV2giT50alI0titPuGjK4zvuhG12ohwkZ4D2mbODb
-        55NO65uVc3NxVaZQm75EdMdhocDXmJ+EKK+wUH90MO81UGXpoZQwwSSqTb0kVcD5WT5Tyn
-        j0xhA7UqH0DNtzVKeLQHnsocxS1JvdU=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-223-MRZ_hrAWMt-gDjjLVhFkOA-1; Mon, 20 Apr 2020 18:30:40 -0400
-X-MC-Unique: MRZ_hrAWMt-gDjjLVhFkOA-1
-Received: by mail-qv1-f70.google.com with SMTP id p12so11869950qvm.21
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:30:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=9q6YhDfeioGYYNbOwoNDtbd8XWXwGnM98df6kx4/308=;
-        b=XqVNHuMYEVGc+siLvQey7FG1RL6GD/n0yb9fRe/bZrD7T7AzJFouEp2rId727ZuU5Z
-         if7a9/nds8QMKqnBHFVDzyLctXNwldZx0vn67p5a85rryvnYWVxr2X8mXKdTvYPGVQsI
-         re0qOPx/Qx6N/pVxCSG0jmTWiW/MJp3caSeOa+4jmpY7dRMZ+QcIAsqLuVPz7jpdgA/O
-         eh9NoxDK7ROzAX+OLN3xa5K7KYUPwMOE3bmjr42t4P51Cc8LX7V0D6ZdkklaBfqEXN1J
-         ffgbNgRLuoU/FlQEF1oZ+W2nmqV5g9+fld9xIazEZxv+EPA30hSFylcq8boLwWmmgmTY
-         3v1A==
-X-Gm-Message-State: AGi0PuZ+NTgvgMQVkTt8whOdNDPKeIv44I34sOuOiLAaSgpzJf1eKubI
-        1o7ZRfqEnVHBpl1PtnRUTKgsJvPGeUs5xd2ymTv6tj1BmltVj/1ytJ2nS1cWXYOnAHhUgTdtyb9
-        TL+62dpngWfhkchMxZC3X6uuy
-X-Received: by 2002:ac8:1a8a:: with SMTP id x10mr18266939qtj.154.1587421839479;
-        Mon, 20 Apr 2020 15:30:39 -0700 (PDT)
-X-Google-Smtp-Source: APiQypL1XEhHKfWJ4L3lMwmFDzE2+TBxLfE0ulmEwOUTO4o7oVPQ7Klu15FdcDd0dnvjj9vSaCf+vQ==
-X-Received: by 2002:ac8:1a8a:: with SMTP id x10mr18266910qtj.154.1587421839193;
-        Mon, 20 Apr 2020 15:30:39 -0700 (PDT)
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id m40sm545368qtc.33.2020.04.20.15.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 15:30:38 -0700 (PDT)
-Message-ID: <93e1141d15e44a7490d756b0a00060660306fadc.camel@redhat.com>
-Subject: Re: cifs - Race between IP address change and sget()?
-From:   Jeff Layton <jlayton@redhat.com>
-To:     David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@cjr.nz>
-Cc:     viro@zeniv.linux.org.uk, Steve French <smfrench@gmail.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
-Date:   Mon, 20 Apr 2020 18:30:37 -0400
-In-Reply-To: <1986040.1587420879@warthog.procyon.org.uk>
-References: <878siq587w.fsf@cjr.nz> <87imhvj7m6.fsf@cjr.nz>
-         <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
-         <3865908.1586874010@warthog.procyon.org.uk>
-         <927453.1587285472@warthog.procyon.org.uk>
-         <1136024.1587388420@warthog.procyon.org.uk>
-         <1986040.1587420879@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 20 Apr 2020 18:32:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725918AbgDTWcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 18:32:35 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6478520857;
+        Mon, 20 Apr 2020 22:32:34 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 18:32:32 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH 2/2] sched: Extract the task putting code from
+ pick_next_task()
+Message-ID: <20200420183232.16b83374@gandalf.local.home>
+In-Reply-To: <7c1eab789cb4b53ec5f54644c089ce27ea14088a.1587309963.git.yu.c.chen@intel.com>
+References: <cover.1587309963.git.yu.c.chen@intel.com>
+        <7c1eab789cb4b53ec5f54644c089ce27ea14088a.1587309963.git.yu.c.chen@intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-20 at 23:14 +0100, David Howells wrote:
-> Paulo Alcantara <pc@cjr.nz> wrote:
-> 
-> > > > > What happens if the IP address the superblock is going to changes, then
-> > > > > another mount is made back to the original IP address?  Does the second
-> > > > > mount just pick the original superblock?
-> > > > 
-> > > > It is going to transparently reconnect to the new ip address, SMB share,
-> > > > and cifs superblock is kept unchanged.  We, however, update internal
-> > > > TCP_Server_Info structure to reflect new destination ip address.
-> > > > 
-> > > > For the second mount, since the hostname (extracted out of the UNC path
-> > > > at mount time) resolves to a new ip address and that address was saved
-> > > > earlier in TCP_Server_Info structure during reconnect, we will end up
-> > > > reusing same cifs superblock as per fs/cifs/connect.c:cifs_match_super().
-> > > 
-> > > Would that be a bug?
-> > 
-> > Probably.
-> > 
-> > I'm not sure how that code is supposed to work, TBH.
-> 
-> Hmmm...  I think there may be a race here then - but I'm not sure it can be
-> avoided or if it matters.
-> 
-> Since the address is part of the primary key to sget() for cifs, changing the
-> IP address will change the primary key.  Jeff tells me that this is governed
-> by a spinlock taken by cifs_match_super().  However, sget() may be busy
-> attaching a new mount to the old superblock under the sb_lock core vfs lock,
-> having already found a match.
-> 
+On Mon, 20 Apr 2020 00:31:52 +0800
+Chen Yu <yu.c.chen@intel.com> wrote:
 
-Not exactly. Both places that match TCP_Server_Info objects by address
-hold the cifs_tcp_ses_lock. The address looks like it gets changed in
-reconn_set_ipaddr, and the lock is not currently taken there, AFAICT. I
-think it probably should be (at least around the cifs_convert_address
-call).
-
-> Should the change of parameters made by cifs be effected with sb_lock held to
-> try and avoid ending up using the wrong superblock?
+> Introduce a new function finish_prev_task() to do the balance
+> when necessary, and then put previous task back to the run queue.
+> This function is extracted from pick_next_task() to prepare for
+> future usage by other type of task picking logic.
 > 
-> However, because the TCP_Server_Info is apparently updated, it looks like my
-> original concern is not actually a problem (the idea that if a mounted server
-> changes its IP address and then a new server comes online at the old IP
-> address, it might end up sharing superblocks because the IP address is part of
-> the key).
+> No functional change.
 > 
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> ---
+>  kernel/sched/core.c | 39 +++++++++++++++++++++++----------------
+>  1 file changed, 23 insertions(+), 16 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 3a61a3b8eaa9..bf59a5cf030c 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3904,6 +3904,28 @@ static inline void schedule_debug(struct task_struct *prev, bool preempt)
+>  	schedstat_inc(this_rq()->sched_count);
+>  }
+>  
+> +static void finish_prev_task(struct rq *rq, struct task_struct *prev,
+> +			     struct rq_flags *rf)
+> +{
+> +	const struct sched_class *class;
+> +#ifdef CONFIG_SMP
+> +	/*
+> +	 * We must do the balancing pass before put_next_task(), such
 
-I'm not sure we should concern ourselves with much more than just not
-allowing addresses to change while matching/searching. If you're
-standing up new servers at old addresses while you still have clients
-are migrating, then you are probably Doing it Wrong.
+I know this is just a cut and paste move, but I'm thinking that this
+comment is wrong. Shouldn't this be "put_prev_task()" as we have no
+"put_next_task()" function.
 
--- 
-Jeff Layton <jlayton@redhat.com>
+
+> +	 * that when we release the rq->lock the task is in the same
+> +	 * state as before we took rq->lock.
+> +	 *
+> +	 * We can terminate the balance pass as soon as we know there is
+> +	 * a runnable task of @class priority or higher.
+> +	 */
+> +	for_class_range(class, prev->sched_class, &idle_sched_class) {
+> +		if (class->balance(rq, prev, rf))
+> +			break;
+> +	}
+> +#endif
+> +
+> +	put_prev_task(rq, prev);
+> +}
+> +
+>  /*
+>   * Pick up the highest-prio task:
+>   */
+> @@ -3937,22 +3959,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  	}
+>  
+>  restart:
+> -#ifdef CONFIG_SMP
+> -	/*
+> -	 * We must do the balancing pass before put_next_task(), such
+> -	 * that when we release the rq->lock the task is in the same
+> -	 * state as before we took rq->lock.
+> -	 *
+> -	 * We can terminate the balance pass as soon as we know there is
+> -	 * a runnable task of @class priority or higher.
+> -	 */
+> -	for_class_range(class, prev->sched_class, &idle_sched_class) {
+> -		if (class->balance(rq, prev, rf))
+> -			break;
+> -	}
+> -#endif
+> -
+> -	put_prev_task(rq, prev);
+> +	finish_prev_task(rq, prev, rf);
+
+I'm not sure I like the name of this function. Perhaps
+"balance_and_put_prev_task()"? Something more in kind to what the function
+does.
+
+-- Steve
+
+>  
+>  	for_each_class(class) {
+>  		p = class->pick_next_task(rq);
 
