@@ -2,71 +2,71 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943E1C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8832CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7261620736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675A920736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYuN6zys"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwFLpx1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgDTTJx (ORCPT
+        id S1728128AbgDTTJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:09:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37416 "EHLO
+        Mon, 20 Apr 2020 15:09:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728022AbgDTTJj (ORCPT
+        by vger.kernel.org with ESMTP id S1727985AbgDTTJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:09:39 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A8F0C061A0C;
-        Mon, 20 Apr 2020 12:09:38 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id d17so13538878wrg.11;
-        Mon, 20 Apr 2020 12:09:38 -0700 (PDT)
+        Mon, 20 Apr 2020 15:09:36 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E06FC061A0F;
+        Mon, 20 Apr 2020 12:09:36 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id e26so765624wmk.5;
+        Mon, 20 Apr 2020 12:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pMhdquAr/HzwmzyKmiKytwMMb3XOVcxGDwBpxb4EVIg=;
-        b=hYuN6zysHNYcwwxQGzpo9119HGSST2EZyKQOVX+aYFlmAyUyJEVYJsDF4z+TXPld/M
-         k1aNILU9rvMgcfkNJz65/RdrQUOwZvF1PhkxO1qEUWzCDB5c6g8M9sKJoFmINh9Zxi2m
-         4NQY7cpT9lYejThY7YkiTitFdqt4z3LDerfseEIiDgcRcof8FlRAOOqdjr+y2//8lyu6
-         eL+MTW9Xe703kSnHY8m1zGqGeGxtJQMqqW5DC3+gf9FJuiUKlW6jGx95ZuNjhFP8iDe2
-         IQwDvA7mLApN39aBCanhDaxLh+0LER2kyFEio8bLeXiXngzpKob4wjdmDofS3s/y9fFW
-         f4ig==
+        bh=SwQZbSyo/ooB+KPpLKSrh54aVWxFR91fOhXcxwQ1VWs=;
+        b=RwFLpx1l8uegfDKUqFMecesRs+bMBFquuhcu7wdDWUUG1+sTg3lM6YgHCQgENobSxA
+         Z48fmWtWLs+aeePjSeRRyci7rPmWm2aXOKFPvfwsGzasqqbBPE4jCoQse488/GWsOFIi
+         fM+tImLEE384mae+9Z+0ZPSQcWKsPe2Ui6LDk+dd6cGU+G9k1nh1YUL0XO2qzgfzFn1f
+         nW7lRs/KxTEleC+mstHpnFbRT0irEpudGwyWNkRQopYYfz64wCEeoVH+NIaRihHy3xUV
+         c+cH9+RRqrBlXRIKsTO4TsH/LK6JFEsa38uGfrUKt5XerXzwi6lVqhPcoP+DmtxxQTsZ
+         7Hsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=pMhdquAr/HzwmzyKmiKytwMMb3XOVcxGDwBpxb4EVIg=;
-        b=LTCeMIAQ2kmGGy9ui5aY/Xi2suWo1hw3fBo4p+94dEMjOAMixgZKQ0sdgr9LFPTc+J
-         +TLG/swPJv4Rg9gVDcjGDPfrsTIsVP9Tx1bZAPo0xHHGhtlVrpWcQyG0/Fvabz0SGBAE
-         JQsjZgDfMsI7jevKWyCWekZP/wgou4/KPIMNV+rcaA7rwzDQ9Iam8js8m5kVKGI9BWgN
-         sWY+ybjxwsCLNcRJczC2l07vtXNytNDFxPmEEBYEnkIpM2GHeGlS+xh+DIm62M/Py8O+
-         ab/N0s0ntUaF48aS3ciyeiLXATF7vHw07dYNUEd96cDt4Cqb2/8pra7gwKldgWA0flTo
-         0wnw==
-X-Gm-Message-State: AGi0PuZg5EC5gSr0N+OM43Siz9nmGZjXX8SGxumELuTf0UwtxXkzpzfu
-        Uqg1qd4ha8c2cbBbZL7TA4Y=
-X-Google-Smtp-Source: APiQypLQvSn0BosVRuMhVoCRqWBE5h7XjuUYVu/ikcSJ6qJtVhmmUeri08ztEGOkX+C6ICTmM5iSpw==
-X-Received: by 2002:adf:e5c8:: with SMTP id a8mr22168182wrn.56.1587409777141;
-        Mon, 20 Apr 2020 12:09:37 -0700 (PDT)
+        bh=SwQZbSyo/ooB+KPpLKSrh54aVWxFR91fOhXcxwQ1VWs=;
+        b=Y2+kTfrTuDd49vgsYwpdpH+V9nbBGo7pOm2DwuGMe9Sb+Kx1LxxFOjh8ZXDGL9x6uW
+         AtBNuvJqGj2uMNy8cP9l82YF0yYjZg1DtB9X/e1X0bhTJAc37JJIAJjsKyKfufpZ+uYB
+         YL3WPbGlBA6E4/+9XtqjIqJCsk+8KohPCpZXkhQvmZUq3TRmoLAU5j8xQKMio9WWvUZ/
+         saM444kVSSD+5lPn42nMKXMZ01QoMk3CXtH0GRMkRj28gEW9f3YhiMMkWgyYxvHeETWf
+         o9ApdIGK3yf1OUo67u6wr9pAva9k8kpcVXlWuwZfsL/BILLfgR1NQRK0jcdCCCGGmXrB
+         0V4g==
+X-Gm-Message-State: AGi0PuZ4H42Cu9XaOpIjhCxkBlQ6Ctx6j3E8GC9qq9RCC7xaf2R89Nja
+        7MQ7T903VSzzYpO0WGl0Ibs=
+X-Google-Smtp-Source: APiQypJYNY3iD8Jn/EHLbCVKIpvCKhuz18FHQmlaD64SVyU1VvBD+3VWvq08ybNhVRYjLZou0zxQUA==
+X-Received: by 2002:a1c:6a08:: with SMTP id f8mr829753wmc.132.1587409774803;
+        Mon, 20 Apr 2020 12:09:34 -0700 (PDT)
 Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id y5sm621251wru.15.2020.04.20.12.09.35
+        by smtp.gmail.com with ESMTPSA id y5sm621251wru.15.2020.04.20.12.09.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 12:09:36 -0700 (PDT)
+        Mon, 20 Apr 2020 12:09:34 -0700 (PDT)
 From:   Kamal Dasu <kdasu.kdev@gmail.com>
 To:     Kamal Dasu <kdasu.kdev@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com,
         Mark Brown <broonie@kernel.org>
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Patch v3 9/9] spi: bcm-qspi: MSPI_SPCR0_MSB MSTR bit exists only on legacy controllers
-Date:   Mon, 20 Apr 2020 15:08:53 -0400
-Message-Id: <20200420190853.45614-10-kdasu.kdev@gmail.com>
+Subject: [Patch v3 8/9] spi: bcm-qspi: add support for MSPI sys clk 108Mhz
+Date:   Mon, 20 Apr 2020 15:08:52 -0400
+Message-Id: <20200420190853.45614-9-kdasu.kdev@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200420190853.45614-1-kdasu.kdev@gmail.com>
 References: <20200420190853.45614-1-kdasu.kdev@gmail.com>
@@ -75,38 +75,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set MASTER bit on the MSPI_SPCR0_MSB only for legacy MSPI and HIF_MSPI
-controllers.
+Adding support for MSPI sys clk 108Mhz available on 7216
+and 7278 BRCMSTB SoCs.
 
-Fixes: fa236a7ef240 ("spi: bcm-qspi: Add Broadcom MSPI driver")
 Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 ---
- drivers/spi/spi-bcm-qspi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/spi/spi-bcm-qspi.c | 44 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
 diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
-index 99f2cfcbb50c..681d09085175 100644
+index edc601dbf221..99f2cfcbb50c 100644
 --- a/drivers/spi/spi-bcm-qspi.c
 +++ b/drivers/spi/spi-bcm-qspi.c
-@@ -576,11 +576,17 @@ static void bcm_qspi_hw_set_parms(struct bcm_qspi *qspi,
- 	spcr = clamp_val(spbr, bcm_qspi_spbr_min(qspi), QSPI_SPBR_MAX);
- 	bcm_qspi_write(qspi, MSPI, MSPI_SPCR0_LSB, spcr);
+@@ -109,6 +109,11 @@
  
--	spcr = MSPI_MASTER_BIT;
-+	if (!qspi->mspi_maj_rev)
-+		/* legacy controller */
-+		spcr = MSPI_MASTER_BIT;
-+	else
-+		spcr = 0;
-+
- 	/* for 16 bit the data should be zero */
- 	if (xp->bits_per_word != 16)
- 		spcr |= xp->bits_per_word << 2;
- 	spcr |= xp->mode & 3;
-+
- 	bcm_qspi_write(qspi, MSPI, MSPI_SPCR0_MSB, spcr);
+ #define MSPI_SPCR3_FASTBR			BIT(0)
+ #define MSPI_SPCR3_FASTDT			BIT(1)
++#define MSPI_SPCR3_SYSCLKSEL_MASK		GENMASK(11, 10)
++#define MSPI_SPCR3_SYSCLKSEL_27			(MSPI_SPCR3_SYSCLKSEL_MASK & \
++						 ~(BIT(10) | BIT(11)))
++#define MSPI_SPCR3_SYSCLKSEL_108		(MSPI_SPCR3_SYSCLKSEL_MASK & \
++						 BIT(11))
  
- 	if (bcm_qspi_has_fastbr(qspi)) {
+ #define MSPI_MSPI_STATUS_SPIF			BIT(0)
+ 
+@@ -117,6 +122,7 @@
+ 
+ #define NUM_CHIPSELECT				4
+ #define QSPI_SPBR_MAX				255U
++#define MSPI_BASE_FREQ				27000000UL
+ 
+ #define OPCODE_DIOR				0xBB
+ #define OPCODE_QIOR				0xEB
+@@ -222,6 +228,7 @@ struct bcm_qspi {
+ 	struct completion bspi_done;
+ 	u8 mspi_maj_rev;
+ 	u8 mspi_min_rev;
++	bool mspi_spcr3_sysclk;
+ };
+ 
+ static inline bool has_bspi(struct bcm_qspi *qspi)
+@@ -240,6 +247,17 @@ static inline bool bcm_qspi_has_fastbr(struct bcm_qspi *qspi)
+ 	return false;
+ }
+ 
++/* hardware supports sys clk 108Mhz  */
++static inline bool bcm_qspi_has_sysclk_108(struct bcm_qspi *qspi)
++{
++	if (!has_bspi(qspi) && (qspi->mspi_spcr3_sysclk ||
++	    ((qspi->mspi_maj_rev >= 1) &&
++	     (qspi->mspi_min_rev >= 6))))
++		return true;
++
++	return false;
++}
++
+ static inline int bcm_qspi_spbr_min(struct bcm_qspi *qspi)
+ {
+ 	if (bcm_qspi_has_fastbr(qspi))
+@@ -570,6 +588,15 @@ static void bcm_qspi_hw_set_parms(struct bcm_qspi *qspi,
+ 
+ 		/* enable fastbr */
+ 		spcr |=	MSPI_SPCR3_FASTBR;
++
++		if (bcm_qspi_has_sysclk_108(qspi)) {
++			/* SYSCLK_108 */
++			spcr |= MSPI_SPCR3_SYSCLKSEL_108;
++			qspi->base_clk = MSPI_BASE_FREQ * 4;
++			/* Change spbr as we changed sysclk */
++			bcm_qspi_write(qspi, MSPI, MSPI_SPCR0_LSB, 4);
++		}
++
+ 		bcm_qspi_write(qspi, MSPI, MSPI_SPCR3, spcr);
+ 	}
+ 
+@@ -1229,14 +1256,22 @@ static const struct spi_controller_mem_ops bcm_qspi_mem_ops = {
+ 
+ struct bcm_qspi_data {
+ 	bool	has_mspi_rev;
++	bool	has_spcr3_sysclk;
+ };
+ 
+ static const struct bcm_qspi_data bcm_qspi_no_rev_data = {
+ 	.has_mspi_rev	= false,
++	.has_spcr3_sysclk = false,
+ };
+ 
+ static const struct bcm_qspi_data bcm_qspi_rev_data = {
+ 	.has_mspi_rev	= true,
++	.has_spcr3_sysclk = false,
++};
++
++static const struct bcm_qspi_data bcm_qspi_spcr3_data = {
++	.has_mspi_rev	= true,
++	.has_spcr3_sysclk = true,
+ };
+ 
+ static const struct of_device_id bcm_qspi_of_match[] = {
+@@ -1256,6 +1291,14 @@ static const struct of_device_id bcm_qspi_of_match[] = {
+ 		.compatible = "brcm,spi-bcm-qspi",
+ 		.data = &bcm_qspi_rev_data,
+ 	},
++	{
++		.compatible = "brcm,spi-bcm7216-qspi",
++		.data = &bcm_qspi_spcr3_data,
++	},
++	{
++		.compatible = "brcm,spi-bcm7278-qspi",
++		.data = &bcm_qspi_spcr3_data,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, bcm_qspi_of_match);
+@@ -1427,6 +1470,7 @@ int bcm_qspi_probe(struct platform_device *pdev,
+ 
+ 	qspi->mspi_maj_rev = (rev >> 4) & 0xf;
+ 	qspi->mspi_min_rev = rev & 0xf;
++	qspi->mspi_spcr3_sysclk = data->has_spcr3_sysclk;
+ 
+ 	qspi->max_speed_hz = qspi->base_clk / (bcm_qspi_spbr_min(qspi) * 2);
+ 
 -- 
 2.17.1
 
