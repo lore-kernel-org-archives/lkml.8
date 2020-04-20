@@ -2,53 +2,51 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C60C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F12E1C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4990C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CE6206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386953;
-	bh=QF/JlUVuuZ4UZfQX9BcA0AhsY/9SEydJlDSSXemrN4Y=;
+	s=default; t=1587386955;
+	bh=GtM8Eu8Gg71VT1THbBX6n0LWdrHWKtVwCqUCscUtYEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZoX2mykZlrcLcr2radrqZjH6rBwR+LJtZTmKLWDTawrfSX1c8mRMg5Kq9nXtXsKl
-	 KMseMF1HfHAdKBA/jP9AVuyJrNFoAKSJww3ldH9qvsyv4CmAVwIP2FvCEPEgJAp+48
-	 9FHiTByIWdcIBAepQP71RNikCR9Fd3kZOaGm62H8=
+	b=CWejMtkcO1zFwfWpIlK60ISajIV7JLO6JSi1p18TbvsRe1e/QhGftXXE1SlZCVu5D
+	 X9hsRCq4SSuwxzs+vNe7XJ0Ej3LNesUFftpD0Rr6pV/F/g/4jlMasnzlppw3FmZdLc
+	 jfqe2OgpgICxkNjHArXNldgp+IesIYhiq3uIcMEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgDTMtM (ORCPT
+        id S1729386AbgDTMtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:49:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45924 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:49:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbgDTMtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:49:04 -0400
+        id S1729360AbgDTMtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:49:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD2202075A;
-        Mon, 20 Apr 2020 12:49:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2430D206DD;
+        Mon, 20 Apr 2020 12:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386943;
-        bh=QF/JlUVuuZ4UZfQX9BcA0AhsY/9SEydJlDSSXemrN4Y=;
+        s=default; t=1587386945;
+        bh=GtM8Eu8Gg71VT1THbBX6n0LWdrHWKtVwCqUCscUtYEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bEmTPBR0v8tP7H/FZTnHPRj5oJa+6C0GFgu2iW5elKKf3WHP20ogf0qfdKdgzhAmj
-         9kMUZ07Phvrio2TCFBgMR4iG1/aTDAbHGhu0MisMsSqR2AF/IkHc1aM3EDcmdF31Q7
-         B90/Ml9jSiuoW9H+EoFApmlP3xfPUunEgGOwALDE=
+        b=jK2PvQP64UyJYaEqigbD8MWRx49pnuBWXc4EC/M2Zi3knN/2FwYY7U4HvMGPoZePC
+         xX+zUjVahqZNNelH3ZW9rDVoeN4W8thIPDhsv4ULBvPXC8NZz3JtHFvufAWcXDZ3nq
+         ceKHGusZxxwSFFrvXqoCBSKftoLrHCmSZVKZzaks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
-        Maurizio Lombardi <mlombard@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/40] scsi: target: remove boilerplate code
-Date:   Mon, 20 Apr 2020 14:39:40 +0200
-Message-Id: <20200420121504.315986574@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.19 13/40] ext4: fix incorrect group count in ext4_fill_super error message
+Date:   Mon, 20 Apr 2020 14:39:23 +0200
+Message-Id: <20200420121456.437361174@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
@@ -61,101 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maurizio Lombardi <mlombard@redhat.com>
+From: Josh Triplett <josh@joshtriplett.org>
 
-[ Upstream commit e49a7d994379278d3353d7ffc7994672752fb0ad ]
+commit df41460a21b06a76437af040d90ccee03888e8e5 upstream.
 
-iscsit_free_session() is equivalent to iscsit_stop_session() followed by a
-call to iscsit_close_session().
+ext4_fill_super doublechecks the number of groups before mounting; if
+that check fails, the resulting error message prints the group count
+from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
+computed group count instead (which at that point has just been computed
+in "blocks_count").
 
-Link: https://lore.kernel.org/r/20200313170656.9716-2-mlombard@redhat.com
-Tested-by: Rahul Kundu <rahul.kundu@chelsio.com>
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
+Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/target/iscsi/iscsi_target.c | 46 ++---------------------------
- drivers/target/iscsi/iscsi_target.h |  1 -
- 2 files changed, 2 insertions(+), 45 deletions(-)
+ fs/ext4/super.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index 03e9cb156df94..82b46bab8aabe 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4541,49 +4541,6 @@ void iscsit_fail_session(struct iscsi_session *sess)
- 	sess->session_state = TARG_SESS_STATE_FAILED;
- }
- 
--int iscsit_free_session(struct iscsi_session *sess)
--{
--	u16 conn_count = atomic_read(&sess->nconn);
--	struct iscsi_conn *conn, *conn_tmp = NULL;
--	int is_last;
--
--	spin_lock_bh(&sess->conn_lock);
--	atomic_set(&sess->sleep_on_sess_wait_comp, 1);
--
--	list_for_each_entry_safe(conn, conn_tmp, &sess->sess_conn_list,
--			conn_list) {
--		if (conn_count == 0)
--			break;
--
--		if (list_is_last(&conn->conn_list, &sess->sess_conn_list)) {
--			is_last = 1;
--		} else {
--			iscsit_inc_conn_usage_count(conn_tmp);
--			is_last = 0;
--		}
--		iscsit_inc_conn_usage_count(conn);
--
--		spin_unlock_bh(&sess->conn_lock);
--		iscsit_cause_connection_reinstatement(conn, 1);
--		spin_lock_bh(&sess->conn_lock);
--
--		iscsit_dec_conn_usage_count(conn);
--		if (is_last == 0)
--			iscsit_dec_conn_usage_count(conn_tmp);
--
--		conn_count--;
--	}
--
--	if (atomic_read(&sess->nconn)) {
--		spin_unlock_bh(&sess->conn_lock);
--		wait_for_completion(&sess->session_wait_comp);
--	} else
--		spin_unlock_bh(&sess->conn_lock);
--
--	iscsit_close_session(sess);
--	return 0;
--}
--
- void iscsit_stop_session(
- 	struct iscsi_session *sess,
- 	int session_sleep,
-@@ -4668,7 +4625,8 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
- 	list_for_each_entry_safe(se_sess, se_sess_tmp, &free_list, sess_list) {
- 		sess = (struct iscsi_session *)se_sess->fabric_sess_ptr;
- 
--		iscsit_free_session(sess);
-+		iscsit_stop_session(sess, 1, 1);
-+		iscsit_close_session(sess);
- 		session_count++;
- 	}
- 
-diff --git a/drivers/target/iscsi/iscsi_target.h b/drivers/target/iscsi/iscsi_target.h
-index 48bac0acf8c76..11a481cf6eade 100644
---- a/drivers/target/iscsi/iscsi_target.h
-+++ b/drivers/target/iscsi/iscsi_target.h
-@@ -43,7 +43,6 @@ extern int iscsi_target_rx_thread(void *);
- extern int iscsit_close_connection(struct iscsi_conn *);
- extern int iscsit_close_session(struct iscsi_session *);
- extern void iscsit_fail_session(struct iscsi_session *);
--extern int iscsit_free_session(struct iscsi_session *);
- extern void iscsit_stop_session(struct iscsi_session *, int, int);
- extern int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *, int);
- 
--- 
-2.20.1
-
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4162,9 +4162,9 @@ static int ext4_fill_super(struct super_
+ 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
+ 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
+ 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
+-		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
++		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
+ 		       "(block count %llu, first data block %u, "
+-		       "blocks per group %lu)", sbi->s_groups_count,
++		       "blocks per group %lu)", blocks_count,
+ 		       ext4_blocks_count(es),
+ 		       le32_to_cpu(es->s_first_data_block),
+ 		       EXT4_BLOCKS_PER_GROUP(sb));
 
 
