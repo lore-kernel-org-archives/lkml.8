@@ -2,310 +2,104 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C633C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420D6C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71CB52084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E8D2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:51:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aKHshmB8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bCQSCeE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgDTTvI (ORCPT
+        id S1727006AbgDTTvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725897AbgDTTvI (ORCPT
+        Mon, 20 Apr 2020 15:51:21 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55849 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726141AbgDTTvU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:51:08 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0864BC061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:51:08 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id h11so4331190plr.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:51:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cXndO/9atMRBj3ki1OBgBAxeMbivxmBoqy5um/+TbH8=;
-        b=aKHshmB81P4jVzDuwe3k2sHJgUvtTm1Mcpd9HHn/+ZTXeDzs7LPgFHPinxZV33OTkh
-         pLup8x0WaJi7Rrvq6bARbjU8MnPvOUz5zJ3g9oxEkLBsKDGJqaVZWwXxnYq1LL6H1qil
-         tr81s68QkcTewzitq+PCd8ExjXkLEROJBeVCzKrIcaoq2OdEGEhcFOUG7KR85Pc97QDH
-         84FqeclwwQj8vxNGHVZBKGCtRCMAcAaDadYuUhNJrNdDxQ1EZqIJU2RtbsCz9PD6tmd1
-         qJWWGZ7TrLLUAGVfObzkBCWMqvO4NuJBKPEQiRHjO0zwiEkLg5DxUBkdmMsLmlKs479o
-         C9hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cXndO/9atMRBj3ki1OBgBAxeMbivxmBoqy5um/+TbH8=;
-        b=Pg3K7Kar6mM+0RXvFkZEGNQeCp+dFR98tNWN+ZXxsucAY4L6WsTjDPDdqQrpS0H7Gi
-         xkqm/JRJOepfC3MoS1zV4qt5v7F03vTmklPcikOIeUad099g254P2h1XvnKlPC00+cqT
-         +23k/FQEWcu8tkmXsOZN2h9EKAuZ3GSJ6AXeIK1/tZkcd/tGxC4XVKktwG8b1gpLAMGZ
-         m8okWhy9hf2gBWL0/BXpIHfuPkZ6kMGjHVw0/sqdO2fjki5fZ2hgr04pMvopHXjTkDCG
-         aMhRCyzvkDCiHb7qaG3Iq/hI3NZ8LrAITNcLWTyE8AYeLUTViOB6e9K/wxjksjnt3qgp
-         qkAQ==
-X-Gm-Message-State: AGi0PuY7lT/Cz/U+3aCkqBSdihFO00DoYPk9Pmlebk7eZhTA4CLB6zkK
-        gNOS56tWWEIa0EG2WC+1EluxrA==
-X-Google-Smtp-Source: APiQypKiYnTS3YZu4PQkYRxyoy2DcBPSp/lxOL17ZNtEaP8IVuejdUpKA+GupS/4BaQVy3zMZNf0Xg==
-X-Received: by 2002:a17:902:7618:: with SMTP id k24mr8746327pll.71.1587412267357;
-        Mon, 20 Apr 2020 12:51:07 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d8sm289923pfd.159.2020.04.20.12.51.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 12:51:06 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 12:51:30 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/9] Revert "drm/msm/a6xx: Use the DMA API for GMU memory
- objects"
-Message-ID: <20200420195130.GQ576963@builder.lan>
-References: <20200420140313.7263-1-jonathan@marek.ca>
- <20200420140313.7263-3-jonathan@marek.ca>
+        Mon, 20 Apr 2020 15:51:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587412279;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TWPS8Ag7vK66l0A1WZiPeQ8HRASExb1Zd/J41NjFSx4=;
+        b=bCQSCeE3kHWNQt8EjEIlXUABatiKDng0YkWPgQjhJCwbSbt7Is0qOK+UMgeye1lBghBeYu
+        fNhn+jMhwGTZqegR9qN8OVmz1LC3LQkMQv+tzXmoyvblYAhjuVfgEGTEx7TXuytF6VB6T/
+        hfpLGjyUZb05n6iCZ8ExwcNbmeDoIio=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-C1aiVMz-M62ucoynYrtO3A-1; Mon, 20 Apr 2020 15:51:17 -0400
+X-MC-Unique: C1aiVMz-M62ucoynYrtO3A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7F4E1922020;
+        Mon, 20 Apr 2020 19:51:16 +0000 (UTC)
+Received: from treble (ovpn-118-158.rdu2.redhat.com [10.10.118.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B98FB9A253;
+        Mon, 20 Apr 2020 19:51:13 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 14:51:11 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
+ early
+Message-ID: <20200420195111.ob7jnhs7wqp6d56g@treble>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
+ <20200420175751.GA13807@redhat.com>
+ <20200420182516.6awwwbvoen62gwbr@treble>
+ <20200420190141.GB13807@redhat.com>
+ <20200420191117.wrjauayeutkpvkwd@treble>
+ <20200420194900.GC13807@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200420140313.7263-3-jonathan@marek.ca>
+In-Reply-To: <20200420194900.GC13807@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20 Apr 07:03 PDT 2020, Jonathan Marek wrote:
-
-> This reverts commit a5fb8b918920c6f7706a8b5b8ea535a7f077a7f6.
-
-Why?
-
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 115 +++++++++++++++++++++++---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   6 +-
->  2 files changed, 107 insertions(+), 14 deletions(-)
+On Mon, Apr 20, 2020 at 03:49:00PM -0400, Joe Lawrence wrote:
+> On Mon, Apr 20, 2020 at 02:11:17PM -0500, Josh Poimboeuf wrote:
+> > On Mon, Apr 20, 2020 at 03:01:41PM -0400, Joe Lawrence wrote:
+> > > > > ... apply_relocations() is also iterating over the section headers (the
+> > > > > diff context doesn't show it here, but i is an incrementing index over
+> > > > > sechdrs[]).
+> > > > > 
+> > > > > So if there is more than one KLP relocation section, we'll process them
+> > > > > multiple times.  At least the x86 relocation code will detect this and
+> > > > > fail the module load with an invalid relocation (existing value not
+> > > > > zero).
+> > > > 
+> > > > Ah, yes, good catch!
+> > > > 
+> > > 
+> > > The same test case passed with a small modification to push the foreach
+> > > KLP section part to a kernel/livepatch/core.c local function and
+> > > exposing the klp_resolve_symbols() + apply_relocate_add() for a given
+> > > section to kernel/module.c.  Something like following...
+> > 
+> > I came up with something very similar, though I named them
+> > klp_apply_object_relocs() and klp_apply_section_relocs() and changed the
+> > argument order a bit (module first).  Since it sounds like you have a
+> > test, could you try this one?
+> > 
 > 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index c4e71abbdd53..748cd379065f 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -2,7 +2,6 @@
->  /* Copyright (c) 2017-2019 The Linux Foundation. All rights reserved. */
->  
->  #include <linux/clk.h>
-> -#include <linux/dma-mapping.h>
->  #include <linux/interconnect.h>
->  #include <linux/pm_domain.h>
->  #include <linux/pm_opp.h>
-> @@ -921,10 +920,21 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
->  
->  static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu, struct a6xx_gmu_bo *bo)
->  {
-> +	int count, i;
-> +	u64 iova;
-> +
->  	if (IS_ERR_OR_NULL(bo))
->  		return;
->  
-> -	dma_free_wc(gmu->dev, bo->size, bo->virt, bo->iova);
-> +	count = bo->size >> PAGE_SHIFT;
-> +	iova = bo->iova;
-> +
-> +	for (i = 0; i < count; i++, iova += PAGE_SIZE) {
-> +		iommu_unmap(gmu->domain, iova, PAGE_SIZE);
-> +		__free_pages(bo->pages[i], 0);
-> +	}
-> +
-> +	kfree(bo->pages);
->  	kfree(bo);
->  }
->  
-> @@ -932,6 +942,7 @@ static struct a6xx_gmu_bo *a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
->  		size_t size)
->  {
->  	struct a6xx_gmu_bo *bo;
-> +	int ret, count, i;
->  
->  	bo = kzalloc(sizeof(*bo), GFP_KERNEL);
->  	if (!bo)
-> @@ -939,14 +950,86 @@ static struct a6xx_gmu_bo *a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
->  
->  	bo->size = PAGE_ALIGN(size);
->  
-> -	bo->virt = dma_alloc_wc(gmu->dev, bo->size, &bo->iova, GFP_KERNEL);
-> +	count = bo->size >> PAGE_SHIFT;
->  
-> -	if (!bo->virt) {
-> +	bo->pages = kcalloc(count, sizeof(struct page *), GFP_KERNEL);
-> +	if (!bo->pages) {
->  		kfree(bo);
->  		return ERR_PTR(-ENOMEM);
->  	}
->  
-> +	for (i = 0; i < count; i++) {
-> +		bo->pages[i] = alloc_page(GFP_KERNEL);
-> +		if (!bo->pages[i])
-> +			goto err;
-> +	}
-> +
-> +	bo->iova = gmu->uncached_iova_base;
-> +
-> +	for (i = 0; i < count; i++) {
-> +		ret = iommu_map(gmu->domain,
-> +			bo->iova + (PAGE_SIZE * i),
-> +			page_to_phys(bo->pages[i]), PAGE_SIZE,
-> +			IOMMU_READ | IOMMU_WRITE);
-> +
-> +		if (ret) {
-> +			DRM_DEV_ERROR(gmu->dev, "Unable to map GMU buffer object\n");
-> +
-> +			for (i = i - 1 ; i >= 0; i--)
-> +				iommu_unmap(gmu->domain,
-> +					bo->iova + (PAGE_SIZE * i),
-> +					PAGE_SIZE);
-> +
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	bo->virt = vmap(bo->pages, count, VM_IOREMAP,
-> +		pgprot_writecombine(PAGE_KERNEL));
-> +	if (!bo->virt)
-> +		goto err;
-> +
-> +	/* Align future IOVA addresses on 1MB boundaries */
-> +	gmu->uncached_iova_base += ALIGN(size, SZ_1M);
-> +
->  	return bo;
-> +
-> +err:
-> +	for (i = 0; i < count; i++) {
-> +		if (bo->pages[i])
-> +			__free_pages(bo->pages[i], 0);
-> +	}
-> +
-> +	kfree(bo->pages);
-> +	kfree(bo);
-> +
-> +	return ERR_PTR(-ENOMEM);
-> +}
-> +
-> +static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * The GMU address space is hardcoded to treat the range
-> +	 * 0x60000000 - 0x80000000 as un-cached memory. All buffers shared
-> +	 * between the GMU and the CPU will live in this space
-> +	 */
-> +	gmu->uncached_iova_base = 0x60000000;
-> +
-> +
-> +	gmu->domain = iommu_domain_alloc(&platform_bus_type);
-> +	if (!gmu->domain)
-> +		return -ENODEV;
-> +
-> +	ret = iommu_attach_device(gmu->domain, gmu->dev);
-> +
-> +	if (ret) {
-> +		iommu_domain_free(gmu->domain);
-> +		gmu->domain = NULL;
-> +	}
-> +
-> +	return ret;
->  }
->  
->  /* Return the 'arc-level' for the given frequency */
-> @@ -1206,6 +1289,10 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
->  
->  	a6xx_gmu_memory_free(gmu, gmu->hfi);
->  
-> +	iommu_detach_device(gmu->domain, gmu->dev);
-> +
-> +	iommu_domain_free(gmu->domain);
-> +
->  	free_irq(gmu->gmu_irq, gmu);
->  	free_irq(gmu->hfi_irq, gmu);
->  
-> @@ -1226,15 +1313,7 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
->  
->  	gmu->dev = &pdev->dev;
->  
-> -	/* Pass force_dma false to require the DT to set the dma region */
-> -	ret = of_dma_configure(gmu->dev, node, false);
-> -	if (ret)
-> -		return ret;
-> -
-> -	/* Set the mask after the of_dma_configure() */
-> -	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(31));
-> -	if (ret)
-> -		return ret;
-> +	of_dma_configure(gmu->dev, node, true);
->  
->  	/* Fow now, don't do anything fancy until we get our feet under us */
->  	gmu->idle_level = GMU_IDLE_STATE_ACTIVE;
-> @@ -1246,6 +1325,11 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
->  	if (ret)
->  		goto err_put_device;
->  
-> +	/* Set up the IOMMU context bank */
-> +	ret = a6xx_gmu_memory_probe(gmu);
-> +	if (ret)
-> +		goto err_put_device;
-> +
->  	/* Allocate memory for for the HFI queues */
->  	gmu->hfi = a6xx_gmu_memory_alloc(gmu, SZ_16K);
->  	if (IS_ERR(gmu->hfi))
-> @@ -1291,6 +1375,11 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
->  err_memory:
->  	a6xx_gmu_memory_free(gmu, gmu->hfi);
->  
-> +	if (gmu->domain) {
-> +		iommu_detach_device(gmu->domain, gmu->dev);
-> +
-> +		iommu_domain_free(gmu->domain);
-> +	}
->  	ret = -ENODEV;
->  
->  err_put_device:
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> index 4af65a36d5ca..2af91ed7ed0c 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> @@ -12,7 +12,8 @@
->  struct a6xx_gmu_bo {
->  	void *virt;
->  	size_t size;
-> -	dma_addr_t iova;
-> +	u64 iova;
-> +	struct page **pages;
->  };
->  
->  /*
-> @@ -48,6 +49,9 @@ struct a6xx_gmu {
->  	int hfi_irq;
->  	int gmu_irq;
->  
-> +	struct iommu_domain *domain;
-> +	u64 uncached_iova_base;
-> +
->  	struct device *gxpd;
->  
->  	int idle_level;
-> -- 
-> 2.26.1
-> 
+> LGTM.  I have a few klp-convert selftests that I've been slowly
+> tinkering on and they all load/run successfully with this version. :)
+
+Good to hear, thanks!  Hooray selftests :-)
+
+-- 
+Josh
+
