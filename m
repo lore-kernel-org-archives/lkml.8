@@ -2,405 +2,188 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB513C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F30C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFAB72078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E61205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eTgQdJ96"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJ0Pqwkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgDTTH5 (ORCPT
+        id S1727032AbgDTTIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37122 "EHLO
+        Mon, 20 Apr 2020 15:08:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726688AbgDTTH5 (ORCPT
+        by vger.kernel.org with ESMTP id S1725896AbgDTTIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:07:57 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC49C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:07:56 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id j3so11252005ljg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:07:56 -0700 (PDT)
+        Mon, 20 Apr 2020 15:08:52 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AF85C061A0C;
+        Mon, 20 Apr 2020 12:08:51 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id j4so11899017qkc.11;
+        Mon, 20 Apr 2020 12:08:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZKq6Q8RhG/Mknjv1EO22iG+3+Ph0W9R1eR/bro3elSs=;
-        b=eTgQdJ96yAD9MGh67Fz2Mpvt4RUaEAZn0Dg64jYvO5oSIh/WhYWEBImunfq/KHu7dD
-         fvniThbiwsBYZKoqRbLAm+EuMp5EpEN3uUqjNNyDBTWygAKFq5QmuPujRSOrTOs05S3Z
-         8ELLNt1+Y7ThGLP5r7gfvObrDf6zx8upb+Fozm4udX8fTa9OQW62VBO4EidSSobsjV0E
-         k4RgOwJ47glE1wcQ4d71IyTc5kO9ajWzbbk4k1CmFOfDBWFBZrrk5jTVvAy2zfdTWTbx
-         SOCtynl04DsVxsMAFFOGb2WI4deujt1VkzfYFgN0xwU63Yayg9CeXW0RPVmzsJFZGCa9
-         yDLQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=H3Jg3tG9mOP7tMGOLglwmln0MBz8ObmXMf+JASaNH08=;
+        b=sJ0PqwkjLvBvuf2g+GVKZUikKq4EiCL6XVrnPp6yMjFoiogoqIwOMSj4ydUKKkfoQc
+         QA0Muf96g9gTXkat2x24I/kORZ2Aw3euk0noHRJrbZ0RzYZOGPqD4X6tc4bhw1IUX37w
+         jOiGfRgX6I88dne3WkL9vNRudoxD9dWfpFYcZwkysTKplFm67VJThkLQdSdWU0lPlbHu
+         uh7R7T1cLmH6c1MFrE5Z+sxUqTjPjaH8DV7Ucv6y3gTdeTzjGkCr+Bvzr9ceWvxnOrqr
+         VPB+PKOmQdrZtj8/3GRH0Ih38xgeSl/VgV658w6lcu8w4XC9AQjCueUAUJbzOmcH5gkw
+         TvtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZKq6Q8RhG/Mknjv1EO22iG+3+Ph0W9R1eR/bro3elSs=;
-        b=WRmvWTr9rBFxoeZtME4hFp3TdNSGjy82B+5Kp3R7BIXjo8NOZTIAtXnlGfSUxhPRyM
-         +JjRIAhU35RmGQRGynnABpa2YqZs/zpaFxwR6AD3fgI1dVnsWDguDj1f9m6+cnj1sG8z
-         HBSe/8+8HrvIOA1eHgOGXVgsqEv7WXQVgCRuuPPt9WW9CRzPoQa0q42GAJ9Uxkg6XOMo
-         EQ+mWQYeRyicP6yXavvxT0lNzoodFhUC3RZ09wrZ4JX8AaCVYbbMtunL7eohzJmdxRJb
-         thEdzAAsCKCEDY6xtKF68BB2KWwAOqsmjIUOtHqqvBmg461c1WuWRG4puvKpqw9CgV4d
-         YJSQ==
-X-Gm-Message-State: AGi0PuZnpMfP1RlgWMz5Lm3DMHwGygef358BBy5kREoF7Ao8Y5V6N9lI
-        HhQHTDa1C3qjDgyqR30t7ZKtQ2oUP1wXGbqA2NqbuA==
-X-Google-Smtp-Source: APiQypLW+2UdJ0x7VeiX1LKbTlJvtnn3T3NW3BJKudSf2fJB1rTDEuD1N8+coV7y+K+FCVGbWmWpTJHHCskavdkVs3I=
-X-Received: by 2002:a2e:7e03:: with SMTP id z3mr11116664ljc.200.1587409675138;
- Mon, 20 Apr 2020 12:07:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H3Jg3tG9mOP7tMGOLglwmln0MBz8ObmXMf+JASaNH08=;
+        b=Ehe46LLG+tcaH55Z6cf1si5hirD6hNSZDhrE/Mfpm6bvII19okii+ncdc1GYRcI4EP
+         eOhfOmhZHSGhCbHYmn+RfFjzKegem2ht0d/x5J2LJKCKXNxcMgRdac6xLJ7Wg14p+uTg
+         +0sC2Sf6iX45m+/bST9fccglGyXnHqvztcFP4ZR4phZx6BSLq/L6imOk5FiLcJFqP2Y9
+         UavqkQlOqhg5SmFcSyKDmcunf4zBsu/w8uN9nItkinVb5mzJJoSWR8EZCYATFBpBwZlK
+         52JaV0oq7StwOTmY0xmlJ5QQBh0KrouddmTKeorlSeQmHCzWietKVABhO3KqTWAGWFXs
+         fkqg==
+X-Gm-Message-State: AGi0PubwOwSrAWa19Lyt5AZVzo7DCT4K//ND/VUSjsAe7SggvGZrYCNO
+        XnN6Zm+KYhdez16MXs6mbbU=
+X-Google-Smtp-Source: APiQypIs6F/4crhBr5ngpinP4J4A/ZzbDaWJ7ym5ePzRZC6vwn/0AZ0a1hX4yuysaEjJ1XMJjgJzSg==
+X-Received: by 2002:a37:e112:: with SMTP id c18mr17010881qkm.467.1587409730812;
+        Mon, 20 Apr 2020 12:08:50 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id u190sm274784qkb.102.2020.04.20.12.08.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 12:08:49 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 15:08:10 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2] drivers: counter: Add Cros EC Sync counter
+Message-ID: <20200420190810.GA16124@icarus>
+References: <20200413195514.192868-1-gwendal@chromium.org>
+ <20200414204814.GH7347@icarus>
+ <CAPUE2utas86PQdQem7bPsNL+xnHreepG8wbvbt2Vk5rtjoyn-A@mail.gmail.com>
 MIME-Version: 1.0
-References: <1587406337-32317-1-git-send-email-jrdr.linux@gmail.com>
-In-Reply-To: <1587406337-32317-1-git-send-email-jrdr.linux@gmail.com>
-From:   Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Date:   Mon, 20 Apr 2020 21:07:44 +0200
-Message-ID: <CAMeQTsbDWopyaYbJt-T1jVUvFezQ6xtSuQhYiXpUuLP3kOeXPg@mail.gmail.com>
-Subject: Re: [PATCH] drm/gma500: Remove dead code
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
+Content-Disposition: inline
+In-Reply-To: <CAPUE2utas86PQdQem7bPsNL+xnHreepG8wbvbt2Vk5rtjoyn-A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 8:04 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
->
-> These are dead code since 3.7. If there is no plan to use them further,
-> these can be removed forever.
 
-Thanks. Will apply to drm-misc-next.
+--DocE+STaALJfprDB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+On Mon, Apr 20, 2020 at 11:54:16AM -0700, Gwendal Grignou wrote:
+> On Tue, Apr 14, 2020 at 1:48 PM William Breathitt Gray
+> <vilhelm.gray@gmail.com> wrote:
+> >
+> > On Mon, Apr 13, 2020 at 12:55:14PM -0700, Gwendal Grignou wrote:
+> > > When the camera vsync pin is connected to the embedded controller (EC=
+) of
+> > > a chromebook, the EC reports a sensor with a counter that increases
+> > > at each GPIO rising edge.
+> > >
+> > > The sensor is presented using the counter subsystem.
+> > > In addition, it is also presented via the IIO subsystem with a timest=
+amp,
+> > > allowing synchronisation with sensors connected to the same EC, for
+> > > image stabilisation or augmented reality applications.
+> >
+> > Hi Gwendal,
+> >
+> > Sorry for the delay. I have some changes requested below.
+> >
+> > > To enable the counter:
+> > > via counter ABI:
+> > > echo "rising edge" > counterX/count0/signal_action
+> > > via iio ABI
+> > > echo 1 > iio:deviceY/en
+> > >
+> > > To disable the counter:
+> > > via counter ABI:
+> > > echo "none" > counterX/count0/signal_action
+> > > via iio ABI
+> > > echo 0 > iio:deviceY/en
+> >
+> > Although in theory a user could manually disable the actions for a
+> > Signal, this is a very roundabout way of actually disabling the Count.
+> > It's better to expose an "enable" attribute to allow the users to
+> > perform this functionality; for example:
+> >
+> > echo 0 > counterX/count0/enable
+> > echo 1 > counterX/count0/enable
+> >
+> > >
+> > > To read the current counter value:
+> > > via counter ABI:
+> > > cat counterX/count0/count
+> > > via iio ABI
+> > > cat iio:deviceY/in_count_raw
+> >
+> > I know we discussed this in the last review but it's still the same as
+> > before: IIO_COUNT interface is deprecated so new drivers won't be
+> > allowed to use it. You'll have to remove the IIO_COUNT code in this
+> > driver and replace it with Counter subsystem equivalents.
+> I understand the need of a clean separation between counter and IIO subsy=
+stems.
+> I will wait for counter to offer a way to gather timestamp'ed counts.
+> Do you have a plan/proposed ABI you can share?
+>=20
+> Thanks,
+>=20
+> Gwendal.
 
->
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> ---
->  drivers/gpu/drm/gma500/cdv_intel_dp.c        | 31 +--------
->  drivers/gpu/drm/gma500/cdv_intel_lvds.c      | 83 -----------------------
->  drivers/gpu/drm/gma500/mdfld_intel_display.c | 31 ---------
->  drivers/gpu/drm/gma500/psb_intel_sdvo.c      | 99 ----------------------------
->  4 files changed, 1 insertion(+), 243 deletions(-)
->
-> diff --git a/drivers/gpu/drm/gma500/cdv_intel_dp.c b/drivers/gpu/drm/gma500/cdv_intel_dp.c
-> index 5772b2d..a9ed372 100644
-> --- a/drivers/gpu/drm/gma500/cdv_intel_dp.c
-> +++ b/drivers/gpu/drm/gma500/cdv_intel_dp.c
-> @@ -1271,37 +1271,8 @@ static void cdv_intel_dp_commit(struct drm_encoder *encoder)
->         return ((l >> s) & 3) << DP_TRAIN_PRE_EMPHASIS_SHIFT;
->  }
->
-> -
-> -#if 0
-> -static char    *voltage_names[] = {
-> -       "0.4V", "0.6V", "0.8V", "1.2V"
-> -};
-> -static char    *pre_emph_names[] = {
-> -       "0dB", "3.5dB", "6dB", "9.5dB"
-> -};
-> -static char    *link_train_names[] = {
-> -       "pattern 1", "pattern 2", "idle", "off"
-> -};
-> -#endif
-> -
->  #define CDV_DP_VOLTAGE_MAX         DP_TRAIN_VOLTAGE_SWING_LEVEL_3
-> -/*
-> -static uint8_t
-> -cdv_intel_dp_pre_emphasis_max(uint8_t voltage_swing)
-> -{
-> -       switch (voltage_swing & DP_TRAIN_VOLTAGE_SWING_MASK) {
-> -       case DP_TRAIN_VOLTAGE_SWING_400:
-> -               return DP_TRAIN_PRE_EMPHASIS_6;
-> -       case DP_TRAIN_VOLTAGE_SWING_600:
-> -               return DP_TRAIN_PRE_EMPHASIS_6;
-> -       case DP_TRAIN_VOLTAGE_SWING_800:
-> -               return DP_TRAIN_PRE_EMPHASIS_3_5;
-> -       case DP_TRAIN_VOLTAGE_SWING_1200:
-> -       default:
-> -               return DP_TRAIN_PRE_EMPHASIS_0;
-> -       }
-> -}
-> -*/
-> +
->  static void
->  cdv_intel_get_adjust_train(struct gma_encoder *encoder)
->  {
-> diff --git a/drivers/gpu/drm/gma500/cdv_intel_lvds.c b/drivers/gpu/drm/gma500/cdv_intel_lvds.c
-> index ea0a5d9..dffb86e 100644
-> --- a/drivers/gpu/drm/gma500/cdv_intel_lvds.c
-> +++ b/drivers/gpu/drm/gma500/cdv_intel_lvds.c
-> @@ -72,89 +72,6 @@ static u32 cdv_intel_lvds_get_max_backlight(struct drm_device *dev)
->         return retval;
->  }
->
-> -#if 0
-> -/*
-> - * Set LVDS backlight level by I2C command
-> - */
-> -static int cdv_lvds_i2c_set_brightness(struct drm_device *dev,
-> -                                       unsigned int level)
-> -{
-> -       struct drm_psb_private *dev_priv = dev->dev_private;
-> -       struct psb_intel_i2c_chan *lvds_i2c_bus = dev_priv->lvds_i2c_bus;
-> -       u8 out_buf[2];
-> -       unsigned int blc_i2c_brightness;
-> -
-> -       struct i2c_msg msgs[] = {
-> -               {
-> -                       .addr = lvds_i2c_bus->slave_addr,
-> -                       .flags = 0,
-> -                       .len = 2,
-> -                       .buf = out_buf,
-> -               }
-> -       };
-> -
-> -       blc_i2c_brightness = BRIGHTNESS_MASK & ((unsigned int)level *
-> -                            BRIGHTNESS_MASK /
-> -                            BRIGHTNESS_MAX_LEVEL);
-> -
-> -       if (dev_priv->lvds_bl->pol == BLC_POLARITY_INVERSE)
-> -               blc_i2c_brightness = BRIGHTNESS_MASK - blc_i2c_brightness;
-> -
-> -       out_buf[0] = dev_priv->lvds_bl->brightnesscmd;
-> -       out_buf[1] = (u8)blc_i2c_brightness;
-> -
-> -       if (i2c_transfer(&lvds_i2c_bus->adapter, msgs, 1) == 1)
-> -               return 0;
-> -
-> -       DRM_ERROR("I2C transfer error\n");
-> -       return -1;
-> -}
-> -
-> -
-> -static int cdv_lvds_pwm_set_brightness(struct drm_device *dev, int level)
-> -{
-> -       struct drm_psb_private *dev_priv = dev->dev_private;
-> -
-> -       u32 max_pwm_blc;
-> -       u32 blc_pwm_duty_cycle;
-> -
-> -       max_pwm_blc = cdv_intel_lvds_get_max_backlight(dev);
-> -
-> -       /*BLC_PWM_CTL Should be initiated while backlight device init*/
-> -       BUG_ON((max_pwm_blc & PSB_BLC_MAX_PWM_REG_FREQ) == 0);
-> -
-> -       blc_pwm_duty_cycle = level * max_pwm_blc / BRIGHTNESS_MAX_LEVEL;
-> -
-> -       if (dev_priv->lvds_bl->pol == BLC_POLARITY_INVERSE)
-> -               blc_pwm_duty_cycle = max_pwm_blc - blc_pwm_duty_cycle;
-> -
-> -       blc_pwm_duty_cycle &= PSB_BACKLIGHT_PWM_POLARITY_BIT_CLEAR;
-> -       REG_WRITE(BLC_PWM_CTL,
-> -                 (max_pwm_blc << PSB_BACKLIGHT_PWM_CTL_SHIFT) |
-> -                 (blc_pwm_duty_cycle));
-> -
-> -       return 0;
-> -}
-> -
-> -/*
-> - * Set LVDS backlight level either by I2C or PWM
-> - */
-> -void cdv_intel_lvds_set_brightness(struct drm_device *dev, int level)
-> -{
-> -       struct drm_psb_private *dev_priv = dev->dev_private;
-> -
-> -       if (!dev_priv->lvds_bl) {
-> -               DRM_ERROR("NO LVDS Backlight Info\n");
-> -               return;
-> -       }
-> -
-> -       if (dev_priv->lvds_bl->type == BLC_I2C_TYPE)
-> -               cdv_lvds_i2c_set_brightness(dev, level);
-> -       else
-> -               cdv_lvds_pwm_set_brightness(dev, level);
-> -}
-> -#endif
-> -
->  /**
->   * Sets the backlight level.
->   *
-> diff --git a/drivers/gpu/drm/gma500/mdfld_intel_display.c b/drivers/gpu/drm/gma500/mdfld_intel_display.c
-> index 4fff110..aae2d35 100644
-> --- a/drivers/gpu/drm/gma500/mdfld_intel_display.c
-> +++ b/drivers/gpu/drm/gma500/mdfld_intel_display.c
-> @@ -658,16 +658,6 @@ static int mdfld_crtc_mode_set(struct drm_crtc *crtc,
->
->         dev_dbg(dev->dev, "pipe = 0x%x\n", pipe);
->
-> -#if 0
-> -       if (pipe == 1) {
-> -               if (!gma_power_begin(dev, true))
-> -                       return 0;
-> -               android_hdmi_crtc_mode_set(crtc, mode, adjusted_mode,
-> -                       x, y, old_fb);
-> -               goto mrst_crtc_mode_set_exit;
-> -       }
-> -#endif
-> -
->         ret = check_fb(crtc->primary->fb);
->         if (ret)
->                 return ret;
-> @@ -918,14 +908,6 @@ static int mdfld_crtc_mode_set(struct drm_crtc *crtc,
->                 }
->                 dpll = 0;
->
-> -#if 0 /* FIXME revisit later */
-> -               if (ksel == KSEL_CRYSTAL_19 || ksel == KSEL_BYPASS_19 ||
-> -                                               ksel == KSEL_BYPASS_25)
-> -                       dpll &= ~MDFLD_INPUT_REF_SEL;
-> -               else if (ksel == KSEL_BYPASS_83_100)
-> -                       dpll |= MDFLD_INPUT_REF_SEL;
-> -#endif /* FIXME revisit later */
-> -
->                 if (is_hdmi)
->                         dpll |= MDFLD_VCO_SEL;
->
-> @@ -935,20 +917,7 @@ static int mdfld_crtc_mode_set(struct drm_crtc *crtc,
->                 /* compute bitmask from p1 value */
->                 dpll |= (1 << (clock.p1 - 2)) << 17;
->
-> -#if 0 /* 1080p30 & 720p */
-> -               dpll = 0x00050000;
-> -               fp = 0x000001be;
-> -#endif
-> -#if 0 /* 480p */
-> -               dpll = 0x02010000;
-> -               fp = 0x000000d2;
-> -#endif
->         } else {
-> -#if 0 /*DBI_TPO_480x864*/
-> -               dpll = 0x00020000;
-> -               fp = 0x00000156;
-> -#endif /* DBI_TPO_480x864 */ /* get from spec. */
-> -
->                 dpll = 0x00800000;
->                 fp = 0x000000c1;
->         }
-> diff --git a/drivers/gpu/drm/gma500/psb_intel_sdvo.c b/drivers/gpu/drm/gma500/psb_intel_sdvo.c
-> index 264d7ad..68fb3d7 100644
-> --- a/drivers/gpu/drm/gma500/psb_intel_sdvo.c
-> +++ b/drivers/gpu/drm/gma500/psb_intel_sdvo.c
-> @@ -864,36 +864,6 @@ static bool psb_intel_sdvo_set_avi_infoframe(struct psb_intel_sdvo *psb_intel_sd
->         DRM_INFO("HDMI is not supported yet");
->
->         return false;
-> -#if 0
-> -       struct dip_infoframe avi_if = {
-> -               .type = DIP_TYPE_AVI,
-> -               .ver = DIP_VERSION_AVI,
-> -               .len = DIP_LEN_AVI,
-> -       };
-> -       uint8_t tx_rate = SDVO_HBUF_TX_VSYNC;
-> -       uint8_t set_buf_index[2] = { 1, 0 };
-> -       uint64_t *data = (uint64_t *)&avi_if;
-> -       unsigned i;
-> -
-> -       intel_dip_infoframe_csum(&avi_if);
-> -
-> -       if (!psb_intel_sdvo_set_value(psb_intel_sdvo,
-> -                                 SDVO_CMD_SET_HBUF_INDEX,
-> -                                 set_buf_index, 2))
-> -               return false;
-> -
-> -       for (i = 0; i < sizeof(avi_if); i += 8) {
-> -               if (!psb_intel_sdvo_set_value(psb_intel_sdvo,
-> -                                         SDVO_CMD_SET_HBUF_DATA,
-> -                                         data, 8))
-> -                       return false;
-> -               data++;
-> -       }
-> -
-> -       return psb_intel_sdvo_set_value(psb_intel_sdvo,
-> -                                   SDVO_CMD_SET_HBUF_TXRATE,
-> -                                   &tx_rate, 1);
-> -#endif
->  }
->
->  static bool psb_intel_sdvo_set_tv_format(struct psb_intel_sdvo *psb_intel_sdvo)
-> @@ -1227,75 +1197,6 @@ static bool psb_intel_sdvo_get_capabilities(struct psb_intel_sdvo *psb_intel_sdv
->         return true;
->  }
->
-> -/* No use! */
-> -#if 0
-> -struct drm_connector* psb_intel_sdvo_find(struct drm_device *dev, int sdvoB)
-> -{
-> -       struct drm_connector *connector = NULL;
-> -       struct psb_intel_sdvo *iout = NULL;
-> -       struct psb_intel_sdvo *sdvo;
-> -
-> -       /* find the sdvo connector */
-> -       list_for_each_entry(connector, &dev->mode_config.connector_list, head) {
-> -               iout = to_psb_intel_sdvo(connector);
-> -
-> -               if (iout->type != INTEL_OUTPUT_SDVO)
-> -                       continue;
-> -
-> -               sdvo = iout->dev_priv;
-> -
-> -               if (sdvo->sdvo_reg == SDVOB && sdvoB)
-> -                       return connector;
-> -
-> -               if (sdvo->sdvo_reg == SDVOC && !sdvoB)
-> -                       return connector;
-> -
-> -       }
-> -
-> -       return NULL;
-> -}
-> -
-> -int psb_intel_sdvo_supports_hotplug(struct drm_connector *connector)
-> -{
-> -       u8 response[2];
-> -       u8 status;
-> -       struct psb_intel_sdvo *psb_intel_sdvo;
-> -       DRM_DEBUG_KMS("\n");
-> -
-> -       if (!connector)
-> -               return 0;
-> -
-> -       psb_intel_sdvo = to_psb_intel_sdvo(connector);
-> -
-> -       return psb_intel_sdvo_get_value(psb_intel_sdvo, SDVO_CMD_GET_HOT_PLUG_SUPPORT,
-> -                                   &response, 2) && response[0];
-> -}
-> -
-> -void psb_intel_sdvo_set_hotplug(struct drm_connector *connector, int on)
-> -{
-> -       u8 response[2];
-> -       u8 status;
-> -       struct psb_intel_sdvo *psb_intel_sdvo = to_psb_intel_sdvo(connector);
-> -
-> -       psb_intel_sdvo_write_cmd(psb_intel_sdvo, SDVO_CMD_GET_ACTIVE_HOT_PLUG, NULL, 0);
-> -       psb_intel_sdvo_read_response(psb_intel_sdvo, &response, 2);
-> -
-> -       if (on) {
-> -               psb_intel_sdvo_write_cmd(psb_intel_sdvo, SDVO_CMD_GET_HOT_PLUG_SUPPORT, NULL, 0);
-> -               status = psb_intel_sdvo_read_response(psb_intel_sdvo, &response, 2);
-> -
-> -               psb_intel_sdvo_write_cmd(psb_intel_sdvo, SDVO_CMD_SET_ACTIVE_HOT_PLUG, &response, 2);
-> -       } else {
-> -               response[0] = 0;
-> -               response[1] = 0;
-> -               psb_intel_sdvo_write_cmd(psb_intel_sdvo, SDVO_CMD_SET_ACTIVE_HOT_PLUG, &response, 2);
-> -       }
-> -
-> -       psb_intel_sdvo_write_cmd(psb_intel_sdvo, SDVO_CMD_GET_ACTIVE_HOT_PLUG, NULL, 0);
-> -       psb_intel_sdvo_read_response(psb_intel_sdvo, &response, 2);
-> -}
-> -#endif
-> -
->  static bool
->  psb_intel_sdvo_multifunc_encoder(struct psb_intel_sdvo *psb_intel_sdvo)
->  {
-> --
-> 1.9.1
->
+Hi Gwendal,
+
+I'm working on a reimplementation of the internals of the Counter
+subsystem: https://gitlab.com/vilhelmgray/iio/-/tree/counter_chardev
+
+I'm hoping to submit it to the mailing list later this week if I don't
+hit any delays; it'll include support as well for a character device
+interface for userspace application.
+
+Once those changes are merged into IIO, I'll submit a patch to add
+timestamp support -- hopefully within a week or two after. Right now I
+haven't yet chosen any specific format for timestamps, but I will likely
+match the format IIO subsystem currently has for its timestamp support
+so that migration is easier for these drivers.
+
+William Breathitt Gray
+
+--DocE+STaALJfprDB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6d8xoACgkQhvpINdm7
+VJLvUBAAvbUJPNJWuqxWg5+I1tHr2pK+fwO7yuy65gwXG7V8n0kaZ5XqnZfwoO5+
+1sdDtGnCs1qmhaY/ge2epuE9ylRW5RBkKbwAL8vB42Q2bbs7BgIaVg7LOvhcGNPV
+7T0erY7XPf2/cxcuipQYhztISb9wMTYaLOCFdSNo+tUCJeRy0MPynOrdvI3Fsvzu
+/SnvLFfhMeU3w9u2XXG/P7LY0bGIrrEfOu8b/MObIMYnRXi/squkNJAqojCXGFHZ
+1c9rRtc9kWWxwM7cSzxSZKMJIiIpqdZFutDQW64uIIHmlnYzaRhz0Ti4OkedrzHY
+AHWhQBbkA+1vLjX4Nt8Q521m1JlYg9T9oS3MPGhFdz7HO1XUZPJh0Fg18LCBEk4O
+R0MpB/x6HGW3Ky+gIaXY5y9nY8BWozgBfEdPL5WYAqqiVs/yaV2KCcV14o+cHHSv
+xZGfLObMPGmawTfFk2EsCyWca3G2ioPyG3ZkOcFXNOpuZUaqec5AfQhYkms1CE4I
+Oj38LE3MShV5qYjBUE1zNd6MGI6+nFnIytm1gMq0nC5wP6HKsVm6BuTrmkfH5V1M
+n2QaI96FUF+NZRpFp3BXktMi2S5BePtTogr5IkLZ5nuLmGPCfrKGyd8dxiv4/qmM
+luSTSLtF/PN/bmVTs9VkMUTSuHyRqidCVvAMjwxM0zW5TvjPaSQ=
+=Ale4
+-----END PGP SIGNATURE-----
+
+--DocE+STaALJfprDB--
