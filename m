@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBADC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03E8C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92AC32070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DCA20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386647;
-	bh=eZOTwLQ+89n4izqg2qhLqC8W3atJDfDu9J0twFIibYk=;
+	s=default; t=1587386651;
+	bh=X2fDvyENdeVAPEi4xR7NUbVfmUWj1c8mEiQ43bYDMdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLiePeuKTMqdmS/LgrPC7lToYRCwbh2D68JrLHsSDcVeJNG32ujcFwM556lFMlzAs
-	 F3NZo2kdkGrBcV2ktDEIhXN2F751z4ejJ7+KHXqczvZAhZwt8RqfB4wzJQv6gMXrh7
-	 RAZ1c3ygCjHObd8gHDQk4m0l2e7eCV942o9bT56E=
+	b=wtqkucqdWaQzmj0TIckvR1k0DoLOGqXRXNDmX0lQirV2iqTH2QhHMaUhhUu0G1aYe
+	 /Rj5sMnZIKdtFv2usq1WZG1k0hC6buR8SRQ0Yv8+N+cGyg9bejHW2KxGN055ysH7FI
+	 3+vABqW+qW8Xw94lx9NPe6pNIrLRTqnb4YeWq7lQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgDTMoH (ORCPT
+        id S1728527AbgDTMoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37832 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728505AbgDTMoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:03 -0400
+        id S1728516AbgDTMoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:44:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BD7A20738;
-        Mon, 20 Apr 2020 12:44:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FB7420736;
+        Mon, 20 Apr 2020 12:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386642;
-        bh=eZOTwLQ+89n4izqg2qhLqC8W3atJDfDu9J0twFIibYk=;
+        s=default; t=1587386645;
+        bh=X2fDvyENdeVAPEi4xR7NUbVfmUWj1c8mEiQ43bYDMdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJ2NpiQCI7mbh6PVzSSjByAjC6kR4YpeypkIoWywYfwsWPj1qBuL3EE49SuoDyCxS
-         PyPA7nye4I996bmwumfpZuxjPi63Y2Ex+C45vHswgLpR1Ziq+A0QJu0Z2p2JPOycRk
-         951Vk+8NqTgyV3Ktrh9jEd+r9hNf1af7K6cm5L0Y=
+        b=GKg81SZXYhklD7S+qEsfLsYczUAhoZ81VJ8likpye01/mEw6qdTK4VU8pFoT9PTSa
+         I1mTbJRzFB9VPl2hlZOIdDFOA2iILn9rcHp6hPSSs2PkrTKLeY0mBiGWiTEJoMA0Wt
+         +MNMXxkmmtqNdsLuvqL1yI39XZIxPG/FJWh3r9Cc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.6 39/71] usb: dwc3: gadget: Dont clear flags before transfer ended
-Date:   Mon, 20 Apr 2020 14:38:53 +0200
-Message-Id: <20200420121517.193262046@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.6 40/71] ASoC: Intel: mrfld: fix incorrect check on p->sink
+Date:   Mon, 20 Apr 2020 14:38:54 +0200
+Message-Id: <20200420121517.408405907@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,36 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit a114c4ca64bd522aec1790c7e5c60c882f699d8f upstream.
+commit f5e056e1e46fcbb5f74ce560792aeb7d57ce79e6 upstream.
 
-We track END_TRANSFER command completion. Don't clear transfer
-started/ended flag prematurely. Otherwise, we'd run into the problem
-with restarting transfer before END_TRANSFER command finishes.
+The check on p->sink looks bogus, I believe it should be p->source
+since the following code blocks are related to p->source. Fix
+this by replacing p->sink with p->source.
 
-Fixes: 6d8a019614f3 ("usb: dwc3: gadget: check for Missed Isoc from event status")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Addresses-Coverity: ("Copy-paste error")
+Link: https://lore.kernel.org/r/20191119113640.166940-1-colin.king@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ sound/soc/intel/atom/sst-atom-controls.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2570,10 +2570,8 @@ static void dwc3_gadget_endpoint_transfe
+--- a/sound/soc/intel/atom/sst-atom-controls.c
++++ b/sound/soc/intel/atom/sst-atom-controls.c
+@@ -1333,7 +1333,7 @@ int sst_send_pipe_gains(struct snd_soc_d
+ 				dai->capture_widget->name);
+ 		w = dai->capture_widget;
+ 		snd_soc_dapm_widget_for_each_source_path(w, p) {
+-			if (p->connected && !p->connected(w, p->sink))
++			if (p->connected && !p->connected(w, p->source))
+ 				continue;
  
- 	dwc3_gadget_ep_cleanup_completed_requests(dep, event, status);
- 
--	if (stop) {
-+	if (stop)
- 		dwc3_stop_active_transfer(dep, true, true);
--		dep->flags = DWC3_EP_ENABLED;
--	}
- 
- 	/*
- 	 * WORKAROUND: This is the 2nd half of U1/U2 -> U0 workaround.
+ 			if (p->connect &&  p->source->power &&
 
 
