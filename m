@@ -2,218 +2,244 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8DCC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279D3C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA652223D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01436206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:05:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="pwDDKyOF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TmjG1V6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgDTJEL (ORCPT
+        id S1726319AbgDTJFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:04:11 -0400
-Received: from mail-eopbgr1410131.outbound.protection.outlook.com ([40.107.141.131]:61401
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbgDTJEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:04:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KI33g9xZBgHKaW5voW69jTw0gIidmq43HfdrX6QMYgXFNfwybamzIX+n8FZCI2BXJV6c+Z4E3AU9k//W+xZr4GAFjPuIfiK7MEwSjc7S8pTo9HRT/mOw+YxhXyuOw9J4aJpK/jw95zrY/gw1TjKLgwHIWtLmfe8hipmzJmbGE6NktHcArgIktQ8zhX5n/smQEFA7EmRNuCUsqtvkzONodNX8zkRcLWZWlOpBFKp9BJLew7347v/Q7iU+wSYtmd8q0PeaG6hIMS/mALstP6m3HHrj4dL8FjnitGWYWf3/ihe3EaRCL4B3TUMfn9xt7mfyQwyCS3dZk6XJnXcEK8hwYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7TGHtjA5Z7WbIVqJ1NdRUTSyiYds1CA/1Sub6kW+AsM=;
- b=dnLClVAWCWhhrPRoYohHDdI84YSchTRAEHy6ZF1laXTQ63irMmy11fNqP5eQ/XH7BKZ9Chz9edBP3yzbLMZUCH5CZvaWiJ6P9a5unQrRHI1dvrAlzxgJfBj6GAYOVaOs2shUsD9iYxZX8Z47zSTca5q/QrRTGNofW9P+4l7Zc67Tgfi3S8EhAE4KpjlPNVRKc1IoPsh1Dsk1hA2+3KW4n/k2evCsA86Kvz/rfh7mGqb/f8SipzkuWmeLsAgvN5XndjcgH94lg1oaLSenOWjaySWG7kap3JiMxhIBHn357FVo6U9gIRAX7zJh8cPVjZ6XIvs1mlZxQjE8WW3xrjF7/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7TGHtjA5Z7WbIVqJ1NdRUTSyiYds1CA/1Sub6kW+AsM=;
- b=pwDDKyOF1YoAfw1ZG+LryRjLQgwFZFnHHsIIj76nl4cD6qnLApYcMgWdkcxbeK+C//xC+dFdMvPH87YqeZGUceeNuZ2ptHsCFJh98kwFN55FXzLJSeXnMhL7JU66dOFWYqK5Ik3PIrIL9nf3g3dPBaHVbV4SEk6KAoB7nEAS1SY=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB2605.jpnprd01.prod.outlook.com (20.177.103.137) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.26; Mon, 20 Apr 2020 09:04:00 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
- 09:04:00 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v8 5/8] PCI: endpoint: Add support to handle multiple base
- for mapping outbound memory
-Thread-Topic: [PATCH v8 5/8] PCI: endpoint: Add support to handle multiple
- base for mapping outbound memory
-Thread-Index: AQHWFk5NxeIeMSjSVEWc7YIINcCN9KiBtnxg
-Date:   Mon, 20 Apr 2020 09:04:00 +0000
-Message-ID: <TYAPR01MB4544FDF2FEDBED104F6C6C45D8D40@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1587302823-4435-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587302823-4435-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1587302823-4435-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 29289b9f-751e-47cc-7a2c-08d7e509c438
-x-ms-traffictypediagnostic: TYAPR01MB2605:|TYAPR01MB2605:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB26058622ED10DD7BFE47D86AD8D40@TYAPR01MB2605.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 03793408BA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(376002)(346002)(39860400002)(366004)(136003)(55016002)(107886003)(9686003)(33656002)(4326008)(76116006)(52536014)(64756008)(66556008)(66476007)(66946007)(186003)(55236004)(26005)(6506007)(7696005)(66446008)(316002)(54906003)(8676002)(81156014)(8936002)(110136005)(2906002)(5660300002)(478600001)(86362001)(71200400001)(7416002)(921003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tuuphgj5ozXh/JagCacIiYpiQHopSrB44vp7l4QbKFcfeL/cyfeYcrdVsVhBfvUWgwp8B7uRcq0k9jAGi/NBNdA8OASsTMuIYmr7ljnxK5kkMy63/VKrTapfgM4qphbExzhVKMEwwlX3d3Vr0OVxBTJNVvKeDs/Mg+seaAaYsbcvVMMM3Rsbrgk2jKKZcLFZMcATuCjd7cwyXEI0enm9q3Cx76X76BiYUuMw4+m7NaGEFb2o0uJjWd15C1ie8Hzfql98tG/wCNoPLvHWXbIc0QHX8w6XlOQvDIENA3YK+CvHhJLwEITKhizoWIt4FwrvBvi0i065aw1xm4iA8gNuH44lqLU95eGTdf2O44gSafTZKaZ+HqdOEREZ90atDXFcDwaur4p+qBhBkd2ZDrtsm+AAIhT4Id5f1uuAXB3psvO2b1WcE7Q5GDn2ftDBbgdfEBDMobrGDJTcGsFhvDDiV2zwTYXNn0Wu+ZDxKTjMhFg=
-x-ms-exchange-antispam-messagedata: B5753voFyj56JAbim634rYGLx2IMGOn8IXdCWRgzA3Z+9c8F7FwlwMUzg9V5ysP5+N+GfYD3l2x0S5dkmKn0BIkNU38qvvl9QK35wxzWHz958W0ZHuMKYu6v/3qvoxXDjUha0eKNgoED+8nMK0qUXQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Apr 2020 05:05:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43426 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725773AbgDTJFO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:05:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587373512;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7gJtJYhwAi5omWX+yALxrJj5CbwmC8TzExgCZurnBeE=;
+        b=TmjG1V6HajYg4XaasLv0TVXVGpjkm9A/jdVU7DpGNd9yHGLMsuDUw7iZWdxrfAPMUrwn7Z
+        0fe+z4OiNqQAIYuBBubmBVCB6EsGgQ4WCVJzRIkiQYHMYLf0OtCJWI+lx1gnn4gOQbWfdn
+        Qeg8wkx6ONk0GsGoyNqulmAdiI66e54=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-342-Z5RS7GqfOyKxzeMgmZ3AFQ-1; Mon, 20 Apr 2020 05:05:08 -0400
+X-MC-Unique: Z5RS7GqfOyKxzeMgmZ3AFQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 625561005510;
+        Mon, 20 Apr 2020 09:05:06 +0000 (UTC)
+Received: from krava (ovpn-115-153.ams2.redhat.com [10.36.115.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 106C4129F96;
+        Mon, 20 Apr 2020 09:05:02 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 11:05:00 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Tommi Rantala <tommi.t.rantala@nokia.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] perf tools: Fix segfaults due to missing zstd
+ decompressor initialization
+Message-ID: <20200420090500.GE718574@krava>
+References: <20200417132330.119407-1-tommi.t.rantala@nokia.com>
+ <20200417132330.119407-3-tommi.t.rantala@nokia.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29289b9f-751e-47cc-7a2c-08d7e509c438
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 09:04:00.4087
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D0AmiTVgX7RGN8P+dRYr045sJi9aVmMWAqWSjsZUPEBseyxbxCgZS+H4qZOTutGa0QupR4Up3qUed9Sf5UcFE0FX3uR444mfGB1aKq5jhqkZCP5Ma4d1K4EuM2zr95rJ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2605
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417132330.119407-3-tommi.t.rantala@nokia.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar-san,
+On Fri, Apr 17, 2020 at 04:23:28PM +0300, Tommi Rantala wrote:
+> Initialization of zstd decompressor state is done for "perf report" and
+> "perf inject", but missing for other tools, causing segfaults e.g. with
+> "perf script" and "perf annotate" when zstd compressed data is used:
+> 
+>   # ./perf record -z -a -- sleep 1
+>   # gdb -q --args ./perf script
+>   (gdb) run
+>   Program received signal SIGSEGV, Segmentation fault.
+>   0x00007ffff771d4cb in ZSTD_decompressStream () from /lib64/libzstd.so.1
+>   (gdb) bt
+>   #0  0x00007ffff771d4cb in ZSTD_decompressStream () from /lib64/libzstd.so.1
+>   #1  0x00000000005c92a8 in zstd_decompress_stream (data=0xc3f8e0, src=0x7ffff6dd3038, src_size=255, dst=0x7ffff61ec028, dst_size=528384) at util/zstd.c:100
+>   #2  0x00000000005262ba in perf_session__process_compressed_event (session=0xc38cc0, event=0x7ffff6dd3030, file_offset=11948080) at util/session.c:73
+>   #3  0x000000000052a596 in perf_session__process_user_event (session=0xc38cc0, event=0x7ffff6dd3030, file_offset=11948080) at util/session.c:1581
+>   #4  0x000000000052ab4b in perf_session__process_event (session=0xc38cc0, event=0x7ffff6dd3030, file_offset=11948080) at util/session.c:1713
+>   #5  0x000000000052bed6 in process_simple (session=0xc38cc0, event=0x7ffff6dd3030, file_offset=11948080) at util/session.c:2209
+>   #6  0x000000000052bcfe in reader__process_events (rd=0x7fffffffb400, session=0xc38cc0, prog=0x7fffffffb420) at util/session.c:2175
+>   #7  0x000000000052bfc2 in __perf_session__process_events (session=0xc38cc0) at util/session.c:2232
+>   #8  0x000000000052c0f3 in perf_session__process_events (session=0xc38cc0) at util/session.c:2265
+>   #9  0x0000000000447266 in __cmd_script (script=0x7fffffffb5c0) at builtin-script.c:2608
+>   #10 0x000000000044ba79 in cmd_script (argc=0, argv=0x7fffffffd330) at builtin-script.c:3988
+>   #11 0x00000000004bf2b8 in run_builtin (p=0xa398f8 <commands+408>, argc=1, argv=0x7fffffffd330) at perf.c:312
+>   #12 0x00000000004bf525 in handle_internal_command (argc=1, argv=0x7fffffffd330) at perf.c:364
+>   #13 0x00000000004bf66c in run_argv (argcp=0x7fffffffd18c, argv=0x7fffffffd180) at perf.c:408
+>   #14 0x00000000004bfa38 in main (argc=1, argv=0x7fffffffd330) at perf.c:538
+> 
+> Split zstd_init() into zstd_decomp_init() and zstd_comp_init(), so that
+> we can do lazy initialization for the decompressor, and handle it all in
+> perf_session to make it easily available to all the tools.
 
-Thank you for the patch!
+Alexey, could you please check on this one?
 
-> From: Lad Prabhakar, Sent: Sunday, April 19, 2020 10:27 PM
-<snip>
-> @@ -109,11 +137,22 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_init);
->   */
->  void pci_epc_mem_exit(struct pci_epc *epc)
->  {
-> -	struct pci_epc_mem *mem =3D epc->mem;
-> +	struct pci_epc_mem *mem;
-> +	int i;
->=20
-> +	if (!epc->num_windows)
-> +		return;
-> +
-> +	for (i =3D 0; i <=3D epc->num_windows; i++) {
+thanks,
+jirka
 
-I'm sorry, I overlooked when I reviewed before.
-This condition should be "i < epc->num_windows".
-
-> +		mem =3D epc->windows[i];
-> +		kfree(mem->bitmap);
-> +		kfree(mem);
-> +	}
-> +	kfree(epc->windows);
-> +
-> +	epc->windows =3D NULL;
->  	epc->mem =3D NULL;
-> -	kfree(mem->bitmap);
-> -	kfree(mem);
-> +	epc->num_windows =3D 0;
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
->=20
-> @@ -129,31 +168,57 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
->  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->  				     phys_addr_t *phys_addr, size_t size)
->  {
-> -	int pageno;
->  	void __iomem *virt_addr =3D NULL;
-> -	struct pci_epc_mem *mem =3D epc->mem;
-> -	unsigned int page_shift =3D ilog2(mem->page_size);
-> +	struct pci_epc_mem *mem;
-> +	unsigned int page_shift;
-> +	size_t align_size;
-> +	int pageno;
->  	int order;
-> +	int i;
->=20
-> -	size =3D ALIGN(size, mem->page_size);
-> -	order =3D pci_epc_mem_get_order(mem, size);
+> 
+> Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+> ---
+>  tools/perf/builtin-inject.c |  3 ---
+>  tools/perf/builtin-record.c |  2 +-
+>  tools/perf/builtin-report.c |  3 ---
+>  tools/perf/util/compress.h  | 10 ++++++++--
+>  tools/perf/util/session.c   |  3 +++
+>  tools/perf/util/zstd.c      | 14 +++++++++++++-
+>  6 files changed, 25 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 1ffb8393357a..8cc9dff9e66b 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -803,9 +803,6 @@ int cmd_inject(int argc, const char **argv)
+>  	if (IS_ERR(inject.session))
+>  		return PTR_ERR(inject.session);
+>  
+> -	if (zstd_init(&(inject.session->zstd_data), 0) < 0)
+> -		pr_warning("Decompression initialization failed.\n");
 > -
-> -	mutex_lock(&mem->lock);
-> -	pageno =3D bitmap_find_free_region(mem->bitmap, mem->pages, order);
-> -	if (pageno < 0)
-> -		goto ret;
-> +	for (i =3D 0; i < epc->num_windows; i++) {
-> +		mem =3D epc->windows[i];
-> +		mutex_lock(&mem->lock);
-> +		align_size =3D ALIGN(size, mem->window.page_size);
-> +		order =3D pci_epc_mem_get_order(mem, align_size);
->=20
-> -	*phys_addr =3D mem->phys_base + ((phys_addr_t)pageno << page_shift);
-> -	virt_addr =3D ioremap(*phys_addr, size);
-> -	if (!virt_addr)
-> -		bitmap_release_region(mem->bitmap, pageno, order);
-> +		pageno =3D bitmap_find_free_region(mem->bitmap, mem->pages,
-> +						 order);
-> +		if (pageno >=3D 0) {
-> +			page_shift =3D ilog2(mem->window.page_size);
-> +			*phys_addr =3D mem->window.phys_base +
-> +				((phys_addr_t)pageno << page_shift);
-> +			virt_addr =3D ioremap(*phys_addr, align_size);
-> +			if (!virt_addr)
-> +				bitmap_release_region(mem->bitmap,
-> +						      pageno, order);
-
-I'm sorry here again. But, I think we should call mutex_unlock() and "conti=
-nue;"
-here if ioremap() failed for trying remaining windows. What do you think?
-
-> +			mutex_unlock(&mem->lock);
-> +			return virt_addr;
-> +		}
-> +		mutex_unlock(&mem->lock);
-> +	}
->=20
-> -ret:
-> -	mutex_unlock(&mem->lock);
->  	return virt_addr;
+>  	if (inject.build_ids) {
+>  		/*
+>  		 * to make sure the mmap records are ordered correctly
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 8ed00de1ca29..fa9c59fc4fe0 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1461,7 +1461,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>  	fd = perf_data__fd(data);
+>  	rec->session = session;
+>  
+> -	if (zstd_init(&session->zstd_data, rec->opts.comp_level) < 0) {
+> +	if (zstd_comp_init(&session->zstd_data, rec->opts.comp_level) < 0) {
+>  		pr_err("Compression initialization failed.\n");
+>  		return -1;
+>  	}
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index e06e14980264..b85fcdebdb5a 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -1355,9 +1355,6 @@ int cmd_report(int argc, const char **argv)
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (zstd_init(&(session->zstd_data), 0) < 0)
+> -		pr_warning("Decompression initialization failed. Reported data may be incomplete.\n");
+> -
+>  	if (report.queue_size) {
+>  		ordered_events__set_alloc_size(&session->ordered_events,
+>  					       report.queue_size);
+> diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
+> index 0cd3369af2a4..aff9ce60dfb8 100644
+> --- a/tools/perf/util/compress.h
+> +++ b/tools/perf/util/compress.h
+> @@ -26,7 +26,8 @@ struct zstd_data {
+>  
+>  #ifdef HAVE_ZSTD_SUPPORT
+>  
+> -int zstd_init(struct zstd_data *data, int level);
+> +int zstd_comp_init(struct zstd_data *data, int level);
+> +int zstd_decomp_init(struct zstd_data *data);
+>  int zstd_fini(struct zstd_data *data);
+>  
+>  size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
+> @@ -37,7 +38,12 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
+>  			      void *dst, size_t dst_size);
+>  #else /* !HAVE_ZSTD_SUPPORT */
+>  
+> -static inline int zstd_init(struct zstd_data *data __maybe_unused, int level __maybe_unused)
+> +static inline int zstd_comp_init(struct zstd_data *data __maybe_unused, int level __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int zstd_decomp_init(struct zstd_data *data __maybe_unused)
+>  {
+>  	return 0;
 >  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-
-Best regards,
-Yoshihiro Shimoda
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 64e8b794b0bc..2bba731e7cbf 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -45,6 +45,9 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+>  	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
+>  	struct decomp *decomp, *decomp_last = session->decomp_last;
+>  
+> +	if (zstd_decomp_init(&session->zstd_data) < 0)
+> +		return -1;
+> +
+>  	if (decomp_last) {
+>  		decomp_last_rem = decomp_last->size - decomp_last->head;
+>  		decomp_len += decomp_last_rem;
+> diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+> index d2202392ffdb..d789665e8c0c 100644
+> --- a/tools/perf/util/zstd.c
+> +++ b/tools/perf/util/zstd.c
+> @@ -5,10 +5,13 @@
+>  #include "util/compress.h"
+>  #include "util/debug.h"
+>  
+> -int zstd_init(struct zstd_data *data, int level)
+> +int zstd_decomp_init(struct zstd_data *data)
+>  {
+>  	size_t ret;
+>  
+> +	if (data->dstream)
+> +		return 0;
+> +
+>  	data->dstream = ZSTD_createDStream();
+>  	if (data->dstream == NULL) {
+>  		pr_err("Couldn't create decompression stream.\n");
+> @@ -18,9 +21,18 @@ int zstd_init(struct zstd_data *data, int level)
+>  	ret = ZSTD_initDStream(data->dstream);
+>  	if (ZSTD_isError(ret)) {
+>  		pr_err("Failed to initialize decompression stream: %s\n", ZSTD_getErrorName(ret));
+> +		ZSTD_freeDStream(data->dstream);
+> +		data->dstream = NULL;
+>  		return -1;
+>  	}
+>  
+> +	return 0;
+> +}
+> +
+> +int zstd_comp_init(struct zstd_data *data, int level)
+> +{
+> +	size_t ret;
+> +
+>  	if (!level)
+>  		return 0;
+>  
+> -- 
+> 2.25.2
+> 
 
