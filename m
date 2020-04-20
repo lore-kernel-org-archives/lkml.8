@@ -2,154 +2,115 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8F8C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FC8C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BED82074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527172084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="e7e2f+ba"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRQ+zQcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgDTSeQ (ORCPT
+        id S1728037AbgDTSeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:34:16 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:52178 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725613AbgDTSeQ (ORCPT
+        Mon, 20 Apr 2020 14:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbgDTSeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:34:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587407655; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Ix/MdnxLfjPN0cVkJkI+uYStoKyur9aJ+Sj4mNFkPFE=; b=e7e2f+baiZPZOxuDa5/iaMdizRiPX0fcDPjMViOiGAvoswZkFO+/KS3f7bwhkJ9l/D1O6SQJ
- UOVKVWgIwz/gJBjic+4nDLKlu5f/49Jmfw1i0OkYic6KoDdSJsG1a58oeU2FHJH5B0746xvA
- 3fv0AMgPH/b7U0OlF4hhfe0si4M=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9deb26.7f79e0df0d88-smtp-out-n03;
- Mon, 20 Apr 2020 18:34:14 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8878EC44799; Mon, 20 Apr 2020 18:34:12 +0000 (UTC)
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EDAD6C433CB;
-        Mon, 20 Apr 2020 18:34:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EDAD6C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv4 1/6] iommu: arm-smmu-impl: Convert to a generic reset implementation
-Date:   Tue, 21 Apr 2020 00:03:49 +0530
-Message-Id: <d24a0278021bc0b2732636c5728efe55e7318a8b.1587407458.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1587407458.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1587407458.git.saiprakash.ranjan@codeaurora.org>
+        Mon, 20 Apr 2020 14:34:23 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3AAC061A0C;
+        Mon, 20 Apr 2020 11:34:22 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j7so1920079pgj.13;
+        Mon, 20 Apr 2020 11:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZMXNXOn18ztbuDgZhLYqZA8C0KLTfCYAabuhHQdVEgc=;
+        b=bRQ+zQcNerLNraD0+K3XcVBhR8In6GYgzcEMJFJy3EM54s+7VpeUkpewJywI7Dlu1C
+         0NV6aw+rdb72SW046ScVrndy1qT+OWeSe3F3WSs53I1INh7jHAF9cPmu3fl1IcxNn52n
+         AnetC47v2j8aUaRMwfkjEOPqArnLCpBIEJNTtwh61lLv79b4b7JFaI9clE8aL+U+Ar3O
+         x3fwGUBvZHP9tg20oIWd7+Fc+GOkI4AmMoUl0RWU1xZy2Sxts3XpSJxE3WTfbl4weMcc
+         bctl/oKZj8sU83vRHoR7vEpuR1MqVevHmTrqEuHJMDIpyrkau/6SCqN4O4gIZ5qHWM5E
+         q/nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZMXNXOn18ztbuDgZhLYqZA8C0KLTfCYAabuhHQdVEgc=;
+        b=dNrossLpumFVEvv1x9ZT6UpqDWdb98xqsEyjUfwnnzuOQlf8++iG/AYDjEQfyluB7W
+         cOmluDD+5Y+dahCSxCiIVY5zCKeBZxFCoFNZaQCSjUg+OcN9qP/QZU+LLKMOTVA0C1Jc
+         +1dMwycNoWDpukYkodRoeZPrQ9++6k/bFjCDze/ATTBIz2iqunxm8NAs5iytIZSDo6zU
+         1lAC69AXaEBSFukG8/2KIUeafRHVSvmGTvgknw9g9qUR4anF2FXb1oLE0inAdl6Yagjm
+         YynxcGzM5SxwvZ4jejlBmffHty35dC8jqZ6FKCPkr+DxLgMnatIM0j5NNowEhVt7VQxg
+         sASw==
+X-Gm-Message-State: AGi0PuZUHX2gnk1vTdJocqBV34BykNo6PQ381Y7bMRhdgDCeRsqWG+L6
+        GQg+eEsg1T03QQolg/j/g+4=
+X-Google-Smtp-Source: APiQypLLXx1+KoTFJBQwTmqbsymwlQm5i4LeHNqlSUAsMlO3wtSMB/tpw2gZ7VXql4tTCRNgPnJaxQ==
+X-Received: by 2002:a62:880f:: with SMTP id l15mr17900763pfd.218.1587407662356;
+        Mon, 20 Apr 2020 11:34:22 -0700 (PDT)
+Received: from athina.mtv.corp.google.com ([2620:15c:211:0:c786:d9fd:ab91:6283])
+        by smtp.gmail.com with ESMTPSA id mq6sm51661pjb.38.2020.04.20.11.34.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 11:34:21 -0700 (PDT)
+From:   =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>
+To:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Linux Network Development Mailing List <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Lorenzo Colitti <lorenzo@google.com>
+Subject: [PATCH] net: bpf: Allow TC programs to call BPF_FUNC_skb_change_head
+Date:   Mon, 20 Apr 2020 11:34:08 -0700
+Message-Id: <20200420183409.210660-1-zenczykowski@gmail.com>
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the QCOM specific smmu reset implementation is very
-specific to SDM845 SoC and has a wait-for-safe logic which
-may not be required for other SoCs. So move the SDM845 specific
-logic to its specific reset function. Also add SC7180 SMMU
-compatible for calling into QCOM specific implementation.
+From: Lorenzo Colitti <lorenzo@google.com>
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+This allows TC eBPF programs to modify and forward (redirect) packets
+from interfaces without ethernet headers (for example cellular)
+to interfaces with (for example ethernet/wifi).
+
+The lack of this appears to simply be an oversight.
+
+Tested:
+  in active use in Android R on 4.14+ devices for ipv6
+  cellular to wifi tethering offload.
+
+Signed-off-by: Lorenzo Colitti <lorenzo@google.com>
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
 ---
- drivers/iommu/arm-smmu-impl.c |  8 +++++---
- drivers/iommu/arm-smmu-qcom.c | 16 +++++++++++++---
- 2 files changed, 18 insertions(+), 6 deletions(-)
+ net/core/filter.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
-index 74d97a886e93..c75b9d957b70 100644
---- a/drivers/iommu/arm-smmu-impl.c
-+++ b/drivers/iommu/arm-smmu-impl.c
-@@ -150,6 +150,8 @@ static const struct arm_smmu_impl arm_mmu500_impl = {
- 
- struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
- {
-+	const struct device_node *np = smmu->dev->of_node;
-+
- 	/*
- 	 * We will inevitably have to combine model-specific implementation
- 	 * quirks with platform-specific integration quirks, but everything
-@@ -166,11 +168,11 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
- 		break;
- 	}
- 
--	if (of_property_read_bool(smmu->dev->of_node,
--				  "calxeda,smmu-secure-config-access"))
-+	if (of_property_read_bool(np, "calxeda,smmu-secure-config-access"))
- 		smmu->impl = &calxeda_impl;
- 
--	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500"))
-+	if (of_device_is_compatible(np, "qcom,sdm845-smmu-500") ||
-+	    of_device_is_compatible(np, "qcom,sc7180-smmu-500"))
- 		return qcom_smmu_impl_init(smmu);
- 
- 	return smmu;
-diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-index 24c071c1d8b0..64a4ab270ab7 100644
---- a/drivers/iommu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm-smmu-qcom.c
-@@ -15,8 +15,6 @@ static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
- {
- 	int ret;
- 
--	arm_mmu500_reset(smmu);
--
- 	/*
- 	 * To address performance degradation in non-real time clients,
- 	 * such as USB and UFS, turn off wait-for-safe on sdm845 based boards,
-@@ -30,8 +28,20 @@ static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
- 	return ret;
- }
- 
-+static int qcom_smmu500_reset(struct arm_smmu_device *smmu)
-+{
-+	const struct device_node *np = smmu->dev->of_node;
-+
-+	arm_mmu500_reset(smmu);
-+
-+	if (of_device_is_compatible(np, "qcom,sdm845-smmu-500"))
-+		return qcom_sdm845_smmu500_reset(smmu);
-+
-+	return 0;
-+}
-+
- static const struct arm_smmu_impl qcom_smmu_impl = {
--	.reset = qcom_sdm845_smmu500_reset,
-+	.reset = qcom_smmu500_reset,
- };
- 
- struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu)
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 7d6ceaa54d21..755867867e57 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -6213,6 +6213,8 @@ tc_cls_act_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_skb_adjust_room_proto;
+ 	case BPF_FUNC_skb_change_tail:
+ 		return &bpf_skb_change_tail_proto;
++	case BPF_FUNC_skb_change_head:
++		return &bpf_skb_change_head_proto;
+ 	case BPF_FUNC_skb_get_tunnel_key:
+ 		return &bpf_skb_get_tunnel_key_proto;
+ 	case BPF_FUNC_skb_set_tunnel_key:
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.26.1.301.g55bc3eb7cb9-goog
+
