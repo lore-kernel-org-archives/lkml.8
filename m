@@ -2,87 +2,233 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED0FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95B9C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C38FE206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8AC206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:21:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjr.nz header.i=@cjr.nz header.b="JeY6U99P"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="qHmMzco9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgDTSVh (ORCPT
+        id S1727977AbgDTSVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:21:37 -0400
-Received: from mx.cjr.nz ([51.158.111.142]:21034 "EHLO mx.cjr.nz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727980AbgDTSVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:21:33 -0400
-Received: from authenticated-user (mx.cjr.nz [51.158.111.142])
-        (Authenticated sender: pc)
-        by mx.cjr.nz (Postfix) with ESMTPSA id 701BB7FCFC;
-        Mon, 20 Apr 2020 18:21:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjr.nz; s=dkim;
-        t=1587406891;
+        Mon, 20 Apr 2020 14:21:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgDTSVb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 14:21:31 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8466CC061A0C;
+        Mon, 20 Apr 2020 11:21:28 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 6856423EE1;
+        Mon, 20 Apr 2020 20:21:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587406885;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XLtiuMGzfer0pae2SDTC3iJPxGcLgbM+htJ0fXQblHE=;
-        b=JeY6U99PmBoc7K2kOj51HYcjWJeX3//jnLGabU3mmTwXpybaIMRJQSxLX8x/+7gxTOCSTr
-        Hv9mwFQRIWgFkU0lT98JLFFXxsnrL4qfqJunWNNOnIL/KrXOyC5lZOjKcC3YlFTbGDQtU6
-        xiDiGgZdH4R3VvQD3aMCGUX/PVZDmGHawAflJgUTW+n36YLIYoSEEDxOfqo/4tk0toZJoJ
-        QvV5XbHnd5OBz63WIKMLqBxjEsMaOct1YcZv5TRbzGMxha3OUejx3dbWx7r5NQRWS/QhUO
-        DPFmdQUzLUwfD0GPDW+5vaZskSiTqXTNvqVn7Ckm/7Bq1RKQO5JmzPsQb+bzrA==
-From:   Paulo Alcantara <pc@cjr.nz>
-To:     David Howells <dhowells@redhat.com>
-Cc:     dhowells@redhat.com, Steve French <smfrench@gmail.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, keyrings@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, fweimer@redhat.com
-Subject: Re: What's a good default TTL for DNS keys in the kernel
-In-Reply-To: <1136024.1587388420@warthog.procyon.org.uk>
-References: <87imhvj7m6.fsf@cjr.nz>
- <CAH2r5mv5p=WJQu2SbTn53FeTsXyN6ke_CgEjVARQ3fX8QAtK_w@mail.gmail.com>
- <3865908.1586874010@warthog.procyon.org.uk>
- <927453.1587285472@warthog.procyon.org.uk>
- <1136024.1587388420@warthog.procyon.org.uk>
-Date:   Mon, 20 Apr 2020 15:21:23 -0300
-Message-ID: <878siq587w.fsf@cjr.nz>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Ksawt5Xe7oAzLSynplACqdx1saqa6POHLRoqhe8eZbk=;
+        b=qHmMzco9TGQg57uDMpKi2hf+qMVnLlhA73UTBl/uzDTR+fQ+/jwrYga036Vs56HGkCRVwM
+        tEugWZPoSi8u5TzCYa37NsWsMgrwNVkqHhNB0ktQqtcKeJEhGfbtDjbR6Yh79QMm24kqsF
+        rbrWSb3A+CBMdC9S4TatO8IWGl4SXZE=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH net-next v3 1/3] net: phy: broadcom: add helper to write/read RDB registers
+Date:   Mon, 20 Apr 2020 20:21:11 +0200
+Message-Id: <20200420182113.22577-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 6856423EE1
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[0.841];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[suse.com,roeck-us.net,lunn.ch,gmail.com,armlinux.org.uk,davemloft.net,walle.cc];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Howells <dhowells@redhat.com> writes:
+RDB (Register Data Base) registers are used on newer Broadcom PHYs. Add
+helper to read, write and modify these registers.
 
-> Paulo Alcantara <pc@cjr.nz> wrote:
->
->> >> For SMB3/CIFS mounts, Paulo added support last year for automatic
->> >> reconnect if the IP address of the server changes.  It also is helpful
->> >> when DFS (global name space) addresses change.
->> >
->> > What happens if the IP address the superblock is going to changes, then
->> > another mount is made back to the original IP address?  Does the second mount
->> > just pick the original superblock?
->> 
->> It is going to transparently reconnect to the new ip address, SMB share,
->> and cifs superblock is kept unchanged.  We, however, update internal
->> TCP_Server_Info structure to reflect new destination ip address.
->> 
->> For the second mount, since the hostname (extracted out of the UNC path
->> at mount time) resolves to a new ip address and that address was saved earlier
->> in TCP_Server_Info structure during reconnect, we will end up
->> reusing same cifs superblock as per fs/cifs/connect.c:cifs_match_super().
->
-> Would that be a bug?
+Signed-off-by: Michael Walle <michael@walle.cc>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+changes since v2:
+ none
 
-Probably.
+changes since v1:
+ - corrected typo
+ - added Reviewed-by
 
-I'm not sure how that code is supposed to work, TBH.
+ drivers/net/phy/bcm-phy-lib.c | 80 +++++++++++++++++++++++++++++++++++
+ drivers/net/phy/bcm-phy-lib.h |  9 ++++
+ include/linux/brcmphy.h       |  3 ++
+ 3 files changed, 92 insertions(+)
+
+diff --git a/drivers/net/phy/bcm-phy-lib.c b/drivers/net/phy/bcm-phy-lib.c
+index e77b274a09fd..d5f9a2701989 100644
+--- a/drivers/net/phy/bcm-phy-lib.c
++++ b/drivers/net/phy/bcm-phy-lib.c
+@@ -155,6 +155,86 @@ int bcm_phy_write_shadow(struct phy_device *phydev, u16 shadow,
+ }
+ EXPORT_SYMBOL_GPL(bcm_phy_write_shadow);
+ 
++int __bcm_phy_read_rdb(struct phy_device *phydev, u16 rdb)
++{
++	int val;
++
++	val = __phy_write(phydev, MII_BCM54XX_RDB_ADDR, rdb);
++	if (val < 0)
++		return val;
++
++	return __phy_read(phydev, MII_BCM54XX_RDB_DATA);
++}
++EXPORT_SYMBOL_GPL(__bcm_phy_read_rdb);
++
++int bcm_phy_read_rdb(struct phy_device *phydev, u16 rdb)
++{
++	int ret;
++
++	phy_lock_mdio_bus(phydev);
++	ret = __bcm_phy_read_rdb(phydev, rdb);
++	phy_unlock_mdio_bus(phydev);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(bcm_phy_read_rdb);
++
++int __bcm_phy_write_rdb(struct phy_device *phydev, u16 rdb, u16 val)
++{
++	int ret;
++
++	ret = __phy_write(phydev, MII_BCM54XX_RDB_ADDR, rdb);
++	if (ret < 0)
++		return ret;
++
++	return __phy_write(phydev, MII_BCM54XX_RDB_DATA, val);
++}
++EXPORT_SYMBOL_GPL(__bcm_phy_write_rdb);
++
++int bcm_phy_write_rdb(struct phy_device *phydev, u16 rdb, u16 val)
++{
++	int ret;
++
++	phy_lock_mdio_bus(phydev);
++	ret = __bcm_phy_write_rdb(phydev, rdb, val);
++	phy_unlock_mdio_bus(phydev);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(bcm_phy_write_rdb);
++
++int __bcm_phy_modify_rdb(struct phy_device *phydev, u16 rdb, u16 mask, u16 set)
++{
++	int new, ret;
++
++	ret = __phy_write(phydev, MII_BCM54XX_RDB_ADDR, rdb);
++	if (ret < 0)
++		return ret;
++
++	ret = __phy_read(phydev, MII_BCM54XX_RDB_DATA);
++	if (ret < 0)
++		return ret;
++
++	new = (ret & ~mask) | set;
++	if (new == ret)
++		return 0;
++
++	return __phy_write(phydev, MII_BCM54XX_RDB_DATA, new);
++}
++EXPORT_SYMBOL_GPL(__bcm_phy_modify_rdb);
++
++int bcm_phy_modify_rdb(struct phy_device *phydev, u16 rdb, u16 mask, u16 set)
++{
++	int ret;
++
++	phy_lock_mdio_bus(phydev);
++	ret = __bcm_phy_modify_rdb(phydev, rdb, mask, set);
++	phy_unlock_mdio_bus(phydev);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(bcm_phy_modify_rdb);
++
+ int bcm_phy_enable_apd(struct phy_device *phydev, bool dll_pwr_down)
+ {
+ 	int val;
+diff --git a/drivers/net/phy/bcm-phy-lib.h b/drivers/net/phy/bcm-phy-lib.h
+index 129df819be8c..4d3de91cda6c 100644
+--- a/drivers/net/phy/bcm-phy-lib.h
++++ b/drivers/net/phy/bcm-phy-lib.h
+@@ -48,6 +48,15 @@ int bcm_phy_write_shadow(struct phy_device *phydev, u16 shadow,
+ 			 u16 val);
+ int bcm_phy_read_shadow(struct phy_device *phydev, u16 shadow);
+ 
++int __bcm_phy_write_rdb(struct phy_device *phydev, u16 rdb, u16 val);
++int bcm_phy_write_rdb(struct phy_device *phydev, u16 rdb, u16 val);
++int __bcm_phy_read_rdb(struct phy_device *phydev, u16 rdb);
++int bcm_phy_read_rdb(struct phy_device *phydev, u16 rdb);
++int __bcm_phy_modify_rdb(struct phy_device *phydev, u16 rdb, u16 mask,
++			 u16 set);
++int bcm_phy_modify_rdb(struct phy_device *phydev, u16 rdb, u16 mask,
++		       u16 set);
++
+ int bcm_phy_ack_intr(struct phy_device *phydev);
+ int bcm_phy_config_intr(struct phy_device *phydev);
+ 
+diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
+index 7e1d857c8468..897b69309964 100644
+--- a/include/linux/brcmphy.h
++++ b/include/linux/brcmphy.h
+@@ -115,6 +115,9 @@
+ #define MII_BCM54XX_SHD_VAL(x)	((x & 0x1f) << 10)
+ #define MII_BCM54XX_SHD_DATA(x)	((x & 0x3ff) << 0)
+ 
++#define MII_BCM54XX_RDB_ADDR	0x1e
++#define MII_BCM54XX_RDB_DATA	0x1f
++
+ /*
+  * AUXILIARY CONTROL SHADOW ACCESS REGISTERS.  (PHY REG 0x18)
+  */
+-- 
+2.20.1
+
