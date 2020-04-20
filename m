@@ -2,122 +2,157 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A80C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AE0C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59AA02074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6D12074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:11:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Gft4E8gY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgDTQKe (ORCPT
+        id S1728017AbgDTQLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:10:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:51626 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbgDTQKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:10:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61D1531B;
-        Mon, 20 Apr 2020 09:10:33 -0700 (PDT)
-Received: from [192.168.0.110] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6BFC3F73D;
-        Mon, 20 Apr 2020 09:10:32 -0700 (PDT)
-Subject: Re: [PATCH RFC] KVM: arm64: Sidestep stage2_unmap_vm() on vcpu reset
- when S2FWB is supported
-To:     Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>
-References: <20200415072835.1164-1-yuzenghui@huawei.com>
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-Message-ID: <e99bc07d-0dd4-055c-808f-fd9cde88d2fc@arm.com>
-Date:   Mon, 20 Apr 2020 17:10:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 12:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725958AbgDTQLZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 12:11:25 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E72ADC061A0C;
+        Mon, 20 Apr 2020 09:11:24 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 24DB823058;
+        Mon, 20 Apr 2020 18:11:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587399083;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JV6/yxI0hnc0gvSbIatDYRHmoDSkrGEsV3XUSagw0bk=;
+        b=Gft4E8gYE1Lgsbzo3T45DiSRrqtW8EXgO1MzjtcCpkpzeNmTcz9ooabT2uU5w+5DEq1jiB
+        Fm2CW2M+hAkXy/yB6/MppZvOKIVGP+qyL8twG3E2QEaWi6pe5VB8nmJZ+has2k0UFwuWs5
+        zegzfvshTGmk6r02tUYBRwmwFvYHTbU=
 MIME-Version: 1.0
-In-Reply-To: <20200415072835.1164-1-yuzenghui@huawei.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Date:   Mon, 20 Apr 2020 18:11:22 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 3/3] net: phy: bcm54140: add hwmon support
+In-Reply-To: <20200420153625.GA917792@lunn.ch>
+References: <20200417201338.GI785713@lunn.ch>
+ <84679226df03bdd8060cb95761724d3a@walle.cc>
+ <20200417212829.GJ785713@lunn.ch>
+ <4f3ff33f78472f547212f87f75a37b66@walle.cc>
+ <20200419162928.GL836632@lunn.ch>
+ <ebc026792e09d5702d031398e96d34f2@walle.cc>
+ <20200419170547.GO836632@lunn.ch>
+ <0f7ea4522a76f977f3aa3a80dd62201d@walle.cc>
+ <20200419215549.GR836632@lunn.ch>
+ <75428c5faab7fc656051ab227663e6e6@walle.cc>
+ <20200420153625.GA917792@lunn.ch>
+Message-ID: <00e8c608daac498623643e8f769f80a6@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 24DB823058
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[10];
+         NEURAL_HAM(-0.00)[-0.970];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,suse.com,roeck-us.net,gmail.com,armlinux.org.uk,davemloft.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Am 2020-04-20 17:36, schrieb Andrew Lunn:
+>> Ok I see, but what locking do you have in mind? We could have 
+>> something
+>> like
+>> 
+>> __phy_package_write(struct phy_device *dev, u32 regnum, u16 val)
+>> {
+>>   return __mdiobus_write(phydev->mdio.bus, phydev->shared->addr,
+>>                          regnum, val);
+>> }
+>> 
+>> and its phy_package_write() equivalent. But that would just be
+>> convenience functions, nothing where you actually help the user with
+>> locking. Am I missing something?
+> 
+> In general, drivers should not be using __foo functions. We want
+> drivers to make use of phy_package_write() which would do the bus
+> locking. Look at a typical PHY driver. There is no locking what so
+> ever. Just lots of phy_read() and phy write(). The locking is done by
+> the core and so should be correct.
 
-On 4/15/20 8:28 AM, Zenghui Yu wrote:
-> stage2_unmap_vm() was introduced to unmap user RAM region in the stage2
-> page table to make the caches coherent. E.g., a guest reboot with stage1
-> MMU disabled will access memory using non-cacheable attributes. If the
-> RAM and caches are not coherent at this stage, some evicted dirty cache
-> line may go and corrupt guest data in RAM.
->
-> Since ARMv8.4, S2FWB feature is mandatory and KVM will take advantage
-> of it to configure the stage2 page table and the attributes of memory
-> access. So we ensure that guests always access memory using cacheable
-> attributes and thus, the caches always be coherent.
->
-> So on CPUs that support S2FWB, we can safely reset the vcpu without a
-> heavy stage2 unmapping.
->
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Christoffer Dall <christoffer.dall@arm.com>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->
-> If this is correct, there should be a great performance improvement on
-> a guest reboot (or reset) on systems support S2FWB. But I'm afraid that
-> I've missed some points here, so please comment!
->
-> The commit 957db105c997 ("arm/arm64: KVM: Introduce stage2_unmap_vm")
-> was merged about six years ago and I failed to track its histroy and
-> intention. Instead of a whole stage2 unmapping, something like
-> stage2_flush_vm() looks enough to me. But again, I'm unsure...
->
-> Thanks for having a look!
+Ok, but for example the BCM54140 uses indirect register access and thus
+need to lock the mdio bus itself in which case I need the __funcs.
 
-I had a chat with Christoffer about stage2_unmap_vm, and as I understood it, the
-purpose was to make sure that any changes made by userspace were seen by the guest
-while the MMU is off. When a stage 2 fault happens, we do clean+inval on the
-dcache, or inval on the icache if it was an exec fault. This means that whatever
-the host userspace writes while the guest is shut down and is still in the cache,
-the guest will be able to read/execute.
+>> > > > Get the core to do reference counting on the structure?
+>> > > > Add helpers phy_read_shared(), phy_write_shared(), etc, which does
+>> > > > MDIO accesses on the base device, taking care of the locking.
+>> > > >
+>> > > The "base" access is another thing, I guess, which has nothing to do
+>> > > with the shared structure.
+>> > >
+>> > I'm making the assumption that all global addresses are at the base
+>> > address. If we don't want to make that assumption, we need the change
+>> > the API above so you pass a cookie, and all PHYs need to use the same
+>> > cookie to identify the package.
+>> 
+>> how would a phy driver deduce a common cookie? And how would that be a
+>> difference to using a PHY address.
+> 
+> For a cookie, i don't care how the driver decides on the cookie. The
+> core never uses it, other than comparing cookies to combine individual
+> PHYs into a package. It could be a PHY address. It could be the PHY
+> address where the global registers are. Or it could be anything else.
+> 
+>> > Maybe base is the wrong name, since MSCC can have the base as the high
+>> > address of the four, not the low?
+>> 
+>> I'd say it might be any of the four addresses as long as it is the 
+>> same
+>> across the PHYs in the same package. And in that case you can also 
+>> have
+>> the phy_package_read/write() functions.
+> 
+> Yes. That is the semantics which is think is most useful. But then we
+> don't have a cookie, the value has real significance, and we need to
+> document what is should mean.
 
-This can be relevant if the guest relocates the kernel and overwrites the original
-image location, and userspace copies the original kernel image back in before
-restarting the vm.
+Agreed.
 
->
->  virt/kvm/arm/arm.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-> index 48d0ec44ad77..e6378162cdef 100644
-> --- a/virt/kvm/arm/arm.c
-> +++ b/virt/kvm/arm/arm.c
-> @@ -983,8 +983,11 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
->  	/*
->  	 * Ensure a rebooted VM will fault in RAM pages and detect if the
->  	 * guest MMU is turned off and flush the caches as needed.
-> +	 *
-> +	 * S2FWB enforces all memory accesses to RAM being cacheable, we
-> +	 * ensure that the cache is always coherent.
->  	 */
-> -	if (vcpu->arch.has_run_once)
-> +	if (vcpu->arch.has_run_once && !cpus_have_const_cap(ARM64_HAS_STAGE2_FWB))
+I will post a RFC shortly.
 
-I think userspace does not invalidate the icache when loading a new kernel image,
-and if the guest patched instructions, they could potentially still be in the
-icache. Should the icache be invalidated if FWB is present?
-
-Thanks,
-Alex
->  		stage2_unmap_vm(vcpu->kvm);
->  
->  	vcpu_reset_hcr(vcpu);
+-michael
