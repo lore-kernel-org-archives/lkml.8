@@ -2,104 +2,226 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 536FBC55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7097FC55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 266EF20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A32020782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ae7uMN5F"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="qSqtEXm2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgDTVUs (ORCPT
+        id S1728082AbgDTVVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726021AbgDTVUr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:20:47 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 929ADC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:20:47 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id s10so10661597iln.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 14:20:47 -0700 (PDT)
+        Mon, 20 Apr 2020 17:21:16 -0400
+Received: from mail-dm6nam11on2059.outbound.protection.outlook.com ([40.107.223.59]:56672
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727792AbgDTVVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 17:21:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bP9AztaoUCen8N9Y1mAxp78UZHPg0SHwDTZMY7Vduc24q5SpxQNzLaXklUolrg/wSUKXLp4qbPaQd1KD/FadmUfnIsAS6lqBV+zak2GD1x+gQErseXgG9P3avq7HS9/LjghHgJ+pgt4RYNMALZZggIcZk8UiOgqA7btw/Do7mqafY4JltFqT/L/nidLbbHIEiaN0D2MEBt1hnY+5ObQPUe0ZJ7hP89LxPT01o50AEvtRKmEMQu5NWjOucJ0Q7lrWh4mdDaYM1VXjkTwfFAlmNSR0aV7BgxpLPABBPGNs5iknxnBf4ZHB/OI0GJWvNPfJYVQH5VX6GwYzh/IjTDOWIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OltIbxtNDPxZ05hF2m9dR1Ya7nwmP4ZbGr9OPyIAE0I=;
+ b=UagPlFD+qJJRIjgV0NYh651A653kedrbyszyVN+tH0r3TqdhuH/D7XLacwAbWDwOEWAAyn3oe7JCMXaJ2JArAnwVcpMq+tuYBldtODW6XlxGMXNe2CUjyIQopM+o7lewHJY+1T5f3rPvsGQl8bfwQRtwhS57edmAfds0jCsvWpJBpnPILjxN3YIZv1S/OuDJFRTGBK/R73a/Ix0v2ybAeT9taTQ6Tr4eQkzKg6t5OtXXYh6aUUpXnei4wXw+BgKkvvnUDrS8RJ8qxZ/2NHXojIA2tKG3u4OQUwzeaw+OFTGERqTyVfuAJaL5oEo1t6/ESEAuegogeWabuyIhwNfnog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pMEo8IzhJo5r/g49jS9dMArCoyOrINpa+pWa++ryG9Y=;
-        b=Ae7uMN5F5HzPJjZt/wpRzu64bJAInmuWePBtwGqdOSrvTqVuQpFpkHrX62DMUsctvD
-         ICQm9swQ9rOIUD1QUSUpMrGuL9EZzs1qJdfht7Mo1u0pq0jMn7Mf6Er2aJc/Qqox5V+z
-         ca3ZQp7epoHA/l4Qp3QVn/2Ud7L3o7WwnfXqr+w3EJgQTy1HE4JfxJTQNFscexXCzRyO
-         duWNhUaj6nkzSC11XBsz0uK9W67Kjg4P8RW2hEf+PfBxjWvgTDh7MMxVAPzwlGkoC+c6
-         1QkjD6gQXxIBbZiKuIsD15Je9m0BKCplmMjDtb5PAc25xIZSyfHtsDekOCzasCQ+671s
-         69zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pMEo8IzhJo5r/g49jS9dMArCoyOrINpa+pWa++ryG9Y=;
-        b=eq4jUdv/H1WTRsyTSLWFKtTd4Vt8rmdTlqSiJNfFWV+06A0hFAQ5BBAJmHwteQor6Z
-         cYCoXdg/kRLrzzyap/xQfBbBv+UAAXKGFsw9Z5HJDsRzsCj7xIrN/2pBLQezfUTIfMaq
-         DTeqR962KV8vAZ2X7eljFfF/MMZCkIK61MJWFSdNNyp8i6dBhhtTpiurEX3miZYeMyWt
-         geInKJ/J7CL7dXxRlQ64AvUmtCCZxJW9Yzk4CsMLtYWisY88DB0R01Gc4stj79zmQVTF
-         J36TXOurG9k5g3NXsXmcoqiQLRWRwV6mVwKwSgcvIDrqJpiEDnkOk9Q0P8yxbP42tDMG
-         lB1g==
-X-Gm-Message-State: AGi0PuZKth/FAbwJ5y897N850kB22Kx0L23yvxWu0G4cQIlYBBaQywm0
-        EcZbBbAN/i3bAVrcM/LmtzRJil+r7COEJna2BWGV7g==
-X-Google-Smtp-Source: APiQypJNjV1AJ+b0wwmMaphTOkR07VuJG4QnVLK3VJ7HIknTzJNSqo4lCzDfgH6mdfsDZLZ2yBhTZvi/yJqDuxa5By4=
-X-Received: by 2002:a05:6e02:c65:: with SMTP id f5mr8205254ilj.44.1587417646632;
- Mon, 20 Apr 2020 14:20:46 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OltIbxtNDPxZ05hF2m9dR1Ya7nwmP4ZbGr9OPyIAE0I=;
+ b=qSqtEXm2At8QObZNkWhtax93Oc3fBHbq4r3wxx9dbwmRmXPndug5jM0lBZ8nTY01eE21PnvSqykXfi3+B1CIoWvrVdWQ++LOVmIImTTNZy1cys5ZNbn7a/NldEuXqD4yPSBmt5WH58xc+VWm0tgeGXymWQoGitbJuA9xHyZfa5k=
+Received: from CY4PR15CA0012.namprd15.prod.outlook.com (2603:10b6:910:14::22)
+ by DM6PR02MB6361.namprd02.prod.outlook.com (2603:10b6:5:1fd::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Mon, 20 Apr
+ 2020 21:21:13 +0000
+Received: from CY1NAM02FT010.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:910:14:cafe::3b) by CY4PR15CA0012.outlook.office365.com
+ (2603:10b6:910:14::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend
+ Transport; Mon, 20 Apr 2020 21:21:13 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; ideasonboard.com; dkim=none (message not signed)
+ header.d=none;ideasonboard.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT010.mail.protection.outlook.com (10.152.75.50) with Microsoft SMTP
+ Server id 15.20.2921.25 via Frontend Transport; Mon, 20 Apr 2020 21:21:12
+ +0000
+Received: from [149.199.38.66] (port=60257 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <venkateshwar.rao.gannavarapu@xilinx.com>)
+        id 1jQdpt-0007rg-6z; Mon, 20 Apr 2020 14:20:13 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <venkateshwar.rao.gannavarapu@xilinx.com>)
+        id 1jQdqq-0003Iv-7L; Mon, 20 Apr 2020 14:21:12 -0700
+Received: from [172.23.62.221] (helo=xhdrdevl201.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <venkateshwar.rao.gannavarapu@xilinx.com>)
+        id 1jQdqj-0003FI-Sk; Mon, 20 Apr 2020 14:21:06 -0700
+From:   Venkateshwar Rao Gannavarapu 
+        <venkateshwar.rao.gannavarapu@xilinx.com>
+To:     hyun.kwon@xilinx.com, laurent.pinchart@ideasonboard.com,
+        dri-devel@lists.freedesktop.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
+        sandipk@xilinx.com, vgannava@xilinx.com,
+        Venkateshwar Rao Gannavarapu 
+        <venkateshwar.rao.gannavarapu@xilinx.com>
+Subject: [RFC PATCH 1/2] dt-bindings: display: xlnx: Add Xilinx DSI TX subsystem bindings
+Date:   Tue, 21 Apr 2020 02:50:55 +0530
+Message-Id: <1587417656-48078-2-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587417656-48078-1-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
+References: <1587417656-48078-1-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(376002)(346002)(46966005)(8676002)(478600001)(47076004)(82740400003)(6666004)(356005)(81166007)(70206006)(70586007)(107886003)(81156014)(9786002)(2906002)(36756003)(316002)(4326008)(186003)(8936002)(426003)(7696005)(26005)(5660300002)(2616005)(336012);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
-References: <20200417221446.108733-1-jcargill@google.com> <87d083td9f.fsf@vitty.brq.redhat.com>
- <CANxmayg3ML5_w=pY3=x7_TLOqawojxYGbqMLrXJn+r0b_gvWgA@mail.gmail.com> <02039a7b-01b4-ea5c-bd73-100ea753bf5e@redhat.com>
-In-Reply-To: <02039a7b-01b4-ea5c-bd73-100ea753bf5e@redhat.com>
-From:   Jon Cargille <jcargill@google.com>
-Date:   Mon, 20 Apr 2020 14:20:34 -0700
-Message-ID: <CANxmayh3A1CaLqKdf=GknOmOQ-ww0npg9ikUTGRyDbbRge+yHQ@mail.gmail.com>
-Subject: Re: [PATCH] kvm: add capability for halt polling
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        David Matlack <dmatlack@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1eddd861-ca6d-4dcd-d595-08d7e570c084
+X-MS-TrafficTypeDiagnostic: DM6PR02MB6361:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB63619A6A70BA131D947FB098B1D40@DM6PR02MB6361.namprd02.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:1850;
+X-Forefront-PRVS: 03793408BA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bjyM6kc0HL1+PFBAnxQ9/dcZ+V+O4uWPynD3TPpAaGobLplgf6U0q/R6c7TdjJ724UxuGpcHotoZYhRP+zTaid5zSn+cP8P8the2gGW5jzTZxxICEBB8eECkkJw5sy2cOeyOY91JeIGb4b5/T6LOJOD5lyM4wZtENbfRSjNlrafz4sqOrctT8Y6F9fwu3RbwwzGSZijEefRelZvSiyMNK0OmBY0yYPvWyXYTDuieSgOTgfZxLfziUMXy2G3h2KntrOlV5SJinqfRqN0jlkIvvA3GC2nxUro4E9JrirVWhVEfOrZXX8H80CrWrGWtyaCUnlHE1ARZOgTSQrvuM1v40LaeKS555vB98gGRho30HdMDRo+nBkfToXUsAY37h7Ux8x2253ZlGT/bNe6rSiS2zqVBZRMpm5sojvThHFWBoyySL2WufXnONhx77KNFcmCVBWqPsUwzZ6Lyw9Chw/fQDxIBfP9NVDlZUQ/v9r8JUcJXLwV3u0UfNt7S8cf8kMoF
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 21:21:12.5113
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1eddd861-ca6d-4dcd-d595-08d7e570c084
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6361
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 2:10 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 20/04/20 20:47, Jon Cargille wrote:
-> >> Is it safe to allow any value from userspace here or would it maybe make
-> >> sense to only allow [0, global halt_poll_ns]?
-> > I believe that any value is safe; a very large value effectively disables
-> > halt-polling, which is equivalent to setting a value of zero to explicitly
-> > disable it, which is legal.
->
-> Doesn't a large value make KVM poll all the time?  But you could do that
-> just by running "for (;;)" so there's no reason to limit the parameter.
+This add a dt binding for Xilinx DSI TX subsystem.
 
-Yes, I mis-spoke; apologies. A large number will cause KVM to poll for a
-long time; as long as the thread can be preempted, we don't see any
-problem with that.
+The Xilinx MIPI DSI (Display serial interface) Transmitter Subsystem
+implements the Mobile Industry Processor Interface (MIPI) based display
+interface. It supports the interface with the programmable logic (FPGA).
 
-Thanks,
+Signed-off-by: Venkateshwar Rao Gannavarapu <venkateshwar.rao.gannavarapu@x=
+ilinx.com>
+---
+ .../devicetree/bindings/display/xlnx/xlnx,dsi.txt  | 68 ++++++++++++++++++=
+++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,dsi=
+.txt
 
-Jon
+diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.txt b/=
+Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.txt
+new file mode 100644
+index 0000000..ef69729
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.txt
+@@ -0,0 +1,68 @@
++Device-Tree bindings for Xilinx MIPI DSI Tx IP core
++
++The IP core supports transmission of video data in MIPI DSI protocol.
++
++Required properties:
++ - compatible: Should be "xlnx-dsi".
++ - reg: physical base address and length of the registers set for the devi=
+ce.
++ - xlnx,dsi-num-lanes: Possible number of DSI lanes for the Tx controller.
++   The values should be 1, 2, 3 or 4. Based on xlnx,dsi-num-lanes and
++   line rate for the MIPI D-PHY core in Mbps, the AXI4-stream received by
++   Xilinx MIPI DSI Tx IP core adds markers as per DSI protocol and the pac=
+ket
++   thus framed is convered to serial data by MIPI D-PHY core. Please refer
++   Xilinx pg238 for more details. This value should be equal to the number
++   of lanes supported by the connected DSI panel. Panel has to support thi=
+s
++   value or has to be programmed to the same value that DSI Tx controller =
+is
++   configured to.
++ - xlnx,dsi-datatype: Color format. The value should be one of "MIPI_DSI_F=
+MT_RGB888",
++  "MIPI_DSI_FMT_RGB666", "MIPI_DSI_FMT_RGB666_PACKED" or "MIPI_DSI_FMT_RGB=
+565".
++ - #address-cells, #size-cells: should be set respectively to <1> and <0>
++   according to DSI host bindings (see MIPI DSI bindings [1])
++ - clock-names: Must contain "s_axis_aclk" and "dphy_clk_200M" in same ord=
+er as
++   clocks listed in clocks property.
++ - clocks: List of phandles to Video and 200Mhz DPHY clocks.
++ - port: Logical block can be used / connected independently with
++   external device. In the display controller port nodes, topology
++   for entire pipeline should be described using the DT bindings defined i=
+n
++   Documentation/devicetree/bindings/graph.txt.
++ - simple_panel: The subnode for connected panel. This represents the
++   DSI peripheral connected to the DSI host node. Please refer to
++   Documentation/devicetree/bindings/display/mipi-dsi-bus.txt. The
++   simple-panel driver has auo,b101uan01 panel timing parameters added alo=
+ng
++   with other existing panels. DSI driver derive the required Tx IP contro=
+ller
++   timing values from the panel timing parameters.
++
++Required simple_panel properties:
++ - compatible: Value should be one of the panel names in
++   Documentation/devicetree/bindings/display/panel/. e.g. "auo,b101uan01".
++   For available panel compatible strings, please refer to bindings in
++   Documentation/devicetree/bindings/display/panel/
++
++Optional properties:
++ - xlnx,dsi-cmd-mode: denotes command mode enable.
++
++[1]: Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
++[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++
++       mipi_dsi_tx_subsystem@80000000 {
++               compatible =3D "xlnx,dsi";
++               reg =3D <0x0 0x80000000 0x0 0x10000>;
++               xlnx,dsi-num-lanes =3D <4>;
++               xlnx,dsi-data-type =3D <MIPI_DSI_FMT_RGB888>;
++               #address-cells =3D <1>;
++               #size-cells =3D <0>;
++               clock-names =3D "dphy_clk_200M", "s_axis_aclk";
++               clocks =3D <&misc_clk_0>, <&misc_clk_1>;
++               encoder_dsi_port: port@0 {
++                       reg =3D <0>;
++                       dsi_encoder: endpoint {
++                               remote-endpoint =3D <&xdsi_ep>;
++                       };
++               };
++               simple_panel: simple-panel@0 {
++                       compatible =3D "auo,b101uan01";
++                       reg =3D <0>;
++                       };
++               };
+--
+2.7.4
 
->
-> Paolo
->
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
