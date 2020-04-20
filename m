@@ -2,104 +2,97 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420D6C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40437C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20E8D2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:51:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bCQSCeE3"
+	by mail.kernel.org (Postfix) with ESMTP id 1F8872074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgDTTvV (ORCPT
+        id S1727873AbgDTTvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:51:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55849 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726141AbgDTTvU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:51:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587412279;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TWPS8Ag7vK66l0A1WZiPeQ8HRASExb1Zd/J41NjFSx4=;
-        b=bCQSCeE3kHWNQt8EjEIlXUABatiKDng0YkWPgQjhJCwbSbt7Is0qOK+UMgeye1lBghBeYu
-        fNhn+jMhwGTZqegR9qN8OVmz1LC3LQkMQv+tzXmoyvblYAhjuVfgEGTEx7TXuytF6VB6T/
-        hfpLGjyUZb05n6iCZ8ExwcNbmeDoIio=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-C1aiVMz-M62ucoynYrtO3A-1; Mon, 20 Apr 2020 15:51:17 -0400
-X-MC-Unique: C1aiVMz-M62ucoynYrtO3A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7F4E1922020;
-        Mon, 20 Apr 2020 19:51:16 +0000 (UTC)
-Received: from treble (ovpn-118-158.rdu2.redhat.com [10.10.118.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B98FB9A253;
-        Mon, 20 Apr 2020 19:51:13 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 14:51:11 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mon, 20 Apr 2020 15:51:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59880 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbgDTTvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 15:51:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 42D0CAC20;
+        Mon, 20 Apr 2020 19:51:41 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 12:48:13 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
- early
-Message-ID: <20200420195111.ob7jnhs7wqp6d56g@treble>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
- <20200420175751.GA13807@redhat.com>
- <20200420182516.6awwwbvoen62gwbr@treble>
- <20200420190141.GB13807@redhat.com>
- <20200420191117.wrjauayeutkpvkwd@treble>
- <20200420194900.GC13807@redhat.com>
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: Re: [PATCH v4 01/10] mmap locking API: initial implementation as
+ rwsem wrappers
+Message-ID: <20200420194813.v7m7tmqhuza6qzoi@linux-p48b>
+Mail-Followup-To: Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+References: <20200415004353.130248-1-walken@google.com>
+ <20200415004353.130248-2-walken@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200420194900.GC13807@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200415004353.130248-2-walken@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 03:49:00PM -0400, Joe Lawrence wrote:
-> On Mon, Apr 20, 2020 at 02:11:17PM -0500, Josh Poimboeuf wrote:
-> > On Mon, Apr 20, 2020 at 03:01:41PM -0400, Joe Lawrence wrote:
-> > > > > ... apply_relocations() is also iterating over the section headers (the
-> > > > > diff context doesn't show it here, but i is an incrementing index over
-> > > > > sechdrs[]).
-> > > > > 
-> > > > > So if there is more than one KLP relocation section, we'll process them
-> > > > > multiple times.  At least the x86 relocation code will detect this and
-> > > > > fail the module load with an invalid relocation (existing value not
-> > > > > zero).
-> > > > 
-> > > > Ah, yes, good catch!
-> > > > 
-> > > 
-> > > The same test case passed with a small modification to push the foreach
-> > > KLP section part to a kernel/livepatch/core.c local function and
-> > > exposing the klp_resolve_symbols() + apply_relocate_add() for a given
-> > > section to kernel/module.c.  Something like following...
-> > 
-> > I came up with something very similar, though I named them
-> > klp_apply_object_relocs() and klp_apply_section_relocs() and changed the
-> > argument order a bit (module first).  Since it sounds like you have a
-> > test, could you try this one?
-> > 
-> 
-> LGTM.  I have a few klp-convert selftests that I've been slowly
-> tinkering on and they all load/run successfully with this version. :)
+On Tue, 14 Apr 2020, Michel Lespinasse wrote:
 
-Good to hear, thanks!  Hooray selftests :-)
+>This change wraps the existing mmap_sem related rwsem calls into a new
+>mmap locking API. There are two justifications for the new API:
+>
+>- At first, it provides an easy hooking point to instrument mmap_sem
+>  locking latencies independently of any other rwsems.
+>
+>- In the future, it may be a starting point for replacing the rwsem
+>  implementation with a different one, such as range locks.
+>
+>Signed-off-by: Michel Lespinasse <walken@google.com>
+>Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 
--- 
-Josh
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
 
+With one observation below.
+
+>+static inline void mmap_downgrade_write_lock(struct mm_struct *mm)
+>+{
+>+	downgrade_write(&mm->mmap_sem);
+>+}
+
+Shouldn't this really be just mmap_downgrade_write()? In locking
+normally don't add the _lock at the end as it implies the operation
+of acquiring the lock.
+
+Thanks,
+Davidlohr
