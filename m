@@ -2,103 +2,103 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517ACC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8CFC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30C24208FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A9F2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="L8rOOqcK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OIMXNv+S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgDTSgv (ORCPT
+        id S1728023AbgDTShR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:36:51 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37433 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbgDTSgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:36:41 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 495b5348S3z9v1wG;
-        Mon, 20 Apr 2020 20:36:39 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=L8rOOqcK; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id gxDbs_nGq2rw; Mon, 20 Apr 2020 20:36:39 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 495b5330mBz9v1wB;
-        Mon, 20 Apr 2020 20:36:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587407799; bh=Z+DTGzvTxqsqWxp7dVXacfp4jVlr8OqLRFto6Y4sZ9Y=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=L8rOOqcKaI8PRNtGUjmExVCXN2aNm7M4ITgfNvfHi0vm9iF2SxG5McgWPHCMxgUbd
-         w/JDEn0iV9AaIW7Vzc24QlW0oeJaxOLqj46CJOvh0FF6TnMgOHUKbZsqSl/TrIc7UF
-         SHD9VypxTA063u8DemWf1+5fC8tvjnIJQpKRC/iU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 55A558B78A;
-        Mon, 20 Apr 2020 20:36:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id rAhfwyKCRVLE; Mon, 20 Apr 2020 20:36:39 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0A2B98B77E;
-        Mon, 20 Apr 2020 20:36:39 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id D48DB657AE; Mon, 20 Apr 2020 18:36:38 +0000 (UTC)
-Message-Id: <bb0a6081f7b95ee64ca20f92483e5b9661cbacb2.1587407777.git.christophe.leroy@c-s.fr>
-In-Reply-To: <a5945463f86c984151962a475a3ee56a2893e85d.1587407777.git.christophe.leroy@c-s.fr>
-References: <a5945463f86c984151962a475a3ee56a2893e85d.1587407777.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 5/5] powerpc: Remove _ALIGN_UP(), _ALIGN_DOWN() and _ALIGN()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org
-Date:   Mon, 20 Apr 2020 18:36:38 +0000 (UTC)
+        Mon, 20 Apr 2020 14:37:17 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:30176 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727981AbgDTShR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 14:37:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587407836; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=7e3eo1fJ3V4W47xQX8u/gUmo/iNTfiSlIlfQaS2lzFU=;
+ b=OIMXNv+SuZEpcYFe5dpW/wD1MupWD7CKdzhf/VasnPGTTmVirbya7uCgutFdRxvURgZ2UJfc
+ JNB1X+9gjkEVJT+X9kvyp46OSwQfGUuvvqbdCuIP5nRLFearlQtjaKI0CRm9IzXf2g0ovIFf
+ SC120upVFXpvVUf/0GFK1mVtOPE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9debb8.7fae3df34ce0-smtp-out-n03;
+ Mon, 20 Apr 2020 18:36:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7EB7CC4478C; Mon, 20 Apr 2020 18:36:40 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF97EC433F2;
+        Mon, 20 Apr 2020 18:36:39 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 21 Apr 2020 00:06:39 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCHv3 2/6] iommu/arm-smmu: Allow client devices to select
+ direct mapping
+In-Reply-To: <b69fc30c-e6fb-70bf-4d6e-0d9b39404bdd@arm.com>
+References: <cover.1587400573.git.saiprakash.ranjan@codeaurora.org>
+ <d36f9c9ef3ef8dc84da02dfb160cd6846d2869fc.1587400573.git.saiprakash.ranjan@codeaurora.org>
+ <b69fc30c-e6fb-70bf-4d6e-0d9b39404bdd@arm.com>
+Message-ID: <0702f3186327b419ee38e4775c040052@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These three powerpc macros have been replaced by
-equivalent generic macros and are not used anymore.
+On 2020-04-20 22:27, Robin Murphy wrote:
+> On 2020-04-20 5:42 pm, Sai Prakash Ranjan wrote:
+>> From: Jordan Crouse <jcrouse@codeaurora.org>
+>> 
+>> Some client devices want to directly map the IOMMU themselves instead
+>> of using the DMA domain. Allow those devices to opt in to direct
+>> mapping by way of a list of compatible strings.
+> 
+> Neat and tidy :)
+> 
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> Strictly, I think patch #3/6 should really have come before this one
+> (with the header change moved accordingly), but don't bother resending
+> just for that.
+> 
 
-Remove them.
+Thanks, I have sent the updated version with this change as well
+in addition to the commit msg update for modem requesting direct
+mapping.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/include/asm/page.h | 7 -------
- 1 file changed, 7 deletions(-)
+Thanks,
+Sai
 
-diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
-index 3ee8df0f66e0..a63fe6f3a0ff 100644
---- a/arch/powerpc/include/asm/page.h
-+++ b/arch/powerpc/include/asm/page.h
-@@ -249,13 +249,6 @@ static inline bool pfn_valid(unsigned long pfn)
- #include <asm/page_32.h>
- #endif
- 
--/* align addr on a size boundary - adjust address up/down if needed */
--#define _ALIGN_UP(addr, size)   __ALIGN_KERNEL(addr, size)
--#define _ALIGN_DOWN(addr, size)	((addr)&(~((typeof(addr))(size)-1)))
--
--/* align addr on a size boundary - adjust address up if needed */
--#define _ALIGN(addr,size)     _ALIGN_UP(addr,size)
--
- /*
-  * Don't compare things with KERNELBASE or PAGE_OFFSET to test for
-  * "kernelness", use is_kernel_addr() - it should do what you want.
 -- 
-2.25.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
