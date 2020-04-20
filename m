@@ -2,58 +2,107 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890DFC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02260C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 719B7206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BAF21927
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgDTIXX (ORCPT
+        id S1726355AbgDTIXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:23:23 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:42608 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgDTIXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:23:23 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jQRhh-0001kz-1W; Mon, 20 Apr 2020 18:22:58 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 20 Apr 2020 18:22:56 +1000
-Date:   Mon, 20 Apr 2020 18:22:56 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwrng: cctrng - add missing include to linux/fips.h
-Message-ID: <20200420082256.GB22231@gondor.apana.org.au>
-References: <1587155926-32663-1-git-send-email-hadar.gat@arm.com>
+        Mon, 20 Apr 2020 04:23:35 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2060 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725959AbgDTIXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:23:34 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 79AE012A1BE46888B769;
+        Mon, 20 Apr 2020 09:23:32 +0100 (IST)
+Received: from [127.0.0.1] (10.47.7.108) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 20 Apr
+ 2020 09:23:31 +0100
+Subject: Re: [PATCH] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when
+ no budget
+To:     Bart Van Assche <bvanassche@acm.org>, <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <ming.lei@redhat.com>
+References: <1587035931-125028-1-git-send-email-john.garry@huawei.com>
+ <e5416179-2ba0-c9a8-1b86-d52eae29e146@acm.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <663d472a-5bde-4b89-3137-c7bfdf4d7b97@huawei.com>
+Date:   Mon, 20 Apr 2020 09:22:58 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587155926-32663-1-git-send-email-hadar.gat@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e5416179-2ba0-c9a8-1b86-d52eae29e146@acm.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.7.108]
+X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:38:45PM +0300, Hadar Gat wrote:
-> This fixes build failure when CONFIG_CRYPTO_FIPS is defined.
+On 18/04/2020 03:43, Bart Van Assche wrote:
+> On 2020-04-16 04:18, John Garry wrote:
+>> If in blk_mq_dispatch_rq_list() we find no budget, then we break of the
+>> dispatch loop, but the request may keep the driver tag, evaulated
+>> in 'nxt' in the previous loop iteration.
+>>
+>> Fix by putting the driver tag for that request.
+>>
+>> Signed-off-by: John Garry <john.garry@huawei.com>
+>>
+>> diff --git a/block/blk-mq.c b/block/blk-mq.c
+>> index 8e56884fd2e9..a7785df2c944 100644
+>> --- a/block/blk-mq.c
+>> +++ b/block/blk-mq.c
+>> @@ -1222,8 +1222,10 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+>>   		rq = list_first_entry(list, struct request, queuelist);
+>>   
+>>   		hctx = rq->mq_hctx;
+>> -		if (!got_budget && !blk_mq_get_dispatch_budget(hctx))
+>> +		if (!got_budget && !blk_mq_get_dispatch_budget(hctx)) {
+>> +			blk_mq_put_driver_tag(rq);
+>>   			break;
+>> +		}
+>>   
+>>   		if (!blk_mq_get_driver_tag(rq)) {
+>>   			/*
 > 
-> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
-> ---
->  drivers/char/hw_random/cctrng.c | 1 +
->  1 file changed, 1 insertion(+)
+> Is this something that can only happen if q->mq_ops->queue_rq(hctx, &bd)
+> returns another value than BLK_STS_OK, BLK_STS_RESOURCE and
+> BLK_STS_DEV_RESOURCE? 
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Right, as that case is handled in blk_mq_handle_dev_resource()
+
+If so, please add a comment in the source code
+> that explains this.
+
+So important that we should now do this in an extra patch?
+
+> 
+> Is this perhaps a bug fix for 0bca799b9280 ("blk-mq: order getting
+> budget and driver tag")? If so, please mention this and add Cc tags for
+> the people who were Cc-ed on that patch.
+
+So it looks like 0bca799b9280 had a flaw, but I am not sure if anything 
+got broken there and worthy of stable backport.
+
+I found this issue while debugging Ming's blk-mq cpu hotplug patchset, 
+which I feel is ready to merge.
+
+Having said that, this nasty issue did take > 1 day for me to debug... 
+so let me know.
+
+Thanks,
+John
