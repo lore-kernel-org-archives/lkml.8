@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 074A4C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A29FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCCAB22202
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434452145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgDTCSx (ORCPT
+        id S1726450AbgDTCTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 22:18:53 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2802 "EHLO huawei.com"
+        Sun, 19 Apr 2020 22:19:03 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2799 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726353AbgDTCSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 22:18:48 -0400
+        id S1726355AbgDTCSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 22:18:51 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 47B3A8E84D34B30889E9;
+        by Forcepoint Email with ESMTP id 31CE9CFF094A680F9F5B;
         Mon, 20 Apr 2020 10:18:45 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 20 Apr 2020 10:18:34 +0800
+ 14.3.487.0; Mon, 20 Apr 2020 10:18:35 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Guojia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 05/10] net: hns3: remove two unused structures in hclge_cmd.h
-Date:   Mon, 20 Apr 2020 10:17:30 +0800
-Message-ID: <1587349055-4403-6-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 07/10] net: hns3: clean up some coding style issue
+Date:   Mon, 20 Apr 2020 10:17:32 +0800
+Message-ID: <1587349055-4403-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587349055-4403-1-git-send-email-tanhuazhong@huawei.com>
 References: <1587349055-4403-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,53 +46,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+This patch removes some unnecessary blank lines, redundant
+parentheses, and changes one tab to blank in
+hclge_dbg_dump_reg_common().
 
-struct hclge_mac_vlan_remove_cmd and hclge_mac_vlan_add_cmd are unused.
-So removes them from hclge_cmd.h.
-
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h | 25 ----------------------
- 1 file changed, 25 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c |  2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 10 +++-------
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index 96498d9..90e422ef 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -733,31 +733,6 @@ struct hclge_mac_mgr_tbl_entry_cmd {
- 	u8      rsv3[2];
- };
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+index 1722828..cfc9300 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+@@ -143,7 +143,7 @@ static void hclge_dbg_dump_reg_common(struct hclge_dev *hdev,
+ 		return;
+ 	}
  
--struct hclge_mac_vlan_add_cmd {
--	__le16  flags;
--	__le16  mac_addr_hi16;
--	__le32  mac_addr_lo32;
--	__le32  mac_addr_msk_hi32;
--	__le16  mac_addr_msk_lo16;
--	__le16  vlan_tag;
--	__le16  ingress_port;
--	__le16  egress_port;
--	u8      rsv[4];
--};
+-	buf_len	= sizeof(struct hclge_desc) * bd_num;
++	buf_len = sizeof(struct hclge_desc) * bd_num;
+ 	desc_src = kzalloc(buf_len, GFP_KERNEL);
+ 	if (!desc_src)
+ 		return;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 9edee7d..635aec2 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -5380,7 +5380,7 @@ static int hclge_fd_check_ext_tuple(struct hclge_dev *hdev,
+ 				    struct ethtool_rx_flow_spec *fs,
+ 				    u32 *unused_tuple)
+ {
+-	if ((fs->flow_type & FLOW_EXT)) {
++	if (fs->flow_type & FLOW_EXT) {
+ 		if (fs->h_ext.vlan_etype)
+ 			return -EOPNOTSUPP;
+ 		if (!fs->h_ext.vlan_tci)
+@@ -5401,7 +5401,7 @@ static int hclge_fd_check_ext_tuple(struct hclge_dev *hdev,
+ 		if (is_zero_ether_addr(fs->h_ext.h_dest))
+ 			*unused_tuple |= BIT(INNER_DST_MAC);
+ 		else
+-			*unused_tuple &= ~(BIT(INNER_DST_MAC));
++			*unused_tuple &= ~BIT(INNER_DST_MAC);
+ 	}
+ 
+ 	return 0;
+@@ -5674,7 +5674,7 @@ static int hclge_fd_get_tuple(struct hclge_dev *hdev,
+ 		break;
+ 	}
+ 
+-	if ((fs->flow_type & FLOW_EXT)) {
++	if (fs->flow_type & FLOW_EXT) {
+ 		rule->tuples.vlan_tag1 = be16_to_cpu(fs->h_ext.vlan_tci);
+ 		rule->tuples_mask.vlan_tag1 = be16_to_cpu(fs->m_ext.vlan_tci);
+ 	}
+@@ -5785,7 +5785,6 @@ static int hclge_add_fd_entry(struct hnae3_handle *handle,
+ 	}
+ 
+ 	rule->flow_type = fs->flow_type;
 -
--#define HNS3_MAC_VLAN_CFG_FLAG_BIT 0
--struct hclge_mac_vlan_remove_cmd {
--	__le16  flags;
--	__le16  mac_addr_hi16;
--	__le32  mac_addr_lo32;
--	__le32  mac_addr_msk_hi32;
--	__le16  mac_addr_msk_lo16;
--	__le16  vlan_tag;
--	__le16  ingress_port;
--	__le16  egress_port;
--	u8      rsv[4];
--};
+ 	rule->location = fs->location;
+ 	rule->unused_tuple = unused;
+ 	rule->vf_id = dst_vport_id;
+@@ -6273,7 +6272,6 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 	 */
+ 	if (hdev->fd_active_type == HCLGE_FD_EP_ACTIVE) {
+ 		spin_unlock_bh(&hdev->fd_rule_lock);
 -
- struct hclge_vlan_filter_ctrl_cmd {
- 	u8 vlan_type;
- 	u8 vlan_fe;
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+@@ -6287,14 +6285,12 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 		bit_id = find_first_zero_bit(hdev->fd_bmap, MAX_FD_FILTER_NUM);
+ 		if (bit_id >= hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1]) {
+ 			spin_unlock_bh(&hdev->fd_rule_lock);
+-
+ 			return -ENOSPC;
+ 		}
+ 
+ 		rule = kzalloc(sizeof(*rule), GFP_ATOMIC);
+ 		if (!rule) {
+ 			spin_unlock_bh(&hdev->fd_rule_lock);
+-
+ 			return -ENOMEM;
+ 		}
+ 
 -- 
 2.7.4
 
