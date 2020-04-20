@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177A9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D878BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC60A2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9252072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386616;
-	bh=61WFqwITioEntxRH6QDaMEwXKdxo0S5pX28b3CWeGdc=;
+	s=default; t=1587386618;
+	bh=SgjDXtDgQGdZHYXIuByUqint4a036yOfcRxQTWh8XgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0KhonfIxN+TdU14X1McOeg6oElG8SxQXtR3Z5zv4Sx+HRamdectH0Sv3UqyVI2DTw
-	 7/K5xHgjD+kfdS+/VZ8s9E1xo6wG/MmT83Hv6RSkO5/KZOhuaEJkebfjUFwGb73zxs
-	 hvLEwqRWkb0QxiLfcOdJbQ3fUVVF7sQLms9bJCJA=
+	b=KmPKgATYGzypZ94GYqvuQM/kuJKeQ6hh7SQJvA0662KuJI/PHcdCyAeq4q27fe8Hv
+	 BCBuLLUZpCuTJizvqHTU6G9WsXsqY1AZl6uQxll3LlxcirFw18/6hAiPoNcs9Od6WF
+	 r0cMCy1RAz2pZQK+8slBjZhERPqKfu321QX4RcAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgDTMnf (ORCPT
+        id S1727890AbgDTMni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:43:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:43:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728395AbgDTMn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:43:28 -0400
+        id S1728412AbgDTMnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:43:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FA3220735;
-        Mon, 20 Apr 2020 12:43:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FA932072B;
+        Mon, 20 Apr 2020 12:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386608;
-        bh=61WFqwITioEntxRH6QDaMEwXKdxo0S5pX28b3CWeGdc=;
+        s=default; t=1587386613;
+        bh=SgjDXtDgQGdZHYXIuByUqint4a036yOfcRxQTWh8XgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hbB2B8kcJbd8HxzRnWiUV9qm2/nvEBBUcuPTl62TUGGXgluE2kUQqMx14oaXIqfdC
-         HzKqNe9pC8emftAHBONmW2ki+pR6nqXJZsu1IwzPZimMtCB1GxsHr8Cw6HGLiT8Lzh
-         wbyDm2KROrxPQSenDrTJIACmJYDJhu4fAwXuL7hk=
+        b=uH58oHelR66e+UlH0rHzUhGAa4l1GdA75WY9Vjp/sb0p1HyfIHjbPqJf+L81MQKPD
+         7YUhi/y4xMjQRy0Q/0LqXNVbMZ9ai9vxZd/X8Z1WHWfEvN6Av6UfImHqMq3xR2Txuz
+         t8N11TsEMqwb0VDz1Fmy+o1z1j+o/ECG/DmgyNbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.6 26/71] jbd2: improve comments about freeing data buffers whose page mapping is NULL
-Date:   Mon, 20 Apr 2020 14:38:40 +0200
-Message-Id: <20200420121513.759932086@linuxfoundation.org>
+        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.6 28/71] perf report: Fix no branch type statistics report issue
+Date:   Mon, 20 Apr 2020 14:38:42 +0200
+Message-Id: <20200420121514.192225755@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,41 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-commit 780f66e59231fcf882f36c63f287252ee47cc75a upstream.
+commit c3b10649a80e9da2892c1fd3038c53abd57588f6 upstream.
 
-Improve comments in jbd2_journal_commit_transaction() to describe why
-we don't need to clear the buffer_mapped bit for freeing file mapping
-buffers whose page mapping is NULL.
+Previously we could get the report of branch type statistics.
 
-Link: https://lore.kernel.org/r/20200217112706.20085-1-yi.zhang@huawei.com
-Fixes: c96dceeabf76 ("jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer")
-Suggested-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+For example:
+
+  # perf record -j any,save_type ...
+  # t perf report --stdio
+
+  #
+  # Branch Statistics:
+  #
+  COND_FWD:  40.6%
+  COND_BWD:   4.1%
+  CROSS_4K:  24.7%
+  CROSS_2M:  12.3%
+      COND:  44.7%
+    UNCOND:   0.0%
+       IND:   6.1%
+      CALL:  24.5%
+       RET:  24.7%
+
+But now for the recent perf, it can't report the branch type statistics.
+
+It's a regression issue caused by commit 40c39e304641 ("perf report: Fix
+a no annotate browser displayed issue"), which only counts the branch
+type statistics for browser mode.
+
+This patch moves the branch_type_count() outside of ui__has_annotation()
+checking, then branch type statistics can work for stdio mode.
+
+Fixes: 40c39e304641 ("perf report: Fix a no annotate browser displayed issue")
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20200313134607.12873-1-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/commit.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/perf/builtin-report.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -997,9 +997,10 @@ restart_loop:
- 			 * journalled data) we need to unmap buffer and clear
- 			 * more bits. We also need to be careful about the check
- 			 * because the data page mapping can get cleared under
--			 * out hands, which alse need not to clear more bits
--			 * because the page and buffers will be freed and can
--			 * never be reused once we are done with them.
-+			 * our hands. Note that if mapping == NULL, we don't
-+			 * need to make buffer unmapped because the page is
-+			 * already detached from the mapping and buffers cannot
-+			 * get reused.
- 			 */
- 			mapping = READ_ONCE(bh->b_page->mapping);
- 			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -185,24 +185,23 @@ static int hist_iter__branch_callback(st
+ {
+ 	struct hist_entry *he = iter->he;
+ 	struct report *rep = arg;
+-	struct branch_info *bi;
++	struct branch_info *bi = he->branch_info;
+ 	struct perf_sample *sample = iter->sample;
+ 	struct evsel *evsel = iter->evsel;
+ 	int err;
+ 
++	branch_type_count(&rep->brtype_stat, &bi->flags,
++			  bi->from.addr, bi->to.addr);
++
+ 	if (!ui__has_annotation() && !rep->symbol_ipc)
+ 		return 0;
+ 
+-	bi = he->branch_info;
+ 	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
+ 	if (err)
+ 		goto out;
+ 
+ 	err = addr_map_symbol__inc_samples(&bi->to, sample, evsel);
+ 
+-	branch_type_count(&rep->brtype_stat, &bi->flags,
+-			  bi->from.addr, bi->to.addr);
+-
+ out:
+ 	return err;
+ }
 
 
