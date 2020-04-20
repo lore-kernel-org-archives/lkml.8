@@ -2,98 +2,90 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C24C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD54C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4376820BED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AACD214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pAtkxvUG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="XHmXv7hu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgDTHeb (ORCPT
+        id S1726183AbgDTHee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:34:31 -0400
+        Mon, 20 Apr 2020 03:34:34 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725994AbgDTHeb (ORCPT
+        by vger.kernel.org with ESMTP id S1725994AbgDTHec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:34:31 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F3BC061A10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:34:31 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id c24so3228125uap.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:34:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=opCQWgYuAFYxLdRztezYqwdg+lsU+kLFUGlLQxUPDrg=;
-        b=pAtkxvUGU+urLdOoGr0lXgvyKlRl16BlV9bPojdE8r0nGdNQq0Sf8j3kDMPzqsRTNX
-         /LFbidWy/e3DGc29eEF6nu6yj59jxfAxBjHAb2EgMa+bg+B48EiqCITZNUxpRSsLnMrT
-         1pAPf2rlHJV8chg1gtTC1AdvdJrNEq9jnheHYXDf0XqoLc1k7T/9W8DO+0mdau7N8LYG
-         DLjtMznlnI3ljgsnfWjLUkhC+8JsNwrM8EnL6vcMmUgkJr/2MQGjDEJQS8mgEpIeVW0x
-         b34kleywutIxcGdICiWzOZaLbd2j2BLBRJKRpKtHFv0Q+/EHjk5AYIBWRS5G/u16KQBh
-         z7zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=opCQWgYuAFYxLdRztezYqwdg+lsU+kLFUGlLQxUPDrg=;
-        b=GNYnappPQVa5+G/EC98p35ONM416y2KWe530y/d3+/K0diZaP2GgsmUXyRDKQPzNsG
-         fNMJWNionP+3koxvv8ScvxPDo/E+OlyfZDWXa07FAy+fkkSfoyfGLX7Jz/T0uS90T9n4
-         FJrctUijhydIRjGAcnZ1ZrXWE5+eGng1G3XXydHdoCQpnRDfb5/Jj95DFPxMTPC6Wvbh
-         Dk6lwK5wY/MjZPjkeZWmSqTNU6KaRjq5JFbRy47MPVf8nuUoj96cYF3CQnKxQe+xn+W3
-         hYokyigK0d3o1E6mG4AZRUFNHMd3pLtQ9cJfteJvLZZG+NchhkdXxCXK7Z0aOntHaHPJ
-         qEow==
-X-Gm-Message-State: AGi0PubVFOLOWpbpO9Hf4NDGa2lYI49WHerzSYWlCA/5sfvYolM7onkE
-        UAhiUiGKXc5zYptryX0iSsZwJZpDZVWgJYIqH6VOhA==
-X-Google-Smtp-Source: APiQypIP0+2cZRffzlocpbxn2ONEPkD5ue7l25ETDalvg1y0d5aVMpH/wBvI56nsmtEm2deJhKL1tD2ouDEFeELmEvY=
-X-Received: by 2002:ab0:3343:: with SMTP id h3mr272200uap.19.1587368070353;
- Mon, 20 Apr 2020 00:34:30 -0700 (PDT)
+        Mon, 20 Apr 2020 03:34:32 -0400
+X-Greylist: delayed 1318 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 20 Apr 2020 00:34:32 PDT
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A83EC061A0C;
+        Mon, 20 Apr 2020 00:34:32 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 69C8920CEA;
+        Mon, 20 Apr 2020 07:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587368071; bh=gcui++ieWd7uwUAXv2hAzwbMmKtI8T9QNmQZh73J2Qk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XHmXv7huslucaxXmqOOJUJ/Win32d7xMmz0ZjpHmbC0Jbfd6DEG2cb+lNrY8P+XGL
+         pxHRSUBpO2XZ+N7V5RXmie5d9KZuI1fS7dkHYPSUXJjGBjLhSrLmTgQWpdlBSZ+5+a
+         xeqNgPtWPiTVfGg4eJMnMWAUXp1Qo+tpVJ2ZUrQv5sKJdfdDZ4GtVgEEDs5cYP9NKe
+         dhTnof8mboy9kUY32glwsQJJWResjPdnOeeTIOYVsKHaIthmuGiOlMXX8XTR9b3oAZ
+         iOypWNY/ki9OZyDBFYXzhY9cfu9j40Vkz02XfB+NLtuNdFU4BubiUCFRN2VMcdJjDt
+         obnScb8DT0sEw==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND 0/5] Loongson64: RS780E clean-ups
+Date:   Mon, 20 Apr 2020 15:33:35 +0800
+Message-Id: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-References: <20200417154901.112236-1-colin.king@canonical.com>
-In-Reply-To: <20200417154901.112236-1-colin.king@canonical.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 20 Apr 2020 09:33:54 +0200
-Message-ID: <CAPDyKFocu+ckJE5WpMWuNTMJiwkfgQ4Ha-AXCF4mRJKMrhFa0A@mail.gmail.com>
-Subject: Re: [PATCH][next] sdhci: arasan: fix uninitialized value being
- returned as error code
-To:     Colin King <colin.king@canonical.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Manish Narani <manish.narani@xilinx.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 at 17:49, Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> Currently the error return value in variable ret is not being initialized
-> and so a successful return path is returning a garbage value. Since ret
-> is not being used the simple fix is just return 0 on a successful return.
->
-> Addresses-Coverity: ("Uninitialized scalar variable")
-> Fixes: f73e66a36772 ("sdhci: arasan: Add support for Versal Tap Delays")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Basically ensure all RS780E stuff is enabled by DeviceTree.
+So I can post LS7A support later on.
 
-Thanks for the patch, but this time I have already applied [1] an
-earlier fix for it.
+Hi Thomas, could you please pick them into MIPS tree?
 
-Kind regards
-Uffe
+Thanks.
 
-[...]
+Jiaxun Yang (5):
+  MIPS: Loongson64: Remove dead RTC code
+  MIPS: Loongson64: Make RS780E ACPI as a platform driver
+  dt-bindings: Document Loongson RS780E PCH ACPI Controller
+  MIPS: DTS: Loongson64: Add ACPI Controller Node
+  MIPS: Loongson64: Mark RS780 HPET as broken
 
-[1] https://patchwork.kernel.org/patch/11493633/
+ .../bindings/mips/loongson/rs780e-acpi.yaml   | 40 +++++++++++++
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  5 ++
+ .../include/asm/mach-loongson64/mc146818rtc.h | 36 ------------
+ arch/mips/loongson64/Kconfig                  | 12 +---
+ arch/mips/loongson64/Makefile                 |  3 +-
+ arch/mips/loongson64/rtc.c                    | 39 -------------
+ arch/mips/loongson64/time.c                   |  8 +--
+ drivers/platform/mips/Kconfig                 |  6 ++
+ drivers/platform/mips/Makefile                |  1 +
+ .../platform/mips/rs780e-acpi.c               | 58 ++++++++++++-------
+ 10 files changed, 95 insertions(+), 113 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mips/loongson/rs780e-acpi.yaml
+ delete mode 100644 arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+ delete mode 100644 arch/mips/loongson64/rtc.c
+ rename arch/mips/loongson64/acpi_init.c => drivers/platform/mips/rs780e-acpi.c (70%)
+
+-- 
+2.26.0.rc2
+
