@@ -2,229 +2,220 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59081C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E65C54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3770D2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 053682073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 06:36:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEatlmJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgDTG3V (ORCPT
+        id S1726023AbgDTGgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 02:29:21 -0400
-Received: from mga11.intel.com ([192.55.52.93]:45685 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbgDTG3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 02:29:20 -0400
-IronPort-SDR: ob/ti3+TRAlC+teMXCsTUMwvltOnE3sYNOu8rIKx6AnXdtSAqjcRBfeMwi6xaDKB8JpYIJB4ZV
- FJKwvIoSuN4A==
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 23:29:13 -0700
-IronPort-SDR: 6xZBM4/Uka1juJn2JaC0bAdCVx3CqY8JPHeKXT4S/KaElv+c29a1i8Osb25jicdSrnBaV+UbCj
- sBR2IEEzWhdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="gz'50?scan'50,208,50";a="300193270"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Apr 2020 23:29:11 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jQPvb-000HOa-2k; Mon, 20 Apr 2020 14:29:11 +0800
-Date:   Mon, 20 Apr 2020 14:28:32 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Palmer Dabbelt <palmerdabbelt@google.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-Subject: arch/riscv/kernel/stacktrace.c:78:8: error: 'sp_in_global' undeclared
-Message-ID: <202004201430.dyuVjFZW%lkp@intel.com>
+        Mon, 20 Apr 2020 02:36:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725812AbgDTGgx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 02:36:53 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5708FC061A10
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 23:36:52 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x15so203996pfa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 23:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=L27HBU83hEal+N26VFwHycUX9XOfAyoXkB2huIPsA9k=;
+        b=XEatlmJeITPpwD3f0SlRiEBIQL07PhR1eF9mmHF/OhduyMH5V6X1Wn6a71K6iBByQx
+         HK60nJ8BGPYHQWgoZ09buq/ukO0+LJY/fabEE8x2W1HnykDWV61JUWBdy/AJsDfWZz+e
+         KIr2OC0fti5A4PxK6X+n4UwWOSiR6J9LYe5r9lmmUfwY7+rx17ImZsmMnUNgJUEN2fs7
+         gNbRmCztcAR+ox2Q9zFikSPdyd8Ytqo5ZqZojKUU0EnWwFjJ/QCQCaUds8MyM+uqLCjG
+         llSaH06R8wN18FFgBYinwz9/7HqCHuVcH4briVvomSNNW774Skr7R/pazfzRa+N0xLmX
+         xmMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L27HBU83hEal+N26VFwHycUX9XOfAyoXkB2huIPsA9k=;
+        b=rvz+1p3IikmAjCF1gzFNzrKe2tBIqgTrrpHC9bkDEMNFIU+B91LvQimWXEkfu3uxrt
+         artQYgJTFl4M+fL4javlXtKXtSy1b731BjdjJ21sBdkQSVBAVd5wb53hvrlYQsf0xGV4
+         XcBQFTUjkFP7doGPDgd0arFpp78Rq4zmkva62wEPN2knvqar3nBbL/TmYUfho/J6SW3L
+         ZsQ5rwGJKReMYlgDYEfC/iMpOzIcur0eaaukNVnhJENMzpuaoE/Q/loGLxgSPvctPiw4
+         7drb707XNjHphdwgHu9KQf8FAD+HEzKvHs//Ldku/1tbTzoGioE0bnJ1H4RwFNGRkzvq
+         3VNA==
+X-Gm-Message-State: AGi0PuZ28G0BNRPMe7P72FV6Roj41JOVcmHQlz2rU8N6EbWoIMd2DU1r
+        zp3uFmC8KnwtgJLlbDMRdmYYTQ==
+X-Google-Smtp-Source: APiQypIyskZupogxs8R5S2FQG0PhO1AvaANwpsKWLHsPifS9+YKjOFR/4CCknIWpq8eAAm9OOA7gNA==
+X-Received: by 2002:aa7:96cf:: with SMTP id h15mr10987919pfq.319.1587364611618;
+        Sun, 19 Apr 2020 23:36:51 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h9sm96070pfo.129.2020.04.19.23.36.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 23:36:50 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 23:37:14 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v6 4/5] remoteproc: ingenic: Added remoteproc driver
+Message-ID: <20200420063714.GA1868936@builder.lan>
+References: <20200417170040.174319-1-paul@crapouillou.net>
+ <20200417170040.174319-4-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="fUYQa+Pmc3FrFX/N"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200417170040.174319-4-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri 17 Apr 10:00 PDT 2020, Paul Cercueil wrote:
 
---fUYQa+Pmc3FrFX/N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> This driver is used to boot, communicate with and load firmwares to the
+> MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
+> Ingenic.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
 
-Hi Palmer,
+Please read Documentation/process/submitting-patches.rst about
+"Developer's Certificate of Origin".
 
-FYI, the error/warning still remains.
+I suspect that you incorporated review feedback on previous revisions
+from kbuild and Julia, this is generally omitted from the actual commit
+message.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   7a56db0299f9d43b4fe076838150c5cc293df131
-commit: 52e7c52d2ded5908e6a4f8a7248e5fa6e0d6809a RISC-V: Stop relying on GCC's register allocator's hueristics
-date:   7 weeks ago
-config: riscv-allnoconfig (attached as .config)
-compiler: riscv64-linux-gcc (GCC) 9.3.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout 52e7c52d2ded5908e6a4f8a7248e5fa6e0d6809a
-        # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=riscv 
+> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+> 
+> Notes:
+>     v2: Remove exception for always-mapped memories
+>     v3: - Use clk_bulk API
+>     	- Move device-managed code to its own patch [3/4]
+>     	- Move devicetree table right above ingenic_rproc_driver
+>     	- Removed #ifdef CONFIG_OF around devicetree table
+>     	- Removed .owner = THIS_MODULE in ingenic_rproc_driver
+>     	- Removed useless platform_set_drvdata()
+>     v4: - Add fix reported by Julia
+>     	- Change Kconfig symbol to INGENIC_VPU_RPROC
+>     	- Add documentation to struct vpu
+>     	- disable_irq_nosync() -> disable_irq()
+>     v5: No change
+>     v6: Instead of prepare/unprepare callbacks, use PM runtime callbacks
+> 
+>  drivers/remoteproc/Kconfig         |   8 +
+>  drivers/remoteproc/Makefile        |   1 +
+>  drivers/remoteproc/ingenic_rproc.c | 282 +++++++++++++++++++++++++++++
+>  3 files changed, 291 insertions(+)
+>  create mode 100644 drivers/remoteproc/ingenic_rproc.c
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index fbaed079b299..31da3e6c6281 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -240,6 +240,14 @@ config STM32_RPROC
+>  
+>  	  This can be either built-in or a loadable module.
+>  
+> +config INGENIC_VPU_RPROC
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
+Please try to keep things alphabetically ordered.
 
-All errors (new ones prefixed by >>):
+> +	tristate "Ingenic JZ47xx VPU remoteproc support"
+> +	depends on MIPS || COMPILE_TEST
+> +	help
+> +	  Say y or m here to support the VPU in the JZ47xx SoCs from Ingenic.
+> +	  This can be either built-in or a loadable module.
+> +	  If unsure say N.
+> +
+>  endif # REMOTEPROC
+>  
+>  endmenu
+[..]
+> diff --git a/drivers/remoteproc/ingenic_rproc.c b/drivers/remoteproc/ingenic_rproc.c
+[..]
+> +/**
+> + * struct vpu - Ingenic VPU remoteproc private structure
+> + * @irq: interrupt number
+> + * @clks: pointers to the VPU and AUX clocks
 
-   arch/riscv/kernel/stacktrace.c: In function 'walk_stackframe':
->> arch/riscv/kernel/stacktrace.c:78:8: error: 'sp_in_global' undeclared (first use in this function)
-      78 |   sp = sp_in_global;
-         |        ^~~~~~~~~~~~
-   arch/riscv/kernel/stacktrace.c:78:8: note: each undeclared identifier is reported only once for each function it appears in
+aux_base is missing
 
-vim +/sp_in_global +78 arch/riscv/kernel/stacktrace.c
+> + * @mem_info: array of struct vpu_mem_info, which contain the mapping info of
+> + *            each of the external memories
+> + * @dev: private pointer to the device
+> + */
+> +struct vpu {
+> +	int irq;
+> +	struct clk_bulk_data clks[2];
+> +	void __iomem *aux_base;
+> +	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
+> +	struct device *dev;
+> +};
+[..]
+> +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+> +{
+> +	struct vpu *vpu = rproc->priv;
+> +	void __iomem *va = NULL;
+> +	unsigned int i;
+> +
+> +	if (len <= 0)
 
-    67	
-    68	static void notrace walk_stackframe(struct task_struct *task,
-    69		struct pt_regs *regs, bool (*fn)(unsigned long, void *), void *arg)
-    70	{
-    71		unsigned long sp, pc;
-    72		unsigned long *ksp;
-    73	
-    74		if (regs) {
-    75			sp = user_stack_pointer(regs);
-    76			pc = instruction_pointer(regs);
-    77		} else if (task == NULL || task == current) {
-  > 78			sp = sp_in_global;
-    79			pc = (unsigned long)walk_stackframe;
-    80		} else {
-    81			/* task blocked in __switch_to */
-    82			sp = task->thread.sp;
-    83			pc = task->thread.ra;
-    84		}
-    85	
-    86		if (unlikely(sp & 0x7))
-    87			return;
-    88	
-    89		ksp = (unsigned long *)sp;
-    90		while (!kstack_end(ksp)) {
-    91			if (__kernel_text_address(pc) && unlikely(fn(pc, arg)))
-    92				break;
-    93			pc = (*ksp++) - 0x4;
-    94		}
-    95	}
-    96	
+len can't be negative (also, does it add value to check for and fail len
+== 0?)
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +		return NULL;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+> +		const struct vpu_mem_info *info = &vpu->mem_info[i];
+> +		const struct vpu_mem_map *map = info->map;
+> +
+> +		if (da >= map->da && (da + len) < (map->da + info->len)) {
+> +			va = info->base + (da - map->da);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return (__force void *)va;
+> +}
+[..]
+> +static struct platform_driver ingenic_rproc_driver = {
+> +	.probe = ingenic_rproc_probe,
+> +	.driver = {
+> +		.name = "ingenic-vpu",
+> +#ifdef CONFIG_PM
 
---fUYQa+Pmc3FrFX/N
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+Please omit the #ifdef here.
 
-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
-3WKCrf8FLDdmSuxJAAA=
+> +		.pm = &ingenic_rproc_pm,
+> +#endif
+> +		.of_match_table = of_match_ptr(ingenic_rproc_of_matches),
 
---fUYQa+Pmc3FrFX/N--
+Please omit the of_match_ptr()
+
+Regards,
+Bjorn
+
+> +	},
+> +};
+> +module_platform_driver(ingenic_rproc_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+> +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
+> -- 
+> 2.25.1
+> 
