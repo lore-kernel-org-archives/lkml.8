@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D6BC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D2FC38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D15A820857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53DA720857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgDTQrQ (ORCPT
+        id S1726505AbgDTQrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:47:16 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:43060 "EHLO ale.deltatee.com"
+        Mon, 20 Apr 2020 12:47:19 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:43056 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbgDTQrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726024AbgDTQrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Apr 2020 12:47:13 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1jQZZb-0008F6-BS; Mon, 20 Apr 2020 10:47:12 -0600
+        id 1jQZZb-0008F1-BL; Mon, 20 Apr 2020 10:47:12 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1jQZZa-0005dr-C1; Mon, 20 Apr 2020 10:47:06 -0600
+        id 1jQZZZ-0005dc-RX; Mon, 20 Apr 2020 10:47:05 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
@@ -34,19 +34,18 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Date:   Mon, 20 Apr 2020 10:46:57 -0600
-Message-Id: <20200420164700.21620-7-logang@deltatee.com>
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Mon, 20 Apr 2020 10:46:52 -0600
+Message-Id: <20200420164700.21620-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200420164700.21620-1-logang@deltatee.com>
 References: <20200420164700.21620-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v12 6/9] nvme: Export existing nvme core functions
+Subject: [PATCH v12 1/9] nvme-core: Clear any SGL flags in passthru commands
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,89 +53,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export nvme_put_ns(), nvme_command_effects(), nvme_execute_passthru_rq()
-and nvme_find_get_ns() for use in the nvmet passthru code.
+The host driver should decide whether to use SGLs or PRPs and they
+currently assume the flags are cleared after the call to
+nvme_setup_cmd(). However, passed-through commands may erroneously
+set these bits; so clear them for all cases.
 
-The exports are conditional on CONFIG_NVME_TARGET_PASSTHRU.
-
-Based-on-a-patch-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 ---
- drivers/nvme/host/core.c | 14 +++++++++-----
- drivers/nvme/host/nvme.h |  5 +++++
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ drivers/nvme/host/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 1f3ef53bb8b4..6dfc7d90ce87 100644
+index 91c1bd659947..f5283b300e87 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -457,7 +457,7 @@ static void nvme_free_ns(struct kref *kref)
- 	kfree(ns);
- }
- 
--static void nvme_put_ns(struct nvme_ns *ns)
-+void nvme_put_ns(struct nvme_ns *ns)
- {
- 	kref_put(&ns->kref, nvme_free_ns);
- }
-@@ -890,8 +890,8 @@ static void *nvme_add_user_metadata(struct bio *bio, void __user *ubuf,
- 	return ERR_PTR(ret);
- }
- 
--static u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
--				u8 opcode)
-+u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
-+			 u8 opcode)
- {
- 	u32 effects = 0;
- 
-@@ -976,7 +976,7 @@ static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
- 		nvme_queue_scan(ctrl);
- }
- 
--static void nvme_execute_passthru_rq(struct request *rq)
-+void nvme_execute_passthru_rq(struct request *rq)
- {
- 	struct nvme_command *cmd = nvme_req(rq)->cmd;
- 	struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
-@@ -3530,7 +3530,7 @@ static int ns_cmp(void *priv, struct list_head *a, struct list_head *b)
- 	return nsa->head->ns_id - nsb->head->ns_id;
- }
- 
--static struct nvme_ns *nvme_find_get_ns(struct nvme_ctrl *ctrl, unsigned nsid)
-+struct nvme_ns *nvme_find_get_ns(struct nvme_ctrl *ctrl, unsigned nsid)
- {
- 	struct nvme_ns *ns, *ret = NULL;
- 
-@@ -4309,6 +4309,10 @@ EXPORT_SYMBOL_GPL(nvme_sync_queues);
-  * use by the nvmet-passthru and should not be used for
-  * other things.
-  */
-+EXPORT_SYMBOL_GPL(nvme_put_ns);
-+EXPORT_SYMBOL_GPL(nvme_command_effects);
-+EXPORT_SYMBOL_GPL(nvme_execute_passthru_rq);
-+EXPORT_SYMBOL_GPL(nvme_find_get_ns);
- 
- struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path)
- {
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 9195dd97b61b..76b4aa8f35e1 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -695,6 +695,11 @@ static inline void nvme_hwmon_init(struct nvme_ctrl *ctrl) { }
-  * use by the nvmet-passthru and should not be used for
-  * other things.
-  */
-+void nvme_put_ns(struct nvme_ns *ns);
-+u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
-+			 u8 opcode);
-+void nvme_execute_passthru_rq(struct request *rq);
-+struct nvme_ns *nvme_find_get_ns(struct nvme_ctrl *ctrl, unsigned int nsid);
- struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path);
- #endif /* CONFIG_NVME_TARGET_PASSTHRU */
- 
+@@ -756,6 +756,8 @@ blk_status_t nvme_setup_cmd(struct nvme_ns *ns, struct request *req,
+ 	case REQ_OP_DRV_IN:
+ 	case REQ_OP_DRV_OUT:
+ 		memcpy(cmd, nvme_req(req)->cmd, sizeof(*cmd));
++		/* passthru commands should let the driver set the SGL flags */
++		cmd->common.flags &= ~NVME_CMD_SGL_ALL;
+ 		break;
+ 	case REQ_OP_FLUSH:
+ 		nvme_setup_flush(ns, cmd);
 -- 
 2.20.1
 
