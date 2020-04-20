@@ -2,144 +2,139 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C30C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B35BC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02B7E206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CEB5206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BnUTJulO"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="poQyuPWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgDTSZ1 (ORCPT
+        id S1727001AbgDTS1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:25:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46807 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726838AbgDTSZ0 (ORCPT
+        Mon, 20 Apr 2020 14:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbgDTS1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:25:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587407125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VHKvl33Abr0fTYth11HDGBq8eZzlB7XRZhJAHr6xvHU=;
-        b=BnUTJulOfS8vvfBqcyfpVcWnBRYlugD2t/aETFK96iPR+tmPXfiK/g9tjMSUhvTxZ6M18K
-        CigN/CNVXhD3c7jEjVLN1HLoI5TEzBshWJif7syk3uvYKF77uT0OY/x9mGZq6h8WR/LFRn
-        chaoy8K5NBSZdfU01E1HfkQoUhSGC5E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-x0b4Iy8sNiq2TcpjLUSREA-1; Mon, 20 Apr 2020 14:25:23 -0400
-X-MC-Unique: x0b4Iy8sNiq2TcpjLUSREA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 952C910753F5;
-        Mon, 20 Apr 2020 18:25:22 +0000 (UTC)
-Received: from treble (ovpn-118-158.rdu2.redhat.com [10.10.118.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C58535D9E5;
-        Mon, 20 Apr 2020 18:25:19 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 13:25:16 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
- early
-Message-ID: <20200420182516.6awwwbvoen62gwbr@treble>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
- <20200420175751.GA13807@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200420175751.GA13807@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Mon, 20 Apr 2020 14:27:43 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6F6C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:27:42 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id g30so5357439pfr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:27:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3j7I+GwBPTWoE/gepMWkNd8iIKlyP+O5Cvl6ddDtBIE=;
+        b=poQyuPWbKffKCW0Q6nE3FUGjjj9O/c5xdGoYcp6Es73N4nBCmfEhbhBe9jR2mPg6Yt
+         eZc8KCC3HNbKl6zWcLIWEBbW5fhYpWz5Tx3EoUtDDDWtr0sils+CHfTYihCyub8miFXp
+         DPAkJSzeD/1MHdDblb7jequuMEp03aKqh6jLw5bvOFt6Wipo6KxdUpIFzTREmLR5rkGE
+         Q40qX3K/Npci9Q3C5tWYBV7tywXIWei2BqN+55DoPd/dI/bYFqn4yECk6iYdWV3GCEHF
+         vLq39hy0+y3aEEuJRCQEQ4KKMmPFSo/au3pJv9k4CoSJVMxlxRjuF6q0umQFRScR23p1
+         JeeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=3j7I+GwBPTWoE/gepMWkNd8iIKlyP+O5Cvl6ddDtBIE=;
+        b=CTijmXteh8vlbyGu8TYk4nD0k/Gcyb+YKzudZkA6Q5S9RHQqUxhlLrcMev344STgj5
+         PdaTWFSUCZr+FxfbK/TYT4Q6zsRjWG9U72ZCH6NrFxwgIqwZq+q2ikD4XZbUZziW7Bz8
+         p9aFnrFaIu4ZPlBQtYMoKoQvAMJ2Mam4qlbIbf96IVvDnSdXdxE1XeQrjHbXKcsqFjY4
+         JwP1/gwFzykCG/zIaMn9i4BkA+mzKRm8srXFhPutXvwkK26sdrB2fHZ39JRzdh9+ZzUn
+         onCahJ8jpnpdgUj/WInJ/UcmMuwANfBssCurkC3UM8oMP8mVGxlNT+WHGMDPntUi7jo1
+         PziQ==
+X-Gm-Message-State: AGi0PuY1Wp8GvLb1Q7fEndfryr3W4MajqIoMcbXquAczSz7jbyEcBQUa
+        bQSm8dYc0yKECnDBwGggQ+wqRg==
+X-Google-Smtp-Source: APiQypLv50XPkHoI7VnUU30/Sn6iEsoPmL7NIe1/tSUt4S/CGGJSca5v0TQ7gj9mPAYJYoPVl9vRNw==
+X-Received: by 2002:a63:62c1:: with SMTP id w184mr16558626pgb.296.1587407262240;
+        Mon, 20 Apr 2020 11:27:42 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id j7sm61576pjy.9.2020.04.20.11.27.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 11:27:40 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 11:27:40 -0700 (PDT)
+X-Google-Original-Date: Mon, 20 Apr 2020 11:23:07 PDT (-0700)
+Subject:     Re: [PATCH v5 0/9] Support strict kernel memory permissions for security
+In-Reply-To: <cover.1586332296.git.zong.li@sifive.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        mhiramat@kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, zong.li@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     zong.li@sifive.com
+Message-ID: <mhng-103aea95-cf25-47c5-8e8d-56534f40c570@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 01:57:51PM -0400, Joe Lawrence wrote:
-> On Fri, Apr 17, 2020 at 09:04:27AM -0500, Josh Poimboeuf wrote:
-> > 
-> > [ ... snip ... ]
-> > 
-> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> > index 40cfac8156fd..5fda3afc0285 100644
-> > --- a/kernel/livepatch/core.c
-> > +++ b/kernel/livepatch/core.c
-> > 
-> > [ ... snip ... ]
-> > 
-> > +int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-> > +			  const char *shstrtab, const char *strtab,
-> > +			  unsigned int symndx, struct module *pmod,
-> > +			  const char *objname)
-> >  {
-> >  	int i, cnt, ret = 0;
-> > -	const char *objname, *secname;
-> >  	char sec_objname[MODULE_NAME_LEN];
-> >  	Elf_Shdr *sec;
-> >  
-> > -	if (WARN_ON(!klp_is_object_loaded(obj)))
-> > -		return -EINVAL;
-> > -
-> > -	objname = klp_is_module(obj) ? obj->name : "vmlinux";
-> > -
-> >  	/* For each klp relocation section */
-> > -	for (i = 1; i < pmod->klp_info->hdr.e_shnum; i++) {
-> > -		sec = pmod->klp_info->sechdrs + i;
-> > -		secname = pmod->klp_info->secstrings + sec->sh_name;
-> > +	for (i = 1; i < ehdr->e_shnum; i++) {
-> > +		sec = sechdrs + i;
-> 
-> Hi Josh, minor bug:
-> 
-> Note the for loop through the section headers in
-> klp_write_relocations(), but its calling function ...
-> 
-> > [ ... snip ... ]
-> > 
-> > diff --git a/kernel/module.c b/kernel/module.c
-> > index 646f1e2330d2..d36ea8a8c3ec 100644
-> > --- a/kernel/module.c
-> > +++ b/kernel/module.c
-> > @@ -2334,11 +2334,12 @@ static int apply_relocations(struct module *mod, const struct load_info *info)
-> >  		if (!(info->sechdrs[infosec].sh_flags & SHF_ALLOC))
-> >  			continue;
-> >  
-> > -		/* Livepatch relocation sections are applied by livepatch */
-> >  		if (info->sechdrs[i].sh_flags & SHF_RELA_LIVEPATCH)
-> > -			continue;
-> > -
-> > -		if (info->sechdrs[i].sh_type == SHT_REL)
-> > +			err = klp_write_relocations(info->hdr, info->sechdrs,
-> > +						    info->secstrings,
-> > +						    info->strtab,
-> > +						    info->index.sym, mod, NULL);
-> > +		else if (info->sechdrs[i].sh_type == SHT_REL)
-> >  			err = apply_relocate(info->sechdrs, info->strtab,
-> >  					     info->index.sym, i, mod);
-> >  		else if (info->sechdrs[i].sh_type == SHT_RELA)
-> 
-> ... apply_relocations() is also iterating over the section headers (the
-> diff context doesn't show it here, but i is an incrementing index over
-> sechdrs[]).
-> 
-> So if there is more than one KLP relocation section, we'll process them
-> multiple times.  At least the x86 relocation code will detect this and
-> fail the module load with an invalid relocation (existing value not
-> zero).
+On Wed, 08 Apr 2020 00:56:55 PDT (-0700), zong.li@sifive.com wrote:
+> The main purpose of this patch series is changing the kernel mapping permission
+> , make sure that code is not writeable, data is not executable, and read-only
+> data is neither writable nor executable.
+>
+> This patch series also supports the relevant implementations such as
+> ARCH_HAS_SET_MEMORY, ARCH_HAS_SET_DIRECT_MAP,
+> ARCH_SUPPORTS_DEBUG_PAGEALLOC and DEBUG_WX.
+>
+> Changes in v5:
+>  - Add lockdep_assert_held and more comments for text_mutex.
+>
+> Changes in v4:
+>  - Use NOKPROBE_SYMBOL instead of __kprobe annotation
+>  - Use text_mutex instead of patch_lock
+>  - Remove 'riscv_' prefix of function name
+>
+> Changes in v3:
+>  - Fix build error on nommu configuration. We already support nommu on
+>    RISC-V, so we should consider nommu case and test not only rv32/64,
+>    but also nommu.
+>
+> Changes in v2:
+>  - Use _data to specify the start of data section with write permission.
+>  - Change ftrace patch text implementaion.
+>  - Separate DEBUG_WX patch to another patchset.
+>
+> Zong Li (9):
+>   riscv: add macro to get instruction length
+>   riscv: introduce interfaces to patch kernel code
+>   riscv: patch code by fixmap mapping
+>   riscv: add ARCH_HAS_SET_MEMORY support
+>   riscv: add ARCH_HAS_SET_DIRECT_MAP support
+>   riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
+>   riscv: move exception table immediately after RO_DATA
+>   riscv: add alignment for text, rodata and data sections
+>   riscv: add STRICT_KERNEL_RWX support
+>
+>  arch/riscv/Kconfig                  |   6 +
+>  arch/riscv/include/asm/bug.h        |   8 ++
+>  arch/riscv/include/asm/fixmap.h     |   2 +
+>  arch/riscv/include/asm/patch.h      |  12 ++
+>  arch/riscv/include/asm/set_memory.h |  48 +++++++
+>  arch/riscv/kernel/Makefile          |   4 +-
+>  arch/riscv/kernel/ftrace.c          |  26 ++--
+>  arch/riscv/kernel/patch.c           | 128 +++++++++++++++++++
+>  arch/riscv/kernel/traps.c           |   3 +-
+>  arch/riscv/kernel/vmlinux.lds.S     |  11 +-
+>  arch/riscv/mm/Makefile              |   2 +-
+>  arch/riscv/mm/init.c                |  44 +++++++
+>  arch/riscv/mm/pageattr.c            | 187 ++++++++++++++++++++++++++++
+>  13 files changed, 466 insertions(+), 15 deletions(-)
+>  create mode 100644 arch/riscv/include/asm/patch.h
+>  create mode 100644 arch/riscv/include/asm/set_memory.h
+>  create mode 100644 arch/riscv/kernel/patch.c
+>  create mode 100644 arch/riscv/mm/pageattr.c
 
-Ah, yes, good catch!
+Looks like there are quite a few conflicts here.  Do you mind re-spinning the
+patch set for me?  It's a bit early to spin off for-next right now so there
+might be some more conflicts, but hopefully not too many.
 
--- 
-Josh
-
+Thanks!
