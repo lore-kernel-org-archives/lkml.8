@@ -2,149 +2,207 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DECF5C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0647C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC46C2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823C22145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ac5gOFDj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMz5C7M8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgDTJQw (ORCPT
+        id S1726316AbgDTJRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:16:52 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:28970 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgDTJQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:16:51 -0400
-IronPort-SDR: 2ys5ASrXSbcmVL+4NIw63pOAsLRT+HX/T8VTq5XCDymrms7XkAaUO3Ms8NQ8AWUHf33n9UUGKk
- wY9hC3uxchSHHARCVSIC+ed5O33c4Y/BTY0SYzC8e4L0Ev/VkMB3wJc3LoKtni2FiiRG5fcnri
- KKUGcenNyVMfMFZh5VhGhLzv+RAWODG5Uzbz/vt5BG2MYZrqijiYQrb4AK77lsQeatkuwTHKWC
- UMFTj2bbWfcEu26J00XaxPJ+dUImnEQZQ/kAF/vRfhNt+me/IiDGbeFrR/kA22WfeLf0hQ2Vnf
- KFA=
-X-IronPort-AV: E=Sophos;i="5.72,406,1580770800"; 
-   d="scan'208";a="11886200"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 20 Apr 2020 11:16:49 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 20 Apr 2020 11:16:49 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 20 Apr 2020 11:16:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1587374209; x=1618910209;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=oSH4PE9XUEzsC5hY5Yl58pEZ9iVdMK0ATZmTRJuWy9I=;
-  b=ac5gOFDjEWBUoWCuv/9qNa1bTBJ7OVUyXwt1PIkSXdWosuj2Wy9TeU9a
-   uH+fFlRfHgExn+PB19kwgBWaoiQFfZDBALxSIKdPZzUadPc4Tltz/Tz7e
-   mQfIZhP2/4/QrcnHHtaiuWj/sZ9JWbRxc0DgNbEN9dRlQxGNfoOWFtn/j
-   Giw1Y1PGWVmx5Db6NkaT2Bzy7sDYHDdgi+kbTvI4EI+WLFO86OcQAp3Nc
-   Ud6m8HtPJaL2jFmq3C7uzlasY3EI4ZxZw7SyDhzSmONfrodw7cDwNA7Tt
-   W9Uk/ViJJy8gDY2NGawMuM7jX81YbdsxGG0rWPfhgviW6LPtCPUJkne5W
-   A==;
-IronPort-SDR: VAaUGW9OFiUDqtCiMG47M9f1Qvx33mJ6omOs+p+lue1C9j1oOUAQymQCiVF9QsgAdt763n54Ym
- ItjjHfJjY+venTKKHG/OoF39QYFCvVa75vEjUrafECUIqod95BbByM24NDkMmkMeHw/A7vkk50
- +BxOfbRFatY6ZlMVZk7bi0ksJM3md3uPcM3laONwbLTorrH9FzfYo6XFKymsT7wQ1f/tyD9LSn
- nQ6Be86QaCKWLNPnJb7HocyM42ia2w5vhYkq6HzlMLwpnPIyCNVrdc1Fb9M/1kxa8PZ3dXw4kJ
- Lfo=
-X-IronPort-AV: E=Sophos;i="5.72,406,1580770800"; 
-   d="scan'208";a="11886199"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 20 Apr 2020 11:16:49 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 3A902280065;
-        Mon, 20 Apr 2020 11:16:49 +0200 (CEST)
-Message-ID: <f7b9de1b0caa4b27ccfe23c969ff586ec7ecefea.camel@ew.tq-group.com>
-Subject: Re: [PATCH net-next 1/4] net: dsa: allow switch drivers to override
- default slave PHY addresses
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrew@lunn.ch, vivien.didelot@gmail.com, davem@davemloft.net,
-        kuba@kernel.org
-Date:   Mon, 20 Apr 2020 11:16:46 +0200
-In-Reply-To: <a796bf7cfb1f72a888522050320624546950c281.camel@ew.tq-group.com>
-References: <20200330135345.4361-1-matthias.schiffer@ew.tq-group.com>
-         <6a306ad4-c029-03a3-7a1c-0fdadc13d386@gmail.com>
-         <a796bf7cfb1f72a888522050320624546950c281.camel@ew.tq-group.com>
+        Mon, 20 Apr 2020 05:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725773AbgDTJRg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:17:36 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A70FC061A0C;
+        Mon, 20 Apr 2020 02:17:35 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id g14so1966572ooa.4;
+        Mon, 20 Apr 2020 02:17:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AnWmmqyadUpYAg/OdUB3REEr7mswPcf6gajx39PJsls=;
+        b=iMz5C7M8nwUrx4PejZt5Ek6DNYZFxgkLLWtP2mqKgO2eJVezj+9VzWUQUMHbt+OmbJ
+         6zeKio16xHc6GdLed5Xy3i/+R9PDWQ91F9WupihOLmer9oz2zNYMIu2dQjHhwc0T1HjC
+         B3m1VobXmuxbat9P+52AvY8zl/GGEjIVXYjYurr7gorAu8SJk1mHuDW0CxLswbHPk4w8
+         lSnfXrCC3HR/nc3KiUqB4InexSyq6q/Og8e1aRe3fddjrIX1Whl0C4gAkft9JiU+iD99
+         3s52XY3R79g2gBni4SVfzv8VeZ/y2PBZpq+ZLu2L8fKxnL1KiZ26JiZ+LDPi9YYkhw+k
+         U+dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AnWmmqyadUpYAg/OdUB3REEr7mswPcf6gajx39PJsls=;
+        b=YUfAB3njKP9zFkW+7QZbEWYQI10aSmc45mSlbBfgYpc8xvme25D6bUFIkX9Gm7mQU0
+         sYc0U0c56dDNPYhLJS4c0Wj5KJclDC74pzXmjxNbHs+hQS1STult90+1Kr3bS302jnt+
+         CTPcYtm9dleiaK5H7eiOamR+6wWobFpjp2GYyTXTFUCSxrlZCfUPD0JzD9XRm33xhVyp
+         SQvQIOb7KXdajSAqL3IMtafFcZi8+3hwPokoGtW1qTKgIU0bsGxFew5xyAav1xIG1eME
+         iYygVSLj2h08AqdFHnkvc5S4Ls8xbtqZ/doWRg7fW0eyO9eztDDaPUaZ04HjkxH7A75u
+         NS6w==
+X-Gm-Message-State: AGi0Pub5QMuvAxP17OsCAIuQHoitZ+4newfr4uuLEI//aJUx5mPQXJrT
+        EcVWt6sdeJH3vZgKqfb0vadQqT3IOYreJeFdc3C3UO9H
+X-Google-Smtp-Source: APiQypI4Gr+ymKJWQD9+txTG6EVrczz7o4VweZ+9eE91Uh1wR935sBN7tHzoKMtrzlSaP1JA6RLmCgydoef3Y6ZHrSo=
+X-Received: by 2002:a4a:e08b:: with SMTP id w11mr12080171oos.62.1587374254916;
+ Mon, 20 Apr 2020 02:17:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <1587302823-4435-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587302823-4435-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <TYAPR01MB4544FDF2FEDBED104F6C6C45D8D40@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB4544FDF2FEDBED104F6C6C45D8D40@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 20 Apr 2020 10:17:08 +0100
+Message-ID: <CA+V-a8vkZwgOf8gkxWU62A3L1BTXw_y2H5MGo-7-+ad28q1tWQ@mail.gmail.com>
+Subject: Re: [PATCH v8 5/8] PCI: endpoint: Add support to handle multiple base
+ for mapping outbound memory
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-31 at 11:09 +0200, Matthias Schiffer wrote:
-> On Mon, 2020-03-30 at 20:04 -0700, Florian Fainelli wrote:
-> > 
-> > On 3/30/2020 6:53 AM, Matthias Schiffer wrote:
-> > > Avoid having to define a PHY for every physical port when PHY
-> > > addresses
-> > > are fixed, but port index != PHY address.
-> > > 
-> > > Signed-off-by: Matthias Schiffer <
-> > > matthias.schiffer@ew.tq-group.com
-> > > > 
-> > 
-> > You could do this much more elegantly by doing this with Device
-> > Tree
-> > and
-> > specifying the built-in PHYs to be hanging off the switch's
-> > internal
-> > MDIO bus and specifying the port to PHY address mapping, you would
-> > only
-> > patch #4 then.
-> 
-> This does work indeed, but it seems we have different ideas on
-> elegance.
-> 
-> I'm not happy about the fact that an implementor needs to study the
-> switch manual in great detail to find out about things like the PHY
-> address offsets when the driver could just to the right thing by
-> default. Requiring this only for some switch configurations, while
-> others work fine with the defaults, doesn't make this any less
-> confusing (I'd even argue that it would be better if there weren't
-> any
-> default PHY and IRQ mappings for the switch ports, but I also
-> understand that this can't easily be removed at this point...)
-> 
-> In particular when PHY IRQ support is desired (not implemented on the
-> PHY driver side for this switch yet; not sure if my current project
-> will require it), indices are easy to get wrong - which might not be
-> noticed as long as there is no PHY driver with IRQ support for the
-> port
-> PHYs, potentially breaking existing Device Trees with future kernel
-> updates. For this reason, I think at least patch #2 should be
-> considered even if #1 and #3 are rejected.
-> 
-> Kind regards,
-> Matthias
+Hi Yoshihiro,
 
-net-next is open again, and I'd like to come to a conclusion regarding
-this patch series before I resend it (or parts of it).
+Thank you for the review.
 
-It is my impression that a detailed configuration in the Device Tree is
-most useful when the driver that it configures is very generic, so
-different values are useful in practice.
+On Mon, Apr 20, 2020 at 10:04 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+>
+> Hi Prabhakar-san,
+>
+> Thank you for the patch!
+>
+> > From: Lad Prabhakar, Sent: Sunday, April 19, 2020 10:27 PM
+> <snip>
+> > @@ -109,11 +137,22 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_init);
+> >   */
+> >  void pci_epc_mem_exit(struct pci_epc *epc)
+> >  {
+> > -     struct pci_epc_mem *mem = epc->mem;
+> > +     struct pci_epc_mem *mem;
+> > +     int i;
+> >
+> > +     if (!epc->num_windows)
+> > +             return;
+> > +
+> > +     for (i = 0; i <= epc->num_windows; i++) {
+>
+> I'm sorry, I overlooked when I reviewed before.
+> This condition should be "i < epc->num_windows".
+>
+Argh my bad, will fix it.
 
-The mv88e6xxx driver is not generic in this sense: It already lists
-every single piece of supported hardware, often using completely
-different code for different chips - which is already not configurable
-in the Device Tree (and being able to wouldn't make much sense IMO).
+> > +             mem = epc->windows[i];
+> > +             kfree(mem->bitmap);
+> > +             kfree(mem);
+> > +     }
+> > +     kfree(epc->windows);
+> > +
+> > +     epc->windows = NULL;
+> >       epc->mem = NULL;
+> > -     kfree(mem->bitmap);
+> > -     kfree(mem);
+> > +     epc->num_windows = 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+> >
+> > @@ -129,31 +168,57 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+> >  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+> >                                    phys_addr_t *phys_addr, size_t size)
+> >  {
+> > -     int pageno;
+> >       void __iomem *virt_addr = NULL;
+> > -     struct pci_epc_mem *mem = epc->mem;
+> > -     unsigned int page_shift = ilog2(mem->page_size);
+> > +     struct pci_epc_mem *mem;
+> > +     unsigned int page_shift;
+> > +     size_t align_size;
+> > +     int pageno;
+> >       int order;
+> > +     int i;
+> >
+> > -     size = ALIGN(size, mem->page_size);
+> > -     order = pci_epc_mem_get_order(mem, size);
+> > -
+> > -     mutex_lock(&mem->lock);
+> > -     pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
+> > -     if (pageno < 0)
+> > -             goto ret;
+> > +     for (i = 0; i < epc->num_windows; i++) {
+> > +             mem = epc->windows[i];
+> > +             mutex_lock(&mem->lock);
+> > +             align_size = ALIGN(size, mem->window.page_size);
+> > +             order = pci_epc_mem_get_order(mem, align_size);
+> >
+> > -     *phys_addr = mem->phys_base + ((phys_addr_t)pageno << page_shift);
+> > -     virt_addr = ioremap(*phys_addr, size);
+> > -     if (!virt_addr)
+> > -             bitmap_release_region(mem->bitmap, pageno, order);
+> > +             pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
+> > +                                              order);
+> > +             if (pageno >= 0) {
+> > +                     page_shift = ilog2(mem->window.page_size);
+> > +                     *phys_addr = mem->window.phys_base +
+> > +                             ((phys_addr_t)pageno << page_shift);
+> > +                     virt_addr = ioremap(*phys_addr, align_size);
+> > +                     if (!virt_addr)
+> > +                             bitmap_release_region(mem->bitmap,
+> > +                                                   pageno, order);
+>
+> I'm sorry here again. But, I think we should call mutex_unlock() and "continue;"
+> here if ioremap() failed for trying remaining windows. What do you think?
+>
+If ioremap() has failed something has really went wrong with the
+system, but there is no harm in trying other windows. So Ill add the
+code as suggested above.
 
-Having the additional pieces of sane defaults in the driver that are
-introduced by the patches 1..3 of this series avoids mistakes in the DT
-configuration, for settings that never need to be modified for a given
-switch model supported by mv88e6xxx.
+Cheers,
+--Prabhakar
 
-Kind regards,
-Matthias
-
+> > +                     mutex_unlock(&mem->lock);
+> > +                     return virt_addr;
+> > +             }
+> > +             mutex_unlock(&mem->lock);
+> > +     }
+> >
+> > -ret:
+> > -     mutex_unlock(&mem->lock);
+> >       return virt_addr;
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+>
+> Best regards,
+> Yoshihiro Shimoda
+>
