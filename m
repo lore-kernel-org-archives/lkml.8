@@ -2,93 +2,176 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6215EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D48C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34271206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387199;
-	bh=bCDq43JudMUVyE16zfPz7jVRgValKuqje5YUNUC1vdY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bZUXJjkO+Kra5l5SRB+XBHvofG43W9JGOqidUse8E6pWUeeKYkr7p1sEWs+Qs0uQG
-	 sPDVz9TdX9VrE0uZu8BtIR8SJXqqYQzXBGrN+SbftYZ51OPZ5JvPI4CazkX1nIDVHr
-	 fnOiwn4Dqg5wlxH1CB9hKsT8EVKJZvgm5LZSW74M=
+	by mail.kernel.org (Postfix) with ESMTP id C41F1206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:53:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgDTMxR (ORCPT
+        id S1729609AbgDTMxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:53:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728207AbgDTMqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:46:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A639206DD;
-        Mon, 20 Apr 2020 12:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386807;
-        bh=bCDq43JudMUVyE16zfPz7jVRgValKuqje5YUNUC1vdY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WJS66V0vzphSMuy+gEKC/I60WjwNaOOsusuLhaneAaOY9sdR5PZKms4J5lLZTMMo8
-         bPBu14eLwIPasr6dgupUNal1KT+aKTi0NEMEPmAahmmOk5ZP5g0ARQGKq9A3+w1b9Z
-         vbrsf+jUZ3KlJDV6alS0Q29TEDfmGhOBqQPlKJos=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.4 33/60] usb: dwc3: gadget: Dont clear flags before transfer ended
-Date:   Mon, 20 Apr 2020 14:39:11 +0200
-Message-Id: <20200420121510.387048885@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
-References: <20200420121500.490651540@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Apr 2020 08:53:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38988 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726759AbgDTMqo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:46:44 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCWOG8146713;
+        Mon, 20 Apr 2020 08:46:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmu6wtcd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:46:29 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCWQnE146897;
+        Mon, 20 Apr 2020 08:46:29 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmu6wtbv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:46:29 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KChTUO010741;
+        Mon, 20 Apr 2020 12:46:28 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma01dal.us.ibm.com with ESMTP id 30fs66cqs9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 12:46:28 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCkQFP43909446
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 12:46:26 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A0D47136053;
+        Mon, 20 Apr 2020 12:46:26 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4BE1136051;
+        Mon, 20 Apr 2020 12:46:22 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 12:46:22 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
+        kirill@shutemov.name,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH v3 22/22] powerpc/mm/book3s64: Fix MADV_DONTNEED and parallel page fault race
+Date:   Mon, 20 Apr 2020 18:14:34 +0530
+Message-Id: <20200420124434.47330-23-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_03:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0
+ impostorscore=0 mlxscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+MADV_DONTNEED holds mmap_sem in read mode and that implies a
+parallel page fault is possible and the kernel can end up with a level 1 PTE
+entry (THP entry) converted to a level 0 PTE entry without flushing
+the THP TLB entry.
 
-commit a114c4ca64bd522aec1790c7e5c60c882f699d8f upstream.
+Most architectures including POWER have issues with kernel instantiating a level
+0 PTE entry while holding level 1 TLB entries.
 
-We track END_TRANSFER command completion. Don't clear transfer
-started/ended flag prematurely. Otherwise, we'd run into the problem
-with restarting transfer before END_TRANSFER command finishes.
+The code sequence I am looking at is
 
-Fixes: 6d8a019614f3 ("usb: dwc3: gadget: check for Missed Isoc from event status")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+down_read(mmap_sem)                         down_read(mmap_sem)
 
+zap_pmd_range()
+ zap_huge_pmd()
+  pmd lock held
+  pmd_cleared
+  table details added to mmu_gather
+  pmd_unlock()
+                                         insert a level 0 PTE entry()
+
+tlb_finish_mmu().
+
+Fix this by forcing a tlb flush before releasing pmd lock if this is
+not a fullmm invalidate. We can safely skip this invalidate for
+task exit case (fullmm invalidate) because in that case we are sure
+there can be no parallel fault handlers.
+
+This do change the Qemu guest RAM del/unplug time as below
+
+128 core, 496GB guest:
+
+Without patch:
+munmap start: timer = 196449 ms, PID=6681
+munmap finish: timer = 196488 ms, PID=6681 - delta = 39ms
+
+With patch:
+munmap start: timer = 196345 ms, PID=6879
+munmap finish: timer = 196714 ms, PID=6879 - delta = 369ms
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
- drivers/usb/dwc3/gadget.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/powerpc/include/asm/book3s/64/pgtable.h |  5 +++++
+ arch/powerpc/mm/book3s64/pgtable.c           | 18 ++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2567,10 +2567,8 @@ static void dwc3_gadget_endpoint_transfe
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+index 03521a8b0292..e1f551159f7d 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+@@ -1265,6 +1265,11 @@ static inline pmd_t pmdp_collapse_flush(struct vm_area_struct *vma,
+ }
+ #define pmdp_collapse_flush pmdp_collapse_flush
  
- 	dwc3_gadget_ep_cleanup_completed_requests(dep, event, status);
++#define __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR_FULL
++pmd_t pmdp_huge_get_and_clear_full(struct vm_area_struct *vma,
++				   unsigned long addr,
++				   pmd_t *pmdp, int full);
++
+ #define __HAVE_ARCH_PGTABLE_DEPOSIT
+ static inline void pgtable_trans_huge_deposit(struct mm_struct *mm,
+ 					      pmd_t *pmdp, pgtable_t pgtable)
+diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
+index 127325ead505..54b6d6d103ea 100644
+--- a/arch/powerpc/mm/book3s64/pgtable.c
++++ b/arch/powerpc/mm/book3s64/pgtable.c
+@@ -112,6 +112,24 @@ pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
+ 	return __pmd(old_pmd);
+ }
  
--	if (stop) {
-+	if (stop)
- 		dwc3_stop_active_transfer(dep, true, true);
--		dep->flags = DWC3_EP_ENABLED;
--	}
- 
- 	/*
- 	 * WORKAROUND: This is the 2nd half of U1/U2 -> U0 workaround.
-
++pmd_t pmdp_huge_get_and_clear_full(struct vm_area_struct *vma,
++				   unsigned long addr, pmd_t *pmdp, int full)
++{
++	pmd_t pmd;
++	VM_BUG_ON(addr & ~HPAGE_PMD_MASK);
++	VM_BUG_ON((pmd_present(*pmdp) && !pmd_trans_huge(*pmdp) &&
++		   !pmd_devmap(*pmdp)) || !pmd_present(*pmdp));
++	pmd = pmdp_huge_get_and_clear(vma->vm_mm, addr, pmdp);
++	/*
++	 * if it not a fullmm flush, then we can possibly end up converting
++	 * this PMD pte entry to a regular level 0 PTE by a parallel page fault.
++	 * Make sure we flush the tlb in this case.
++	 */
++	if (!full)
++		flush_pmd_tlb_range(vma, addr, addr + HPAGE_PMD_SIZE);
++	return pmd;
++}
++
+ static pmd_t pmd_set_protbits(pmd_t pmd, pgprot_t pgprot)
+ {
+ 	return __pmd(pmd_val(pmd) | pgprot_val(pgprot));
+-- 
+2.25.3
 
