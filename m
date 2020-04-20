@@ -2,269 +2,143 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EBDC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D51BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCED2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CBE2206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SgiPSULi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcA3jVtC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbgDTTx1 (ORCPT
+        id S1728190AbgDTTxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:53:27 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16256 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbgDTTxY (ORCPT
+        Mon, 20 Apr 2020 15:53:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726049AbgDTTxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:53:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9dfda70001>; Mon, 20 Apr 2020 12:53:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 20 Apr 2020 12:53:24 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 20 Apr 2020 12:53:24 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Apr
- 2020 19:53:23 +0000
-Received: from [10.26.73.5] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Apr
- 2020 19:53:21 +0000
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "Wolfram Sang" <wsa@the-dreams.de>
-CC:     <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200324191217.1829-1-digetx@gmail.com>
- <20200324191217.1829-2-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
-Date:   Mon, 20 Apr 2020 20:53:20 +0100
+        Mon, 20 Apr 2020 15:53:31 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A89C061A0C;
+        Mon, 20 Apr 2020 12:53:31 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id p25so5444689pfn.11;
+        Mon, 20 Apr 2020 12:53:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hIltLYbWuhCUx2M2qqr5RNqHCaL70WLgf45DKMjPSP0=;
+        b=GcA3jVtCpcm/+2FOl3xXL2DDrn/fC/oIxAMLHL7YhSO81Fk35QN0b7+RKRyxl7xcBc
+         Rr4YMVZy8A45sXSSQNgns8Vi8kmKYBIQAXSsuFyUYWitV7T0mylrh+pWxnLSrWhHg5AS
+         5Ir+eUrNyjBJsv/2Sut/dudsKRGlRiP5AYNWHpznoRJv9bJtQv23f8Hd4SEcpeIZuN5y
+         IeutU9HgXEyMg6L7YYxBLvB7p+lK3pCtWpMelDwXf0fGpvwyxpKiEUGdH5YRPUpU8hMJ
+         rKUl0W98rRTpLV4M620O+01j4QL1FZZr5L90AxxdMStt3MBrSaIlyjNa6ipwtT80CISo
+         80Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=hIltLYbWuhCUx2M2qqr5RNqHCaL70WLgf45DKMjPSP0=;
+        b=jhjt7VW92LOCcvslNiRK/d0Y1C4ZHd6XJOSGjanJTSN5ciQywNtniDp/aKW2ckgBVE
+         LhDPOnwY50QWj2aRZBEgCa2s31CVc1XpVaPPE/i2w8G//fU9aAmnQIaB7dvJn7b0FdKy
+         hC7CHagnWJqDuKtsZhQ2qGkM3XFWNfFjQyaeIE/krPszjabriqYx/nZXVORscfCRKbEl
+         HTdoiCDVltmbHM/JxVcR4HlwU/WU6p3nj7fj9wP+8duS88JsakCc5/Q0Xw9A2POqq0nJ
+         aXWQUPKbH3kVMbmH1enKFve7YT8bGKkl/wDnkY60lb3l+0Ze4c+3fjMng6DvfDgNPQHe
+         LhCQ==
+X-Gm-Message-State: AGi0PuYj8qFbi/MOJ0f2RS7eJMxxtm7heMWcOdwtsbvWMmDjsSQVS8DN
+        7xpc8SSuYl9o14/gDYkbyW4GZYgu
+X-Google-Smtp-Source: APiQypLGRFLholTc3uoV7lQMN73NMj8mY6KdQm78iapls1q7B+iLRxHMy1YpnHW/XarB/t9rO4boSQ==
+X-Received: by 2002:a63:48a:: with SMTP id 132mr18207667pge.380.1587412410973;
+        Mon, 20 Apr 2020 12:53:30 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 22sm296949pfb.132.2020.04.20.12.53.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 12:53:30 -0700 (PDT)
+Subject: Re: [PATCH 5.6 00/71] 5.6.6-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200420121508.491252919@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <f0a24f34-e3c8-2945-2e89-27ac243212d1@roeck-us.net>
+Date:   Mon, 20 Apr 2020 12:53:29 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200324191217.1829-2-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587412391; bh=MaHgc2Ud4bcX42r63WlzgALU6hIPj1jDmiN3kFRyBlE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SgiPSULiuZKZq5822JYASXn/xwkWCMj73Hyryd3GmcD5Dw9DAyaVmNchTNlSj5nMw
-         lmxf/cjDYWHnI5JbDYq3uwMVkiV92UrD9Hyx9vaPIhCApPfkhfeQs34cXyniR1xS6y
-         ChIveZNLCyju0EhBf5XMCn2c0E279EcSy+itG+x/Moqz3vvlMNxuhs5xmuZ0OSLseI
-         rk4f5h4irdTlIEgLJJipT69v1s8qV0HaGrp/D7NMK9rIrcsmfjlyhsJSejjtSe+a9T
-         lfUnfyNsuQ+oqwXJDkGhXRYQ/+Np4QdwHTuc5/kl6A/0LZ7QIylkY2VxU/QI7bUpgU
-         MjW32gvYehw8Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-On 24/03/2020 19:12, Dmitry Osipenko wrote:
-> Boot CPU0 always handle I2C interrupt and under some rare circumstances
-> (like running KASAN + NFS root) it may stuck in uninterruptible state for
-> a significant time. In this case we will get timeout if I2C transfer is
-> running on a sibling CPU, despite of IRQ being raised. In order to handle
-> this rare condition, the IRQ status needs to be checked after completion
-> timeout.
+On 4/20/20 5:38 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.6 release.
+> There are 71 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 27 +++++++++++++++------------
->  1 file changed, 15 insertions(+), 12 deletions(-)
-
-
-I have noticed a regression on tegra30-cardhu-a04 when testing system
-suspend. Git bisect is pointing to this commit and reverting it fixes
-the problem. In the below console log I2C fails to resume ...
-
-[   40.888512] usb1_vbus: supplied by 5v0
-
-[   40.892408] vddio_sdmmc,avdd_vdac: supplied by 5v0
-
-[   40.897401] cam_1v8: disabling
-
-[   40.900548] modem_3v3: disabling
-
-[   40.903875] vdd_cam1_ldo: disabling
-
-[   40.907501] vdd_cam2_ldo: disabling
-
-[   40.911092] vdd_cam3_ldo: disabling
-
-[   40.914714] vdd_fuse_3v3: disabling
-
-[   40.918305] vddio_vid: disabling
-
-[   40.921623] usb1_vbus: disabling
-
-[   59.445032] PM: suspend entry (deep)
-
-[   59.448852] Filesystems sync: 0.000 seconds
-
-[   59.456161] Freezing user space processes ... (elapsed 0.001 seconds) done.
-
-[   59.457645] OOM killer disabled.
-
-[   59.457649] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
-
-[   59.764926] Disabling non-boot CPUs ...
-
-[   59.769540] IRQ 18: no longer affine to CPU1
-
-[   59.789070] IRQ 19: no longer affine to CPU2
-
-[   59.808049] IRQ 20: no longer affine to CPU3
-
-[   59.827113] Entering suspend state LP1
-
-[   59.827163] Enabling non-boot CPUs ...
-
-[   59.834797] CPU1 is up
-
-[   59.840943] CPU2 is up
-
-[   59.847378] CPU3 is up
-
-[   59.850577] tegra-i2c 7000d000.i2c: runtime resume failed -13
-
-[   59.856432] tegra-i2c 7000d000.i2c: runtime resume failed -13
-
-[   59.862231] tegra-i2c 7000d000.i2c: runtime resume failed -13
-
-[   59.868070] vdd_pexa,vdd_pexb: is_enabled() failed: -13
-
-[   59.873334] tegra-i2c 7000d000.i2c: runtime resume failed -13
-
-[   59.879143] vdd_pexa,vdd_pexb: is_enabled() failed: -13
-
-[   59.884420] Failed to enable avdd-pex-pll: -13
-
-[   59.888877] Failed to enable avdd-plle: -13
-
-[   59.893061] Failed to enable avdd-pexb: -13
-
-[   59.897279] Failed to enable vdd-pexb: -13
-
-[   59.901383] tegra-pcie 3000.pcie: failed to enable regulators: -13
-
-[   60.434185] clk_plle_training: timeout waiting for PLLE
-
-[   60.439565] tegra-pcie 3000.pcie: failed to enable CML clock: -16
-
-[   60.445700] ------------[ cut here ]------------
-
-[   60.450346] WARNING: CPU: 0 PID: 653 at /home/jonathanh/workdir/tegra/mlt-linux_next/kernel/drivers/regulator/core.c:2603 _regulator_disable+0xb8/0x1b4
-
-[   60.463959] unbalanced disables for vdd_pexa,vdd_pexb
-
-[   60.469038] Modules linked in:
-
-[   60.472107] CPU: 0 PID: 653 Comm: rtcwake Tainted: G        W         5.7.0-rc2-next-20200420 #2
-
-[   60.480892] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-
-[   60.487190] [<c0111b68>] (unwind_backtrace) from [<c010bc00>] (show_stack+0x10/0x14)
-
-[   60.494951] [<c010bc00>] (show_stack) from [<c0480f14>] (dump_stack+0xc0/0xd4)
-
-[   60.502189] [<c0480f14>] (dump_stack) from [<c01234a4>] (__warn+0xe0/0xf8)
-
-[   60.509073] [<c01234a4>] (__warn) from [<c0123530>] (warn_slowpath_fmt+0x74/0xb8)
-
-[   60.516568] [<c0123530>] (warn_slowpath_fmt) from [<c0516714>] (_regulator_disable+0xb8/0x1b4)
-
-[   60.525191] [<c0516714>] (_regulator_disable) from [<c0516844>] (regulator_disable+0x34/0xd0)
-
-[   60.533729] [<c0516844>] (regulator_disable) from [<c0518488>] (regulator_bulk_disable+0x28/0xb4)
-
-[   60.542619] [<c0518488>] (regulator_bulk_disable) from [<c04dbc84>] (tegra_pcie_pm_resume+0xbb0/0x107c)
-
-[   60.552032] [<c04dbc84>] (tegra_pcie_pm_resume) from [<c05f7e44>] (dpm_run_callback+0x38/0x1d4)
-
-[   60.560741] [<c05f7e44>] (dpm_run_callback) from [<c05f8af8>] (device_resume_noirq+0x110/0x248)
-
-[   60.569451] [<c05f8af8>] (device_resume_noirq) from [<c05f93e0>] (dpm_resume_noirq+0x10c/0x36c)
-
-[   60.578162] [<c05f93e0>] (dpm_resume_noirq) from [<c017dd74>] (suspend_devices_and_enter+0x27c/0x9dc)
-
-[   60.587393] [<c017dd74>] (suspend_devices_and_enter) from [<c017e7dc>] (pm_suspend+0x308/0x370)
-
-[   60.596110] [<c017e7dc>] (pm_suspend) from [<c017cb30>] (state_store+0x6c/0xc8)
-
-[   60.603440] [<c017cb30>] (state_store) from [<c03138e4>] (kernfs_fop_write+0xf8/0x210)
-
-[   60.611379] [<c03138e4>] (kernfs_fop_write) from [<c0286c44>] (__vfs_write+0x2c/0x1c4)
-
-[   60.619310] [<c0286c44>] (__vfs_write) from [<c02886e8>] (vfs_write+0xa4/0x188)
-
-[   60.626632] [<c02886e8>] (vfs_write) from [<c028898c>] (ksys_write+0xa4/0xd4)
-
-[   60.633778] [<c028898c>] (ksys_write) from [<c01000c0>] (ret_fast_syscall+0x0/0x54)
-
-[   60.641437] Exception stack(0xeda91fa8 to 0xeda91ff0)
-
-[   60.646497] 1fa0:                   0000006c 00498438 00000004 00498438 00000004 00000000
-
-[   60.654683] 1fc0: 0000006c 00498438 00497228 00000004 00000004 00000004 0048478c 00497228
-
-[   60.662866] 1fe0: 00000004 be9029b8 b6ec8c0b b6e53206
-
-[   60.668007] ---[ end trace 5453317048e46ae9 ]---
-
-[   60.672632] Failed to disable vdd-pexb: -5
-
-[   60.676761] tegra-pcie 3000.pcie: tegra pcie power on fail: -16
-
-[   60.682694] PM: dpm_run_callback(): tegra_pcie_pm_resume+0x0/0x107c returns -16
-
-[   60.690035] PM: Device 3000.pcie failed to resume noirq: error -16
-
-[   60.696859] tegra-mc 7000f000.memory-controller: fdcdwr2: write @0x877e8400: EMEM address decode error (SMMU translation error [--S])
-
-[   60.708876] tegra-mc 7000f000.memory-controller: fdcdwr2: write @0x877e8400: Page fault (SMMU translation error [--S])
-
-[   61.278965] OOM killer enabled.
-
-[   61.288563] Restarting tasks ... done.
-
-[   61.300508] PM: suspend exit
-
-[   63.124813] asix 1-1:1.0 eth0: link up, 100Mbps, full-duplex, lpa 0xCDE1
-
-[   63.740705] PM: suspend entry (deep)
-
-[   63.744593] Filesystems sync: 0.000 seconds
-
-[   63.749600] Freezing user space processes ... (elapsed 0.001 seconds) done.
-
-[   63.751053] OOM killer disabled.
-
-[   63.751057] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
-
-
-Have you seen this?
-
-Cheers
-Jon
-
--- 
-nvpublic
+> Responses should be made by Wed, 22 Apr 2020 12:10:36 +0000.
+> Anything received after that time might be too late.
+> 
+
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 428 pass: 428 fail: 0
+
+Guenter
