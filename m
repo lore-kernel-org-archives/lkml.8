@@ -2,79 +2,118 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98D3C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47612C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4CEA20A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D1A2145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:13:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="dE5h4joV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G23U+tfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgDTIKz (ORCPT
+        id S1726049AbgDTINp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:10:55 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:13467 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgDTIKy (ORCPT
+        Mon, 20 Apr 2020 04:13:45 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:36807 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725773AbgDTINp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:10:54 -0400
-IronPort-SDR: z3jJ3n8cIFVJJdKM1zKH5Hja7L9vAgIXLp2g/sEepXg2baC4xd5Jj2kfSqoLYjwjdtrbQ8Wiwk
- Wmja9Hnk7zlCimqLnQP6keralbo6+kl9R+IFNmFFE/0pybcFLAZCBZoPy/sE+LM2fWJSXZMe+8
- +YW9oAzsBO8uewM7Twx5t9NlR911XCxeCPJExGe5yn5GruWohY2A14MwfKPUDzJCNUOFiKsGee
- K24bdRgLaAm7aQTwBAJwjoC1g4mzrbGBjm43A1L3We2D/2X6BGd98fvhaDisScS3YK69PbWZgQ
- tnM=
-X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="scan'208";a="48003471"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 20 Apr 2020 00:10:53 -0800
-IronPort-SDR: j0c0SYjtH5xm1+rLbl7MBxJsFS7HD+VmqYjZa+nhY/t6UkUz6BYcU0RyQRtHlfmRWv0h//KbCV
- VrWFlJry+ZeEniLjyts830dxN6taqJ0tW3Ll22tAyFg+8wixnWYRTgjC+ZRTvi2OUd07gAE4Wa
- OnIK97LBe+EGO4LwABtrIRpkYSxqvKN/SgKRJT2+bP84xeex6fmhX9QenIhGhm35DqYcjFKQYw
- 0r4p86j7WFjwf0flwW7eAi2iNapPW3Ru16tjIyXTTU+sdjIn6wBKBg+igiS/ttpah11AkZ5ny5
- TNw=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        'Tetsuhiro Kohada' <kohada.t2@gmail.com>,
-        'Tetsuhiro Kohada' <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-CC:     "Mori.Takahiro@ab.MitsubishiElectric.co.jp" 
-        <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
-        "motai.hirotaka@aj.mitsubishielectric.co.jp" 
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: AW: [PATCH v3] exfat: replace 'time_ms' with 'time_cs'
-Thread-Topic: [PATCH v3] exfat: replace 'time_ms' with 'time_cs'
-Thread-Index: AQHWE8zo2F2bkeyZKkiqZc7BRS6Da6h8ioSAgASj0YCAABaLAIAAaZDA
-Date:   Mon, 20 Apr 2020 08:10:47 +0000
-Message-ID: <da017fb91fcd46e2842a1871b30a816a@SVR-IES-MBX-03.mgc.mentorg.com>
-References: <CGME20200416085144epcas1p1527b8df86453c7566b1a4d5a85689e69@epcas1p1.samsung.com>
-        <20200416085121.57495-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-        <003601d61461$7140be60$53c23b20$@samsung.com>
-        <b250254c-3b88-9457-652d-f96c4c15e454@gmail.com>
- <000001d616be$9f4513b0$ddcf3b10$@samsung.com>
-In-Reply-To: <000001d616be$9f4513b0$ddcf3b10$@samsung.com>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 20 Apr 2020 04:13:45 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 2C9A7434;
+        Mon, 20 Apr 2020 04:13:43 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 20 Apr 2020 04:13:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=SXSTFribf+OBJQkU3j6jVIz3bY6
+        eV4OkRjDaFUbGPVw=; b=dE5h4joV1X2zyfsk9mJ41dSV9Gw9Z/YVaMMRGJ820cJ
+        NOM2XNUzGMrQc6ydYn/Zic69B5NNRAo6QYHu7GiXTukZObTUlEBXjml6kZ/h7tAT
+        KMRH6rsLmKGHMxHRm7KJLGWmYRqhGKyvler6AycFGuPEGCumuG7dlYNh0te1Urjx
+        B6h7D1L21WQxrWq9rbIg2awGPkD9xDLlas4gTjOZhaRUMmGgHQg+K1OSe1L7j+F6
+        bmwm6FQYhRHRkEqK671hDPeOeYQIt9YyhceNDEnvh2vN6YHgeij3N4pO5N+DJN7w
+        9V+2zj+aOoX22lyD9EziS9+y0v/eOMqyQ7U5xATaBqw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SXSTFr
+        ibf+OBJQkU3j6jVIz3bY6eV4OkRjDaFUbGPVw=; b=G23U+tfw+wQH0rkso4eEwx
+        yQrM7P5msXz/OSSuwywZHpLw59W7M9piQzgYDymuZ/YKvqo9EW4FYeWdNyEoH+Ed
+        qmqsr4Sy9SCUAWo+U7Xi8UaefRJgr1xVvCWCNwhs0s9c7HwcgF9NnbIaBi1jxF8Q
+        z/QcFe7e+rHQBP1rEmpE2U43OrZLm5wRDGIiSoDuD1YdwkM+WbU5zoyBvHMF5KMW
+        C7vFCc8JDlwMTEP39M/PyYTBAbvRGE/SyZ1pVAhaeuNueZSROb33Z+uvkYT1/7c3
+        cpFJBI0Uq5E1XdygU8RLJ53HUPy2gALcm2KVAsWjq0oho1PeFfIGNg0GONbW7ZHA
+        ==
+X-ME-Sender: <xms:tFmdXrjoBzIgx--8HKQXgDrtxO5gVSCcQrfVsGCBN7W7YGtfh-qHEA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefucetufdoteggodetrfdotffvucfrrh
+    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhmvgcutfhi
+    phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:tFmdXix3P9qkRjDO69NN5eUQUL2gZwUhPrg6E8e4InQODtjq81Pbsw>
+    <xmx:tFmdXp8VSgOzUNGzxjXDXf0hmnasH9Zn98KD4SKEGNOKFRqoWr01-w>
+    <xmx:tFmdXvBn1GLk5m2Pm5avHEkDYkDZzYF2fWl4nUyo3FlyH1VrQfUqxg>
+    <xmx:tlmdXt6FXLOMGmuXYEy2LsOWngKuRKcExd-_FWiOCNilGysnqab04_8LDgI>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A92B33280060;
+        Mon, 20 Apr 2020 04:13:40 -0400 (EDT)
+Date:   Mon, 20 Apr 2020 10:13:39 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Alistair Francis <alistair@alistair23.me>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, wens@csie.org, anarsoul@gmail.com,
+        devicetree@vger.kernel.org, alistair23@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] arm64: allwinner: Enable Bluetooth and WiFi on
+ sopine baseboard
+Message-ID: <20200420081339.znoxmshq2z74slvg@gilmour.lan>
+References: <20200412020644.355142-1-alistair@alistair23.me>
+ <20200412020644.355142-3-alistair@alistair23.me>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ejtot7cm3kxebrar"
+Content-Disposition: inline
+In-Reply-To: <20200412020644.355142-3-alistair@alistair23.me>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pg0KPiBGcm9tOiBUZXRzdWhpcm8gS29oYWRhIDxLb2hhZGEuVGV0c3VoaXJvQGRjLm1pdHN1Ymlz
-aGllbGVjdHJpYy5jby5qcD4NCj4gIT0NCj4gU2lnbmVkLW9mZi1ieTogVGV0c3VoaXJvIEtvaGFk
-YQ0KPiA8S29oYWRhLlRldHN1aGlyb0BkYy5NaXRzdWJpc2hpRWxlY3RyaWMuY28uanA+DQo+DQpN
-aXRzdWJpc2hpRWxlY3RyaWMgIT0gbWl0c3ViaXNoaWVsZWN0cmljDQoNCkNhcGl0YWwgbGV0dGVy
-cyBtYXR0ZXI/Pz8/DQoNCi0tLS0tLS0tLS0tLS0tLS0tDQpNZW50b3IgR3JhcGhpY3MgKERldXRz
-Y2hsYW5kKSBHbWJILCBBcm51bGZzdHJhw59lIDIwMSwgODA2MzQgTcO8bmNoZW4gLyBHZXJtYW55
-DQpSZWdpc3RlcmdlcmljaHQgTcO8bmNoZW4gSFJCIDEwNjk1NSwgR2VzY2jDpGZ0c2bDvGhyZXI6
-IFRob21hcyBIZXVydW5nLCBBbGV4YW5kZXIgV2FsdGVyDQo=
+
+--ejtot7cm3kxebrar
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Sat, Apr 11, 2020 at 07:06:44PM -0700, Alistair Francis wrote:
+> The sopine board has an optional RTL8723BS WiFi + BT module that can be
+> connected to UART1. Add this to the device tree so that it will work
+> for users if connected.
+>=20
+> Signed-off-by: Alistair Francis <alistair@alistair23.me>
+
+Like Vasily said in a previous iteration, this should be an overlay.
+
+Maxime
+
+--ejtot7cm3kxebrar
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp1ZswAKCRDj7w1vZxhR
+xRHnAQDHNvHWo1zmq8o4pNF0FFVzFdG9ZW4B0hE0ap3rEg3u+QEAtFnUoV0c8i8g
+nKNO32LMpG2lK/In+8B74ILYTIcZpAQ=
+=IRUG
+-----END PGP SIGNATURE-----
+
+--ejtot7cm3kxebrar--
