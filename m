@@ -2,146 +2,190 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8F1C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D50C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2533F20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C4420857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:41:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ceif5E5e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DocS62iB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgDTQlL (ORCPT
+        id S1726581AbgDTQl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:41:11 -0400
-Received: from mail-eopbgr1300122.outbound.protection.outlook.com ([40.107.130.122]:34400
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726620AbgDTQlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:41:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VQfX9tW6KmL7CGvGYqo5gtD+fQoMnvDfdADGsa9vZhdAXQVUhiTdQeGD4zSGQBDn6JU9ie9uxnO3cK+76bNRPpoio/glI2nH6gUIqSez8dSJH23Nx75T63ZtKofU7eKw2ZlTZ1FWeG8hvuZjxwmhPtI/8EBB5Xz3bgLKf3+Abahn4lsCvdVOipmEvIIPzU69cXPBgfaIrnDCCxb/8r75uSyXbvfslP39uWJ/F8AF5kGUQsFfb6Aah8LZwWw8s1htnpIQOJqfuLt28Hkme+JdDmuGCruKrzLtFQ/43FG6Gz7lmNP2FETSlA0dVjuqIO/+HtVIqSn19T0Q1Not3pZZ8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zj425DsWvodYJiPpBCxYf5VlUoVkfBWF89XmSQ8wYNc=;
- b=IMuzwxWLRglLmSIZpwwW3VMxbAd+MUv0/zLewsBLjm/AONrR7Q/MIl6aNRmq3L+uqERKHXeDWh07BtCvNubmLLbl+kp0Bl3AbKKWagRsNhHjNiAz9kGnpycA0saLEJjkutrNne36vX8V0u5KcHQodox3V+mszYFbOCWLW0sqpv9sB9QDae6xKOZNiCqJyQDlFiQpxPL2KjXYqlUvAoH8h8hQD03+A8lAPwLF+QDUGTBOQbb1or7qOjOExcoeOZ/8sBr3V2IX/sZd7WyVyQfomhlGlNRE2RkQ7gdCNXhVn6RIsVwk+7qyi7afdsR6ICXS1GollOc1l4vLkuRVjl2E6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zj425DsWvodYJiPpBCxYf5VlUoVkfBWF89XmSQ8wYNc=;
- b=ceif5E5erSxfE5/2l9WWl1/MZO5ZnBHGrLx6jpr5LRva65oqBKKFigp/1dUgmIsM7qHzsPlMhbNuYUkT0prfB6jNm8ZQapqFTUxaA/j3gsb25QKBGJ8vCtm3C+ERgav65iVD07DBfCCvdVRpRxJlVwQzYHyTPdfKr22YbFugW20=
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::12)
- by HK0P153MB0115.APCP153.PROD.OUTLOOK.COM (2603:1096:203:19::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.2; Mon, 20 Apr
- 2020 16:40:55 +0000
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2958.001; Mon, 20 Apr 2020
- 16:40:55 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>
-CC:     "bp@alien8.de" <bp@alien8.de>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
- hibernation
-Thread-Topic: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
- hibernation
-Thread-Index: AQHWFRKUfBcacZSsfESBcN86F1My4aiB7qAAgABK3nA=
-Date:   Mon, 20 Apr 2020 16:40:54 +0000
-Message-ID: <HK0P153MB027347CE9D0C35A1C53B19F6BFD40@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
- <20200417110007.uzfo6musx2x2suw7@debian>
- <HK0P153MB0273A04F0585524883C46B0FBFD90@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
- <20200420120822.4bncj2iwgqbpoxei@debian>
-In-Reply-To: <20200420120822.4bncj2iwgqbpoxei@debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-20T16:40:50.7568635Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ede3ca55-cff0-4120-b2a0-d6d1ef9813cb;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:8ad:e9e1:6b1b:63b1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: af748047-704d-4f23-626b-08d7e54998af
-x-ms-traffictypediagnostic: HK0P153MB0115:|HK0P153MB0115:|HK0P153MB0115:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <HK0P153MB01150C8A5B47879297C1A22EBFD40@HK0P153MB0115.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 03793408BA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(136003)(366004)(396003)(9686003)(4744005)(6916009)(81156014)(478600001)(55016002)(71200400001)(8990500004)(10290500003)(15650500001)(86362001)(64756008)(66556008)(66476007)(66946007)(6506007)(8936002)(66446008)(7696005)(33656002)(186003)(54906003)(52536014)(76116006)(316002)(5660300002)(82960400001)(2906002)(4326008)(8676002)(82950400001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wfTTrTcIdwod2EtRGi1WYsYXRZKbmcLHqILumZ11yqvEZVl03B4OXN3TYRSGyRaECKXux+lzFWquiKJapduAQW/q4GN5yaDEKcNbMBcVVVxbS0/5q32yzc8P9kteiVlg1CX5CLaXVLEtrWj+N3HHdFZ8zpXIoAjKH8xXYNtykMQtTMiIv+4BHtpNo11vBgRRmUEru6X7V+tft1EEWDJzDjTocKTnSJzdC8t6+0ANabsw2g2hp6SfWljmu8I5BIuTlOq2Z7xmMli2JDkQNFdXdOe32sOPfXXggmYZyi2uSsVCK+5cm8oK3rVpgFNEv8bLNCDUXSUs96X5FwHY/Ex8RD7eZ8jZeeBUC55uSN62HBfy6+PMaDZNjnhNyxmv8Z/3lpje/0GEZhUvz/jlsHxUDjP6ca4g9muoHxRBJ0+R8Ny+z1pvjTVoCeH9zhsfeP/N
-x-ms-exchange-antispam-messagedata: rshdaiudfT0+AOFZU4Cbf4xRTDG4JjQZJYvtPW8sfNxAlwZYCdCCM9ag2SQcCles6qjlgic9VCVg8f1gTm41jLRNkaLnAHjcVJayItqlQ5WFuq7RWHT8+NaqeGZ8j9uoQ2J0Jkms/HPbraK9/4E1AJ/mIpc+p5yzrRlfwq/6AV+L4uP4RHmzvRmLywMgAu6vlqgS7kjIayvzcUIOaHgP52Et/iCH0wbKQYDf5k1Rn6YbazWc3WOeGhEGaNKUE/NM9grhV9fUk0G1txd/5kIPIMnJP3W7SohHL+tNuawtNiDELS6P7wDWDs0RONihKDctmbNf0740yNZDJkcjxh8Pbx2sEGj7maewoiSNebTvfjm/rOehMOQWOOP4tsZZF2OE3CIiGj4rkXi7990mCOwVbctlkTuvs46/Fe4a7WdAV1154Hkscr+np8/sqYYTbhLdhE7OcX0hQrr9MpaNnQfGnINboelfSoCYo6IuyPvQL/s1g7gQIAa7NYMqV3NISHyHgJi9GwX3ceAD7GlZjuMebVKzXcRZ7Ry9IzN8jp5id2MsliRVRBSvlORN8vCyeD8PAjhtl99EGbtdcDEZrZaHPL1Ih0cwvEWJ+t3jNISv6gDOEJUKJAOCfXfSAGw/m+GbhIDx+Upfp4QUw6NG1cUSgnnZg7JtdOQjkDfyzT8KqW3sogryUtL+oZeuhncOyMOTBKK38EOL41ze3eH4uBz1mlUKsSumzgYdOFGn/ScrblPaP7IJjig9G9asEFuh2myCPW+bgpgBR4M1Y7fhERL4DaQaoo8hrpe+C+NVn8VNu7RIo5LUDjI74ucOPfbt/cqOCl8+qObsXcOF0Un3P0ihyaEHoYMcSjZjbjwcwZHv/EI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Apr 2020 12:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726208AbgDTQl2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 12:41:28 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB79FC061A0C;
+        Mon, 20 Apr 2020 09:41:27 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j1so7595273wrt.1;
+        Mon, 20 Apr 2020 09:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pHkfqaZsrvViCrU4vsZGcZiXBeGIBVSy7YBzRqpKWdA=;
+        b=DocS62iBm+MaxthEy8q58x+ZJU00CguRHCiYuW6dSG4/U6ZyGPWmJrpqRaNjkRtbF7
+         /RdZSQWSQ5H6mteZjuHLXUdo5lFRpI3NnH8AfGByJ9+aIiSkz/qzxmyb5XOd0oKkuUsG
+         5IetuYNfruFqMLFvjQX8+VAgTEgvRhLcCFAVYfSpeNrSsewv1pjunDnWaVYCwjh2Ec5N
+         /3t24EgrtLPIjg2mkbufRaGlL+k6ZWxTG60iMpCC+tZKDq3qJ9vY+fbowAm6WE53kEhc
+         o9nC28ByOnpk4pqSScAIK+vx+0Bn7EcqO7v0rNdv5mDmP2rkenwq4oordoJJOvDWy/aI
+         NbXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pHkfqaZsrvViCrU4vsZGcZiXBeGIBVSy7YBzRqpKWdA=;
+        b=WCY63XXr/U0haQyEZ6ICnhPE/UFnOGjfJeX1C7QPgx6s6/iITJJxzsWa85qf/+Indy
+         LkucqTz4Cb+vMm7kWhhkacrxGC4+gVClp6wVB8bQ5aLo4yow0OcQRERVbdA8NlZBAhB0
+         DHfHpvnPbXCHyi3QyC4PIn31POfi6zqDXN6ICEgckuEUuFXImZ+GD+7/ZmFatWsiWYE9
+         czir/Wef4nh83ImzUAC9BxLMkLFXV86xeVPVbikHUt0ZWMvDE7z9pwkX6xatXlH86n3y
+         ptAJlSTo3aNtCN8cLrOLRUlrzpXjHTTQI2u7prq5+q+Q7APtpFGZ32b99q2ExijkSbim
+         R8XA==
+X-Gm-Message-State: AGi0PuabZfvauEq4yAhhVSsDKiaxoB3xoJksNtpW/LXNfg9AMg6NQv40
+        RNRR/qUAPctICHuwDV5Qh4w=
+X-Google-Smtp-Source: APiQypIu7Usjxv+iYA4v7BBaqwgthc4mJlRmQjaEIvh6W/U/9yhM0xy2y9UlKGHHHnWU6b0Gch+giQ==
+X-Received: by 2002:a5d:6148:: with SMTP id y8mr19160703wrt.236.1587400886434;
+        Mon, 20 Apr 2020 09:41:26 -0700 (PDT)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
+        by smtp.gmail.com with ESMTPSA id j13sm48180wro.51.2020.04.20.09.41.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 09:41:25 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Samuel Holland <samuel@sholland.org>, linux-sunxi@googlegroups.com
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        paul.kocialkowski@bootlin.com
+Subject: Re: [linux-sunxi] [PATCH] media: cedrus: Implement runtime PM
+Date:   Mon, 20 Apr 2020 18:41:23 +0200
+Message-ID: <5590139.lOV4Wx5bFT@jernej-laptop>
+In-Reply-To: <20200420151010.GL125838@aptenodytes>
+References: <20200408010232.48432-1-samuel@sholland.org> <244922ec-ed3a-eca7-6640-49de7ad9c605@sholland.org> <20200420151010.GL125838@aptenodytes>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af748047-704d-4f23-626b-08d7e54998af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 16:40:54.8851
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 36C6ZxQ5nok7QRiBXOFNPZm/Gpr8EhCt1dOxvocr9+wvzkpcbc0WVgNhDcrxSMYuLM0eYL67WFMUmmuEy7zORw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0115
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Wei Liu <wei.liu@kernel.org>
-> Sent: Monday, April 20, 2020 5:08 AM
+Dne ponedeljek, 20. april 2020 ob 17:10:10 CEST je Paul Kocialkowski=20
+napisal(a):
+> Hi,
 >=20
-> I would suggest make this clear in the commit message to not give the
-> impression that Hyper-V has this weird behaviour of corrupting guest
-> memory for no reason.
+> On Sun 19 Apr 20, 15:28, Samuel Holland wrote:
+> > On 4/8/20 11:01 AM, Jernej =C5=A0krabec wrote:
+> > > Hi Samuel!
+> > >=20
+> > > Dne sreda, 08. april 2020 ob 03:02:32 CEST je Samuel Holland napisal(=
+a):
+> > >> This allows the VE clocks and PLL_VE to be disabled most of the time.
+> > >>=20
+> > >> Since the device is stateless, each frame gets a separate runtime PM
+> > >> reference. Enable autosuspend so the PM callbacks are not run before
+> > >> and
+> > >> after every frame.
+> > >>=20
+> > >> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> > >> ---
+> > >>=20
+> > >> I tested this with v4l2-request-test. I don't have the setup to do
+> > >> anything more complicated at the moment.
+> > >>=20
+> > >> ---
+> > >>=20
+> > >>  drivers/staging/media/sunxi/cedrus/cedrus.c   |   7 ++
+> > >>  .../staging/media/sunxi/cedrus/cedrus_hw.c    | 115 ++++++++++++---=
+=2D--
+> > >>  .../staging/media/sunxi/cedrus/cedrus_hw.h    |   3 +
+> > >>  3 files changed, 88 insertions(+), 37 deletions(-)
+> >=20
+> > [snip]
+> >=20
+> > > Reset above causes problem. When format is set in cedrus_s_fmt_vid_ca=
+p()
+> > > a
+> > > function is called, which sets few registers in HW. Of course, there =
+is
+> > > no
+> > > guarantee that someone will start decoding immediately after capture
+> > > format is set. So, if the driver puts VPU to sleep in the mean time,
+> > > reset will clear those registers and decoded video will be in differe=
+nt
+> > > format than expected. It could be even argued that registers should n=
+ot
+> > > be set in that function and that this is design issue or bug in drive=
+r.
+> >=20
+> > You're right. I didn't see that cedrus_dst_format_set() was called outs=
+ide
+> > cedrus_engine_enable/disable().
 >=20
-> We can replace the paragraph starting with "The issue is: ..." with:
->=20
-> ---
-> Linux needs to update Hyper-V the correct VP assist page to prevent
-> Hyper-V from writing to a stale page, which causes guest memory
-> corruption.  The memory corruption may have caused some of the hangs and
-> triple faults we saw during non-boot CPUs resume.
-> ---
-> This What do you think?
+> This might indeed be an issue with multiple decoding contexts in parallel,
+> with potentially different formats. For that reason, it looks like the
+> right thing to do would be to set the format at each decoding run based on
+> the format set in the context by s_fmt.
 
-This version is much better. I'll use it. Thanks, Wei!
+So you are suggesting that cedrus_dst_format_set() should be moved to=20
+cedrus_device_run(), right? This way all registers are set at each run, whi=
+ch=20
+is then truly stateless.
 
-I'll post a v2 with the updated comments. I'll document Vitaly's concern ab=
-out
-nested virtualization in the comment.
-=20
-Thanks,
--- Dexuan
+Best regards,
+Jernej
+
+>=20
+> > > Anyway, I made a runtime PM support long time ago, but never do anyth=
+ing
+> > > besides running few tests:
+> > > https://github.com/jernejsk/linux-1/commit/
+> > > d245b7fa2a26e519ff675a255c45230575a4a848
+> > >=20
+> > > It takes a bit different approach. Power is enabled in start streaming
+> > > and
+> > > disabled in stop streaming. This is simpler approach and doesn't need
+> > > autosuspend functionality. I also moved call to a function which sets
+> > > format in HW registers to start streaming handler, so it's guaranteed
+> > > to be set at the beginning.
+> >=20
+> > Assuming cedrus_device_run() only gets called between streamon and
+> > streamoff (which appears to be the case), this looks like a better
+> > design.
+>=20
+> Yes, this is defintiely ensured by the V4L2 framework. I agree that
+> streamon/off are the correct sync points.
+>=20
+> > > Note that some registers are only set in start streaming handler. With
+> > > your
+> > > approach, if first frame is submitted too late, asserting and
+> > > de-asserting
+> > > reset line could reset those registers.
+> >=20
+> > I only see registers being set in cedrus_start_streaming() after your
+> > patch, where you add a call to cedrus_dst_format_set(). I can't find any
+> > registers being written in any of the ->start() callbacks.
+> >=20
+> > I'll send a v2 which combines the two patches: yours which handles the
+> > runtime part better, and mine which handles the probe/remove part better
+> > with !CONFIG_PM.
+> Thanks, that should do it!
+>=20
+> Cheers,
+>=20
+> Paul
+
+
+
+
