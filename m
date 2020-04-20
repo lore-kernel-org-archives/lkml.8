@@ -2,73 +2,202 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AC5C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A800DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1151B21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903EB206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgDTNni (ORCPT
+        id S1728343AbgDTNpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:43:38 -0400
-Received: from mail-pj1-f50.google.com ([209.85.216.50]:34894 "EHLO
-        mail-pj1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbgDTNnh (ORCPT
+        Mon, 20 Apr 2020 09:45:07 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41119 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgDTNpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:43:37 -0400
-Received: by mail-pj1-f50.google.com with SMTP id ms17so4448420pjb.0;
-        Mon, 20 Apr 2020 06:43:36 -0700 (PDT)
+        Mon, 20 Apr 2020 09:45:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k9so8751350oia.8;
+        Mon, 20 Apr 2020 06:45:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JoL7larpzyH5iX/rf4Vk7J7BF8Tz5qYtFapR4pOM/Bk=;
-        b=JO1Lg60Oha4cxftq7yQ0DuhPEPWuhHEvs86YmITKggtosz3+T0A6SMsefv6pxct+8j
-         3HkO9RLvPdfqRZUDK84pMklsY7uxuIc5bc94iMzayGe/TbZ9SpX27DXpWWTWIfe8mhba
-         dNasX2vDZqn0GMxPQQIb0f7uT6KjlX4oaJlpNw2apDH5OCvhds3477PMMleytVdTAp44
-         jNLc4JjfEu87368jctWOJtsVGYJHWWghMtvI+rVQKJyo3aE6RTVpl51QT1tRqFsfEmpS
-         mTxhPZmKNIWaRFc7RQSVek+Hq4PBnzqBPAnXhXaCl8eThNswETQ41UIceTVb7x6rfKZY
-         7U1w==
-X-Gm-Message-State: AGi0PuaJyRO9y+hRB/xs6T5QczwP/PCFC8VvLIJxK9x9wLVhi85m4c1q
-        gA0ryspd8hSEmBmL2bQhjFE=
-X-Google-Smtp-Source: APiQypLjLUEKZwjnKvQUj7O4uM3XDSaudjkn+w90Nf3N0Q0zgj93rWKm9sIw8dDU6imKQoS9X3qycw==
-X-Received: by 2002:a17:902:8697:: with SMTP id g23mr16602371plo.306.1587390216410;
-        Mon, 20 Apr 2020 06:43:36 -0700 (PDT)
-Received: from [100.124.9.192] ([104.129.198.219])
-        by smtp.gmail.com with ESMTPSA id j23sm1247267pjz.13.2020.04.20.06.43.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 06:43:35 -0700 (PDT)
-Subject: Re: [PATCH 3/4] loop: Move loop_set_from_status() and friends up.
-To:     Martijn Coenen <maco@android.com>, axboe@kernel.dk, hch@lst.de,
-        ming.lei@redhat.com
-Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maco@google.com, Chaitanya.Kulkarni@wdc.com
-References: <20200420080409.111693-1-maco@android.com>
- <20200420080409.111693-4-maco@android.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <df62d742-9e43-b6ed-580e-99b7675a885f@acm.org>
-Date:   Mon, 20 Apr 2020 06:43:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=30fPuFeZ8+KowrZfxxMKA5oN9jvkWbTz83d3a3WghjU=;
+        b=rlpq95L/PL26iyvWu9o7ByjWXc7PAbQeY6E8IPpcK0R6zn2/QVS2o9WicO83ZLK96x
+         unG965rNSu84pPEvq/KuQ9QhXHlDwsBTjlQWTwKqnVps/edKViQEq0XUHmC83PGrChzP
+         B5VfRLSHUuuHIsMvOs9jDKpZgr0EnFspOmURXUFn+XB4dpfMhpG3RHAjCek7e9B16Obc
+         /oE90sRBOwgMIUpUOqnHm+0PperCO2rExyEX7x+ZCcjEBd1dmNuiygw35pLhW1UUAptq
+         vFFGo0mRDr4fBQX9ckX3I4zdI7lbqTPM0Didxwx2eieJy3ExIOnFOiliGo7lIsOkG9c4
+         dhUQ==
+X-Gm-Message-State: AGi0PuZ2viCHTn0AAAg+pd6lE6x4fcRaLfuJXCX+2TFZ9lin+lrQ2glu
+        ahtPhGfrROHMFhgccz2kryh3pMSnvXoWQQtRnwA=
+X-Google-Smtp-Source: APiQypLA1Qn55GQn4mJL7GDyTOFPDO/nthf1o88r87quKKxquHFgIz8br0NuoDllWsVGK1L+6g+sKJxp7nqM8ixUaKU=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr10122357oih.148.1587390304100;
+ Mon, 20 Apr 2020 06:45:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200420080409.111693-4-maco@android.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com> <1585289423-18440-3-git-send-email-hadar.gat@arm.com>
+In-Reply-To: <1585289423-18440-3-git-send-email-hadar.gat@arm.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 20 Apr 2020 15:44:51 +0200
+Message-ID: <CAMuHMdV6Uce79MPs7jfJfX3WOqAMH22vf2V_=Ui0zLHYqsJ+Xg@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] hw_random: cctrng: introduce Arm CryptoCell driver
+To:     Hadar Gat <hadar.gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/20/20 1:04 AM, Martijn Coenen wrote:
-> So we can use it without forward declaration. This is a separate commit
-> to make it easier to verify that this is just a move, without functional
-> modifications.
+Hi Hadar,
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+On Fri, Mar 27, 2020 at 7:11 AM Hadar Gat <hadar.gat@arm.com> wrote:
+> Introduce low level Arm CryptoCell TRNG HW support.
+>
+> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/drivers/char/hw_random/cctrng.c
+
+> +static int cctrng_probe(struct platform_device *pdev)
+> +{
+> +       struct resource *req_mem_cc_regs = NULL;
+> +       struct cctrng_drvdata *drvdata;
+> +       struct device *dev = &pdev->dev;
+> +       int rc = 0;
+> +       u32 val;
+> +       int irq;
+> +
+> +       drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +       if (!drvdata)
+> +               return -ENOMEM;
+> +
+> +       drvdata->rng.name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
+> +       if (!drvdata->rng.name)
+> +               return -ENOMEM;
+> +
+> +       drvdata->rng.read = cctrng_read;
+> +       drvdata->rng.priv = (unsigned long)drvdata;
+> +       drvdata->rng.quality = CC_TRNG_QUALITY;
+> +
+> +       platform_set_drvdata(pdev, drvdata);
+> +       drvdata->pdev = pdev;
+> +
+> +       drvdata->circ.buf = (char *)drvdata->data_buf;
+> +
+> +       /* Get device resources */
+> +       /* First CC registers space */
+> +       req_mem_cc_regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       /* Map registers space */
+> +       drvdata->cc_base = devm_ioremap_resource(dev, req_mem_cc_regs);
+> +       if (IS_ERR(drvdata->cc_base)) {
+> +               dev_err(dev, "Failed to ioremap registers");
+> +               return PTR_ERR(drvdata->cc_base);
+> +       }
+> +
+> +       dev_dbg(dev, "Got MEM resource (%s): %pR\n", req_mem_cc_regs->name,
+> +               req_mem_cc_regs);
+> +       dev_dbg(dev, "CC registers mapped from %pa to 0x%p\n",
+> +               &req_mem_cc_regs->start, drvdata->cc_base);
+> +
+> +       /* Then IRQ */
+> +       irq = platform_get_irq(pdev, 0);
+> +       if (irq < 0) {
+> +               dev_err(dev, "Failed getting IRQ resource\n");
+> +               return irq;
+> +       }
+> +
+> +       /* parse sampling rate from device tree */
+> +       rc = cc_trng_parse_sampling_ratio(drvdata);
+> +       if (rc) {
+> +               dev_err(dev, "Failed to get legal sampling ratio for rosc\n");
+> +               return rc;
+> +       }
+> +
+> +       rc = cc_trng_clk_init(drvdata);
+> +       if (rc) {
+> +               dev_err(dev, "cc_trng_clk_init failed\n");
+> +               return rc;
+> +       }
+> +
+> +       INIT_WORK(&drvdata->compwork, cc_trng_compwork_handler);
+> +       INIT_WORK(&drvdata->startwork, cc_trng_startwork_handler);
+> +       spin_lock_init(&drvdata->read_lock);
+> +
+> +       /* register the driver isr function */
+> +       rc = devm_request_irq(dev, irq, cc_isr, IRQF_SHARED, "cctrng", drvdata);
+
+Shoudn't this be done after clearing the pending interrupts below?
+
+> +       if (rc) {
+> +               dev_err(dev, "Could not register to interrupt %d\n", irq);
+> +               goto post_clk_err;
+> +       }
+> +       dev_dbg(dev, "Registered to IRQ: %d\n", irq);
+> +
+> +       /* Clear all pending interrupts */
+> +       val = cc_ioread(drvdata, CC_HOST_RGF_IRR_REG_OFFSET);
+> +       dev_dbg(dev, "IRR=0x%08X\n", val);
+> +       cc_iowrite(drvdata, CC_HOST_RGF_ICR_REG_OFFSET, val);
+
+The above accesses the engine's registers...
+
+> +
+> +       /* unmask HOST RNG interrupt */
+> +       cc_iowrite(drvdata, CC_HOST_RGF_IMR_REG_OFFSET,
+> +                  cc_ioread(drvdata, CC_HOST_RGF_IMR_REG_OFFSET) &
+> +                  ~CC_HOST_RNG_IRQ_MASK);
+> +
+> +       /* init PM */
+> +       rc = cc_trng_pm_init(drvdata);
+> +       if (rc) {
+> +               dev_err(dev, "cc_trng_pm_init failed\n");
+> +               goto post_clk_err;
+> +       }
+
+> +
+> +       /* increment device's usage counter */
+> +       rc = cc_trng_pm_get(dev);
+
+... but only here is Runtime PM initialized, and the device guaranteed
+to be powered.  If a device is accessed while powered down, this may
+lead to an asynchronous external abort, or a plain lockup.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
