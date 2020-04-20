@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2A7C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB8FC38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 419EE2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2F32084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EpnGqHux"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o2p+EPk1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgDTSe7 (ORCPT
+        id S1728127AbgDTSfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:34:59 -0400
+        Mon, 20 Apr 2020 14:35:07 -0400
 Received: from mail27.static.mailgun.info ([104.130.122.27]:52178 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728050AbgDTSe7 (ORCPT
+        by vger.kernel.org with ESMTP id S1728077AbgDTSfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:34:59 -0400
+        Mon, 20 Apr 2020 14:35:05 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587407698; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1587407705; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Tj2PQ/woMiwCdJuPYcUQx4SEawLDLIWZBKxuQ9AsVhE=; b=EpnGqHuxxhSWBlCby3linf60M9FXlkGfot7WmXF4B0WgKQ7e8T7ippvKz5ugbDkT5wSPNye4
- yO1UXvOmdrEQj4j6qyfCsXof7H+JhtAowp1ZV9FVX0+YYwjaEGaZEDW2lVDl7ubKllEyTXDH
- XQjpaN4A3UPgNZna3uvFwwfayek=
+ Sender; bh=LG1BzWNgEc4P/Q2YyUIsL9mmn47LWA5+bq3Cl0xGTeU=; b=o2p+EPk1rQUTpx7nL6utXz01ge6/CEJY8/zpezxOih4SBnSqUYCK24APvwH7rnD6koPkmbmd
+ 8pcdXMTsw4IZPXYtuFy/ZqK8beeluuLJIebJxui2U+oJeVeZjlaHyW/KETydHVMhOJG0apoz
+ MNcBCeVIPi4tvNWXZMfQTG4Rrrw=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9deb44.7fea79047420-smtp-out-n05;
- Mon, 20 Apr 2020 18:34:44 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e9deb47.7fc5c5f3d3e8-smtp-out-n05;
+ Mon, 20 Apr 2020 18:34:47 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BCAE2C4478C; Mon, 20 Apr 2020 18:34:42 +0000 (UTC)
+        id B1AC1C58A02; Mon, 20 Apr 2020 18:34:46 +0000 (UTC)
 Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78D29C44788;
-        Mon, 20 Apr 2020 18:34:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78D29C44788
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 62299C58A02;
+        Mon, 20 Apr 2020 18:34:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 62299C58A02
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
 From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
@@ -58,11 +58,10 @@ Cc:     Stephen Boyd <swboyd@chromium.org>,
         linux-arm-msm@vger.kernel.org,
         Matthias Kaehlcke <mka@chromium.org>,
         Evan Green <evgreen@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCHv4 5/6] dt-bindings: remoteproc: qcom: Add iommus property
-Date:   Tue, 21 Apr 2020 00:03:53 +0530
-Message-Id: <561e9b42b8665fc9712fdb40a525ab8871fcbdac.1587407458.git.saiprakash.ranjan@codeaurora.org>
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv4 6/6] arm64: dts: qcom: sdm845-cheza: Add iommus property
+Date:   Tue, 21 Apr 2020 00:03:54 +0530
+Message-Id: <38c607841e81664a2db69a27260cd7dfbd653458.1587407458.git.saiprakash.ranjan@codeaurora.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <cover.1587407458.git.saiprakash.ranjan@codeaurora.org>
 References: <cover.1587407458.git.saiprakash.ranjan@codeaurora.org>
@@ -75,30 +74,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sibi Sankar <sibis@codeaurora.org>
 
-Add iommus property to allow Q6 modem to boot on platforms which do
-not have trustZone.
+Add iommus property to remoteproc modem node.
+
+Following SMMU global faults are seen without it.
+
+arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
+                         GFSYNR1 0x00000781, GFSYNR2 0x00000000
+
+arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
+                         GFSYNR1 0x00000461, GFSYNR2 0x00000000
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index 88dfa3fc15f7..130e50aab741 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -184,6 +184,9 @@ For the compatible strings below the following phandle references are required:
- 		    followed by the offset within syscon for conn_box_spare0
- 		    register.
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+index 9070be43a309..07081da2c83e 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -631,6 +631,11 @@ ap_ts_i2c: &i2c14 {
+ 	status = "okay";
+ };
  
-+The Hexagon node must contain iommus property as described in ../iommu/iommu.txt
-+on platforms which do not have TrustZone.
++&mss_pil {
++	iommus = <&apps_smmu 0x780 0x1>,
++		 <&apps_smmu 0x724 0x3>;
++};
 +
- = SUBNODES:
- The Hexagon node must contain two subnodes, named "mba" and "mpss" representing
- the memory regions used by the Hexagon firmware. Each sub-node must contain:
+ &pm8998_pwrkey {
+ 	status = "disabled";
+ };
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
