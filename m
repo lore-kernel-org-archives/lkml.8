@@ -2,740 +2,464 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916A5C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D308C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA6E20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2919D20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:20:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="dyFeAmcf";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="cSrWn2po"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgDTESo (ORCPT
+        id S1726054AbgDTEUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 00:18:44 -0400
-Received: from mga12.intel.com ([192.55.52.136]:9018 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgDTESo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 00:18:44 -0400
-IronPort-SDR: 1lmd2IVoH0t/xiyJnq6lxdCz/uGXt/YYALD8nNePBHA5RM87Von6OtygX0iwakPcg3oEk7MT1e
- ydg8CvX1BWeg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 21:18:43 -0700
-IronPort-SDR: 85gVmBVdeDE1JfznfamMH77Dtz8FytPYU50XraWuT3CzsmIEYp2bqpjhtUYS611zXoaYQV7MIV
- a4CofOkEjiVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
-   d="scan'208";a="455552348"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Apr 2020 21:18:42 -0700
-Received: from [10.249.68.96] (vramuthx-mobl1.gar.corp.intel.com [10.249.68.96])
-        by linux.intel.com (Postfix) with ESMTP id 7D3EB580479;
-        Sun, 19 Apr 2020 21:18:35 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
-        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200418105533.477ce529@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <79e186a8-68fb-0e75-910b-9f1b40679ca2@linux.intel.com>
-Date:   Mon, 20 Apr 2020 12:18:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200418105533.477ce529@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Mon, 20 Apr 2020 00:20:48 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:18286 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgDTEUs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 00:20:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1587356447; x=1618892447;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=8nRkcxVAyAVgErzy4y29tSdaJVgliKQGbUtVr3zQF/o=;
+  b=dyFeAmcflygsVfktauDYByPWtM92EMYUFulOWtDmj+awCnk+6VsaykoI
+   lWES3stlysOG7SfUzsxDj9f9O4CamjCHek1egplr4CWKIsBiisWQMMQHv
+   DbELIbXzDmb58i8Sfniv0AJh8fpCipyeMVlTsIOqwhEayLvt8w0OY5Zv5
+   jx/jG9RzLpSU7vkRK52qnRIqcgZxi4I2WDkZcuHbVSNJq7ahnnWBVb1Px
+   xKon/0BAYpzCcJnJ+iQ5Uz/ygURTAeBiSsgjWlBpKKtkxM2mhHhhlEIBr
+   qB187wP0/sNRi2VhUoOhYWxyHMXIdSQ27LxUqRUS1qRQH8uA3zW5Wj4GG
+   g==;
+IronPort-SDR: STCYjek4Z+dkO0bUqNVhRM0z14uMJxgvNebTDv0nAtRJA2ZuySqidkpHKE65fJ2xdscv7cgrVE
+ 8JNMgti1tDYXHsEjcHJSBUypxFDts4SPV4JuuCtvSIDm9FKDuQJ8uPHLXZzI/Ie1xxNklUwN7D
+ igXsEXs4KQqbxOuM6kCte9lxYTZEoMDLiuFdrZz/6esnRT4msFE8sgaBl8V9la9I3Rv+CDAwIp
+ RLF2ixHEJWKqyMUJu9hx0dmfpYXNkhVK6/puihRZ5X2L+WHpbUR5LApFB3ctdQdSkhMQCTZYgl
+ F24=
+X-IronPort-AV: E=Sophos;i="5.72,405,1580745600"; 
+   d="scan'208";a="135988705"
+Received: from mail-mw2nam12lp2048.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.48])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Apr 2020 12:20:42 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HN/HLHBXW22AEAmDPILrnevJPIQhzYkzwL7v74vZGb5S7qGEaaUNPOXHVa2+aPnkjpt37QUVO/g6QSgUtDhEPKW/JOTxM9WMKOEVZEsmhGkhICHWHrs4S6zR77NCvYyR+JJa14sS3e6/zMP+hN0PhqvQZHgGJRvlnooUupT27+ZrqzMV5QLANu6ZW0cP1lM1M7mvZzHt0DraTgFrtjhc08ip4q7AKBRwrzFvZVbVJV4nmrsYfsc64eB/RCb2Ya/ckUIsdJIwNsFFvhnsHZdqdV/8IXEeVS5lS6sy9KvizLl5UdONppIJjn0NFjGC+xJJqCzulWu4MO7X10GCp5ptRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8nRkcxVAyAVgErzy4y29tSdaJVgliKQGbUtVr3zQF/o=;
+ b=j4sqzoISubhbjvTiozHyEz3anf/Me8x7lxZNRRek0pb0pA44CLtV3LxKaZeYRnDcMbR9l0Cec2om5geHWPlZsbtXC7RL/hq7NBQwGgdk1y+2xsLf/EF3QKfmpy55JJ3XbxLwZb7xGZx4VXuQiNJc+H56hLpRqs7SQRrbpuffCALaOqzoUIAmtc5ZqFLRIR0r7B33nIMmMp5pxYvVws/+QidagOhOn0O930b/yR4XCr8K1GFFwvNElTUv/u/RKYDUaXKB91OFJ6cReV0T1XJS96LHJOh9RS4V9+RWPlUlV4UfqWGVkGPbIftXv0Ld3Sk5hLjcQQZ1BsDY329d+X1+DQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8nRkcxVAyAVgErzy4y29tSdaJVgliKQGbUtVr3zQF/o=;
+ b=cSrWn2pogdkQ0Ux9dhBCybNNwpHsBYRmXM0r1Ph2dnaoMsRHBSZfBL+FBUpAS+WZqL/THoPNLK3i21Up6tn7pE6SrcfYHi8pw8Yi8M9mvbCEQ8D62k3sMICOyiSgOug60yh4g0r+brdUa9fJjPSG3olhWZrFvFU9XlLLjs6PKfE=
+Received: from BY5PR04MB6724.namprd04.prod.outlook.com (2603:10b6:a03:219::15)
+ by BY5PR04MB7091.namprd04.prod.outlook.com (2603:10b6:a03:227::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Mon, 20 Apr
+ 2020 04:20:40 +0000
+Received: from BY5PR04MB6724.namprd04.prod.outlook.com
+ ([fe80::5591:a2e7:4fad:6b0c]) by BY5PR04MB6724.namprd04.prod.outlook.com
+ ([fe80::5591:a2e7:4fad:6b0c%6]) with mapi id 15.20.2921.030; Mon, 20 Apr 2020
+ 04:20:40 +0000
+From:   Atish Patra <Atish.Patra@wdc.com>
+To:     "atishp@atishpatra.org" <atishp@atishpatra.org>,
+        "ardb@kernel.org" <ardb@kernel.org>
+CC:     "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "will@kernel.org" <will@kernel.org>
+Subject: Re: [v3 PATCH 5/5] RISC-V: Add EFI stub support.
+Thread-Topic: [v3 PATCH 5/5] RISC-V: Add EFI stub support.
+Thread-Index: AQHWE1+28FOiVu5TgkiR99oyVUE/r6h7XhGAgALW74CAAILMgIAAHjUAgABv1oCAAAF7gIACJ+EA
+Date:   Mon, 20 Apr 2020 04:20:39 +0000
+Message-ID: <b6a28d62be4d42319fca2adaad755612ef094667.camel@wdc.com>
+References: <20200415195422.19866-1-atish.patra@wdc.com>
+         <20200415195422.19866-6-atish.patra@wdc.com>
+         <CAMj1kXFRqTYr7_M_j6oN1-xnQ6V4uCYK49yAbjvrf1BB823Cng@mail.gmail.com>
+         <CAOnJCUK3fqsR93ewYMUkanh+x1EJN_3QwkFjSDDZZr2MjzpnUQ@mail.gmail.com>
+         <CAMj1kXFOkARJ9k81pu-LuHEd7H7AZRRrquzVN-WQ3J239JUZTw@mail.gmail.com>
+         <CAMj1kXGv8XrXJ=Tx88O38a9UYM3iuBevg5NXRpMrny1XJZGB7A@mail.gmail.com>
+         <CAOnJCUJOY_84eesRreVyEQKjL2awkehcFi5ydMv0USNeaFHd6A@mail.gmail.com>
+         <CAMj1kXHLfXOp=JQhAeFx6oazFp=kqiS0TMTV06ZthTFg6QdzWw@mail.gmail.com>
+In-Reply-To: <CAMj1kXHLfXOp=JQhAeFx6oazFp=kqiS0TMTV06ZthTFg6QdzWw@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Atish.Patra@wdc.com; 
+x-originating-ip: [2601:641:500:3bd0:3a49:27ae:9617:88a2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: dd67f4c5-958c-405a-3049-08d7e4e22f23
+x-ms-traffictypediagnostic: BY5PR04MB7091:
+x-microsoft-antispam-prvs: <BY5PR04MB70913362A713AF6AF07FAFB4FAD40@BY5PR04MB7091.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 03793408BA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6724.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(478600001)(53546011)(186003)(5660300002)(81156014)(30864003)(6506007)(8676002)(71200400001)(110136005)(54906003)(66946007)(66476007)(8936002)(76116006)(64756008)(66556008)(66446008)(2616005)(2906002)(4326008)(36756003)(6512007)(7416002)(6486002)(86362001)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YppD5pevyxv90o7P2CpEt6v8AmF73gDRTGyQIr5MUb3MCDWQbhvE2UbjTM5I5FRr6WrxhFwTBXJ5aBRoiSC4ixGYVngn82IN86JQkuYMQQAhXxRzK6jvrFU544S8z55E+aa8zjLzIAkEXCqfWXBjHn7uTrVx3OXtBoIuy3fE76SnFILaDkb6GjrmbRBbH1LOY0eyY7Hh4j/1KggMOF6/XbAzAQUWrxqzeKR51URLnJP9VGanuG7UTT64UBpiGER+3I84yIFvx5dF38OGLwlBM64/N5QenZHuhQlmMdeTLDJV3n9ESX2AjmXXcjaTmqXIyGvdqq6Ll0WLsDRWOa8UPOLpJOUQVSjYIMiiT5m1Xcb2YyBsEeXHypXTfeXJjOgfiHsnGXzDtE/8Dw1Gm84SL3ibLv2YP0x7wTUFT7L9d3d9LMORYdIDXAw5znErWf/h
+x-ms-exchange-antispam-messagedata: cAMLuxC4Ket6+wHFYJD/GOb0yEz05wOiI3DA9R2p3RPlG8W9nXrLUlcYzdaBCg7E2v782tBpAyRI13crvwEtDQ4Pxi4l8/v7CYDWtzehV7fgQ7so41ydjhDnjnHVuA7CjCt2R4KEEuncP095dXq215JDV+EQUecBs3nV5rblxYcFH5kIYdp39zG0ZLyR1LShljyIoaYq2sTgMAbw1U/qaw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0E26D5F32087334A8A420A389EACEE3F@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd67f4c5-958c-405a-3049-08d7e4e22f23
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 04:20:39.8611
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0WD4iNMFDV71+Mt1YvYm68VcIYWG8zB5jIwoT0FFBJ56vOh2H7MzeOXo/rIisdsg6EhLVFOTDC1Dre4Ug2pZsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
-
-   Thank you very much for the review comments and your time...
-
-On 18/4/2020 4:55 pm, Boris Brezillon wrote:
-> On Fri, 17 Apr 2020 16:21:47 +0800
-> "Ramuthevar,Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> This patch adds the new IP of Nand Flash Controller(NFC) support
->> on Intel's Lightning Mountain(LGM) SoC.
->>
->> DMA is used for burst data transfer operation, also DMA HW supports
->> aligned 32bit memory address and aligned data access by default.
->> DMA burst of 8 supported. Data register used to support the read/write
->> operation from/to device.
->>
->> NAND controller driver implements ->exec_op() to replace legacy hooks,
->> these specific call-back method to execute NAND operations.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   drivers/mtd/nand/raw/Kconfig          |   7 +
->>   drivers/mtd/nand/raw/Makefile         |   1 +
->>   drivers/mtd/nand/raw/intel_lgm_nand.c | 740 ++++++++++++++++++++++++++++++++++
-> I wonder if we shouldn't name the driver infineon-nand-controller.c
-> since the original design comes from Infineon IIUC. intel_lgm_nand.c is
-> definitely misleading, as we also have a nand_intel.c file which is for
-> Intel NAND chips (not NAND controllers). If we keep intel in the name,
-> let's at least add a "-controller" suffix to make it clear.
-sure , will add -controller suffix.
->
-> Side note for Miquel: I guess we would also benefit from having a clear
-> core vs controller-drivers split as recently done for spi-nor (a
-> controller subdir has been created).
->
->>   3 files changed, 748 insertions(+)
->>   create mode 100644 drivers/mtd/nand/raw/intel_lgm_nand.c
->>
->> diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
->> index a80a46bb5b8b..9efc4bbaf4a3 100644
->> --- a/drivers/mtd/nand/raw/Kconfig
->> +++ b/drivers/mtd/nand/raw/Kconfig
->> @@ -457,6 +457,13 @@ config MTD_NAND_CADENCE
->>   	  Enable the driver for NAND flash on platforms using a Cadence NAND
->>   	  controller.
->>   
->> +config MTD_NAND_INTEL_LGM
->> +	tristate "Support for NAND controller on Intel LGM SoC"
->> +	depends on X86
-> Do we have a hard dependency on x86 here? Maybe 'depends on HAS_MMIO'
-> would be enough.
-yes Boris, we have hard dependency on x86.
->> +	help
->> +	  Enables support for NAND Flash chips on Intel's LGM SoC.
->> +          NAND flash interfaced through the External Bus Unit.
->> +
->>   comment "Misc"
->>   
->>   config MTD_SM_COMMON
->> diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
->> index 2d136b158fb7..49a301ae0c9d 100644
->> --- a/drivers/mtd/nand/raw/Makefile
->> +++ b/drivers/mtd/nand/raw/Makefile
->> @@ -58,6 +58,7 @@ obj-$(CONFIG_MTD_NAND_TEGRA)		+= tegra_nand.o
->>   obj-$(CONFIG_MTD_NAND_STM32_FMC2)	+= stm32_fmc2_nand.o
->>   obj-$(CONFIG_MTD_NAND_MESON)		+= meson_nand.o
->>   obj-$(CONFIG_MTD_NAND_CADENCE)		+= cadence-nand-controller.o
->> +obj-$(CONFIG_MTD_NAND_INTEL_LGM)	+= intel_lgm_nand.o
->>   
->>   nand-objs := nand_base.o nand_legacy.o nand_bbt.o nand_timings.o nand_ids.o
->>   nand-objs += nand_onfi.o
->> diff --git a/drivers/mtd/nand/raw/intel_lgm_nand.c b/drivers/mtd/nand/raw/intel_lgm_nand.c
->> new file mode 100644
->> index 000000000000..96cd1831f070
->> --- /dev/null
->> +++ b/drivers/mtd/nand/raw/intel_lgm_nand.c
->> @@ -0,0 +1,740 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/* Copyright (c) 2019 Intel Corporation. */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/completion.h>
->> +#include <linux/dmaengine.h>
->> +#include <linux/dma-direction.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/err.h>
->> +#include <linux/init.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/module.h>
->> +#include <linux/resource.h>
->> +#include <linux/sched.h>
->> +#include <linux/types.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/mtd/rawnand.h>
->> +#include <linux/mtd/nand_ecc.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of.h>
->> +#include <linux/mtd/partitions.h>
->> +#include <linux/io.h>
->> +#include <linux/slab.h>
->> +#include <mtd/mtd-abi.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/mtd/nand.h>
->> +
->> +#define LGM_CLC			0x000
->> +#define LGM_CLC_RST		0x00000000u
->> +
->> +#define LGM_NAND_ECC_OFFSET	0x008
->> +
->> +#define LGM_ADDR_SEL(n)		(0x20 + (n) * 4)
->> +#define LGM_ADDR_MASK		(5 << 4)
->> +#define LGM_ADDR_SEL_REGEN	0x1
->> +
->> +#define LGM_BUSCON(n)		(0x60 + (n) * 4)
->> +#define LGM_BUSCON_CMULT_V4	0x1
->> +#define LGM_BUSCON_RECOVC(n)	((n) << 2)
->> +#define LGM_BUSCON_HOLDC(n)	((n) << 4)
->> +#define LGM_BUSCON_WAITRDC(n)	((n) << 6)
->> +#define LGM_BUSCON_WAITWRC(n)	((n) << 8)
->> +#define LGM_BUSCON_BCGEN_CS	0x0
->> +#define LGM_BUSCON_SETUP_EN	BIT(22)
->> +#define LGM_BUSCON_ALEC		0xC000
->> +
-> Hm, I'm pretty sure we don't need the LGM_ prefix here.
-Agreed!, will replace EBU_ prefix to LGM_
->> +#define NAND_CON		0x0B0
->> +#define NAND_CON_NANDM_EN	BIT(0)
->> +#define NAND_CON_NANDM_DIS	0x0
->> +#define NAND_CON_CSMUX_E_EN	BIT(1)
->> +#define NAND_CON_ALE_P_LOW	BIT(2)
->> +#define NAND_CON_CLE_P_LOW	BIT(3)
->> +#define NAND_CON_CS_P_LOW	BIT(4)
->> +#define NAND_CON_SE_P_LOW	BIT(5)
->> +#define NAND_CON_WP_P_LOW	BIT(6)
->> +#define NAND_CON_PRE_P_LOW	BIT(7)
->> +#define NAND_CON_IN_CS_S(n)	((n) << 8)
->> +#define NAND_CON_OUT_CS_S(n)	((n) << 10)
->> +#define NAND_CON_LAT_EN_CS_P	((0x3D) << 18)
->> +
->> +#define NAND_WAIT		0x0B4
->> +#define NAND_WAIT_RDBY		BIT(0)
->> +#define NAND_WAIT_WR_C		BIT(3)
->> +
->> +#define NAND_CTL1		0x110
->> +#define NAND_CTL1_ADDR_3_SHIFT	24
->> +
->> +#define NAND_CTL2		0x114
->> +#define NAND_CTL2_ADDR_5_SHIFT	8
->> +#define NAND_CTL2_CYC_N_V5	(0x2 << 16)
->> +
->> +#define NAND_INT_MSK_CTL	0x124
->> +#define NAND_INT_MSK_CTL_WR_C	BIT(4)
->> +
->> +#define NAND_INT_STA		0x128
->> +#define NAND_INT_STA_WR_C	BIT(4)
->> +
->> +#define NAND_CTL		0x130
->> +#define NAND_CTL_MODE_ECC	0x1
->> +#define NAND_CTL_GO		BIT(2)
->> +#define NAND_CTL_CE_SEL_CS(n)	BIT(3 + (n))
->> +#define NAND_CTL_RW_READ	0x0
->> +#define NAND_CTL_RW_WRITE	BIT(10)
->> +#define NAND_CTL_ECC_OFF_V8TH	BIT(11)
->> +#define NAND_CTL_CKFF_EN	0x0
->> +#define NAND_CTL_MSG_EN		BIT(17)
->> +
->> +#define NAND_PARA0		0x13c
->> +#define NAND_PARA0_PAGE_V8192	0x3
->> +#define NAND_PARA0_PIB_V256	(0x3 << 4)
->> +#define NAND_PARA0_BYP_EN_NP	0x0
->> +#define NAND_PARA0_BYP_DEC_NP	0x0
->> +#define NAND_PARA0_TYPE_ONFI	BIT(18)
->> +#define NAND_PARA0_ADEP_EN	BIT(21)
->> +
->> +#define NAND_CMSG_0		0x150
->> +#define NAND_CMSG_1		0x154
->> +
->> +#define NAND_WRITE_CMD		(NAND_CON_CS_P_LOW | NAND_CON_CLE_P_LOW)
->> +#define NAND_WRITE_ADDR		(NAND_CON_CS_P_LOW | NAND_CON_ALE_P_LOW)
-> I would redefine ALE, CLE and CS here instead of re-using the NAND_CON
-> definitions. Even if they have the same value they represent different
-> things I think. One is encoding the signal polarity when configuring
-> the NAND controller, and the other one is an offset in the memory bus
-> MMIO range that's used to control the CLE/ALE/CS signals.
-Noted, will update.
->
-> #define NAND_ALE_OFFS			BIT(2)
-> #define NAND_CLE_OFFS			BIT(3)
-> #define NAND_CS_OFFS			BIT(4)
->
->> +#define NAND_WRITE_DATA		NAND_CON_CS_P_LOW
->> +#define NAND_READ_DATA		NAND_CON_CS_P_LOW
-> Can we not hide that behind macros. And there's no point having 2
-> different definitions for read/write, since all they do is keeping the
-> CS line asserted, the direction is selection by the operation done on
-> the bus (read or write). BTW, you even mix those without realizing the
-> mistake in your implementation :P.
-Sure, do optimization with single macro
->
->> +
->> +#define NAND_CHIP_NO_SELECTION	-1
->> +#define NAND_CHIP_SELECTION	0x0
->> +
->> +struct lgm_nand_host {
-> infineon_nand_controller?
-better we keep intel_nand_controller , is it okay?
->> +	struct nand_controller	controller;
->> +	struct nand_chip	chip;
->> +	void __iomem		*lgm_va;
->> +	void __iomem		*hsnand_va;
->> +	void __iomem		*nandaddr_va;
-> You can drop the _va suffixes and pick names describing what's exposed
-> by the MMIO range (lgm doesn't sounds like a good name to me).
-Noted, will pick the proper name
->> +	struct clk		*clk;
->> +	unsigned long		clk_rate;
->> +	u32			cs;
->> +	u32			nd_para0;
->> +	struct device		*dev;
->> +	struct dma_chan		*dma_tx;
->> +	struct dma_chan		*dma_rx;
->> +	struct completion	dma_access_complete;
->> +	const char *cs_name;
->> +};
->> +
->> +static u8 lgm_nand_readb(struct nand_chip *chip, int op)
-> Make op an unsigned int.
-okay, noted.
->> +{
->> +	struct lgm_nand_host *lgm_host = nand_get_controller_data(chip);
->> +	void __iomem *nand_wait = lgm_host->lgm_va + NAND_WAIT;
->> +	u32 stat;
->> +	int ret;
->> +	u8 val;
->> +
->> +	val = readb(lgm_host->nandaddr_va + op);
->> +
->> +	ret = readl_poll_timeout(nand_wait, stat, stat & NAND_WAIT_WR_C,
->> +				 20, 1000);
->> +	if (ret)
->> +		dev_warn(lgm_host->dev,
->> +			 "lgm nand write timeout. nand_wait(0x%p)=0x%x\n",
->> +			 nand_wait, readl(nand_wait));
->> +
->> +	return val;
->> +}
->> +
->> +static void lgm_nand_writeb(struct nand_chip *chip, int op, u8 value)
->> +{
->> +	struct lgm_nand_host *lgm_host = nand_get_controller_data(chip);
->> +	void __iomem *nand_wait = lgm_host->lgm_va + NAND_WAIT;
->> +	u32 stat;
->> +	int ret;
->> +
->> +	writeb(value, lgm_host->nandaddr_va + op);
-> Looks like NAND_CON_CS_P_LOW is always set, so no need to force the
-> caller to pass it in op.
-Agreed!
->> +
->> +	ret = readl_poll_timeout(nand_wait, stat, stat & NAND_WAIT_WR_C,
->> +				 20, 1000);
->> +	if (ret)
->> +		dev_warn(lgm_host->dev,
->> +			 "lgm nand write timeout. nand_wait(0x%p)=0x%x\n",
->> +			 nand_wait, readl(nand_wait));
->> +}
->> +
->> +static unsigned char lgm_read_byte(struct nand_chip *chip)
->> +{
->> +	return lgm_nand_readb(chip, NAND_READ_DATA);
->> +}
-> This one should not be needed.
-Good catch , will drop it.
->> +
->> +static void lgm_read_buf(struct nand_chip *chip, u_char *buf, int len)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < len; i++)
->> +		buf[i] = lgm_nand_readb(chip, NAND_WRITE_DATA);
->> +}
->> +
->> +static void lgm_write_buf(struct nand_chip *chip, const u_char *buf, int len)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < len; i++)
->> +		lgm_nand_writeb(chip, NAND_WRITE_DATA, buf[i]);
->> +}
->> +
->> +static void lgm_select_chip(struct nand_chip *chip, int select)
->> +{
->> +	struct lgm_nand_host *lgm_host = nand_get_controller_data(chip);
->> +	void __iomem *nand_con = lgm_host->lgm_va + NAND_CON;
->> +	u32 cs = lgm_host->cs;
->> +	int val;
->> +
->> +	switch (select) {
->> +	case NAND_CHIP_NO_SELECTION:
->> +		val = readl(nand_con);
->> +		writel(val & ~NAND_CON_NANDM_EN, nand_con);
->> +		break;
-> Please move that to an unselect_chip() function. I also see that this
-> function is never called with NAND_CHIP_NO_SELECTION. Oh, and you don't
-> need the select argument since you only support one CS per chip.
-Sure , will update as per single chip selection support.
->
->> +	case NAND_CHIP_SELECTION:
->> +		writel(NAND_CON_NANDM_EN | NAND_CON_CSMUX_E_EN |
->> +		       NAND_CON_CS_P_LOW | NAND_CON_SE_P_LOW |
->> +		       NAND_CON_WP_P_LOW | NAND_CON_PRE_P_LOW |
->> +		       NAND_CON_IN_CS_S(cs) | NAND_CON_OUT_CS_S(cs) |
->> +		       NAND_CON_LAT_EN_CS_P, nand_con);
->> +		break;
->> +	default:
->> +		break;
->> +	}
->> +}
->> +
->> +static int lgm_dev_ready(struct nand_chip *chip)
->> +{
->> +	struct lgm_nand_host *lgm_host = nand_get_controller_data(chip);
->> +
->> +	return readl(lgm_host->lgm_va + NAND_WAIT) & NAND_WAIT_RDBY;
->> +}
->> +
->> +static void lgm_cmd_ctrl(struct nand_chip *chip, int cmd, unsigned int ctrl)
->> +{
->> +	if (cmd == NAND_CMD_NONE)
->> +		return;
->> +
->> +	if (ctrl & NAND_CLE)
->> +		lgm_nand_writeb(chip, NAND_WRITE_CMD, cmd);
->> +	else if (ctrl & NAND_ALE)
->> +		lgm_nand_writeb(chip, NAND_WRITE_ADDR, cmd);
->> +}
-> Looks like you're still sticking to the old cmd_ctrl() interface.
-> Please inline what can be inlined in exec_op() (everything that's
-> related to CMD/ADDR cycle emission) and add helpers for the read/write
-> data logic.
-Yes, Your are right, function definition need to be updated and aligned 
-with exec_op() based definitions
->> +
->> +static int lgm_nand_ooblayout_ecc(struct mtd_info *mtd, int section,
->> +				  struct mtd_oob_region *oobregion)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +
->> +	if (section)
->> +		return -ERANGE;
->> +
->> +	oobregion->offset = LGM_NAND_ECC_OFFSET;
->> +	oobregion->length = chip->ecc.total;
->> +
->> +	return 0;
->> +}
->> +
->> +static int lgm_nand_ooblayout_free(struct mtd_info *mtd, int section,
->> +				   struct mtd_oob_region *oobregion)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +
->> +	if (section)
->> +		return -ERANGE;
->> +
->> +	oobregion->offset = chip->ecc.total + LGM_NAND_ECC_OFFSET;
->> +	oobregion->length = mtd->oobsize - oobregion->offset;
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct mtd_ooblayout_ops lgm_nand_ooblayout_ops = {
->> +	.ecc = lgm_nand_ooblayout_ecc,
->> +	.free = lgm_nand_ooblayout_free,
->> +};
->> +
->> +static inline struct lgm_nand_host *nand_to_lgm(struct nand_chip *chip)
->> +{
->> +	return container_of(chip, struct lgm_nand_host, chip);
->> +}
-> Please move that function next to the struct definition, and you can
-> drop the inline specifier, the compiler should be smart enough to
-> inline it anyway.
-Noted, will move next to structure  and also drop inline.
->> +static int lgm_nand_exec_op(struct nand_chip *chip,
->> +			    const struct nand_operation *op, bool check_only)
->> +{
->> +	struct lgm_nand_host *host = nand_to_lgm(chip);
->> +	const struct nand_op_instr *instr = NULL;
->> +	unsigned int op_id;
->> +	int i, ret = 0;
->> +
->> +	for (op_id = 0; op_id < op->ninstrs; op_id++) {
->> +		instr = &op->instrs[op_id];
->> +
->> +		lgm_select_chip(chip, host->cs);
-> Should be moved before the for() loop (no need to select the chip
-> every time you excute an instruction).
-Good catch, Thanks!
->> +
->> +		switch (instr->type) {
->> +		case NAND_OP_CMD_INSTR:
->> +			lgm_cmd_ctrl(chip, instr->ctx.cmd.opcode, NAND_CLE);
-> 			lgm_nand_writeb(chip, NAND_CLE_OFFS,
-> 					instr->ctx.cmd.opcode);	
->
->> +		break;
-> Missing tab here^.
-Noted.
->> +
->> +		case NAND_OP_ADDR_INSTR:
->> +			for (i = 0; i < instr->ctx.addr.naddrs; i++)
->> +				lgm_cmd_ctrl(chip, instr->ctx.addr.addrs[i],
->> +					     NAND_ALE);
-> 				lgm_nand_writeb(chip, NAND_ALE_OFFS,
-> 						instr->ctx.addr.addrs[i]);
->
->> +			break;
->> +
->> +		case NAND_OP_DATA_IN_INSTR:
->> +			lgm_read_buf(chip, instr->ctx.data.buf.in,
->> +				     instr->ctx.data.len);
->> +			break;
->> +
->> +		case NAND_OP_DATA_OUT_INSTR:
->> +			lgm_write_buf(chip, instr->ctx.data.buf.out,
->> +				      instr->ctx.data.len);
->> +			break;
->> +
->> +		case NAND_OP_WAITRDY_INSTR:
->> +			ret = lgm_dev_ready(chip);
-> That's wrong, WAITRDY should wait for the NAND_WAIT_RDBY flag to be
-> set but you only check its value once.
-okay, let me check and update.
->
-> 			ret = readl_poll_timeout(lgm_host->lgm_va +
-> 						  NAND_WAIT, status,
-> 						  status & NAND_WAIT_RDBY, 20,
-> 						  instr->ctx.waitrdy.timeout_ms * 1000);
->> +			break;
->> +		}
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static const struct nand_controller_ops lgm_nand_controller_ops {
->> +	.attach_chip = lgm_nand_attach_chip,
->> +	.exec_op = lgm_nand_exec_op,
->> +};
->> +
->> +static void lgm_dma_exit(struct lgm_nand_host *lgm_host)
-> lgm_dma_cleanup()?
-Noted, will update the function name
->> +{
->> +	if (lgm_host->dma_rx) {
->> +		dma_release_channel(lgm_host->dma_rx);
->> +		lgm_host->dma_rx = NULL;
->> +	}
->> +
->> +	if (lgm_host->dma_tx) {
->> +		dma_release_channel(lgm_host->dma_tx);
->> +		lgm_host->dma_tx = NULL;
->> +	}
->> +}
->> +
->> +static int lgm_dma_init(struct device *dev, struct lgm_nand_host *lgm_host)
->> +{
->> +	int ret;
->> +
->> +	/* Prepare for TX DMA: */
->> +	lgm_host->dma_tx = dma_request_chan(dev, "tx");
->> +	if (IS_ERR(lgm_host->dma_tx)) {
->> +		ret = PTR_ERR(lgm_host->dma_tx);
->> +		dev_err(dev, "can't get the TX DMA channel, error %d!\n", ret);
->> +		goto err;
->> +	}
->> +
->> +	/* Prepare for RX: */
->> +	lgm_host->dma_rx = dma_request_chan(dev, "rx");
-> Hm, too bad there's not devm_ version for that one.
->
->> +	if (IS_ERR(lgm_host->dma_rx)) {
->> +		ret = PTR_ERR(lgm_host->dma_rx);
->> +		dev_err(dev, "can't get the RX DMA channel, error %d\n", ret);
->> +		goto err;
->> +	}
->> +
->> +	return 0;
->> +err:
-> No need for an error path if you just return the error code. BTW, I
-> don't like those functions that don't cleanup behind them when an error
-> happens. I know it's all handled in the dma_exit() function, but still.
-okay, will return error code and also cleanup.
->> +	return ret;
->> +}
->> +
->> +static int lgm_nand_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct lgm_nand_host *lgm_host;
->> +	struct nand_chip *nand;
->> +	phys_addr_t nandaddr_pa;
->> +	struct mtd_info *mtd;
->> +	struct resource *res;
->> +	int ret;
->> +	u32 cs;
->> +
->> +	lgm_host = devm_kzalloc(dev, sizeof(*lgm_host), GFP_KERNEL);
->> +	if (!lgm_host)
->> +		return -ENOMEM;
->> +
->> +	lgm_host->dev = dev;
->> +	nand_controller_init(&lgm_host->controller);
->> +
->> +	lgm_host->lgm_va =
->> +	devm_platform_ioremap_resource_byname(pdev, "lgmnand");
-> 	lgm_host->lgm_va = devm_platform_ioremap_resource_byname(pdev,
-> 								  "lgmnand");
->
->> +	if (IS_ERR(lgm_host->lgm_va))
->> +		return PTR_ERR(lgm_host->lgm_va);
->> +
->> +	lgm_host->hsnand_va =
->> +	devm_platform_ioremap_resource_byname(pdev, "hsnand");
->> +	if (IS_ERR(lgm_host->hsnand_va))
->> +		return PTR_ERR(lgm_host->hsnand_va);
->> +
->> +	ret = device_property_read_u32(dev, "nand,cs", &cs);
->> +	if (ret) {
->> +		dev_err(dev, "failed to get chip select: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	lgm_host->cs = cs;
->> +
->> +	lgm_host->cs_name = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", cs);
-> You don't need to keep the cs_name attached to lgm_host as it's
-> automatically release. You can just get rid of the lgm_host->cs_name
-> field.
-Good point for me to update, Thanks!
->> +	if (IS_ERR(lgm_host->cs_name)) {
->> +		ret = PTR_ERR(lgm_host->cs_name);
->> +		dev_err(dev, "failed to get chip select name: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
->> +	lgm_host->nandaddr_va = res;
->> +	nandaddr_pa = res->start;
->> +	if (IS_ERR(lgm_host->nandaddr_va))
->> +		return PTR_ERR(lgm_host->nandaddr_va);
->> +
->> +	lgm_host->clk = devm_clk_get(dev, NULL);
->> +	if (IS_ERR(lgm_host->clk)) {
->> +		ret = PTR_ERR(lgm_host->clk);
->> +		dev_err(dev, "failed to get clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_prepare_enable(lgm_host->clk);
->> +	if (ret) {
->> +		dev_err(dev, "failed to enable clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +	lgm_host->clk_rate = clk_get_rate(lgm_host->clk);
->> +
->> +	ret = lgm_dma_init(dev, lgm_host);
->> +	if (ret)
->> +		goto disable_clk;
->> +
->> +	writel(lower_32_bits(nandaddr_pa) | LGM_ADDR_SEL_REGEN | LGM_ADDR_MASK,
->> +	       lgm_host->lgm_va + LGM_ADDR_SEL(cs));
->> +
->> +	writel(LGM_BUSCON_CMULT_V4 | LGM_BUSCON_RECOVC(1) |
->> +	       LGM_BUSCON_HOLDC(1) | LGM_BUSCON_WAITRDC(2) |
->> +	       LGM_BUSCON_WAITWRC(2) | LGM_BUSCON_BCGEN_CS | LGM_BUSCON_ALEC |
->> +	       LGM_BUSCON_SETUP_EN, lgm_host->lgm_va + LGM_BUSCON(cs));
->> +
->> +	/*
->> +	 * NAND physical address selection is based on the chip select
->> +	 * and written to ADDR_SEL register to get Memory Region Base address.
->> +	 * FPI Bus addresses are compared to this base address in conjunction
->> +	 * with the mask control. Driver need to program this field!
->> +	 * Address: 0x17400 if chip select is CS_0
->> +	 * Address: 0x17C00 if chip select is CS_1
->> +	 * Refer the Intel LGM SoC datasheet.
->> +	 */
->> +	writel(0x17400051, lgm_host->lgm_va + LGM_ADDR_SEL(0));
->> +	writel(0x17C00051, lgm_host->lgm_va + LGM_ADDR_SEL(cs));
-> No magic value please. I guess the 0x51 at the end encode some flags, so
-> please describe those fields and come with a macro to generate the base
-> range value (or a mapping table).
-sure, will add MACRO instead of magic values.
->> +	nand_set_flash_node(&lgm_host->chip, dev->of_node);
->> +	mtd = nand_to_mtd(&lgm_host->chip);
->> +	mtd->dev.parent = dev;
->> +	lgm_host->dev = dev;
->> +
->> +	platform_set_drvdata(pdev, lgm_host);
->> +	nand_set_controller_data(&lgm_host->chip, lgm_host);
->> +
->> +	nand = &lgm_host->chip;
->> +	nand->controller = &lgm_host->controller;
->> +	nand->controller->ops = &lgm_nand_controller_ops;
->> +
->> +	/* Scan to find existence of the device */
->> +	ret = nand_scan(&lgm_host->chip, 1);
->> +	if (ret)
->> +		goto exit_dma;
->> +
->> +	ret = mtd_device_register(mtd, NULL, 0);
->> +	if (ret)
->> +		goto clean_nand;
->> +
->> +	return 0;
->> +
->> +clean_nand:
->> +	nand_cleanup(&lgm_host->chip);
->> +exit_dma:
->> +	lgm_dma_exit(lgm_host);
->> +disable_clk:
->> +	clk_disable_unprepare(lgm_host->clk);
->> +
->> +	return ret;
->> +}
->> +
->> +static int lgm_nand_remove(struct platform_device *pdev)
->> +{
->> +	struct lgm_nand_host *lgm_host = platform_get_drvdata(pdev);
->> +
->> +	nand_release(&lgm_host->chip);
-> Can you use mtd_device_unregister() + nand_cleanup() instead, and check
-> their return value?
-Sure, will use .
->> +	clk_disable_unprepare(lgm_host->clk);
->> +	lgm_dma_exit(lgm_host);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id lgm_nand_match[] = {
->> +	{ .compatible = "intel,lgm-nand", },
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, lgm_nand_match);
-> You probably have a missing "depends on OF" in your Kconfig.
-okay , Noted.
->> +
->> +static struct platform_driver lgm_nand_driver = {
->> +	.probe = lgm_nand_probe,
->> +	.remove = lgm_nand_remove,
->> +	.driver = {
->> +		.name = "intel-lgm-nand",
->> +		.of_match_table = lgm_nand_match,
->> +	},
->> +
->> +};
->> +module_platform_driver(lgm_nand_driver);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@intel.com>");
->> +MODULE_DESCRIPTION("Intel's LGM External Bus NAND Controller driver");
-> I didn't review the DMA and ECC aspects yet, but I think you have enough
-> things to address for a v3.
-
-Thanks a lot for the review comments and valuable inputs to me for 
-further driver patch preparation.
-
-Regards
-Vadviel
+T24gU2F0LCAyMDIwLTA0LTE4IGF0IDIxOjI0ICswMjAwLCBBcmQgQmllc2hldXZlbCB3cm90ZToN
+Cj4gT24gU2F0LCAxOCBBcHIgMjAyMCBhdCAyMToxOSwgQXRpc2ggUGF0cmEgPGF0aXNocEBhdGlz
+aHBhdHJhLm9yZz4NCj4gd3JvdGU6DQo+ID4gT24gU2F0LCBBcHIgMTgsIDIwMjAgYXQgNTozOSBB
+TSBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPg0KPiA+IHdyb3RlOg0KPiA+ID4gT24g
+U2F0LCAxOCBBcHIgMjAyMCBhdCAxMjo1MSwgQXJkIEJpZXNoZXV2ZWwgPGFyZGJAa2VybmVsLm9y
+Zz4NCj4gPiA+IHdyb3RlOg0KPiA+ID4gPiBPbiBTYXQsIDE4IEFwciAyMDIwIGF0IDA1OjAzLCBB
+dGlzaCBQYXRyYSA8DQo+ID4gPiA+IGF0aXNocEBhdGlzaHBhdHJhLm9yZz4gd3JvdGU6DQo+ID4g
+PiA+ID4gT24gVGh1LCBBcHIgMTYsIDIwMjAgYXQgMTI6NDEgQU0gQXJkIEJpZXNoZXV2ZWwgPA0K
+PiA+ID4gPiA+IGFyZGJAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4gPiA+ID4gPiBPbiBXZWQsIDE1
+IEFwciAyMDIwIGF0IDIxOjU0LCBBdGlzaCBQYXRyYSA8DQo+ID4gPiA+ID4gPiBhdGlzaC5wYXRy
+YUB3ZGMuY29tPiB3cm90ZToNCj4gPiA+ID4gPiA+ID4gQWRkIGEgUklTQy1WIGFyY2hpdGVjdHVy
+ZSBzcGVjaWZpYyBzdHViIGNvZGUgdGhhdA0KPiA+ID4gPiA+ID4gPiBhY3R1YWxseSBjb3BpZXMg
+dGhlDQo+ID4gPiA+ID4gPiA+IGFjdHVhbCBrZXJuZWwgaW1hZ2UgdG8gYSB2YWxpZCBhZGRyZXNz
+IGFuZCBqdW1wIHRvIGl0DQo+ID4gPiA+ID4gPiA+IGFmdGVyIGJvb3Qgc2VydmljZXMNCj4gPiA+
+ID4gPiA+ID4gYXJlIHRlcm1pbmF0ZWQuIEVuYWJsZSBVRUZJIHJlbGF0ZWQga2VybmVsIGNvbmZp
+Z3MgYXMNCj4gPiA+ID4gPiA+ID4gd2VsbCBmb3IgUklTQy1WLg0KPiA+ID4gPiA+ID4gPiANCj4g
+PiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQXRpc2ggUGF0cmEgPGF0aXNoLnBhdHJhQHdkYy5j
+b20+DQo+ID4gPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gPiAgYXJjaC9yaXNjdi9LY29uZmln
+ICAgICAgICAgICAgICAgICAgICAgICAgfCAgMjAgKysrKw0KPiA+ID4gPiA+ID4gPiAgYXJjaC9y
+aXNjdi9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiA+ID4gPiA+ID4g
+PiAgYXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgfCAgIDEgKw0KPiA+
+ID4gPiA+ID4gPiAgYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9lZmkuaCAgICAgICAgICAgICAgfCAg
+NDQNCj4gPiA+ID4gPiA+ID4gKysrKysrKysrDQo+ID4gPiA+ID4gPiA+ICBkcml2ZXJzL2Zpcm13
+YXJlL2VmaS9LY29uZmlnICAgICAgICAgICAgICB8ICAgMiArLQ0KPiA+ID4gPiA+ID4gPiAgZHJp
+dmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi9NYWtlZmlsZSAgICAgfCAgIDcgKysNCj4gPiA+ID4g
+PiA+ID4gIGRyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIvcmlzY3Ytc3R1Yi5jIHwgMTExDQo+
+ID4gPiA+ID4gPiA+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+ID4gPiA+ID4gIDcgZmls
+ZXMgY2hhbmdlZCwgMTg1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiA+ID4gPiA+
+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2VmaS5oDQo+ID4g
+PiA+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1
+Yi9yaXNjdi0NCj4gPiA+ID4gPiA+ID4gc3R1Yi5jDQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9LY29uZmlnIGIvYXJjaC9yaXNjdi9LY29uZmln
+DQo+ID4gPiA+ID4gPiA+IGluZGV4IGYzOWUzMjZhN2E0Mi4uZWI0ZjQxYzhmM2NlIDEwMDY0NA0K
+PiA+ID4gPiA+ID4gPiAtLS0gYS9hcmNoL3Jpc2N2L0tjb25maWcNCj4gPiA+ID4gPiA+ID4gKysr
+IGIvYXJjaC9yaXNjdi9LY29uZmlnDQo+ID4gPiA+ID4gPiA+IEBAIC0zNzksMTAgKzM3OSwzMCBA
+QCBjb25maWcgQ01ETElORV9GT1JDRQ0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gIGVu
+ZGNob2ljZQ0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gK2NvbmZpZyBFRklfU1RVQg0K
+PiA+ID4gPiA+ID4gPiArICAgICAgIGJvb2wNCj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4g
+PiArY29uZmlnIEVGSQ0KPiA+ID4gPiA+ID4gPiArICAgICAgIGJvb2wgIlVFRkkgcnVudGltZSBz
+dXBwb3J0Ig0KPiA+ID4gPiA+ID4gPiArICAgICAgIGRlcGVuZHMgb24gT0YNCj4gPiA+ID4gPiA+
+ID4gKyAgICAgICBzZWxlY3QgTElCRkRUDQo+ID4gPiA+ID4gPiA+ICsgICAgICAgc2VsZWN0IFVD
+UzJfU1RSSU5HDQo+ID4gPiA+ID4gPiA+ICsgICAgICAgc2VsZWN0IEVGSV9QQVJBTVNfRlJPTV9G
+RFQNCj4gPiA+ID4gPiA+ID4gKyAgICAgICBzZWxlY3QgRUZJX1NUVUINCj4gPiA+ID4gPiA+ID4g
+KyAgICAgICBzZWxlY3QgRUZJX0dFTkVSSUNfU1RVQg0KPiA+ID4gPiA+ID4gPiArICAgICAgIGRl
+ZmF1bHQgeQ0KPiA+ID4gPiA+ID4gPiArICAgICAgIGhlbHANCj4gPiA+ID4gPiA+ID4gKyAgICAg
+ICAgIFRoaXMgb3B0aW9uIHByb3ZpZGVzIHN1cHBvcnQgZm9yIHJ1bnRpbWUNCj4gPiA+ID4gPiA+
+ID4gc2VydmljZXMgcHJvdmlkZWQNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgIGJ5IFVFRkkgZmly
+bXdhcmUgKHN1Y2ggYXMgbm9uLXZvbGF0aWxlDQo+ID4gPiA+ID4gPiA+IHZhcmlhYmxlcywgcmVh
+bHRpbWUNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICBjbG9jaywgYW5kIHBsYXRmb3JtIHJlc2V0
+KS4gQSBVRUZJIHN0dWIgaXMNCj4gPiA+ID4gPiA+ID4gYWxzbyBwcm92aWRlZCB0bw0KPiA+ID4g
+PiA+ID4gPiArICAgICAgICAgYWxsb3cgdGhlIGtlcm5lbCB0byBiZSBib290ZWQgYXMgYW4gRUZJ
+DQo+ID4gPiA+ID4gPiA+IGFwcGxpY2F0aW9uLiBUaGlzDQo+ID4gPiA+ID4gPiA+ICsgICAgICAg
+ICBpcyBvbmx5IHVzZWZ1bCBvbiBzeXN0ZW1zIHRoYXQgaGF2ZSBVRUZJDQo+ID4gPiA+ID4gPiA+
+IGZpcm13YXJlLg0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICBlbmRtZW51DQo+ID4g
+PiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiAgbWVudSAiUG93ZXIgbWFuYWdlbWVudCBvcHRpb25z
+Ig0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gIHNvdXJjZSAia2VybmVsL3Bvd2VyL0tj
+b25maWciDQo+ID4gPiA+ID4gPiA+ICtzb3VyY2UgImRyaXZlcnMvZmlybXdhcmUvS2NvbmZpZyIN
+Cj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ICBlbmRtZW51DQo+ID4gPiA+ID4gPiA+IGRp
+ZmYgLS1naXQgYS9hcmNoL3Jpc2N2L01ha2VmaWxlIGIvYXJjaC9yaXNjdi9NYWtlZmlsZQ0KPiA+
+ID4gPiA+ID4gPiBpbmRleCBmYjZlMzdkYjgzNmQuLjA3OTQzNTgwNGQ2ZCAxMDA2NDQNCj4gPiA+
+ID4gPiA+ID4gLS0tIGEvYXJjaC9yaXNjdi9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4gPiArKysgYi9h
+cmNoL3Jpc2N2L01ha2VmaWxlDQo+ID4gPiA+ID4gPiA+IEBAIC04MCw2ICs4MCw3IEBAIGhlYWQt
+eSA6PSBhcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLm8NCj4gPiA+ID4gPiA+ID4gIGNvcmUteSArPSBh
+cmNoL3Jpc2N2Lw0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gIGxpYnMteSArPSBhcmNo
+L3Jpc2N2L2xpYi8NCj4gPiA+ID4gPiA+ID4gK2NvcmUtJChDT05GSUdfRUZJX1NUVUIpICs9DQo+
+ID4gPiA+ID4gPiA+ICQob2JqdHJlZSkvZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi9saWIu
+YQ0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gIFBIT05ZICs9IHZkc29faW5zdGFsbA0K
+PiA+ID4gPiA+ID4gPiAgdmRzb19pbnN0YWxsOg0KPiA+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEv
+YXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZpZw0KPiA+ID4gPiA+ID4gPiBiL2FyY2gvcmlzY3Yv
+Y29uZmlncy9kZWZjb25maWcNCj4gPiA+ID4gPiA+ID4gaW5kZXggNGRhNDg4NjI0NmE0Li5hZTY5
+ZTEyZDMwNmEgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+IC0tLSBhL2FyY2gvcmlzY3YvY29uZmlncy9k
+ZWZjb25maWcNCj4gPiA+ID4gPiA+ID4gKysrIGIvYXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZp
+Zw0KPiA+ID4gPiA+ID4gPiBAQCAtMTI5LDMgKzEyOSw0IEBAIENPTkZJR19ERUJVR19CTE9DS19F
+WFRfREVWVD15DQo+ID4gPiA+ID4gPiA+ICAjIENPTkZJR19SVU5USU1FX1RFU1RJTkdfTUVOVSBp
+cyBub3Qgc2V0DQo+ID4gPiA+ID4gPiA+ICBDT05GSUdfTUVNVEVTVD15DQo+ID4gPiA+ID4gPiA+
+ICAjIENPTkZJR19TWVNGU19TWVNDQUxMIGlzIG5vdCBzZXQNCj4gPiA+ID4gPiA+ID4gK0NPTkZJ
+R19FRkk9eQ0KPiA+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9pbmNsdWRlL2Fz
+bS9lZmkuaA0KPiA+ID4gPiA+ID4gPiBiL2FyY2gvcmlzY3YvaW5jbHVkZS9hc20vZWZpLmgNCj4g
+PiA+ID4gPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gPiA+ID4gaW5kZXggMDAw
+MDAwMDAwMDAwLi42MmQ3ZDVlYWZlZDgNCj4gPiA+ID4gPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
+ID4gPiA+ID4gPiArKysgYi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2VmaS5oDQo+ID4gPiA+ID4g
+PiA+IEBAIC0wLDAgKzEsNDQgQEANCj4gPiA+ID4gPiA+ID4gKy8qIFNQRFgtTGljZW5zZS1JZGVu
+dGlmaWVyOiBHUEwtMi4wICovDQo+ID4gPiA+ID4gPiA+ICsvKg0KPiA+ID4gPiA+ID4gPiArICog
+Q29weXJpZ2h0IChDKSAyMDIwIFdlc3Rlcm4gRGlnaXRhbCBDb3Jwb3JhdGlvbiBvciBpdHMNCj4g
+PiA+ID4gPiA+ID4gYWZmaWxpYXRlcy4NCj4gPiA+ID4gPiA+ID4gKyAqIEJhc2VkIG9uIGFyY2gv
+YXJtNjQvaW5jbHVkZS9hc20vZWZpLmgNCj4gPiA+ID4gPiA+ID4gKyAqLw0KPiA+ID4gPiA+ID4g
+PiArI2lmbmRlZiBfQVNNX0VGSV9IDQo+ID4gPiA+ID4gPiA+ICsjZGVmaW5lIF9BU01fRUZJX0gN
+Cj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiArI2luY2x1ZGUgPGFzbS9pby5oPg0KPiA+
+ID4gPiA+ID4gPiArI2luY2x1ZGUgPGFzbS9tbXVfY29udGV4dC5oPg0KPiA+ID4gPiA+ID4gPiAr
+I2luY2x1ZGUgPGFzbS9wdHJhY2UuaD4NCj4gPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxhc20vdGxi
+Zmx1c2guaD4NCj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiArI2RlZmluZSBWQV9CSVRT
+X01JTiAzOQ0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICsvKiBvbiBSSVNDLVYsIHRo
+ZSBGRFQgbWF5IGJlIGxvY2F0ZWQgYW55d2hlcmUgaW4gc3lzdGVtDQo+ID4gPiA+ID4gPiA+IFJB
+TSAqLw0KPiA+ID4gPiA+ID4gPiArc3RhdGljIGlubGluZSB1bnNpZ25lZCBsb25nDQo+ID4gPiA+
+ID4gPiA+IGVmaV9nZXRfbWF4X2ZkdF9hZGRyKHVuc2lnbmVkIGxvbmcgZHJhbV9iYXNlKQ0KPiA+
+ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gPiArICAgICAgIHJldHVybiBVTE9OR19NQVg7DQo+
+ID4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKy8qIExvYWQg
+aW5pdHJkIGF0IGVub3VnaCBkaXN0YW5jZSBmcm9tIERSQU0gc3RhcnQgKi8NCj4gPiA+ID4gPiA+
+ID4gK3N0YXRpYyBpbmxpbmUgdW5zaWduZWQgbG9uZw0KPiA+ID4gPiA+ID4gPiBlZmlfZ2V0X21h
+eF9pbml0cmRfYWRkcih1bnNpZ25lZCBsb25nIGRyYW1fYmFzZSwNCj4gPiA+ID4gPiA+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnDQo+
+ID4gPiA+ID4gPiA+IG5lZCBsb25nIGltYWdlX2FkZHIpDQo+ID4gPiA+ID4gPiA+ICt7DQo+ID4g
+PiA+ID4gPiA+ICsgICAgICAgcmV0dXJuIGRyYW1fYmFzZSArIFNaXzI1Nk07DQo+ID4gPiA+ID4g
+PiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyNkZWZpbmUgZWZpX2JzX2Nh
+bGwoZnVuYywgLi4uKSBlZmlfc3lzdGVtX3RhYmxlKCktDQo+ID4gPiA+ID4gPiA+ID5ib290dGlt
+ZS0+ZnVuYyhfX1ZBX0FSR1NfXykNCj4gPiA+ID4gPiA+ID4gKyNkZWZpbmUgZWZpX3J0X2NhbGwo
+ZnVuYywgLi4uKSBlZmlfc3lzdGVtX3RhYmxlKCktDQo+ID4gPiA+ID4gPiA+ID5ydW50aW1lLT5m
+dW5jKF9fVkFfQVJHU19fKQ0KPiA+ID4gPiA+ID4gPiArI2RlZmluZSBlZmlfaXNfbmF0aXZlKCkg
+ICAgICAgICAgICAgICAgKHRydWUpDQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyNk
+ZWZpbmUgZWZpX3RhYmxlX2F0dHIoaW5zdCwgYXR0cikgICAgIChpbnN0LT5hdHRyKQ0KPiA+ID4g
+PiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICsjZGVmaW5lIGVmaV9jYWxsX3Byb3RvKGluc3QsIGZ1
+bmMsIC4uLikgaW5zdC0+ZnVuYyhpbnN0LCANCj4gPiA+ID4gPiA+ID4gIyNfX1ZBX0FSR1NfXykN
+Cj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiArI2RlZmluZQ0KPiA+ID4gPiA+ID4gPiBh
+bGxvY19zY3JlZW5faW5mbyh4Li4uKSAgICAgICAgICAgICAgICAoJnNjcmVlbl9pbmZvKQ0KPiA+
+ID4gPiA+ID4gPiArZXh0ZXJuIGNoYXIgc3RleHRfb2Zmc2V0W107DQo+ID4gPiA+ID4gPiA+ICsN
+Cj4gPiA+ID4gPiA+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBmcmVlX3NjcmVlbl9pbmZvKHN0cnVj
+dCBzY3JlZW5faW5mbw0KPiA+ID4gPiA+ID4gPiAqc2kpDQo+ID4gPiA+ID4gPiA+ICt7DQo+ID4g
+PiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyNlbmRpZiAvKiBf
+QVNNX0VGSV9IICovDQo+ID4gPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Zpcm13YXJl
+L2VmaS9LY29uZmlnDQo+ID4gPiA+ID4gPiA+IGIvZHJpdmVycy9maXJtd2FyZS9lZmkvS2NvbmZp
+Zw0KPiA+ID4gPiA+ID4gPiBpbmRleCAyYTJiMmI5NmExZGMuLmZjZGM3ODlkM2Y4NyAxMDA2NDQN
+Cj4gPiA+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9maXJtd2FyZS9lZmkvS2NvbmZpZw0KPiA+ID4g
+PiA+ID4gPiArKysgYi9kcml2ZXJzL2Zpcm13YXJlL2VmaS9LY29uZmlnDQo+ID4gPiA+ID4gPiA+
+IEBAIC0xMTEsNyArMTExLDcgQEAgY29uZmlnIEVGSV9HRU5FUklDX1NUVUINCj4gPiA+ID4gPiA+
+ID4gDQo+ID4gPiA+ID4gPiA+ICBjb25maWcgRUZJX0FSTVNUVUJfRFRCX0xPQURFUg0KPiA+ID4g
+PiA+ID4gPiAgICAgICAgIGJvb2wgIkVuYWJsZSB0aGUgRFRCIGxvYWRlciINCj4gPiA+ID4gPiA+
+ID4gLSAgICAgICBkZXBlbmRzIG9uIEVGSV9HRU5FUklDX1NUVUINCj4gPiA+ID4gPiA+ID4gKyAg
+ICAgICBkZXBlbmRzIG9uIEVGSV9HRU5FUklDX1NUVUIgJiYgIVJJU0NWDQo+ID4gPiA+ID4gPiA+
+ICAgICAgICAgZGVmYXVsdCB5DQo+ID4gPiA+ID4gPiA+ICAgICAgICAgaGVscA0KPiA+ID4gPiA+
+ID4gPiAgICAgICAgICAgU2VsZWN0IHRoaXMgY29uZmlnIG9wdGlvbiB0byBhZGQgc3VwcG9ydCBm
+b3INCj4gPiA+ID4gPiA+ID4gdGhlIGR0Yj0gY29tbWFuZA0KPiA+ID4gPiA+ID4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4g
+PiBiL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIvTWFrZWZpbGUNCj4gPiA+ID4gPiA+ID4g
+aW5kZXggMmI0ZTA5YmY5ODdjLi43ZDQ2YjcwYjUxZjIgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+IC0t
+LSBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIvTWFrZWZpbGUNCj4gPiA+ID4gPiA+ID4g
+KysrIGIvZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4g
+PiBAQCAtMjIsNiArMjIsOCBAQCBjZmxhZ3MtDQo+ID4gPiA+ID4gPiA+ICQoQ09ORklHX0FSTTY0
+KSAgICAgICAgICAgICAgICA6PSAkKHN1YnN0DQo+ID4gPiA+ID4gPiA+ICQoQ0NfRkxBR1NfRlRS
+QUNFKSwsJChLQlVJTERfQ0ZMQUdTKSkgXA0KPiA+ID4gPiA+ID4gPiAgY2ZsYWdzLSQoQ09ORklH
+X0FSTSkgICAgICAgICAgIDo9ICQoc3Vic3QNCj4gPiA+ID4gPiA+ID4gJChDQ19GTEFHU19GVFJB
+Q0UpLCwkKEtCVUlMRF9DRkxBR1MpKSBcDQo+ID4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgLWZuby1idWlsdGluIC1mcGljIFwNCj4gPiA+ID4gPiA+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAkKGNhbGwgY2Mtb3B0aW9uLC1tbm8tDQo+
+ID4gPiA+ID4gPiA+IHNpbmdsZS1waWMtYmFzZSkNCj4gPiA+ID4gPiA+ID4gK2NmbGFncy0kKENP
+TkZJR19SSVNDVikgICAgICAgICA6PSAkKHN1YnN0DQo+ID4gPiA+ID4gPiA+ICQoQ0NfRkxBR1Nf
+RlRSQUNFKSwsJChLQlVJTERfQ0ZMQUdTKSkgXA0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIC1mcGljDQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
+PiAgY2ZsYWdzLSQoQ09ORklHX0VGSV9HRU5FUklDX1NUVUIpICAgICAgKz0NCj4gPiA+ID4gPiA+
+ID4gLUkkKHNyY3RyZWUpL3NjcmlwdHMvZHRjL2xpYmZkdA0KPiA+ID4gPiA+ID4gPiANCj4gPiA+
+ID4gPiA+ID4gQEAgLTU3LDYgKzU5LDcgQEAgbGliLQ0KPiA+ID4gPiA+ID4gPiAkKENPTkZJR19F
+RklfR0VORVJJQ19TVFVCKSAgICAgICAgICAgICAgICArPSBlZmktc3R1Yi5vDQo+ID4gPiA+ID4g
+PiA+IGZkdC5vIHN0cmluZy5vIFwNCj4gPiA+ID4gPiA+ID4gIGxpYi0kKENPTkZJR19BUk0pICAg
+ICAgICAgICAgICArPSBhcm0zMi1zdHViLm8NCj4gPiA+ID4gPiA+ID4gIGxpYi0kKENPTkZJR19B
+Uk02NCkgICAgICAgICAgICArPSBhcm02NC1zdHViLm8NCj4gPiA+ID4gPiA+ID4gIGxpYi0kKENP
+TkZJR19YODYpICAgICAgICAgICAgICArPSB4ODYtc3R1Yi5vDQo+ID4gPiA+ID4gPiA+ICtsaWIt
+JChDT05GSUdfUklTQ1YpICAgICAgICAgICAgKz0gcmlzY3Ytc3R1Yi5vDQo+ID4gPiA+ID4gPiA+
+ICBDRkxBR1NfYXJtMzItc3R1Yi5vICAgICAgICAgICAgOj0NCj4gPiA+ID4gPiA+ID4gLURURVhU
+X09GRlNFVD0kKFRFWFRfT0ZGU0VUKQ0KPiA+ID4gPiA+ID4gPiAgQ0ZMQUdTX2FybTY0LXN0dWIu
+byAgICAgICAgICAgIDo9DQo+ID4gPiA+ID4gPiA+IC1EVEVYVF9PRkZTRVQ9JChURVhUX09GRlNF
+VCkNCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IEBAIC04MSw2ICs4NCwxMCBAQCBTVFVC
+Q09QWV9GTEFHUy0NCj4gPiA+ID4gPiA+ID4gJChDT05GSUdfQVJNNjQpICAgICAgICs9IC0tcHJl
+Zml4LWFsbG9jLXNlY3Rpb25zPS5pbml0IFwNCj4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAtLXByZWZpeC0NCj4gPiA+ID4gPiA+ID4gc3ltYm9scz1fX2Vm
+aXN0dWJfDQo+ID4gPiA+ID4gPiA+ICBTVFVCQ09QWV9SRUxPQy0kKENPTkZJR19BUk02NCkgOj0g
+Ul9BQVJDSDY0X0FCUw0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gK1NUVUJDT1BZX0ZM
+QUdTLSQoQ09ORklHX1JJU0NWKSArPSAtLXByZWZpeC1hbGxvYy0NCj4gPiA+ID4gPiA+ID4gc2Vj
+dGlvbnM9LmluaXQgXA0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIC0tcHJlZml4LQ0KPiA+ID4gPiA+ID4gPiBzeW1ib2xzPV9fZWZpc3R1Yl8NCj4gPiA+
+ID4gPiA+ID4gK1NUVUJDT1BZX1JFTE9DLSQoQ09ORklHX1JJU0NWKSA6PSBSX1JJU0NWX0hJMjAN
+Cj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiAgJChvYmopLyUuc3R1Yi5vOiAkKG9iaikv
+JS5vIEZPUkNFDQo+ID4gPiA+ID4gPiA+ICAgICAgICAgJChjYWxsIGlmX2NoYW5nZWQsc3R1YmNv
+cHkpDQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9m
+aXJtd2FyZS9lZmkvbGlic3R1Yi9yaXNjdi1zdHViLmMNCj4gPiA+ID4gPiA+ID4gYi9kcml2ZXJz
+L2Zpcm13YXJlL2VmaS9saWJzdHViL3Jpc2N2LXN0dWIuYw0KPiA+ID4gPiA+ID4gPiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NA0KPiA+ID4gPiA+ID4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjY5ZDEzZTBl
+YmFlYQ0KPiA+ID4gPiA+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiA+ID4gPiA+ICsrKyBiL2Ry
+aXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIvcmlzY3Ytc3R1Yi5jDQo+ID4gPiA+ID4gPiA+IEBA
+IC0wLDAgKzEsMTExIEBADQo+ID4gPiA+ID4gPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
+cjogR1BMLTIuMA0KPiA+ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+ID4gKyAqIENvcHlyaWdo
+dCAoQykgMjAxMywgMjAxNCBMaW5hcm8gTHRkOyAgPA0KPiA+ID4gPiA+ID4gPiByb3kuZnJhbnpA
+bGluYXJvLm9yZz4NCj4gPiA+ID4gPiA+ID4gKyAqIENvcHlyaWdodCAoQykgMjAyMCBXZXN0ZXJu
+IERpZ2l0YWwgQ29ycG9yYXRpb24gb3IgaXRzDQo+ID4gPiA+ID4gPiA+IGFmZmlsaWF0ZXMuDQo+
+ID4gPiA+ID4gPiA+ICsgKg0KPiA+ID4gPiA+ID4gPiArICogVGhpcyBmaWxlIGltcGxlbWVudHMg
+dGhlIEVGSSBib290IHN0dWIgZm9yIHRoZSBSSVNDLVYgDQo+ID4gPiA+ID4gPiA+IGtlcm5lbC4N
+Cj4gPiA+ID4gPiA+ID4gKyAqIEFkYXB0ZWQgZnJvbSBBUk02NCB2ZXJzaW9uIGF0DQo+ID4gPiA+
+ID4gPiA+IGRyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIvYXJtNjQtc3R1Yi5jLg0KPiA+ID4g
+PiA+ID4gPiArICovDQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxs
+aW51eC9lZmkuaD4NCj4gPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9saWJmZHQuaD4NCj4g
+PiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9saWJmZHRfZW52Lmg+DQo+ID4gPiA+ID4gPiA+
+ICsjaW5jbHVkZSA8YXNtL2VmaS5oPg0KPiA+ID4gPiA+ID4gPiArI2luY2x1ZGUgPGFzbS9zZWN0
+aW9ucy5oPg0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICsjaW5jbHVkZSAiZWZpc3R1
+Yi5oIg0KPiA+ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+ID4gKyAqIFJJU0NWIHJlcXVpcmVz
+IHRoZSBrZXJuZWwgaW1hZ2UgdG8gcGxhY2VkIFRFWFRfT0ZGU0VUDQo+ID4gPiA+ID4gPiA+IGJ5
+dGVzIGJleW9uZCBhIDIgTUINCj4gPiA+ID4gPiA+ID4gKyAqIGFsaWduZWQgYmFzZSBmb3IgNjQg
+Yml0IGFuZCA0TUIgZm9yIDMyIGJpdC4NCj4gPiA+ID4gPiA+ID4gKyAqLw0KPiA+ID4gPiA+IA0K
+PiA+ID4gPiA+IEZpeGVkIHRoZSBjb21tZW50Lg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiAr
+I2lmZGVmIENPTkZJR182NEJJVA0KPiA+ID4gPiA+ID4gPiArI2RlZmluZSBNSU5fS0lNR19BTElH
+TiBTWl8yTQ0KPiA+ID4gPiA+ID4gPiArI2Vsc2UNCj4gPiA+ID4gPiA+ID4gKyNkZWZpbmUgTUlO
+X0tJTUdfQUxJR04gU1pfNE0NCj4gPiA+ID4gPiA+ID4gKyNlbmRpZg0KPiA+ID4gPiA+ID4gPiAr
+DQo+ID4gPiA+ID4gPiA+ICt0eXBlZGVmIF9fYXR0cmlidXRlX18oKG5vcmV0dXJuKSkgdm9pZA0K
+PiA+ID4gPiA+ID4gPiAoKmp1bXBfa2VybmVsX2Z1bmMpKHVuc2lnbmVkIGludCwNCj4gPiA+ID4g
+PiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgDQo+ID4gPiA+ID4gPiA+ICAgdW5zaWduZWQgbG9uZyk7DQo+ID4gPiA+ID4gPiA+ICtl
+Zmlfc3RhdHVzX3QgY2hlY2tfcGxhdGZvcm1fZmVhdHVyZXModm9pZCkNCj4gPiA+ID4gPiA+ID4g
+K3sNCj4gPiA+ID4gPiA+ID4gKyAgICAgICByZXR1cm4gRUZJX1NVQ0NFU1M7DQo+ID4gPiA+ID4g
+PiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gK3N0YXRpYyB1MzIgZ2V0X2Jv
+b3RfaGFydGlkX2Zyb21fZmR0KHVuc2lnbmVkIGxvbmcgZmR0KQ0KPiA+ID4gPiA+ID4gPiArew0K
+PiA+ID4gPiA+ID4gPiArICAgICAgIGludCBjaG9zZW5fbm9kZSwgbGVuOw0KPiA+ID4gPiA+ID4g
+PiArICAgICAgIGNvbnN0IGZkdDMyX3QgKnByb3A7DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4g
+PiA+ID4gKyAgICAgICBjaG9zZW5fbm9kZSA9IGZkdF9wYXRoX29mZnNldCgodm9pZCAqKWZkdCwN
+Cj4gPiA+ID4gPiA+ID4gIi9jaG9zZW4iKTsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICBpZiAoY2hv
+c2VuX25vZGUgPCAwKQ0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIFUzMl9N
+QVg7DQo+ID4gPiA+ID4gPiA+ICsgICAgICAgcHJvcCA9IGZkdF9nZXRwcm9wKCh2b2lkICopZmR0
+LCBjaG9zZW5fbm9kZSwNCj4gPiA+ID4gPiA+ID4gImJvb3QtaGFydGlkIiwgJmxlbik7DQo+ID4g
+PiA+ID4gPiA+ICsgICAgICAgaWYgKCFwcm9wIHx8IGxlbiAhPSBzaXplb2YodTMyKSkNCj4gPiA+
+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBVMzJfTUFYOw0KPiA+ID4gPiA+ID4gPiAr
+DQo+ID4gPiA+ID4gPiA+ICsgICAgICAgcmV0dXJuIGZkdDMyX3RvX2NwdSgqcHJvcCk7DQo+ID4g
+PiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKy8qDQo+ID4gPiA+
+ID4gPiA+ICsgKiBKdW1wIHRvIHJlYWwga2VybmVsIGhlcmUgd2l0aCBmb2xsb3dpbmcgY29uc3Ry
+YWludHMuDQo+ID4gPiA+ID4gPiA+ICsgKiAxLiBNTVUgc2hvdWxkIGJlIGRpc2FibGVkLg0KPiA+
+ID4gPiA+ID4gPiArICogMi4gYTAgc2hvdWxkIGNvbnRhaW4gaGFydGlkDQo+ID4gPiA+ID4gPiA+
+ICsgKiAzLiBhMSBzaG91bGQgRFQgYWRkcmVzcw0KPiA+ID4gPiA+ID4gPiArICovDQo+ID4gPiA+
+ID4gPiA+ICt2b2lkIF9fbm9yZXR1cm4gZWZpX2VudGVyX2tlcm5lbCh1bnNpZ25lZCBsb25nDQo+
+ID4gPiA+ID4gPiA+IGVudHJ5cG9pbnQsIHVuc2lnbmVkIGxvbmcgZmR0LA0KPiA+ID4gPiA+ID4g
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nIGZkdF9zaXpl
+KQ0KPiA+ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gPiArICAgICAgIHVuc2lnbmVkIGxvbmcg
+a2VybmVsX2VudHJ5ID0gZW50cnlwb2ludCArDQo+ID4gPiA+ID4gPiA+ICh1bnNpZ25lZCBsb25n
+KXN0ZXh0X29mZnNldDsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICBqdW1wX2tlcm5lbF9mdW5jIGp1
+bXBfa2VybmVsID0gKGp1bXBfa2VybmVsX2Z1bmMpDQo+ID4gPiA+ID4gPiA+IGtlcm5lbF9lbnRy
+eTsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICB1MzIgaGFydGlkID0gZ2V0X2Jvb3RfaGFydGlkX2Zy
+b21fZmR0KGZkdCk7DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICBpZiAo
+aGFydGlkID09IFUzMl9NQVgpDQo+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAvKiBXZSBj
+YW4gbm90IHVzZSBwYW5pYyBvciBCVUcgYXQgdGhpcw0KPiA+ID4gPiA+ID4gPiBwb2ludCAqLw0K
+PiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgX19hc21fXyBfX3ZvbGF0aWxlX18gKCJlYnJl
+YWsiKTsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAvKiBEaXNhYmxlIE1NVSAqLw0KPiA+ID4gPiA+
+ID4gPiArICAgICAgIGNzcl93cml0ZShDU1JfU0FUUCwgMCk7DQo+ID4gPiA+ID4gPiA+ICsgICAg
+ICAganVtcF9rZXJuZWwoaGFydGlkLCBmZHQpOw0KPiA+ID4gPiA+ID4gPiArfQ0KPiA+ID4gPiA+
+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICtlZmlfc3RhdHVzX3QgaGFuZGxlX2tlcm5lbF9pbWFnZSh1
+bnNpZ25lZCBsb25nDQo+ID4gPiA+ID4gPiA+ICppbWFnZV9hZGRyLA0KPiA+ID4gPiA+ID4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nDQo+ID4gPiA+ID4g
+PiA+ICppbWFnZV9zaXplLA0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB1bnNpZ25lZCBsb25nDQo+ID4gPiA+ID4gPiA+ICpyZXNlcnZlX2FkZHIsDQo+ID4g
+PiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcN
+Cj4gPiA+ID4gPiA+ID4gKnJlc2VydmVfc2l6ZSwNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBkcmFtX2Jhc2UsDQo+ID4gPiA+ID4g
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVmaV9sb2FkZWRfaW1hZ2VfdA0K
+PiA+ID4gPiA+ID4gPiAqaW1hZ2UpDQo+ID4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiA+ICsg
+ICAgICAgZWZpX3N0YXR1c190IHN0YXR1czsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICB1bnNpZ25l
+ZCBsb25nIGtlcm5lbF9zaXplLCBrZXJuZWxfbWVtc2l6ZSA9IDA7DQo+ID4gPiA+ID4gPiA+ICsg
+ICAgICAgdW5zaWduZWQgbG9uZyBtYXhfYWxsb2NfYWRkcmVzczsNCj4gPiA+ID4gPiA+ID4gKw0K
+PiA+ID4gPiA+ID4gPiArICAgICAgIGlmIChpbWFnZS0+aW1hZ2VfYmFzZSAhPSBfc3RhcnQpDQo+
+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBwcl9lZmlfZXJyKCJGSVJNV0FSRSBCVUc6DQo+
+ID4gPiA+ID4gPiA+IGVmaV9sb2FkZWRfaW1hZ2VfdDo6aW1hZ2VfYmFzZSBoYXMgYm9ndXMgdmFs
+dWVcbiIpOw0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IEkgZG9u
+J3QgdGhpbmsgeW91IG5lZWQgdGhpcy4NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+IA0KPiA+ID4g
+PiA+IFN1cmUuIEkgd2lsbCByZW1vdmUgaXQuIEkgZ3Vlc3MgQVJNNjQgY29kZSBoYXMgdGhlIGVy
+cm9yDQo+ID4gPiA+ID4gcHJpbnQgZm9yDQo+ID4gPiA+ID4gbGVnYWN5IGxvYWRlciBjb2RlID8N
+Cj4gPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IE5vLCBmb3IgYnJva2VuIGRpc3RybyB2ZXJz
+aW9ucyBvZiBHUlVCDQo+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiArICAgICAgIGtlcm5lbF9zaXpl
+ID0gX2VkYXRhIC0gX3N0YXJ0Ow0KPiA+ID4gPiA+ID4gPiArICAgICAgIGtlcm5lbF9tZW1zaXpl
+ID0ga2VybmVsX3NpemUgKyAoX2VuZCAtIF9lZGF0YSk7DQo+ID4gPiA+ID4gPiA+ICsgICAgICAg
+bWF4X2FsbG9jX2FkZHJlc3MgPSByb3VuZF91cChkcmFtX2Jhc2UsDQo+ID4gPiA+ID4gPiA+IE1J
+Tl9LSU1HX0FMSUdOKSArDQo+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBrZXJuZWxfbWVtc2l6ZTsNCj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+
+ID4gPiBZb3Ugc2FpZCB0aGUga2VybmVsIGNvdWxkIGJlIGFueXdoZXJlIGluIG1lbW9yeSwgYXMg
+bG9uZyBhcw0KPiA+ID4gPiA+ID4gaXQgaXMNCj4gPiA+ID4gPiA+IGFsaWduZWQgY29ycmVjdGx5
+LCByaWdodD8NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBTb3JyeSBJIHdhcyB3cm9uZyBhYm91dCB0
+aGlzLiBSSVNDLVYga2VybmVsIG1hcHMgUEFHRV9PRkZTRVQNCj4gPiA+ID4gPiB2aXJ0dWFsDQo+
+ID4gPiA+ID4gYWRkcmVzcyB0byB0aGUNCj4gPiA+ID4gPiBwaHlzaWNhbCBhZGRyZXNzIDx4eXo+
+IHdoZXJlIGl0IGlzIGJvb3RlZC4gVGhhdCBtZWFucyBtZW1vcnkNCj4gPiA+ID4gPiBiZXR3ZWVu
+DQo+ID4gPiA+ID4gZHJhbSBzdGFydCBhbmQgYW5kIDx4eXo+IGFkZHJlc3MNCj4gPiA+ID4gPiB3
+aWxsIGJlIHVudXNhYmxlLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gT0sNCj4gPiA+
+ID4gDQo+ID4gPiA+ID4gSSBhbHNvIHJlYWxpemVkIHRoYXQgdGhlIGFib3ZlIGNvbXB1dGluZyBt
+YXhfYWRkcmVzcyBhcyBhYm92ZQ0KPiA+ID4gPiA+IGFsc28NCj4gPiA+ID4gPiB3b24ndCB3b3Jr
+IGZvciB0aGUgZm9sbG93aW5nIHJlYXNvbi4NCj4gPiA+ID4gPiBlZmlfYWxsb2NhdGVfcGFnZXNf
+YWxpZ25lZCBhY3R1YWxseSBBTElHTl9ET1dOIHRoZQ0KPiA+ID4gPiA+IG1heF9hZGRyZXNzLiBU
+aHVzLA0KPiA+ID4gPiA+IGVmaSB3b24ndCBmaW5kIGVub3VnaA0KPiA+ID4gPiA+IGZyZWUgbWVt
+b3J5IGluIHRoaXMgY2FzZSBpZiB0aGUgbWF4X2FkZHJlc3MgaXMgY29tcHV0ZWQgZnJvbQ0KPiA+
+ID4gPiA+IHRoZSBkcmFtX2Jhc2UuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSXMgdGhlcmUgYW4g
+aW1wbGljaXQgcmVxdWlyZW1lbnQgZm9yDQo+ID4gPiA+ID4gZWZpX2FsbG9jYXRlX3BhZ2VzX2Fs
+aWduZWQgb3INCj4gPiA+ID4gPiBlZmlfbG93X2FsbG9jX2Fib3ZlIHNob3VsZCBiZSB0cmllZCBp
+biBjYXNlIG9mIGZhaWx1cmU/DQo+ID4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiBObyBub3Qg
+cmVhbGx5LiBXaGF0IGV2ZXIgd29ya3MgZm9yIHlvdXIgcGFydGljdWxhciB1c2UgY2FzZSBpcw0K
+PiA+ID4gPiBhY2NlcHRhYmxlIHRvIG1lLg0KPiA+ID4gPiANCj4gPiA+ID4gPiA+IEluIHRoYXQg
+Y2FzZSwgeW91IGRvbid0IG5lZWQgdGhpcywgeW91IGNhbiBzaW1wbHkgcGFzcw0KPiA+ID4gPiA+
+ID4gVUxPTkdfTUFYIGFzDQo+ID4gPiA+ID4gPiB0aGUgbWF4IGFkZHJlc3MuDQo+ID4gPiA+ID4g
+PiANCj4gPiA+ID4gPiBBcyBSSVNDLVYgc2hvdWxkIGFsbG9jYXRlIG1lbW9yeSBhcyBsb3cgYXMg
+cG9zc2libGUgdG8gYXZvaWQNCj4gPiA+ID4gPiBtZW1vcnkNCj4gPiA+ID4gPiB3YXN0YWdlLCBJ
+IHRoaW5rIHRoZSBmb2xsb3dpbmcgc2hvdWxkIHdvcmsuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
+ZWZpX2xvd19hbGxvY19hYm92ZSgqcmVzZXJ2ZV9zaXplLCBNSU5fS0lNR19BTElHTiwNCj4gPiA+
+ID4gPiByZXNlcnZlX2FkZHIsIGRyYW1fYmFzZSk7DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSWYg
+dGhpcyBsb29rcyBva2F5IHRvIHlvdSwgZWZpX2xvd19hbGxvY19hYm92ZSBzaG91bGQgYmUNCj4g
+PiA+ID4gPiBtb3ZlZCBiYWNrIHRvDQo+ID4gPiA+ID4gbWVtLmMgZnJvbSByZWxvY2F0ZS5jLg0K
+PiA+ID4gPiA+IFNob3VsZCBJIGRvIGl0IGluIGEgc2VwYXJhdGUgcGF0Y2ggb3IgdGhlIG9yaWdp
+bmFsIHBhdGNoDQo+ID4gPiA+ID4gc2hvdWxkIGJlDQo+ID4gPiA+ID4gbW9kaWZpZWQgc28gdGhh
+dCBlZmlfbG93X2FsbG9jX2Fib3ZlIHdhcyBuZXZlciBtb3ZlZCB0bw0KPiA+ID4gPiA+IHJlbG9j
+YXRlLmMNCj4gPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IE5vLCBwbGVhc2Uga2VlcCBlZmlf
+bG93X2FsbG9jX2Fib3ZlKCkgd2hlcmUgaXQgaXMsIGJ1dCBkcm9wIHRoZQ0KPiA+ID4gPiBzdGF0
+aWMsIGFuZCBwdXQgYmFjayB0aGUgZGVjbGFyYXRpb24gaW4gZWZpc3R1Yi5oDQo+ID4gPiA+IA0K
+PiA+ID4gDQo+ID4gPiBBbHRlcm5hdGl2ZWx5LCBjYW4geW91IGNoZWNrIHdoZXRoZXIgZWZpX3Jl
+bG9jYXRlX2tlcm5lbCgpDQo+ID4gPiBhbHJlYWR5DQo+ID4gPiBkb2VzIHdoYXQgeW91IG5lZWQ/
+DQo+ID4gDQo+ID4gWWVhaC4gZWZpX3JlbG9jYXRlX2tlcm5lbCB3b3JrcyB0b28uIEl0J3MganVz
+dCB0aGF0DQo+ID4gZWZpX3JlbG9jYXRlX2tlcm5lbCBleHBlY3RzIGEgcHJlZmVycmVkIGFkZHJl
+c3MNCj4gPiB3aGljaCBSSVNDLVYgZG9lc24ndCBjYXJlIGFib3V0Lg0KPiANCj4gVGhlcmUgaXMg
+YSBwcmVmZXJyZWQgYWRkcmVzcywgbm8/IFRoZSBiYXNlIG9mIERSQU0/DQo+IA0KDQpJIGp1c3Qg
+cmVhbGl6ZWQgdGhhdCBteSByZXBseSBmcm9tIG15IGdtYWlsIG5ldmVyIGxhbmRlZCBpbiBhbnkg
+b2YgdGhlDQptYWlsaW5nIGxpc3RzLiBJZiB5b3UgaGF2ZSBhbHJlYWR5IHJlY2VpdmVkIGl0LCBz
+b3JyeSBmb3IgdGhlIHNwYW0uDQoNCiJJZiB0aGUgcHJlZmVycmVkIGFkZHJlc3MgaXMgc2V0IGFz
+IHRoZSBiYXNlIG9mIERSQU0sIGVmaV9ic19jYWxsIGlzDQpib3VuZCB0byBmYWlsIGFzIHdlbGwg
+YmVjYXVzZSB0aGUgYmFzZSBvZiBEUkFNIGlzIHJlc2VydmVkIGJ5IHRoZQ0KZmlybXdhcmUuIFNv
+IHRoZSBlZmkgbWVtb3J5IGFsbG9jYXRvciBjYW4ndCBhbGxvY2F0ZSBhdCB0aGF0IGFkZHJlc3Mu
+DQpUZWNobmljYWxseSwgaXQgd2lsbCB3b3JrIGJ1dCBpdCBpcyBubyBkaWZmZXJlbnQgdGhhbiBw
+YXNzaW5nDQpVTE9OR19NQVguIFNvIEkgdGhvdWdodCBVTE9OR19NQVggd2lsbCBhdm9pZCB0aGUg
+Y29uZnVzaW9uLg0KDQpXZSB0cnkgdG8gYWxsb2NhdGUgYXMgbG93IGFzIHBvc3NpYmxlIHNvIEkg
+YW0gcGFzc2luZyBkcmFtX2Jhc2UgYXMgdGhlDQptaW5pbXVtIGFkZHJlc3MgYW55d2F5cy4gQXMg
+dGhlIGZpcm13YXJlIHJlc2VydmVkIHRoZSBmaXJzdCBmZXcgS0JzLA0KDQoNCj4gPiBJIGNhbiBw
+YXNzIFVMT05HX01BWCBzbyB0aGF0DQo+ID4gZWZpX2JzX2NhbGwgd2lsbCBmYWlsIGFuZA0KPiA+
+IGVmaV9sb3dfYWxsb2NfYWJvdmUgd2lsbCBiZSBpbnZva2VkIGV2ZW50dWFsbHkuDQo+ID4gDQo+
+ID4gSSBhbSBhbHNvIHRoaW5raW5nIHRvIHB1dCBhIGNoZWNrIGluIHJlbG9jYXRlX2tlcm5lbCBm
+b3IgcHJlZmVycmVkDQo+ID4gYWRkcmVzcyAhPSBVTE9OR19NQVggdG8gYXZvaWQNCj4gPiBhbiBl
+eHRyYSBlZmlfYnNfY2FsbC4gVGhlIGV4dHJhIGNhbGwgZG9lc24ndCBhY3R1YWxseSBjcmVhdGUg
+YW4NCj4gPiBpc3N1ZSwNCj4gPiBqdXN0IGEgbWlub3Igb3B0aW1pemF0aW9uLg0KPiA+IEJ1dCBp
+ZiB0aGF0IGlzIG5vdCBhY2NlcHRhYmxlIGZvciBnZW5lcmljIGNvZGUsIHRoYXQgaXMgZmluZSBh
+cw0KPiA+IHdlbGwuDQo+ID4gDQo+ID4gVGhhbmtzIGZvciB5b3VyIHN1Z2dlc3Rpb25zIGFuZCB0
+aW1lLg0KPiA+IC0tDQo+ID4gUmVnYXJkcywNCj4gPiBBdGlzaA0KDQotLSANClJlZ2FyZHMsDQpB
+dGlzaA0K
