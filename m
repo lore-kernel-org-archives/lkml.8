@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EA4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC56CC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE0D12070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93FB2072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386561;
-	bh=5v7DDvOv3fsCZHx1bL7Tqpej7JL2oFsZSdM7fuPngl4=;
+	s=default; t=1587386566;
+	bh=HaUo+E5NxLGCGdFw4NKrqAONKCA3eOeOzeVolfXxgx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AMNfGdQtk/PQGzNMxU+P2SPWPynpAkaHDjQtiS+m4trgClKgmf1oq2pgdu0kPGkmm
-	 /Pmgu5Qc4SCW1DTc1c1VYwB/ErKapqAEdoxTO2Jjsv9VJZyswpjD99pg/hGuKtnRSB
-	 sNFsLmXUMmBnqdfAaM7QIqSp2uv06P8k2ZNlwuZ8=
+	b=JeDTNVGmWN/WB4NBLwNh+wPFxC5S/xyfTRjY9QmT17DYPzGH/Xs9qqu1mwz7KBW3i
+	 3w5bl7tW3m1ni5SXHuhCbwJZPWLGl+4k+ty6ku67F/MzoWojz+KuoK738f7nVJTV/e
+	 jp3SbGnXPXmYI9nGPKTbvklVoUHi6t3q8jGM+uzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgDTMmk (ORCPT
+        id S1728276AbgDTMmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:42:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728250AbgDTMmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:42:36 -0400
+        id S1728250AbgDTMml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:42:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BC9920724;
-        Mon, 20 Apr 2020 12:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61F942072B;
+        Mon, 20 Apr 2020 12:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386555;
-        bh=5v7DDvOv3fsCZHx1bL7Tqpej7JL2oFsZSdM7fuPngl4=;
+        s=default; t=1587386560;
+        bh=HaUo+E5NxLGCGdFw4NKrqAONKCA3eOeOzeVolfXxgx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZAkgYisgEck5+vGQ41luU0yEc8TRJIxfZwq2r5hg8pJsP7vGFrcQsvm1w+3Jn/RwG
-         SPBOLTTe6IxtRFVmeiyUvUwdqS+bsGFZLdiduJnHjwKyJyMsLOf50L6720NBPEem6z
-         cJsSWrTaEikBk/pYepOWKv7jV2E6cMWFtV4FTTdM=
+        b=j4P5VL/1iEdGJOkB2fJJw40qv5XpwS7Vo6erw935z8Yy/MqLYHB9PcJOeJXXG5hnN
+         bYfoI5xrDC5VG/pAud5LfJeAipLSx8mDMCY8B0aDe+1sigBNuv6Nlxl37offT07hBO
+         Uxia+KDOGXjWDIMknr03ZFWBhkJwMTeRY5QeW8iQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 44/65] ALSA: usb-audio: Check mapping at creating connector controls, too
-Date:   Mon, 20 Apr 2020 14:38:48 +0200
-Message-Id: <20200420121516.174989292@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 46/65] keys: Fix proc_keys_next to increase position index
+Date:   Mon, 20 Apr 2020 14:38:50 +0200
+Message-Id: <20200420121516.763243061@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -58,105 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 934b96594ed66b07dbc7e576d28814466df3a494 upstream.
+commit 86d32f9a7c54ad74f4514d7fef7c847883207291 upstream.
 
-Add the mapping check to build_connector_control() so that the device
-specific quirk can provide the node to skip for the badly behaving
-connector controls.  As an example, ALC1220-VB-based codec implements
-the skip entry for the broken SPDIF connector detection.
+If seq_file .next function does not change position index,
+read after some lseek can generate unexpected output:
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200412081331.4742-5-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+    $ dd if=/proc/keys bs=1  # full usual output
+    0f6bfdf5 I--Q---     2 perm 3f010000  1000  1000 user      4af2f79ab8848d0a: 740
+    1fb91b32 I--Q---     3 perm 1f3f0000  1000 65534 keyring   _uid.1000: 2
+    27589480 I--Q---     1 perm 0b0b0000     0     0 user      invocation_id: 16
+    2f33ab67 I--Q---   152 perm 3f030000     0     0 keyring   _ses: 2
+    33f1d8fa I--Q---     4 perm 3f030000  1000  1000 keyring   _ses: 1
+    3d427fda I--Q---     2 perm 3f010000  1000  1000 user      69ec44aec7678e5a: 740
+    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
+    521+0 records in
+    521+0 records out
+    521 bytes copied, 0,00123769 s, 421 kB/s
+
+But a read after lseek in middle of last line results in the partial
+last line and then a repeat of the final line:
+
+    $ dd if=/proc/keys bs=500 skip=1
+    dd: /proc/keys: cannot skip to specified offset
+    g   _uid_ses.1000: 1
+    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
+    0+1 records in
+    0+1 records out
+    97 bytes copied, 0,000135035 s, 718 kB/s
+
+and a read after lseek beyond end of file results in the last line being
+shown:
+
+    $ dd if=/proc/keys bs=1000 skip=1   # read after lseek beyond end of file
+    dd: /proc/keys: cannot skip to specified offset
+    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
+    0+1 records in
+    0+1 records out
+    76 bytes copied, 0,000119981 s, 633 kB/s
+
+See https://bugzilla.kernel.org/show_bug.cgi?id=206283
+
+Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c      |   18 +++++++++++-------
- sound/usb/mixer_maps.c |    4 +++-
- 2 files changed, 14 insertions(+), 8 deletions(-)
+ security/keys/proc.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1750,11 +1750,15 @@ static void get_connector_control_name(s
- 
- /* Build a mixer control for a UAC connector control (jack-detect) */
- static void build_connector_control(struct usb_mixer_interface *mixer,
-+				    const struct usbmix_name_map *imap,
- 				    struct usb_audio_term *term, bool is_input)
- {
- 	struct snd_kcontrol *kctl;
- 	struct usb_mixer_elem_info *cval;
- 
-+	if (check_ignored_ctl(find_map(imap, term->id, 0)))
-+		return;
-+
- 	cval = kzalloc(sizeof(*cval), GFP_KERNEL);
- 	if (!cval)
- 		return;
-@@ -2090,7 +2094,7 @@ static int parse_audio_input_terminal(st
- 	/* Check for jack detection. */
- 	if ((iterm.type & 0xff00) != 0x0100 &&
- 	    uac_v2v3_control_is_readable(bmctls, control))
--		build_connector_control(state->mixer, &iterm, true);
-+		build_connector_control(state->mixer, state->map, &iterm, true);
- 
- 	return 0;
+--- a/security/keys/proc.c
++++ b/security/keys/proc.c
+@@ -139,6 +139,8 @@ static void *proc_keys_next(struct seq_f
+ 	n = key_serial_next(p, v);
+ 	if (n)
+ 		*_pos = key_node_serial(n);
++	else
++		(*_pos)++;
+ 	return n;
  }
-@@ -3051,13 +3055,13 @@ static int snd_usb_mixer_controls_badd(s
- 		memset(&iterm, 0, sizeof(iterm));
- 		iterm.id = UAC3_BADD_IT_ID4;
- 		iterm.type = UAC_BIDIR_TERMINAL_HEADSET;
--		build_connector_control(mixer, &iterm, true);
-+		build_connector_control(mixer, map->map, &iterm, true);
  
- 		/* Output Term - Insertion control */
- 		memset(&oterm, 0, sizeof(oterm));
- 		oterm.id = UAC3_BADD_OT_ID3;
- 		oterm.type = UAC_BIDIR_TERMINAL_HEADSET;
--		build_connector_control(mixer, &oterm, false);
-+		build_connector_control(mixer, map->map, &oterm, false);
- 	}
- 
- 	return 0;
-@@ -3132,8 +3136,8 @@ static int snd_usb_mixer_controls(struct
- 			if ((state.oterm.type & 0xff00) != 0x0100 &&
- 			    uac_v2v3_control_is_readable(le16_to_cpu(desc->bmControls),
- 							 UAC2_TE_CONNECTOR)) {
--				build_connector_control(state.mixer, &state.oterm,
--							false);
-+				build_connector_control(state.mixer, state.map,
-+							&state.oterm, false);
- 			}
- 		} else {  /* UAC_VERSION_3 */
- 			struct uac3_output_terminal_descriptor *desc = p;
-@@ -3158,8 +3162,8 @@ static int snd_usb_mixer_controls(struct
- 			if ((state.oterm.type & 0xff00) != 0x0100 &&
- 			    uac_v2v3_control_is_readable(le32_to_cpu(desc->bmControls),
- 							 UAC3_TE_INSERTION)) {
--				build_connector_control(state.mixer, &state.oterm,
--							false);
-+				build_connector_control(state.mixer, state.map,
-+							&state.oterm, false);
- 			}
- 		}
- 	}
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -350,9 +350,11 @@ static const struct usbmix_name_map dell
- };
- 
- /* Some mobos shipped with a dummy HD-audio show the invalid GET_MIN/GET_MAX
-- * response for Input Gain Pad (id=19, control=12).  Skip it.
-+ * response for Input Gain Pad (id=19, control=12) and the connector status
-+ * for SPDIF terminal (id=18).  Skip them.
-  */
- static const struct usbmix_name_map asus_rog_map[] = {
-+	{ 18, NULL }, /* OT, connector control */
- 	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
- 	{}
- };
 
 
