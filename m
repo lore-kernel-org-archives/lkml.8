@@ -2,145 +2,133 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E8EC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94284C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4333B221F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC5E20A8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPlNud7I"
+	dkim=pass (2048-bit key) header.d=daemons-net.20150623.gappssmtp.com header.i=@daemons-net.20150623.gappssmtp.com header.b="zBk0M5IV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgDTJgO (ORCPT
+        id S1726324AbgDTJgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:36:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60530 "EHLO
+        Mon, 20 Apr 2020 05:36:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbgDTJgO (ORCPT
+        by vger.kernel.org with ESMTP id S1725773AbgDTJgU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:36:14 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E3D9C061A0C;
-        Mon, 20 Apr 2020 02:36:13 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id t3so9836579qkg.1;
-        Mon, 20 Apr 2020 02:36:13 -0700 (PDT)
+        Mon, 20 Apr 2020 05:36:20 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C7EBC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 02:36:20 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d24so3743478pll.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 02:36:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/3syDFruM55e7HQozZGMW1Rq8pizNFPEYU3zJts7jcc=;
-        b=jPlNud7IcyvvcC4FDfDaaF2GJOXTaOY9mACZEfQBSkhKxw2DZCnYqHSpqTGEPfimor
-         PjSWJpwWjdewLz98XZ/UZIfk/d/51vUoWdhqLHmdQfBUjLAy81WKoFUNUJmySNGtwnlm
-         /szq8VzdM6ihajM4VLZ10Bg/ouBqD2rD8P4Y6y+FZ2146MEIhyGRVtdtNbPi8sOrMuzy
-         Le86yrjIg4cAZVEsIU28yajgXDgKtthrapoK9jK7m7mTolLO94iLRVJ/lgXUtEr2NKb7
-         3USDC1P8FxQUb3Y2Lk5csj4rO7UlziADVkkITlHvfjUtzVnxO6u4ONGsIzgo0HLOy/X+
-         pugA==
+        d=daemons-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=3DGhAD7IJSYwN5Mh5wLkFIUQWPuH8Xyr5nhCfZdhrRE=;
+        b=zBk0M5IVJTUHZhgTJvFVpuI50jKguU5uoGrX54baKAYHE3pFHiaWlt+kDCmF45FGY9
+         J/qX6D+oHD+PEzRPiyyGOdn/sMaFkKT9QBk5NCK1xWLKcyQakpCQQtO8/2jrEXGU9t4V
+         +srfyBTS/ERMCJSmCejLk0o/fWlPGPo0BXoUmxHqshzGIDuNT1PL6za/0tvgI/GltBWg
+         +QjypSIht2By96xTrQ4Lifzuei9gj/dac64sJgtL/Gzyorq4BJUubtILITWTp+8Uo7Iv
+         3lNXNiGJgIVg0JBWnfqJE3spIiCVVZ3YrQ7hNF1dXnp3SF34CzfbpsDcEPXuSKBCEpAA
+         WLCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/3syDFruM55e7HQozZGMW1Rq8pizNFPEYU3zJts7jcc=;
-        b=Y2Gs9P7DeYpRy7Yi6nV9eWowL5vfE5QR+fBn+tEyPpo3A+FshZJfIjJ+stVpVlqQAa
-         TMl918CfUqSNtdhwr5yhtH2if6SZYPLvwbo6foPa5LE3k2B6VVkVcJ12I0XWObiT4pie
-         h7jh30gOUdJVvHxjYPfPQL9qVkNvKO5n1fTSmuaOP8e1JMHTPj2hPeInouTSVZg9hr4I
-         PO77izWKyoXFkssMzA8sacGMa2QWoYrqKhqtymxmpVa9RLIeb3RS+TNIepBZxQJhnQvw
-         7jwz6RzV40K0dDH2NiaXT95BTTxxsrs1Dj1xOSo8S6Hg0GBrLnVADBsTD/9BOxaARFZg
-         ytHg==
-X-Gm-Message-State: AGi0PuZI47uCtBGUdGDflaFj8AMrtHrJ1HlgOLrtl3AX8F6SxjVdjSqV
-        zJ73zA0XSyZw8Bzhk7TGDQjYLXdA17DVuOw+mF8=
-X-Google-Smtp-Source: APiQypLw+gOLHPIU20qEHGA+Tzz3uLgk+8kc5CB4I2cZCht+4GtvYnE+IUKaHLhktJS/u/ZqgBaQaC1xS3anJ+HAJLw=
-X-Received: by 2002:a37:6f41:: with SMTP id k62mr14432765qkc.239.1587375372653;
- Mon, 20 Apr 2020 02:36:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=3DGhAD7IJSYwN5Mh5wLkFIUQWPuH8Xyr5nhCfZdhrRE=;
+        b=kEKjMIEdsLKv3YRK8uowW7FnN0E663T882rmjg3sIlIvay69ODslwPiXBXq8TFbHdI
+         9DVL4mctb5dKDqywHBs7Dtwpd0WXGpewWKnIbZyKQnN4p7MFu889LFEaKaFKJIUjgkVD
+         2IbX0XKen52kcLsyvMeHoJri/IXxxudrD1Oj1GYNlgVOmy0WsXV97eS5EZCMAnAp7xS2
+         yP5qwpA1GR+AsJyWkTJuo66z2JLaOpDVtVRJAEdIQsQ7IuHZoTMw5JZsVsGcO2VgbAHj
+         BYCGZ/nM33+HCiMV+xkP+NPiYtmzqMkkgiMCwQK5I5vtnuriVheBqLEEu4c1+MMnCyc6
+         yDCg==
+X-Gm-Message-State: AGi0PuYWLWgbcp+LM2nYaU/OgCnQptnMaLCFu/cAc34YdQezs/kseMpV
+        EQaZ7b2IRjHbYeWtiQ2Jo7In
+X-Google-Smtp-Source: APiQypIFyoGdo5N2UATcTDeToHVhHOExE0hyeqDVi9r+wjICYlrbxxJlpXV9YK979M9CMtO6YnDT+Q==
+X-Received: by 2002:a17:902:b101:: with SMTP id q1mr15411011plr.246.1587375379433;
+        Mon, 20 Apr 2020 02:36:19 -0700 (PDT)
+Received: from arctic-shiba-lx ([47.156.151.166])
+        by smtp.gmail.com with ESMTPSA id u21sm677223pga.21.2020.04.20.02.36.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 02:36:18 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 02:36:10 -0700
+From:   Clay McClure <clay@daemons.net>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: cpts: Condition WARN_ON on PTP_1588_CLOCK
+Message-ID: <20200420093610.GA28162@arctic-shiba-lx>
+References: <20200416085627.1882-1-clay@daemons.net>
+ <6fef3a00-6c18-b775-d1b4-dfd692261bd3@ti.com>
 MIME-Version: 1.0
-References: <20200413070014.12960-1-zhang.lyra@gmail.com> <20200413070014.12960-2-zhang.lyra@gmail.com>
-In-Reply-To: <20200413070014.12960-2-zhang.lyra@gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Mon, 20 Apr 2020 17:36:01 +0800
-Message-ID: <CABOV4+XaTMd=A5_5eTtGG=S3DvgBCTxrqV4aXnp55pTsdbO4NA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/2] cpuidle: allow idle state to be found as
- deepest state for s2idle only
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6fef3a00-6c18-b775-d1b4-dfd692261bd3@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Apr 16, 2020 at 02:11:45PM +0300, Grygorii Strashko wrote:
 
-Any comments or suggests on this? That would be very appreciated.
+Grygorii,
 
-Thanks,
-Chunyan
+> > CPTS_MOD merely implies PTP_1588_CLOCK; it is possible to build cpts
+> > without PTP clock support. In that case, ptp_clock_register() returns
+> > NULL and we should not WARN_ON(cpts->clock) when downing the interface.
+> > The ptp_*() functions are stubbed without PTP_1588_CLOCK, so it's safe
+> > to pass them a null pointer.
+> 
+> Could you explain the purpose of the exercise (Enabling CPTS with
+> PTP_1588_CLOCK disabled), pls?
 
+Hardware timestamping with a free-running PHC _almost_ works without
+PTP_1588_CLOCK, but since PHC rollover is handled by the PTP kworker
+in this driver the timestamps end up not being monotonic.
 
-On Mon, Apr 13, 2020 at 5:09 PM <zhang.lyra@gmail.com> wrote:
->
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
->
-> Add a new flag CPUIDLE_FLAG_S2IDLE to allow c-state to be found as
-> deepest state for s2idle only, so that users can add a new c-state
-> for using s2idle and don't worry disturbing other use cases such as
-> play_idle() which probably don't want to enter into so much deep
-> idle state since devices are not suspended for that kind of cases.
->
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
->  drivers/cpuidle/cpuidle.c        | 3 ++-
->  drivers/cpuidle/dt_idle_states.c | 3 +++
->  include/linux/cpuidle.h          | 1 +
->  3 files changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index de81298051b3..bb61f0c271d2 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -89,7 +89,8 @@ static int find_deepest_state(struct cpuidle_driver *drv,
->                     s->exit_latency_ns <= latency_req ||
->                     s->exit_latency_ns > max_latency_ns ||
->                     (s->flags & forbidden_flags) ||
-> -                   (s2idle && !s->enter_s2idle))
-> +                   (s2idle && !s->enter_s2idle) ||
-> +                   (!s2idle && (s->flags & CPUIDLE_FLAG_S2ILDE)))
->                         continue;
->
->                 latency_req = s->exit_latency_ns;
-> diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
-> index 252f2a9686a6..530db2726c05 100644
-> --- a/drivers/cpuidle/dt_idle_states.c
-> +++ b/drivers/cpuidle/dt_idle_states.c
-> @@ -80,6 +80,9 @@ static int init_state_node(struct cpuidle_state *idle_state,
->         idle_state->flags = 0;
->         if (of_property_read_bool(state_node, "local-timer-stop"))
->                 idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
-> +
-> +       if (of_property_read_bool(state_node, "for-s2idle-only"))
-> +               idle_state->flags |= CPUIDLE_FLAG_S2ILDE;
->         /*
->          * TODO:
->          *      replace with kstrdup and pointer assignment when name
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index ec2ef63771f0..08da701f74cd 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -78,6 +78,7 @@ struct cpuidle_state {
->  #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
->  #define CPUIDLE_FLAG_UNUSABLE  BIT(3) /* avoid using this state */
->  #define CPUIDLE_FLAG_OFF       BIT(4) /* disable this state by default */
-> +#define CPUIDLE_FLAG_S2ILDE    BIT(5) /* state is used for s2idle only */
->
->  struct cpuidle_device_kobj;
->  struct cpuidle_state_kobj;
-> --
-> 2.20.1
->
+And of course the moment you want to syntonize/synchronize the PHC with
+another clock (say, CLOCK_REALTIME), you'll need a PTP clock device. So
+you're right, there's not much point in building CPTS_MOD without
+PTP_1588_CLOCK.
+
+Given that, I wonder why all the Ethernet drivers seem to just `imply`
+PTP_1588_CLOCK, rather than `depends on` it?
+
+In any case, I was surprised to get a warning during `ifdown` but not
+during `ifup`. What do you think of this change, which prints an error
+like this during `ifup` if PTP_1588_CLOCK is not enabled:
+
+[    6.192707] 000: cpsw 4a100000.ethernet: error registering cpts device
+
+--- 
+diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
+index 10ad706dda53..70b15039cd37 100644
+--- a/drivers/net/ethernet/ti/cpts.c
++++ b/drivers/net/ethernet/ti/cpts.c
+@@ -462,8 +462,8 @@ int cpts_register(struct cpts *cpts)
+        timecounter_init(&cpts->tc, &cpts->cc, ktime_get_real_ns());
+ 
+        cpts->clock = ptp_clock_register(&cpts->info, cpts->dev);
+-       if (IS_ERR(cpts->clock)) {
+-               err = PTR_ERR(cpts->clock);
++       if (IS_ERR_OR_NULL(cpts->clock)) {
++               err = cpts->clock ? PTR_ERR(cpts->clock) : -EOPNOTSUPP;
+                cpts->clock = NULL;
+                goto err_ptp;
+        }
+
+-- 
+Clay
