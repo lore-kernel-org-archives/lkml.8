@@ -2,349 +2,166 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A112C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B98C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71D9A2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LvrP8zzS"
+	by mail.kernel.org (Postfix) with ESMTP id 176D621473
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgDTInT (ORCPT
+        id S1726437AbgDTInZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgDTInJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:43:09 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE55CC061A0C;
-        Mon, 20 Apr 2020 01:43:08 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j2so11018625wrs.9;
-        Mon, 20 Apr 2020 01:43:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hRRIkqL6fbq8TpMuecFXBC2M0LcF4y35GjVFBof8OL4=;
-        b=LvrP8zzSE1w42oWbY5ycewQFc6Nu2hLhU9aazl5iaxNiedEQZJgw3BH8Kal7nZS092
-         CVSTyf44G1A69gWsO3zKIrMQNafxU3PmEGnWj8Le6sevEtMnjZ2xMgpZhZjypmuGXgM2
-         ASrI/tfW1/wIouvoAaPUGQrVeHLqeKP+XM7ySiW4qUfQKUh8Ff2D8tD00cH9AhYVQH+z
-         FS/bhBRPg7nz5iCOPgYYeFj636GVnQd6pP21zqpWXdW43hI2SVFc2ptIVMS9uWJ6FMvl
-         Kh4amPTzjuO9mo6QgQkSzKYEP3oQhoykQ5p2/qaNd0OjqMRDIXgB/IuE2JEQrsd1W6A/
-         s3tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hRRIkqL6fbq8TpMuecFXBC2M0LcF4y35GjVFBof8OL4=;
-        b=uiu0/s2bNrm/XFx/IqNlCBQjooXhlJl+GQHlC/fgbs6iz730ohOx/WVCOMf1FOGnUO
-         WLJuJAHJPE0lbXUUi+Ka7Ae9UpUAtcWoZqLsWEOSnzW3h9c1USaexXv8NI46MKoMrbtx
-         GJyrglwbwgJNCk55Q0eRmq8uy08rRGLRanBcXb4n/urky8fMyjIRuamxR8nqw3KTomkA
-         f35o9b0ZMSeoA2VjpiWd68yu6kMJxZ1hvz/1+5efs2sL+Tx+QtbikMvlLza7g0XS/lf6
-         3L/LwaJJ4CBsvQj/kJtrqE4YJOS0CnzVruS9sbYa7ft0/F2Zpjt1/kYpsdsFZII1yz22
-         qK1Q==
-X-Gm-Message-State: AGi0Pub3BUyIntWbegn1SMtZKtS/zXqBnT9bWWXfSCmfPlHO9eQSJSB6
-        z+JIgyiP+blT0qbs5X0K8D8wioifoPU=
-X-Google-Smtp-Source: APiQypKiRV4EIzXvp2eVvpsZ7wGh/mmqFvoaEzfv+7V1f6vTzOxoHgNkPGLu+bGYJuriLUAfu7rxUA==
-X-Received: by 2002:adf:f342:: with SMTP id e2mr16676885wrp.146.1587372187496;
-        Mon, 20 Apr 2020 01:43:07 -0700 (PDT)
-Received: from meru.fronius.com ([2a01:cb18:832e:5f00:c546:5ea:178b:4074])
-        by smtp.gmail.com with ESMTPSA id g74sm403183wme.44.2020.04.20.01.43.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 01:43:06 -0700 (PDT)
-From:   Mathieu Othacehe <m.othacehe@gmail.com>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Othacehe <m.othacehe@gmail.com>
-Subject: [PATCH v3 4/4] iio: vcnl4000: Add buffer support for VCNL4010/20.
-Date:   Mon, 20 Apr 2020 10:42:10 +0200
-Message-Id: <20200420084210.14245-5-m.othacehe@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200420084210.14245-1-m.othacehe@gmail.com>
-References: <20200420084210.14245-1-m.othacehe@gmail.com>
+        Mon, 20 Apr 2020 04:43:25 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15992 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbgDTInX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:43:23 -0400
+IronPort-SDR: h0lYUhWJZdooRot5/D6i4tHIo4pA1sefPqFOqsLqlRmss7ekuU4SBK/deZaIujNKTqkUgq+NPo
+ aoWctAx2Ztpw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 01:43:21 -0700
+IronPort-SDR: lSsNa/ish74j6oe4by+cDFOKlC8LCWgp3ExdSfVUMqp21bW54LB3nnX+4ZKKJBzmLXQYApaB8d
+ IXoKfosg8Emg==
+X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
+   d="scan'208";a="429047884"
+Received: from iastakh-mobl.ccr.corp.intel.com (HELO localhost) ([10.252.63.229])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 01:43:16 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Pitre <nico@fluxnic.net>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        jonas@kwiboo.se, David Airlie <airlied@linux.ie>,
+        jernej.skrabec@siol.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+In-Reply-To: <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200417011146.83973-1-saeedm@mellanox.com> <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com> <nycvar.YSQ.7.76.2004181509030.2671@knanqh.ubzr> <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
+Date:   Mon, 20 Apr 2020 11:43:13 +0300
+Message-ID: <87v9lu1ra6.fsf@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VCNL4010 and VCNL4020 chips are able to raise interrupts on data ready.
-Use it to provide triggered buffer support for proximity data.
+On Sun, 19 Apr 2020, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> On Sun, Apr 19, 2020 at 4:11 AM Nicolas Pitre <nico@fluxnic.net> wrote:
+>>
+>> On Sun, 19 Apr 2020, Masahiro Yamada wrote:
+>>
+>> > (FOO || !FOO) is difficult to understand, but
+>> > the behavior of "uses FOO" is as difficult to grasp.
+>>
+>> Can't this be expressed as the following instead:
+>>
+>>         depends on FOO if FOO
+>>
+>> That would be a little clearer.
+>>
+>>
+>> Nicolas
+>
+>
+>
+> 'depends on' does not take the 'if <expr>'
+>
+> 'depends on A if B' is the syntax sugar of
+> 'depends on (A || !B), right ?
+>
+> I do not know how clearer it would make things.
+>
+> depends on (m || FOO != m)
+> is another equivalent, but we are always
+> talking about a matter of expression.
+>
+>
+> How important is it to stick to
+> depends on (FOO || !FOO)
+> or its equivalents?
+>
+>
+> If a driver wants to use the feature FOO
+> in most usecases, 'depends on FOO' is sensible.
+>
+> If FOO is just optional, you can get rid of the dependency,
+> and IS_REACHABLE() will do logically correct things.
 
-Those two chips also provide ambient light data. However, they are sampled
-at different rate than proximity data. As this is not handled by the IIO
-framework for now, and the sample frequencies of ambient light data are
-very low, do add buffer support for them.
+If by logically correct you mean the kernel builds, you're
+right. However the proliferation of IS_REACHABLE() is making the kernel
+config *harder* to understand. User enables FOO=m and expects BAR to use
+it, however if BAR=y it silently gets ignored. I have and I will oppose
+adding IS_REACHABLE() usage to i915 because it's just silently accepting
+configurations that should be flagged and forbidden at kconfig stage.
 
-Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
----
- drivers/iio/light/Kconfig    |   2 +
- drivers/iio/light/vcnl4000.c | 173 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 173 insertions(+), 2 deletions(-)
+> I do not think IS_REACHABLE() is too bad,
+> but if it is confusing, we can add one more
+> option to make it explicit.
+>
+>
+>
+> config DRIVER_X
+>        tristate "driver x"
+>
+> config DRIVER_X_USES_FOO
+>        bool "use FOO from driver X"
+>        depends on DRIVER_X
+>        depends on DRIVER_X <= FOO
+>        help
+>          DRIVER_X works without FOO, but
+>          Using FOO will provide better usability.
+>          Say Y if you want to make driver X use FOO.
+>
+>
+>
+> Of course,
+>
+>       if (IS_ENABLED(CONFIG_DRIVER_X_USES_FOO))
+>                foo_init();
+>
+> works like
+>
+>       if (IS_REACHABLE(CONFIG_FOO))
+>                 foo_init();
+>
+>
+> At lease, it will eliminate a question like
+> "I loaded the module FOO, I swear.
+> But my built-in driver X still would not use FOO, why?"
 
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index 74970f18a93b..05f61b1e223a 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -506,6 +506,8 @@ config US5182D
- 
- config VCNL4000
- 	tristate "VCNL4000/4010/4020/4200 combined ALS and proximity sensor"
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
- 	depends on I2C
- 	help
- 	  Say Y here if you want to build a driver for the Vishay VCNL4000,
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index 3f9d63858b51..a0b98fc1c7a9 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -5,6 +5,7 @@
-  *
-  * Copyright 2012 Peter Meerwald <pmeerw@pmeerw.net>
-  * Copyright 2019 Pursim SPC
-+ * Copyright 2020 Mathieu Othacehe <m.othacehe@gmail.com>
-  *
-  * IIO driver for:
-  *   VCNL4000/10/20 (7-bit I2C slave address 0x13)
-@@ -14,8 +15,7 @@
-  * TODO:
-  *   allow to adjust IR current
-  *   proximity threshold and event handling
-- *   periodic ALS/proximity measurement (VCNL4010/20)
-- *   interrupts (VCNL4010/20/40, VCNL4200)
-+ *   interrupts (VCNL4040, VCNL4200)
-  */
- 
- #include <linux/module.h>
-@@ -25,9 +25,13 @@
- #include <linux/pm_runtime.h>
- #include <linux/interrupt.h>
- 
-+#include <linux/iio/buffer.h>
- #include <linux/iio/events.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
- 
- #define VCNL4000_DRV_NAME "vcnl4000"
- #define VCNL4000_PROD_ID	0x01
-@@ -890,7 +894,14 @@ static const struct iio_chan_spec vcnl4010_channels[] = {
- 		.event_spec = vcnl4000_event_spec,
- 		.num_event_specs = ARRAY_SIZE(vcnl4000_event_spec),
- 		.ext_info = vcnl4000_ext_info,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_CPU,
-+		},
- 	},
-+	IIO_CHAN_SOFT_TIMESTAMP(1),
- };
- 
- static IIO_CONST_ATTR(in_illuminance_sampling_frequency_available,
-@@ -1012,10 +1023,153 @@ static irqreturn_t vcnl4010_irq_thread(int irq, void *p)
- 		mutex_unlock(&data->vcnl4000_lock);
- 	}
- 
-+	if (isr & VCNL4010_INT_DRDY && iio_buffer_enabled(indio_dev))
-+		iio_trigger_poll_chained(indio_dev->trig);
-+
-+end:
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t vcnl4010_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+	const unsigned long *active_scan_mask = indio_dev->active_scan_mask;
-+	u16 buffer[8] = {0}; /* 1x16-bit + ts */
-+	bool data_read = false;
-+	unsigned long isr;
-+	int val = 0;
-+	int ret;
-+
-+	mutex_lock(&data->vcnl4000_lock);
-+	ret = i2c_smbus_read_byte_data(data->client, VCNL4010_ISR);
-+	mutex_unlock(&data->vcnl4000_lock);
-+
-+	if (ret < 0)
-+		goto end;
-+
-+	isr = ret;
-+
-+	if (test_bit(0, active_scan_mask)) {
-+		if (test_bit(VCNL4010_INT_PROXIMITY, &isr)) {
-+			ret = vcnl4000_read_data(data,
-+						 VCNL4000_PS_RESULT_HI,
-+						 &val);
-+			if (ret < 0)
-+				goto end;
-+
-+			buffer[0] = val;
-+			data_read = true;
-+		}
-+	}
-+
-+	mutex_lock(&data->vcnl4000_lock);
-+	ret = i2c_smbus_write_byte_data(data->client, VCNL4010_ISR,
-+					isr & VCNL4010_INT_DRDY);
-+	mutex_unlock(&data->vcnl4000_lock);
-+
-+	if (ret < 0 || !data_read)
-+		goto end;
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, buffer,
-+					   iio_get_time_ns(indio_dev));
-+
- end:
-+	iio_trigger_notify_done(indio_dev->trig);
- 	return IRQ_HANDLED;
- }
- 
-+static int vcnl4010_buffer_postenable(struct iio_dev *indio_dev)
-+{
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+	int ret;
-+	int cmd;
-+
-+	ret = iio_triggered_buffer_postenable(indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&data->vcnl4000_lock);
-+
-+	ret = i2c_smbus_read_byte_data(data->client, VCNL4000_COMMAND);
-+	if (ret < 0)
-+		goto end;
-+
-+	/* Do not enable the buffer if we are already capturing events. */
-+	if ((ret & VCNL4000_SELF_TIMED_EN) > 0) {
-+		ret = -EBUSY;
-+		goto end;
-+	}
-+
-+	ret = i2c_smbus_write_byte_data(data->client, VCNL4010_INT_CTRL,
-+					VCNL4010_INT_PROX_EN);
-+	if (ret < 0)
-+		goto end;
-+
-+	cmd = VCNL4000_SELF_TIMED_EN | VCNL4000_PROX_EN;
-+	ret = i2c_smbus_write_byte_data(data->client, VCNL4000_COMMAND, cmd);
-+	if (ret < 0)
-+		goto end;
-+
-+end:
-+	mutex_unlock(&data->vcnl4000_lock);
-+	if (ret < 0)
-+		iio_triggered_buffer_predisable(indio_dev);
-+
-+	return ret;
-+}
-+
-+static int vcnl4010_buffer_predisable(struct iio_dev *indio_dev)
-+{
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+	int ret, ret_disable;
-+
-+	mutex_lock(&data->vcnl4000_lock);
-+
-+	ret = i2c_smbus_write_byte_data(data->client, VCNL4010_INT_CTRL, 0);
-+	if (ret < 0)
-+		goto end;
-+
-+	ret = i2c_smbus_write_byte_data(data->client, VCNL4000_COMMAND, 0);
-+
-+end:
-+	mutex_unlock(&data->vcnl4000_lock);
-+
-+	ret_disable = iio_triggered_buffer_predisable(indio_dev);
-+	if (ret == 0)
-+		ret = ret_disable;
-+
-+	return ret;
-+}
-+
-+static const struct iio_buffer_setup_ops vcnl4010_buffer_ops = {
-+	.postenable = &vcnl4010_buffer_postenable,
-+	.predisable = &vcnl4010_buffer_predisable,
-+};
-+
-+static const struct iio_trigger_ops vcnl4010_trigger_ops = {
-+	.validate_device = iio_trigger_validate_own_device,
-+};
-+
-+static int vcnl4010_probe_trigger(struct iio_dev *indio_dev)
-+{
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+	struct i2c_client *client = data->client;
-+	struct iio_trigger *trigger;
-+
-+	trigger = devm_iio_trigger_alloc(&client->dev, "%s-dev%d",
-+					 indio_dev->name, indio_dev->id);
-+	if (!trigger)
-+		return -ENOMEM;
-+
-+	trigger->dev.parent = &client->dev;
-+	trigger->ops = &vcnl4010_trigger_ops;
-+	iio_trigger_set_drvdata(trigger, indio_dev);
-+
-+	return devm_iio_trigger_register(&client->dev, trigger);
-+}
-+
- static int vcnl4000_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
- {
-@@ -1052,6 +1206,16 @@ static int vcnl4000_probe(struct i2c_client *client,
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
- 	if (client->irq && data->chip_spec->irq_support) {
-+		ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
-+						      NULL,
-+						      vcnl4010_trigger_handler,
-+						      &vcnl4010_buffer_ops);
-+		if (ret < 0) {
-+			dev_err(&client->dev,
-+				"unable to setup iio triggered buffer\n");
-+			return ret;
-+		}
-+
- 		ret = devm_request_threaded_irq(&client->dev, client->irq,
- 						NULL, vcnl4010_irq_thread,
- 						IRQF_TRIGGER_FALLING |
-@@ -1062,6 +1226,10 @@ static int vcnl4000_probe(struct i2c_client *client,
- 			dev_err(&client->dev, "irq request failed\n");
- 			return ret;
- 		}
-+
-+		ret = vcnl4010_probe_trigger(indio_dev);
-+		if (ret < 0)
-+			return ret;
- 	}
- 
- 	ret = pm_runtime_set_active(&client->dev);
-@@ -1157,5 +1325,6 @@ static struct i2c_driver vcnl4000_driver = {
- module_i2c_driver(vcnl4000_driver);
- 
- MODULE_AUTHOR("Peter Meerwald <pmeerw@pmeerw.net>");
-+MODULE_AUTHOR("Mathieu Othacehe <m.othacehe@gmail.com>");
- MODULE_DESCRIPTION("Vishay VCNL4000 proximity/ambient light sensor driver");
- MODULE_LICENSE("GPL");
+Please let's not make that a more widespread problem than it already
+is. I have yet to hear *one* good rationale for allowing that in the
+first place. And if that pops up, you can make it work by using
+IS_REACHABLE() *without* the depends, simply by checking if the module
+is there.
+
+Most use cases increasingly solved by IS_REACHABLE() should use the
+"depends on FOO || FOO=n" construct, but the problem is that's not
+widely understood. I'd like to have another keyword for people to
+copy-paste into their Kconfigs.
+
+In another mail I suggested
+
+	optionally depends on FOO
+
+might be a better alternative than "uses".
+
+
+BR,
+Jani.
+
 -- 
-2.26.0
-
+Jani Nikula, Intel Open Source Graphics Center
