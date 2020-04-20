@@ -2,166 +2,225 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA68C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54533C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF5521D82
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C33E21D82
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgDTD2V (ORCPT
+        id S1726173AbgDTDbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 23:28:21 -0400
-Received: from mga09.intel.com ([134.134.136.24]:38261 "EHLO mga09.intel.com"
+        Sun, 19 Apr 2020 23:31:31 -0400
+Received: from mga17.intel.com ([192.55.52.151]:35291 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgDTD2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 23:28:21 -0400
-IronPort-SDR: HxJ2i4q39Vzlq9hk71piAICkRbLiE2pmH84WUcEaBnStIN0ltZ/W2OeJRiK4/xuQOQdBCSwOZj
- b3GqoFoXcZUw==
+        id S1725896AbgDTDba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 23:31:30 -0400
+IronPort-SDR: I07uk5suiviV70XibrfyO0m9eSbfYjbBx7INzIyPLCKW/8XjM3/ssgL+xLNeSNOqDUkVTlH0IC
+ lifRZsFmy+Rw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 20:28:20 -0700
-IronPort-SDR: HAo3SnHSgS33uHmI/1WIj+u8MQgHZlw7cOFUr8mBDve0Oo8JvF0iK+RXOd39QJm38wIK6S1q0o
- bGN5MbOYUoYg==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 20:31:30 -0700
+IronPort-SDR: edhuHMjqHP9ErywtRRWHrLaytJmqVEjKvc7uIf+5na+R+BKrRYIRKDtE2lsM3pbSBKyN7z6L8e
+ VL3qFI+42lnQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
-   d="scan'208";a="333784767"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 19 Apr 2020 20:28:20 -0700
-Received: from [10.249.68.96] (vramuthx-mobl1.gar.corp.intel.com [10.249.68.96])
-        by linux.intel.com (Postfix) with ESMTP id 90C52580479;
-        Sun, 19 Apr 2020 20:28:15 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, piotrs@cadence.com, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200419222817.GK185537@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <cee6075c-a801-a0a9-f0b7-83c0a8c4fe80@linux.intel.com>
-Date:   Mon, 20 Apr 2020 11:28:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200419222817.GK185537@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+   d="scan'208";a="273046498"
+Received: from glass.png.intel.com ([172.30.181.92])
+  by orsmga002.jf.intel.com with ESMTP; 19 Apr 2020 20:31:24 -0700
+From:   Wong Vee Khee <vee.khee.wong@intel.com>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Wei Feng <weifeng.voon@intel.com>,
+        Wong Vee Khee <vee.khee.wong@intel.com>
+Subject: [PATCH net-next 1/1] net: stmmac: Add support for VLAN promiscuous mode
+Date:   Mon, 20 Apr 2020 11:33:59 +0800
+Message-Id: <20200420033359.11610-1-vee.khee.wong@intel.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+From: "Chuah, Kim Tatt" <kim.tatt.chuah@intel.com>
 
-   Thank you very much for the review comments and your time...
+For dwmac4, enable VLAN promiscuity when MAC controller is requested to
+enter promiscuous mode.
 
-On 20/4/2020 6:28 am, Andy Shevchenko wrote:
-> On Fri, Apr 17, 2020 at 04:21:47PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> This patch adds the new IP of Nand Flash Controller(NFC) support
->> on Intel's Lightning Mountain(LGM) SoC.
->>
->> DMA is used for burst data transfer operation, also DMA HW supports
->> aligned 32bit memory address and aligned data access by default.
->> DMA burst of 8 supported. Data register used to support the read/write
->> operation from/to device.
->>
->> NAND controller driver implements ->exec_op() to replace legacy hooks,
->> these specific call-back method to execute NAND operations.
-> I guess untested version slipped into mailing list...
-> See below why.
+Signed-off-by: Chuah, Kim Tatt <kim.tatt.chuah@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Tan, Tee Min <tee.min.tan@intel.com>
+Signed-off-by: Wong Vee Khee <vee.khee.wong@intel.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/common.h  |  1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h  |  1 +
+ .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 67 +++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  2 +-
+ 4 files changed, 70 insertions(+), 1 deletion(-)
 
-Sorry, This is original patch only , header files are mis-aligned so 
-looks like un-tested patch.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 6208a68a331d..127f75862962 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -473,6 +473,7 @@ struct mac_device_info {
+ 	unsigned int xlgmac;
+ 	unsigned int num_vlan;
+ 	u32 vlan_filter[32];
++	unsigned int promisc;
+ };
+ 
+ struct stmmac_rx_routing {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+index 28cac28253b8..61f3249bd724 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+@@ -90,6 +90,7 @@
+ #define GMAC_VLAN_CSVL			BIT(19)
+ #define GMAC_VLAN_VLC			GENMASK(17, 16)
+ #define GMAC_VLAN_VLC_SHIFT		16
++#define GMAC_VLAN_VLHT			GENMASK(15, 0)
+ 
+ /* MAC VLAN Tag */
+ #define GMAC_VLAN_TAG_VID		GENMASK(15, 0)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 39692d15d80c..ecd834e0e121 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -450,6 +450,12 @@ static int dwmac4_add_hw_vlan_rx_fltr(struct net_device *dev,
+ 	if (vid > 4095)
+ 		return -EINVAL;
+ 
++	if (hw->promisc) {
++		netdev_err(dev,
++			   "Adding VLAN in promisc mode not supported\n");
++		return -EPERM;
++	}
++
+ 	/* Single Rx VLAN Filter */
+ 	if (hw->num_vlan == 1) {
+ 		/* For single VLAN filter, VID 0 means VLAN promiscuous */
+@@ -499,6 +505,12 @@ static int dwmac4_del_hw_vlan_rx_fltr(struct net_device *dev,
+ {
+ 	int i, ret = 0;
+ 
++	if (hw->promisc) {
++		netdev_err(dev,
++			   "Deleting VLAN in promisc mode not supported\n");
++		return -EPERM;
++	}
++
+ 	/* Single Rx VLAN Filter */
+ 	if (hw->num_vlan == 1) {
+ 		if ((hw->vlan_filter[0] & GMAC_VLAN_TAG_VID) == vid) {
+@@ -523,9 +535,45 @@ static int dwmac4_del_hw_vlan_rx_fltr(struct net_device *dev,
+ 	return ret;
+ }
+ 
++static void dwmac4_vlan_promisc_enable(struct net_device *dev,
++				       struct mac_device_info *hw)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value;
++	u32 hash;
++	u32 val;
++	int i;
++
++	/* Single Rx VLAN Filter */
++	if (hw->num_vlan == 1) {
++		dwmac4_write_single_vlan(dev, 0);
++		return;
++	}
++
++	/* Extended Rx VLAN Filter Enable */
++	for (i = 0; i < hw->num_vlan; i++) {
++		if (hw->vlan_filter[i] & GMAC_VLAN_TAG_DATA_VEN) {
++			val = hw->vlan_filter[i] & ~GMAC_VLAN_TAG_DATA_VEN;
++			dwmac4_write_vlan_filter(dev, hw, i, val);
++		}
++	}
++
++	hash = readl(ioaddr + GMAC_VLAN_HASH_TABLE);
++	if (hash & GMAC_VLAN_VLHT) {
++		value = readl(ioaddr + GMAC_VLAN_TAG);
++		if (value & GMAC_VLAN_VTHM) {
++			value &= ~GMAC_VLAN_VTHM;
++			writel(value, ioaddr + GMAC_VLAN_TAG);
++		}
++	}
++}
++
+ static void dwmac4_restore_hw_vlan_rx_fltr(struct net_device *dev,
+ 					   struct mac_device_info *hw)
+ {
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value;
++	u32 hash;
+ 	u32 val;
+ 	int i;
+ 
+@@ -542,6 +590,13 @@ static void dwmac4_restore_hw_vlan_rx_fltr(struct net_device *dev,
+ 			dwmac4_write_vlan_filter(dev, hw, i, val);
+ 		}
+ 	}
++
++	hash = readl(ioaddr + GMAC_VLAN_HASH_TABLE);
++	if (hash & GMAC_VLAN_VLHT) {
++		value = readl(ioaddr + GMAC_VLAN_TAG);
++		value |= GMAC_VLAN_VTHM;
++		writel(value, ioaddr + GMAC_VLAN_TAG);
++	}
+ }
+ 
+ static void dwmac4_set_filter(struct mac_device_info *hw,
+@@ -624,6 +679,18 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 		value |= GMAC_PACKET_FILTER_VTFE;
+ 
+ 	writel(value, ioaddr + GMAC_PACKET_FILTER);
++
++	if (dev->flags & IFF_PROMISC) {
++		if (!hw->promisc) {
++			hw->promisc = 1;
++			dwmac4_vlan_promisc_enable(dev, hw);
++		}
++	} else {
++		if (hw->promisc) {
++			hw->promisc = 0;
++			dwmac4_restore_hw_vlan_rx_fltr(dev, hw);
++		}
++	}
+ }
+ 
+ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index e6898fd5223f..80250c7be783 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4877,7 +4877,6 @@ int stmmac_dvr_probe(struct device *device,
+ 		}
+ 	}
+ 
+-	ndev->features |= ndev->hw_features | NETIF_F_HIGHDMA;
+ 	ndev->watchdog_timeo = msecs_to_jiffies(watchdog);
+ #ifdef STMMAC_VLAN_TAG_USED
+ 	/* Both mac100 and gmac support receive VLAN tag detection */
+@@ -4892,6 +4891,7 @@ int stmmac_dvr_probe(struct device *device,
+ 			ndev->features |= NETIF_F_HW_VLAN_STAG_TX;
+ 	}
+ #endif
++	ndev->features |= ndev->hw_features | NETIF_F_HIGHDMA;
+ 	priv->msg_enable = netif_msg_init(debug, default_msg_level);
+ 
+ 	/* Initialize RSS */
+-- 
+2.17.0
 
-> ...
->
->> +#include <linux/clk.h>
->> +#include <linux/completion.h>
->> +#include <linux/dmaengine.h>
->> +#include <linux/dma-direction.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/err.h>
->> +#include <linux/init.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/module.h>
->> +#include <linux/resource.h>
->> +#include <linux/sched.h>
->> +#include <linux/types.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/mtd/rawnand.h>
->> +#include <linux/mtd/nand_ecc.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of.h>
-> Do you need this?
-Noted, will check and drop if it is notnecessary.
->> +#include <linux/mtd/partitions.h>
->> +#include <linux/io.h>
->> +#include <linux/slab.h>
->> +#include <mtd/mtd-abi.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/mtd/nand.h>
-> Basically, do you need all of them?
->
-> And maybe keep them in order?
-Sure, will update.
-> ...
->
->> +static int lgm_dma_init(struct device *dev, struct lgm_nand_host *lgm_host)
->> +{
->> +	int ret;
->> +
->> +	/* Prepare for TX DMA: */
->> +	lgm_host->dma_tx = dma_request_chan(dev, "tx");
->> +	if (IS_ERR(lgm_host->dma_tx)) {
->> +		ret = PTR_ERR(lgm_host->dma_tx);
->> +		dev_err(dev, "can't get the TX DMA channel, error %d!\n", ret);
->> +		goto err;
->> +	}
->> +
->> +	/* Prepare for RX: */
->> +	lgm_host->dma_rx = dma_request_chan(dev, "rx");
->> +	if (IS_ERR(lgm_host->dma_rx)) {
->> +		ret = PTR_ERR(lgm_host->dma_rx);
->> +		dev_err(dev, "can't get the RX DMA channel, error %d\n", ret);
-> I suspect this error path hasn't been tested. I don't see where tx channel
-> freeing is happening.
-Good catch, Thanks!, will update
->> +		goto err;
->> +	}
->> +
->> +	return 0;
->> +err:
->> +	return ret;
-> Redundant label.
-Noted.
->> +}
-> ...
->
->> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
->> +	lgm_host->nandaddr_va = res;
->> +	nandaddr_pa = res->start;
->> +	if (IS_ERR(lgm_host->nandaddr_va))
->> +		return PTR_ERR(lgm_host->nandaddr_va);
-> I'm wonderig what is this.  How is it even compile?
-
-Agreed!, need a correction, but it's compiled.
-
-Regards
-Vadivel
->
