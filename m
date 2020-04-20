@@ -2,72 +2,83 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEAAC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2EBC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46E912071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF4821744
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hG44Nr7n"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="NwqsVU23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgDTKav (ORCPT
+        id S1726161AbgDTKbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 06:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725775AbgDTKav (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 06:30:51 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C256BC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 03:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BvN7RLIcpSybBv1y35pdwDqup1KO/lx80cy/owfczXc=; b=hG44Nr7nPMFdbwohdRdRqsqd4O
-        KPfyFOaQnj6Nd/qTgJrlYLRL8/HMJH3pPoegG3D+s2e1PBGuAwLQcwLclGvUyztN+I7aBv/50YMLb
-        3L5BSE7FyjJVNMJtfXRrXxUk20eDLemhhEGtFvfv6oKGiJVwWQrvOOuuRdZ5DO65gC1cHvkJGBE+h
-        2Jwgsuo6P9Twcs4/Z5S+MCAQemg+qHiWJtAS5+j10i3r/7eZiYaY3KIxpiRaj/ay350z7/EYgoqY1
-        ckVSh0trQXh3Rm0vgvulQ0MuuIoPsv1iXzU4Z+zHwemozCc8BUz/zkLUJqRTTBESdJKR5p8pD6Wj5
-        GzAX0AIA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQTh9-0002yc-MO; Mon, 20 Apr 2020 10:30:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 49A763010BC;
-        Mon, 20 Apr 2020 12:30:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 33BAB2B8DAF29; Mon, 20 Apr 2020 12:30:28 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 12:30:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: hide __pte2cachemode_tbl and __cachemode2pte_tbl
-Message-ID: <20200420103028.GC20696@hirez.programming.kicks-ass.net>
-References: <20200408152745.1565832-1-hch@lst.de>
+        Mon, 20 Apr 2020 06:31:19 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53412 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbgDTKbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 06:31:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1587378677; bh=/yBEOQg36NmTB26lwG9esRHwBVVu8AY1wtn2VnP7cZU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NwqsVU23pOZdrdNtM/TxIjsLxRszSZsNu4I7tPd1CyESi2GXRZ7Vm6ZPODjjvUgB7
+         RRbLUbxzbXyQ393pRruYQbWBecGl/oapIgYDj1OIGfMZUIanelMIPI69Ze1dSYNncU
+         EGnTh2JZncF1SA7sTFOkc/O6pB215RLpFG6ow1dw=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] arm64: dts: allwinner: sun50i-a64: Add missing address/size-cells
+Date:   Mon, 20 Apr 2020 12:31:13 +0200
+Message-Id: <20200420103113.577969-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408152745.1565832-1-hch@lst.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 05:27:41PM +0200, Christoph Hellwig wrote:
-> Hi all,
-> 
-> this series avoids pointlessly exposing the cachemode to pte bit
-> translation tables to modules.
+The binding specifies #address-cells and #size-cells should be present.
+Without them present, dtc issues a warning because default for
+#address-cells seems to be <2>:
 
-Nice!
+arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1108.4-52:
+  Warning (dma_ranges_format):
+    /soc/dram-controller@1c62000:dma-ranges:
+    "dma-ranges" property has invalid length (12 bytes)
+    (parent #address-cells == 1, child #address-cells == 2,
+    #size-cells == 1)
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+mbus #address-cells should be 1.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index cca4261089aa..61698094f450 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -1105,6 +1105,8 @@ mbus: dram-controller@1c62000 {
+ 			compatible = "allwinner,sun50i-a64-mbus";
+ 			reg = <0x01c62000 0x1000>;
+ 			clocks = <&ccu 112>;
++			#address-cells = <1>;
++			#size-cells = <1>;
+ 			dma-ranges = <0x00000000 0x40000000 0xc0000000>;
+ 			#interconnect-cells = <1>;
+ 		};
+-- 
+2.26.1
+
