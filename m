@@ -2,52 +2,53 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D155AC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC94C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC4B22072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F972070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386540;
-	bh=2wn0F3Rb9BTNHNvimEOaOhQbgSSFphhXDg2fGL1HMX8=;
+	s=default; t=1587386544;
+	bh=/6Zk/WfSEcta6ObKXtkziK3NKWfi7EYrd+xW2/jWKoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s+ZgS6cKZe8qCOSFPUHyPTQM5pJgoVORy5MYfFvgSpyLYyQlDchYYZux+EJd3eDp8
-	 NFLsfhr2oGHhTMpGgK4mqdOCE0RZ3TQR5CcYLa9GQtHyzwO4jBA8MAqvLouUJP3/rv
-	 OCFOTiMOS38hACv/av0ztmDmM/Hf06EM5tjuODbc=
+	b=hQvonDESEP0/dR+t7KI2ddr2/w14w212bDjly8M9GJ8NpNcE49suxcBWITvFhaDqH
+	 +JpuGMliOp8WKRr2YLS4yDGlHmMlqBn4AJTGJuvdTXv155KUOfCgUFfbH11r8vGpip
+	 Bprznrn75Lo4mkrLT7l43zvSiaCrPg6tRGXWyTTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgDTMmT (ORCPT
+        id S1726898AbgDTMmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:42:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35152 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:42:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728175AbgDTMmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:42:14 -0400
+        id S1728185AbgDTMmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:42:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 207292070B;
-        Mon, 20 Apr 2020 12:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 160482070B;
+        Mon, 20 Apr 2020 12:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386533;
-        bh=2wn0F3Rb9BTNHNvimEOaOhQbgSSFphhXDg2fGL1HMX8=;
+        s=default; t=1587386538;
+        bh=/6Zk/WfSEcta6ObKXtkziK3NKWfi7EYrd+xW2/jWKoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AjJUBs7436ZHVuV3h0NDMZ6eWZSuEorAkS6x2FBW3wvtksXZd0AuV/nQBriQIzL3+
-         43VCPpkWiWhiWGT1uLH5n7hUQYEblpwbkvoBs6hqDeCXRSgGq12ov5hGWtIrYslojn
-         zEst8UbiYJ+itpvfJ2osHSkrxH+l6NQEIzEOkoi4=
+        b=WEcTFsuwLE0zG4Urnvhp5kHYLHDy3RyZ6s/IjzG+ydgrTRe4B0XE88+lQiqQorgzu
+         3fZqikUVf153E1+rtjdvYYdrMmdnu0pY4wZClWx/57BKFD2kHUGrnZFyzQspZ5n+Uz
+         A5Y0UyQZCHGKR2G6iun9oL+tXu8e6L7VjMmqLVjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.5 61/65] x86/resctrl: Preserve CDP enable over CPU hotplug
-Date:   Mon, 20 Apr 2020 14:39:05 +0200
-Message-Id: <20200420121519.717649306@linuxfoundation.org>
+        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
+        Maurizio Lombardi <mlombard@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 63/65] scsi: target: remove boilerplate code
+Date:   Mon, 20 Apr 2020 14:39:07 +0200
+Message-Id: <20200420121520.027764023@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -60,74 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Maurizio Lombardi <mlombard@redhat.com>
 
-commit 9fe0450785abbc04b0ed5d3cf61fcdb8ab656b4b upstream.
+[ Upstream commit e49a7d994379278d3353d7ffc7994672752fb0ad ]
 
-Resctrl assumes that all CPUs are online when the filesystem is mounted,
-and that CPUs remember their CDP-enabled state over CPU hotplug.
+iscsit_free_session() is equivalent to iscsit_stop_session() followed by a
+call to iscsit_close_session().
 
-This goes wrong when resctrl's CDP-enabled state changes while all the
-CPUs in a domain are offline.
-
-When a domain comes online, enable (or disable!) CDP to match resctrl's
-current setting.
-
-Fixes: 5ff193fbde20 ("x86/intel_rdt: Add basic resctrl filesystem support")
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200221162105.154163-1-james.morse@arm.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200313170656.9716-2-mlombard@redhat.com
+Tested-by: Rahul Kundu <rahul.kundu@chelsio.com>
+Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/resctrl/core.c     |    2 ++
- arch/x86/kernel/cpu/resctrl/internal.h |    1 +
- arch/x86/kernel/cpu/resctrl/rdtgroup.c |   13 +++++++++++++
- 3 files changed, 16 insertions(+)
+ drivers/target/iscsi/iscsi_target.c | 46 ++---------------------------
+ drivers/target/iscsi/iscsi_target.h |  1 -
+ 2 files changed, 2 insertions(+), 45 deletions(-)
 
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -578,6 +578,8 @@ static void domain_add_cpu(int cpu, stru
- 	d->id = id;
- 	cpumask_set_cpu(cpu, &d->cpu_mask);
- 
-+	rdt_domain_reconfigure_cdp(r);
-+
- 	if (r->alloc_capable && domain_setup_ctrlval(r, d)) {
- 		kfree(d);
- 		return;
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -601,5 +601,6 @@ bool has_busy_rmid(struct rdt_resource *
- void __check_limbo(struct rdt_domain *d, bool force_free);
- bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
- bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
-+void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
- 
- #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1769,6 +1769,19 @@ static int set_cache_qos_cfg(int level,
- 	return 0;
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
+index 09e55ea0bf5d5..ff85666d4e029 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4567,49 +4567,6 @@ void iscsit_fail_session(struct iscsi_session *sess)
+ 	sess->session_state = TARG_SESS_STATE_FAILED;
  }
  
-+/* Restore the qos cfg state when a domain comes online */
-+void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
-+{
-+	if (!r->alloc_capable)
-+		return;
-+
-+	if (r == &rdt_resources_all[RDT_RESOURCE_L2DATA])
-+		l2_qos_cfg_update(&r->alloc_enabled);
-+
-+	if (r == &rdt_resources_all[RDT_RESOURCE_L3DATA])
-+		l3_qos_cfg_update(&r->alloc_enabled);
-+}
-+
- /*
-  * Enable or disable the MBA software controller
-  * which helps user specify bandwidth in MBps.
+-int iscsit_free_session(struct iscsi_session *sess)
+-{
+-	u16 conn_count = atomic_read(&sess->nconn);
+-	struct iscsi_conn *conn, *conn_tmp = NULL;
+-	int is_last;
+-
+-	spin_lock_bh(&sess->conn_lock);
+-	atomic_set(&sess->sleep_on_sess_wait_comp, 1);
+-
+-	list_for_each_entry_safe(conn, conn_tmp, &sess->sess_conn_list,
+-			conn_list) {
+-		if (conn_count == 0)
+-			break;
+-
+-		if (list_is_last(&conn->conn_list, &sess->sess_conn_list)) {
+-			is_last = 1;
+-		} else {
+-			iscsit_inc_conn_usage_count(conn_tmp);
+-			is_last = 0;
+-		}
+-		iscsit_inc_conn_usage_count(conn);
+-
+-		spin_unlock_bh(&sess->conn_lock);
+-		iscsit_cause_connection_reinstatement(conn, 1);
+-		spin_lock_bh(&sess->conn_lock);
+-
+-		iscsit_dec_conn_usage_count(conn);
+-		if (is_last == 0)
+-			iscsit_dec_conn_usage_count(conn_tmp);
+-
+-		conn_count--;
+-	}
+-
+-	if (atomic_read(&sess->nconn)) {
+-		spin_unlock_bh(&sess->conn_lock);
+-		wait_for_completion(&sess->session_wait_comp);
+-	} else
+-		spin_unlock_bh(&sess->conn_lock);
+-
+-	iscsit_close_session(sess);
+-	return 0;
+-}
+-
+ void iscsit_stop_session(
+ 	struct iscsi_session *sess,
+ 	int session_sleep,
+@@ -4694,7 +4651,8 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
+ 	list_for_each_entry_safe(se_sess, se_sess_tmp, &free_list, sess_list) {
+ 		sess = (struct iscsi_session *)se_sess->fabric_sess_ptr;
+ 
+-		iscsit_free_session(sess);
++		iscsit_stop_session(sess, 1, 1);
++		iscsit_close_session(sess);
+ 		session_count++;
+ 	}
+ 
+diff --git a/drivers/target/iscsi/iscsi_target.h b/drivers/target/iscsi/iscsi_target.h
+index c95f56a3ce31b..7409ce2a66078 100644
+--- a/drivers/target/iscsi/iscsi_target.h
++++ b/drivers/target/iscsi/iscsi_target.h
+@@ -43,7 +43,6 @@ extern int iscsi_target_rx_thread(void *);
+ extern int iscsit_close_connection(struct iscsi_conn *);
+ extern int iscsit_close_session(struct iscsi_session *);
+ extern void iscsit_fail_session(struct iscsi_session *);
+-extern int iscsit_free_session(struct iscsi_session *);
+ extern void iscsit_stop_session(struct iscsi_session *, int, int);
+ extern int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *, int);
+ 
+-- 
+2.20.1
+
 
 
