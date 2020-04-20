@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31357C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4529BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B2520735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9B220735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386523;
-	bh=lUtbY+053Ai2lRHwjODFMXVMPnNRWPaJ+7OKN4N2kGE=;
+	s=default; t=1587386526;
+	bh=V0T2vJzigYrVCiLWOSJATcPRyJ+EEu6I4/FrCJIURc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ejDvKsAvuBs/+WM8dsxdOHlcVLjNLt2Sc/HiNM1OFQvN3V+Ms3U4ASEVq2tNB5D3l
-	 AtAqvhjywuvHFn6LJ5HLSjUTdM/2ryz6PRZ5LVi/FbJnWVK4DwR9k6+pddIW4cu4zo
-	 IkLSp7VoAji3/HvlE52tp/iijI+QTxqfwS1NkkrQ=
+	b=Y+pdPXRn+ofi3ZzZFEOKgGfEfzyDprdSH8bbI2EPwO84K2JAHN6mLg/xIQ9l+V2gS
+	 0iqEQncZBMJn/rB7FibTkwSpBweCV0bQTnaGOlmkilV2g4MaH4fB+DNQ6w2xN9hmkO
+	 rSmAT48geIceFDWspcr8vGVfCIl09I1oFuaVi39Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgDTMmC (ORCPT
+        id S1728150AbgDTMmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:42:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34836 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbgDTMl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:41:59 -0400
+        id S1726495AbgDTMmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:42:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 392ED2072B;
-        Mon, 20 Apr 2020 12:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8CF02070B;
+        Mon, 20 Apr 2020 12:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386518;
-        bh=lUtbY+053Ai2lRHwjODFMXVMPnNRWPaJ+7OKN4N2kGE=;
+        s=default; t=1587386521;
+        bh=V0T2vJzigYrVCiLWOSJATcPRyJ+EEu6I4/FrCJIURc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q0H2om6vSMlXJfVzjzrQ16BZ0yeYeTZooYZ3cbL8iGu7YmAv7ipqMn4CP1p0KaKO3
-         JkUO1Bdn0tlus/w/m2KnK4W+s1HpNh4cXFv1IRhHEP4N2AAM27uwTo/ClYz86z6GJk
-         z2o8AYLCZWxLK5KdjqQbnonVIzbbNQOES2hvFCRM=
+        b=WTgX4r/7yviKkwrTSOMdpmz1Kp3ODIRQYifxlHWFh7yq5U5h8KELTiWHiB7Qq9vcl
+         k/mekQjyWplYrXWhqcGf25MIONhjV0nPXRH45Z89a38ehwMw/R1POg1rFhnzrevTHf
+         a2rWIf9whwTi1nuXfE8Hl8bcn3EWmiKVI+knvrUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prike Liang <Prike.Liang@amd.com>,
-        Mengbing Wang <Mengbing.Wang@amd.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.5 56/65] drm/amdgpu: fix the hw hang during perform system reboot and reset
-Date:   Mon, 20 Apr 2020 14:39:00 +0200
-Message-Id: <20200420121518.853061544@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.5 39/65] ASoC: Intel: mrfld: return error codes when an error occurs
+Date:   Mon, 20 Apr 2020 14:38:43 +0200
+Message-Id: <20200420121514.876500623@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -61,37 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prike Liang <Prike.Liang@amd.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit b2a7e9735ab2864330be9d00d7f38c961c28de5d upstream.
+commit 3025571edd9df653e1ad649f0638368a39d1bbb5 upstream.
 
-The system reboot failed as some IP blocks enter power gate before perform
-hw resource destory. Meanwhile use unify interface to set device CGPG to ungate
-state can simplify the amdgpu poweroff or reset ungate guard.
+Currently function sst_platform_get_resources always returns zero and
+error return codes set by the function are never returned. Fix this
+by returning the error return code in variable ret rather than the
+hard coded zero.
 
-Fixes: 487eca11a321ef ("drm/amdgpu: fix gfx hang during suspend with video playback (v2)")
-Signed-off-by: Prike Liang <Prike.Liang@amd.com>
-Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
-Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Addresses-Coverity: ("Unused value")
+Fixes: f533a035e4da ("ASoC: Intel: mrfld - create separate module for pci part")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200208220720.36657-1-colin.king@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/intel/atom/sst/sst_pci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -2259,6 +2259,8 @@ static int amdgpu_device_ip_suspend_phas
- {
- 	int i, r;
+--- a/sound/soc/intel/atom/sst/sst_pci.c
++++ b/sound/soc/intel/atom/sst/sst_pci.c
+@@ -99,7 +99,7 @@ static int sst_platform_get_resources(st
+ 	dev_dbg(ctx->dev, "DRAM Ptr %p\n", ctx->dram);
+ do_release_regions:
+ 	pci_release_regions(pci);
+-	return 0;
++	return ret;
+ }
  
-+	amdgpu_device_set_pg_state(adev, AMD_PG_STATE_UNGATE);
-+	amdgpu_device_set_cg_state(adev, AMD_CG_STATE_UNGATE);
- 
- 	for (i = adev->num_ip_blocks - 1; i >= 0; i--) {
- 		if (!adev->ip_blocks[i].status.valid)
+ /*
 
 
