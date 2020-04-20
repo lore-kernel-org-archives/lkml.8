@@ -2,102 +2,250 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B56C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DA1C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80D46206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852EF206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cBB7mGAv"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hfCwL9e+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgDTSUN (ORCPT
+        id S1727957AbgDTSUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:20:13 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51380 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgDTSUN (ORCPT
+        Mon, 20 Apr 2020 14:20:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgDTSUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:20:13 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03KIIT2L092800;
-        Mon, 20 Apr 2020 18:19:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=QuIWgezP2N6hj71rPIzbG6Obl8hHzVzSMPSsXiwJCsI=;
- b=cBB7mGAvxJ2V8s5aBFkjjXLjwc8AT3o12QHla3fJLnBxU0k3INOxI3Yg40OApw2TwAC4
- 58zx7ppDm4KAPQ04PV1a0wn3O5cLSSRx8q5UUzGeCsfjw2RpRb5HMzTD+yVU+m4mZDal
- nPd+REyB7EHlEWm2Z+iWpD3uP2ZnBqsKE6ZLjdedkOwatIRb4zvYmsMzZpekjFpXJGO1
- qW5JCFkLG8G5Pv8tBIJTlWa2Lf78IVVK8sMQt+JFuq5ZFr9qRSbGnO2rP09NQxP9vqDS
- +qlPekYE3wdDouEAZBfDtX3RAPsyTBV1G2psq0ymHsgrB7V6zqCwynDPDGT4Nekn5U1q Yg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30fsgkrxdx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 18:19:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03KICOPw060724;
-        Mon, 20 Apr 2020 18:19:48 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30gbbb9eye-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 18:19:48 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03KIJkEb019234;
-        Mon, 20 Apr 2020 18:19:46 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 Apr 2020 11:19:46 -0700
-Date:   Mon, 20 Apr 2020 14:19:58 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: Re: [PATCH v4 06/10] mmap locking API: convert nested write lock
- sites
-Message-ID: <20200420181958.vn7l3f5zylhoo7fj@ca-dmjordan1.us.oracle.com>
-References: <20200415004353.130248-1-walken@google.com>
- <20200415004353.130248-7-walken@google.com>
+        Mon, 20 Apr 2020 14:20:14 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B010C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:20:14 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id r16so1507345edw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZtO01bYahgOb7Z9oRmIlu41t03TJcXzE5gRBaNEAL7Q=;
+        b=hfCwL9e+vf+caPGwbcjlSh2CVWoPvLRnIJcrj9mrBBg13LqXHm391fyBRHAGUhOojJ
+         LFECsoHiwbzsCXzyE4yH5jK/CDgMbH7FByj4ye7bEj/Ofh9EY2YC2x6C7G6R7GjxFyvx
+         2gRQywjHtfuTQV7PlTAPcwJydCPzueCu7uy7izUk1uyjenndaa6On7aS8aabj3t4uFE+
+         p8oCadvi8p8EhSxf6uH8wrvny0KrtCMVNd4OS91UYmaa2RWisGlQjHRt7xajzGeHfkD+
+         77kA25TlmNCq/KLfxDuchQz6UT/xj/9zjeQ2akTKJ8eiod7ODfifUo9nA88OMQiZpONE
+         lY+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZtO01bYahgOb7Z9oRmIlu41t03TJcXzE5gRBaNEAL7Q=;
+        b=aKczS7kotAdB8t8Ir7051qp9U8AA2+6++s8qyeLAH7W99OwKKodzoMMbDpo/OnOeSS
+         2pNemaR6h8Yub3CGZPmyOIhRR8qoExRKIqkBmfzNCV36gpz5hKHYda2vsTRkO0Cz5fKw
+         bQSF1/idE52agrV3p7Jynzk37HPuvCM5vYz8dFKh2wvDdzQ9o1pXURFb46zxW6ZLRV4s
+         fVvBV/OlcsjbJdV0gt0unvUMTwiGuAU4L+i3vGL78klGHVo+gr5p57aozjXNo9CzFdo7
+         KPVldDmbaRRURBI4F7VcmR5ozn8zb79ivqH0ecY5nC21+3RGy+Xu3B20aggMzSPh9A+e
+         HXYg==
+X-Gm-Message-State: AGi0PubbvhK5yVqq6tHhvLkYuH7ZwBcKAiBBa90jKUsPBFngvVFh0ioV
+        JRmrUc2oYGhZz+OLIraq2Ueq0oXlz52BPau9uM3LmQ==
+X-Google-Smtp-Source: APiQypIB2bw4dzyFz/giglaCjVx3tH8usOa1T6pRutdl0wU2qwmyfZCwpwPbaM4BrQQaPmzCgUG//qy8oe92xQNI5M4=
+X-Received: by 2002:a50:ee86:: with SMTP id f6mr16488628edr.123.1587406812976;
+ Mon, 20 Apr 2020 11:20:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415004353.130248-7-walken@google.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9597 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200147
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9597 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200147
+References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net>
+ <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
+ <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com> <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com>
+In-Reply-To: <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 20 Apr 2020 11:20:01 -0700
+Message-ID: <CAPcyv4hrfZsg48Gw_s7xTLLhjLTk_U+PV0MsLnG+xh3652xFCQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 05:43:49PM -0700, Michel Lespinasse wrote:
-> Add API for nested write locks and convert the few call sites doing that.
-> 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
+On Mon, Apr 20, 2020 at 10:29 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sun, Apr 19, 2020 at 10:08 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > Do we have examples of doing exception handling from C? I thought all
+> > the exception handling copy routines were assembly routines?
+>
+> You need assembler for the actual access, but that's a _single_
+> instruction - best done as inline asm.
+>
+> The best example of something that does *exactly* what you want to do is likely
+>
+>         unsafe_get_user();
+>         unsafe_put_user();
+>
+> which basically turns into a single instruction with exception
+> handling, with the exception hander jumping directly to an error
+> label.
+>
+> Ok, so right now gcc can't do that for inline asm with outputs, so it
+> generates fairly nasty code (a secondary register with the error state
+> that then causes a conditional branch on it), but that's a compiler
+> limitation that will eventually go away (where "eventially" means that
+> it already works in LLVM with experimental patches).
+>
+> You could literally mis-use those helpers as-is (please don't - the
+> code generation is correct, but at the very least we'd have to
+> re-organize a bit to make it a better interface, ie have an
+> alternative name like "unsafe_get_kernel()" for kernel pointer
+> accesses).
+>
+> You'd have to do the alignment guarantees yourself, but there are
+> examples of that in this area too (strnlen_user() does exactly that -
+> aligned word accesses).
 
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Ok, I'll take a deeper look, but my initial reaction is that this
+approach could be a way to replace memcpy_mcsafe_slow(), but would be
+unfortunate for the fast case which can just use rep; movs;
+
+>
+> So the point here is that the current interfaces are garbage, _if_ the
+> whole "access a single value" is actually performance-critical.
+>
+> And if that is *not* the case, then the best thing to do is likely to
+> just use a static call. No inlining of single instructions at all,
+> just always use a function call, and then pick the function
+> appropriately.
+>
+> Honestly, I can't imagine that the "single access" case is so
+> timing-critical that the static call isn't the right model. Your use
+> case is _not_ as important or common as doing user accesses.
+>
+> Finally, the big question is whether the completely broken hardware
+> even matters. Are there actual customers that actually use the garbage
+> "we can crash the machine" stuff?
+>
+> Because when it comes to things like nvdimms etc, the _primary_
+> performance target would be getting the kernel entirely out of the
+> way, and allowing databases etc to just access the damn thing
+> directly.
+>
+> And if you allow user space to access it directly, then you just have
+> to admit that it's not a software issue any more - it's the hardware
+> that is terminally broken and unusable garbage. It's not even
+> interesting to work around things in the kernel, because user space
+> can just crash the machine directly.
+>
+> This is why I absolutely detest that thing so much. The hardware is
+> _so_ fundamentally broken that I have always considered the kernel
+> workarounds to basically be "staging" level stuff - good enough for
+> some random testing of known-broken stuff, but not something that
+> anybody sane should ever use.
+>
+> So my preference would actually be to just call the broken cases to be
+> largely ignored, at least from a performance angle. If you can only
+> access it through the kernel, the biggest performance limitation is
+> that you cannot do any DAX-like thing at all safely, so then the
+> performance of some kernel accessors is completely secondary and
+> meaningless. When a kernel entry/exit takes a few thousand cycles on
+> the broken hardware (due to _other_ bugs), what's the point about
+> worrying about trying to inline some single access to the nvdimm?
+>
+> Did the broken hardware ever spread out into the general public?
+> Because if not, then the proper thing to do might be to just make it a
+> compile-time option for the (few) customers that signed up for testing
+> the initial broken stuff, and make the way _forward_ be a clean model
+> without the need to worry about any exceptions at all.
+
+There are 3 classes of hardware, all of them trigger exceptions* it's
+just the recoverability of those exceptions that is different:
+
+1/ Recovery not supported all exceptions report PCC=1 (processor
+context corrupted) and the kernel decides to panic.
+
+2/ Recovery supported, user processes killed on consumption, panic on
+kernel consumption outside of an exception handler instrumented code
+path. Unfortunately there is no architectural way to distinguish
+class1 from class2 outside of a PCI quirk whitelist. The kernel prior
+to memcpy_mcsafe() just unconditionally enabled recovery for user
+consumption, panicked on kernel consumption, and hoped that exceptions
+are sent with PCC=0. The introduction of memcpy_mcsafe() to handle
+poison consumption from kernel-space without a panic introduced this
+not pretty caveat that some platforms needed to do special snowflake
+memcpy to avoid known scenarios** that trigger PCC=1 when they could
+otherwise trigger PCC=0. So a PCI quirk whitelist was added for those.
+
+3/ Recovery supported *and* special snowflake memcpy rules relaxed.
+Still no architectural way to discover this state so let us just
+enable memcpy_mcsafe_fast() always and let the former whitelist become
+a blacklist of "this CPU requires you to do a dance to avoid some
+PCC=1 cases, but that dance impacts performance".
+
+* I'm at a loss of why you seem to be suggesting that hardware should
+/ could avoid all exceptions. What else could hardware do besides
+throw an exception on consumption of a naturally occuring multi-bit
+ECC error? Data is gone, and only software might know how to recover.
+
+** Unaligned access across a cacheline boundary, fast string consumption...
+
+> > The writes can mmu-fault now that memcpy_mcsafe() is also used by
+> > _copy_to_iter_mcsafe(). This allows a clean bypass of the block layer
+> > in fs/dax.c in addition to the pmem driver access of poisoned memory.
+> > Now that the fallback is a sane rep; movs; it can be considered for
+> > plain copy_to_iter() for other user copies so you get exception
+> > handling on kernel access of poison outside of persistent memory. To
+> > Andy's point I think a recoverable copy (for exceptions or faults) is
+> > generally useful.
+>
+> I think that's completely independent.
+>
+> If we have good reasons for having targets with exception handling,
+> then that has absolutely nothing to do with machine checks or buggy
+> hardware.
+>
+> And it sure shouldn't be called "mcsafe", since it has nothing to do
+> with that situation any more.
+
+Ok, true.
+
+> > I understand the gripes about the mcsafe_slow() implementation, but
+> > how do I implement mcsafe_fast() any better than how it is currently
+> > organized given that, setting aside machine check handling,
+> > memcpy_mcsafe() is the core of a copy_to_iter*() front-end that can
+> > mmu-fault on either source or destination access?
+>
+> So honestly, once it is NOT about the broken machine check garbage,
+> then it should be sold on its own independent reasons.
+>
+> Do we want to have a "copy_to_iter_safe" that can handle page faults?
+> Because we have lots of those kinds of things, we have
+>
+>  - load_unaligned_zeropad()
+>
+>    This loads a single word knowing that the _first_ byte is valid,
+> but can take an exception and zero-pad if it crosses a page boundary
+>
+>  - probe_kernel_read()/write()
+>
+>    This is a kernel memcpy() with the source/destination perhaps being unmapped.
+>
+>  - various perf and tracing helpers that have special semantics.
+>
+> but once it's about some generic interface, then it also needs to take
+> other architectures into account.
+
+For the fast case it's really just copy_user_enhanced_fast_string()
+without forced stac/clac when the source and dest are both kernel
+accesses.
