@@ -2,206 +2,212 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD16C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16D6C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE0D21D79
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBAA2078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:15:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="IDveWlOS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z69BlBZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgDTLOb (ORCPT
+        id S1726228AbgDTLP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:14:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47422 "EHLO
+        Mon, 20 Apr 2020 07:15:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725886AbgDTLOa (ORCPT
+        by vger.kernel.org with ESMTP id S1725994AbgDTLP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:14:30 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158D9C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 04:14:30 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id x1so7564794ejd.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 04:14:30 -0700 (PDT)
+        Mon, 20 Apr 2020 07:15:26 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D26FC061A10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 04:15:26 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id i10so11596494wrv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 04:15:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=okPBkG9vtS/wVdJh/KDIc+hdg6krV+bND5agW6vUaRM=;
-        b=IDveWlOS7Tzhrdb36+hZpTST6wjOAPrAj2jj5uib3vbWbabqwzW9IWuAtw8h4eTBNA
-         9a9lkdgEJOm6Eb3fwCtOVTxrVmphaH2PGWy9bhlS9QBo4VsFK/CUgj6vV9uyCovU0arA
-         5Kj1tMT4D5sNr37XYcPWFQo9UnIzxN1guBg1w=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=4uCgchzEKUbGCjVb5ErPQQvp7VtDEqWO3rkjRlf6Z0c=;
+        b=Z69BlBZc3+yIjY+OiSNwt8bsyBI0gsYDwMfdiucsDa5C+MKP/wOJquAOhh0jY8LvP8
+         DrypNHoQ8098wugctLVFMem6rV1KysE9rL4PQbw9dgV9IX4vzDo8vaR3IolrnwdZnlue
+         oiYWMkYalyjVcjm2bEgoiKKZoPYWWSYOSW2mlfPKPx+R10IJHuVAXZKI+CMv1NXjZwBe
+         4ApmE0F3A3wQai4D9aDrDuXakAc3roQsOINa7eE95IHRnzDQ2WMpJIYitHW849I7SOu2
+         /WgTnsClHrd3yTWNDwW+tMRpyK1PDxfZIy/Qi+no+uSblRgwH6XmDdXWWcVSG1+c8QGu
+         WI1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=okPBkG9vtS/wVdJh/KDIc+hdg6krV+bND5agW6vUaRM=;
-        b=CJdQeXneYJLndkghAv7E94abE5kuWvCNkllcAu5wHQ9vXz9RsGhPrxYa694EfsbN0E
-         MyQHyziRkkasKmSWadZRAut43ocAojgtf8X+opyjCZ94uL+r3hVsvCbEjmEljjGP9hUm
-         mABHmF0xd40MTMCPO8NkZZjPLmvMWbaMANYsYSkXme0VoGtmCuHFWn1uQ+qTSbgXrZ+K
-         B/yaSuR74M7mEbwOkPIa8UuaOuYXhnf4cCU3B8daliSI5PdYrhAgplmmDYWTGXaXDVd8
-         b4JiFUSHRTTFMvn9WPomtX5WXKfUqhGFH0mVWN3ggyUttRr5p1c7HSMP68tTWRLAG/pn
-         ASuw==
-X-Gm-Message-State: AGi0PuY66Wqtv52unzz5HBapf2+NSpiKD/KmYqW65S2qJ/vDfpEhFHUw
-        jZV78aQcWrXF7RBkw1FHdh0C9GfB56wsQzoIbQtrcw==
-X-Google-Smtp-Source: APiQypIVhtjPPYqBEymAM1SkD4SYcU1V6bmTKvyt+63wSYT0tOjvuXxym8edoJZS6GcpMs4Nq+7PF2DextVY/K9Ax1g=
-X-Received: by 2002:a17:906:841a:: with SMTP id n26mr16038100ejx.43.1587381268754;
- Mon, 20 Apr 2020 04:14:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=4uCgchzEKUbGCjVb5ErPQQvp7VtDEqWO3rkjRlf6Z0c=;
+        b=spaP+7ensY1jsEWaBzs4S96Iilekps/DYnMrlHNrBoN/+Dp1UFEb8Al0krYgq0gjn2
+         R3hXStBoHmkkaTH+7cEi0xiYAZc8/WAxzLt9BiRQwU9+pGISU5JIKedM0hqo4AAZfgQa
+         TO4mk8G8hTvaGhRLqeskrb93wyhhPHyczTYGb47oBDCfRZbKd6hYWcoF/kb7W7Kghl94
+         7aIRYaiJGeISQu4oOWeJzgPSnbh8pPgA5bkBkbgsCdfHT69RjoudFGFIMcdzSBIeb1f2
+         sSIP4zG8UN/N5Xw20k8KjLSehbG7hcylG1C4qijPBobCAXfe/6cwdbcWIRymtz7hsC4j
+         FOEA==
+X-Gm-Message-State: AGi0Pub8L0Pb2QfW9Ii7k5SkEQpyGHUOYoR5/CUEXXOnG+6tw+HAvIpR
+        Du43ZWVYe2VryfBsvtIM2waAWQ==
+X-Google-Smtp-Source: APiQypJhmbeviPbiHBjSOOZlAdECJVyeKqJZLm8MMiKHA1YJPMBCV2InSlX2aY5iSqxkecD8aYWnaQ==
+X-Received: by 2002:a5d:5147:: with SMTP id u7mr17746146wrt.290.1587381324902;
+        Mon, 20 Apr 2020 04:15:24 -0700 (PDT)
+Received: from dell ([95.149.164.107])
+        by smtp.gmail.com with ESMTPSA id q143sm969035wme.31.2020.04.20.04.15.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 04:15:24 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 12:15:22 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-rtc@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Josef Friedl <josef.friedl@speed.at>,
+        srv_heupstream@mediatek.com, Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v12 1/6] mfd: mt6397: Modify suspend/resume behavior
+Message-ID: <20200420111522.GB3612@dell>
+References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <20200416084910.GX2167633@dell>
+ <1587379959.6297.2.camel@mtksdaap41>
 MIME-Version: 1.0
-References: <20200414150233.24495-1-willy@infradead.org> <20200414150233.24495-25-willy@infradead.org>
-In-Reply-To: <20200414150233.24495-25-willy@infradead.org>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Mon, 20 Apr 2020 13:14:17 +0200
-Message-ID: <CAJfpegsZF=TFQ67vABkE5ghiZoTZF+=_u8tM5U_P6jZeAmv23A@mail.gmail.com>
-Subject: Re: [PATCH v11 24/25] fuse: Convert from readpages to readahead
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        William Kucharski <william.kucharski@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1587379959.6297.2.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 5:08 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->
-> Implement the new readahead operation in fuse by using __readahead_batch()
-> to fill the array of pages in fuse_args_pages directly.  This lets us
-> inline fuse_readpages_fill() into fuse_readahead().
->
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Dave Chinner <dchinner@redhat.com>
-> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-> ---
->  fs/fuse/file.c | 99 ++++++++++++++------------------------------------
->  1 file changed, 27 insertions(+), 72 deletions(-)
->
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 9d67b830fb7a..db82fb29dd39 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -915,84 +915,39 @@ static void fuse_send_readpages(struct fuse_io_args *ia, struct file *file)
->         fuse_readpages_end(fc, &ap->args, err);
->  }
->
-> -struct fuse_fill_data {
-> -       struct fuse_io_args *ia;
-> -       struct file *file;
-> -       struct inode *inode;
-> -       unsigned int nr_pages;
-> -       unsigned int max_pages;
-> -};
-> -
-> -static int fuse_readpages_fill(void *_data, struct page *page)
-> +static void fuse_readahead(struct readahead_control *rac)
->  {
-> -       struct fuse_fill_data *data = _data;
-> -       struct fuse_io_args *ia = data->ia;
-> -       struct fuse_args_pages *ap = &ia->ap;
-> -       struct inode *inode = data->inode;
-> +       struct inode *inode = rac->mapping->host;
->         struct fuse_conn *fc = get_fuse_conn(inode);
-> +       unsigned int i, max_pages, nr_pages = 0;
->
-> -       fuse_wait_on_page_writeback(inode, page->index);
-> -
-> -       if (ap->num_pages &&
-> -           (ap->num_pages == fc->max_pages ||
-> -            (ap->num_pages + 1) * PAGE_SIZE > fc->max_read ||
-> -            ap->pages[ap->num_pages - 1]->index + 1 != page->index)) {
-> -               data->max_pages = min_t(unsigned int, data->nr_pages,
-> -                                       fc->max_pages);
-> -               fuse_send_readpages(ia, data->file);
-> -               data->ia = ia = fuse_io_alloc(NULL, data->max_pages);
-> -               if (!ia) {
-> -                       unlock_page(page);
-> -                       return -ENOMEM;
-> -               }
-> -               ap = &ia->ap;
-> -       }
-> -
-> -       if (WARN_ON(ap->num_pages >= data->max_pages)) {
-> -               unlock_page(page);
-> -               fuse_io_free(ia);
-> -               return -EIO;
-> -       }
-> -
-> -       get_page(page);
-> -       ap->pages[ap->num_pages] = page;
-> -       ap->descs[ap->num_pages].length = PAGE_SIZE;
-> -       ap->num_pages++;
-> -       data->nr_pages--;
-> -       return 0;
-> -}
-> -
-> -static int fuse_readpages(struct file *file, struct address_space *mapping,
-> -                         struct list_head *pages, unsigned nr_pages)
-> -{
-> -       struct inode *inode = mapping->host;
-> -       struct fuse_conn *fc = get_fuse_conn(inode);
-> -       struct fuse_fill_data data;
-> -       int err;
-> -
-> -       err = -EIO;
->         if (is_bad_inode(inode))
-> -               goto out;
-> +               return;
->
-> -       data.file = file;
-> -       data.inode = inode;
-> -       data.nr_pages = nr_pages;
-> -       data.max_pages = min_t(unsigned int, nr_pages, fc->max_pages);
-> -;
-> -       data.ia = fuse_io_alloc(NULL, data.max_pages);
-> -       err = -ENOMEM;
-> -       if (!data.ia)
-> -               goto out;
-> +       max_pages = min(fc->max_pages, fc->max_read / PAGE_SIZE);
->
-> -       err = read_cache_pages(mapping, pages, fuse_readpages_fill, &data);
-> -       if (!err) {
-> -               if (data.ia->ap.num_pages)
-> -                       fuse_send_readpages(data.ia, file);
-> -               else
-> -                       fuse_io_free(data.ia);
-> +       for (;;) {
-> +               struct fuse_io_args *ia;
-> +               struct fuse_args_pages *ap;
-> +
-> +               nr_pages = readahead_count(rac) - nr_pages;
+On Mon, 20 Apr 2020, Hsin-hsiung Wang wrote:
 
-Hmm.  I see what's going on here, but it's confusing.   Why is
-__readahead_batch() decrementing the readahead count at the start,
-rather than at the end?
+> Hi,
+> 
+> On Thu, 2020-04-16 at 09:49 +0100, Lee Jones wrote:
+> > On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
+> > 
+> > > Some pmics don't need backup interrupt settings, so we change to use
+> > > pm notifier for the pmics which are necessary to store settings.
+> > > 
+> > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> > > ---
+> > >  drivers/mfd/mt6397-core.c       | 30 ------------------------------
+> > >  drivers/mfd/mt6397-irq.c        | 35 ++++++++++++++++++++++++++++++++++-
+> > >  include/linux/mfd/mt6397/core.h |  2 ++
+> > >  3 files changed, 36 insertions(+), 31 deletions(-)
+> > > 
+> > > diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> > > index 0437c85..d2e70d8 100644
+> > > --- a/drivers/mfd/mt6397-core.c
+> > > +++ b/drivers/mfd/mt6397-core.c
+> > > @@ -100,35 +100,6 @@ static const struct mfd_cell mt6397_devs[] = {
+> > >  	}
+> > >  };
+> > >  
+> > > -#ifdef CONFIG_PM_SLEEP
+> > > -static int mt6397_irq_suspend(struct device *dev)
+> > > -{
+> > > -	struct mt6397_chip *chip = dev_get_drvdata(dev);
+> > > -
+> > > -	regmap_write(chip->regmap, chip->int_con[0], chip->wake_mask[0]);
+> > > -	regmap_write(chip->regmap, chip->int_con[1], chip->wake_mask[1]);
+> > > -
+> > > -	enable_irq_wake(chip->irq);
+> > > -
+> > > -	return 0;
+> > > -}
+> > > -
+> > > -static int mt6397_irq_resume(struct device *dev)
+> > > -{
+> > > -	struct mt6397_chip *chip = dev_get_drvdata(dev);
+> > > -
+> > > -	regmap_write(chip->regmap, chip->int_con[0], chip->irq_masks_cur[0]);
+> > > -	regmap_write(chip->regmap, chip->int_con[1], chip->irq_masks_cur[1]);
+> > > -
+> > > -	disable_irq_wake(chip->irq);
+> > > -
+> > > -	return 0;
+> > > -}
+> > > -#endif
+> > > -
+> > > -static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
+> > > -			mt6397_irq_resume);
+> > > -
+> > >  struct chip_data {
+> > >  	u32 cid_addr;
+> > >  	u32 cid_shift;
+> > > @@ -238,7 +209,6 @@ static struct platform_driver mt6397_driver = {
+> > >  	.driver = {
+> > >  		.name = "mt6397",
+> > >  		.of_match_table = of_match_ptr(mt6397_of_match),
+> > > -		.pm = &mt6397_pm_ops,
+> > >  	},
+> > >  	.id_table = mt6397_id,
+> > >  };
+> > > diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
+> > > index b2d3ce1..2924919 100644
+> > > --- a/drivers/mfd/mt6397-irq.c
+> > > +++ b/drivers/mfd/mt6397-irq.c
+> > > @@ -9,6 +9,7 @@
+> > >  #include <linux/of_irq.h>
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/regmap.h>
+> > > +#include <linux/suspend.h>
+> > >  #include <linux/mfd/mt6323/core.h>
+> > >  #include <linux/mfd/mt6323/registers.h>
+> > >  #include <linux/mfd/mt6397/core.h>
+> > > @@ -81,7 +82,7 @@ static struct irq_chip mt6397_irq_chip = {
+> > >  static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
+> > >  				  int irqbase)
+> > >  {
+> > > -	unsigned int status;
+> > > +	unsigned int status = 0;
+> > 
+> > This looks like an unrelated change, no?
+> > 
+> 
+> It is to fix the coverity defect.
 
-At the very least it needs a comment about why nr_pages is calculated this way.
+Which isn't mentioned in the commit log and doesn't have anything to
+do with this patch.  Thus it should be in a separate patch, but I'm
+not going to lose any sleep over it.
 
-> +               if (nr_pages > max_pages)
-> +                       nr_pages = max_pages;
-> +               if (nr_pages == 0)
-> +                       break;
-> +               ia = fuse_io_alloc(NULL, nr_pages);
-> +               if (!ia)
-> +                       return;
-> +               ap = &ia->ap;
-> +               nr_pages = __readahead_batch(rac, ap->pages, nr_pages);
-> +               for (i = 0; i < nr_pages; i++) {
-> +                       fuse_wait_on_page_writeback(inode,
-> +                                                   readahead_index(rac) + i);
+> > >  	int i, irq, ret;
+> > >  
+> > >  	ret = regmap_read(mt6397->regmap, reg, &status);
+> > > @@ -128,6 +129,36 @@ static const struct irq_domain_ops mt6397_irq_domain_ops = {
+> > >  	.map = mt6397_irq_domain_map,
+> > >  };
+> > 
+> > Other than that.
+> > 
+> > For my own reference:
+> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > 
+> Thanks for your review. I will add it in the next version.
+> 
 
-What's wrong with ap->pages[i]->index?  Are we trying to wean off using ->index?
-
-Thanks,
-Miklos
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
