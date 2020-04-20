@@ -2,127 +2,211 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09285C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DB8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3814206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35F8B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="hicy5CuB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgDTNqL (ORCPT
+        id S1728474AbgDTNqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:46:11 -0400
-Received: from mga17.intel.com ([192.55.52.151]:2419 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgDTNqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:46:10 -0400
-IronPort-SDR: aetgUe4Rqc1vqtAFF1LKm3PYmrR0/PJuvDqQBQaS+0eHy1mGAmxMDgGj3nkLyzcsoL2GwD9kNh
- i/9hxBJxvfzg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 06:46:09 -0700
-IronPort-SDR: 1YErZVp17AT81ueYfmLyxl8OVkXE568E5vDmzNW6ZfxrwHXYz/y0+7gGoYzB8XPKixV/CxDvPh
- FOz+2/DC8oAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="scan'208";a="333930677"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga001.jf.intel.com with ESMTP; 20 Apr 2020 06:46:07 -0700
-Subject: Re: linux-next: Tree for Apr 17 (mmc/host/sdhci-of-at91.c)
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@atmel.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>
-References: <20200417145017.3932443d@canb.auug.org.au>
- <995a958c-15a1-cb05-e276-065c7f6e57fd@infradead.org>
- <CAPDyKFqE7zfaKSbpBoBbrSCEnx+70dOrWs+=QG_x2G-Fpt6=ng@mail.gmail.com>
- <ce11a0b5-22a6-dd18-f858-5d30f43e1128@intel.com>
- <CAK7LNARCT3YQEnVE0NMCphSuqvjLoG2EXdpdcAZuoEOD_mFyEw@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <60d26835-245f-9f47-3027-39710d28db74@intel.com>
-Date:   Mon, 20 Apr 2020 16:45:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 09:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725944AbgDTNqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 09:46:24 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F50C061A0C;
+        Mon, 20 Apr 2020 06:46:24 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 0CFF820CD8;
+        Mon, 20 Apr 2020 13:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587390382; bh=pAU0GQtIe9CHI3zEvVQ1okUdMcuIoJdTgDyCDw9GKa0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hicy5CuBUVkL+GjmHHgahKbGXfIOV7xU5qO9uM1DXePwmgRRE+Qc080dMhME8SrEl
+         ix8+eCtdGMwxqHABdEky2mXP0tgimZmn1VF/tEUlfTx/3c3XePU9wQG0w+NqWioJyE
+         2a43/4letXnP+yNs6W1ZyeT0U5FJQj9N1uUjqJniFGsaYKTsMGeFtQYalQoGI+zlOk
+         eLD49M4zm/+ePKfoIXU7uBs4JCLyXYS9gugchvCOBzWMDIdBVHJnvxUSykZiYH32+M
+         PhnIHd0pC7tOy20W2ru/Cn65pcWSyG931fnjQ5o933wzA70rQtsqU0Pa5r7dCvFk4J
+         OoiGIp/R11hVQ==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/5] MIPS: Loongson64: Remove dead RTC code
+Date:   Mon, 20 Apr 2020 21:45:25 +0800
+Message-Id: <20200420134536.210475-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
+References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNARCT3YQEnVE0NMCphSuqvjLoG2EXdpdcAZuoEOD_mFyEw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/04/20 3:27 pm, Masahiro Yamada wrote:
-> On Mon, Apr 20, 2020 at 7:28 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 20/04/20 12:12 pm, Ulf Hansson wrote:
->>> + Masahiro Yamada, Adrian Hunter
->>>
->>> On Fri, 17 Apr 2020 at 16:48, Randy Dunlap <rdunlap@infradead.org> wrote:
->>>>
->>>> On 4/16/20 9:50 PM, Stephen Rothwell wrote:
->>>>> Hi all,
->>>>>
->>>>> Changes since 20200416:
->>>>>
->>>>
->>>> on i386:
->>>>
->>>>   CC      drivers/mmc/host/sdhci-of-at91.o
->>>> In file included from ../include/linux/build_bug.h:5:0,
->>>>                  from ../include/linux/bitfield.h:10,
->>>>                  from ../drivers/mmc/host/sdhci-of-at91.c:9:
->>>> ../drivers/mmc/host/sdhci-of-at91.c: In function ‘sdhci_at91_set_clks_presets’:
->>>> ../include/linux/compiler.h:394:38: error: call to ‘__compiletime_assert_63’ declared with attribute error: FIELD_PREP: value too large for the field
->>>>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>>                                       ^
->>>> ../include/linux/compiler.h:375:4: note: in definition of macro ‘__compiletime_assert’
->>>>     prefix ## suffix();    \
->>>>     ^~~~~~
->>>> ../include/linux/compiler.h:394:2: note: in expansion of macro ‘_compiletime_assert’
->>>>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>>>   ^~~~~~~~~~~~~~~~~~~
->>>> ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
->>>>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->>>>                                      ^~~~~~~~~~~~~~~~~~
->>>> ../include/linux/bitfield.h:49:3: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
->>>>    BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
->>>>    ^~~~~~~~~~~~~~~~
->>>> ../include/linux/bitfield.h:94:3: note: in expansion of macro ‘__BF_FIELD_CHECK’
->>>>    __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
->>>>    ^~~~~~~~~~~~~~~~
->>>> ../drivers/mmc/host/sdhci-of-at91.c:185:11: note: in expansion of macro ‘FIELD_PREP’
->>>>   caps1 |= FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
->>
->> My guess is the compiler has decided clk_mul is constant (probably (unsigned
->> int)-1) because there is no CONFIG_COMMON_CLK i.e. clk_get_rate() is 0
->>
->> So maybe add to config MMC_SDHCI_OF_AT91
->>
->>         depends on COMMON_CLK
->>
->>>>            ^~~~~~~~~~
-> 
-> 
-> 
-> I checked include/linux/clk.h
-> 
-> 
-> clk_get_rate() is guarded by CONFIG_HAVE_CLK.
-> 
-> I think
-> 
->     depends on HAVE_CLK
+RTC is now enabled by devicetree. So platform code is
+no longer needed.
 
-Okay
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+v2: Rebase to mips-next
+---
+ .../include/asm/mach-loongson64/mc146818rtc.h | 36 -----------------
+ arch/mips/loongson64/Kconfig                  |  4 --
+ arch/mips/loongson64/Makefile                 |  1 -
+ arch/mips/loongson64/rtc.c                    | 39 -------------------
+ arch/mips/loongson64/time.c                   |  8 +---
+ 5 files changed, 1 insertion(+), 87 deletions(-)
+ delete mode 100644 arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+ delete mode 100644 arch/mips/loongson64/rtc.c
+
+diff --git a/arch/mips/include/asm/mach-loongson64/mc146818rtc.h b/arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+deleted file mode 100644
+index ebdccfee50be..000000000000
+--- a/arch/mips/include/asm/mach-loongson64/mc146818rtc.h
++++ /dev/null
+@@ -1,36 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 1998, 2001, 03, 07 by Ralf Baechle (ralf@linux-mips.org)
+- *
+- * RTC routines for PC style attached Dallas chip.
+- */
+-#ifndef __ASM_MACH_LOONGSON64_MC146818RTC_H
+-#define __ASM_MACH_LOONGSON64_MC146818RTC_H
+-
+-#include <linux/io.h>
+-
+-#define RTC_PORT(x)	(0x70 + (x))
+-#define RTC_IRQ		8
+-
+-static inline unsigned char CMOS_READ(unsigned long addr)
+-{
+-	outb_p(addr, RTC_PORT(0));
+-	return inb_p(RTC_PORT(1));
+-}
+-
+-static inline void CMOS_WRITE(unsigned char data, unsigned long addr)
+-{
+-	outb_p(addr, RTC_PORT(0));
+-	outb_p(data, RTC_PORT(1));
+-}
+-
+-#define RTC_ALWAYS_BCD	0
+-
+-#ifndef mc146818_decode_year
+-#define mc146818_decode_year(year) ((year) < 70 ? (year) + 2000 : (year) + 1970)
+-#endif
+-
+-#endif /* __ASM_MACH_LOONGSON64_MC146818RTC_H */
+diff --git a/arch/mips/loongson64/Kconfig b/arch/mips/loongson64/Kconfig
+index 48b29c198acf..c386b8a3c753 100644
+--- a/arch/mips/loongson64/Kconfig
++++ b/arch/mips/loongson64/Kconfig
+@@ -14,8 +14,4 @@ config RS780_HPET
+ 	  If unsure, say Yes.
+ 
+ 
+-config LOONGSON_MC146818
+-	bool
+-	default n
+-
+ endif # MACH_LOONGSON64
+diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
+index b7f40b179c71..32b8c224852f 100644
+--- a/arch/mips/loongson64/Makefile
++++ b/arch/mips/loongson64/Makefile
+@@ -9,5 +9,4 @@ obj-$(CONFIG_SMP)	+= smp.o
+ obj-$(CONFIG_NUMA)	+= numa.o
+ obj-$(CONFIG_RS780_HPET) += hpet.o
+ obj-$(CONFIG_PCI) += pci.o
+-obj-$(CONFIG_LOONGSON_MC146818) += rtc.o
+ obj-$(CONFIG_SUSPEND) += pm.o
+diff --git a/arch/mips/loongson64/rtc.c b/arch/mips/loongson64/rtc.c
+deleted file mode 100644
+index 8d7628c0f513..000000000000
+--- a/arch/mips/loongson64/rtc.c
++++ /dev/null
+@@ -1,39 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- *  Lemote Fuloong platform support
+- *
+- *  Copyright(c) 2010 Arnaud Patard <apatard@mandriva.com>
+- */
+-
+-#include <linux/init.h>
+-#include <linux/kernel.h>
+-#include <linux/platform_device.h>
+-#include <linux/mc146818rtc.h>
+-
+-static struct resource loongson_rtc_resources[] = {
+-	{
+-		.start	= RTC_PORT(0),
+-		.end	= RTC_PORT(1),
+-		.flags	= IORESOURCE_IO,
+-	}, {
+-		.start	= RTC_IRQ,
+-		.end	= RTC_IRQ,
+-		.flags	= IORESOURCE_IRQ,
+-	}
+-};
+-
+-static struct platform_device loongson_rtc_device = {
+-	.name		= "rtc_cmos",
+-	.id		= -1,
+-	.resource	= loongson_rtc_resources,
+-	.num_resources	= ARRAY_SIZE(loongson_rtc_resources),
+-};
+-
+-
+-static int __init loongson_rtc_platform_init(void)
+-{
+-	platform_device_register(&loongson_rtc_device);
+-	return 0;
+-}
+-
+-device_initcall(loongson_rtc_platform_init);
+diff --git a/arch/mips/loongson64/time.c b/arch/mips/loongson64/time.c
+index 1245f22cec84..91e842b58365 100644
+--- a/arch/mips/loongson64/time.c
++++ b/arch/mips/loongson64/time.c
+@@ -6,7 +6,7 @@
+  * Copyright (C) 2009 Lemote Inc.
+  * Author: Wu Zhangjin, wuzhangjin@gmail.com
+  */
+-#include <asm/mc146818-time.h>
++
+ #include <asm/time.h>
+ #include <asm/hpet.h>
+ 
+@@ -21,9 +21,3 @@ void __init plat_time_init(void)
+ 	setup_hpet_timer();
+ #endif
+ }
+-
+-void read_persistent_clock64(struct timespec64 *ts)
+-{
+-	ts->tv_sec = mc146818_get_cmos_time();
+-	ts->tv_nsec = 0;
+-}
+-- 
+2.26.0.rc2
+
