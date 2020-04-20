@@ -2,95 +2,121 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0810EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383B6C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE0862078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:35:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A97fOK+E"
+	by mail.kernel.org (Postfix) with ESMTP id 122932078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587382580;
+	bh=Ttxo4ShYqlkWnXjbFggOt9MCuzR3OQsdnOZ8YyHwteQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NZTLW9a7I2R68UKlvJ12h+MPvS7A/JlYEUbmlZv//azDpAk1A3n7VawJoJVXtlzHW
+	 CJ170C6y+Dm7GqG3aLVoWFD8vyqIFTFlE+YiQtyhmNBqL9WAXGz3lfn3yQyCT8SU6U
+	 6UTFumSdHOTRO7cw1KG1ROUslXaNg0GIGY3G6hbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgDTLfZ (ORCPT
+        id S1726318AbgDTLgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:35:25 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43379 "EHLO ozlabs.org"
+        Mon, 20 Apr 2020 07:36:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgDTLfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:35:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725886AbgDTLgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:36:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 495Pkx71S6z9s71;
-        Mon, 20 Apr 2020 21:35:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587382523;
-        bh=9HNZXDQ2jku75LULznlIt2gVSDkDGtRUfetclacD8Fs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=A97fOK+EgV9lhMdHp1E6XXc6whR8BDqO9uYniP1LubHFfGS4coHuqBBXJEzZLtiH5
-         y97RMaFReGX8gxplIjHnXe6Uci5eefhKc1qv8fePbubZFotJc1x4LygV6K/+hxQlnj
-         wlj74+EYMEJB0TUE/m6jVcZHIU/k3pZCfcdfVUHQTg+54StDLxWWLPs4VnikGfcAMZ
-         L1IOq38Y76qxX7uOOit3KWSxrs8FQD/+HcipwlsAt6KhvL5zB0NvvshzxTvjv7I5lb
-         mnNv2j0On/AcWWP/MdRtkbChX7Mou82ZS2TPR7Z183PEzBz82Mpw9PXtXcnpeUrbu9
-         cckd72tO4QfOA==
-Date:   Mon, 20 Apr 2020 21:35:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Dmitry Safonov <dima@arista.com>
-Subject: linux-next: build failure after merge of Linus' tree
-Message-ID: <20200420213519.3c5ee143@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id C5BEB206D4;
+        Mon, 20 Apr 2020 11:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587382578;
+        bh=Ttxo4ShYqlkWnXjbFggOt9MCuzR3OQsdnOZ8YyHwteQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pZyvrt/ONGuKXMLNymKIUlRFlsD0HNaWXlOnui9JnS6bIFEmXyZHqV9GuDgieyS0v
+         cBo2FFAnsC1Vg0yjQU9nqQkBIvr/BkDhEd2KFbun69AzJA8kv+9wGz43GHneF/LMr1
+         uryFwmhZ3w/t3ulsRV3irbD2gs6+mTw3FD/x9+cM=
+Date:   Mon, 20 Apr 2020 13:36:16 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/10] blk-debugfs: upgrade warns to BUG_ON() if
+ directory is already found
+Message-ID: <20200420113616.GA3906674@kroah.com>
+References: <20200419194529.4872-1-mcgrof@kernel.org>
+ <20200419194529.4872-7-mcgrof@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Moytko7.w5QiWdvPaewmWzF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419194529.4872-7-mcgrof@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Moytko7.w5QiWdvPaewmWzF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Apr 19, 2020 at 07:45:25PM +0000, Luis Chamberlain wrote:
+> Now that we have moved release_queue from being asynchronous to
+> synchronous, and fixed how we use the debugfs directory with blktrace
+> we should no longer have expected races with device removal/addition
+> and other operations with the debugfs directory.
+> 
+> If races do happen however, we want to be informed of *how* this races
+> happens rather than dealing with a debugfs splat, so upgrading this to a
+> BUG_ON() should capture better information about how this can happen
+> in the future.
+> 
+> This is specially true these days with funky reproducers in userspace
+> for which we have no access to, but only a bug splat.
+> 
+> Note that on addition the gendisk kobject is used as the parent for the
+> request_queue kobject, and upon removal, now that request_queue removal
+> is synchronous, blk_unregister_queue() is called prior to the gendisk
+> device_del(). This means we expect to see a sysfs clash first now prior
+> to running into a race with the debugfs dentry; so this bug would be
+> considered highly unlikely.
+> 
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> ---
+>  block/blk-debugfs.c | 10 +---------
+>  1 file changed, 1 insertion(+), 9 deletions(-)
+> 
+> diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
+> index d84038bce0a5..761318dcbf40 100644
+> --- a/block/blk-debugfs.c
+> +++ b/block/blk-debugfs.c
+> @@ -19,16 +19,8 @@ void blk_debugfs_register(void)
+>  
+>  int __must_check blk_queue_debugfs_register(struct request_queue *q)
+>  {
+> -	struct dentry *dir = NULL;
+> -
+>  	/* This can happen if we have a bug in the lower layers */
+> -	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
+> -	if (dir) {
+> -		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
+> -			kobject_name(q->kobj.parent));
+> -		dput(dir);
+> -		return -EALREADY;
+> -	}
+> +	BUG_ON(debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root));
 
-Hi all,
+So you are willing to crash the whole kernel and throw all of
+userspace's data away if this happens?
 
-[reported by the kernelci.org bot]
+Ick, no, don't do that, handle the issue correctly and move on.
 
-For some time, building Linus' tree, the linux-next build (mips
-mtx1_defconfig) fails like this:
+As proof you shouldn't be doing this, that BUG_ON will trigger if
+debugfs is not enabled, which might be a bit mean for all users of those
+kernels :(
 
-ERROR: modpost: "sysrq_toggle_support" [drivers/tty/serial/serial_core.ko] =
-undefined!
-ERROR: modpost: "sysrq_mask" [drivers/tty/serial/serial_core.ko] undefined!
+Hard NAK from me, sorry.
 
-Caused by commit
-
-  68af43173d3f ("serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Moytko7.w5QiWdvPaewmWzF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6diPcACgkQAVBC80lX
-0Gy9rAf+JuLx+iAw0rACbUfNtGc/eS2bqCVMDbl45AYlVyQCUemSRXZaSfdguncs
-sn+YgJx3SeOoBwbhQp23tZa8k/EUxcgE5ycxnKf4MCtdAubzUwRAtIC18IyVvSS1
-cIdZ2h0kZKOqcqILBUMvjf36YBBROGYWghDzbD/EefQlnfS4/4ASIjJv+t6NSod2
-Byw5Kp5DQ8RbNf83f3XP2GbgfcUHTygVOg4TiH3mQFij0yzOMX6CXE1KmugQfydN
-cd7jf13jpskEpo/t7+Nq+3ELu2Cy0nGg6048koKjzAHE7w9MkKiL47F4E+9TlNMO
-KNIWDXlhVO1rmHkej4SB09i4gE2zMQ==
-=O73D
------END PGP SIGNATURE-----
-
---Sig_/Moytko7.w5QiWdvPaewmWzF--
+greg k-h
