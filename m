@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289A2C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FFCC55183
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F242020857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A968E20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="lD2oKzCp"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="W9M8209L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgDTWMW (ORCPT
+        id S1728411AbgDTWML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38222 "EHLO
+        Mon, 20 Apr 2020 18:12:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728440AbgDTWMP (ORCPT
+        with ESMTP id S1728359AbgDTWMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:12:15 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34989C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:12:14 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id g74so12521127qke.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:12:14 -0700 (PDT)
+        Mon, 20 Apr 2020 18:12:05 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD4FFC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:12:05 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id c16so10067136qtv.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:12:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PncRoalTORTzbPDipW6LC/3hBRJEv36Hcb5+zF4gMQI=;
-        b=lD2oKzCp8iMw2/AoEsPsa7wNaiC7gPfC/xtQbGFpVKtiYZcZw1aaTPz3iutggIrJYj
-         +F39OgqOjUV24z5rbhHJ0hRn7w+tBm0XBBT7c1Hmxu0UF5Y+Ggh+HK6Kostsdj/NyvyH
-         EvFx5J+8al9GXzRRuJ3vDEWRZckh7TPr5J+sH+iEGksj7idRcraj57Nkv8ntPVxnw1hI
-         Es0XUIHbguzDRlfAFCk9aHkdV2KUD9nI9sHGr9WFre3CS53I8JC2//bxVqEsp8NV4vLb
-         erMHFO1mmEvAsoU7i168DpDvh3bNY1WtbSXX62iEASE2Lqz20vy20jkDFpc01nai5awo
-         ERxg==
+        bh=0ByVKo45aqE3C3DiOWQlsfGiXPD8l0eCrADnL4xHp3M=;
+        b=W9M8209Lc67ASOYNxMxTQgqQ83SefdkGr4BMt3zVc2SbUfZkCY8RKITBaHT3GEOBhj
+         N6lcEWc71w4InzGYzCXejgX6dB57cHmEO7jFYsstDdDGBjxMHjRaEeEgsw/FS7v0xboV
+         8kJ9WEuhnEhURfAcJrMRRRUKtpl23ZrvvZG1L024jGU6N6WvFDqxir/r+ZLBe1XD77/C
+         3Yaim4ynqkVQTMgEXcwAP2ozd6akgOygsfVgsn/eDTH8+9VGOpu5KStmyVSRak9cEonB
+         pYfrKK3YsJB+eMlMlWfXLRjbHSdSuD96IhBn35BCOQyPlYBUk9zopL+9drvDv9A0RPCR
+         e2EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PncRoalTORTzbPDipW6LC/3hBRJEv36Hcb5+zF4gMQI=;
-        b=km8rhIRPLTZ4Z99L7AdI4N3XCcmmoxocW59Bz4oQmDtn/gaegHa79DFhB2lj52Yf9/
-         HxdIoBLFCKrxK8UAuKhYaT0fuv2THhoX4oK7bNdm3mnoK4uh8R1StVqA+NwRztT54GcL
-         2VOQFRwPoz4z96sNRe0y9E2RObCcNoxi0EJL/UZAb2k1M4aZb7dAa7LmHXFCoO24AIHT
-         HfT0Zgb60xCyvxutjiPeYX2VaiGLsl4149oBIMz2G3heHnPOhoiwgsGGMY96Vv4a/prF
-         o2leLwT6CiCNiT83OOOAqyUXeS4G6VoI9v7J+0z1dQj/XUVF83zrKs3zuJVhjfsw83YL
-         z3pw==
-X-Gm-Message-State: AGi0PuaX7WbjVvZrjbnDx4TGBIrbEDyyX0raNbjD1mm5+BsH77xgZIEi
-        K0NS8NCu8BspAf3T8+rPAKLXjw==
-X-Google-Smtp-Source: APiQypKmCeYifa3cirZ/DIUOjt014kXlMLmlAxwLPSf6UL0vF1T1XfAndFyIPskVlxtnbXWOHNwFMA==
-X-Received: by 2002:a37:e310:: with SMTP id y16mr18741966qki.275.1587420733327;
-        Mon, 20 Apr 2020 15:12:13 -0700 (PDT)
+        bh=0ByVKo45aqE3C3DiOWQlsfGiXPD8l0eCrADnL4xHp3M=;
+        b=PAaH901s4TUaNly+NPvprlsbAzDCvbCdc8eurclT5dkRO9DvooXD7NLdlf3Ko/ynu8
+         LAb47F4mVbSOH6vZZd1aG+NsFQIw54FRDICpscWr6SVm9O0nQQMQsWzMCr5ox2GNCg6l
+         AGbgj7MMy/wris2E0xu8mMRHoOMSIO4Tcg5tWejaZVJsSdcsMa7muVwX3juGgS1v+0cl
+         h5a36mEBwPTce0D301aR/ySUK8E6YjNbYEXOf6PxgUNfZ6ZOwZF+A9DAo/OLbLGXf1tX
+         GhMz0Js0iDrkJA0xpdmHySn49vLlnRi84p/4+07kuJzItnkBKOhgK5/x7wVqo9wdVUrL
+         LlOQ==
+X-Gm-Message-State: AGi0Pua0Y6HfnKqJwRa4XmybZnSbXo3pg58exal44cL2CZzz8gk/rUHJ
+        ss/F3TK+J3KJdWyqeIzOis7RIw==
+X-Google-Smtp-Source: APiQypKo2DmYJKGiyL9AbVGNCrQ9cisUiwv9yX0i7x9v3iG5reuyNDJ7IGJ5vGas8mXirtHTbM036w==
+X-Received: by 2002:ac8:1703:: with SMTP id w3mr18392750qtj.267.1587420724916;
+        Mon, 20 Apr 2020 15:12:04 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:e6b6])
-        by smtp.gmail.com with ESMTPSA id o68sm568301qka.110.2020.04.20.15.12.12
+        by smtp.gmail.com with ESMTPSA id 31sm435219qta.56.2020.04.20.15.12.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 15:12:12 -0700 (PDT)
+        Mon, 20 Apr 2020 15:12:04 -0700 (PDT)
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Joonsoo Kim <js1304@gmail.com>,
         Alex Shi <alex.shi@linux.alibaba.com>
@@ -69,9 +69,9 @@ Cc:     Shakeel Butt <shakeelb@google.com>,
         Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
         cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com
-Subject: [PATCH 17/18] mm: memcontrol: delete unused lrucare handling
-Date:   Mon, 20 Apr 2020 18:11:25 -0400
-Message-Id: <20200420221126.341272-18-hannes@cmpxchg.org>
+Subject: [PATCH 13/18] mm: memcontrol: drop unused try/commit/cancel charge API
+Date:   Mon, 20 Apr 2020 18:11:21 -0400
+Message-Id: <20200420221126.341272-14-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200420221126.341272-1-hannes@cmpxchg.org>
 References: <20200420221126.341272-1-hannes@cmpxchg.org>
@@ -82,326 +82,247 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are no more users. RIP in peace.
+
 Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/memcontrol.h |  5 ++--
- kernel/events/uprobes.c    |  3 +-
- mm/filemap.c               |  2 +-
- mm/huge_memory.c           |  7 ++---
- mm/khugepaged.c            |  4 +--
- mm/memcontrol.c            | 57 +++-----------------------------------
- mm/memory.c                |  8 +++---
- mm/migrate.c               |  2 +-
- mm/shmem.c                 |  2 +-
- mm/swap_state.c            |  2 +-
- mm/userfaultfd.c           |  2 +-
- 11 files changed, 21 insertions(+), 73 deletions(-)
+ include/linux/memcontrol.h |  36 -----------
+ mm/memcontrol.c            | 126 +++++--------------------------------
+ 2 files changed, 15 insertions(+), 147 deletions(-)
 
 diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index d458f1d90aa4..4b868e5a687f 100644
+index 9ac8122ec1cd..52eb6411cfee 100644
 --- a/include/linux/memcontrol.h
 +++ b/include/linux/memcontrol.h
-@@ -357,8 +357,7 @@ static inline unsigned long mem_cgroup_protection(struct mem_cgroup *memcg,
+@@ -357,14 +357,6 @@ static inline unsigned long mem_cgroup_protection(struct mem_cgroup *memcg,
  enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
  						struct mem_cgroup *memcg);
  
--int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
--		      bool lrucare);
-+int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask);
+-int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
+-			  gfp_t gfp_mask, struct mem_cgroup **memcgp);
+-int mem_cgroup_try_charge_delay(struct page *page, struct mm_struct *mm,
+-			  gfp_t gfp_mask, struct mem_cgroup **memcgp);
+-void mem_cgroup_commit_charge(struct page *page, struct mem_cgroup *memcg,
+-			      bool lrucare);
+-void mem_cgroup_cancel_charge(struct page *page, struct mem_cgroup *memcg);
+-
+ int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
+ 		      bool lrucare);
  
- void mem_cgroup_uncharge(struct page *page);
- void mem_cgroup_uncharge_list(struct list_head *page_list);
-@@ -839,7 +838,7 @@ static inline enum mem_cgroup_protection mem_cgroup_protected(
+@@ -846,34 +838,6 @@ static inline enum mem_cgroup_protection mem_cgroup_protected(
+ 	return MEMCG_PROT_NONE;
  }
  
+-static inline int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
+-					gfp_t gfp_mask,
+-					struct mem_cgroup **memcgp)
+-{
+-	*memcgp = NULL;
+-	return 0;
+-}
+-
+-static inline int mem_cgroup_try_charge_delay(struct page *page,
+-					      struct mm_struct *mm,
+-					      gfp_t gfp_mask,
+-					      struct mem_cgroup **memcgp)
+-{
+-	*memcgp = NULL;
+-	return 0;
+-}
+-
+-static inline void mem_cgroup_commit_charge(struct page *page,
+-					    struct mem_cgroup *memcg,
+-					    bool lrucare)
+-{
+-}
+-
+-static inline void mem_cgroup_cancel_charge(struct page *page,
+-					    struct mem_cgroup *memcg)
+-{
+-}
+-
  static inline int mem_cgroup_charge(struct page *page, struct mm_struct *mm,
--				    gfp_t gfp_mask, bool lrucare)
-+				    gfp_t gfp_mask)
+ 				    gfp_t gfp_mask, bool lrucare)
  {
- 	return 0;
- }
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4253c153e985..eddc8db96027 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -167,8 +167,7 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
- 				addr + PAGE_SIZE);
- 
- 	if (new_page) {
--		err = mem_cgroup_charge(new_page, vma->vm_mm, GFP_KERNEL,
--					false);
-+		err = mem_cgroup_charge(new_page, vma->vm_mm, GFP_KERNEL);
- 		if (err)
- 			return err;
- 	}
-diff --git a/mm/filemap.c b/mm/filemap.c
-index a10bd6696049..f73b221314df 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -845,7 +845,7 @@ static int __add_to_page_cache_locked(struct page *page,
- 	page->index = offset;
- 
- 	if (!huge) {
--		error = mem_cgroup_charge(page, current->mm, gfp_mask, false);
-+		error = mem_cgroup_charge(page, current->mm, gfp_mask);
- 		if (error)
- 			goto error;
- 	}
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 0b33eaf0740a..35a716720e26 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -593,7 +593,7 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
- 
- 	VM_BUG_ON_PAGE(!PageCompound(page), page);
- 
--	if (mem_cgroup_charge(page, vma->vm_mm, gfp, false)) {
-+	if (mem_cgroup_charge(page, vma->vm_mm, gfp)) {
- 		put_page(page);
- 		count_vm_event(THP_FAULT_FALLBACK);
- 		count_vm_event(THP_FAULT_FALLBACK_CHARGE);
-@@ -1276,7 +1276,7 @@ static vm_fault_t do_huge_pmd_wp_page_fallback(struct vm_fault *vmf,
- 					       vmf->address, page_to_nid(page));
- 		if (unlikely(!pages[i] ||
- 			     mem_cgroup_charge(pages[i], vma->vm_mm,
--					       GFP_KERNEL, false))) {
-+					       GFP_KERNEL))) {
- 			if (pages[i])
- 				put_page(pages[i]);
- 			while (--i >= 0)
-@@ -1430,8 +1430,7 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
- 		goto out;
- 	}
- 
--	if (unlikely(mem_cgroup_charge(new_page, vma->vm_mm, huge_gfp,
--				       false))) {
-+	if (unlikely(mem_cgroup_charge(new_page, vma->vm_mm, huge_gfp))) {
- 		put_page(new_page);
- 		split_huge_pmd(vma, vmf->pmd, vmf->address);
- 		if (page)
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 5cf8082fb038..28c6d84db4ee 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -973,7 +973,7 @@ static void collapse_huge_page(struct mm_struct *mm,
- 		goto out_nolock;
- 	}
- 
--	if (unlikely(mem_cgroup_charge(new_page, mm, gfp, false))) {
-+	if (unlikely(mem_cgroup_charge(new_page, mm, gfp))) {
- 		result = SCAN_CGROUP_CHARGE_FAIL;
- 		goto out_nolock;
- 	}
-@@ -1527,7 +1527,7 @@ static void collapse_file(struct mm_struct *mm,
- 		goto out;
- 	}
- 
--	if (unlikely(mem_cgroup_charge(new_page, mm, gfp, false))) {
-+	if (unlikely(mem_cgroup_charge(new_page, mm, gfp))) {
- 		result = SCAN_CGROUP_CHARGE_FAIL;
- 		goto out;
- 	}
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 1d7408a8744a..a8cce52b6b4d 100644
+index 7845a87b94d5..d5aee5577ff3 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -2601,51 +2601,9 @@ static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
- 	css_put_many(&memcg->css, nr_pages);
+@@ -6431,29 +6431,26 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
  }
  
--static void lock_page_lru(struct page *page, int *isolated)
-+static void commit_charge(struct page *page, struct mem_cgroup *memcg)
- {
--	pg_data_t *pgdat = page_pgdat(page);
--
--	spin_lock_irq(&pgdat->lru_lock);
--	if (PageLRU(page)) {
--		struct lruvec *lruvec;
--
--		lruvec = mem_cgroup_page_lruvec(page, pgdat);
--		ClearPageLRU(page);
--		del_page_from_lru_list(page, lruvec, page_lru(page));
--		*isolated = 1;
--	} else
--		*isolated = 0;
--}
--
--static void unlock_page_lru(struct page *page, int isolated)
--{
--	pg_data_t *pgdat = page_pgdat(page);
--
--	if (isolated) {
--		struct lruvec *lruvec;
--
--		lruvec = mem_cgroup_page_lruvec(page, pgdat);
--		VM_BUG_ON_PAGE(PageLRU(page), page);
--		SetPageLRU(page);
--		add_page_to_lru_list(page, lruvec, page_lru(page));
--	}
--	spin_unlock_irq(&pgdat->lru_lock);
--}
--
--static void commit_charge(struct page *page, struct mem_cgroup *memcg,
--			  bool lrucare)
--{
--	int isolated;
--
- 	VM_BUG_ON_PAGE(page->mem_cgroup, page);
--
--	/*
--	 * In some cases, SwapCache and FUSE(splice_buf->radixtree), the page
--	 * may already be on some other mem_cgroup's LRU.  Take care of it.
--	 */
--	if (lrucare)
--		lock_page_lru(page, &isolated);
--
- 	/*
- 	 * Nobody should be changing or seriously looking at
- 	 * page->mem_cgroup at this point:
-@@ -2661,9 +2619,6 @@ static void commit_charge(struct page *page, struct mem_cgroup *memcg,
- 	 *   have the page locked
- 	 */
- 	page->mem_cgroup = memcg;
--
--	if (lrucare)
--		unlock_page_lru(page, isolated);
- }
- 
- #ifdef CONFIG_MEMCG_KMEM
-@@ -6433,22 +6388,18 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+ /**
+- * mem_cgroup_try_charge - try charging a page
++ * mem_cgroup_charge - charge a newly allocated page to a cgroup
   * @page: page to charge
   * @mm: mm context of the victim
   * @gfp_mask: reclaim mode
-- * @lrucare: page might be on the LRU already
+- * @memcgp: charged memcg return
++ * @lrucare: page might be on the LRU already
   *
   * Try to charge @page to the memcg that @mm belongs to, reclaiming
   * pages according to @gfp_mask if necessary.
   *
-  * Returns 0 on success. Otherwise, an error code is returned.
+- * Returns 0 on success, with *@memcgp pointing to the charged memcg.
+- * Otherwise, an error code is returned.
+- *
+- * After page->mapping has been set up, the caller must finalize the
+- * charge with mem_cgroup_commit_charge().  Or abort the transaction
+- * with mem_cgroup_cancel_charge() in case page instantiation fails.
++ * Returns 0 on success. Otherwise, an error code is returned.
   */
--int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
--		      bool lrucare)
-+int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask)
+-int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
+-			  gfp_t gfp_mask, struct mem_cgroup **memcgp)
++int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
++		      bool lrucare)
  {
  	unsigned int nr_pages = hpage_nr_pages(page);
  	struct mem_cgroup *memcg = NULL;
  	int ret = 0;
  
--	VM_BUG_ON_PAGE(PageLRU(page) && !lrucare, page);
--
++	VM_BUG_ON_PAGE(PageLRU(page) && !lrucare, page);
++
  	if (mem_cgroup_disabled())
  		goto out;
  
-@@ -6482,7 +6433,7 @@ int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
- 	if (ret)
- 		goto out_put;
+@@ -6485,56 +6482,8 @@ int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
+ 		memcg = get_mem_cgroup_from_mm(mm);
  
--	commit_charge(page, memcg, lrucare);
-+	commit_charge(page, memcg);
+ 	ret = try_charge(memcg, gfp_mask, nr_pages);
+-
+-	css_put(&memcg->css);
+-out:
+-	*memcgp = memcg;
+-	return ret;
+-}
+-
+-int mem_cgroup_try_charge_delay(struct page *page, struct mm_struct *mm,
+-			  gfp_t gfp_mask, struct mem_cgroup **memcgp)
+-{
+-	int ret;
+-
+-	ret = mem_cgroup_try_charge(page, mm, gfp_mask, memcgp);
+-	if (*memcgp)
+-		cgroup_throttle_swaprate(page, gfp_mask);
+-	return ret;
+-}
+-
+-/**
+- * mem_cgroup_commit_charge - commit a page charge
+- * @page: page to charge
+- * @memcg: memcg to charge the page to
+- * @lrucare: page might be on LRU already
+- *
+- * Finalize a charge transaction started by mem_cgroup_try_charge(),
+- * after page->mapping has been set up.  This must happen atomically
+- * as part of the page instantiation, i.e. under the page table lock
+- * for anonymous pages, under the page lock for page and swap cache.
+- *
+- * In addition, the page must not be on the LRU during the commit, to
+- * prevent racing with task migration.  If it might be, use @lrucare.
+- *
+- * Use mem_cgroup_cancel_charge() to cancel the transaction instead.
+- */
+-void mem_cgroup_commit_charge(struct page *page, struct mem_cgroup *memcg,
+-			      bool lrucare)
+-{
+-	unsigned int nr_pages = hpage_nr_pages(page);
+-
+-	VM_BUG_ON_PAGE(PageLRU(page) && !lrucare, page);
+-
+-	if (mem_cgroup_disabled())
+-		return;
+-	/*
+-	 * Swap faults will attempt to charge the same page multiple
+-	 * times.  But reuse_swap_page() might have removed the page
+-	 * from swapcache already, so we can't check PageSwapCache().
+-	 */
+-	if (!memcg)
+-		return;
++	if (ret)
++		goto out_put;
  
- 	local_irq_disable();
- 	mem_cgroup_charge_statistics(memcg, page, nr_pages);
-@@ -6685,7 +6636,7 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
- 		page_counter_charge(&memcg->memsw, nr_pages);
- 	css_get_many(&memcg->css, nr_pages);
+ 	commit_charge(page, memcg, lrucare);
  
--	commit_charge(newpage, memcg, false);
-+	commit_charge(newpage, memcg);
- 
- 	local_irq_save(flags);
- 	mem_cgroup_charge_statistics(memcg, newpage, nr_pages);
-diff --git a/mm/memory.c b/mm/memory.c
-index 5d266532fc40..0ad4db56bea2 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2677,7 +2677,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 		}
+@@ -6552,55 +6501,11 @@ void mem_cgroup_commit_charge(struct page *page, struct mem_cgroup *memcg,
+ 		 */
+ 		mem_cgroup_uncharge_swap(entry, nr_pages);
  	}
+-}
  
--	if (mem_cgroup_charge(new_page, mm, GFP_KERNEL, false))
-+	if (mem_cgroup_charge(new_page, mm, GFP_KERNEL))
- 		goto oom_free_new;
- 	cgroup_throttle_swaprate(new_page, GFP_KERNEL);
+-/**
+- * mem_cgroup_cancel_charge - cancel a page charge
+- * @page: page to charge
+- * @memcg: memcg to charge the page to
+- *
+- * Cancel a charge transaction started by mem_cgroup_try_charge().
+- */
+-void mem_cgroup_cancel_charge(struct page *page, struct mem_cgroup *memcg)
+-{
+-	unsigned int nr_pages = hpage_nr_pages(page);
+-
+-	if (mem_cgroup_disabled())
+-		return;
+-	/*
+-	 * Swap faults will attempt to charge the same page multiple
+-	 * times.  But reuse_swap_page() might have removed the page
+-	 * from swapcache already, so we can't check PageSwapCache().
+-	 */
+-	if (!memcg)
+-		return;
+-
+-	cancel_charge(memcg, nr_pages);
+-}
+-
+-/**
+- * mem_cgroup_charge - charge a newly allocated page to a cgroup
+- * @page: page to charge
+- * @mm: mm context of the victim
+- * @gfp_mask: reclaim mode
+- * @lrucare: page might be on the LRU already
+- *
+- * Try to charge @page to the memcg that @mm belongs to, reclaiming
+- * pages according to @gfp_mask if necessary.
+- *
+- * Returns 0 on success. Otherwise, an error code is returned.
+- */
+-int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
+-		      bool lrucare)
+-{
+-	struct mem_cgroup *memcg;
+-	int ret;
+-
+-	ret = mem_cgroup_try_charge(page, mm, gfp_mask, &memcg);
+-	if (ret)
+-		return ret;
+-	mem_cgroup_commit_charge(page, memcg, lrucare);
+-	return 0;
++out_put:
++	css_put(&memcg->css);
++out:
++	return ret;
+ }
  
-@@ -3136,7 +3136,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 				/* Tell memcg to use swap ownership records */
- 				SetPageSwapCache(page);
- 				err = mem_cgroup_charge(page, vma->vm_mm,
--							GFP_KERNEL, false);
-+							GFP_KERNEL);
- 				ClearPageSwapCache(page);
- 				if (err)
- 					goto out_page;
-@@ -3360,7 +3360,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 	if (!page)
- 		goto oom;
- 
--	if (mem_cgroup_charge(page, vma->vm_mm, GFP_KERNEL, false))
-+	if (mem_cgroup_charge(page, vma->vm_mm, GFP_KERNEL))
- 		goto oom_free_page;
- 	cgroup_throttle_swaprate(page, GFP_KERNEL);
- 
-@@ -3856,7 +3856,7 @@ static vm_fault_t do_cow_fault(struct vm_fault *vmf)
- 	if (!vmf->cow_page)
- 		return VM_FAULT_OOM;
- 
--	if (mem_cgroup_charge(vmf->cow_page, vma->vm_mm, GFP_KERNEL, false)) {
-+	if (mem_cgroup_charge(vmf->cow_page, vma->vm_mm, GFP_KERNEL)) {
- 		put_page(vmf->cow_page);
- 		return VM_FAULT_OOM;
- 	}
-diff --git a/mm/migrate.c b/mm/migrate.c
-index a3361c744069..ced652d069ee 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2792,7 +2792,7 @@ static void migrate_vma_insert_page(struct migrate_vma *migrate,
- 
- 	if (unlikely(anon_vma_prepare(vma)))
- 		goto abort;
--	if (mem_cgroup_charge(page, vma->vm_mm, GFP_KERNEL, false))
-+	if (mem_cgroup_charge(page, vma->vm_mm, GFP_KERNEL))
- 		goto abort;
- 
- 	/*
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 966f150a4823..add10d448bc6 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -624,7 +624,7 @@ static int shmem_add_to_page_cache(struct page *page,
- 	page->index = index;
- 
- 	if (!PageSwapCache(page)) {
--		error = mem_cgroup_charge(page, charge_mm, gfp, false);
-+		error = mem_cgroup_charge(page, charge_mm, gfp);
- 		if (error) {
- 			if (PageTransHuge(page)) {
- 				count_vm_event(THP_FILE_FALLBACK);
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index f3b9073bfff3..26fded65c30d 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -427,7 +427,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
- 	if (add_to_swap_cache(page, entry, gfp_mask & GFP_KERNEL))
- 		goto fail_unlock;
- 
--	if (mem_cgroup_charge(page, NULL, gfp_mask & GFP_KERNEL, false))
-+	if (mem_cgroup_charge(page, NULL, gfp_mask & GFP_KERNEL))
- 		goto fail_delete;
- 
- 	/* Initiate read into locked page */
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 2745489415cc..7f5194046b01 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -96,7 +96,7 @@ static int mcopy_atomic_pte(struct mm_struct *dst_mm,
- 	__SetPageUptodate(page);
- 
- 	ret = -ENOMEM;
--	if (mem_cgroup_charge(page, dst_mm, GFP_KERNEL, false))
-+	if (mem_cgroup_charge(page, dst_mm, GFP_KERNEL))
- 		goto out_release;
- 
- 	_dst_pte = pte_mkdirty(mk_pte(page, dst_vma->vm_page_prot));
+ struct uncharge_gather {
+@@ -6707,8 +6612,7 @@ static void uncharge_list(struct list_head *page_list)
+  * mem_cgroup_uncharge - uncharge a page
+  * @page: page to uncharge
+  *
+- * Uncharge a page previously charged with mem_cgroup_try_charge() and
+- * mem_cgroup_commit_charge().
++ * Uncharge a page previously charged with mem_cgroup_charge().
+  */
+ void mem_cgroup_uncharge(struct page *page)
+ {
+@@ -6731,7 +6635,7 @@ void mem_cgroup_uncharge(struct page *page)
+  * @page_list: list of pages to uncharge
+  *
+  * Uncharge a list of pages previously charged with
+- * mem_cgroup_try_charge() and mem_cgroup_commit_charge().
++ * mem_cgroup_charge().
+  */
+ void mem_cgroup_uncharge_list(struct list_head *page_list)
+ {
 -- 
 2.26.0
 
