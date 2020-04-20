@@ -2,129 +2,144 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409E4C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05835C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2284B206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9333206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:59:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qvZErNLW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgDTEyU (ORCPT
+        id S1726013AbgDTE7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 00:54:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32974 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725930AbgDTEyT (ORCPT
+        Mon, 20 Apr 2020 00:59:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgDTE7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 00:54:19 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K4VsSm107235
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:54:19 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gg265vte-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:54:18 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
-        Mon, 20 Apr 2020 05:53:55 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 Apr 2020 05:53:53 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03K4sE9j44630454
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 04:54:14 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 77D9D4C04E;
-        Mon, 20 Apr 2020 04:54:14 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 236974C04A;
-        Mon, 20 Apr 2020 04:54:12 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.92.243])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 04:54:11 +0000 (GMT)
-Subject: Re: [PATCH] ext4: remove unnecessary comparisons to bool
-To:     Jason Yan <yanaijie@huawei.com>, tytso@mit.edu,
-        adilger.kernel@dilger.ca, enwlinux@gmail.com,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200420042918.19459-1-yanaijie@huawei.com>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Mon, 20 Apr 2020 10:24:10 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 20 Apr 2020 00:59:05 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D35C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 21:59:05 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 18so741962pfx.6
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 21:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wAPlRWgezwhMIxEulFfKKHAsUfPFwC0PHoMBzV+JlwI=;
+        b=qvZErNLWFA0MXJfaPogJoSFPlbsjkzOdKBcpC+dBEjVp/ttD4NrntsY2Bh67whd53Q
+         QZVuESc+tpPhztFQacvq89rHOoUZSP8b1y5dCfp5JqE434zmbJCRbGxtHxZ28xxGbWtA
+         vPkwmKU/ojlORtYLz+CKQnJig9d0kdFkA+Km2qnqKuQ13aCGl/RkE4pozk+zWwYAxvI9
+         8TwwzxNZM6RzxBjEsHU/oIB6Oi463KgbGsMKGk0ieiuh1h9trvYo+i7SjLVBSs6snd12
+         LMy5FfgTyuwkgO8iZz5T0d2TGNAQ/oTBnf08bsEmP8yrfqBxK9GRLJ83MGNVkaeDhmbE
+         ApwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wAPlRWgezwhMIxEulFfKKHAsUfPFwC0PHoMBzV+JlwI=;
+        b=JMJN5MfZNcIhca33pGinmedERz3ELjItqBNzpLka5epyRELOkI17Z6lkWsMKUWH9Iu
+         +6H2mR08cEaI7mj8lW8cYAea8FzcN1uKL85DHgolHABG76IQMjJBgedCyKZllFfHWu9N
+         w7wS1rcOvGuVnHTv7XSVXfWqJbZtyofJ+MM3JkLoLWIXIWDl8Z2h4B/TQZGYBCJrh1Dh
+         aXzNUQdA4LStdrIw1AL/kcmeknrICmNmO73Gpiw8WNHyu+ucraCXFPocQDSmubQF4sCe
+         uOQ7LBedoCxWsAwf3nTmWJUJYRvBAwErHfzbkUqFeU0g2VQFpEJqjkIdrRzSFZC4TwUO
+         N0SA==
+X-Gm-Message-State: AGi0PubStiVU3iS7RgDesZSvkx/T4DNujEj/Fmcx4+UFrwsiletKovF/
+        pT1hWtUDPbDmvSUiy3eB4BJMnA==
+X-Google-Smtp-Source: APiQypI+Xh29Tan/fCXAwKqqgM92mQvjPxDij3ZhoXScf9xhZvC1wYM79H9afYGS/FHuHt2MKQ2cug==
+X-Received: by 2002:a63:1562:: with SMTP id 34mr14547089pgv.150.1587358744684;
+        Sun, 19 Apr 2020 21:59:04 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id fy21sm12601107pjb.25.2020.04.19.21.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 21:59:03 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 21:59:27 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] remoteproc: Use a local copy for the name field
+Message-ID: <20200420045927.GA1516868@builder.lan>
+References: <20200417002036.24359-1-s-anna@ti.com>
+ <20200417002036.24359-3-s-anna@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200420042918.19459-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042004-0012-0000-0000-000003A7AD9F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042004-0013-0000-0000-000021E4F609
-Message-Id: <20200420045412.236974C04A@d06av22.portsmouth.uk.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-19_06:2020-04-17,2020-04-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 spamscore=0 priorityscore=1501 clxscore=1015 adultscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200037
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417002036.24359-3-s-anna@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 16 Apr 17:20 PDT 2020, Suman Anna wrote:
 
-
-On 4/20/20 9:59 AM, Jason Yan wrote:
-> Fix the following coccicheck warning:
+> The current name field used in the remoteproc structure is simply
+> a pointer to a name field supplied during the rproc_alloc() call.
+> The pointer passed in by remoteproc drivers during registration is
+> typically a dev_name pointer, but it is possible that the pointer
+> will no longer remain valid if the devices themselves were created
+> at runtime like in the case of of_platform_populate(), and were
+> deleted upon any failures within the respective remoteproc driver
+> probe function.
 > 
-> fs/ext4/extents_status.c:1057:5-28: WARNING: Comparison to bool
-> fs/ext4/inode.c:2314:18-24: WARNING: Comparison to bool
+> So, allocate and maintain a local copy for this name field to
+> keep it agnostic of the logic used in the remoteproc drivers.
 > 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 
-Thanks for the patch. Looks good to me.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Feel free to add:
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Regards,
+Bjorn
 
 > ---
->   fs/ext4/extents_status.c | 2 +-
->   fs/ext4/inode.c          | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
+> v1:
+>  - Patch baselined on top of Mathieu's rproc_alloc() refactor
+>    series, and so addresses Bjorn's simplified cleanup comments
+>  - Switch to {kstrdup/kfree}_const variants
+> v0: https://patchwork.kernel.org/patch/11456385/
 > 
-> diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
-> index d996b44d2265..e75171535375 100644
-> --- a/fs/ext4/extents_status.c
-> +++ b/fs/ext4/extents_status.c
-> @@ -1054,7 +1054,7 @@ static void count_rsvd(struct inode *inode, ext4_lblk_t lblk, long len,
->   	end = (end > ext4_es_end(es)) ? ext4_es_end(es) : end;
+>  drivers/remoteproc/remoteproc_core.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
->   	/* record the first block of the first delonly extent seen */
-> -	if (rc->first_do_lblk_found == false) {
-> +	if (!rc->first_do_lblk_found) {
->   		rc->first_do_lblk = i;
->   		rc->first_do_lblk_found = true;
->   	}
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 2a4aae6acdcb..acb8fedcba76 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -2311,7 +2311,7 @@ static int mpage_map_and_submit_buffers(struct mpage_da_data *mpd)
->   			 * mapping, or maybe the page was submitted for IO.
->   			 * So we return to call further extent mapping.
->   			 */
-> -			if (err < 0 || map_bh == true)
-> +			if (err < 0 || map_bh)
->   				goto out;
->   			/* Page fully mapped - let IO run! */
->   			err = mpage_submit_page(mpd, page);
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index e38f627059ac..3cebface3f26 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1984,6 +1984,7 @@ static void rproc_type_release(struct device *dev)
+>  
+>  	kfree(rproc->firmware);
+>  	kfree(rproc->ops);
+> +	kfree_const(rproc->name);
+>  	kfree(rproc);
+>  }
+>  
+> @@ -2069,7 +2070,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>  	if (!rproc)
+>  		return NULL;
+>  
+> -	rproc->name = name;
+>  	rproc->priv = &rproc[1];
+>  	rproc->auto_boot = true;
+>  	rproc->elf_class = ELFCLASS32;
+> @@ -2081,6 +2081,10 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>  	rproc->dev.driver_data = rproc;
+>  	idr_init(&rproc->notifyids);
+>  
+> +	rproc->name = kstrdup_const(name, GFP_KERNEL);
+> +	if (!rproc->name)
+> +		goto put_device;
+> +
+>  	if (rproc_alloc_firmware(rproc, name, firmware))
+>  		goto put_device;
+>  
+> -- 
+> 2.26.0
 > 
-
