@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9588FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB34C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72DEF20724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC6F20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386529;
-	bh=bCIEyiPkV8o12eWrXDzdZoMDxhQhg7Z7FfRhpj/KWFg=;
+	s=default; t=1587386533;
+	bh=e2LmvBy0QEq7kzKFYINQFw6ZWjivBByKAKZVzSDNcRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yGncGymLiqaavoMnTwL9u8FUon8nWNZw9goLxpveY1DPzO1JqSiCOBdYqkZK3noYl
-	 k+MgTtyZ3HsVHTZdAPig1XNL4bpiMSvzaf8b6w7Bqg8Yp1wcmCj1Ui4Ilq1nRCCrp2
-	 qmNn0XrkAJ6VT7/uhl2sEMoZWc0+tFxX0LYo/3RI=
+	b=EPKnjHoFmHul1Fkf2YhwcHksMz38YgKY89R+pQf9gRXVKiqFEwOnVhATFhf5hswuO
+	 0pIby7IVIhtl8vAsHC/giuNWbtr7upHOi8OHFUvZnkzJcNtbdr1EPV5qUhcZ9jKcoe
+	 RHTH4OpXuDNoe8WQK8F1CxbbgC6vm7ODB1RDcIuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgDTMmI (ORCPT
+        id S1728172AbgDTMmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34950 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:42:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbgDTMmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:42:04 -0400
+        id S1728139AbgDTMmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:42:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 290A620736;
-        Mon, 20 Apr 2020 12:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C0DE21473;
+        Mon, 20 Apr 2020 12:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386523;
-        bh=bCIEyiPkV8o12eWrXDzdZoMDxhQhg7Z7FfRhpj/KWFg=;
+        s=default; t=1587386528;
+        bh=e2LmvBy0QEq7kzKFYINQFw6ZWjivBByKAKZVzSDNcRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uKE67qyj2WUQI7CS3NO3ozrp77WIhZYY6HlYT/WBFF5l9SATnls7qDS83GJBR72q/
-         ZKd3ZF6uE3f88420iYwQPiSlQivREXT3l64MRIPkVt724aA0TABwtFTgSiz+RdUIGB
-         Pmq6nnM2OfY3OB+METD9ACoaLJ/hiA3xwD2VLA6Q=
+        b=jqxEszSxAYZGjHaMf4M2ftJ8DEqhKLdA+HKwzvpGA8IoUrqU3FWim5K1rZaWK6Cc1
+         1dnoVa19bwn4DK8AzA++VJoZ7p2qEZ1grC+f2lmKrCTzDsdIFPVO4zUhGnZQX9hc+9
+         taMeFYsvxcC8egS5SgN3bWIzPbI5DRG0EprJ/sOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.5 57/65] i2c: designware: platdrv: Remove DPM_FLAG_SMART_SUSPEND flag on BYT and CHT
-Date:   Mon, 20 Apr 2020 14:39:01 +0200
-Message-Id: <20200420121519.014769166@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.5 59/65] ext4: do not zeroout extents beyond i_disksize
+Date:   Mon, 20 Apr 2020 14:39:03 +0200
+Message-Id: <20200420121519.396618789@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -62,108 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Jan Kara <jack@suse.cz>
 
-commit d79294d0de12ddd1420110813626d691f440b86f upstream.
+commit 801674f34ecfed033b062a0f217506b93c8d5e8a upstream.
 
-We already set DPM_FLAG_SMART_PREPARE, so we completely skip all
-callbacks (other then prepare) where possible, quoting from
-dw_i2c_plat_prepare():
+We do not want to create initialized extents beyond end of file because
+for e2fsck it is impossible to distinguish them from a case of corrupted
+file size / extent tree and so it complains like:
 
-        /*
-         * If the ACPI companion device object is present for this device, it
-         * may be accessed during suspend and resume of other devices via I2C
-         * operation regions, so tell the PM core and middle layers to avoid
-         * skipping system suspend/resume callbacks for it in that case.
-         */
-        return !has_acpi_companion(dev);
+Inode 12, i_size is 147456, should be 163840.  Fix? no
 
-Also setting the DPM_FLAG_SMART_SUSPEND will cause acpi_subsys_suspend()
-to leave the controller runtime-suspended even if dw_i2c_plat_prepare()
-returned 0.
+Code in ext4_ext_convert_to_initialized() and
+ext4_split_convert_extents() try to make sure it does not create
+initialized extents beyond inode size however they check against
+inode->i_size which is wrong. They should instead check against
+EXT4_I(inode)->i_disksize which is the current inode size on disk.
+That's what e2fsck is going to see in case of crash before all dirty
+data is written. This bug manifests as generic/456 test failure (with
+recent enough fstests where fsx got fixed to properly pass
+FALLOC_KEEP_SIZE_FL flags to the kernel) when run with dioread_lock
+mount option.
 
-Leaving the controller runtime-suspended normally, when the I2C controller
-is suspended during the suspend_late phase, is not an issue because
-the pm_runtime_get_sync() done by i2c_dw_xfer() will (runtime-)resume it.
-
-But for dw I2C controllers on Bay- and Cherry-Trail devices acpi_lpss.c
-leaves the controller alive until the suspend_noirq phase, because it may
-be used by the _PS3 ACPI methods of PCI devices and PCI devices are left
-powered on until the suspend_noirq phase.
-
-Between the suspend_late and resume_early phases runtime-pm is disabled.
-So for any ACPI I2C OPRegion accesses done after the suspend_late phase,
-the pm_runtime_get_sync() done by i2c_dw_xfer() is a no-op and the
-controller is left runtime-suspended.
-
-i2c_dw_xfer() has a check to catch this condition (rather then waiting
-for the I2C transfer to timeout because the controller is suspended).
-acpi_subsys_suspend() leaving the controller runtime-suspended in
-combination with an ACPI I2C OPRegion access done after the suspend_late
-phase triggers this check, leading to the following error being logged
-on a Bay Trail based Lenovo Thinkpad 8 tablet:
-
-[   93.275882] i2c_designware 80860F41:00: Transfer while suspended
-[   93.275993] WARNING: CPU: 0 PID: 412 at drivers/i2c/busses/i2c-designware-master.c:429 i2c_dw_xfer+0x239/0x280
-...
-[   93.276252] Workqueue: kacpi_notify acpi_os_execute_deferred
-[   93.276267] RIP: 0010:i2c_dw_xfer+0x239/0x280
-...
-[   93.276340] Call Trace:
-[   93.276366]  __i2c_transfer+0x121/0x520
-[   93.276379]  i2c_transfer+0x4c/0x100
-[   93.276392]  i2c_acpi_space_handler+0x219/0x510
-[   93.276408]  ? up+0x40/0x60
-[   93.276419]  ? i2c_acpi_notify+0x130/0x130
-[   93.276433]  acpi_ev_address_space_dispatch+0x1e1/0x252
-...
-
-So since on BYT and CHT platforms we want ACPI I2c OPRegion accesses
-to work until the suspend_noirq phase, we need the controller to be
-runtime-resumed during the suspend phase if it is runtime-suspended
-suspended at that time. This means that we must not set the
-DPM_FLAG_SMART_SUSPEND on these platforms.
-
-On BYT and CHT we already have a special ACCESS_NO_IRQ_SUSPEND flag
-to make sure the controller stays functional until the suspend_noirq
-phase. This commit makes the driver not set the DPM_FLAG_SMART_SUSPEND
-flag when that flag is set.
-
-Cc: stable@vger.kernel.org
-Fixes: b30f2f65568f ("i2c: designware: Set IRQF_NO_SUSPEND flag for all BYT and CHT controllers")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+CC: stable@vger.kernel.org
+Fixes: 21ca087a3891 ("ext4: Do not zero out uninitialized extents beyond i_size")
+Reviewed-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/20200331105016.8674-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-designware-platdrv.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ fs/ext4/extents.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -370,10 +370,16 @@ static int dw_i2c_plat_probe(struct plat
- 	adap->dev.of_node = pdev->dev.of_node;
- 	adap->nr = -1;
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -3570,8 +3570,8 @@ static int ext4_ext_convert_to_initializ
+ 		(unsigned long long)map->m_lblk, map_len);
  
--	dev_pm_set_driver_flags(&pdev->dev,
--				DPM_FLAG_SMART_PREPARE |
--				DPM_FLAG_SMART_SUSPEND |
--				DPM_FLAG_LEAVE_SUSPENDED);
-+	if (dev->flags & ACCESS_NO_IRQ_SUSPEND) {
-+		dev_pm_set_driver_flags(&pdev->dev,
-+					DPM_FLAG_SMART_PREPARE |
-+					DPM_FLAG_LEAVE_SUSPENDED);
-+	} else {
-+		dev_pm_set_driver_flags(&pdev->dev,
-+					DPM_FLAG_SMART_PREPARE |
-+					DPM_FLAG_SMART_SUSPEND |
-+					DPM_FLAG_LEAVE_SUSPENDED);
-+	}
+ 	sbi = EXT4_SB(inode->i_sb);
+-	eof_block = (inode->i_size + inode->i_sb->s_blocksize - 1) >>
+-		inode->i_sb->s_blocksize_bits;
++	eof_block = (EXT4_I(inode)->i_disksize + inode->i_sb->s_blocksize - 1)
++			>> inode->i_sb->s_blocksize_bits;
+ 	if (eof_block < map->m_lblk + map_len)
+ 		eof_block = map->m_lblk + map_len;
  
- 	/* The code below assumes runtime PM to be disabled. */
- 	WARN_ON(pm_runtime_enabled(&pdev->dev));
+@@ -3826,8 +3826,8 @@ static int ext4_split_convert_extents(ha
+ 		  __func__, inode->i_ino,
+ 		  (unsigned long long)map->m_lblk, map->m_len);
+ 
+-	eof_block = (inode->i_size + inode->i_sb->s_blocksize - 1) >>
+-		inode->i_sb->s_blocksize_bits;
++	eof_block = (EXT4_I(inode)->i_disksize + inode->i_sb->s_blocksize - 1)
++			>> inode->i_sb->s_blocksize_bits;
+ 	if (eof_block < map->m_lblk + map->m_len)
+ 		eof_block = map->m_lblk + map->m_len;
+ 	/*
 
 
