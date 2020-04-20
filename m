@@ -2,107 +2,129 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CD1C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C917C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22BCA20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:14:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O/KLhL+a"
+	by mail.kernel.org (Postfix) with ESMTP id 26382206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgDTQOK (ORCPT
+        id S1728163AbgDTQPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:14:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725958AbgDTQOK (ORCPT
+        Mon, 20 Apr 2020 12:15:18 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54897 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgDTQPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:14:10 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062ECC061A0C;
-        Mon, 20 Apr 2020 09:14:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=xudTG6A7+qcVFoLFZf/JKAo5nIg1+DsDp60lgvIOJr0=; b=O/KLhL+axrhzsZuHOxClDbjVqK
-        ozfgl/qe8lFedt22O8MwyzwyluTuFhQXJupG68Ud3C/MwqLUK5CnCkoofGAar3iN3+4VsBpe+6GaF
-        CHC1U9TXWl9Rovu1NcduCxhIgYqeDZ7AWdY8+y8KuKwwFcMY23st/k3IqgO7XSrQR8uLT/HhOlb5s
-        +e4MqJwhrZv67Dee5d4eFzP05UkSHRC43iMEr+Ykg9h2lPVLd2hUiFjQVIF2X3IX5QgDneL9zIT1E
-        ymGUtLDHJUKV+fcwYk4K8z5H/0OzWC8QBgVhTvDZDLgRRCLC2LjaVfvaH44TlKtxbUl6Mw/7H+kBU
-        UL3guzYg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQZ3g-0006GE-UI; Mon, 20 Apr 2020 16:14:09 +0000
-Subject: Re: linux-next: Tree for Apr 20 (objtool warning)
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20200420142610.390e5922@canb.auug.org.au>
- <30d5a881-95fe-9f98-a899-2c955c5eb2c1@infradead.org>
- <20200420155330.5uepjeyfsso5l4rm@treble>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <96be5a96-07f6-7343-e159-ffb110646d76@infradead.org>
-Date:   Mon, 20 Apr 2020 09:14:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 20 Apr 2020 12:15:18 -0400
+Received: by mail-pj1-f66.google.com with SMTP id np9so53109pjb.4;
+        Mon, 20 Apr 2020 09:15:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mKMIW3mEg5t1gLoJ6mz8YW5V5YHdFX18CfmBOsT8+DM=;
+        b=f7Ti89jI8mxJ++RbVIzArU4aCIEPh2c72uCntV4+3RouLxK7sEZBvt+6OnCYrx6e4c
+         MdFybnbC7fdPiafrm3LmvP1xu/0VFNOkVfnV5Y35HpjYxocBMleKj1IUrIma8cc4LYuY
+         XO67BjJrs5if1zVZGqpE23u8n10aS5YSECe3URm61+tcpnisZgsPZU2BsHcjpsYbhe9T
+         ZXvbiVZLFSJLP23APR0r6aBIujdvAfQZBLRDyqlj4rCeqoV9TkvbuIo6fN9fcZ9g0oox
+         FKqujgWDDMAitHe/ewdxdInmeJwAlBaHKl7rS9WPewzyqBZC7je0tIt+TvchrFLe1TRF
+         7pmA==
+X-Gm-Message-State: AGi0Pub8xibp06D0DzIgpYwu1wm2LyA1NuuxSHnaeNITk6Pi5CxphHwF
+        oFqZyM52QOIvakJPOxp3O6jcVnfw
+X-Google-Smtp-Source: APiQypIo65I60EmrvJr0Fn9k464/b4BsdAENW1ihErA04xVYqn/vV5ywXSVnzlYGX6PHk/VUYYyFKA==
+X-Received: by 2002:a17:90a:890a:: with SMTP id u10mr161799pjn.154.1587399317254;
+        Mon, 20 Apr 2020 09:15:17 -0700 (PDT)
+Received: from sultan-box.localdomain ([104.200.129.62])
+        by smtp.gmail.com with ESMTPSA id o1sm48749pjs.35.2020.04.20.09.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 09:15:16 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 09:15:14 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>, stable@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthew Auld <matthew.auld@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] drm/i915: Synchronize active and retire callbacks
+Message-ID: <20200420161514.GB1963@sultan-box.localdomain>
+References: <20200404024156.GA10382@sultan-box.localdomain>
+ <20200407064007.7599-1-sultan@kerneltoast.com>
+ <20200414061312.GA90768@sultan-box.localdomain>
+ <158685263618.16269.9317893477736764675@build.alporthouse.com>
+ <20200414144309.GB2082@sultan-box.localdomain>
+ <20200420052419.GA40250@sultan-box.localdomain>
+ <158737090265.8380.6644489879531344891@jlahtine-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200420155330.5uepjeyfsso5l4rm@treble>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158737090265.8380.6644489879531344891@jlahtine-desk.ger.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/20/20 8:53 AM, Josh Poimboeuf wrote:
-> On Mon, Apr 20, 2020 at 08:29:04AM -0700, Randy Dunlap wrote:
->> On 4/19/20 9:26 PM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20200417:
->>>
->>
->> on x86_64:
->>
->> arch/x86/kvm/svm/vmenter.o: warning: objtool: __svm_vcpu_run()+0xe4: BP used as a scratch register
->>
->> Full randconfig file is included.
-> 
-> Yeah, frame pointers are toast in that function.  We'll need something
-> like:
+On Mon, Apr 20, 2020 at 11:21:42AM +0300, Joonas Lahtinen wrote:
+> So it seems that the patch got pulled into v5.6 and has been backported
+> to v5.5 but not v5.4.
 
-That works for me. Thanks.
+You're right, that's my mistake.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> In doing that zeroing of ring->vaddr is removed so the test to do mdelay(1)
+> and "ring->vaddr = NULL;" is not correct.
 
+I'm not so sure about this. Look at where `ring->vaddr` is assigned:
+-------------------------------------8<-----------------------------------------
+	ret = i915_vma_pin(vma, 0, 0, flags);
+	if (unlikely(ret))
+		goto err_unpin;
 
-> diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-> index a789759b7261..221e2bd7e76d 100644
-> --- a/arch/x86/kvm/Makefile
-> +++ b/arch/x86/kvm/Makefile
-> @@ -3,6 +3,10 @@
->  ccflags-y += -Iarch/x86/kvm
->  ccflags-$(CONFIG_KVM_WERROR) += -Werror
->  
-> +ifeq ($(CONFIG_UNWINDER_FRAME_POINTER),y)
-> +OBJECT_FILES_NON_STANDARD_vmenter.o := y
-> +endif
-> +
->  KVM := ../../../virt/kvm
->  
->  kvm-y			+= $(KVM)/kvm_main.o $(KVM)/coalesced_mmio.o \
-> 
-> 
+	if (i915_vma_is_map_and_fenceable(vma))
+		addr = (void __force *)i915_vma_pin_iomap(vma);
+	else
+		addr = i915_gem_object_pin_map(vma->obj,
+					       i915_coherent_map_type(vma->vm->i915));
+	if (IS_ERR(addr)) {
+		ret = PTR_ERR(addr);
+		goto err_ring;
+	}
 
+	i915_vma_make_unshrinkable(vma);
 
--- 
-~Randy
+	/* Discard any unused bytes beyond that submitted to hw. */
+	intel_ring_reset(ring, ring->emit);
+
+	ring->vaddr = addr;
+------------------------------------->8-----------------------------------------
+
+And then the converse of that is done *before* my reproducer patch does
+`ring->vaddr = NULL;`:
+-------------------------------------8<-----------------------------------------
+	i915_vma_unset_ggtt_write(vma);
+	if (i915_vma_is_map_and_fenceable(vma))
+		i915_vma_unpin_iomap(vma);
+	else
+		i915_gem_object_unpin_map(vma->obj);
+
+	/* mdelay(1);
+	ring->vaddr = NULL; */
+
+	i915_vma_make_purgeable(vma);
+	i915_vma_unpin(vma);
+------------------------------------->8-----------------------------------------
+
+Isn't the value assigned to `ring->vaddr` trashed by those function calls above
+where I've got the mdelay? If so, why would it be correct to let the stale value
+sit in `ring->vaddr`?
+
+My interpretation of the zeroing of ring->vaddr being removed by Chris was that
+it was an unnecessary step before the ring was getting discarded anyway.
+
+Sultan
