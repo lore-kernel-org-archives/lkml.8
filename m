@@ -2,110 +2,263 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37185C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96521C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF0720736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7690222240
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587386928;
+	bh=h8Z/dkCxk8TLX9dyat7PhY4hg5Vbo3TN2LqGCyokX2o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wdfYAtJOGiqvKI1uTnLATGFzAAwswutThPTwk1Ir/1EM87lhKfSuj3BsH0oJm0YwX
+	 MuSAlIQJc2die5sfpbvdY/JQsaYJ+B2FTbvLBkioIGqRYE0epd2F9nbQ+7rejrqCuc
+	 zK2apR+PtbPktcL5OZXoYcenTOiHR0r2tEAkU5U4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbgDTMsn (ORCPT
+        id S1729310AbgDTMsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:48:43 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39861 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729274AbgDTMsf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:48:35 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 18so1244373pfx.6;
-        Mon, 20 Apr 2020 05:48:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mZP/0iYmD/H54p8CqHE4Y7J8ed0tbv+i/HVHsWZbrMk=;
-        b=iaxux+3PSCXp10dZI3+AdV9cTAZ2NlYpakrt+LWoFTtsBOqiTBDoR3UjVIks8IFuGk
-         OQAc43VnqlzOfsLNAa3eN/ft2MuNfj20tOtWC+IB/LtELuWlw+A+sQ0Yw9cKHdafCINj
-         vRWpC/LE9M4jkbLvnP4R8CS19Z1rJq1PNlK4LEBxidU2+f1ecwUNgoOKRqnmdVV74JbT
-         qEmeyDJxP+m7ZAPCz3Lq++XRgaSl2uM0Q064Cxws2zlV9MSWmj+b05U4UD2UTd8S6og4
-         4NE25yXf3psH9lL5GPslyTpmNLCsOYKIYMHX1bMc3P4UIIZ7QBZn786IiGHk5A2Sl4p9
-         XXIw==
-X-Gm-Message-State: AGi0PuY2tp+mUUXm5Mi4/vu5CQTAMy7GS1LMe4wXXmhYKHark1l13VY3
-        vATRw0K1oQuNu0kzWlPf4lh76ZM3
-X-Google-Smtp-Source: APiQypKtBb/IXceWbDe5CMNWJm//QZH8agRsemv9yl7WdzWlqnqObNfzUAgzhR9X5A2pdS6dfkidYQ==
-X-Received: by 2002:a63:a362:: with SMTP id v34mr15923320pgn.198.1587386914648;
-        Mon, 20 Apr 2020 05:48:34 -0700 (PDT)
-Received: from [100.124.9.192] ([104.129.199.3])
-        by smtp.gmail.com with ESMTPSA id t126sm1056573pfb.29.2020.04.20.05.48.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 05:48:33 -0700 (PDT)
-Subject: Re: [PATCH] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when
- no budget
-To:     John Garry <john.garry@huawei.com>, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ming.lei@redhat.com
-References: <1587035931-125028-1-git-send-email-john.garry@huawei.com>
- <e5416179-2ba0-c9a8-1b86-d52eae29e146@acm.org>
- <663d472a-5bde-4b89-3137-c7bfdf4d7b97@huawei.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <287efbca-b8ca-1aa8-484f-a98e5205592c@acm.org>
-Date:   Mon, 20 Apr 2020 05:48:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 20 Apr 2020 08:48:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729287AbgDTMsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59E5520735;
+        Mon, 20 Apr 2020 12:48:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587386918;
+        bh=h8Z/dkCxk8TLX9dyat7PhY4hg5Vbo3TN2LqGCyokX2o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=k1xLk5Bx+9Y8OcqRZaWku8Du1oIvnmeBeD4pd+0nZBCOBhscGeQsqpe8GxPoN8TsP
+         x6FAq4MO7EPKMPU6lra14+m4tGTFNDrxWYNvAvMriOuc/K8AdxeuXNAQd748+moq33
+         +4G/TNf7zcwv6My5x/DvkQW5ZjJcTbYtEHSi4Y8s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Clemens Gruber <clemens.gruber@pqgruber.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH 4.19 12/40] pwm: pca9685: Fix PWM/GPIO inter-operation
+Date:   Mon, 20 Apr 2020 14:39:22 +0200
+Message-Id: <20200420121455.197027594@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
+References: <20200420121444.178150063@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <663d472a-5bde-4b89-3137-c7bfdf4d7b97@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/20/20 1:22 AM, John Garry wrote:
-> On 18/04/2020 03:43, Bart Van Assche wrote:
->> On 2020-04-16 04:18, John Garry wrote:
->>> If in blk_mq_dispatch_rq_list() we find no budget, then we break of the
->>> dispatch loop, but the request may keep the driver tag, evaulated
->>> in 'nxt' in the previous loop iteration.
->>>
->>> Fix by putting the driver tag for that request.
->>>
->>> Signed-off-by: John Garry <john.garry@huawei.com>
->>>
->>> diff --git a/block/blk-mq.c b/block/blk-mq.c
->>> index 8e56884fd2e9..a7785df2c944 100644
->>> --- a/block/blk-mq.c
->>> +++ b/block/blk-mq.c
->>> @@ -1222,8 +1222,10 @@ bool blk_mq_dispatch_rq_list(struct 
->>> request_queue *q, struct list_head *list,
->>>           rq = list_first_entry(list, struct request, queuelist);
->>>           hctx = rq->mq_hctx;
->>> -        if (!got_budget && !blk_mq_get_dispatch_budget(hctx))
->>> +        if (!got_budget && !blk_mq_get_dispatch_budget(hctx)) {
->>> +            blk_mq_put_driver_tag(rq);
->>>               break;
->>> +        }
->>>           if (!blk_mq_get_driver_tag(rq)) {
->>>               /*
->>
->> Is this something that can only happen if q->mq_ops->queue_rq(hctx, &bd)
->> returns another value than BLK_STS_OK, BLK_STS_RESOURCE and
->> BLK_STS_DEV_RESOURCE? 
-> 
-> Right, as that case is handled in blk_mq_handle_dev_resource()
-> 
-> If so, please add a comment in the source code
->> that explains this.
-> 
-> So important that we should now do this in an extra patch?
+From: Sven Van Asbroeck <TheSven73@gmail.com>
 
-Probably not, unless someone else feels strongly about this.
+commit 9cc5f232a4b6a0ef6e9b57876d61b88f61bdd7c2 upstream.
 
-Thanks,
+This driver allows pwms to be requested as gpios via gpiolib. Obviously,
+it should not be allowed to request a GPIO when its corresponding PWM is
+already requested (and vice versa). So it requires some exclusion code.
 
-Bart.
+Given that the PWMm and GPIO cores are not synchronized with respect to
+each other, this exclusion code will also require proper
+synchronization.
+
+Such a mechanism was in place, but was inadvertently removed by Uwe's
+clean-up in commit e926b12c611c ("pwm: Clear chip_data in pwm_put()").
+
+Upon revisiting the synchronization mechanism, we found that
+theoretically, it could allow two threads to successfully request
+conflicting PWMs/GPIOs.
+
+Replace with a bitmap which tracks PWMs in-use, plus a mutex. As long as
+PWM and GPIO's respective request/free functions modify the in-use
+bitmap while holding the mutex, proper synchronization will be
+guaranteed.
+
+Reported-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Link: https://lkml.org/lkml/2019/5/31/963
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[cg: Tested on an i.MX6Q board with two NXP PCA9685 chips]
+Tested-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com> # cg's rebase
+Link: https://lore.kernel.org/lkml/20200330160238.GD2817345@ulmo/
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/pwm/pwm-pca9685.c |   85 +++++++++++++++++++++++++---------------------
+ 1 file changed, 48 insertions(+), 37 deletions(-)
+
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -31,6 +31,7 @@
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/pm_runtime.h>
++#include <linux/bitmap.h>
+ 
+ /*
+  * Because the PCA9685 has only one prescaler per chip, changing the period of
+@@ -85,6 +86,7 @@ struct pca9685 {
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+ 	struct mutex lock;
+ 	struct gpio_chip gpio;
++	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
+ #endif
+ };
+ 
+@@ -94,51 +96,51 @@ static inline struct pca9685 *to_pca(str
+ }
+ 
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+-static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
+ {
+-	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
++	bool is_inuse;
+ 
+ 	mutex_lock(&pca->lock);
+-
+-	pwm = &pca->chip.pwms[offset];
+-
+-	if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
+-		mutex_unlock(&pca->lock);
+-		return -EBUSY;
++	if (pwm_idx >= PCA9685_MAXCHAN) {
++		/*
++		 * "all LEDs" channel:
++		 * pretend already in use if any of the PWMs are requested
++		 */
++		if (!bitmap_empty(pca->pwms_inuse, PCA9685_MAXCHAN)) {
++			is_inuse = true;
++			goto out;
++		}
++	} else {
++		/*
++		 * regular channel:
++		 * pretend already in use if the "all LEDs" channel is requested
++		 */
++		if (test_bit(PCA9685_MAXCHAN, pca->pwms_inuse)) {
++			is_inuse = true;
++			goto out;
++		}
+ 	}
+-
+-	pwm_set_chip_data(pwm, (void *)1);
+-
++	is_inuse = test_and_set_bit(pwm_idx, pca->pwms_inuse);
++out:
+ 	mutex_unlock(&pca->lock);
+-	pm_runtime_get_sync(pca->chip.dev);
+-	return 0;
++	return is_inuse;
+ }
+ 
+-static bool pca9685_pwm_is_gpio(struct pca9685 *pca, struct pwm_device *pwm)
++static void pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
+ {
+-	bool is_gpio = false;
+-
+ 	mutex_lock(&pca->lock);
++	clear_bit(pwm_idx, pca->pwms_inuse);
++	mutex_unlock(&pca->lock);
++}
+ 
+-	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
+-		unsigned int i;
+-
+-		/*
+-		 * Check if any of the GPIOs are requested and in that case
+-		 * prevent using the "all LEDs" channel.
+-		 */
+-		for (i = 0; i < pca->gpio.ngpio; i++)
+-			if (gpiochip_is_requested(&pca->gpio, i)) {
+-				is_gpio = true;
+-				break;
+-			}
+-	} else if (pwm_get_chip_data(pwm)) {
+-		is_gpio = true;
+-	}
++static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++{
++	struct pca9685 *pca = gpiochip_get_data(gpio);
+ 
+-	mutex_unlock(&pca->lock);
+-	return is_gpio;
++	if (pca9685_pwm_test_and_set_inuse(pca, offset))
++		return -EBUSY;
++	pm_runtime_get_sync(pca->chip.dev);
++	return 0;
+ }
+ 
+ static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
+@@ -173,6 +175,7 @@ static void pca9685_pwm_gpio_free(struct
+ 
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
++	pca9685_pwm_clear_inuse(pca, offset);
+ }
+ 
+ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+@@ -224,12 +227,17 @@ static int pca9685_pwm_gpio_probe(struct
+ 	return devm_gpiochip_add_data(dev, &pca->gpio, pca);
+ }
+ #else
+-static inline bool pca9685_pwm_is_gpio(struct pca9685 *pca,
+-				       struct pwm_device *pwm)
++static inline bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca,
++						  int pwm_idx)
+ {
+ 	return false;
+ }
+ 
++static inline void
++pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
++{
++}
++
+ static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ {
+ 	return 0;
+@@ -413,7 +421,7 @@ static int pca9685_pwm_request(struct pw
+ {
+ 	struct pca9685 *pca = to_pca(chip);
+ 
+-	if (pca9685_pwm_is_gpio(pca, pwm))
++	if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
+ 		return -EBUSY;
+ 	pm_runtime_get_sync(chip->dev);
+ 
+@@ -422,8 +430,11 @@ static int pca9685_pwm_request(struct pw
+ 
+ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
++	struct pca9685 *pca = to_pca(chip);
++
+ 	pca9685_pwm_disable(chip, pwm);
+ 	pm_runtime_put(chip->dev);
++	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
+ }
+ 
+ static const struct pwm_ops pca9685_pwm_ops = {
+
+
