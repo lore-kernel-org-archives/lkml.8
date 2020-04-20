@@ -2,113 +2,92 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12014C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497E7C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D901F206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587385958;
-	bh=ZMukz6nNKGu33s3FRvBaxizeZXmWlbe9Fjx2efgzEDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qmQW7WCsJfymU4ez3yIp8++n5hxD790kvhF3r3ldkDVHUs+62QCVEolRCSqU/qwtv
-	 FEkA/2hxOQnXjPuK8QkuAjHUrT+CXUs7hGDSK/xz7RmJdlE16ewgvFenLLBPW1XhhH
-	 ebldZouHsUmJHeuc0+RU/wMubHTAbztYMbm7imUA=
+	by mail.kernel.org (Postfix) with ESMTP id 2795620724
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:33:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="pHC4uN65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgDTMci (ORCPT
+        id S1726596AbgDTMdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:32:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57272 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:33:32 -0400
+Received: from plaes.org ([188.166.43.21]:34990 "EHLO plaes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgDTMch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:32:37 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96EBB206D4;
-        Mon, 20 Apr 2020 12:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587385957;
-        bh=ZMukz6nNKGu33s3FRvBaxizeZXmWlbe9Fjx2efgzEDI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RGa+xqk+kcDuKFAQaQOzJb322uQMKz8mX0qmE8uu2t74dL6qjcU+iq7X3+F/FiHrm
-         xCn3skOK0MoFz4m5zpYhpW+MogfrTDXCV4OK+oBSdK9fzO03ZZlVI5AI4hhtbASPeK
-         Q2tW8m19A3PuQRnXS4hgsowLkHAzmDsJdyyXG05E=
-Date:   Mon, 20 Apr 2020 13:32:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        Nishanth Menon <nm@ti.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Subject: Re: Multiple regulators for one device [was drm/panfrost: add
- devfreq regulator support]
-Message-ID: <20200420123234.GA10045@sirena.org.uk>
-References: <CAJiuCccv2XPLY6sjcgvvrG5a8ONYHa_xn9i-YUDKUDK5a0DY=A@mail.gmail.com>
- <CAJiuCcfa9ro1V4nBzfD48cCuHpEsLaNA5P0bb-tQ3hcWUCtpkA@mail.gmail.com>
- <000f26f4-3640-797f-c7f6-4b31a5e2669e@arm.com>
- <CAJiuCccF3tmbmMWNh0nC5WRJ1_iPdj6f1oH1zYMSue_pFrXsPQ@mail.gmail.com>
- <20200414185523.GO5412@sirena.org.uk>
- <CAJiuCce5ekAed6RF8+x_ehruCXW3900wkFNKRXN_Xo_62MPXew@mail.gmail.com>
- <5e15e7ac-1d9c-d614-8fd9-27525c88cafb@arm.com>
- <5290a7a8-2a0a-cb89-9d62-270393123054@arm.com>
- <CAJiuCccm4gTAUWhTy+gK0kt4of=8yWcz2n_JtnmeAJofcpBKeQ@mail.gmail.com>
- <CAJiuCceECTKqTecq5KGayzNqOvQfOctR8RqnncKU66ieU7hH1w@mail.gmail.com>
+        id S1725886AbgDTMdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:33:31 -0400
+Received: from plaes.org (localhost [127.0.0.1])
+        by plaes.org (Postfix) with ESMTPSA id CCE9A40A95;
+        Mon, 20 Apr 2020 12:32:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
+        t=1587385978; bh=dD6UJxueO7iBXUJ0MYPcRp2vcNvPimi5NJR2GD1gM1U=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=pHC4uN65eK9FrZlif52Y7dJqnVpm/59WYaZQDMSv2CworsbmtUgWCLLJw63uW7CCa
+         NRaKKkAAT30qxnEYe2S44AL0KbginlGKs6+yg/JSgw3RUUmSb6n30S7J9AHpYYP/JW
+         XSfFlEORgxc42MBi9xx1ud5zA1c1FwBCIkh/PLXG62ZIN8UYfuF08m9yJ47cD/iVCm
+         SjoYpBF/EY3FeRvMYE7AjvKCcG0vjoIFLfeXBlhuU30eo9IM5obdRQXXOmzBOfAL/j
+         QEKlBuWLji8Vj3e6k7jWE0QNmAIhrvYllmH/RV9plJhx3kThbDA4ckR10tHEfDM4hf
+         tZ+IfhX2kx/iQ==
+Date:   Mon, 20 Apr 2020 12:32:57 +0000
+From:   Priit Laes <plaes@plaes.org>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 0/4] ARM: sun7i: Convert A20 GMAC driver to CCU
+Message-ID: <20200420123257.GA18522@plaes.org>
+References: <20200417221730.555954-1-plaes@plaes.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJiuCceECTKqTecq5KGayzNqOvQfOctR8RqnncKU66ieU7hH1w@mail.gmail.com>
-X-Cookie: Hope is a waking dream.
+In-Reply-To: <20200417221730.555954-1-plaes@plaes.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Apr 18, 2020 at 01:17:26AM +0300, Priit Laes wrote:
+> This serie converts Allwinner A20 (sun7i) GMAC driver to CCU
+> while still retaining compatibility with existing devicetrees.
+> 
+> First two patches contain preliminary work which convert
+> sun4i/sun7i clock drivers to platform devices and creates regmap
+> to access gmac register from the sun7i gmac driver.
+> 
+> Third patch implements syscon-based regmap to allow driver manage
+> its own clock source.
+> 
+> Fourth patch updates the devicetree and drops the unused clocks.
+> 
+> While testing the driver I noticed following bugs with the existing
+> sun7i gmac driver:
+> - driver relies on u-boot for initialization (fixed in this
+>   implementation)
 
---+QahgC5+KEYLbs62
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Scratch that.. this is actually due to unhandled rx and tx delays,
+which I "accidentally" fixed by copying the value BIT(12) from the
+u-boot..
 
-On Sun, Apr 19, 2020 at 11:25:08AM +0200, Cl=E9ment P=E9ron wrote:
-
-> Just saw that a Lima devfreq[0] has been also introduced with I think
-> exactly the same logic.
-
-> Is this something that hasn't been triggered by Maintainer or I am
-> missing something?
-
-My understanding is that there is very little use of any of this
-upstream since it's all pretty new, some platforms have OPPs but use a
-firmware interface rather than the OS to control clocks and regulators
-while most other platforms don't have OPPs defined and it's only
-platforms with both regulators and OPPs that are affected.
-
---+QahgC5+KEYLbs62
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6dlmEACgkQJNaLcl1U
-h9DypQf+P2vOWeN+u8XMuP/6aPG5takPC+MHnWznoRLaDc2TdO5H+eHG2iQOAjO0
-1aZTF0RSKX4Q0Sh0l3cuYuiuZYqLMfRuftdQDiHPT3PoVWKUPSA3yfCIhlIMQq6K
-W8DYg6MQ1T3sYSpbgeuWzEBfsMJqtHTpKxn9NvH8TEaJ2meGJpHW3BrquR1Xl9pj
-oL196yRNbFAswmrHo/n1KUtID7dkPXZkXk+Jzfdy8G8GTDAU9imish/sLYNZkdup
-JI0g2XYO2U/HscE4mniwpJKufckSu2TbKlpOP56W23xEFHs3LANgz75Blokpu3WQ
-AyNedgAah8HO9b2ZovsitfGhGVJMrA==
-=IWQH
------END PGP SIGNATURE-----
-
---+QahgC5+KEYLbs62--
+> - `systemctl restart networking` fails to bring the link up again.
+> 
+> 
+> Priit Laes (4):
+>   clk: sunxi-ng: a10/a20: rewrite init code to a platform driver
+>   clk: sunxi-ng: a20: export a regmap to access the GMAC register
+>   net: stmmac: dwmac-sunxi: Implement syscon-based clock handling
+>   ARM: dts: sun7i: Use syscon-based implementation for gmac
+> 
+>  arch/arm/boot/dts/sun7i-a20.dtsi              |  36 +----
+>  drivers/clk/sunxi-ng/ccu-sun4i-a10.c          | 108 ++++++++++++---
+>  .../net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 124 ++++++++++++++++--
+>  3 files changed, 206 insertions(+), 62 deletions(-)
+> 
+> -- 
+> 2.25.2
+> 
