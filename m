@@ -2,153 +2,188 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15909C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAB8C55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF8D120672
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:28:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLl7hGj8"
+	by mail.kernel.org (Postfix) with ESMTP id E905120722
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587418155;
+	bh=VNiQsywGgzDu+UPWr62f+ikDlVnC2t5q9KRTCBukmn8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0TNdteKsVLUHV5E975WUE2Yek8dk6ZGMEw+BbvVUxvzXhocQFozSb8yM77BURo1Cn
+	 ZzPaHC519KWGpiMUUCiZceUs9xqc4LarW6ZeTb02JHXlE5bY4QUZJk95hSzDw8hxwg
+	 5Xt1poFVbDSZOBEV2A5HnFR4LkW6uSzt8X6NXv1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgDTV2k (ORCPT
+        id S1728098AbgDTV3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726017AbgDTV2k (ORCPT
+        Mon, 20 Apr 2020 17:29:14 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44395 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgDTV3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:28:40 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F9CC061A0C;
-        Mon, 20 Apr 2020 14:28:40 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r26so1283774wmh.0;
-        Mon, 20 Apr 2020 14:28:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nch3oPa8U1oHJxNa/tt8ccjtrHSf13GKGszol75zytE=;
-        b=SLl7hGj8FVFVlvCC/+faP8qh4tSAuGz4wygWSMbPQBe1je/dYQwHtuKDQjVXKQMnCW
-         hWZYF7CmDZX1fUrAQf66rJUxcB0NgxTHKRbzmlDsQHGVzi+vDiFUzuYdKBqoK49RsXOJ
-         YnuBIZP040Vd37UCpHujRyuK09D6XLak4UEX22ovNZ2CUpkMeOripV7h/OuHe2Dxs1Ok
-         aHNjdzp9nlCCTRIbrr93BEbxSLdVRbHAOPktGpjb5SIIsTqQFhGXqc5kEl/ihFQgLIAe
-         gMUahq/ZKv6YClOgoJwoJmOSY2Jb9+sVqfSLIqij0Z2mpiRBZKBZJgIx+VsIfraumH06
-         7uZg==
+        Mon, 20 Apr 2020 17:29:13 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a2so5554992oia.11;
+        Mon, 20 Apr 2020 14:29:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nch3oPa8U1oHJxNa/tt8ccjtrHSf13GKGszol75zytE=;
-        b=fqlarqVRf/gH9dNW0HgPiOg+/s9YHtefiyPHczh6MOQIhJseZ3yoGm+OcYmuEgtuw7
-         aFqPURP9RBn2Qe6T9WgkrNq7jJWu2M+5BynHcYysdnIp+KDc/TSW/I4OdC9+5YYkz1Nl
-         1RpjAmdrPmIGCMpgnQuUsryHgm8+5vi7DymxOZUcoDt77mYuy3HmDb6quAwDjstSgmG5
-         CPw3bYoy0QfgGW7ue1bSA4Ls0D5BdE4v5QlFH2acO8ZnvwWm1lI6YKDx9VBdjdoL0eAd
-         eMlYbHrFQ/isfe+czLxKI9TZba8OScrsUVVd0mdQM2I9ckyelPpEBh8ivSm4iOsalPHx
-         gd/A==
-X-Gm-Message-State: AGi0PubhlO4vRl6XzpERtAmCTt7qxw2O8RlMClG3GwPIMdkjDcd7pnh4
-        w0I0uT4wFFZdYeaaSdH4MnNGT5Jz
-X-Google-Smtp-Source: APiQypJIbOVg0ybiqpoZeJ0zrOE3pBS/2d5IDIraLbFzh2GnmHIa5vDeE2u0Yo/KUQPC06l8yNkiLg==
-X-Received: by 2002:a05:600c:218e:: with SMTP id e14mr1479258wme.140.1587418118856;
-        Mon, 20 Apr 2020 14:28:38 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id u17sm1157607wra.63.2020.04.20.14.28.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Apr 2020 14:28:38 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 21:28:37 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2] rcu: simplify the calculation of rcu_state.ncpus
-Message-ID: <20200420212837.j6vnzrhm6oqvbxqa@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200419215715.21071-1-richard.weiyang@gmail.com>
- <20200420014137.GW17661@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pVvaPy9TriCxXUNOlVqLauolz3jDKaAdK4fSEUctuf0=;
+        b=EhU9p7YcOFSqelU8j2WjxdXSIdseLQd1/JOhYHqnAWUyEo5ygx4KRs9CmpI/jTvb5o
+         CHwk8U9RA2S9hEcucR18BDuMAqwmrmBmE9kCGuWpltzI/agKINOZzhQOrxXRbVvb8cIZ
+         huCyl5hdKRskHxt4IpHjb+o6IK/+CgmSG/2YJdlDs9+hxvZHktPRXzmB0m0qr9a5fy4l
+         tfb+6BOtaquDC2FS9HIXgXscyjJg5ppSqyMB5hsT0ORc4s2eE59XwtwX4Jong/2Y6j8/
+         itghq3Taqqka2iaE5wk2Zuwza7MYock52burp1/hSIQ16YIjDUOXHrRU4pERZnF7qjDH
+         LFmQ==
+X-Gm-Message-State: AGi0Pua23vH4fLO5beTFngf7Z1fVs4eWDtzt+3YrF1Brq9FoVetzo/sy
+        hWykvBC2I1fH6QYe4GscGQ==
+X-Google-Smtp-Source: APiQypKKosF3ptynJlahs4jhDzXsM68ALGaWcgwNZ/s1v7FiGz78riXbUIaqOwO7V7Tj/97B0k7ZMA==
+X-Received: by 2002:aca:4588:: with SMTP id s130mr1047118oia.133.1587418152449;
+        Mon, 20 Apr 2020 14:29:12 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t13sm225254otr.43.2020.04.20.14.29.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 14:29:11 -0700 (PDT)
+Received: (nullmailer pid 16602 invoked by uid 1000);
+        Mon, 20 Apr 2020 21:29:10 -0000
+Date:   Mon, 20 Apr 2020 16:29:10 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/2] dt-bindings: watchdog: Convert i.MX to json-schema
+Message-ID: <20200420212910.GB7615@bogus>
+References: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200420014137.GW17661@paulmck-ThinkPad-P72>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 06:41:37PM -0700, Paul E. McKenney wrote:
->On Sun, Apr 19, 2020 at 09:57:15PM +0000, Wei Yang wrote:
->> There is only 1 bit set in mask, which means the difference between
->> oldmask and the new one would be at the position where the bit is set in
->> mask.
->> 
->> Based on this knowledge, rcu_state.ncpus could be calculated by checking
->> whether mask is already set in rnp->expmaskinitnext.
->> 
->> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->
->Queued, thank you!
->
->I updated the commit log as shown below, so please let me know if I
->messed something up.
->
-
-Looks pretty good.
-
->							Thanx, Paul
->
->------------------------------------------------------------------------
->
->commit 2ff1b8268456b1a476f8b79672c87d32d4f59024
->Author: Wei Yang <richard.weiyang@gmail.com>
->Date:   Sun Apr 19 21:57:15 2020 +0000
->
->    rcu: Simplify the calculation of rcu_state.ncpus
->    
->    There is only 1 bit set in mask, which means that the only difference
->    between oldmask and the new one will be at the position where the bit is
->    set in mask.  This commit therefore updates rcu_state.ncpus by checking
->    whether the bit in mask is already set in rnp->expmaskinitnext.
->    
->    Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->
->diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
->index f288477..6d39485 100644
->--- a/kernel/rcu/tree.c
->+++ b/kernel/rcu/tree.c
->@@ -3732,10 +3732,9 @@ void rcu_cpu_starting(unsigned int cpu)
-> {
-> 	unsigned long flags;
-> 	unsigned long mask;
->-	int nbits;
->-	unsigned long oldmask;
-> 	struct rcu_data *rdp;
-> 	struct rcu_node *rnp;
->+	bool newcpu;
+On Wed, Apr 15, 2020 at 08:40:10AM +0800, Anson Huang wrote:
+> Convert the i.MX watchdog binding to DT schema format using json-schema.
 > 
-> 	if (per_cpu(rcu_cpu_started, cpu))
-> 		return;
->@@ -3747,12 +3746,10 @@ void rcu_cpu_starting(unsigned int cpu)
-> 	mask = rdp->grpmask;
-> 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
-> 	WRITE_ONCE(rnp->qsmaskinitnext, rnp->qsmaskinitnext | mask);
->-	oldmask = rnp->expmaskinitnext;
->+	newcpu = !(rnp->expmaskinitnext & mask);
-> 	rnp->expmaskinitnext |= mask;
->-	oldmask ^= rnp->expmaskinitnext;
->-	nbits = bitmap_weight(&oldmask, BITS_PER_LONG);
-> 	/* Allow lockless access for expedited grace periods. */
->-	smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + nbits); /* ^^^ */
->+	smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + newcpu); /* ^^^ */
-> 	ASSERT_EXCLUSIVE_WRITER(rcu_state.ncpus);
-> 	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
-> 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No change.
+> ---
+>  .../devicetree/bindings/watchdog/fsl-imx-wdt.txt   | 24 ----------
+>  .../devicetree/bindings/watchdog/fsl-imx-wdt.yaml  | 56 ++++++++++++++++++++++
+>  2 files changed, 56 insertions(+), 24 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> deleted file mode 100644
+> index adc6b76..0000000
+> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -* Freescale i.MX Watchdog Timer (WDT) Controller
+> -
+> -Required properties:
+> -- compatible : Should be "fsl,<soc>-wdt"
+> -- reg : Should contain WDT registers location and length
+> -- interrupts : Should contain WDT interrupt
+> -
+> -Optional properties:
+> -- big-endian: If present the watchdog device's registers are implemented
+> -  in big endian mode, otherwise in native mode(same with CPU), for more
+> -  detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
+> -- fsl,ext-reset-output: If present the watchdog device is configured to
+> -  assert its external reset (WDOG_B) instead of issuing a software reset.
+> -- timeout-sec : Contains the watchdog timeout in seconds
+> -
+> -Examples:
+> -
+> -wdt@73f98000 {
+> -	compatible = "fsl,imx51-wdt", "fsl,imx21-wdt";
+> -	reg = <0x73f98000 0x4000>;
+> -	interrupts = <58>;
+> -	big-endian;
+> -	timeout-sec = <20>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> new file mode 100644
+> index 0000000..674d902
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/fsl-imx-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale i.MX Watchdog Timer (WDT) Controller
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +allOf:
+> +  - $ref: "watchdog.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,imx21-wdt
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: |
+> +      Watchdog's clock source.
 
--- 
-Wei Yang
-Help you, Help me
+Drop this. No description needed if single entry.
+
+> +    maxItems: 1
+> +
+> +  fsl,ext-reset-output:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: |
+> +      If present, the watchdog device is configured to assert its
+> +      external reset (WDOG_B) instead of issuing a software reset.
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/imx6qdl-clock.h>
+> +
+> +    wdog1: watchdog@20bc000 {
+
+Drop the unused label.
+
+> +        compatible = "fsl,imx21-wdt";
+> +        reg = <0x020bc000 0x4000>;
+> +        interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&clks IMX6QDL_CLK_IPG>;
+> +    };
+> +
+> +...
+> -- 
+> 2.7.4
+> 
