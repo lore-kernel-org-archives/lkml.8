@@ -2,68 +2,133 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD82C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BB5C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0C4720775
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE62D2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgDTPIH (ORCPT
+        id S1730079AbgDTPIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:08:07 -0400
-Received: from muru.com ([72.249.23.125]:50448 "EHLO muru.com"
+        Mon, 20 Apr 2020 11:08:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:50590 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726748AbgDTPIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:08:06 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 3385F8027;
-        Mon, 20 Apr 2020 15:08:53 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 08:08:02 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
- autosuspend
-Message-ID: <20200420150802.GR37466@atomide.com>
-References: <20191217004048.46298-1-tony@atomide.com>
- <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com>
- <20200416184638.GI37466@atomide.com>
- <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
- <20200417164340.3d9043d1@aktux>
- <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com>
- <20200417150721.GL37466@atomide.com>
- <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com>
+        id S1726748AbgDTPIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:08:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC5FB31B;
+        Mon, 20 Apr 2020 08:08:44 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DF373F73D;
+        Mon, 20 Apr 2020 08:08:42 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 16:08:40 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Quentin Perret <qperret@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200420150839.ysh3ijfjftyzg7jw@e107158-lin.cambridge.arm.com>
+References: <20200403123020.13897-1-qais.yousef@arm.com>
+ <20200415101122.GA14447@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com>
+In-Reply-To: <20200415101122.GA14447@google.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [200417 21:04]:
-> To me it looks as if reading hqd too quickly after omap_hdq_runtime_resume()
-> may be part of the problem, although it is 0.4 seconds between [   18.355163]
-> and [   18.745269]. So I am not sure about my interpretation.
+Hi Quentin
+
+On 04/15/20 11:11, Quentin Perret wrote:
+> Hi Qais,
 > 
-> A different attempt for interpretation may be that trying to read the
-> slave triggers omap_hdq_runtime_resume() just before doing the
-> first hdq_read_byte().
+> On Friday 03 Apr 2020 at 13:30:19 (+0100), Qais Yousef wrote:
+> <snip>
+> > +	/*
+> > +	 * The new value will be applied to all RT tasks the next time they
+> > +	 * wakeup, assuming the task is using the system default and not a user
+> > +	 * specified value. In the latter we shall leave the value as the user
+> > +	 * requested.
+> > +	 */
+> >  	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
+> >  	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
+> >  		result = -EINVAL;
+> >  		goto undo;
+> >  	}
+> >  
+> > +	if (sysctl_sched_rt_default_uclamp_util_min > SCHED_CAPACITY_SCALE) {
+> > +		result = -EINVAL;
+> > +		goto undo;
+> > +	}
+> 
+> Hmm, checking:
+> 
+> 	if (sysctl_sched_rt_default_uclamp_util_min > sysctl_sched_uclamp_util_min)
+> 
+> would probably make sense too, but then that would make writing in
+> sysctl_sched_uclamp_util_min cumbersome for sysadmins as they'd need to
+> lower the rt default first. Is that the reason for checking against
+> SCHED_CAPACITY_SCALE? That might deserve a comment or something.
 
-Hmm so I wonder if adding msleep(100) at the end of
-omap_hdq_runtime_resume() might help?
+There's no need for that extra diff. That constraint will be applied
+automatically when calculating the effective value.
 
-Regards,
+The check for SCHED_CAPACITY_SCALE is a a range check. The possible value is
+[0:SCHED_CAPACITY_SCALE].
 
-Tony
+Does this answer your question? I could add a comment that all the uclamp
+sysctls need to be within this range.
+
+> 
+> <snip>
+> > @@ -1241,9 +1293,13 @@ static void uclamp_fork(struct task_struct *p)
+> >  	for_each_clamp_id(clamp_id) {
+> >  		unsigned int clamp_value = uclamp_none(clamp_id);
+> >  
+> > -		/* By default, RT tasks always get 100% boost */
+> > +		/*
+> > +		 * By default, RT tasks always get 100% boost, which the admins
+> > +		 * are allowed to change via
+> > +		 * sysctl_sched_rt_default_uclamp_util_min knob.
+> > +		 */
+> >  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+> > -			clamp_value = uclamp_none(UCLAMP_MAX);
+> > +			clamp_value = sysctl_sched_rt_default_uclamp_util_min;
+> >  
+> >  		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
+> >  	}
+> 
+> And that, as per 20200414161320.251897-1-qperret@google.com, should not
+> be there :)
+
+Yep saw it. Thanks for fixing it!
+
+> 
+> Otherwise the patch pretty looks good to me!
+
+Cheers
+
+--
+Qais Yousef
