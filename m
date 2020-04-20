@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43126C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA18EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 230A8206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AEC5206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387445;
-	bh=HaUo+E5NxLGCGdFw4NKrqAONKCA3eOeOzeVolfXxgx4=;
+	s=default; t=1587387449;
+	bh=VnYYLsz/sYIWnIIfbHRQhrU0U/h+gGUu95y/4hL63Ng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMnr2DKwgboa3vR667OxRoYKJZSiRI76xStxJRXy8XdHdrLsaDFW13SiQkJjld8WM
-	 JglGiUwrNUG6/LDXCDUmVGgfYapbKf/rrUFsjo00a2+Y2soPzSrd2aVnll5iDmp9gS
-	 RwKJxwWGc8NioADXu6KR/EVbNIXifbXSxSy5Uaa0=
+	b=w/GvAs4N5e+YYqZKj+ZHOe82wygjg6bdRaTLS/6XdL/vzLbtjFJqMSaxfPPZr+fW2
+	 oiq5M0F3OImoThYw50rIdM/TTGs/Bqw0aaULWQNwAroD0ocfMLNW/JnyiMk3wvq8Mq
+	 JyDdqjufkx4jDYkLzQhcv7iOHBSFL/ewBpcJw7Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgDTMof (ORCPT
+        id S1728559AbgDTMoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:44:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38448 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:44:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgDTMoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:30 -0400
+        id S1728536AbgDTMoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:44:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59050206E9;
-        Mon, 20 Apr 2020 12:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84B97206DD;
+        Mon, 20 Apr 2020 12:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386669;
-        bh=HaUo+E5NxLGCGdFw4NKrqAONKCA3eOeOzeVolfXxgx4=;
+        s=default; t=1587386660;
+        bh=VnYYLsz/sYIWnIIfbHRQhrU0U/h+gGUu95y/4hL63Ng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ep1BQ2OU2ivW1d5Csa9hDl9r9nckAdulX6r3BQSPogrk0/0dsvYiVVoTEWqyREWvK
-         axjMmv8SW7uXc0fCJExqc3GX+zdfDBkgDuzcFuZ8XEO20Sr2pfEDgxxOUVGk6uSzSg
-         IsiGaMw08+bRBVhHdY2XqgMwemaKxAHe86zF3Nf4=
+        b=CgNXh7fmUpdnCXGCcMWk6wQ/COo3NCSjpsm0d+G+KDcp9YDueL+RdPAWwvlBqD/DF
+         h1pnXxJP4/wzAcupW4pQ/VOWc4IIDyYI9UOFVxFtzfJVvp+mpdgTDgEFED46qHVZVw
+         RypAgMnxWG57Bq3SB0XSsIUtK2KrX8TOqcPs/hBc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 49/71] keys: Fix proc_keys_next to increase position index
-Date:   Mon, 20 Apr 2020 14:39:03 +0200
-Message-Id: <20200420121519.138652082@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 45/71] ALSA: usb-audio: Dont override ignore_ctl_error value from the map
+Date:   Mon, 20 Apr 2020 14:38:59 +0200
+Message-Id: <20200420121518.444465424@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -61,70 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 86d32f9a7c54ad74f4514d7fef7c847883207291 upstream.
+commit 3507245b82b4362dc9721cbc328644905a3efa22 upstream.
 
-If seq_file .next function does not change position index,
-read after some lseek can generate unexpected output:
+The mapping table may contain also ignore_ctl_error flag for devices
+that are known to behave wild.  Since this flag always writes the
+card's own ignore_ctl_error flag, it overrides the value already set
+by the module option, so it doesn't follow user's expectation.
+Let's fix the code not to clear the flag that has been set by user.
 
-    $ dd if=/proc/keys bs=1  # full usual output
-    0f6bfdf5 I--Q---     2 perm 3f010000  1000  1000 user      4af2f79ab8848d0a: 740
-    1fb91b32 I--Q---     3 perm 1f3f0000  1000 65534 keyring   _uid.1000: 2
-    27589480 I--Q---     1 perm 0b0b0000     0     0 user      invocation_id: 16
-    2f33ab67 I--Q---   152 perm 3f030000     0     0 keyring   _ses: 2
-    33f1d8fa I--Q---     4 perm 3f030000  1000  1000 keyring   _ses: 1
-    3d427fda I--Q---     2 perm 3f010000  1000  1000 user      69ec44aec7678e5a: 740
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    521+0 records in
-    521+0 records out
-    521 bytes copied, 0,00123769 s, 421 kB/s
-
-But a read after lseek in middle of last line results in the partial
-last line and then a repeat of the final line:
-
-    $ dd if=/proc/keys bs=500 skip=1
-    dd: /proc/keys: cannot skip to specified offset
-    g   _uid_ses.1000: 1
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    0+1 records in
-    0+1 records out
-    97 bytes copied, 0,000135035 s, 718 kB/s
-
-and a read after lseek beyond end of file results in the last line being
-shown:
-
-    $ dd if=/proc/keys bs=1000 skip=1   # read after lseek beyond end of file
-    dd: /proc/keys: cannot skip to specified offset
-    3ead4096 I--Q---     1 perm 1f3f0000  1000 65534 keyring   _uid_ses.1000: 1
-    0+1 records in
-    0+1 records out
-    76 bytes copied, 0,000119981 s, 633 kB/s
-
-See https://bugzilla.kernel.org/show_bug.cgi?id=206283
-
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200412081331.4742-3-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/keys/proc.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/usb/mixer.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/security/keys/proc.c
-+++ b/security/keys/proc.c
-@@ -139,6 +139,8 @@ static void *proc_keys_next(struct seq_f
- 	n = key_serial_next(p, v);
- 	if (n)
- 		*_pos = key_node_serial(n);
-+	else
-+		(*_pos)++;
- 	return n;
- }
- 
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -3085,7 +3085,7 @@ static int snd_usb_mixer_controls(struct
+ 		if (map->id == state.chip->usb_id) {
+ 			state.map = map->map;
+ 			state.selector_map = map->selector_map;
+-			mixer->ignore_ctl_error = map->ignore_ctl_error;
++			mixer->ignore_ctl_error |= map->ignore_ctl_error;
+ 			break;
+ 		}
+ 	}
 
 
