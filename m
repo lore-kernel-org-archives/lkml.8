@@ -2,124 +2,129 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7CEC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409E4C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC4EA206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:52:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="llneVi56"
+	by mail.kernel.org (Postfix) with ESMTP id 2284B206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 04:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgDTEwn (ORCPT
+        id S1726200AbgDTEyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 00:52:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgDTEwm (ORCPT
+        Mon, 20 Apr 2020 00:54:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32974 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725930AbgDTEyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 00:52:42 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D45DC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 21:52:41 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id n16so4467105pgb.7
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 21:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oNKRiUuDH3HcT8/Qwk9sSK+q6T3XdbwZxPtum7dk+0k=;
-        b=llneVi56W55NiLr4/oEdHvQsx+uYbkRQzHPT7RXrZNrdWl4RLJewuv+rVJiKFrxkY4
-         nmoFjBHPPeFNYEhI0kfaqgQBF6znWdA/EnlSHtnOx4AclT+kIaTuWS5tm4iSecLCnJ2R
-         dooRwMKfMVWt3HMIgWpLAcKKHUSvFmDPybPwq4jo9AkyuK8Dnd4CBBSVaOkqsH7FwfLR
-         s0D/bjS8qTOYDnSracP58KpC0hBcOwJYF3kbiuPScSMwMAdeyIIRIryN1guKVbLzk3eE
-         1Rl9U9+MmfT//SMqV+TPzyfgxNh7I+SU//n/RgeKQLzsejwKAlcB3D8JTWza3p0o0Svh
-         WsJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oNKRiUuDH3HcT8/Qwk9sSK+q6T3XdbwZxPtum7dk+0k=;
-        b=h7aLeA5AZZoMpGaaQ9MjIg3yIO3zXyLS8q46ACBbvuoxYtqvpXrJ5Vi2CpH4hjAPcQ
-         +ehPMDV8VTt8k3oc2VrTAQeOZ/kplOp9dyNC9utfmXDbDrwfAxJHhjIOlGBFvko+BxhK
-         CZ7ti2MEvkJrCQSmDhXO/j8hxo3kQHkpemtkQMlwMk8gvE+OWko9nLsMeyJ0O5kNWqS4
-         N4vQVKcN2FunTQpf95yz7tjFTd0fJUvBMGH3f7ralSotz1UWRFmpwtrk00UiQiLxEFgC
-         jdILa27XHb35kC/EWMxUeqIE6+xcq+AZP2ecXjtjcWJgywL3VUgdzdqDpz61VjAlfr2W
-         TJPg==
-X-Gm-Message-State: AGi0PubtAzrnIMN84EnqtUCNJm0R2M5HXcPwjxJWQDM9qMjWUYSxEG2V
-        A9+SfONjC3Yn6DuDBahDx2fG+QXZy0k=
-X-Google-Smtp-Source: APiQypL47lTKmGwxOxVtKUAf13H57l0+QHnxWnUbjOkYcpSlzaMu1RjcsaR+CpdIXKiQMYpYBNys4A==
-X-Received: by 2002:a63:514a:: with SMTP id r10mr12687721pgl.246.1587358360091;
-        Sun, 19 Apr 2020 21:52:40 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e26sm25908782pfi.84.2020.04.19.21.52.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 21:52:39 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 21:52:37 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     joro@8bytes.org, agross@kernel.org, robdclark@gmail.com,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2]iommu/qcom:fix local_base status check
-Message-ID: <20200420045237.GH987656@yoga>
-References: <20200418134703.1760-1-tangbin@cmss.chinamobile.com>
+        Mon, 20 Apr 2020 00:54:19 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K4VsSm107235
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:54:19 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gg265vte-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:54:18 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
+        Mon, 20 Apr 2020 05:53:55 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 Apr 2020 05:53:53 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03K4sE9j44630454
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 04:54:14 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 77D9D4C04E;
+        Mon, 20 Apr 2020 04:54:14 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 236974C04A;
+        Mon, 20 Apr 2020 04:54:12 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.92.243])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 04:54:11 +0000 (GMT)
+Subject: Re: [PATCH] ext4: remove unnecessary comparisons to bool
+To:     Jason Yan <yanaijie@huawei.com>, tytso@mit.edu,
+        adilger.kernel@dilger.ca, enwlinux@gmail.com,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200420042918.19459-1-yanaijie@huawei.com>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Mon, 20 Apr 2020 10:24:10 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418134703.1760-1-tangbin@cmss.chinamobile.com>
+In-Reply-To: <20200420042918.19459-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042004-0012-0000-0000-000003A7AD9F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042004-0013-0000-0000-000021E4F609
+Message-Id: <20200420045412.236974C04A@d06av22.portsmouth.uk.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-19_06:2020-04-17,2020-04-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 18 Apr 06:47 PDT 2020, Tang Bin wrote:
 
-> The function qcom_iommu_device_probe() does not perform sufficient
-> error checking after executing devm_ioremap_resource(), which can
-> result in crashes if a critical error path is encountered.
+
+On 4/20/20 9:59 AM, Jason Yan wrote:
+> Fix the following coccicheck warning:
 > 
-
-Thanks, that's much better.
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
+> fs/ext4/extents_status.c:1057:5-28: WARNING: Comparison to bool
+> fs/ext4/inode.c:2314:18-24: WARNING: Comparison to bool
 > 
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+
+Thanks for the patch. Looks good to me.
+
+Feel free to add:
+Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
+
 > ---
-> v2:
->  - fix commit message and add fixed tag
-> ---
->  drivers/iommu/qcom_iommu.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>   fs/ext4/extents_status.c | 2 +-
+>   fs/ext4/inode.c          | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-> index 4328da0b0..b160cf140 100644
-> --- a/drivers/iommu/qcom_iommu.c
-> +++ b/drivers/iommu/qcom_iommu.c
-> @@ -813,8 +813,11 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
->  	qcom_iommu->dev = dev;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (res)
-> +	if (res) {
->  		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(qcom_iommu->local_base))
-> +			return PTR_ERR(qcom_iommu->local_base);
-> +	}
->  
->  	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
->  	if (IS_ERR(qcom_iommu->iface_clk)) {
-> -- 
-> 2.20.1.windows.1
+> diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
+> index d996b44d2265..e75171535375 100644
+> --- a/fs/ext4/extents_status.c
+> +++ b/fs/ext4/extents_status.c
+> @@ -1054,7 +1054,7 @@ static void count_rsvd(struct inode *inode, ext4_lblk_t lblk, long len,
+>   	end = (end > ext4_es_end(es)) ? ext4_es_end(es) : end;
 > 
+>   	/* record the first block of the first delonly extent seen */
+> -	if (rc->first_do_lblk_found == false) {
+> +	if (!rc->first_do_lblk_found) {
+>   		rc->first_do_lblk = i;
+>   		rc->first_do_lblk_found = true;
+>   	}
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 2a4aae6acdcb..acb8fedcba76 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -2311,7 +2311,7 @@ static int mpage_map_and_submit_buffers(struct mpage_da_data *mpd)
+>   			 * mapping, or maybe the page was submitted for IO.
+>   			 * So we return to call further extent mapping.
+>   			 */
+> -			if (err < 0 || map_bh == true)
+> +			if (err < 0 || map_bh)
+>   				goto out;
+>   			/* Page fully mapped - let IO run! */
+>   			err = mpage_submit_page(mpd, page);
 > 
-> 
+
