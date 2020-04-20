@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BB9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DA7C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 551C62072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D295120736
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386918;
-	bh=zqEIafLdABW1ykFZi1ROD4+wSZHXs3eWhQzSHPhb3iE=;
+	s=default; t=1587386920;
+	bh=ENj6Qt52KrnVwLM66JGBO+2QFyAr22rkd+rd3OdPeVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JVulG8iKQ2/27Ai+UidLIRKJCD8kTucpji1dMEgB0qkyu3zjEU7J/5qGoLlrnu0Vw
-	 ubRfHKgveVRqSmEFJtSvNU9CjPBZr1D9XxQ/2MP9UNe8DHXRdOBuZAQTmAh7wh+MQI
-	 QcU+4mo98aoPyawnlUzwKDBC62IpqOUrcw5ebvL4=
+	b=jDLOrTbXKrM+IhfQRMS9GiuE1nDGbn1eGAI/Zsa49zJExoHpsEtKUwUdr0AdPUfEK
+	 HhhHqKdDIOiuJj6VX0r8VndGTh6Wf+C2L9QVjnp9/sqoYZq0EtL+mnfIKG+PKOQP3L
+	 /7RCsQOeYfkrSVIz/mcKFXEVoz7PbtOvqEwPkpxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbgDTMsh (ORCPT
+        id S1729292AbgDTMsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:48:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45120 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:48:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729256AbgDTMs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:48:29 -0400
+        id S1728217AbgDTMse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 860D821473;
-        Mon, 20 Apr 2020 12:48:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6667F2072B;
+        Mon, 20 Apr 2020 12:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386909;
-        bh=zqEIafLdABW1ykFZi1ROD4+wSZHXs3eWhQzSHPhb3iE=;
+        s=default; t=1587386913;
+        bh=ENj6Qt52KrnVwLM66JGBO+2QFyAr22rkd+rd3OdPeVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VBTNKfrwL8cMUblAMuWKFTtJdewL1xsY0TccoL55rdFBnLy7+GGQqOW+NoW9KboDY
-         TRN5BNp2JHF79b6a6luhQ9Os422EJqO9/jFBUjJaPqxNqgpduEAPLd/tBQ0T/Yj3OE
-         F4zbv/a95GLYl+fHvDy7m4rmXJCfeuVlwzUr4EFY=
+        b=uGB+clyx4p79u6Lj6O9ONhjiqFGqbdXM7gkIpvw/uakwbP7biQro9I4lEKOtyWdLO
+         eFdq7DJJu4FarEjv3x3z7OHYpf4H3Bk6ukz0FlNq19onF/JZrJK0cw7eCFVST1GndY
+         bshHcy4Nq8ezfbN2rmfISJuBz94naL+cLH+qg96A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 07/40] net: stmmac: dwmac-sunxi: Provide TX and RX fifo sizes
-Date:   Mon, 20 Apr 2020 14:39:17 +0200
-Message-Id: <20200420121453.188521584@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 09/40] ovl: fix value of i_ino for lower hardlink corner case
+Date:   Mon, 20 Apr 2020 14:39:19 +0200
+Message-Id: <20200420121454.159987874@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
@@ -60,42 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-[ Upstream commit 806fd188ce2a4f8b587e83e73c478e6484fbfa55 ]
+commit 300b124fcf6ad2cd99a7b721e0f096785e0a3134 upstream.
 
-After commit bfcb813203e619a8960a819bf533ad2a108d8105 ("net: dsa:
-configure the MTU for switch ports") my Lamobo R1 platform which uses
-an allwinner,sun7i-a20-gmac compatible Ethernet MAC started to fail
-by rejecting a MTU of 1536. The reason for that is that the DMA
-capabilities are not readable on this version of the IP, and there
-is also no 'tx-fifo-depth' property being provided in Device Tree. The
-property is documented as optional, and is not provided.
+Commit 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more
+cases"), relaxed the condition nfs_export=on in order to set the value of
+i_ino to xino map of real ino.
 
-Chen-Yu indicated that the FIFO sizes are 4KB for TX and 16KB for RX, so
-provide these values through platform data as an immediate fix until
-various Device Tree sources get updated accordingly.
+Specifically, it also relaxed the pre-condition that index=on for
+consistent i_ino. This opened the corner case of lower hardlink in
+ovl_get_inode(), which calls ovl_fill_inode() with ino=0 and then
+ovl_init_inode() is called to set i_ino to lower real ino without the xino
+mapping.
 
-Fixes: eaf4fac47807 ("net: stmmac: Do not accept invalid MTU values")
-Suggested-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Pass the correct values of ino;fsid in this case to ovl_fill_inode(), so it
+can initialize i_ino correctly.
+
+Fixes: 6dde1e42f497 ("ovl: make i_ino consistent with st_ino in more ...")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-@@ -155,6 +155,8 @@ static int sun7i_gmac_probe(struct platf
- 	plat_dat->init = sun7i_gmac_init;
- 	plat_dat->exit = sun7i_gmac_exit;
- 	plat_dat->fix_mac_speed = sun7i_fix_speed;
-+	plat_dat->tx_fifo_size = 4096;
-+	plat_dat->rx_fifo_size = 16384;
- 
- 	ret = sun7i_gmac_init(pdev, plat_dat->bsp_priv);
- 	if (ret)
+---
+ fs/overlayfs/inode.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -884,7 +884,7 @@ struct inode *ovl_get_inode(struct super
+ 	struct dentry *lowerdentry = lowerpath ? lowerpath->dentry : NULL;
+ 	bool bylower = ovl_hash_bylower(sb, upperdentry, lowerdentry,
+ 					oip->index);
+-	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
++	int fsid = bylower ? lowerpath->layer->fsid : 0;
+ 	bool is_dir, metacopy = false;
+ 	unsigned long ino = 0;
+ 	int err = oip->newinode ? -EEXIST : -ENOMEM;
+@@ -934,6 +934,8 @@ struct inode *ovl_get_inode(struct super
+ 			err = -ENOMEM;
+ 			goto out_err;
+ 		}
++		ino = realinode->i_ino;
++		fsid = lowerpath->layer->fsid;
+ 	}
+ 	ovl_fill_inode(inode, realinode->i_mode, realinode->i_rdev, ino, fsid);
+ 	ovl_inode_init(inode, upperdentry, lowerdentry, oip->lowerdata);
 
 
