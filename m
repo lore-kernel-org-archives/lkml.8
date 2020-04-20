@@ -2,190 +2,111 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D50C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93677C38A30
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9C4420857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2B920857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DocS62iB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BFrKHN5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgDTQl3 (ORCPT
+        id S1726362AbgDTQmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:41:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726208AbgDTQl2 (ORCPT
+        Mon, 20 Apr 2020 12:42:23 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:25265 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725550AbgDTQmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:41:28 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB79FC061A0C;
-        Mon, 20 Apr 2020 09:41:27 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j1so7595273wrt.1;
-        Mon, 20 Apr 2020 09:41:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pHkfqaZsrvViCrU4vsZGcZiXBeGIBVSy7YBzRqpKWdA=;
-        b=DocS62iBm+MaxthEy8q58x+ZJU00CguRHCiYuW6dSG4/U6ZyGPWmJrpqRaNjkRtbF7
-         /RdZSQWSQ5H6mteZjuHLXUdo5lFRpI3NnH8AfGByJ9+aIiSkz/qzxmyb5XOd0oKkuUsG
-         5IetuYNfruFqMLFvjQX8+VAgTEgvRhLcCFAVYfSpeNrSsewv1pjunDnWaVYCwjh2Ec5N
-         /3t24EgrtLPIjg2mkbufRaGlL+k6ZWxTG60iMpCC+tZKDq3qJ9vY+fbowAm6WE53kEhc
-         o9nC28ByOnpk4pqSScAIK+vx+0Bn7EcqO7v0rNdv5mDmP2rkenwq4oordoJJOvDWy/aI
-         NbXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pHkfqaZsrvViCrU4vsZGcZiXBeGIBVSy7YBzRqpKWdA=;
-        b=WCY63XXr/U0haQyEZ6ICnhPE/UFnOGjfJeX1C7QPgx6s6/iITJJxzsWa85qf/+Indy
-         LkucqTz4Cb+vMm7kWhhkacrxGC4+gVClp6wVB8bQ5aLo4yow0OcQRERVbdA8NlZBAhB0
-         DHfHpvnPbXCHyi3QyC4PIn31POfi6zqDXN6ICEgckuEUuFXImZ+GD+7/ZmFatWsiWYE9
-         czir/Wef4nh83ImzUAC9BxLMkLFXV86xeVPVbikHUt0ZWMvDE7z9pwkX6xatXlH86n3y
-         ptAJlSTo3aNtCN8cLrOLRUlrzpXjHTTQI2u7prq5+q+Q7APtpFGZ32b99q2ExijkSbim
-         R8XA==
-X-Gm-Message-State: AGi0PuabZfvauEq4yAhhVSsDKiaxoB3xoJksNtpW/LXNfg9AMg6NQv40
-        RNRR/qUAPctICHuwDV5Qh4w=
-X-Google-Smtp-Source: APiQypIu7Usjxv+iYA4v7BBaqwgthc4mJlRmQjaEIvh6W/U/9yhM0xy2y9UlKGHHHnWU6b0Gch+giQ==
-X-Received: by 2002:a5d:6148:: with SMTP id y8mr19160703wrt.236.1587400886434;
-        Mon, 20 Apr 2020 09:41:26 -0700 (PDT)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
-        by smtp.gmail.com with ESMTPSA id j13sm48180wro.51.2020.04.20.09.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 09:41:25 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Samuel Holland <samuel@sholland.org>, linux-sunxi@googlegroups.com
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        paul.kocialkowski@bootlin.com
-Subject: Re: [linux-sunxi] [PATCH] media: cedrus: Implement runtime PM
-Date:   Mon, 20 Apr 2020 18:41:23 +0200
-Message-ID: <5590139.lOV4Wx5bFT@jernej-laptop>
-In-Reply-To: <20200420151010.GL125838@aptenodytes>
-References: <20200408010232.48432-1-samuel@sholland.org> <244922ec-ed3a-eca7-6640-49de7ad9c605@sholland.org> <20200420151010.GL125838@aptenodytes>
+        Mon, 20 Apr 2020 12:42:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587400942; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=ubP5W8F6e9FFlNVIC2E3q1WwK9ltQ3l642E1CJn0x9M=; b=BFrKHN5g3gAjmxogp4mpjPSM2XVJRoojTWefdifMvzZAckTTa9oilT4QF548z9EAiNAWhuAG
+ GrPb68nnycGbo/cW0lccueNt4u6ZgM1HPkNloTOpcKvbTK2OeOdUws2MYjWzuBhsC8W11Nej
+ d31Fcjl9yUYopFy9H5qG99XMlgU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9dd0ec.7f8fbf572ae8-smtp-out-n05;
+ Mon, 20 Apr 2020 16:42:20 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EC5AFC43637; Mon, 20 Apr 2020 16:42:19 +0000 (UTC)
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 819D4C433D2;
+        Mon, 20 Apr 2020 16:42:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 819D4C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3 0/6] iommu/arm-smmu: Allow client devices to select identity mapping
+Date:   Mon, 20 Apr 2020 22:11:58 +0530
+Message-Id: <cover.1587400573.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne ponedeljek, 20. april 2020 ob 17:10:10 CEST je Paul Kocialkowski=20
-napisal(a):
-> Hi,
->=20
-> On Sun 19 Apr 20, 15:28, Samuel Holland wrote:
-> > On 4/8/20 11:01 AM, Jernej =C5=A0krabec wrote:
-> > > Hi Samuel!
-> > >=20
-> > > Dne sreda, 08. april 2020 ob 03:02:32 CEST je Samuel Holland napisal(=
-a):
-> > >> This allows the VE clocks and PLL_VE to be disabled most of the time.
-> > >>=20
-> > >> Since the device is stateless, each frame gets a separate runtime PM
-> > >> reference. Enable autosuspend so the PM callbacks are not run before
-> > >> and
-> > >> after every frame.
-> > >>=20
-> > >> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> > >> ---
-> > >>=20
-> > >> I tested this with v4l2-request-test. I don't have the setup to do
-> > >> anything more complicated at the moment.
-> > >>=20
-> > >> ---
-> > >>=20
-> > >>  drivers/staging/media/sunxi/cedrus/cedrus.c   |   7 ++
-> > >>  .../staging/media/sunxi/cedrus/cedrus_hw.c    | 115 ++++++++++++---=
-=2D--
-> > >>  .../staging/media/sunxi/cedrus/cedrus_hw.h    |   3 +
-> > >>  3 files changed, 88 insertions(+), 37 deletions(-)
-> >=20
-> > [snip]
-> >=20
-> > > Reset above causes problem. When format is set in cedrus_s_fmt_vid_ca=
-p()
-> > > a
-> > > function is called, which sets few registers in HW. Of course, there =
-is
-> > > no
-> > > guarantee that someone will start decoding immediately after capture
-> > > format is set. So, if the driver puts VPU to sleep in the mean time,
-> > > reset will clear those registers and decoded video will be in differe=
-nt
-> > > format than expected. It could be even argued that registers should n=
-ot
-> > > be set in that function and that this is design issue or bug in drive=
-r.
-> >=20
-> > You're right. I didn't see that cedrus_dst_format_set() was called outs=
-ide
-> > cedrus_engine_enable/disable().
->=20
-> This might indeed be an issue with multiple decoding contexts in parallel,
-> with potentially different formats. For that reason, it looks like the
-> right thing to do would be to set the format at each decoding run based on
-> the format set in the context by s_fmt.
+This series allows DRM, Modem devices to set a default
+identity mapping in qcom smmu implementation.
 
-So you are suggesting that cedrus_dst_format_set() should be moved to=20
-cedrus_device_run(), right? This way all registers are set at each run, whi=
-ch=20
-is then truly stateless.
+Patch 1 is cleanup to support other SoCs to call into
+QCOM specific  implementation.
+Patch 2 sets the default identity domain for DRM devices.
+Patch 3 implements def_domain_type callback for arm-smmu.
+Patch 4 sets the default identity domain for modem device.
+Patch 5-6 adds the iommus property for mss pil.
 
-Best regards,
-Jernej
+This is based on Joerg's tree:
+ - https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v2
 
->=20
-> > > Anyway, I made a runtime PM support long time ago, but never do anyth=
-ing
-> > > besides running few tests:
-> > > https://github.com/jernejsk/linux-1/commit/
-> > > d245b7fa2a26e519ff675a255c45230575a4a848
-> > >=20
-> > > It takes a bit different approach. Power is enabled in start streaming
-> > > and
-> > > disabled in stop streaming. This is simpler approach and doesn't need
-> > > autosuspend functionality. I also moved call to a function which sets
-> > > format in HW registers to start streaming handler, so it's guaranteed
-> > > to be set at the beginning.
-> >=20
-> > Assuming cedrus_device_run() only gets called between streamon and
-> > streamoff (which appears to be the case), this looks like a better
-> > design.
->=20
-> Yes, this is defintiely ensured by the V4L2 framework. I agree that
-> streamon/off are the correct sync points.
->=20
-> > > Note that some registers are only set in start streaming handler. With
-> > > your
-> > > approach, if first frame is submitted too late, asserting and
-> > > de-asserting
-> > > reset line could reset those registers.
-> >=20
-> > I only see registers being set in cedrus_start_streaming() after your
-> > patch, where you add a call to cedrus_dst_format_set(). I can't find any
-> > registers being written in any of the ->start() callbacks.
-> >=20
-> > I'll send a v2 which combines the two patches: yours which handles the
-> > runtime part better, and mine which handles the probe/remove part better
-> > with !CONFIG_PM.
-> Thanks, that should do it!
->=20
-> Cheers,
->=20
-> Paul
+v3:
+ * Use arm_smmu_master_cfg to get impl instead of long way as per Robin.
+ * Use def_domain_type name for the callback in arm_smmu_imp as per Robin
 
+Jordan Crouse (1):
+  iommu/arm-smmu: Allow client devices to select direct mapping
 
+Sai Prakash Ranjan (2):
+  iommu: arm-smmu-impl: Convert to a generic reset implementation
+  iommu/arm-smmu: Implement iommu_ops->def_domain_type call-back
 
+Sibi Sankar (3):
+  iommu/arm-smmu-qcom: Request direct mapping for modem device
+  dt-bindings: remoteproc: qcom: Add iommus property
+  arm64: dts: qcom: sdm845-cheza: Add iommus property
 
+ .../bindings/remoteproc/qcom,q6v5.txt         |  3 ++
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |  5 +++
+ drivers/iommu/arm-smmu-impl.c                 |  8 ++--
+ drivers/iommu/arm-smmu-qcom.c                 | 37 +++++++++++++++++--
+ drivers/iommu/arm-smmu.c                      | 12 ++++++
+ drivers/iommu/arm-smmu.h                      |  1 +
+ 6 files changed, 60 insertions(+), 6 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
