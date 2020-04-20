@@ -2,125 +2,197 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A360C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E213EC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5623920CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FC12145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aQxT1hRt"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UmA/0Dcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgDTI7A (ORCPT
+        id S1726209AbgDTI7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:59:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52234 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725959AbgDTI67 (ORCPT
+        Mon, 20 Apr 2020 04:59:54 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54663 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725896AbgDTI7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:58:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587373137;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Bz93CG5tgmLS8pJDkO23pSfLYauBKXmOP1VWfhP+LYw=;
-        b=aQxT1hRtQGyPIMj2Pfy8IFUnex+XVkj6ZCx0kaPk690G4TUyFGbuOXpuZc/sofBPJa9YHa
-        r4+CWUV0wbUEcEOooOni9hJ3oshgm1i4g2zHO3wDPs+oPZTuqV09THa3VFKc1iGAFq0sNP
-        Fo1fNyPjVAbJdP6948FXk9K8Dyta/sU=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-TtXea8YEM1Wt7GgfmbBbvQ-1; Mon, 20 Apr 2020 04:58:52 -0400
-X-MC-Unique: TtXea8YEM1Wt7GgfmbBbvQ-1
-Received: by mail-qv1-f69.google.com with SMTP id dc4so9541438qvb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:58:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bz93CG5tgmLS8pJDkO23pSfLYauBKXmOP1VWfhP+LYw=;
-        b=RcPAG7VV/lnodCS25kolo+s8Ik5dG3WTT+CznIwzHbtNXGbiTRxnABKX5FlVLnHCWw
-         W2LIgwnWkwb0l57eQb5OkSjg/JKG7OU9Aks1HM+zSaR9wwz62itcejVh0BsMl9SqtCB7
-         BFjZAFPGfnX3aE5LH0/QXwwhh/C6JnWufb5dGzp3NgKYIoe+0chEAjHB1WIOKNLw/q9T
-         eNwE8FwiPucaLbohVUVce8c6z8vK20Kvn061HE884P76j7kdV2YR4O66BjBLmuVFAeKo
-         dU8GbX2Gw3zaCADNy83BRuWU9AqIkn+VggYicmQyhsojFrWAJcmJYJ5pQtqVAxya5Od2
-         qsUA==
-X-Gm-Message-State: AGi0PubYoi3VBak9oUe95NizNz/WakwqHtrXjl1XaXOyxt/Q6ctvvJtX
-        al9J8XoOGb+wAey4sGT4lkhZ58Wty5XfwKAuRiHMUjWQY3vfTwJSx4m1Uww4GbPaex2Q9KvN+bO
-        ONGteolLJ3HOGDr5zlsy5puLgoguY4FdHXnpw37cU
-X-Received: by 2002:ae9:ed92:: with SMTP id c140mr8007661qkg.29.1587373131729;
-        Mon, 20 Apr 2020 01:58:51 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIjRvIlDDg57MantknXiQ5Jwc+acww2bCZ5DeZC+XsS6aRa5FxXy575F8K7vkHScc9X0dsku5X4PlBNJJp3zz0=
-X-Received: by 2002:ae9:ed92:: with SMTP id c140mr8007648qkg.29.1587373131491;
- Mon, 20 Apr 2020 01:58:51 -0700 (PDT)
+        Mon, 20 Apr 2020 04:59:53 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K8wpSC006363;
+        Mon, 20 Apr 2020 10:59:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=eBxkQEjV5LwT97ZezRCcYQScn1j4krELuQFmG3AFDoc=;
+ b=UmA/0DcspsogyEGnpBmjMKvbIio5f4taFXIQBV0YNHj4UO5FS9EmK8mK9hVkhYzVnvAA
+ q/gvzcqG0D3cKnDytR9s8lwwymaM9/mAEIaqwf4/J4sBp/cfNdOKliHVhPRH80Ae0OBP
+ S8xrC4QAC53bGR3F4nvwQdG3ghhu01mKVaMJU7DjHCDbhlEKogAuntP7XR8PMKctchLq
+ s353ifKSRZOMfebbWbmhDD5/N7QtqXyXcaPQbxPJgIcaABThyon899Z9Q5I3gdQcZmTT
+ ZPOoI320erdThlNPaGkY/pywRFLVUERQ9QAUz5YIegwH/Idbc1wGOYrLAksROX+yXGpz zQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30fqaw18rs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 10:59:37 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D4E9D100038;
+        Mon, 20 Apr 2020 10:59:36 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BE9902BE226;
+        Mon, 20 Apr 2020 10:59:36 +0200 (CEST)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Apr 2020 10:59:36
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <fabrice.gasnier@st.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [RESEND v6 2/6] ARM: dts: stm32: Add timer subnodes on stm32mp15 SoCs
+Date:   Mon, 20 Apr 2020 10:59:26 +0200
+Message-ID: <20200420085930.26989-3-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200420085930.26989-1-benjamin.gaignard@st.com>
+References: <20200420085930.26989-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-References: <20200416143532.11743-1-mszeredi@redhat.com> <c47459a5-3323-121e-ec66-4a8eb2a8afca@samba.org>
- <CAOssrKe7RNyReAFLoQGBDm79qMdXEubhP5QhG_+UmGZXgeXBkA@mail.gmail.com> <3dce8811-a54e-1f74-c7ed-715b97a4652c@samba.org>
-In-Reply-To: <3dce8811-a54e-1f74-c7ed-715b97a4652c@samba.org>
-From:   Miklos Szeredi <mszeredi@redhat.com>
-Date:   Mon, 20 Apr 2020 10:58:40 +0200
-Message-ID: <CAOssrKcVddL5URQ0Vy79eQOscqTTK115Ro0Eqe8Q9kdkNJspCg@mail.gmail.com>
-Subject: Re: [PATCH] vfs: add faccessat2 syscall
-To:     Stefan Metzmacher <metze@samba.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_03:2020-04-17,2020-04-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 10:23 PM Stefan Metzmacher <metze@samba.org> wrote:
->
-> Am 18.04.20 um 21:00 schrieb Miklos Szeredi:
-> > On Sat, Apr 18, 2020 at 8:36 PM Stefan Metzmacher <metze@samba.org> wrote:
-> >>
-> >> Hi Miklos,
-> >>
-> >>> POSIX defines faccessat() as having a fourth "flags" argument, while the
-> >>> linux syscall doesn't have it.  Glibc tries to emulate AT_EACCESS and
-> >>> AT_SYMLINK_NOFOLLOW, but AT_EACCESS emulation is broken.
-> >>>
-> >>> Add a new faccessat(2) syscall with the added flags argument and implement
-> >>> both flags.
-> >>>
-> >>> The value of AT_EACCESS is defined in glibc headers to be the same as
-> >>> AT_REMOVEDIR.  Use this value for the kernel interface as well, together
-> >>> with the explanatory comment.
-> >>
-> >> It would be nice if resolv_flags would also be passed in addition to the
-> >> at flags.
-> >> See:https://lore.kernel.org/linux-api/CAHk-=wiaL6zznNtCHKg6+MJuCqDxO=yVfms3qR9A0czjKuSSiA@mail.gmail.com/
-> >>
-> >> We should avoid expecting yet another syscall in near future.
-> >
-> > What is the objection against
-> >
-> > openat(... O_PATH)
-> > foobarat(fd, AT_EMPTY_PATH, ...)
->
-> openat2(), foobarat(), close() are 3 syscalls vs. just one.
+Add timer subnode and interrupts to low power timer nodes for
+all stm32mp15x SoCs.
 
-That's not a good argument.  We could have a million specialized
-syscalls that all do very useful things.  Except it would be a
-nightmare in terms of maintenance...
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ arch/arm/boot/dts/stm32mp151.dtsi | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-"do one thing and do it well"
-
-> As we have the new features available, I think it would be
-> good to expose them to userspace for all new syscalls, so
-> that applications can avoid boiler plate stuff around each syscall
-> and get better performance in a world where context switches are not for
-> free.
-
-The io-uring guys are working on that problem, AFAIK.
-
-Thanks,
-Miklos
+diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
+index 3ea05ba48215..5e881e8d0f58 100644
+--- a/arch/arm/boot/dts/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -359,6 +359,8 @@
+ 			reg = <0x40009000 0x400>;
+ 			clocks = <&rcc LPTIM1_K>;
+ 			clock-names = "mux";
++			interrupts-extended = <&exti 47 IRQ_TYPE_LEVEL_HIGH>;
++			wakeup-source;
+ 			status = "disabled";
+ 
+ 			pwm {
+@@ -377,6 +379,11 @@
+ 				compatible = "st,stm32-lptimer-counter";
+ 				status = "disabled";
+ 			};
++
++			timer {
++				compatible = "st,stm32-lptimer-timer";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		spi2: spi@4000b000 {
+@@ -1144,6 +1151,8 @@
+ 			reg = <0x50021000 0x400>;
+ 			clocks = <&rcc LPTIM2_K>;
+ 			clock-names = "mux";
++			interrupts-extended = <&exti 48 IRQ_TYPE_LEVEL_HIGH>;
++			wakeup-source;
+ 			status = "disabled";
+ 
+ 			pwm {
+@@ -1162,6 +1171,11 @@
+ 				compatible = "st,stm32-lptimer-counter";
+ 				status = "disabled";
+ 			};
++
++			timer {
++				compatible = "st,stm32-lptimer-timer";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		lptimer3: timer@50022000 {
+@@ -1171,6 +1185,8 @@
+ 			reg = <0x50022000 0x400>;
+ 			clocks = <&rcc LPTIM3_K>;
+ 			clock-names = "mux";
++			interrupts-extended = <&exti 50 IRQ_TYPE_LEVEL_HIGH>;
++			wakeup-source;
+ 			status = "disabled";
+ 
+ 			pwm {
+@@ -1184,6 +1200,11 @@
+ 				reg = <2>;
+ 				status = "disabled";
+ 			};
++
++			timer {
++				compatible = "st,stm32-lptimer-timer";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		lptimer4: timer@50023000 {
+@@ -1191,6 +1212,8 @@
+ 			reg = <0x50023000 0x400>;
+ 			clocks = <&rcc LPTIM4_K>;
+ 			clock-names = "mux";
++			interrupts-extended = <&exti 52 IRQ_TYPE_LEVEL_HIGH>;
++			wakeup-source;
+ 			status = "disabled";
+ 
+ 			pwm {
+@@ -1198,6 +1221,11 @@
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
+ 			};
++
++			timer {
++				compatible = "st,stm32-lptimer-timer";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		lptimer5: timer@50024000 {
+@@ -1205,6 +1233,8 @@
+ 			reg = <0x50024000 0x400>;
+ 			clocks = <&rcc LPTIM5_K>;
+ 			clock-names = "mux";
++			interrupts-extended = <&exti 53 IRQ_TYPE_LEVEL_HIGH>;
++			wakeup-source;
+ 			status = "disabled";
+ 
+ 			pwm {
+@@ -1212,6 +1242,11 @@
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
+ 			};
++
++			timer {
++				compatible = "st,stm32-lptimer-timer";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		vrefbuf: vrefbuf@50025000 {
+-- 
+2.15.0
 
