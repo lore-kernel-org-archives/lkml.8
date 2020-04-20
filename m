@@ -2,116 +2,97 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EEDC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2CFC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2256C21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:43:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g7JEJ58U"
+	by mail.kernel.org (Postfix) with ESMTP id 5521C20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgDTLnJ (ORCPT
+        id S1726380AbgDTLov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:43:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726387AbgDTLnG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:43:06 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FFFEC061A0C;
-        Mon, 20 Apr 2020 04:43:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=y3v9H7gulitO+Y85OVNVzldz0TRWO8cQsHtyyEuI5ig=; b=g7JEJ58UfwyeWV04dJy7haqXcR
-        FkY7TCFjfydjy7CUKLk2sKTRTGMeWlNvIH6QaFdDcJ6LNamrUKqVtRcrYX13W0QaBjHoZgQRwTrWr
-        pFMw6Zh2CU0LWD4TLAEVKbFuQrrB+5ujPnG45zzsqeSt+qZFmCfJvo+ZWZer92aHWA9AX6zXTHxmR
-        SZTQ0uswpYDxkQli+e+cy4XXvjLfdwzNe85/eZjU4D+5T9gllu2ggGK4e+wrNS8ioWTjEeUaLiDp9
-        BBpgydRU02eR0+H8csye5k3wOpZi5BcrTH2LP3QdS1jLAlgaTQNjvb0utJkJEpp5gVZ/qj8/l1oQZ
-        Kc/2zb2Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQUpI-0006Jo-4N; Mon, 20 Apr 2020 11:43:00 +0000
-Date:   Mon, 20 Apr 2020 04:43:00 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: Re: [PATCH v11 24/25] fuse: Convert from readpages to readahead
-Message-ID: <20200420114300.GB5820@bombadil.infradead.org>
-References: <20200414150233.24495-1-willy@infradead.org>
- <20200414150233.24495-25-willy@infradead.org>
- <CAJfpegsZF=TFQ67vABkE5ghiZoTZF+=_u8tM5U_P6jZeAmv23A@mail.gmail.com>
+        Mon, 20 Apr 2020 07:44:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:46918 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbgDTLov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:44:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B7481FB;
+        Mon, 20 Apr 2020 04:44:50 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D42D33F237;
+        Mon, 20 Apr 2020 04:44:48 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 12:44:46 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     zhang.lyra@gmail.com
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [RFC PATCH v1 2/2] dt-bindings: arm: Add description to the new
+ property for-s2idle-only
+Message-ID: <20200420114446.GB14343@lakrids.cambridge.arm.com>
+References: <20200413070014.12960-1-zhang.lyra@gmail.com>
+ <20200413070014.12960-3-zhang.lyra@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJfpegsZF=TFQ67vABkE5ghiZoTZF+=_u8tM5U_P6jZeAmv23A@mail.gmail.com>
+In-Reply-To: <20200413070014.12960-3-zhang.lyra@gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 01:14:17PM +0200, Miklos Szeredi wrote:
-> > +       for (;;) {
-> > +               struct fuse_io_args *ia;
-> > +               struct fuse_args_pages *ap;
-> > +
-> > +               nr_pages = readahead_count(rac) - nr_pages;
+On Mon, Apr 13, 2020 at 03:00:14PM +0800, zhang.lyra@gmail.com wrote:
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > 
-> Hmm.  I see what's going on here, but it's confusing.   Why is
-> __readahead_batch() decrementing the readahead count at the start,
-> rather than at the end?
+> Add a new property for-s2idle-only. The idle-state marked with this
+> property will be set with CPUIDLE_FLAG_S2IDLE during initialization
+> and it would be expected to be found as deepest state for s2idle
+> rather than other cases like play_idle().
 > 
-> At the very least it needs a comment about why nr_pages is calculated this way.
-
-Because usually that's what we want.  See, for example, fs/mpage.c:
-
-        while ((page = readahead_page(rac))) {
-                prefetchw(&page->flags);
-                args.page = page;
-                args.nr_pages = readahead_count(rac);
-                args.bio = do_mpage_readpage(&args);
-                put_page(page);
-        }
-
-fuse is different because it's trying to allocate for the next batch,
-not for the batch we're currently on.
-
-I'm a little annoyed because I posted almost this exact loop here:
-
-https://lore.kernel.org/linux-fsdevel/CAJfpegtrhGamoSqD-3Svfj3-iTdAbfD8TP44H_o+HE+g+CAnCA@mail.gmail.com/
-
-and you said "I think that's fine", modified only by your concern
-for it not being obvious that nr_pages couldn't be decremented by
-__readahead_batch(), so I modified the loop slightly to assign to
-nr_pages.  The part you're now complaining about is unchanged.
-
-> > +               if (nr_pages > max_pages)
-> > +                       nr_pages = max_pages;
-> > +               if (nr_pages == 0)
-> > +                       break;
-> > +               ia = fuse_io_alloc(NULL, nr_pages);
-> > +               if (!ia)
-> > +                       return;
-> > +               ap = &ia->ap;
-> > +               nr_pages = __readahead_batch(rac, ap->pages, nr_pages);
-> > +               for (i = 0; i < nr_pages; i++) {
-> > +                       fuse_wait_on_page_writeback(inode,
-> > +                                                   readahead_index(rac) + i);
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> ---
+>  Documentation/devicetree/bindings/arm/idle-states.yaml | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> What's wrong with ap->pages[i]->index?  Are we trying to wean off using ->index?
+> diff --git a/Documentation/devicetree/bindings/arm/idle-states.yaml b/Documentation/devicetree/bindings/arm/idle-states.yaml
+> index ea805c1e6b20..cec47b3a447f 100644
+> --- a/Documentation/devicetree/bindings/arm/idle-states.yaml
+> +++ b/Documentation/devicetree/bindings/arm/idle-states.yaml
+> @@ -263,7 +263,6 @@ patternProperties:
+>      description: |
+>        Each state node represents an idle state description and must be defined
+>        as follows.
+> -
+>        The idle state entered by executing the wfi instruction (idle_standby
+>        SBSA,[3][4]) is considered standard on all ARM platforms and therefore
+>        must not be listed.
+> @@ -283,6 +282,15 @@ patternProperties:
+>               lost on state entry, otherwise it is retained.
+>          type: boolean
+>  
+> +      for-s2idle-only:
+> +        description:
+> +          This indicates that the state only can be found as deepest state
+> +          for s2idle rather than other cases like play_idle(). In general,
+> +          the state having this property should have longer min-residency
+> +          than the cpuidle target min-residency which CPU QoS constraints
+> +          defines, to avoid being used by runtime cpuidle.
+> +        type: boolean
 
-It saves reading from a cacheline?  I wouldn't be surprised if the
-compiler hoisted the read from rac->_index to outside the loop and just
-iterated from rac->_index to rac->_index + nr_pages.
+This is very Linux-specific, and is encoding a policy ratehr than a
+property of the state.
+
+As on patch 1, can you please describe the expected properties of this
+idle state, with some rationale as to why it's not suited for idle in
+general? A real example in the commit message would be very helpful.
+
+Thanks,
+Mark.
+
