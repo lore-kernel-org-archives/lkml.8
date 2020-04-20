@@ -2,426 +2,95 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02F4C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7EFC55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94D36206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB716206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgDTUuk (ORCPT
+        id S1726677AbgDTUxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:50:40 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53456 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTUuk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:50:40 -0400
-Received: from [IPv6:2804:431:e7cc:a5f6:9375:2a8f:ddf7:24fe] (unknown [IPv6:2804:431:e7cc:a5f6:9375:2a8f:ddf7:24fe])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7753F2A1107;
-        Mon, 20 Apr 2020 21:50:36 +0100 (BST)
-Subject: Re: [PATCH v2 1/3] media: vimc: Support multiple media bus codes for
- each pixelformat
-To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
-        <nfraprado@protonmail.com>
-Cc:     linux-media@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-References: <20200326214730.2449707-1-nfraprado@protonmail.com>
- <20200326214730.2449707-2-nfraprado@protonmail.com>
- <e41520f6-1d2e-9d36-3693-1e6d950ecf2f@collabora.com>
- <20200420203646.6hhbsb57ybwh6u76@ArchWay.local>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <41e25337-1f23-8650-37fb-745321ab2e9e@collabora.com>
-Date:   Mon, 20 Apr 2020 17:50:30 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 16:53:31 -0400
+Received: from sauhun.de ([88.99.104.3]:50670 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbgDTUxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:53:31 -0400
+Received: from localhost (p54B335B8.dip0.t-ipconnect.de [84.179.53.184])
+        by pokefinder.org (Postfix) with ESMTPSA id 279052C1F4C;
+        Mon, 20 Apr 2020 22:53:29 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 22:53:26 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Patrick Williams <patrick@stwcx.xyz>
+Cc:     Bjorn Ardo <bjorn.ardo@axis.com>,
+        Patrick Williams <alpawi@amazon.com>,
+        =?utf-8?B?QmrDtnJuIEFyZMO2?= <bjornar@axis.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: slave-eeprom: initialize empty eeprom properly
+Message-ID: <20200420205325.GA1693@ninjato>
+References: <20191001164009.21610-1-alpawi@amazon.com>
+ <150599be-9125-4ab9-e2a6-e792b41910e6@axis.com>
+ <20200420164349.GD3721@ninjato>
+ <20200420203146.GC95151@heinlein.lan.stwcx.xyz>
 MIME-Version: 1.0
-In-Reply-To: <20200420203646.6hhbsb57ybwh6u76@ArchWay.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
+Content-Disposition: inline
+In-Reply-To: <20200420203146.GC95151@heinlein.lan.stwcx.xyz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nícolas,
 
-On 4/20/20 5:36 PM, Nícolas F. R. A. Prado wrote:
-> Hi Helen,
-> 
-> thanks for the review.
-> 
-> Some comments below.
-> 
-> On Mon, Mar 30, 2020 at 04:36:45PM -0300, Helen Koike wrote:
->>
->> Hi Nícolas,
->>
->> thank you for the patch.
->>
->> The series looks good in general, just minor comments below.
->>
->> On 3/26/20 6:47 PM, Nícolas F. R. A. Prado wrote:
->>> Change vimc_pix_map_list to allow multiple media bus codes to map to the
->>> same pixelformat, making it possible to add media bus codes for which
->>> there are no pixelformat.
->>>
->>> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
->>> ---
->>>
->>> Changes in v2:
->>> - Fix vimc_mbus_code_by_index not checking code array bounds
->>> - Fix array formatting
->>> - Rename variables
->>> - Change code array size
->>> - Add comment about vimc_mbus_code_by_index return value
->>>
->>>  drivers/media/platform/vimc/vimc-common.c | 70 ++++++++++++++---------
->>>  drivers/media/platform/vimc/vimc-common.h | 11 +++-
->>>  drivers/media/platform/vimc/vimc-scaler.c | 10 +++-
->>>  drivers/media/platform/vimc/vimc-sensor.c |  6 +-
->>>  4 files changed, 65 insertions(+), 32 deletions(-)
->>>
->>> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
->>> index c95c17c048f2..119846f3eaa5 100644
->>> --- a/drivers/media/platform/vimc/vimc-common.c
->>> +++ b/drivers/media/platform/vimc/vimc-common.c
->>> @@ -19,19 +19,19 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->>>
->>>  	/* RGB formats */
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_BGR888_1X24,
->>> +		.code = { MEDIA_BUS_FMT_BGR888_1X24 },
->>>  		.pixelformat = V4L2_PIX_FMT_BGR24,
->>>  		.bpp = 3,
->>>  		.bayer = false,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_RGB888_1X24,
->>> +		.code = { MEDIA_BUS_FMT_RGB888_1X24 },
->>>  		.pixelformat = V4L2_PIX_FMT_RGB24,
->>>  		.bpp = 3,
->>>  		.bayer = false,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_ARGB8888_1X32,
->>> +		.code = { MEDIA_BUS_FMT_ARGB8888_1X32 },
->>>  		.pixelformat = V4L2_PIX_FMT_ARGB32,
->>>  		.bpp = 4,
->>>  		.bayer = false,
->>> @@ -39,49 +39,49 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->>>
->>>  	/* Bayer formats */
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SBGGR8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SBGGR8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SGBRG8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SGBRG8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SGRBG8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SGRBG8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SRGGB8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SRGGB8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
->>> +		.code = { MEDIA_BUS_FMT_SBGGR10_1X10 },
->>>  		.pixelformat = V4L2_PIX_FMT_SBGGR10,
->>>  		.bpp = 2,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
->>> +		.code = { MEDIA_BUS_FMT_SGBRG10_1X10 },
->>>  		.pixelformat = V4L2_PIX_FMT_SGBRG10,
->>>  		.bpp = 2,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
->>> +		.code = { MEDIA_BUS_FMT_SGRBG10_1X10 },
->>>  		.pixelformat = V4L2_PIX_FMT_SGRBG10,
->>>  		.bpp = 2,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
->>> +		.code = { MEDIA_BUS_FMT_SRGGB10_1X10 },
->>>  		.pixelformat = V4L2_PIX_FMT_SRGGB10,
->>>  		.bpp = 2,
->>>  		.bayer = true,
->>> @@ -89,25 +89,25 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->>>
->>>  	/* 10bit raw bayer a-law compressed to 8 bits */
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>> @@ -115,49 +115,49 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->>>
->>>  	/* 10bit raw bayer DPCM compressed to 8 bits */
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
->>> +		.code = { MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8 },
->>>  		.pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
->>>  		.bpp = 1,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
->>> +		.code = { MEDIA_BUS_FMT_SBGGR12_1X12 },
->>>  		.pixelformat = V4L2_PIX_FMT_SBGGR12,
->>>  		.bpp = 2,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
->>> +		.code = { MEDIA_BUS_FMT_SGBRG12_1X12 },
->>>  		.pixelformat = V4L2_PIX_FMT_SGBRG12,
->>>  		.bpp = 2,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
->>> +		.code = { MEDIA_BUS_FMT_SGRBG12_1X12 },
->>>  		.pixelformat = V4L2_PIX_FMT_SGRBG12,
->>>  		.bpp = 2,
->>>  		.bayer = true,
->>>  	},
->>>  	{
->>> -		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
->>> +		.code = { MEDIA_BUS_FMT_SRGGB12_1X12 },
->>>  		.pixelformat = V4L2_PIX_FMT_SRGGB12,
->>>  		.bpp = 2,
->>>  		.bayer = true,
->>> @@ -182,13 +182,31 @@ const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i)
->>>  	return &vimc_pix_map_list[i];
->>>  }
->>>
->>> +const u32 vimc_mbus_code_by_index(unsigned int index)
->>> +{
->>> +	unsigned int i, j;
->>> +
->>> +	for (i = 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
->>> +		for (j = 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j++) {
->>> +			if (vimc_pix_map_list[i].code[j]) {
->>
->> Can this be false?
-> 
-> Actually it can, but after you asked I realized this code could be way clearer.
-> 
-> When vimc_pix_map_list[i].code[j] is 0, it means that this is an unused value of
-> the array, so we should skip to the next pixelformat.
-> I think writing it this way instead would be better, what do you think?
-> 
->         for (i = 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
->                 for (j = 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j++) {
->                         if (!vimc_pix_map_list[i].code[j])
->                                 break;
->  
->                         if (!index)
->                                 return vimc_pix_map_list[i].code[j];
->                         index--;
-> 
+--cWoXeonUoKmBZSoM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looks better, I prefer reducing indentation.
+On Mon, Apr 20, 2020 at 03:31:46PM -0500, Patrick Williams wrote:
+> On Mon, Apr 20, 2020 at 06:43:49PM +0200, Wolfram Sang wrote:
+> > On Wed, Oct 02, 2019 at 08:20:53AM +0200, Bjorn Ardo wrote:
+> > > Hi,
+> > >=20
+> > >=20
+> > > I sent in another patch earlier that added support for specifying a f=
+ile in
+> > > devicetree to initilize the eeprom from, corresponding to the case of
+> > > pre-flashed eeprom. Maybe these two patches should be merged so this
+> > > initialization is only done if no file is specified?
+> >=20
+> > Yes, I agree.
+> >=20
+>=20
+> It looks like Bjorn's referenced patches are still unmerged also?
 
->>
->>> +				if (!index)
->>> +					return vimc_pix_map_list[i].code[j];
->>> +				index--;
->>> +			}
->>> +		}
->>> +	}
->>> +	return 0;
->>> +}
->>> +
->>>  const struct vimc_pix_map *vimc_pix_map_by_code(u32 code)
->>>  {
->>> -	unsigned int i;
->>> +	unsigned int i, j;
->>>
->>>  	for (i = 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
->>> -		if (vimc_pix_map_list[i].code == code)
->>> -			return &vimc_pix_map_list[i];
->>> +		for (j = 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j++) {
->>> +			if (vimc_pix_map_list[i].code[j] == code)
->>> +				return &vimc_pix_map_list[i];
->>> +		}
->>>  	}
->>>  	return NULL;
->>>  }
->>> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
->>> index 616d5a6b0754..585441694c86 100644
->>> --- a/drivers/media/platform/vimc/vimc-common.h
->>> +++ b/drivers/media/platform/vimc/vimc-common.h
->>> @@ -69,7 +69,7 @@ do {									\
->>>   * V4L2_PIX_FMT_* fourcc pixelformat and its bytes per pixel (bpp)
->>>   */
->>>  struct vimc_pix_map {
->>> -	unsigned int code;
->>> +	unsigned int code[1];
->>>  	unsigned int bpp;
->>>  	u32 pixelformat;
->>>  	bool bayer;
->>> @@ -172,6 +172,15 @@ void vimc_sen_release(struct vimc_ent_device *ved);
->>>   */
->>>  const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i);
->>>
->>> +/**
->>> + * vimc_mbus_code_by_index - get mbus code by its index
->>> + *
->>> + * @index:		index of the mbus code in vimc_pix_map_list
->>> + *
->>> + * Returns 0 if no mbus code is found for the given index.
->>> + */
->>> +const u32 vimc_mbus_code_by_index(unsigned int index);
->>> +
->>>  /**
->>>   * vimc_pix_map_by_code - get vimc_pix_map struct by media bus code
->>>   *
->>> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
->>> index 7521439747c5..6bac1fa65a6f 100644
->>> --- a/drivers/media/platform/vimc/vimc-scaler.c
->>> +++ b/drivers/media/platform/vimc/vimc-scaler.c
->>> @@ -110,13 +110,19 @@ static int vimc_sca_enum_mbus_code(struct v4l2_subdev *sd,
->>>  				   struct v4l2_subdev_pad_config *cfg,
->>>  				   struct v4l2_subdev_mbus_code_enum *code)
->>>  {
->>> -	const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
->>> +	const u32 mbus_code = vimc_mbus_code_by_index(code->index);
->>> +	const struct vimc_pix_map *vpix;
->>> +
->>> +	if (!mbus_code)
->>> +		return -EINVAL;
->>> +
->>> +	vpix = vimc_pix_map_by_code(mbus_code);
->>>
->>>  	/* We don't support bayer format */
->>>  	if (!vpix || vpix->bayer)
->>>  		return -EINVAL;
->>>
->>> -	code->code = vpix->code;
->>> +	code->code = mbus_code;
->>
->> no need to change this.
-> 
-> This change is actually needed, because after this patch, the code property of
-> vimc_pix_map_list is an array, so there isn't a 1 to 1 relation between mbus
-> code and pixmap format anymore.
-> Since we already got the mbus code by index through
-> vimc_mbus_code_by_index(code->index), we just use it.
+Yes, it might be easiest if he merges your patch (with attribution) into
+the else branch of his fw-load patch.
 
-Make sense, thank you for your explanation.
 
-Regards,
-Helen
+--cWoXeonUoKmBZSoM
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
->>
->>>
->>>  	return 0;
->>>  }
->>> diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
->>> index 92daee58209e..b8bd430809c1 100644
->>> --- a/drivers/media/platform/vimc/vimc-sensor.c
->>> +++ b/drivers/media/platform/vimc/vimc-sensor.c
->>> @@ -52,12 +52,12 @@ static int vimc_sen_enum_mbus_code(struct v4l2_subdev *sd,
->>>  				   struct v4l2_subdev_pad_config *cfg,
->>>  				   struct v4l2_subdev_mbus_code_enum *code)
->>>  {
->>> -	const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
->>> +	const u32 mbus_code = vimc_mbus_code_by_index(code->index);
->>>
->>> -	if (!vpix)
->>> +	if (!mbus_code)
->>>  		return -EINVAL;
->>>
->>> -	code->code = vpix->code;
->>> +	code->code = mbus_code;
->>>
->>>  	return 0;
->>>  }
->>>
->>
->> With these changes
->>
->> Acked-by: Helen Koike <helen.koike@collabora.com>
->>
->> Regards,
->> Helen
-> 
-> Thank you,
-> Nícolas
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6eC8EACgkQFA3kzBSg
+KbaQrA/+J/BFo8rhuV/ObewANKKTUc0Tr1RAY+npkvv8asmIoT1xriSOb8TzUPI2
+6wv5egQD9fQ8z3DjZlr3pxSISwJDT8aFyTMcEDeQ6JI4P0fFWZXBCIbtjyJqlwMe
+t0U6leFUITmVB5HjoLUWFQb59l/1/CLvWYTmiE/VmYtaMhPIzN/ze4LKHLHdLPq4
+3n0XEwtOhHTTshNNq3MuFSqpu0Hynja5IbuGPyekXdQYEOz7o9A0rcg80IZAdtvB
+kP/07D6LpR2fIUW2Zi+Uo2q3S2K8H+sqr+QKNGlUArwQnsB7qwiFDcGOgY/Jp2xi
+ZNc9homj0brUQnh2gxmqLrDyJfs8txeMQ0gW2fPjJeQdA1iJVisLc4gmXgqKnYmr
+hyRm/7ED4SrkSIuvVIU8bJ0HKIxvdn/YYv4zDTMYl6xHjCcr3qrwmjMbaB+14X+a
+eLG3b/NbGI/W+Q2rGJI3TNtT7hmoNaBGxMYe8vKJBc5WvrkL+yrBIxkK+Y573TYe
+HiZrsBtairdpU+Knz6up0+Dx7yq5N06F85UMWPuizotI8h8jkbI+AW6Rxk/9xtwH
+/WesL3yo0gD3bZRMJ17uT4wdiRZkDZL2x641jXVhX7+pYBV8mZYm+mfwdYs/UI/D
+dEyL9FCo/U6fO7xJ4vT9DrSS0TjFbcFX/m6eKWSEtQ4UipWC5YA=
+=7XYS
+-----END PGP SIGNATURE-----
+
+--cWoXeonUoKmBZSoM--
