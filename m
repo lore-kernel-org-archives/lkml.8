@@ -2,138 +2,87 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484EFC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3673C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24501206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:05:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gpsGlv//"
+	by mail.kernel.org (Postfix) with ESMTP id 927DF208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgDTJFj (ORCPT
+        id S1726063AbgDTJJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:05:39 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25535 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726141AbgDTJFj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:05:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587373538;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3jN0EW6WMAdqDs9jGBK08UEDNd80uljOnIKIYUrofCI=;
-        b=gpsGlv//IuyexZHO+US1eF3ysjgYhYwNUtTOVLFYDf37n/cPE0hHqc9Aahdxmmng2OU9A2
-        eJJnMBHAYJPMyLighnPIItrhNETIlM9YkeSsZjf2btwAHFO0YktMh2Zbsmu5j9srr1sBeM
-        TL1+EoDqdAHXQH86bG3LEJt/Tl0QWPU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-MLdBaXaWO6utL8H7m2QNMQ-1; Mon, 20 Apr 2020 05:05:33 -0400
-X-MC-Unique: MLdBaXaWO6utL8H7m2QNMQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B980818C35A2;
-        Mon, 20 Apr 2020 09:05:31 +0000 (UTC)
-Received: from krava (ovpn-115-153.ams2.redhat.com [10.36.115.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C97E31001B0B;
-        Mon, 20 Apr 2020 09:05:28 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 11:05:26 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Tommi Rantala <tommi.t.rantala@nokia.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] perf bench: Fix div-by-zero if runtime is zero
-Message-ID: <20200420090526.GF718574@krava>
-References: <20200417132330.119407-1-tommi.t.rantala@nokia.com>
- <20200417132330.119407-4-tommi.t.rantala@nokia.com>
+        Mon, 20 Apr 2020 05:09:17 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21720 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725865AbgDTJJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:09:17 -0400
+IronPort-SDR: ElH6xDf5DxsOdPkWVAl+H9V9kHotBBkT2rAy3WLqifdbdQevjJ22ywLNkPfwx8zS2zDKTEElFo
+ ca83FF/yb0RA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 02:09:17 -0700
+IronPort-SDR: biERhZ+vFcl9j2ypAfG9Cj5s8s/G8aPIX5fOvx4nYwFDXVv7iTLkOesiftFWSe4KcNyh1fKyaX
+ gJxCXzW62XuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
+   d="scan'208";a="364944929"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 20 Apr 2020 02:09:14 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 20 Apr 2020 12:09:13 +0300
+Date:   Mon, 20 Apr 2020 12:09:13 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Ani Sinha <ani@anisinha.ca>
+Cc:     linux-kernel@vger.kernel.org, ani@anirban.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Denis Efremov <efremov@linux.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: pciehp: Cleanup unused HP_SUPR_RM macro
+Message-ID: <20200420090913.GV2586@lahna.fi.intel.com>
+References: <1587303383-37819-1-git-send-email-ani@anisinha.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417132330.119407-4-tommi.t.rantala@nokia.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <1587303383-37819-1-git-send-email-ani@anisinha.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:23:29PM +0300, Tommi Rantala wrote:
-> Fix div-by-zero if runtime is zero:
+On Sun, Apr 19, 2020 at 07:06:20PM +0530, Ani Sinha wrote:
+> We do not use PCIE hotplug surprise (PCI_EXP_SLTCAP_HPS) bit anymore.
+> Consequently HP_SUPR_RM() macro is not used in the kernel source anymore.
+> Let's clean it up.
 > 
->   $ perf bench futex hash --runtime=0
->   # Running 'futex/hash' benchmark:
->   Run summary [PID 12090]: 4 threads, each operating on 1024 [private] futexes for 0 secs.
->   Floating point exception (core dumped)
-> 
-> Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+> Signed-off-by: Ani Sinha <ani@anisinha.ca>
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-thanks,
-jirka
+BTW, there seem to be other macros like EMI() that is not used anymore
+so maybe worth removing them as well.
 
 > ---
->  tools/perf/bench/epoll-wait.c    | 3 ++-
->  tools/perf/bench/futex-hash.c    | 3 ++-
->  tools/perf/bench/futex-lock-pi.c | 3 ++-
->  3 files changed, 6 insertions(+), 3 deletions(-)
+>  drivers/pci/hotplug/pciehp.h | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
-> index f938c585d512..cf797362675b 100644
-> --- a/tools/perf/bench/epoll-wait.c
-> +++ b/tools/perf/bench/epoll-wait.c
-> @@ -519,7 +519,8 @@ int bench_epoll_wait(int argc, const char **argv)
->  		qsort(worker, nthreads, sizeof(struct worker), cmpworker);
->  
->  	for (i = 0; i < nthreads; i++) {
-> -		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
-> +		unsigned long t = bench__runtime.tv_sec > 0 ?
-> +			worker[i].ops / bench__runtime.tv_sec : 0;
->  
->  		update_stats(&throughput_stats, t);
->  
-> diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-> index 65eebe06c04d..915bf3da7ce2 100644
-> --- a/tools/perf/bench/futex-hash.c
-> +++ b/tools/perf/bench/futex-hash.c
-> @@ -205,7 +205,8 @@ int bench_futex_hash(int argc, const char **argv)
->  	pthread_mutex_destroy(&thread_lock);
->  
->  	for (i = 0; i < nthreads; i++) {
-> -		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
-> +		unsigned long t = bench__runtime.tv_sec > 0 ?
-> +			worker[i].ops / bench__runtime.tv_sec : 0;
->  		update_stats(&throughput_stats, t);
->  		if (!silent) {
->  			if (nfutexes == 1)
-> diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
-> index 89fd8f325f38..bb25d8beb3b8 100644
-> --- a/tools/perf/bench/futex-lock-pi.c
-> +++ b/tools/perf/bench/futex-lock-pi.c
-> @@ -211,7 +211,8 @@ int bench_futex_lock_pi(int argc, const char **argv)
->  	pthread_mutex_destroy(&thread_lock);
->  
->  	for (i = 0; i < nthreads; i++) {
-> -		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
-> +		unsigned long t = bench__runtime.tv_sec > 0 ?
-> +			worker[i].ops / bench__runtime.tv_sec : 0;
->  
->  		update_stats(&throughput_stats, t);
->  		if (!silent)
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index ae44f46..5747967 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -148,7 +148,6 @@ struct controller {
+>  #define MRL_SENS(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_MRLSP)
+>  #define ATTN_LED(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_AIP)
+>  #define PWR_LED(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_PIP)
+> -#define HP_SUPR_RM(ctrl)	((ctrl)->slot_cap & PCI_EXP_SLTCAP_HPS)
+>  #define EMI(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_EIP)
+>  #define NO_CMD_CMPL(ctrl)	((ctrl)->slot_cap & PCI_EXP_SLTCAP_NCCS)
+>  #define PSN(ctrl)		(((ctrl)->slot_cap & PCI_EXP_SLTCAP_PSN) >> 19)
 > -- 
-> 2.25.2
-> 
-
+> 2.7.4
