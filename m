@@ -2,205 +2,169 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6F3C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A743CC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF042206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823D9206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:35:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="qpAdI8vv"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="xH/QmMTG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgDTPfZ (ORCPT
+        id S1728231AbgDTPfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:35:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59732 "EHLO
+        Mon, 20 Apr 2020 11:35:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgDTPfY (ORCPT
+        with ESMTP id S1726415AbgDTPfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:35:24 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081F9C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:35:24 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z6so9026wml.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:35:23 -0700 (PDT)
+        Mon, 20 Apr 2020 11:35:54 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B59DC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:35:54 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id m67so10960725qke.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:35:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=+K+qKu708z2zVtKaY1gkYCyIah49wYPOwR1gFNLf0bo=;
-        b=qpAdI8vvJOtyeSlXBkFHfH4B5C8yKPj5rBiaxCTZBc7Iuk412crGYb7cJJV8hqda+8
-         1w6hDI4DcEJ8KH5sPSlr1UnRM9CJUJN3BuyAignz7OGxJIKhwX21bE2zT495CCm6OtTr
-         O4SqYJ/coKIi17kgGJV1eVN0Lt544tq7RAxYpcs1RpXlaYIuIQj01cyDXgPSnUw9Geec
-         zw+jm4KgINP2OxNKFO9u5QUv6pOizP0KWZ31nVt+wUWiJwt8FZUrb0/9UasNNpCgmLOS
-         Yy/zwJFUULhR3SSeOnkdPt3pQz9OHfQPzmUkG95sYyx1rCpHKhjhFAisgSH+VC128VkM
-         qaQQ==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P5AdbeASeN3LWLwAao7IPBW2Z8hbXGbMOqZhqhTsi0o=;
+        b=xH/QmMTGrRk0vg4u23/IshU43Loy0kmEdOHU6LEJwx6eLcIS3nQx+g31KY/s6njFes
+         eFpdGA7e7bgn8AdpC+HYklwRzIuGD6UXVNiT7wwaO//ei1ErR5rh3im2N2npx0XtCH5I
+         7MjCLC6WKMEnm3WT0zxCUgdOoShSJb5RDyIr6UhlStTvwIFSmgZiz9QK5w6vmP2gTElx
+         1KMCF7wdByLiQjdgU36XzxKeuqW39K5IHYgTUtlYhoJ/D3woMFjPHQJFTT80i3Pya+J6
+         IqUmeLkj/OBSz+q5jbGXEunJfZIPSYFfvxTj/yhzE3WCA2F94rWYjbgLVNtuHOR6f/8C
+         ieuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=+K+qKu708z2zVtKaY1gkYCyIah49wYPOwR1gFNLf0bo=;
-        b=TKEIMMtwgkVBI3iNeg5TMu5nT+PmtnImw8qNbbSZWdRIyQ4oulnVvEwvAiwkdqNiBC
-         G1g8ipInxiYNhilONZqY4tpqY3igGwamc77AnEqjUi2kFcgaLM67+iai/Z0jJMnr21nV
-         WUrgNgKBV1HSEfMnHPuagFJHkGLYXQSALchhoL0BJKRrTqWHrx/gp+7btuBTejOAwy+A
-         PFzMZsFC/a/LhbyAtgiGTCrSeuTGKM5z9nFSh1HoB2ACSTNMfFaFgr2xi4msOEoZmI/S
-         VHRgGC/RWjG8YPPNRstH2EF4g/9/8Sh1eMIsvz9dcqWbM5Z1Gink9yh0SvbN4yeOP+Lp
-         18VQ==
-X-Gm-Message-State: AGi0PuaKkPiOUDJmmo2SDV7vKJyyPb6dt17hGKNogavjw95mJy8OzJ5r
-        PHaIBQ1QyGKB51Dm8xz+rtKvwQ==
-X-Google-Smtp-Source: APiQypICr1nADV0G13PJbrR/ddpdcRZMBwBzTFr+0IZALFBviYlLaDljuZMViX5a/fg0cB6qqO0qhg==
-X-Received: by 2002:a1c:5446:: with SMTP id p6mr18188522wmi.172.1587396922664;
-        Mon, 20 Apr 2020 08:35:22 -0700 (PDT)
-Received: from linux-2.fritz.box (p200300D997064100F4D27C63BD39C692.dip0.t-ipconnect.de. [2003:d9:9706:4100:f4d2:7c63:bd39:c692])
-        by smtp.googlemail.com with ESMTPSA id v131sm1878061wmb.19.2020.04.20.08.35.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 08:35:21 -0700 (PDT)
-Subject: Re: [PATCH] ipc: Convert ipcs_idr to XArray
-To:     Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200326151418.27545-1-willy@infradead.org>
-From:   Manfred Spraul <manfred@colorfullife.com>
-Message-ID: <80ab3182-5a17-7434-9007-33eb1da46d85@colorfullife.com>
-Date:   Mon, 20 Apr 2020 17:35:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P5AdbeASeN3LWLwAao7IPBW2Z8hbXGbMOqZhqhTsi0o=;
+        b=tD9/ZgmSE82vfH7KiZ6c+V51Sned1kUq4gXDhpN0hNiWn7du/AQjAr1rmkxcbXFCBT
+         YJHIOHmvdO2dd+YF0dQ1J4iqXpHoh16bYHj/q0OaL03vBDjx3KSP31JxFkOYYzIfy3Ss
+         jqRIaCJf2LjGXo11CoaoPst/lQEc8DOhVR7+f/rpuOxQYZ2faQ1zOx1r3cnEaAa4RCLB
+         GWz4jY24cuikK6zPhBLTQBTpMsafGIC1VV+gW4tEhes3aLMKYqdaTFPYGDVEEXiGu4e7
+         sHmMQW+hhAEm51PZYd63K1woT1wtEK04ar8t3RZdfs0ndh1aWESke/5USfFB6ZO7s3/t
+         8Yvg==
+X-Gm-Message-State: AGi0PuaQlw9fbA/cEOYiL9Rnbf3ZgusnIQq3GUU94G/UVNPytAr8s/c8
+        GFec+rQOU99Lu8H7Odqo6u0v8Q==
+X-Google-Smtp-Source: APiQypKoJbJWLjg+0XysGGc0MJ3P0qgeXjQAIu8l5u0lW95JQmearXo4++Rg9AGrTzIHk3HGJC7uNg==
+X-Received: by 2002:a37:9e94:: with SMTP id h142mr15638183qke.56.1587396953312;
+        Mon, 20 Apr 2020 08:35:53 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id b11sm708373qti.50.2020.04.20.08.35.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 08:35:52 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] arm64: dts: qcom: fix pm8150 gpio interrupts
+Date:   Mon, 20 Apr 2020 11:35:43 -0400
+Message-Id: <20200420153543.14512-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-In-Reply-To: <20200326151418.27545-1-willy@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthew,
+This was mistakenly copied from the downstream dts, however the upstream
+driver works differently.
 
-On 3/26/20 4:14 PM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->
-> The XArray has better loops than the IDR has, removing the need to
-> open-code them.  We also don't need to call idr_destroy() any more.
-> Allocating the ID is a little tricky due to needing to get 'seq'
-> correct.  Open-code a variant of __xa_alloc() which lets us set the
-> ID and the seq before depositing the pointer in the array.
->
-> Signed-off-by: Matthew Wilcox <willy@infradead.org>
-> ---
+I only tested this with the pm8150_gpios node (used with volume button),
+but the 2 others should be the same.
 
-> -		max_idx = max(ids->in_use*3/2, ipc_min_cycle);
-> -		max_idx = min(max_idx, ipc_mni);
-> -
-> -		/* allocate the idx, with a NULL struct kern_ipc_perm */
-> -		idx = idr_alloc_cyclic(&ids->ipcs_idr, NULL, 0, max_idx,
-> -					GFP_NOWAIT);
-> -
-> -		if (idx >= 0) {
-> -			/*
-> -			 * idx got allocated successfully.
-> -			 * Now calculate the sequence number and set the
-> -			 * pointer for real.
-> -			 */
-> -			if (idx <= ids->last_idx) {
-> +		min_idx = ids->next_idx;
-> +		new->seq = ids->seq;
-> +
-> +		/* Modified version of __xa_alloc */
-> +		do {
-> +			xas.xa_index = min_idx;
-> +			xas_find_marked(&xas, max_idx, XA_FREE_MARK);
-> +			if (xas.xa_node == XAS_RESTART && min_idx > 0) {
->   				ids->seq++;
->   				if (ids->seq >= ipcid_seq_max())
->   					ids->seq = 0;
-> +				new->seq = ids->seq;
-> +				xas.xa_index = 0;
-> +				min_idx = 0;
-> +				xas_find_marked(&xas, max_idx, XA_FREE_MARK);
->   			}
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ arch/arm64/boot/dts/qcom/pm8150.dtsi  | 14 ++------------
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi | 14 ++------------
+ arch/arm64/boot/dts/qcom/pm8150l.dtsi | 14 ++------------
+ 3 files changed, 6 insertions(+), 36 deletions(-)
 
-Is is nessary to have that many details of xarray in ipc/util?
-
-This function is not performance critical.
-
-The core requirement is that ipc_obtain_object_check() must scale.
-
-Would it be possible to use something like
-
-     xa_alloc(,entry=NULL,)
-
-     new->seq = ...
-
-     xa_store(,entry=new,);
-
-> -			ids->last_idx = idx;
-> -
-> -			new->seq = ids->seq;
-> -			/* no need for smp_wmb(), this is done
-> -			 * inside idr_replace, as part of
-> -			 * rcu_assign_pointer
-> -			 */
-
-Could you leave the memory barrier comments in the code?
-
-The rcu_assign_pointer() is the first hands-off from semget() or msgget().
-
-Before the rcu_assign_pointer, e.g. semop() calls would return -EINVAL;
-
-After the rcu_assign_pointer, semwhatever() must work - and e.g. the 
-permission checks are lockless.
-
-> -			idr_replace(&ids->ipcs_idr, new, idx);
-> -		}
-> +			if (xas.xa_node == XAS_RESTART)
-> +				xas_set_err(&xas, -ENOSPC);
-> +			else
-> +				new->id = (new->seq << ipcmni_seq_shift()) +
-> +					xas.xa_index;
-
-Setting new->id should remain at the end, outside any locking:
-
-The variable has no special protection, access is only allowed after 
-proper locking, thus no need to have the initialization in the middle.
-
-What is crucial is that the final value of new->seq is visible to all 
-cpus before a storing the pointer.
-> +			xas_store(&xas, new);
-> +			xas_clear_mark(&xas, XA_FREE_MARK);
-> +		} while (__xas_nomem(&xas, GFP_KERNEL));
-> +
-
-Just for my curiosity:
-
-If the xas is in an invalid state, then xas_store() will not store anything.
-Thus the loop will not store "new" multiple times, it will be stored 
-only once.
-
-@@ -472,7 +487,7 @@ void ipc_rmid(struct ipc_ids *ids, struct 
-kern_ipc_perm *ipcp)
->   			idx--;
->   			if (idx == -1)
->   				break;
-> -		} while (!idr_find(&ids->ipcs_idr, idx));
-> +		} while (!xa_load(&ids->ipcs, idx));
->   		ids->max_idx = idx;
->   	}
->   }
-
-Is there an xa_find_last() function?
-
-It is outside of any hot path, I have a patch that does a binary search 
-with idr_get_next().
-
-If there is no xa_find_last(), then I would rebase that patch.
-
-
---
-
-     Manfred
+diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
+index b6e304748a57..c0b197458665 100644
+--- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
+@@ -73,18 +73,8 @@ pm8150_gpios: gpio@c000 {
+ 			reg = <0xc000>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+-			interrupts = <0x0 0xc0 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xc1 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xc2 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xc3 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xc4 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xc5 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xc6 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xc7 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xc8 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xc9 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xca 0x0 IRQ_TYPE_NONE>,
+-				     <0x0 0xcb 0x0 IRQ_TYPE_NONE>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+index 322379d5c31f..40b5d75a4a1d 100644
+--- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+@@ -62,18 +62,8 @@ pm8150b_gpios: gpio@c000 {
+ 			reg = <0xc000>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+-			interrupts = <0x2 0xc0 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xc1 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xc2 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xc3 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xc4 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xc5 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xc6 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xc7 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xc8 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xc9 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xca 0x0 IRQ_TYPE_NONE>,
+-				     <0x2 0xcb 0x0 IRQ_TYPE_NONE>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/qcom/pm8150l.dtsi b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
+index eb0e9a090e42..cf05e0685d10 100644
+--- a/arch/arm64/boot/dts/qcom/pm8150l.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
+@@ -56,18 +56,8 @@ pm8150l_gpios: gpio@c000 {
+ 			reg = <0xc000>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+-			interrupts = <0x4 0xc0 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xc1 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xc2 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xc3 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xc4 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xc5 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xc6 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xc7 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xc8 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xc9 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xca 0x0 IRQ_TYPE_NONE>,
+-				     <0x4 0xcb 0x0 IRQ_TYPE_NONE>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 		};
+ 	};
+ 
+-- 
+2.26.1
 
