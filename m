@@ -2,169 +2,96 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C572C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A397C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122C22074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:17:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0bvD2YaX"
+	by mail.kernel.org (Postfix) with ESMTP id E53E8206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:17:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587395873;
+	bh=NR9eij5fAZ2F4GMX8r7wjGK2n8gim5kWT5snSmUaZtg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rhUDZikpH8Op+3pfdPfm43ViygcxbSNYXs9Z0BeV/rVqlgoWncbzbvEHD8UpUtzkF
+	 tN1sDu7CNBOqG5MrIIf8au/Zf/R3xPXEmx8noDVYLh8kmYr79jPkMa3rWwcq5ytbmf
+	 m0lDr2XZH64B0YPUQgjH8wVik0v89Z8dHSTbTExg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgDTPRP (ORCPT
+        id S1726651AbgDTPRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:17:15 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:9128 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726061AbgDTPRO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:17:14 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KF86eZ009838;
-        Mon, 20 Apr 2020 17:17:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=utrDtfDiBp72eoR3DFVmDIYTn4oU6h7X8z50uW0XqAY=;
- b=0bvD2YaXsrK2zDpYtviIlolYHaArCW/O9D63XPC0jTNRAAAn2QAgHHo+ut7x1+bEiAZt
- GC8IQRhFwQ2eVRtioH5m282YqCUI+8E5Q+tRa0OjZ0dXKYeFOIsRIay8Aa7lgRYdY1pp
- f2pXtuH8h0/+3mvLku3x4HtnsSOx45zXQNNgGCsUX6pr+ktglUgX3pTPgK73tGLSsiJx
- YXF+Yx4LtyefGdR7CDBSVzPw/T+GRwnprizeVcpoZGG8h/PrS3AXpv+/pMQOcKhXbvxG
- WmJfFCU/pZxDXHF86kVAd80zDCuSUWCpbY2KzgcR4zJPx4xF3NzqIlD+LEeREBjuFNhl gA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fpp8k577-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 17:17:07 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C54CA10002A;
-        Mon, 20 Apr 2020 17:17:06 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B9EE22B3E39;
-        Mon, 20 Apr 2020 17:17:06 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Apr 2020 17:17:06
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
-CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: [PATCH v2] i2c: stm32: don't print an error on probe deferral
-Date:   Mon, 20 Apr 2020 17:17:06 +0200
-Message-ID: <1587395826-17541-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 20 Apr 2020 11:17:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbgDTPRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:17:51 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E81DB206B9;
+        Mon, 20 Apr 2020 15:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587395871;
+        bh=NR9eij5fAZ2F4GMX8r7wjGK2n8gim5kWT5snSmUaZtg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hvjCxTVyILnUvseqf7yNKSG5kyjIENn+YTUDkQ/MkbBAuIYGJXvaU2RC1suIG5XUw
+         gae8NkJ9g5I2z3WfPICpbQI1lQbVrpK3OJ4QDYHt5YkzBotzJwz/4iTDBxiHeSK+Hn
+         gK2hXNPVVQE9ECSyMaab2jFtkz1fW4oeZZpPcnds=
+Date:   Mon, 20 Apr 2020 16:17:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch v2 3/9] spi: bcm-qspi: Handle lack of MSPI_REV offset
+Message-ID: <20200420151748.GE10045@sirena.org.uk>
+References: <20200419192339.32023-1-kdasu.kdev@gmail.com>
+ <20200419192339.32023-4-kdasu.kdev@gmail.com>
+ <63176468-53b6-c11a-9e33-2ca9dd06f7a3@gmail.com>
+ <CAC=U0a1mOWo3ucMJ7x5wuWQ44NRA2+Dj6fKAi1dbevNaxcYJzA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_05:2020-04-20,2020-04-20 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="a+b56+3nqLzpiR9O"
+Content-Disposition: inline
+In-Reply-To: <CAC=U0a1mOWo3ucMJ7x5wuWQ44NRA2+Dj6fKAi1dbevNaxcYJzA@mail.gmail.com>
+X-Cookie: Hope is a waking dream.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Etienne Carriere <etienne.carriere@st.com>
 
-Do not print an error trace when deferring probe for some resource.
-Fix as well the error message in case of tx dma_request_chan failure.
+--a+b56+3nqLzpiR9O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
----
-v2: replace dev_dbg with dev_err in case of error with dma_request_chan for tx
+On Mon, Apr 20, 2020 at 11:12:21AM -0400, Kamal Dasu wrote:
+> Yes missed this one.
+> Should I send a v3 of the entire set.
 
- drivers/i2c/busses/i2c-stm32.c   | 10 +++++++---
- drivers/i2c/busses/i2c-stm32f4.c |  4 +++-
- drivers/i2c/busses/i2c-stm32f7.c |  7 +++++--
- 3 files changed, 15 insertions(+), 6 deletions(-)
+Yes.
 
-diff --git a/drivers/i2c/busses/i2c-stm32.c b/drivers/i2c/busses/i2c-stm32.c
-index 1da347e6a358..3f69a3bb6119 100644
---- a/drivers/i2c/busses/i2c-stm32.c
-+++ b/drivers/i2c/busses/i2c-stm32.c
-@@ -25,8 +25,9 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
- 	/* Request and configure I2C TX dma channel */
- 	dma->chan_tx = dma_request_chan(dev, "tx");
- 	if (IS_ERR(dma->chan_tx)) {
--		dev_dbg(dev, "can't request DMA tx channel\n");
- 		ret = PTR_ERR(dma->chan_tx);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "can't request DMA tx channel\n");
- 		goto fail_al;
- 	}
- 
-@@ -44,8 +45,10 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
- 	/* Request and configure I2C RX dma channel */
- 	dma->chan_rx = dma_request_chan(dev, "rx");
- 	if (IS_ERR(dma->chan_rx)) {
--		dev_err(dev, "can't request DMA rx channel\n");
- 		ret = PTR_ERR(dma->chan_rx);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "can't request DMA rx channel\n");
-+
- 		goto fail_tx;
- 	}
- 
-@@ -73,7 +76,8 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
- 	dma_release_channel(dma->chan_tx);
- fail_al:
- 	devm_kfree(dev, dma);
--	dev_info(dev, "can't use DMA\n");
-+	if (ret != -EPROBE_DEFER)
-+		dev_info(dev, "can't use DMA\n");
- 
- 	return ERR_PTR(ret);
- }
-diff --git a/drivers/i2c/busses/i2c-stm32f4.c b/drivers/i2c/busses/i2c-stm32f4.c
-index d6a69dfcac3f..48e269284369 100644
---- a/drivers/i2c/busses/i2c-stm32f4.c
-+++ b/drivers/i2c/busses/i2c-stm32f4.c
-@@ -797,8 +797,10 @@ static int stm32f4_i2c_probe(struct platform_device *pdev)
- 
- 	rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
- 	if (IS_ERR(rst)) {
--		dev_err(&pdev->dev, "Error: Missing controller reset\n");
- 		ret = PTR_ERR(rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Error: Missing reset ctrl\n");
-+
- 		goto clk_free;
- 	}
- 	reset_control_assert(rst);
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 8102e33a6753..59a0dcd6a475 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -1967,7 +1967,8 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 
- 	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(i2c_dev->clk)) {
--		dev_err(&pdev->dev, "Error: Missing controller clock\n");
-+		if (PTR_ERR(i2c_dev->clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get controller clock\n");
- 		return PTR_ERR(i2c_dev->clk);
- 	}
- 
-@@ -1979,8 +1980,10 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 
- 	rst = devm_reset_control_get(&pdev->dev, NULL);
- 	if (IS_ERR(rst)) {
--		dev_err(&pdev->dev, "Error: Missing controller reset\n");
- 		ret = PTR_ERR(rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Error: Missing reset ctrl\n");
-+
- 		goto clk_free;
- 	}
- 	reset_control_assert(rst);
--- 
-2.7.4
+Please don't top post, reply in line with needed context.  This allows
+readers to readily follow the flow of conversation and understand what
+you are talking about and also helps ensure that everything in the
+discussion is being addressed.
 
+--a+b56+3nqLzpiR9O
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6dvRwACgkQJNaLcl1U
+h9C0WAf/cyzvCvLfQuHf1luVV6CarAaC3lE0lb4NHmdgRh7jrFN0JkDEERFLkVGV
+cE1XJSS3fEIOd4W7UPoRPfsVud/ApmMFc7lqF225T1a5BbWXOHMsNi+CwKO+eYUQ
+0VEFQDlS0ciT3jPWBqlj3sidevwtMRUgQkH6P8Ra9M6aLbFKkPxwCA0mYo0H76nw
+kf3enT4gTbGHFIcFZQJatsipS/fOJrcYuN8sxEb9IAAHLKa1Adm+ZCaBuZm4V0Of
+yfAA2AnJ5IIgTWMt20bjXcYtHGrsQVAVJs9oXFHV41X2baFkpZi5FRPaZUHiprUI
+zBXyBGf49q7QV0E5vC+8fRKKHzhESw==
+=ULEV
+-----END PGP SIGNATURE-----
+
+--a+b56+3nqLzpiR9O--
