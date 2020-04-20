@@ -2,106 +2,137 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB7DC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B50C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 729DF20747
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882A4206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587387289;
+	bh=y3pcqYQywdv657EcLBgi9iL8MyEr1EzQSc0kbGUvRAI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uPr5M9LpPJfu+q80HHUuEABe/8XB4Z4bueoxRFKAirYYsZ9mW4tnheDwAfcYTSXm0
+	 wOnFrVaqULVCiApraElbdCrkewNKWetON1GvF7Lu06KsaZTLZQjI+Zi4aw4iPCvfIw
+	 C67ZbRH8i2YOFq2KZwtSxdR7fQMnMpEwFf/w/8/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729713AbgDTMyr (ORCPT
+        id S1729706AbgDTMyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:54:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2809 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729693AbgDTMyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:54:40 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DFF9BFC3FD05B4C312C1;
-        Mon, 20 Apr 2020 20:54:30 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Apr 2020
- 20:54:24 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <geert@linux-m68k.org>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <ckeepax@opensource.cirrus.com>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] ASoC: wm89xx: Add missing dependency
-Date:   Mon, 20 Apr 2020 20:53:43 +0800
-Message-ID: <20200420125343.20920-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20200418090853.30340-1-yuehaibing@huawei.com>
-References: <20200418090853.30340-1-yuehaibing@huawei.com>
+        Mon, 20 Apr 2020 08:54:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728909AbgDTMqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:46:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A99BF20736;
+        Mon, 20 Apr 2020 12:46:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587386780;
+        bh=y3pcqYQywdv657EcLBgi9iL8MyEr1EzQSc0kbGUvRAI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qhE7aYwvsM1PRsFCQEd7xLAFQgz5vvy4wmgCAZ5qWdfrT2iLyd4/+GmxYYjf7ZZUP
+         NWOWxxQZcouiWJzraReCrdRVbr+mqyUqBKth6xjjZrmI6NLKJM0ru5T8tz2/lAOgE5
+         D5j63z0X9ToSLxStSMiFxUp2ygtwcWeXl12WB9RM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 5.4 23/60] acpi/nfit: improve bounds checking for func
+Date:   Mon, 20 Apr 2020 14:39:01 +0200
+Message-Id: <20200420121508.158062718@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
+References: <20200420121500.490651540@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sound/soc/codecs/wm8900.o: In function `wm8900_i2c_probe':
-wm8900.c:(.text+0xa36): undefined reference to `__devm_regmap_init_i2c'
-sound/soc/codecs/wm8900.o: In function `wm8900_modinit':
-wm8900.c:(.init.text+0xb): undefined reference to `i2c_register_driver'
-sound/soc/codecs/wm8900.o: In function `wm8900_exit':
-wm8900.c:(.exit.text+0x8): undefined reference to `i2c_del_driver'
-sound/soc/codecs/wm8988.o: In function `wm8988_i2c_probe':
-wm8988.c:(.text+0x857): undefined reference to `__devm_regmap_init_i2c'
-sound/soc/codecs/wm8988.o: In function `wm8988_modinit':
-wm8988.c:(.init.text+0xb): undefined reference to `i2c_register_driver'
-sound/soc/codecs/wm8988.o: In function `wm8988_exit':
-wm8988.c:(.exit.text+0x8): undefined reference to `i2c_del_driver'
-sound/soc/codecs/wm8995.o: In function `wm8995_i2c_probe':
-wm8995.c:(.text+0x1c4f): undefined reference to `__devm_regmap_init_i2c'
-sound/soc/codecs/wm8995.o: In function `wm8995_modinit':
-wm8995.c:(.init.text+0xb): undefined reference to `i2c_register_driver'
-sound/soc/codecs/wm8995.o: In function `wm8995_exit':
-wm8995.c:(.exit.text+0x8): undefined reference to `i2c_del_driver'
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Add SND_SOC_I2C_AND_SPI dependency to fix this.
+commit 01091c496f920e634ea84b689f480c39016752a8 upstream.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: ea00d95200d02ece ("ASoC: Use imply for SND_SOC_ALL_CODECS")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+The 'func' variable can come from the user in the __nd_ioctl().  If it's
+too high then the (1 << func) shift in acpi_nfit_clear_to_send() is
+undefined.  In acpi_nfit_ctl() we pass 'func' to test_bit(func, &dsm_mask)
+which could result in an out of bounds access.
+
+To fix these issues, I introduced the NVDIMM_CMD_MAX (31) define and
+updated nfit_dsm_revid() to use that define as well instead of magic
+numbers.
+
+Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Link: https://lore.kernel.org/r/20200225161927.hvftuq7kjn547fyj@kili.mountain
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/codecs/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/acpi/nfit/core.c |   10 ++++++----
+ drivers/acpi/nfit/nfit.h |    1 +
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index e6a0c5d05fa5..e60e0b6a689c 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -1525,6 +1525,7 @@ config SND_SOC_WM8804_SPI
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -360,7 +360,7 @@ static union acpi_object *acpi_label_inf
  
- config SND_SOC_WM8900
- 	tristate
-+	depends on SND_SOC_I2C_AND_SPI
+ static u8 nfit_dsm_revid(unsigned family, unsigned func)
+ {
+-	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][32] = {
++	static const u8 revid_table[NVDIMM_FAMILY_MAX+1][NVDIMM_CMD_MAX+1] = {
+ 		[NVDIMM_FAMILY_INTEL] = {
+ 			[NVDIMM_INTEL_GET_MODES] = 2,
+ 			[NVDIMM_INTEL_GET_FWINFO] = 2,
+@@ -386,7 +386,7 @@ static u8 nfit_dsm_revid(unsigned family
  
- config SND_SOC_WM8903
- 	tristate "Wolfson Microelectronics WM8903 CODEC"
-@@ -1576,6 +1577,7 @@ config SND_SOC_WM8985
+ 	if (family > NVDIMM_FAMILY_MAX)
+ 		return 0;
+-	if (func > 31)
++	if (func > NVDIMM_CMD_MAX)
+ 		return 0;
+ 	id = revid_table[family][func];
+ 	if (id == 0)
+@@ -492,7 +492,8 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 	 * Check for a valid command.  For ND_CMD_CALL, we also have to
+ 	 * make sure that the DSM function is supported.
+ 	 */
+-	if (cmd == ND_CMD_CALL && !test_bit(func, &dsm_mask))
++	if (cmd == ND_CMD_CALL &&
++	    (func > NVDIMM_CMD_MAX || !test_bit(func, &dsm_mask)))
+ 		return -ENOTTY;
+ 	else if (!test_bit(cmd, &cmd_mask))
+ 		return -ENOTTY;
+@@ -3499,7 +3500,8 @@ static int acpi_nfit_clear_to_send(struc
+ 	if (nvdimm && cmd == ND_CMD_CALL &&
+ 			call_pkg->nd_family == NVDIMM_FAMILY_INTEL) {
+ 		func = call_pkg->nd_command;
+-		if ((1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
++		if (func > NVDIMM_CMD_MAX ||
++		    (1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
+ 			return -EOPNOTSUPP;
+ 	}
  
- config SND_SOC_WM8988
- 	tristate
-+	depends on SND_SOC_I2C_AND_SPI
+--- a/drivers/acpi/nfit/nfit.h
++++ b/drivers/acpi/nfit/nfit.h
+@@ -34,6 +34,7 @@
+ 		| ACPI_NFIT_MEM_NOT_ARMED | ACPI_NFIT_MEM_MAP_FAILED)
  
- config SND_SOC_WM8990
- 	tristate
-@@ -1594,6 +1596,7 @@ config SND_SOC_WM8994
+ #define NVDIMM_FAMILY_MAX NVDIMM_FAMILY_HYPERV
++#define NVDIMM_CMD_MAX 31
  
- config SND_SOC_WM8995
- 	tristate
-+	depends on SND_SOC_I2C_AND_SPI
- 
- config SND_SOC_WM8996
- 	tristate
--- 
-2.17.1
+ #define NVDIMM_STANDARD_CMDMASK \
+ (1 << ND_CMD_SMART | 1 << ND_CMD_SMART_THRESHOLD | 1 << ND_CMD_DIMM_FLAGS \
 
 
