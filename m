@@ -2,235 +2,154 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28303C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE44DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E443B20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:34:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JhrFNeQE"
+	by mail.kernel.org (Postfix) with ESMTP id 8DEDB20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729909AbgDTOed (ORCPT
+        id S1729922AbgDTOfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:34:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46822 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728639AbgDTOeb (ORCPT
+        Mon, 20 Apr 2020 10:35:13 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:59495 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbgDTOfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:34:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587393269;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=QKgQlmHl/vlNhHGtLDszGPS70GFdJJv30q0eyxymYP8=;
-        b=JhrFNeQEQZ9+5TiTewoff+I/1rZLhYVKVJhrqs+0gRNhdwZVQzpuuhNzXtFX2OzXvCh7jw
-        Tojk8P0DnhxQLDWA88n9GDxjZbYS7UhsSFNmyzI+ZrC5xFkL2NpBoBo0VNiNQNxAibd00q
-        ceHOrDV95FctugBDMq94dta4fnKugzg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-vnIfXQywPWOuB-ka5qmqKw-1; Mon, 20 Apr 2020 10:34:27 -0400
-X-MC-Unique: vnIfXQywPWOuB-ka5qmqKw-1
-Received: by mail-wr1-f70.google.com with SMTP id r17so5790268wrg.19
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:34:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=QKgQlmHl/vlNhHGtLDszGPS70GFdJJv30q0eyxymYP8=;
-        b=tkaou0soqd4tcjtCIsP/j52TKAmwlwkE7ejR/aU+8zQiA1oEfmAy7mwZT+4CC+cjeq
-         WFzu/3bHd44xa2gaY2E90ea35b3NIFkRO1eYY1lBft300N+lXNUw1eNP1rSZdDgXAM8L
-         2WwusiNSl5SnNS5IqIBfxu8/320YUOgg/gWWc24UcoLsZOIcVckE8nYKPVStf5QGZiZi
-         uptU7MuE4qL3PMqFd1hzen38nKSfNHDI7P3BIdtXc1N73f9HZW/rEzL2rAkFdkGPDQqe
-         EOcBtYJc0vmjf4j6VZWs/uyIbhwjTck7SEIWbfF37js0B03oywX54BrZvuH8xoy3X3T6
-         zRYg==
-X-Gm-Message-State: AGi0Puau8UJpos78F746jfdVP5cPaSGgaL959e0HcPw+Xs3h3vgyH4UX
-        N4jNBctNqN+xREqfctc6oXhlfHa7Kvw9bO7ERTt8ZAI2tyAZsipbFDNlOTGqNB/7q28KzZeUNAd
-        CHey4oYT3TmpKt5ArGhfi/nX4
-X-Received: by 2002:a5d:4e02:: with SMTP id p2mr19097332wrt.302.1587393266214;
-        Mon, 20 Apr 2020 07:34:26 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJPCB2aIBVyG+epiQn8wefNJaBqE0mL7KfjY5M7sLpr1ftDgKPHhXnntLSPOZw2XTiIctqPcQ==
-X-Received: by 2002:a5d:4e02:: with SMTP id p2mr19097299wrt.302.1587393265925;
-        Mon, 20 Apr 2020 07:34:25 -0700 (PDT)
-Received: from redhat.com (bzq-79-183-51-3.red.bezeqint.net. [79.183.51.3])
-        by smtp.gmail.com with ESMTPSA id u12sm1690368wmu.25.2020.04.20.07.34.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 07:34:25 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 10:34:23 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Richard Earnshaw <Richard.Earnshaw@arm.com>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jason Wang <jasowang@redhat.com>, netdev@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH v4] vhost: disable for OABI
-Message-ID: <20200420143229.245488-1-mst@redhat.com>
+        Mon, 20 Apr 2020 10:35:13 -0400
+Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N45th-1jHMUx43rV-0105HW for <linux-kernel@vger.kernel.org>; Mon, 20 Apr
+ 2020 16:35:11 +0200
+Received: by mail-qt1-f169.google.com with SMTP id z90so8546168qtd.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:35:10 -0700 (PDT)
+X-Gm-Message-State: AGi0PuahG27kNBpjdzcO8xGat2cRhoSuipOu9DeBfwE9kl1pmWQdFXNQ
+        haSFqGcfe8HUzkjtGcwnl8uhXEH871fVyKBULNc=
+X-Google-Smtp-Source: APiQypJ8+eSyM92GKz+tgktc3MN8Tu0mYjJI8QaeKzhQGr6nLHXQdvHnLZbXBCSy5i2jRKmsTpsr3bDsRZBUFnm0wII=
+X-Received: by 2002:ac8:6757:: with SMTP id n23mr16212594qtp.304.1587393309871;
+ Mon, 20 Apr 2020 07:35:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
-X-Mutt-Fcc: =sent
+References: <20200420030538.101696-1-wenhu.wang@vivo.com>
+In-Reply-To: <20200420030538.101696-1-wenhu.wang@vivo.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Apr 2020 16:34:53 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1ErZh6teKEC8srU5E1WmXxtTgQppt1yDoYmO7huw4gqA@mail.gmail.com>
+Message-ID: <CAK8P3a1ErZh6teKEC8srU5E1WmXxtTgQppt1yDoYmO7huw4gqA@mail.gmail.com>
+Subject: Re: [PATCH v2,RESEND] misc: new driver sram_uapi for user level SRAM access
+To:     Wang Wenhu <wenhu.wang@vivo.com>
+Cc:     gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, kernel@vivo.com,
+        Rob Herring <robh@kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Scott Wood <oss@buserror.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:f2KcBoQYKMkDgGCqtwpUxjQ4BrGLgCXosMUHdU42ZMlCwfboEx8
+ o/UC7mLD3M1uD0ncxhJGmDjhNLwiSu78TGgPbleNfkhx21n1gOXYeZUzRyTvugdC2q1gGQM
+ FkTekJondpUYpvFiQxXMKGCX6cXF1jF3EN/LSXIxh1c8fkj7SUKL8KR33wQLlgDgTTK5s3t
+ UaG8sQunweBBFU5PG13FA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:t2mjBYshxc4=:Zm43rhuYlnsdUeOB8eHDHk
+ hIgV2c+XbsOAyna+DhZFIKrk/2ujUMs7rAfT0VHZCPnFdhWxyR5A2LXUXFJY0dMeDWzmJokAK
+ qPyOwgT5kA9nUBqB793UeZf4R2cSx1dbQ74pA8LERnVbqjCFNXPPSKwU7ZmmcTIQUXgBCXJA/
+ +FdOZlalnLoByUi+KAQ4JC3tFQD64cjRnRVJT2uDJEZwOf2Tm8PbVhgnZ9fVv3AO/wRN+MunM
+ 3hBQ5tb9jHutdTd9PULZ6ieJGvSrPzT1/IHivuUI5jx3f9IwjWMoMD1GPqPJgM23KI4OjIiIh
+ BZjv4gsQGgWZFwE3iuCX3aTlZGa16suvAKEtq3z8LX8+861FMPsqV1UroclTtRPY8PYnfCcQ+
+ DolqCOb1hykFRkHpnBPn2vb9GQMjSYnQILVMI350IYy4gmtb2uby2wLJTL+8mLg3gdN8lJvk0
+ j8ayH7ZwFuS33B0VSNFxD4L7aBSeSe2OAI/9DDAYdE3rsmhTvLFO0A2MWMnR/QTp6a7D1M4pJ
+ +ArrZ+p7toPRAB0aMLVPv8/j+6Z+9FsGaTY/CK4SmwA4mpzP0qGqrFOyBCMATEDNYO0s4pTUx
+ UVPUPNmHAbz0xYJwVrIQsqzG3z7NshtVq5jO4N+4z5Y0ynkstGTr9GpQ4tNbhzJ61xulnwbsG
+ NeXtuABeqz0oGTTy/K5fATECbZo/6t2ge5NOdZAwNw0zc1WHWzPl+i27aGEE/GK37CB9ES4jo
+ 1tTZvQabQCDzYKD0dVFc4ZUrDbnBEA0SGi9oKEtPGbyHtQFTfUYm8FHJWZ7bE2vVZQaTLggR9
+ sMtbGuj9ON8Vcoy6/XQ20Um4nU48wXEnbbIKNMaEw+Ms/bo/4s=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vhost is currently broken on the some ARM configs.
+On Mon, Apr 20, 2020 at 5:06 AM Wang Wenhu <wenhu.wang@vivo.com> wrote:
+>
+> A generic User-Kernel interface that allows a misc device created
+> by it to support file-operations of ioctl and mmap to access SRAM
+> memory from user level. Different kinds of SRAM alloction and free
+> APIs could be registered by specific SRAM hardware level driver to
+> the available list and then be chosen by users to allocate and map
+> SRAM memory from user level.
+>
+> It is extremely helpful for the user space applications that require
+> high performance memory accesses, such as embedded networking devices
+> that would process data in user space, and PowerPC e500 is a case.
+>
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Scott Wood <oss@buserror.net>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> ---
+> Changes since v1: addressed comments from Arnd
+>  * Changed the ioctl cmd definitions using _IO micros
+>  * Export interfaces for HW-SRAM drivers to register apis to available list
+>  * Modified allocation alignment to PAGE_SIZE
+>  * Use phys_addr_t as type of SRAM resource size and offset
+>  * Support compat_ioctl
+>  * Misc device name:sram
 
-The reason is that the ring element addresses are passed between
-components with different alignments assumptions. Thus, if
-guest selects a pointer and host then gets and dereferences
-it, then alignment assumed by the host's compiler might be
-greater than the actual alignment of the pointer.
-compiler on the host from assuming pointer is aligned.
+Looks much better already.
 
-This actually triggers on ARM with -mabi=apcs-gnu - which is a
-deprecated configuration. With this OABI, compiler assumes that
-all structures are 4 byte aligned - which is stronger than
-virtio guarantees for available and used rings, which are
-merely 2 bytes. Thus a guest without -mabi=apcs-gnu running
-on top of host with -mabi=apcs-gnu will be broken.
+> Note: From this on, the SRAM_UAPI driver is independent to any hardware
+> drivers, so I would only commit the patch itself as v2, while the v1 of
+> it was wrapped together with patches for Freescale L2-Cache-SRAM device.
+> Then after, I'd create patches for Freescale L2-Cache-SRAM device as
+> another series.
 
-The correct fix is to force alignment of structures - however
-that is an intrusive fix that's best deferred until the next release.
+What I meant to suggest was actually to tie it more closely to
+the code we already have in drivers/misc/sram.c, which already
+has some form of abstraction.
 
-We didn't previously support such ancient systems at all - this surfaced
-after vdpa support prompted removing dependency of vhost on
-VIRTULIZATION. So for now, let's just add something along the lines of
+> +static int __init sram_uapi_init(void)
+> +{
+> +       int ret;
+> +
+> +       INIT_LIST_HEAD(&sram_api_list);
+> +       mutex_init(&sram_api_list_lock);
+> +
+> +       ret = misc_register(&sram_uapi_miscdev);
+> +       if (ret)
+> +               pr_err("failed to register sram uapi misc device\n");
 
-	depends on !ARM || AEABI
+The mutex and listhead are already initialized, so this can
+be a one-line function
 
-to the virtio Kconfig declaration, and add a comment that it has to do
-with struct member alignment.
+    return misc_register(&sram_uapi_miscdev);
 
-Note: we can't make VHOST and VHOST_RING themselves have
-a dependency since these are selected. Add a new symbol for that.
+> --- /dev/null
+> +++ b/include/linux/sram_uapi.h
 
-We should be able to drop this dependency down the road.
+The ioctl definitions need to be in include/uapi/linux/
 
-Fixes: 20c384f1ea1a0bc7 ("vhost: refine vhost and vringh kconfig")
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-Suggested-by: Richard Earnshaw <Richard.Earnshaw@arm.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __SRAM_UAPI_H
+> +#define __SRAM_UAPI_H
+> +
+> +/* Set SRAM type to be accessed */
+> +#define SRAM_UAPI_IOC_SET_SRAM_TYPE    _IOW('S', 0, __u32)
+> +
+> +/* Allocate resource from SRAM */
+> +#define SRAM_UAPI_IOC_ALLOC            _IOWR('S', 1, struct res_info)
+> +
+> +/* Free allocated resource of SRAM */
+> +#define SRAM_UAPI_IOC_FREE             _IOW('S', 2, struct res_info)
 
-changes from v3:
-	update commit log clarifying the motivation and that
-	it's a temporary fix.
+struct res_info needs to also be defined here, so user applications can
+see the definition, and it has to use __u64, not phys_addr_t, to ensure
+the API does not depend on kernel configuraiton.
 
-	suggested by Christoph Hellwig
-
- drivers/misc/mic/Kconfig |  2 +-
- drivers/net/caif/Kconfig |  2 +-
- drivers/vdpa/Kconfig     |  2 +-
- drivers/vhost/Kconfig    | 17 +++++++++++++----
- 4 files changed, 16 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/misc/mic/Kconfig b/drivers/misc/mic/Kconfig
-index 8f201d019f5a..3bfe72c59864 100644
---- a/drivers/misc/mic/Kconfig
-+++ b/drivers/misc/mic/Kconfig
-@@ -116,7 +116,7 @@ config MIC_COSM
- 
- config VOP
- 	tristate "VOP Driver"
--	depends on VOP_BUS
-+	depends on VOP_BUS && VHOST_DPN
- 	select VHOST_RING
- 	select VIRTIO
- 	help
-diff --git a/drivers/net/caif/Kconfig b/drivers/net/caif/Kconfig
-index 9db0570c5beb..661c25eb1c46 100644
---- a/drivers/net/caif/Kconfig
-+++ b/drivers/net/caif/Kconfig
-@@ -50,7 +50,7 @@ config CAIF_HSI
- 
- config CAIF_VIRTIO
- 	tristate "CAIF virtio transport driver"
--	depends on CAIF && HAS_DMA
-+	depends on CAIF && HAS_DMA && VHOST_DPN
- 	select VHOST_RING
- 	select VIRTIO
- 	select GENERIC_ALLOCATOR
-diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
-index 3e1ceb8e9f2b..e8140065c8a5 100644
---- a/drivers/vdpa/Kconfig
-+++ b/drivers/vdpa/Kconfig
-@@ -10,7 +10,7 @@ if VDPA
- 
- config VDPA_SIM
- 	tristate "vDPA device simulator"
--	depends on RUNTIME_TESTING_MENU && HAS_DMA
-+	depends on RUNTIME_TESTING_MENU && HAS_DMA && VHOST_DPN
- 	select VHOST_RING
- 	default n
- 	help
-diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-index 2c75d164b827..c4f273793595 100644
---- a/drivers/vhost/Kconfig
-+++ b/drivers/vhost/Kconfig
-@@ -13,6 +13,15 @@ config VHOST_RING
- 	  This option is selected by any driver which needs to access
- 	  the host side of a virtio ring.
- 
-+config VHOST_DPN
-+	bool
-+	depends on !ARM || AEABI
-+	default y
-+	help
-+	  Anything selecting VHOST or VHOST_RING must depend on VHOST_DPN.
-+	  This excludes the deprecated ARM ABI since that forces a 4 byte
-+	  alignment on all structs - incompatible with virtio spec requirements.
-+
- config VHOST
- 	tristate
- 	select VHOST_IOTLB
-@@ -28,7 +37,7 @@ if VHOST_MENU
- 
- config VHOST_NET
- 	tristate "Host kernel accelerator for virtio net"
--	depends on NET && EVENTFD && (TUN || !TUN) && (TAP || !TAP)
-+	depends on NET && EVENTFD && (TUN || !TUN) && (TAP || !TAP) && VHOST_DPN
- 	select VHOST
- 	---help---
- 	  This kernel module can be loaded in host kernel to accelerate
-@@ -40,7 +49,7 @@ config VHOST_NET
- 
- config VHOST_SCSI
- 	tristate "VHOST_SCSI TCM fabric driver"
--	depends on TARGET_CORE && EVENTFD
-+	depends on TARGET_CORE && EVENTFD && VHOST_DPN
- 	select VHOST
- 	default n
- 	---help---
-@@ -49,7 +58,7 @@ config VHOST_SCSI
- 
- config VHOST_VSOCK
- 	tristate "vhost virtio-vsock driver"
--	depends on VSOCKETS && EVENTFD
-+	depends on VSOCKETS && EVENTFD && VHOST_DPN
- 	select VHOST
- 	select VIRTIO_VSOCKETS_COMMON
- 	default n
-@@ -63,7 +72,7 @@ config VHOST_VSOCK
- 
- config VHOST_VDPA
- 	tristate "Vhost driver for vDPA-based backend"
--	depends on EVENTFD
-+	depends on EVENTFD && VHOST_DPN
- 	select VHOST
- 	depends on VDPA
- 	help
--- 
-MST
-
+        Arnd
