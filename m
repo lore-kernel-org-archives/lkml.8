@@ -2,174 +2,126 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E579C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A44C55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5D720782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503DD20782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587417292;
+	bh=I6tbGUc3GxqytdKG1l8k/J+6rt9qRtfBs15bm8wLOL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QcbCvooJ0ih3bhciCAZRkh8RFjAIbDFr/30A4EjhY1JjSdyR3Hf7QZwLEVQE8c/d0
+	 6KM8VSmuC1f7k4sO4d8BgSkmWVDpG34o/PN+OOgK0HmEG5kCmIN8S194DG3NDB3L4f
+	 vP3GHNzV9iEO6qJOKtxuChlyZEaJ2uXrxBJcG74Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgDTVOn (ORCPT
+        id S1727824AbgDTVOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:14:43 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:49317 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTVOn (ORCPT
+        Mon, 20 Apr 2020 17:14:51 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35566 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgDTVOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:14:43 -0400
-Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7894D200002;
-        Mon, 20 Apr 2020 21:14:36 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 14:14:34 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v4 2/3] fs: openat2: Extend open_how to allow
- userspace-selected fds
-Message-ID: <20200420211434.GC3515@localhost>
-References: <cover.1586830316.git.josh@joshtriplett.org>
- <f969e7d45a8e83efc1ca13d675efd8775f13f376.1586830316.git.josh@joshtriplett.org>
- <20200419104404.j4e5gxdn2duvmu6s@yavin.dot.cyphar.com>
+        Mon, 20 Apr 2020 17:14:51 -0400
+Received: by mail-oi1-f194.google.com with SMTP id o7so8402990oif.2;
+        Mon, 20 Apr 2020 14:14:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D1tmHbhZ2ad6HfaZfQo7QhxzoWrXJ0tmAqtcSp3UnAM=;
+        b=nH2CRbxkPXWfzz/GD0YxPC1D5NVg+i1GZyQ4lxy8WGFT291+CSHqW7A8tTi9mKqQCt
+         GpAOW/e/gnOoZCCiyt8PqbWL7josMstTBisC9xE4mh2wU73DfhXWC+PCotOQ3yBL+aLG
+         /CI/0QWzI3CVsp2cGRrrJ5bWgFZ+xrrRjyNVzvUU3TSerugE9fqkEWYAUSHnSRk98jFl
+         hV/xeddpa0MK86mqGMScVaTNFpcPNFKJvVUI02k7aM6hfJczSO+0aA0RbBWUljFib8PP
+         ez5gzBWPY82Ct9OiFSEue3o3Fn8OzSIF26xu4eBOqBijscaheuni52aGptwfUYICy6d6
+         JVgg==
+X-Gm-Message-State: AGi0PubSfp80f2ce4WZaQikFgBoFFApHB/DdYozJ78txfwYD5K/cH5W0
+        BxW3D2IVOaZXJ+uM7Q0ag3blN8o=
+X-Google-Smtp-Source: APiQypIkgLf6iD08sZH0/MtRvDvHFkYHoX7Vn2cb2zxQrUsjpbFpA36SjP9PNXqkcKUzsyvr79uq9A==
+X-Received: by 2002:aca:c495:: with SMTP id u143mr1065353oif.72.1587417289983;
+        Mon, 20 Apr 2020 14:14:49 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t9sm154233oie.24.2020.04.20.14.14.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 14:14:49 -0700 (PDT)
+Received: (nullmailer pid 16562 invoked by uid 1000);
+        Mon, 20 Apr 2020 21:14:48 -0000
+Date:   Mon, 20 Apr 2020 16:14:48 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     daniel.lezcano@linaro.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, Mark Rutland <mark.rutland@arm.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: thermal: Add the idle cooling device
+Message-ID: <20200420211448.GA16458@bogus>
+References: <20200414220837.9284-1-daniel.lezcano@linaro.org>
+ <20200414220837.9284-2-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200419104404.j4e5gxdn2duvmu6s@yavin.dot.cyphar.com>
+In-Reply-To: <20200414220837.9284-2-daniel.lezcano@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 08:44:04PM +1000, Aleksa Sarai wrote:
-> On 2020-04-13, Josh Triplett <josh@joshtriplett.org> wrote:
-> > Inspired by the X protocol's handling of XIDs, allow userspace to select
-> > the file descriptor opened by openat2, so that it can use the resulting
-> > file descriptor in subsequent system calls without waiting for the
-> > response to openat2.
-> > 
-> > In io_uring, this allows sequences like openat2/read/close without
-> > waiting for the openat2 to complete. Multiple such sequences can
-> > overlap, as long as each uses a distinct file descriptor.
+On Wed, 15 Apr 2020 00:08:31 +0200, Daniel Lezcano wrote:
+> Some devices are not able to cool down by reducing their voltage /
+> frequency because it could be not available or the system does not
+> allow voltage scaling. In this configuration, it is not possible to
+> use this strategy and the idle injection cooling device can be used
+> instead.
 > 
-> I'm not sure I understand this explanation -- how can you trigger a
-> syscall with an fd that hasn't yet been registered (unless you're just
-> hoping the race goes in your favour)?
-
-See the response from Jens for an explanation of how this works in
-io_uring.
-
-> > Add a new O_SPECIFIC_FD open flag to enable this behavior, only accepted
-> > by openat2 for now (ignored by open/openat like all unknown flags). Add
-> > an fd field to struct open_how (along with appropriate padding, and
-> > verify that the padding is 0 to allow replacing the padding with a field
-> > in the future).
-> > 
-> > The file table has a corresponding new function
-> > get_specific_unused_fd_flags, which gets the specified file descriptor
-> > if O_SPECIFIC_FD is set (and the fd isn't -1); otherwise it falls back
-> > to get_unused_fd_flags, to simplify callers.
-> > 
-> > The specified file descriptor must not already be open; if it is,
-> > get_specific_unused_fd_flags will fail with -EBUSY. This helps catch
-> > userspace errors.
-> > 
-> > When O_SPECIFIC_FD is set, and fd is not -1, openat2 will use the
-> > specified file descriptor rather than finding the lowest available one.
+> One idle cooling device is now present for the CPU as implemented by
+> the combination of the idle injection framework belonging to the power
+> capping framework and the thermal cooling device. The missing part is
+> the DT binding providing a way to describe how the cooling device will
+> work on the system.
 > 
-> I still don't like that you can enable this feature with O_SPECIFIC_FD
-> but then disable it by specifying fd as -1. I understand why this is
-> needed for pipe2() and socketpair() and that's totally fine, but I don't
-> think it makes sense for openat2() or other interfaces where there's
-> only one fd being returned -- what does it mean to say "give me a
-> specific fd, but actually I don't care what it is"?
+> A first iteration was done by making the cooling device to point to
+> the idle state. Unfortunately it does not make sense because it would
+> need to duplicate the idle state description for each CPU in order to
+> have a different phandle and make the thermal internal framework
+> happy.
 > 
-> I know this is a trade-off between consistency of O_SPECIFIC_FD
-> interfaces and having wart-less interfaces for each syscall, but I don't
-> think it breaks consistency to say "syscalls that only give you one fd
-> don't have a second way of disabling the feature -- just don't pass
-> O_SPECIFIC_FD".
-
-I think there's value in the orthogonality, and -1 can never be a valid
-file descriptor. If this becomes a sticking point, it could certainly be
-changed (just modify pipe2 to remove the O_SPECIFIC_FD flag if passed
--1), but at the same time, I'd rather have this logic implemented once
-with a uniform semantic no matter what syscall uses it.
-
-> >  struct open_how {
-> >  	__u64 flags;
-> >  	__u64 mode;
-> >  	__u64 resolve;
-> > +	__u32 fd;
-> > +	__u32 pad; /* Must be 0 in the current version */
+> It was proposed to add an cooling-cells to <3>, unfortunately the
+> thermal framework is expecting a value of <2> as stated by the
+> documentation and it is not possible from the cooling device generic
+> code to loop this third value to the back end cooling device.
 > 
-> Small nit: This field should be called __padding to make it more
-> explicit it's something internal and shouldn't be looked at by
-> userspace. And the comment should just be "must be zeroed".
-
-Good point. Done in v5.
-
-> > --- a/tools/testing/selftests/openat2/openat2_test.c
-> > +++ b/tools/testing/selftests/openat2/openat2_test.c
-> > @@ -40,7 +40,7 @@ struct struct_test {
-> >  	int err;
-> >  };
-> >  
-> > -#define NUM_OPENAT2_STRUCT_TESTS 7
-> > +#define NUM_OPENAT2_STRUCT_TESTS 8
-> >  #define NUM_OPENAT2_STRUCT_VARIATIONS 13
-> >  
-> >  void test_openat2_struct(void)
-> > @@ -52,6 +52,9 @@ void test_openat2_struct(void)
-> >  		{ .name = "normal struct",
-> >  		  .arg.inner.flags = O_RDONLY,
-> >  		  .size = sizeof(struct open_how) },
-> > +		{ .name = "v0 struct",
-> > +		  .arg.inner.flags = O_RDONLY,
-> > +		  .size = OPEN_HOW_SIZE_VER0 },
-> >  		/* Bigger struct, with zeroed out end. */
-> >  		{ .name = "bigger struct (zeroed out)",
-> >  		  .arg.inner.flags = O_RDONLY,
-> > @@ -155,7 +158,7 @@ struct flag_test {
-> >  	int err;
-> >  };
-> >  
-> > -#define NUM_OPENAT2_FLAG_TESTS 23
-> > +#define NUM_OPENAT2_FLAG_TESTS 29
-> >  
-> >  void test_openat2_flags(void)
-> >  {
-> > @@ -223,6 +226,24 @@ void test_openat2_flags(void)
-> >  		{ .name = "invalid how.resolve and O_PATH",
-> >  		  .how.flags = O_PATH,
-> >  		  .how.resolve = 0x1337, .err = -EINVAL },
-> > +
-> > +		/* O_SPECIFIC_FD tests */
-> > +		{ .name = "O_SPECIFIC_FD",
-> > +		  .how.flags = O_RDONLY | O_SPECIFIC_FD, .how.fd = 42 },
-> > +		{ .name = "O_SPECIFIC_FD if fd exists",
-> > +		  .how.flags = O_RDONLY | O_SPECIFIC_FD, .how.fd = 2,
-> > +		  .err = -EBUSY },
-> > +		{ .name = "O_SPECIFIC_FD with fd -1",
-> > +		  .how.flags = O_RDONLY | O_SPECIFIC_FD, .how.fd = -1 },
-> > +		{ .name = "fd without O_SPECIFIC_FD",
-> > +		  .how.flags = O_RDONLY, .how.fd = 42,
-> > +		  .err = -EINVAL },
-> > +		{ .name = "fd -1 without O_SPECIFIC_FD",
-> > +		  .how.flags = O_RDONLY, .how.fd = -1,
-> > +		  .err = -EINVAL },
-> > +		{ .name = "existing fd without O_SPECIFIC_FD",
-> > +		  .how.flags = O_RDONLY, .how.fd = 2,
-> > +		  .err = -EINVAL },
+> Another proposal was to add a child 'thermal-idle' node as the SCMI
+> does. This approach allows to have a self-contained configuration for
+> the idle cooling device without colliding with the cpufreq cooling
+> device which is based on the CPU node. In addition, it allows to have
+> the cpufreq cooling device and the idle cooling device to co-exist
+> together as shown in the example.
 > 
-> It would be good to add a test to make sure that a non-zero value of
-> how->__padding also gives -EINVAL.
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  - V3:
+>    - Removed extra line with tab inside
+>  - V2:
+>    - Fixed comment type
+>    - Added dual license
+>    - Fixed description s/begins to/should/
+>    - Changed name s/duration/duration-us/
+>    - Changed name s/latency/exit-latency-us/
+>    - Removed types for latency / duration
+>    - Fixed s/idle-thermal/thermal-idle/
+> ---
+>  .../bindings/thermal/thermal-idle.yaml        | 145 ++++++++++++++++++
+>  1 file changed, 145 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+> 
 
-Done in v5.
-
-- Josh Triplett
+Reviewed-by: Rob Herring <robh@kernel.org>
