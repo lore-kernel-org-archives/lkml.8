@@ -2,136 +2,92 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BEAC55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D381BC55182
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4FE0206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587415367;
-	bh=/Lm2cTmavSfvPwo3EnY/skppJ5i7CHKipIJNiAMzESE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WW+ZRiu03tNIUkOoXu3Z1q2WaE/QiRanIWBZ2FK8t05OccVyWjsGcvbIpVh9X3Dqs
-	 9PnY3AxicRZBjqfMeO6PiIApdBWxviZ4ZZWpti7X5Caf4IF9d7PU2Oir+IfzUkWtzG
-	 5fiavHF8RlGGS0Wwhu3MWRpymg2GELGEUFZdF11o=
+	by mail.kernel.org (Postfix) with ESMTP id B604F20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:45:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgDTUmr (ORCPT
+        id S1726398AbgDTUpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:42:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53106 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 16:45:35 -0400
+Received: from mga04.intel.com ([192.55.52.120]:7869 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgDTUmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:42:46 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50BB9207FC;
-        Mon, 20 Apr 2020 20:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587415366;
-        bh=/Lm2cTmavSfvPwo3EnY/skppJ5i7CHKipIJNiAMzESE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vX206r139s9j+s4JKnaMI4JpxtutoxgTKEzqEw3LnEF+8MAWjTABg/8ixx8KpUvhJ
-         aBeW060QZCReO+UrYVjtFosA573ZmpGd4EEAhYESWJJ38YU2e8uDaSguoFjd9eEoa2
-         GF7apirwkq/9qg8hWCNZ5P1q630+XpFbjnKHsvw4=
-Date:   Mon, 20 Apr 2020 21:42:39 +0100
-From:   Will Deacon <will@kernel.org>
-To:     George Spelvin <lkml@sdf.org>
-Cc:     linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        id S1725774AbgDTUpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:45:34 -0400
+IronPort-SDR: MPUnbGyn7+o8mzo/GldtqqgNDMDwBo8Z120WNx3OJk7dYnwdRxujJW6if0O0RXRfdgM9cqkl43
+ GxZ0Af8abH9A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 13:45:34 -0700
+IronPort-SDR: 9wacpcNj1X7bZVjCS2BWPnrcI9BXhubPhcWdxC9v9tkuthZl31RSKE8EyqAK89B1ixIJ8dk2Od
+ vVplzjpcKI9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,407,1580803200"; 
+   d="scan'208";a="279373633"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Apr 2020 13:45:34 -0700
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.83]) by
+ ORSMSX105.amr.corp.intel.com ([169.254.2.15]) with mapi id 14.03.0439.000;
+ Mon, 20 Apr 2020 13:45:33 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org
-Subject: Re: [RFC PATCH v1 40/50] arch/*/include/asm/stackprotector.h: Use
- get_random_canary() consistently
-Message-ID: <20200420204238.GB29998@willie-the-truck>
-References: <202003281643.02SGhM0T009250@sdf.org>
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Tsaur, Erwin" <erwin.tsaur@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Subject: RE: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
+Thread-Topic: [PATCH] x86/memcpy: Introduce memcpy_mcsafe_fast
+Thread-Index: AQHWFcAkxzMCKIhw+kKWzhMhw9bMXah/0FOAgAIc84CAAM7CAIAADmyAgAAMx4CAAAaOAIAACpqA//+PPQCAAHZ6AP//jGvw
+Date:   Mon, 20 Apr 2020 20:45:33 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F5FB1C0@ORSMSX115.amr.corp.intel.com>
+References: <67FF611B-D10E-4BAF-92EE-684C83C9107E@amacapital.net>
+ <CAHk-=wjePyyiNZo0oufYSn0s46qMYHoFyyNKhLOm5MXnKtfLcg@mail.gmail.com>
+ <CAPcyv4jQ3s_ZVRvw6jAmm3vcebc-Ucf7FHYP3_nTybwdfQeG8Q@mail.gmail.com>
+ <CAHk-=wjSqtXAqfUJxFtWNwmguFASTgB0dz1dT3V-78Quiezqbg@mail.gmail.com>
+ <CAPcyv4hrfZsg48Gw_s7xTLLhjLTk_U+PV0MsLnG+xh3652xFCQ@mail.gmail.com>
+ <CAHk-=wgcc=5kiph7o+aBZoWBCbu=9nQDQtD41DvuRRrqixohUA@mail.gmail.com>
+ <CAPcyv4iTaBNPMwqUwas+J4rxd867QL7JnQBYB8NKnYaTA-R_Tw@mail.gmail.com>
+ <CAHk-=wgOUOveRe8=iFWw0S1LSDEjSfQ-4bM64eiXdGj4n7Omng@mail.gmail.com>
+ <20200420202332.GA30160@agluck-desk2.amr.corp.intel.com>
+ <CAHk-=whNL-P71xQRsahpYrzKquvz3WwqPCUVPT+1TUmWZ+67TQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whNL-P71xQRsahpYrzKquvz3WwqPCUVPT+1TUmWZ+67TQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003281643.02SGhM0T009250@sdf.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 12:35:14AM -0500, George Spelvin wrote:
-> ... in boot_init_stack_canary().
-> 
-> This is the archetypical example of where the extra security of
-> get_random_bytes() is wasted.  The canary is only important as
-> long as it's stored in __stack_chk_guard.
-> 
-> It's also a great example of code that has been copied around
-> a lot and not updated.
-> 
-> Remove the XOR with LINUX_VERSION_CODE as it's pointless; the inclusion
-> of utsname() in init_std_data in the random seeding obviates it.
-> 
-> The XOR with the TSC on x86 and mtfb() on powerPC were left in,
-> as I haven't proved them redundant yet.  For those, we call
-> get_random_long(), xor, and mask manually.
-> 
-> FUNCTIONAL CHANGE: mips and xtensa were changed from 64-bit
-> get_random_long() to 56-bit get_random_canary() to match the
-> others, in accordance with the logic in CANARY_MASK.
-> 
-> (We could do 1 bit better and zero *one* of the two high bytes.)
-> 
-> Signed-off-by: George Spelvin <lkml@sdf.org>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: linux-sh@vger.kernel.org
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc:  "H. Peter Anvin" <hpa@zytor.com>
-> Cc: x86@kernel.org
-> Cc: Chris Zankel <chris@zankel.net>
-> Cc: Max Filippov <jcmvbkbc@gmail.com>
-> Cc: linux-xtensa@linux-xtensa.org
-> ---
->  arch/arm/include/asm/stackprotector.h     | 9 +++------
->  arch/arm64/include/asm/stackprotector.h   | 8 ++------
->  arch/mips/include/asm/stackprotector.h    | 7 ++-----
->  arch/powerpc/include/asm/stackprotector.h | 6 ++----
->  arch/sh/include/asm/stackprotector.h      | 8 ++------
->  arch/x86/include/asm/stackprotector.h     | 4 ++--
->  arch/xtensa/include/asm/stackprotector.h  | 7 ++-----
->  7 files changed, 15 insertions(+), 34 deletions(-)
-
-Just found this kicking around in the depths of my inbox. Is the series
-dead?
-
-Will
+PiBCeSAiYXN5bmNocm9ub3VzIiBJIGRvbid0IG1lYW4gImhvdXJzIGxhdGVyIi4NCj4NCj4gTWFr
+ZSBpdCBiZSAiaW50ZXJydXB0cyBhcmUgZW5hYmxlZCwgYmVmb3JlIHNlcmlhbGl6aW5nIGluc3Ry
+dWN0aW9uIi4NCj4NCj4gWWVzLCB3ZSB3YW50IGJvdW5kZWQgZXJyb3IgaGFuZGxpbmcgbGF0ZW5j
+eS4gQnV0IHRoYXQgZG9lc24ndCBtZWFuICJzeW5jaHJvbm91cyINCg0KQW5vdGhlciBYODYgdmVu
+ZG9yIHNlZW1zIHRvIGJlIGFkZGluZyBzb21ldGhpbmcgbGlrZSB0aGF0LiBTZWUgTUNPTU1JVA0K
+aW4gaHR0cHM6Ly93d3cuYW1kLmNvbS9zeXN0ZW0vZmlsZXMvVGVjaERvY3MvMjQ1OTQucGRmDQoN
+CkJ1dCBJIHdvbmRlciBob3cgYW4gT1Mgd2lsbCBrbm93IHdoZXRoZXIgaXQgaXMgcnVubmluZyBz
+b21lIHNtYXJ0DQpNQ09NTUlULWF3YXJlIGFwcGxpY2F0aW9uIHRoYXQgY2FuIGZpZ3VyZSBvdXQg
+d2hhdCB0byBkbyB3aXRoIGJhZA0KZGF0YSwgb3IgYSBsZWdhY3kgYXBwbGljYXRpb24gdGhhdCBz
+aG91bGQgcHJvYmFibHkgYmUgc3RvcHBlZCBiZWZvcmUNCml0IGh1cnRzIHNvbWVib2R5Lg0KDQpJ
+IGFsc28gd29uZGVyIGhvdyBleHBlbnNpdmUgTUNPTU1JVCBpcyAoc2luY2UgaXQgaXMgZXNzZW50
+aWFsbHkNCnBvbGxpbmcgZm9yICJkaWQgYW55IGVycm9ycyBoYXBwZW4iKS4NCg0KLVRvbnkNCg==
