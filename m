@@ -2,155 +2,113 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D35C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEF3C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B38A9206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14AD8206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CHOzMuiz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0dASc/nX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgDTQ3T (ORCPT
+        id S1726117AbgDTQ3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:29:19 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:49576 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725774AbgDTQ22 (ORCPT
+        Mon, 20 Apr 2020 12:29:40 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42948 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgDTQ3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:28:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587400108; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=QA9CZuPAM8s1GI09MkFEN/LL8wgIB+Q0f+qXwJ/VpWg=;
- b=CHOzMuizuOZ8szlYs1XgI2AqoUZ10WffvJEum/q4inG48PFB1dUk7H7wJHUxTWDUFpsp1Qro
- 7WZrxKdH1toZl7ZytLRUILW+Kztfcgy2WP1OiU1vpc6TxVZQYfSLSaeLqCGR4ZBrQ+Oxguzt
- V3MTjtbwg73aKcoP5PtnENu8RVE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9dcdac.7f23024071f0-smtp-out-n04;
- Mon, 20 Apr 2020 16:28:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 06E2BC43637; Mon, 20 Apr 2020 16:28:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3245DC433D2;
-        Mon, 20 Apr 2020 16:28:26 +0000 (UTC)
+        Mon, 20 Apr 2020 12:29:39 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03KGIRrK097179;
+        Mon, 20 Apr 2020 16:29:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=vaowHN1wYK+HPlBhnAmToCjB2mfzdaKTJsxFeKtQV/w=;
+ b=0dASc/nXEa8RpOpZQvXqmgXZXIEN6oc6b+2XX7OZFRB/ZBe6oSu84+c3XbxPG4jWlALT
+ SIZG79KJDRBfyWMyLXx2V6IkiLBiLYpOfMgL0PKJxfNeNQA6fVxDgQMwwFSTJ7GIDVjI
+ VGh/o+vBsQx4nInPwt0Xn67kwMH3GyknBMPHAwWmHhIa6yofIRIW16ttkRvOaKgRW/iA
+ NzpUulDJvOdUOrclk19A80q31tNNzeOQL5KEalEG+SzVL0PEKAyw8NoiuW0zqWlj/zZc
+ kpMsmwElf/uSRkd8ocql5imLV1G/NaUc9+JFYBDYAYuhhSsrTHPFRwNc0mZEsZ7NI2S6 pQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30grpgcs6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 16:29:17 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03KGCOeU051492;
+        Mon, 20 Apr 2020 16:29:17 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30gbbb144c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 16:29:16 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03KGTF0w017518;
+        Mon, 20 Apr 2020 16:29:15 GMT
+Received: from linux-1.home (/92.157.36.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 Apr 2020 09:29:15 -0700
+Subject: Re: [patch 00/15] x86/tlb: Unexport per-CPU tlbstate
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+References: <20200419203137.214111265@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <860bf6a4-e0c9-92a8-065d-780f4a5794c1@oracle.com>
+Date:   Mon, 20 Apr 2020 18:33:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200419203137.214111265@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Apr 2020 21:58:26 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv2 2/6] iommu/arm-smmu: Allow client devices to select
- direct mapping
-In-Reply-To: <e35b10dc-8e58-f201-8485-9543dafbadfe@arm.com>
-References: <cover.1587392905.git.saiprakash.ranjan@codeaurora.org>
- <14539e787e6d8b7bd0a6d8f8a001baae6f691988.1587392905.git.saiprakash.ranjan@codeaurora.org>
- <e35b10dc-8e58-f201-8485-9543dafbadfe@arm.com>
-Message-ID: <65f21f15b90f73e16c0bb5bb75e835e6@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9597 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=911 adultscore=0 mlxscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9597 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=963 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004200133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-20 21:27, Robin Murphy wrote:
-> On 2020-04-20 3:37 pm, Sai Prakash Ranjan wrote:
->> From: Jordan Crouse <jcrouse@codeaurora.org>
->> 
->> Some client devices want to directly map the IOMMU themselves instead
->> of using the DMA domain. Allow those devices to opt in to direct
->> mapping by way of a list of compatible strings.
->> 
->> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
->> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>   drivers/iommu/arm-smmu-qcom.c | 19 +++++++++++++++++++
->>   drivers/iommu/arm-smmu.h      |  1 +
->>   2 files changed, 20 insertions(+)
->> 
->> diff --git a/drivers/iommu/arm-smmu-qcom.c 
->> b/drivers/iommu/arm-smmu-qcom.c
->> index 64a4ab270ab7..0b3f159065aa 100644
->> --- a/drivers/iommu/arm-smmu-qcom.c
->> +++ b/drivers/iommu/arm-smmu-qcom.c
->> @@ -3,6 +3,7 @@
->>    * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->>    */
->>   +#include <linux/of_device.h>
->>   #include <linux/qcom_scm.h>
->>     #include "arm-smmu.h"
->> @@ -11,6 +12,23 @@ struct qcom_smmu {
->>   	struct arm_smmu_device smmu;
->>   };
->>   +static const struct of_device_id qcom_smmu_client_of_match[] = {
->> +	{ .compatible = "qcom,adreno" },
->> +	{ .compatible = "qcom,mdp4" },
->> +	{ .compatible = "qcom,mdss" },
->> +	{ .compatible = "qcom,sc7180-mdss" },
->> +	{ .compatible = "qcom,sdm845-mdss" },
->> +	{ }
->> +};
->> +
->> +static int qcom_smmu_request_domain(struct device *dev)
->> +{
->> +	const struct of_device_id *match =
->> +		of_match_device(qcom_smmu_client_of_match, dev);
->> +
->> +	return match ? IOMMU_DOMAIN_IDENTITY : 0;
->> +}
->> +
->>   static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
->>   {
->>   	int ret;
->> @@ -41,6 +59,7 @@ static int qcom_smmu500_reset(struct arm_smmu_device 
->> *smmu)
->>   }
->>     static const struct arm_smmu_impl qcom_smmu_impl = {
->> +	.req_domain = qcom_smmu_request_domain,
->>   	.reset = qcom_smmu500_reset,
->>   };
->>   diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
->> index 8d1cd54d82a6..662fdb4dccd2 100644
->> --- a/drivers/iommu/arm-smmu.h
->> +++ b/drivers/iommu/arm-smmu.h
->> @@ -386,6 +386,7 @@ struct arm_smmu_impl {
->>   	int (*init_context)(struct arm_smmu_domain *smmu_domain);
->>   	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
->>   			 int status);
->> +	int (*req_domain)(struct device *dev);
+
+
+On 4/19/20 10:31 PM, Thomas Gleixner wrote:
+> The per-CPU tlbstate contains sensitive information which should be really
+> only accessible in core code. It is exported to modules because some inline
+> functions which are required by KVM need access to it.
 > 
-> Nit: since the point is to implement the full
-> iommu_ops::def_domain_type interface, can we call it def_domain_type
-> please?
+> The following series creates regular exported functions for the few things
+> which are needed by KVM and hides the struct definition and some low level
+> helpers from modules.
+> 
+> The series is also available from git:
+> 
+>     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel x86/tlb
+> 
+> Thanks,
+> 
+> 	tglx
 > 
 
-Sure, will send the next version shortly.
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 
-Thanks,
-Sai
+For all patches.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+alex.
