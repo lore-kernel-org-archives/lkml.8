@@ -2,90 +2,114 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60696C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B50C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC6C2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153B92078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:53:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tzzXq+Kf"
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="zk/XmDTX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgDTFxG (ORCPT
+        id S1726116AbgDTFxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:53:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726013AbgDTFxF (ORCPT
+        Mon, 20 Apr 2020 01:53:41 -0400
+Received: from dvalin.narfation.org ([213.160.73.56]:52296 "EHLO
+        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgDTFxk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:53:05 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85745C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:53:05 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j2so10519491wrs.9
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Apr 2020 22:53:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NnAMQjTDH7lLrNULYEV7Ij8ljI9O9hltmkzvqcgr3cY=;
-        b=tzzXq+KfTcsdxjq/Lh4slqha3MG717ieAB5DbwSJp5YoQk1A+d7E9pVckvbDvrMhso
-         wgiq/bmTArtl5SA1kG7ce4pGuCDHKsVnPCfVIreYBtyAPfcK2hd042R9LddmKBihvpxO
-         pEubMKdXy/Fv8R/nb1aFuU5fa83+Ujsk3IJEKBKYQEn+k6bES6YFoIe/C8NbDUAOiJWf
-         qRLnxGo13LeyEvGKPYsX6kW7EQJl4WQw4+dpNFj16ihFr7s5HZi3FAApOMQ/dXBGDTRY
-         3LlKjVChIlsZsdrdotX88VK0UywP2O83vnqKcHPM2On23XPFAA9APrZHI6Ui3VHxTnAN
-         FuYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NnAMQjTDH7lLrNULYEV7Ij8ljI9O9hltmkzvqcgr3cY=;
-        b=dIrB8rJcpZgOwMgt4ezpUXVYzCvnqfF9VDD7qwCuYLdfjtzO2xsBUjeMxh+w3CBzpN
-         dLsX1bYG3l7lmG0O8cnotQdBKDhU1z+OKW7D1s1RirLjKMJEvNQ3hcu5jxfPBQDnq7yI
-         uG/8GQ88ao3oK8qpulAN9KzazAVnXY8h1EHA3dwOBVcE1j0jS2sWaPwzF8yjLg4OugMT
-         wT43kRRBAzSM8MmNfqWWVNehrhfotUJh+TCYqNj6Dt27eeVy+JtaI5KERFoe2IJ+wsZg
-         9dE7OmAE6cokTRCquOy1bbYA+gL0QRrLHMouENzMntCUdtiHyAyu3wK6RnAajZ3S0GwF
-         SCUg==
-X-Gm-Message-State: AGi0PuYxFOiXIAjelEPTjchs2/awc74Zp0pff+mci2SlKHjp6DBeYNQ0
-        I9zCeY5pyHxiF4/w7wcwN+Ch+iU5RwYlVe42Ifp0YllbfF4=
-X-Google-Smtp-Source: APiQypI3MGbkHlN8kvVjklZaCXXH4FrurgGwKEWAk5YqwZe8sgHddYTQVB3/Z/mNTvYfLfynblgEknQLPOh6HdoH66w=
-X-Received: by 2002:a5d:688f:: with SMTP id h15mr17038210wru.352.1587361984334;
- Sun, 19 Apr 2020 22:53:04 -0700 (PDT)
+        Mon, 20 Apr 2020 01:53:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1587362014;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8v1nt9LlaYNIMct5NGUuujlOt/0rExt6hQKkny68o/c=;
+        b=zk/XmDTXnWfXW9BZ9mbWPCgmPhlL7TY46W6ldofYU6lxb4p8Q5PIXxj19Yd0EGq+vCN+BU
+        qh6aGHqyGJmBkx4dRrp1XYhYuVXBEn7NtEMnCG3BKPeDMD4VG45z/llKx20JaljUBcmNzl
+        4iJe7BcUWarvfNEUzUmpE9+uVVe6uCw=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antonio Quartulli <a@unstable.cc>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
+        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
+Subject: Re: [PATCH] batman-adv: Fix refcnt leak in batadv_v_ogm_process
+Date:   Mon, 20 Apr 2020 07:53:31 +0200
+Message-ID: <6844758.PSh0Y5hloC@bentobox>
+In-Reply-To: <1587361040-83099-1-git-send-email-xiyuyang19@fudan.edu.cn>
+References: <1587361040-83099-1-git-send-email-xiyuyang19@fudan.edu.cn>
 MIME-Version: 1.0
-References: <20200419162943.3704-1-evalds.iodzevics@gmail.com> <20200419165434.GA3697654@kroah.com>
-In-Reply-To: <20200419165434.GA3697654@kroah.com>
-From:   Evalds Iodzevics <evalds.iodzevics@gmail.com>
-Date:   Mon, 20 Apr 2020 08:52:53 +0300
-Message-ID: <CADqhmmdrXa6jrHEa-C2bLurM9DKhVxrQ1TeJdaOkWEA0D16-sQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/CPU: Add native CPUID variants returning a single datum
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="nextPart3626795.PeB5Tdf7to"; micalg="pgp-sha512"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The second patch depends on this commit by Borislav so i included
-this, probably I should have just mentioned it in my comment?
+--nextPart3626795.PeB5Tdf7to
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Sun, Apr 19, 2020 at 7:54 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Apr 19, 2020 at 07:29:42PM +0300, Evalds Iodzevics wrote:
-> > From: Borislav Petkov <bp@suse.de>
-> >
-> > ... similarly to the cpuid_<reg>() variants.
-> >
-> > Signed-off-by: Borislav Petkov <bp@suse.de>
-> > Link: http://lkml.kernel.org/r/20170109114147.5082-2-bp@alien8.de
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > ---
-> >  arch/x86/include/asm/processor.h | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
->
-> Why are you resending patches from someone else?
+On Monday, 20 April 2020 07:37:20 CEST Xiyu Yang wrote:
+> batadv_v_ogm_process() invokes batadv_hardif_neigh_get(), which returns
+> a reference of the neighbor object to "hardif_neigh" with increased
+> refcount.
+> 
+> When batadv_v_ogm_process() returns, "hardif_neigh" becomes invalid, so
+> the refcount should be decreased to keep refcount balanced.
+> 
+> The reference counting issue happens in one exception handling paths of
+> batadv_v_ogm_process(). When batadv_v_ogm_orig_get() fails to get the
+> orig node and returns NULL, the refcnt increased by
+> batadv_hardif_neigh_get() is not decreased, causing a refcnt leak.
+> 
+> Fix this issue by jumping to "out" label when batadv_v_ogm_orig_get()
+> fails to get the orig node.
+> 
+> Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> ---
+>  net/batman-adv/bat_v_ogm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Applied [1]
+
+Thanks,
+	Sven
+
+[1] https://git.open-mesh.org/linux-merge.git/commit/afba933d9875cdf31c973a1ecf05de7129a142c4
+--nextPart3626795.PeB5Tdf7to
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl6dONsACgkQXYcKB8Em
+e0b6aA/9EgeHxmgaw9nEaGwVPQxs/aDz3TGXDZAVPhtj4/dd/uXxbvJ9USAG8veI
+XgBtMWRDj7jQP41+1CGYaPePAid6tZ4/hE0mEFg5d7+1gnf2rFCZ8CN0ox9GhGN2
+pccBnmMuJpHWIyxABUjCwbtYFw+fTbGAIV1Hm1y610JgXGmszcjfcqtY6LNaw3b0
+A8azcTlyZiAPJ+tCzUYb33hrxeNb9yqgaZSHMDXOpzcg/L8iR9xvgpgYRZi5DBj6
+E2EDpPWknflOfd4lX3FVrHzql7V2URKnDUBhhMc76Nea5qVLFqn8vKgW2IdbYwt+
+zTjGSqmwsme0pOEAI8xJkXGbwC3X4LhssidHHLRQb3vUu5UU+ShrEhGw+ack9IeE
+QUr9nGgpX3Yf6bu7jmEnIFZHG47A2l+KHbyxWpVsN9vnRMWKfvD82cqjfbglS5Xp
+y3V3RrREXN5hlKQ5jpn9vnJmlI0XmoWBiXjVkZHO2S2XPhXxf0FcwYCtCoGQGDa7
+qYc3adPv/pAf09g4rB1DYsB7/BXPjuz1JMf9zpdrGoJ/E+2z5xKRYbhiZX95TFSk
+n2ay85irBwRODSC4tgIzqJdH0udGUKxWAOo26dLOmZRTC1DUN+6IxfdGetGg7Y58
+9aZWNtXkhaeAtZyIU4VT191pyWf13nuL5luP3EPST1n/T5/nQCc=
+=oZeN
+-----END PGP SIGNATURE-----
+
+--nextPart3626795.PeB5Tdf7to--
+
+
+
