@@ -2,143 +2,131 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FD4C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30337C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C282C2072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SjvBif89"
+	by mail.kernel.org (Postfix) with ESMTP id 0E7092145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:14:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587374077;
+	bh=+x/OfWUtv6vxKKGVV82g7KQURoCOuxYGmr6C4EACaJc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LJChj13n/QlL4d4Zd1wgYQvFzjq7sEUZ0jZfc3c450465M53bUK9OfHmI8WqHEQVQ
+	 XKq9jWXyyBuZYGjmfFrN0eO+4EDz1ywwXLwuwSirRttaZiPGGNvpDNZryQmHEZH3fo
+	 +hFTEgNUvEUif3CaWHPxF29puJPRM9UQa+bmF48Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgDTJMl (ORCPT
+        id S1726173AbgDTJOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:12:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725896AbgDTJMk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:12:40 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB5DC061A10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 02:12:38 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id i22so3324204uak.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 02:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=D5DA0AVUZZnTAM/ihh6DaspZ07iKnTCzkRsZBNpa07A=;
-        b=SjvBif89YfnXbxd7GMu3X4fKAtX67zD5cErAA7NiHKnyJkwnzfakr8aAAIV61e7w9Z
-         ERxCnvn1GrcWslAHcKeTA7asLTGzhcPZ4nCZNkGFF3JyR/VNAj2ernqKXumLcTEye6wA
-         5SgUPv/JoDvH1m4NcP+Tslfp4zsn+Obm0yQiberdVeuXLYZWbl1NWoPR49/rhM5mjE+b
-         0RoHnM7I1IduNjfr/cv888TzQ/f6uMb243BTOHRcgl9qtoF6nI/bqXjh51XjKq/7u2Dm
-         CDBEcI6SlHjjIiJVRhktMVjX8H3BOhlaOv+wBHBtjhcLKXL/QUgmCAXg8gw1lTMaBaKl
-         Pfjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D5DA0AVUZZnTAM/ihh6DaspZ07iKnTCzkRsZBNpa07A=;
-        b=OGSyU91HJcEl/6Cu/GSOkWVqnX2noya7MV4kK5INDPvoHgjfVq4CMiTsz1WUYYBwvr
-         JHtL734MzUM10Vo9XXaAnGnkZf+1HicvF8o5W2Jd6wMRzjk6tyPeBui+V5MxOMmROzj2
-         OhJGxoTzz0eNp00Hm/4n9i7NK7R01rxwCVcrfuex1wBFMmWHp0vcYZGyQMEHIxiNe/FQ
-         W77isI0VaMAz/OKqQXBcw+pzC52mrvgEjIXSJmPo4G+qwe8dQ/Kd5crHuQinqHTmtNGG
-         bvx0GSPi6fcN9Duce/O4QxrFBHGuTY+8H7cXMTNEcLmuefHy4pqUG9m4ScMy+e5Elzfb
-         FuJQ==
-X-Gm-Message-State: AGi0PuYvOniTtGx8dEYpcByQb1JS8zvGJXOrMpQEC0V85tU9vlQFEmD6
-        EmRaCKTshgZzPW1P8CoHvsT7P7cGhEVIjF7KAuwZhA==
-X-Google-Smtp-Source: APiQypLZ6PMekSmOqs+25OFvhsfT/B2tJOUATSybOBWpLf9Vtag2Vy3uH6+F6Ux4iwrWqEhjf4LFpwze/AE3L9GCJ8s=
-X-Received: by 2002:ab0:544a:: with SMTP id o10mr6973297uaa.15.1587373957934;
- Mon, 20 Apr 2020 02:12:37 -0700 (PDT)
+        Mon, 20 Apr 2020 05:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725865AbgDTJOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:14:36 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08C692078E;
+        Mon, 20 Apr 2020 09:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587374075;
+        bh=+x/OfWUtv6vxKKGVV82g7KQURoCOuxYGmr6C4EACaJc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FWW6qJ6ZX323VPf6/ew/Zd9S7mctMMY46H2fDfg6+6MVwlnMW76TITYkYxo17RpuL
+         1bkpH9ag5tCOybB9eJk99eMNiFqz+tcvkaCwHFFRwYDLMhmDlX+zxfz7nWQVw9LsSr
+         QT+T6VJIQgoHmE4wiM2NUAwghoGg872domNLa8OQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jQSVd-004osT-CU; Mon, 20 Apr 2020 10:14:33 +0100
 MIME-Version: 1.0
-References: <20200417145017.3932443d@canb.auug.org.au> <995a958c-15a1-cb05-e276-065c7f6e57fd@infradead.org>
-In-Reply-To: <995a958c-15a1-cb05-e276-065c7f6e57fd@infradead.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 20 Apr 2020 11:12:02 +0200
-Message-ID: <CAPDyKFqE7zfaKSbpBoBbrSCEnx+70dOrWs+=QG_x2G-Fpt6=ng@mail.gmail.com>
-Subject: Re: linux-next: Tree for Apr 17 (mmc/host/sdhci-of-at91.c)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@atmel.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Apr 2020 10:14:33 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Alan Mikhak <alan.mikhak@sifive.com>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org, tglx@linutronix.de, kishon@ti.com,
+        paul.walmsley@sifive.com
+Subject: Re: [PATCH] genirq/msi: Check null pointer before copying struct
+ msi_msg
+In-Reply-To: <CY4PR12MB1271277CEE4F1FE06B71DDE8DAD60@CY4PR12MB1271.namprd12.prod.outlook.com>
+References: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
+ <20200418122123.10157ddd@why>
+ <CY4PR12MB1271277CEE4F1FE06B71DDE8DAD60@CY4PR12MB1271.namprd12.prod.outlook.com>
+Message-ID: <8a03b55223b118c6fc605d7204e01460@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: Gustavo.Pimentel@synopsys.com, alan.mikhak@sifive.com, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, tglx@linutronix.de, kishon@ti.com, paul.walmsley@sifive.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Masahiro Yamada, Adrian Hunter
+On 2020-04-18 16:19, Gustavo Pimentel wrote:
+> Hi Marc and Alan,
+> 
+>> I'm not convinced by this. If you know that, by construction, these
+>> interrupts are not associated with an underlying MSI, why calling
+>> get_cached_msi_msg() the first place?
+>> 
+>> There seem to be some assumptions in the DW EDMA driver that the
+>> signaling would be MSI based, so maybe someone from Synopsys 
+>> (Gustavo?)
+>> could clarify that. From my own perspective, running on an endpoint
+>> device means that it is *generating* interrupts, and I'm not sure what
+>> the MSIs represent here.
+> 
+> Giving a little context to this topic.
+> 
+> The eDMA IP present on the Synopsys DesignWare PCIe Endpoints can be
+> configured and triggered *remotely* as well *locally*.
+> For the sake of simplicity let's assume for now the eDMA was 
+> implemented
+> on the EP and that is the IP that we want to configure and use.
+> 
+> When I say *remotely* I mean that this IP can be configurable through 
+> the
+> RC/CPU side, however, for that, it requires the eDMA registers to be
+> exposed through a PCIe BAR on the EP. This will allow setting the SAR,
+> DAR and other settings, also need(s) the interrupt(s) address(es) to be
+> set as well (MSI or MSI-X only) so that it can signal through PCIe (to
+> the RC and consecutively the associated EP driver) if the data transfer
+> has been completed, aborted or if the Linked List consumer algorithm 
+> has
+> passed in some linked element marked with a watermark.
+> 
+> It was based on this case that the eDMA driver was exclusively 
+> developed.
+> 
+> However, Alan, wants to expand a little more this, by being able to use
+> this driver on the EP side (through
+> pcitest/pci_endpoint_test/pci_epf_test) so that he can configure this 
+> IP
+> *locally*.
+> In fact, when doing this, he doesn't need to configure the interrupt
+> address (MSI or MSI-X), because this IP provides a local interrupt line
+> so that be connected to other blocks on the EP side.
 
-On Fri, 17 Apr 2020 at 16:48, Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 4/16/20 9:50 PM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20200416:
-> >
->
-> on i386:
->
->   CC      drivers/mmc/host/sdhci-of-at91.o
-> In file included from ../include/linux/build_bug.h:5:0,
->                  from ../include/linux/bitfield.h:10,
->                  from ../drivers/mmc/host/sdhci-of-at91.c:9:
-> ../drivers/mmc/host/sdhci-of-at91.c: In function =E2=80=98sdhci_at91_set_=
-clks_presets=E2=80=99:
-> ../include/linux/compiler.h:394:38: error: call to =E2=80=98__compiletime=
-_assert_63=E2=80=99 declared with attribute error: FIELD_PREP: value too la=
-rge for the field
->   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->                                       ^
-> ../include/linux/compiler.h:375:4: note: in definition of macro =E2=80=98=
-__compiletime_assert=E2=80=99
->     prefix ## suffix();    \
->     ^~~~~~
-> ../include/linux/compiler.h:394:2: note: in expansion of macro =E2=80=98_=
-compiletime_assert=E2=80=99
->   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->   ^~~~~~~~~~~~~~~~~~~
-> ../include/linux/build_bug.h:39:37: note: in expansion of macro =E2=80=98=
-compiletime_assert=E2=80=99
->  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->                                      ^~~~~~~~~~~~~~~~~~
-> ../include/linux/bitfield.h:49:3: note: in expansion of macro =E2=80=98BU=
-ILD_BUG_ON_MSG=E2=80=99
->    BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
->    ^~~~~~~~~~~~~~~~
-> ../include/linux/bitfield.h:94:3: note: in expansion of macro =E2=80=98__=
-BF_FIELD_CHECK=E2=80=99
->    __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
->    ^~~~~~~~~~~~~~~~
-> ../drivers/mmc/host/sdhci-of-at91.c:185:11: note: in expansion of macro =
-=E2=80=98FIELD_PREP=E2=80=99
->   caps1 |=3D FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
->            ^~~~~~~~~~
->
->
-> Full randconfig file is attached.
->
->
-> --
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Right, so this confirms my hunch that the driver is being used in
+a way that doesn't reflect the expected use case. Rather than
+papering over the problem by hacking the core code, I'd rather see
+the eDMA driver be updated to support both host and endpoint cases.
+This probably boils down to a PCI vs non-PCI set of helpers.
 
-Thanks for reporting! I have looped in the relevant people, let's see
-how we move forward with this.
+Alan, could you confirm whether we got it right?
 
-I assume the offending commit is this one:
-Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed Apr 8 16:21:05 2020 +0900
-mmc: sdhci: use FIELD_GET/PREP for capabilities bit masks
+Thanks,
 
-Kind regards
-Uffe
+         M.
+-- 
+Jazz is not dead. It just smells funny...
