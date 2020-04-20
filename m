@@ -2,171 +2,118 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F37C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06D1C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD2A20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="p6knrLkB"
+	by mail.kernel.org (Postfix) with ESMTP id D5D8820782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgDTU0z (ORCPT
+        id S1726812AbgDTU00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgDTU02 (ORCPT
+        Mon, 20 Apr 2020 16:26:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15600 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725774AbgDTU0Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:26:28 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98038C061A0C;
-        Mon, 20 Apr 2020 13:26:28 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id v8so886081wma.0;
-        Mon, 20 Apr 2020 13:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6W8grtyB7pbKtLO6nZYSpUXrUqbnBG7Y9G7Qj2TNYYc=;
-        b=p6knrLkBXwqGxq6+Y8qDIGzAfcrs/wLEqwashKOOkURN4yTA94z5zf6FYUXgFl5l+A
-         sUZmWPty1XgIIpLJ3hTZO4gKR/faEocL0UrIS0nof9RS8Twbj238UkMEtj94Kz5OlpUd
-         8hQELeyceiME/J/rZZVVMoRms2EpF/5fJzag0sVaY5uAMl/5yXip4SfSyG3lZMWSEjeM
-         k14iXl5I9MZDAQS/v/frX36Orkn+PTNpt0fHnjzmF1buhsAhSk+K0WNkYkNAsy4sfAEL
-         awitjW9GwcEYdzsGz3nqeD8ILj01JO0ixWHC5/iW+BObvDHrDvKpuPvCv4X+F1l5TCIY
-         yh+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6W8grtyB7pbKtLO6nZYSpUXrUqbnBG7Y9G7Qj2TNYYc=;
-        b=CME10pCQEBoI1RMvw5ps/2HHknQywcxYM6VWmPsLyYjH50O2tFRMfWcwcoJVjgDlCn
-         t2qu3pLPYAOnWARhjB855ms6u34kFggkgFPDTenmBC5tQMuuIyFnWRpN95R6Hnbc80Z3
-         5wbeCNXJ6kgj5vvH6P9/Hxzfpf7sjJ1WI+y9aesShfb1+/ykOaGCjybCl+VyRYCC/0oB
-         MnYEVD8ewDBnRdQco5b21nEucMcvk5uk2sENhzOKiaPP/9UUZlzBXc+SY4bKNvTfT1MZ
-         WUb1tI0kh9Ose1t42X62LOA7TJ3OCZ4NI7vCM0ogwn3F5GefkDOdn8aL5HnCAvapBpUs
-         xWOQ==
-X-Gm-Message-State: AGi0PuYC6FooMiZjCjTCyUglHxtupi0j9rLPah4RN2gCghMQq0gy4Ga5
-        kTXR+2aq+7jUvLH4jjHiNh0=
-X-Google-Smtp-Source: APiQypLqmxKs/1t8ZCj39OTBsU0FhGL3s33M63qCSyOMn2SmgJ0ImXAQAFlCOH5BiI32aIJv+k0WsA==
-X-Received: by 2002:a1c:148:: with SMTP id 69mr1161252wmb.181.1587414387225;
-        Mon, 20 Apr 2020 13:26:27 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id l19sm657846wmj.14.2020.04.20.13.26.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:26:26 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 4/4] soc: amlogic: meson-ee-pwrc: add support for the Meson GX SoCs
-Date:   Mon, 20 Apr 2020 22:26:12 +0200
-Message-Id: <20200420202612.369370-5-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
-References: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
+        Mon, 20 Apr 2020 16:26:25 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KK4Cc2022033;
+        Mon, 20 Apr 2020 16:26:15 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggr1r1dn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 16:26:15 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KKQ3Cj010970;
+        Mon, 20 Apr 2020 20:26:14 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01dal.us.ibm.com with ESMTP id 30fs66gj4c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 20:26:14 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KKQDjV46203294
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 20:26:13 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F102AE05F;
+        Mon, 20 Apr 2020 20:26:13 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6F943AE066;
+        Mon, 20 Apr 2020 20:26:12 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.56.120])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 20:26:12 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
+        eajames@linux.ibm.com
+Subject: [PATCH v10 0/7] soc: aspeed: Add XDMA engine driver
+Date:   Mon, 20 Apr 2020 15:26:04 -0500
+Message-Id: <20200420202611.17776-1-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_07:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=755
+ spamscore=0 impostorscore=0 malwarescore=0 suspectscore=3 mlxscore=0
+ clxscore=1015 lowpriorityscore=0 bulkscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the Meson GX SoCs to the meson-ee-pwrc driver.
+This series adds a driver to control the Aspeed XDMA engine embedded in the
+AST2500 and AST2600. The XDMA engine performs automatic DMA operations
+over PCI-E between the Aspeed SOC (acting as a BMC) and a host processor.
 
-The power domains on the GX SoCs are very similar to G12A. The only
-known differences so far are:
-- The GX SoCs do not have the HHI_VPU_MEM_PD_REG2 register (for the
-  VPU power-domain)
-- The GX SoCs have an additional reset line called "dvin"
+Changes since v9:
+ - Remove the kernel command queue
+ - Use memcpy_toio instead to copy commands to the buffer
+ - Free the client's genalloc'd memory in the release method
+ - Switch the bindings documentation to yaml
+ - Add patches to fix SCU interrupt controller include
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/soc/amlogic/meson-ee-pwrc.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+Changes since v8:
+ - Use DMA API to allocate memory from reserved region.
+ - Fix the driver for the AST2500 by keeping the command queue in kernel
+   memory and copying the whole buffer to the reserved memory area before
+   starting the operation.
+ - Add krefs to the client structure to prevent use-after-free.
+ - Switch reset-names binding to "device", "root-complex"
 
-diff --git a/drivers/soc/amlogic/meson-ee-pwrc.c b/drivers/soc/amlogic/meson-ee-pwrc.c
-index b30868da456a..a90572cb9c82 100644
---- a/drivers/soc/amlogic/meson-ee-pwrc.c
-+++ b/drivers/soc/amlogic/meson-ee-pwrc.c
-@@ -16,6 +16,7 @@
- #include <linux/clk.h>
- #include <dt-bindings/power/meson8-power.h>
- #include <dt-bindings/power/meson-g12a-power.h>
-+#include <dt-bindings/power/meson-gxbb-power.h>
- #include <dt-bindings/power/meson-sm1-power.h>
- 
- /* AO Offsets */
-@@ -73,7 +74,7 @@ struct meson_ee_pwrc_domain_data {
- 
- /* TOP Power Domains */
- 
--static struct meson_ee_pwrc_top_domain g12a_pwrc_vpu = {
-+static struct meson_ee_pwrc_top_domain gxbb_pwrc_vpu = {
- 	.sleep_reg = AO_RTI_GEN_PWR_SLEEP0,
- 	.sleep_mask = BIT(8),
- 	.iso_reg = AO_RTI_GEN_PWR_SLEEP0,
-@@ -138,6 +139,12 @@ static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_vpu[] = {
- 	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
- };
- 
-+static struct meson_ee_pwrc_mem_domain gxbb_pwrc_mem_vpu[] = {
-+	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
-+	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
-+	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
-+};
-+
- static struct meson_ee_pwrc_mem_domain meson8_pwrc_mem_eth[] = {
- 	{ HHI_MEM_PD_REG0, GENMASK(3, 2) },
- };
-@@ -223,11 +230,17 @@ static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_audio[] = {
- static bool pwrc_ee_get_power(struct meson_ee_pwrc_domain *pwrc_domain);
- 
- static struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
--	[PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &g12a_pwrc_vpu, g12a_pwrc_mem_vpu,
-+	[PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &gxbb_pwrc_vpu, g12a_pwrc_mem_vpu,
- 				     pwrc_ee_get_power, 11, 2),
- 	[PWRC_G12A_ETH_ID] = MEM_PD("ETH", meson8_pwrc_mem_eth),
- };
- 
-+static struct meson_ee_pwrc_domain_desc gxbb_pwrc_domains[] = {
-+	[PWRC_GXBB_VPU_ID]  = VPU_PD("VPU", &gxbb_pwrc_vpu, gxbb_pwrc_mem_vpu,
-+				     pwrc_ee_get_power, 12, 2),
-+	[PWRC_GXBB_ETHERNET_MEM_ID] = MEM_PD("ETH", meson8_pwrc_mem_eth),
-+};
-+
- static struct meson_ee_pwrc_domain_desc meson8_pwrc_domains[] = {
- 	[PWRC_MESON8_VPU_ID]  = VPU_PD("VPU", &meson8_pwrc_vpu,
- 				       meson8_pwrc_mem_vpu, pwrc_ee_get_power,
-@@ -514,6 +527,11 @@ static struct meson_ee_pwrc_domain_data meson_ee_g12a_pwrc_data = {
- 	.domains = g12a_pwrc_domains,
- };
- 
-+static struct meson_ee_pwrc_domain_data meson_ee_gxbb_pwrc_data = {
-+	.count = ARRAY_SIZE(gxbb_pwrc_domains),
-+	.domains = gxbb_pwrc_domains,
-+};
-+
- static struct meson_ee_pwrc_domain_data meson_ee_m8_pwrc_data = {
- 	.count = ARRAY_SIZE(meson8_pwrc_domains),
- 	.domains = meson8_pwrc_domains,
-@@ -542,6 +560,10 @@ static const struct of_device_id meson_ee_pwrc_match_table[] = {
- 		.compatible = "amlogic,meson8m2-pwrc",
- 		.data = &meson_ee_m8b_pwrc_data,
- 	},
-+	{
-+		.compatible = "amlogic,meson-gxbb-pwrc",
-+		.data = &meson_ee_gxbb_pwrc_data,
-+	},
- 	{
- 		.compatible = "amlogic,meson-g12a-pwrc",
- 		.data = &meson_ee_g12a_pwrc_data,
+Eddie James (7):
+  dt-bindings: soc: Add Aspeed XDMA Engine
+  soc: aspeed: Add XDMA Engine Driver
+  soc: aspeed: xdma: Add user interface
+  soc: aspeed: xdma: Add reset ioctl
+  ARM: dts: Aspeed: AST2600: Add XDMA PCI-E root control reset
+  ARM: dts: Aspeed: AST2500: Add missing SCU interrupt controller
+    include
+  ARM: dts: Aspeed: AST2600: Add missing SCU interrupt controller
+    include
+
+ .../devicetree/bindings/soc/aspeed/xdma.yaml  |  108 ++
+ MAINTAINERS                                   |    8 +
+ arch/arm/boot/dts/aspeed-g5.dtsi              |    1 +
+ arch/arm/boot/dts/aspeed-g6.dtsi              |    4 +-
+ drivers/soc/aspeed/Kconfig                    |    8 +
+ drivers/soc/aspeed/Makefile                   |    1 +
+ drivers/soc/aspeed/aspeed-xdma.c              | 1106 +++++++++++++++++
+ include/uapi/linux/aspeed-xdma.h              |   42 +
+ 8 files changed, 1277 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
+ create mode 100644 drivers/soc/aspeed/aspeed-xdma.c
+ create mode 100644 include/uapi/linux/aspeed-xdma.h
+
 -- 
-2.26.1
+2.24.0
 
