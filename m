@@ -2,102 +2,198 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842D5C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67CDC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60644206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC9C2224F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 17:12:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587402743;
+	bh=/ZHsHp1usqr/RF1hK0tLM3DblWJABJZwOeUQ1Q3+dcg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VpiwA7G6f34AoPVOBOY2acn6baJmelEGfiFcCkhUVZTYuYDCBuDNvHXVdj+hPQ9KW
+	 UOoFxioCM50qAeGd45Fzkop3PBzvxGmznLPi+rO1y3CUBjluPIUTQv+oaQ8idZPfEH
+	 iDuOuPdjQrIoktUiWqQZxcwiK6vpgQD0+dTT+d/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgDTRJi (ORCPT
+        id S1726405AbgDTRMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:09:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:52412 "EHLO foss.arm.com"
+        Mon, 20 Apr 2020 13:12:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbgDTRJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:09:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5B4331B;
-        Mon, 20 Apr 2020 10:09:36 -0700 (PDT)
-Received: from [10.57.33.63] (unknown [10.57.33.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 602183F73D;
-        Mon, 20 Apr 2020 10:09:34 -0700 (PDT)
-Subject: Re: [PATCHv3 4/6] iommu/arm-smmu-qcom: Request direct mapping for
- modem device
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>
-References: <cover.1587400573.git.saiprakash.ranjan@codeaurora.org>
- <509d88fbe7592aa15f867933c177b61bc7ba8efa.1587400573.git.saiprakash.ranjan@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <49c8c377-961b-3f95-a99c-08528def4cb7@arm.com>
-Date:   Mon, 20 Apr 2020 18:09:32 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1725774AbgDTRMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:12:22 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53E89206D9;
+        Mon, 20 Apr 2020 17:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587402741;
+        bh=/ZHsHp1usqr/RF1hK0tLM3DblWJABJZwOeUQ1Q3+dcg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QuJexw8mxsa6aipMVIAskHLERDvWC8yf7dQ5wFwoAQS0IDMAi1h0ee+ZqhAYOM+SC
+         Z6c50HQJWMTaRJdVfgSIxO1Jt39h6i4hcPo+S2hNTrbb2zAaN87VtpHsjqV3M+rVN5
+         svuEx2/DfNDpBJIppg/Nd/rIoCj9XD61yEc1et40=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jQZxz-004x1G-Mq; Mon, 20 Apr 2020 18:12:19 +0100
 MIME-Version: 1.0
-In-Reply-To: <509d88fbe7592aa15f867933c177b61bc7ba8efa.1587400573.git.saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Apr 2020 18:12:19 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     tglx@linutronix.de, pbonzini@redhat.com, kvm@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>, peterz@infradead.org,
+        torvalds@linux-foundation.org, bigeasy@linutronix.de,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        linux-mips@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
+        joel@joelfernandes.org, will@kernel.org,
+        kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH v2] kvm: Replace vcpu->swait with rcuwait
+In-Reply-To: <20200420164132.tjzk5ebx35m66yce@linux-p48b>
+References: <20200324044453.15733-1-dave@stgolabs.net>
+ <20200324044453.15733-4-dave@stgolabs.net>
+ <20200420164132.tjzk5ebx35m66yce@linux-p48b>
+Message-ID: <418acdb5001a9ae836095b7187338085@misterjones.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: dave@stgolabs.net, tglx@linutronix.de, pbonzini@redhat.com, kvm@vger.kernel.org, dbueso@suse.de, peterz@infradead.org, torvalds@linux-foundation.org, bigeasy@linutronix.de, linux-kernel@vger.kernel.org, rostedt@goodmis.org, linux-mips@vger.kernel.org, paulus@ozlabs.org, joel@joelfernandes.org, will@kernel.org, kvmarm@lists.cs.columbia.edu
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-20 5:42 pm, Sai Prakash Ranjan wrote:
-> From: Sibi Sankar <sibis@codeaurora.org>
+On 2020-04-20 17:41, Davidlohr Bueso wrote:
+> The use of any sort of waitqueue (simple or regular) for
+> wait/waking vcpus has always been an overkill and semantically
+> wrong. Because this is per-vcpu (which is blocked) there is
+> only ever a single waiting vcpu, thus no need for any sort of
+> queue.
 > 
-> Request direct mapping for modem on platforms which don't have TrustZone
-> (which programs the modem SIDs) to prevent the following global faults seen
-> on Cheza/Trogdor:
-
-Not strictly true - it's patch #6/6 that prevents *those* faults (and 
-these days the driver should be reporting unmatched streams a little 
-more helpfully). This change would resolve the context faults and/or 
-weird memory corruption that might result from applying patch #6 alone - 
-this is the crazy thing where transactions sometimes go directly to DRAM 
-round the side of the SMMU so we can never safely remap anything, right?
-
-Robin.
-
-> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
-> arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
-> 			 GFSYNR1 0x00000781, GFSYNR2 0x00000000
+> As such, make use of the rcuwait primitive, with the following
+> considerations:
 > 
-> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
-> arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
-> 			 GFSYNR1 0x00000461, GFSYNR2 0x00000000
+>  - rcuwait already provides the proper barriers that serialize
+>  concurrent waiter and waker.
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>  - Task wakeup is done in rcu read critical region, with a
+>  stable task pointer.
+> 
+>  - Because there is no concurrency among waiters, we need
+>  not worry about rcuwait_wait_event() calls corrupting
+>  the wait->task. As a consequence, this saves the locking
+>  done in swait when modifying the queue. This also applies
+>  to per-vcore wait for powerpc kvm-hv.
+> 
+> The x86-tscdeadline_latency test mentioned in 8577370fb0cb
+> ("KVM: Use simple waitqueue for vcpu->wq") shows that, on avg,
+> latency is reduced by around 15-20% with this change.
+> 
+> This patch also changes TASK_INTERRUPTIBLE for TASK_IDLE, as
+> kvm is (ab)using the former such that idle vcpus do no contribute
+> to the loadavg. Let use the correct semantics for this.
+> 
+> Cc: Paul Mackerras <paulus@ozlabs.org>
+> Cc: kvmarm@lists.cs.columbia.edu
+> Cc: linux-mips@vger.kernel.org
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 > ---
->   drivers/iommu/arm-smmu-qcom.c | 2 ++
->   1 file changed, 2 insertions(+)
+> v2: Added missing semicolon in mips change.
 > 
-> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-> index 5bedf21587a5..cf01d0215a39 100644
-> --- a/drivers/iommu/arm-smmu-qcom.c
-> +++ b/drivers/iommu/arm-smmu-qcom.c
-> @@ -17,7 +17,9 @@ static const struct of_device_id qcom_smmu_client_of_match[] = {
->   	{ .compatible = "qcom,mdp4" },
->   	{ .compatible = "qcom,mdss" },
->   	{ .compatible = "qcom,sc7180-mdss" },
-> +	{ .compatible = "qcom,sc7180-mss-pil" },
->   	{ .compatible = "qcom,sdm845-mdss" },
-> +	{ .compatible = "qcom,sdm845-mss-pil" },
->   	{ }
->   };
->   
+> The rest of the patches in this series continues to apply on tip,
+> as such I am only sending a v2 for this particular patch.
 > 
+> arch/mips/kvm/mips.c                  |  6 ++----
+> arch/powerpc/include/asm/kvm_book3s.h |  2 +-
+> arch/powerpc/include/asm/kvm_host.h   |  2 +-
+> arch/powerpc/kvm/book3s_hv.c          | 22 ++++++++--------------
+> arch/powerpc/kvm/powerpc.c            |  2 +-
+> arch/x86/kvm/lapic.c                  |  2 +-
+> include/linux/kvm_host.h              | 10 +++++-----
+> virt/kvm/arm/arch_timer.c             |  2 +-
+> virt/kvm/arm/arm.c                    |  9 +++++----
+> virt/kvm/async_pf.c                   |  3 +--
+> virt/kvm/kvm_main.c                   | 31 
+> +++++++++++--------------------
+> 11 files changed, 37 insertions(+), 54 deletions(-)
+
+[...]
+
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 70f03ce0e5c1..887efb39fb1a 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -343,7 +343,7 @@ static void kvm_vcpu_init(struct kvm_vcpu *vcpu,
+> struct kvm *kvm, unsigned id)
+> 	vcpu->kvm = kvm;
+> 	vcpu->vcpu_id = id;
+> 	vcpu->pid = NULL;
+> -	init_swait_queue_head(&vcpu->wq);
+> +	rcuwait_init(&vcpu->wait);
+> 	kvm_async_pf_vcpu_init(vcpu);
+> 
+> 	vcpu->pre_pcpu = -1;
+> @@ -2465,9 +2465,8 @@ static int kvm_vcpu_check_block(struct kvm_vcpu 
+> *vcpu)
+> void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+> {
+> 	ktime_t start, cur;
+> -	DECLARE_SWAITQUEUE(wait);
+> -	bool waited = false;
+> 	u64 block_ns;
+> +	int block_check = -EINTR;
+> 
+> 	kvm_arch_vcpu_blocking(vcpu);
+> 
+> @@ -2491,17 +2490,9 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+> 		} while (single_task_running() && ktime_before(cur, stop));
+> 	}
+> 
+> -	for (;;) {
+> -		prepare_to_swait_exclusive(&vcpu->wq, &wait, TASK_INTERRUPTIBLE);
+> -
+> -		if (kvm_vcpu_check_block(vcpu) < 0)
+> -			break;
+> -
+> -		waited = true;
+> -		schedule();
+> -	}
+> -
+> -	finish_swait(&vcpu->wq, &wait);
+> +	rcuwait_wait_event(&vcpu->wait,
+> +			   (block_check = kvm_vcpu_check_block(vcpu)) < 0,
+> +			   TASK_IDLE);
+> 	cur = ktime_get();
+> out:
+> 	kvm_arch_vcpu_unblocking(vcpu);
+> @@ -2525,18 +2516,17 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+> 		}
+> 	}
+> 
+> -	trace_kvm_vcpu_wakeup(block_ns, waited, vcpu_valid_wakeup(vcpu));
+> +	trace_kvm_vcpu_wakeup(block_ns, !block_check, 
+> vcpu_valid_wakeup(vcpu));
+
+This looks like a change in the semantics of the tracepoint. Before this
+change, 'waited' would have been true if the vcpu waited at all. Here, 
+you'd
+have false if it has been interrupted by a signal, even if the vcpu has 
+waited
+for a period of time.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
