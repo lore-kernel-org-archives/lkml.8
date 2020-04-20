@@ -2,148 +2,109 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D548C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0681AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8B42074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:10:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s7ViBweo"
+	by mail.kernel.org (Postfix) with ESMTP id D743520857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587395472;
+	bh=6UFLOWAprSQ5mjEGM3XnD3JuEIBCD19BtpyRyiiFWXM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=j1UnrlHSXkWSUIWmSGzUpBQRHDpziw1xKcfZ4D0jpcBNLcaqQmNZP0r5S65hlx0Vb
+	 y+JUcc/sfYGRbbfUZzU9P6e9bteCihmKWjU7ITPPr/43OacL5N8UEwQta9lcB05Fs0
+	 DuRW6UwhDufxbB9aSno+WG+Tx7J9GF3tpc1YJk/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbgDTPKt (ORCPT
+        id S1730108AbgDTPLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbgDTPKt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:10:49 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA42C061A0C;
-        Mon, 20 Apr 2020 08:10:48 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id pg17so8209165ejb.9;
-        Mon, 20 Apr 2020 08:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9p5YSZ4+mi/e7FFFEHIrB7QFMMbbaz2S5WA2HGT9XH0=;
-        b=s7ViBweoBfolqtUE1Dw+S7+3GkaeERdZbkylc7Ai1AdgnOZfN65hg71OXW2rVO1/hU
-         ROT1CPA181AXr4yd0UPHspj7hazs1F+i3kUgTTZmg6M3RdHYZgnM8vBDyfvpEX1i75yo
-         UwzqsxsY7lQpOBva7nO3k53ypxyz09Hvq6rn4E2QLPHERcYMiqNDY6QqG0q9hiK9XJbD
-         pJ37ogZ12tshixBKhmzU0osoY6T9h+atrk/L0AfZkFeWZ7rcWBRlAQeVTZ92fwy0eDof
-         mMP8lFJLRiU93vpaLiJyXh4wt7SLDINfUqFKY0JfpCuo/anSJvB6VMwTcwWsbMhVetbR
-         1pjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9p5YSZ4+mi/e7FFFEHIrB7QFMMbbaz2S5WA2HGT9XH0=;
-        b=fTTNuIivmIbOgAt5hWnQtO9Lxv3KloHsYxg9yzRdkPB5KiDM0CzKTpKAhf9eERqHYj
-         mDTJR2ul4OnUN4KBSe1u47+l2gwN4x0KuHZvE6ZrwKgUydzZvt/NVo2YGjvjwyJ3xu8O
-         wgFnJ9Lo3iZMjNUk8NLK4xaW0KZ4Imt411vnP11FVL4711BRoVnmPLXu3jcqYG5E61bI
-         mLQ5UFOI7SSc3IFnYmCNYKVGtVeWhw41NEdNOq7WtmnFL2Yibr74abT0KWVJ2qsICtCF
-         gMxWkBMffFtaeiL8ChLVNPcm4x80f6+EBLeVJ6/YB2G4zq6138dwEDAzBDLKItwJCMMg
-         tgYw==
-X-Gm-Message-State: AGi0PuaURLQVAcRNppy/ZWHonbBunYmfdObZufUZMRytzuxhjEMUlS2a
-        s+mywqjWZ9ypTW71m4veoQSoOa9og2dOKACrsGs=
-X-Google-Smtp-Source: APiQypKoDW/toyMfK3ngXt0Qzk4fYcwRXK1MtxzKr+4ijH8KGhOQCargMvQmSlg/UhgArVHds5aJa6yamXfVVFNdTzs=
-X-Received: by 2002:a17:906:78c:: with SMTP id l12mr15719453ejc.189.1587395447071;
- Mon, 20 Apr 2020 08:10:47 -0700 (PDT)
+        Mon, 20 Apr 2020 11:11:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726888AbgDTPLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:11:11 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 441DD2074F;
+        Mon, 20 Apr 2020 15:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587395471;
+        bh=6UFLOWAprSQ5mjEGM3XnD3JuEIBCD19BtpyRyiiFWXM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nkV2kPsc9CDPI8+iBM9g1V7mLs/iPl9kpXtIWPC/VV0+Tlx9kNyuXa1L+2BlEeK7f
+         FNJs6kQk2dsncVnBeO8+PnlzkZl2tWmC629elTuDcHZU6zvwz5Jz7+oOZF9lrBkiSK
+         92rvGw9ob80XZYq9PRZPM7+s4Ao3o6PH0EIBF3po=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: [PATCH rdma-next 00/18] Refactor mlx5_ib_create_qp (Part I)
+Date:   Mon, 20 Apr 2020 18:10:47 +0300
+Message-Id: <20200420151105.282848-1-leon@kernel.org>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-References: <20200318001603.9650-1-olteanv@gmail.com> <20200318001603.9650-13-olteanv@gmail.com>
- <20200420143831.GB32419@dragon>
-In-Reply-To: <20200420143831.GB32419@dragon>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 20 Apr 2020 18:10:35 +0300
-Message-ID: <CA+h21hrfwJ7LMjj=sy7LG3D-FFhVSRuM5TwqfX9LvW4XKarUWA@mail.gmail.com>
-Subject: Re: [PATCH v5 12/12] arm64: dts: ls1028a-rdb: Add a spidev node for
- the mikroBUS
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        Michael Walle <michael@walle.cc>, peng.ma@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 at 17:38, Shawn Guo <shawnguo@kernel.org> wrote:
->
-> On Wed, Mar 18, 2020 at 02:16:03AM +0200, Vladimir Oltean wrote:
-> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> >
-> > For debugging, it is useful to have access to the DSPI controller
-> > signals. On the reference design board, these are exported to either the
-> > mikroBUS1 or mikroBUS2 connector (according to the CPLD register
-> > BRDCFG3[SPI3]).
-> >
-> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> > ---
-> > Changes in v5:
-> > None.
-> >
-> > Changes in v4:
-> > None.
-> >
-> > Changes in v3:
-> > None.
-> >
-> > Changes in v2:
-> > Change compatible string for spidev node.
-> >
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> > index 6d05b76c2c7a..0d27b5667b8c 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> > @@ -83,6 +83,20 @@
-> >       };
-> >  };
-> >
-> > +&dspi2 {
-> > +     bus-num = <2>;
-> > +     status = "okay";
-> > +
-> > +     /* mikroBUS1 */
-> > +     spidev@0 {
-> > +             compatible = "rohm,dh2228fv";
->
-> Is the compatible documented?
->
-> Shawn
->
-> > +             spi-max-frequency = <20000000>;
-> > +             fsl,spi-cs-sck-delay = <100>;
-> > +             fsl,spi-sck-cs-delay = <100>;
-> > +             reg = <0>;
-> > +     };
-> > +};
-> > +
-> >  &esdhc {
-> >       sd-uhs-sdr104;
-> >       sd-uhs-sdr50;
-> > --
-> > 2.17.1
-> >
+From: Leon Romanovsky <leonro@mellanox.com>
 
-I don't really know what's the status with spidev compatibles. I do
-see other device trees are using this one, I thought it should be
-fine.
+Hi,
 
-Thanks,
--Vladimir
+This is first part of series which tries to return some sanity
+to mlx5_ib_create_qp() function. Such refactoring is required
+to make extension of that function with less worries of breaking
+driver.
+
+Extra goal of such refactoring is to ensure that QP is allocated
+at the beginning of function and released at the end. It will allow
+us to move QP allocation to be under IB/core responsibility.
+
+It is based on previously sent [1] "[PATCH mlx5-next 00/24] Mass
+conversion to light mlx5 command interface"
+
+Thanks
+
+[1] https://lore.kernel.org/linux-rdma/20200420114136.264924-1-leon@kernel.org
+
+Leon Romanovsky (18):
+  RDMA/mlx5: Organize QP types checks in one place
+  RDMA/mlx5: Delete impossible GSI port check
+  RDMA/mlx5: Perform check if QP creation flow is valid
+  RDMA/mlx5: Prepare QP allocation for future removal
+  RDMA/mlx5: Avoid setting redundant NULL for XRC QPs
+  RDMA/mlx5: Set QP subtype immediately when it is known
+  RDMA/mlx5: Separate create QP flows to be based on type
+  RDMA/mlx5: Split scatter CQE configuration for DCT QP
+  RDMA/mlx5: Update all DRIVER QP places to use QP subtype
+  RDMA/mlx5: Move DRIVER QP flags check into separate function
+  RDMA/mlx5: Remove second copy from user for non RSS RAW QPs
+  RDMA/mlx5: Initial separation of RAW_PACKET QP from common flow
+  RDMA/mlx5: Delete create QP flags obfuscation
+  RDMA/mlx5: Process create QP flags in one place
+  RDMA/mlx5: Use flags_en mechanism to mark QP created with WQE
+    signature
+  RDMA/mlx5: Change scatter CQE flag to be set like other vendor flags
+  RDMA/mlx5: Return all configured create flags through query QP
+  RDMA/mlx5: Process all vendor flags in one place
+
+ drivers/infiniband/hw/mlx5/devx.c    |   2 +-
+ drivers/infiniband/hw/mlx5/flow.c    |   2 +-
+ drivers/infiniband/hw/mlx5/gsi.c     |  10 -
+ drivers/infiniband/hw/mlx5/main.c    |   9 +-
+ drivers/infiniband/hw/mlx5/mlx5_ib.h |  24 +-
+ drivers/infiniband/hw/mlx5/odp.c     |   2 +-
+ drivers/infiniband/hw/mlx5/qp.c      | 928 +++++++++++++--------------
+ 7 files changed, 467 insertions(+), 510 deletions(-)
+
+--
+2.25.2
+
