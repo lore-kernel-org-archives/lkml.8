@@ -2,147 +2,108 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B46EC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2334C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 274E3206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9D0206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:30:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bp8Y7lB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgDTP3q (ORCPT
+        id S1728012AbgDTPaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:29:46 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:58587 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgDTP3p (ORCPT
+        Mon, 20 Apr 2020 11:30:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgDTPaZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:29:45 -0400
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id B7571100016;
-        Mon, 20 Apr 2020 15:29:41 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 17:29:41 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH] cedrus: Drop unneeded CONFIG_OF dependency
-Message-ID: <20200420152941.GA610656@aptenodytes>
-References: <20200402194653.13535-1-ezequiel@collabora.com>
- <20200403082206.GA626942@aptenodytes>
- <a36a825bc048821b4b7088feea71bd31e9e17211.camel@collabora.com>
+        Mon, 20 Apr 2020 11:30:25 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DE43C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:30:25 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id d17so12679697wrg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:30:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PD5DeOdqi6e0MkxPAfwdJyP3eDR+86tLjrIumXPzzT4=;
+        b=bp8Y7lB6hXvn9JH54tFD2UDbpwmiblTLlKAIT3+DCmvZle1bg3aC3vYn1nqOyiR5OY
+         HgL3OGsbeJva2GrenO/QQ9jEXf99AjvliEDPB66I7Q3lm0BMgokvt7k9nT4P1r6k8aCn
+         5PLeAowMTscry4PrfawUrthTM4pC+ndE/nZL5Zv9YlQ0cyO1KWbw11HmyXClk5QiMx+G
+         1A+0vJ5x/0My02ge4tzFk8os5rcxhHmpPqt88QASYX3j7OJFqLDkeX20CT4Ald8jIsYD
+         jUITLIwrB69buHlkbfNn8nJX2dyIUQkrPgAK9AToP92RpJSZ0C5ftuPFuOyAtZ5ipn3C
+         ralw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PD5DeOdqi6e0MkxPAfwdJyP3eDR+86tLjrIumXPzzT4=;
+        b=cycjovXNkZAFREZHfF8P6Vp73p+ajgVOURrWvVgN2izu/YqT1Y5aqjaca165+O4mC2
+         PG5oHR4wNEc56bXVNu4iEXdGa5MfZFZ4Sk0vnl/53WzSoGOIWoG/yliLeyfyml580vGt
+         UZA9pl36U+WTtxtc65YWr324m+F0TwFdLmQZiLHIx6DKVXOxUaDa1Khiacvd9JiM+RC7
+         92IIWQZqrggFCPPhj+aJ29aOZWJw5ZF3TZ6wjZJV+I/Z/35BxOqCIFOPCEavSaAzkM7x
+         2gTmr6FfgGzX3ccBUsVbtcd8PfWvsidPwVPNxj2kdtMNLUJVbFYqaAahGkNtW3IkjzRG
+         vgrQ==
+X-Gm-Message-State: AGi0PuYo3QkWjBSLLvJJElzJWHccAVhbICjXKJKHtxVSdXc2g+zrFNc+
+        OeRofkg+IPL8iLrwH5f7DesJDmxCYXeOWX26a+U=
+X-Google-Smtp-Source: APiQypJNVGW7y4CcAc7fYlBuLAQtsl07x5NtoSods0LPEQbSJ1ymdgu97+hTSGZ3nDodKZ90UfA1dTb1tUYmxNTUDzs=
+X-Received: by 2002:a5d:498d:: with SMTP id r13mr20138167wrq.374.1587396623955;
+ Mon, 20 Apr 2020 08:30:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
-Content-Disposition: inline
-In-Reply-To: <a36a825bc048821b4b7088feea71bd31e9e17211.camel@collabora.com>
+References: <CABXGCsN=SNp7Ub3KHmsGrg+5R1g13HMea2+Jw+hTer3g74q21Q@mail.gmail.com>
+ <4a9ae285-f126-c83b-b55f-36bd7a4403a0@gmail.com> <CABXGCsNSni7cjufva_n-VZQ4HKY2osBL4JB2kk_z7Pzv2u10MQ@mail.gmail.com>
+In-Reply-To: <CABXGCsNSni7cjufva_n-VZQ4HKY2osBL4JB2kk_z7Pzv2u10MQ@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 20 Apr 2020 11:30:12 -0400
+Message-ID: <CADnq5_NXtSfn1C8kceQ_Bfmu9LbgRTPVq_s6yk-6BG23ZB10Qg@mail.gmail.com>
+Subject: Re: BUG: kernel NULL pointer dereference, address: 0000000000000026
+ after switching to 5.7 kernel
+To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
+        "Russell, Kent" <Kent.Russell@amd.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---AqsLC8rIMeq19msA
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Ezequiel,
-
-On Fri 03 Apr 20, 09:21, Ezequiel Garcia wrote:
-> On Fri, 2020-04-03 at 10:22 +0200, Paul Kocialkowski wrote:
-> > Hi Ezequiel,
-> >=20
-> > On Thu 02 Apr 20, 16:46, Ezequiel Garcia wrote:
-> > > The driver is perfectly capable of being built without CONFIG_OF.
-> > > Remove this dependency, which is useful for compile-only tests.
-> >=20
-> > Thanks for the patch!
-> >=20
-> > Alas, the driver won't do anything useful without OF enabled, so it see=
-ms
-> > useful to keep that dependency.
->=20
-> I'm not convinced about this argument, I like to have
-> dependencies on things the driver needs to compile
-> (except the machine option, see below).
-
-Is there a general kernel-wide policy about that?
-
-I must admit that I never really understood if Kconfig depends are supposed=
- to
-strictly reflect build dependencies or dependencies that must reasonably be
-expected for the driver to be useful. The arch dependency (which is farily
-common) seems to suggest the latter.
-
-Maxime, any thought about that?
-
-> > I would suggest making this a: depends on OF || COMPILE_TEST
-> > instead. What do you think?
->=20
-> Although there are a handful, I don't see many drivers doing that.
-> To be honest, I don't like this much.
->=20
-> Also, if you want to make sure this driver can only be selected
-> where it makes sense, you consider having a ARCH_SUNXI || COMPILE_TEST.
-
-Fair enough, that would be the consistent choice with OF || COMPILE_TEST.
-
-> IMO, the dependency on OF should be dropped as well.
+On Sat, Apr 18, 2020 at 7:13 AM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
 >
-> Cheers,
-> Eze
->=20
-> > Cheers,
-> >=20
-> > Paul
-> >=20
-> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > ---
-> > >  drivers/staging/media/sunxi/cedrus/Kconfig | 1 -
-> > >  1 file changed, 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/Kconfig b/drivers/sta=
-ging/media/sunxi/cedrus/Kconfig
-> > > index 17733e9a088f..59b8d1b29865 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/Kconfig
-> > > +++ b/drivers/staging/media/sunxi/cedrus/Kconfig
-> > > @@ -3,7 +3,6 @@ config VIDEO_SUNXI_CEDRUS
-> > >  	tristate "Allwinner Cedrus VPU driver"
-> > >  	depends on VIDEO_DEV && VIDEO_V4L2 && MEDIA_CONTROLLER
-> > >  	depends on HAS_DMA
-> > > -	depends on OF
-> > >  	depends on MEDIA_CONTROLLER_REQUEST_API
-> > >  	select SUNXI_SRAM
-> > >  	select VIDEOBUF2_DMA_CONTIG
-> > > --=20
-> > > 2.26.0.rc2
-> > >=20
->=20
->=20
+> On Sat, 11 Apr 2020 at 14:56, Christian K=C3=B6nig
+> <ckoenig.leichtzumerken@gmail.com> wrote:
+> >
+> > Yeah, that is a known issue.
+> >
+> > You could try the attached patch, but please be aware that it is not
+> > even compile tested because of the Easter holidays here.
+> >
+>
+> Looks good to me, so it's pity that this patch did not exist in the
+> pull request https://patchwork.kernel.org/patch/11492083/
 
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+It should show up in the next drm-misc PR:
+https://cgit.freedesktop.org/drm/drm-misc/commit/?h=3Ddrm-misc-fixes&id=3D8=
+623b5255ae7ccaf276aac3920787bf575fa6b37
 
---AqsLC8rIMeq19msA
-Content-Type: application/pgp-signature; name="signature.asc"
+Alex
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6dv+UACgkQ3cLmz3+f
-v9F/ZggAlAIvNxnteZI11ryM9PMa8354QX9Kdf3nGN/QAGCeK48282o2GYPmUmk+
-GHehBW01rTvo9bS/oa0ltcSO06xEvuwusxc3rNA8ldanB16wT/zK9/nPsVFtvd17
-/lhIvSMODSvBYD6HnFOeC058vCcGeFupgTHJyAfatcSYDeYc1ZomT3RMWkuIynMv
-10SqKNWVGH+4cyFw7/Yxth1cHtUNqNtdNwPhW9LBVLm5C3/Sz4SKggUoNhVcHsqA
-gSM4bRnpGudU2e/o++NKJuwxPZQmEjsh9epni8p98Gs6PXAQxvQSurzMY90fYHFT
-h2hgdOrKxzTyH9x3eoaHbxtywqWOxg==
-=KW81
------END PGP SIGNATURE-----
-
---AqsLC8rIMeq19msA--
+>
+> --
+> Best Regards,
+> Mike Gavrilov.
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
