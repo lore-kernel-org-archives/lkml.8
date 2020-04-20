@@ -2,87 +2,173 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387A1C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741B9C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE4820857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4F220857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587384510;
+	bh=lYlFfjql5Opqqr8+WMOH+2BAP5tssxnrteDmk2h80zU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KwlpBXPcrTvJv6LDMtzUHWSQ4w4Q05sag3HWQVihrWUGRhapLC837kJUrluRR+Zyt
+	 iYMZfc0fs3fyP37I56lNtovTOD/mOfASx9lT1tnBoT8GbqyQIB4FFx2tInBQXTweUI
+	 PMz6d+DExzLDE+Z8n1qTYFBIIaLHG8odZ+/aqJoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgDTMIS (ORCPT
+        id S1726725AbgDTMI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:08:18 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55926 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726581AbgDTMIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:08:17 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9F657B648C2AFE2537E3;
-        Mon, 20 Apr 2020 20:08:14 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Mon, 20 Apr 2020
- 20:08:07 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <jeffrey.t.kirsher@intel.com>, <davem@davemloft.net>,
-        <ast@kernel.org>, <daniel@iogearbox.net>, <kuba@kernel.org>,
-        <hawk@kernel.org>, <john.fastabend@gmail.com>, <kafai@fb.com>,
-        <songliubraving@fb.com>, <yhs@fb.com>, <andriin@fb.com>,
-        <kpsingh@chromium.org>, <intel-wired-lan@lists.osuosl.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bpf@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] i40e: Remove unneeded conversion to bool
-Date:   Mon, 20 Apr 2020 20:34:48 +0800
-Message-ID: <20200420123448.7382-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        Mon, 20 Apr 2020 08:08:29 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40562 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbgDTMI2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:08:28 -0400
+Received: by mail-wr1-f65.google.com with SMTP id k13so10621607wrw.7;
+        Mon, 20 Apr 2020 05:08:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8IrFThSk1fchwYwkQB2VvTz6i+J6Xv3NsNLPKTgfzss=;
+        b=ceoFhSb7s7b/nTQgS49MErGW/StZPrsdeG3WhzQrv1HFaZeDoqfZZYQq7BFvqgnH92
+         SefEKkuhiikZOGuEqi/uSZGbBc8Bel1FTdxwLURl42CdvOqZ+4iQ6JnkPRTe5hysze1N
+         EryKg6GIgpAoIY9tJB7HeZvY16Tvyjih6b0USXZ0u0dX4ptE9OvZMpfS/vpLHOCSXCG4
+         fqkqsDRknpdFeec6gnA0prISjHL+x2FhNGdKC+9kDgJPy+oTC4b+ASqwfkMie1XNrnkV
+         NdAAdmgi0EKBxv1fHiSPkZHricjA5FyW+x44Vcw2WY6vpKA59yfE9xe7D3Tq6m4CnWrn
+         08Pg==
+X-Gm-Message-State: AGi0PuY5HsjaciMp6v8ZG0cQpr1OwplwHOHjyY1Jv9Ea6Ja7XO6ymAWp
+        x9N018BxVLP0E6dD9J+BsQQ=
+X-Google-Smtp-Source: APiQypIq0tYSDgiZhBXS+e7724ZzctVwppbD2oAuHlQR1KtdVxaLIPo4bzhgsoGliXG6rmSWdgYLlA==
+X-Received: by 2002:adf:edc6:: with SMTP id v6mr18076400wro.8.1587384506480;
+        Mon, 20 Apr 2020 05:08:26 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id y10sm1061455wma.5.2020.04.20.05.08.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 05:08:25 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 13:08:22 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        vkuznets <vkuznets@redhat.com>
+Subject: Re: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
+ hibernation
+Message-ID: <20200420120822.4bncj2iwgqbpoxei@debian>
+References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
+ <20200417110007.uzfo6musx2x2suw7@debian>
+ <HK0P153MB0273A04F0585524883C46B0FBFD90@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HK0P153MB0273A04F0585524883C46B0FBFD90@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The '==' expression itself is bool, no need to convert it to bool again.
-This fixes the following coccicheck warning:
+On Fri, Apr 17, 2020 at 11:47:41PM +0000, Dexuan Cui wrote:
+> > From: Wei Liu <wei.liu@kernel.org>
+> > Sent: Friday, April 17, 2020 4:00 AM
+> > To: Dexuan Cui <decui@microsoft.com>
+> > 
+> > On Thu, Apr 16, 2020 at 11:29:59PM -0700, Dexuan Cui wrote:
+> > > Unlike the other CPUs, CPU0 is never offlined during hibernation. So in the
+> > > resume path, the "new" kernel's VP assist page is not suspended (i.e.
+> > > disabled), and later when we jump to the "old" kernel, the page is not
+> > > properly re-enabled for CPU0 with the allocated page from the old kernel.
+> > >
+> > > So far, the VP assist page is only used by hv_apic_eoi_write(). When the
+> > > page is not properly re-enabled, hvp->apic_assist is always 0, so the
+> > > HV_X64_MSR_EOI MSR is always written. This is not ideal with respect to
+> > > performance, but Hyper-V can still correctly handle this.
+> > >
+> > > The issue is: the hypervisor can corrupt the old kernel memory, and hence
+> > > sometimes cause unexpected behaviors, e.g. when the old kernel's non-boot
+> > > CPUs are being onlined in the resume path, the VM can hang or be killed
+> > > due to virtual triple fault.
+> > 
+> > I don't quite follow here.
+> > 
+> > The first sentence is rather alarming -- why would Hyper-V corrupt
+> > guest's memory (kernel or not)?
+> 
+> Without this patch, after the VM resumes from hibernation, the hypervisor 
+> still thinks the assist page of vCPU0 points to the physical page allocated by
+> the "new" kernel (the "new" kernel started up freshly, loaded the saved state 
+> of the "old" kernel from disk into memory, and jumped to the "old" kernel),
+> but the same physical page can be allocated to store something different in
+> the "old" kernel (which is the currently running kernel, since the VM resumed).
+> 
+> Conceptually, it looks Hyper-V writes into the assist page from time to time,
+> e.g. for the EOI optimization. This "corrupts" the page for the "old" kernel.
+> 
+> I'm not absolutely sure if this explains the strange hang issue or triple fault
+> I occasionally saw in my long-haul hibernation test, but with this patch,
+> I never reproduce the strange hang/triple fault issue again, so I think this
+> patch works.
 
-drivers/net/ethernet/intel/i40e/i40e_main.c:1614:52-57: WARNING:
-conversion to bool not needed here
-drivers/net/ethernet/intel/i40e/i40e_main.c:11439:52-57: WARNING:
-conversion to bool not needed here
+OK. I wouldn't be surprised if the corruption ends up changing code in
+the kernel which further triggers triple fault etc. 
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
+I would suggest make this clear in the commit message to not give the
+impression that Hyper-V has this weird behaviour of corrupting guest
+memory for no reason.
+
+We can replace the paragraph starting with "The issue is: ..." with:
+
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Linux needs to update Hyper-V the correct VP assist page to prevent
+Hyper-V from writing to a stale page, which causes guest memory
+corruption.  The memory corruption may have caused some of the hangs and
+triple faults we saw during non-boot CPUs resume.
+---
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 8c3e753bfb9d..2a037ec244b9 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -1611,7 +1611,7 @@ static int i40e_config_rss_aq(struct i40e_vsi *vsi, const u8 *seed,
- 		}
- 	}
- 	if (lut) {
--		bool pf_lut = vsi->type == I40E_VSI_MAIN ? true : false;
-+		bool pf_lut = vsi->type == I40E_VSI_MAIN;
- 
- 		ret = i40e_aq_set_rss_lut(hw, vsi->id, pf_lut, lut, lut_size);
- 		if (ret) {
-@@ -11436,7 +11436,7 @@ static int i40e_get_rss_aq(struct i40e_vsi *vsi, const u8 *seed,
- 	}
- 
- 	if (lut) {
--		bool pf_lut = vsi->type == I40E_VSI_MAIN ? true : false;
-+		bool pf_lut = vsi->type == I40E_VSI_MAIN;
- 
- 		ret = i40e_aq_get_rss_lut(hw, vsi->id, pf_lut, lut, lut_size);
- 		if (ret) {
--- 
-2.21.1
+This What do you think?
 
+Wei.
+
+> 
+> > Secondly, code below only specifies cpu0. What does it do with non-boot
+> > cpus on the resume path?
+> > 
+> > Wei.
+> 
+> hyperv_init() registers hv_cpu_init()/hv_cpu_die() to the cpuhp framework:
+> 
+> cpuhp = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/hyperv_init:online",
+>                        hv_cpu_init, hv_cpu_die);
+> 
+> In the hibernation procedure, the non-boot CPUs are automatically disabled
+> and reenabled, so hv_cpu_init()/hv_cpu_die() are automatically called for them,
+> e.g. in the resume path, see:
+>     hibernation_restore()
+>         resume_target_kernel()
+>             hibernate_resume_nonboot_cpu_disable()
+>                 disable_nonboot_cpus() 
+>             syscore_suspend()
+>                 hv_cpu_die(0)  // Added by this patch
+>             swsusp_arch_resume()
+>                 relocate_restore_code()
+>                     restore_image()
+>                         jump to the old kernel and we return from 
+>                         the swsusp_arch_suspend() in create_image()
+>                             syscore_resume()
+>                                 hv_cpu_init(0) // Added by this patch.
+>                             suspend_enable_secondary_cpus()
+>                             dpm_resume_start()
+>                             ...
+> Thanks,
+> -- Dexuan
