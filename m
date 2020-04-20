@@ -2,121 +2,81 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5593C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E874C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAB520782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:33:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uq1UtX4Q"
+	by mail.kernel.org (Postfix) with ESMTP id 39F9220B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:33:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587422034;
+	bh=ViONWUUyMBUwXsCi2iskcpvlAwUnt1s05iWjG3WH8Pw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fPd4lqE4OeQPnxwcbmgzpAyUmqexhCU3i/fF5b17s+NpE9veBnqEYl2dhAm5+2Uv3
+	 ixGl5jlFjhzTzj1r7+PrKEBqclYxMEKgo8dxRNm6ECry/R2r+2UdfI82VZcF9HhzPQ
+	 ufPPL3+h9iJs80hZxQTDzxn3s4U9dJ4mx9BCvJZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgDTWdh (ORCPT
+        id S1728209AbgDTWdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:33:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgDTWdh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:33:37 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E76CC061A0C;
-        Mon, 20 Apr 2020 15:33:37 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id r4so5807610pgg.4;
-        Mon, 20 Apr 2020 15:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wQEM9DWcyVuGSR7yq/Z954i7krAGNWwBbn5c8AlgXpE=;
-        b=uq1UtX4QuL5/kWF8QYjdfFO8Ui/Bpd1N/OQYaosFtl+eERSaDHbqouW0owYi+peb/E
-         NxHI0u8TlYQeWzQN/J9XOliKLN4jl9X4FYIpWrw9sybbKqU+iKbVlQJXlxYUSU3YkYUr
-         y2+B/HADZ4llIIMviTBzk+7Nv3uNDfGPWIDogukqV+wt1LvXtdiTQH0fX/+AkvQfCJaJ
-         31/n1bW7Nrnq//6K15IwQZ3LW5tQJqu4E4duwtzU8XzBgK32lyPZavyzB6MxBqz824sa
-         vQtKx46bCPrA6WsPzRdq9wTVJX6NGY1jZ6e5am8pN7yPB8p3Qa5fA3m5F/+4VKTsMOZQ
-         VrHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wQEM9DWcyVuGSR7yq/Z954i7krAGNWwBbn5c8AlgXpE=;
-        b=EEviEubb9t++YeW7i6hdbzJzwBFNrDBvt80/EkgSqD96ED51zh+YKtrhL3losMqfjO
-         lJxVh/rqSrP1iGvUaOgiP/nn2uBA48WyZSseumVyBslg/6WxKfXoqbLTiv//adp3H9Pa
-         LTgiMHOVywbMdGWgazpodUZVCS3HMYNESOU7WpbWhhcU16w9wcohDwE4PyLhMuPJMSi2
-         tG6q9cKa12n0WShKuA37LPW6u/9qEfPuIn+aUCMeV3XOPRs0b/ayBaS8e6eE8W9xvLoL
-         o04NQEYMIP572NaqGooTtdCrB4G0SpbWjcCOdpgBWFkFvdNAb/S+eNF1z1j4Y0QnPX8m
-         NR4w==
-X-Gm-Message-State: AGi0PuYBCwhRa5rqDXV6ZfKNYt3h85woEeqp45ZopMDM4REGmShHa5kr
-        HFOHm4+3tBEHSknRW72mhTKAHxuBZxwGjVlk7XWGURAYLcDdTg==
-X-Google-Smtp-Source: APiQypI6CwvEBvAfBXjMuiwiFJLQbo3/oNzWqVmgFdLUkN+AngNn81WtbZw7udc4CqufrnIUYILSwnvOS+1SDzcemtk=
-X-Received: by 2002:aa7:9097:: with SMTP id i23mr18460117pfa.170.1587422016694;
- Mon, 20 Apr 2020 15:33:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200420220421.171298-1-hdegoede@redhat.com>
-In-Reply-To: <20200420220421.171298-1-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Apr 2020 01:33:24 +0300
-Message-ID: <CAHp75VfC7-saRXnGDpee1dxAqDSDcveHMoC872WN9-SL4sDH4Q@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: surface3_power: i2c_acpi_new_device()
- returns a PTR_ERR
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 20 Apr 2020 18:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbgDTWdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 18:33:53 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C24F20782;
+        Mon, 20 Apr 2020 22:33:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587422032;
+        bh=ViONWUUyMBUwXsCi2iskcpvlAwUnt1s05iWjG3WH8Pw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uDwWm7NxumBoTt+V8rV7xTtd1DxB+bFx9ihDXHb5kZqYopJHQgVgv8cAMvuSUqhnS
+         FVS1nKe//wXkKusDiwWiaObhZli1SvY6fERQPqRdGARnYi7sLQbizUt/zhSKkNZEum
+         Yo9Cjpi80RTrd2r5cBHttRMh9pz+VL7u6GiIRaAc=
+Date:   Mon, 20 Apr 2020 15:33:52 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     glider@google.com
+Cc:     adobriyan@gmail.com, linux-kernel@vger.kernel.org,
+        sunhaoyl@outlook.com, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] fs/binfmt_elf.c: allocate initialized memory in
+ fill_thread_core_info()
+Message-Id: <20200420153352.6682533e794f591dae7aafbc@linux-foundation.org>
+In-Reply-To: <20200419100848.63472-1-glider@google.com>
+References: <20200419100848.63472-1-glider@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 1:04 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> i2c_acpi_new_device() never returns NULL, it either returns an i2c_client
-> or a PTR_ERR. Adjust the mshw0011_probe() error handling to take this
-> into account.
->
-> Note the goto out_err will cause i2c_unregister_device() to get called
-> even though the i2c_acpi_new_device() fails, this is ok as it accepts
-> a NULL pointer argument (and treats it as a no-op).
->
+On Sun, 19 Apr 2020 12:08:48 +0200 glider@google.com wrote:
 
-Thanks, I guess it repeats [1].
-
-[1]: http://git.infradead.org/linux-platform-drivers-x86.git/commitdiff/4dbccb873f2b35ad1b26419ff88c80509e2d4cbb
-
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/surface3_power.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> KMSAN reported uninitialized data being written to disk when dumping
+> core. As a result, several kilobytes of kmalloc memory may be written to
+> the core file and then read by a non-privileged user.
+> 
+> ...
 >
-> diff --git a/drivers/platform/x86/surface3_power.c b/drivers/platform/x86/surface3_power.c
-> index 946ac2dc08ae..32e6e86e27dd 100644
-> --- a/drivers/platform/x86/surface3_power.c
-> +++ b/drivers/platform/x86/surface3_power.c
-> @@ -522,8 +522,10 @@ static int mshw0011_probe(struct i2c_client *client)
->         strlcpy(board_info.type, "MSHW0011-bat0", I2C_NAME_SIZE);
->
->         bat0 = i2c_acpi_new_device(dev, 1, &board_info);
-> -       if (!bat0)
-> -               return -ENOMEM;
-> +       if (IS_ERR(bat0)) {
-> +               error = PTR_ERR(bat0);
-> +               goto out_err;
-> +       }
->
->         data->bat0 = bat0;
->         i2c_set_clientdata(bat0, data);
-> --
-> 2.26.0
->
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -1733,7 +1733,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+>  		    (!regset->active || regset->active(t->task, regset) > 0)) {
+>  			int ret;
+>  			size_t size = regset_size(t->task, regset);
+> -			void *data = kmalloc(size, GFP_KERNEL);
+> +			void *data = kzalloc(size, GFP_KERNEL);
+>  			if (unlikely(!data))
+>  				return 0;
+>  			ret = regset->get(t->task, regset,
 
+This seems to be a quite easy way of exposing quite a large amount of
+kernel memory contents, so I think I'll add a cc:stable to this patch?
 
--- 
-With Best Regards,
-Andy Shevchenko
