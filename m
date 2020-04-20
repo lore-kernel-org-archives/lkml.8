@@ -2,118 +2,125 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C057C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B19C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8104220782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578B320782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:58:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aAUNKvGC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgDTS5Z (ORCPT
+        id S1726498AbgDTS6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:57:25 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:51657 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgDTS5Z (ORCPT
+        Mon, 20 Apr 2020 14:58:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgDTS6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:57:25 -0400
-Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MzQbw-1j4Nox0nfU-00vR4u; Mon, 20 Apr 2020 20:57:23 +0200
-Received: by mail-qv1-f43.google.com with SMTP id w18so4843855qvs.3;
-        Mon, 20 Apr 2020 11:57:22 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYW2X+cHPalxq1d41B6dYJZAKtbCTatppUv+gPqFh7DTBEUH+/G
-        7+cNvSWIBSlpfO2Tfy1F3dnFRyD3YHj2hBfIbjM=
-X-Google-Smtp-Source: APiQypL3soWm0qcnc1Pl8apCyIqmvfNZS5Xqm9pLkv5lVITTxZWJ439g6o4H9UTag8MoqrM3DsBlN1fhI2bW7XmLhng=
-X-Received: by 2002:a0c:eb11:: with SMTP id j17mr16425332qvp.197.1587409041974;
- Mon, 20 Apr 2020 11:57:21 -0700 (PDT)
+        Mon, 20 Apr 2020 14:58:38 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C8FC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:58:36 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id m8so11275445lji.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:58:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OyRaasLaLoASyW1/WLmX+C7yyhvEwUVdH1hzQw3fL7E=;
+        b=aAUNKvGCyrKNt32Q53YuPu83JPr2m78bZjek5JeaSOZXAWOSGrhq63lYEotLTLwyTV
+         2lxdxzeM41bnfDEQPDVTPB4Z22UZOiLWy8uftsHy958As20WxujgDFn06bFQ7IHSzo0F
+         djukFCXip2VwGYwTsqmQhzPG4l+oDShfVueps=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OyRaasLaLoASyW1/WLmX+C7yyhvEwUVdH1hzQw3fL7E=;
+        b=nWa6BlKuxo6PHWz22uxdG3Jmr+6aX3lPwdpPZXFtBB35s8CSSZDII/WjATwhYYLeTJ
+         DpBNcJjAohN/cMJUgjErn/ByEUiizMZzBoOCSgNfy5ZA4rMngKcR2zXpwC1rqPDaFXWl
+         mahNW/9lB686pea5fw/gpMi42VXd+tn8nrXzkTCf7dUd6e8gDIt22le1sa/SQENUBzfz
+         xrZ3UBbo/hxrZPHHEn0tT+Dm5wIE9glJQ1RkKKDH7eHIgyzVsxeZHH6yx6KBAxS9mL2V
+         3Cg1F4GNok5kCRxq0XodyrnaFgk2hdPanC4X9KezmzAouWzUOwy4BoD/2uz15Rkl8sju
+         yWUQ==
+X-Gm-Message-State: AGi0PuYt+RiiUxFZW5pJKNl3zhy+btZVxCE6pRKgsk500gQjMRGTHImw
+        qWX8O0zes4ua9jABGFJ711Bh4woRpik=
+X-Google-Smtp-Source: APiQypIrRdTTrLq94hC3cv7GotOdw8Ynh0Z5JbI481m07dODKiOcLT6XrXVcafq4ilVHcq54wBscyQ==
+X-Received: by 2002:a2e:b605:: with SMTP id r5mr10765657ljn.40.1587409114319;
+        Mon, 20 Apr 2020 11:58:34 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id i20sm217132lfe.15.2020.04.20.11.58.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 11:58:33 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id f18so5232031lja.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:58:33 -0700 (PDT)
+X-Received: by 2002:a05:651c:449:: with SMTP id g9mr11325281ljg.278.1587409112751;
+ Mon, 20 Apr 2020 11:58:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200416085627.1882-1-clay@daemons.net> <6fef3a00-6c18-b775-d1b4-dfd692261bd3@ti.com>
- <20200420093610.GA28162@arctic-shiba-lx> <CAK8P3a36ZxNJxUS4UzrwJiMx8UrgYPkcv4X6yYw7EC4jRBbbGQ@mail.gmail.com>
- <20200420170051.GB11862@localhost>
-In-Reply-To: <20200420170051.GB11862@localhost>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 20 Apr 2020 20:57:05 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a11CqpDJzjy5QfV-ebHgRxUu8SRVTJPPmsus1O1+OL72Q@mail.gmail.com>
-Message-ID: <CAK8P3a11CqpDJzjy5QfV-ebHgRxUu8SRVTJPPmsus1O1+OL72Q@mail.gmail.com>
-Subject: Re: [PATCH] net: cpts: Condition WARN_ON on PTP_1588_CLOCK
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Clay McClure <clay@daemons.net>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200415071619.6052-1-sibis@codeaurora.org> <20200415071619.6052-2-sibis@codeaurora.org>
+ <CAE=gft4NK8vXGwJFEtXwKroKfoSO8wPxq=fv35AVC6vSQk02ig@mail.gmail.com>
+In-Reply-To: <CAE=gft4NK8vXGwJFEtXwKroKfoSO8wPxq=fv35AVC6vSQk02ig@mail.gmail.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Mon, 20 Apr 2020 11:57:56 -0700
+X-Gmail-Original-Message-ID: <CAE=gft62yeCsK0U87doWmKhD0YC57fRB6-3g3aOLBJON4PY36Q@mail.gmail.com>
+Message-ID: <CAE=gft62yeCsK0U87doWmKhD0YC57fRB6-3g3aOLBJON4PY36Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] remoteproc: qcom_q6v5_mss: Remove unused
+ q6v5_da_to_va function
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org, Ohad Ben Cohen <ohad@wizery.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:JGonziQQvMq8xpUFCtBPF/y6J2ULzhxm98+04fJ2KuKB2TQFiLT
- YDkjFDtXw3c7JOpp0GOYdM6j/bxcmrjbJNygrwsiN/JmSc3IPA42YXbjEZHzIFPJOf5Jot/
- ZsmIok7fhgjHyvd7w1D95/ByPqY/JMl9EYr1S+JWVLs31Dpb5CTkMGuzCrPz4XgojEhv9Ly
- Fj8rmXa1iruTFNewihb0g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RURF41x0JKM=:K19zyKboovO+UcjkGYpToE
- z8eDA1KVpcb2aNQKnM1Sfu4+MLBtnmE5FCkav5G2TpMhyxiTePRBv0Kx0EHgsXl8KEkgm8uv/
- wrvZ7O3QmE5ScVclwMiF/meXCmPv5ZJuEjUeJiQNa/GnKgsUhLDlMLEg8hp99/HYe1imlI6Si
- tT0PFltkD2qR6O+riolUQ5Y8hiVupnd83/cwOPfYoTbZQ/MOlHT9+exHG134vcWL4qcQTjP0k
- T0aTKVX0WAcwD9AFriEYSmYaSj6NJZHUY7edN5h4uPMP4VhzlHaCE6CVdxiTkR020J/uX0WVK
- FCNXQ3Bbbrx2RCWeSowKBqYyR1Zn0J6pvAEvvoe6gEv61uD/o1HOzRE1tTjI5PYURX/4oz0GV
- 4SBxWh4I8beADRLzGh0pU7QoYrbd+v6GG2ccT+u+5doiBm25LwVCA4fzsrnRS8CWpA5d/tQfb
- 4jFGsBbG/z1lob7vRhZXFvXPd0fNKq+5e2emVhD7xHMS6LtzjYBuvR4UVwTt5/DFQlZjVwdSA
- qZGTPYNPyNJixj1NMo2HXDcCdB3R3/jO7TszxbdgvfP7DqBSSh81n3mrUNUVKTITYyjpzyybL
- h6Kim54FbuUVRMbVYxehe8V08e0WXR+zb1+RedEPGslieHAdLQrlii7m1YBPA69TB7q8wGdgn
- +gOE+87UNvI5WJHxO+708t3AUj62SixtKFsxyQ4qjx9LPy/eDXQkD+HGtsO0Df5/tCwVSglFa
- rWerbCiY5hQeSGtHScWr44beGj6yaEg1YejAnVHoNiBG2hdg+3kJssXJh3P2WXM6tj0UL22Sn
- C3r9fCfYA0UjFMv6efCDUsEgNSEmqS4R2rx1TDV/1vbG9whMf8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 7:00 PM Richard Cochran
-<richardcochran@gmail.com> wrote:
+On Mon, Apr 20, 2020 at 11:53 AM Evan Green <evgreen@chromium.org> wrote:
 >
-> On Mon, Apr 20, 2020 at 04:38:32PM +0200, Arnd Bergmann wrote:
+> On Wed, Apr 15, 2020 at 12:16 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 > >
-> > I suspect we should move all of them back. This was an early user
-> > of 'imply', but the meaning of that keyword has now changed
-> > in the latest Kconfig.
+> > Remove unsed q6v5_da_to_va function as the mss driver uses a per segment
+> > dump function.
+> >
+> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> > ---
+> >  drivers/remoteproc/qcom_q6v5_mss.c | 14 --------------
+> >  1 file changed, 14 deletions(-)
+> >
+> > diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> > index b781fc8de3597..6a19e0e77236e 100644
+> > --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> > +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> > @@ -196,7 +196,6 @@ struct q6v5 {
+> >
+> >         phys_addr_t mpss_phys;
+> >         phys_addr_t mpss_reloc;
+> > -       void *mpss_region;
 >
-> Can you please explain the justification for changing the meaning?
+> Hm, this doesn't build for me on our Chrome tree:
 >
-> It was a big PITA for me to support this in the first place, and now
-> we are back to square one?
+>   CC [M]  drivers/remoteproc/qcom_q6v5_mss.o
+> /mnt/host/source/src/third_party/kernel/v5.4/drivers/remoteproc/qcom_q6v5_mss.c:1118:16:
+> error: no member named 'mpss_region' in 'struct q6v5'
+>                 ptr = qproc->mpss_region + offset;
+>                       ~~~~~  ^
+> /mnt/host/source/src/third_party/kernel/v5.4/drivers/remoteproc/qcom_q6v5_mss.c:1520:9:
+> error: no member named 'mpss_region' in 'struct q6v5'
+>         qproc->mpss_region = devm_ioremap_wc(qproc->dev,
+> qproc->mpss_phys, qproc->mpss_size);
+>         ~~~~~  ^
+> /mnt/host/source/src/third_party/kernel/v5.4/drivers/remoteproc/qcom_q6v5_mss.c:1521:14:
+> error: no member named 'mpss_region' in 'struct q6v5'
+>         if (!qproc->mpss_region) {
+>              ~~~~~  ^
 
-I don't understand it either. Apparently it didn't always do what users
-expected, though the new definition seems less useful to me, as it
-only changes the default.
-
-> > Something else is wrong if you need IS_ERR_OR_NULL(). Any
-> > kernel interface should either return an negative error code when
-> > something goes wrong, or should return NULL for all errors, but
-> > not mix the two.
->
-> On the contrary, this is exactly what the whole "imply" thing
-> demanded.
->
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 172) #if IS_REACHABLE(CONFIG_PTP_1588_CLOCK)
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 173)
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 174) /**
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 175)  * ptp_clock_register() - register a PTP hardware clock driver
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 176)  *
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 177)  * @info:   Structure describing the new clock.
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 178)  * @parent: Pointer to the parent device of the new clock.
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 179)  *
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 180)  * Returns a valid pointer on success or PTR_ERR on failure.  If PHC
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 181)  * support is missing at the configuration level, this function
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 182)  * returns NULL, and drivers are expected to gracefully handle that
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 183)  * case separately.
-> d1cbfd771ce82 (Nicolas Pitre       2016-11-11 184)  */
-
-The key here is "gracefully". The second patch from Clay just turns NULL into
- -EOPNOTSUPP and treats the compile-time condition into a runtime error.
-I don't see a point in allowing the driver to compile if it just always returns
-an error. The two callers then go on to print a message for any error
-and just keep going.
-
-      Arnd
+Whoops, ignore me, I missed the other patch in this series.
+-Evan
