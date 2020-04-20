@@ -2,91 +2,67 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AE5C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69F9C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDFB218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C537206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgDTL6y (ORCPT
+        id S1727844AbgDTL7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:58:54 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:47438 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726451AbgDTL6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:58:44 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj2pujp1eGSQqAA--.4S4;
-        Mon, 20 Apr 2020 19:58:41 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [RESEND v2 2/4] kmod: Remove redundant "be an" in the comment
-Date:   Mon, 20 Apr 2020 19:58:36 +0800
-Message-Id: <1587383918-1870-3-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1587383918-1870-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1587383918-1870-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxj2pujp1eGSQqAA--.4S4
-X-Coremail-Antispam: 1UD129KBjvdXoWruF48ZrW8WFWrXrykuFWxWFg_yoWDXFX_Wa
-        1kA3W7K34DCr9I93Wkta13ZrWvgrWvv34xCa1xt3y8t3s7Jrn0qwsxGFZYyrnxGaykGrs8
-        Ca9rZ3s09r13ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbSAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-        0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-        vE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-        r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8KwCF04k20x
-        vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
-        3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIx
-        AIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAI
-        cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2js
-        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUneOLUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Mon, 20 Apr 2020 07:59:03 -0400
+Received: from verein.lst.de ([213.95.11.211]:40205 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726402AbgDTL7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:59:02 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id E578968C65; Mon, 20 Apr 2020 13:58:56 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 13:58:56 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+        axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org,
+        bvanassche@acm.org, tytso@mit.edu, gregkh@linuxfoundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/8] bdi: add a ->dev_name field to struct
+ backing_dev_info
+Message-ID: <20200420115856.GA12115@lst.de>
+References: <20200416165453.1080463-1-hch@lst.de> <20200416165453.1080463-4-hch@lst.de> <20200417085909.GA12234@quack2.suse.cz> <20200417130135.GB5053@lst.de> <e02b7cdc-f29a-916c-d923-224a1b312485@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e02b7cdc-f29a-916c-d923-224a1b312485@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists redundant "be an" in the comment, remove it.
+On Mon, Apr 20, 2020 at 01:41:57PM +0200, Hans de Goede wrote:
+> AFAICT for vboxsf the bdi-name can be anything as long as it is unique, hence
+> the "vboxsf-" prefix to make this unique vs other block-devices and the
+> ".%d" postfix is necessary because the same export can be mounted multiple
+> times (without using bind mounts), see:
+> https://github.com/jwrdegoede/vboxsf/issues/3
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+Shouldn't vboxsf switch to get_tree_single instead of get_tree_nodev?
+Having two independent dentry trees for a single actual file system
+can be pretty dangerous.
 
-v2:
-  - just add the Acked-by tag
+>
+> The presence of the source inside the bdi-name is only for informational
+> purposes really, so truncating that should be fine, maybe switch to:
+>
+> "vboxsf%d-%s" as format string and swap the sbi->bdi_id and fc->source
+> in the args, then if we truncate anything it will be the source (which
+> as said is only there for informational purposes) and the name will
+> still be guaranteed to be unique.
 
- kernel/kmod.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/kmod.c b/kernel/kmod.c
-index 37c3c4b..3cd075c 100644
---- a/kernel/kmod.c
-+++ b/kernel/kmod.c
-@@ -36,9 +36,8 @@
-  *
-  * If you need less than 50 threads would mean we're dealing with systems
-  * smaller than 3200 pages. This assumes you are capable of having ~13M memory,
-- * and this would only be an be an upper limit, after which the OOM killer
-- * would take effect. Systems like these are very unlikely if modules are
-- * enabled.
-+ * and this would only be an upper limit, after which the OOM killer would take
-+ * effect. Systems like these are very unlikely if modules are enabled.
-  */
- #define MAX_KMOD_CONCURRENT 50
- static atomic_t kmod_concurrent_max = ATOMIC_INIT(MAX_KMOD_CONCURRENT);
--- 
-2.1.0
-
+Can we just switch to vboxsf%d where %d іs a simple monotonically
+incrementing count?  That is what various other file systems (e.g. ceph)
+do.
