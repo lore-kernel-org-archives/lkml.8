@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214EBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F19C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 017C7206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54DF206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387008;
-	bh=PvzQYekc9rviXYusn8MIPZu7+m17k5b5gSCNGZcpQa8=;
+	s=default; t=1587387014;
+	bh=fhMCzs+5oAeNDilCXNjN57Y84x/pplV7/I0kKxgTNjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LgizVg4WMV7qW5m5iREcRBk9ruTz+BU7np/WCy/QEpK556PIoT/qyuC7SpSurYQNZ
-	 nFYmOLZsVsVoyF43nw4XrMvdrsYWQsamxGwtUVJIaNA1px39N+BASN7wwZO9liDh0L
-	 9OLpayrfgLPrcs8WQjVtDulrSZD3wujGYQDAS7KI=
+	b=pNLdVe/NS1iCPmqCoce2y9gfFSfxcCmkD+qigFfPH/7EnHg2j5UhXjhnoFtcgNYnD
+	 QWvyx6wXnAX4LQ8IfrnHIIIQWoao4ErGPLqCIL3UGZxdXQeJC0I32PTyVSqg3CMwiP
+	 4WM3BvEGs5szIOgxq5fNi8NGihLwqQmQJqW2UuSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbgDTMtl (ORCPT
+        id S1729523AbgDTMuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:49:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46510 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:50:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729431AbgDTMta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:49:30 -0400
+        id S1729453AbgDTMth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:49:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F34D22260;
-        Mon, 20 Apr 2020 12:49:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A614720735;
+        Mon, 20 Apr 2020 12:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386969;
-        bh=PvzQYekc9rviXYusn8MIPZu7+m17k5b5gSCNGZcpQa8=;
+        s=default; t=1587386977;
+        bh=fhMCzs+5oAeNDilCXNjN57Y84x/pplV7/I0kKxgTNjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JA/27YagO1LSLa8fU/qw4pLhK2axoe1AZlA2Q0pg04iMpqsgVFGB0hE5lhS7B336V
-         iFUC/oGh/EIUet/xXNXiBF6DIseq2nRdIvgEN+pefDVpKw7vkWmIbZ+QCN038o4TeF
-         oYBWsahhKPFgFHKF7iWPxdkFmO68a4GtBGJDSKyI=
+        b=xOZSa0T3YmSy5xosrJL/HiCYa4N6Bm7pwm8fgu9rwcb1yLt6ehfuqLA3NBVT0bsVf
+         7xo0ypnjarUwlmZDLyUJi/G2EyXPejPDDBUPf+CkiAOUjk6ON7x++qVR7ZTiNT8tj9
+         TTsY14fkXVihcm7R/MjgzJ37TPtZ5OWioupD+eV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Austin Kim <austindh.kim@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Roman Gushchin <guro@fb.com>, Roman Penyaev <rpenyaev@suse.de>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 40/40] mm/vmalloc.c: move area->pages after if statement
-Date:   Mon, 20 Apr 2020 14:39:50 +0200
-Message-Id: <20200420121508.076569623@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 16/40] ASoC: Intel: mrfld: return error codes when an error occurs
+Date:   Mon, 20 Apr 2020 14:39:26 +0200
+Message-Id: <20200420121458.268430959@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
@@ -67,64 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Austin Kim <austindh.kim@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 7ea362427c170061b8822dd41bafaa72b3bcb9ad upstream.
+commit 3025571edd9df653e1ad649f0638368a39d1bbb5 upstream.
 
-If !area->pages statement is true where memory allocation fails, area is
-freed.
+Currently function sst_platform_get_resources always returns zero and
+error return codes set by the function are never returned. Fix this
+by returning the error return code in variable ret rather than the
+hard coded zero.
 
-In this case 'area->pages = pages' should not executed.  So move
-'area->pages = pages' after if statement.
-
-[akpm@linux-foundation.org: give area->pages the same treatment]
-Link: http://lkml.kernel.org/r/20190830035716.GA190684@LGEARND20B15
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Uladzislau Rezki (Sony) <urezki@gmail.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Roman Penyaev <rpenyaev@suse.de>
-Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Addresses-Coverity: ("Unused value")
+Fixes: f533a035e4da ("ASoC: Intel: mrfld - create separate module for pci part")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200208220720.36657-1-colin.king@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmalloc.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ sound/soc/intel/atom/sst/sst_pci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1668,7 +1668,6 @@ static void *__vmalloc_area_node(struct
- 	nr_pages = get_vm_area_size(area) >> PAGE_SHIFT;
- 	array_size = (nr_pages * sizeof(struct page *));
+--- a/sound/soc/intel/atom/sst/sst_pci.c
++++ b/sound/soc/intel/atom/sst/sst_pci.c
+@@ -107,7 +107,7 @@ static int sst_platform_get_resources(st
+ 	dev_dbg(ctx->dev, "DRAM Ptr %p\n", ctx->dram);
+ do_release_regions:
+ 	pci_release_regions(pci);
+-	return 0;
++	return ret;
+ }
  
--	area->nr_pages = nr_pages;
- 	/* Please note that the recursion is strictly bounded. */
- 	if (array_size > PAGE_SIZE) {
- 		pages = __vmalloc_node(array_size, 1, nested_gfp|highmem_mask,
-@@ -1676,13 +1675,16 @@ static void *__vmalloc_area_node(struct
- 	} else {
- 		pages = kmalloc_node(array_size, nested_gfp, node);
- 	}
--	area->pages = pages;
--	if (!area->pages) {
-+
-+	if (!pages) {
- 		remove_vm_area(area->addr);
- 		kfree(area);
- 		return NULL;
- 	}
- 
-+	area->pages = pages;
-+	area->nr_pages = nr_pages;
-+
- 	for (i = 0; i < area->nr_pages; i++) {
- 		struct page *page;
- 
+ /*
 
 
