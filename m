@@ -2,200 +2,115 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C8FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C704C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03F1F20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C852074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:13:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="uaBDmj8T"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DfxtwDuR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbgDTPMz (ORCPT
+        id S1730300AbgDTPNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:12:55 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:38961 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730189AbgDTPMD (ORCPT
+        Mon, 20 Apr 2020 11:13:02 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37600 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730173AbgDTPMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:12:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587395522; x=1618931522;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Wk5W6JOrVyShu0Bu566DjA/nJMtV0L8hDnh56QYpSOM=;
-  b=uaBDmj8TWjB5B6tF6X9EUH7zLr/q9cUp5ITouwbRtvCUakbE+InjzeH0
-   R+hCU0JQmtoAXH6nSGl+qYuPVCew1FFzRpqJNb8HESSPwDsXUTc0eyjxE
-   DySQskfxs2iRsGFbKDu4RM9FTsH/tqrcijuShqZyXO2KabUXI9Z207ShU
-   X1k0ibwBGv6MESsmvGNJmonm/ZAko13g1OCiJ8Af2IjDQZOQm2XVwyqlS
-   WO2/MhM+fykjp0w3A9NQ8U++XMN4JdfJQO/Ic3W8B6Z0sbIEtzKNlT3mT
-   Gg2sWpC06xKgNNeUnIE6c4lK4OH/kwqM6n8E3RHacT4TCN+Zz/AFEInq/
-   Q==;
-IronPort-SDR: iDuceTZ3lhtWv0/inC4A/4Av3OD0q1/GaXu6hx49hOcWgWkps6ZYHeuZjT5iVxDUQ94yon5qHR
- ww5O4pAs8511kaZfGD8GvfnAMNDP3U27OosCIC+hKu1Jg/m000BSAH9H1tjs6/pumCZfPs3C/R
- CLt0b4TIQoXk6+M6iPpqqT4IUzdugS5k8SgvOZwmtBuiwZolFlynLDnKv/sChuQJ3pZ6oZSUB9
- 0oOUD17JX5XwsIJyBCYzVzeF6kcMkwyVZS9oEBYawM7EhhcSJZ4t1UIZ/zDvSjFOEaoFHNdvWL
- +cQ=
-X-IronPort-AV: E=Sophos;i="5.72,406,1580799600"; 
-   d="scan'208";a="72755110"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Apr 2020 08:12:02 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 20 Apr 2020 08:12:02 -0700
-Received: from soft-dev3.microsemi.net (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Mon, 20 Apr 2020 08:11:31 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
-        <jiri@resnulli.us>, <ivecera@redhat.com>, <kuba@kernel.org>,
-        <roopa@cumulusnetworks.com>, <olteanv@gmail.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next 07/13] switchdev: mrp: Extend switchdev API to offload MRP
-Date:   Mon, 20 Apr 2020 17:09:41 +0200
-Message-ID: <20200420150947.30974-8-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200420150947.30974-1-horatiu.vultur@microchip.com>
-References: <20200420150947.30974-1-horatiu.vultur@microchip.com>
+        Mon, 20 Apr 2020 11:12:02 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KF7nfO015137;
+        Mon, 20 Apr 2020 17:11:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=4wle+BCTKMTBKSpUmBME32Lx6QZ8URVEdWZoWxaJkyY=;
+ b=DfxtwDuRe8VAsuC7SLh6qmShFY8uJTfq7AEasGTQSE7lsGzXklDgpBj8ab76EF57BEXH
+ MJuWISBM43wO8WCU8RhHv1eTukfa95cpZpZ8NccKJubeYbkJ45uvSiJdb/HcXzq1wdxf
+ xBkB5ICagyRga31i8QpYWQqaTNIKFLQw5v9u9EDX5swCJBAS1wsW6beAak/agKvNohMk
+ mHIarn2scI2iF0oM9Yj9chI24DGS7tX0LgeuPXQINA+saws8GysBrREOnYuJEFdpHnA4
+ +XFJTaC94LaTT5+HHpYC9Zmv7ANHcKmLzQrlC0py2eMsA6DyxHplCMhsqh3N8YKQYs0k Zw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30fq11b0bn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 17:11:56 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E23C810002A;
+        Mon, 20 Apr 2020 17:11:55 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D46CE2A608B;
+        Mon, 20 Apr 2020 17:11:55 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Apr
+ 2020 17:11:55 +0200
+Date:   Mon, 20 Apr 2020 17:11:52 +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     <pierre-yves.mordret@st.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+Subject: Re: [PATCH] i2c: stm32: don't print an error on probe deferral
+Message-ID: <20200420151152.GA10855@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
+        pierre-yves.mordret@st.com, alexandre.torgue@st.com,
+        linux-i2c@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+References: <1584642136-15418-1-git-send-email-alain.volmat@st.com>
+ <20200415110145.GN1141@ninjato>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200415110145.GN1141@ninjato>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_05:2020-04-20,2020-04-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend switchdev API to add support for MRP. The HW is notified in
-following cases:
+Hi Wolfram,
 
-SWITCHDEV_OBJ_ID_MRP: This is used when a MRP instance is added/removed
-  from the MRP ring.
+On Wed, Apr 15, 2020 at 01:01:45PM +0200, Wolfram Sang wrote:
+> >  	if (IS_ERR(dma->chan_tx)) {
+> > -		dev_dbg(dev, "can't request DMA tx channel\n");
+> >  		ret = PTR_ERR(dma->chan_tx);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_dbg(dev, "can't request DMA tx channel\n");
+> 
+> dev_dbg for tx...
 
-SWITCHDEV_OBJ_ID_RING_ROLE_MRP: This is used when the role of the node
-  changes. The current supported roles are MRM and MRC.
+Intention was to not change too much the original code when introducing this
+check and fixing this message level in another patch. But I guess indeed this
+can be done all at once.
 
-SWITCHDEV_OBJ_ID_RING_TEST_MRP: This is used when to start/stop sending
-  MRP_Test frames on the mrp ring ports. This is called only on nodes that have
-  the role MRM. In case this fails then the SW will generate the frames.
+I am pushing a v2 fixing this in this patch and having dev_err for both tx & rx
+dma requests.
 
-SWITCHDEV_OBJ_ID_RING_STATE_STATE: This is used when the ring changes it states
-  to open or closed. This is required to notify HW because the MRP_Test frame
-  contains the field MRP_InState which contains this information.
+> 
+> >  		goto fail_al;
+> >  	}
+> >  
+> > @@ -44,8 +45,10 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
+> >  	/* Request and configure I2C RX dma channel */
+> >  	dma->chan_rx = dma_request_chan(dev, "rx");
+> >  	if (IS_ERR(dma->chan_rx)) {
+> > -		dev_err(dev, "can't request DMA rx channel\n");
+> >  		ret = PTR_ERR(dma->chan_rx);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(dev, "can't request DMA rx channel\n");
+> 
+> ... and dev_err for rx? Intentional?
+> 
 
-SWITCHDEV_ATTR_ID_MRP_PORT_STATE: This is used when the port's state is
-  changed. It can be in blocking/forwarding mode.
-
-SWITCHDEV_ATTR_ID_MRP_PORT_ROLE: This is used when port's role changes. The
-  roles of the port can be primary/secondary. This is required to notify HW
-  because the MRP_Test frame contains the field MRP_PortRole that contains this
-  information.
-
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- include/net/switchdev.h | 62 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
-
-diff --git a/include/net/switchdev.h b/include/net/switchdev.h
-index aee86a189432..ae7aeb0d1f9c 100644
---- a/include/net/switchdev.h
-+++ b/include/net/switchdev.h
-@@ -40,6 +40,10 @@ enum switchdev_attr_id {
- 	SWITCHDEV_ATTR_ID_BRIDGE_VLAN_FILTERING,
- 	SWITCHDEV_ATTR_ID_BRIDGE_MC_DISABLED,
- 	SWITCHDEV_ATTR_ID_BRIDGE_MROUTER,
-+#if IS_ENABLED(CONFIG_BRIDGE_MRP)
-+	SWITCHDEV_ATTR_ID_MRP_PORT_STATE,
-+	SWITCHDEV_ATTR_ID_MRP_PORT_ROLE,
-+#endif
- };
- 
- struct switchdev_attr {
-@@ -55,6 +59,11 @@ struct switchdev_attr {
- 		clock_t ageing_time;			/* BRIDGE_AGEING_TIME */
- 		bool vlan_filtering;			/* BRIDGE_VLAN_FILTERING */
- 		bool mc_disabled;			/* MC_DISABLED */
-+#if IS_ENABLED(CONFIG_BRIDGE_MRP)
-+		u8 mrp_port_state;			/* MRP_PORT_STATE */
-+		u8 mrp_port_role;			/* MRP_PORT_ROLE */
-+		u8 mrp_ring_state;			/* MRP_RING_STATE */
-+#endif
- 	} u;
- };
- 
-@@ -63,6 +72,12 @@ enum switchdev_obj_id {
- 	SWITCHDEV_OBJ_ID_PORT_VLAN,
- 	SWITCHDEV_OBJ_ID_PORT_MDB,
- 	SWITCHDEV_OBJ_ID_HOST_MDB,
-+#if IS_ENABLED(CONFIG_BRIDGE_MRP)
-+	SWITCHDEV_OBJ_ID_MRP,
-+	SWITCHDEV_OBJ_ID_RING_TEST_MRP,
-+	SWITCHDEV_OBJ_ID_RING_ROLE_MRP,
-+	SWITCHDEV_OBJ_ID_RING_STATE_MRP,
-+#endif
- };
- 
- struct switchdev_obj {
-@@ -94,6 +109,53 @@ struct switchdev_obj_port_mdb {
- #define SWITCHDEV_OBJ_PORT_MDB(OBJ) \
- 	container_of((OBJ), struct switchdev_obj_port_mdb, obj)
- 
-+
-+#if IS_ENABLED(CONFIG_BRIDGE_MRP)
-+/* SWITCHDEV_OBJ_ID_MRP */
-+struct switchdev_obj_mrp {
-+	struct switchdev_obj obj;
-+	struct net_device *p_port;
-+	struct net_device *s_port;
-+	u32 ring_id;
-+};
-+
-+#define SWITCHDEV_OBJ_MRP(OBJ) \
-+	container_of((OBJ), struct switchdev_obj_mrp, obj)
-+
-+/* SWITCHDEV_OBJ_ID_RING_TEST_MRP */
-+struct switchdev_obj_ring_test_mrp {
-+	struct switchdev_obj obj;
-+	/* The value is in us and a value of 0 represents to stop */
-+	u32 interval;
-+	u8 max_miss;
-+	u32 ring_id;
-+	u32 period;
-+};
-+
-+#define SWITCHDEV_OBJ_RING_TEST_MRP(OBJ) \
-+	container_of((OBJ), struct switchdev_obj_ring_test_mrp, obj)
-+
-+/* SWICHDEV_OBJ_ID_RING_ROLE_MRP */
-+struct switchdev_obj_ring_role_mrp {
-+	struct switchdev_obj obj;
-+	u8 ring_role;
-+	u32 ring_id;
-+};
-+
-+#define SWITCHDEV_OBJ_RING_ROLE_MRP(OBJ) \
-+	container_of((OBJ), struct switchdev_obj_ring_role_mrp, obj)
-+
-+struct switchdev_obj_ring_state_mrp {
-+	struct switchdev_obj obj;
-+	u8 ring_state;
-+	u32 ring_id;
-+};
-+
-+#define SWITCHDEV_OBJ_RING_STATE_MRP(OBJ) \
-+	container_of((OBJ), struct switchdev_obj_ring_state_mrp, obj)
-+
-+#endif
-+
- typedef int switchdev_obj_dump_cb_t(struct switchdev_obj *obj);
- 
- enum switchdev_notifier_type {
--- 
-2.17.1
 
