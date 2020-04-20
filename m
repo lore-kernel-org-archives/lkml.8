@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACFBC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA48BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B09D3206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1083206DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386818;
-	bh=JOOTuWI6U2ZH4Csf9zK1OR4MtIve53GIFno1otkRgWE=;
+	s=default; t=1587386821;
+	bh=41bMuC0XJaXuLe33x+qaMb1pSjt/qKw8s1GFHjLPPhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0+Gj+CPMHypjMdEdGfG2/wsz5NoBvJu9GPGLVXEw8PGx2n5HoaOM81rmNYxg69MY
-	 o15bvjRv8QZCrHpumkTXVZrTp8tjf6YbMFJcQ6LHcvHBcQj8HFtg8fm+Sq3nIFNlqc
-	 TBJwFLAr/UyKDmaDtC6q0S/A7iTEIkqlHIBSRflg=
+	b=FbTahqUBkBL786k/kUILkeaacApGyS0DFjoM4bR1ll0mT8jSZtMrKFVNu6la9ywqF
+	 zk+hNFp6+ZG2PacO6W2L6tv9buahKw+4g2l6PX6e5/QR5Kl/fHAqSAO1SpaypmGjoy
+	 wLaem3o2WKUMwll7EuUF5RAd+lXCIhjZzGas3xnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgDTMq5 (ORCPT
+        id S1728996AbgDTMrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:46:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42188 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:47:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgDTMqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:46:37 -0400
+        id S1726815AbgDTMqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:46:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1A5E22242;
-        Mon, 20 Apr 2020 12:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D78A2078E;
+        Mon, 20 Apr 2020 12:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386797;
-        bh=JOOTuWI6U2ZH4Csf9zK1OR4MtIve53GIFno1otkRgWE=;
+        s=default; t=1587386802;
+        bh=41bMuC0XJaXuLe33x+qaMb1pSjt/qKw8s1GFHjLPPhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifshT+GUX2dC2aDXp88j3uDPPOfEM3QV7ATZcxoEgBmVfaLadwdKEqWQmXT9U+1U5
-         pajfn7BLU+7gbl1KGJ7kX66BUmZL7/p3YpdQrGLCHpZGLcrRs2Kl//m8QEkJd2qy8i
-         e2LQqLQ9KT428Bou5x6zVXIH6sffLYgTdq2K+m/I=
+        b=Yyea+H+2L09qpNSXUTn7Tw62lgO0ABf1PkmcD1alB6WIcNxiic9cvWyJOI7AAzzBF
+         kyLemsvI9lxxG7MK6Qq87pF2JsUJSuZ9GWVIQq7wTGJfXYiKkbFPn/bii15r4Ebmzh
+         S/QaiqCfdARAk1g65ohMolKqcH0vSWai8n49qXU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.4 30/60] clk: at91: usb: use proper usbs_mask
-Date:   Mon, 20 Apr 2020 14:39:08 +0200
-Message-Id: <20200420121509.331290084@linuxfoundation.org>
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.4 31/60] ARM: dts: imx7-colibri: fix muxing of usbc_det pin
+Date:   Mon, 20 Apr 2020 14:39:09 +0200
+Message-Id: <20200420121509.758653965@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -61,34 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-commit d7a83d67a1694c42cc95fc0755d823f7ca3bfcfb upstream.
+commit 7007f2eca0f258710899ca486da00546d03db0ed upstream.
 
-Use usbs_mask passed as argument. The usbs_mask is different for
-SAM9X60.
+USB_C_DET pin shouldn't be in ethernet group.
 
-Fixes: 2423eeaead6f8 ("clk: at91: usb: Add sam9x60 support")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Link: https://lkml.kernel.org/r/1579261009-4573-4-git-send-email-claudiu.beznea@microchip.com
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Creating a separate group allows one to use this pin
+as an USB ID pin.
+
+Fixes: b326629f25b7 ("ARM: dts: imx7: add Toradex Colibri iMX7S/iMX7D suppor")
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/at91/clk-usb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/clk/at91/clk-usb.c
-+++ b/drivers/clk/at91/clk-usb.c
-@@ -211,7 +211,7 @@ _at91sam9x5_clk_register_usb(struct regm
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -346,7 +346,7 @@
+ &iomuxc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4
+-		     &pinctrl_gpio7>;
++		     &pinctrl_gpio7 &pinctrl_usbc_det>;
  
- 	usb->hw.init = &init;
- 	usb->regmap = regmap;
--	usb->usbs_mask = SAM9X5_USBS_MASK;
-+	usb->usbs_mask = usbs_mask;
+ 	pinctrl_gpio1: gpio1-grp {
+ 		fsl,pins = <
+@@ -451,7 +451,6 @@
  
- 	hw = &usb->hw;
- 	ret = clk_hw_register(NULL, &usb->hw);
+ 	pinctrl_enet1: enet1grp {
+ 		fsl,pins = <
+-			MX7D_PAD_ENET1_CRS__GPIO7_IO14			0x14
+ 			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x73
+ 			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0	0x73
+ 			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1	0x73
+@@ -649,6 +648,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_usbc_det: gpio-usbc-det {
++		fsl,pins = <
++			MX7D_PAD_ENET1_CRS__GPIO7_IO14	0x14
++		>;
++	};
++
+ 	pinctrl_usbh_reg: gpio-usbh-vbus {
+ 		fsl,pins = <
+ 			MX7D_PAD_UART3_CTS_B__GPIO4_IO7	0x14 /* SODIMM 129 USBH PEN */
 
 
