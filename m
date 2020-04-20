@@ -2,203 +2,115 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF1AC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1EDC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FEB62071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587407849;
-	bh=P5EmJJIN273/S0FNhUmo8XteOF2pmXcFoG774fIUD1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gKD4zXg25Kt1DYpjnXigHWwiDIe5+CxclmlqHJsc7Rme0NrgZuWskl+hxJyts5ZEJ
-	 trJCoWqyZKW8yz+ZirpOnAMhjrh9HaQDqRKEk+EkTZ3j8aWSJ0/lJW3XG3Uj57phC1
-	 sbUulpAJ5cNeroUWoqufEqT+HHov6Fqsa28xuEvM=
+	by mail.kernel.org (Postfix) with ESMTP id 7C9AE2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:38:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qdR0buXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgDTSh2 (ORCPT
+        id S1728097AbgDTSiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:37:28 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41153 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgDTSh2 (ORCPT
+        Mon, 20 Apr 2020 14:38:08 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14145 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727931AbgDTSiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:37:28 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c3so9010561otp.8;
-        Mon, 20 Apr 2020 11:37:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SwEht26LXsrYWXHN9AUzhB2LIZfMy4nj6PiaQR9cyys=;
-        b=j7OMx1yXolF7jI3IoToWGl1yee1T4SrQZHPsixHd8fuqyFUY6qJmzETIwv4vNWOh8+
-         WLR+gKYrBSI427r34cqNCLKcCa3udcVvDZMid9ZZkSf87qiylmYddJ96MYz77dZtceJI
-         WBNXv1QqCxkVnCMNrIuzTm4vl3pzPHwaYn4gPDGmKAa6URbKS7UNJ7qahYwHZY7clUIE
-         nxkj8tGi2V6pJ1/72VW1Z7rP1sFaCMnWvlDY/hCKZ985TMELBcskHWpRRNXg2ndAT+eD
-         XYJScwJPpLWcwn9N/m9VAED6QmWGFLm7uEt2aGVg7Pk5x+VXvn3Os83UOLs4UXZuW8sn
-         LSvA==
-X-Gm-Message-State: AGi0PuaPT6xzZto0OTPc2ru3hhY59NPmb0uGHS4iZszhaHfTeNFcb5yI
-        GC+RLw8WN7oztazmn46u8Q==
-X-Google-Smtp-Source: APiQypITmTVLmCHUT2eoWbm+5j8UVDm4ArOIAfxEx6QVgHNIjF0wocTSMcaN3A1FjSNLuRxTVjRewg==
-X-Received: by 2002:a9d:2d89:: with SMTP id g9mr10268404otb.367.1587407846953;
-        Mon, 20 Apr 2020 11:37:26 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r21sm106975otg.67.2020.04.20.11.37.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 11:37:26 -0700 (PDT)
-Received: (nullmailer pid 13827 invoked by uid 1000);
-        Mon, 20 Apr 2020 18:37:25 -0000
-Date:   Mon, 20 Apr 2020 13:37:25 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2] dt-bindings: thermal: Convert i.MX8MM to json-schema
-Message-ID: <20200420183725.GA11019@bogus>
-References: <1586481044-19283-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 20 Apr 2020 14:38:08 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9deb9d0000>; Mon, 20 Apr 2020 11:36:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 20 Apr 2020 11:38:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 20 Apr 2020 11:38:07 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Apr
+ 2020 18:38:07 +0000
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Apr
+ 2020 18:38:04 +0000
+Subject: Re: [PATCH v9 3/3] MAINTAINERS: add HMM selftests
+To:     Joe Perches <joe@perches.com>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+References: <20200417235458.13462-1-rcampbell@nvidia.com>
+ <20200417235458.13462-4-rcampbell@nvidia.com>
+ <13a8e8efd56d00945e375760f7f065fb020287a1.camel@perches.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <e2006240-27b8-ceef-68bf-2769d2a77ccd@nvidia.com>
+Date:   Mon, 20 Apr 2020 11:38:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586481044-19283-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <13a8e8efd56d00945e375760f7f065fb020287a1.camel@perches.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587407773; bh=GJO2T/9pMFVSG1zuEWD7YSOrm1UFp+OyX1sarWLp1Q4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qdR0buXekI0fSG1y/vcH+5q5zr2hB8qT2ACM0FV9Z+iN+ZS5y0IF4H50jZNsBIMvn
+         Mm8Dmji15xrUgzyYjObLxvQtgVRP+lsHL+3KagOM+1/lVSJqHCTjvX6OWFat9hJMjp
+         ghUHzyVXNzgIDGvQSMb+VnodCQeAjhiUbO0viX7k7mvtGPM3mMxq1q6heoDuMfnIgI
+         tkOow5KGZfkSD+/WL1roUKAhTSLLoM8eHzRrdV22OsCMOyClEFoi8jIwJVRacrkO2T
+         kKw8H8pk1LLchbd3BY+31Y6ifu6keFUP4WK/EfAgE7m/qks2yo/8ReyGzOK0OYvOQy
+         CXSFL5Rjpw36g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 09:10:44AM +0800, Anson Huang wrote:
-> Convert the i.MX8MM thermal binding to DT schema format using json-schema
+
+On 4/17/20 5:59 PM, Joe Perches wrote:
+> On Fri, 2020-04-17 at 16:54 -0700, Ralph Campbell wrote:
+>> Add files for HMM selftests.
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> ---
+>>   MAINTAINERS | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index e64e5db31497..072921b7bae2 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -7729,6 +7729,9 @@ S:	Maintained
+>>   F:	Documentation/vm/hmm.rst
+>>   F:	include/linux/hmm*
+>>   F:	mm/hmm*
+>> +F:	include/uapi/linux/test_hmm*
+>> +F:	lib/test_hmm*
+>> +F:	tools/testing/selftests/vm/*hmm*
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- Add description to mention that i.MX8MM thermal driver supports
-> 	  both i.MX8MM(1 sensor) and i.MX8MP(2 sensors).
-> 	- Remove ./thermal.txt reference.
-> ---
->  .../devicetree/bindings/thermal/imx8mm-thermal.txt | 15 ------
->  .../bindings/thermal/imx8mm-thermal.yaml           | 62 ++++++++++++++++++++++
->  2 files changed, 62 insertions(+), 15 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
->  create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+> file patterns in alphabetic order please:
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-> deleted file mode 100644
-> index 3629d3c..0000000
-> --- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-> +++ /dev/null
-> @@ -1,15 +0,0 @@
-> -* Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
-> -
-> -Required properties:
-> -- compatible : Must be "fsl,imx8mm-tmu" or "fsl,imx8mp-tmu".
-> -- reg : Address range of TMU registers.
-> -- clocks : TMU's clock source.
-> -- #thermal-sensor-cells : Should be 0 or 1. See ./thermal.txt for a description.
-> -
-> -Example:
-> -tmu: tmu@30260000 {
-> -	compatible = "fsl,imx8mm-tmu";
-> -	reg = <0x30260000 0x10000>;
-> -	clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
-> -	#thermal-sensor-cells = <0>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
-> new file mode 100644
-> index 0000000..71807e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/imx8mm-thermal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP i.MX8M Mini Thermal Binding
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +description: |
-> +  i.MX8MM has TMU IP to allow temperature measurement, there are
-> +  currently two distinct major versions of the IP that is supported
-> +  by a single driver. The IP versions are named v1 and v2, v1 is
-> +  for i.MX8MM which has ONLY 1 sensor, v2 is for i.MX8MP which has
-> +  2 sensors.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx8mm-tmu
-> +              - fsl,imx8mp-tmu
-
-Just:
-
-compatible:
-  enum:
-    - fsl,imx8mm-tmu
-    - fsl,imx8mp-tmu
-
-> +  reg:
-> +    description: |
-> +      Address range of TMU registers.
-
-Drop this.
-
-> +    maxItems: 1
-
-Blank line here.
-
-> +  clocks:
-> +    description: |
-> +      TMU's clock source.
-
-Drop
-
-> +    maxItems: 1
-> +
-> +  "#thermal-sensor-cells":
-> +    description: |
-> +      Number of cells required to uniquely identify the thermal
-> +      sensors, 0 for ONLY one sensor and 1 for multiple sensors.
-> +    enum:
-> +      - 0
-> +      - 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - '#thermal-sensor-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/imx8mm-clock.h>
-> +
-> +    tmu: tmu@30260000 {
-
-thermal-sensor@...
-
-> +         compatible = "fsl,imx8mm-tmu";
-> +         reg = <0x30260000 0x10000>;
-> +         clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
-> +         #thermal-sensor-cells = <0>;
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
+> F	Documentation/vm/hmm.rst
+> F:	include/linux/hmm*
+> F:	include/uapi/linux/test_hmm*
+> F:	lib/test_hmm*
+> F:	mm/hmm*
+> F:	tools/testing/selftests/vm/*hmm*	
 > 
+
+No problem. Will fix in the next posting.
+Thanks.
