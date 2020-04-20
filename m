@@ -2,268 +2,106 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B76CC38A30
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1769C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2EEA2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587407722;
-	bh=TkZrKQj9vsqkmFr85nH7UyxBaUsQ9gILdadhMu3aJhU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lx0CaSvo+Y5aWP8MRC5uU4TH5IgauV7DCAwcXtLWcgG8YxTiw1jAgpx3P02JkA3bt
-	 GSZJAIy/p5fsyp7VeKIWl6wB+sk9GIa7LabeAd2VcPRIfDMGmAekXvH7OZD2n4NmXB
-	 EZlAYdw714FT2q91Y6637jekSO9lyEwC+n6etCI8=
+	by mail.kernel.org (Postfix) with ESMTP id C4A8F2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="S+5BeLfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgDTSfV (ORCPT
+        id S1728134AbgDTSfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:35:21 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44794 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgDTSfU (ORCPT
+        Mon, 20 Apr 2020 14:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbgDTSfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:35:20 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a2so5085626oia.11;
-        Mon, 20 Apr 2020 11:35:19 -0700 (PDT)
+        Mon, 20 Apr 2020 14:35:33 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ABACC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:35:33 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id w65so5344793pfc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BVyxzO6w6KRqh5zTiPhAR3WguF52RcQy4LeNfkdXE5s=;
+        b=S+5BeLfI2TmyfSan2k/CYEVDdox0YsV5vCj+hrbs2c+qoMYAL3ZtPvNeOESG/nM2c5
+         4yoURWGbunwdWDiIBogB/kPUQKoDCzxbGyk+r1e6gXC4w3HR646WvvqRmK3TEt5VQdyK
+         9hX+03iayDi27GDcxu+IGGwLWQHu872LdAyoSqEH+peMaXE03v+5kq8MHqqruHnyPk6I
+         WaQVKmQQU6fNg5EqEAqUl4jyuZPfVclo+Wtl35fzV2J7qS5WFkKkxxFaaiL+nFu9HoM6
+         t+zW7Ptw5/Vh0C764eH4Lv3ry5WW1nffvZdPIrY79DGlsX3EXviVufSWvYY/Rz819UXf
+         ZqzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R4OQ//22u2MPOmZHKyicGJvmvsIaQtYSXsu+wdZNuM4=;
-        b=QPdqckdskbRCogJpNcYplhwYEyeqNleapgNp2sift0yoLXOFp6lH4FbM9+xuJpOJtd
-         41NdEBQuzI+XjVgkbmsMAaqN/z4X+j4UX8SRHQ7SKynz1Ui+NdjKqn/9XTkpFuOQelyX
-         tqGXT18go9wKhA18QrTL0eIOKJjKX570hspYWofReMtRyoxK0UKNnaenaxkWf8np2ki5
-         qdg9eKF3h/ufT+0VtbK3L9AwCKK5wQId+axcp+MwYwEEDKt5+MFqksCWEwFHVHAAOO66
-         ryLtajfixPIMpbFaceWW0qnLlt810pkGaO/tBpENRTgl1ysvVSdf6OIrOHPqWk0KGrrd
-         8mFg==
-X-Gm-Message-State: AGi0PuY9OwHjBZDYXNL4Wwq3xcw4+4gV1jMFogsBfhgQieU0saVdAafJ
-        /iL+Jo1QLZQyEGgrwubGTA==
-X-Google-Smtp-Source: APiQypI5iWrU/MsQnhldGps2oxwvsnjbS3ZoaH/XAT2+pSAztESGSzhH48A1n6XI4AszMbeiLRaqlg==
-X-Received: by 2002:aca:dc08:: with SMTP id t8mr521470oig.135.1587407719248;
-        Mon, 20 Apr 2020 11:35:19 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q18sm100760otl.65.2020.04.20.11.35.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 11:35:18 -0700 (PDT)
-Received: (nullmailer pid 10765 invoked by uid 1000);
-        Mon, 20 Apr 2020 18:35:12 -0000
-Date:   Mon, 20 Apr 2020 13:35:12 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2] dt-bindings: thermal: Convert i.MX to json-schema
-Message-ID: <20200420183512.GA5483@bogus>
-References: <1586480844-19227-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BVyxzO6w6KRqh5zTiPhAR3WguF52RcQy4LeNfkdXE5s=;
+        b=j/jdpp1EtkcXRTs29WS26RQV0FcCGqaGXubkdyAxtofe9iAzoVBxpFlcaE6FRE/GEg
+         5abdFjjjk+w9No883ghCR3/1QHX4QgXLL+OGH/uYL0B/wbJfh5vPPC7Orth4rEmhmvWr
+         tgAgKGiblflTbzBLwNdv+fgQdmovfj3cv0Op1t3nsbWtFV9dIEMz+uE3yLyXf6UGmkYj
+         oH6Vok41rzso1nhOKO7TVch9/EN13ad58G3df4s8jVi49rsg0Sw8AP4WrtfnWmZ//Gi9
+         7ZJ1d0UU+Ko4Zk6EtfSETnXCwvCqFROQ/Xcs7racUdPN79Vtmk9V4VpJ5jU91rQMZD+f
+         o4YA==
+X-Gm-Message-State: AGi0PuYo3xzd/VBY7tkSbJm0Ra19KhGjtkQMlXCtAmbQEk3ImsIy1SIe
+        jFm4lCv/uN5hhOWs6i1km2Pr8w==
+X-Google-Smtp-Source: APiQypJ27QfKwierbm7XkX8Y3qkJZSMtvY5tcdA6Jc5QfsInRa2UZlTs9UzyQejBlHKxFnsslrKZ8w==
+X-Received: by 2002:a63:dd0a:: with SMTP id t10mr17488927pgg.229.1587407732608;
+        Mon, 20 Apr 2020 11:35:32 -0700 (PDT)
+Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id i190sm175314pfe.114.2020.04.20.11.35.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 11:35:31 -0700 (PDT)
+Subject: Re: [PATCH 2/3] x86/vdso2c: Convert iterator to unsigned
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>, x86@kernel.org,
+        Andrei Vagin <avagin@openvz.org>
+References: <20200420183256.660371-1-dima@arista.com>
+ <20200420183256.660371-3-dima@arista.com>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <04b64d48-62f7-cf50-a12c-ccb2f8a1b9c1@arista.com>
+Date:   Mon, 20 Apr 2020 19:35:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586480844-19227-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200420183256.660371-3-dima@arista.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 09:07:24AM +0800, Anson Huang wrote:
-> Convert the i.MX thermal binding to DT schema format using json-schema
+This one was sent by a mistake, see
+> [PATCH 2/3] x86/vdso2c: Convert iterators to unsigned
+instead, please.
+
+On 4/20/20 7:32 PM, Dmitry Safonov wrote:
+> i and j are used everywhere with unsigned types.
+> Cleanup and prettify the code a bit.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- make clock property optional.
-> ---
->  .../devicetree/bindings/thermal/imx-thermal.txt    | 61 --------------
->  .../devicetree/bindings/thermal/imx-thermal.yaml   | 96 ++++++++++++++++++++++
->  2 files changed, 96 insertions(+), 61 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
->  create mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> Introduce syms_nr for readability and as a preparation for allocating an
+> array of vDSO entries that will be needed for creating two vdso .so's:
+> one for host tasks and another for processes inside time namespace.
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> deleted file mode 100644
-> index 823e417..0000000
-> --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> +++ /dev/null
-> @@ -1,61 +0,0 @@
-> -* Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
-> -
-> -Required properties:
-> -- compatible : must be one of following:
-> -  - "fsl,imx6q-tempmon" for i.MX6Q,
-> -  - "fsl,imx6sx-tempmon" for i.MX6SX,
-> -  - "fsl,imx7d-tempmon" for i.MX7S/D.
-> -- interrupts : the interrupt output of the controller:
-> -  i.MX6Q has one IRQ which will be triggered when temperature is higher than high threshold,
-> -  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
-> -  when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
-> -  is higher than panic threshold, system will auto reboot by SRC module.
-> -- fsl,tempmon : phandle pointer to system controller that contains TEMPMON
-> -  control registers, e.g. ANATOP on imx6q.
-> -- nvmem-cells: A phandle to the calibration cells provided by ocotp.
-> -- nvmem-cell-names: Should be "calib", "temp_grade".
-> -
-> -Deprecated properties:
-> -- fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
-> -  calibration data, e.g. OCOTP on imx6q.  The details about calibration data
-> -  can be found in SoC Reference Manual.
-> -
-> -Direct access to OCOTP via fsl,tempmon-data is incorrect on some newer chips
-> -because it does not handle OCOTP clock requirements.
-> -
-> -Optional properties:
-> -- clocks : thermal sensor's clock source.
-> -
-> -Example:
-> -ocotp: ocotp@21bc000 {
-> -	#address-cells = <1>;
-> -	#size-cells = <1>;
-> -	compatible = "fsl,imx6sx-ocotp", "syscon";
-> -	reg = <0x021bc000 0x4000>;
-> -	clocks = <&clks IMX6SX_CLK_OCOTP>;
-> -
-> -	tempmon_calib: calib@38 {
-> -		reg = <0x38 4>;
-> -	};
-> -
-> -	tempmon_temp_grade: temp-grade@20 {
-> -		reg = <0x20 4>;
-> -	};
-> -};
-> -
-> -tempmon: tempmon {
-> -	compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
-> -	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> -	fsl,tempmon = <&anatop>;
-> -	nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-> -	nvmem-cell-names = "calib", "temp_grade";
-> -	clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
-> -};
-> -
-> -Legacy method (Deprecated):
-> -tempmon {
-> -	compatible = "fsl,imx6q-tempmon";
-> -	fsl,tempmon = <&anatop>;
-> -	fsl,tempmon-data = <&ocotp>;
-> -	clocks = <&clks 172>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-> new file mode 100644
-> index 0000000..193c7e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-> @@ -0,0 +1,96 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/imx-thermal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP i.MX Thermal Binding
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx6q-tempmon
-> +              - fsl,imx6sx-tempmon
-> +              - fsl,imx7d-tempmon
-> +
-> +  interrupts:
-> +    description: |
-> +      The interrupt output of the controller, the IRQ will be triggered
-> +      when temperature is higher than high threshold.
-> +    maxItems: 1
-> +
-> +  nvmem-cells:
-> +    description: |
-> +      Phandle to the calibration cells provided by ocotp for calibration
-> +      data and temperature grade.
-> +    maxItems: 2
-> +
-> +  nvmem-cell-names:
-> +    maxItems: 2
-> +    items:
-> +      - const: calib
-> +      - const: temp_grade
-> +
-> +  fsl,tempmon:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    description: |
-> +      Phandle pointer to system controller that contains TEMPMON control
-> +      registers, e.g. ANATOP on imx6q.
-
-Really, this should have been a child of the system controller. Not too 
-late to do that, but you'd need to keep this for compatibility.
-
-> +
-> +  fsl,tempmon-data:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    description: |
-> +      Deprecated property, phandle pointer to fuse controller that contains
-> +      TEMPMON calibration data, e.g. OCOTP on imx6q. The details about
-> +      calibration data can be found in SoC Reference Manual.
-
-Use 'deprecated: true' for deprecated properties.
-
-> +
-> +  clocks:
-> +    description: |
-> +      Thermal sensor's clock source, it is optional.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - fsl,tempmon
-> +  - nvmem-cells
-> +  - nvmem-cell-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/imx6sx-clock.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    ocotp: ocotp@21bc000 {
-> +         #address-cells = <1>;
-> +         #size-cells = <1>;
-> +         compatible = "fsl,imx6sx-ocotp", "syscon";
-> +         reg = <0x021bc000 0x4000>;
-> +         clocks = <&clks IMX6SX_CLK_OCOTP>;
-> +
-> +         tempmon_calib: calib@38 {
-> +             reg = <0x38 4>;
-> +         };
-> +
-> +         tempmon_temp_grade: temp-grade@20 {
-> +             reg = <0x20 4>;
-> +         };
-> +    };
-> +
-> +    tempmon: tempmon {
-> +         compatible = "fsl,imx6sx-tempmon";
-> +         interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +         fsl,tempmon = <&anatop>;
-> +         nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-> +         nvmem-cell-names = "calib", "temp_grade";
-> +         clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
-> 
+> Co-developed-by: Andrei Vagin <avagin@openvz.org>
+> Signed-off-by: Andrei Vagin <avagin@openvz.org>
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
+[..]
+Thanks,
+          Dmitry
