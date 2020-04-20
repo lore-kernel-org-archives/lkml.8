@@ -2,102 +2,91 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E16C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03A8C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC08B221F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:48:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="LDHslhvF"
+	by mail.kernel.org (Postfix) with ESMTP id BF21920CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 09:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgDTJsE (ORCPT
+        id S1726105AbgDTJtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:48:04 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52748 "EHLO vps.xff.cz"
+        Mon, 20 Apr 2020 05:49:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50056 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgDTJsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:48:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1587376081; bh=kvg/KPchN1Bd4x4Qv/4aiZ1j8gCVrRDg80fgEeNCT3w=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=LDHslhvFYkNvK5LvMAotJMKWV1Oyixl1P0cwrXBL45Fr3c1qZIqNW0bxcZLXITig4
-         f/DpPOBGtsRKQJfjFTcdxD7J6Ss/ZC7HiH5Cf3bNqWtpztoJwT4noCkJ88+KCmCrnV
-         GG+vlLU/1hj6lL0MSyXrB3F3b7EhsCh6OF++1eXI=
-Date:   Mon, 20 Apr 2020 11:48:01 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] [PATCH v3 0/7] Add support for Allwinner H6 DVFS
-Message-ID: <20200420094801.ltsittj3gdrbbr3u@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-References: <20200419135011.18010-1-peron.clem@gmail.com>
+        id S1725773AbgDTJta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:49:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 218FAAC52;
+        Mon, 20 Apr 2020 09:49:28 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 7F70B1E126F; Mon, 20 Apr 2020 11:49:27 +0200 (CEST)
+Date:   Mon, 20 Apr 2020 11:49:27 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>,
+        axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org, tytso@mit.edu,
+        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/8] bdi: add a ->dev_name field to struct
+ backing_dev_info
+Message-ID: <20200420094927.GA17130@quack2.suse.cz>
+References: <20200416165453.1080463-1-hch@lst.de>
+ <20200416165453.1080463-4-hch@lst.de>
+ <20200417085909.GA12234@quack2.suse.cz>
+ <70f001cd-eaec-874f-9742-c44e66368a2a@acm.org>
+ <20200419075809.GA12222@lst.de>
+ <a37e947d-c49a-837e-e97d-647ca9d378c3@acm.org>
+ <20200419160651.GA18308@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200419135011.18010-1-peron.clem@gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200419160651.GA18308@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Clément,
-
-On Sun, Apr 19, 2020 at 03:50:04PM +0200, Clément Péron wrote:
-> Hi Sunxi maintainers and members,
+On Sun 19-04-20 18:06:51, Christoph Hellwig wrote:
+> On Sun, Apr 19, 2020 at 08:29:21AM -0700, Bart Van Assche wrote:
+> > On 4/19/20 12:58 AM, Christoph Hellwig wrote:
+> >> On Sat, Apr 18, 2020 at 08:40:20AM -0700, Bart Van Assche wrote:
+> >>>> This can have a sideeffect not only bdi->dev_name will be truncated to 64
+> >>>> chars (which generally doesn't matter) but possibly also kobject name will
+> >>>> be truncated in the same way.  Which may have user visible effects. E.g.
+> >>>> for fs/vboxsf 64 chars need not be enough. So shouldn't we rather do it the
+> >>>> other way around - i.e., let device_create_vargs() create the device name
+> >>>> and then copy to bdi->dev_name whatever fits?
+> >>>
+> >>> How about using kvasprintf() instead of vsnprintf()?
+> >>
+> >> That is what v1 did, see the thread in response to that on why it isn't
+> >> a good idea.
+> >
+> > Are you perhaps referring to patch "[PATCH 3/8] bdi: add a ->dev_name field 
+> > to struct backing_dev_info" 
+> > (https://lore.kernel.org/linux-block/20200416071519.807660-4-hch@lst.de/) 
+> > and also to the replies to that patch? This is what I found in the replies: 
+> > "When driver try to to re-register bdi but without release_bdi(), the old 
+> > dev_name will be cover directly by the newer in bdi_register_va(). So, I am 
+> > not sure whether it can cause memory leak for bdi->dev_name."
+> >
+> > Has it been considered to avoid that leak by freeing bdi->dev_name from 
+> > unregister_bdi(), e.g. as follows?
 > 
-> Now that required drivers are merged we can contibute on DVFS
-> support for Allwinner H6.
-> 
+> We'd need some protection against concurrent accesses as unregister_bdi
+> can race with them.  But with RCU that could be handled, so let me try
+> that.
 
-[ snip ]
+Yeah, that's what Yufen tried in his series some time ago and what I think
+you personally didn't like :).
 
-> 
-> Changes since v2 (thanks to Maxime Ripard):
->   - Change Orange Pi boards to Orange Pi 3
->   - Change soc speed nvmem node name
->   - Fix device tree warnings
->   - Drop GPU opp tables
-
-Looks like you may have also inadverently dropped the second patch from v2
-series that implemented CPU thermal trip points.
-
-> Changes since v1 (thanks to Ondřej Jirman):
->   - Remove Polling thermal
->   - Add Orange Pi boards
->   - Remove minimal voltage change for Beelink GS1
->   - Add ramp-deplay for GPU and CPU regulators
->   - Push to thermal point to 85°C (Allwinner set them to 100°C and 115°C)
->   - Added 1.6GHz and 1.7GHz to OPP table.
-> 
-> Clément Péron (6):
->   arm64: configs: Enable sun50i cpufreq nvmem
->   arm64: dts: allwinner: h6: Enable CPU opp tables for Beelink GS1
->   arm64: dts: allwinner: h6: Enable CPU opp tables for Orange Pi 3
->   arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6
->   arm64: dts: allwinner: Sort Pine H64 device-tree nodes
->   arm64: dts: allwinner: h6: Enable CPU and GPU opp tables for Pine H64
-
-You may also want to fix title of this patch to drop the GPU reference.
-
-thank you and regards,
-	o.
-
-> Ondrej Jirman (1):
->   arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
