@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB6CC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E84C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C802A206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824D1206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387297;
-	bh=BCsMp6KmgZiVCIqWnfB2eIy61jHp4A1fOmlCIapij5I=;
+	s=default; t=1587387300;
+	bh=otd2QZ8LurhFqBTT0j5u25PASA7bqvPKOXhJaz2Pir8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BO67y3fcIg0e7EAlY88pmO5onmH6zNsHzyhLTR1ADWs3IjbvcZqwtP8l8vCfELWlm
-	 7KA9N6OJdAImlK36KBa9Tw5lTKYO0WkGTIr6Fq/1we2OmqafVA/CWfeGVLIT1yN85m
-	 QcZSUs+dnmcu4Nen2ObRx/xPY8vM6c5ipFwib6xs=
+	b=wF4vj9hPmAuPSYPi+PyG9b0GrXuRcLoQcneqVx2/e2Ll2kCmDp8Qe+jzN6zL/E4Ir
+	 FBrcqVHF8E9wU2iS/wL0GSi1DuMqyKmjsBPJ4QZJXS6pv2+jw9Df7l4gUeJpvubBGH
+	 ogTl5K3S22TSn9IVeUm2RgCGiJ7tPIuR8/g0M13g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgDTMqE (ORCPT
+        id S1729493AbgDTMy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:46:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41100 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:54:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbgDTMp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:58 -0400
+        id S1728879AbgDTMqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:46:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A44E9206DD;
-        Mon, 20 Apr 2020 12:45:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59E4F20735;
+        Mon, 20 Apr 2020 12:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386758;
-        bh=BCsMp6KmgZiVCIqWnfB2eIy61jHp4A1fOmlCIapij5I=;
+        s=default; t=1587386772;
+        bh=otd2QZ8LurhFqBTT0j5u25PASA7bqvPKOXhJaz2Pir8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gM/zodchYYRAtbdcQP0nAvFXatLRF6wBdM0+GHjFTFALtobR+uSN3j3DHbqHME8c+
-         IMKJBXc2TwTFTYz0qYmj4uZcVDELlYJZ9jwDsRhQO6iz0F/lghnPU1SYj94PPN6E9M
-         eueWckHtNxOTIn2DAwAA16U8x+nWJERtZABSZUvM=
+        b=EccRunhjSjVEFwkRmyiOA+OWjx8grISCoKTQNJsR+Ctv2VoCTcN/JXId5dD8UUesv
+         ivZggJYLaR8pEhqXx9oc+IaZdVTa445fjcyu0ZU3puLcjO9LHHs9YbDzs23z27gnPH
+         RVeIeBuz3UDAxob3lMhaRaoozEuJiR2fVLbTxyzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 15/60] net/mlx5e: Fix nest_level for vlan pop action
-Date:   Mon, 20 Apr 2020 14:38:53 +0200
-Message-Id: <20200420121505.524678777@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Michael=20Wei=C3=9F?= <michael.weiss@aisec.fraunhofer.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 03/60] l2tp: Allow management of tunnels and session in user namespace
+Date:   Mon, 20 Apr 2020 14:38:41 +0200
+Message-Id: <20200420121501.460823896@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -60,43 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Linkin <dmitrolin@mellanox.com>
+From: "Michael Weiﬂ" <michael.weiss@aisec.fraunhofer.de>
 
-[ Upstream commit 70f478ca085deec4d6c1f187f773f5827ddce7e8 ]
+[ Upstream commit 2abe05234f2e892728c388169631e4b99f354c86 ]
 
-Current value of nest_level, assigned from net_device lower_level value,
-does not reflect the actual number of vlan headers, needed to pop.
-For ex., if we have untagged ingress traffic sended over vlan devices,
-instead of one pop action, driver will perform two pop actions.
-To fix that, calculate nest_level as difference between vlan device and
-parent device lower_levels.
+Creation and management of L2TPv3 tunnels and session through netlink
+requires CAP_NET_ADMIN. However, a process with CAP_NET_ADMIN in a
+non-initial user namespace gets an EPERM due to the use of the
+genetlink GENL_ADMIN_PERM flag. Thus, management of L2TP VPNs inside
+an unprivileged container won't work.
 
-Fixes: f3b0a18bb6cb ("net: remove unnecessary variables and callback")
-Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+We replaced the GENL_ADMIN_PERM by the GENL_UNS_ADMIN_PERM flag
+similar to other network modules which also had this problem, e.g.,
+openvswitch (commit 4a92602aa1cd "openvswitch: allow management from
+inside user namespaces") and nl80211 (commit 5617c6cd6f844 "nl80211:
+Allow privileged operations from user namespaces").
+
+I tested this in the container runtime trustm3 (trustm3.github.io)
+and was able to create l2tp tunnels and sessions in unpriviliged
+(user namespaced) containers using a private network namespace.
+For other runtimes such as docker or lxc this should work, too.
+
+Signed-off-by: Michael Wei√ü <michael.weiss@aisec.fraunhofer.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/l2tp/l2tp_netlink.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -3181,12 +3181,13 @@ static int add_vlan_pop_action(struct ml
- 			       struct mlx5_esw_flow_attr *attr,
- 			       u32 *action)
- {
--	int nest_level = attr->parse_attr->filter_dev->lower_level;
- 	struct flow_action_entry vlan_act = {
- 		.id = FLOW_ACTION_VLAN_POP,
- 	};
--	int err = 0;
-+	int nest_level, err = 0;
+--- a/net/l2tp/l2tp_netlink.c
++++ b/net/l2tp/l2tp_netlink.c
+@@ -920,51 +920,51 @@ static const struct genl_ops l2tp_nl_ops
+ 		.cmd = L2TP_CMD_TUNNEL_CREATE,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_tunnel_create,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_TUNNEL_DELETE,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_tunnel_delete,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_TUNNEL_MODIFY,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_tunnel_modify,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_TUNNEL_GET,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_tunnel_get,
+ 		.dumpit = l2tp_nl_cmd_tunnel_dump,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_SESSION_CREATE,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_session_create,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_SESSION_DELETE,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_session_delete,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_SESSION_MODIFY,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_session_modify,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+ 		.cmd = L2TP_CMD_SESSION_GET,
+ 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
+ 		.doit = l2tp_nl_cmd_session_get,
+ 		.dumpit = l2tp_nl_cmd_session_dump,
+-		.flags = GENL_ADMIN_PERM,
++		.flags = GENL_UNS_ADMIN_PERM,
+ 	},
+ };
  
-+	nest_level = attr->parse_attr->filter_dev->lower_level -
-+						priv->netdev->lower_level;
- 	while (nest_level--) {
- 		err = parse_tc_vlan_action(priv, &vlan_act, attr, action);
- 		if (err)
 
 
