@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B03EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37066C54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA94B2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BE72074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:33:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="RCtJAKGb"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="R6iixU7T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgDTSdI (ORCPT
+        id S1727899AbgDTSdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:33:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59480 "EHLO
+        Mon, 20 Apr 2020 14:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbgDTSdH (ORCPT
+        with ESMTP id S1725613AbgDTSdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:33:07 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E80C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:33:07 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w65so5341327pfc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:33:07 -0700 (PDT)
+        Mon, 20 Apr 2020 14:33:11 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30CE7C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:33:11 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k18so4264544pll.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:33:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gen1M+qmXAJMJ8ttcb3/H4xStTkszQo6DIR2GPpGFxw=;
-        b=RCtJAKGblQLL+e4wkUbNuQFul/A/dXUoDg6yQk1o/4X9s+YZmF9wuHMAv6OByfLo/x
-         SG422GKuiYQeARlGpR4+qWPgY8jI03n+4M/P8v7rNzTqZEbUQhw3EfRGEmmH5n8Q8yUA
-         h75q9+rP1TDxrxpLgiMNmSbplnGPmbPRjZP9BvVlVwG7hT1A0iJWuvg/nNMEla/rTqM8
-         OeHC8M6gfdK8JW5NEpArpQK81Rnc0xj4ULhKgYwgVs9scdFI6DjMnUPGf9JVlCC8SHaB
-         8aTamiSSFbtQ50kyMdNT7LIR4GJOqMvguXUcSZ5AS0immHALKi06agJEx/Sbcgtd11rr
-         0rKw==
+        bh=P8+QEr6nEc3XkBp5IsOTLoBUYx1ezfM2tLTr0o8bZf4=;
+        b=R6iixU7Tw7k/m27XZlp/ylDYNZUIZOR2YIvh8oBtu6bT6aSUzRdGt8DL9kg0gICkkV
+         OmMqFta5jVgVqCdbDSu5pkIWAhiTyCfc1ICOFVh+pnmexPOtuEZPI8mFw+pdr/O+Nvp9
+         r/+oZAMHD03TORbrtz+ROegmy24J6D8d7tdQbWXAUcZLylHFReyveADwm/sDPQODcPEI
+         ON350vxcgjMMhVDotXxKx/9aB+WsHSC2iR7bJARYTgHLLr5U5dZXZX6CyhlsWV99oAGJ
+         szT768w5vizo399e06Zp16cMp4dVIN48AunZo3C4lrp0FAmUhEpyrnEngNTVBBgep7VD
+         OgRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gen1M+qmXAJMJ8ttcb3/H4xStTkszQo6DIR2GPpGFxw=;
-        b=BWVfNsg6nUMJa2NebVez5ZqqyRIJFfuSfwrURynaNv1bp2ZgKo5TGMUa3F/m/bb+0T
-         su55wOoJnnXqTwaRBURdgEVIkkTz3OzUh/2fGMfD9PMrFshz2w7yRCcDtjRfnnt+hwv0
-         c//0V6qRYRpMqE+Ehg1UOgNasIAExZF/0gaeFKWIC4k6q6t0Morf2wYrntzeILjhj79j
-         bf7Y3CGNZ5VxzJxalovpcicqCls8tvbWexiTghHNozl6H6Qqh8ccZUZKyslkllk14zZi
-         U+ddfaO/5IsIN9E0ldX26rPr+z+vRmc6iNg+PG5WShFY5r58+zdEsc1rL9QhA2+B8zvE
-         k+JQ==
-X-Gm-Message-State: AGi0PualCTWEI81SKqvK2dPXpqPdqPAS+TSurzK9QcarGqRqrsOtfukN
-        ouf1T6Vn6tXgd8PVNCM39UNPnZqd+eihWg==
-X-Google-Smtp-Source: APiQypJNWMn/7pvPs/nSvHePEQtldRDCRs999tTtsV6kWSextz2pcNoQoEch533PPnSP0kxuV5q8Tw==
-X-Received: by 2002:a63:1566:: with SMTP id 38mr18556582pgv.355.1587407586218;
-        Mon, 20 Apr 2020 11:33:06 -0700 (PDT)
+        bh=P8+QEr6nEc3XkBp5IsOTLoBUYx1ezfM2tLTr0o8bZf4=;
+        b=AKYji6EHFURWfTbSVTqdtn2rub18eShtKqt7q/hLnbzXR3hfmPE5iFuQ1+zVd/rP/y
+         7c0Xlron2OD4SBZ/9WFUQkjSaZBa/oSuVZJ5hbACJdzZtNuI+8Azz8jjkAh4JHEHeaFV
+         g55QNKCn8mDHfa9HNRRdeP6s14zuTNoHiJ1c2ceIlS3lyE5lNAVdyFDpNqzc2hE0L2sX
+         uALozkyNCwOG+D6PFs/ukU17xQQyhY4mR6+RG74ZOH5O7yQ7GRK14pW8Gn1c7nouIRUf
+         ASjXcWI1i5tXracFYsWFU+4Aa/rxyfb30PQ/3vwU0c6sSXS/2efAuzWKowUybPJPsPWQ
+         x/TA==
+X-Gm-Message-State: AGi0PuaUr9RHwIVQu7I+k+Qhkgt+VookiraSpxA29t4VrLID9IKIIsjo
+        NZDaLkFpDhE/zN1fh27wQA5twuRafIrGAQ==
+X-Google-Smtp-Source: APiQypJz614uV8iKNNoHchO9WxCPYm5upLuQokJI8MHagYt6bvHUYrC9LbwbI7VhGx4KCr02Xdy/XQ==
+X-Received: by 2002:a17:90b:4c84:: with SMTP id my4mr840255pjb.3.1587407590227;
+        Mon, 20 Apr 2020 11:33:10 -0700 (PDT)
 Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id l185sm172536pfl.104.2020.04.20.11.33.01
+        by smtp.gmail.com with ESMTPSA id l185sm172536pfl.104.2020.04.20.11.33.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 11:33:04 -0700 (PDT)
+        Mon, 20 Apr 2020 11:33:09 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>, x86@kernel.org,
         Andrei Vagin <avagin@openvz.org>
-Subject: [PATCH 1/3] x86/vdso2c: Correct err messages on file opening
-Date:   Mon, 20 Apr 2020 19:32:53 +0100
-Message-Id: <20200420183256.660371-2-dima@arista.com>
+Subject: [PATCH 2/3] x86/vdso2c: Convert iterator to unsigned
+Date:   Mon, 20 Apr 2020 19:32:54 +0100
+Message-Id: <20200420183256.660371-3-dima@arista.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200420183256.660371-1-dima@arista.com>
 References: <20200420183256.660371-1-dima@arista.com>
@@ -83,41 +83,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-err() message in main() is misleading: it should print `outfilename`,
-which is argv[3], not argv[2].
+i and j are used everywhere with unsigned types.
+Cleanup and prettify the code a bit.
 
-Correct error messages to be more precise about what failed and for
-which file.
+Introduce syms_nr for readability and as a preparation for allocating an
+array of vDSO entries that will be needed for creating two vdso .so's:
+one for host tasks and another for processes inside time namespace.
 
 Co-developed-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/entry/vdso/vdso2c.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/entry/vdso/vdso2c.h | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vdso2c.c b/arch/x86/entry/vdso/vdso2c.c
-index 3842873b3ae3..7380908045c7 100644
---- a/arch/x86/entry/vdso/vdso2c.c
-+++ b/arch/x86/entry/vdso/vdso2c.c
-@@ -187,7 +187,7 @@ static void map_input(const char *name, void **addr, size_t *len, int prot)
+diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
+index a20b134de2a8..80be339ee93e 100644
+--- a/arch/x86/entry/vdso/vdso2c.h
++++ b/arch/x86/entry/vdso/vdso2c.h
+@@ -13,7 +13,7 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 	unsigned long load_size = -1;  /* Work around bogus warning */
+ 	unsigned long mapping_size;
+ 	ELF(Ehdr) *hdr = (ELF(Ehdr) *)raw_addr;
+-	int i;
++	unsigned int i, syms_nr;
+ 	unsigned long j;
+ 	ELF(Shdr) *symtab_hdr = NULL, *strtab_hdr, *secstrings_hdr,
+ 		*alt_sec = NULL;
+@@ -86,11 +86,10 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 	strtab_hdr = raw_addr + GET_LE(&hdr->e_shoff) +
+ 		GET_LE(&hdr->e_shentsize) * GET_LE(&symtab_hdr->sh_link);
  
- 	int fd = open(name, O_RDONLY);
- 	if (fd == -1)
--		err(1, "%s", name);
-+		err(1, "open(%s)", name);
- 
- 	tmp_len = lseek(fd, 0, SEEK_END);
- 	if (tmp_len == (off_t)-1)
-@@ -240,7 +240,7 @@ int main(int argc, char **argv)
- 	outfilename = argv[3];
- 	outfile = fopen(outfilename, "w");
- 	if (!outfile)
--		err(1, "%s", argv[2]);
-+		err(1, "fopen(%s)", outfilename);
- 
- 	go(raw_addr, raw_len, stripped_addr, stripped_len, outfile, name);
- 
++	syms_nr = GET_LE(&symtab_hdr->sh_size) / GET_LE(&symtab_hdr->sh_entsize);
+ 	/* Walk the symbol table */
+-	for (i = 0;
+-	     i < GET_LE(&symtab_hdr->sh_size) / GET_LE(&symtab_hdr->sh_entsize);
+-	     i++) {
+-		int k;
++	for (i = 0; i < syms_nr; i++) {
++		unsigned int k;
+ 		ELF(Sym) *sym = raw_addr + GET_LE(&symtab_hdr->sh_offset) +
+ 			GET_LE(&symtab_hdr->sh_entsize) * i;
+ 		const char *sym_name = raw_addr +
 -- 
 2.26.0
 
