@@ -2,265 +2,152 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910A4C55182
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D039DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4C0207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587417895;
-	bh=wV/xC13m4vAE/JFz5qIugHkQT858OWkygzriD3LoE+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J+omMuOeyKZV30sunBwDwUrkzDYzOWnSAZ9KqqU0qjNgi/xTaF/IxhAhvY5cF0wwU
-	 FKIijyaQwa2U54rpGNDTumDvte/bTh7F93/sSB762LlBZ6zhKeyg3Dqn/1OVpIW5CE
-	 38pg0PCGVV0ZX6UNZmvKgKhiHge/uF3c52aGtG+E=
+	by mail.kernel.org (Postfix) with ESMTP id B623F207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgDTVYy (ORCPT
+        id S1726846AbgDTV1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:24:54 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39320 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgDTVYy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:24:54 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m13so9467240otf.6;
-        Mon, 20 Apr 2020 14:24:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/PYRUd145uwywq6C1mfwPkvq46x3zUYySJRsVBrwgD0=;
-        b=gABfUn/VhIiCaPBml9RA1JUY45UI3S1Nc3CH4iclMcyfq9vjkiMVisSdp8EAq9QHx6
-         O49A7JUxotAj/Sr2v/c4ByIoNxQqqa48L3cCJloXuF4mFUNPVT+6vhSngpwf05T3RZs/
-         yDqZTpQHR6StKFXxNK17b3ixSifY9VKPHyp4Jb/1NoBnZtGQu3Usp9t195JBT9CZTdYA
-         l0L3MwQ7s6/09ekaUor64qI22UOg2F4uPk+zTNh8EoZe+r3AqF1Anxk070ITPPFw+Grj
-         KQbXYOt9OC29mc+jE2SU/Al6eN8Ln5dGjsbHyZx3ruQuZzkVFibrf1yc4GjkppJSd63q
-         B6zg==
-X-Gm-Message-State: AGi0PuZfDn92Gwl7k4p4OKq9RxpuGwFSU0txpJrvjSCsRUWplIuQu0Zk
-        j38nkYA0i7YxhQ6H2v4KkA==
-X-Google-Smtp-Source: APiQypKHGZeotSvJnLU+HKhQIe9WZ4T519yDeefcTOMv5aOAD9cDz6Px0Xs8V3iP/9aejEJL9YmFXQ==
-X-Received: by 2002:a9d:72c2:: with SMTP id d2mr11805918otk.260.1587417891893;
-        Mon, 20 Apr 2020 14:24:51 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q206sm172423oib.2.2020.04.20.14.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:24:51 -0700 (PDT)
-Received: (nullmailer pid 6994 invoked by uid 1000);
-        Mon, 20 Apr 2020 21:24:50 -0000
-Date:   Mon, 20 Apr 2020 16:24:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: Document the Synopsys ARC HDMI TX
- bindings
-Message-ID: <20200420212450.GA16835@bogus>
-References: <20200414232929.22788-1-Eugeniy.Paltsev@synopsys.com>
- <20200414232929.22788-3-Eugeniy.Paltsev@synopsys.com>
+        Mon, 20 Apr 2020 17:27:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:35383 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgDTV1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 17:27:23 -0400
+IronPort-SDR: TEs/9Fnz7hcwNvlBPeJ4OVtvGPzLhNLQFtRw305M0D7cs5XyEVbTF+dRAgUgrnlluBdl7hcVhx
+ KmFfpZ3Vg6hw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 14:27:22 -0700
+IronPort-SDR: inL+gV1iNgpp4Pg9Jrp7kPw0b7fxvNXaWpgLg9468RJgLqjzIFFXB084vJwePYH/m1c+jM1v90
+ Dxza4s6gBnMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,407,1580803200"; 
+   d="scan'208";a="258483635"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 20 Apr 2020 14:27:20 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jQdwp-0027yy-Co; Tue, 21 Apr 2020 00:27:23 +0300
+Date:   Tue, 21 Apr 2020 00:27:23 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        linux@rasmusvillemoes.dk
+Subject: Re: [PATCH 03/15] print_integer: new and improved way of printing
+ integers
+Message-ID: <20200420212723.GE185537@smile.fi.intel.com>
+References: <20200420205743.19964-1-adobriyan@gmail.com>
+ <20200420205743.19964-3-adobriyan@gmail.com>
+ <20200420211911.GC185537@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414232929.22788-3-Eugeniy.Paltsev@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200420211911.GC185537@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:29:29AM +0300, Eugeniy Paltsev wrote:
-> This patch adds documentation of device tree bindings for the Synopsys
-> HDMI 2.0 TX encoder driver for ARC SoCs.
-
-You're going to need to base this on top of Laurent's conversion of 
-dw_hdmi.txt to schema.
-
+On Tue, Apr 21, 2020 at 12:19:11AM +0300, Andy Shevchenko wrote:
+> On Mon, Apr 20, 2020 at 11:57:31PM +0300, Alexey Dobriyan wrote:
+> > Time honored way to print integers via vsnprintf() or equivalent has
+> > unavoidable slowdown of parsing format string. This can't be fixed in C,
+> > without introducing external preprocessor.
+> > 
+> > seq_put_decimal_ull() partially saves the day, but there are a lot of
+> > branches inside and overcopying still.
+> > 
+> > _print_integer_*() family of functions is meant to make printing
+> > integers as fast as possible by deleting format string parsing and doing
+> > as little work as possible.
+> > 
+> > It is based on the following observations:
+> > 
+> > 1) memcpy is done in forward direction
+> > 	it can be done backwards but nobody does that,
+> > 
+> > 2) digits can be extracted in a very simple loop which costs only
+> > 	1 multiplication and shift (division by constant is not division)
+> > 
+> > All the above asks for the following signature, semantics and pattern of
+> > printing out beloved /proc files:
+> > 
+> > 	/* seq_printf(seq, "%u %llu\n", A, b); */
+> > 
+> > 	char buf[10 + 1 + 20 + 1];
+> > 	char *p = buf + sizeof(buf);
+> > 
+> > 	*--p = '\n';
+> > 	p = _print_integer_u64(p, B);
+> > 	*--p = ' ';
+> > 	p = _print_integer_u32(p, A);
+> > 
+> > 	seq_write(seq, p, buf + sizeof(buf) - p);
+> > 
+> > 1) stack buffer capable of holding the biggest string is allocated.
+> > 
+> > 2) "p" is pointer to start of the string. Initially it points past
+> > 	the end of the buffer WHICH IS NOT NUL-TERMINATED!
+> > 
+> > 3) _print_integer_*() actually prints an integer from right to left
+> > 	and returns new start of the string.
+> > 
+> > 			     <--------|
+> > 				123
+> > 				^
+> > 				|
+> > 				+-- p
+> > 
+> > 4) 1 character is printed with
+> > 
+> > 	*--p = 'x';
+> > 
+> > 	It generates very efficient code as multiple writes can be
+> > 	merged.
+> > 
+> > 5) fixed string is printed with
+> > 
+> > 	p = memcpy(p - 3, "foo", 3);
+> > 
+> > 	Complers know what memcpy() does and write-combine it.
+> > 	4/8-byte writes become 1 instruction and are very efficient.
+> > 
+> > 6) Once everything is printed, the result is written to seq_file buffer.
+> > 	It does only one overflow check and 1 copy.
+> > 
+> > This generates very efficient code (and small!).
+> > 
+> > In regular seq_printf() calls, first argument and format string are
+> > constantly reloaded. Format string will most likely with [rip+...] which
+> > is quite verbose.
+> > 
+> > seq_put_decimal_ull() will do branches (and even more branches
+> > with "width" argument)
+> > 
 > 
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> ---
->  .../display/bridge/snps,arc-dw-hdmi.yaml      | 136 ++++++++++++++++++
->  1 file changed, 136 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
+> > 	TODO
+> > 	benchmark with mainline because nouveau is broken for me -(
+> > 	vsnprintf() changes make the code slower
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
-> new file mode 100644
-> index 000000000000..9b2fdfecd5b3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
-> @@ -0,0 +1,136 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings please:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/snps,arc-dw-hdmi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synopsys DesignWare HDMI 2.0 TX encoder driver
-
-Bindings are for h/w blocks, not drivers.
-
-> +
-> +maintainers:
-> +  - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> +
-> +description: |
-> +  The HDMI transmitter is a Synopsys DesignWare HDMI 2.0 TX controller IP
-> +  with a companion of Synopsys DesignWare HDMI 2.0 TX PHY IP.
-
-Sounds like 2 blocks?
-
-> +
-> +  These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
-> +  Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
-> +  with the following device-specific properties.
-> +
-> +properties:
-> +  compatible:
-> +    const: snps,arc-dw-hdmi-hsdk
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +      Memory mapped base address and length of the DWC HDMI TX registers.
-
-Can drop.
-
-> +
-> +  clocks:
-> +    items:
-> +      - description: The bus clock for AHB / APB
-> +      - description: The internal register configuration clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: iahb
-> +      - const: isfr
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: Reference to the DWC HDMI TX interrupt
-
-Can drop.
-
-> +
-> +  reg-io-width:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [1, 4]
-> +        description: |
-> +          Width of the registers specified by the reg property. The
-> +          value is expressed in bytes and must be equal to 1 or 4 if specified.
-> +          The register width defaults to 1 if the property is not present.
-
-default: 1
-
-The description is pretty much a plain text version of the constraints, 
-so all but the first sentence can be dropped.
-
-> +
-> +  ports:
-> +    type: object
-> +    description: |
-> +      A ports node with endpoint definitions as defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-
-Can drop. That's all 'ports'.
-
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        description: |
-> +          Video input endpoints of the controller.
-> +          Usually it is associated with ARC PGU.
-> +
-> +      port@1:
-> +        type: object
-> +        description: |
-> +          Output endpoints of the controller. HDMI connector.
-> +
-> +    required:
-> +      - "#address-cells"
-> +      - "#size-cells"
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    hdmi@10000 {
-> +        compatible = "snps,arc-dw-hdmi-hsdk";
-> +        reg = <0x10000 0x10000>;
-> +        reg-io-width = <4>;
-> +        interrupts = <14>;
-> +        clocks = <&apbclk>, <&hdmi_pix_clk>;
-> +        clock-names = "iahb", "isfr";
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@0 {
-> +                reg = <0>;
-> +                hdmi_enc_input: endpoint {
-> +                    remote-endpoint = <&pgu_output>;
-> +                };
-> +            };
-> +
-> +            port@1 {
-> +                reg = <1>;
-> +                hdmi_enc_out: endpoint {
-> +                    remote-endpoint = <&hdmi_con>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +    hdmi-out {
-> +        port {
-> +            hdmi_con: endpoint {
-> +                remote-endpoint = <&hdmi_enc_out>;
-> +            };
-> +        };
-> +    };
-> +
-> +    pgu {
-> +        port_o: port {
-> +            pgu_output: endpoint {
-> +                remote-endpoint = <&hdmi_enc_input>;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.21.1
+> Exactly main point of this exercise. I don't believe that algos in vsprintf.c
+> are too dumb to use division per digit (yes, division by constant which is not
+> power of two is a heavy operation).
 > 
+
+And second point here, why not to use existing algos from vsprintf.c?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
