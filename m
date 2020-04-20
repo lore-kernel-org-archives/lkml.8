@@ -2,127 +2,58 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80939C54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD46C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62DA420782
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:54:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U1UVPdXM"
+	by mail.kernel.org (Postfix) with ESMTP id 427EF20782
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgDTSy2 (ORCPT
+        id S1727063AbgDTSzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34824 "EHLO
+        Mon, 20 Apr 2020 14:55:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726850AbgDTSy2 (ORCPT
+        with ESMTP id S1726017AbgDTSzd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:54:28 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE36C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:54:27 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id u189so6339309ilc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 11:54:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sS4YS2nlJ10xkXGmMzOy7jMGWrIlLM0vLffgB5tHhvw=;
-        b=U1UVPdXMQxck81iz4E9kfwVW/WHaF+jXQmb23OmsK2DtqmBRTlEGOSYmWQjag5K5gb
-         YM3qRvf52nmsT+0gO8oiB6foiANGTqwGioB9RKe+xH3k8P23jLzkVbwo2uwh3JGl9+ra
-         NXFyZV8dOv+8azYRNM7Uw5YLdug3rmD0pjCI8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sS4YS2nlJ10xkXGmMzOy7jMGWrIlLM0vLffgB5tHhvw=;
-        b=GmHFRaO8Mr95qvuooK/Bn6fK1LSQNnwdm1JirIuZa5d9tlD77hvD7oapFpjwfR7v4I
-         yAOb7UEYb3pijGLu8Sop9qB3zMBWVQ3gzFmEhbV2HMREJZTRnc6tLaVjPnmmLup/VO20
-         AeM1WuD7nEZciftsF4XIC/0VXPomPBLFD9UFIHpgg6Tyd5QZ32B8AL2nygXGUuV2Ne9S
-         g8NnNuOyftZDCyseHrxRlHW1cly5lPI68O2qTw0X0pmtPL8tmGMz1/9uNFhMWLGmJxzc
-         H+224sgfAPVKB2Z5u3DyH9kXfdqnfiUfHaAiMEXNAVdGRU9mZAP7V/Lhz+POf46cCLLn
-         MwhA==
-X-Gm-Message-State: AGi0PuYjpcjPFPnM8s+PbXJdWe01Ielim3zdOtMFB9rpmQ0rH59S1/M9
-        8v7x3rb7rNBJX3lZeFxnTBwj1c0zkOZG2+SLo6xt2w==
-X-Google-Smtp-Source: APiQypLWXvyYVM9rwFOfV38ssOrflZRJlOT5tya/OAF1hXcPghtYYQIc3djt453TYnFBcv/sp9r1hsBVBgwBmTe1UBI=
-X-Received: by 2002:a05:6e02:544:: with SMTP id i4mr3464318ils.145.1587408867241;
- Mon, 20 Apr 2020 11:54:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200413195514.192868-1-gwendal@chromium.org> <20200414204814.GH7347@icarus>
-In-Reply-To: <20200414204814.GH7347@icarus>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Mon, 20 Apr 2020 11:54:16 -0700
-Message-ID: <CAPUE2utas86PQdQem7bPsNL+xnHreepG8wbvbt2Vk5rtjoyn-A@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers: counter: Add Cros EC Sync counter
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 20 Apr 2020 14:55:33 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27241C061A0C;
+        Mon, 20 Apr 2020 11:55:33 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 843E9127EB5DB;
+        Mon, 20 Apr 2020 11:55:32 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 11:55:29 -0700 (PDT)
+Message-Id: <20200420.115529.2239491685168433270.davem@davemloft.net>
+To:     f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: phy: Propagate error from bus->reset
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200419031713.24423-1-f.fainelli@gmail.com>
+References: <20200419031713.24423-1-f.fainelli@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Apr 2020 11:55:32 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 1:48 PM William Breathitt Gray
-<vilhelm.gray@gmail.com> wrote:
->
-> On Mon, Apr 13, 2020 at 12:55:14PM -0700, Gwendal Grignou wrote:
-> > When the camera vsync pin is connected to the embedded controller (EC) of
-> > a chromebook, the EC reports a sensor with a counter that increases
-> > at each GPIO rising edge.
-> >
-> > The sensor is presented using the counter subsystem.
-> > In addition, it is also presented via the IIO subsystem with a timestamp,
-> > allowing synchronisation with sensors connected to the same EC, for
-> > image stabilisation or augmented reality applications.
->
-> Hi Gwendal,
->
-> Sorry for the delay. I have some changes requested below.
->
-> > To enable the counter:
-> > via counter ABI:
-> > echo "rising edge" > counterX/count0/signal_action
-> > via iio ABI
-> > echo 1 > iio:deviceY/en
-> >
-> > To disable the counter:
-> > via counter ABI:
-> > echo "none" > counterX/count0/signal_action
-> > via iio ABI
-> > echo 0 > iio:deviceY/en
->
-> Although in theory a user could manually disable the actions for a
-> Signal, this is a very roundabout way of actually disabling the Count.
-> It's better to expose an "enable" attribute to allow the users to
-> perform this functionality; for example:
->
-> echo 0 > counterX/count0/enable
-> echo 1 > counterX/count0/enable
->
-> >
-> > To read the current counter value:
-> > via counter ABI:
-> > cat counterX/count0/count
-> > via iio ABI
-> > cat iio:deviceY/in_count_raw
->
-> I know we discussed this in the last review but it's still the same as
-> before: IIO_COUNT interface is deprecated so new drivers won't be
-> allowed to use it. You'll have to remove the IIO_COUNT code in this
-> driver and replace it with Counter subsystem equivalents.
-I understand the need of a clean separation between counter and IIO subsystems.
-I will wait for counter to offer a way to gather timestamp'ed counts.
-Do you have a plan/proposed ABI you can share?
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Sat, 18 Apr 2020 20:17:13 -0700
 
-Thanks,
+> If a bus->reset() call for the mii_bus structure returns an error (e.g.:
+> -EPROE_DEFER) we should propagate it accordingly.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Gwendal.
+Applied, thanks.
