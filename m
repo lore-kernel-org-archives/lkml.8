@@ -6,120 +6,103 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23CBC54FC9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519C5C54FC9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84F1F20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 02:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B932074B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 03:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rFPKZgkR"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="emt3bcME"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgDTCyC (ORCPT
+        id S1726039AbgDTDB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 22:54:02 -0400
-Received: from mail-eopbgr30055.outbound.protection.outlook.com ([40.107.3.55]:37958
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725896AbgDTCyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 22:54:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GXK6oeFqmk+cMcx+c2Bd4QyPUe+kMMfBbPemBCBv/5eSHPOlWftDTaVtlQCYuXXfbJd5PfvN5Pdk0SKubgeuNFPdSjrsNG12J6c7zS/AjlBWLPfzfv2QVusg6hPMXtCyHIXGEahOsGUWIuU1Ob02Vhmrx1kDKu9uow50l7o6qO7UcjB9HGFc64EQ/9rTKD+V7tnNeJngwVmFNY5RPj/IWHpkw92JzefyXItf4JUY1fthsm5aiMV3SNErDVYVbZfg9H6/+TXBmwiG6FwW+N96iAJxeTnUAkVZoF8bGcdmInk879Ge4nFu3vNsIoHSSbUIxOz0SOSTI8HRu8rip7dXew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0a0cSmpQOEv3tWV1nKHiyRBzdnqnN4WnCuZfmyXXLYc=;
- b=hHRL/RPlczl6ebS0scPYq1m2wr/sfVUKOZCvPq7q5jywTXy3Vr6lUBXlt8NtSuyRInWpbriC1qWS11W9voa5eaihHoWQXIFUe94gvtsuR6ZY2TS3HuhOcEmISodgRtNQxYmpugt3NXh6aFsDuf3BwPu96QTnsAxiN4Nr1Bhv46clM29yoEFfx2CawCWgDqFfPi5TrxOhLaylocSPUBbnzFJgmivfIUcP6s7E0Z6AOrloKML+KmBPCJFtOXQKSICwIQnH+nXmo0w1w9YPeNsMt8S3b/0A8/JHOVnReUE20w7FYkSviyMIjNE93mEd72QPEt4UUMXPqjMpjjv3e8Qw7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0a0cSmpQOEv3tWV1nKHiyRBzdnqnN4WnCuZfmyXXLYc=;
- b=rFPKZgkRwHg12dbco60OpkGq0g8FnbiHOLz45Dbp0JF0dgZFI8ita/fui4S08vMCdGsIz0ZmitxLzSMpkvAEHf5azWRJMB5XqKBhPFcj2lys1CDVqJg72sb3kPvnf21wvc1FVbcaOClFQvTQlD3OW6LJgsSgE0VG5oAq8UWtlio=
-Received: from AM7PR04MB6885.eurprd04.prod.outlook.com (2603:10a6:20b:10d::24)
- by AM7PR04MB6871.eurprd04.prod.outlook.com (2603:10a6:20b:109::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Mon, 20 Apr
- 2020 02:53:59 +0000
-Received: from AM7PR04MB6885.eurprd04.prod.outlook.com
- ([fe80::fdc0:9eff:2931:d11b]) by AM7PR04MB6885.eurprd04.prod.outlook.com
- ([fe80::fdc0:9eff:2931:d11b%5]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
- 02:53:59 +0000
-From:   "Y.b. Lu" <yangbo.lu@nxp.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>
-Subject: RE: [v2, 0/7] Support programmable pins for Ocelot PTP driver
-Thread-Topic: [v2, 0/7] Support programmable pins for Ocelot PTP driver
-Thread-Index: AQHWBxL03Cs51oqVYUqmHzAo138hlKhiG/oAgB9TUxA=
-Date:   Mon, 20 Apr 2020 02:53:59 +0000
-Message-ID: <AM7PR04MB6885C6159F01EC9EECB78885F8D40@AM7PR04MB6885.eurprd04.prod.outlook.com>
-References: <20200331041113.15873-1-yangbo.lu@nxp.com>
- <20200330.213010.176136354629521349.davem@davemloft.net>
-In-Reply-To: <20200330.213010.176136354629521349.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yangbo.lu@nxp.com; 
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6b24b98a-c49c-4cf1-c1ad-08d7e4d61338
-x-ms-traffictypediagnostic: AM7PR04MB6871:|AM7PR04MB6871:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM7PR04MB68710E41E252F193F94CE679F8D40@AM7PR04MB6871.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 03793408BA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB6885.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(396003)(136003)(366004)(8676002)(316002)(55016002)(66556008)(66476007)(66946007)(64756008)(33656002)(66446008)(9686003)(5660300002)(7696005)(86362001)(478600001)(2906002)(4744005)(26005)(186003)(6506007)(52536014)(53546011)(4326008)(76116006)(54906003)(8936002)(6916009)(81156014)(71200400001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: y0MTL+H44KS75AJuzG2UEQCEtMO5z/j501tdm4yAlVfudQH3n1uNWEyiwBuros2dfSOBjpVniMOpE3s5swlb6gRknqXM97eQ1xJVsQeMsVn/riQLzeohcFr+R4rGBzQSZIC6djFqs67pacHxkf8hWYiCKtd9pWPBKw6MEo1mvf4BZ9DX/k/EHiZLoXjEHaiYbrCu4wQUdEQlj8xsmPWTfmGuayJQ5iQGJDMUXElkxt1B1Z1B+HbHpmB7C7UaRDyNecODfxajEpq88rbevyuNq0+cU4Ow7fUp3gKZqhisJ23NVt0/pzZJlDZf+H4QJRr+D2Hx/LeqONfWjFKOnQLED2pREWj+D9BrwUqCU0xTDOnlNYxBBvSQpUzI04y/52Xy2Y1BHQAL/KjejL9MZgvh/rTERaKHv+EjkAQFVKThPuo8jwkuaOanPPexzi2j43Pa
-x-ms-exchange-antispam-messagedata: Z8dty2FN8Yu2RVMOIliH2LKuBJ/bgrjkP2NK+XIi6MbEwgeEYPiOF0gv4AEFv/LFsPTm5Obd6aQhUF9p4v29+fZ3lvgBbAaynezx1gji9gvpUngWOaZ6hE0aP4aiEHjCygcTXkLRN8MMqWW21YhWoQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 19 Apr 2020 23:01:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725865AbgDTDB0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Apr 2020 23:01:26 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834A1C061A0C;
+        Sun, 19 Apr 2020 20:01:26 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 495BKr4jMzz9sR4;
+        Mon, 20 Apr 2020 13:01:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587351684;
+        bh=EXvHwasEn6ueQoK02J1mxsjP8ImqNeLDZvYXLJk2orA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=emt3bcMEsDH5vmmqPQiBP3gcl4rZHI2up2/XiFFrXibOgLWmBkjo+PkAj1R8ZlrAd
+         1RMeRnfmHGBvQdZPtQtH8G8Utleb4/HOXfPQQJTod4Zmv3eup++c3+RNNCDE9+z+Aq
+         755auWX6RjVrl6kbA/GF8KE6h8F28n2BTiBzPzX//KSZQY/mv7VANCGECvrtSujneH
+         zcErS5NPGkztXzUutCEdkdZYVJ4YRWiWvmK9lkHmFt6JCNq4P84jr6NoxHALEhxlDV
+         Zy3gCI1iJJY+fLDdmE6e35l1wf9AwTFrsiqBUHoLzIHQ3VuZrQO1fQMr1vIxsVMooN
+         ew1DR6lx31usQ==
+Date:   Mon, 20 Apr 2020 13:01:18 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20200420130118.7a866fd5@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b24b98a-c49c-4cf1-c1ad-08d7e4d61338
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 02:53:59.1680
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MGe4BT3GgNZfZGFmy8Qob9XyvvCFzAZG6h2kMIhBO/moamtt2Faqy+wLuIIPtjwwYwCcOoCTxl5uIDGJjBheDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6871
+Content-Type: multipart/signed; boundary="Sig_/TQAAgXi.j+9sTT+m4qv9GoZ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: David Miller <davem@davemloft.net>
-> Sent: Tuesday, March 31, 2020 12:30 PM
-> To: Y.b. Lu <yangbo.lu@nxp.com>
-> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org;
-> richardcochran@gmail.com; Vladimir Oltean <vladimir.oltean@nxp.com>;
-> Claudiu Manoil <claudiu.manoil@nxp.com>; andrew@lunn.ch;
-> vivien.didelot@gmail.com; f.fainelli@gmail.com;
-> alexandre.belloni@bootlin.com; UNGLinuxDriver@microchip.com
-> Subject: Re: [v2, 0/7] Support programmable pins for Ocelot PTP driver
->=20
->=20
-> net-next is closed, please resubmit this when net-next opens again
+--Sig_/TQAAgXi.j+9sTT+m4qv9GoZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Resubmit the patch-set as V3.
-Thanks!
+Hi all,
 
->=20
-> Thank you.
+After merging the drm-misc tree, today's linux-next build (powerpc
+allyesconfig) failed like this:
+
+drivers/video/fbdev/controlfb.c: In function 'controlfb_mmap':
+drivers/video/fbdev/controlfb.c:756:23: error: implicit declaration of func=
+tion 'pgprot_cached_wthru'; did you mean 'pgprot_cached'? [-Werror=3Dimplic=
+it-function-declaration]
+  756 |   vma->vm_page_prot =3D pgprot_cached_wthru(vma->vm_page_prot);
+      |                       ^~~~~~~~~~~~~~~~~~~
+      |                       pgprot_cached
+drivers/video/fbdev/controlfb.c:756:23: error: incompatible types when assi=
+gning to type 'pgprot_t' {aka 'struct <anonymous>'} from type 'int'
+
+Presumably exposed by commit
+
+  a07a63b0e24d ("video: fbdev: controlfb: add COMPILE_TEST support")
+
+I just turned off COMPILE_TEST again for today.  Please let me know when
+this is fixed.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/TQAAgXi.j+9sTT+m4qv9GoZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6dEH4ACgkQAVBC80lX
+0GzkQAf+NYTRus1sYkOm7D8jCQ3yofQuSbktV19Rv+ynryJTfHkb6cncymKSaDyM
+u/nzABHVAnKABm7hjUQrJTTmXD7j5irg0YcFgTlwM4mTTNol7vMQvVio7lDfS2bm
+4F7rdrvgzTQWn8sMrKhc5QLDzdVOUZJl30Z2Iov3ddDoZ+g4JAGIej6tSJGX6Gs+
+xMnI3MowjKR1eU+3rp2r+mtQpahSBQYI9uFFaSQasS1PEq955Zc7ifGi6laYjHfQ
+ozoTfzEK934KVOG1vCCQt44XacBr6ek9o2wHcn3ZAuf0Eco4n1DUI6qzAvi9P5XX
+YtoxihgKOyJtuHOi7E+w7cwvs8oM5w==
+=2xmG
+-----END PGP SIGNATURE-----
+
+--Sig_/TQAAgXi.j+9sTT+m4qv9GoZ--
