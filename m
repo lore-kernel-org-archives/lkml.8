@@ -2,103 +2,97 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01487C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABBCC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA3782078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6FE221F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 11:38:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587382734;
+	bh=veCGgKP+gaMaBxAIpl/jdA0mDZiqNm79OtKradPHlN8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XxvMUo1NIX9bdQ7c8pvScsZqXWA7ahIprn/mkDVNb6ZP7D7hrFBfQkG82ETKK+Ul1
+	 kmfO7abw7oSJ+YbCJ8EBYaaiyicbloYtc9/b4m8NRq/d90QWCwWSWWgE2Kyl8CjHIN
+	 lD9tR/9ZejzLbyN95fsM7XuNmgFaOCOwctWBeGr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgDTLhu (ORCPT
+        id S1726387AbgDTLiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:37:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53736 "EHLO mx2.suse.de"
+        Mon, 20 Apr 2020 07:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbgDTLht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:37:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 102A4AED2;
-        Mon, 20 Apr 2020 11:37:47 +0000 (UTC)
-Subject: Re: [PATCH 01/10] mm/page-flags: introduce PageHighMemZone()
-To:     Matthew Wilcox <willy@infradead.org>, js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <1587369582-3882-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1587369582-3882-2-git-send-email-iamjoonsoo.kim@lge.com>
- <20200420112010.GA5820@bombadil.infradead.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <2c45bab6-8c29-e227-56b8-307e8bee46c6@suse.cz>
-Date:   Mon, 20 Apr 2020 13:37:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1725886AbgDTLix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:38:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03B3E206D4;
+        Mon, 20 Apr 2020 11:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587382732;
+        bh=veCGgKP+gaMaBxAIpl/jdA0mDZiqNm79OtKradPHlN8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PSv9KlPALQJwITlfEXQWZBKfTFX3Lc197g3Q8P8hhWjMQdROLzHL4K9KMio/IONiC
+         5fodZe10QtCuAN7yHrgwgFtBahvsrbC6jYbm3WOBcv4YJEBjYg9GmRAm9CLUTGV3U2
+         HxwYBll9AtQn8IQGb+0B89WmylTNdKz49QFIMyqc=
+Date:   Mon, 20 Apr 2020 13:38:50 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/10] block: panic if block debugfs dir is not created
+Message-ID: <20200420113850.GC3906674@kroah.com>
+References: <20200419194529.4872-1-mcgrof@kernel.org>
+ <20200419194529.4872-10-mcgrof@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200420112010.GA5820@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419194529.4872-10-mcgrof@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/20/20 1:20 PM, Matthew Wilcox wrote:
-> On Mon, Apr 20, 2020 at 04:59:33PM +0900, js1304@gmail.com wrote:
->> ZONE_MOVABLE is special. It is considered as normal type zone on
->> !CONFIG_HIGHMEM, but, it is considered as highmem type zone
->> on CONFIG_HIGHMEM. Let's focus on later case. In later case, all pages
->> on the ZONE_MOVABLE has no direct mapping until now.
->> 
->> However, following patchset
->> "mm/cma: manage the memory of the CMA area by using the ZONE_MOVABLE"
->> , which is once merged and reverted, will be tried again and will break
->> this assumption that all pages on the ZONE_MOVABLE has no direct mapping.
->> Hence, the ZONE_MOVABLE which is considered as highmem type zone could
->> have the both types of pages, direct mapped and not. Since
->> the ZONE_MOVABLE could have both type of pages, __GFP_HIGHMEM is still
->> required to allocate the memory from it. And, we conservatively need to
->> consider the ZONE_MOVABLE as highmem type zone.
+On Sun, Apr 19, 2020 at 07:45:28PM +0000, Luis Chamberlain wrote:
+> If DEBUG_FS is disabled we have another inline
+> blk_debugfs_register() which just returns 0.
 > 
-> I don't understand why CMA allocating pages from ZONE_MOVABLE somehow
-> gives these pages a direct mapping.  Maybe you have a freaky layout in
-> the architecture that makes no sense and that's what needs to be fixed?
+> If BLK_DEV_IO_TRACE is enabled we rely on the block debugfs
+> directory to have been created. If BLK_DEV_IO_TRACE is not enabled
+> though, but if debugfs is still enabled we will always create a
+> debugfs directory for a request_queue. Instead of special-casing
+> this just for BLK_DEV_IO_TRACE, ensure this block debugfs dir is
+> always created at boot if we have enabled debugfs.
 > 
-> My understanding of the zones is based on x86, and it looks like this
-> on a 32-bit system with 8GB of memory:
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> ---
+>  block/blk-debugfs.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> ZONE_DMA	0-16MB
-> ZONE_NORMAL	16-896MB
-> ZONE_HIGHMEM	896-xMB
-> ZONE_MOVABLE	x-8192MB
-> 
-> where x is a boot option used to partition the highmem between movable
-> and unmovable.
-> 
-> Now, why would allocating the CMA from ZONE_NORMAL suddenly make these
-> pages part of the direct mapping?
+> diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
+> index 761318dcbf40..d6ec980e7531 100644
+> --- a/block/blk-debugfs.c
+> +++ b/block/blk-debugfs.c
+> @@ -15,6 +15,8 @@ struct dentry *blk_debugfs_root;
+>  void blk_debugfs_register(void)
+>  {
+>  	blk_debugfs_root = debugfs_create_dir("block", NULL);
+> +	if (!blk_debugfs_root)
+> +		panic("Failed to create block debugfs directory\n");
 
-I assume the scenario is that ZONE_MOVABLE could extend into today's ZONE_NORMAL
-range, which is the range covered by direct mapping.
-At that point, testing page's zone stops being a reliable test of "does this
-page have direct mapping"?
+How rude, never crash the kernel for something so trivial as that.
 
-I don't know the exact motivation why that will happen but I can imagine two.
-1) some CMA user needs the CMA allocations to be in direct mapping range
-2) the amount of CMA memory reservation required is so high it won't fit in
-highmem range only.
+Heck, never do ANYTHING different in the kernel if debugfs fails to do
+something you think it should do.  This is debugging code, nothing
+should ever depend on it, so just save the value (if you need it) and
+move on.  Never check the value, as it means nothing to you.
 
+greg k-h
