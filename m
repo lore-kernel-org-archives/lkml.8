@@ -2,219 +2,214 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D85DC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73743C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB16820736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:19:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587410385;
-	bh=8O1xYFHUo2rOMpED/8nTvf1vTf+JIn6rBgkFfujB4Z0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v3qYampd0DVrCD85v30GE0iKo+wBmwBeGl9YloAD70eRTNji6IukIzXn0GtOyATEl
-	 O2TQbXzoum4L+wzjVhSIgVl5KRjXu+m+JRChjOdJfGZhU7CCia3mbvB/DFrvlh9vgY
-	 v6zXYEE9pqg8CR1AsnGVPC6Bl4u3rLZCJgMk//p0=
+	by mail.kernel.org (Postfix) with ESMTP id 4F3BB20BED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:20:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZpfomaTm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgDTTTp (ORCPT
+        id S1728083AbgDTTUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:19:45 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40286 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbgDTTTo (ORCPT
+        Mon, 20 Apr 2020 15:20:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726141AbgDTTUN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:19:44 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t199so9853125oif.7;
-        Mon, 20 Apr 2020 12:19:44 -0700 (PDT)
+        Mon, 20 Apr 2020 15:20:13 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF5AC061A10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:20:13 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b2so5862555ljp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:20:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kwYYllclEk2QodGz3ELQAydSvXneVAst3mjkOyGD1/c=;
+        b=ZpfomaTmDL83rc1yC7uOa5O8bXqqAg6Nw+rKStG/6MLe5Ahm6thqlsw6U0m0vIoKwA
+         YJogFfgkH/yrwMfpx9tawVDQ/4gmGism/d0omAeSujpA001TjbWaKsZ9q0gX1DA8f5Np
+         HjZ1x4DlLwS3NLnnFcDHdrkzWmseO5AjhlgcizN4QhZasFqgyedyprYGzc38v8AoU1qr
+         UdkNWUdhFcjHL1qqbIR2vVc5m+KT0OgcCcksyM6xucAH4VnR+DiwzVBY4ticUMPtWoQf
+         SijGXDDc32DommdkB+ww4U0W50ZShxS9m3awA+CT7sTsspwYWmpyZ2mde59kPGljKGK/
+         sY9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m49dvApWhU3KhcyzujKNwqVJs/SgDVOiHkBTX8p3UsA=;
-        b=fPr6IxNqM++7gizqUYJNavGAop2Xhxm7D74CJDy4ths/lj9475tSr1c+CMHzHpf/VR
-         iCAMOpW1i9qKzdYlgAP6qqoO3eGmskpBhwvkOuu8EPmtEcjyUsnKAf8iUOFEVbxt1gxr
-         ZwVS5Qv8NIoxfG3qL+QCd8VZgbLpn0Zq7wI8X4FUtSzW16FXLPPwqsp1jn3auygwCrmv
-         YPf/Riua4A8h4OrZFmVu4zWfEBWo2nxLO+9mFMp1VlGT8P4FcCdz+nsFRPrPQCiHi4vb
-         uqIY4u9NIuC/4z2nBO5if37qop7nJOLhAEPSiL+enQOxcQX1sTgrrO3MxfBOqkn10lAb
-         RDXQ==
-X-Gm-Message-State: AGi0PuazhoZvW1bXBPqFDkE2VKL1VPy+UGGb7RW0qh3t9yC9ajwIJkTm
-        0uvL8V6PyXlcz3EijVySOw==
-X-Google-Smtp-Source: APiQypI1tu9WWN3GJQtf/Egn/TvM3KKQj1/YfMtUGLJE64jxb1gypfLgp3KOVUkdTuGeoCxmSDcrIw==
-X-Received: by 2002:aca:4d47:: with SMTP id a68mr739207oib.60.1587410383533;
-        Mon, 20 Apr 2020 12:19:43 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k26sm143306ots.3.2020.04.20.12.19.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 12:19:42 -0700 (PDT)
-Received: (nullmailer pid 9370 invoked by uid 1000);
-        Mon, 20 Apr 2020 19:19:41 -0000
-Date:   Mon, 20 Apr 2020 14:19:41 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH] dt-bindings: gpio: Convert i.MX to json-schema
-Message-ID: <20200420191941.GA6101@bogus>
-References: <1586770849-15693-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kwYYllclEk2QodGz3ELQAydSvXneVAst3mjkOyGD1/c=;
+        b=JVDeK7x84RrNtIb9QGT33hbEytjhFhVNk0LFfc3mz9njCoaganov8lZeZk46PWgHKv
+         Jbo70lBsJwdphCIat68pTvmGC+49WG4+sZBE2V481tHfy5YyFXI9tabgaAZLfS3MjtdQ
+         wb8npUBDDY9GLjW0wzeFAA0olNVQQ5a6hCwVSfcdGwXWM7nlj6YZR0CPUjl8G/uXzD38
+         XTAlx6aPb3VqbZsdN+OLaizz71LlnUV8T/88feXkeNjBnp2LvQSSk0fMFfmeaEx5empd
+         S9AhcrMKy5zELRELlufYF99gExEEXrRihD103phFpVclmZCXJHCGRtMW4N+l9j62pyx5
+         bakA==
+X-Gm-Message-State: AGi0PubdOJ9+ryAOMbhrNOogbU4ScqG1kbXo1OfMIJ+DdSS1f+/4MNUe
+        IerKvIi+OWY8/4cjNdmd8b3Aviey1Fb4ynYv1o3hwQ==
+X-Google-Smtp-Source: APiQypJJDSopvLbi40jdqQWmMwp3P9hoeBS+hLRiVefqSg6wtQfTkOjzFk7aBXWxr9v6gi60+m1Npi6jd3/TofiSysI=
+X-Received: by 2002:a2e:898b:: with SMTP id c11mr11081921lji.197.1587410411621;
+ Mon, 20 Apr 2020 12:20:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586770849-15693-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
+ <20200418122123.10157ddd@why> <CY4PR12MB1271277CEE4F1FE06B71DDE8DAD60@CY4PR12MB1271.namprd12.prod.outlook.com>
+ <8a03b55223b118c6fc605d7204e01460@kernel.org> <CABEDWGxLKB68iknXtK8-4ke3wGW-6RKBnDEh6rFbBekLyawVOw@mail.gmail.com>
+In-Reply-To: <CABEDWGxLKB68iknXtK8-4ke3wGW-6RKBnDEh6rFbBekLyawVOw@mail.gmail.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Mon, 20 Apr 2020 12:20:00 -0700
+Message-ID: <CABEDWGwgPjw_Ym-k=nuDYWoZtbq=23miJBfiS5RaqUseCOO0DA@mail.gmail.com>
+Subject: Re: [PATCH] genirq/msi: Check null pointer before copying struct msi_msg
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>, tglx@linutronix.de,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 05:40:49PM +0800, Anson Huang wrote:
-> Convert the i.MX GPIO binding to DT schema format using json-schema.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  .../devicetree/bindings/gpio/fsl-imx-gpio.txt      | 35 -----------
->  .../devicetree/bindings/gpio/fsl-imx-gpio.yaml     | 72 ++++++++++++++++++++++
->  2 files changed, 72 insertions(+), 35 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
-> deleted file mode 100644
-> index b4cd9f90..0000000
-> --- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
-> +++ /dev/null
-> @@ -1,35 +0,0 @@
-> -* Freescale i.MX/MXC GPIO controller
-> -
-> -Required properties:
-> -- compatible : Should be "fsl,<soc>-gpio"
-> -- reg : Address and length of the register set for the device
-> -- interrupts : Should be the port interrupt shared by all 32 pins, if
-> -  one number.  If two numbers, the first one is the interrupt shared
-> -  by low 16 pins and the second one is for high 16 pins.
-> -- gpio-controller : Marks the device node as a gpio controller.
-> -- #gpio-cells : Should be two.  The first cell is the pin number and
-> -  the second cell is used to specify the gpio polarity:
-> -      0 = active high
-> -      1 = active low
-> -- interrupt-controller: Marks the device node as an interrupt controller.
-> -- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
-> -  The second cell bits[3:0] is used to specify trigger type and level flags:
-> -      1 = low-to-high edge triggered.
-> -      2 = high-to-low edge triggered.
-> -      4 = active high level-sensitive.
-> -      8 = active low level-sensitive.
-> -
-> -Optional properties:
-> -- clocks: the clock for clocking the GPIO silicon
-> -
-> -Example:
-> -
-> -gpio0: gpio@73f84000 {
-> -	compatible = "fsl,imx51-gpio", "fsl,imx35-gpio";
-> -	reg = <0x73f84000 0x4000>;
-> -	interrupts = <50 51>;
-> -	gpio-controller;
-> -	#gpio-cells = <2>;
-> -	interrupt-controller;
-> -	#interrupt-cells = <2>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> new file mode 100644
-> index 0000000..465104c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/fsl-imx-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX/MXC GPIO controller
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx1-gpio
-> +              - fsl,imx21-gpio
-> +              - fsl,imx31-gpio
-> +              - fsl,imx35-gpio
-> +              - fsl,imx7d-gpio
+On Mon, Apr 20, 2020 at 9:08 AM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+>
+> On Mon, Apr 20, 2020 at 2:14 AM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On 2020-04-18 16:19, Gustavo Pimentel wrote:
+> > > Hi Marc and Alan,
+> > >
+> > >> I'm not convinced by this. If you know that, by construction, these
+> > >> interrupts are not associated with an underlying MSI, why calling
+> > >> get_cached_msi_msg() the first place?
+> > >>
+> > >> There seem to be some assumptions in the DW EDMA driver that the
+> > >> signaling would be MSI based, so maybe someone from Synopsys
+> > >> (Gustavo?)
+> > >> could clarify that. From my own perspective, running on an endpoint
+> > >> device means that it is *generating* interrupts, and I'm not sure what
+> > >> the MSIs represent here.
+> > >
+> > > Giving a little context to this topic.
+> > >
+> > > The eDMA IP present on the Synopsys DesignWare PCIe Endpoints can be
+> > > configured and triggered *remotely* as well *locally*.
+> > > For the sake of simplicity let's assume for now the eDMA was
+> > > implemented
+> > > on the EP and that is the IP that we want to configure and use.
+> > >
+> > > When I say *remotely* I mean that this IP can be configurable through
+> > > the
+> > > RC/CPU side, however, for that, it requires the eDMA registers to be
+> > > exposed through a PCIe BAR on the EP. This will allow setting the SAR,
+> > > DAR and other settings, also need(s) the interrupt(s) address(es) to be
+> > > set as well (MSI or MSI-X only) so that it can signal through PCIe (to
+> > > the RC and consecutively the associated EP driver) if the data transfer
+> > > has been completed, aborted or if the Linked List consumer algorithm
+> > > has
+> > > passed in some linked element marked with a watermark.
+> > >
+> > > It was based on this case that the eDMA driver was exclusively
+> > > developed.
+> > >
+> > > However, Alan, wants to expand a little more this, by being able to use
+> > > this driver on the EP side (through
+> > > pcitest/pci_endpoint_test/pci_epf_test) so that he can configure this
+> > > IP
+> > > *locally*.
+> > > In fact, when doing this, he doesn't need to configure the interrupt
+> > > address (MSI or MSI-X), because this IP provides a local interrupt line
+> > > so that be connected to other blocks on the EP side.
+> >
+> > Right, so this confirms my hunch that the driver is being used in
+> > a way that doesn't reflect the expected use case. Rather than
+> > papering over the problem by hacking the core code, I'd rather see
+> > the eDMA driver be updated to support both host and endpoint cases.
+> > This probably boils down to a PCI vs non-PCI set of helpers.
+> >
+> > Alan, could you confirm whether we got it right?
+>
+> Thanks Marc and Gustavo. I appreciate all your comments and feedback.
+>
+> You both got it right. As Gustavo mentioned, I am trying to expand dw-edma
+> for additional use cases.
+>
+> First new use case is for integration of dw-edma with pci-epf-test so the latter
+> can initiate dma transfers locally from endpoint memory to host memory over the
+> PCIe bus in response to a user command issued from the host-side command
+> prompt using the pcitest utility. When the locally-initiated dma
+> transfer completes
+> in this use case on the endpoint side, dw-edma issues an interrupt to the local
+> CPU on the endpoint side by way of a legacy interrupt
 
-compatible:
-  enum:
-    - fsl,imx1-gpio
-    - fsl,imx21-gpio
-    - fsl,imx31-gpio
-    - fsl,imx35-gpio
-    - fsl,imx7d-gpio
+Although dw-edma enables and handles such interrupts, to be correct, I should
+have said that in this use case Synopsys DesignWare PCI eDMA hardware issues
+an interrupt to the local CPU on the endpoint side by way of a legacy interrupt.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: |
-> +      Should be the port interrupt shared by all 32 pins, if one number.
-> +      If two numbers, the first one is the interrupt shared by low 16 pins
-> +      and the second one is for high 16 pins.
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  clocks:
-> +    description: |
-> +      The clock for clocking the GPIO silicon.
+> and pci-epf-test issues
+> an interrupt toward the remote host CPU across the PCIe bus by way of legacy,
+> MSI, or possibly MSI-X interrupt.
+>
+> Second new use case is for integration of dw-edma with pci_endpoint_test
+> running on the host CPU so the latter can initiate dma transfers locally from
+> host-side in response to a user command issued from the host-side command
+> prompt using the pcitest utility. This use case is for host systems that have
+> Synopsys DesignWare PCI eDMA hardware on the host side. When the
+> locally-initiated dma transfer completes in this use case on the host-side,
+> dw-edma issues a legacy interrupt to its local host CPU
 
-Can drop.
+Although dw-edma enables and handles such interrupts, to be correct, I should
+have said that in this case the Synopsys DesignWare PCI eDMA hardware issues
+a legacy interrupt to its local host CPU in this use case.
 
-> +    maxItems: 1
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    gpio0: gpio@73f84000 {
-> +        compatible = "fsl,imx35-gpio";
-> +        reg = <0x73f84000 0x4000>;
-> +        interrupts = <50 51>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
-> 
+> and pci-epf-test running
+> on the endpoint side issues a legacy, MSI, or possibly MSI-X interrupt
+> across the
+> PCIe bus toward the host CPU.
+>
+> When both the host and endpoint sides have the Synopsys DesignWare PCI
+> eDMA hardware, more use cases become possible in which eDMA controllers
+> from both systems can be engaged to move data. Embedded DMA controllers
+> from other PCIe IP vendors may also be supported with additional dmaengine
+> drivers under the Linux PCI Endpoint Framework with pci-epf-test, pcitest, and
+> pci_endpoint_test suite as well as new PCI endpoint function drivers for such
+> applications that require dma, for example nvme or virtio_net endpoint function
+> drivers.
+>
+> I submitted a recent patch [1] and [2] which Gustavo ACk'd to decouple dw-edma
+> from struct pci_dev. This enabled me to exercise dw-edma on some riscv host
+> and endpoint systems that I work with.
+>
+> I will submit another patch to decouple dw-edma from struct msi_msg such
+> that it would only call get_cached_msi_msg() on the host-side in its original
+> use case with remotely initiated dma transfers using the BAR access method.
+
+Marc, I submitted another patch [3] to modify dw-edma to check if a
+struct msi_desc
+entry exists before copying the contents of its struct msi_msg
+pointer. This is not
+exactly decoupling dw-edma from struct msi_msg as I suggested earlier but this
+set of dw-edma patches should show your concern is being addressed.
+
+>
+> The crash that I reported in __get_cached_msi_msg() is probably worth fixing
+> too. It seems to be low impact since get_cached_msi_msg() seems to be called
+> infrequently by a few callers.
+>
+> Regards,
+> Alan Mikhak
+>
+> [1] https://patchwork.kernel.org/patch/11489607/
+> [2] https://patchwork.kernel.org/patch/11491757/
+[3] https://patchwork.kernel.org/patch/11499551/
+
+>
+> >
+> > Thanks,
+> >
+> >          M.
+> > --
+> > Jazz is not dead. It just smells funny...
