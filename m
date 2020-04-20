@@ -2,155 +2,156 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F899C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068BDC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10F20206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32DA20BED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 07:32:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="shohTt/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDTHbv (ORCPT
+        id S1726167AbgDTHcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:31:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17972 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725971AbgDTHbu (ORCPT
+        Mon, 20 Apr 2020 03:32:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726116AbgDTHb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:31:50 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K72l7H115337
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 03:31:50 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gcbe4wnj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 03:31:49 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 20 Apr 2020 08:31:11 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 Apr 2020 08:31:07 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03K7UWtj24051968
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 07:30:32 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E9F742045;
-        Mon, 20 Apr 2020 07:31:39 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9205B4203F;
-        Mon, 20 Apr 2020 07:31:38 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.158.104])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 07:31:38 +0000 (GMT)
-Subject: Re: [PATCH] KVM: s390: remove unneeded semicolon in
- gisa_vcpu_kicker()
-To:     Jason Yan <yanaijie@huawei.com>, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, Ulrich.Weigand@de.ibm.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hulk Robot <hulkci@huawei.com>
-References: <20200418081926.41666-1-yanaijie@huawei.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 20 Apr 2020 09:31:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 20 Apr 2020 03:31:59 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 224A4C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:31:59 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id x4so9803253wmj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 00:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Irkm1t7texpDTdUbbf1TCyy80mJcHmDgDPGpxK2nECY=;
+        b=shohTt/yf8dzKqAja5yZw/W0nu5rJUWnkH4GMCrvNWxjOWfSHvdGqPHblWnvz7cNc/
+         wHLoKebMkLi1F7mwe5VShLwnv1iOBGdw4GlovkR4aPUdz6Gfzigr7Q+f8i6jUmsQh3dq
+         mDTsITXiv85lr9ix8WBZ9axZuO8DIdt78O8zCx+Ahl8svy5UC/y/tv5xQwDC5sW9lpzg
+         CmYMN+AIE1vQItJdb233MwfuIwlGjdNxW+ckrnhBJN/ozn7otWkTcCLYjoAxOmLOBvOs
+         tEy6wM4XOoxRS/bTJezonmZr3h+gc/OT7MWydSWG66T3E5RPmTyg5QbfpCNqvKHQyew2
+         Q2EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Irkm1t7texpDTdUbbf1TCyy80mJcHmDgDPGpxK2nECY=;
+        b=dfFqKqZeKiIn934TpWIMV8JliHDReLZNIrboGBs4bkXhWsAyHKer2scpHSyvE3M0Rv
+         zkWyx59LhJdRq9VehfDAhxlOPqeLa3/BDLzo6sbNY2BsE3BW7agSwn02fCsjk9tEJG9X
+         zHKLwnsMwqeU/A60CN0HhGTRldFr8NwLlt7a8jY+JZWHHQ5c5KhRmVnDXfoeiIpA9B7a
+         5mJqgwvyqIE5Iriploe7C8oEXDvJqxbV747UMfcl+7SHAEkkPI/M6jB7kt7wq594LZyG
+         PzoG0rW2y/DnojziskILOBhZlUckM7GZZTyVzrrsTadVJ8bzchKXHUnDc2FzuIqqlRcl
+         1S3w==
+X-Gm-Message-State: AGi0PuZ5aK1I00bFmfd9ULz3x5XJhVmO3YJ/yi+XEUjRaO1qaCiyfRit
+        MFjaKZSWdnqsM0v1GMXBcXhP8YEjjyA=
+X-Google-Smtp-Source: APiQypIWmIdKdy/1oq6wCDylTuILAe8zIGt4RJL7gzOKN1D2xzlvfQAJXOgmUgbaFZcGZB2rGNMlWw==
+X-Received: by 2002:a1c:7415:: with SMTP id p21mr15895325wmc.93.1587367917882;
+        Mon, 20 Apr 2020 00:31:57 -0700 (PDT)
+Received: from dell ([95.149.164.107])
+        by smtp.gmail.com with ESMTPSA id u7sm200895wmg.41.2020.04.20.00.31.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 00:31:57 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 08:31:55 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: Re: [RESEND PATCH v2 1/2] mfd: da9063: Fix revision handling to
+ correctly select reg tables
+Message-ID: <20200420073155.GK3737@dell>
+References: <cover.1586162737.git.Adam.Thomson.Opensource@diasemi.com>
+ <f830d0c2c2210253855d26c05b0e941e9e6f77a9.1586162737.git.Adam.Thomson.Opensource@diasemi.com>
+ <20200416075944.GU2167633@dell>
+ <AM6PR10MB22634D3B677E57EED0514DF680D80@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <20200417092410.GF2167633@dell>
+ <AM6PR10MB2263F5CE9B3627A256BD695880D90@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <20200418081926.41666-1-yanaijie@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042007-0008-0000-0000-00000373EC57
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042007-0009-0000-0000-00004A95AD5B
-Message-Id: <0201f3bf-335a-30db-51a2-c8050d92ae92@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_02:2020-04-17,2020-04-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
- clxscore=1015 suspectscore=0 malwarescore=0 spamscore=0 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200063
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM6PR10MB2263F5CE9B3627A256BD695880D90@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.04.20 10:19, Jason Yan wrote:
-> Fix the following coccicheck warning:
-> 
-> arch/s390/kvm/interrupt.c:3085:2-3: Unneeded semicolon
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+On Fri, 17 Apr 2020, Adam Thomson wrote:
 
-Thanks applied.
+> On 17 April 2020 10:24, Lee Jones wrote:
+> 
+> > > > > +		return -EINVAL;
+> > > >
+> > > > Do you want to fail silently here?
+> > >
+> > > Well an error message is printed in the calling code, so didn't feel like it
+> > > was necessary to have additional debug here. Felt like bloat.
+> > 
+> > As a user, I would prefer a more specific reason.
+> > 
+> > Thus, I would provide an error message here and omit the generic one.
+> 
+> I can update although I'll of course then need to do similar messages for the
+> other error legs of this function. FWIW, as this is only being called once in
+> the same file this error leg of code currently can never occur.
 
-> ---
->  arch/s390/kvm/interrupt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-> index 8191106bf7b9..559177123d0f 100644
-> --- a/arch/s390/kvm/interrupt.c
-> +++ b/arch/s390/kvm/interrupt.c
-> @@ -3082,7 +3082,7 @@ static enum hrtimer_restart gisa_vcpu_kicker(struct hrtimer *timer)
->  		__airqs_kick_single_vcpu(kvm, pending_mask);
->  		hrtimer_forward_now(timer, ns_to_ktime(gi->expires));
->  		return HRTIMER_RESTART;
-> -	};
-> +	}
-> 
->  	return HRTIMER_NORESTART;
->  }
-> 
+As a tiny improvement, it's not a deal breaker.  If it's too much
+work, you can either submit a subsequent patch or omit it completely.
 
+> > > > > +}
+> > > > > +
+> > > > > +enum {
+> > > > > +	DA9063_DEV_ID_REG = 0,
+> > > > > +	DA9063_VAR_ID_REG,
+> > > > > +	DA9063_CHIP_ID_REGS,
+> > > > > +};
+> > > > > +
+> > > > > +static int da9063_get_device_type(struct i2c_client *i2c, struct da9063
+> > > > *da9063)
+> > > > > +{
+> > > > > +	int ret;
+> > > > > +	u8 buf[DA9063_CHIP_ID_REGS];
+> > > >
+> > > > Really small nit: Could you reverse these please.
+> > >
+> > > Yep, agreed.
+> > >
+> > > >
+> > > > > +	ret = da9063_i2c_blockreg_read(i2c, DA9063_REG_DEVICE_ID, buf,
+> > > > > +				       DA9063_CHIP_ID_REGS);
+> > > > > +	if (ret < 0) {
+> > > >
+> > > > if (ret)
+> > > >
+> > > > Or better yet, as this is a read function, you could just return
+> > > > i2c_transfer() and do the appropriate error checking here *instead*.
+> > >
+> > > I think given that the function handles all of the I2C specific stuff I'd prefer
+> > > it be kept there. Logically that to me makes more sense. Can change this to
+> > > 'if (ret)'
+> > 
+> > Yes, not that I understand the message length (3) has more do to with
+> > the I2C interactions (rather than a derisive of 'count'), it makes
+> > sense to handle that inside the function.
+> > 
+> > However, it does seem odd to handle the return value of a *_read()
+> > function in this way.  They usually return the number of bytes read,
+> > which in this case would be DA9063_CHIP_ID_REGS (count), right?
+> 
+> Well regmap_bulk_read and regmap_read return 0 for success and negative for
+> failure so I'd disagree on this part.
+
+Fair enough. :)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
