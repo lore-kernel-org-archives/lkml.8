@@ -2,86 +2,62 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D14DC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F2FC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E082074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6928920BED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:23:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgDTTXK (ORCPT
+        id S1727822AbgDTTX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:23:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgDTTXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:23:10 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3B5420736;
-        Mon, 20 Apr 2020 19:23:07 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 15:23:06 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 04/12] scs: disable when function graph tracing is
- enabled
-Message-ID: <20200420152306.2d45e3c4@gandalf.local.home>
-In-Reply-To: <20200417154613.GB9529@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
-        <20200416161245.148813-1-samitolvanen@google.com>
-        <20200416161245.148813-5-samitolvanen@google.com>
-        <20200417100039.GS20730@hirez.programming.kicks-ass.net>
-        <20200417144620.GA9529@lakrids.cambridge.arm.com>
-        <20200417152645.GH20730@hirez.programming.kicks-ass.net>
-        <20200417154613.GB9529@lakrids.cambridge.arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 20 Apr 2020 15:23:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725896AbgDTTX2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 15:23:28 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F26F2C061A0C;
+        Mon, 20 Apr 2020 12:23:27 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 591F5127F98A6;
+        Mon, 20 Apr 2020 12:23:27 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 12:23:26 -0700 (PDT)
+Message-Id: <20200420.122326.1497522059061965797.davem@davemloft.net>
+To:     aishwaryarj100@gmail.com
+Cc:     aelior@marvell.com, GR-everest-linux-l2@marvell.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: qed: Remove unneeded cast from memory allocation
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200419162917.23030-1-aishwaryarj100@gmail.com>
+References: <20200419162917.23030-1-aishwaryarj100@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Apr 2020 12:23:27 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 16:46:14 +0100
-Mark Rutland <mark.rutland@arm.com> wrote:
+From: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Date: Sun, 19 Apr 2020 21:59:17 +0530
 
-> > > > And doesn't BPF also do stuff like this?  
-> > > 
-> > > Can BPF mess with return addresses now!?  
-> > 
-> > At least on x86 I think it does. But what do I know, I can't operate
-> > that stuff. Rostedt might know.  
+> Remove casting the values returned by memory allocation function.
 > 
-> Sounds like I might need to do some digging...
+> Coccinelle emits WARNING: casting value returned by memory allocation
+> function to struct pointer is useless.
+> 
+> This issue was detected by using the Coccinelle.
+> 
+> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
 
-May want to ping Alexei. It appears that if BPF adds a direct hook to a
-function, it will prevent the function graph tracer from tracing it. :-/
-
--- Steve
+Applied to net-next, thanks.
