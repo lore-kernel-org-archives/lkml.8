@@ -2,217 +2,137 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367C0C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211B7C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09FC4206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE5AF206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 14:54:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F4+FBrar"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Mx7wSGW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgDTOwF (ORCPT
+        id S1728363AbgDTOyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726102AbgDTOwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:52:04 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F4E8C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:52:03 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id f59so3317138uaf.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q/IW0rVYUl8ibIrc/id1YI3H7MyQzSZkTchvxN0ESh4=;
-        b=F4+FBrarJu0YoXSL1GjRqkxVmKsLO5XfO/Qs41zBmWfrM1YtnNIRDNZddMm3uGJzRR
-         6IyS7frBmtuqPU2YVFEaunzD89A0XXdrGsiob6IpNx53OqaA+ESaMVwbZTEOOOeLn6CR
-         kAqvT+FIOpGn9LyykzPnBgEZD+qUVJA1LUm0Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q/IW0rVYUl8ibIrc/id1YI3H7MyQzSZkTchvxN0ESh4=;
-        b=H6jj6zhd+E3eaQ3K5NGnUzeedo2xeMozVYcPAq32njBy0lH4doOkyX/8STolHo59XA
-         9iE7MFIk5mOg3xaUYYAH6TrMWo0crseRC2AzA8GzKgo23nEAvyXeUn+jBwYQLDoc9cZM
-         R54sVPsTvI/39oum/3jsHIziwJPkYpo0Ox082nSLBPpb6T2pVVJsRctv4cytJXh9ufhN
-         G9pbuHo/8D94ZC/NbQ89O5a3xp68nBLmeQt7PMLVia0GZ+r5ggF/JoWsFrKctt6fG7qq
-         2rc64AqzNEHt/FESc/I2W2vxpqsre6OdTpljr3lHAVYyw5vuzA9ocSrE9XQ6W+f3pjtK
-         pMwQ==
-X-Gm-Message-State: AGi0PuY+UNFl8rDsd4rnAFov4kPtv5QuMcfZUm9zPiXu/sva5ZcWjfMy
-        qLIf3rE+ElaJJnGNfs4Zs08NBZNSdb8=
-X-Google-Smtp-Source: APiQypISMUiI/TLvW4hXaymumfIstVxkfQqq0fgYaeMMvqH9F1jd7qpKtI8gK7EuX2Tqyl0JillDsw==
-X-Received: by 2002:a9f:3042:: with SMTP id i2mr6454515uab.138.1587394321860;
-        Mon, 20 Apr 2020 07:52:01 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id d83sm261735vka.34.2020.04.20.07.52.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 07:52:01 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id t8so3737822uap.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 07:52:00 -0700 (PDT)
-X-Received: by 2002:a9f:27ca:: with SMTP id b68mr8236936uab.8.1587394319880;
- Mon, 20 Apr 2020 07:51:59 -0700 (PDT)
+        Mon, 20 Apr 2020 10:54:33 -0400
+Received: from mout.web.de ([212.227.15.4]:54757 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbgDTOyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 10:54:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1587394463;
+        bh=UJVHxAmciaJC1WEEAZraT2mAU41uAN7USj3F52poiOU=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Mx7wSGW8XLxhahuByFUINKOTH2KmT+ISt6rEUaWYSMDGhBIqCV5u+svqYQX6s0EUw
+         yamJ2vJ+11Y1dBMrxUODQdRBXn0wvb9x+Je5AtvvvyGJvLFVQjgKeDgFl6G9KOEzx9
+         FZO16e+T0sKYQmEjYtP6HI/c45Gv2ck8iZB6+TtU=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.153.203]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LnBD3-1ijDhi1MU9-00hJE8; Mon, 20
+ Apr 2020 16:54:23 +0200
+Subject: Re: [net-next v2] can: ti_hecc: convert to
+ devm_platform_ioremap_resource_byname()
+To:     Dejin Zheng <zhengdejin5@gmail.com>, netdev@vger.kernel.org
+Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Wolfgang Grandegger <wg@grandegger.com>
+References: <20200420132207.8536-1-zhengdejin5@gmail.com>
+ <940fcaa1-8500-e534-2380-39419f1ac5a0@web.de> <20200420141921.GA10880@nuc8i5>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <3fd53b73-87b3-b788-d984-cb1c719f9e7f@web.de>
+Date:   Mon, 20 Apr 2020 16:54:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200324144754.v2.1.I9df0264e151a740be292ad3ee3825f31b5997776@changeid>
-In-Reply-To: <20200324144754.v2.1.I9df0264e151a740be292ad3ee3825f31b5997776@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 20 Apr 2020 07:51:48 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Uu-5quAn4w+9t3zRYcnLBx_PyoN1FE9_io4yvoxcA4Fg@mail.gmail.com>
-Message-ID: <CAD=FV=Uu-5quAn4w+9t3zRYcnLBx_PyoN1FE9_io4yvoxcA4Fg@mail.gmail.com>
-Subject: Re: [PATCH v2] bdev: Reduce time holding bd_mutex in sync in blkdev_close()
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Salman Qazi <sqazi@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200420141921.GA10880@nuc8i5>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:6LjBIEqGWOrI0faVvSxg6RrHcqv7h8eO//Qc2CbE15tFTRHq1g8
+ EfBBdvCX4lG5EtKijUHu3G4dm6rE5ZMM3p3oveTT3eAuP35Dn6IhbaTpC2k9cZZGFw5GlRj
+ vaa2MBO5pju+J6vlBYthEm9W3vT8+I/3UT8ZGUJHvo0sZY0hHuFCTsVSyGtHGX6mwE6hWA2
+ BOo+kkFZ4kUkLPGghe8Ew==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Yv+gJNi3LUY=:N3O7zQDLVDXj39ORIcl5Fw
+ wCuRc2lRRjvfhZOnAx1uQ6H8yfVvsoKqJCUniriFSt1azi89Gw5WXu6zLoiOlM+M8uRU+UUjo
+ UywAjtC4yR04QAthL7N2H4QGjBVLRYIcyY0En0BdE3JLBJrUKZM8PZjs/PDaji0g6Ry6ieEOI
+ ILWnu+t8LCxmB6w/BlSH0YprWaevrZhMIe/+jNIg9dehPkyYsnevHIxOHy5ii4UX2eXonzD37
+ TN8DFOtj3TUFsKwuwzYZYRXavHoH6hSdOGKn+HB5ZZuk0PtJcWy76JClY1JdHnhfy5lf0XmfA
+ ZY9o0ax/7rH6LAqnjvNimOySZaLtJen2582nu908B1APdFd6Olw3PpBgZIdyCUJqAi6O59OOg
+ XvyCnRRbR4U/1qEtzU3WHNWP5K248yQEQ9aZsUykKoLTJ+XpBX4xVeYoJiljLRJHxwnO+12PH
+ bRD6qOZzaPAPU6sY2BIHw07IXDB919JBiaVozqf0VXNt7V7hSoi1dD4ADXJYQrQUPvLZRkZTW
+ L9voI4tfrT7P+W4hd0so68UvgZo7dcAL8geg7/BsvfxllHjP41Dk8ywXGGgsiEzpX3HYDnebK
+ HaX3pk4dFCh9ryjoIUsStHbya62FBMwY0b3AQgq7lyGv2YJb8ubu8+dCZeOlU3binQlh1CS/g
+ WtM95rt2BmY11mzPwAyS7swcYAYLsBRMhB+OzDwYtowZIvE/VgggnGsYqv5suFooB4BwN6cgl
+ /du6IFi0kYKQpuzUqRO9uUkCW5xr0XcCPkCMllk26DQ6GcDafyM0ZD7sPT65ERaXNWi0ESadx
+ kti4zVRcvsYb+vK7BOo4At2rd7OuWnEvdXHTgt81NJzX+FdeghPDitxDwY+nUw7i1y7fh/vRT
+ zGlcnnPL6YtIulx7ji8o5byQD4T66DS4LqnYSC6HiWSa0qJbftENXrZx2rrj2PK7yJhDOE0kM
+ 93FpLep1tm+P7Ac6fH+UPlDYF6fZL6laaJM2lhX91froPfr3tegpGDFgXRc8mD+b5sWA64Dho
+ IJJqS+sWNqNcD0yQf9862cSR5Q99VjM7jpL6U+fg2VL64ZNXrIhKQWv2ZtUndHM982l4JTqe+
+ KnOHfXWLCJPjtLlV9yD9mm8M27HrAm5pN4Gcgt0NQGkDM+YdCgLgvYjwRfkdeH91MibN6IVEB
+ 8AGRgmSZbIRSxoqg8M0DtMm1AA57W49aJK5ZrND8o7jsuKqOj3RZquZzCpYf5zXwrEYkT63fC
+ CjGAO5E1lHkGJRsXE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
+>> Example:
+>> bgmac_probe()
+>> https://elixir.bootlin.com/linux/v5.7-rc2/source/drivers/net/ethernet/broadcom/bgmac-platform.c#L201
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/ethernet/broadcom/bgmac-platform.c?id=ae83d0b416db002fe95601e7f97f64b59514d936#n201
+>>
+> Markus, Thanks very much for your info, I will do it. Thanks again.
 
-On Tue, Mar 24, 2020 at 2:48 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> While trying to "dd" to the block device for a USB stick, I
-> encountered a hung task warning (blocked for > 120 seconds).  I
-> managed to come up with an easy way to reproduce this on my system
-> (where /dev/sdb is the block device for my USB stick) with:
->
->   while true; do dd if=/dev/zero of=/dev/sdb bs=4M; done
->
-> With my reproduction here are the relevant bits from the hung task
-> detector:
->
->  INFO: task udevd:294 blocked for more than 122 seconds.
->  ...
->  udevd           D    0   294      1 0x00400008
->  Call trace:
->   ...
->   mutex_lock_nested+0x40/0x50
->   __blkdev_get+0x7c/0x3d4
->   blkdev_get+0x118/0x138
->   blkdev_open+0x94/0xa8
->   do_dentry_open+0x268/0x3a0
->   vfs_open+0x34/0x40
->   path_openat+0x39c/0xdf4
->   do_filp_open+0x90/0x10c
->   do_sys_open+0x150/0x3c8
->   ...
->
->  ...
->  Showing all locks held in the system:
->  ...
->  1 lock held by dd/2798:
->   #0: ffffff814ac1a3b8 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0x50/0x204
->  ...
->  dd              D    0  2798   2764 0x00400208
->  Call trace:
->   ...
->   schedule+0x8c/0xbc
->   io_schedule+0x1c/0x40
->   wait_on_page_bit_common+0x238/0x338
->   __lock_page+0x5c/0x68
->   write_cache_pages+0x194/0x500
->   generic_writepages+0x64/0xa4
->   blkdev_writepages+0x24/0x30
->   do_writepages+0x48/0xa8
->   __filemap_fdatawrite_range+0xac/0xd8
->   filemap_write_and_wait+0x30/0x84
->   __blkdev_put+0x88/0x204
->   blkdev_put+0xc4/0xe4
->   blkdev_close+0x28/0x38
->   __fput+0xe0/0x238
->   ____fput+0x1c/0x28
->   task_work_run+0xb0/0xe4
->   do_notify_resume+0xfc0/0x14bc
->   work_pending+0x8/0x14
->
-> The problem appears related to the fact that my USB disk is terribly
-> slow and that I have a lot of RAM in my system to cache things.
-> Specifically my writes seem to be happening at ~15 MB/s and I've got
-> ~4 GB of RAM in my system that can be used for buffering.  To write 4
-> GB of buffer to disk thus takes ~4000 MB / ~15 MB/s = ~267 seconds.
->
-> The 267 second number is a problem because in __blkdev_put() we call
-> sync_blockdev() while holding the bd_mutex.  Any other callers who
-> want the bd_mutex will be blocked for the whole time.
->
-> The problem is made worse because I believe blkdev_put() specifically
-> tells other tasks (namely udev) to go try to access the device at right
-> around the same time we're going to hold the mutex for a long time.
->
-> Putting some traces around this (after disabling the hung task detector),
-> I could confirm:
->  dd:    437.608600: __blkdev_put() right before sync_blockdev() for sdb
->  udevd: 437.623901: blkdev_open() right before blkdev_get() for sdb
->  dd:    661.468451: __blkdev_put() right after sync_blockdev() for sdb
->  udevd: 663.820426: blkdev_open() right after blkdev_get() for sdb
->
-> A simple fix for this is to realize that sync_blockdev() works fine if
-> you're not holding the mutex.  Also, it's not the end of the world if
-> you sync a little early (though it can have performance impacts).
-> Thus we can make a guess that we're going to need to do the sync and
-> then do it without holding the mutex.  We still do one last sync with
-> the mutex but it should be much, much faster.
->
-> With this, my hung task warnings for my test case are gone.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> I didn't put a "Fixes" annotation here because, as far as I can tell,
-> this issue has been here "forever" unless someone knows of something
-> else that changed that made this possible to hit.  This could probably
-> get picked back to any stable tree that anyone is still maintaining.
->
-> Changes in v2:
-> - Don't bother holding the mutex when checking "bd_openers".
->
->  fs/block_dev.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> index 9501880dff5e..40c57a9cc91a 100644
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -1892,6 +1892,16 @@ static void __blkdev_put(struct block_device *bdev, fmode_t mode, int for_part)
->         struct gendisk *disk = bdev->bd_disk;
->         struct block_device *victim = NULL;
->
-> +       /*
-> +        * Sync early if it looks like we're the last one.  If someone else
-> +        * opens the block device between now and the decrement of bd_openers
-> +        * then we did a sync that we didn't need to, but that's not the end
-> +        * of the world and we want to avoid long (could be several minute)
-> +        * syncs while holding the mutex.
-> +        */
-> +       if (bdev->bd_openers == 1)
-> +               sync_blockdev(bdev);
-> +
->         mutex_lock_nested(&bdev->bd_mutex, for_part);
->         if (for_part)
->                 bdev->bd_part_count--;
-> --
-> 2.25.1.696.g5e7596f4ac-goog
+If you would use another script (like for the semantic patch language),
+you could find remaining update candidates in a convenient way,
+couldn't you?
 
-Are you the right person to land this patch?  If so, is there anything
-else that needs to be done?  Jens: if you should be the person to land
-(as suggested by "git log" but not by "get_maintainer") I'm happy to
-repost with collected tags.  Originally I trusted "get_maintainer" to
-help point me to the right person.
-
-Thanks!
-
--Doug
+Regards,
+Markus
