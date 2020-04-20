@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF74C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20168C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 972B820747
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FCF2072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386461;
-	bh=otd2QZ8LurhFqBTT0j5u25PASA7bqvPKOXhJaz2Pir8=;
+	s=default; t=1587386468;
+	bh=GP35ms7s6eukRrP35V2qI8Cv1wypBlHoorzFyo/mSfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fnCmzhWC9DDizy+3uCaKERRgQJzmM2rApLdtqkH8PoYvMbLEfubu05e0u9z900Czi
-	 o1MH25ICXh65k4Ywi/gwhjpAyYlj6V6o19vIE141lLjVqUm2Oa/DbKdBgbPTEiN1U/
-	 ZK6XSotMak1Xqn2OtOSirFQaeaBkj1OV9c9SSBQA=
+	b=gtgIja23J+lK0ZDC/fVLF8nkAfmnh99ndcfi0ATAKmzEblK4bAQUMERAf2xRgDmXB
+	 zx7iRnLvNkxlnU0QwT4Fl/l3lASPRalMz3dnLsT82/EcD3auHJXEHP8mXoCR5H+6qd
+	 KBQc0h/8Ksweh6JNNx5e7XGTzHc7WcSf1fnfqi4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgDTMlA (ORCPT
+        id S1727944AbgDTMlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33466 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbgDTMk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:40:58 -0400
+        id S1727924AbgDTMlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:41:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 969A52072B;
-        Mon, 20 Apr 2020 12:40:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 109AF2070B;
+        Mon, 20 Apr 2020 12:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386457;
-        bh=otd2QZ8LurhFqBTT0j5u25PASA7bqvPKOXhJaz2Pir8=;
+        s=default; t=1587386464;
+        bh=GP35ms7s6eukRrP35V2qI8Cv1wypBlHoorzFyo/mSfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cw9P2wDqHJJcpGibkrx1mzmXURePRHXu57jMQLN4P0v10AEGf/pBo7eW/DViBOGh7
-         7w9VgCKydCkJtLAsdQ2B5O8cADsUDTCCOHsN7QKXfWb04TwJ8o7wsNN2QC2iTyiGrO
-         R5Ys3sGSYQ4H43hHb3fv7VDhvsHfGOeIPDahgUSM=
+        b=zm9X5bmObiFPiQ8hZ7KtUXe3fVdTh+xy7Tv/7BdxJuWNZeiO9fCIVe95UzxQnjda5
+         p2BdS5BbAcFK108SeAcMWeWEHw/FXlvnBkNZAcgXr+/e4oBYaPZbL4GESBwoX+LX6B
+         soonqB2ALvrRsePGJ6aJRs0qiBsmrLXeXkbtVLlg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Michael=20Wei=C3=9F?= <michael.weiss@aisec.fraunhofer.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 03/65] l2tp: Allow management of tunnels and session in user namespace
-Date:   Mon, 20 Apr 2020 14:38:07 +0200
-Message-Id: <20200420121507.052936221@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.5 32/65] HID: lg-g15: Do not fail the probe when we fail to disable F# emulation
+Date:   Mon, 20 Apr 2020 14:38:36 +0200
+Message-Id: <20200420121513.180593904@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -60,95 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Michael Weiﬂ" <michael.weiss@aisec.fraunhofer.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 2abe05234f2e892728c388169631e4b99f354c86 ]
+commit b8a75eaddae9410767c7d95a1c5f3a547aae7b81 upstream.
 
-Creation and management of L2TPv3 tunnels and session through netlink
-requires CAP_NET_ADMIN. However, a process with CAP_NET_ADMIN in a
-non-initial user namespace gets an EPERM due to the use of the
-genetlink GENL_ADMIN_PERM flag. Thus, management of L2TP VPNs inside
-an unprivileged container won't work.
+By default the G1-G12 keys on the Logitech gaming keyboards send
+F1 - F12 when in "generic HID" mode.
 
-We replaced the GENL_ADMIN_PERM by the GENL_UNS_ADMIN_PERM flag
-similar to other network modules which also had this problem, e.g.,
-openvswitch (commit 4a92602aa1cd "openvswitch: allow management from
-inside user namespaces") and nl80211 (commit 5617c6cd6f844 "nl80211:
-Allow privileged operations from user namespaces").
+The first thing the hid-lg-g15 driver does is disable this behavior.
 
-I tested this in the container runtime trustm3 (trustm3.github.io)
-and was able to create l2tp tunnels and sessions in unpriviliged
-(user namespaced) containers using a private network namespace.
-For other runtimes such as docker or lxc this should work, too.
+We have received a bugreport that this does not work when the keyboard
+is connected through an Aten KVM switch. Using a gaming keyboard with
+a KVM is a bit weird setup, but still we can try to fail a bit more
+gracefully here.
 
-Signed-off-by: Michael Wei√ü <michael.weiss@aisec.fraunhofer.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+On the G510 keyboards the same USB-interface which is used for the gaming
+keys is also used for the media-keys. Before this commit we would call
+hid_hw_stop() on failure to disable the F# emulation and then exit the
+probe method with an error code.
+
+This not only causes us to not handle the gaming-keys, but this also
+breaks the media keys which is a regression compared to the situation
+when these keyboards where handled by the generic hidinput driver.
+
+This commit changes the error handling to clear the hiddev drvdata
+(to disable our .raw_event handler) and then returning from the probe
+method with success.
+
+The net result of this is that, when connected through a KVM, things
+work as well as they did before the hid-lg-g15 driver was introduced.
+
+Fixes: ad4203f5a243 ("HID: lg-g15: Add support for the G510 keyboards' gaming keys")
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1806321
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/l2tp/l2tp_netlink.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/net/l2tp/l2tp_netlink.c
-+++ b/net/l2tp/l2tp_netlink.c
-@@ -920,51 +920,51 @@ static const struct genl_ops l2tp_nl_ops
- 		.cmd = L2TP_CMD_TUNNEL_CREATE,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_tunnel_create,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_TUNNEL_DELETE,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_tunnel_delete,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_TUNNEL_MODIFY,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_tunnel_modify,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_TUNNEL_GET,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_tunnel_get,
- 		.dumpit = l2tp_nl_cmd_tunnel_dump,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_SESSION_CREATE,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_session_create,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_SESSION_DELETE,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_session_delete,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_SESSION_MODIFY,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_session_modify,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd = L2TP_CMD_SESSION_GET,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = l2tp_nl_cmd_session_get,
- 		.dumpit = l2tp_nl_cmd_session_dump,
--		.flags = GENL_ADMIN_PERM,
-+		.flags = GENL_UNS_ADMIN_PERM,
- 	},
- };
+---
+ drivers/hid/hid-lg-g15.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+--- a/drivers/hid/hid-lg-g15.c
++++ b/drivers/hid/hid-lg-g15.c
+@@ -803,8 +803,10 @@ static int lg_g15_probe(struct hid_devic
+ 	}
  
+ 	if (ret < 0) {
+-		hid_err(hdev, "Error disabling keyboard emulation for the G-keys\n");
+-		goto error_hw_stop;
++		hid_err(hdev, "Error %d disabling keyboard emulation for the G-keys, falling back to generic hid-input driver\n",
++			ret);
++		hid_set_drvdata(hdev, NULL);
++		return 0;
+ 	}
+ 
+ 	/* Get initial brightness levels */
 
 
