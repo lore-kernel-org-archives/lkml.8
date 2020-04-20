@@ -2,103 +2,203 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8CFC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF1AC54FCF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91A9F2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:37:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OIMXNv+S"
+	by mail.kernel.org (Postfix) with ESMTP id 6FEB62071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 18:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587407849;
+	bh=P5EmJJIN273/S0FNhUmo8XteOF2pmXcFoG774fIUD1I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gKD4zXg25Kt1DYpjnXigHWwiDIe5+CxclmlqHJsc7Rme0NrgZuWskl+hxJyts5ZEJ
+	 trJCoWqyZKW8yz+ZirpOnAMhjrh9HaQDqRKEk+EkTZ3j8aWSJ0/lJW3XG3Uj57phC1
+	 sbUulpAJ5cNeroUWoqufEqT+HHov6Fqsa28xuEvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgDTShR (ORCPT
+        id S1728172AbgDTSh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:37:17 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:30176 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727981AbgDTShR (ORCPT
+        Mon, 20 Apr 2020 14:37:28 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41153 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgDTSh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 14:37:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587407836; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=7e3eo1fJ3V4W47xQX8u/gUmo/iNTfiSlIlfQaS2lzFU=;
- b=OIMXNv+SuZEpcYFe5dpW/wD1MupWD7CKdzhf/VasnPGTTmVirbya7uCgutFdRxvURgZ2UJfc
- JNB1X+9gjkEVJT+X9kvyp46OSwQfGUuvvqbdCuIP5nRLFearlQtjaKI0CRm9IzXf2g0ovIFf
- SC120upVFXpvVUf/0GFK1mVtOPE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9debb8.7fae3df34ce0-smtp-out-n03;
- Mon, 20 Apr 2020 18:36:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7EB7CC4478C; Mon, 20 Apr 2020 18:36:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF97EC433F2;
-        Mon, 20 Apr 2020 18:36:39 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 21 Apr 2020 00:06:39 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
+        Mon, 20 Apr 2020 14:37:28 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c3so9010561otp.8;
+        Mon, 20 Apr 2020 11:37:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SwEht26LXsrYWXHN9AUzhB2LIZfMy4nj6PiaQR9cyys=;
+        b=j7OMx1yXolF7jI3IoToWGl1yee1T4SrQZHPsixHd8fuqyFUY6qJmzETIwv4vNWOh8+
+         WLR+gKYrBSI427r34cqNCLKcCa3udcVvDZMid9ZZkSf87qiylmYddJ96MYz77dZtceJI
+         WBNXv1QqCxkVnCMNrIuzTm4vl3pzPHwaYn4gPDGmKAa6URbKS7UNJ7qahYwHZY7clUIE
+         nxkj8tGi2V6pJ1/72VW1Z7rP1sFaCMnWvlDY/hCKZ985TMELBcskHWpRRNXg2ndAT+eD
+         XYJScwJPpLWcwn9N/m9VAED6QmWGFLm7uEt2aGVg7Pk5x+VXvn3Os83UOLs4UXZuW8sn
+         LSvA==
+X-Gm-Message-State: AGi0PuaPT6xzZto0OTPc2ru3hhY59NPmb0uGHS4iZszhaHfTeNFcb5yI
+        GC+RLw8WN7oztazmn46u8Q==
+X-Google-Smtp-Source: APiQypITmTVLmCHUT2eoWbm+5j8UVDm4ArOIAfxEx6QVgHNIjF0wocTSMcaN3A1FjSNLuRxTVjRewg==
+X-Received: by 2002:a9d:2d89:: with SMTP id g9mr10268404otb.367.1587407846953;
+        Mon, 20 Apr 2020 11:37:26 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r21sm106975otg.67.2020.04.20.11.37.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 11:37:26 -0700 (PDT)
+Received: (nullmailer pid 13827 invoked by uid 1000);
+        Mon, 20 Apr 2020 18:37:25 -0000
+Date:   Mon, 20 Apr 2020 13:37:25 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCHv3 2/6] iommu/arm-smmu: Allow client devices to select
- direct mapping
-In-Reply-To: <b69fc30c-e6fb-70bf-4d6e-0d9b39404bdd@arm.com>
-References: <cover.1587400573.git.saiprakash.ranjan@codeaurora.org>
- <d36f9c9ef3ef8dc84da02dfb160cd6846d2869fc.1587400573.git.saiprakash.ranjan@codeaurora.org>
- <b69fc30c-e6fb-70bf-4d6e-0d9b39404bdd@arm.com>
-Message-ID: <0702f3186327b419ee38e4775c040052@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2] dt-bindings: thermal: Convert i.MX8MM to json-schema
+Message-ID: <20200420183725.GA11019@bogus>
+References: <1586481044-19283-1-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586481044-19283-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-20 22:27, Robin Murphy wrote:
-> On 2020-04-20 5:42 pm, Sai Prakash Ranjan wrote:
->> From: Jordan Crouse <jcrouse@codeaurora.org>
->> 
->> Some client devices want to directly map the IOMMU themselves instead
->> of using the DMA domain. Allow those devices to opt in to direct
->> mapping by way of a list of compatible strings.
+On Fri, Apr 10, 2020 at 09:10:44AM +0800, Anson Huang wrote:
+> Convert the i.MX8MM thermal binding to DT schema format using json-schema
 > 
-> Neat and tidy :)
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- Add description to mention that i.MX8MM thermal driver supports
+> 	  both i.MX8MM(1 sensor) and i.MX8MP(2 sensors).
+> 	- Remove ./thermal.txt reference.
+> ---
+>  .../devicetree/bindings/thermal/imx8mm-thermal.txt | 15 ------
+>  .../bindings/thermal/imx8mm-thermal.yaml           | 62 ++++++++++++++++++++++
+>  2 files changed, 62 insertions(+), 15 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+>  create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
 > 
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> Strictly, I think patch #3/6 should really have come before this one
-> (with the header change moved accordingly), but don't bother resending
-> just for that.
-> 
+> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> deleted file mode 100644
+> index 3629d3c..0000000
+> --- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> +++ /dev/null
+> @@ -1,15 +0,0 @@
+> -* Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
+> -
+> -Required properties:
+> -- compatible : Must be "fsl,imx8mm-tmu" or "fsl,imx8mp-tmu".
+> -- reg : Address range of TMU registers.
+> -- clocks : TMU's clock source.
+> -- #thermal-sensor-cells : Should be 0 or 1. See ./thermal.txt for a description.
+> -
+> -Example:
+> -tmu: tmu@30260000 {
+> -	compatible = "fsl,imx8mm-tmu";
+> -	reg = <0x30260000 0x10000>;
+> -	clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
+> -	#thermal-sensor-cells = <0>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+> new file mode 100644
+> index 0000000..71807e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/imx8mm-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP i.MX8M Mini Thermal Binding
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +description: |
+> +  i.MX8MM has TMU IP to allow temperature measurement, there are
+> +  currently two distinct major versions of the IP that is supported
+> +  by a single driver. The IP versions are named v1 and v2, v1 is
+> +  for i.MX8MM which has ONLY 1 sensor, v2 is for i.MX8MP which has
+> +  2 sensors.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - fsl,imx8mm-tmu
+> +              - fsl,imx8mp-tmu
 
-Thanks, I have sent the updated version with this change as well
-in addition to the commit msg update for modem requesting direct
-mapping.
+Just:
 
-Thanks,
-Sai
+compatible:
+  enum:
+    - fsl,imx8mm-tmu
+    - fsl,imx8mp-tmu
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+> +  reg:
+> +    description: |
+> +      Address range of TMU registers.
+
+Drop this.
+
+> +    maxItems: 1
+
+Blank line here.
+
+> +  clocks:
+> +    description: |
+> +      TMU's clock source.
+
+Drop
+
+> +    maxItems: 1
+> +
+> +  "#thermal-sensor-cells":
+> +    description: |
+> +      Number of cells required to uniquely identify the thermal
+> +      sensors, 0 for ONLY one sensor and 1 for multiple sensors.
+> +    enum:
+> +      - 0
+> +      - 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - '#thermal-sensor-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imx8mm-clock.h>
+> +
+> +    tmu: tmu@30260000 {
+
+thermal-sensor@...
+
+> +         compatible = "fsl,imx8mm-tmu";
+> +         reg = <0x30260000 0x10000>;
+> +         clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
+> +         #thermal-sensor-cells = <0>;
+> +    };
+> +
+> +...
+> -- 
+> 2.7.4
+> 
