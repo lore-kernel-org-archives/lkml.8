@@ -2,256 +2,195 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1774EC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20772C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2C2A206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387318;
-	bh=ViXl8RC3PjaFVNZCj/TS7jC+L8ZXlKG1t16nT8XQANQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cU0YL2jmV+o5DC4k60JiuPsanwHQSOlTyCGoFnJdOtsLpftR/5/LWB3F8fgmMAY+O
-	 8a+25SZSyDdKTjF6k/uGmdkAJ50JAefVMgzX7OvRkSiDBH+efmN1GmLshYpmhrR9Kj
-	 K/cWnDgnSh22AnkTqAc8EnnXNWvhaqRMTQLufW3w=
+	by mail.kernel.org (Postfix) with ESMTP id 0049F206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgDTMpw (ORCPT
+        id S1729525AbgDTMzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:45:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728836AbgDTMpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:45:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E44CC206DD;
-        Mon, 20 Apr 2020 12:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386748;
-        bh=ViXl8RC3PjaFVNZCj/TS7jC+L8ZXlKG1t16nT8XQANQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UbRbSPWpy0geParLfr2fbdhkdoCBkp6lk4Mu9K0g7Z1/VoQVbA7Zgkf+KgkHPv7Wj
-         LgpgPDPHCF1PJOAFuB9yJ4aX5v3HJhJerr1cGKBt6VK6Tk9oMxAPfFfq827NuXyDZf
-         viV9+qPUiSUuKnK7efLCPakv+qExPWy/VRheQQYs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 11/60] net: dsa: mt7530: move mt7623 settings out off the mt7530
-Date:   Mon, 20 Apr 2020 14:38:49 +0200
-Message-Id: <20200420121504.460563135@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
-References: <20200420121500.490651540@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 Apr 2020 08:55:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7734 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728827AbgDTMpu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:45:50 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KCXXSY039390;
+        Mon, 20 Apr 2020 08:45:31 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxnsga4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:30 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03KCXWLq039378;
+        Mon, 20 Apr 2020 08:45:30 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxnsg9h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 08:45:30 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KCdtld005947;
+        Mon, 20 Apr 2020 12:45:29 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma01wdc.us.ibm.com with ESMTP id 30fs65rj1j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 12:45:29 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KCjRER37290462
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 12:45:27 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE0FA13604F;
+        Mon, 20 Apr 2020 12:45:27 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0ABF136051;
+        Mon, 20 Apr 2020 12:45:23 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.51.43])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 12:45:23 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
+        kirill@shutemov.name,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH v3 09/22] powerpc/kvm/book3s: Add helper to walk partition scoped linux page table.
+Date:   Mon, 20 Apr 2020 18:14:21 +0530
+Message-Id: <20200420124434.47330-10-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
+References: <20200420124434.47330-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_04:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ priorityscore=1501 spamscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "René van Dorst" <opensource@vdorst.com>
+The locking rules for walking partition scoped table is different from process
+scoped table. Hence add a helper for secondary linux page table walk and also
+add check whether we are holding the right locks.
 
-[ Upstream commit 84d2f7b708c374a15a2abe092a74e0e47d018286 ]
-
-Moving mt7623 logic out off mt7530, is required to make hardware setting
-consistent after we introduce phylink to mtk driver.
-
-Fixes: ca366d6c889b ("net: dsa: mt7530: Convert to PHYLINK API")
-Reviewed-by: Sean Wang <sean.wang@mediatek.com>
-Tested-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: RenÃ© van Dorst <opensource@vdorst.com>
-Tested-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
- drivers/net/dsa/mt7530.c |   85 -----------------------------------------------
- drivers/net/dsa/mt7530.h |   10 -----
- 2 files changed, 95 deletions(-)
+ arch/powerpc/include/asm/kvm_book3s_64.h | 13 +++++++++++++
+ arch/powerpc/kvm/book3s_64_mmu_radix.c   | 12 ++++++------
+ arch/powerpc/kvm/book3s_hv_nested.c      |  2 +-
+ 3 files changed, 20 insertions(+), 7 deletions(-)
 
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -67,58 +67,6 @@ static const struct mt7530_mib_desc mt75
- };
+diff --git a/arch/powerpc/include/asm/kvm_book3s_64.h b/arch/powerpc/include/asm/kvm_book3s_64.h
+index 04b2b927bb5a..2c2635967d6e 100644
+--- a/arch/powerpc/include/asm/kvm_book3s_64.h
++++ b/arch/powerpc/include/asm/kvm_book3s_64.h
+@@ -14,6 +14,7 @@
+ #include <asm/book3s/64/mmu-hash.h>
+ #include <asm/cpu_has_feature.h>
+ #include <asm/ppc-opcode.h>
++#include <asm/pte-walk.h>
  
- static int
--mt7623_trgmii_write(struct mt7530_priv *priv,  u32 reg, u32 val)
--{
--	int ret;
--
--	ret =  regmap_write(priv->ethernet, TRGMII_BASE(reg), val);
--	if (ret < 0)
--		dev_err(priv->dev,
--			"failed to priv write register\n");
--	return ret;
--}
--
--static u32
--mt7623_trgmii_read(struct mt7530_priv *priv, u32 reg)
--{
--	int ret;
--	u32 val;
--
--	ret = regmap_read(priv->ethernet, TRGMII_BASE(reg), &val);
--	if (ret < 0) {
--		dev_err(priv->dev,
--			"failed to priv read register\n");
--		return ret;
--	}
--
--	return val;
--}
--
--static void
--mt7623_trgmii_rmw(struct mt7530_priv *priv, u32 reg,
--		  u32 mask, u32 set)
--{
--	u32 val;
--
--	val = mt7623_trgmii_read(priv, reg);
--	val &= ~mask;
--	val |= set;
--	mt7623_trgmii_write(priv, reg, val);
--}
--
--static void
--mt7623_trgmii_set(struct mt7530_priv *priv, u32 reg, u32 val)
--{
--	mt7623_trgmii_rmw(priv, reg, 0, val);
--}
--
--static void
--mt7623_trgmii_clear(struct mt7530_priv *priv, u32 reg, u32 val)
--{
--	mt7623_trgmii_rmw(priv, reg, val, 0);
--}
--
--static int
- core_read_mmd_indirect(struct mt7530_priv *priv, int prtad, int devad)
- {
- 	struct mii_bus *bus = priv->bus;
-@@ -530,27 +478,6 @@ mt7530_pad_clk_setup(struct dsa_switch *
- 		for (i = 0 ; i < NUM_TRGMII_CTRL; i++)
- 			mt7530_rmw(priv, MT7530_TRGMII_RD(i),
- 				   RD_TAP_MASK, RD_TAP(16));
--	else
--		if (priv->id != ID_MT7621)
--			mt7623_trgmii_set(priv, GSW_INTF_MODE,
--					  INTF_MODE_TRGMII);
--
--	return 0;
--}
--
--static int
--mt7623_pad_clk_setup(struct dsa_switch *ds)
--{
--	struct mt7530_priv *priv = ds->priv;
--	int i;
--
--	for (i = 0 ; i < NUM_TRGMII_CTRL; i++)
--		mt7623_trgmii_write(priv, GSW_TRGMII_TD_ODT(i),
--				    TD_DM_DRVP(8) | TD_DM_DRVN(8));
--
--	mt7623_trgmii_set(priv, GSW_TRGMII_RCK_CTRL, RX_RST | RXC_DQSISEL);
--	mt7623_trgmii_clear(priv, GSW_TRGMII_RCK_CTRL, RX_RST);
--
- 	return 0;
+ #ifdef CONFIG_PPC_PSERIES
+ static inline bool kvmhv_on_pseries(void)
+@@ -634,6 +635,18 @@ extern void kvmhv_remove_nest_rmap_range(struct kvm *kvm,
+ 				unsigned long gpa, unsigned long hpa,
+ 				unsigned long nbytes);
+ 
++static inline pte_t *find_kvm_secondary_pte(struct kvm *kvm, unsigned long ea,
++					    unsigned *hshift)
++{
++	pte_t *pte;
++
++	VM_WARN(!spin_is_locked(&kvm->mmu_lock),
++		"%s called with kvm mmu_lock not held \n", __func__);
++	pte = __find_linux_pte(kvm->arch.pgtable, ea, NULL, hshift);
++
++	return pte;
++}
++
+ #endif /* CONFIG_KVM_BOOK3S_HV_POSSIBLE */
+ 
+ #endif /* __ASM_KVM_BOOK3S_64_H__ */
+diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+index 9f050064d2a2..bf8b72a274fa 100644
+--- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
++++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+@@ -980,11 +980,11 @@ int kvm_unmap_radix(struct kvm *kvm, struct kvm_memory_slot *memslot,
+ 		return 0;
+ 	}
+ 
+-	ptep = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
++	ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
+ 	if (ptep && pte_present(*ptep))
+ 		kvmppc_unmap_pte(kvm, ptep, gpa, shift, memslot,
+ 				 kvm->arch.lpid);
+-	return 0;				
++	return 0;
  }
  
-@@ -1257,10 +1184,6 @@ mt7530_setup(struct dsa_switch *ds)
- 	dn = ds->ports[MT7530_CPU_PORT].master->dev.of_node->parent;
+ /* Called with kvm->mmu_lock held */
+@@ -1000,7 +1000,7 @@ int kvm_age_radix(struct kvm *kvm, struct kvm_memory_slot *memslot,
+ 	if (kvm->arch.secure_guest & KVMPPC_SECURE_INIT_DONE)
+ 		return ref;
  
- 	if (priv->id == ID_MT7530) {
--		priv->ethernet = syscon_node_to_regmap(dn);
--		if (IS_ERR(priv->ethernet))
--			return PTR_ERR(priv->ethernet);
--
- 		regulator_set_voltage(priv->core_pwr, 1000000, 1000000);
- 		ret = regulator_enable(priv->core_pwr);
- 		if (ret < 0) {
-@@ -1422,14 +1345,6 @@ static void mt7530_phylink_mac_config(st
- 		/* Setup TX circuit incluing relevant PAD and driving */
- 		mt7530_pad_clk_setup(ds, state->interface);
+-	ptep = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
++	ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
+ 	if (ptep && pte_present(*ptep) && pte_young(*ptep)) {
+ 		old = kvmppc_radix_update_pte(kvm, ptep, _PAGE_ACCESSED, 0,
+ 					      gpa, shift);
+@@ -1027,7 +1027,7 @@ int kvm_test_age_radix(struct kvm *kvm, struct kvm_memory_slot *memslot,
+ 	if (kvm->arch.secure_guest & KVMPPC_SECURE_INIT_DONE)
+ 		return ref;
  
--		if (priv->id == ID_MT7530) {
--			/* Setup RX circuit, relevant PAD and driving on the
--			 * host which must be placed after the setup on the
--			 * device side is all finished.
--			 */
--			mt7623_pad_clk_setup(ds);
--		}
--
- 		priv->p6_interface = state->interface;
- 		break;
- 	default:
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -275,7 +275,6 @@ enum mt7530_vlan_port_attr {
+-	ptep = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
++	ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
+ 	if (ptep && pte_present(*ptep) && pte_young(*ptep))
+ 		ref = 1;
+ 	return ref;
+@@ -1047,7 +1047,7 @@ static int kvm_radix_test_clear_dirty(struct kvm *kvm,
+ 	if (kvm->arch.secure_guest & KVMPPC_SECURE_INIT_DONE)
+ 		return ret;
  
- /* Registers for TRGMII on the both side */
- #define MT7530_TRGMII_RCK_CTRL		0x7a00
--#define GSW_TRGMII_RCK_CTRL		0x300
- #define  RX_RST				BIT(31)
- #define  RXC_DQSISEL			BIT(30)
- #define  DQSI1_TAP_MASK			(0x7f << 8)
-@@ -284,31 +283,24 @@ enum mt7530_vlan_port_attr {
- #define  DQSI0_TAP(x)			((x) & 0x7f)
- 
- #define MT7530_TRGMII_RCK_RTT		0x7a04
--#define GSW_TRGMII_RCK_RTT		0x304
- #define  DQS1_GATE			BIT(31)
- #define  DQS0_GATE			BIT(30)
- 
- #define MT7530_TRGMII_RD(x)		(0x7a10 + (x) * 8)
--#define GSW_TRGMII_RD(x)		(0x310 + (x) * 8)
- #define  BSLIP_EN			BIT(31)
- #define  EDGE_CHK			BIT(30)
- #define  RD_TAP_MASK			0x7f
- #define  RD_TAP(x)			((x) & 0x7f)
- 
--#define GSW_TRGMII_TXCTRL		0x340
- #define MT7530_TRGMII_TXCTRL		0x7a40
- #define  TRAIN_TXEN			BIT(31)
- #define  TXC_INV			BIT(30)
- #define  TX_RST				BIT(28)
- 
- #define MT7530_TRGMII_TD_ODT(i)		(0x7a54 + 8 * (i))
--#define GSW_TRGMII_TD_ODT(i)		(0x354 + 8 * (i))
- #define  TD_DM_DRVP(x)			((x) & 0xf)
- #define  TD_DM_DRVN(x)			(((x) & 0xf) << 4)
- 
--#define GSW_INTF_MODE			0x390
--#define  INTF_MODE_TRGMII		BIT(1)
--
- #define MT7530_TRGMII_TCK_CTRL		0x7a78
- #define  TCK_TAP(x)			(((x) & 0xf) << 8)
- 
-@@ -441,7 +433,6 @@ static const char *p5_intf_modes(unsigne
-  * @ds:			The pointer to the dsa core structure
-  * @bus:		The bus used for the device and built-in PHY
-  * @rstc:		The pointer to reset control used by MCM
-- * @ethernet:		The regmap used for access TRGMII-based registers
-  * @core_pwr:		The power supplied into the core
-  * @io_pwr:		The power supplied into the I/O
-  * @reset:		The descriptor for GPIO line tied to its reset pin
-@@ -458,7 +449,6 @@ struct mt7530_priv {
- 	struct dsa_switch	*ds;
- 	struct mii_bus		*bus;
- 	struct reset_control	*rstc;
--	struct regmap		*ethernet;
- 	struct regulator	*core_pwr;
- 	struct regulator	*io_pwr;
- 	struct gpio_desc	*reset;
-
+-	ptep = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
++	ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
+ 	if (ptep && pte_present(*ptep) && pte_dirty(*ptep)) {
+ 		ret = 1;
+ 		if (shift)
+@@ -1108,7 +1108,7 @@ void kvmppc_radix_flush_memslot(struct kvm *kvm,
+ 	gpa = memslot->base_gfn << PAGE_SHIFT;
+ 	spin_lock(&kvm->mmu_lock);
+ 	for (n = memslot->npages; n; --n) {
+-		ptep = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
++		ptep = find_kvm_secondary_pte(kvm, gpa, &shift);
+ 		if (ptep && pte_present(*ptep))
+ 			kvmppc_unmap_pte(kvm, ptep, gpa, shift, memslot,
+ 					 kvm->arch.lpid);
+diff --git a/arch/powerpc/kvm/book3s_hv_nested.c b/arch/powerpc/kvm/book3s_hv_nested.c
+index dc97e5be76f6..7f1fc5db13ea 100644
+--- a/arch/powerpc/kvm/book3s_hv_nested.c
++++ b/arch/powerpc/kvm/book3s_hv_nested.c
+@@ -1362,7 +1362,7 @@ static long int __kvmhv_nested_page_fault(struct kvm_run *run,
+ 	/* See if can find translation in our partition scoped tables for L1 */
+ 	pte = __pte(0);
+ 	spin_lock(&kvm->mmu_lock);
+-	pte_p = __find_linux_pte(kvm->arch.pgtable, gpa, NULL, &shift);
++	pte_p = find_kvm_secondary_pte(kvm, gpa, &shift);
+ 	if (!shift)
+ 		shift = PAGE_SHIFT;
+ 	if (pte_p)
+-- 
+2.25.3
 
