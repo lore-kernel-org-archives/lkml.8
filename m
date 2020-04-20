@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D9EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8E4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94423206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C39C206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387093;
-	bh=qaL4iYj7C80HTLE18s9gZmgPRTetzxaDAONH7zHUwiM=;
+	s=default; t=1587387095;
+	bh=X6HHSiGPxDds4aAYE1pVBzYbDO1xRfaiocXNMNWYJgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H2TKDiWNZ1fVgyw91bGOJ0C+ZEf4NorqzG+iO+1QVygishc4YbXwBJ6tvgQFp5Gt3
-	 WnVXGa+W2NCwBN3TpLl0pAapDQKEnB8wkxMm0L2lzZPVb/YXingd2gGCigMXlcNqJ5
-	 2/YNiH01JgaA5UJnevAnDNQpnfw8/EjLSyHtkBIQ=
+	b=y9Ee0n/y9G6VUylEb5cjKfXP1UISaGrP76rKAyTgiBsOHT9p2ZKaf4vQY1XVC2WlA
+	 4kPjEjc2jVH87ek2HmRUkEZEJyVMPZAVN0tWJidD/M2foec60nKQEjA6ehKBf7dEqK
+	 J149kLEjrxmhPZt4q6TBVpCHuWk8AzMcS+mCntPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbgDTMvc (ORCPT
+        id S1729568AbgDTMvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:51:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729226AbgDTMsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:48:17 -0400
+        id S1729230AbgDTMsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 666552078E;
-        Mon, 20 Apr 2020 12:48:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7B3820735;
+        Mon, 20 Apr 2020 12:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386896;
-        bh=qaL4iYj7C80HTLE18s9gZmgPRTetzxaDAONH7zHUwiM=;
+        s=default; t=1587386899;
+        bh=X6HHSiGPxDds4aAYE1pVBzYbDO1xRfaiocXNMNWYJgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N5Tf/tYOA8DviEEEtu+RosTIN4hrGnCJx4DzZrOOMGyU4Undj5Oq18YgkNyGz4Xea
-         gaQoUoKCz4JAA49fbrQds3QyLvSn13zDQC/bLswyEFER0bt8exbwEhn0gxHYaEvvB7
-         ZPa3hOhQ3oIYJAssASXDtmkGjVOeM+nPrtrCljfc=
+        b=2Y/x+Oadogk5hmFCTPTqxe4iHNtPJ6Q7YMy1l4ZyKeshhPNuc2eB3+grIGLXlawub
+         67+dIonItYnmImE4tlc09qxg4gic5oObA1mSaCP3gQ1t1575746dYwX33DVW7aythc
+         ftg1E0A4/gnOJhdFD6LzJg64HFnJEHlRoa731maE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        stable@vger.kernel.org, Taras Chornyi <taras.chornyi@plvision.eu>,
+        Vadym Kochan <vadym.kochan@plvision.eu>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 02/40] hsr: check protocol version in hsr_newlink()
-Date:   Mon, 20 Apr 2020 14:39:12 +0200
-Message-Id: <20200420121449.830617851@linuxfoundation.org>
+Subject: [PATCH 4.19 03/40] net: ipv4: devinet: Fix crash when add/del multicast IP with autojoin
+Date:   Mon, 20 Apr 2020 14:39:13 +0200
+Message-Id: <20200420121450.667479590@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
 References: <20200420121444.178150063@linuxfoundation.org>
@@ -59,53 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Taras Chornyi <taras.chornyi@plvision.eu>
 
-[ Upstream commit 4faab8c446def7667adf1f722456c2f4c304069c ]
+[ Upstream commit 690cc86321eb9bcee371710252742fb16fe96824 ]
 
-In the current hsr code, only 0 and 1 protocol versions are valid.
-But current hsr code doesn't check the version, which is received by
-userspace.
+When CONFIG_IP_MULTICAST is not set and multicast ip is added to the device
+with autojoin flag or when multicast ip is deleted kernel will crash.
 
-Test commands:
-    ip link add dummy0 type dummy
-    ip link add dummy1 type dummy
-    ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1 version 4
+steps to reproduce:
 
-In the test commands, version 4 is invalid.
-So, the command should be failed.
+ip addr add 224.0.0.0/32 dev eth0
+ip addr del 224.0.0.0/32 dev eth0
 
-After this patch, following error will occur.
-"Error: hsr: Only versions 0..1 are supported."
+or
 
-Fixes: ee1c27977284 ("net/hsr: Added support for HSR v1")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+ip addr add 224.0.0.0/32 dev eth0 autojoin
+
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000088
+ pc : _raw_write_lock_irqsave+0x1e0/0x2ac
+ lr : lock_sock_nested+0x1c/0x60
+ Call trace:
+  _raw_write_lock_irqsave+0x1e0/0x2ac
+  lock_sock_nested+0x1c/0x60
+  ip_mc_config.isra.28+0x50/0xe0
+  inet_rtm_deladdr+0x1a8/0x1f0
+  rtnetlink_rcv_msg+0x120/0x350
+  netlink_rcv_skb+0x58/0x120
+  rtnetlink_rcv+0x14/0x20
+  netlink_unicast+0x1b8/0x270
+  netlink_sendmsg+0x1a0/0x3b0
+  ____sys_sendmsg+0x248/0x290
+  ___sys_sendmsg+0x80/0xc0
+  __sys_sendmsg+0x68/0xc0
+  __arm64_sys_sendmsg+0x20/0x30
+  el0_svc_common.constprop.2+0x88/0x150
+  do_el0_svc+0x20/0x80
+ el0_sync_handler+0x118/0x190
+  el0_sync+0x140/0x180
+
+Fixes: 93a714d6b53d ("multicast: Extend ip address command to enable multicast group join/leave on")
+Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/hsr/hsr_netlink.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ net/ipv4/devinet.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/net/hsr/hsr_netlink.c
-+++ b/net/hsr/hsr_netlink.c
-@@ -64,10 +64,16 @@ static int hsr_newlink(struct net *src_n
- 	else
- 		multicast_spec = nla_get_u8(data[IFLA_HSR_MULTICAST_SPEC]);
- 
--	if (!data[IFLA_HSR_VERSION])
-+	if (!data[IFLA_HSR_VERSION]) {
- 		hsr_version = 0;
--	else
-+	} else {
- 		hsr_version = nla_get_u8(data[IFLA_HSR_VERSION]);
-+		if (hsr_version > 1) {
-+			NL_SET_ERR_MSG_MOD(extack,
-+					   "Only versions 0..1 are supported");
-+			return -EINVAL;
-+		}
-+	}
- 
- 	return hsr_dev_finalize(dev, link, multicast_spec, hsr_version);
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -587,12 +587,15 @@ struct in_ifaddr *inet_ifa_byprefix(stru
+ 	return NULL;
  }
+ 
+-static int ip_mc_config(struct sock *sk, bool join, const struct in_ifaddr *ifa)
++static int ip_mc_autojoin_config(struct net *net, bool join,
++				 const struct in_ifaddr *ifa)
+ {
++#if defined(CONFIG_IP_MULTICAST)
+ 	struct ip_mreqn mreq = {
+ 		.imr_multiaddr.s_addr = ifa->ifa_address,
+ 		.imr_ifindex = ifa->ifa_dev->dev->ifindex,
+ 	};
++	struct sock *sk = net->ipv4.mc_autojoin_sk;
+ 	int ret;
+ 
+ 	ASSERT_RTNL();
+@@ -605,6 +608,9 @@ static int ip_mc_config(struct sock *sk,
+ 	release_sock(sk);
+ 
+ 	return ret;
++#else
++	return -EOPNOTSUPP;
++#endif
+ }
+ 
+ static int inet_rtm_deladdr(struct sk_buff *skb, struct nlmsghdr *nlh,
+@@ -646,7 +652,7 @@ static int inet_rtm_deladdr(struct sk_bu
+ 			continue;
+ 
+ 		if (ipv4_is_multicast(ifa->ifa_address))
+-			ip_mc_config(net->ipv4.mc_autojoin_sk, false, ifa);
++			ip_mc_autojoin_config(net, false, ifa);
+ 		__inet_del_ifa(in_dev, ifap, 1, nlh, NETLINK_CB(skb).portid);
+ 		return 0;
+ 	}
+@@ -907,8 +913,7 @@ static int inet_rtm_newaddr(struct sk_bu
+ 		 */
+ 		set_ifa_lifetime(ifa, valid_lft, prefered_lft);
+ 		if (ifa->ifa_flags & IFA_F_MCAUTOJOIN) {
+-			int ret = ip_mc_config(net->ipv4.mc_autojoin_sk,
+-					       true, ifa);
++			int ret = ip_mc_autojoin_config(net, true, ifa);
+ 
+ 			if (ret < 0) {
+ 				inet_free_ifa(ifa);
 
 
