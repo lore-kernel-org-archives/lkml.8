@@ -2,96 +2,209 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563C1C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5B1C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1E120857
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5B820775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:12:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgDFb32K"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="r0x366Uh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbgDTPMh (ORCPT
+        id S1730290AbgDTPMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbgDTPMf (ORCPT
+        Mon, 20 Apr 2020 11:12:43 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:16974 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728276AbgDTPMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:12:35 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4511C061A0F;
-        Mon, 20 Apr 2020 08:12:34 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id w6so5764697ilg.1;
-        Mon, 20 Apr 2020 08:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1KANu4cUD65S82lmIiU07FeIllaQkhNpX/3s3IPgN3E=;
-        b=RgDFb32KuNLLsna2y/5I+2tdw6jgmi60xwvuo7s1rSDaE/7w30gtcWsShaerB09w4m
-         1YrgVlC4K7UV3jIfy/IckwYodny0QH0BAqqFhyYZJi0XCfugelfX2MxoMShXqKdWw4Lm
-         4ma+xK9Cn6F0Hudx69m1Sub1EGdR7hP/4k7v///Q+u6yL1uoM+MzceMw7Opc1ody8izi
-         kM/ctkn4CPaJuXDhGH9KY4Ls5LpjiQdghcg4EJ3LLUbHuP7GddectBN7nYYpfHt5fLxO
-         LXK5GzQln+bSYXlFEc9wlyk6Qv4E+cIfWND/VxRF1T0B6+t9dJKV+MbD/vq5VJV0aYIj
-         luZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1KANu4cUD65S82lmIiU07FeIllaQkhNpX/3s3IPgN3E=;
-        b=Htc47bAuASVbzIEVlO9kltvrnjMH+j3lwjAH5mxTptj/Ja5hTr7MYmnR+rlkkmTSEZ
-         9NztRsH5Gt3J6y3XW9538BtQiNp1G0PrjagwGGwaRzar6CXu0Z8DdQpWqYx9xOHeXRFH
-         ch/8qGDnFs0bY3VqAyMs5nMCxBUz6Z9WmIZsRPCZSS5I7CRNzMUn2twljDnoXBJGowsY
-         1/2Li+ykP/qGMT4sUSaVeMP5gqk2NJ0NmVWRiMub6aS6P3pX684O9F9IETf28wxdDmA8
-         9725W1VhzdgvfnWrU78HNjDS1aJ9AeUtWmVti2jVq2NxOeNHLisIwckH25Pmu3pWIwue
-         CErg==
-X-Gm-Message-State: AGi0Pua1o8q9+syKclcqYBvn26gq4MBiM4q/x13l/49SZt/cJH0WNknS
-        kwmTbRkD05m+vISqt006mtE3w0dDDmDCZmlxJL4=
-X-Google-Smtp-Source: APiQypL2E1Y6m/iRXIttTCmhHlg64CrNNr4IVdxn0m3KXmrJwlEWOznwojod+3UwyRO0rYWdfr+1tjDqAQ3nBBsAuKU=
-X-Received: by 2002:a92:5dca:: with SMTP id e71mr15507083ilg.34.1587395554381;
- Mon, 20 Apr 2020 08:12:34 -0700 (PDT)
+        Mon, 20 Apr 2020 11:12:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587395533; x=1618931533;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=ZxKatHTMNcBCkv+A3yZh89TcTKMhb8QIcfCth0yOy1o=;
+  b=r0x366UhAfiJOabh6E/N2ytoDICaRn1KAimfwaTZLaQREIHVUrV3/yO4
+   SE+5j0NzmZOYFSqEWKRVHE/f/mlHbaeDiTHKzNh4l5AZHZllYE0lWXKtE
+   4g64tGCDaUCIN4ooWAmAMha/uhARpdQAJrJpgu5s0m0YYBknsCUpUsyON
+   dMQrabca8Cj+tUWvvNqFzWGRCr3qnydhFeyE6JO2iyX8BcHGhAvmlohqZ
+   TAWQHL6tHTvGt4OnNiSILA5wHtH1OQ0RD28soIwieT4LQR43EVaSpuxuC
+   7TvVnDdtPsZ/RmJTn80ClKha2OYfIgn/F80p/KtFdyBL3KwW5zUpQZ78s
+   g==;
+IronPort-SDR: l5cJfID29+w+CSe3av0vDuJdTYiCnzVhIHQxSoVLuFkxFLlKc28kO887eVgMB8K0db+KIoH2H0
+ cmJff48cWD2hmXaKkBngglH27NNGLxehQH8ZwJhaP6QihX9B86g25hbF5/LAtdEH3cVnqnZLPO
+ UvQUYw0TKsgdC1PAvWlhTxqV/iMaE147/vN4PjYsJLTB9OZTd5S6v+KME8dIMB7eCjQaw9Ymrw
+ br0JwEdF6xsLEGTiwDP+NFw9g6xn/Jwg1Ok+LhWXuu1SVdveeMY5a18VKhtxxCDQJkD5dLcC4f
+ sF0=
+X-IronPort-AV: E=Sophos;i="5.72,406,1580799600"; 
+   d="scan'208";a="70911843"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Apr 2020 08:12:12 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 20 Apr 2020 08:12:12 -0700
+Received: from soft-dev3.microsemi.net (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Mon, 20 Apr 2020 08:11:41 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
+        <jiri@resnulli.us>, <ivecera@redhat.com>, <kuba@kernel.org>,
+        <roopa@cumulusnetworks.com>, <olteanv@gmail.com>, <andrew@lunn.ch>,
+        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net-next 10/13] bridge: mrp: Implement netlink interface to configure MRP
+Date:   Mon, 20 Apr 2020 17:09:44 +0200
+Message-ID: <20200420150947.30974-11-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200420150947.30974-1-horatiu.vultur@microchip.com>
+References: <20200420150947.30974-1-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
-References: <20200419192339.32023-1-kdasu.kdev@gmail.com> <20200419192339.32023-4-kdasu.kdev@gmail.com>
- <63176468-53b6-c11a-9e33-2ca9dd06f7a3@gmail.com>
-In-Reply-To: <63176468-53b6-c11a-9e33-2ca9dd06f7a3@gmail.com>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Mon, 20 Apr 2020 11:12:21 -0400
-Message-ID: <CAC=U0a1mOWo3ucMJ7x5wuWQ44NRA2+Dj6fKAi1dbevNaxcYJzA@mail.gmail.com>
-Subject: Re: [Patch v2 3/9] spi: bcm-qspi: Handle lack of MSPI_REV offset
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes missed this one.
-Should I send a v3 of the entire set.
+Implement netlink interface to configure MRP. The implementation
+will do sanity checks over the attributes and then eventually call the MRP
+interface.
 
-Kamal
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+---
+ net/bridge/br_mrp_netlink.c | 117 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+ create mode 100644 net/bridge/br_mrp_netlink.c
 
-On Sun, Apr 19, 2020 at 3:44 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> Hi Kamal,
->
-> On 4/19/2020 12:23 PM, Kamal Dasu wrote:
-> > Older MIPS chips have a QSPI/MSPI controller that does not have the
-> > MSPI_REV offset, reading from that offset will cause a bus error. Match
-> > their compatible string and do not perform a read from that register in
-> > that case.
-> >
-> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
->
-> This patch should also have a From: that is from me.
-> --
-> Florian
+diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
+new file mode 100644
+index 000000000000..0ff42e7c7f57
+--- /dev/null
++++ b/net/bridge/br_mrp_netlink.c
+@@ -0,0 +1,117 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <net/genetlink.h>
++
++#include <uapi/linux/mrp_bridge.h>
++#include "br_private.h"
++#include "br_private_mrp.h"
++
++static const struct nla_policy br_mrp_policy[IFLA_BRIDGE_MRP_MAX + 1] = {
++	[IFLA_BRIDGE_MRP_UNSPEC]	= { .type = NLA_REJECT },
++	[IFLA_BRIDGE_MRP_INSTANCE]	= { .type = NLA_EXACT_LEN,
++					    .len = sizeof(struct br_mrp_instance)},
++	[IFLA_BRIDGE_MRP_PORT_STATE]	= { .type = NLA_U32 },
++	[IFLA_BRIDGE_MRP_PORT_ROLE]	= { .type = NLA_EXACT_LEN,
++					    .len = sizeof(struct br_mrp_port_role)},
++	[IFLA_BRIDGE_MRP_RING_STATE]	= { .type = NLA_EXACT_LEN,
++					    .len = sizeof(struct br_mrp_ring_state)},
++	[IFLA_BRIDGE_MRP_RING_ROLE]	= { .type = NLA_EXACT_LEN,
++					    .len = sizeof(struct br_mrp_ring_role)},
++	[IFLA_BRIDGE_MRP_START_TEST]	= { .type = NLA_EXACT_LEN,
++					    .len = sizeof(struct br_mrp_start_test)},
++};
++
++int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
++		 struct nlattr *attr, int cmd, struct netlink_ext_ack *extack)
++{
++	struct nlattr *tb[IFLA_BRIDGE_MRP_MAX + 1];
++	int err;
++
++	if (br->stp_enabled != BR_NO_STP) {
++		NL_SET_ERR_MSG_MOD(extack, "MRP can't be enabled if STP is already enabled\n");
++		return -EINVAL;
++	}
++
++	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_MAX, attr,
++			       NULL, extack);
++	if (err)
++		return err;
++
++	if (tb[IFLA_BRIDGE_MRP_INSTANCE]) {
++		struct br_mrp_instance *instance =
++			nla_data(tb[IFLA_BRIDGE_MRP_INSTANCE]);
++
++		if (cmd == RTM_SETLINK)
++			err = br_mrp_add(br, instance);
++		else
++			err = br_mrp_del(br, instance);
++		if (err)
++			return err;
++	}
++
++	if (tb[IFLA_BRIDGE_MRP_PORT_STATE]) {
++		enum br_mrp_port_state_type state =
++			nla_get_u32(tb[IFLA_BRIDGE_MRP_PORT_STATE]);
++
++		err = br_mrp_set_port_state(p, state);
++		if (err)
++			return err;
++	}
++
++	if (tb[IFLA_BRIDGE_MRP_PORT_ROLE]) {
++		struct br_mrp_port_role *role =
++			nla_data(tb[IFLA_BRIDGE_MRP_PORT_ROLE]);
++
++		err = br_mrp_set_port_role(p, role);
++		if (err)
++			return err;
++	}
++
++	if (tb[IFLA_BRIDGE_MRP_RING_STATE]) {
++		struct br_mrp_ring_state *state =
++			nla_data(tb[IFLA_BRIDGE_MRP_RING_STATE]);
++
++		err = br_mrp_set_ring_state(br, state);
++		if (err)
++			return err;
++	}
++
++	if (tb[IFLA_BRIDGE_MRP_RING_ROLE]) {
++		struct br_mrp_ring_role *role =
++			nla_data(tb[IFLA_BRIDGE_MRP_RING_ROLE]);
++
++		err = br_mrp_set_ring_role(br, role);
++		if (err)
++			return err;
++	}
++
++	if (tb[IFLA_BRIDGE_MRP_START_TEST]) {
++		struct br_mrp_start_test *test =
++			nla_data(tb[IFLA_BRIDGE_MRP_START_TEST]);
++
++		err = br_mrp_start_test(br, test);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++
++int br_mrp_port_open(struct net_device *dev, u8 loc)
++{
++	struct net_bridge_port *p;
++	int err = 0;
++
++	p = br_port_get_rcu(dev);
++	if (!p) {
++		err = -EINVAL;
++		goto out;
++	}
++
++	p->loc = loc;
++	br_ifinfo_notify(RTM_NEWLINK, NULL, p);
++
++out:
++	return err;
++}
++EXPORT_SYMBOL(br_mrp_port_open);
+-- 
+2.17.1
+
