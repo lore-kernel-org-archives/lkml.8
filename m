@@ -2,124 +2,205 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ED2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84949C54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F195E20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F33F206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 01:33:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k5AmKImn"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WuCzM+T5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgDTBbF (ORCPT
+        id S1726061AbgDTBda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Apr 2020 21:31:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725949AbgDTBbE (ORCPT
+        Sun, 19 Apr 2020 21:33:30 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:43634 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbgDTBd3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Apr 2020 21:31:04 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6125BC061A0C;
-        Sun, 19 Apr 2020 18:31:03 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id t9so1722031pjw.0;
-        Sun, 19 Apr 2020 18:31:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1qntJfTQVW2R5B/BZXP8n8jq5XEP710G+Kb7QjDlEEQ=;
-        b=k5AmKImn7KnzGnT/lWSdv8VX3CIj8spL4RyLMQd8HGJxiXy77oPkqozWBzp5ILJKoB
-         WW0eEcH2eIiOxwIC5DOVe5gCzW89E3KUq9R0MbsASNOePmn6tIhsvExsdGOU94kEaeK1
-         goV0DiyfVW98J/N1PvBAnIa9mH7PBqXEELyQNpJGXRJthAE4ECVzLJl8FOS0IvTno1vh
-         LLy9qv4lygAnjf8zzpJiExCmq+M3b6CsQPgtQrzfXp60lOqnIgZk/wwp2xry5l86ntfE
-         MjwVvT8eANo059zfDXoyxrUEBjcXMOMuFFgnCorTEzWUHXC7H0D7LePh12VsuUvqyUxa
-         8GuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1qntJfTQVW2R5B/BZXP8n8jq5XEP710G+Kb7QjDlEEQ=;
-        b=ifw2FGZ3DRLA9OkQLEnKcKiDfy18yKvL93F5aBIJM77fm8oW+lSFZNGykYSZq56syr
-         mbphCPAtTnuI5VRH6Qm4vOmnZhxLYzZUa38MOcLPUUm6cw6pnzS9auNfahjzBOJ6JP1H
-         AEqzqJJi8gxVYGL2bh9AA7u5xcBzV/dB4KWCgR6lxGQ91Y19d6/dPt/rGTNeUA64jcW4
-         m7aar6dTlSK00PeQ+kSpdR6O1vafz/eePJiuwAlGy0U2zNOVGWKLqbV0cX1ck4mEOXZP
-         PfUU1qMD5I2f0h6jfOCdh2GHsFUjWoZS6L+YQiyQTZnn54y6GWqdorbJ8mpH6X6TJMsE
-         D9RA==
-X-Gm-Message-State: AGi0PuZxVO1ZwEfSlBvTU0WuCKxinqm4p12E9JpAIQAvq6il4dfPFwNt
-        hN14UnhHiAZHlA03J5dL/yPvrF+VAMu9AQ==
-X-Google-Smtp-Source: APiQypJtGX6ti+FmScXgNNGNQDgAbN5PeCH/OOo+A6WHAH0Gh4hrHTS9FyZXO+Ifmjp6k+NAz7Jhaw==
-X-Received: by 2002:a17:90b:374f:: with SMTP id ne15mr9508017pjb.181.1587346262714;
-        Sun, 19 Apr 2020 18:31:02 -0700 (PDT)
-Received: from ?IPv6:::1? ([2404:7a87:83e0:f800:d9be:3496:1edd:1106])
-        by smtp.gmail.com with ESMTPSA id a22sm20373159pfg.169.2020.04.19.18.31.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Apr 2020 18:31:02 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Subject: Re: [PATCH v3] exfat: replace 'time_ms' with 'time_cs'
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        'Tetsuhiro Kohada' <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200416085144epcas1p1527b8df86453c7566b1a4d5a85689e69@epcas1p1.samsung.com>
- <20200416085121.57495-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
- <003601d61461$7140be60$53c23b20$@samsung.com>
-Message-ID: <b250254c-3b88-9457-652d-f96c4c15e454@gmail.com>
-Date:   Mon, 20 Apr 2020 10:31:01 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <003601d61461$7140be60$53c23b20$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Avast (VPS 200419-0, 2020/04/19), Outbound message
-X-Antivirus-Status: Clean
+        Sun, 19 Apr 2020 21:33:29 -0400
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200420013326epoutp02d02992455a9b810c9fcad5242310c8b1~HYyWVsJw52058120581epoutp02U
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:33:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200420013326epoutp02d02992455a9b810c9fcad5242310c8b1~HYyWVsJw52058120581epoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587346406;
+        bh=QLGR/21hPBV9EKZby41Rww+EnJI3BX4xeSI7yPOB9P0=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=WuCzM+T5Pjy6P7weEIuLBIvJNcexLQp4ymNEycStiJlJqIEvPBTPImlXerj6ltsMh
+         yvBZuTTCV2xtmBN2Q0+hwzm7QdIbdirG1fDrnrR865bz9JiatQyAc8P0Sv3/ZLy3+u
+         /L25q1bagdmmxrzmd11WCOtnw6QWctx1tk+zSwOQ=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20200420013326epcas2p278d404e3a8dad07cf31a15f1f0df97b8~HYyV02bTk1023610236epcas2p2S;
+        Mon, 20 Apr 2020 01:33:26 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.187]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4958NN3wdczMqYkh; Mon, 20 Apr
+        2020 01:33:24 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        43.96.04598.2EBFC9E5; Mon, 20 Apr 2020 10:33:22 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200420013322epcas2p263e72997dd4ebdaf00b095a83a6b6651~HYySZc-we1982219822epcas2p2x;
+        Mon, 20 Apr 2020 01:33:22 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200420013322epsmtrp125fe850a0e4607b08943b25610a5bbe0~HYySYe3mN3125131251epsmtrp1j;
+        Mon, 20 Apr 2020 01:33:22 +0000 (GMT)
+X-AuditID: b6c32a45-ea1ff700000011f6-a2-5e9cfbe20478
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E6.D7.04158.2EBFC9E5; Mon, 20 Apr 2020 10:33:22 +0900 (KST)
+Received: from ishtar.dsn.sec.samsung.com (unknown [12.36.155.159]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200420013322epsmtip1ab47e7be5f94a2629f122af3ef079938~HYySLY4zV2241422414epsmtip1t;
+        Mon, 20 Apr 2020 01:33:22 +0000 (GMT)
+From:   Hyunki Koo <hyunki00.koo@samsung.com>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     hyunki00.koo@samsung.com
+Subject: [PATCH v8 1/3] serial: samsung: Replace rd_regb/wr_regb with
+ rd_reg/wr_reg
+Date:   Mon, 20 Apr 2020 10:32:56 +0900
+Message-Id: <20200420013300.17249-1-hyunki00.koo@samsung.com>
+X-Mailer: git-send-email 2.15.0.rc1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDKsWRmVeSWpSXmKPExsWy7bCmue7j33PiDO4KWzQvXs9msWrpDWaL
+        KRs+MFn0P37NbHH+/AZ2i02Pr7FaXN41h81ixvl9TBZnFveyO3B6bFrVyeaxf+4ado/NS+o9
+        +rasYvRYv+Uqi8fnTXIBbFE5NhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJ
+        uam2Si4+AbpumTlANykplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCgwNC/SKE3OL
+        S/PS9ZLzc60MDQyMTIEqE3IylixYzVhwQ7Li+6wN7A2Mx0W7GDk5JARMJOa8+craxcjFISSw
+        g1Fi2+ljbBDOJ0aJrmmXGCGcb4wSGza0scO0XL//mwUisZdR4syRfcwQzg9Gif6n35hAqtgE
+        tCXefJ8JlhARWMIkMf38ExaQBLOAjMSP7ffAioQFQiV+nNkBNpZFQFWidelKZhCbV8BWYuP1
+        O4wQ65QlLrxbAnahhMAMNokfD39A3eEi8WbGXqgiYYlXx7dAxaUkXvbD3Fovsa9tIjtEcw+j
+        xM8PT1khEsYSs561AzVzAF2kKbF+lz6ICbLsyC2oO/kkOg7/ZYcI80p0tAlBNKpJrPv2ggnC
+        lpFY83QX1CYPib/PL4JdIyQQK3Gj4QXzBEbZWQjzFzAyrmIUSy0ozk1PLTYqMESOpk2M4JSm
+        5bqDccY5n0OMAhyMSjy8EXPnxAmxJpYVV+YeYpTgYFYS4T3oNjNOiDclsbIqtSg/vqg0J7X4
+        EKMpMPAmMkuJJucD021eSbyhqZGZmYGlqYWpmZGFkjjvZu6bMUIC6YklqdmpqQWpRTB9TByc
+        Ug2M0lMDxLq8+AMmerSVznBc6XYz8Fu2dsC7Xv+myP7k5+aHFH6+/LiXgduYvUF559YrqZf3
+        Pys8WumqIbhaYZfTz9MnLBS/cGVm9nG/2l26ky26bfLJIlHNSrHJt/lf7NmSti8310Rdsv7F
+        7zuHOX/pmwoIN885PoPP7POJHR7OMzaLxXpaKOcpsRRnJBpqMRcVJwIAiRZV8H8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNLMWRmVeSWpSXmKPExsWy7bCSnO6j33PiDO79E7NoXryezWLV0hvM
+        FlM2fGCy6H/8mtni/PkN7BabHl9jtbi8aw6bxYzz+5gszizuZXfg9Ni0qpPNY//cNewem5fU
+        e/RtWcXosX7LVRaPz5vkAtiiuGxSUnMyy1KL9O0SuDKWLFjNWHBDsuL7rA3sDYzHRbsYOTkk
+        BEwkrt//zdLFyMUhJLCbUeLq592sEAkZiQkvljBD2MIS91uOsEIUfWOUWDv9FTtIgk1AW+LN
+        95nMIAkRgVVMEtcPLGECSTADdf/Yfg/MFhYIltjz6SbYJBYBVYnWpSvBbF4BW4mN1+8wQmxQ
+        lrjwbgnrBEaeBYwMqxglUwuKc9Nziw0LjPJSy/WKE3OLS/PS9ZLzczcxgoNMS2sH44kT8YcY
+        BTgYlXh4I+bOiRNiTSwrrsw9xCjBwawkwnvQbWacEG9KYmVValF+fFFpTmrxIUZpDhYlcV75
+        /GORQgLpiSWp2ampBalFMFkmDk6pBkb/KCPHnwuKu6MvLdeS/ffD2XOPw8FVDEHbf7nGReVn
+        r9YWlXwQ7LnNKep8T3Wd9uashJRDXgWJsfddNU/LXlaW+rvG9rNm390Drswa0XH6KZsq4/n2
+        +yidvDdL9WGuY+LLh4znnCbPF/2gpPB7m57GnGPG+48cdNZ8JKKwtzRo+dqSN13nLZRYijMS
+        DbWYi4oTAXS/GVIuAgAA
+X-CMS-MailID: 20200420013322epcas2p263e72997dd4ebdaf00b095a83a6b6651
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200420013322epcas2p263e72997dd4ebdaf00b095a83a6b6651
+References: <CGME20200420013322epcas2p263e72997dd4ebdaf00b095a83a6b6651@epcas2p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/04/17 11:39, Namjae Jeon wrote:
->> Replace "time_ms"  with "time_cs" in the file directory entry structure
->> and related functions.
->>
->> The unit of create_time_ms/modify_time_ms in File Directory Entry are not
->> 'milli-second', but 'centi-second'.
->> The exfat specification uses the term '10ms', but instead use 'cs' as in
->> "msdos_fs.h".
->>
->> Signed-off-by: Tetsuhiro Kohada
->> <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
->> ---
-> I have run checkpatch.pl on your patch.
-> It give a following warning.
-> 
-> WARNING: Missing Signed-off-by: line by nominal patch author 'Tetsuhiro
-> Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>'
-> total: 0 errors, 1 warnings, 127 lines checked
-> 
-> Please fix it.
+This patch change the name of macro for general usage.
 
-I want to fix it, but I'm not sure what's wrong.
-The my patch has the following line:
+Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+---
+ drivers/tty/serial/samsung_tty.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-
-Both my real name and email address are correct.
-Can you give me some advice?
-
-*** Currently I can't use office email, so I'm sending it from private email instead.
-
-
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 73f951d65b93..326b0164609c 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -154,10 +154,10 @@ struct s3c24xx_uart_port {
+ #define portaddrl(port, reg) \
+ 	((unsigned long *)(unsigned long)((port)->membase + (reg)))
+ 
+-#define rd_regb(port, reg) (readb_relaxed(portaddr(port, reg)))
++#define rd_reg(port, reg) (readb_relaxed(portaddr(port, reg)))
+ #define rd_regl(port, reg) (readl_relaxed(portaddr(port, reg)))
+ 
+-#define wr_regb(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
++#define wr_reg(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
+ #define wr_regl(port, reg, val) writel_relaxed(val, portaddr(port, reg))
+ 
+ /* Byte-order aware bit setting/clearing functions. */
+@@ -714,7 +714,7 @@ static void s3c24xx_serial_rx_drain_fifo(struct s3c24xx_uart_port *ourport)
+ 		fifocnt--;
+ 
+ 		uerstat = rd_regl(port, S3C2410_UERSTAT);
+-		ch = rd_regb(port, S3C2410_URXH);
++		ch = rd_reg(port, S3C2410_URXH);
+ 
+ 		if (port->flags & UPF_CONS_FLOW) {
+ 			int txe = s3c24xx_serial_txempty_nofifo(port);
+@@ -826,7 +826,7 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
+ 	}
+ 
+ 	if (port->x_char) {
+-		wr_regb(port, S3C2410_UTXH, port->x_char);
++		wr_reg(port, S3C2410_UTXH, port->x_char);
+ 		port->icount.tx++;
+ 		port->x_char = 0;
+ 		goto out;
+@@ -852,7 +852,7 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
+ 		if (rd_regl(port, S3C2410_UFSTAT) & ourport->info->tx_fifofull)
+ 			break;
+ 
+-		wr_regb(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
++		wr_reg(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
+ 		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+ 		port->icount.tx++;
+ 		count--;
+@@ -916,7 +916,7 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
+ /* no modem control lines */
+ static unsigned int s3c24xx_serial_get_mctrl(struct uart_port *port)
+ {
+-	unsigned int umstat = rd_regb(port, S3C2410_UMSTAT);
++	unsigned int umstat = rd_reg(port, S3C2410_UMSTAT);
+ 
+ 	if (umstat & S3C2410_UMSTAT_CTS)
+ 		return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
+@@ -2185,7 +2185,7 @@ static int s3c24xx_serial_get_poll_char(struct uart_port *port)
+ 	if (s3c24xx_serial_rx_fifocnt(ourport, ufstat) == 0)
+ 		return NO_POLL_CHAR;
+ 
+-	return rd_regb(port, S3C2410_URXH);
++	return rd_reg(port, S3C2410_URXH);
+ }
+ 
+ static void s3c24xx_serial_put_poll_char(struct uart_port *port,
+@@ -2200,7 +2200,7 @@ static void s3c24xx_serial_put_poll_char(struct uart_port *port,
+ 
+ 	while (!s3c24xx_serial_console_txrdy(port, ufcon))
+ 		cpu_relax();
+-	wr_regb(port, S3C2410_UTXH, c);
++	wr_reg(port, S3C2410_UTXH, c);
+ }
+ 
+ #endif /* CONFIG_CONSOLE_POLL */
+@@ -2212,7 +2212,7 @@ s3c24xx_serial_console_putchar(struct uart_port *port, int ch)
+ 
+ 	while (!s3c24xx_serial_console_txrdy(port, ufcon))
+ 		cpu_relax();
+-	wr_regb(port, S3C2410_UTXH, ch);
++	wr_reg(port, S3C2410_UTXH, ch);
+ }
+ 
+ static void
 -- 
-このEメールはアバスト アンチウイルスによりウイルススキャンされています。
-https://www.avast.com/antivirus
+2.15.0.rc1
 
