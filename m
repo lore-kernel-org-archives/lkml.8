@@ -4,218 +4,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45E7C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B78DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1B3A2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B3C2078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgDTKfA (ORCPT
+        id S1726240AbgDTKgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 06:35:00 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:35492 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbgDTKfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 06:35:00 -0400
-Received: from [10.20.42.25] (unknown [10.20.42.25])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj9xHep1eHB0qAA--.15S3;
-        Mon, 20 Apr 2020 18:32:40 +0800 (CST)
-Subject: Re: [PATCH 7/7] KVM: MIPS: clean up redundant kvm_run parameters in
- assembly
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com
-References: <20200419075106.16248-1-tianjia.zhang@linux.alibaba.com>
- <20200419075106.16248-8-tianjia.zhang@linux.alibaba.com>
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   maobibo <maobibo@loongson.cn>
-Message-ID: <0b110e7f-9d08-496e-158e-8c3ff7307423@loongson.cn>
-Date:   Mon, 20 Apr 2020 18:32:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Mon, 20 Apr 2020 06:36:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:16437 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbgDTKgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 06:36:48 -0400
+IronPort-SDR: GfKZ/dBBk17DnchVmGuO4gZqdyLWHZrRBgKcW8ll2NGfyLxMbs/RfZS3452KGuCvczyUXkyMh8
+ aVwc3klJlv4w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 03:36:48 -0700
+IronPort-SDR: i9SlA6S+Z9Yd3ZvP2m4PtHjqGxFXqbbarTfv3P4KSW0R1akYYp0RCjMsFYnEM8RBpcwPvqfUhS
+ kWzphpIO4mHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
+   d="scan'208";a="455651402"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.105])
+  by fmsmga005.fm.intel.com with ESMTP; 20 Apr 2020 03:36:44 -0700
+Date:   Mon, 20 Apr 2020 18:36:43 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [LKP] Re: [y2038] 412c53a680: will-it-scale.per_process_ops
+ 11.7% improvement
+Message-ID: <20200420103643.GC46370@shbuild999.sh.intel.com>
+References: <20200305062138.GI5972@shao2-debian>
+ <20200305195317.771bd8fd1f308172d26a51fe@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200419075106.16248-8-tianjia.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxj9xHep1eHB0qAA--.15S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3WrWrJr1kWw4ruF1kArW7twb_yoW7CFWUpF
-        n7C3WDua1IqrWUK34xArsY9F4aqrs8Kr17ua4UJFWYqw1YqF1rtFs2krZ8Ar98Cr1F93Wf
-        ZF9YqFn8Crs2ywUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9jb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4
-        vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
-        xwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-        b7AF67AKxVWrXVW8Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-        IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1l
-        IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-        C2KfnxnUUI43ZEXa7IU56KZtUUUUU==
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305195317.771bd8fd1f308172d26a51fe@linux-foundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andrew,
 
-
-On 04/19/2020 03:51 PM, Tianjia Zhang wrote:
-> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
-> structure. Earlier than historical reasons, many kvm-related function
-> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
-> This patch does a unified cleanup of these remaining redundant parameters.
+On Thu, Mar 05, 2020 at 07:53:17PM -0800, Andrew Morton wrote:
+> On Thu, 5 Mar 2020 14:21:38 +0800 kernel test robot <rong.a.chen@intel.com> wrote:
 > 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> ---
->  arch/mips/include/asm/kvm_host.h |  4 ++--
->  arch/mips/kvm/entry.c            | 15 +++++----------
->  arch/mips/kvm/mips.c             |  3 ++-
->  arch/mips/kvm/trap_emul.c        |  2 +-
->  arch/mips/kvm/vz.c               |  2 +-
->  5 files changed, 11 insertions(+), 15 deletions(-)
+> > FYI, we noticed a 11.7% improvement of will-it-scale.per_process_ops due to commit:
+> > 
+> > 
+> > commit: 412c53a680a97cb1ae2c0ab60230e193bee86387 ("y2038: remove unused time32 interfaces")
 > 
-> diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
-> index 971439297cea..db915c55166d 100644
-> --- a/arch/mips/include/asm/kvm_host.h
-> +++ b/arch/mips/include/asm/kvm_host.h
-> @@ -310,7 +310,7 @@ struct kvm_mmu_memory_cache {
->  #define KVM_MIPS_GUEST_TLB_SIZE	64
->  struct kvm_vcpu_arch {
->  	void *guest_ebase;
-> -	int (*vcpu_run)(struct kvm_run *run, struct kvm_vcpu *vcpu);
-> +	int (*vcpu_run)(struct kvm_vcpu *vcpu);
->  
->  	/* Host registers preserved across guest mode execution */
->  	unsigned long host_stack;
-> @@ -821,7 +821,7 @@ int kvm_mips_emulation_init(struct kvm_mips_callbacks **install_callbacks);
->  /* Debug: dump vcpu state */
->  int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
->  
-> -extern int kvm_mips_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu);
-> +extern int kvm_mips_handle_exit(struct kvm_vcpu *vcpu);
->  
->  /* Building of entry/exception code */
->  int kvm_mips_entry_setup(void);
-> diff --git a/arch/mips/kvm/entry.c b/arch/mips/kvm/entry.c
-> index 16e1c93b484f..e3f29af3b6cd 100644
-> --- a/arch/mips/kvm/entry.c
-> +++ b/arch/mips/kvm/entry.c
-> @@ -204,7 +204,7 @@ static inline void build_set_exc_base(u32 **p, unsigned int reg)
->   * Assemble the start of the vcpu_run function to run a guest VCPU. The function
->   * conforms to the following prototype:
->   *
-> - * int vcpu_run(struct kvm_run *run, struct kvm_vcpu *vcpu);
-> + * int vcpu_run(struct kvm_vcpu *vcpu);
->   *
->   * The exit from the guest and return to the caller is handled by the code
->   * generated by kvm_mips_build_ret_to_host().
-> @@ -217,8 +217,7 @@ void *kvm_mips_build_vcpu_run(void *addr)
->  	unsigned int i;
->  
->  	/*
-> -	 * A0: run
-> -	 * A1: vcpu
-> +	 * A0: vcpu
->  	 */
->  
->  	/* k0/k1 not being used in host kernel context */
-> @@ -237,10 +236,10 @@ void *kvm_mips_build_vcpu_run(void *addr)
->  	kvm_mips_build_save_scratch(&p, V1, K1);
->  
->  	/* VCPU scratch register has pointer to vcpu */
-> -	UASM_i_MTC0(&p, A1, scratch_vcpu[0], scratch_vcpu[1]);
-> +	UASM_i_MTC0(&p, A0, scratch_vcpu[0], scratch_vcpu[1]);
->  
->  	/* Offset into vcpu->arch */
-> -	UASM_i_ADDIU(&p, K1, A1, offsetof(struct kvm_vcpu, arch));
-> +	UASM_i_ADDIU(&p, K1, A0, offsetof(struct kvm_vcpu, arch));
->  
->  	/*
->  	 * Save the host stack to VCPU, used for exception processing
-> @@ -628,10 +627,7 @@ void *kvm_mips_build_exit(void *addr)
->  	/* Now that context has been saved, we can use other registers */
->  
->  	/* Restore vcpu */
-> -	UASM_i_MFC0(&p, S1, scratch_vcpu[0], scratch_vcpu[1]);
-> -
-> -	/* Restore run (vcpu->run) */
-> -	UASM_i_LW(&p, S0, offsetof(struct kvm_vcpu, run), S1);
-> +	UASM_i_MFC0(&p, S0, scratch_vcpu[0], scratch_vcpu[1]);
->  
->  	/*
->  	 * Save Host level EPC, BadVaddr and Cause to VCPU, useful to process
-> @@ -793,7 +789,6 @@ void *kvm_mips_build_exit(void *addr)
->  	 * with this in the kernel
->  	 */
->  	uasm_i_move(&p, A0, S0);
-> -	uasm_i_move(&p, A1, S1);
->  	UASM_i_LA(&p, T9, (unsigned long)kvm_mips_handle_exit);
->  	uasm_i_jalr(&p, RA, T9);
->  	 UASM_i_ADDIU(&p, SP, SP, -CALLFRAME_SIZ);
+> That patch merely removed unused code!
 
-I suggest keeping asm code untouched, the change for c code is much easier to understand, however I do not see obvious advantage to remove one redundant function parameter :) 
+Sorry for the late response.
 
+Yes, we've seen similar cases for this exact micro benchmark before,
+that commit is about cpu idle driver which has no direct relation
+with mmap at all. https://lkml.org/lkml/2019/9/17/966
 
-regards
-bibo,mao
+The reason could be the changed address and cache alignment of
+kernel data and code, which has been discussed for other
+micro-benchmarsk, like https://lkml.org/lkml/2020/2/5/238
 
+But for this test for mmap, we found very high lock contention for
+the spinlock of per-cpu counter "vm_committed_as", the perf data is: 
 
-> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-> index 9710477a9827..32850470c037 100644
-> --- a/arch/mips/kvm/mips.c
-> +++ b/arch/mips/kvm/mips.c
-> @@ -1186,8 +1186,9 @@ static void kvm_mips_set_c0_status(void)
->  /*
->   * Return value is in the form (errcode<<2 | RESUME_FLAG_HOST | RESUME_FLAG_NV)
->   */
-> -int kvm_mips_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
-> +int kvm_mips_handle_exit(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *run = vcpu->run;
->  	u32 cause = vcpu->arch.host_cp0_cause;
->  	u32 exccode = (cause >> CAUSEB_EXCCODE) & 0x1f;
->  	u32 __user *opc = (u32 __user *) vcpu->arch.pc;
-> diff --git a/arch/mips/kvm/trap_emul.c b/arch/mips/kvm/trap_emul.c
-> index d822f3aee3dc..04c864cc356a 100644
-> --- a/arch/mips/kvm/trap_emul.c
-> +++ b/arch/mips/kvm/trap_emul.c
-> @@ -1238,7 +1238,7 @@ static int kvm_trap_emul_vcpu_run(struct kvm_vcpu *vcpu)
->  	 */
->  	kvm_mips_suspend_mm(cpu);
->  
-> -	r = vcpu->arch.vcpu_run(vcpu->run, vcpu);
-> +	r = vcpu->arch.vcpu_run(vcpu);
->  
->  	/* We may have migrated while handling guest exits */
->  	cpu = smp_processor_id();
-> diff --git a/arch/mips/kvm/vz.c b/arch/mips/kvm/vz.c
-> index 94f1d23828e3..c5878fa0636d 100644
-> --- a/arch/mips/kvm/vz.c
-> +++ b/arch/mips/kvm/vz.c
-> @@ -3152,7 +3152,7 @@ static int kvm_vz_vcpu_run(struct kvm_vcpu *vcpu)
->  	kvm_vz_vcpu_load_tlb(vcpu, cpu);
->  	kvm_vz_vcpu_load_wired(vcpu);
->  
-> -	r = vcpu->arch.vcpu_run(vcpu->run, vcpu);
-> +	r = vcpu->arch.vcpu_run(vcpu);
->  
->  	kvm_vz_vcpu_save_wired(vcpu);
->  
-> 
+    94.14%     0.35%  [kernel.kallsyms]         [k] _raw_spin_lock_irqsave                      -      -            
+48.21% _raw_spin_lock_irqsave;percpu_counter_add_batch;__vm_enough_memory;mmap_region;do_mmap;vm_mmap_pgoff;ksys_mmap_pgoff;do_syscall_64;entry_SYSCALL_64_after_hwframe;mmap64
+45.91% _raw_spin_lock_irqsave;percpu_counter_add_batch;__do_munmap;__vm_munmap;__x64_sys_munmap;do_syscall_64;entry_SYSCALL_64_after_hwframe;munmap
+
+I think the lock contention is only necessary for accuracy of
+"vm_committed_as" when overcommit policy is OVERCOMMIT_NEVER.
+
+And with the following debug patch, the benchmark score could be
+bumped to 8X~20X, and the delta caused by this "year 2038" commit
+is reduced to 2%, delta for the cpuidle commit is reduced to 0.
+Which means the micro benchmark is much stabler.
+(the debug patch sitll has some problems)
+
+Thanks,
+Feng
+
+--------------------------------------------
+mm: util: Reduce spinlock usage for vm !OVERCOMMIT_NEVER policy
+
+When debugging a will-it-scale performance regression we found
+about 94% cpu cycles are used on
+	_raw_spin_lock_irqsave <-- percpu_counter_add_batch
+which is for "vm_committed_as" inside vm_acct_memory().
+
+Actually this heavy lock contention is not always necessary. The
+spinlock is only used when percpu_counter_add_batch() needs to be
+very precise(needs a small batch number), while only when the vm
+overcommit policy is OVERCOMMIT_NEVER, the "vm_committed_as" is
+really used with high precision for sanity checking.
+
+So adjust the batch number according to vm commit policy, to
+reduce the lock contention for non OVERCOMMIT_NEVER cases.
+
+Benchmark with the same mmap case [1] on Cascade Lake sever (48C/96T)
+and Knights Mill (72C/288T) shows 1400%~2400%(10X-20X) performance
+gain.
+
+Todo: adjust the other 2 possible places which use "vm_committed_as",
+one is /proc/meminfo, the other is HyperV ballon driver.
+
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+---
+ include/linux/mman.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/mman.h b/include/linux/mman.h
+index 4b08e9c..04d20d9 100644
+--- a/include/linux/mman.h
++++ b/include/linux/mman.h
+@@ -65,7 +65,15 @@ unsigned long vm_memory_committed(void);
+ 
+ static inline void vm_acct_memory(long pages)
+ {
+-	percpu_counter_add_batch(&vm_committed_as, pages, vm_committed_as_batch);
++	s32 batch = vm_committed_as_batch;
++
++	/* choose the batch number according to vm overcommit policy */
++	if (sysctl_overcommit_memory == OVERCOMMIT_ALWAYS)
++		batch = totalram_pages() >> 6;
++	else if (sysctl_overcommit_memory == OVERCOMMIT_GUESS)
++		batch = totalram_pages() >> 8;
++
++	percpu_counter_add_batch(&vm_committed_as, pages, batch);
+ }
+ 
+ static inline void vm_unacct_memory(long pages)
+-- 
+2.7.4
 
