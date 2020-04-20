@@ -2,111 +2,77 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24ADC38A30
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACE2C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8ED20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844382082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 16:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgDTQnv (ORCPT
+        id S1726377AbgDTQoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:43:51 -0400
-Received: from sauhun.de ([88.99.104.3]:47794 "EHLO pokefinder.org"
+        Mon, 20 Apr 2020 12:44:32 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:42970 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgDTQnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:43:51 -0400
-Received: from localhost (p54B335B8.dip0.t-ipconnect.de [84.179.53.184])
-        by pokefinder.org (Postfix) with ESMTPSA id F06262C1F4C;
-        Mon, 20 Apr 2020 18:43:49 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 18:43:49 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Bjorn Ardo <bjorn.ardo@axis.com>
-Cc:     Patrick Williams <alpawi@amazon.com>,
-        =?utf-8?B?QmrDtnJuIEFyZMO2?= <bjornar@axis.com>,
-        Patrick Williams <patrick@stwcx.xyz>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: slave-eeprom: initialize empty eeprom properly
-Message-ID: <20200420164349.GD3721@ninjato>
-References: <20191001164009.21610-1-alpawi@amazon.com>
- <150599be-9125-4ab9-e2a6-e792b41910e6@axis.com>
+        id S1726013AbgDTQoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 12:44:32 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jQZX1-0008Cn-Qh; Mon, 20 Apr 2020 10:44:29 -0600
+To:     Abhishek Sahu <abhsahu@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200420082231.4202-1-abhsahu@nvidia.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <02c40a96-b9dd-14d8-57f4-426322b76bf2@deltatee.com>
+Date:   Mon, 20 Apr 2020 10:44:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6Nae48J/T25AfBN4"
-Content-Disposition: inline
-In-Reply-To: <150599be-9125-4ab9-e2a6-e792b41910e6@axis.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200420082231.4202-1-abhsahu@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, dan.j.williams@intel.com, akpm@linux-foundation.org, abhsahu@nvidia.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] x86/mm: fix compilation error for unknown type name
+ pgprot_t
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---6Nae48J/T25AfBN4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 02, 2019 at 08:20:53AM +0200, Bjorn Ardo wrote:
-> Hi,
->=20
->=20
-> I sent in another patch earlier that added support for specifying a file =
-in
-> devicetree to initilize the eeprom from, corresponding to the case of
-> pre-flashed eeprom. Maybe these two patches should be merged so this
-> initialization is only done if no file is specified?
+On 2020-04-20 2:22 a.m., Abhishek Sahu wrote:
+> commit 30796e18c299 ("x86/mm: introduce __set_memory_prot()")
+> added the function __set_memory_prot() which uses pgprot_t in
+> function prototype. The currently included header files in
+> <arch/x86/include/asm/set_memory.h> do not include type name
+> pgprot_t. The pgprot_t is defined in <asm/pgtable_types.h>.
+> 
+> Fixes: 30796e18c299 ("x86/mm: introduce __set_memory_prot()")
+> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
 
-Yes, I agree.
+I assume this is only hit with a specific driver or something that
+includes set_memory.h without including pgtable_types.h before hand.
 
-> /BA
->=20
-> On 10/1/19 6:40 PM, Patrick Williams wrote:
-> > The i2c-slave-eeprom driver emulates at24 class eeprom devices,
-> > which come initialized with all 1s.  Do the same in the software
-> > emulation.
-> >=20
-> > Signed-off-by: Patrick Williams <alpawi@amazon.com>
-> > ---
-> >   drivers/i2c/i2c-slave-eeprom.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> >=20
-> > diff --git a/drivers/i2c/i2c-slave-eeprom.c b/drivers/i2c/i2c-slave-eep=
-rom.c
-> > index db9763cb4dae..efee56106251 100644
-> > --- a/drivers/i2c/i2c-slave-eeprom.c
-> > +++ b/drivers/i2c/i2c-slave-eeprom.c
-> > @@ -131,6 +131,8 @@ static int i2c_slave_eeprom_probe(struct i2c_client=
- *client, const struct i2c_de
-> >   	if (!eeprom)
-> >   		return -ENOMEM;
-> > +	memset(eeprom->buffer, 0xFF, size);
-> > +
-> >   	eeprom->idx_write_cnt =3D 0;
-> >   	eeprom->num_address_bytes =3D flag_addr16 ? 2 : 1;
-> >   	eeprom->address_mask =3D size - 1;
+It certainly compiles fine for me and the kbuild robot has had lots of
+time to test it with random configs.
 
---6Nae48J/T25AfBN4
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6d0UUACgkQFA3kzBSg
-Kba+gxAAj7fIStG6KAF5VvDWWpM8Pg8kZRzkCLZ+FY8Ihrj3aJT+hTkUaU3BwfCV
-OXQCQWQP9OHDcSJJbjVq3XyG4b4pAXTuokoCQVX5OjB5b5Oi/RJhpt3U8JFKy/eh
-x17uULwKA0zUZ05z9iaKcKDy8xNOEkfAdDlJRPdWPx5LJIa0VyGLgeadU+YAtd31
-cs/+WKVTMFkA53hAKO+emVlY0yrDzpjBTiBbn9psIhKEyJ78fwEjChUq1m1tF2u5
-4Gl4KMvuK5oc0JoNzppsqybDZ67qWqjYT7E99AUPMOBjZwXZiR7BS6v0IatQjn5r
-4vdGVPQTZ6NRRAuzq7IjBrj/rVC7qRiAX/0rI6WVCDDa400xA+2zYQDXx2BrceFc
-5zTejMPuJheqJ4lESiMgc1gC3BMCpbC8T3CTUqekij4CsakPfQYdpqPXT1L2Y+Rc
-Cw5YGw6mPn6EJlsmuxzaRYSQvYpH876cTyIw0wX97Pgs9fbY5l8LPicXbgfqTzzO
-ZQt0YVBz/Z65xhjqlifguiMPvARJX0zyAQ/Gr8zRA2uhH/RIxo7Y4RjvajWjvkLQ
-jwQXiB5dkB9XX/1DLmMKVf3ADw1gtSjQunKk/cOLt2qNNatVZVivbXQsZfBJz8mZ
-nm1EeUgEFjGacGrQFjrWDpRlCtOCvRXwWS6meTU+m+mwnyVIERQ=
-=C9ai
------END PGP SIGNATURE-----
-
---6Nae48J/T25AfBN4--
+Logan
