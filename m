@@ -2,80 +2,136 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE90C54FD0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BEAC55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48EEF207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FE0206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 20:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587415345;
-	bh=SYmDL71+i0dxipydp4fzdeCa0qcgn3q6383QGXptJxI=;
+	s=default; t=1587415367;
+	bh=/Lm2cTmavSfvPwo3EnY/skppJ5i7CHKipIJNiAMzESE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Evau+uIVX5nIwrrEinJgNSf61b0v6MVMr/d44ZG6Qerpw612hidmLv789o+I7qJg4
-	 DPro7dU0xb5zT2bWdqpcRkrbFQYnnmw+/sSkYzq3qL3Or8dCZcv+5XcFW00nwrBS3p
-	 y/aESz8cqpygMWBU4cdh5QR0wRUvzUtQI1HfwqR8=
+	b=WW+ZRiu03tNIUkOoXu3Z1q2WaE/QiRanIWBZ2FK8t05OccVyWjsGcvbIpVh9X3Dqs
+	 9PnY3AxicRZBjqfMeO6PiIApdBWxviZ4ZZWpti7X5Caf4IF9d7PU2Oir+IfzUkWtzG
+	 5fiavHF8RlGGS0Wwhu3MWRpymg2GELGEUFZdF11o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgDTUmY (ORCPT
+        id S1726802AbgDTUmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:42:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52912 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 16:42:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726644AbgDTUmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 16:42:24 -0400
+        id S1725774AbgDTUmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:42:46 -0400
 Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F259206E9;
-        Mon, 20 Apr 2020 20:42:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50BB9207FC;
+        Mon, 20 Apr 2020 20:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587415343;
-        bh=SYmDL71+i0dxipydp4fzdeCa0qcgn3q6383QGXptJxI=;
+        s=default; t=1587415366;
+        bh=/Lm2cTmavSfvPwo3EnY/skppJ5i7CHKipIJNiAMzESE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xMeM05XEdBoL/1hRghTVBJkRL92JNBsc0vONEfPdXkSjSKxdOO+hwrPBHdB/Cr1Z9
-         GOD/PkSOModeIzIKldikpS1QexS3bmWDjnQ1l890YR72ONrmjqRMU1CbRcBJio2bGZ
-         DiXKGrl9oq/t5wptbUrKeawIy93SgtP0oDiVXJH0=
-Date:   Mon, 20 Apr 2020 21:42:18 +0100
+        b=vX206r139s9j+s4JKnaMI4JpxtutoxgTKEzqEw3LnEF+8MAWjTABg/8ixx8KpUvhJ
+         aBeW060QZCReO+UrYVjtFosA573ZmpGd4EEAhYESWJJ38YU2e8uDaSguoFjd9eEoa2
+         GF7apirwkq/9qg8hWCNZ5P1q630+XpFbjnKHsvw4=
+Date:   Mon, 20 Apr 2020 21:42:39 +0100
 From:   Will Deacon <will@kernel.org>
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     catalin.marinas@arm.com, alexios.zavras@intel.com,
-        tglx@linutronix.de, akpm@linux-foundation.org,
-        steven.price@arm.com, steve.capper@arm.com, mark.rutland@arm.com,
-        broonie@kernel.org, keescook@chromium.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH] arm64: add check_wx_pages debugfs for CHECK_WX
-Message-ID: <20200420204217.GA29998@willie-the-truck>
-References: <20200307093926.27145-1-tranmanphong@gmail.com>
+To:     George Spelvin <lkml@sdf.org>
+Cc:     linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org
+Subject: Re: [RFC PATCH v1 40/50] arch/*/include/asm/stackprotector.h: Use
+ get_random_canary() consistently
+Message-ID: <20200420204238.GB29998@willie-the-truck>
+References: <202003281643.02SGhM0T009250@sdf.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200307093926.27145-1-tranmanphong@gmail.com>
+In-Reply-To: <202003281643.02SGhM0T009250@sdf.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 04:39:26PM +0700, Phong Tran wrote:
-> follow the suggestion from
-> https://github.com/KSPP/linux/issues/35
+On Tue, Dec 10, 2019 at 12:35:14AM -0500, George Spelvin wrote:
+> ... in boot_init_stack_canary().
 > 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> This is the archetypical example of where the extra security of
+> get_random_bytes() is wasted.  The canary is only important as
+> long as it's stored in __stack_chk_guard.
+> 
+> It's also a great example of code that has been copied around
+> a lot and not updated.
+> 
+> Remove the XOR with LINUX_VERSION_CODE as it's pointless; the inclusion
+> of utsname() in init_std_data in the random seeding obviates it.
+> 
+> The XOR with the TSC on x86 and mtfb() on powerPC were left in,
+> as I haven't proved them redundant yet.  For those, we call
+> get_random_long(), xor, and mask manually.
+> 
+> FUNCTIONAL CHANGE: mips and xtensa were changed from 64-bit
+> get_random_long() to 56-bit get_random_canary() to match the
+> others, in accordance with the logic in CANARY_MASK.
+> 
+> (We could do 1 bit better and zero *one* of the two high bytes.)
+> 
+> Signed-off-by: George Spelvin <lkml@sdf.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: linux-sh@vger.kernel.org
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc:  "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> Cc: Chris Zankel <chris@zankel.net>
+> Cc: Max Filippov <jcmvbkbc@gmail.com>
+> Cc: linux-xtensa@linux-xtensa.org
 > ---
->  arch/arm64/Kconfig.debug        |  3 ++-
->  arch/arm64/include/asm/ptdump.h |  2 ++
->  arch/arm64/mm/dump.c            |  1 +
->  arch/arm64/mm/ptdump_debugfs.c  | 18 ++++++++++++++++++
->  4 files changed, 23 insertions(+), 1 deletion(-)
+>  arch/arm/include/asm/stackprotector.h     | 9 +++------
+>  arch/arm64/include/asm/stackprotector.h   | 8 ++------
+>  arch/mips/include/asm/stackprotector.h    | 7 ++-----
+>  arch/powerpc/include/asm/stackprotector.h | 6 ++----
+>  arch/sh/include/asm/stackprotector.h      | 8 ++------
+>  arch/x86/include/asm/stackprotector.h     | 4 ++--
+>  arch/xtensa/include/asm/stackprotector.h  | 7 ++-----
+>  7 files changed, 15 insertions(+), 34 deletions(-)
 
-Any plans to spin an updated version of this? The review feedback all seemed
-reasonable to me.
-
-Thanks,
+Just found this kicking around in the depths of my inbox. Is the series
+dead?
 
 Will
