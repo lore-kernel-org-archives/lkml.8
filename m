@@ -2,147 +2,275 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8830CC54FCF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CF6C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 665602145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1E920857
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 19:11:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="coABxXCM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HgD9/j2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgDTTKw (ORCPT
+        id S1726850AbgDTTL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:10:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725897AbgDTTKv (ORCPT
+        Mon, 20 Apr 2020 15:11:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36469 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726039AbgDTTL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:10:51 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA03C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:10:49 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b62so11941809qkf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 12:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aTDI+EJs0M0kJGbpFd6Q8vcUdxuIOGt0F4hNcJOF1Bs=;
-        b=coABxXCMnijlmrd3Gvvr5BLZLjZVcbfygcvfqavZW87LeIdIkMffnctr2rmwkr/VEd
-         dx6J/sOiV0sGX8/UEYz2m284IQnnOkIEUBFqAzZkwyvmnlsnbM9R4cGlfacfvj+DVyPD
-         aQRa4DEq2UXZl9VtFiM/t4NfZ9oPI18Mze4k8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aTDI+EJs0M0kJGbpFd6Q8vcUdxuIOGt0F4hNcJOF1Bs=;
-        b=FvX29a1XjHTN+grNtMktQnVGmppRykea4KbcEkzaGKJERY2uavN7v2XehRN0cwMCJB
-         1x+nC82SSdxTBCB1NvBY7eIYPDTs55FmJJgOEerZa7VG3jYVkW3NKGgE1pgGztebtHgI
-         W4UhICTfx9YMQQKFVeKtJuzIUO7BMysWr4FUPARa6V/ESSS5CFO/QxyoLcj3az4aLlXL
-         V/QvPkAvwE9lBxemQggapxnrCy8VJKIkdPvSq2dYxZWpK2MpuAYi4A8O/dUxrU2O/DjU
-         euzD56y0xYdcF/XgG61BEShrJvB5dGevJhmJ703Ous6yXlTo5yVLIn8vLKVUoXOANfok
-         a87w==
-X-Gm-Message-State: AGi0PuYsS/Tp08rQcyQ0bHZLzvmXRtTefkSxJ4CZqMmGX1ReNqCN7QBk
-        oagMimIvnRmAh14PpUbIaUnEGw==
-X-Google-Smtp-Source: APiQypLa8oDcLCrysnkHdjZx8h4i4v04h6Dci2mOJpfUBkhn6KkgMxFHIhIBl5uL64cv/d6yxVcmAA==
-X-Received: by 2002:a05:620a:16cf:: with SMTP id a15mr17419307qkn.156.1587409848264;
-        Mon, 20 Apr 2020 12:10:48 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l13sm144236qtj.17.2020.04.20.12.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 12:10:47 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 15:10:47 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Mon, 20 Apr 2020 15:11:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587409886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eO9YXDr/mCidnJMfjRT+7Um9k0phawd3zi+O/FYIxvI=;
+        b=HgD9/j2VjXweTnX/kcF7+9M6o7y1Ie0cPzzmHRtRE5OiLzp6ogb9hv0igbG9DVQAPR56nE
+        A+fmkdy+GucGR6UeFXCbgPQLF20Bc0nN1ffkxKPQFzcLTwuDe1OVBJDWoUxNgBtkU8AyNe
+        OAkbkdwXiZxZlvPjddUYiZoIV8B+bmY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-tVKwHA9OOqKkWflS6Vzatw-1; Mon, 20 Apr 2020 15:11:24 -0400
+X-MC-Unique: tVKwHA9OOqKkWflS6Vzatw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77425107ACC4;
+        Mon, 20 Apr 2020 19:11:23 +0000 (UTC)
+Received: from treble (ovpn-118-158.rdu2.redhat.com [10.10.118.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EC4EE60C87;
+        Mon, 20 Apr 2020 19:11:19 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 14:11:17 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Glexiner <tglx@linutronix.de>,
-        steven.sistare@oracle.com, Dhaval Giani <dhaval.giani@oracle.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>, parth@linux.ibm.com
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-Message-ID: <20200420191047.GA67569@google.com>
-References: <20190905083127.GA2332@hirez.programming.kicks-ass.net>
- <87r24v2i14.fsf@arm.com>
- <20190905104616.GD2332@hirez.programming.kicks-ass.net>
- <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
- <20190905113002.GK2349@hirez.programming.kicks-ass.net>
- <20190905114725.ehi5ea6qg3rychlz@e107158-lin.cambridge.arm.com>
- <20200416000235.GA211099@google.com>
- <730928f8-b48b-ea3a-149a-18932eb18c90@arm.com>
- <CAEXW_YTnS7Gz38Rw55M8q5NnJZJntOqxRHPC_AZ0uaQo+G4RqA@mail.gmail.com>
- <20200420114728.iy6w34khketplxvk@e107158-lin.cambridge.arm.com>
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
+ early
+Message-ID: <20200420191117.wrjauayeutkpvkwd@treble>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
+ <20200420175751.GA13807@redhat.com>
+ <20200420182516.6awwwbvoen62gwbr@treble>
+ <20200420190141.GB13807@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200420114728.iy6w34khketplxvk@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200420190141.GB13807@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qais!
-
-On Mon, Apr 20, 2020 at 12:47:29PM +0100, Qais Yousef wrote:
-> On 04/18/20 12:01, Joel Fernandes wrote:
-> > > What's missing is the per-taskgroup implementation, at least from the
-> > > standpoint of ACK.
-> > >
-> > > The (mainline) EAS use-case for latency nice is already in ACK
-> > > (android-5.4):
-> > >
-> > > https://android.googlesource.com/kernel/common/+/760b82c9b88d2c8125abfc5f732cc3cd460b2a54
+On Mon, Apr 20, 2020 at 03:01:41PM -0400, Joe Lawrence wrote:
+> > > ... apply_relocations() is also iterating over the section headers (the
+> > > diff context doesn't show it here, but i is an incrementing index over
+> > > sechdrs[]).
+> > > 
+> > > So if there is more than one KLP relocation section, we'll process them
+> > > multiple times.  At least the x86 relocation code will detect this and
+> > > fail the module load with an invalid relocation (existing value not
+> > > zero).
 > > 
-> > Yes, I was aware of this. But if we use task groups, then the
-> > transition from schedtune -> uclamp means now the tasks that use
-> > uclamp would also be subjected to cpu.shares. That's why we were
-> > looking into the per-task interface and glad there's some work on this
-> > already done.
+> > Ah, yes, good catch!
+> > 
 > 
-> Hmm uclamp doesn't do anything with cpu.shares. I assume this is some
-> implementation detail at your end? IOW, you don't have to use cpu.shares to use
-> uclamp.
+> The same test case passed with a small modification to push the foreach
+> KLP section part to a kernel/livepatch/core.c local function and
+> exposing the klp_resolve_symbols() + apply_relocate_add() for a given
+> section to kernel/module.c.  Something like following...
 
-Right, it is a ChromeOS-specific issue. We have CONFIG_FAIR_GROUP_SCHED
-enabled in the kernel for container workloads. However there are CGroups of
-tasks that used "schedtune" CGroup interface before to provide util clamping
-like behavior. We are now migrating these to the upstream util-clamp.
+I came up with something very similar, though I named them
+klp_apply_object_relocs() and klp_apply_section_relocs() and changed the
+argument order a bit (module first).  Since it sounds like you have a
+test, could you try this one?
 
-We can't disable CONFIG_FAIR_GROUP_SCHED because that would break the
-container workloads.
+diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+index 533359e48c39..fb1a3de39726 100644
+--- a/include/linux/livepatch.h
++++ b/include/linux/livepatch.h
+@@ -231,10 +231,10 @@ void klp_shadow_free_all(unsigned long id, klp_shadow_dtor_t dtor);
+ struct klp_state *klp_get_state(struct klp_patch *patch, unsigned long id);
+ struct klp_state *klp_get_prev_state(unsigned long id);
+ 
+-int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+-			  const char *shstrtab, const char *strtab,
+-			  unsigned int symindex, struct module *pmod,
+-			  const char *objname);
++int klp_apply_section_relocs(struct module *pmod, Elf_Shdr *sechdrs,
++			     const char *shstrtab, const char *strtab,
++			     unsigned int symindex, unsigned int secindex,
++			     const char *objname);
+ 
+ #else /* !CONFIG_LIVEPATCH */
+ 
+@@ -245,10 +245,10 @@ static inline void klp_update_patch_state(struct task_struct *task) {}
+ static inline void klp_copy_process(struct task_struct *child) {}
+ 
+ static inline
+-int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+-			  const char *shstrtab, const char *strtab,
+-			  unsigned int symindex, struct module *pmod,
+-			  const char *objname)
++int klp_apply_section_relocs(struct module *pmod, Elf_Shdr *sechdrs,
++			     const char *shstrtab, const char *strtab,
++			     unsigned int symindex, unsigned int secindex,
++			     const char *objname);
+ {
+ 	return 0;
+ }
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 3ff886b911ae..89c5cb962c54 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -285,49 +285,37 @@ static int klp_resolve_symbols(Elf64_Shdr *sechdrs, const char *strtab,
+  *    the to-be-patched module to be loaded and patched sometime *after* the
+  *    klp module is loaded.
+  */
+-int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+-			  const char *shstrtab, const char *strtab,
+-			  unsigned int symndx, struct module *pmod,
+-			  const char *objname)
++int klp_apply_section_relocs(struct module *pmod, Elf_Shdr *sechdrs,
++			     const char *shstrtab, const char *strtab,
++			     unsigned int symndx, unsigned int secndx,
++			     const char *objname)
+ {
+-	int i, cnt, ret = 0;
++	int cnt, ret;
+ 	char sec_objname[MODULE_NAME_LEN];
+-	Elf_Shdr *sec;
++	Elf_Shdr *sec = sechdrs + secndx;
+ 
+-	/* For each klp relocation section */
+-	for (i = 1; i < ehdr->e_shnum; i++) {
+-		sec = sechdrs + i;
+-		if (!(sec->sh_flags & SHF_RELA_LIVEPATCH))
+-			continue;
+-
+-		/*
+-		 * Format: .klp.rela.sec_objname.section_name
+-		 * See comment in klp_resolve_symbols() for an explanation
+-		 * of the selected field width value.
+-		 */
+-		cnt = sscanf(shstrtab + sec->sh_name, ".klp.rela.%55[^.]",
+-			     sec_objname);
+-		if (cnt != 1) {
+-			pr_err("section %s has an incorrectly formatted name\n",
+-			       shstrtab + sec->sh_name);
+-			ret = -EINVAL;
+-			break;
+-		}
+-
+-		if (strcmp(objname ? objname : "vmlinux", sec_objname))
+-			continue;
++	/*
++	 * Format: .klp.rela.sec_objname.section_name
++	 * See comment in klp_resolve_symbols() for an explanation
++	 * of the selected field width value.
++	 */
++	cnt = sscanf(shstrtab + sec->sh_name, ".klp.rela.%55[^.]",
++		     sec_objname);
++	if (cnt != 1) {
++		pr_err("section %s has an incorrectly formatted name\n",
++		       shstrtab + sec->sh_name);
++		return -EINVAL;
++	}
+ 
+-		ret = klp_resolve_symbols(sechdrs, strtab, symndx, sec,
+-					  sec_objname);
+-		if (ret)
+-			break;
++	if (strcmp(objname ? objname : "vmlinux", sec_objname))
++		return 0;
+ 
+-		ret = apply_relocate_add(sechdrs, strtab, symndx, i, pmod);
+-		if (ret)
+-			break;
+-	}
++	ret = klp_resolve_symbols(sechdrs, strtab, symndx, sec,
++				  sec_objname);
++	if (ret)
++		return ret;
+ 
+-	return ret;
++	return apply_relocate_add(sechdrs, strtab, symndx, secndx, pmod);
+ }
+ 
+ /*
+@@ -758,13 +746,34 @@ static int klp_init_func(struct klp_object *obj, struct klp_func *func)
+ 			   func->old_sympos ? func->old_sympos : 1);
+ }
+ 
++int klp_apply_object_relocs(struct klp_patch *patch, struct klp_object *obj)
++{
++	int i, ret;
++	struct klp_modinfo *info = patch->mod->klp_info;
++
++	for (i = 1; i < info->hdr.e_shnum; i++) {
++		Elf_Shdr *sec = info->sechdrs + i;
++
++		if (!(sec->sh_flags & SHF_RELA_LIVEPATCH))
++			continue;
++
++		ret = klp_apply_section_relocs(patch->mod, info->sechdrs,
++					       info->secstrings,
++					       patch->mod->core_kallsyms.strtab,
++					       info->symndx, i, obj->name);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ /* parts of the initialization that is done only when the object is loaded */
+ static int klp_init_object_loaded(struct klp_patch *patch,
+ 				  struct klp_object *obj)
+ {
+ 	struct klp_func *func;
+ 	int ret;
+-	struct klp_modinfo *info = patch->mod->klp_info;
+ 
+ 	if (klp_is_module(obj)) {
+ 		/*
+@@ -773,11 +782,7 @@ static int klp_init_object_loaded(struct klp_patch *patch,
+ 		 * written earlier during the initialization of the klp module
+ 		 * itself.
+ 		 */
+-		ret = klp_write_relocations(&info->hdr, info->sechdrs,
+-					    info->secstrings,
+-					    patch->mod->core_kallsyms.strtab,
+-					    info->symndx, patch->mod,
+-					    obj->name);
++		ret = klp_apply_object_relocs(patch, obj);
+ 		if (ret)
+ 			return ret;
+ 	}
+diff --git a/kernel/module.c b/kernel/module.c
+index b1d30ad67e82..3ba024afe379 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2322,10 +2322,11 @@ static int apply_relocations(struct module *mod, const struct load_info *info)
+ 			continue;
+ 
+ 		if (info->sechdrs[i].sh_flags & SHF_RELA_LIVEPATCH)
+-			err = klp_write_relocations(info->hdr, info->sechdrs,
+-						    info->secstrings,
+-						    info->strtab,
+-						    info->index.sym, mod, NULL);
++			err = klp_apply_section_relocs(mod, info->sechdrs,
++						       info->secstrings,
++						       info->strtab,
++						       info->index.sym, i,
++						       NULL);
+ 		else if (info->sechdrs[i].sh_type == SHT_REL)
+ 			err = apply_relocate(info->sechdrs, info->strtab,
+ 					     info->index.sym, i, mod);
 
-So we have to use the per-process interface of util clamp.
-
-If we used the CGroups interface of util clamping, we would get the
-cpu.shares as well since the CGroup interface comes with shares. There's no
-way to avoid being subject to cpu.shares (that I'm aware off anyway).
-
-> Although there should be few tasks in the system that need the latency-nice, so
-> I prefer the per-task interface rather than lump everything in a cgroup. Though
-> there could be valid use cases for the latter.
-
-Yes, with either interface, we need something like latency_nice to indicate
-that the task is low-latency (something we used for a number of years with
-the out-of-tree schedtune).
-
-thanks!
-
- - Joel
-
-
-> 
-> Thanks
-> 
-> --
-> Qais Yousef
