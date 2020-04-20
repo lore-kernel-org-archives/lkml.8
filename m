@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E340C54FD2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D1EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 051E7206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA32206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386702;
-	bh=3w05jCYjIhoDyDncLmt8aY0aq/NFMnH9Bfe0njl5I1E=;
+	s=default; t=1587386705;
+	bh=D9Zh8lCgpiqB7HX8/NwmWCHrVq/g2Z7HfkRe/5ncGN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i3u9dmy2jreUC3o4TE3GQAcfwg8/k1bEfdYUb91i+PzrIc4gt5xmXQ/9/Nl4Zkk1u
-	 APiiFCtuCgyAKBRqtXAL7USU2eWiNEaQfdKchbkHK2kNgtckuVyM6606/1MXL+x/gT
-	 T0qEeCitmZQ8BhJxCbhMOWKxK++KQG66H2pgu7WI=
+	b=IBmINS90bVn1LgcrBfOZWCbpFXdnLmJJIoypKf8GNJxjCW6hQkayB6igoviiCmDsQ
+	 Do+sZDd/Sz2x6V0x3wLCTOIIlcLP3Kfqc2zeuDYOeTcIrVCjQNbf7dKTVszY+F4HsR
+	 I8HHzQ16Q8BIC/TyQ1IKdhWcHoACFxHhhKxU7Cpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgDTMpB (ORCPT
+        id S1728651AbgDTMpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:45:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38700 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728606AbgDTMom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:44:42 -0400
+        id S1728617AbgDTMot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:44:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F6D82072B;
-        Mon, 20 Apr 2020 12:44:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3C2F206E9;
+        Mon, 20 Apr 2020 12:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386682;
-        bh=3w05jCYjIhoDyDncLmt8aY0aq/NFMnH9Bfe0njl5I1E=;
+        s=default; t=1587386689;
+        bh=D9Zh8lCgpiqB7HX8/NwmWCHrVq/g2Z7HfkRe/5ncGN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V3bmyavaQYnmDjghg0JXBId9APbPVqTZ3eOl4sfdsIO2zODcjpI89AjkfsEqCBctW
-         TPr9PCbghBOShmJQvgr/Xe0Rb8aXxLCyoYDY3BdsoLNrLNYc3w2LylszLWrzrBq6cl
-         bpcFeeTwqX3ANbUM615fxFvMzTPqAp/jCBF0oZLg=
+        b=i4EnWbvkq2Uboj8MqbDt9j6SojJp4wFArJjBohNHDA6s3QoEXRRylJyA5FXL26UWX
+         QAjoFe4DwyalbNXw7CG+ySo4r0M0BjV/I1DRaEHNURkV5IsdaOubEJ3nEEkq52uKQT
+         Xn2AK6nPrJRNnwpbwrCaCAIQDWfk9ChebjY9Dyzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.6 53/71] mac80211: fix race in ieee80211_register_hw()
-Date:   Mon, 20 Apr 2020 14:39:07 +0200
-Message-Id: <20200420121519.805021247@linuxfoundation.org>
+        stable@vger.kernel.org, Tim Stallard <code@timstallard.me.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 18/71] net: icmp6: do not select saddr from iif when route has prefsrc set
+Date:   Mon, 20 Apr 2020 14:38:32 +0200
+Message-Id: <20200420121512.086635523@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,149 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumit Garg <sumit.garg@linaro.org>
+From: Tim Stallard <code@timstallard.me.uk>
 
-commit 52e04b4ce5d03775b6a78f3ed1097480faacc9fd upstream.
+[ Upstream commit b93cfb9cd3af3adc9ba4854f178d5300f7544d3e ]
 
-A race condition leading to a kernel crash is observed during invocation
-of ieee80211_register_hw() on a dragonboard410c device having wcn36xx
-driver built as a loadable module along with a wifi manager in user-space
-waiting for a wifi device (wlanX) to be active.
+Since commit fac6fce9bdb5 ("net: icmp6: provide input address for
+traceroute6") ICMPv6 errors have source addresses from the ingress
+interface. However, this overrides when source address selection is
+influenced by setting preferred source addresses on routes.
 
-Sequence diagram for a particular kernel crash scenario:
+This can result in ICMP errors being lost to upstream BCP38 filters
+when the wrong source addresses are used, breaking path MTU discovery
+and traceroute.
 
-    user-space  ieee80211_register_hw()  ieee80211_tasklet_handler()
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-       |                    |                 |
-       |<---phy0----wiphy_register()          |
-       |-----iwd if_add---->|                 |
-       |                    |<---IRQ----(RX packet)
-       |              Kernel crash            |
-       |              due to unallocated      |
-       |              workqueue.              |
-       |                    |                 |
-       |       alloc_ordered_workqueue()      |
-       |                    |                 |
-       |              Misc wiphy init.        |
-       |                    |                 |
-       |            ieee80211_if_add()        |
-       |                    |                 |
+This patch sets the modified source address selection to only take place
+when the route used has no prefsrc set.
 
-As evident from above sequence diagram, this race condition isn't specific
-to a particular wifi driver but rather the initialization sequence in
-ieee80211_register_hw() needs to be fixed. So re-order the initialization
-sequence and the updated sequence diagram would look like:
+It can be tested with:
 
-    user-space  ieee80211_register_hw()  ieee80211_tasklet_handler()
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-       |                    |                 |
-       |       alloc_ordered_workqueue()      |
-       |                    |                 |
-       |              Misc wiphy init.        |
-       |                    |                 |
-       |<---phy0----wiphy_register()          |
-       |-----iwd if_add---->|                 |
-       |                    |<---IRQ----(RX packet)
-       |                    |                 |
-       |            ieee80211_if_add()        |
-       |                    |                 |
+ip link add v1 type veth peer name v2
+ip netns add test
+ip netns exec test ip link set lo up
+ip link set v2 netns test
+ip link set v1 up
+ip netns exec test ip link set v2 up
+ip addr add 2001:db8::1/64 dev v1 nodad
+ip addr add 2001:db8::3 dev v1 nodad
+ip netns exec test ip addr add 2001:db8::2/64 dev v2 nodad
+ip netns exec test ip route add unreachable 2001:db8:1::1
+ip netns exec test ip addr add 2001:db8:100::1 dev lo
+ip netns exec test ip route add 2001:db8::1 dev v2 src 2001:db8:100::1
+ip route add 2001:db8:1000::1 via 2001:db8::2
+traceroute6 -s 2001:db8::1 2001:db8:1000::1
+traceroute6 -s 2001:db8::3 2001:db8:1000::1
+ip netns delete test
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Link: https://lore.kernel.org/r/1586254255-28713-1-git-send-email-sumit.garg@linaro.org
-[Johannes: fix rtnl imbalances]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Output before:
+$ traceroute6 -s 2001:db8::1 2001:db8:1000::1
+traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
+ 1  2001:db8::2 (2001:db8::2)  0.843 ms !N  0.396 ms !N  0.257 ms !N
+$ traceroute6 -s 2001:db8::3 2001:db8:1000::1
+traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
+ 1  2001:db8::2 (2001:db8::2)  0.772 ms !N  0.257 ms !N  0.357 ms !N
+
+After:
+$ traceroute6 -s 2001:db8::1 2001:db8:1000::1
+traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
+ 1  2001:db8:100::1 (2001:db8:100::1)  8.885 ms !N  0.310 ms !N  0.174 ms !N
+$ traceroute6 -s 2001:db8::3 2001:db8:1000::1
+traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
+ 1  2001:db8::2 (2001:db8::2)  1.403 ms !N  0.205 ms !N  0.313 ms !N
+
+Fixes: fac6fce9bdb5 ("net: icmp6: provide input address for traceroute6")
+Signed-off-by: Tim Stallard <code@timstallard.me.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/mac80211/main.c |   24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ net/ipv6/icmp.c |   21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
---- a/net/mac80211/main.c
-+++ b/net/mac80211/main.c
-@@ -1051,7 +1051,7 @@ int ieee80211_register_hw(struct ieee802
- 		local->hw.wiphy->signal_type = CFG80211_SIGNAL_TYPE_UNSPEC;
- 		if (hw->max_signal <= 0) {
- 			result = -EINVAL;
--			goto fail_wiphy_register;
-+			goto fail_workqueue;
- 		}
- 	}
- 
-@@ -1113,7 +1113,7 @@ int ieee80211_register_hw(struct ieee802
- 
- 	result = ieee80211_init_cipher_suites(local);
- 	if (result < 0)
--		goto fail_wiphy_register;
-+		goto fail_workqueue;
- 
- 	if (!local->ops->remain_on_channel)
- 		local->hw.wiphy->max_remain_on_channel_duration = 5000;
-@@ -1139,10 +1139,6 @@ int ieee80211_register_hw(struct ieee802
- 
- 	local->hw.wiphy->max_num_csa_counters = IEEE80211_MAX_CSA_COUNTERS_NUM;
- 
--	result = wiphy_register(local->hw.wiphy);
--	if (result < 0)
--		goto fail_wiphy_register;
--
- 	/*
- 	 * We use the number of queues for feature tests (QoS, HT) internally
- 	 * so restrict them appropriately.
-@@ -1198,9 +1194,9 @@ int ieee80211_register_hw(struct ieee802
- 		goto fail_flows;
- 
- 	rtnl_lock();
--
- 	result = ieee80211_init_rate_ctrl_alg(local,
- 					      hw->rate_control_algorithm);
-+	rtnl_unlock();
- 	if (result < 0) {
- 		wiphy_debug(local->hw.wiphy,
- 			    "Failed to initialize rate control algorithm\n");
-@@ -1254,6 +1250,12 @@ int ieee80211_register_hw(struct ieee802
- 		local->sband_allocated |= BIT(band);
- 	}
- 
-+	result = wiphy_register(local->hw.wiphy);
-+	if (result < 0)
-+		goto fail_wiphy_register;
-+
-+	rtnl_lock();
-+
- 	/* add one default STA interface if supported */
- 	if (local->hw.wiphy->interface_modes & BIT(NL80211_IFTYPE_STATION) &&
- 	    !ieee80211_hw_check(hw, NO_AUTO_VIF)) {
-@@ -1293,17 +1295,17 @@ int ieee80211_register_hw(struct ieee802
- #if defined(CONFIG_INET) || defined(CONFIG_IPV6)
-  fail_ifa:
- #endif
-+	wiphy_unregister(local->hw.wiphy);
-+ fail_wiphy_register:
- 	rtnl_lock();
- 	rate_control_deinitialize(local);
- 	ieee80211_remove_interfaces(local);
-- fail_rate:
- 	rtnl_unlock();
-+ fail_rate:
-  fail_flows:
- 	ieee80211_led_exit(local);
- 	destroy_workqueue(local->workqueue);
-  fail_workqueue:
--	wiphy_unregister(local->hw.wiphy);
-- fail_wiphy_register:
- 	if (local->wiphy_ciphers_allocated)
- 		kfree(local->hw.wiphy->cipher_suites);
- 	kfree(local->int_scan_req);
-@@ -1353,8 +1355,8 @@ void ieee80211_unregister_hw(struct ieee
- 	skb_queue_purge(&local->skb_queue_unreliable);
- 	skb_queue_purge(&local->skb_queue_tdls_chsw);
- 
--	destroy_workqueue(local->workqueue);
- 	wiphy_unregister(local->hw.wiphy);
-+	destroy_workqueue(local->workqueue);
- 	ieee80211_led_exit(local);
- 	kfree(local->int_scan_req);
+--- a/net/ipv6/icmp.c
++++ b/net/ipv6/icmp.c
+@@ -229,6 +229,25 @@ static bool icmpv6_xrlim_allow(struct so
+ 	return res;
  }
+ 
++static bool icmpv6_rt_has_prefsrc(struct sock *sk, u8 type,
++				  struct flowi6 *fl6)
++{
++	struct net *net = sock_net(sk);
++	struct dst_entry *dst;
++	bool res = false;
++
++	dst = ip6_route_output(net, sk, fl6);
++	if (!dst->error) {
++		struct rt6_info *rt = (struct rt6_info *)dst;
++		struct in6_addr prefsrc;
++
++		rt6_get_prefsrc(rt, &prefsrc);
++		res = !ipv6_addr_any(&prefsrc);
++	}
++	dst_release(dst);
++	return res;
++}
++
+ /*
+  *	an inline helper for the "simple" if statement below
+  *	checks if parameter problem report is caused by an
+@@ -527,7 +546,7 @@ static void icmp6_send(struct sk_buff *s
+ 		saddr = force_saddr;
+ 	if (saddr) {
+ 		fl6.saddr = *saddr;
+-	} else {
++	} else if (!icmpv6_rt_has_prefsrc(sk, type, &fl6)) {
+ 		/* select a more meaningful saddr from input if */
+ 		struct net_device *in_netdev;
+ 
 
 
