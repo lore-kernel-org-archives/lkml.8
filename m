@@ -2,153 +2,74 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A1DC55182
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAFDC55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257A120724
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587419572;
-	bh=fwuByLRJ71NF1Pijln4StMzRzMcGNd5kEZHDxyOu7D8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jh/FR55o2YOhE6o9gePwjdh3oEVoGKqBfhGHi5V6b9eCPWRLcwl3ngfgbF2UqNpn7
-	 +VuUXIGlLRovKkMx5ccxE65/00gftKjraFxMPqS3DsMjfBNsFeYLC3Ic5N9p+n5/F/
-	 6Dk/7mMZsp4d4Q50vDoVmyXTBRoO+e9t0PBdwVsU=
+	by mail.kernel.org (Postfix) with ESMTP id 1F9E720724
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 21:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgDTVwv (ORCPT
+        id S1726432AbgDTVxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:52:51 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:35484 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgDTVwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:52:51 -0400
-Received: by mail-oo1-f65.google.com with SMTP id t12so2100425oot.2;
-        Mon, 20 Apr 2020 14:52:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Co1cYmNyWmTzHzgxsSFAcduEN2SDR57H6MmIshko7Lk=;
-        b=HVoO5iIzlJPb8znTk8Dvd3b8X9LuVIaL4rKRiFnr3V4v1Dru9Eri/o5l224jrZv/Xu
-         pv2g3Y779WLSXgxpK5DHKZl01urKeeWqmgkTvH1LsH7UvwI0Wwxm6pdFwUlF9dMT8XmY
-         5xMyl2R93lXw5kALf9K9hYpPzE18t00jy9JPSm1L+BYi6ZQlYR33MioxnhQgMfwGIfhd
-         82jFMMNJigfRVIl53TF3kmBY1lx/EpNzCHDu3+hNhBi1XHUdmzAdP0bFA7QWZiGigBGx
-         XMo+nLxZDa5mvsXRZWpJsQAtIjx6UUszM2y4LynfbW4r8MOjyi5FzHADPT+ColnLzABQ
-         nEzQ==
-X-Gm-Message-State: AGi0PuaIRvaAuL3qhPtnJ526PnMp7xROcITXpc9sogSIhAs9/fwpM3rO
-        3gYM5hxQmEdRlGLgDAbjMA==
-X-Google-Smtp-Source: APiQypKSI24KGC+Qmm1XwTPCDSuY0GG18ywAMyBMW7x3poTOLSXS061QvnH629ajhE5cTf8nGcNrBA==
-X-Received: by 2002:a4a:7504:: with SMTP id j4mr14628604ooc.10.1587419569965;
-        Mon, 20 Apr 2020 14:52:49 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 204sm184174oid.18.2020.04.20.14.52.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:52:49 -0700 (PDT)
-Received: (nullmailer pid 28065 invoked by uid 1000);
-        Mon, 20 Apr 2020 21:52:48 -0000
-Date:   Mon, 20 Apr 2020 16:52:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Saravanan Sekar <saravanan@linumiz.com>
-Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, broonie@kernel.org, lgirdwood@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 2/4] dt-bindings: iio: add document bindings for
- wsen-itds accel sensor
-Message-ID: <20200420215248.GA26239@bogus>
-References: <20200415065535.7753-1-saravanan@linumiz.com>
- <20200415065535.7753-3-saravanan@linumiz.com>
+        Mon, 20 Apr 2020 17:53:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36894 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgDTVxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 17:53:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0EE2CAE47;
+        Mon, 20 Apr 2020 21:53:41 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 14:50:14 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Marc Zyngier <maz@kernel.org>, tglx@linutronix.de,
+        kvm@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>,
+        peterz@infradead.org, torvalds@linux-foundation.org,
+        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, linux-mips@vger.kernel.org,
+        Paul Mackerras <paulus@ozlabs.org>, joel@joelfernandes.org,
+        will@kernel.org, kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH v2] kvm: Replace vcpu->swait with rcuwait
+Message-ID: <20200420215014.sarodevmhphnkkn7@linux-p48b>
+References: <20200324044453.15733-1-dave@stgolabs.net>
+ <20200324044453.15733-4-dave@stgolabs.net>
+ <20200420164132.tjzk5ebx35m66yce@linux-p48b>
+ <418acdb5001a9ae836095b7187338085@misterjones.org>
+ <20200420205641.6sgsllj6pmsnwrvp@linux-p48b>
+ <f7cc83fe-3e91-0057-9af2-26c201456689@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200415065535.7753-3-saravanan@linumiz.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f7cc83fe-3e91-0057-9af2-26c201456689@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 08:55:33AM +0200, Saravanan Sekar wrote:
-> Add device tree binding information for wsen-itds accel sensor driver.
-> 
-> Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
-> ---
->  .../bindings/iio/accel/we,wsen-itds.yaml      | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml b/Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
-> new file mode 100644
-> index 000000000000..165cdf71966d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/accel/we,wsen-itds.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Würth Elektronik WSEN-ITDS triaxial acceleration sensor
-> +
-> +maintainers:
-> +  - Saravanan Sekar <saravanan@linumiz.com>
-> +
-> +description: |
-> +  Acceleration and temperature iio sensors with an i2c interface.
-> +  The sensor provies additional application specific features like
-> +  tap detection, 6D Orinetation, Free-fall, Motion and Activity.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - we,wsen-itds
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: phandle to the regulator that provides power to the accelerometer
-> +
-> +  vddio-supply:
-> +    description: phandle to the regulator that provides power to the sensor's IO
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
+On Mon, 20 Apr 2020, Paolo Bonzini wrote:
 
-Add:
+>On 20/04/20 22:56, Davidlohr Bueso wrote:
+>> On Mon, 20 Apr 2020, Marc Zyngier wrote:
+>>
+>>> This looks like a change in the semantics of the tracepoint. Before this
+>>> change, 'waited' would have been true if the vcpu waited at all. Here,
+>>> you'd
+>>> have false if it has been interrupted by a signal, even if the vcpu
+>>> has waited
+>>> for a period of time.
+>>
+>> Hmm but sleeps are now uninterruptible as we're using TASK_IDLE.
+>
+>Hold on, does that mean that you can't anymore send a signal in order to
+>kick a thread out of KVM_RUN?  Or am I just misunderstanding?
 
-additionalProperties: false
+Considering that the return value of the interruptible wait is not
+checked, I would not think this breaks KVM_RUN.
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      accelerometer@18 {
-> +        compatible = "we,wsen-itds";
-> +        reg = <0x18>;
-> +        vdd-supply = <&vdd>;
-> +        vddio-supply = <&vddio>;
-> +        interrupt-parent = <&gpio0>;
-> +        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +      };
-> +    };
-> -- 
-> 2.17.1
-> 
+Thanks,
+Davidlohr
