@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D03C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278B4C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91A1920736
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C132078C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587387503;
-	bh=plMxhHApsc4BN2fh/xPdBd++keSZJd9EE9BXwTtjyPs=;
+	s=default; t=1587387506;
+	bh=+YTUwla6O7ssMXw5d7M6LSEs07RMDzftrFuWJsm1zo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tucUyC894sPkSc0VZRi6yBW5sKFoaOU1rdmRoL82GdDUXRGQ7FN6IcLxf4/Ietua5
-	 0mrTt93M/11RMVOhmebz9eOZeTSADtxZr5BWr9pTOB24jVxc0bZTAcLSizSD3xR49o
-	 YdIZc8WrNl59J6FecM7X4T3D5nlCjMAVnx2MfpUE=
+	b=Dg1hD2riqvU0dn4ES+YI9bnq/b/fqwAx/zjNNodyrM5S36RClyhAkRPnmtYB9PPMZ
+	 rlt0EyfEanM2Df63l13CPRtAehTW+cQqvFyEn5NHwyA1xW5w5tLZCqMJY9mUdbeF0p
+	 fiMpZkNB5JKAVMJJA+cW2qUJTld8toHJ9/svTOzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgDTMnA (ORCPT
+        id S1728298AbgDTMnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 20 Apr 2020 08:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36108 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:36010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbgDTMmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:42:51 -0400
+        id S1728281AbgDTMms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:42:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5242320735;
-        Mon, 20 Apr 2020 12:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D70642072B;
+        Mon, 20 Apr 2020 12:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386570;
-        bh=plMxhHApsc4BN2fh/xPdBd++keSZJd9EE9BXwTtjyPs=;
+        s=default; t=1587386568;
+        bh=+YTUwla6O7ssMXw5d7M6LSEs07RMDzftrFuWJsm1zo0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dRoDWGfPEQeWxrz9fqEviac/5gzMSKfdrCEaFngf6a0rrpWFTL+nEkn8oXEvrHqRZ
-         ogqRc+RBCHX64mTlHau86k4fEQE4E1AWF5g3xa77exjJdu3WWn80OwP+qiijz4xfm4
-         XURWPMWNMpDQncV/zRFzBewhEQ6KbpDWch8TKNsg=
+        b=L/0N4wsFUowFHc9PsLUf0ZqXbJNcwaZerl7aoP3ReFlrHphQLqG+Vziw2qEtwyJwf
+         kG5Lu/BIgA4b2MvcQkmtXfNLddeJtjYA1gtZxvLGBROqC0nhFrN3YQLHezBZO2ymSB
+         pIsGVpPutdTl2dWEQVnFGDQNTUT2PvMTKEAFLoCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilberto Bertin <me@jibi.io>,
+        stable@vger.kernel.org, Dmitry Yakunin <zeil@yandex-team.ru>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 11/71] net: tun: record RX queue in skb before do_xdp_generic()
-Date:   Mon, 20 Apr 2020 14:38:25 +0200
-Message-Id: <20200420121510.699855599@linuxfoundation.org>
+Subject: [PATCH 5.6 10/71] net: revert default NAPI poll timeout to 2 jiffies
+Date:   Mon, 20 Apr 2020 14:38:24 +0200
+Message-Id: <20200420121510.571780205@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121508.491252919@linuxfoundation.org>
 References: <20200420121508.491252919@linuxfoundation.org>
@@ -59,46 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilberto Bertin <me@jibi.io>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 3fe260e00cd0bf0be853c48fcc1e19853df615bb ]
+[ Upstream commit a4837980fd9fa4c70a821d11831698901baef56b ]
 
-This allows netif_receive_generic_xdp() to correctly determine the RX
-queue from which the skb is coming, so that the context passed to the
-XDP program will contain the correct RX queue index.
+For HZ < 1000 timeout 2000us rounds up to 1 jiffy but expires randomly
+because next timer interrupt could come shortly after starting softirq.
 
-Signed-off-by: Gilberto Bertin <me@jibi.io>
+For commonly used CONFIG_HZ=1000 nothing changes.
+
+Fixes: 7acf8a1e8a28 ("Replace 2 jiffies with sysctl netdev_budget_usecs to enable softirq tuning")
+Reported-by: Dmitry Yakunin <zeil@yandex-team.ru>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/tun.c |    3 ++-
+ net/core/dev.c |    3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1925,6 +1925,7 @@ drop:
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4140,7 +4140,8 @@ EXPORT_SYMBOL(netdev_max_backlog);
  
- 	skb_reset_network_header(skb);
- 	skb_probe_transport_header(skb);
-+	skb_record_rx_queue(skb, tfile->queue_index);
- 
- 	if (skb_xdp) {
- 		struct bpf_prog *xdp_prog;
-@@ -2498,6 +2499,7 @@ build:
- 	skb->protocol = eth_type_trans(skb, tun->dev);
- 	skb_reset_network_header(skb);
- 	skb_probe_transport_header(skb);
-+	skb_record_rx_queue(skb, tfile->queue_index);
- 
- 	if (skb_xdp) {
- 		err = do_xdp_generic(xdp_prog, skb);
-@@ -2509,7 +2511,6 @@ build:
- 	    !tfile->detached)
- 		rxhash = __skb_get_hash_symmetric(skb);
- 
--	skb_record_rx_queue(skb, tfile->queue_index);
- 	netif_receive_skb(skb);
- 
- 	/* No need for get_cpu_ptr() here since this function is
+ int netdev_tstamp_prequeue __read_mostly = 1;
+ int netdev_budget __read_mostly = 300;
+-unsigned int __read_mostly netdev_budget_usecs = 2000;
++/* Must be at least 2 jiffes to guarantee 1 jiffy timeout */
++unsigned int __read_mostly netdev_budget_usecs = 2 * USEC_PER_SEC / HZ;
+ int weight_p __read_mostly = 64;           /* old backlog weight */
+ int dev_weight_rx_bias __read_mostly = 1;  /* bias for backlog weight */
+ int dev_weight_tx_bias __read_mostly = 1;  /* bias for output_queue quota */
 
 
