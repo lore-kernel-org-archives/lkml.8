@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6F0C55181
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FC4C55181
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB032206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8628C206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 22:12:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="xocpHaip"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="NAh8EB3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgDTWME (ORCPT
+        id S1728426AbgDTWML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38156 "EHLO
+        Mon, 20 Apr 2020 18:12:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbgDTWMA (ORCPT
+        with ESMTP id S1728384AbgDTWMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:12:00 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBAEAC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:11:59 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l25so12587700qkk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:11:59 -0700 (PDT)
+        Mon, 20 Apr 2020 18:12:08 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC312C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:12:07 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 20so12520342qkl.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 15:12:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BdaTHSulpE2zzB/6JwXh0SRm1+Npp4vhHduu9et/U1A=;
-        b=xocpHaipvx0mCwme5RQ47EmCDwQi1yM3HT4rUVXaDLYLh128h4u1qiplVjhVhbrUqC
-         wVg+/YC4tXEYTAKaVexd/suB8x0QK0G7r3Lz/AYX5KO4WOTZCa6E3XSfsJXfsYExhsiq
-         qtPmOjTGmN7+QaFpwjdAT/9ox2GgFf2mB2CTOzWCJXFxy/0fFqzKXyFje0Hwust0ctMF
-         YUBONAB4URfOnaPcylTrgwLe5uFsygDWxenDouuIvb+Y8hd57kgO4SZAfVU/7Vpwm9z4
-         FoDaC2Tk2oa+gJ9FkF3niuzUpt14UxGOLgOeYCSXsP6pUBLjyb0AbZxIgd9biwiOy3GU
-         FBIA==
+        bh=4BfoKiO68JS5GTVEtZtyPUsjUcvWwl21g5043cZUh4U=;
+        b=NAh8EB3ujMtE3JW8FwO9QxU3wUahsLprFKjL+rZXgB98pAw/I1cRRlwb2E6WmfTSKr
+         hMoJ1ESOu7U+cptDfS12CTHbRFNUXyTTyM+e5ZBwS3WsLfBERvNyWbjL1rz9CyOrki1Z
+         by3J2+GSY280wtFvaZz6sJpi1Z0h1h5Ry/6DbqUWV1cUz9W/QtX48Irm9VN19PEM+N0T
+         cEN8+VMev+TEjzZm/3dE7VyirSa+3/eDvmF2J7D947wy7TTen2d4MZUKOVw57GLfUksT
+         EYoEUThyWb5X6dQHwoK7972N6f1MV1WW8Ewt3U5dEl7uQctc2S3sXKlO1FiejUhtm7vK
+         evgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BdaTHSulpE2zzB/6JwXh0SRm1+Npp4vhHduu9et/U1A=;
-        b=jmgelDGaiZPEi96jmzeuGWSVPj470CSf7/cuF3EHvakxIERqJ7v+KjJhaL/QFzUqLn
-         r6amEL9ROhGtconkCfGda3BiAviqPf4j0XXgBaBe0kQBDGXqbAz8kRH9ktNF+A1/M6fr
-         3tq8hzIQXAelq2kLb2vzKQvwcb3HdUVssYY+fhLxGVcZHAy0IfbOub8XU2e8HARpZDnk
-         Ew9q8yLgfN+jObY0hDnmzWUc6UnpIPO9u7u/rYey9rYVNauRcQnDfF0GliSQ65NpWV+4
-         KcVH+6t+2VdUDrI/eZzVIq3egRintzFjl88ra2O8CmeUu4QmV2uxFtq+RAIPBS651eko
-         6JbQ==
-X-Gm-Message-State: AGi0PubAGSbCQsBi8En04fZg6Y6lYr0FlBnfyor9lqZEcaY+hDT370eW
-        4ExrRR8IXkRA1s5CUe0MxwTyig==
-X-Google-Smtp-Source: APiQypLq3RPjEYYXidJlHsDmMgeGRdsRhgYNiFhqZPobAOyPq6LL6Z5JpCDKEWPhM2gFjsQBCqRfVQ==
-X-Received: by 2002:a37:614a:: with SMTP id v71mr9999616qkb.326.1587420718979;
-        Mon, 20 Apr 2020 15:11:58 -0700 (PDT)
+        bh=4BfoKiO68JS5GTVEtZtyPUsjUcvWwl21g5043cZUh4U=;
+        b=VP15IJeLjSDbP5FYNQhWDcJKBW3BGvJ54kVi6TzK+ugnaZRRRAORxbeV1Q4GxYjQVi
+         5RXX9RiTD5c+ndbD3CNnfzs+UR32GkhZtYCn3FGQU5kcDuvJIZcq4HT5piCTSwgagzuH
+         9sn1/JuE7yvp0eOeWhAeeuezdn2/tgmEhLkXq0TPTKsujqrKDfbkh5UqzVW+bHuhRI8z
+         9LCkM9hcaGzcjZv0QhE/CNLMlAYC2jWQf36vgITaJSed+tJ7zlJmWtU4zJRG1y9upemW
+         8xgqdz0tRWiTS0WYMiwVVdvFcrJyTFIpW2zJsobpf/56uKAdCr4X8cCLQQI640Ert1gM
+         e2/w==
+X-Gm-Message-State: AGi0PuZOLXhujNwpJp/gWyEAqM97Cm9XLera6yrwqOr05g6SqWPeYZ/C
+        Fj1C31fC5C1yL066z44xDabjBg==
+X-Google-Smtp-Source: APiQypIxbp+3vK65VX1I+DnBRv6DzoynhnXVjr4q0qoUBcIMTkCChunVmnXoTc1Lg+U3zqyPuhtE5w==
+X-Received: by 2002:a05:620a:b83:: with SMTP id k3mr18223737qkh.412.1587420727081;
+        Mon, 20 Apr 2020 15:12:07 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:e6b6])
-        by smtp.gmail.com with ESMTPSA id b1sm585956qkf.103.2020.04.20.15.11.57
+        by smtp.gmail.com with ESMTPSA id k184sm573866qke.94.2020.04.20.15.12.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 15:11:58 -0700 (PDT)
+        Mon, 20 Apr 2020 15:12:06 -0700 (PDT)
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Joonsoo Kim <js1304@gmail.com>,
         Alex Shi <alex.shi@linux.alibaba.com>
@@ -69,9 +69,9 @@ Cc:     Shakeel Butt <shakeelb@google.com>,
         Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
         cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com
-Subject: [PATCH 10/18] mm: memcontrol: switch to native NR_ANON_MAPPED counter
-Date:   Mon, 20 Apr 2020 18:11:18 -0400
-Message-Id: <20200420221126.341272-11-hannes@cmpxchg.org>
+Subject: [PATCH 14/18] mm: memcontrol: prepare swap controller setup for integration
+Date:   Mon, 20 Apr 2020 18:11:22 -0400
+Message-Id: <20200420221126.341272-15-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200420221126.341272-1-hannes@cmpxchg.org>
 References: <20200420221126.341272-1-hannes@cmpxchg.org>
@@ -82,279 +82,207 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Memcg maintains a private MEMCG_RSS counter. This divergence from the
-generic VM accounting means unnecessary code overhead, and creates a
-dependency for memcg that page->mapping is set up at the time of
-charging, so that page types can be told apart.
+A few cleanups to streamline the swap controller setup:
 
-Convert the generic accounting sites to mod_lruvec_page_state and
-friends to maintain the per-cgroup vmstat counter of
-NR_ANON_MAPPED. We use lock_page_memcg() to stabilize page->mem_cgroup
-during rmap changes, the same way we do for NR_FILE_MAPPED.
+- Replace the do_swap_account flag with cgroup_memory_noswap. This
+  brings it in line with other functionality that is usually available
+  unless explicitly opted out of - nosocket, nokmem.
 
-With the previous patch removing MEMCG_CACHE and the private NR_SHMEM
-counter, this patch finally eliminates the need to have page->mapping
-set up at charge time.
+- Remove the really_do_swap_account flag that stores the boot option
+  and is later used to switch the do_swap_account. It's not clear why
+  this indirection is/was necessary. Use do_swap_account directly.
+
+- Minor coding style polishing
 
 Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/memcontrol.h |  3 +--
- mm/memcontrol.c            | 27 ++++++++--------------
- mm/rmap.c                  | 47 +++++++++++++++++++++++---------------
- 3 files changed, 39 insertions(+), 38 deletions(-)
+ include/linux/memcontrol.h |  2 +-
+ mm/memcontrol.c            | 59 ++++++++++++++++++--------------------
+ mm/swap_cgroup.c           |  4 +--
+ 3 files changed, 31 insertions(+), 34 deletions(-)
 
 diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index c44aa1ccf553..bfb1d961e346 100644
+index 52eb6411cfee..d458f1d90aa4 100644
 --- a/include/linux/memcontrol.h
 +++ b/include/linux/memcontrol.h
-@@ -29,8 +29,7 @@ struct kmem_cache;
+@@ -560,7 +560,7 @@ struct mem_cgroup *mem_cgroup_get_oom_group(struct task_struct *victim,
+ void mem_cgroup_print_oom_group(struct mem_cgroup *memcg);
  
- /* Cgroup-specific page state, on top of universal node page state */
- enum memcg_stat_item {
--	MEMCG_RSS = NR_VM_NODE_STAT_ITEMS,
--	MEMCG_RSS_HUGE,
-+	MEMCG_RSS_HUGE = NR_VM_NODE_STAT_ITEMS,
- 	MEMCG_SWAP,
- 	MEMCG_SOCK,
- 	/* XXX: why are these zone and not node counters? */
+ #ifdef CONFIG_MEMCG_SWAP
+-extern int do_swap_account;
++extern bool cgroup_memory_noswap;
+ #endif
+ 
+ struct mem_cgroup *lock_page_memcg(struct page *page);
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 7e77166cf10b..c87178d6219f 100644
+index d5aee5577ff3..5558777023e7 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -836,13 +836,6 @@ static void mem_cgroup_charge_statistics(struct mem_cgroup *memcg,
- 					 struct page *page,
- 					 int nr_pages)
+@@ -83,10 +83,14 @@ static bool cgroup_memory_nokmem;
+ 
+ /* Whether the swap controller is active */
+ #ifdef CONFIG_MEMCG_SWAP
+-int do_swap_account __read_mostly;
++#ifdef CONFIG_MEMCG_SWAP_ENABLED
++bool cgroup_memory_noswap __read_mostly;
+ #else
+-#define do_swap_account		0
+-#endif
++bool cgroup_memory_noswap __read_mostly = 1;
++#endif /* CONFIG_MEMCG_SWAP_ENABLED */
++#else
++#define cgroup_memory_noswap		1
++#endif /* CONFIG_MEMCG_SWAP */
+ 
+ #ifdef CONFIG_CGROUP_WRITEBACK
+ static DECLARE_WAIT_QUEUE_HEAD(memcg_cgwb_frn_waitq);
+@@ -95,7 +99,7 @@ static DECLARE_WAIT_QUEUE_HEAD(memcg_cgwb_frn_waitq);
+ /* Whether legacy memory+swap accounting is active */
+ static bool do_memsw_account(void)
  {
--	/*
--	 * Here, RSS means 'mapped anon' and anon's SwapCache. Shmem/tmpfs is
--	 * counted as CACHE even if it's on ANON LRU.
--	 */
--	if (PageAnon(page))
--		__mod_memcg_state(memcg, MEMCG_RSS, nr_pages);
--
- 	if (abs(nr_pages) > 1) {
- 		VM_BUG_ON_PAGE(!PageTransHuge(page), page);
- 		__mod_memcg_state(memcg, MEMCG_RSS_HUGE, nr_pages);
-@@ -1384,7 +1377,7 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
- 	 */
+-	return !cgroup_subsys_on_dfl(memory_cgrp_subsys) && do_swap_account;
++	return !cgroup_subsys_on_dfl(memory_cgrp_subsys) && !cgroup_memory_noswap;
+ }
  
- 	seq_buf_printf(&s, "anon %llu\n",
--		       (u64)memcg_page_state(memcg, MEMCG_RSS) *
-+		       (u64)memcg_page_state(memcg, NR_ANON_MAPPED) *
- 		       PAGE_SIZE);
- 	seq_buf_printf(&s, "file %llu\n",
- 		       (u64)memcg_page_state(memcg, NR_FILE_PAGES) *
-@@ -3298,7 +3291,7 @@ static unsigned long mem_cgroup_usage(struct mem_cgroup *memcg, bool swap)
- 
- 	if (mem_cgroup_is_root(memcg)) {
- 		val = memcg_page_state(memcg, NR_FILE_PAGES) +
--			memcg_page_state(memcg, MEMCG_RSS);
-+			memcg_page_state(memcg, NR_ANON_MAPPED);
- 		if (swap)
- 			val += memcg_page_state(memcg, MEMCG_SWAP);
- 	} else {
-@@ -3768,7 +3761,7 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
- 
- static const unsigned int memcg1_stats[] = {
- 	NR_FILE_PAGES,
--	MEMCG_RSS,
-+	NR_ANON_MAPPED,
- 	MEMCG_RSS_HUGE,
- 	NR_SHMEM,
- 	NR_FILE_MAPPED,
-@@ -5395,7 +5388,12 @@ static int mem_cgroup_move_account(struct page *page,
- 
- 	lock_page_memcg(page);
- 
--	if (!PageAnon(page)) {
-+	if (PageAnon(page)) {
-+		if (page_mapped(page)) {
-+			__mod_lruvec_state(from_vec, NR_ANON_MAPPED, -nr_pages);
-+			__mod_lruvec_state(to_vec, NR_ANON_MAPPED, nr_pages);
-+		}
-+	} else {
- 		__mod_lruvec_state(from_vec, NR_FILE_PAGES, -nr_pages);
- 		__mod_lruvec_state(to_vec, NR_FILE_PAGES, nr_pages);
- 
-@@ -6529,7 +6527,6 @@ void mem_cgroup_commit_charge(struct page *page, struct mem_cgroup *memcg,
- {
- 	unsigned int nr_pages = hpage_nr_pages(page);
- 
--	VM_BUG_ON_PAGE(!page->mapping, page);
- 	VM_BUG_ON_PAGE(PageLRU(page) && !lrucare, page);
- 
- 	if (mem_cgroup_disabled())
-@@ -6602,8 +6599,6 @@ int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
- 	struct mem_cgroup *memcg;
- 	int ret;
- 
--	VM_BUG_ON_PAGE(!page->mapping, page);
--
- 	ret = mem_cgroup_try_charge(page, mm, gfp_mask, &memcg);
- 	if (ret)
- 		return ret;
-@@ -6615,7 +6610,6 @@ struct uncharge_gather {
- 	struct mem_cgroup *memcg;
- 	unsigned long nr_pages;
- 	unsigned long pgpgout;
--	unsigned long nr_anon;
- 	unsigned long nr_kmem;
- 	unsigned long nr_huge;
- 	struct page *dummy_page;
-@@ -6640,7 +6634,6 @@ static void uncharge_batch(const struct uncharge_gather *ug)
- 	}
- 
- 	local_irq_save(flags);
--	__mod_memcg_state(ug->memcg, MEMCG_RSS, -ug->nr_anon);
- 	__mod_memcg_state(ug->memcg, MEMCG_RSS_HUGE, -ug->nr_huge);
- 	__count_memcg_events(ug->memcg, PGPGOUT, ug->pgpgout);
- 	__this_cpu_add(ug->memcg->vmstats_percpu->nr_page_events, ug->nr_pages);
-@@ -6682,8 +6675,6 @@ static void uncharge_page(struct page *page, struct uncharge_gather *ug)
- 	if (!PageKmemcg(page)) {
- 		if (PageTransHuge(page))
- 			ug->nr_huge += nr_pages;
--		if (PageAnon(page))
--			ug->nr_anon += nr_pages;
- 		ug->pgpgout++;
- 	} else {
- 		ug->nr_kmem += nr_pages;
-diff --git a/mm/rmap.c b/mm/rmap.c
-index f79a206b271a..150513d31efa 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1114,6 +1114,11 @@ void do_page_add_anon_rmap(struct page *page,
- 	bool compound = flags & RMAP_COMPOUND;
- 	bool first;
- 
-+	if (unlikely(PageKsm(page)))
-+		lock_page_memcg(page);
-+	else
-+		VM_BUG_ON_PAGE(!PageLocked(page), page);
-+
- 	if (compound) {
- 		atomic_t *mapcount;
- 		VM_BUG_ON_PAGE(!PageLocked(page), page);
-@@ -1134,12 +1139,13 @@ void do_page_add_anon_rmap(struct page *page,
+ #define THRESHOLDS_EVENTS_TARGET 128
+@@ -6458,18 +6462,19 @@ int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
+ 		/*
+ 		 * Every swap fault against a single page tries to charge the
+ 		 * page, bail as early as possible.  shmem_unuse() encounters
+-		 * already charged pages, too.  The USED bit is protected by
+-		 * the page lock, which serializes swap cache removal, which
++		 * already charged pages, too.  page->mem_cgroup is protected
++		 * by the page lock, which serializes swap cache removal, which
+ 		 * in turn serializes uncharging.
  		 */
- 		if (compound)
- 			__inc_node_page_state(page, NR_ANON_THPS);
--		__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, nr);
-+		__mod_lruvec_page_state(page, NR_ANON_MAPPED, nr);
- 	}
--	if (unlikely(PageKsm(page)))
--		return;
+ 		VM_BUG_ON_PAGE(!PageLocked(page), page);
+ 		if (compound_head(page)->mem_cgroup)
+ 			goto out;
  
--	VM_BUG_ON_PAGE(!PageLocked(page), page);
-+	if (unlikely(PageKsm(page))) {
-+		unlock_page_memcg(page);
-+		return;
-+	}
+-		if (do_swap_account) {
++		if (!cgroup_memory_noswap) {
+ 			swp_entry_t ent = { .val = page_private(page), };
+-			unsigned short id = lookup_swap_cgroup_id(ent);
++			unsigned short id;
  
- 	/* address might be in next vma when migration races vma_adjust */
- 	if (first)
-@@ -1181,7 +1187,7 @@ void page_add_new_anon_rmap(struct page *page,
- 		/* increment count (starts at -1) */
- 		atomic_set(&page->_mapcount, 0);
- 	}
--	__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, nr);
-+	__mod_lruvec_page_state(page, NR_ANON_MAPPED, nr);
- 	__page_set_anon_rmap(page, vma, address, 1);
- }
++			id = lookup_swap_cgroup_id(ent);
+ 			rcu_read_lock();
+ 			memcg = mem_cgroup_from_id(id);
+ 			if (memcg && !css_tryget_online(&memcg->css))
+@@ -6944,7 +6949,7 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
+ 	struct mem_cgroup *memcg;
+ 	unsigned short oldid;
  
-@@ -1230,13 +1236,12 @@ static void page_remove_file_rmap(struct page *page, bool compound)
- 	int i, nr = 1;
+-	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) || !do_swap_account)
++	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) || cgroup_memory_noswap)
+ 		return 0;
  
- 	VM_BUG_ON_PAGE(compound && !PageHead(page), page);
--	lock_page_memcg(page);
+ 	memcg = page->mem_cgroup;
+@@ -6988,7 +6993,7 @@ void mem_cgroup_uncharge_swap(swp_entry_t entry, unsigned int nr_pages)
+ 	struct mem_cgroup *memcg;
+ 	unsigned short id;
  
- 	/* Hugepages are not counted in NR_FILE_MAPPED for now. */
- 	if (unlikely(PageHuge(page))) {
- 		/* hugetlb pages are always mapped with pmds */
- 		atomic_dec(compound_mapcount_ptr(page));
--		goto out;
-+		return;
- 	}
+-	if (!do_swap_account)
++	if (cgroup_memory_noswap)
+ 		return;
  
- 	/* page still mapped by someone else? */
-@@ -1246,14 +1251,14 @@ static void page_remove_file_rmap(struct page *page, bool compound)
- 				nr++;
- 		}
- 		if (!atomic_add_negative(-1, compound_mapcount_ptr(page)))
--			goto out;
-+			return;
- 		if (PageSwapBacked(page))
- 			__dec_node_page_state(page, NR_SHMEM_PMDMAPPED);
- 		else
- 			__dec_node_page_state(page, NR_FILE_PMDMAPPED);
- 	} else {
- 		if (!atomic_add_negative(-1, &page->_mapcount))
--			goto out;
-+			return;
- 	}
- 
- 	/*
-@@ -1265,8 +1270,6 @@ static void page_remove_file_rmap(struct page *page, bool compound)
- 
- 	if (unlikely(PageMlocked(page)))
- 		clear_page_mlock(page);
--out:
--	unlock_page_memcg(page);
- }
- 
- static void page_remove_anon_compound_rmap(struct page *page)
-@@ -1310,7 +1313,7 @@ static void page_remove_anon_compound_rmap(struct page *page)
- 		clear_page_mlock(page);
- 
- 	if (nr)
--		__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, -nr);
-+		__mod_lruvec_page_state(page, NR_ANON_MAPPED, -nr);
- }
- 
- /**
-@@ -1322,22 +1325,28 @@ static void page_remove_anon_compound_rmap(struct page *page)
-  */
- void page_remove_rmap(struct page *page, bool compound)
+ 	id = swap_cgroup_record(entry, 0, nr_pages);
+@@ -7011,7 +7016,7 @@ long mem_cgroup_get_nr_swap_pages(struct mem_cgroup *memcg)
  {
--	if (!PageAnon(page))
--		return page_remove_file_rmap(page, compound);
-+	lock_page_memcg(page);
+ 	long nr_swap_pages = get_nr_swap_pages();
  
--	if (compound)
--		return page_remove_anon_compound_rmap(page);
-+	if (!PageAnon(page)) {
-+		page_remove_file_rmap(page, compound);
-+		goto out;
-+	}
-+
-+	if (compound) {
-+		page_remove_anon_compound_rmap(page);
-+		goto out;
-+	}
+-	if (!do_swap_account || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
++	if (cgroup_memory_noswap || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
+ 		return nr_swap_pages;
+ 	for (; memcg != root_mem_cgroup; memcg = parent_mem_cgroup(memcg))
+ 		nr_swap_pages = min_t(long, nr_swap_pages,
+@@ -7028,7 +7033,7 @@ bool mem_cgroup_swap_full(struct page *page)
  
- 	/* page still mapped by someone else? */
- 	if (!atomic_add_negative(-1, &page->_mapcount))
--		return;
-+		goto out;
+ 	if (vm_swap_full())
+ 		return true;
+-	if (!do_swap_account || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
++	if (cgroup_memory_noswap || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
+ 		return false;
  
- 	/*
- 	 * We use the irq-unsafe __{inc|mod}_zone_page_stat because
- 	 * these counters are not modified in interrupt context, and
- 	 * pte lock(a spinlock) is held, which implies preemption disabled.
- 	 */
--	__dec_node_page_state(page, NR_ANON_MAPPED);
-+	__dec_lruvec_page_state(page, NR_ANON_MAPPED);
- 
- 	if (unlikely(PageMlocked(page)))
- 		clear_page_mlock(page);
-@@ -1354,6 +1363,8 @@ void page_remove_rmap(struct page *page, bool compound)
- 	 * Leaving it set also helps swapoff to reinstate ptes
- 	 * faster for those pages still in swapcache.
- 	 */
-+out:
-+	unlock_page_memcg(page);
+ 	memcg = page->mem_cgroup;
+@@ -7043,22 +7048,15 @@ bool mem_cgroup_swap_full(struct page *page)
+ 	return false;
  }
  
- /*
+-/* for remember boot option*/
+-#ifdef CONFIG_MEMCG_SWAP_ENABLED
+-static int really_do_swap_account __initdata = 1;
+-#else
+-static int really_do_swap_account __initdata;
+-#endif
+-
+-static int __init enable_swap_account(char *s)
++static int __init setup_swap_account(char *s)
+ {
+ 	if (!strcmp(s, "1"))
+-		really_do_swap_account = 1;
++		cgroup_memory_noswap = 0;
+ 	else if (!strcmp(s, "0"))
+-		really_do_swap_account = 0;
++		cgroup_memory_noswap = 1;
+ 	return 1;
+ }
+-__setup("swapaccount=", enable_swap_account);
++__setup("swapaccount=", setup_swap_account);
+ 
+ static u64 swap_current_read(struct cgroup_subsys_state *css,
+ 			     struct cftype *cft)
+@@ -7124,7 +7122,7 @@ static struct cftype swap_files[] = {
+ 	{ }	/* terminate */
+ };
+ 
+-static struct cftype memsw_cgroup_files[] = {
++static struct cftype memsw_files[] = {
+ 	{
+ 		.name = "memsw.usage_in_bytes",
+ 		.private = MEMFILE_PRIVATE(_MEMSWAP, RES_USAGE),
+@@ -7153,13 +7151,12 @@ static struct cftype memsw_cgroup_files[] = {
+ 
+ static int __init mem_cgroup_swap_init(void)
+ {
+-	if (!mem_cgroup_disabled() && really_do_swap_account) {
+-		do_swap_account = 1;
+-		WARN_ON(cgroup_add_dfl_cftypes(&memory_cgrp_subsys,
+-					       swap_files));
+-		WARN_ON(cgroup_add_legacy_cftypes(&memory_cgrp_subsys,
+-						  memsw_cgroup_files));
+-	}
++	if (mem_cgroup_disabled() || cgroup_memory_noswap)
++		return 0;
++
++	WARN_ON(cgroup_add_dfl_cftypes(&memory_cgrp_subsys, swap_files));
++	WARN_ON(cgroup_add_legacy_cftypes(&memory_cgrp_subsys, memsw_files));
++
+ 	return 0;
+ }
+ subsys_initcall(mem_cgroup_swap_init);
+diff --git a/mm/swap_cgroup.c b/mm/swap_cgroup.c
+index 45affaef3bc6..7aa764f09079 100644
+--- a/mm/swap_cgroup.c
++++ b/mm/swap_cgroup.c
+@@ -171,7 +171,7 @@ int swap_cgroup_swapon(int type, unsigned long max_pages)
+ 	unsigned long length;
+ 	struct swap_cgroup_ctrl *ctrl;
+ 
+-	if (!do_swap_account)
++	if (cgroup_memory_noswap)
+ 		return 0;
+ 
+ 	length = DIV_ROUND_UP(max_pages, SC_PER_PAGE);
+@@ -209,7 +209,7 @@ void swap_cgroup_swapoff(int type)
+ 	unsigned long i, length;
+ 	struct swap_cgroup_ctrl *ctrl;
+ 
+-	if (!do_swap_account)
++	if (cgroup_memory_noswap)
+ 		return;
+ 
+ 	mutex_lock(&swap_cgroup_mutex);
 -- 
 2.26.0
 
