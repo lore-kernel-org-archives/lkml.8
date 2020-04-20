@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04E2C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7A1C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C682B206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7E62078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386423;
-	bh=lU55WaZbyj1wMvqSbLf0bL3kHvkYaGv5VaeW43GHrJk=;
+	s=default; t=1587386427;
+	bh=D9Zh8lCgpiqB7HX8/NwmWCHrVq/g2Z7HfkRe/5ncGN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v98jSmrWfvHjXehwwAAPHuLhk//ZBaEcPfO2NrkHfziByrweyzbBPM/mqw5ssr2SU
-	 unYQMHnCl1EdTA2fGopZOmKUl+B3qDE0eDxCSBA79HkML/LUJM+R/+7l7sJtfMFkRe
-	 ZwIl+4S1nbp5Jp8/dV/9o1FCWsd77Bm8df6rjVI0=
+	b=uP2tK6SPKlCV99lg/xc/XrXoJFd7s+UlLugl9LIag7jlbaRFPTTpwSKPUdOcKPVgp
+	 kX3TLu3E7qPPPSBcREEWlUICad20fyjhZPZeGHe2J4nq1ncWVsMeZXlZqNS7bYo76S
+	 oM+b5w6XeyGm+alK4j+mNQNCrAaZsi3JWzNNhs5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgDTMkW (ORCPT
+        id S1726599AbgDTMk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60626 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:40:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727024AbgDTMkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:40:18 -0400
+        id S1727067AbgDTMkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:40:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29E4D2070B;
-        Mon, 20 Apr 2020 12:40:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13E922070B;
+        Mon, 20 Apr 2020 12:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386417;
-        bh=lU55WaZbyj1wMvqSbLf0bL3kHvkYaGv5VaeW43GHrJk=;
+        s=default; t=1587386422;
+        bh=D9Zh8lCgpiqB7HX8/NwmWCHrVq/g2Z7HfkRe/5ncGN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1p7oSNlgXFUR9nRJorjfxs+T270SfEOPCa2N8JdiP7a1gFITm5/X3j2tAZpzoaFle
-         MHMpV3a/4MDjpyLKHkdGgVqv1gmGXgTEi/ncTXXn2PJKYBVB26OQwq9y9Vimip36B5
-         osHXsRaIa+68fNWj0vWaxB4oxAblDG0TYE7McX/k=
+        b=f+FUgRIeQm6DdObh854xrZqX/IRa6qhVo6h4IsRwK5hLJ06GFpaYtYkBnAzROd8Ea
+         o3Z2rY08wpuMessfTlt4pTrDKkFcXqxCtQ11nHaG+xVLbbAsyRbHvN50w9yjaqK95J
+         I+KX3p4XsHf/GKBGBSTx4VG3iFgLe0iN5qXZVSzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.5 15/65] net/mlx5e: Fix nest_level for vlan pop action
-Date:   Mon, 20 Apr 2020 14:38:19 +0200
-Message-Id: <20200420121509.586805644@linuxfoundation.org>
+        stable@vger.kernel.org, Tim Stallard <code@timstallard.me.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 17/65] net: icmp6: do not select saddr from iif when route has prefsrc set
+Date:   Mon, 20 Apr 2020 14:38:21 +0200
+Message-Id: <20200420121510.180413831@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -60,43 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Linkin <dmitrolin@mellanox.com>
+From: Tim Stallard <code@timstallard.me.uk>
 
-[ Upstream commit 70f478ca085deec4d6c1f187f773f5827ddce7e8 ]
+[ Upstream commit b93cfb9cd3af3adc9ba4854f178d5300f7544d3e ]
 
-Current value of nest_level, assigned from net_device lower_level value,
-does not reflect the actual number of vlan headers, needed to pop.
-For ex., if we have untagged ingress traffic sended over vlan devices,
-instead of one pop action, driver will perform two pop actions.
-To fix that, calculate nest_level as difference between vlan device and
-parent device lower_levels.
+Since commit fac6fce9bdb5 ("net: icmp6: provide input address for
+traceroute6") ICMPv6 errors have source addresses from the ingress
+interface. However, this overrides when source address selection is
+influenced by setting preferred source addresses on routes.
 
-Fixes: f3b0a18bb6cb ("net: remove unnecessary variables and callback")
-Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+This can result in ICMP errors being lost to upstream BCP38 filters
+when the wrong source addresses are used, breaking path MTU discovery
+and traceroute.
+
+This patch sets the modified source address selection to only take place
+when the route used has no prefsrc set.
+
+It can be tested with:
+
+ip link add v1 type veth peer name v2
+ip netns add test
+ip netns exec test ip link set lo up
+ip link set v2 netns test
+ip link set v1 up
+ip netns exec test ip link set v2 up
+ip addr add 2001:db8::1/64 dev v1 nodad
+ip addr add 2001:db8::3 dev v1 nodad
+ip netns exec test ip addr add 2001:db8::2/64 dev v2 nodad
+ip netns exec test ip route add unreachable 2001:db8:1::1
+ip netns exec test ip addr add 2001:db8:100::1 dev lo
+ip netns exec test ip route add 2001:db8::1 dev v2 src 2001:db8:100::1
+ip route add 2001:db8:1000::1 via 2001:db8::2
+traceroute6 -s 2001:db8::1 2001:db8:1000::1
+traceroute6 -s 2001:db8::3 2001:db8:1000::1
+ip netns delete test
+
+Output before:
+$ traceroute6 -s 2001:db8::1 2001:db8:1000::1
+traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
+ 1  2001:db8::2 (2001:db8::2)  0.843 ms !N  0.396 ms !N  0.257 ms !N
+$ traceroute6 -s 2001:db8::3 2001:db8:1000::1
+traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
+ 1  2001:db8::2 (2001:db8::2)  0.772 ms !N  0.257 ms !N  0.357 ms !N
+
+After:
+$ traceroute6 -s 2001:db8::1 2001:db8:1000::1
+traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
+ 1  2001:db8:100::1 (2001:db8:100::1)  8.885 ms !N  0.310 ms !N  0.174 ms !N
+$ traceroute6 -s 2001:db8::3 2001:db8:1000::1
+traceroute to 2001:db8:1000::1 (2001:db8:1000::1), 30 hops max, 80 byte packets
+ 1  2001:db8::2 (2001:db8::2)  1.403 ms !N  0.205 ms !N  0.313 ms !N
+
+Fixes: fac6fce9bdb5 ("net: icmp6: provide input address for traceroute6")
+Signed-off-by: Tim Stallard <code@timstallard.me.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/ipv6/icmp.c |   21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -3221,12 +3221,13 @@ static int add_vlan_pop_action(struct ml
- 			       struct mlx5_esw_flow_attr *attr,
- 			       u32 *action)
- {
--	int nest_level = attr->parse_attr->filter_dev->lower_level;
- 	struct flow_action_entry vlan_act = {
- 		.id = FLOW_ACTION_VLAN_POP,
- 	};
--	int err = 0;
-+	int nest_level, err = 0;
+--- a/net/ipv6/icmp.c
++++ b/net/ipv6/icmp.c
+@@ -229,6 +229,25 @@ static bool icmpv6_xrlim_allow(struct so
+ 	return res;
+ }
  
-+	nest_level = attr->parse_attr->filter_dev->lower_level -
-+						priv->netdev->lower_level;
- 	while (nest_level--) {
- 		err = parse_tc_vlan_action(priv, &vlan_act, attr, action);
- 		if (err)
++static bool icmpv6_rt_has_prefsrc(struct sock *sk, u8 type,
++				  struct flowi6 *fl6)
++{
++	struct net *net = sock_net(sk);
++	struct dst_entry *dst;
++	bool res = false;
++
++	dst = ip6_route_output(net, sk, fl6);
++	if (!dst->error) {
++		struct rt6_info *rt = (struct rt6_info *)dst;
++		struct in6_addr prefsrc;
++
++		rt6_get_prefsrc(rt, &prefsrc);
++		res = !ipv6_addr_any(&prefsrc);
++	}
++	dst_release(dst);
++	return res;
++}
++
+ /*
+  *	an inline helper for the "simple" if statement below
+  *	checks if parameter problem report is caused by an
+@@ -527,7 +546,7 @@ static void icmp6_send(struct sk_buff *s
+ 		saddr = force_saddr;
+ 	if (saddr) {
+ 		fl6.saddr = *saddr;
+-	} else {
++	} else if (!icmpv6_rt_has_prefsrc(sk, type, &fl6)) {
+ 		/* select a more meaningful saddr from input if */
+ 		struct net_device *in_netdev;
+ 
 
 
