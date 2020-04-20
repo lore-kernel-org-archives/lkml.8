@@ -2,90 +2,191 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376DAC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14103C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 111B221927
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:29:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d2qXA6v+"
+	by mail.kernel.org (Postfix) with ESMTP id E54AA214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgDTI3N (ORCPT
+        id S1726285AbgDTI34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:29:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgDTI3M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:29:12 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7033C061A0C;
-        Mon, 20 Apr 2020 01:29:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IqO0rH/XwB4jj2Xbm/MnV+bQAuc82OBA3N+hT9MUMh0=; b=d2qXA6v+SNk5E4HWTuJcwW6zBn
-        DB1oSYdGQF1W4KKLZf9Ds+4wUNsRVg365/r3rjS/0JSpP8Vsh4xWwpOBUjf1/vp3uslgkQN80gG6h
-        yMBJFQ1pwH9iKLSriw3RG73+stuI6syQo8t9T0BIp4KRaBcmjYmKuwg4LqryDDL2X2fYVyXIRkUl0
-        7WaB1Z+4BzMMXn3uzsNjSpRav6VqCOwDAi5ZAjUAwF/5JAuEDpOqmS86f2gPR940LS5e+0fOlAnMS
-        Ml+O+FzmAu+Pqptaid6xzcjqQEpgnjNFfs9zpfvZ/LME9fc+V1v+1WJZLxJk1eX42+EGk5JwdGlGe
-        /iRiWEhw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQRnh-0002G7-Jz; Mon, 20 Apr 2020 08:29:09 +0000
-Date:   Mon, 20 Apr 2020 01:29:09 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Richard Earnshaw <Richard.Earnshaw@arm.com>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jason Wang <jasowang@redhat.com>, netdev@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v3] vhost: disable for OABI
-Message-ID: <20200420082909.GA28749@infradead.org>
-References: <20200416221902.5801-1-mst@redhat.com>
+        Mon, 20 Apr 2020 04:29:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:45042 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbgDTI34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:29:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11C7030E;
+        Mon, 20 Apr 2020 01:29:55 -0700 (PDT)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BA1A3F6CF;
+        Mon, 20 Apr 2020 01:29:48 -0700 (PDT)
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+To:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200403123020.13897-1-qais.yousef@arm.com>
+Message-ID: <292dbd54-e590-dc4f-41e6-5f86e478c0ee@arm.com>
+Date:   Mon, 20 Apr 2020 10:29:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416221902.5801-1-mst@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200403123020.13897-1-qais.yousef@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 06:20:20PM -0400, Michael S. Tsirkin wrote:
-> vhost is currently broken on the some ARM configs.
-> 
-> The reason is that that uses apcs-gnu which is the ancient OABI that is been
-> deprecated for a long time.
-> 
-> Given that virtio support on such ancient systems is not needed in the
-> first place, let's just add something along the lines of
-> 
-> 	depends on !ARM || AEABI
-> 
-> to the virtio Kconfig declaration, and add a comment that it has to do
-> with struct member alignment.
-> 
-> Note: we can't make VHOST and VHOST_RING themselves have
-> a dependency since these are selected. Add a new symbol for that.
+On 03.04.20 14:30, Qais Yousef wrote:
 
-This description is horrible.  The only interesting thing for ARM OABI
-is that it has some strange padding rules, but that isn't something
-that can't be handled.   Please spend some time looking into the issue
-and add te proper __padded annotations, we've done that elsewhere in
-the kernel and it isn't too bad - in fact it helps understanding issues
-with implicit alignment.
+[...]
 
-And even if you have a good reason not to fix vhost (which I think you
-don't have) this changelog is just utter crap, as it fails to mention
-what the problem with ARM OABI even is.
+> @@ -924,6 +945,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+>  	return uc_req;
+>  }
+>  
+> +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
+> +{
+> +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+> +
+> +	if (!uc_se->user_defined)
+> +		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
+> +}
+> +
+>  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+>  {
+>  	struct uclamp_se uc_eff;
+> @@ -1030,6 +1059,12 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+>  	if (unlikely(!p->sched_class->uclamp_enabled))
+>  		return;
+>  
+> +	/*
+> +	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
+> +	 * user, we apply any new value on the next wakeup, which is here.
+> +	 */
+> +	uclamp_rt_sync_default_util_min(p);
+> +
+
+Does this have to be an extra function? Can we not reuse
+uclamp_tg_restrict() by slightly rename it to uclamp_restrict()?
+
+This function will then deal with enforcing restrictions, whether system
+and taskgroup hierarchy related or default value (latter only for rt-min
+right now since the others are fixed) related.
+
+uclamp_eff_get() -> uclamp_restrict() is called from:
+
+  'enqueue_task(), uclamp_update_active() -> uclamp_rq_inc() -> uclamp_rq_inc_id()' and
+
+  'task_fits_capacity() -> clamp_task_util(), rt_task_fits_capacity() -> uclamp_eff_value()' and
+
+  'schedutil_cpu_util(), find_energy_efficient_cpu() -> uclamp_rq_util_with() -> uclamp_eff_value()'
+
+so there would be more check-points than the one in 'enqueue_task() -> uclamp_rq_inc()' now.
+
+Only lightly tested:
+
+---8<---
+
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Date: Sun, 19 Apr 2020 01:20:17 +0200
+Subject: [PATCH] sched/core: uclamp: Move uclamp_rt_sync_default_util_min()
+ into uclamp_tg_restrict()
+
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+---
+ kernel/sched/core.c | 34 +++++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8f4e0d5c7daf..6802113d6d4b 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -899,12 +899,22 @@ unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+ }
+ 
+ static inline struct uclamp_se
+-uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
++uclamp_restrict(struct task_struct *p, enum uclamp_id clamp_id)
+ {
+-	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
+-#ifdef CONFIG_UCLAMP_TASK_GROUP
+-	struct uclamp_se uc_max;
++	struct uclamp_se uc_req, __maybe_unused uc_max;
++
++	if (unlikely(rt_task(p)) && clamp_id == UCLAMP_MIN &&
++	    !uc_req.user_defined) {
++		struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
++		int rt_min = sysctl_sched_rt_default_uclamp_util_min;
++
++		if (uc_se->value != rt_min)
++			uclamp_se_set(uc_se, rt_min, false);
++	}
+ 
++	uc_req = p->uclamp_req[clamp_id];
++
++#ifdef CONFIG_UCLAMP_TASK_GROUP
+ 	/*
+ 	 * Tasks in autogroups or root task group will be
+ 	 * restricted by system defaults.
+@@ -933,7 +943,7 @@ uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
+ static inline struct uclamp_se
+ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+ {
+-	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
++	struct uclamp_se uc_req = uclamp_restrict(p, clamp_id);
+ 	struct uclamp_se uc_max = uclamp_default[clamp_id];
+ 
+ 	/* System default restrictions always apply */
+@@ -943,14 +953,6 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+ 	return uc_req;
+ }
+ 
+-static void uclamp_rt_sync_default_util_min(struct task_struct *p)
+-{
+-	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+-
+-	if (!uc_se->user_defined)
+-		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
+-}
+-
+ unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+ {
+ 	struct uclamp_se uc_eff;
+@@ -1057,12 +1059,6 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+ 	if (unlikely(!p->sched_class->uclamp_enabled))
+ 		return;
+ 
+-	/*
+-	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
+-	 * user, we apply any new value on the next wakeup, which is here.
+-	 */
+-	uclamp_rt_sync_default_util_min(p);
+-
+ 	for_each_clamp_id(clamp_id)
+ 		uclamp_rq_inc_id(rq, p, clamp_id);
+ 
+-- 
+2.17.1
