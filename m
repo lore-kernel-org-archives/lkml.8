@@ -2,51 +2,53 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE773C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE6FC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAFE2206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE5820735
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386878;
-	bh=HFt2cNSRVwRrNyRATsHeOZAVGfis+zFjOerb5zwBaPs=;
+	s=default; t=1587386886;
+	bh=vvtxPGNY4H3Zah+sQGG8PCj/JswP2BP8CzeJyE9ExMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=COVTCYsnyCI/iv21VvlX1ujTU7dhGoCTfDVmQruhb78Fe24PiHHQcfE1SnsxZ3/57
-	 a9zJkFZOaU58OYRljBUOoeHy9xN5uDugh1iGAesFUAwdycyF8ePyOvvs+MQfAjCerO
-	 VHSJ54ToIVpj/4JVQcGS99wz1Wj0aIHEKP7FSReU=
+	b=toYKVe9a4Sa6/ipoxCLgh/gnGdVwmKE2Wd0s/B7BQFXc8s1PoXvyiIYAinOUUqVu7
+	 Vv0KAuvkI1PLfnP/NrF73dLEpdoS4snUTarr9uG4WqOXlDOfiuKytA/zLj5GGuPguZ
+	 6glgw4RTPy3i1tQtoBCHUmkOemk03Rkdz10Hc5Po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbgDTMr5 (ORCPT
+        id S1729191AbgDTMsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44070 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:48:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729147AbgDTMrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:47:48 -0400
+        id S1729172AbgDTMsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:48:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F70E206D4;
-        Mon, 20 Apr 2020 12:47:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76BB0206DD;
+        Mon, 20 Apr 2020 12:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386867;
-        bh=HFt2cNSRVwRrNyRATsHeOZAVGfis+zFjOerb5zwBaPs=;
+        s=default; t=1587386880;
+        bh=vvtxPGNY4H3Zah+sQGG8PCj/JswP2BP8CzeJyE9ExMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q6mMuE+zFfFCtF+QgRcYESnaqMgoKf5y1Rze1s7z1XVTZDwNQOga9+KediHu/XXiS
-         BY9E9qcC4fehvg4X/6fBQ1JeooKKmSmu2ZhcYSnKNy7JHDIk9wWHLL5baQP4WsFsoa
-         K72o3uJyLau3DLlaTCpdgP9Nmppt9E3qUfR7mwpU=
+        b=fDUdFpeONQBrjjfdT1Lwv52jGj4UJAmxRfYFaPl1BSRONSdLYkbE4+z9yDipTzTdm
+         vcrR5ExfIyDJatomlybJvjjPDl8HMEW23q6R9Wjn15GVMU2MU/Py20Nir0CgIfmTr7
+         Juo1wtQ36wqSQDrSxchjTB1XRZKNhSYG2WbcyS+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Allen <john.allen@amd.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.4 60/60] x86/microcode/AMD: Increase microcode PATCH_MAX_SIZE
-Date:   Mon, 20 Apr 2020 14:39:38 +0200
-Message-Id: <20200420121516.353448570@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 49/60] net/mlx5e: Rename hw_modify to preactivate
+Date:   Mon, 20 Apr 2020 14:39:27 +0200
+Message-Id: <20200420121513.644507412@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121500.490651540@linuxfoundation.org>
 References: <20200420121500.490651540@linuxfoundation.org>
@@ -59,33 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Allen <john.allen@amd.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-commit bdf89df3c54518eed879d8fac7577fcfb220c67e upstream.
+[ Upstream commit dca147b3dce5abb5284ff747211960fd2db5ec2e ]
 
-Future AMD CPUs will have microcode patches that exceed the default 4K
-patch size. Raise our limit.
+mlx5e_safe_switch_channels accepts a callback to be called before
+activating new channels. It is intended to configure some hardware
+parameters in cases where channels are recreated because some
+configuration has changed.
 
-Signed-off-by: John Allen <john.allen@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: stable@vger.kernel.org # v4.14..
-Link: https://lkml.kernel.org/r/20200409152931.GA685273@mojo.amd.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Recently, this callback has started being used to update the driver's
+internal MLX5E_STATE_XDP_OPEN flag, and the following patches also
+intend to use this callback for software preparations. This patch
+renames the hw_modify callback to preactivate, so that the name fits
+better.
 
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/microcode_amd.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h      |  6 +++---
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 14 ++++++++------
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
---- a/arch/x86/include/asm/microcode_amd.h
-+++ b/arch/x86/include/asm/microcode_amd.h
-@@ -41,7 +41,7 @@ struct microcode_amd {
- 	unsigned int			mpb[0];
- };
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 55ceabf077b29..3cb5b4321bf93 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -1035,14 +1035,14 @@ int mlx5e_open_channels(struct mlx5e_priv *priv,
+ 			struct mlx5e_channels *chs);
+ void mlx5e_close_channels(struct mlx5e_channels *chs);
  
--#define PATCH_MAX_SIZE PAGE_SIZE
-+#define PATCH_MAX_SIZE (3 * PAGE_SIZE)
+-/* Function pointer to be used to modify WH settings while
++/* Function pointer to be used to modify HW or kernel settings while
+  * switching channels
+  */
+-typedef int (*mlx5e_fp_hw_modify)(struct mlx5e_priv *priv);
++typedef int (*mlx5e_fp_preactivate)(struct mlx5e_priv *priv);
+ int mlx5e_safe_reopen_channels(struct mlx5e_priv *priv);
+ int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
+ 			       struct mlx5e_channels *new_chs,
+-			       mlx5e_fp_hw_modify hw_modify);
++			       mlx5e_fp_preactivate preactivate);
+ void mlx5e_activate_priv_channels(struct mlx5e_priv *priv);
+ void mlx5e_deactivate_priv_channels(struct mlx5e_priv *priv);
  
- #ifdef CONFIG_MICROCODE_AMD
- extern void __init load_ucode_amd_bsp(unsigned int family);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index dc456a222c48d..c58f02258ddfa 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -2965,7 +2965,7 @@ void mlx5e_deactivate_priv_channels(struct mlx5e_priv *priv)
+ 
+ static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
+ 				       struct mlx5e_channels *new_chs,
+-				       mlx5e_fp_hw_modify hw_modify)
++				       mlx5e_fp_preactivate preactivate)
+ {
+ 	struct net_device *netdev = priv->netdev;
+ 	int new_num_txqs;
+@@ -2984,9 +2984,11 @@ static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
+ 
+ 	priv->channels = *new_chs;
+ 
+-	/* New channels are ready to roll, modify HW settings if needed */
+-	if (hw_modify)
+-		hw_modify(priv);
++	/* New channels are ready to roll, call the preactivate hook if needed
++	 * to modify HW settings or update kernel parameters.
++	 */
++	if (preactivate)
++		preactivate(priv);
+ 
+ 	priv->profile->update_rx(priv);
+ 	mlx5e_activate_priv_channels(priv);
+@@ -2998,7 +3000,7 @@ static void mlx5e_switch_priv_channels(struct mlx5e_priv *priv,
+ 
+ int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
+ 			       struct mlx5e_channels *new_chs,
+-			       mlx5e_fp_hw_modify hw_modify)
++			       mlx5e_fp_preactivate preactivate)
+ {
+ 	int err;
+ 
+@@ -3006,7 +3008,7 @@ int mlx5e_safe_switch_channels(struct mlx5e_priv *priv,
+ 	if (err)
+ 		return err;
+ 
+-	mlx5e_switch_priv_channels(priv, new_chs, hw_modify);
++	mlx5e_switch_priv_channels(priv, new_chs, preactivate);
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
+
 
 
