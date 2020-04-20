@@ -2,172 +2,125 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631CBC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A360C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2654620A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5623920CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:59:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="HX2Nlo/T";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="RquGAnHy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aQxT1hRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgDTI5s (ORCPT
+        id S1726067AbgDTI7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:57:48 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:28948 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbgDTI5r (ORCPT
+        Mon, 20 Apr 2020 04:59:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52234 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725959AbgDTI67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:57:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587373067; x=1618909067;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=E23YSq0J6DDTP4u4E7SA98uuIEGqYvHWRiyzO3/Irhc=;
-  b=HX2Nlo/TQRPIOvGEHy6uHsQawFmQpgOgROyhhfdjUlQuOahTD8zd179t
-   yxgoVkJvLHmIccCx/5srq6DCWEUc46ZHEjth3xeh1Avvmc5M0oq0dNG9R
-   y8Tg5Ixb0dTkzLBa4+U6b268Ijw134u1GypnKqCh8/Ye0unj3bZcRUEOT
-   +BNJF7rZc1J6fxaciyFXKWAZ0SPesIHAirO3O7/h69bPN7zOpgRzkzlx1
-   Wk0wVRwCkG7C1i4dTXS7uJpQHTxM40DPx/P38Rs5obi8/LPx1gl8ArGKU
-   ONp6I+w5LpdrqGb8aOgNwnZUhlu65WHW/XocJ5VsatjGK3IE3EKo6RvCl
-   g==;
-IronPort-SDR: 4Z96JFkWbAIR+MhQYI+YtTyJfz6nI8/W3QCzFVKLwOt2RslIrs/yltCSfjgJjY+KzX5gVLo8u9
- uTuXVoL5QdBGHdIkOAoXnn+nqZA6jVJbPhLI2NR+fBdIiIRm4gCShYW7kFfNjmTqK5RDi/5eRM
- EkREoWM9zdQXisIDdZPSnOXFo00WTRe5+V0bpqzHbxFIayl2RjH/mJKxn+3uR1vA4MQBwNYzKe
- RRF1xDfuLXCbx2hCcVaHDR3XUAbpySm8PLjNzFBt1SoM8aixHT1Xil/9BMYLGk9w5AE7pidW0s
- bhw=
-X-IronPort-AV: E=Sophos;i="5.72,406,1580799600"; 
-   d="scan'208";a="73099098"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Apr 2020 01:57:46 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 20 Apr 2020 01:57:46 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 20 Apr 2020 01:57:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=laxQwLir/5nwtOEmiOPm59ZYUy4xcS9+KYuLuKAif5WeKTeMVnfbCnXzPIzBITRFTHAbgCptCaDNldJp+5ynWO9+v4LZV5u2niZFrvQjFln3wDdQ8pfC3YBKI00Q7XKDtdN20adT2i0U1eIzB8YpP5QyRnkDeQX9V8qIZoWzIB2UWgSugy0gcPkVzRkzIKcZph0F60Ij8rUH1uWq8SF/+8UjalftmL7MCc6HZVHwW1wbnMGrEMEt9ftn3G8nK4T35D38WOsdmcyVSHkgs2qYy4L/91nnQs/Eb0rLkhoPIOre/vNVgBDV40nk/tnBnLvHdJTkNOQs53jYfiR+OEva7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kyxDWbvFTRxAyVb0mPwGVjyjB7bjb3m2H2iAhc9r+0Q=;
- b=U+wFmm1NEV4E7IcQeuloPk7DL/mA2UZtq3DqcJQQ4iAIbpFOOjT8+GMkILQ8PZ5Dtio46KzGdskZr8Kicvwcz5pA9rjJvhG1xBE6ka/5VT3prNjqe/rip28QvWhOc0IKWA/UQO/39Bdb1SI3ZzO+jFPDH6xXWV9S1ue2lS/AuVGEEiIK4KyOoF21sYSsk9U8bFTX5eHeWE1lLhsYNO2Q5jCmLVIHAocteJxPDG9RvKsVSHbfkmV8WYVCfKcWQ+D/bARUYmHfh0woC2j/1HFnT4HGVsO4GuQ51n7YQOGn2Q+1x7YGIzqvUamsW4sOnPsHFLTVsUVB8AI9NQiA2GjZBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kyxDWbvFTRxAyVb0mPwGVjyjB7bjb3m2H2iAhc9r+0Q=;
- b=RquGAnHyafAcAmj47RCKrmfNXgT0Jn63BOA4llyMjUhm46a7Kc3cmmm39SILQFRG9c4Qvgh+9dGkVhhLzGcb83VxRHiHULuvKeITj2lYDxSKXkw9HXqUTTjkjoC09zr2DMuVRC2wQFHiTin6G2kTANUmgGvWTWNXUAt3zM6oWFA=
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
- by BY5PR11MB3878.namprd11.prod.outlook.com (2603:10b6:a03:182::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Mon, 20 Apr
- 2020 08:57:43 +0000
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
- 08:57:42 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <masonccyang@mxic.com.tw>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <juliensu@mxic.com.tw>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: macronix: Add mx25u51245g support
-Thread-Topic: [PATCH 2/2] mtd: spi-nor: macronix: Add mx25u51245g support
-Thread-Index: AQHWFvHANv13lIezFkiOi0jmtp6uRQ==
-Date:   Mon, 20 Apr 2020 08:57:42 +0000
-Message-ID: <3097723.HxHl8gbcWJ@192.168.0.120>
-References: <1586163611-4565-1-git-send-email-masonccyang@mxic.com.tw>
- <1586163611-4565-3-git-send-email-masonccyang@mxic.com.tw>
-In-Reply-To: <1586163611-4565-3-git-send-email-masonccyang@mxic.com.tw>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Tudor.Ambarus@microchip.com; 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ab0366f5-b2f1-46df-4608-08d7e508e32a
-x-ms-traffictypediagnostic: BY5PR11MB3878:
-x-microsoft-antispam-prvs: <BY5PR11MB38788A314F1E4DCD6E96B470F0D40@BY5PR11MB3878.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
-x-forefront-prvs: 03793408BA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(136003)(39860400002)(396003)(376002)(346002)(366004)(54906003)(316002)(6506007)(53546011)(9686003)(26005)(2906002)(6512007)(86362001)(5660300002)(6916009)(6486002)(81156014)(8936002)(14286002)(186003)(4326008)(76116006)(71200400001)(478600001)(66946007)(66556008)(66446008)(66476007)(64756008)(91956017)(8676002)(39026012);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OyXXgRa33nCXIGbGFEfZSdv6753i1dh8fT3eBtybAX+NA9WW8rfau56PCxExGkls8j4da541a0sFC4+jlZO1kzfS9/UnZHNxuGVe59I63zUQqi8L/gTWtC4FmEstk6BQ6UBUxDayu7W5j7aCjMjosYh8a+1baYWq6xM/djVTmIz+CDNAv43x2RvR57miow+4ffa/LRpHIDZ2OjKxLebbxdRI9sQo//ck70+ItIM/WyzNc+zhXhfHMAzqnoHeAacayaiTkKLADjwoRdKWvPOtGIg4usM7dunSHru8yapA9D9Ju08tN/qfYdXpb9W40c6mCkFh+zqaphuQs5OmuJupEgWKf5l5a6XsxDMqYdSNeqVTfBCtsxtrtXRK/C5H5JMAa4bFSPdXdNzvFh713w4hPlEIje6ekmlFb0dIKUL61Ve/37hU4K5D5EpX7pPt+OI5sxqdc3LpKaHfwsemKbjUiPhbPplqyNKr+qpBS7CVVHS+x6Tj1FnCBxqUrpVMceGI
-x-ms-exchange-antispam-messagedata: HoV9I+DdzWYU1zjgm+IoGFE5aHdFIQCSSNMxTo79hElDqKv6yeTbQnZIb/BtmXzwxaohiO/aP+DtrLs7SkvM5YiH7AfOgsTf8KGgoUcdGhvaS3kQcPFC35sfh2zs8LV+luj+/H7i8Bv2+NWe8JctkA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <57C680001698114395CA3E1C226FA7BB@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Apr 2020 04:58:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587373137;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Bz93CG5tgmLS8pJDkO23pSfLYauBKXmOP1VWfhP+LYw=;
+        b=aQxT1hRtQGyPIMj2Pfy8IFUnex+XVkj6ZCx0kaPk690G4TUyFGbuOXpuZc/sofBPJa9YHa
+        r4+CWUV0wbUEcEOooOni9hJ3oshgm1i4g2zHO3wDPs+oPZTuqV09THa3VFKc1iGAFq0sNP
+        Fo1fNyPjVAbJdP6948FXk9K8Dyta/sU=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-8-TtXea8YEM1Wt7GgfmbBbvQ-1; Mon, 20 Apr 2020 04:58:52 -0400
+X-MC-Unique: TtXea8YEM1Wt7GgfmbBbvQ-1
+Received: by mail-qv1-f69.google.com with SMTP id dc4so9541438qvb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 01:58:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bz93CG5tgmLS8pJDkO23pSfLYauBKXmOP1VWfhP+LYw=;
+        b=RcPAG7VV/lnodCS25kolo+s8Ik5dG3WTT+CznIwzHbtNXGbiTRxnABKX5FlVLnHCWw
+         W2LIgwnWkwb0l57eQb5OkSjg/JKG7OU9Aks1HM+zSaR9wwz62itcejVh0BsMl9SqtCB7
+         BFjZAFPGfnX3aE5LH0/QXwwhh/C6JnWufb5dGzp3NgKYIoe+0chEAjHB1WIOKNLw/q9T
+         eNwE8FwiPucaLbohVUVce8c6z8vK20Kvn061HE884P76j7kdV2YR4O66BjBLmuVFAeKo
+         dU8GbX2Gw3zaCADNy83BRuWU9AqIkn+VggYicmQyhsojFrWAJcmJYJ5pQtqVAxya5Od2
+         qsUA==
+X-Gm-Message-State: AGi0PubYoi3VBak9oUe95NizNz/WakwqHtrXjl1XaXOyxt/Q6ctvvJtX
+        al9J8XoOGb+wAey4sGT4lkhZ58Wty5XfwKAuRiHMUjWQY3vfTwJSx4m1Uww4GbPaex2Q9KvN+bO
+        ONGteolLJ3HOGDr5zlsy5puLgoguY4FdHXnpw37cU
+X-Received: by 2002:ae9:ed92:: with SMTP id c140mr8007661qkg.29.1587373131729;
+        Mon, 20 Apr 2020 01:58:51 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIjRvIlDDg57MantknXiQ5Jwc+acww2bCZ5DeZC+XsS6aRa5FxXy575F8K7vkHScc9X0dsku5X4PlBNJJp3zz0=
+X-Received: by 2002:ae9:ed92:: with SMTP id c140mr8007648qkg.29.1587373131491;
+ Mon, 20 Apr 2020 01:58:51 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab0366f5-b2f1-46df-4608-08d7e508e32a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 08:57:42.8832
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gPdHAq6HiyBjsjCQlsb61Lruv2g+nVHsVW2UkNC1LV8ZUzK36XLH/e2jsaK0nDSBWTpO1tCGrslfUU0lmSYJiZlH1uLqoQV7ppbH3ajkMNY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3878
+References: <20200416143532.11743-1-mszeredi@redhat.com> <c47459a5-3323-121e-ec66-4a8eb2a8afca@samba.org>
+ <CAOssrKe7RNyReAFLoQGBDm79qMdXEubhP5QhG_+UmGZXgeXBkA@mail.gmail.com> <3dce8811-a54e-1f74-c7ed-715b97a4652c@samba.org>
+In-Reply-To: <3dce8811-a54e-1f74-c7ed-715b97a4652c@samba.org>
+From:   Miklos Szeredi <mszeredi@redhat.com>
+Date:   Mon, 20 Apr 2020 10:58:40 +0200
+Message-ID: <CAOssrKcVddL5URQ0Vy79eQOscqTTK115Ro0Eqe8Q9kdkNJspCg@mail.gmail.com>
+Subject: Re: [PATCH] vfs: add faccessat2 syscall
+To:     Stefan Metzmacher <metze@samba.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Eric Sandeen <sandeen@sandeen.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Mason,
+On Sat, Apr 18, 2020 at 10:23 PM Stefan Metzmacher <metze@samba.org> wrote:
+>
+> Am 18.04.20 um 21:00 schrieb Miklos Szeredi:
+> > On Sat, Apr 18, 2020 at 8:36 PM Stefan Metzmacher <metze@samba.org> wrote:
+> >>
+> >> Hi Miklos,
+> >>
+> >>> POSIX defines faccessat() as having a fourth "flags" argument, while the
+> >>> linux syscall doesn't have it.  Glibc tries to emulate AT_EACCESS and
+> >>> AT_SYMLINK_NOFOLLOW, but AT_EACCESS emulation is broken.
+> >>>
+> >>> Add a new faccessat(2) syscall with the added flags argument and implement
+> >>> both flags.
+> >>>
+> >>> The value of AT_EACCESS is defined in glibc headers to be the same as
+> >>> AT_REMOVEDIR.  Use this value for the kernel interface as well, together
+> >>> with the explanatory comment.
+> >>
+> >> It would be nice if resolv_flags would also be passed in addition to the
+> >> at flags.
+> >> See:https://lore.kernel.org/linux-api/CAHk-=wiaL6zznNtCHKg6+MJuCqDxO=yVfms3qR9A0czjKuSSiA@mail.gmail.com/
+> >>
+> >> We should avoid expecting yet another syscall in near future.
+> >
+> > What is the objection against
+> >
+> > openat(... O_PATH)
+> > foobarat(fd, AT_EMPTY_PATH, ...)
+>
+> openat2(), foobarat(), close() are 3 syscalls vs. just one.
 
-On Monday, April 6, 2020 12:00:11 PM EEST Mason Yang wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
-e
-> content is safe
->=20
-> mx25u51245g is a mass production for new design and
-> replace mx66u51235f(phase out).
->=20
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  drivers/mtd/spi-nor/macronix.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macroni=
-x.c
-> index c864ac8..e685aec 100644
-> --- a/drivers/mtd/spi-nor/macronix.c
-> +++ b/drivers/mtd/spi-nor/macronix.c
-> @@ -73,6 +73,9 @@
->         { "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024,
->                               SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
->                               SPI_NOR_4B_OPCODES) },
-> +       { "mx25u51245g", INFO(0xc2253a, 0, 64 * 1024, 1024,
+That's not a good argument.  We could have a million specialized
+syscalls that all do very useful things.  Except it would be a
+nightmare in terms of maintenance...
 
-Shouldn't the ID be 0xc2953a?
+"do one thing and do it well"
 
-We usually don't add new flashes if they are not tested. Please specify in =
-the=20
-commit message with which controller you tested the flash. Please do the sa=
-me=20
-for the previous patch.
+> As we have the new features available, I think it would be
+> good to expose them to userspace for all new syscalls, so
+> that applications can avoid boiler plate stuff around each syscall
+> and get better performance in a world where context switches are not for
+> free.
 
-The minimal test is a read, erase, read back, write and read back. This=20
-sequence should verify if read, erase and pp work fine.
+The io-uring guys are working on that problem, AFAIK.
 
-Cheers,
-ta
+Thanks,
+Miklos
 
