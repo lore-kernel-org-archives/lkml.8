@@ -2,191 +2,80 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14103C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D8DC54FCC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E54AA214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B30F21927
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 08:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgDTI34 (ORCPT
+        id S1726324AbgDTIaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:29:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:45042 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgDTI34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:29:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11C7030E;
-        Mon, 20 Apr 2020 01:29:55 -0700 (PDT)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BA1A3F6CF;
-        Mon, 20 Apr 2020 01:29:48 -0700 (PDT)
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-To:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200403123020.13897-1-qais.yousef@arm.com>
-Message-ID: <292dbd54-e590-dc4f-41e6-5f86e478c0ee@arm.com>
-Date:   Mon, 20 Apr 2020 10:29:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 04:30:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46522 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgDTIaE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:30:04 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 569992A0A02;
+        Mon, 20 Apr 2020 09:30:02 +0100 (BST)
+Date:   Mon, 20 Apr 2020 10:29:59 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200420102959.2659774d@collabora.com>
+In-Reply-To: <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200403123020.13897-1-qais.yousef@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.04.20 14:30, Qais Yousef wrote:
+On Fri, 17 Apr 2020 16:21:47 +0800
+"Ramuthevar,Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-[...]
-
-> @@ -924,6 +945,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
->  	return uc_req;
->  }
->  
-> +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
-> +{
-> +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
 > +
-> +	if (!uc_se->user_defined)
-> +		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
-> +}
+> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
+> +	lgm_host->nandaddr_va = res;
+> +	nandaddr_pa = res->start;
+> +	if (IS_ERR(lgm_host->nandaddr_va))
+> +		return PTR_ERR(lgm_host->nandaddr_va);
+
+Hm, I didn't realize you needed the physical address for DMA transfers.
+Just use platform_get_resource_by_name()+devm_ioremap_resource() in
+that case.
+
+
 > +
->  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
->  {
->  	struct uclamp_se uc_eff;
-> @@ -1030,6 +1059,12 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
->  	if (unlikely(!p->sched_class->uclamp_enabled))
->  		return;
->  
-> +	/*
-> +	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
-> +	 * user, we apply any new value on the next wakeup, which is here.
-> +	 */
-> +	uclamp_rt_sync_default_util_min(p);
-> +
+> +	writel(LGM_BUSCON_CMULT_V4 | LGM_BUSCON_RECOVC(1) |
+> +	       LGM_BUSCON_HOLDC(1) | LGM_BUSCON_WAITRDC(2) |
+> +	       LGM_BUSCON_WAITWRC(2) | LGM_BUSCON_BCGEN_CS | LGM_BUSCON_ALEC |
+> +	       LGM_BUSCON_SETUP_EN, lgm_host->lgm_va + LGM_BUSCON(cs));
 
-Does this have to be an extra function? Can we not reuse
-uclamp_tg_restrict() by slightly rename it to uclamp_restrict()?
-
-This function will then deal with enforcing restrictions, whether system
-and taskgroup hierarchy related or default value (latter only for rt-min
-right now since the others are fixed) related.
-
-uclamp_eff_get() -> uclamp_restrict() is called from:
-
-  'enqueue_task(), uclamp_update_active() -> uclamp_rq_inc() -> uclamp_rq_inc_id()' and
-
-  'task_fits_capacity() -> clamp_task_util(), rt_task_fits_capacity() -> uclamp_eff_value()' and
-
-  'schedutil_cpu_util(), find_energy_efficient_cpu() -> uclamp_rq_util_with() -> uclamp_eff_value()'
-
-so there would be more check-points than the one in 'enqueue_task() -> uclamp_rq_inc()' now.
-
-Only lightly tested:
-
----8<---
-
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Date: Sun, 19 Apr 2020 01:20:17 +0200
-Subject: [PATCH] sched/core: uclamp: Move uclamp_rt_sync_default_util_min()
- into uclamp_tg_restrict()
-
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
----
- kernel/sched/core.c | 34 +++++++++++++++-------------------
- 1 file changed, 15 insertions(+), 19 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8f4e0d5c7daf..6802113d6d4b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -899,12 +899,22 @@ unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
- }
- 
- static inline struct uclamp_se
--uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
-+uclamp_restrict(struct task_struct *p, enum uclamp_id clamp_id)
- {
--	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
--#ifdef CONFIG_UCLAMP_TASK_GROUP
--	struct uclamp_se uc_max;
-+	struct uclamp_se uc_req, __maybe_unused uc_max;
-+
-+	if (unlikely(rt_task(p)) && clamp_id == UCLAMP_MIN &&
-+	    !uc_req.user_defined) {
-+		struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-+		int rt_min = sysctl_sched_rt_default_uclamp_util_min;
-+
-+		if (uc_se->value != rt_min)
-+			uclamp_se_set(uc_se, rt_min, false);
-+	}
- 
-+	uc_req = p->uclamp_req[clamp_id];
-+
-+#ifdef CONFIG_UCLAMP_TASK_GROUP
- 	/*
- 	 * Tasks in autogroups or root task group will be
- 	 * restricted by system defaults.
-@@ -933,7 +943,7 @@ uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
- static inline struct uclamp_se
- uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
- {
--	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
-+	struct uclamp_se uc_req = uclamp_restrict(p, clamp_id);
- 	struct uclamp_se uc_max = uclamp_default[clamp_id];
- 
- 	/* System default restrictions always apply */
-@@ -943,14 +953,6 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
- 	return uc_req;
- }
- 
--static void uclamp_rt_sync_default_util_min(struct task_struct *p)
--{
--	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
--
--	if (!uc_se->user_defined)
--		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
--}
--
- unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
- {
- 	struct uclamp_se uc_eff;
-@@ -1057,12 +1059,6 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
- 	if (unlikely(!p->sched_class->uclamp_enabled))
- 		return;
- 
--	/*
--	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
--	 * user, we apply any new value on the next wakeup, which is here.
--	 */
--	uclamp_rt_sync_default_util_min(p);
--
- 	for_each_clamp_id(clamp_id)
- 		uclamp_rq_inc_id(rq, p, clamp_id);
- 
--- 
-2.17.1
+I'm sure some the timings you hardcode here can be extracted from the
+NAND timings. Can you see if you can implement ->setup_data_interface()
+instead.
