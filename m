@@ -2,94 +2,105 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6080C3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282CCC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC272078C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C8C2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 05:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EcjpzCRQ"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="3Vwu87CC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgDTFno (ORCPT
+        id S1726055AbgDTFoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:43:44 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:48494 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725379AbgDTFno (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:43:44 -0400
-X-UUID: d985ed20ac654ad5a9d8b5b3a70e0855-20200420
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=MIME-Version:Content-Transfer-Encoding:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=8WMihIX1G3xwXKUcZ3oRNUz/6PgZiIB1kiu0iy+8nSo=;
-        b=EcjpzCRQ4Y3w7v5xxB8Qag5Nxhy1JRp6xPxLrp0wU30CEVEWqBB0R0MfzcZSF5XsJlEC29gFjZ9rRY2nsFzWOI/NqLLgp7fhcGdseIEO2yZEw9Z+HTmfsDwwXUTgSHbKrKKOvUXZnqckQm8w7846GcgVD75IhIFbOZU6aLsLTgs=;
-X-UUID: d985ed20ac654ad5a9d8b5b3a70e0855-20200420
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1695885634; Mon, 20 Apr 2020 13:43:41 +0800
-Received: from MTKMBS06N2.mediatek.inc (172.21.101.130) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 20 Apr 2020 13:43:38 +0800
-Received: from MTKMBS06N2.mediatek.inc ([fe80::35cb:62e4:53bc:637d]) by
- mtkmbs06n2.mediatek.inc ([fe80::35cb:62e4:53bc:637d%18]) with mapi id
- 15.00.1497.000; Mon, 20 Apr 2020 13:43:40 +0800
-From:   =?utf-8?B?V2FsdGVyLVpIIFd1ICjlkLPnpZblr7Ap?= 
-        <Walter-ZH.Wu@mediatek.com>
-To:     David Gow <davidgow@google.com>,
-        "trishalfonso@google.com" <trishalfonso@google.com>,
-        "brendanhiggins@google.com" <brendanhiggins@google.com>,
-        "aryabinin@virtuozzo.com" <aryabinin@virtuozzo.com>,
-        "dvyukov@google.com" <dvyukov@google.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kunit-dev@googlegroups.com" <kunit-dev@googlegroups.com>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "Andrey Konovalov" <andreyknvl@google.com>
-Subject: RE: [PATCH v6 2/5] KUnit: KASAN Integration
-Thread-Topic: [PATCH v6 2/5] KUnit: KASAN Integration
-Thread-Index: AQHWFTAiYFnHEtPY6kiUTjs5y2r2caiBgWxg
-Date:   Mon, 20 Apr 2020 05:43:40 +0000
-Message-ID: <eb68aacaf65b4e37962f1b746d3e7c5c@mtkmbs06n2.mediatek.inc>
-References: <20200418031833.234942-1-davidgow@google.com>
- <20200418031833.234942-3-davidgow@google.com>
-In-Reply-To: <20200418031833.234942-3-davidgow@google.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.21.101.239]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Mon, 20 Apr 2020 01:44:16 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:33230 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725379AbgDTFoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 01:44:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=yAOu0VUkborL/7+dqlJ4jWkJ1m2aAADVyJZ3KeTxc1w=; b=3
+        Vwu87CCBMNoOn8C3OXoqNfWk/SbXJqSw+e7lDhS92qY78pj/qLTaNn7w+ibW2IAp
+        iqTcgm5gQY7pl2PlClqregA8jJ1LD8hSO8DYT1qYWKZEoJmXUwXtmd1oY1szPuWd
+        9WOtgK+AaFI6yZZT0mLP0TFbNChzxNv4mk9FhbaV5k=
+Received: from localhost.localdomain (unknown [120.229.255.67])
+        by app2 (Coremail) with SMTP id XQUFCgA3ywicNp1ePAAeAA--.3223S3;
+        Mon, 20 Apr 2020 13:43:57 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Olaf Kirch <okir@suse.de>, Andrew Morton <akpm@osdl.org>,
+        Andreas Gruenbacher <agruen@suse.de>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Mon, 20 Apr 2020 13:43:28 +0800
+Message-Id: <1587361410-83560-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgA3ywicNp1ePAAeAA--.3223S3
+X-Coremail-Antispam: 1UD129KBjvJXoWrKFW3tr4ruw1xtFykAw1DZFb_yoW8JF45pw
+        4Ikr1UtF98tFW8tas8Aw48W34kAa10qw1rKwn5Wa1SvrnxXasxCFyYqw13XFWUArW8JF18
+        Wr1Yg3y3Z3WDCaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
+        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8WwCF04k20xvY0x0EwIxGrw
+        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
+        wI8IcIk0rVW8JVW3JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUO2NtUUUUU
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGF2aWQsDQoNCglzdGFydF9yZXBvcnQoJmZsYWdzKTsNCiAJcHJfZXJyKCJCVUc6IEtBU0FO
-OiBkb3VibGUtZnJlZSBvciBpbnZhbGlkLWZyZWUgaW4gJXBTXG4iLCAodm9pZCAqKWlwKTsNCiAJ
-cHJpbnRfdGFncyh0YWcsIG9iamVjdCk7DQpAQCAtNDg2LDYgKzUxMywxNCBAQCB2b2lkIF9fa2Fz
-YW5fcmVwb3J0KHVuc2lnbmVkIGxvbmcgYWRkciwgc2l6ZV90IHNpemUsIGJvb2wgaXNfd3JpdGUs
-IHVuc2lnbmVkIGxvbg0KIAl2b2lkICp1bnRhZ2dlZF9hZGRyOw0KIAl1bnNpZ25lZCBsb25nIGZs
-YWdzOw0KIA0KKwlpZiAobGlrZWx5KCFyZXBvcnRfZW5hYmxlZCgpKSkNCisJCXJldHVybjsNCg0K
-a2FzYW5fcmVwb3J0KCkgYWxyZWFkeSBoYXMgdGhlIHRlc3QgZXhwcmVzc2lvbiwgaXQgc2hvdWxk
-IG5vdCBuZWVkIGR1cGxpY2F0aW5nIGlmIHN0YXRlbWVudC4NCg0KDQpXYWx0ZXINCg0KKw0KKyNp
-ZiBJU19FTkFCTEVEKENPTkZJR19LVU5JVCkNCisJaWYgKGN1cnJlbnQtPmt1bml0X3Rlc3QpDQor
-CQlrYXNhbl91cGRhdGVfa3VuaXRfc3RhdHVzKGN1cnJlbnQtPmt1bml0X3Rlc3QpOw0KKyNlbmRp
-ZiAvKiBJU19FTkFCTEVEKENPTkZJR19LVU5JVCkgKi8NCisNCiAJZGlzYWJsZV90cmFjZV9vbl93
-YXJuaW5nKCk7DQogDQogCXRhZ2dlZF9hZGRyID0gKHZvaWQgKilhZGRyOw0KLS0NCjIuMjYuMS4z
-MDEuZzU1YmMzZWI3Y2I5LWdvb2cNCg0KLS0NCllvdSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVj
-YXVzZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91cHMgImthc2FuLWRldiIg
-Z3JvdXAuDQpUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5n
-IGVtYWlscyBmcm9tIGl0LCBzZW5kIGFuIGVtYWlsIHRvIGthc2FuLWRldit1bnN1YnNjcmliZUBn
-b29nbGVncm91cHMuY29tLg0KVG8gdmlldyB0aGlzIGRpc2N1c3Npb24gb24gdGhlIHdlYiB2aXNp
-dCBodHRwczovL2dyb3Vwcy5nb29nbGUuY29tL2QvbXNnaWQva2FzYW4tZGV2LzIwMjAwNDE4MDMx
-ODMzLjIzNDk0Mi0zLWRhdmlkZ293JTQwZ29vZ2xlLmNvbS4NCg==
+nfs3_set_acl() invokes get_acl(), which returns a local reference of the
+posix_acl object to "alloc" with increased refcount.
+
+When nfs3_set_acl() returns or a new object is assigned to "alloc",  the
+original local reference of  "alloc" becomes invalid, so the refcount
+should be decreased to keep refcount balanced.
+
+The reference counting issue happens in one path of nfs3_set_acl(). When
+"acl" equals to NULL but "alloc" is not NULL, the function forgets to
+decrease the refcnt increased by get_acl() and causes a refcnt leak.
+
+Fix this issue by calling posix_acl_release() on this path when "alloc"
+is not NULL.
+
+Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ fs/nfs/nfs3acl.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
+index c5c3fc6e6c60..b5c41bcca8cf 100644
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -274,6 +274,8 @@ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
+ 	}
+ 
+ 	if (acl == NULL) {
++		if (alloc)
++			posix_acl_release(alloc);
+ 		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+ 		if (IS_ERR(alloc))
+ 			goto fail;
+-- 
+2.7.4
+
