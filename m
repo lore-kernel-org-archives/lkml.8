@@ -2,120 +2,146 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 635D2C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C1AC3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 374CE206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587395147;
-	bh=7BiXorufPKAH/HQwDAPyJlEGnPQWrcZBKYuT26mkfa4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=detpNoMx/Ey1lqdvCHtTKQdQKSNQuZGO2PQAf/7DLIONKA7sFvdTF5+jm1j+oKzJ0
-	 iWvga96SkL7diWaLS2dD51Zog19G/yFDfZCxWdeFC3ypqacEw/DAL2NbLyq9VIlcMx
-	 wkbNK0DmYSmjnPsjFg33fF4bfom4bxfiF1GpSwwo=
+	by mail.kernel.org (Postfix) with ESMTP id 2419C20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:06:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6f02Z7T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgDTPFq (ORCPT
+        id S1729613AbgDTPGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:05:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbgDTPFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:05:46 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8576C206F6;
-        Mon, 20 Apr 2020 15:05:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587395145;
-        bh=7BiXorufPKAH/HQwDAPyJlEGnPQWrcZBKYuT26mkfa4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Y79zU3kE6J9vfYKflUYmHAt3XecS+mZTfm+H8HkXK3PHnSJ9yjRFZJWExU+/7OR0p
-         abbEFTGtu1H67B9XabUMY2hvw8VC8LP2BS2IZ7K7Nzcam92+0Bn3VNL5fhWlPqa2Gd
-         UzCvXt4ka5tJegHGIalhYUTCi4s2BX2ebkgTiZuM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5972F35233EC; Mon, 20 Apr 2020 08:05:45 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 08:05:45 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Petko Manolov' <petko.manolov@konsulko.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] WRITE_ONCE_INC() and friends
-Message-ID: <20200420150545.GB17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200419094439.GA32841@carbon>
- <491f0b0bc9e4419d93a78974fd7f44c7@AcuMS.aculab.com>
- <20200419182957.GA36919@carbon>
- <8e5a0283ed76465aac19a2b97a27ff15@AcuMS.aculab.com>
+        Mon, 20 Apr 2020 11:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgDTPGq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:06:46 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F47C061A0C;
+        Mon, 20 Apr 2020 08:06:46 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id p25so5048046pfn.11;
+        Mon, 20 Apr 2020 08:06:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ebTJK3VIsFc6VNFg3gPxRYeNnxObdYDofUcsgMI3igM=;
+        b=K6f02Z7TYGsc3/2J7vMCj5h0qZ8t1zLmDg8M46bUXvub7eC8fyZ1Xo+ftlQLSSQorB
+         a1bF5dZu8PX21RP4904YvDlPybcuNPbjms1EEwHzGkSU+hHQWWDJ9u3o6PtNpxzr776F
+         Ym7yLtWxGXv07H701hSp5vF6w6Ys/2A3+SjgNQZzXa7UU5mLUG1efqklk8IDeoz/SF2y
+         VNleTPLRcAi3RqfZ28ntM+nlcInAVvLs+DFWCiZjHQEhK59S0OM48alXJQcDoEBpeIxf
+         Vym0Xn7JijQJniqUaMPhciLI064kLcUgZf3aP2KxYlO8sulyRJIiGIV7iV/vsels6dsg
+         9Jog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ebTJK3VIsFc6VNFg3gPxRYeNnxObdYDofUcsgMI3igM=;
+        b=NOI7QqOyZzrdGLITqD6GBfKJi95vmY68XW6zQ2UfEJ3K3zQ3ftECkObRbHxCXC9rHR
+         jZSJiOnXHTHhhDoCHenVs9KwsIYBMH1rQ0D3FlrMup12FAyXuvFOHdtiCNKVEr7yQ+SA
+         lJcVxRfXTAu59XY+FJcokFlW4Ij8W+sJP5CNazm9z+trmLZckNgeotpjbxsrgHG0/sVj
+         10FE36/i7DVNxFO8v5z4luBj20j2p70sDdp2dkqvoa+9NTsb0LaA6bHUNnfTXp1ezbrI
+         XB14R+ukw2yCanUSRdHsZlZ4GvxUXy8RTVe6XG99F28Mr9XsGHUVgA6gjc2CwAM2I1DI
+         Zm0Q==
+X-Gm-Message-State: AGi0PuZscHhvO6fN6in+sMwSmY8/UGqqmzPPUr/i71e3wUMlZ0mFhDmF
+        ZzXLd1XIv05T/V8/aMTpyfQ=
+X-Google-Smtp-Source: APiQypLYT+kzB5ZNagQxYzYx7UKNIkqCzey0XV2xcIagr6BlIGA76rjh7t3gPX6nS44gOHK/KmNIGg==
+X-Received: by 2002:a62:6443:: with SMTP id y64mr16817917pfb.13.1587395206380;
+        Mon, 20 Apr 2020 08:06:46 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id b29sm1327297pfp.68.2020.04.20.08.06.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Apr 2020 08:06:45 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     davem@davemloft.net, ynezz@true.cz, swboyd@chromium.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH net-next v1] net: broadcom: convert to devm_platform_ioremap_resource_byname()
+Date:   Mon, 20 Apr 2020 23:06:41 +0800
+Message-Id: <20200420150641.2528-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e5a0283ed76465aac19a2b97a27ff15@AcuMS.aculab.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 09:37:10PM +0000, David Laight wrote:
-> From: Petko Manolov
-> > Sent: 19 April 2020 19:30
-> > 
-> > On 20-04-19 18:02:50, David Laight wrote:
-> > > From: Petko Manolov
-> > > > Sent: 19 April 2020 10:45
-> > > > Recently I started reading up on KCSAN and at some point I ran into stuff like:
-> > > >
-> > > > WRITE_ONCE(ssp->srcu_lock_nesting[idx], ssp->srcu_lock_nesting[idx] + 1);
-> > > > WRITE_ONCE(p->mm->numa_scan_seq, READ_ONCE(p->mm->numa_scan_seq) + 1);
-> > >
-> > > If all the accesses use READ/WRITE_ONCE() why not just mark the structure
-> > > field 'volatile'?
-> > 
-> > This is a bit heavy.  I guess you've read this one:
-> > 
-> > 	https://lwn.net/Articles/233479/
-> 
-> I remember reading something similar before.
-> I also remember a very old gcc (2.95?) that did a readback
-> after every volatile write on sparc (to flush the store buffer).
-> That broke everything.
-> 
-> I suspect there is a lot more code that is attempting to be lockless
-> these days.
-> Ring buffers (one writer and one reader) are a typical example where
-> you don't need locks but do need to use a consistent value.
-> 
-> Now you may also need ordering between accesses - which I think needs
-> more than volatile.
+Use the function devm_platform_ioremap_resource_byname() to simplify
+source code which calls the functions platform_get_resource_byname()
+and devm_ioremap_resource(). Remove also a few error messages which
+became unnecessary with this software refactoring.
 
-In Petko's patch, all needed ordering is supplied by the fact that it
-is the same variable being read and written.  But yes, in many other
-cases, more ordering is required.
+Suggested-by: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ .../net/ethernet/broadcom/bgmac-platform.c    | 33 +++++++------------
+ 1 file changed, 11 insertions(+), 22 deletions(-)
 
-> > And no, i am not sure all accesses are through READ/WRITE_ONCE().  If, for
-> > example, all others are from withing spin_lock/unlock pairs then we _may_ not
-> > need READ/WRITE_ONCE().
-> 
-> The cost of volatile accesses is probably minimal unless the
-> code is written assuming the compiler will only access things once.
+diff --git a/drivers/net/ethernet/broadcom/bgmac-platform.c b/drivers/net/ethernet/broadcom/bgmac-platform.c
+index c46c1b1416f7..a5d1a6cb9ce3 100644
+--- a/drivers/net/ethernet/broadcom/bgmac-platform.c
++++ b/drivers/net/ethernet/broadcom/bgmac-platform.c
+@@ -172,7 +172,6 @@ static int bgmac_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct bgmac *bgmac;
+-	struct resource *regs;
+ 	const u8 *mac_addr;
+ 
+ 	bgmac = bgmac_alloc(&pdev->dev);
+@@ -202,31 +201,21 @@ static int bgmac_probe(struct platform_device *pdev)
+ 	if (bgmac->irq < 0)
+ 		return bgmac->irq;
+ 
+-	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "amac_base");
+-	if (!regs) {
+-		dev_err(&pdev->dev, "Unable to obtain base resource\n");
+-		return -EINVAL;
+-	}
+-
+-	bgmac->plat.base = devm_ioremap_resource(&pdev->dev, regs);
++	bgmac->plat.base =
++		devm_platform_ioremap_resource_byname(pdev, "amac_base");
+ 	if (IS_ERR(bgmac->plat.base))
+ 		return PTR_ERR(bgmac->plat.base);
+ 
+-	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "idm_base");
+-	if (regs) {
+-		bgmac->plat.idm_base = devm_ioremap_resource(&pdev->dev, regs);
+-		if (IS_ERR(bgmac->plat.idm_base))
+-			return PTR_ERR(bgmac->plat.idm_base);
+-		bgmac->feature_flags &= ~BGMAC_FEAT_IDM_MASK;
+-	}
++	bgmac->plat.idm_base =
++		devm_platform_ioremap_resource_byname(pdev, "idm_base");
++	if (IS_ERR(bgmac->plat.idm_base))
++		return PTR_ERR(bgmac->plat.idm_base);
++	bgmac->feature_flags &= ~BGMAC_FEAT_IDM_MASK;
+ 
+-	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nicpm_base");
+-	if (regs) {
+-		bgmac->plat.nicpm_base = devm_ioremap_resource(&pdev->dev,
+-							       regs);
+-		if (IS_ERR(bgmac->plat.nicpm_base))
+-			return PTR_ERR(bgmac->plat.nicpm_base);
+-	}
++	bgmac->plat.nicpm_base =
++		devm_platform_ioremap_resource_byname(pdev, "nicpm_base");
++	if (IS_ERR(bgmac->plat.nicpm_base))
++		return PTR_ERR(bgmac->plat.nicpm_base);
+ 
+ 	bgmac->read = platform_bgmac_read;
+ 	bgmac->write = platform_bgmac_write;
+-- 
+2.25.0
 
-And there are variables marked as volatile, for example, jiffies.
-
-But one downside of declaring variables volatile is that it can prevent
-KCSAN from spotting violations of the concurrency design for those
-variables.
-
-> > I merely proposed the _INC() variant for better readability.
-> 
-> More like shorter code lines :-)
-
-That too!  ;-)
-
-							Thanx, Paul
