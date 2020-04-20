@@ -3,129 +3,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD988C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6834BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950F5206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA30206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 10:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgDTK27 (ORCPT
+        id S1726365AbgDTK3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 06:28:59 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24690 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgDTK25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 06:28:57 -0400
-IronPort-SDR: cxKonAg+3BbLhdUwiJZXNL2JnQ3xGeubqdBCn15JAaD1b8dOIAZejrvffOAlJaEr8trFGDRma/
- CsADFAUIl2qg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 03:28:56 -0700
-IronPort-SDR: iHULl3pxbtqQ1MqumC0TUlV1+InpWyde7JALFkMK93zTjHDxNzzjlKzi+4FW1T4iQh1UI5UnhB
- XnHAlzl8Wzbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
-   d="scan'208";a="243766286"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga007.jf.intel.com with ESMTP; 20 Apr 2020 03:28:54 -0700
-Subject: Re: linux-next: Tree for Apr 17 (mmc/host/sdhci-of-at91.c)
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Mon, 20 Apr 2020 06:29:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725865AbgDTK3E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 06:29:04 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B85CC061A0C;
+        Mon, 20 Apr 2020 03:29:04 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9AA0B2A0057;
+        Mon, 20 Apr 2020 11:29:02 +0100 (BST)
+Date:   Mon, 20 Apr 2020 12:28:59 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@atmel.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>
-References: <20200417145017.3932443d@canb.auug.org.au>
- <995a958c-15a1-cb05-e276-065c7f6e57fd@infradead.org>
- <CAPDyKFqE7zfaKSbpBoBbrSCEnx+70dOrWs+=QG_x2G-Fpt6=ng@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <ce11a0b5-22a6-dd18-f858-5d30f43e1128@intel.com>
-Date:   Mon, 20 Apr 2020 13:28:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw, piotrs@cadence.com,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        "hauke.mehrtens" <hauke.mehrtens@intel.com>, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200420122859.2a210268@collabora.com>
+In-Reply-To: <CAHp75Vfp_WYNR8kHVsSVumGzuVbGEGpAjfXVvJAV7t6zXXY+HA@mail.gmail.com>
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200418105533.477ce529@collabora.com>
+        <20200419222040.GJ185537@smile.fi.intel.com>
+        <20200420111754.5863324b@collabora.com>
+        <CAHp75VeOH+DC362tsEo13gr9fJpeCHXok=7O19B3njbxCOzd2A@mail.gmail.com>
+        <20200420115256.3a0ff647@collabora.com>
+        <CAHp75Vfp_WYNR8kHVsSVumGzuVbGEGpAjfXVvJAV7t6zXXY+HA@mail.gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFqE7zfaKSbpBoBbrSCEnx+70dOrWs+=QG_x2G-Fpt6=ng@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/04/20 12:12 pm, Ulf Hansson wrote:
-> + Masahiro Yamada, Adrian Hunter
-> 
-> On Fri, 17 Apr 2020 at 16:48, Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> On 4/16/20 9:50 PM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20200416:
->>>
->>
->> on i386:
->>
->>   CC      drivers/mmc/host/sdhci-of-at91.o
->> In file included from ../include/linux/build_bug.h:5:0,
->>                  from ../include/linux/bitfield.h:10,
->>                  from ../drivers/mmc/host/sdhci-of-at91.c:9:
->> ../drivers/mmc/host/sdhci-of-at91.c: In function ‘sdhci_at91_set_clks_presets’:
->> ../include/linux/compiler.h:394:38: error: call to ‘__compiletime_assert_63’ declared with attribute error: FIELD_PREP: value too large for the field
->>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>                                       ^
->> ../include/linux/compiler.h:375:4: note: in definition of macro ‘__compiletime_assert’
->>     prefix ## suffix();    \
->>     ^~~~~~
->> ../include/linux/compiler.h:394:2: note: in expansion of macro ‘_compiletime_assert’
->>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>   ^~~~~~~~~~~~~~~~~~~
->> ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
->>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->>                                      ^~~~~~~~~~~~~~~~~~
->> ../include/linux/bitfield.h:49:3: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
->>    BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
->>    ^~~~~~~~~~~~~~~~
->> ../include/linux/bitfield.h:94:3: note: in expansion of macro ‘__BF_FIELD_CHECK’
->>    __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
->>    ^~~~~~~~~~~~~~~~
->> ../drivers/mmc/host/sdhci-of-at91.c:185:11: note: in expansion of macro ‘FIELD_PREP’
->>   caps1 |= FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
+On Mon, 20 Apr 2020 13:14:42 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-My guess is the compiler has decided clk_mul is constant (probably (unsigned
-int)-1) because there is no CONFIG_COMMON_CLK i.e. clk_get_rate() is 0
-
-So maybe add to config MMC_SDHCI_OF_AT91
-
-	depends on COMMON_CLK
-
->>            ^~~~~~~~~~
->>
->>
->> Full randconfig file is attached.
->>
->>
->> --
->> ~Randy
->> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> On Mon, Apr 20, 2020 at 12:53 PM Boris Brezillon
+> <boris.brezillon@collabora.com> wrote:
+> > On Mon, 20 Apr 2020 12:44:51 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> >  
+> > > On Mon, Apr 20, 2020 at 12:21 PM Boris Brezillon
+> > > <boris.brezillon@collabora.com> wrote:  
+> > > > On Mon, 20 Apr 2020 01:20:40 +0300
+> > > > Andy Shevchenko <andriy.shevchenko@intel.com> wrote:  
+> > > > > On Sat, Apr 18, 2020 at 10:55:33AM +0200, Boris Brezillon wrote:  
+> > > > > > On Fri, 17 Apr 2020 16:21:47 +0800
+> > > > > > "Ramuthevar,Vadivel MuruganX"
+> > > > > > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> > > > > >  
+> > > > > > > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>  
+> > > > >  
+> > > > > > > +static const struct of_device_id lgm_nand_match[] = {
+> > > > > > > + { .compatible = "intel,lgm-nand", },
+> > > > > > > + {}
+> > > > > > > +};
+> > > > > > > +MODULE_DEVICE_TABLE(of, lgm_nand_match);  
+> > > > > >
+> > > > > > You probably have a missing "depends on OF" in your Kconfig.  
+> > > > >
+> > > > > Since it's using device property API, dependency is not needed.
+> > > > >  
+> > > >
+> > > > There's no compile-time dependency, but this driver will be pretty
+> > > > useless if all its users have the NAND controller node defined in their
+> > > > DT and CONFIG_OF is not enabled.  
+> > >
+> > > No, it's not.
+> > > See [1] for the details how ACPI may utilize this table.
+> > >
+> > > [1]: https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.html#device-tree-namespace-link-device-id  
+> >
+> > Except the NAND framework does use the OF lib when parsing common DT
+> > properties (like nand-ecc-mode, etc), so it does depend on OF if you
+> > want those props to be parsed, which, according to the DT binding patch,
+> > is the case.  
 > 
-> Thanks for reporting! I have looped in the relevant people, let's see
-> how we move forward with this.
-> 
-> I assume the offending commit is this one:
-> Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Date:   Wed Apr 8 16:21:05 2020 +0900
-> mmc: sdhci: use FIELD_GET/PREP for capabilities bit masks
-> 
-> Kind regards
-> Uffe
+> I see, so, NAND framework can be transformed at some point. In any
+> case, from driver perspective it's OF independent.
 > 
 
+Well, it uses it only if the driver passes an OF node which this driver
+does (see the nand_set_flash_node() call), so no, it's really a driver
+dependency.
