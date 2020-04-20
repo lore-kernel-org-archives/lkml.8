@@ -2,210 +2,314 @@ Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F2FC3815B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE4AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDED206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFAB9206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 15:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qM3kAztq"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jjjTrvy2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgDTPcS (ORCPT
+        id S1727930AbgDTPea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:32:18 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52116 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbgDTPcS (ORCPT
+        Mon, 20 Apr 2020 11:34:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbgDTPe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:32:18 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03KFISef189074;
-        Mon, 20 Apr 2020 15:31:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=Yql0IcIqHpszKXnVsmou87K4Wd/Z21X1vdlTa/+vIIg=;
- b=qM3kAztqgggIdXYZZ3y6FSDE7zVrMXkTvBV89ziEWf8JxRePc7xXaCA8dppDwT/NsYEI
- d/4cZpfhy61OCWjktB+cbZoDOwQSgwqhgvMz8Hvj5I8Nb4DN9DY9cKMLYZIvqjQIJ7Vr
- 1fdUUj6zqDZpqWw5H4+DtBPXRNwaQISadno2k+OnRAj/IB51VjcRToMg8mMRwuzGgCyl
- r0JltMu8IP9/4qHz7wMTaII36C/1L/8DFQ0/PyYPwam2v681r6oGhe/X7yCXnRzaZMBX
- NedzQpkamt6fiBqO3kqfgz6gZi6pvkkk7ED+LsD+aGtRlqZFbKOmJS4d5q9f0TR2ah1u Gw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30grpgcdug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 15:31:59 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03KFIPF2037527;
-        Mon, 20 Apr 2020 15:29:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30gbbavtuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 15:29:58 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03KFTvmn003913;
-        Mon, 20 Apr 2020 15:29:57 GMT
-Received: from dhcp-10-175-219-85.vpn.oracle.com (/10.175.219.85)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 Apr 2020 08:29:56 -0700
-Date:   Mon, 20 Apr 2020 16:29:49 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-cc:     Alan Maguire <alan.maguire@oracle.com>, ast@kernel.org,
-        daniel@iogearbox.net, yhs@fb.com, kafai@fb.com,
-        songliubraving@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH bpf-next 0/6] bpf, printk: add BTF-based type
- printing
-In-Reply-To: <20200418160536.4mrvqh2lasqbyk77@ast-mbp>
-Message-ID: <alpine.LRH.2.21.2004201623390.12711@localhost>
-References: <1587120160-3030-1-git-send-email-alan.maguire@oracle.com> <20200418160536.4mrvqh2lasqbyk77@ast-mbp>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9596 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200130
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9596 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015
- malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004200130
+        Mon, 20 Apr 2020 11:34:29 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13354C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:34:29 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id s63so11023624qke.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 08:34:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=npWq2XT20dmtrkzpn/wWrvRXENSuyiO3LHGOrfDPnHs=;
+        b=jjjTrvy2vg5nuieofgLvVo3mBlaSZX2b9oWKA5VtEiQ6EvWHnkfztV+jI725AG3Xan
+         3V7zdKw0z1oVgAEYO2If54k1Up3g3aqj1T+1QXj7qIcI2tKy/YW4tiBYp+m28jE14wCF
+         5i+/2rVjwuUj8zKMSQlQ+PFf/if8JEfOhSIx0x4jjjKQsWuYE+l2kNguAOUymoAuOlZJ
+         WfERH2FVT3WrkIC69PASIz/eibcyTS6dOhztcvnxs4+OOsCPb/UzYWbXlQ6lOosqG7vN
+         qsJWEKj+6CtkfMRxXwqzdDVQCJ7K9+c6wZA3ZaOKa6ny6cXEzmN2xOcYJv2AdOhrSU7Y
+         KIZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=npWq2XT20dmtrkzpn/wWrvRXENSuyiO3LHGOrfDPnHs=;
+        b=JDcuqeapmsGxAjk+FH9tdguOoDc5UmxbOl6Z0bFEm+iaPftY55dgbOm1fRpJ0uKThW
+         k74DX2Y0wnIsrntW7ONK9FGedTuRsLpDp3YlWZxIhm6vzcj8b0s/ZIkIhdhWZhAMjGLv
+         pOA0WZNPKehfC2rUM1qpDT1JoKZ4evzSkj3CJykaCri6JloUFlNSY61ci5bC1c4LOwID
+         u7HXeY4IkX3Z8WbCFWfClMgf5jMoxBEqVwfYkqoB9ssFvTpIhDrEFCIjzVm87dTBfboR
+         Q16DxHR33DQk6J04hS2KIc7P2aeiV1F7ito6bAPppxQA8+kWhtOVBfUwWI0CtqQkirGQ
+         4BJQ==
+X-Gm-Message-State: AGi0Pub3WunUIsyfixXrgdhzGTTCVCY+VGPCfvUXU5+sJf4YSbGmj6u8
+        A1aAe47Z4h/pW9HEn/NGjZXRhg==
+X-Google-Smtp-Source: APiQypInAT0yQSOyX2ykJEcndc4QbjNLYen1mhs6MpEFOqtQyBg2OXGSeBnhQqPwJE4FVuLfBonbvA==
+X-Received: by 2002:a37:61cf:: with SMTP id v198mr15721385qkb.485.1587396867942;
+        Mon, 20 Apr 2020 08:34:27 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id m1sm744465qtm.22.2020.04.20.08.34.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Apr 2020 08:34:27 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v3 0/4] Clean up hugetlb boot command line processing
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200417185049.275845-1-mike.kravetz@oracle.com>
+Date:   Mon, 20 Apr 2020 11:34:22 -0400
+Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5E312000-05D8-4C5D-A7C0-DDDE1842CB0E@lca.pw>
+References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Apr 2020, Alexei Starovoitov wrote:
 
-> On Fri, Apr 17, 2020 at 11:42:34AM +0100, Alan Maguire wrote:
-> > The printk family of functions support printing specific pointer types
-> > using %p format specifiers (MAC addresses, IP addresses, etc).  For
-> > full details see Documentation/core-api/printk-formats.rst.
-> > 
-> > This RFC patchset proposes introducing a "print typed pointer" format
-> > specifier "%pT<type>"; the type specified is then looked up in the BPF
-> > Type Format (BTF) information provided for vmlinux to support display.
-> 
-> This is great idea! Love it.
->
 
-Thanks for taking a look!
- 
-> > The above potential use cases hint at a potential reply to
-> > a reasonable objection that such typed display should be
-> > solved by tracing programs, where the in kernel tracing records
-> > data and the userspace program prints it out.  While this
-> > is certainly the recommended approach for most cases, I
-> > believe having an in-kernel mechanism would be valuable
-> > also.
-> 
-> yep. This is useful for general purpose printk.
-> The only piece that must be highlighted in the printk documentation
-> that unlike the rest of BPF there are zero safety guarantees here.
-> The programmer can pass wrong pointer to printk() and the kernel _will_ crash.
-> 
+> On Apr 17, 2020, at 2:50 PM, Mike Kravetz <mike.kravetz@oracle.com> =
+wrote:
+>=20
+> Longpeng(Mike) reported a weird message from hugetlb command line =
+processing
+> and proposed a solution [1].  While the proposed patch does address =
+the
+> specific issue, there are other related issues in command line =
+processing.
+> As hugetlbfs evolved, updates to command line processing have been =
+made to
+> meet immediate needs and not necessarily in a coordinated manner.  The =
+result
+> is that some processing is done in arch specific code, some is done in =
+arch
+> independent code and coordination is problematic.  Semantics can vary =
+between
+> architectures.
+>=20
+> The patch series does the following:
+> - Define arch specific arch_hugetlb_valid_size routine used to =
+validate
+>  passed huge page sizes.
+> - Move hugepagesz=3D command line parsing out of arch specific code =
+and into
+>  an arch independent routine.
+> - Clean up command line processing to follow desired semantics and
+>  document those semantics.
+>=20
+> [1] =
+https://lore.kernel.org/linux-mm/20200305033014.1152-1-longpeng2@huawei.co=
+m
+>=20
+> Mike Kravetz (4):
+>  hugetlbfs: add arch_hugetlb_valid_size
+>  hugetlbfs: move hugepagesz=3D parsing to arch independent code
+>  hugetlbfs: remove hugetlb_add_hstate() warning for existing hstate
+>  hugetlbfs: clean up command line processing
 
-Good point; I'll highlight the fact that we aren't
-executing in BPF context, no verifier etc.
+Reverted this series fixed many undefined behaviors on arm64 with the =
+config,
 
-> >   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
-> > 
-> >   pr_info("%pTN<struct sk_buff>", skb);
-> 
-> why follow "TN" convention?
-> I think "%p<struct sk_buff>" is much more obvious, unambiguous, and
-> equally easy to parse.
-> 
+https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
 
-That was my first choice, but the first character
-after the 'p' in the '%p' specifier signifies the
-pointer format specifier. If we use '<', and have
-'%p<', where do we put the modifiers? '%p<xYz struct foo>'
-seems clunky to me.
+[   54.172683][    T1] UBSAN: shift-out-of-bounds in =
+./include/linux/hugetlb.h:555:34
+[   54.180411][    T1] shift exponent 4294967285 is too large for 64-bit =
+type 'unsigned long'
+[   54.188885][    T1] CPU: 130 PID: 1 Comm: swapper/0 Not tainted =
+5.7.0-rc2-next-20200420 #1
+[   54.197284][    T1] Hardware name: HPE Apollo 70             =
+/C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
+[   54.207888][    T1] Call trace:
+[   54.211100][    T1]  dump_backtrace+0x0/0x224
+[   54.215565][    T1]  show_stack+0x20/0x2c
+[   54.219651][    T1]  dump_stack+0xfc/0x184
+[   54.223829][    T1]  __ubsan_handle_shift_out_of_bounds+0x304/0x344
+[   54.230204][    T1]  hugetlb_add_hstate+0x3ec/0x414
+huge_page_size at include/linux/hugetlb.h:555
+(inlined by) hugetlb_add_hstate at mm/hugetlb.c:3301
+[   54.235191][    T1]  hugetlbpage_init+0x14/0x30
+[   54.239824][    T1]  do_one_initcall+0x6c/0x144
+[   54.244446][    T1]  do_initcall_level+0x158/0x1c4
+[   54.249336][    T1]  do_initcalls+0x68/0xb0
+[   54.253597][    T1]  do_basic_setup+0x28/0x30
+[   54.258049][    T1]  kernel_init_freeable+0x19c/0x228
+[   54.263188][    T1]  kernel_init+0x14/0x208
+[   54.267473][    T1]  ret_from_fork+0x10/0x18
 
-> > ...gives us:
-> > 
-> > {{{.next=00000000c7916e9c,.prev=00000000c7916e9c,{.dev=00000000c7916e9c|.dev_scratch=0}}|.rbnode={.__rb_parent_color=0,
-> 
-> This is unreadable.
-> I like the choice of C style output, but please format it similar to drgn. Like:
-> *(struct task_struct *)0xffff889ff8a08000 = {
-> 	.thread_info = (struct thread_info){
-> 		.flags = (unsigned long)0,
-> 		.status = (u32)0,
-> 	},
-> 	.state = (volatile long)1,
-> 	.stack = (void *)0xffffc9000c4dc000,
-> 	.usage = (refcount_t){
-> 		.refs = (atomic_t){
-> 			.counter = (int)2,
-> 		},
-> 	},
-> 	.flags = (unsigned int)4194560,
-> 	.ptrace = (unsigned int)0,
-> 
-> I like Arnaldo's idea as well, but I prefer zeros to be dropped by default.
-> Just like %d doesn't print leading zeros by default.
-> "%p0<struct sk_buff>" would print them.
-> 
 
-I'll try and match the above as closely as possible for v2
-while retaining the compact form for the verifier's use.
+[   55.534338][    T1] UBSAN: shift-out-of-bounds in =
+./include/linux/hugetlb.h:555:34
+[   55.542064][    T1] shift exponent 4294967285 is too large for 64-bit =
+type 'unsigned long'
+[   55.550555][    T1] CPU: 129 PID: 1 Comm: swapper/0 Not tainted =
+5.7.0-rc2-next-20200420 #1
+[   55.558992][    T1] Hardware name: HPE Apollo 70             =
+/C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
+[   55.569659][    T1] Call trace:
+[   55.572898][    T1]  dump_backtrace+0x0/0x224
+[   55.577335][    T1]  show_stack+0x20/0x2c
+[   55.581442][    T1]  dump_stack+0xfc/0x184
+[   55.585621][    T1]  __ubsan_handle_shift_out_of_bounds+0x304/0x344
+[   55.592031][    T1]  __hugetlb_cgroup_file_dfl_init+0x37c/0x384
+[   55.598062][    T1]  hugetlb_cgroup_file_init+0x9c/0xd8
+[   55.603399][    T1]  hugetlb_init+0x248/0x448
+[   55.607840][    T1]  do_one_initcall+0x6c/0x144
+[   55.612493][    T1]  do_initcall_level+0x158/0x1c4
+[   55.617404][    T1]  do_initcalls+0x68/0xb0
+[   55.621664][    T1]  do_basic_setup+0x28/0x30
+[   55.626107][    T1]  kernel_init_freeable+0x19c/0x228
+[   55.631253][    T1]  kernel_init+0x14/0x208
+[   55.635519][    T1]  ret_from_fork+0x10/0x18
 
-> > The patches are marked RFC for several reasons
-> > 
-> > - There's already an RFC patchset in flight dealing with BTF dumping;
-> > 
-> > https://www.spinics.net/lists/netdev/msg644412.html
-> > 
-> >   The reason I'm posting this is the approach is a bit different 
-> >   and there may be ways of synthesizing the approaches.
-> 
-> I see no overlap between patch sets whatsoever.
-> Why do you think there is?
->
+[  153.283648][    T1] =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+[  153.293078][    T1] UBSAN: shift-out-of-bounds in =
+./include/linux/hugetlb.h:555:34
+[  153.300841][    T1] shift exponent 4294967285 is too large for 64-bit =
+type 'unsigned long'
+[  153.309185][    T1] CPU: 161 PID: 1 Comm: swapper/0 Tainted: G        =
+     L    5.7.0-rc2-next-20200420 #1
+[  153.318879][    T1] Hardware name: HPE Apollo 70             =
+/C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
+[  153.329352][    T1] Call trace:
+[  153.332545][    T1]  dump_backtrace+0x0/0x224
+[  153.336945][    T1]  show_stack+0x20/0x2c
+[  153.341000][    T1]  dump_stack+0xfc/0x184
+[  153.345149][    T1]  __ubsan_handle_shift_out_of_bounds+0x304/0x344
+[  153.351465][    T1]  hugetlbfs_fill_super+0x424/0x43c
+[  153.356560][    T1]  vfs_get_super+0xcc/0x170
+[  153.360959][    T1]  get_tree_nodev+0x28/0x34
+[  153.365358][    T1]  hugetlbfs_get_tree+0xfc/0x128
+[  153.370193][    T1]  vfs_get_tree+0x54/0x158
+[  153.374513][    T1]  fc_mount+0x1c/0x5c
+[  153.378399][    T1]  mount_one_hugetlbfs+0x54/0xc8
+[  153.383233][    T1]  init_hugetlbfs_fs+0x18c/0x268
+[  153.388068][    T1]  do_one_initcall+0x6c/0x144
+[  153.392647][    T1]  do_initcall_level+0x158/0x1c4
+[  153.397480][    T1]  do_initcalls+0x68/0xb0
+[  153.401706][    T1]  do_basic_setup+0x28/0x30
+[  153.406105][    T1]  kernel_init_freeable+0x19c/0x228
+[  153.411208][    T1]  kernel_init+0x14/0x208
+[  153.415436][    T1]  ret_from_fork+0x10/0x18
 
-Because I hadn't read through Yonghong's patchset properly ;-)
-I see potential future overlap in having a dumper support a 
-"raw" mode using BTF-based display if needed, but no actual
-overlap in what's there (and here) today.
- 
-> > - The mechanism of vmlinux BTF initialization is not fit for purpose
-> >   in a printk() setting as I understand it (it uses mutex locking
-> >   to prevent multiple initializations of the BTF info).  A simple
-> >   approach to support printk might be to simply initialize the
-> >   BTF vmlinux case early in boot; it only needs to happen once.
-> >   Any suggestions here would be great.
-> > - BTF-based rendering is more complex than other printk() format
-> >   specifier-driven methods; that said, because of its generality it
-> >   does provide significant value I think
-> > - More tests are needed.
-> 
-> yep. Please make sure to add one to selftest/bpf as well.
-> bpf maintainers don't run printk tests as part of workflow, so
-> future BTF changes will surely break it if there are no selftests/bpf.
-> 
 
-Absolutely.
+[  194.312926][ T1828] UBSAN: shift-out-of-bounds in =
+./include/linux/hugetlb.h:584:11
+[  194.320664][ T1828] shift exponent 4294967285 is too large for 32-bit =
+type 'int'
+[  194.328103][ T1828] CPU: 194 PID: 1828 Comm: systemd-journal Tainted: =
+G             L    5.7.0-rc2-next-20200420 #1
+[  194.338558][ T1828] Hardware name: HPE Apollo 70             =
+/C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
+[  194.349010][ T1828] Call trace:
+[  194.352183][ T1828]  dump_backtrace+0x0/0x224
+[  194.356560][ T1828]  show_stack+0x20/0x2c
+[  194.360595][ T1828]  dump_stack+0xfc/0x184
+[  194.364724][ T1828]  __ubsan_handle_shift_out_of_bounds+0x304/0x344
+[  194.371020][ T1828]  hugetlb_total_pages+0x100/0x128
+[  194.376017][ T1828]  vm_commit_limit+0x54/0xb0
+[  194.380484][ T1828]  meminfo_proc_show+0x8f4/0xc4c
+[  194.385297][ T1828]  seq_read+0x380/0x930
+[  194.389353][ T1828]  pde_read+0x5c/0x78
+[  194.393232][ T1828]  proc_reg_read+0x74/0xc0
+[  194.397528][ T1828]  __vfs_read+0x84/0x1d0
+[  194.401646][ T1828]  vfs_read+0xec/0x124
+[  194.405588][ T1828]  ksys_read+0xb0/0x120
+[  194.409643][ T1828]  __arm64_sys_read+0x54/0x88
+[  194.414195][ T1828]  do_el0_svc+0x128/0x1dc
+[  194.418405][ T1828]  el0_sync_handler+0x150/0x250
+[  194.423157][ T1828]  el0_sync+0x164/0x180
+[  194.427425][ T1828] =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+[  194.436930][ T1828] =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+[  194.446355][ T1828] UBSAN: shift-out-of-bounds in =
+mm/hugetlb.c:3564:23
+[  194.453190][ T1828] shift exponent 4294967285 is too large for 64-bit =
+type 'unsigned long'
+[  194.461752][ T1828] CPU: 194 PID: 1828 Comm: systemd-journal Tainted: =
+G             L    5.7.0-rc2-next-20200420 #1
+[  194.472245][ T1828] Hardware name: HPE Apollo 70             =
+/C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
+[  194.482720][ T1828] Call trace:
+[  194.485909][ T1828]  dump_backtrace+0x0/0x224
+[  194.490312][ T1828]  show_stack+0x20/0x2c
+[  194.494368][ T1828]  dump_stack+0xfc/0x184
+[  194.498513][ T1828]  __ubsan_handle_shift_out_of_bounds+0x304/0x344
+[  194.504828][ T1828]  hugetlb_report_meminfo+0x25c/0x2ac
+[  194.510103][ T1828]  meminfo_proc_show+0xc08/0xc4c
+[  194.514938][ T1828]  seq_read+0x380/0x930
+[  194.518993][ T1828]  pde_read+0x5c/0x78
+[  194.522874][ T1828]  proc_reg_read+0x74/0xc0
+[  194.527190][ T1828]  __vfs_read+0x84/0x1d0
+[  194.531335][ T1828]  vfs_read+0xec/0x124
+[  194.535304][ T1828]  ksys_read+0xb0/0x120
+[  194.539371][ T1828]  __arm64_sys_read+0x54/0x88
+[  194.543958][ T1828]  do_el0_svc+0x128/0x1dc
+[  194.548187][ T1828]  el0_sync_handler+0x150/0x250
+[  194.552936][ T1828]  el0_sync+0x164/0x180
 
-> Patch 2 isn't quite correct. Early parse of vmlinux BTF does not compute
-> resolved_ids to save kernel memory. The trade off is execution time vs kernel
-> memory. I believe that saving memory is more important here, since execution is
-> not in critical path. There is __get_type_size(). It should be used in later
-> patches instead of btf_type_id_size() that relies on pre-computed
-> resolved_sizes and resolved_ids.
->
+>=20
+> .../admin-guide/kernel-parameters.txt         |  40 ++--
+> Documentation/admin-guide/mm/hugetlbpage.rst  |  35 ++++
+> arch/arm64/mm/hugetlbpage.c                   |  30 +--
+> arch/powerpc/mm/hugetlbpage.c                 |  30 +--
+> arch/riscv/mm/hugetlbpage.c                   |  24 +--
+> arch/s390/mm/hugetlbpage.c                    |  24 +--
+> arch/sparc/mm/init_64.c                       |  43 +---
+> arch/x86/mm/hugetlbpage.c                     |  23 +--
+> include/linux/hugetlb.h                       |   2 +-
+> mm/hugetlb.c                                  | 190 +++++++++++++++---
+> 10 files changed, 271 insertions(+), 170 deletions(-)
+>=20
+> --=20
+> 2.25.2
+>=20
+>=20
 
-Thanks for the info, will fix for v2!
-
-Alan 
