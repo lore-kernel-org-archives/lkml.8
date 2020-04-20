@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2A7C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04E2C3815B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABDC5206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C682B206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 12:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587386416;
-	bh=9cG006k3LbqtUOh3C3GQ/cY8hx5/Uc58zO0Ys8/zvsc=;
+	s=default; t=1587386423;
+	bh=lU55WaZbyj1wMvqSbLf0bL3kHvkYaGv5VaeW43GHrJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AxPLTPkllAjy8VbCKWfWVNVq0Jg5O+o+c5X5xQcLvMYgiK2nlwYXAfy37vFqnDLkj
-	 JGbxZha9AeUUxjGcBdfdTg8ES0DH0nUIuuKeO8dkDD7V51c1JXgjL7sYPmRYEq0PH+
-	 jVxEO3r1rxDnDUm2WPptFUv44+XRkcqSl+W34hrc=
+	b=v98jSmrWfvHjXehwwAAPHuLhk//ZBaEcPfO2NrkHfziByrweyzbBPM/mqw5ssr2SU
+	 unYQMHnCl1EdTA2fGopZOmKUl+B3qDE0eDxCSBA79HkML/LUJM+R/+7l7sJtfMFkRe
+	 ZwIl+4S1nbp5Jp8/dV/9o1FCWsd77Bm8df6rjVI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgDTMkQ (ORCPT
+        id S1727065AbgDTMkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60480 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 08:40:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbgDTMkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:40:13 -0400
+        id S1727024AbgDTMkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 08:40:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DC96206D4;
-        Mon, 20 Apr 2020 12:40:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29E4D2070B;
+        Mon, 20 Apr 2020 12:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587386412;
-        bh=9cG006k3LbqtUOh3C3GQ/cY8hx5/Uc58zO0Ys8/zvsc=;
+        s=default; t=1587386417;
+        bh=lU55WaZbyj1wMvqSbLf0bL3kHvkYaGv5VaeW43GHrJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nrLiEjw7FRBXowl2zyeoDTC6f0sXnKLOJCtcDTAQv1kGMqhr7nPuJvEZEWfqs+Duy
-         iDPPdF68SD8jPa7QTIheUZIUTZk/PwPX++vFljbbC2ytLqu5PhWq+3P1/zZ7bZq3RK
-         hL7eU3CgfPBT2pMAj3rDALsP/vnnJWJ2WA4NZMFc=
+        b=1p7oSNlgXFUR9nRJorjfxs+T270SfEOPCa2N8JdiP7a1gFITm5/X3j2tAZpzoaFle
+         MHMpV3a/4MDjpyLKHkdGgVqv1gmGXgTEi/ncTXXn2PJKYBVB26OQwq9y9Vimip36B5
+         osHXsRaIa+68fNWj0vWaxB4oxAblDG0TYE7McX/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
-        Feras Daoud <ferasda@mellanox.com>,
+        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.5 13/65] net/mlx5: Fix frequent ioread PCI access during recovery
-Date:   Mon, 20 Apr 2020 14:38:17 +0200
-Message-Id: <20200420121509.188216905@linuxfoundation.org>
+Subject: [PATCH 5.5 15/65] net/mlx5e: Fix nest_level for vlan pop action
+Date:   Mon, 20 Apr 2020 14:38:19 +0200
+Message-Id: <20200420121509.586805644@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420121505.909671922@linuxfoundation.org>
 References: <20200420121505.909671922@linuxfoundation.org>
@@ -60,63 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Dmytro Linkin <dmitrolin@mellanox.com>
 
-[ Upstream commit 8c702a53bb0a79bfa203ba21ef1caba43673c5b7 ]
+[ Upstream commit 70f478ca085deec4d6c1f187f773f5827ddce7e8 ]
 
-High frequency of PCI ioread calls during recovery flow may cause the
-following trace on powerpc:
+Current value of nest_level, assigned from net_device lower_level value,
+does not reflect the actual number of vlan headers, needed to pop.
+For ex., if we have untagged ingress traffic sended over vlan devices,
+instead of one pop action, driver will perform two pop actions.
+To fix that, calculate nest_level as difference between vlan device and
+parent device lower_levels.
 
-[ 248.670288] EEH: 2100000 reads ignored for recovering device at
-location=Slot1 driver=mlx5_core pci addr=0000:01:00.1
-[ 248.670331] EEH: Might be infinite loop in mlx5_core driver
-[ 248.670361] CPU: 2 PID: 35247 Comm: kworker/u192:11 Kdump: loaded
-Tainted: G OE ------------ 4.14.0-115.14.1.el7a.ppc64le #1
-[ 248.670425] Workqueue: mlx5_health0000:01:00.1 health_recover_work
-[mlx5_core]
-[ 248.670471] Call Trace:
-[ 248.670492] [c00020391c11b960] [c000000000c217ac] dump_stack+0xb0/0xf4
-(unreliable)
-[ 248.670548] [c00020391c11b9a0] [c000000000045818]
-eeh_check_failure+0x5c8/0x630
-[ 248.670631] [c00020391c11ba50] [c00000000068fce4]
-ioread32be+0x114/0x1c0
-[ 248.670692] [c00020391c11bac0] [c00800000dd8b400]
-mlx5_error_sw_reset+0x160/0x510 [mlx5_core]
-[ 248.670752] [c00020391c11bb60] [c00800000dd75824]
-mlx5_disable_device+0x34/0x1d0 [mlx5_core]
-[ 248.670822] [c00020391c11bbe0] [c00800000dd8affc]
-health_recover_work+0x11c/0x3c0 [mlx5_core]
-[ 248.670891] [c00020391c11bc80] [c000000000164fcc]
-process_one_work+0x1bc/0x5f0
-[ 248.670955] [c00020391c11bd20] [c000000000167f8c]
-worker_thread+0xac/0x6b0
-[ 248.671015] [c00020391c11bdc0] [c000000000171618] kthread+0x168/0x1b0
-[ 248.671067] [c00020391c11be30] [c00000000000b65c]
-ret_from_kernel_thread+0x5c/0x80
-
-Reduce the PCI ioread frequency during recovery by using msleep()
-instead of cond_resched()
-
-Fixes: 3e5b72ac2f29 ("net/mlx5: Issue SW reset on FW assert")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Reviewed-by: Feras Daoud <ferasda@mellanox.com>
+Fixes: f3b0a18bb6cb ("net: remove unnecessary variables and callback")
+Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
+Signed-off-by: Roi Dayan <roid@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/health.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/health.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/health.c
-@@ -243,7 +243,7 @@ recover_from_sw_reset:
- 		if (mlx5_get_nic_state(dev) == MLX5_NIC_IFC_DISABLED)
- 			break;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -3221,12 +3221,13 @@ static int add_vlan_pop_action(struct ml
+ 			       struct mlx5_esw_flow_attr *attr,
+ 			       u32 *action)
+ {
+-	int nest_level = attr->parse_attr->filter_dev->lower_level;
+ 	struct flow_action_entry vlan_act = {
+ 		.id = FLOW_ACTION_VLAN_POP,
+ 	};
+-	int err = 0;
++	int nest_level, err = 0;
  
--		cond_resched();
-+		msleep(20);
- 	} while (!time_after(jiffies, end));
- 
- 	if (mlx5_get_nic_state(dev) != MLX5_NIC_IFC_DISABLED) {
++	nest_level = attr->parse_attr->filter_dev->lower_level -
++						priv->netdev->lower_level;
+ 	while (nest_level--) {
+ 		err = parse_tc_vlan_action(priv, &vlan_act, attr, action);
+ 		if (err)
 
 
