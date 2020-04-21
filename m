@@ -2,100 +2,113 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7DEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B424BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9EA62084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587444791;
-	bh=9PFZgh7UT2GRpvMcdacvlJbS9OiltjpheXuW9MNd94Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AI2kTO4D+ITEHJsLIP2v/GMTV4Go5MRmBiUeAFKQHfPRt8P3N2ZiLV62EHZsU+YNv
-	 R/4uYRo/Q1ga3eBjZbuw4b4R7LZ7HmCPJRbtgE/Wtx9CKnwkTtKy73IJ31nQuK8NXd
-	 Sx9SgNJjn1wTL7dQREAOT+HmLvXh5AnR2r1VEg40=
+	by mail.kernel.org (Postfix) with ESMTP id 92C682084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgDUExL (ORCPT
+        id S1726490AbgDUEyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 00:53:11 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:52276 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgDUExK (ORCPT
+        Tue, 21 Apr 2020 00:54:23 -0400
+Received: from m176149.mail.qiye.163.com ([59.111.176.149]:24811 "EHLO
+        m176149.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgDUEyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 00:53:10 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 03L4qpuO010727;
-        Tue, 21 Apr 2020 13:52:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 03L4qpuO010727
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587444772;
-        bh=/bMQlShw8uk7wtf7csiuF+GhrxiF4rVo+x6bc8t2/pE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZHInWwaFV6Ppb5RJptyXg2Hjwhhcv/Ew7dIOaejliN5o945L/GOphVXlnBGkuk8Lf
-         PNMpNUHKpy71O2JbSaYT6WRdhMHOY2QIwBfipvcS559mOb3YVNVIQ0j8xjuvLKIuv0
-         +xF2yDcKyT97aKRHZWB3u0DLDY52hsANzuyQM08w/DOg0WOZUKQbif81cSYc6/Y5oi
-         fRWn6AOCN5nDOgmEpy0PQHM0WFamJdZCxWJAOepjD2O0hm6JjvgITU41MG6O/7b6hm
-         ngZIoo3NN7cYgVqWkDCZme0DIFMZnxHvxsjDDWd2VbZNO/vkyz2+3ZjlTRKIJl5SI5
-         EBhdW6Com/TYw==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id t189so7647841vst.7;
-        Mon, 20 Apr 2020 21:52:51 -0700 (PDT)
-X-Gm-Message-State: AGi0Pubbchpf06LVzeQxceYemKD235cfWahVfDn5jqkNYQsyD+X+/Yr/
-        qbqSqNEhPOx/X0S0siBZQJRfmn7b1lRyC1a4jqI=
-X-Google-Smtp-Source: APiQypK5llLv7LJrjEM3PXYVXtnIpMbDbXFW38yPuWSVyr/Dlk13SYDsY48W+fB8TZ7RTuAWTfCi+VnAHLy7xjr+UOU=
-X-Received: by 2002:a67:e94d:: with SMTP id p13mr11315926vso.215.1587444770520;
- Mon, 20 Apr 2020 21:52:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200414012132.32721-1-vitor@massaru.org> <CAK7LNAQYxtcNinV7JR+c8Pn9Rp1g0TxJ7m_mOFNOJQsB=OiAoA@mail.gmail.com>
- <b82142248b38085fa3ab49a9d3181cabd5a79a91.camel@massaru.org>
-In-Reply-To: <b82142248b38085fa3ab49a9d3181cabd5a79a91.camel@massaru.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 21 Apr 2020 13:52:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQPdSDGX32wXM8MPAQjOwky9qWX2sAo4SWZEcWP5RdTOg@mail.gmail.com>
-Message-ID: <CAK7LNAQPdSDGX32wXM8MPAQjOwky9qWX2sAo4SWZEcWP5RdTOg@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: ensure mrproper removes arch/$(SUBARCH)/include/generated/
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "linux-kernel-mentees@lists.linuxfoundation.org" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>
+        Tue, 21 Apr 2020 00:54:23 -0400
+Received: from vivo.com (wm-9.qy.internal [127.0.0.1])
+        by m176149.mail.qiye.163.com (Hmail) with ESMTP id 9403728200D;
+        Tue, 21 Apr 2020 12:53:47 +0800 (CST)
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AMsA9gCCCG0x*Vd28n6VQ4rK.3.1587444827503.Hmail.bernard@vivo.com>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     alexander.deucher@amd.com,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCBWMl0gYW1kZ3B1OiByZW1vdmUgdW5uZWNlc3NhcnkgY29uZGl0aW9uIGNoZWNr?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <7fe6eeef-3129-3e54-67a2-46eccca9f529@amd.com>
+MIME-Version: 1.0
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 21 Apr 2020 12:53:47 +0800 (GMT+08:00)
+From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
+Date:   Tue, 21 Apr 2020 12:53:47 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVPSEhLS0tLQ0xMSENLT1lXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSEhPTE5DS0pJN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Ngg6Qhw4ODg8SwNRLR9JQxVNLSpPCTBVSFVKTkNMT09PQ0hJTUJKVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTU5CQjcG
+X-HM-Tid: 0a719b15c5dd9395kuws9403728200d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitor,
-
-
-On Tue, Apr 21, 2020 at 7:27 AM Vitor Massaru Iha <vitor@massaru.org> wrote:
->
-
-> > > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> >
-> > Reported-by: Brendan Higgins <brendanhiggins@google.com>
->
-> Was actually Reported-by Theodore Ts'o <tytso@mit.edu>
-> https://groups.google.com/forum/#!msg/kunit-dev/QmA27YEgEgI/hvS1kiz2CwAJ
-
-OK, please add his tag, then.
-
-
->
-> Can I add suggested-by Masahiro Yamada <masahiroy@kernel.org> ?
-
-Please feel free to do so.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+CkZyb206IEZlbGl4IEt1ZWhsaW5nIDxmZWxpeC5rdWVobGluZ0BhbWQuY29tPgpEYXRlOiAyMDIw
+LTA0LTIxIDEyOjI0OjE5ClRvOiAgMTU4NzE4MDAzNy0xMTM4NDAtMS1naXQtc2VuZC1lbWFpbC1i
+ZXJuYXJkQHZpdm8uY29tLEFsZXggRGV1Y2hlciA8YWxleGFuZGVyLmRldWNoZXJAYW1kLmNvbT4s
+IkNocmlzdGlhbiBLw7ZuaWciIDxjaHJpc3RpYW4ua29lbmlnQGFtZC5jb20+LCJEYXZpZCAoQ2h1
+bk1pbmcpIFpob3UiIDxEYXZpZDEuWmhvdUBhbWQuY29tPixEYXZpZCBBaXJsaWUgPGFpcmxpZWRA
+bGludXguaWU+LERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4sYW1kLWdmeEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcsZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZyxsaW51eC1rZXJu
+ZWxAdmdlci5rZXJuZWwub3JnCkNjOiAgb3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20sQmVybmFy
+ZCBaaGFvIDxiZXJuYXJkQHZpdm8uY29tPgpTdWJqZWN0OiBSZTogW1BBVENIIFYyXSBhbWRncHU6
+IHJlbW92ZSB1bm5lY2Vzc2FyeSBjb25kaXRpb24gY2hlY2s+SGkgQmVybmFyZCwKPgo+UGxlYXNl
+IHNlZSBjb21tZW50cyBpbmxpbmUuCj4KPkFtIDIwMjAtMDQtMjAgdW0gMTA6NDEgcC5tLiBzY2hy
+aWViIEJlcm5hcmQgWmhhbzoKPj4gVGhlcmUgaXMgbm8gbmVlZCB0byBpZiBjaGVjayBhZ2Fpbiwg
+bWF5YmUgd2UgY291bGQgbWVyZ2UKPj4gaW50byB0aGUgYWJvdmUgZWxzZSBicmFuY2guCj4+Cj4+
+IFNpZ25lZC1vZmYtYnk6IEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KPj4KPj4gLS0t
+Cj4+IENoYW5nZXMgc2luY2UgVjE6Cj4+ICpjb21taXQgbWVzc2FnZSBpbXByb3ZlCj4+ICpjb2Rl
+IHN0eWxlIHJlZmFjdG9yaW5nCj4+Cj4+IExpbmsgZm9yIFYxOgo+PiAqIGh0dHBzOi8vbG9yZS5r
+ZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMjI2NTg3Lwo+PiAtLS0KPj4gIGRyaXZlcnMvZ3B1
+L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hbWRrZmRfZ3B1dm0uYyB8IDE2ICsrKysrKysrKy0tLS0t
+LS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCj4+
+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfYW1ka2Zk
+X2dwdXZtLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfYW1ka2ZkX2dwdXZt
+LmMKPj4gaW5kZXggOWRmZjc5MmM5MjkwLi5hNjRlZWIwN2JlYzQgMTAwNjQ0Cj4+IC0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hbWRrZmRfZ3B1dm0uYwo+PiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfYW1ka2ZkX2dwdXZtLmMKPj4gQEAgLTY2
+MCwxMyArNjYwLDE1IEBAIHN0YXRpYyBpbnQgcmVzZXJ2ZV9ib19hbmRfdm0oc3RydWN0IGtnZF9t
+ZW0gKm1lbSwKPj4gIAo+PiAgCXJldCA9IHR0bV9ldV9yZXNlcnZlX2J1ZmZlcnMoJmN0eC0+dGlj
+a2V0LCAmY3R4LT5saXN0LAo+PiAgCQkJCSAgICAgZmFsc2UsICZjdHgtPmR1cGxpY2F0ZXMpOwo+
+PiAtCWlmICghcmV0KQo+PiAtCQljdHgtPnJlc2VydmVkID0gdHJ1ZTsKPj4gLQllbHNlIHsKPj4g
+Kwo+PiArCWlmIChyZXQpIHsKPj4gIAkJcHJfZXJyKCJGYWlsZWQgdG8gcmVzZXJ2ZSBidWZmZXJz
+IGluIHR0bVxuIik7Cj4+ICAJCWtmcmVlKGN0eC0+dm1fcGQpOwo+PiAgCQljdHgtPnZtX3BkID0g
+TlVMTDsKPj4gIAl9Cj4+ICsJZWxzZSB7Cj4+ICsJCWN0eC0+cmVzZXJ2ZWQgPSB0cnVlOwo+PiAr
+CX0KPgo+SGVyZSB5b3UncmUganVzdCByZXZlcnNpbmcgdGhlIGlmIGFuZCBlbHNlIGJyYW5jaGVz
+LiBUaGlzIGNoYW5nZSBsb29rcwo+Y29tcGxldGVseSBzdXBlcmZsdW91cyB0byBtZS4KPgo+WW91
+J3JlIGFsc28gYnJlYWtpbmcgY29kaW5nIHN0eWxlIGNvbnZlbnRpb25zLiBUaGUgImVsc2UiIHNo
+b3VsZCBiZSBvbgo+dGhlIHNhbWUgbGluZSBhcyB0aGUgY2xvc2luZyBicmFjZSAifSIuIEknbSBw
+cmV0dHkgc3VyZSBjaGVja3BhdGNoLnBsCj53aWxsIGNvbXBsYWluIGFib3V0IHRoaXMuCj4KCklu
+IHRoaXMgZmlsZSwgb25seSB0aGVzZSB0d28gZnVuY3Rpb25zIGFyZSA8aWYgKCEgQ29uZGl0aW9u
+KS4uLiBlbHNlIC4uLi4gPiBmb3JtYXQuIApTbyBpbiBWMiwgYWZ0ZXIgaW1wcm92ZSB0aGUgY29t
+bWl0ICBpbmZvLCAKSSByZWZlciB0byB0aGUgZm9sbG93aW5nIGNvZGUgc3R5bGUgc3VnZ2VzdGlv
+bnMgYW5kIG1vZGlmeSBpdCB0byA8aWYgKGNvbmRpdGlvbikuLi5lbHNlLi4uID4gZm9ybWF0Cmh0
+dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xp
+bnV4LmdpdC90cmVlL0RvY3VtZW50YXRpb24vcHJvY2Vzcy9jb2Rpbmctc3R5bGUucnN0P2lkPTkw
+MjgwZWFhODhhYzFhOTE0MGRjNzU5OTQxMTIzNTMwZDU1NDViYjYjbjE5MQoocmVmZXIgZnJvbSBN
+YXJrdXMgRWxmcmluZ2BzIHN1Z2dlc3Rpb24pLgoKPj4gIAo+PiAgCXJldHVybiByZXQ7Cj4+ICB9
+Cj4+IEBAIC03MzMsMTUgKzczNSwxNSBAQCBzdGF0aWMgaW50IHJlc2VydmVfYm9fYW5kX2NvbmRf
+dm1zKHN0cnVjdCBrZ2RfbWVtICptZW0sCj4+ICAKPj4gIAlyZXQgPSB0dG1fZXVfcmVzZXJ2ZV9i
+dWZmZXJzKCZjdHgtPnRpY2tldCwgJmN0eC0+bGlzdCwKPj4gIAkJCQkgICAgIGZhbHNlLCAmY3R4
+LT5kdXBsaWNhdGVzKTsKPj4gLQlpZiAoIXJldCkKPj4gLQkJY3R4LT5yZXNlcnZlZCA9IHRydWU7
+Cj4+IC0JZWxzZQo+PiAtCQlwcl9lcnIoIkZhaWxlZCB0byByZXNlcnZlIGJ1ZmZlcnMgaW4gdHRt
+LlxuIik7Cj4+ICAKPj4gIAlpZiAocmV0KSB7Cj4+ICsJCXByX2VycigiRmFpbGVkIHRvIHJlc2Vy
+dmUgYnVmZmVycyBpbiB0dG0uXG4iKTsKPj4gIAkJa2ZyZWUoY3R4LT52bV9wZCk7Cj4+ICAJCWN0
+eC0+dm1fcGQgPSBOVUxMOwo+PiAgCX0KPj4gKwllbHNlIHsKPj4gKwkJY3R4LT5yZXNlcnZlZCA9
+IHRydWU7Cj4+ICsJfQo+Cj5TYW1lIGFzIGFib3ZlIHJlZ2FyZGluZyBjb2Rpbmcgc3R5bGUuCj4K
+PlRvIG1pbmltaXplIHVubmVjZXNzYXJ5IGNvZGUgY2hhbmdlcywgeW91IGNhbiBtZXJnZSB0aGUg
+ImlmIChyZXQpIC4uLiIKPmNvZGUgaW50byB0aGUgZWxzZS1icmFuY2ggb2YgdGhlIHByZXZpb3Vz
+IGlmLgo+Cj5SZWdhcmRzLAo+wqAgRmVsaXgKPgo+Cj4+ICAKPj4gIAlyZXR1cm4gcmV0Owo+PiAg
+fQoNCg0K
