@@ -2,146 +2,331 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0436EC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697ABC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D63EB20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPXUahDC"
+	by mail.kernel.org (Postfix) with ESMTP id 49676206F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgDUDXf (ORCPT
+        id S1728239AbgDUDXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgDUDXd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:23:33 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5BAC061A0E;
-        Mon, 20 Apr 2020 20:23:33 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w65so5967225pfc.12;
-        Mon, 20 Apr 2020 20:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=hAkHMsgW8GMOATHz1y5uXLHZRbJthuEQUyFwW1zRZQM=;
-        b=VPXUahDC4egr5T5AOQWCcO4zp+GKmqPNumciQBEnRpnZbz9csSEtIbonJvKgNgbNAC
-         /26RtixkoiejDvxn5y5XE+0PoTMvwCzM+pmbIPBX50MKcxzCkABeQbwMpmTIqU5HdcMI
-         tGF2eAq/W2XwbV3etne63aQT4EtjHtPRs+22FyNTB7VBrcIHyAK2U9Fx21ZnojRvl8et
-         0x5FPnq2+1qBC3V8vqgaWUnuT2x3opB1vKKq2uUJAJnUeNWlbi3+BwSyf0NZoPCDV6/P
-         dlilEaFTlMgUR+gMg5gpvz/Jqpc5xCy5e6SvWDnWH9oPCP15vUTRrZdhHq3fBdyX7Ljp
-         noNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=hAkHMsgW8GMOATHz1y5uXLHZRbJthuEQUyFwW1zRZQM=;
-        b=FVcikftf/MX7uL23/gVC84jd2B31pQO/CfW3JLgHFeTeqrnVqutbBZ6vicB3jqaq2j
-         R6MqDuAxiGVQzlAPsVztC+48UqIeBPS5DDJVc3bOxsNyp4GMBUZXyY4BYmgwJ5lX4Kvv
-         5v2WbF6wjmhuqdok0KF4j2EOG4gAjTn/XPpAnSXzhMVU9T0M8gyyf36IlG+8iYC5+eib
-         YlworEJLL09eABM1wmonlTqAeMMNtGS5WN4pJaa1Bgpb1b3A0abtvbyXbmawF85tPvBo
-         73QPc0wlTCqonMh53Hix5y2+ajHHUAGLxFoZz3DIfSYPAx5S2XYGUIdFH2hZtBl5j7d4
-         y9Sg==
-X-Gm-Message-State: AGi0PuaRApg566bADF7IU8WX/y4Es+Mz2Mj0HACHtjGjdThQ1a2TrNod
-        jdf4jVll258Fa/aiFurA800=
-X-Google-Smtp-Source: APiQypLhKGgG/jGFDVrWB+3ZbTxFK/mnqBBi4Q7+MoUlz67fb9NBBXaTrapsFcW+jfbqx8p5W2arGw==
-X-Received: by 2002:a63:6d4a:: with SMTP id i71mr19464270pgc.445.1587439412118;
-        Mon, 20 Apr 2020 20:23:32 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:f163])
-        by smtp.gmail.com with ESMTPSA id i4sm866747pjg.4.2020.04.20.20.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 23:23:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:57360 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgDUDXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 23:23:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C883D31B;
+        Mon, 20 Apr 2020 20:23:37 -0700 (PDT)
+Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 835A83F6CF;
         Mon, 20 Apr 2020 20:23:31 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 20:23:28 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Mao Wenan <maowenan@huawei.com>, "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        kernel-team@fb.com
-Subject: Re: [PATCH bpf-next v2] bpf: remove set but not used variable
- 'dst_known'
-Message-ID: <20200421032328.fglmpdmnwnjts375@ast-mbp.dhcp.thefacebook.com>
-References: <8855e82a-88d0-8d1e-e5e0-47e781f9653c@huawei.com>
- <20200418013735.67882-1-maowenan@huawei.com>
- <C7067847-8EDB-49B5-8DDF-C8504BB82962@fb.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <C7067847-8EDB-49B5-8DDF-C8504BB82962@fb.com>
+From:   Jianyong Wu <jianyong.wu@arm.com>
+To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
+        suzuki.poulose@arm.com, steven.price@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        jianyong.wu@arm.com, nd@arm.com
+Subject: [RFC PATCH v11 2/9] ptp: Reorganize ptp_kvm modules to make it arch-independent.
+Date:   Tue, 21 Apr 2020 11:22:57 +0800
+Message-Id: <20200421032304.26300-3-jianyong.wu@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200421032304.26300-1-jianyong.wu@arm.com>
+References: <20200421032304.26300-1-jianyong.wu@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 06:13:48AM +0000, Song Liu wrote:
-> 
-> 
-> > On Apr 17, 2020, at 6:37 PM, Mao Wenan <maowenan@huawei.com> wrote:
-> > 
-> > Fixes gcc '-Wunused-but-set-variable' warning:
-> > 
-> > kernel/bpf/verifier.c:5603:18: warning: variable ‘dst_known’
-> > set but not used [-Wunused-but-set-variable], delete this
-> > variable.
-> > 
-> > Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> 
-> Acked-by: Song Liu <songliubraving@fb.com>
-> 
-> With one nit below. 
-> 
-> > ---
-> > v2: remove fixes tag in commit log. 
-> > kernel/bpf/verifier.c | 4 +---
-> > 1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> > index 04c6630cc18f..c9f50969a689 100644
-> > --- a/kernel/bpf/verifier.c
-> > +++ b/kernel/bpf/verifier.c
-> > @@ -5600,7 +5600,7 @@ static int adjust_scalar_min_max_vals(struct bpf_verifier_env *env,
-> > {
-> > 	struct bpf_reg_state *regs = cur_regs(env);
-> > 	u8 opcode = BPF_OP(insn->code);
-> > -	bool src_known, dst_known;
-> > +	bool src_known;
-> 
-> This is not a hard rule, but we prefer to keep variable definition in 
-> "reverse Christmas tree" order. Since we are on this function, let's 
-> reorder these definitions to something like:
-> 
->         u64 insn_bitness = (BPF_CLASS(insn->code) == BPF_ALU64) ? 64 : 32;
->         struct bpf_reg_state *regs = cur_regs(env);
->         u8 opcode = BPF_OP(insn->code);
->         u32 dst = insn->dst_reg;
->         s64 smin_val, smax_val;
->         u64 umin_val, umax_val;
->         bool src_known;
->         int ret;
+Currently, ptp_kvm modules implementation is only for x86 which includs
+large part of arch-specific code.  This patch move all of those code
+into new arch related file in the same directory.
 
-I don't want folks to keep re-sorting variables and making patches difficult
-to backport, do git blame, causing bpf vs bpf-next conflicts, etc.
+Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+---
+ drivers/ptp/Makefile                        |  1 +
+ drivers/ptp/ptp_kvm.h                       | 11 +++
+ drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 80 +++++-------------
+ drivers/ptp/ptp_kvm_x86.c                   | 89 +++++++++++++++++++++
+ 4 files changed, 122 insertions(+), 59 deletions(-)
+ create mode 100644 drivers/ptp/ptp_kvm.h
+ rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (63%)
+ create mode 100644 drivers/ptp/ptp_kvm_x86.c
 
-reverse xmas tree is not mandatory. It's a style preference.
-I personally do it for new code, but very rarely for fixes.
-And certainly not for this kind of cleanup.
+diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
+index 7aff75f745dc..baac6f5b243b 100644
+--- a/drivers/ptp/Makefile
++++ b/drivers/ptp/Makefile
+@@ -4,6 +4,7 @@
+ #
+ 
+ ptp-y					:= ptp_clock.o ptp_chardev.o ptp_sysfs.o
++ptp_kvm-y				:= ptp_kvm_$(ARCH).o ptp_kvm_common.o
+ obj-$(CONFIG_PTP_1588_CLOCK)		+= ptp.o
+ obj-$(CONFIG_PTP_1588_CLOCK_DTE)	+= ptp_dte.o
+ obj-$(CONFIG_PTP_1588_CLOCK_INES)	+= ptp_ines.o
+diff --git a/drivers/ptp/ptp_kvm.h b/drivers/ptp/ptp_kvm.h
+new file mode 100644
+index 000000000000..4bf1802bbeb8
+--- /dev/null
++++ b/drivers/ptp/ptp_kvm.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Virtual PTP 1588 clock for use with KVM guests
++ *
++ * Copyright (C) 2017 Red Hat Inc.
++ */
++
++int kvm_arch_ptp_init(void);
++int kvm_arch_ptp_get_clock(struct timespec64 *ts);
++int kvm_arch_ptp_get_crosststamp(unsigned long *cycle,
++		struct timespec64 *tspec, void *cs);
+diff --git a/drivers/ptp/ptp_kvm.c b/drivers/ptp/ptp_kvm_common.c
+similarity index 63%
+rename from drivers/ptp/ptp_kvm.c
+rename to drivers/ptp/ptp_kvm_common.c
+index fc7d0b77e118..4fdd8ab11a28 100644
+--- a/drivers/ptp/ptp_kvm.c
++++ b/drivers/ptp/ptp_kvm_common.c
+@@ -8,15 +8,16 @@
+ #include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
++#include <linux/slab.h>
+ #include <linux/module.h>
+ #include <uapi/linux/kvm_para.h>
+ #include <asm/kvm_para.h>
+-#include <asm/pvclock.h>
+-#include <asm/kvmclock.h>
+ #include <uapi/asm/kvm_para.h>
+ 
+ #include <linux/ptp_clock_kernel.h>
+ 
++#include "ptp_kvm.h"
++
+ struct kvm_ptp_clock {
+ 	struct ptp_clock *ptp_clock;
+ 	struct ptp_clock_info caps;
+@@ -24,56 +25,29 @@ struct kvm_ptp_clock {
+ 
+ DEFINE_SPINLOCK(kvm_ptp_lock);
+ 
+-static struct pvclock_vsyscall_time_info *hv_clock;
+-
+-static struct kvm_clock_pairing clock_pair;
+-static phys_addr_t clock_pair_gpa;
+-
+ static int ptp_kvm_get_time_fn(ktime_t *device_time,
+ 			       struct system_counterval_t *system_counter,
+ 			       void *ctx)
+ {
+-	unsigned long ret;
++	unsigned long ret, cycle;
+ 	struct timespec64 tspec;
+-	unsigned version;
+-	int cpu;
+-	struct pvclock_vcpu_time_info *src;
++	struct clocksource *cs;
+ 
+ 	spin_lock(&kvm_ptp_lock);
+ 
+ 	preempt_disable_notrace();
+-	cpu = smp_processor_id();
+-	src = &hv_clock[cpu].pvti;
+-
+-	do {
+-		/*
+-		 * We are using a TSC value read in the hosts
+-		 * kvm_hc_clock_pairing handling.
+-		 * So any changes to tsc_to_system_mul
+-		 * and tsc_shift or any other pvclock
+-		 * data invalidate that measurement.
+-		 */
+-		version = pvclock_read_begin(src);
+-
+-		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
+-				     clock_pair_gpa,
+-				     KVM_CLOCK_PAIRING_WALLCLOCK);
+-		if (ret != 0) {
+-			pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
+-			spin_unlock(&kvm_ptp_lock);
+-			preempt_enable_notrace();
+-			return -EOPNOTSUPP;
+-		}
+-
+-		tspec.tv_sec = clock_pair.sec;
+-		tspec.tv_nsec = clock_pair.nsec;
+-		ret = __pvclock_read_cycles(src, clock_pair.tsc);
+-	} while (pvclock_read_retry(src, version));
++	ret = kvm_arch_ptp_get_crosststamp(&cycle, &tspec, &cs);
++	if (ret != 0) {
++		pr_err_ratelimited("clock pairing hypercall ret %lu\n", ret);
++		spin_unlock(&kvm_ptp_lock);
++		preempt_enable_notrace();
++		return -EOPNOTSUPP;
++	}
+ 
+ 	preempt_enable_notrace();
+ 
+-	system_counter->cycles = ret;
+-	system_counter->cs = &kvm_clock;
++	system_counter->cycles = cycle;
++	system_counter->cs = cs;
+ 
+ 	*device_time = timespec64_to_ktime(tspec);
+ 
+@@ -116,17 +90,13 @@ static int ptp_kvm_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+ 
+ 	spin_lock(&kvm_ptp_lock);
+ 
+-	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
+-			     clock_pair_gpa,
+-			     KVM_CLOCK_PAIRING_WALLCLOCK);
++	ret = kvm_arch_ptp_get_clock(&tspec);
+ 	if (ret != 0) {
+ 		pr_err_ratelimited("clock offset hypercall ret %lu\n", ret);
+ 		spin_unlock(&kvm_ptp_lock);
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	tspec.tv_sec = clock_pair.sec;
+-	tspec.tv_nsec = clock_pair.nsec;
+ 	spin_unlock(&kvm_ptp_lock);
+ 
+ 	memcpy(ts, &tspec, sizeof(struct timespec64));
+@@ -166,21 +136,13 @@ static void __exit ptp_kvm_exit(void)
+ 
+ static int __init ptp_kvm_init(void)
+ {
+-	long ret;
+-
+-	if (!kvm_para_available())
+-		return -ENODEV;
+-
+-	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
+-	hv_clock = pvclock_get_pvti_cpu0_va();
++	int ret;
+ 
+-	if (!hv_clock)
+-		return -ENODEV;
+-
+-	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
+-			KVM_CLOCK_PAIRING_WALLCLOCK);
+-	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
+-		return -ENODEV;
++	ret = kvm_arch_ptp_init();
++	if (ret) {
++		pr_err("fail to initialize ptp_kvm");
++		return -EOPNOTSUPP;
++	}
+ 
+ 	kvm_ptp_clock.caps = ptp_kvm_caps;
+ 
+diff --git a/drivers/ptp/ptp_kvm_x86.c b/drivers/ptp/ptp_kvm_x86.c
+new file mode 100644
+index 000000000000..55417b3b282d
+--- /dev/null
++++ b/drivers/ptp/ptp_kvm_x86.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Virtual PTP 1588 clock for use with KVM guests
++ *
++ * Copyright (C) 2017 Red Hat Inc.
++ */
++
++#include <linux/device.h>
++#include <asm/kvm_para.h>
++#include <asm/pvclock.h>
++#include <asm/kvmclock.h>
++#include <linux/module.h>
++#include <linux/ptp_clock_kernel.h>
++#include <uapi/asm/kvm_para.h>
++#include <uapi/linux/kvm_para.h>
++
++phys_addr_t clock_pair_gpa;
++struct kvm_clock_pairing clock_pair;
++struct pvclock_vsyscall_time_info *hv_clock;
++
++int kvm_arch_ptp_init(void)
++{
++	int ret;
++
++	if (!kvm_para_available())
++		return -ENODEV;
++
++	clock_pair_gpa = slow_virt_to_phys(&clock_pair);
++	hv_clock = pvclock_get_pvti_cpu0_va();
++	if (!hv_clock)
++		return -ENODEV;
++
++	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING, clock_pair_gpa,
++			     KVM_CLOCK_PAIRING_WALLCLOCK);
++	if (ret == -KVM_ENOSYS || ret == -KVM_EOPNOTSUPP)
++		return -ENODEV;
++
++	return 0;
++}
++
++int kvm_arch_ptp_get_clock(struct timespec64 *ts)
++{
++	long ret;
++
++	ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
++			     clock_pair_gpa,
++			     KVM_CLOCK_PAIRING_WALLCLOCK);
++	if (ret != 0)
++		return -EOPNOTSUPP;
++
++	ts->tv_sec = clock_pair.sec;
++	ts->tv_nsec = clock_pair.nsec;
++
++	return 0;
++}
++
++int kvm_arch_ptp_get_crosststamp(unsigned long *cycle, struct timespec64 *tspec,
++			      struct clocksource **cs)
++{
++	unsigned long ret;
++	unsigned int version;
++	int cpu;
++	struct pvclock_vcpu_time_info *src;
++
++	cpu = smp_processor_id();
++	src = &hv_clock[cpu].pvti;
++
++	do {
++		/*
++		 * We are using a TSC value read in the hosts
++		 * kvm_hc_clock_pairing handling.
++		 * So any changes to tsc_to_system_mul
++		 * and tsc_shift or any other pvclock
++		 * data invalidate that measurement.
++		 */
++		version = pvclock_read_begin(src);
++
++		ret = kvm_hypercall2(KVM_HC_CLOCK_PAIRING,
++				     clock_pair_gpa,
++				     KVM_CLOCK_PAIRING_WALLCLOCK);
++		tspec->tv_sec = clock_pair.sec;
++		tspec->tv_nsec = clock_pair.nsec;
++		*cycle = __pvclock_read_cycles(src, clock_pair.tsc);
++	} while (pvclock_read_retry(src, version));
++
++	*cs = &kvm_clock;
++
++	return 0;
++}
+-- 
+2.17.1
 
-Applied. Thanks
