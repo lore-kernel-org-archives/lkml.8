@@ -2,156 +2,68 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579A6C38A30
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B618CC38A30
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5A5B20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:55:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="3LdGT1lm"
+	by mail.kernel.org (Postfix) with ESMTP id 8316020782
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:59:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587437945;
+	bh=W3MzZqLv72l10lePV5P3s2AV3T4CM7dFmWlBV+gveZk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wGmJfjlZr0+wefvt+tGYkyiumpF19U7b8ileh5Uy+sYkpxJqRqQXcW++x8XOD9xnh
+	 ueLcPuWoZ3y5cFOe4QflOhuRIXRPvrojyRiL6GHCEuifioAMAw/9bfv5q5COhnTyQL
+	 vK5+2kwmTzqp6QXw5zd9V/TRRtflrnhHU9wWKeUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgDUCzj (ORCPT
+        id S1726628AbgDUC7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 22:55:39 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:59746 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725829AbgDUCzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 22:55:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=f3Xqbop8kqKQYJgVyVtr8yk6+TBXU6F//RkjHBh14uk=; b=3
-        LdGT1lmFK3pW+XEiQonA/2h4thQl+Y9ywpyBf79MF1YcfRvMvoaN+Fya+VlSqaOv
-        8hp5xU03cyoEKxEKENV/a+oayWxRHT1QE2cHJQKcsC3KUxiBk+I600DIJyUR5cQj
-        xyzk/WkqrmcNdx5jMZ8wTBXq+dm5xGMetqFVRQ41Y0=
-Received: from localhost.localdomain (unknown [120.229.255.67])
-        by app2 (Coremail) with SMTP id XQUFCgBnb_+ZYJ5erEYrAA--.11121S3;
-        Tue, 21 Apr 2020 10:55:23 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH v2] btrfs: Fix block group leak when remove it fails
-Date:   Tue, 21 Apr 2020 10:54:11 +0800
-Message-Id: <1587437651-87784-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgBnb_+ZYJ5erEYrAA--.11121S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw4DuF48Jw4fXFW5GFyrtFb_yoW5Wr4Dpr
-        yDKws0gr1rAr1qqa1kG3yYqw1Fg3WkGw48Grn8Crsaqw43Jw13XF9ay3WYyry5tFWfXrZr
-        Xa1Fv34UAF9Fkw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUQZ23UUU
-        UU=
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Mon, 20 Apr 2020 22:59:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgDUC7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 22:59:04 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC3C320782;
+        Tue, 21 Apr 2020 02:59:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587437944;
+        bh=W3MzZqLv72l10lePV5P3s2AV3T4CM7dFmWlBV+gveZk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=E52zdUtcXbBhlSAwu0JC0W09eFVNtik1wixT7L0iRFiUrQxgyOnu69HNxCeFQK6Ig
+         my+2RBnLM46sKg75wo+yultZE4u0I+yYDR65Dvv/IxvF+/ySrPkDL9dXQ5SoE2w7Nq
+         fWgSnVOSXj2rtd9REBwnXrn0RVSqdHzhzXJTfdbc=
+Date:   Mon, 20 Apr 2020 19:59:03 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     agordeev@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] mm/mmap.c: do not allow mappings outside of allowed
+ limits
+Message-Id: <20200420195903.93455e087985b423f97bdfe3@linux-foundation.org>
+In-Reply-To: <d6da1319114a331095052638f0ffa3ccb0be58f1.1584958099.git.agordeev@linux.ibm.com>
+References: <cover.1584958099.git.agordeev@linux.ibm.com>
+        <d6da1319114a331095052638f0ffa3ccb0be58f1.1584958099.git.agordeev@linux.ibm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-btrfs_remove_block_group() invokes btrfs_lookup_block_group(), which
-returns a local reference of the blcok group that contains the given
-bytenr to "block_group" with increased refcount.
+On Mon, 23 Mar 2020 14:29:29 +0100 agordeev@linux.ibm.com wrote:
 
-When btrfs_remove_block_group() returns, "block_group" becomes invalid,
-so the refcount should be decreased to keep refcount balanced.
+> It is possible to request a fixed mapping address below
+> mmap_min_addr and succeed. This update adds early checks
+> of mmap_min_addr and mmap_end boundaries and fixes the
+> above issue.
 
-The reference counting issue happens in several exception handling paths
-of btrfs_remove_block_group(). When those error scenarios occur such as
-btrfs_alloc_path() returns NULL, the function forgets to decrease its
-refcnt increased by btrfs_lookup_block_group() and will cause a refcnt
-leak.
-
-Fix this issue by jumping to "out_put_group" label and calling
-btrfs_put_block_group() when those error scenarios occur.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
-Changes in v2:
-- Change title description
-- Modify the patch in a better code style
----
- fs/btrfs/block-group.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 404e050ce8ee..1628471b968b 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -916,7 +916,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 	path = btrfs_alloc_path();
- 	if (!path) {
- 		ret = -ENOMEM;
--		goto out;
-+		goto out_put_group;
- 	}
- 
- 	/*
-@@ -954,7 +954,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 		ret = btrfs_orphan_add(trans, BTRFS_I(inode));
- 		if (ret) {
- 			btrfs_add_delayed_iput(inode);
--			goto out;
-+			goto out_put_group;
- 		}
- 		clear_nlink(inode);
- 		/* One for the block groups ref */
-@@ -977,13 +977,13 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 
- 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
- 	if (ret < 0)
--		goto out;
-+		goto out_put_group;
- 	if (ret > 0)
- 		btrfs_release_path(path);
- 	if (ret == 0) {
- 		ret = btrfs_del_item(trans, tree_root, path);
- 		if (ret)
--			goto out;
-+			goto out_put_group;
- 		btrfs_release_path(path);
- 	}
- 
-@@ -1102,9 +1102,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 
- 	ret = remove_block_group_free_space(trans, block_group);
- 	if (ret)
--		goto out;
-+		goto out_put_group;
- 
--	btrfs_put_block_group(block_group);
-+	/* once for the block groups rbtree */
- 	btrfs_put_block_group(block_group);
- 
- 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
-@@ -1127,6 +1127,10 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 		/* once for the tree */
- 		free_extent_map(em);
- 	}
-+
-+out_put_group:
-+	/* once for the lookup reference */
-+	btrfs_put_block_group(block_group);
- out:
- 	if (remove_rsv)
- 		btrfs_delayed_refs_rsv_release(fs_info, 1);
--- 
-2.7.4
+Does this solve any known problems?  If not, what is the motivation for
+the change?
 
