@@ -2,168 +2,139 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF41C55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A42C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2EC21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:55:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587452140;
-	bh=zJ60yvTqB3tFZq6e5i0uFpw0aBM0sbkbs4gVEDscwcc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hmWzpbB/xIN8bY5MIgc5txJl62OaiTxsPk747yW1wdRXfMRSw/9JMgQ1q5r8N7wxL
-	 3TqNzhBPfaV27FdCqN2rJh0nqfSHYsw3locip4tWdLGA1nUhejDBVA9a7J63TElyHf
-	 RSMdBLgvHk1UhHNnq+rdxGkhuQLJhBd5SHRzRgjI=
+	by mail.kernel.org (Postfix) with ESMTP id 6034920738
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:56:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NIYyPwlg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgDUGzj (ORCPT
+        id S1726812AbgDUG4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 02:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56284 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 02:56:49 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:49149 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbgDUGzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 02:55:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF8D2072D;
-        Tue, 21 Apr 2020 06:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587452137;
-        bh=zJ60yvTqB3tFZq6e5i0uFpw0aBM0sbkbs4gVEDscwcc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rOvT1pf71YXBkdb+1cDESYAuVzGz9Pfk05UHBuTjyKfXBGV8Jwl3nLgA8xfppe4Gy
-         3rQRUzHq43ryklylYJLxHNa0hUAmBU4i2wDKLh3QDBBLU8xmzuY6g/vZ/rjhX3FvfR
-         l9NazMlSeEbaWkalX0L3KNeQ72f9/by4M0/j7BI8=
-Date:   Tue, 21 Apr 2020 08:55:35 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] blktrace: add checks for created debugfs files
- on setup
-Message-ID: <20200421065535.GC347130@kroah.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-9-mcgrof@kernel.org>
- <38240225-e48e-3035-0baa-4929948b23a3@acm.org>
- <20200419230537.GG11244@42.do-not-panic.com>
- <c69b67d1-f887-600b-f3ab-54ab0b7dcb13@acm.org>
- <20200420114038.GE3906674@kroah.com>
- <20200420184445.GK11244@42.do-not-panic.com>
- <20200420201101.GB302402@kroah.com>
- <20200420202046.GN11244@42.do-not-panic.com>
+        id S1725940AbgDUG4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 02:56:49 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 495vW20DBVz9v16V;
+        Tue, 21 Apr 2020 08:56:46 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=NIYyPwlg; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 46KdLJppvgXh; Tue, 21 Apr 2020 08:56:45 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 495vW15Gmwz9v16T;
+        Tue, 21 Apr 2020 08:56:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1587452205; bh=KQZJC6KX1xpBYQjH9gTCok37HzkmIIMid4Gimdkdk0o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=NIYyPwlgeGjxnLgTYHY6DhRJMQYOTm1aESrLGiO/ANRDXn4gnetiIbleE+xtmS+80
+         gnd1a2nd+DGOAQvjUZaUurJ1ZceeONg2tg0bqPwSNpQz8L9pkXInLTRSPOfMAFh2Jq
+         qa3sR9Wz4Sf9NxKAQppJEgwrgv2S8Ut9sLmNq0Xw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BC2518B783;
+        Tue, 21 Apr 2020 08:56:46 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Afw_vswuFQPo; Tue, 21 Apr 2020 08:56:46 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 060D98B774;
+        Tue, 21 Apr 2020 08:56:44 +0200 (CEST)
+Subject: Re: [PATCH v7 0/7] powerpc: switch VDSO to C implementation
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>
+References: <cover.1587401492.git.christophe.leroy@c-s.fr>
+ <CAK8P3a11t=piuDq+TuGMo0xDiN06OLMxsym0PGiWNv5qYSUXLQ@mail.gmail.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <268ff4cf-2f30-fead-fef5-e8e5f8f17aba@c-s.fr>
+Date:   Tue, 21 Apr 2020 08:56:35 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420202046.GN11244@42.do-not-panic.com>
+In-Reply-To: <CAK8P3a11t=piuDq+TuGMo0xDiN06OLMxsym0PGiWNv5qYSUXLQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 08:20:46PM +0000, Luis Chamberlain wrote:
-> On Mon, Apr 20, 2020 at 10:11:01PM +0200, Greg KH wrote:
-> > On Mon, Apr 20, 2020 at 06:44:45PM +0000, Luis Chamberlain wrote:
-> > > On Mon, Apr 20, 2020 at 01:40:38PM +0200, Greg KH wrote:
-> > > > On Sun, Apr 19, 2020 at 04:17:46PM -0700, Bart Van Assche wrote:
-> > > > > On 4/19/20 4:05 PM, Luis Chamberlain wrote:
-> > > > > > On Sun, Apr 19, 2020 at 03:57:58PM -0700, Bart Van Assche wrote:
-> > > > > > > On 4/19/20 12:45 PM, Luis Chamberlain wrote:
-> > > > > > > > Even though debugfs can be disabled, enabling BLK_DEV_IO_TRACE will
-> > > > > > > > select DEBUG_FS, and blktrace exposes an API which userspace uses
-> > > > > > > > relying on certain files created in debugfs. If files are not created
-> > > > > > > > blktrace will not work correctly, so we do want to ensure that a
-> > > > > > > > blktrace setup creates these files properly, and otherwise inform
-> > > > > > > > userspace.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> > > > > > > > ---
-> > > > > > > >    kernel/trace/blktrace.c | 8 +++++---
-> > > > > > > >    1 file changed, 5 insertions(+), 3 deletions(-)
-> > > > > > > > 
-> > > > > > > > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> > > > > > > > index 9cc0153849c3..fc32a8665ce8 100644
-> > > > > > > > --- a/kernel/trace/blktrace.c
-> > > > > > > > +++ b/kernel/trace/blktrace.c
-> > > > > > > > @@ -552,17 +552,19 @@ static int blk_trace_create_debugfs_files(struct blk_user_trace_setup *buts,
-> > > > > > > >    					  struct dentry *dir,
-> > > > > > > >    					  struct blk_trace *bt)
-> > > > > > > >    {
-> > > > > > > > -	int ret = -EIO;
-> > > > > > > > -
-> > > > > > > >    	bt->dropped_file = debugfs_create_file("dropped", 0444, dir, bt,
-> > > > > > > >    					       &blk_dropped_fops);
-> > > > > > > > +	if (!bt->dropped_file)
-> > > > > > > > +		return -ENOMEM;
-> > > > > > > >    	bt->msg_file = debugfs_create_file("msg", 0222, dir, bt, &blk_msg_fops);
-> > > > > > > > +	if (!bt->msg_file)
-> > > > > > > > +		return -ENOMEM;
-> > > > > > > >    	bt->rchan = relay_open("trace", dir, buts->buf_size,
-> > > > > > > >    				buts->buf_nr, &blk_relay_callbacks, bt);
-> > > > > > > >    	if (!bt->rchan)
-> > > > > > > > -		return ret;
-> > > > > > > > +		return -EIO;
-> > > > > > > >    	return 0;
-> > > > > > > >    }
-> > > > > > > 
-> > > > > > > I should have had a look at this patch before I replied to the previous
-> > > > > > > patch.
-> > > > > > > 
-> > > > > > > Do you agree that the following code can be triggered by
-> > > > > > > debugfs_create_file() and also that debugfs_create_file() never returns
-> > > > > > > NULL?
-> > > > > > 
-> > > > > > If debugfs is enabled, and not that we know it is in this blktrace code,
-> > > > > > as we select it, it can return ERR_PTR(-ERROR) if an error occurs.
-> > > > > 
-> > > > > This is what I found in include/linux/debugfs.h in case debugfs is disabled:
-> > > > > 
-> > > > > static inline struct dentry *debugfs_create_file(const char *name,
-> > > > > 	umode_t mode, struct dentry *parent, void *data,
-> > > > > 	const struct file_operations *fops)
-> > > > > {
-> > > > > 	return ERR_PTR(-ENODEV);
-> > > > > }
-> > > > > 
-> > > > > I have not found any code path that can cause debugfs_create_file() to
-> > > > > return NULL. Did I perhaps overlook something? If not, it's not clear to me
-> > > > > why the above patch adds checks that check whether debugfs_create_file()
-> > > > > returns NULL?
-> > > > 
-> > > > Short answer, yes, it can return NULL.  Correct answer is, you don't
-> > > > care, don't check the value and don't do anything about it.  It's
-> > > > debugging code, userspace doesn't care, so just keep moving on.
-> > > 
-> > > Thing is this code *exposes* knobs to userspace for an API that *does*
-> > > exepect those files to exist. That is, blktrace *relies* on these
-> > > debugfs files to exist. So the kconfig which enables blktrace
-> > > CONFIG_BLK_DEV_IO_TRACE selects DEBUG_FS.
-> > 
-> > That's nice, but again, no kernel code should do anything different
-> > depending on what debugfs happens to be doing at that point in time.
+
+
+Le 20/04/2020 à 21:57, Arnd Bergmann a écrit :
+> On Mon, Apr 20, 2020 at 6:56 PM Christophe Leroy
+> <christophe.leroy@c-s.fr> wrote:
+>>
+>> This is the seventh version of a series to switch powerpc VDSO to
+>> generic C implementation.
+>>
+>> Main changes since v6 are:
+>> - Added -fasynchronous-unwind-tables in CFLAGS
+>> - Split patch 2 in two parts
+>> - Split patch 5 (which was patch 4) in two parts
+>>
+>> This series applies on today's powerpc/merge branch.
+>>
+>> See the last two patches for details on changes and performance.
+>>
+>> Christophe Leroy (7):
+>>    powerpc/vdso64: Switch from __get_datapage() to get_datapage inline
+>>      macro
+>>    powerpc/vdso: Remove __kernel_datapage_offset and simplify
+>>      __get_datapage()
+>>    powerpc/vdso: Remove unused \tmp param in __get_datapage()
+>>    powerpc/processor: Move cpu_relax() into asm/vdso/processor.h
+>>    powerpc/vdso: Prepare for switching VDSO to generic C implementation.
+>>    powerpc/vdso: Switch VDSO to generic C implementation.
 > 
-> So even if the debugfs files were *not* created, and this code executes only
-> if DEBUG_FS, you don't think we should inform userspace if the blktrace
-> setup ioctl, which sets up these debugfs, didn't happen?
+> This all looks fine, but I'm a bit puzzled why you don't add a
+> clock_gettime64() implementation in the same series. Isn't
+> that the main purpose of doing all that work?
+
+Yes that was one of the objective, be able to add that as a second step.
+First objective was adding the missing clocks and increasing 
+maintainability.
+
+I can add a patch for that now, it looks easy, but how do I test it ? 
+vdsotest from Nathan doesn't seem to test that.
+
 > 
-> The "recovery" here would just be to destroy the blktrace setup, and
-> inform userspace that the blktrace setup ioctl failed.
+> Without it, any 32-bit user space has to go through the system call
+> for time()/getttimeofday()/clock_gettime() when built with a
+> modern libc.
+> 
 
-Hm, ok, but comment the heck out of this saying _why_ you are testing
-the return value, and how that differs from 99% of the other users of
-this function in the kernel tree please.
+How modern ? I have glibc 2.28, the only symbols it seems to know are 
+(extracted with 'strings') :
 
-Otherwise I will end up removing the checks again with my semi-regular
-sweep of the tree...
+__vdso_clock_gettime
+__vdso_time
+__vdso_get_tbfreq
+__vdso_getcpu
+__vdso_clock_getres
+__vdso_sigtramp32
+__vdso_sigtramp_rt32
+__vdso_gettimeofday
 
-thanks,
-
-greg k-h
+Christophe
