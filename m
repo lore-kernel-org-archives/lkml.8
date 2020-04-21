@@ -2,88 +2,109 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79837C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E225CC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 646132076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF17D2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:52:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587473578;
+	bh=Fn7rbRiapP/SaYGJR8P7RLqze6s1UTZ2512WBb64z7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gG2ee5PLyCP3/EXDb362zzpbPvhwUNXlocEuTI6zcMZmK7a2x9eIsuvnVdTkKJw00
+	 dGxfNNKspRINj4eWlZ6NomayBhs9UdiLzNF+O2fy+zDasxsQW6p8oUCWLQ99G32+wH
+	 35Mxvo7NdfDFgt1LQXgCjIqg0Iztbeb8QO5RQ5es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgDUMwb (ORCPT
+        id S1728938AbgDUMw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728337AbgDUMwa (ORCPT
+        Tue, 21 Apr 2020 08:52:58 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46009 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728802AbgDUMwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:52:30 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E55CC061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:52:30 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jQsNz-0004N2-SG; Tue, 21 Apr 2020 14:52:23 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jQsNw-0002Fq-Vn; Tue, 21 Apr 2020 14:52:21 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-Subject: [PATCH net-next v4 0/4] add TJA1102 support
-Date:   Tue, 21 Apr 2020 14:52:15 +0200
-Message-Id: <20200421125219.8402-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.1
+        Tue, 21 Apr 2020 08:52:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t14so16289110wrw.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:52:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wH+l3kjkV4M80pSfaf6tFiuhqXzQ05Et/uLXKnbO3F0=;
+        b=bSkBphiiCZWHgpMJPiMcs4fOqvxiFFTnk482WAaeE+Kt+ZRb8UKhGkpZUXYmzTu3nv
+         M4jrjCvLLAGysDOROm7pgmdL5aC9ivFb5IvRk6L6UmBvs7rFevdn18+iwcJ81vlDaJvL
+         WSyUbU/SUdHUD9Ad0BqTUoOTUUkpHUzFQD1knjZXFJPnj/EredQrEWlCT538hC5clFoU
+         /pKfrEyVR86dO5ZFLe2iXoFy0r6u56TEU7EkYuyNsfeEF0a5q9ZwrZKuCKiNawrmo8Qw
+         dKO5jAinBFr/BvIrXezAElisr9qHxwSj7PuESk7vZv5KJZWP4vWdWy1rFn5bU0ScG4hL
+         RHew==
+X-Gm-Message-State: AGi0PuYJ8qM+Es96WIiJOVxrwXHUlm3upbnblqWJburo/iYZHrxI8TAi
+        bllFVgKnWG13cn4ZOZ2WTGY=
+X-Google-Smtp-Source: APiQypJK2DJznM4LBkwNiRARpy4QXbLWtusdChfPktwY+Si3C/BZwRW5C4+XrfnGFfZdOyFoMUQ86A==
+X-Received: by 2002:a5d:670c:: with SMTP id o12mr10344273wru.286.1587473572262;
+        Tue, 21 Apr 2020 05:52:52 -0700 (PDT)
+Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
+        by smtp.gmail.com with ESMTPSA id u17sm4375673wra.63.2020.04.21.05.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 05:52:51 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 14:52:50 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Subject: Re: [PATCH RFC 1/2] mm/memory_hotplug: no need to init new pgdat
+ with node_start_pfn
+Message-ID: <20200421125250.GG27314@dhcp22.suse.cz>
+References: <20200416104707.20219-1-david@redhat.com>
+ <20200416104707.20219-2-david@redhat.com>
+ <20200421123011.GE27314@dhcp22.suse.cz>
+ <ac246ba8-9a61-0e0b-3aff-caf78743e81f@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac246ba8-9a61-0e0b-3aff-caf78743e81f@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-changes v4:
-- remove unused phy_id variable
+On Tue 21-04-20 14:35:12, David Hildenbrand wrote:
+> On 21.04.20 14:30, Michal Hocko wrote:
+> > Sorry for the late reply
+> > 
+> > On Thu 16-04-20 12:47:06, David Hildenbrand wrote:
+> >> A hotadded node/pgdat will span no pages at all, until memory is moved to
+> >> the zone/node via move_pfn_range_to_zone() -> resize_pgdat_range - e.g.,
+> >> when onlining memory blocks. We don't have to initialize the
+> >> node_start_pfn to the memory we are adding.
+> > 
+> > You are right that the node is empty at this phase but that is already
+> > reflected by zero present pages (hmm, I do not see spanned pages to be
+> > set 0 though). What I am missing here is why this is an improvement. The
+> > new node is already visible here and I do not see why we hide the
+> > information we already know.
+> 
+> "information we already know" - no, not before we online the memory.
 
-changes v3:
-- export part of of_mdiobus_register_phy() and reuse it in tja11xx
-  driver
-- coding style fixes
+Is this really the case? All add_memory_resource users operate on a
+physical memory range.
 
-changes v2:
-- use .match_phy_device
-- add irq support
-- add add delayed registration for PHY1
+> Before onlining, it's just setting node_start_pfn to *some value* to be
+> overwritten in move_pfn_range_to_zone()->resize_pgdat_range().
 
-Oleksij Rempel (4):
-  dt-bindings: net: phy: Add support for NXP TJA11xx
-  net: phy: tja11xx: add initial TJA1102 support
-  net: mdio: of: export part of of_mdiobus_register_phy()
-  net: phy: tja11xx: add delayed registration of TJA1102 PHY1
+Yes the value is overwritten but I am not sure this is actually correct
+thing to do. I cannot remember why I've chosen to do that. It doesn't
+really seem unlikely to online node in a higher physical address.
 
- .../devicetree/bindings/net/nxp,tja11xx.yaml  |  61 ++++++
- drivers/net/phy/nxp-tja11xx.c                 | 201 +++++++++++++++++-
- drivers/of/of_mdio.c                          |  73 ++++---
- include/linux/of_mdio.h                       |  11 +-
- 4 files changed, 308 insertions(+), 38 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-
+Btw. one thing that I have in my notes, I was never able to actually
+test the no numa node case. Because I have always been testing with node
+being allocated during the boot. Do you have any way to trigger this
+path?
 -- 
-2.25.1
-
+Michal Hocko
+SUSE Labs
