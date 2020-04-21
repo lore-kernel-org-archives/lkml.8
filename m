@@ -2,141 +2,289 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02B4C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A31C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E1420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9591C20747
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kCcz+Vvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgDUOAQ (ORCPT
+        id S1728957AbgDUOAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:00:16 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59926 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbgDUOAP (ORCPT
+        Tue, 21 Apr 2020 10:00:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728772AbgDUOAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:00:15 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jQtRN-0000iS-5e; Tue, 21 Apr 2020 13:59:57 +0000
-To:     Raed Salem <raeds@mellanox.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Cc:     Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: re: net/mlx5: IPsec, Refactor SA handle creation and destruction
-Message-ID: <ffb0bca8-003f-bb7a-51ac-171b1f4e4a75@canonical.com>
-Date:   Tue, 21 Apr 2020 14:59:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 10:00:46 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A42A2C061A41
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 07:00:46 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id o3so8461182vsd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 07:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3ufO0oc55SP4ppmrO49IkerUiLNfh37ywo2Lik40Adk=;
+        b=kCcz+VvyC/0IdI5gEKgvRf59mDcFEWTu/D1Ov9OACQKF1YEkdo/czGTGb09gPZe9nz
+         CfsRp2cuik7vLYUVXc/zRZIz/M1iAydX8PM+/hsH0pTD5HFXabDTfMSk9eFgJkf3ycO7
+         HwuB5lGEuv0muapa9Iicl4fVKvJVOBKTUwZNnrjM1HewRbx4nfgTaatf1/BoG80s61zW
+         zUZqNfnUAgdZ4NNjRfNyQ7RzgUiJnjKAU5TERSmQGAsn+H+9jQpQp0sn66wVsw8QKIBy
+         9i+kJngnYZVql2Yc/4MY3Wcxtw20Jw09IHP0gKmV2Uy8DOQ/gPTUZZAHunscQ2NmHS2m
+         LbgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3ufO0oc55SP4ppmrO49IkerUiLNfh37ywo2Lik40Adk=;
+        b=LYG/m3e3RuXlzPZfdTz88zBWo7N92p8XFFWF9dhQqySqhUY5J4AjpuQZaED8dVrrXz
+         PB8ztVlr5i9ccnocps3ZC6CRRN5mdzDaTeDiL/+T6kfbgbgf93t7Eu9aJGw5i3js+GXY
+         WJTnalOqgoSaMW4XoCssh9QAuXwBGg/WFCllIpWuM5k26l5M61eo3NF95CqtKimnHYTZ
+         rGBxiezCAKIrfgocTL8F0JLznU3cEDBzMGDoyGGUAnwqSgLNIYVVX6/gWt1fafEu2Pfa
+         lHRPmzu4CSeO+5quZjp296ZbWtBFsWJfCdVBVrct1PogqegGBHJ6QMpwThkOzS9QFoGw
+         lDMQ==
+X-Gm-Message-State: AGi0PubaK3igfHxWaDN5pvx4+W6xp5HgLTAZ3i+qAoyRwsKVcR0PK5Wi
+        RlKaEQGkeJ3bSNxe/nnaHGQ8VHwdppePhcRwnhkM0Q==
+X-Google-Smtp-Source: APiQypIQv+t4aZS0+jM79vzmZ4/jT5P5I5xj04qZzFmgC4QPVEnzYfRtjHR37+JUUyx2j+WbklBp5MY8qqFQMsGI4Pk=
+X-Received: by 2002:a67:8b09:: with SMTP id n9mr15252066vsd.191.1587477645532;
+ Tue, 21 Apr 2020 07:00:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200304121943.28989-1-daniel.baluta@oss.nxp.com> <20200304121943.28989-2-daniel.baluta@oss.nxp.com>
+In-Reply-To: <20200304121943.28989-2-daniel.baluta@oss.nxp.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 21 Apr 2020 16:00:09 +0200
+Message-ID: <CAPDyKFp6KLuuuVFcEWGxn5NkuDSkhM-MjRiiYj_zC4mFxhOBag@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] PM / domains: Introduce multi PM domains helpers
+To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        ranjani.sridharan@linux.intel.com,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        alsa-devel@alsa-project.org, Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Kevin Hilman <khilman@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        paul.olaru@nxp.com, dl-linux-imx <linux-imx@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, shengjiu.wang@nxp.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 4 Mar 2020 at 13:20, Daniel Baluta <daniel.baluta@oss.nxp.com> wrote:
+>
+> From: Daniel Baluta <daniel.baluta@nxp.com>
+>
+> This patch introduces helpers support for multi PM domains.
+>
+> API consists of:
+>
+> 1) dev_multi_pm_attach - powers up all PM domains associated with a given
+> device. Because we can attach one PM domain per device, we create
+> virtual devices (children of initial device) and associate PM domains
+> one per virtual device.
+>
+> 2) dev_multi_pm_detach - detaches all virtual devices from PM domains
+> attached with.
+>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-Static analysis with Coverity has detected a potential issue with the
-following commit:
+First, apologize for the delay.
 
-commit 7dfee4b1d79e1800818abcfb47747b162c9a2d31
-Author: Raed Salem <raeds@mellanox.com>
-Date:   Wed Oct 23 17:04:13 2019 +0300
+In general I don't mind adding helpers that can be used to decrease
+open coding. However, in this case, I wonder how useful the helpers
+would really be.
 
-    net/mlx5: IPsec, Refactor SA handle creation and destruction
+More precisely, according to the information I have, a device may not
+always need all of its PM domains to be turned on together, but
+perhaps only a subset of them. Depending on the current use case that
+is running.
 
-The issue is in mlx5_fpga_is_ipsec_device() in
-drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c as follows:
+Of course, some cases follow your expectations, but as stated, some
+others do not.
 
+Do you have an idea how many users that would be able to switch to
+these new APIs as of today?
 
-710  Bitwise-and with zero
-     bit_and_with_zero: accel_xfrm->attrs.action &
-MLX5_ACCEL_ESP_ACTION_DECRYPT is always 0.  This occurs as the logical
-operand of if.
+Kind regards
+Uffe
 
-711        if (accel_xfrm->attrs.action & MLX5_ACCEL_ESP_ACTION_DECRYPT) {
-Logically dead code (DEADCODE)
-
-712                err = ida_simple_get(&fipsec->halloc, 1, 0, GFP_KERNEL);
-713                if (err < 0) {
-714                        context = ERR_PTR(err);
-715                        goto exists;
-716                }
-717
-718                sa_ctx->sa_handle = err;
-719                if (sa_handle)
-720                        *sa_handle = sa_ctx->sa_handle;
-721        }
-
-in include/linux/mlx5/accel.h MLX5_ACCEL_ESP_ACTION_DECRYPT is defined
-as zero:
-
-50 enum mlx5_accel_esp_action {
-51        MLX5_ACCEL_ESP_ACTION_DECRYPT,
-52        MLX5_ACCEL_ESP_ACTION_ENCRYPT,
-53 };
-
-
-I believe there are some other instances of this bit-wise and-ing with
-zero, e.g. in mlx5_fpga_ipsec_release_sa_ctx() we have:
-
-855     if (sa_ctx->fpga_xfrm->accel_xfrm.attrs.action &
-856         MLX5_ACCEL_ESP_ACTION_DECRYPT)
-
-Colin
+> ---
+>  drivers/base/power/common.c | 93 +++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_domain.h   | 19 ++++++++
+>  2 files changed, 112 insertions(+)
+>
+> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
+> index bbddb267c2e6..6d1f142833b1 100644
+> --- a/drivers/base/power/common.c
+> +++ b/drivers/base/power/common.c
+> @@ -228,3 +228,96 @@ void dev_pm_domain_set(struct device *dev, struct dev_pm_domain *pd)
+>         device_pm_check_callbacks(dev);
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_domain_set);
+> +
+> +/**
+> + * dev_multi_pm_attach - power up device associated power domains
+> + * @dev: The device used to lookup the PM domains
+> + *
+> + * Parse device's OF node to find all PM domains specifiers. For each power
+> + * domain found, create a virtual device and associate it with the
+> + * current power domain.
+> + *
+> + * This function should typically be invoked by a driver during the
+> + * probe phase, in the case its device requires power management through
+> + * multiple PM domains.
+> + *
+> + * Returns a pointer to @dev_multi_pm_domain_data if successfully attached PM
+> + * domains, NULL when the device doesn't need a PM domain or when single
+> + * power-domains exists for it, else an ERR_PTR() in case of
+> + * failures.
+> + */
+> +struct dev_multi_pm_domain_data *dev_multi_pm_attach(struct device *dev)
+> +{
+> +       struct dev_multi_pm_domain_data *mpd, *retp;
+> +       int num_domains;
+> +       int i;
+> +
+> +       num_domains = of_count_phandle_with_args(dev->of_node, "power-domains",
+> +                                                "#power-domain-cells");
+> +       if (num_domains < 2)
+> +               return NULL;
+> +
+> +       mpd = devm_kzalloc(dev, GFP_KERNEL, sizeof(*mpd));
+> +       if (!mpd)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       mpd->dev = dev;
+> +       mpd->num_domains = num_domains;
+> +
+> +       mpd->virt_devs = devm_kmalloc_array(dev, mpd->num_domains,
+> +                                           sizeof(*mpd->virt_devs),
+> +                                           GFP_KERNEL);
+> +       if (!mpd->virt_devs)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       mpd->links = devm_kmalloc_array(dev, mpd->num_domains,
+> +                                       sizeof(*mpd->links), GFP_KERNEL);
+> +       if (!mpd->links)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       for (i = 0; i < mpd->num_domains; i++) {
+> +               mpd->virt_devs[i] = dev_pm_domain_attach_by_id(dev, i);
+> +               if (IS_ERR(mpd->virt_devs[i])) {
+> +                       retp = (struct dev_multi_pm_domain_data *)
+> +                               mpd->virt_devs[i];
+> +                       goto exit_unroll_pm;
+> +               }
+> +               mpd->links[i] = device_link_add(dev, mpd->virt_devs[i],
+> +                                               DL_FLAG_STATELESS |
+> +                                               DL_FLAG_PM_RUNTIME |
+> +                                               DL_FLAG_RPM_ACTIVE);
+> +               if (!mpd->links[i]) {
+> +                       retp = ERR_PTR(-ENOMEM);
+> +                       dev_pm_domain_detach(mpd->virt_devs[i], false);
+> +                       goto exit_unroll_pm;
+> +               }
+> +       }
+> +       return mpd;
+> +
+> +exit_unroll_pm:
+> +       while (--i >= 0) {
+> +               device_link_del(mpd->links[i]);
+> +               dev_pm_domain_detach(mpd->virt_devs[i], false);
+> +       }
+> +
+> +       return retp;
+> +}
+> +EXPORT_SYMBOL(dev_multi_pm_attach);
+> +
+> +/**
+> + * dev_multi_pm_detach - Detach a device from its PM domains.
+> + * Each multi power domain is attached to a virtual children device
+> + *
+> + * @mpd: multi power domains data, contains the association between
+> + * virtul device and PM domain
+> + */
+> +void dev_multi_pm_detach(struct dev_multi_pm_domain_data *mpd)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < mpd->num_domains; i++) {
+> +               device_link_del(mpd->links[i]);
+> +               dev_pm_domain_detach(mpd->virt_devs[i], false);
+> +       }
+> +}
+> +EXPORT_SYMBOL(dev_multi_pm_detach);
+> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+> index 9ec78ee53652..5bcb35150af2 100644
+> --- a/include/linux/pm_domain.h
+> +++ b/include/linux/pm_domain.h
+> @@ -183,6 +183,13 @@ struct generic_pm_domain_data {
+>         void *data;
+>  };
+>
+> +struct dev_multi_pm_domain_data {
+> +       struct device *dev; /* parent device */
+> +       struct device **virt_devs; /* virtual children links */
+> +       struct device_link **links; /*  links parent <-> virtual children */
+> +       int num_domains;
+> +};
+> +
+>  #ifdef CONFIG_PM_GENERIC_DOMAINS
+>  static inline struct generic_pm_domain_data *to_gpd_data(struct pm_domain_data *pdd)
+>  {
+> @@ -369,18 +376,27 @@ struct generic_pm_domain *of_genpd_remove_last(struct device_node *np)
+>
+>  #ifdef CONFIG_PM
+>  int dev_pm_domain_attach(struct device *dev, bool power_on);
+> +struct dev_multi_pm_domain_data *dev_multi_pm_attach(struct device *dev);
+>  struct device *dev_pm_domain_attach_by_id(struct device *dev,
+>                                           unsigned int index);
+>  struct device *dev_pm_domain_attach_by_name(struct device *dev,
+>                                             const char *name);
+>  void dev_pm_domain_detach(struct device *dev, bool power_off);
+>  int dev_pm_domain_start(struct device *dev);
+> +void dev_multi_pm_detach(struct dev_multi_pm_domain_data *mpd);
+>  void dev_pm_domain_set(struct device *dev, struct dev_pm_domain *pd);
+> +
+>  #else
+>  static inline int dev_pm_domain_attach(struct device *dev, bool power_on)
+>  {
+>         return 0;
+>  }
+> +
+> +struct dev_multi_pm_domain_data *dev_multi_pm_attach(struct device *dev)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline struct device *dev_pm_domain_attach_by_id(struct device *dev,
+>                                                         unsigned int index)
+>  {
+> @@ -396,6 +412,9 @@ static inline int dev_pm_domain_start(struct device *dev)
+>  {
+>         return 0;
+>  }
+> +
+> +void dev_multi_pm_detach(struct dev_multi_pm_domain_data *mpd) {}
+> +
+>  static inline void dev_pm_domain_set(struct device *dev,
+>                                      struct dev_pm_domain *pd) {}
+>  #endif
+> --
+> 2.17.1
+>
