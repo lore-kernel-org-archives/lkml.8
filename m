@@ -2,100 +2,136 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5C4C38A30
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869BDC54FCB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A77B206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B512070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wF/m9QcY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FQPGxAaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgDUAne (ORCPT
+        id S1726882AbgDUAoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:43:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
+        Mon, 20 Apr 2020 20:44:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726017AbgDUAne (ORCPT
+        by vger.kernel.org with ESMTP id S1726405AbgDUAoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 20:43:34 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52AB5C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:43:34 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id y21so10219832plr.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:43:34 -0700 (PDT)
+        Mon, 20 Apr 2020 20:44:01 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26415C061A10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:44:00 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id w145so9663523lff.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:44:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=g7Mk/wSLC1J3xQn255xHIAcdYrmeMbJ4awyrSCcplYU=;
-        b=wF/m9QcYx5PI7omBhCV4SYUQslpl+w8Hw+cV/xsckaiiIWuy+fxIpblsF/RuwFv+3B
-         toWLr/derY1YCMfxs+ulY1w0LhkPpOOhsDTaV+KXc0TX2v6bO6PPDwh+hT0x1Vwd8kEf
-         L7WY/WoONJBGycfw0girBGloyZThIlhwWkwblD9oPCEoD8UpgkX4Afigzo8r+8oKY/SC
-         ITLlt9CVXz7dmobUupdPBG+0ysP+khxQ+7GqG1dQVLL54tHfk3djGMHh2cL37NRBkPDR
-         72BXVE8XhSSNig4u9gTFy5vMxf7bmFbJj8AfhSq6z90igOXbenS3r0iBUK6mPrUQanl+
-         QriA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YZRwrK1UjiJpxDYSszjRPtqs1cjLjLji6Aam7rS81wo=;
+        b=FQPGxAaF17vSSjjng+SYnVVTyYVA5s2NG2nnA/4N5kDp/WGCIrb9f25On61fC0A+Mz
+         ArASZ/MOC2sFxS+nTQb0i3heZ8Ll8zNSL8IdvP2+Mna+8oUk343fzXUGUxuQLgoMW1Z4
+         O1jPs/t5whKhm7gTkJBQZestxtL3Dmcfy7EBMApLi0iSO0KWfQQuLCxKrEFiTYNN/OWU
+         h0Ilp90Q6OjyQ3npdWPqddwv5b8E9qdaHGsEOkd8UvwVHnCIO9+AnxuUgJmr+wM8tDXz
+         7krNt+EMRR4FeeU9CTQQ/Ufy7Dc5u+ind2EDMZ2YSGF7sRuDCng69DxqD8wNP25ug6Nz
+         Ql8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=g7Mk/wSLC1J3xQn255xHIAcdYrmeMbJ4awyrSCcplYU=;
-        b=h1E2bOJJIizRhLbyIrLS1KB5Xbt5N46t/QIHDcWnj1t/sIq4l5IDMytKVEULuGjGHk
-         tNNyeE7NAUvVI65HjehnnwOlQfeXA8VT7zFcPqOAncMtoLROsvtEe+kSBv7ifu1AYO1Z
-         e8pBZAHAouiHrEXMkTzbYeELm3oCgpoSFiaYwTarC867gWaEFRw0vCZpC3kh8HmhwGFB
-         kKBDKRGgVnX/a9RbkAjWJT5Z1zePB+ePGldcrz9t/7/srkT/Sqhq8ZJQ3pu3QAvO0OPf
-         LtX6KUQk7WNNEbqWANM3FHFP16ke8HM4vye5UhMeH89BmIn5MFdrWxdseEXRnbjPWJVR
-         YdQw==
-X-Gm-Message-State: AGi0PuY6Y1LiIuOi4r5ot/N039j66ouYKBFPV6TryeSD/QrxolqageY3
-        roysyj0/N/5/Jo6JhTT+5wI69tC6RL+E
-X-Google-Smtp-Source: APiQypLhULsJZRIuttUUR+U23Z9tJRZCIwTGp15jbtp9H43pfMqumb7vvBOFCZSrLauffh+3rGSCtIFWkQWv
-X-Received: by 2002:a17:90a:2170:: with SMTP id a103mr2489493pje.181.1587429813723;
- Mon, 20 Apr 2020 17:43:33 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 17:43:29 -0700
-Message-Id: <20200421004329.43109-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH] perf script: avoid null dereference on symbol
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YZRwrK1UjiJpxDYSszjRPtqs1cjLjLji6Aam7rS81wo=;
+        b=VBsQiytJHCsWR6tVLTmRX8al0hEnxQVxQW/DECbFPhFq/H61Y+9Vs5KN79nebygfMN
+         41k1/kyJ7CLPqF3HUi3lBTEkHtB0/6DNBRRFPR7pcD4HFO2aSFvqjzwPaMlaawFyzjPp
+         9hfHfN3P9YplX6TbAxWVk/jG6Zyvf7HrXRUs1sLBYgJji+o4sy2ApMYsqBO+D3F4O5AN
+         1VaN/5L3pgmrU5kqiW8WyXS/eLY1nHOx1lDnISGilGf+kba3JWFGOwedTk8Xw6xk+V/e
+         A4QsMukMFiMTT6NLDBL//aw6xaCRa2+8YzxaSQ5WEowPd9HCARS5CYSHikALRQz8CqhB
+         8ddQ==
+X-Gm-Message-State: AGi0PuYjwWTFV0nS77X49F2uVFBLdRVepeidpWFquyFc02RG+RvCj8WB
+        /FnfWco/ybaXrVcP/zYnv7KZ0Q+sIAE2nw+CGkWlMg==
+X-Google-Smtp-Source: APiQypJA0kncl3JUukHJh3Fz03w09zxZUG/GX3THwphT5IE6WJ7yzeQ6IMtZBOX7BEGJ02BB50U5guI79IbFaZqJp2g=
+X-Received: by 2002:a05:6512:318a:: with SMTP id i10mr12195933lfe.96.1587429838243;
+ Mon, 20 Apr 2020 17:43:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200420223936.6773-1-schatzberg.dan@gmail.com> <20200420223936.6773-3-schatzberg.dan@gmail.com>
+In-Reply-To: <20200420223936.6773-3-schatzberg.dan@gmail.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 20 Apr 2020 17:43:47 -0700
+Message-ID: <CALvZod4GizLVogLoGObxqXveeFX+vBm2SEpHNYA+Yz+Op7o0Qg@mail.gmail.com>
+Subject: Re: [PATCH 2/4] mm: support nesting memalloc_use_memcg()
+To:     Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-al->sym may be null given current if conditions and may cause a segv.
+On Mon, Apr 20, 2020 at 3:41 PM Dan Schatzberg <schatzberg.dan@gmail.com> wrote:
+>
+> The memalloc_use_memcg() function to override the default memcg
+> accounting context currently doesn't nest. But the patches to make the
+> loop driver cgroup-aware will end up nesting:
+>
+> [   98.137605]  alloc_page_buffers+0x210/0x288
+> [   98.141799]  __getblk_gfp+0x1d4/0x400
+> [   98.145475]  ext4_read_block_bitmap_nowait+0x148/0xbc8
+> [   98.150628]  ext4_mb_init_cache+0x25c/0x9b0
+> [   98.154821]  ext4_mb_init_group+0x270/0x390
+> [   98.159014]  ext4_mb_good_group+0x264/0x270
+> [   98.163208]  ext4_mb_regular_allocator+0x480/0x798
+> [   98.168011]  ext4_mb_new_blocks+0x958/0x10f8
+> [   98.172294]  ext4_ext_map_blocks+0xec8/0x1618
+> [   98.176660]  ext4_map_blocks+0x1b8/0x8a0
+> [   98.180592]  ext4_writepages+0x830/0xf10
+> [   98.184523]  do_writepages+0xb4/0x198
+> [   98.188195]  __filemap_fdatawrite_range+0x170/0x1c8
+> [   98.193086]  filemap_write_and_wait_range+0x40/0xb0
+> [   98.197974]  ext4_punch_hole+0x4a4/0x660
+> [   98.201907]  ext4_fallocate+0x294/0x1190
+> [   98.205839]  loop_process_work+0x690/0x1100
+> [   98.210032]  loop_workfn+0x2c/0x110
+> [   98.213529]  process_one_work+0x3e0/0x648
+> [   98.217546]  worker_thread+0x70/0x670
+> [   98.221217]  kthread+0x1b8/0x1c0
+> [   98.224452]  ret_from_fork+0x10/0x18
+>
+> where loop_process_work() sets the memcg override to the memcg that
+> submitted the IO request, and alloc_page_buffers() sets the override
+> to the memcg that instantiated the cache page, which may differ.
+>
+> Make memalloc_use_memcg() return the old memcg and convert existing
+> users to a stacking model. Delete the unused memalloc_unuse_memcg().
+>
+> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
 
-Fixes: cd2bedb7863e9 (perf script: Allow --symbol to accept hexadecimal addresses)
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch was from Johannes, so I would suggest to keep his
+authorship and signoff along with your signoff.
 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index dc0e11214ae1..f581550a3015 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -626,7 +626,7 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
- 			ret = strlist__has_entry(symbol_conf.sym_list,
- 						al->sym->name);
- 		}
--		if (!(ret && al->sym)) {
-+		if (!ret && al->sym) {
- 			snprintf(al_addr_str, sz, "0x%"PRIx64,
- 				al->map->unmap_ip(al->map, al->sym->start));
- 			ret = strlist__has_entry(symbol_conf.sym_list,
--- 
-2.26.1.301.g55bc3eb7cb9-goog
-
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
