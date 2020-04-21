@@ -2,93 +2,151 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574DFC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAC1C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 237C5206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7C5206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:11:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="k+B4qS+9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/4cXjND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgDURLA (ORCPT
+        id S1726878AbgDURL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45410 "EHLO
+        Tue, 21 Apr 2020 13:11:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725987AbgDURK7 (ORCPT
+        by vger.kernel.org with ESMTP id S1725870AbgDURL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 13:10:59 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA53C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:10:59 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g12so4582215wmh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:10:59 -0700 (PDT)
+        Tue, 21 Apr 2020 13:11:58 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C57AEC061A41;
+        Tue, 21 Apr 2020 10:11:57 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id i10so17282741wrv.10;
+        Tue, 21 Apr 2020 10:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wRF8mhv6ReO1PDrOI+WCZVSt0+yq+v9H72EfJ68K0w0=;
-        b=k+B4qS+9lJ0ExW055A2cabAgqkmJmyyDNvDFOhs5xwLnRsZgvtShLUbS6yLoCmiIzH
-         4Byg3rtggeH+8DGgVL9GAU5Fkn3X8Yy1LzoXf9j4cbA1R92XYxzpZUp6B3Cx0JnF/Srm
-         q7p57ILIUosjMyLqHNL3dUFqMgws0TqQWLRHy+tbdqqTNqyfK/zs8R8RQr6onciodr2B
-         Yc4jiNykFbZIVoFj1wZIfxt7ztyYYT21d7WOL9fZQ3t6P6Z1sX1ku5KODRyFAnKzkCXh
-         +DfhOealMK6qvWWGvUMcjXoty4rg4DDIoBr76zBW+ZYQJTCMNxnoNzutlIzHa330a2fT
-         oB+Q==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oWXq+CmUxcR5oGjgIGi8cH6yIaEJ8WHHwP9A2TLvszA=;
+        b=t/4cXjNDAVvxUuRDqC0SeUAz0JY4JFR+sU6Cz8/FilRkgKIrVQ4TbLFAyOq6JHlTyH
+         mEcch6tjReA+E8MJx0FL+eZSXd/Yuy/9PFbosO1Oeizr/6ncp81K/MZ11zJVntaF310r
+         DRaeyfVVHTyPERez3YfgVqMHG4ElIKrc+VTT3ceqn1SNCBS+CtVRmJuQDj2yItaHs+Oi
+         5MqwyEYucTZ0HiPrejyJs+rv5V7PBAGYZS4FL28A0Q+MjpnqYXvDoCo2GM7ahI9vE0BA
+         0HXMifOexpOMRIYlKwEKwCdXWENCh2OOf3GDH+XBWDdEB3tVRo8VsfPyR2MR0dMvckR6
+         IYbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wRF8mhv6ReO1PDrOI+WCZVSt0+yq+v9H72EfJ68K0w0=;
-        b=bQ7wgbisvJsA2VHoJrC7TC8FKD6tLfuftsVZiK7wF7KALGSnnA7D9teycDR0j+bMgr
-         vI84jBCCogKIy2IrMs54lGahgXUEXCgTqFpN6EcUdBQDfgkeIO73oVfvRneb/KBbQLoM
-         LG6eyGN6XOweXbkHdoVz5Fpl1dTeHfAX6jhLQWAvQ1DyzwRQRJGkbmR02JrDYLtpfvsy
-         ofsYAqsNC6QEG5TBEOVqDUl8nJB7ylasSwGh7pJhyNDSD2+dDAo2r0QGy/dme3hsxvh2
-         e2wfhc4fKbp2UV0QX4ZnzS7oi8ekZmrTjBQpgRVEMiOCL5qax9FU8Xj5LhmKhbTwpr3b
-         lisQ==
-X-Gm-Message-State: AGi0PubX5DWahIul8ATzz6P1FmfxTZGhbAmSMvh9IVznmp950BINB3+D
-        ruayDnuCrh3LmELaUc2RZ2WhuGpfnrf7J2o9Cnm0WQ==
-X-Google-Smtp-Source: APiQypLmJQEyzLsjaey4mJhzOTlmlm+KQEGznl7g0Kon5uiVzuUYQwtbez8EfkeIsC4A324npRTXz4lZaNuyB3p/dR4=
-X-Received: by 2002:a7b:c74d:: with SMTP id w13mr5676517wmk.36.1587489058116;
- Tue, 21 Apr 2020 10:10:58 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oWXq+CmUxcR5oGjgIGi8cH6yIaEJ8WHHwP9A2TLvszA=;
+        b=gYTApINIpyRpnALJSEn2RynRzR8lYU8bpqJh9q8DHE9qKeT5ZB4rOhoQgDhDyd+nR5
+         9swKMqwCTTGuH1oj2rF3uQ0Po3rYeKnASXpVF5qfhzmwSI80GLUKwMBiZrBbSv5jDAc+
+         vJDx2vlycOqfJAkdNsJKKcxG0IK/5megGFsmQev1f/yWEOHkRDNewv7syHZbW9b+ZxQq
+         czEzKMuN7BboCgShU7LH9g/GyvnayQyIcIaZZoefxzCZGy+LHkBLlUm9RcI94nhAXHfE
+         vyJynBcSNGNgSPIsSsCtP7+97GR7OE537bav+8KMgEVHtzoPMOc2DMObdMq1o2n/Zy6+
+         AU0w==
+X-Gm-Message-State: AGi0PuZBbi5MCTnDDlFfrBxqv2ZhW/zAEf16kvamxomO9IIpAJggjyvC
+        uXpArwrDOQxCNYHE83F+vkgX9DGR
+X-Google-Smtp-Source: APiQypJu/C68hg1hMwxmwAGbTtJcpHmk7e7ZQPPioXPfGKR2MQJ2sfWEUG0W9bYrdDy48QE7HU5lDQ==
+X-Received: by 2002:adf:f990:: with SMTP id f16mr23210451wrr.33.1587489116264;
+        Tue, 21 Apr 2020 10:11:56 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id l5sm4486784wrm.66.2020.04.21.10.11.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 10:11:55 -0700 (PDT)
+Subject: Re: [Patch v3 1/9] spi: bcm-qspi: Handle clock probe deferral
+To:     Mark Brown <broonie@kernel.org>, Kamal Dasu <kdasu.kdev@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+References: <20200420190853.45614-1-kdasu.kdev@gmail.com>
+ <20200420190853.45614-2-kdasu.kdev@gmail.com>
+ <158748156553.18089.8164001089518853868.b4-ty@kernel.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <2d810e4f-5f05-4257-59a8-882ae790ecd1@gmail.com>
+Date:   Tue, 21 Apr 2020 10:11:52 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200419203137.214111265@linutronix.de>
-In-Reply-To: <20200419203137.214111265@linutronix.de>
-From:   Andy Lutomirski <luto@amacapital.net>
-Date:   Tue, 21 Apr 2020 10:10:46 -0700
-Message-ID: <CALCETrWubcrju+j4ck65scs7gwHC44gkvryzwJZ=x_9B26=Fhw@mail.gmail.com>
-Subject: Re: [patch 00/15] x86/tlb: Unexport per-CPU tlbstate
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <158748156553.18089.8164001089518853868.b4-ty@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 1:36 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> The per-CPU tlbstate contains sensitive information which should be really
-> only accessible in core code. It is exported to modules because some inline
-> functions which are required by KVM need access to it.
->
-> The following series creates regular exported functions for the few things
-> which are needed by KVM and hides the struct definition and some low level
-> helpers from modules.
->
-> The series is also available from git:
->
->    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel x86/tlb
->
-> Thanks,
 
-The whole series is Acked-by: Andy Lutomirski <luto@kernel.org>
+
+On 4/21/2020 8:06 AM, Mark Brown wrote:
+> On Mon, 20 Apr 2020 15:08:45 -0400, Kamal Dasu wrote:
+>> From: Florian Fainelli <f.fainelli@gmail.com>
+>>
+>> The clock provider may not be ready by the time spi-bcm-qspi gets
+>> probed, handle probe deferral using devm_clk_get_optional().
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+>>
+>> [...]
+> 
+> Applied to
+> 
+>     https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.7
+
+It would be nice if the URL could be clickable, e.g.:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git/log/?h=for-5.7
+
+> 
+> Thanks!
+> 
+> [1/9] spi: bcm-qspi: Handle clock probe deferral
+>        commit: 0392727c261bab65a35cd4f82ee9459bc237591d
+> [2/9] dt: bindings: spi: Add support for mspi on brcmstb SoCs
+>        (not applied)
+> [3/9] spi: bcm-qspi: Handle lack of MSPI_REV offset
+>        (not applied)
+> [4/9] spi: bcm-qspi: Drive MSPI peripheral SSb pin on cs_change
+>        commit: 742d5958062488d03082a9ff01a6afb3cf7bd634
+> [5/9] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
+>        commit: 4df3bea7f9d2ddd9ac2c29ba945c7c4db2def29c
+> [6/9] spi: bcm-qspi: Make PM suspend/resume work with SCMI clock management
+>        commit: 1b7ad8c405c3dc0ad6c2dc61fe21fe7a446cceeb
+> [7/9] spi: bcm-qspi: Use fastbr setting to allow faster MSPI speeds
+>        (not applied)
+> [8/9] spi: bcm-qspi: add support for MSPI sys clk 108Mhz
+>        (not applied)
+> [9/9] spi: bcm-qspi: MSPI_SPCR0_MSB MSTR bit exists only on legacy controllers
+>        (not applied)
+> 
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+> 
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+> 
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+> 
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+> 
+> Thanks,
+> Mark
+> 
+
+-- 
+Florian
