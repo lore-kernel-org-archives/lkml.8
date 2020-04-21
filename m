@@ -2,110 +2,131 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A00C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC26C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E93192074B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E1C206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587497495;
-	bh=FbedF9MkS5eUgPiKSYbu2gEhsu/YFqRKU2igx1LyO0A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=x8gr+n4avmQab3c6wp88oRx5WHXPVvEVrQQN+MfpjVDM8oaMR4VjEaCde8Z4T1Hs4
-	 R8fA2eOb0ru3SicOKcRQB9JgxQQ/ZFHsdwCpNpaTA7QpKbST0TppKOFxn+EKKgB7it
-	 9Lr2VzeSGYK55SFUGHLnN653SGZMHVNTF7UYoUw0=
+	s=default; t=1587497509;
+	bh=BE4IFnhZXL+QecB5RHlSvGSBQfuvKjcw+a+56tvjuPI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wHKrtOSQegKCfVrr5+lLyUbTkku2YdMULkBXsa2rzQ4hBwnWdFKaCDjNfGGBBdcre
+	 kFnmEKz1YN4tJ/oEMmodYNLtfiOT6iwHTsWdEujx6hEYHGLpLia6za4Bb7MfH9pYqF
+	 /fjwBtBBBaEjzPhgiVpodleQdUS0r6G2vWvfT2wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgDUTbd (ORCPT
+        id S1726321AbgDUTbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:31:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35266 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 15:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgDUTbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:31:33 -0400
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725930AbgDUTbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:31:48 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 781A72074B;
-        Tue, 21 Apr 2020 19:31:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8555F206D5;
+        Tue, 21 Apr 2020 19:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587497492;
-        bh=FbedF9MkS5eUgPiKSYbu2gEhsu/YFqRKU2igx1LyO0A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=heh7HSg0OO64M2XG26/1/H7Oyc2lGiZMLU3ctWLMjlBATqKdQ+oKtEuw79g7TPuuX
-         ni5S9ABu+Pcl8TRa74jXlwPCWOhIgEhkx/VuVt+4Rer7X20zdyhMZDtndDzN0qPA7G
-         gkzwg90dVHF6QaHFW5p9G5n/JVJSu7bj1uoGr+KA=
-Received: by mail-qk1-f173.google.com with SMTP id x66so15764017qkd.9;
-        Tue, 21 Apr 2020 12:31:32 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua9gKhpMXo5Jo534kblIwhb2uYQAc48cy+ZB9ocLzYR4K0j2q1M
-        ERHtSprdzr4hJC9yqKduqezcghDoqBP63sIonA==
-X-Google-Smtp-Source: APiQypK+SNrDy3Sm4PczTJQzUksQronXA87RGw2UOqjJ46tD8crLtew/o7kmZa8CWFruSj8e2XxBtDl12SpaD3UpgRg=
-X-Received: by 2002:a37:61cd:: with SMTP id v196mr22897372qkb.393.1587497491552;
- Tue, 21 Apr 2020 12:31:31 -0700 (PDT)
+        s=default; t=1587497351;
+        bh=BE4IFnhZXL+QecB5RHlSvGSBQfuvKjcw+a+56tvjuPI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tSARBWUP64gzQ5NLyeeC4TZ3buBZeIwn+Y3/W/QIGKUcqRbg74UFh/abweOaGS7S8
+         GFaDTsqncX4r1WL5lWFb6SHDZIRr4dlvswFtzmck/3ho/rWCKv5rLGegjNGrHBv+tb
+         /+uf2y3ydxg5X7aUSSvAuI8sOW6M8cgoH0wKnsm4=
+Date:   Tue, 21 Apr 2020 21:29:06 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH 07/10] docs: RCU: RTFP: fix bibtex entries
+Message-ID: <20200421212850.616db8b0@coco.lan>
+In-Reply-To: <20200421175225.GA32083@paulmck-ThinkPad-P72>
+References: <cover.1587488137.git.mchehab+huawei@kernel.org>
+        <3cc10823634f12c3d3c44ee03f73b7aaa347df63.1587488137.git.mchehab+huawei@kernel.org>
+        <20200421174329.GR17661@paulmck-ThinkPad-P72>
+        <20200421175225.GA32083@paulmck-ThinkPad-P72>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
- <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
- <20200421110537.GC5983@pendragon.ideasonboard.com> <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
- <20200421134654.GD5983@pendragon.ideasonboard.com> <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
- <CAK7LNASe9ahgo04=cAuXcsaoffb9CtnUCYOObJd5=Awaak+YZw@mail.gmail.com>
-In-Reply-To: <CAK7LNASe9ahgo04=cAuXcsaoffb9CtnUCYOObJd5=Awaak+YZw@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 21 Apr 2020 14:31:19 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKV4UQeSX1ArJb4es1_kkMp1kbkd2kd17qVc=Oy988F7Q@mail.gmail.com>
-Message-ID: <CAL_JsqKV4UQeSX1ArJb4es1_kkMp1kbkd2kd17qVc=Oy988F7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 11:57 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi Rob,
->
->
-> On Tue, Apr 21, 2020 at 11:01 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > It seems to only fail with out of tree builds (O=...). I expect that
-> > > failures will become more common the more YAML bindings we have, even
-> > > without long directory names.
-> >
-> > dt-mk-schema can take and recurse a single directory already, so does
-> > this fix it for you:
-> >
-> > @@ -22,7 +22,7 @@ $(obj)/%.example.dts: $(src)/%.yaml
-> > check_dtschema_version FORCE
-> >  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
-> >
-> >  quiet_cmd_mk_schema = SCHEMA  $@
-> > -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-> > $(real-prereqs)
-> > +      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-> > $(srctree)/$(src)
->
->
-> I am just curious.
->
-> How come the tool excludes 'processed-schema*' and '*.example.dt.yaml'
-> from $(srctree)/$(src) ?
+Em Tue, 21 Apr 2020 10:52:25 -0700
+"Paul E. McKenney" <paulmck@kernel.org> escreveu:
 
-Uggg, it wouldn't. Can't everyone build out of tree. ;) I guess the options are:
+> On Tue, Apr 21, 2020 at 10:43:29AM -0700, Paul E. McKenney wrote:
+> > On Tue, Apr 21, 2020 at 07:04:08PM +0200, Mauro Carvalho Chehab wrote:  
+> > > There are several troubles at the bibtex entries with
+> > > prevent them to be processed by LaTeX:
+> > > 
+> > > - On LaTeX, comment lines start with '%', but here, comments
+> > >   are starting with "#";
+> > > - Underlines should be escaped.
+> > > - While the best would be to use \url{} for all URL entries,
+> > >   let's do it at least for a couple that would otherwise
+> > >   produce errors on LaTeX.
+> > > 
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+> > 
+> > Another approach might be just to link to a public repo containing
+> > cleaned-up versions of these bibliography entries:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/perfbook.git/tree/bib/RCU.bib
+> > 
+> > That would have the advantage of keeping this information in only one
+> > place, and reducing the number of updates required.
 
-- Call dt-mk-schema on each file individually appending the result
-- Make dt-mk-schema take stdin or a file with a list of files as
-Masahiro suggested
+Yeah. I didn't know you had it somewhere else.
 
-I'd like to avoid a dt-mk-schema change so I'll try to make the former
-work. It's only been a day since adding a minimum version. :(
+> > 
+> > Thoughts?  
+> 
+> OK, I should have read the next patch in the series, where you convert
+> into a Sphinx-compatible bibliography.  Except that you had to convert
+> the bibtex entries by hand to produce the Sphinx-compatible entries?
 
-Rob
+No, but it still required a lot of manual work.
+
+I manually converted the file to ReST. That was the easiest part.
+
+Then, I used sphinx-build to convert it into a LaTeX file and changed
+the produced .tex for it to use the .bib file. 
+
+The last step was the hardest one. I'm not familiar with LaTeX. I did
+several attempts to produce an output with the same kind of captions
+as the original file, but I was unable to generate it.
+
+So, I ended doing the final step the hard way: I used XeLaTeX to produce
+a PDF file. Then, I manually copied the entries from the output back into 
+the ReST file, carefully adjusting the captions, in order for them to
+point to the right places. 
+
+Before that, I tried to use a few Sphinx BibTeX extensions, but they
+are not complete: they were unable to parse some types of entries.
+If I'm not mistaken (I did it some time ago, on another computer),
+the ones I tested crashed when trying to parse some entries, like 
+'@Conference'.
+
+> That will get a bit ugly when it comes time to add more entries.
+> 
+> Or was the conversion of bibliography entries automated?
+
+I suspect it should be possible to automate it, but, as I said,
+I'm not too familiar with LaTeX. 
+
+Thanks,
+Mauro
