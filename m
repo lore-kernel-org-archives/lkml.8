@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BA3C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594C0C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58C2C2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4D22068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dEHSY03i"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="iA7hzwtu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgDUSoC (ORCPT
+        id S1729715AbgDUSoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:44:02 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:44135 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729679AbgDUSoB (ORCPT
+        Tue, 21 Apr 2020 14:44:09 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:58103 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729679AbgDUSoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:44:01 -0400
+        Tue, 21 Apr 2020 14:44:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1587494640; x=1619030640;
+  t=1587494644; x=1619030644;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tTIsnBjqE+u3ZnWQbEklQODug9U78pYyqe4mU4uBc4s=;
-  b=dEHSY03iRIklzqdLG50OhP3VrruByRRy7Wjeq1OA+o/p8QSJknN5cWzJ
-   Es/aXy6EjJGq+NJpmvO8PXvffO23F7gqDHLElc6B23D1Z3eM4cfExrwvn
-   f9ANVvcQxujTTSoBQv/uWrk0h21VjiBkBRMmyLkaZF88pjEJjBOmg9lMJ
+  bh=D9HcJgxc4qqZhJGXAx5AE73mSnX8REqGb4FqR6zgOqg=;
+  b=iA7hzwtuhPX+wtdKgKX2stjaZlpH74+uKnHzk+LVkEoUh7pvNmf1338+
+   5Slvw5qoCVSdbspyN3aEjipGvYklSNZdtiGQZjmMdQQDNxlYX0vVBJS8r
+   xT3wK0fY1+c9CJahdW1fUupz5pABLk0RJ4BuHCx0Ci17zamYFsMU8G5tD
    Y=;
-IronPort-SDR: 1bfE/NL9nQ9wrCFDt9DoWxRX8LrzLfnEPlo1zt6gTs3ktQWjKCYzSxPuO4sTQK/UMHDp8d6JIH
- RnHSDQO0y6wQ==
+IronPort-SDR: E1OEtWh/TXxgF7Tm+5R6eNZav9pOKyWH2vFSqo7w69B4aYS+xleB6sm+8TgyeMqx5xKTYIUPES
+ 43PM+H/wt78A==
 X-IronPort-AV: E=Sophos;i="5.72,411,1580774400"; 
-   d="scan'208";a="28051328"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 21 Apr 2020 18:43:47 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 68F07C5B80;
-        Tue, 21 Apr 2020 18:43:46 +0000 (UTC)
+   d="scan'208";a="26614658"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 21 Apr 2020 18:44:03 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com (Postfix) with ESMTPS id BDDE7A1D33;
+        Tue, 21 Apr 2020 18:44:01 +0000 (UTC)
 Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 21 Apr 2020 18:43:45 +0000
+ id 15.0.1497.2; Tue, 21 Apr 2020 18:44:01 +0000
 Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.217) by
  EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 21 Apr 2020 18:43:37 +0000
+ id 15.0.1497.2; Tue, 21 Apr 2020 18:43:52 +0000
 From:   Andra Paraschiv <andraprs@amazon.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Anthony Liguori <aliguori@amazon.com>,
@@ -65,9 +65,9 @@ CC:     Anthony Liguori <aliguori@amazon.com>,
         Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
         <ne-devel-upstream@amazon.com>,
         Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v1 11/15] nitro_enclaves: Add logic for enclave start
-Date:   Tue, 21 Apr 2020 21:41:46 +0300
-Message-ID: <20200421184150.68011-12-andraprs@amazon.com>
+Subject: [PATCH v1 13/15] nitro_enclaves: Add Kconfig for the Nitro Enclaves driver
+Date:   Tue, 21 Apr 2020 21:41:48 +0300
+Message-ID: <20200421184150.68011-14-andraprs@amazon.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200421184150.68011-1-andraprs@amazon.com>
 References: <20200421184150.68011-1-andraprs@amazon.com>
@@ -82,122 +82,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After all the enclave resources are set, the enclave is ready for
-beginning to run.
-
-Add ioctl command logic for starting an enclave after all its resources,
-memory regions and CPUs, have been set.
-
-The enclave start information includes the local channel addressing -
-vsock CID - and the flags associated with the enclave.
-
-Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
 Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 ---
- .../virt/amazon/nitro_enclaves/ne_misc_dev.c  | 83 +++++++++++++++++++
- 1 file changed, 83 insertions(+)
+ drivers/virt/Kconfig        |  2 ++
+ drivers/virt/amazon/Kconfig | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+ create mode 100644 drivers/virt/amazon/Kconfig
 
-diff --git a/drivers/virt/amazon/nitro_enclaves/ne_misc_dev.c b/drivers/virt/amazon/nitro_enclaves/ne_misc_dev.c
-index 0bd283f73a87..f07eb46f7995 100644
---- a/drivers/virt/amazon/nitro_enclaves/ne_misc_dev.c
-+++ b/drivers/virt/amazon/nitro_enclaves/ne_misc_dev.c
-@@ -455,6 +455,53 @@ static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
- 	return rc;
- }
+diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
+index 363af2eaf2ba..06bb5cfa191d 100644
+--- a/drivers/virt/Kconfig
++++ b/drivers/virt/Kconfig
+@@ -32,4 +32,6 @@ config FSL_HV_MANAGER
+ 	     partition shuts down.
  
-+/**
-+ * ne_enclave_start_ioctl - Trigger enclave start after the enclave resources,
-+ * such as memory and CPU, have been set.
-+ *
-+ * This function gets called with the ne_enclave mutex held.
-+ *
-+ * @ne_enclave: private data associated with the current enclave.
-+ * @enclave_start_metadata: enclave metadata that includes enclave cid and
-+ *			    flags and the slot uid.
-+ *
-+ * @returns: 0 on success, negative return value on failure.
-+ */
-+static int ne_enclave_start_ioctl(struct ne_enclave *ne_enclave,
-+	struct enclave_start_metadata *enclave_start_metadata)
-+{
-+	struct ne_pci_dev_cmd_reply cmd_reply = {};
-+	struct enclave_start_req enclave_start_req = {};
-+	int rc = -EINVAL;
+ source "drivers/virt/vboxguest/Kconfig"
 +
-+	BUG_ON(!ne_enclave);
-+	BUG_ON(!ne_enclave->pdev);
++source "drivers/virt/amazon/Kconfig"
+ endif
+diff --git a/drivers/virt/amazon/Kconfig b/drivers/virt/amazon/Kconfig
+new file mode 100644
+index 000000000000..57fd0aa58803
+--- /dev/null
++++ b/drivers/virt/amazon/Kconfig
+@@ -0,0 +1,28 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, see <http://www.gnu.org/licenses/>.
 +
-+	if (WARN_ON(!enclave_start_metadata))
-+		return -EINVAL;
++# Amazon Nitro Enclaves (NE) support.
++# Nitro is a hypervisor that has been developed by Amazon.
 +
-+	enclave_start_metadata->slot_uid = ne_enclave->slot_uid;
++config NITRO_ENCLAVES
++	tristate "Nitro Enclaves Support"
++	depends on HOTPLUG_CPU
++	---help---
++	  This driver consists of support for enclave lifetime management
++	  for Nitro Enclaves (NE).
 +
-+	enclave_start_req.enclave_cid = enclave_start_metadata->enclave_cid;
-+	enclave_start_req.flags = enclave_start_metadata->flags;
-+	enclave_start_req.slot_uid = enclave_start_metadata->slot_uid;
-+
-+	rc = ne_do_request(ne_enclave->pdev, ENCLAVE_START, &enclave_start_req,
-+			   sizeof(enclave_start_req), &cmd_reply,
-+			   sizeof(cmd_reply));
-+	if (rc < 0) {
-+		pr_err_ratelimited("Failure in enclave start [rc=%d]\n", rc);
-+
-+		return rc;
-+	}
-+
-+	ne_enclave->state = NE_STATE_RUNNING;
-+
-+	enclave_start_metadata->enclave_cid = cmd_reply.enclave_cid;
-+
-+	return 0;
-+}
-+
- static int ne_enclave_open(struct inode *node, struct file *file)
- {
- 	return 0;
-@@ -521,6 +568,42 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd,
- 		return rc;
- 	}
- 
-+	case NE_ENCLAVE_START: {
-+		struct enclave_start_metadata enclave_start_metadata = {};
-+		int rc = -EINVAL;
-+
-+		if (copy_from_user(&enclave_start_metadata, (void *)arg,
-+				   sizeof(enclave_start_metadata))) {
-+			pr_err_ratelimited("Failure in copy from user\n");
-+
-+			return -EFAULT;
-+		}
-+
-+		mutex_lock(&ne_enclave->enclave_info_mutex);
-+
-+		if (!cpumask_empty(ne_enclave->cpu_siblings)) {
-+			pr_err_ratelimited("Enclave has CPU siblings avail\n");
-+
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+			return -EINVAL;
-+		}
-+
-+		rc = ne_enclave_start_ioctl(ne_enclave,
-+					    &enclave_start_metadata);
-+
-+		mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+		if (copy_to_user((void *)arg, &enclave_start_metadata,
-+				 sizeof(enclave_start_metadata))) {
-+			pr_err_ratelimited("Failure in copy to user\n");
-+
-+			return -EFAULT;
-+		}
-+
-+		return rc;
-+	}
-+
- 	default:
- 		return -ENOTTY;
- 	}
++	  To compile this driver as a module, choose M here.
++	  The module will be called nitro_enclaves.
 -- 
 2.20.1 (Apple Git-117)
 
