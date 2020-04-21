@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F129AC5518B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A9AC55186
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D007720724
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5170720724
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CcJCluHY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jCiq2fay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbgDUVPf (ORCPT
+        id S1726389AbgDUVP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726396AbgDUVP3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 17:15:29 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B58FAC0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:29 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 145so4933726pfw.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:29 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726362AbgDUVPZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 17:15:25 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A4CC061BD3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:25 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x15so2927695pfa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BjXLxKYx2J4SfneKVn6eyAIDqxc8kteAmWSGrEv3s1Q=;
-        b=CcJCluHY3oWgCqfj8YhfZKPo0NR/BUu6kAlYc9e5Oewk1f5pCuZN7xV0s8bJRPKSaa
-         jN+bzjxqRaMU7hrDRd5nNyB2ufRcJdE8b+aIVwOlnZcSoBmTm7+6Ka+Hyjdbn8I/xBdB
-         1FpGO292NE9dv3pw6YfLq20gXxSIurqzigZRk=
+        bh=04XZYo5fXA8jjjQEMhm6NIaDkuVBkhqneNWDzQVam7g=;
+        b=jCiq2faydL3OiQdwG7cFDruVuRAgHnscmd8JDvfJ5iyBf/cSxretgz78r9MZid2wQs
+         pHJQK1BpUlFelzuAEcGpKwyg6UjVOQYEIr4jz1kSFuGgbKFAQErtbb7pXwX5etMp0BBm
+         kJHMsRmyCSl2NnT1g3J8PRJwfFJCUJQNithtk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BjXLxKYx2J4SfneKVn6eyAIDqxc8kteAmWSGrEv3s1Q=;
-        b=VwxvvyiATjiRW369rvHSDtjPrvtqNkEPVG60GIG/5yxWzFMtw7untSga0Gb8uw19ue
-         +YIehu1jpLogrKipeqafdIaQ6fOivOiToFOOHYyCElH4o7+/22osv2anddAXgaXzkoTH
-         O1axl7EzWS0OENIH0hYccekPXWhqimHOi5kLmWDtLEzuqgjD7eL8fWAf1CvvLVpYqbYX
-         EQVmb73Z8JRJJtIgK7pKFKhVQRvqgazyUDRjiS5RB/8rDqF/D1D43JnxND+W+dGK3aSk
-         YwsAlYs1vkMBT9ABLD5Hx3IOI2aePnFp58AMcXudWXjedrAmotA1/SbHnToi8vQjs86+
-         tROA==
-X-Gm-Message-State: AGi0PuaYzX/Il4+tUWQvkiSr8dA6iKFfnrwSQzVSv6RRXXDImix0xa5/
-        7T2qcgdhxW4cdAcqo3MV5hnAAw==
-X-Google-Smtp-Source: APiQypKbzNZ3tNv1+91oSCmg1IIaM8GOSYYn0L8dUZkcD300x8Du/f0RDrz/WsZ9Oyq+POo+vU2dNg==
-X-Received: by 2002:a63:f14b:: with SMTP id o11mr24165243pgk.429.1587503729162;
-        Tue, 21 Apr 2020 14:15:29 -0700 (PDT)
+        bh=04XZYo5fXA8jjjQEMhm6NIaDkuVBkhqneNWDzQVam7g=;
+        b=JxozHp1fih8AGBdCSJlfvLz0/tzmNIgEeEr/2IydfAdKGwWEbSZbkmbKPE/6SgqFlk
+         U8dCImclxco/OxnJbfnCj2h2CfRru/sPZdiSadQi6GR4y6Iy8K/KYzC3qEIh9VsbKRET
+         DY7tU3CIU0tt5tRlrph7afeLMyAnw07A5SzSpcy8+I6Zjl/5LZ9QoOm1BdA5bbK6JJ/M
+         knfiG4MIVArB00HkhW3Nzvf7GPRalIEJEVciuK1A7bIcsFgzS/Cc+kaSMYelQ2b7uA9h
+         ZaRECVelfX3hHfWft4hZaQdD8TQc1KNDzpCt/wHF1mNlhMb7YFQqtfRAWqsw0+tLLwJQ
+         uQGA==
+X-Gm-Message-State: AGi0PuZ3CdO+svF/YVRlOd6vuah6Gs8x6pyFYOLrBYzAD7YgzBoMYyU+
+        UBm7wVehfBSjwQ1OPdd9nN9Uuw==
+X-Google-Smtp-Source: APiQypKuBADi/9vxdm+kBSaWN7ML+MvxdmBicivB0CG8boqZPIB1lUO05+yH8k3NEjmmzMx6G4rXkw==
+X-Received: by 2002:a63:4d5e:: with SMTP id n30mr23391637pgl.154.1587503724930;
+        Tue, 21 Apr 2020 14:15:24 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id c1sm3287880pfo.152.2020.04.21.14.15.28
+        by smtp.gmail.com with ESMTPSA id c1sm3287880pfo.152.2020.04.21.14.15.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 14:15:28 -0700 (PDT)
+        Tue, 21 Apr 2020 14:15:24 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
         gregkh@linuxfoundation.org
@@ -65,10 +65,19 @@ Cc:     kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
         bjorn.andersson@linaro.org, jslaby@suse.com,
         catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
         Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/9] serial: qcom_geni_serial: Support earlycon_kgdboc
-Date:   Tue, 21 Apr 2020 14:14:46 -0700
-Message-Id: <20200421141234.v2.8.If2deff9679a62c1ce1b8f2558a8635dc837adf8c@changeid>
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Enrico Weigelt <info@metux.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        jinho lim <jordan.lim@samsung.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/9] arm64: Add call_break_hook() to early_brk64() for early kgdb
+Date:   Tue, 21 Apr 2020 14:14:43 -0700
+Message-Id: <20200421141234.v2.5.I22067ad43e77ddfd4b64c2d49030628480f9e8d9@changeid>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 In-Reply-To: <20200421211447.193860-1-dianders@chromium.org>
 References: <20200421211447.193860-1-dianders@chromium.org>
@@ -79,71 +88,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the read() function in the early console driver.  With
-recent kgdb patches this allows you to use kgdb to debug fairly early
-into the system boot.
+In order to make early kgdb work properly we need early_brk64() to be
+able to call into it.  This is as easy as adding a call into
+call_break_hook() just like we do later in the normal brk_handler().
 
-We only bother implementing this if polling is enabled since kgdb
-can't be enabled without that.
+Once we do this we can let kgdb know that it can break into the
+debugger a little earlier (specifically when parsing early_param's).
+
+NOTE: without this patch it turns out that arm64 can't do breakpoints
+even at dbg_late_init(), so if we decide something about this patch is
+wrong we might need to move dbg_late_init() a little later.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
 ---
 
 Changes in v2: None
 
- drivers/tty/serial/qcom_geni_serial.c | 32 +++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ arch/arm64/include/asm/debug-monitors.h | 2 ++
+ arch/arm64/kernel/debug-monitors.c      | 2 +-
+ arch/arm64/kernel/kgdb.c                | 5 +++++
+ arch/arm64/kernel/traps.c               | 3 +++
+ 4 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 6119090ce045..4563d152b39e 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -1090,6 +1090,36 @@ static void qcom_geni_serial_earlycon_write(struct console *con,
- 	__qcom_geni_serial_console_write(&dev->port, s, n);
+diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
+index 7619f473155f..2d82a0314d29 100644
+--- a/arch/arm64/include/asm/debug-monitors.h
++++ b/arch/arm64/include/asm/debug-monitors.h
+@@ -97,6 +97,8 @@ void unregister_user_break_hook(struct break_hook *hook);
+ void register_kernel_break_hook(struct break_hook *hook);
+ void unregister_kernel_break_hook(struct break_hook *hook);
+ 
++int call_break_hook(struct pt_regs *regs, unsigned int esr);
++
+ u8 debug_monitors_arch(void);
+ 
+ enum dbg_active_el {
+diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+index 48222a4760c2..59c353dfc8e9 100644
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -297,7 +297,7 @@ void unregister_kernel_break_hook(struct break_hook *hook)
+ 	unregister_debug_hook(&hook->node);
  }
  
-+#ifdef CONFIG_CONSOLE_POLL
-+static int qcom_geni_serial_earlycon_read(struct console *con,
-+					  char *s, unsigned int n)
-+{
-+	struct earlycon_device *dev = con->data;
-+	struct uart_port *uport = &dev->port;
-+	int num_read = 0;
-+	int ch;
-+
-+	while (num_read < n) {
-+		ch = qcom_geni_serial_get_char(uport);
-+		if (ch == NO_POLL_CHAR)
-+			break;
-+		s[num_read++] = ch;
-+	}
-+
-+	return num_read;
-+}
-+
-+static void __init qcom_geni_serial_enable_early_read(struct geni_se *se,
-+						      struct console *con)
-+{
-+	geni_se_setup_s_cmd(se, UART_START_READ, 0);
-+	con->read = qcom_geni_serial_earlycon_read;
-+}
-+#else
-+static inline void qcom_geni_serial_enable_early_read(struct geni_se *se,
-+						      struct console *con) { ; }
-+#endif
-+
- static int __init qcom_geni_serial_earlycon_setup(struct earlycon_device *dev,
- 								const char *opt)
+-static int call_break_hook(struct pt_regs *regs, unsigned int esr)
++int call_break_hook(struct pt_regs *regs, unsigned int esr)
  {
-@@ -1136,6 +1166,8 @@ static int __init qcom_geni_serial_earlycon_setup(struct earlycon_device *dev,
+ 	struct break_hook *hook;
+ 	struct list_head *list;
+diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
+index 43119922341f..96a47af870bc 100644
+--- a/arch/arm64/kernel/kgdb.c
++++ b/arch/arm64/kernel/kgdb.c
+@@ -301,6 +301,11 @@ static struct notifier_block kgdb_notifier = {
+ 	.priority	= -INT_MAX,
+ };
  
- 	dev->con->write = qcom_geni_serial_earlycon_write;
- 	dev->con->setup = NULL;
-+	qcom_geni_serial_enable_early_read(&se, dev->con);
++extern bool kgdb_arch_can_debug_early(void)
++{
++	return true;
++}
 +
- 	return 0;
+ /*
+  * kgdb_arch_init - Perform any architecture specific initialization.
+  * This function will handle the initialization of any architecture
+diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+index cf402be5c573..a8173f0c1774 100644
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -1044,6 +1044,9 @@ int __init early_brk64(unsigned long addr, unsigned int esr,
+ 	if ((comment & ~KASAN_BRK_MASK) == KASAN_BRK_IMM)
+ 		return kasan_handler(regs, esr) != DBG_HOOK_HANDLED;
+ #endif
++	if (call_break_hook(regs, esr) == DBG_HOOK_HANDLED)
++		return 0;
++
+ 	return bug_handler(regs, esr) != DBG_HOOK_HANDLED;
  }
- OF_EARLYCON_DECLARE(qcom_geni, "qcom,geni-debug-uart",
+ 
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
