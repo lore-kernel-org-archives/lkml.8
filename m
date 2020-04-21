@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BA6C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0E9C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09C972145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4602082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="E2KuNSBe"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Z861qR1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgDUALb (ORCPT
+        id S1727848AbgDUALf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:11:31 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3540 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgDUAL1 (ORCPT
+        Mon, 20 Apr 2020 20:11:35 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11245 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbgDUAL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 20:11:27 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9e39f10000>; Mon, 20 Apr 2020 17:10:25 -0700
+        Mon, 20 Apr 2020 20:11:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9e39bd0001>; Mon, 20 Apr 2020 17:09:33 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 20 Apr 2020 17:11:27 -0700
+  Mon, 20 Apr 2020 17:11:28 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 20 Apr 2020 17:11:27 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
- 2020 00:11:26 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 21 Apr 2020 00:11:26 +0000
+        by hqpgpgate101.nvidia.com on Mon, 20 Apr 2020 17:11:28 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
+ 2020 00:11:28 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 21 Apr 2020 00:11:27 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.49]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e9e3a2d0000>; Mon, 20 Apr 2020 17:11:26 -0700
+        id <B5e9e3a2e0000>; Mon, 20 Apr 2020 17:11:27 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -46,9 +46,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v8 8/9] dt-bindings: reset: Add ID for Tegra210 VI reset
-Date:   Mon, 20 Apr 2020 17:11:13 -0700
-Message-ID: <1587427874-3291-9-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v8 9/9] arm64: tegra: Add Tegra VI CSI support in device tree
+Date:   Mon, 20 Apr 2020 17:11:14 -0700
+Message-ID: <1587427874-3291-10-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
 References: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
@@ -56,41 +56,123 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587427825; bh=KEZ1lHNwQNYea9tamUq6xhOd3Wa4inGS2Z794lURij8=;
+        t=1587427773; bh=yB3b29VbNFtTvMcPZCMVxLppaVECoZp9WEY70dWiuUY=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=E2KuNSBed2rb7qamv3KPQZgmPSMIcg4xeMxmE7ZfYvLa0mLXdw49YzLlBG6XH81yC
-         83T/ZWmIB+quM67kxe1dcSKofK3Io+tYLR/sq2tx9K4eHM/oli/GfW3Zhv8uso+TAF
-         bRVH/uKbRk8ip1mXhpr8CyhYMyILXHxx2q9bdTUrx/5tFiILyucoy1lQvisvidju8E
-         CzouZcvrrX3nZncidSVCUqcwjob9YUNvl9q59zbhLgnKhwuEakI618xiSHMWRHg0Up
-         i5A/JwvaHwhw8dDCCbrvWa6PHxTfDEYLr/9FfmoIdOU3YCjXuWmdxi6tAp/th/cQ2w
-         ehQE5P0dP0v6A==
+        b=Z861qR1kCPrPTC77B0TQq0mcYt0ZOKeI5+4i+af+jrC0GXt10fnlIEZ17w2MtWG4v
+         RfWhkNsOgg4Y6h0ayBwHt+BWJ7s7yY+ggiIXfexzYHC4B2M1wte0f7GCL3ZJyYLoos
+         kNh9KxE8SHfRdRIzO1FYk1WyezRfmdxPqS92JHgT6oHBr1ATPCxdJqU2MwbXsIzNR6
+         FEB4bJsDGB1rCs03v6DHe94Lk2uZRG8paJOA6n4OPY6SeAodRTdzws3/q1gubyrSYt
+         IU7PuYnvBAqdRlWGslgaAKOVQU/nbl049S4g8iDJQn1p1xA/AOxRf4A/UbFXb1fQSU
+         EMtcuHemi2R3Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds ID for Tegra210 VI controller reset to use with
+Tegra210 contains VI controller for video input capture from MIPI
+CSI camera sensors and also supports built-in test pattern generator.
+
+CSI ports can be one-to-one mapped to VI channels for capturing from
+an external sensor or from built-in test pattern generator.
+
+This patch adds support for VI and CSI and enables them in Tegra210
 device tree.
 
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- include/dt-bindings/reset/tegra210-car.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 10 ++++++
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi       | 46 +++++++++++++++++++++++++-
+ 2 files changed, 55 insertions(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/reset/tegra210-car.h b/include/dt-bindings/reset/tegra210-car.h
-index 9dc84ec..8755946 100644
---- a/include/dt-bindings/reset/tegra210-car.h
-+++ b/include/dt-bindings/reset/tegra210-car.h
-@@ -10,5 +10,6 @@
- #define TEGRA210_RESET(x)		(7 * 32 + (x))
- #define TEGRA210_RST_DFLL_DVCO		TEGRA210_RESET(0)
- #define TEGRA210_RST_ADSP		TEGRA210_RESET(1)
-+#define TEGRA210_RST_VI			20
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+index 313a4c2..b57d837 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -14,6 +14,16 @@
+ 			status = "okay";
+ 		};
  
- #endif	/* _DT_BINDINGS_RESET_TEGRA210_CAR_H */
++		vi@54080000 {
++			status = "okay";
++
++			avdd-dsi-csi-supply = <&vdd_dsi_csi>;
++
++			csi@838 {
++				status = "okay";
++			};
++		};
++
+ 		sor@54580000 {
+ 			status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 5b1dfd8..cad42a7 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -137,9 +137,44 @@
+ 
+ 		vi@54080000 {
+ 			compatible = "nvidia,tegra210-vi";
+-			reg = <0x0 0x54080000 0x0 0x00040000>;
++			reg = <0x0 0x54080000 0x0 0x700>;
+ 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+ 			status = "disabled";
++			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
++			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
++
++			clocks = <&tegra_car TEGRA210_CLK_VI>;
++			power-domains = <&pd_venc>;
++
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			ranges = <0x0 0x0 0x54080000 0x2000>;
++
++			csi@838 {
++				compatible = "nvidia,tegra210-csi";
++				reg = <0x838 0x1300>;
++				status = "disabled";
++				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
++						  <&tegra_car TEGRA210_CLK_CILCD>,
++						  <&tegra_car TEGRA210_CLK_CILE>,
++						  <&tegra_car TEGRA210_CLK_CSI_TPG>;
++				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
++							 <&tegra_car TEGRA210_CLK_PLL_P>,
++							 <&tegra_car TEGRA210_CLK_PLL_P>;
++				assigned-clock-rates = <102000000>,
++						       <102000000>,
++						       <102000000>,
++						       <972000000>;
++
++				clocks = <&tegra_car TEGRA210_CLK_CSI>,
++					 <&tegra_car TEGRA210_CLK_CILAB>,
++					 <&tegra_car TEGRA210_CLK_CILCD>,
++					 <&tegra_car TEGRA210_CLK_CILE>,
++					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
++				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
++				power-domains = <&pd_sor>;
++			};
+ 		};
+ 
+ 		tsec@54100000 {
+@@ -839,6 +874,15 @@
+ 				reset-names = "vic";
+ 				#power-domain-cells = <0>;
+ 			};
++
++			pd_venc: venc {
++				clocks = <&tegra_car TEGRA210_CLK_VI>,
++					 <&tegra_car TEGRA210_CLK_CSI>;
++				resets = <&mc TEGRA210_MC_RESET_VI>,
++					 <&tegra_car TEGRA210_RST_VI>,
++					 <&tegra_car TEGRA210_CLK_CSI>;
++				#power-domain-cells = <0>;
++			};
+ 		};
+ 
+ 		sdmmc1_3v3: sdmmc1-3v3 {
 -- 
 2.7.4
 
