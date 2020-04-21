@@ -2,125 +2,110 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AA6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E66C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8D3206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C162E20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgDUXZA (ORCPT
+        id S1726414AbgDUX2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 19:25:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:38670 "EHLO mga04.intel.com"
+        Tue, 21 Apr 2020 19:28:00 -0400
+Received: from muru.com ([72.249.23.125]:50810 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgDUXZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 19:25:00 -0400
-IronPort-SDR: eld7CtTw7O2a7bvAIF+0BhiPeZvh57Vl4bM8ybQ8dmLe4Gq99UxsIoca9+sbEHjee2ezTWHJch
- irnYcTMRz3sQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 16:24:59 -0700
-IronPort-SDR: VXNYjUbp1WCc/LfcdAKiNjlSOSCA8YZ41iRNh2oDn5LaX5tYLMUtFRO/qjhJ2f6zWA2A4hTGQ1
- txFZzouil5cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
-   d="scan'208";a="290639115"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Apr 2020 16:24:59 -0700
-Date:   Tue, 21 Apr 2020 16:24:59 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V9 10/11] fs/xfs: Update
- xfs_ioctl_setattr_dax_invalidate()
-Message-ID: <20200421232459.GF3372712@iweiny-DESK2.sc.intel.com>
-References: <20200421191754.3372370-1-ira.weiny@intel.com>
- <20200421191754.3372370-11-ira.weiny@intel.com>
- <20200421203140.GD6742@magnolia>
- <20200421213049.GC27860@dread.disaster.area>
- <20200421214328.GD3372712@iweiny-DESK2.sc.intel.com>
- <20200421231343.GD27860@dread.disaster.area>
+        id S1725850AbgDUX2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 19:28:00 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id A6D8B8081;
+        Tue, 21 Apr 2020 23:28:45 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: [PATCHv6 0/4] n_gsm serdev support and protocol driver for droid4 modem
+Date:   Tue, 21 Apr 2020 16:27:48 -0700
+Message-Id: <20200421232752.3070-1-tony@atomide.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421231343.GD27860@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 09:13:43AM +1000, Dave Chinner wrote:
-> On Tue, Apr 21, 2020 at 02:43:29PM -0700, Ira Weiny wrote:
-> > On Wed, Apr 22, 2020 at 07:30:49AM +1000, Dave Chinner wrote:
-> > > On Tue, Apr 21, 2020 at 01:31:40PM -0700, Darrick J. Wong wrote:
-> > > > On Tue, Apr 21, 2020 at 12:17:52PM -0700, ira.weiny@intel.com wrote:
-> > > > > From: Ira Weiny <ira.weiny@intel.com>
+Hi all,
 
-[snip]
+Here's v4 set of n_gsm serdev support patches, and the related protocol
+driver for the modem found on Motorola Mapphone phones and tablets
+like droid4.
 
-> > > > 
-> > > > That's a ... strange name.  Set cache on what?
-> > > > 
-> > > > Oh, this is the function that sets I_DONTCACHE if an FS_XFLAG_DAX change
-> > > > could have an immediate effect on S_DAX (assuming no other users).  What
-> > > > do you think of the following?
-> > > > 
-> > > > 	/*
-> > > > 	 * If a change to FS_XFLAG_DAX will result in an change to S_DAX
-> > > > 	 * the next time the incore inode is initialized, set the VFS
-> > > > 	 * I_DONTCACHE flag to try to hurry that along.
-> > > > 	 */
-> > > > 	static void
-> > > > 	xfs_ioctl_try_change_vfs_dax(...)
-> > > 
-> > > That doesn't seem any better. This is a preparation function now, in
-> > > that it can't fail and doesn't change the outcome of the operation
-> > > being performed. So, IMO, calling it something like
-> > > xfs_ioctl_setattr_prepare_dax() would be a better name for it.
-> > 
-> > But it does potentially (after a check) set I_DONTCACHE.
-> 
-> That is an implementation detail - it doesn't change the outcome of
-> the function, the current behaviour of the inode, or the result of
-> the ioctl....
+This series only adds basic character device support for the serdev
+driver. Other serdev consumer drivers for specific devices will be
+posted separately.
 
-I'm confused.  This function does potentially flag the inode to not be cached.
-How is that not changing the behavior of the inode?
+The patches are against v5.6-rc series.
 
-> 
-> > What about?
-> > 
-> > xfs_ioctl_dax_check_set_dontcache()?
-> 
-> Then we have to rename it again the moment we change it's
-> functionality. i.e. we have exactly the same problem we have now
-> where the function name describes the implementation, not the
-> operational reason the function is being called...
+Regards,
 
-Ok, I see what you are driving at.  You want this function to potentially do
-other things and it should 'prepare' the inode for 'dax stuff'.  Is that about
-it?
+Tony
 
-I'm ok with xfs_ioctl_setattr_prepare_dax() then.
 
-Ira
+Changes since v5:
+- Cosmetic fixes for issues noted by Pavel
 
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Changes since v4:
+- Use drivers/tty/serdev/protocol directory for the driver instead of
+  drivers/mfd as discussed on the lists for v3 set of patches
+- Fix remove to call kfree only after removing device from the list
+
+Changes since v3:
+- Update list of folks in Cc, looks like I sent v3 only to Lee and lkml
+- Init privdata before motmdm_register_dlci calls gsm_serdev_register_dlci
+- Update binding based on Rob's comments for license and "allOf"
+
+Changes since v2:
+- Drop useless send_command indirection, use static motmdm_send_command
+
+Changes since v1:
+
+- Simplified usage and got rid of few pointless inline functions
+- Added consumer MFD driver, devicetree binding, and dts changes
+
+
+Tony Lindgren (4):
+  tty: n_gsm: Add support for serdev drivers
+  serdev: ngsm-motmdm: Add Motorola TS 27.010 serdev modem driver for
+    droid4
+  dt-bindings: serdev: motmdm: Add binding for motorola-mdm
+  ARM: dts: omap4-droid4: Enable basic modem support
+
+ .../serdev/motorola,mapphone-mdm6600.yaml     |   34 +
+ .../boot/dts/motorola-mapphone-common.dtsi    |    6 +
+ drivers/tty/n_gsm.c                           |  372 +++++
+ drivers/tty/serdev/Kconfig                    |    2 +
+ drivers/tty/serdev/Makefile                   |    2 +
+ drivers/tty/serdev/protocol/Kconfig           |   14 +
+ drivers/tty/serdev/protocol/Makefile          |    3 +
+ .../tty/serdev/protocol/serdev-ngsm-motmdm.c  | 1191 +++++++++++++++++
+ include/linux/serdev-gsm.h                    |  168 +++
+ 9 files changed, 1792 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serdev/motorola,mapphone-mdm6600.yaml
+ create mode 100644 drivers/tty/serdev/protocol/Kconfig
+ create mode 100644 drivers/tty/serdev/protocol/Makefile
+ create mode 100644 drivers/tty/serdev/protocol/serdev-ngsm-motmdm.c
+ create mode 100644 include/linux/serdev-gsm.h
+
+-- 
+2.26.2
