@@ -2,165 +2,78 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B708AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2699DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93CBA20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:20:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="btuEYiTX"
+	by mail.kernel.org (Postfix) with ESMTP id E103C20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgDUGUz (ORCPT
+        id S1726123AbgDUGXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 02:20:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726079AbgDUGUz (ORCPT
+        Tue, 21 Apr 2020 02:23:14 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:5491 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725831AbgDUGXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 02:20:55 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9895C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 23:20:53 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k11so15070367wrp.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 23:20:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YkirgEO7Fq+NMC8oPjIVlSmMh+As/hMUFNWcguxE1dQ=;
-        b=btuEYiTXkMbAbWo2V5lDgmJdH3r1AaVj/MfSy6+LLrqyqFlfuRYNZug1kHujsbuxuE
-         i7136PZ2UgSQzw2mJ/b4EywNXrCsef27MkKhEcuHcChHCltv1arkWr2Wk+LQllY0koUa
-         nwuncvdCyidAQCoxcDvuoxsBzvmx53agQHPyHOcOq3KHaUA3QDT9yBhkd12yvqTlQBV8
-         uO/svQUNZd0yOVOLcntALZIr/MeRzRLe9wzSlU+h3LeDP721gcCD2bNRzQ1/DKug0wuH
-         /2ekQUZtntbNvBh1Z6LDOYaX0rFQ+BPh5viVyHLMJ6SU8FcaEdt24pw8EOukJMVq4Wdt
-         HAbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YkirgEO7Fq+NMC8oPjIVlSmMh+As/hMUFNWcguxE1dQ=;
-        b=O56QtqFCoBL+HuPQjss6qQe+7AVsH24nnuS4P/kXcS1Zy+ajO+QMD14hsSI8TYdEhf
-         JaZBZ+mQQVEs2UBYQY2iObW1BCxzy7juFzYgFfDvVwje6Inn2o2y/e41ji+BebgG8uhu
-         8pS01DSsrmDuRKuFiFTiR9voc0tlVRkPAkYB/z/HT5zF3SUHDGvlnoJmHNBHj1zUGi6N
-         tWRb7O9vGZ1AEadvCIP8SAXIJW18mXjCnUwqnpUp6pMLPsSjpsdZP6u7AvGI9O/edKnu
-         P391l4YsAWmapET5FaiiSHnfDBeV3+dZXBvrLoRL9RwxSFSZsTkNNF9h7bBsghKjXQdx
-         8LEg==
-X-Gm-Message-State: AGi0PubDXFI8umi0P21jOdF3PAhhIs7Y61nE1gHm5eopx7pe7kUqqf2N
-        IA5iOwX96M94gQfw7MyqePUSHO8N2k3gazGlnwI4SA==
-X-Google-Smtp-Source: APiQypJzCpRELizuzVA4FdCnZgerTYyzZLwhuujO8WC4l/YN83iXtngXh4zjl+gid12EevC94b10GjtiQEjWOBSXSAM=
-X-Received: by 2002:adf:ee0c:: with SMTP id y12mr24396762wrn.0.1587450052318;
- Mon, 20 Apr 2020 23:20:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1586332296.git.zong.li@sifive.com> <mhng-103aea95-cf25-47c5-8e8d-56534f40c570@palmerdabbelt-glaptop1>
- <CA+ZOyajXsNYZZwQgdV9Y2szN+=QbHu7GDA6Lc5iLk+92yx1WSw@mail.gmail.com>
-In-Reply-To: <CA+ZOyajXsNYZZwQgdV9Y2szN+=QbHu7GDA6Lc5iLk+92yx1WSw@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 21 Apr 2020 11:50:40 +0530
-Message-ID: <CAAhSdy3K2+72FJs1hj1G5qWD4cYAoumHuf7UhMcQM3EeMrVpzw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/9] Support strict kernel memory permissions for security
-To:     Zong Li <zongbox@gmail.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>, Zong Li <zong.li@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mhiramat@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 Apr 2020 02:23:14 -0400
+Date:   21 Apr 2020 15:23:13 +0900
+X-IronPort-AV: E=Sophos;i="5.72,409,1580742000"; 
+   d="scan'208";a="45283541"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 21 Apr 2020 15:23:13 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 32B1C41C23B2;
+        Tue, 21 Apr 2020 15:23:13 +0900 (JST)
+Message-ID: <87eeshuzla.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: sound/soc/soc-compress.c:75:28: warning: 'component' is used uninitialized in this function
+In-Reply-To: <202004201540.vYPhhYMs%lkp@intel.com>
+References: <202004201540.vYPhhYMs%lkp@intel.com>
+User-Agent: Wanderlust/2.15.9 Emacs/25.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 11:06 AM Zong Li <zongbox@gmail.com> wrote:
->
-> Palmer Dabbelt <palmer@dabbelt.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8821=
-=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:27=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> >
-> > On Wed, 08 Apr 2020 00:56:55 PDT (-0700), zong.li@sifive.com wrote:
-> > > The main purpose of this patch series is changing the kernel mapping =
-permission
-> > > , make sure that code is not writeable, data is not executable, and r=
-ead-only
-> > > data is neither writable nor executable.
-> > >
-> > > This patch series also supports the relevant implementations such as
-> > > ARCH_HAS_SET_MEMORY, ARCH_HAS_SET_DIRECT_MAP,
-> > > ARCH_SUPPORTS_DEBUG_PAGEALLOC and DEBUG_WX.
-> > >
-> > > Changes in v5:
-> > >  - Add lockdep_assert_held and more comments for text_mutex.
-> > >
-> > > Changes in v4:
-> > >  - Use NOKPROBE_SYMBOL instead of __kprobe annotation
-> > >  - Use text_mutex instead of patch_lock
-> > >  - Remove 'riscv_' prefix of function name
-> > >
-> > > Changes in v3:
-> > >  - Fix build error on nommu configuration. We already support nommu o=
-n
-> > >    RISC-V, so we should consider nommu case and test not only rv32/64=
-,
-> > >    but also nommu.
-> > >
-> > > Changes in v2:
-> > >  - Use _data to specify the start of data section with write permissi=
-on.
-> > >  - Change ftrace patch text implementaion.
-> > >  - Separate DEBUG_WX patch to another patchset.
-> > >
-> > > Zong Li (9):
-> > >   riscv: add macro to get instruction length
-> > >   riscv: introduce interfaces to patch kernel code
-> > >   riscv: patch code by fixmap mapping
-> > >   riscv: add ARCH_HAS_SET_MEMORY support
-> > >   riscv: add ARCH_HAS_SET_DIRECT_MAP support
-> > >   riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
-> > >   riscv: move exception table immediately after RO_DATA
-> > >   riscv: add alignment for text, rodata and data sections
-> > >   riscv: add STRICT_KERNEL_RWX support
-> > >
-> > >  arch/riscv/Kconfig                  |   6 +
-> > >  arch/riscv/include/asm/bug.h        |   8 ++
-> > >  arch/riscv/include/asm/fixmap.h     |   2 +
-> > >  arch/riscv/include/asm/patch.h      |  12 ++
-> > >  arch/riscv/include/asm/set_memory.h |  48 +++++++
-> > >  arch/riscv/kernel/Makefile          |   4 +-
-> > >  arch/riscv/kernel/ftrace.c          |  26 ++--
-> > >  arch/riscv/kernel/patch.c           | 128 +++++++++++++++++++
-> > >  arch/riscv/kernel/traps.c           |   3 +-
-> > >  arch/riscv/kernel/vmlinux.lds.S     |  11 +-
-> > >  arch/riscv/mm/Makefile              |   2 +-
-> > >  arch/riscv/mm/init.c                |  44 +++++++
-> > >  arch/riscv/mm/pageattr.c            | 187 ++++++++++++++++++++++++++=
-++
-> > >  13 files changed, 466 insertions(+), 15 deletions(-)
-> > >  create mode 100644 arch/riscv/include/asm/patch.h
-> > >  create mode 100644 arch/riscv/include/asm/set_memory.h
-> > >  create mode 100644 arch/riscv/kernel/patch.c
-> > >  create mode 100644 arch/riscv/mm/pageattr.c
-> >
-> > Looks like there are quite a few conflicts here.  Do you mind re-spinni=
-ng the
-> > patch set for me?  It's a bit early to spin off for-next right now so t=
-here
-> > might be some more conflicts, but hopefully not too many.
-> >
->
-> Sure, let me rebase it and send the next version. Thanks.
 
-This series is already merged in Linux kernel and it is available
-in Linux-5.7-rc2.
+Hi
 
-I don't see the point in rebasing this series or commenting on
-this series.
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   7a56db0299f9d43b4fe076838150c5cc293df131
+> commit: 613fb50059cf19aa6acbc503a00265d9151c0b09 ASoC: soc-core: remove snd_soc_rtdcom_list
+> date:   3 months ago
+> config: i386-randconfig-a002-20200420 (attached as .config)
+> compiler: gcc-6 (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+> reproduce:
+>         git checkout 613fb50059cf19aa6acbc503a00265d9151c0b09
+>         # save the attached .config to linux build tree
+>         make ARCH=i386 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    sound/soc/soc-compress.c: In function 'soc_compr_open':
+> >> sound/soc/soc-compress.c:75:28: warning: 'component' is used uninitialized in this function [-Wuninitialized]
+>      struct snd_soc_component *component, *save = NULL;
+>                                ^~~~~~~~~
 
-If you have fixes then send as separate patches based on
-latest Linux-5.7-rcX release.
+Hmm... I still can't reproduce this issue.
+I don't have gcc-6, thus can't try it.
+Is this the issue ??
 
-Regards,
-Anup
+Thank you for your help !!
+
+Best regards
+---
+Kuninori Morimoto
