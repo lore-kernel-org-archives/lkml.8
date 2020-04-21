@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D602AC55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013F5C55183
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA9E20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4F720656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgDUTSg (ORCPT
+        id S1726482AbgDUTSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:18:36 -0400
-Received: from mga03.intel.com ([134.134.136.65]:18934 "EHLO mga03.intel.com"
+        Tue, 21 Apr 2020 15:18:25 -0400
+Received: from mga11.intel.com ([192.55.52.93]:49015 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgDUTSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:18:31 -0400
-IronPort-SDR: DyJlBRDADn0rABmAj852OXCQz9hZs1kY6ue+s6K4Tbcl2JbZxNFu19eRjcoQTRcMXqXVyRJpIY
- iZh+SqlbPe+A==
+        id S1726419AbgDUTSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:18:23 -0400
+IronPort-SDR: Po/lRdNIawa4sEtYsUKafZ6L6U7REyeIct0QVslL77yJXYoRf7ZmzomTCFMpyt9a4itvHBKB3v
+ h+gYm1Rf9Bdg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 12:18:27 -0700
-IronPort-SDR: WoTUm0fw1jxep0Y0SY1vdE60rR6r4v/PinefNkNioRXWYMDUtdkCfgxARt8H3Zzg9r8qBiQuI2
- iS3MGDgm9O1g==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 12:18:22 -0700
+IronPort-SDR: VJLoUeQUxGjgDBfh9o/bEojMQEJPmw810Fyopihploh1pF+Hw2S8SFekwM/xZf+VA/FAZtpni/
+ R9carTkjPlwQ==
 X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
-   d="scan'208";a="258815142"
+   d="scan'208";a="402290272"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 12:18:26 -0700
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 12:18:22 -0700
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
         "Darrick J. Wong" <darrick.wong@oracle.com>
@@ -42,9 +42,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
         Christoph Hellwig <hch@lst.de>,
         "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
         linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH V9 11/11] Documentation/dax: Update Usage section
-Date:   Tue, 21 Apr 2020 12:17:53 -0700
-Message-Id: <20200421191754.3372370-12-ira.weiny@intel.com>
+Subject: [PATCH V9 08/11] fs: Lift XFS_IDONTCACNE to the VFS layer
+Date:   Tue, 21 Apr 2020 12:17:50 -0700
+Message-Id: <20200421191754.3372370-9-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200421191754.3372370-1-ira.weiny@intel.com>
 References: <20200421191754.3372370-1-ira.weiny@intel.com>
@@ -57,207 +57,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Update the Usage section to reflect the new individual dax selection
-functionality.
+DAX effective mode (S_DAX) changes requires inode eviction.
 
+XFS has an advisory flag (XFS_IDONTCACHE) to prevent caching of the
+inode if no other additional references are taken.  We lift this flag to
+the VFS layer and change the behavior slightly by allowing the flag to
+remain even if multiple references are taken.
+
+This will expedite the eviction of inodes to change S_DAX.
+
+Cc: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
 Changes from V8:
-	Updates from Darrick
-
-Changes from V7:
-	Cleanups/clarifications from Darrick and Dan
-
-Changes from V6:
-	Update to allow setting FS_XFLAG_DAX any time.
-	Update with list of behaviors from Darrick
-	https://lore.kernel.org/lkml/20200409165927.GD6741@magnolia/
-
-Changes from V5:
-	Update to reflect the agreed upon semantics
-	https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+	Remove XFS_IDONTCACHE
 ---
- Documentation/filesystems/dax.txt | 164 +++++++++++++++++++++++++++++-
- 1 file changed, 161 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_icache.c | 4 ++--
+ fs/xfs/xfs_inode.h  | 2 +-
+ fs/xfs/xfs_super.c  | 2 +-
+ include/linux/fs.h  | 6 +++++-
+ 4 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-index 679729442fd2..8f4ab08be715 100644
---- a/Documentation/filesystems/dax.txt
-+++ b/Documentation/filesystems/dax.txt
-@@ -17,11 +17,169 @@ For file mappings, the storage device is mapped directly into userspace.
- Usage
- -----
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 17a0b86fe701..de76f7f60695 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -477,7 +477,7 @@ xfs_iget_cache_hit(
+ 		xfs_ilock(ip, lock_flags);
  
--If you have a block device which supports DAX, you can make a filesystem
-+If you have a block device which supports DAX, you can make a file system
- on it as usual.  The DAX code currently only supports files with a block
- size equal to your kernel's PAGE_SIZE, so you may need to specify a block
--size when creating the filesystem.  When mounting it, use the "-o dax"
--option on the command line or add 'dax' to the options in /etc/fstab.
-+size when creating the file system.
-+
-+Currently 3 filesystems support DAX: ext2, ext4 and xfs.  Enabling DAX on them
-+is different.
-+
-+Enabling DAX on ext4 and ext2
-+-----------------------------
-+
-+When mounting the filesystem, use the "-o dax" option on the command line or
-+add 'dax' to the options in /etc/fstab.  This works to enable DAX on all files
-+within the filesystem.  It is equivalent to the '-o dax=always' behavior below.
-+
-+
-+Enabling DAX on xfs
-+-------------------
-+
-+Summary
-+-------
-+
-+ 1. There exists an in-kernel file access mode flag S_DAX that corresponds to
-+    the statx flag STATX_ATTR_DAX.  See the manpage for statx(2) for details
-+    about this access mode.
-+
-+ 2. There exists an advisory file inode flag FS_XFLAG_DAX that is
-+    inherited from the parent directory FS_XFLAG_DAX inode flag at file
-+    creation time.  This advisory flag can be set or cleared at any
-+    time, but doing so does not immediately affect the S_DAX state.
-+
-+    Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
-+    and the fs is on pmem then it will enable S_DAX at inode load time;
-+    if FS_XFLAG_DAX is not set, it will not enable S_DAX.
-+
-+ 3. There exists a dax= mount option.
-+
-+    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
-+
-+    "-o dax=always" means "always set S_DAX (at least on pmem),
-+                    and ignore FS_XFLAG_DAX."
-+
-+    "-o dax"        is an alias for "dax=always".
-+
-+    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
-+
-+ 4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
-+    be set or cleared at any time.  The flag state is inherited by any files or
-+    subdirectories when they are created within that directory.
-+
-+ 5. Programs that require a specific file access mode (DAX or not DAX)
-+    can do one of the following:
-+
-+    (a) Create files in directories that the FS_XFLAG_DAX flag set as
-+        needed; or
-+
-+    (b) Have the administrator set an override via mount option; or
-+
-+    (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
-+        must then cause the kernel to evict the inode from memory.  This
-+        can be done by:
-+
-+        i>  Closing the file and re-opening the file and using statx to
-+            see if the fs has changed the S_DAX flag; and
-+
-+        ii> If the file still does not have the desired S_DAX access
-+            mode, either unmount and remount the filesystem, or close
-+            the file and use drop_caches.
-+
-+ 6. It is expected that users who want to squeeze every last bit of performance
-+    out of the particular rough and tumble bits of their storage will also be
-+    exposed to the difficulties of what happens when the operating system can't
-+    totally virtualize those hardware capabilities.  DAX is such a feature.
-+
-+
-+Details
-+-------
-+
-+There are 2 per-file dax flags.  One is a physical inode setting (FS_XFLAG_DAX)
-+and the other a currently enabled state (S_DAX).
-+
-+FS_XFLAG_DAX is maintained, on disk, on individual inodes.  It is preserved
-+within the file system.  This 'physical' config setting can be set using an
-+ioctl and/or an application such as "xfs_io -c 'chattr [-+]x'".  Files and
-+directories automatically inherit FS_XFLAG_DAX from their parent directory
-+_when_ _created_.  Therefore, setting FS_XFLAG_DAX at directory creation time
-+can be used to set a default behavior for an entire sub-tree.  (Doing so on the
-+root directory acts to set a default for the entire file system.)
-+
-+To clarify inheritance here are 3 examples:
-+
-+Example A:
-+
-+mkdir -p a/b/c
-+xfs_io 'chattr +x' a
-+mkdir a/b/c/d
-+mkdir a/e
-+
-+	dax: a,e
-+	no dax: b,c,d
-+
-+Example B:
-+
-+mkdir a
-+xfs_io 'chattr +x' a
-+mkdir -p a/b/c/d
-+
-+	dax: a,b,c,d
-+	no dax:
-+
-+Example C:
-+
-+mkdir -p a/b/c
-+xfs_io 'chattr +x' c
-+mkdir a/b/c/d
-+
-+	dax: c,d
-+	no dax: a,b
-+
-+
-+The current enabled state (S_DAX) is set when a file inode is _loaded_ based on
-+the underlying media support, the value of FS_XFLAG_DAX, and the file systems
-+dax mount option setting.  See below.
-+
-+statx can be used to query S_DAX.  NOTE that a directory will never have S_DAX
-+set and therefore statx will never indicate that S_DAX is set on directories.
-+
-+NOTE: Setting the FS_XFLAG_DAX (specifically or through inheritance) occurs
-+even if the underlying media does not support dax and/or the file system is
-+overridden with a mount option.
-+
-+
-+Overriding FS_XFLAG_DAX (dax= mount option)
-+-------------------------------------------
-+
-+There exists a dax mount option.  Using the mount option does not change the
-+physical configured state of individual files but overrides the S_DAX operating
-+state when inodes are loaded.
-+
-+Given underlying media support, the dax mount option is a tri-state option
-+(never, always, inode) with the following meanings:
-+
-+   "-o dax=never" means "never set S_DAX, ignore FS_XFLAG_DAX"
-+   "-o dax=always" means "always set S_DAX, ignore FS_XFLAG_DAX"
-+        "-o dax" by itself means "dax=always" to remain compatible with older
-+	         kernels
-+   "-o dax=inode" means "follow FS_XFLAG_DAX"
-+
-+The default state is 'inode'.  Given underlying media support, the following
-+algorithm is used to determine the effective mode of the file S_DAX on a
-+capable device.
-+
-+	S_DAX = FS_XFLAG_DAX;
-+
-+	if (dax_mount == "always")
-+		S_DAX = true;
-+	else if (dax_mount == "off"
-+		S_DAX = false;
-+
-+To reiterate: Setting, and inheritance, continues to affect FS_XFLAG_DAX even
-+while the file system is mounted with a dax override.  However, in-core inode
-+state (S_DAX) will continue to be overridden until the filesystem is remounted
-+with dax=inode and the inode is evicted."
+ 	if (!(flags & XFS_IGET_INCORE))
+-		xfs_iflags_clear(ip, XFS_ISTALE | XFS_IDONTCACHE);
++		xfs_iflags_clear(ip, XFS_ISTALE);
+ 	XFS_STATS_INC(mp, xs_ig_found);
  
+ 	return 0;
+@@ -559,7 +559,7 @@ xfs_iget_cache_miss(
+ 	 */
+ 	iflags = XFS_INEW;
+ 	if (flags & XFS_IGET_DONTCACHE)
+-		iflags |= XFS_IDONTCACHE;
++		VFS_I(ip)->i_state |= I_DONTCACHE;
+ 	ip->i_udquot = NULL;
+ 	ip->i_gdquot = NULL;
+ 	ip->i_pdquot = NULL;
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index 83073c883fbf..52b8ee21a0b1 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -218,7 +218,7 @@ static inline bool xfs_inode_has_cow_data(struct xfs_inode *ip)
+ #define XFS_IFLOCK		(1 << __XFS_IFLOCK_BIT)
+ #define __XFS_IPINNED_BIT	8	 /* wakeup key for zero pin count */
+ #define XFS_IPINNED		(1 << __XFS_IPINNED_BIT)
+-#define XFS_IDONTCACHE		(1 << 9) /* don't cache the inode long term */
++/* Was XFS_IDONTCACHE 9 */
+ #define XFS_IEOFBLOCKS		(1 << 10)/* has the preallocblocks tag set */
+ /*
+  * If this unlinked inode is in the middle of recovery, don't let drop_inode
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 0d0f74786799..2e165e226e15 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -742,7 +742,7 @@ xfs_fs_drop_inode(
+ 		return 0;
+ 	}
  
- Implementation Tips for Block Driver Writers
+-	return generic_drop_inode(inode) || (ip->i_flags & XFS_IDONTCACHE);
++	return generic_drop_inode(inode);
+ }
+ 
+ static void
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index a87cc5845a02..44bd45af760f 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2156,6 +2156,8 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+  *
+  * I_CREATING		New object's inode in the middle of setting up.
+  *
++ * I_DONTCACHE		Evict inode as soon as it is not used anymore.
++ *
+  * Q: What is the difference between I_WILL_FREE and I_FREEING?
+  */
+ #define I_DIRTY_SYNC		(1 << 0)
+@@ -2178,6 +2180,7 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+ #define I_WB_SWITCH		(1 << 13)
+ #define I_OVL_INUSE		(1 << 14)
+ #define I_CREATING		(1 << 15)
++#define I_DONTCACHE		(1 << 16)
+ 
+ #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
+ #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
+@@ -3049,7 +3052,8 @@ extern int inode_needs_sync(struct inode *inode);
+ extern int generic_delete_inode(struct inode *inode);
+ static inline int generic_drop_inode(struct inode *inode)
+ {
+-	return !inode->i_nlink || inode_unhashed(inode);
++	return !inode->i_nlink || inode_unhashed(inode) ||
++		(inode->i_state & I_DONTCACHE);
+ }
+ 
+ extern struct inode *ilookup5_nowait(struct super_block *sb,
 -- 
 2.25.1
 
