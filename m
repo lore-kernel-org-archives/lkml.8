@@ -2,138 +2,87 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83B7C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFFDC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF706206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26722072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kha6OSbM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UhkMmxc5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgDUT2f (ORCPT
+        id S1726232AbgDUTa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:28:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725963AbgDUT2e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:28:34 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4783DC0610D5;
-        Tue, 21 Apr 2020 12:28:33 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t40so1831543pjb.3;
-        Tue, 21 Apr 2020 12:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ylAfLFxsriqqePphFNepgAUrNjlPLS6CtzpqdHOIzFc=;
-        b=kha6OSbMInYcR9hm2zEI4iW2rTk379V3SLY+qdnGPuuh7YiO6Ds8IwXpMj3ruCruxX
-         TUkUFOV5mrR9VhYMh7d9p8FH/FxmnIEO1+PU4ALzbok/93K4jYK96C2QMa1FHW7AF+Wl
-         G5iFQS858+MqaCdBCOyvgxb8fpixLU5ncqS9iM9nuOwB45vU/YUMvrQNKxg3RTHaoMCR
-         4ykMNSyaugFvsHcXnS55Ny+qpuKgFwuTWMirAzQgie0P7ViKveBfLCgwbdHO3Pks53Je
-         i9u3Mf+hWK7a6xLXsUxTpwvm9qFrb48Dlp55wmdYyAfLAX1PL+IgjG/6quSwfUJJDNwh
-         B1Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ylAfLFxsriqqePphFNepgAUrNjlPLS6CtzpqdHOIzFc=;
-        b=nnBgGgXNfLVWt0j4zJo7+UabSU0FzX5Md69b6Cd443LjT97peiqaleeY4MXftPodGP
-         l9fsL5TlK+8COndHoaeRdold8PebqSnPKJOAYe5DCYSB1GX0V45nkEUAxZcL8+73Dcgl
-         xBiH+hFGGpiBewRgKUCN7grtHjsXdCkKYp6xbHBANFQacd2Vk/BepEQlxgKUS8HdbWMq
-         K5b7hUD9pR45V/4NMmuLMBklm/w/TH/3N4kKoqk0ExXq1tog2QzOkK0m7bieBgZruJa6
-         loLYIPajR95dmNOgmHEglsZYXHT8k7FBs/TrnGgwU5ekjZ0X6kZad6Y6fe987+P3FqKy
-         AN8g==
-X-Gm-Message-State: AGi0PuYqHjWhvXsufp+lZGj8a+RonBgZtwB2DUbXw37kLffjmPHXjf+Q
-        Hzd4w1atY2nqzn0Z0HGrmt8=
-X-Google-Smtp-Source: APiQypKa7+JJBgKWMKENf1y38p33ouL8FwaQ2E3Ko3mn7fuLxfJvmhBJyaH9VbcgEiIgNxIey9DUxA==
-X-Received: by 2002:a17:90a:d0c5:: with SMTP id y5mr7257509pjw.67.1587497312525;
-        Tue, 21 Apr 2020 12:28:32 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id o63sm3326604pjb.40.2020.04.21.12.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 12:28:31 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 12:28:29 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Brendan Shanks <bshanks@codeweavers.com>
-Cc:     linux-input@vger.kernel.org, rydberg@bitmath.org,
-        linux-kernel@vger.kernel.org,
-        Mathieu Maret <mathieu.maret@gmail.com>,
-        mmaret@pixium-vision.com
-Subject: Re: BUG: ff_effects lost after a fork
-Message-ID: <20200421192829.GB125362@dtor-ws>
-References: <20191127101008.GA327265@nuka.localdomain>
- <5404D7D5-47EF-4399-B0D9-B3C68A3D5895@codeweavers.com>
+        Tue, 21 Apr 2020 15:30:58 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54842 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbgDUTa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:30:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=869WgTAm8fPzHRXk0oXeeK3XJ3W9FcEBHCf2mBhSQ8A=; b=UhkMmxc5rqjccfJlOUb2dLymev
+        FkmPpIzQPLpgPvbZQTymH6ckC4KQ290Bf+VA/7DqWrGBz2AXOif24oj03RgSwL5uVRqRUsneEeEND
+        KBMiGYQQ1d7hYGHxolQFrl02K/4dNhxwBK5qhTSdWzdKs+hJTYINL3FmYiFBDJ1ouySk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQybf-0044tp-73; Tue, 21 Apr 2020 21:30:55 +0200
+Date:   Tue, 21 Apr 2020 21:30:55 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [RFC PATCH net-next 1/3] net: phy: add concept of shared storage
+ for PHYs
+Message-ID: <20200421193055.GI933345@lunn.ch>
+References: <20200420232624.9127-1-michael@walle.cc>
+ <7bcd7a65740a6f85637ef17ed6b6a1e3@walle.cc>
+ <20200421155031.GE933345@lunn.ch>
+ <47bdeaf298a09f20ad6631db13df37d2@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5404D7D5-47EF-4399-B0D9-B3C68A3D5895@codeweavers.com>
+In-Reply-To: <47bdeaf298a09f20ad6631db13df37d2@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 11:53:19AM -0700, Brendan Shanks wrote:
-> 
-> > On Nov 27, 2019, at 2:10 AM, Mathieu Maret <mathieu.maret@gmail.com>
-> > wrote:
-> > 
-> > Hi,
-> > 
-> > I'm using evdev for vibrator interface.  I can register ff_effect
-> > and play them.  But, if I do any kind of fork, all the effects are
-> > flush and cannot be used.
-> > 
-> > You can find, below, an example of such a program.  From some trace
-> > have put in the kernel, it's seems that at the end of the system()
-> > call, evdev_flush get called.
-> > 
-> > evdev_flush() will call flush_effects() that will remove all the
-> > registered effects.
-> > 
-> > I've only one device with vibrator and it's a imx6 4.1.15 kernel.
-> > But code looks the same that in linus master that why I'm posting it
-> > here. I hope that it will not waste people time
-> > 
-> 
-> Hi everyone,
-> 
-> I’m also hitting this bug with games that use force-feedback steering
-> wheels under Wine/Proton. It typically shows up as EVIOCSFF ioctls
-> failing with EINVAL, since all the effects were unexpectedly flushed.
-> 
-> The problem is that input_ff_flush() is called whenever a file
-> descriptor is closed, but there can be multiple descriptors open to
-> the same file description (through fork(), dup(), etc).
-> input_ff_flush() removes all effects added by that file description,
-> which the users of the other descriptors certainly don't expect.
-> 
-> As for the fix, maybe fd_ops->flush() shouldn’t be implemented at all?
-> In the current design, effects “belong” to a file description (a
-> struct file *), not a descriptor. This seems sensible to me: a process
-> could open a device, upload an effect, then fork(), and it makes sense
-> that the child would have full control of the effects created by the
-> parent. It seems to me like nothing should be done when a descriptor
-> is closed, and input_ff_flush() should be called only when the whole
-> struct file is released.
-> 
+> Speaking of it. Does anyone have an idea how I could create the hwmon
+> device without the PHY device? At the moment it is attached to the
+> first PHY device and is removed when the PHY is removed, although
+> there might be still other PHYs in this package. Its unlikely to
+> happen though, but if someone has a good idea how to handle that,
+> I'd give it a try.
 
-Yes, I agree, we should drop setting fops->flush and move the code into
-evdev_release(). This will ensure that the effects are stopped and
-erased once file is closed, but will allow passing the descriptors
-around.
+There is a somewhat similar problem with Marvell Ethernet switches and
+their internal PHYs. The PHYs are the same as the discrete PHYs, and
+the usual Marvell PHY driver is used. But there is only one
+temperature sensor for the whole switch, and it is mapped into all the
+PHYs. So we end up creating multiple hwmon devices for the one
+temperature sensor, one per PHY.
 
-Can I get a real patch for this please?
+You could take the same approach here. Each PHY exposes a hwmon
+device?
 
-Thanks.
+Looking at
+static struct device *
+__hwmon_device_register(struct device *dev, const char *name, void *drvdata,
+                        const struct hwmon_chip_info *chip,
+                        const struct attribute_group **groups)
 
--- 
-Dmitry
+I think it is O.K. to pass dev as NULL. You don't have to associate it
+to a device. So you could create the hwmon device as part of package
+initialisation and put it into shared->priv.
+
+	Andrew
