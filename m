@@ -2,112 +2,188 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71711C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAACC55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39F2B21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587463018;
-	bh=oi16NvTlPCds/PtaCDgtDmjiWjDjytiV8+wJFUXnaRw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mU9dPGpG44kp8p7jLw137+Gsq2vFvFLdeNGdcp3P5BBS7K2yNRx9SSNGRNfNTQBij
-	 L0XK5TUToWTlnG4rUDRVed9tb1Xs2rkgjn/tThStj+gfXH6IRMKvvXjnp1h2vEqY/4
-	 LInXJB3/dDIrrIfA+cah31SMIel18FE5Tb2r+Azg=
+	by mail.kernel.org (Postfix) with ESMTP id C93E020CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:57:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzIAztT+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgDUJ45 (ORCPT
+        id S1728577AbgDUJ5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:56:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbgDUJ44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:56:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C23AD20CC7;
-        Tue, 21 Apr 2020 09:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587463016;
-        bh=oi16NvTlPCds/PtaCDgtDmjiWjDjytiV8+wJFUXnaRw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LO3vhmg6ln0Ts9dMDyhTcqEhwMy3WWqr8hbcF+fHutcc65SOPbbt18yezpmyH1aio
-         KbUOGrRcO/Hkbmd961cCQ6IB7Gg1O+vzj7Y3yNhEjIDbETM0oD+O18WH1cxw067Vst
-         qFx2S7WU9VsVIgGzxNajYc87i1R30TFjSLSmMz04=
-Date:   Tue, 21 Apr 2020 11:56:54 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Netdev <netdev@vger.kernel.org>, netfilter-devel@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Wang Wenhu <wenhu.wang@vivo.com>,
-        Tim Stallard <code@timstallard.me.uk>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        DENG Qingfang <dqfext@gmail.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 4.19 00/40] 4.19.117-rc1 review
-Message-ID: <20200421095654.GD727481@kroah.com>
-References: <20200420121444.178150063@linuxfoundation.org>
- <CA+G9fYsPaoo5YE9pAKV+w=MnZ_AGn93iquOC-tAN5arVyUD8FQ@mail.gmail.com>
+        Tue, 21 Apr 2020 05:57:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725920AbgDUJ5h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 05:57:37 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A1EC061A0F;
+        Tue, 21 Apr 2020 02:57:37 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id r26so2976110wmh.0;
+        Tue, 21 Apr 2020 02:57:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WrPXEec4AITga6eSmOansPu77CmlHKFEwJJ/qpS6qN0=;
+        b=XzIAztT+mPDZUOwemSpHeuMKwyyom6UpYVUgvy9sW+plkI+MKvLzF0WIelhE/s4fQd
+         FdQLN8/mrEzy8YyT/vrCk46xeGu1rRAkl3J50y4Yh38jJwMBYr6JPXv4HDCOXp4X5cWG
+         lxvpYer0iUja0i9/cnq6qi/aczhg7taK+V1C5VP87hlnsVyIEmOwnZhYslHgNhX3JXrD
+         ORLG/NSj8yZZwwLlP2ddoTtJ2uTmIToQwF4ZS6XQPk0/a6yw1DpWbNWVJ5hwKCRc6n0c
+         6wI68y7E6M8JbLE07W3iSrNsXtH7b30IUSO1Fnp/QOx08JPxGM7xlafgolcctTcz/meZ
+         DFEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WrPXEec4AITga6eSmOansPu77CmlHKFEwJJ/qpS6qN0=;
+        b=MIbYpDbMej+FoMe+t0GbLxkeNs1fiQknuNQl9H3jV69KmxwnFzp1ky91n5vta7miFc
+         Z2VTE4oB42lAtVfzMGvfg+KV3Mvg1zi/btMADJV4WqfjNSv5OhjlA4FZWPLWgtjQV48A
+         0toR8hllXTZXNhknqbqPIRCg5tbJKDzdt3QJgV/pTegTp2n9Sb4MLSw6ULO9IoyfmlwA
+         0b+cPKUgpPYOJnXZEvGPyeUFrixt3RoDDrDMXl3e4tK9eSJDKL/VmnQ9zwH8pq7Kdzrp
+         46ypMAYK6lpcdbraUSMr+vwC7gOlpDyWOQzX3xlQXkkT/qGBhyPkCo6VC2PqIfP/PvWU
+         q99A==
+X-Gm-Message-State: AGi0PuYfXESpSPmUleg/XO59RGBrtpaNsXecCpX81yGFH9BsPgWHffX2
+        Zewsh4XvY1VQ+yRn90GrY26wbYmh
+X-Google-Smtp-Source: APiQypIk3cTAhoSv9SYqD5kOWe7sVp3s0kn28AOHHwlVh0ZbrjxfvG0bZNvA0N2HoKlsXm6HuX2Sig==
+X-Received: by 2002:a1c:9d8c:: with SMTP id g134mr4188162wme.79.1587463055735;
+        Tue, 21 Apr 2020 02:57:35 -0700 (PDT)
+Received: from ?IPv6:2a02:810d:340:2e50:bc17:18d9:e349:724? ([2a02:810d:340:2e50:bc17:18d9:e349:724])
+        by smtp.gmail.com with ESMTPSA id 17sm2751403wmo.2.2020.04.21.02.57.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 02:57:35 -0700 (PDT)
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
+ PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org
+References: <cover.1586939718.git.hns@goldelico.com>
+ <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
+ <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
+ <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
+ <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
+ <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
+ <20200420073842.nx4xb3zqvu23arkc@gilmour.lan>
+From:   Philipp Rossak <embed3d@gmail.com>
+Message-ID: <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com>
+Date:   Tue, 21 Apr 2020 11:57:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYsPaoo5YE9pAKV+w=MnZ_AGn93iquOC-tAN5arVyUD8FQ@mail.gmail.com>
+In-Reply-To: <20200420073842.nx4xb3zqvu23arkc@gilmour.lan>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 03:54:20AM +0530, Naresh Kamboju wrote:
-> On Mon, 20 Apr 2020 at 18:21, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 4.19.117 release.
-> > There are 40 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Wed, 22 Apr 2020 12:10:36 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.117-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> 
-> Results from Linaro’s test farm.
-> Regressions on x86_64.
-> 
-> x86_64 boot failed due to kernel BUG and kernel panic.
-> It is hard to reproduce this BUG and kernel panic
-> We are investigating this problem. The full log links are at [1] and [2].
+Hi,
 
-THanks for testing all of these and if you find an offending commit for
-this, please let me know.
+On 20.04.20 09:38, Maxime Ripard wrote:
+> Hi,
+> 
+> On Fri, Apr 17, 2020 at 02:09:06PM +0200, Philipp Rossak wrote:
+>>>> I'm a bit skeptical on that one since it doesn't even list the
+>>>> interrupts connected to the GPU that the binding mandates.
+>>>
+>>> I think he left it out for a future update.
+>>> But best he comments himself.
+>>
+>> I'm currently working on those bindings. They are now 90% done, but they are
+>> not finished till now. Currently there is some mainline support missing to
+>> add the full binding. The A83T and also the A31/A31s have a GPU Power Off
+>> Gating Register in the R_PRCM module, that is not supported right now in
+>> Mainline. The Register need to be written when the GPU is powered on and
+>> off.
+>>
+>> @Maxime: I totally agree on your point that a demo needs to be provided
+>> before the related DTS patches should be provided. That's the reason why I
+>> added the gpu placeholder patches.
+>> Do you have an idea how a driver for the R_PRCM stuff can look like? I'm not
+>> that experienced with the clock driver framework.
+> 
+> It looks like a power-domain to me, so you'd rather plug that into the genpd
+> framework.
 
-thanks,
+I had a look on genpd and I'm not really sure if that fits.
 
-greg k-h
+It is basically some bit that verify that the clocks should be enabled 
+or disabled. I think this is better placed somewhere in the clocking 
+framework.
+I see there more similarities to the gating stuff.
+Do you think it is suitable to implement it like the clock gating?
+
+
+>> The big question is right now how to proceed with the A83T and A31s patches.
+>> I see there three options, which one do you prefer?:
+>>
+>> 1. Provide now placeholder patches and send new patches, if everything is
+>> clear and other things are mainlined
+>> 2. Provide now patches as complete as possible and provide later patches to
+>> complete them when the R_PRCM things are mainlined
+>> 3. Leave them out, till the related work is mainlined and the bindings are
+>> final.
+> 
+> Like I said, the DT *has* to be backward-compatible, so for any DT patch that
+> you are asking to be merged, you should be prepared to support it indefinitely
+> and be able to run from it, and you won't be able to change the bindings later
+> on.
+
+I agree on your points. But is this also suitable to drivers that are 
+currently off tree and might be merged in one or two years?
+
+>> Since this GPU IP core is very flexible and the SOC manufactures can
+>> configure it on their needs, I think the binding will extend in the future.
+>> For example the SGX544 GPU is available in different configurations: there
+>> is a SGX544 core and SGX544MPx core. The x stands for the count of the USSE
+>> (Universal Scalable Shader Engine) cores. For example the GPU in the A83T is
+>> a MP1 and the A31/A31s a MP2.
+> 
+> Mali is in the same situation and it didn't cause much trouble.
+> 
+Good to know.
+
+>> In addition to that some of the GPU's have also a 2D engine.
+> 
+> In the same memory region, running from the same interrupts, or is it a
+> completely separate IP that happens to be sold by the same vendor?
+> 
+What I know till now this is part of the PowerVR IP and not separated. 
+So it should use the same memory region, clocks and interrupts.
+
+Cheers
+Philipp
+
