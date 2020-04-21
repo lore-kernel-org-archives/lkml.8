@@ -2,55 +2,55 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB59C55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED993C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5822070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89422070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488109;
-	bh=eeWPZWBHhAnJtXqAApzvLw2FDsZwgYaBrsTGYJoAiCE=;
+	s=default; t=1587488111;
+	bh=qqE1YciB8BMQOJkYXer+PqkcNmj8UN1/HU/5HestGfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FDxdywEa9SfRVd4PFyUufAfUBPg7cw//3S4kNYidHHmcNtBDnbzYprpLx6W4SY4Ev
-	 pQMXaJGTN0Dj24wCh4onDxsx45XGUrbzpJhwDULdXVxUsHdsc+8To3i9lkW42V1C8S
-	 y5DOQhMKSu+YjyqxhXXwvvNPu8uJEKfwl/Kv21mI=
+	b=bnFD7uwWfQFmZVkklxJoxQHrfz41Dm0TL45mekD8PVXrwlwDjbd/OdIPP9HXeyEkP
+	 T4SK0L6t7ssHGUmvBh4o6ajouRElfbzo2oIOK26sLOIOklG3wyySavxQrDC72X8PRY
+	 eRjxZZmGLT4U+VbWuS3yhGgcszvEAuONQDc+TAVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgDUQzI (ORCPT
+        id S1729311AbgDUQzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:55:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57382 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 12:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729174AbgDUQyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729186AbgDUQyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 12:54:50 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D0D621655;
+        by mail.kernel.org (Postfix) with ESMTPSA id C159B2192A;
         Tue, 21 Apr 2020 16:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587488084;
-        bh=eeWPZWBHhAnJtXqAApzvLw2FDsZwgYaBrsTGYJoAiCE=;
+        bh=qqE1YciB8BMQOJkYXer+PqkcNmj8UN1/HU/5HestGfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SCD6Z8ercv+wlhnSBS1IdfRvVk/rS0zRsE3xkYS8LWwkZp0u08LKOjEC+zbjDXJdU
-         P5CSI6AVi/38MOl7AsjFRLpL5yfVgGxZiwTVIarHmwuMUjUQXua2yR+e6SG72A2QRw
-         v1nwLam5EQ0kHwyHGFyz4JtA+iz5tuz8P/cw3yrM=
+        b=sYIGV2lNiOnqt1FEOSskNqQruBIyDidjsR0wzjG4RoBUStn+QmZZcH5BGntY2G3o7
+         BUqX+od/xqvSIKRy2whHppF+UK0I5e4X7QHhsv8YiXV/9t3DWVys3+nCoWhPVqIAB5
+         NnObYkqFggEskwdV2nSwpKUZfkR1cg+CYQL6Axig=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jQwAU-00CmF0-OT; Tue, 21 Apr 2020 18:54:42 +0200
+        id 1jQwAV-00CmFe-0T; Tue, 21 Apr 2020 18:54:43 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 21/29] docs: filesystems: convert sharedsubtree.txt to ReST
-Date:   Tue, 21 Apr 2020 18:54:32 +0200
-Message-Id: <95189fdf64e74a5ebaf365ead262f6b3ea22ce60.1587487612.git.mchehab+huawei@kernel.org>
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v2 29/29] docs: filesystems: convert xfs-self-describing-metadata.txt to ReST
+Date:   Tue, 21 Apr 2020 18:54:40 +0200
+Message-Id: <42f38837e5c9e9e0787774558f2f7e1320556b3d.1587487612.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1587487612.git.mchehab+huawei@kernel.org>
 References: <cover.1587487612.git.mchehab+huawei@kernel.org>
@@ -65,830 +65,304 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 - Adjust document and section titles;
 - Some whitespace fixes and new line breaks;
 - Mark literal blocks as such;
-- Add table markups;
-- Add it to filesystems/index.rst
+- Add it to filesystems/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
  Documentation/filesystems/index.rst           |   1 +
- Documentation/filesystems/proc.rst            |   2 +-
- .../{sharedsubtree.txt => sharedsubtree.rst}  | 394 ++++++++++--------
- 3 files changed, 227 insertions(+), 170 deletions(-)
- rename Documentation/filesystems/{sharedsubtree.txt => sharedsubtree.rst} (72%)
+ ...a.txt => xfs-self-describing-metadata.rst} | 182 +++++++++---------
+ MAINTAINERS                                   |   2 +-
+ 3 files changed, 94 insertions(+), 91 deletions(-)
+ rename Documentation/filesystems/{xfs-self-describing-metadata.txt => xfs-self-describing-metadata.rst} (83%)
 
 diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 3d35317b0c46..56fd515af5ef 100644
+index 477496763473..4c536e66dc4c 100644
 --- a/Documentation/filesystems/index.rst
 +++ b/Documentation/filesystems/index.rst
-@@ -33,6 +33,7 @@ algorithms work.
-    mount_api
-    quota
-    seq_file
-+   sharedsubtree
- 
-    automount-support
- 
-diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
-index 38b606991065..a567bcccbb02 100644
---- a/Documentation/filesystems/proc.rst
-+++ b/Documentation/filesystems/proc.rst
-@@ -1870,7 +1870,7 @@ unbindable        mount is unbindable
- 
- For more information on mount propagation see:
- 
--  Documentation/filesystems/sharedsubtree.txt
-+  Documentation/filesystems/sharedsubtree.rst
- 
- 
- 3.6	/proc/<pid>/comm  & /proc/<pid>/task/<tid>/comm
-diff --git a/Documentation/filesystems/sharedsubtree.txt b/Documentation/filesystems/sharedsubtree.rst
-similarity index 72%
-rename from Documentation/filesystems/sharedsubtree.txt
-rename to Documentation/filesystems/sharedsubtree.rst
-index 8ccfbd55244b..d83395354250 100644
---- a/Documentation/filesystems/sharedsubtree.txt
-+++ b/Documentation/filesystems/sharedsubtree.rst
-@@ -1,7 +1,10 @@
+@@ -120,4 +120,5 @@ Documentation for filesystem implementations.
+    virtiofs
+    vfat
+    xfs-delayed-logging-design
++   xfs-self-describing-metadata
+    zonefs
+diff --git a/Documentation/filesystems/xfs-self-describing-metadata.txt b/Documentation/filesystems/xfs-self-describing-metadata.rst
+similarity index 83%
+rename from Documentation/filesystems/xfs-self-describing-metadata.txt
+rename to Documentation/filesystems/xfs-self-describing-metadata.rst
+index 8db0121d0980..51cdafe01ab1 100644
+--- a/Documentation/filesystems/xfs-self-describing-metadata.txt
++++ b/Documentation/filesystems/xfs-self-describing-metadata.rst
+@@ -1,8 +1,11 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+===============
- Shared Subtrees
-----------------
-+===============
- 
--Contents:
-+.. Contents:
- 	1) Overview
- 	2) Features
- 	3) Setting mount states
-@@ -41,31 +44,38 @@ replicas continue to be exactly same.
- 
- 	Here is an example:
- 
--	Let's say /mnt has a mount that is shared.
--	mount --make-shared /mnt
-+	Let's say /mnt has a mount that is shared::
-+
-+	    mount --make-shared /mnt
- 
- 	Note: mount(8) command now supports the --make-shared flag,
- 	so the sample 'smount' program is no longer needed and has been
- 	removed.
- 
--	# mount --bind /mnt /tmp
-+	::
-+
-+	    # mount --bind /mnt /tmp
-+
- 	The above command replicates the mount at /mnt to the mountpoint /tmp
- 	and the contents of both the mounts remain identical.
- 
--	#ls /mnt
--	a b c
-+	::
- 
--	#ls /tmp
--	a b c
-+	    #ls /mnt
-+	    a b c
- 
--	Now let's say we mount a device at /tmp/a
--	# mount /dev/sd0  /tmp/a
-+	    #ls /tmp
-+	    a b c
- 
--	#ls /tmp/a
--	t1 t2 t3
-+	Now let's say we mount a device at /tmp/a::
- 
--	#ls /mnt/a
--	t1 t2 t3
-+	    # mount /dev/sd0  /tmp/a
-+
-+	    #ls /tmp/a
-+	    t1 t2 t3
-+
-+	    #ls /mnt/a
-+	    t1 t2 t3
- 
- 	Note that the mount has propagated to the mount at /mnt as well.
- 
-@@ -123,14 +133,15 @@ replicas continue to be exactly same.
- 
- 2d) A unbindable mount is a unbindable private mount
- 
--	let's say we have a mount at /mnt and we make it unbindable
-+	let's say we have a mount at /mnt and we make it unbindable::
- 
--	# mount --make-unbindable /mnt
-+	    # mount --make-unbindable /mnt
- 
--	 Let's try to bind mount this mount somewhere else.
--	 # mount --bind /mnt /tmp
--	 mount: wrong fs type, bad option, bad superblock on /mnt,
--	        or too many mounted file systems
-+	 Let's try to bind mount this mount somewhere else::
-+
-+	    # mount --bind /mnt /tmp
-+	    mount: wrong fs type, bad option, bad superblock on /mnt,
-+		    or too many mounted file systems
- 
- 	Binding a unbindable mount is a invalid operation.
- 
-@@ -138,12 +149,12 @@ replicas continue to be exactly same.
- 3) Setting mount states
- 
- 	The mount command (util-linux package) can be used to set mount
--	states:
-+	states::
- 
--	mount --make-shared mountpoint
--	mount --make-slave mountpoint
--	mount --make-private mountpoint
--	mount --make-unbindable mountpoint
-+	    mount --make-shared mountpoint
-+	    mount --make-slave mountpoint
-+	    mount --make-private mountpoint
-+	    mount --make-unbindable mountpoint
- 
- 
- 4) Use cases
-@@ -154,9 +165,10 @@ replicas continue to be exactly same.
- 
- 	   Solution:
- 
--		The system administrator can make the mount at /cdrom shared
--		mount --bind /cdrom /cdrom
--		mount --make-shared /cdrom
-+		The system administrator can make the mount at /cdrom shared::
-+
-+		    mount --bind /cdrom /cdrom
-+		    mount --make-shared /cdrom
- 
- 		Now any process that clones off a new namespace will have a
- 		mount at /cdrom which is a replica of the same mount in the
-@@ -172,14 +184,14 @@ replicas continue to be exactly same.
- 	   Solution:
- 
- 		To begin with, the administrator can mark the entire mount tree
--		as shareable.
-+		as shareable::
- 
--		mount --make-rshared /
-+		    mount --make-rshared /
- 
- 		A new process can clone off a new namespace. And mark some part
--		of its namespace as slave
-+		of its namespace as slave::
- 
--		mount --make-rslave /myprivatetree
-+		    mount --make-rslave /myprivatetree
- 
- 		Hence forth any mounts within the /myprivatetree done by the
- 		process will not show up in any other namespace. However mounts
-@@ -206,13 +218,13 @@ replicas continue to be exactly same.
- 		versions of the file depending on the path used to access that
- 		file.
- 
--		An example is:
-+		An example is::
- 
--		mount --make-shared /
--		mount --rbind / /view/v1
--		mount --rbind / /view/v2
--		mount --rbind / /view/v3
--		mount --rbind / /view/v4
-+		    mount --make-shared /
-+		    mount --rbind / /view/v1
-+		    mount --rbind / /view/v2
-+		    mount --rbind / /view/v3
-+		    mount --rbind / /view/v4
- 
- 		and if /usr has a versioning filesystem mounted, then that
- 		mount appears at /view/v1/usr, /view/v2/usr, /view/v3/usr and
-@@ -224,8 +236,8 @@ replicas continue to be exactly same.
- 		filesystem is being requested and return the corresponding
- 		inode.
- 
--5) Detailed semantics:
---------------------
-+5) Detailed semantics
-+---------------------
- 	The section below explains the detailed semantics of
- 	bind, rbind, move, mount, umount and clone-namespace operations.
- 
-@@ -235,6 +247,7 @@ replicas continue to be exactly same.
- 5a) Mount states
- 
- 	A given mount can be in one of the following states
-+
- 	1) shared
- 	2) slave
- 	3) shared and slave
-@@ -252,7 +265,8 @@ replicas continue to be exactly same.
- 		A 'shared mount' is defined as a vfsmount that belongs to a
- 		'peer group'.
- 
--		For example:
-+		For example::
-+
- 			mount --make-shared /mnt
- 			mount --bind /mnt /tmp
- 
-@@ -270,7 +284,7 @@ replicas continue to be exactly same.
- 		A slave mount as the name implies has a master mount from which
- 		mount/unmount events are received. Events do not propagate from
- 		the slave mount to the master.  Only a shared mount can be made
--		a slave by executing the following command
-+		a slave by executing the following command::
- 
- 			mount --make-slave mount
- 
-@@ -290,8 +304,10 @@ replicas continue to be exactly same.
- 		peer group.
- 
- 		Only a slave vfsmount can be made as 'shared and slave' by
--		either executing the following command
-+		either executing the following command::
-+
- 			mount --make-shared mount
-+
- 		or by moving the slave vfsmount under a shared vfsmount.
- 
- 	(4) Private mount
-@@ -307,30 +323,32 @@ replicas continue to be exactly same.
- 
- 
-    	State diagram:
-+
-    	The state diagram below explains the state transition of a mount,
--	in response to various commands.
--	------------------------------------------------------------------------
--	|             |make-shared |  make-slave  | make-private |make-unbindab|
--	--------------|------------|--------------|--------------|-------------|
--	|shared	      |shared	   |*slave/private|   private	 | unbindable  |
--	|             |            |              |              |             |
--	|-------------|------------|--------------|--------------|-------------|
--	|slave	      |shared      |	**slave	  |    private   | unbindable  |
--	|             |and slave   |              |              |             |
--	|-------------|------------|--------------|--------------|-------------|
--	|shared	      |shared      |    slave	  |    private   | unbindable  |
--	|and slave    |and slave   |              |              |             |
--	|-------------|------------|--------------|--------------|-------------|
--	|private      |shared	   |  **private	  |    private   | unbindable  |
--	|-------------|------------|--------------|--------------|-------------|
--	|unbindable   |shared	   |**unbindable  |    private   | unbindable  |
--	------------------------------------------------------------------------
-+	in response to various commands::
- 
--	* if the shared mount is the only mount in its peer group, making it
--	slave, makes it private automatically. Note that there is no master to
--	which it can be slaved to.
-+	    -----------------------------------------------------------------------
-+	    |             |make-shared |  make-slave  | make-private |make-unbindab|
-+	    --------------|------------|--------------|--------------|-------------|
-+	    |shared	  |shared      |*slave/private|   private    | unbindable  |
-+	    |             |            |              |              |             |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |slave	  |shared      | **slave      |    private   | unbindable  |
-+	    |             |and slave   |              |              |             |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |shared       |shared      | slave        |    private   | unbindable  |
-+	    |and slave    |and slave   |              |              |             |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |private      |shared      |  **private   |    private   | unbindable  |
-+	    |-------------|------------|--------------|--------------|-------------|
-+	    |unbindable   |shared      |**unbindable  |    private   | unbindable  |
-+	    ------------------------------------------------------------------------
- 
--	** slaving a non-shared mount has no effect on the mount.
-+	    * if the shared mount is the only mount in its peer group, making it
-+	    slave, makes it private automatically. Note that there is no master to
-+	    which it can be slaved to.
-+
-+	    ** slaving a non-shared mount has no effect on the mount.
- 
- 	Apart from the commands listed below, the 'move' operation also changes
- 	the state of a mount depending on type of the destination mount. Its
-@@ -338,31 +356,32 @@ replicas continue to be exactly same.
- 
- 5b) Bind semantics
- 
--	Consider the following command
-+	Consider the following command::
- 
--	mount --bind A/a  B/b
-+	    mount --bind A/a  B/b
- 
- 	where 'A' is the source mount, 'a' is the dentry in the mount 'A', 'B'
- 	is the destination mount and 'b' is the dentry in the destination mount.
- 
- 	The outcome depends on the type of mount of 'A' and 'B'. The table
--	below contains quick reference.
--   ---------------------------------------------------------------------------
--   |         BIND MOUNT OPERATION                                            |
--   |**************************************************************************
--   |source(A)->| shared       |       private  |       slave    | unbindable |
--   | dest(B)  |               |                |                |            |
--   |   |      |               |                |                |            |
--   |   v      |               |                |                |            |
--   |**************************************************************************
--   |  shared  | shared        |     shared     | shared & slave |  invalid   |
--   |          |               |                |                |            |
--   |non-shared| shared        |      private   |      slave     |  invalid   |
--   ***************************************************************************
-+	below contains quick reference::
-+
-+	    --------------------------------------------------------------------------
-+	    |         BIND MOUNT OPERATION                                           |
-+	    |************************************************************************|
-+	    |source(A)->| shared      |       private  |       slave    | unbindable |
-+	    | dest(B)  |              |                |                |            |
-+	    |   |      |              |                |                |            |
-+	    |   v      |              |                |                |            |
-+	    |************************************************************************|
-+	    |  shared  | shared       |     shared     | shared & slave |  invalid   |
-+	    |          |              |                |                |            |
-+	    |non-shared| shared       |      private   |      slave     |  invalid   |
-+	    **************************************************************************
- 
-      	Details:
- 
--	1. 'A' is a shared mount and 'B' is a shared mount. A new mount 'C'
-+    1. 'A' is a shared mount and 'B' is a shared mount. A new mount 'C'
- 	which is clone of 'A', is created. Its root dentry is 'a' . 'C' is
- 	mounted on mount 'B' at dentry 'b'. Also new mount 'C1', 'C2', 'C3' ...
- 	are created and mounted at the dentry 'b' on all mounts where 'B'
-@@ -371,7 +390,7 @@ replicas continue to be exactly same.
- 	'B'.  And finally the peer-group of 'C' is merged with the peer group
- 	of 'A'.
- 
--	2. 'A' is a private mount and 'B' is a shared mount. A new mount 'C'
-+    2. 'A' is a private mount and 'B' is a shared mount. A new mount 'C'
- 	which is clone of 'A', is created. Its root dentry is 'a'. 'C' is
- 	mounted on mount 'B' at dentry 'b'. Also new mount 'C1', 'C2', 'C3' ...
- 	are created and mounted at the dentry 'b' on all mounts where 'B'
-@@ -379,7 +398,7 @@ replicas continue to be exactly same.
- 	'C', 'C1', .., 'Cn' with exactly the same configuration as the
- 	propagation tree for 'B'.
- 
--	3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount. A new
-+    3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount. A new
- 	mount 'C' which is clone of 'A', is created. Its root dentry is 'a' .
- 	'C' is mounted on mount 'B' at dentry 'b'. Also new mounts 'C1', 'C2',
- 	'C3' ... are created and mounted at the dentry 'b' on all mounts where
-@@ -389,19 +408,19 @@ replicas continue to be exactly same.
- 	is made the slave of mount 'Z'.  In other words, mount 'C' is in the
- 	state 'slave and shared'.
- 
--	4. 'A' is a unbindable mount and 'B' is a shared mount. This is a
-+    4. 'A' is a unbindable mount and 'B' is a shared mount. This is a
- 	invalid operation.
- 
--	5. 'A' is a private mount and 'B' is a non-shared(private or slave or
-+    5. 'A' is a private mount and 'B' is a non-shared(private or slave or
- 	unbindable) mount. A new mount 'C' which is clone of 'A', is created.
- 	Its root dentry is 'a'. 'C' is mounted on mount 'B' at dentry 'b'.
- 
--	6. 'A' is a shared mount and 'B' is a non-shared mount. A new mount 'C'
-+    6. 'A' is a shared mount and 'B' is a non-shared mount. A new mount 'C'
- 	which is a clone of 'A' is created. Its root dentry is 'a'. 'C' is
- 	mounted on mount 'B' at dentry 'b'.  'C' is made a member of the
- 	peer-group of 'A'.
- 
--	7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount. A
-+    7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount. A
- 	new mount 'C' which is a clone of 'A' is created. Its root dentry is
- 	'a'.  'C' is mounted on mount 'B' at dentry 'b'. Also 'C' is set as a
- 	slave mount of 'Z'. In other words 'A' and 'C' are both slave mounts of
-@@ -409,7 +428,7 @@ replicas continue to be exactly same.
- 	mount/unmount on 'A' do not propagate anywhere else. Similarly
- 	mount/unmount on 'C' do not propagate anywhere else.
- 
--	8. 'A' is a unbindable mount and 'B' is a non-shared mount. This is a
-+    8. 'A' is a unbindable mount and 'B' is a non-shared mount. This is a
- 	invalid operation. A unbindable mount cannot be bind mounted.
- 
- 5c) Rbind semantics
-@@ -422,7 +441,9 @@ replicas continue to be exactly same.
- 	then the subtree under the unbindable mount is pruned in the new
- 	location.
- 
--	eg: let's say we have the following mount tree.
-+	eg:
-+
-+	  let's say we have the following mount tree::
- 
- 		A
- 	      /   \
-@@ -430,12 +451,12 @@ replicas continue to be exactly same.
- 	     / \ / \
- 	     D E F G
- 
--	     Let's say all the mount except the mount C in the tree are
--	     of a type other than unbindable.
-+	  Let's say all the mount except the mount C in the tree are
-+	  of a type other than unbindable.
- 
--	     If this tree is rbound to say Z
-+	  If this tree is rbound to say Z
- 
--	     We will have the following tree at the new location.
-+	  We will have the following tree at the new location::
- 
- 		Z
- 		|
-@@ -457,24 +478,26 @@ replicas continue to be exactly same.
- 	the dentry in the destination mount.
- 
- 	The outcome depends on the type of the mount of 'A' and 'B'. The table
--	below is a quick reference.
--   ---------------------------------------------------------------------------
--   |         		MOVE MOUNT OPERATION                                 |
--   |**************************************************************************
--   | source(A)->| shared      |       private  |       slave    | unbindable |
--   | dest(B)  |               |                |                |            |
--   |   |      |               |                |                |            |
--   |   v      |               |                |                |            |
--   |**************************************************************************
--   |  shared  | shared        |     shared     |shared and slave|  invalid   |
--   |          |               |                |                |            |
--   |non-shared| shared        |      private   |    slave       | unbindable |
--   ***************************************************************************
--	NOTE: moving a mount residing under a shared mount is invalid.
-+	below is a quick reference::
-+
-+	    ---------------------------------------------------------------------------
-+	    |         		MOVE MOUNT OPERATION                                 |
-+	    |**************************************************************************
-+	    | source(A)->| shared      |       private  |       slave    | unbindable |
-+	    | dest(B)  |               |                |                |            |
-+	    |   |      |               |                |                |            |
-+	    |   v      |               |                |                |            |
-+	    |**************************************************************************
-+	    |  shared  | shared        |     shared     |shared and slave|  invalid   |
-+	    |          |               |                |                |            |
-+	    |non-shared| shared        |      private   |    slave       | unbindable |
-+	    ***************************************************************************
-+
-+	.. Note:: moving a mount residing under a shared mount is invalid.
- 
-       Details follow:
- 
--	1. 'A' is a shared mount and 'B' is a shared mount.  The mount 'A' is
-+    1. 'A' is a shared mount and 'B' is a shared mount.  The mount 'A' is
- 	mounted on mount 'B' at dentry 'b'.  Also new mounts 'A1', 'A2'...'An'
- 	are created and mounted at dentry 'b' on all mounts that receive
- 	propagation from mount 'B'. A new propagation tree is created in the
-@@ -483,7 +506,7 @@ replicas continue to be exactly same.
- 	propagation tree is appended to the already existing propagation tree
- 	of 'A'.
- 
--	2. 'A' is a private mount and 'B' is a shared mount. The mount 'A' is
-+    2. 'A' is a private mount and 'B' is a shared mount. The mount 'A' is
- 	mounted on mount 'B' at dentry 'b'. Also new mount 'A1', 'A2'... 'An'
- 	are created and mounted at dentry 'b' on all mounts that receive
- 	propagation from mount 'B'. The mount 'A' becomes a shared mount and a
-@@ -491,7 +514,7 @@ replicas continue to be exactly same.
- 	'B'. This new propagation tree contains all the new mounts 'A1',
- 	'A2'...  'An'.
- 
--	3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount.  The
-+    3. 'A' is a slave mount of mount 'Z' and 'B' is a shared mount.  The
- 	mount 'A' is mounted on mount 'B' at dentry 'b'.  Also new mounts 'A1',
- 	'A2'... 'An' are created and mounted at dentry 'b' on all mounts that
- 	receive propagation from mount 'B'. A new propagation tree is created
-@@ -501,32 +524,32 @@ replicas continue to be exactly same.
- 	'A'.  Mount 'A' continues to be the slave mount of 'Z' but it also
- 	becomes 'shared'.
- 
--	4. 'A' is a unbindable mount and 'B' is a shared mount. The operation
-+    4. 'A' is a unbindable mount and 'B' is a shared mount. The operation
- 	is invalid. Because mounting anything on the shared mount 'B' can
- 	create new mounts that get mounted on the mounts that receive
- 	propagation from 'B'.  And since the mount 'A' is unbindable, cloning
- 	it to mount at other mountpoints is not possible.
- 
--	5. 'A' is a private mount and 'B' is a non-shared(private or slave or
-+    5. 'A' is a private mount and 'B' is a non-shared(private or slave or
- 	unbindable) mount. The mount 'A' is mounted on mount 'B' at dentry 'b'.
- 
--	6. 'A' is a shared mount and 'B' is a non-shared mount.  The mount 'A'
-+    6. 'A' is a shared mount and 'B' is a non-shared mount.  The mount 'A'
- 	is mounted on mount 'B' at dentry 'b'.  Mount 'A' continues to be a
- 	shared mount.
- 
--	7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount.
-+    7. 'A' is a slave mount of mount 'Z' and 'B' is a non-shared mount.
- 	The mount 'A' is mounted on mount 'B' at dentry 'b'.  Mount 'A'
- 	continues to be a slave mount of mount 'Z'.
- 
--	8. 'A' is a unbindable mount and 'B' is a non-shared mount. The mount
-+    8. 'A' is a unbindable mount and 'B' is a non-shared mount. The mount
- 	'A' is mounted on mount 'B' at dentry 'b'. Mount 'A' continues to be a
- 	unbindable mount.
- 
- 5e) Mount semantics
- 
--	Consider the following command
-+	Consider the following command::
- 
--	mount device  B/b
-+	    mount device  B/b
- 
- 	'B' is the destination mount and 'b' is the dentry in the destination
- 	mount.
-@@ -537,9 +560,9 @@ replicas continue to be exactly same.
- 
- 5f) Unmount semantics
- 
--	Consider the following command
-+	Consider the following command::
- 
--	umount A
-+	    umount A
- 
- 	where 'A' is a mount mounted on mount 'B' at dentry 'b'.
- 
-@@ -592,10 +615,12 @@ replicas continue to be exactly same.
- 
- 	A. What is the result of the following command sequence?
- 
--		mount --bind /mnt /mnt
--		mount --make-shared /mnt
--		mount --bind /mnt /tmp
--		mount --move /tmp /mnt/1
-+		::
-+
-+		    mount --bind /mnt /mnt
-+		    mount --make-shared /mnt
-+		    mount --bind /mnt /tmp
-+		    mount --move /tmp /mnt/1
- 
- 		what should be the contents of /mnt /mnt/1 /mnt/1/1 should be?
- 		Should they all be identical? or should /mnt and /mnt/1 be
-@@ -604,23 +629,27 @@ replicas continue to be exactly same.
- 
- 	B. What is the result of the following command sequence?
- 
--		mount --make-rshared /
--		mkdir -p /v/1
--		mount --rbind / /v/1
-+		::
-+
-+		    mount --make-rshared /
-+		    mkdir -p /v/1
-+		    mount --rbind / /v/1
- 
- 		what should be the content of /v/1/v/1 be?
- 
- 
- 	C. What is the result of the following command sequence?
- 
--		mount --bind /mnt /mnt
--		mount --make-shared /mnt
--		mkdir -p /mnt/1/2/3 /mnt/1/test
--		mount --bind /mnt/1 /tmp
--		mount --make-slave /mnt
--		mount --make-shared /mnt
--		mount --bind /mnt/1/2 /tmp1
--		mount --make-slave /mnt
-+		::
-+
-+		    mount --bind /mnt /mnt
-+		    mount --make-shared /mnt
-+		    mkdir -p /mnt/1/2/3 /mnt/1/test
-+		    mount --bind /mnt/1 /tmp
-+		    mount --make-slave /mnt
-+		    mount --make-shared /mnt
-+		    mount --bind /mnt/1/2 /tmp1
-+		    mount --make-slave /mnt
- 
- 		At this point we have the first mount at /tmp and
- 		its root dentry is 1. Let's call this mount 'A'
-@@ -668,7 +697,8 @@ replicas continue to be exactly same.
- 
- 		step 1:
- 		   let's say the root tree has just two directories with
--		   one vfsmount.
-+		   one vfsmount::
-+
- 				    root
- 				   /    \
- 				  tmp    usr
-@@ -676,14 +706,17 @@ replicas continue to be exactly same.
- 		    And we want to replicate the tree at multiple
- 		    mountpoints under /root/tmp
- 
--		step2:
--		      mount --make-shared /root
-+		step 2:
-+		      ::
- 
--		      mkdir -p /tmp/m1
- 
--		      mount --rbind /root /tmp/m1
-+			mount --make-shared /root
- 
--		      the new tree now looks like this:
-+			mkdir -p /tmp/m1
-+
-+			mount --rbind /root /tmp/m1
-+
-+		      the new tree now looks like this::
- 
- 				    root
- 				   /    \
-@@ -697,11 +730,13 @@ replicas continue to be exactly same.
- 
- 			  it has two vfsmounts
- 
--		step3:
-+		step 3:
-+		    ::
-+
- 			    mkdir -p /tmp/m2
- 			    mount --rbind /root /tmp/m2
- 
--			the new tree now looks like this:
-+			the new tree now looks like this::
- 
- 				      root
- 				     /    \
-@@ -724,6 +759,7 @@ replicas continue to be exactly same.
- 		       it has 6 vfsmounts
- 
- 		step 4:
-+		      ::
- 			  mkdir -p /tmp/m3
- 			  mount --rbind /root /tmp/m3
- 
-@@ -740,7 +776,8 @@ replicas continue to be exactly same.
- 
- 		step 1:
- 		   let's say the root tree has just two directories with
--		   one vfsmount.
-+		   one vfsmount::
-+
- 				    root
- 				   /    \
- 				  tmp    usr
-@@ -748,17 +785,20 @@ replicas continue to be exactly same.
- 		    How do we set up the same tree at multiple locations under
- 		    /root/tmp
- 
--		step2:
--		      mount --bind /root/tmp /root/tmp
-+		step 2:
-+		      ::
- 
--		      mount --make-rshared /root
--		      mount --make-unbindable /root/tmp
- 
--		      mkdir -p /tmp/m1
-+			mount --bind /root/tmp /root/tmp
- 
--		      mount --rbind /root /tmp/m1
-+			mount --make-rshared /root
-+			mount --make-unbindable /root/tmp
- 
--		      the new tree now looks like this:
-+			mkdir -p /tmp/m1
-+
-+			mount --rbind /root /tmp/m1
-+
-+		      the new tree now looks like this::
- 
- 				    root
- 				   /    \
-@@ -768,11 +808,13 @@ replicas continue to be exactly same.
- 			      /  \
- 			     tmp  usr
- 
--		step3:
-+		step 3:
-+		      ::
-+
- 			    mkdir -p /tmp/m2
- 			    mount --rbind /root /tmp/m2
- 
--		      the new tree now looks like this:
-+		      the new tree now looks like this::
- 
- 				    root
- 				   /    \
-@@ -782,12 +824,13 @@ replicas continue to be exactly same.
- 			      /  \     / \
- 			     tmp  usr tmp usr
- 
--		step4:
-+		step 4:
-+		      ::
- 
- 			    mkdir -p /tmp/m3
- 			    mount --rbind /root /tmp/m3
- 
--		      the new tree now looks like this:
-+		      the new tree now looks like this::
- 
- 				    	  root
- 				      /    	  \
-@@ -801,25 +844,31 @@ replicas continue to be exactly same.
- 
- 8A) Datastructure
- 
--	4 new fields are introduced to struct vfsmount
-+	4 new fields are introduced to struct vfsmount:
-+
-+	*   ->mnt_share
-+	*   ->mnt_slave_list
-+	*   ->mnt_slave
-+	*   ->mnt_master
-+
- 	->mnt_share
--	->mnt_slave_list
--	->mnt_slave
--	->mnt_master
++============================
+ XFS Self Describing Metadata
+-----------------------------
++============================
+ 
+ Introduction
+-------------
++============
+ 
+ The largest scalability problem facing XFS is not one of algorithmic
+ scalability, but of verification of the filesystem structure. Scalabilty of the
+@@ -34,7 +37,7 @@ required for basic forensic analysis of the filesystem structure.
+ 
+ 
+ Self Describing Metadata
+-------------------------
++========================
+ 
+ One of the problems with the current metadata format is that apart from the
+ magic number in the metadata block, we have no other way of identifying what it
+@@ -142,7 +145,7 @@ modification occurred between the corruption being written and when it was
+ detected.
+ 
+ Runtime Validation
+-------------------
++==================
+ 
+ Validation of self-describing metadata takes place at runtime in two places:
+ 
+@@ -183,18 +186,18 @@ error occurs during this process, the buffer is again marked with a EFSCORRUPTED
+ error for the higher layers to catch.
+ 
+ Structures
+-----------
++==========
+ 
+-A typical on-disk structure needs to contain the following information:
++A typical on-disk structure needs to contain the following information::
+ 
+-struct xfs_ondisk_hdr {
+-        __be32  magic;		/* magic number */
+-        __be32  crc;		/* CRC, not logged */
+-        uuid_t  uuid;		/* filesystem identifier */
+-        __be64  owner;		/* parent object */
+-        __be64  blkno;		/* location on disk */
+-        __be64  lsn;		/* last modification in log, not logged */
+-};
++    struct xfs_ondisk_hdr {
++	    __be32  magic;		/* magic number */
++	    __be32  crc;		/* CRC, not logged */
++	    uuid_t  uuid;		/* filesystem identifier */
++	    __be64  owner;		/* parent object */
++	    __be64  blkno;		/* location on disk */
++	    __be64  lsn;		/* last modification in log, not logged */
++    };
+ 
+ Depending on the metadata, this information may be part of a header structure
+ separate to the metadata contents, or may be distributed through an existing
+@@ -214,24 +217,24 @@ level of information is generally provided. For example:
+ 	  well. hence the additional metadata headers change the overall format
+ 	  of the metadata.
+ 
+-A typical buffer read verifier is structured as follows:
++A typical buffer read verifier is structured as follows::
+ 
+-#define XFS_FOO_CRC_OFF		offsetof(struct xfs_ondisk_hdr, crc)
++    #define XFS_FOO_CRC_OFF		offsetof(struct xfs_ondisk_hdr, crc)
+ 
+-static void
+-xfs_foo_read_verify(
+-	struct xfs_buf	*bp)
+-{
+-       struct xfs_mount *mp = bp->b_mount;
++    static void
++    xfs_foo_read_verify(
++	    struct xfs_buf	*bp)
++    {
++	struct xfs_mount *mp = bp->b_mount;
+ 
+-        if ((xfs_sb_version_hascrc(&mp->m_sb) &&
+-             !xfs_verify_cksum(bp->b_addr, BBTOB(bp->b_length),
+-					XFS_FOO_CRC_OFF)) ||
+-            !xfs_foo_verify(bp)) {
+-                XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
+-                xfs_buf_ioerror(bp, EFSCORRUPTED);
+-        }
+-}
++	    if ((xfs_sb_version_hascrc(&mp->m_sb) &&
++		!xfs_verify_cksum(bp->b_addr, BBTOB(bp->b_length),
++					    XFS_FOO_CRC_OFF)) ||
++		!xfs_foo_verify(bp)) {
++		    XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
++		    xfs_buf_ioerror(bp, EFSCORRUPTED);
++	    }
++    }
+ 
+ The code ensures that the CRC is only checked if the filesystem has CRCs enabled
+ by checking the superblock of the feature bit, and then if the CRC verifies OK
+@@ -239,83 +242,83 @@ by checking the superblock of the feature bit, and then if the CRC verifies OK
+ 
+ The verifier function will take a couple of different forms, depending on
+ whether the magic number can be used to determine the format of the block. In
+-the case it can't, the code is structured as follows:
++the case it can't, the code is structured as follows::
+ 
+-static bool
+-xfs_foo_verify(
+-	struct xfs_buf		*bp)
+-{
+-        struct xfs_mount	*mp = bp->b_mount;
+-        struct xfs_ondisk_hdr	*hdr = bp->b_addr;
++    static bool
++    xfs_foo_verify(
++	    struct xfs_buf		*bp)
++    {
++	    struct xfs_mount	*mp = bp->b_mount;
++	    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
+ 
+-        if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
+-                return false;
++	    if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
++		    return false;
+ 
+-        if (!xfs_sb_version_hascrc(&mp->m_sb)) {
+-		if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
+-			return false;
+-		if (bp->b_bn != be64_to_cpu(hdr->blkno))
+-			return false;
+-		if (hdr->owner == 0)
+-			return false;
+-	}
++	    if (!xfs_sb_version_hascrc(&mp->m_sb)) {
++		    if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
++			    return false;
++		    if (bp->b_bn != be64_to_cpu(hdr->blkno))
++			    return false;
++		    if (hdr->owner == 0)
++			    return false;
++	    }
+ 
+-	/* object specific verification checks here */
++	    /* object specific verification checks here */
+ 
+-        return true;
+-}
++	    return true;
++    }
+ 
+ If there are different magic numbers for the different formats, the verifier
+-will look like:
++will look like::
+ 
+-static bool
+-xfs_foo_verify(
+-	struct xfs_buf		*bp)
+-{
+-        struct xfs_mount	*mp = bp->b_mount;
+-        struct xfs_ondisk_hdr	*hdr = bp->b_addr;
++    static bool
++    xfs_foo_verify(
++	    struct xfs_buf		*bp)
++    {
++	    struct xfs_mount	*mp = bp->b_mount;
++	    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
+ 
+-        if (hdr->magic == cpu_to_be32(XFS_FOO_CRC_MAGIC)) {
+-		if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
+-			return false;
+-		if (bp->b_bn != be64_to_cpu(hdr->blkno))
+-			return false;
+-		if (hdr->owner == 0)
+-			return false;
+-	} else if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
+-		return false;
++	    if (hdr->magic == cpu_to_be32(XFS_FOO_CRC_MAGIC)) {
++		    if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
++			    return false;
++		    if (bp->b_bn != be64_to_cpu(hdr->blkno))
++			    return false;
++		    if (hdr->owner == 0)
++			    return false;
++	    } else if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
++		    return false;
+ 
+-	/* object specific verification checks here */
++	    /* object specific verification checks here */
+ 
+-        return true;
+-}
++	    return true;
++    }
+ 
+ Write verifiers are very similar to the read verifiers, they just do things in
+-the opposite order to the read verifiers. A typical write verifier:
++the opposite order to the read verifiers. A typical write verifier::
+ 
+-static void
+-xfs_foo_write_verify(
+-	struct xfs_buf	*bp)
+-{
+-	struct xfs_mount	*mp = bp->b_mount;
+-	struct xfs_buf_log_item	*bip = bp->b_fspriv;
++    static void
++    xfs_foo_write_verify(
++	    struct xfs_buf	*bp)
++    {
++	    struct xfs_mount	*mp = bp->b_mount;
++	    struct xfs_buf_log_item	*bip = bp->b_fspriv;
+ 
+-	if (!xfs_foo_verify(bp)) {
+-		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
+-		xfs_buf_ioerror(bp, EFSCORRUPTED);
+-		return;
+-	}
++	    if (!xfs_foo_verify(bp)) {
++		    XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
++		    xfs_buf_ioerror(bp, EFSCORRUPTED);
++		    return;
++	    }
+ 
+-	if (!xfs_sb_version_hascrc(&mp->m_sb))
+-		return;
++	    if (!xfs_sb_version_hascrc(&mp->m_sb))
++		    return;
+ 
+ 
+-	if (bip) {
+-		struct xfs_ondisk_hdr	*hdr = bp->b_addr;
+-		hdr->lsn = cpu_to_be64(bip->bli_item.li_lsn);
+-	}
+-	xfs_update_cksum(bp->b_addr, BBTOB(bp->b_length), XFS_FOO_CRC_OFF);
+-}
++	    if (bip) {
++		    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
++		    hdr->lsn = cpu_to_be64(bip->bli_item.li_lsn);
++	    }
++	    xfs_update_cksum(bp->b_addr, BBTOB(bp->b_length), XFS_FOO_CRC_OFF);
++    }
+ 
+ This will verify the internal structure of the metadata before we go any
+ further, detecting corruptions that have occurred as the metadata has been
+@@ -324,7 +327,7 @@ update the LSN field (when it was last modified) and calculate the CRC on the
+ metadata. Once this is done, we can issue the IO.
+ 
+ Inodes and Dquots
+------------------
++=================
+ 
+ Inodes and dquots are special snowflakes. They have per-object CRC and
+ self-identifiers, but they are packed so that there are multiple objects per
+@@ -347,4 +350,3 @@ XXX: inode unlinked list modification doesn't recalculate the inode CRC! None of
+ the unlinked list modifications check or update CRCs, neither during unlink nor
+ log recovery. So, it's gone unnoticed until now. This won't matter immediately -
+ repair will probably complain about it - but it needs to be fixed.
 -
--	->mnt_share links together all the mount to/from which this vfsmount
-+		links together all the mount to/from which this vfsmount
- 		send/receives propagation events.
- 
--	->mnt_slave_list links all the mounts to which this vfsmount propagates
-+	->mnt_slave_list
-+		links all the mounts to which this vfsmount propagates
- 		to.
- 
--	->mnt_slave links together all the slaves that its master vfsmount
-+	->mnt_slave
-+		links together all the slaves that its master vfsmount
- 		propagates to.
- 
--	->mnt_master points to the master vfsmount from which this vfsmount
-+	->mnt_master
-+		points to the master vfsmount from which this vfsmount
- 		receives propagation.
- 
--	->mnt_flags takes two more flags to indicate the propagation status of
-+	->mnt_flags
-+		takes two more flags to indicate the propagation status of
- 		the vfsmount.  MNT_SHARE indicates that the vfsmount is a shared
- 		vfsmount.  MNT_UNCLONABLE indicates that the vfsmount cannot be
- 		replicated.
-@@ -842,7 +891,7 @@ replicas continue to be exactly same.
- 
- 	A example propagation tree looks as shown in the figure below.
- 	[ NOTE: Though it looks like a forest, if we consider all the shared
--	mounts as a conceptual entity called 'pnode', it becomes a tree]
-+	mounts as a conceptual entity called 'pnode', it becomes a tree]::
- 
- 
- 		        A <--> B <--> C <---> D
-@@ -864,14 +913,19 @@ replicas continue to be exactly same.
- 	A's ->mnt_slave_list links with ->mnt_slave of 'E', 'K', 'F' and 'G'
- 
- 	E's ->mnt_share links with ->mnt_share of K
--	'E', 'K', 'F', 'G' have their ->mnt_master point to struct
--				vfsmount of 'A'
-+
-+	'E', 'K', 'F', 'G' have their ->mnt_master point to struct vfsmount of 'A'
-+
- 	'M', 'L', 'N' have their ->mnt_master point to struct vfsmount of 'K'
-+
- 	K's ->mnt_slave_list links with ->mnt_slave of 'M', 'L' and 'N'
- 
- 	C's ->mnt_slave_list links with ->mnt_slave of 'J' and 'K'
-+
- 	J and K's ->mnt_master points to struct vfsmount of C
-+
- 	and finally D's ->mnt_slave_list links with ->mnt_slave of 'H' and 'I'
-+
- 	'H' and 'I' have their ->mnt_master pointing to struct vfsmount of 'D'.
- 
- 
-@@ -903,6 +957,7 @@ replicas continue to be exactly same.
- 	Prepare phase:
- 
- 	for each mount in the source tree:
-+
- 		   a) Create the necessary number of mount trees to
- 		   	be attached to each of the mounts that receive
- 			propagation from the destination mount.
-@@ -929,11 +984,12 @@ replicas continue to be exactly same.
- 	Abort phase
- 		delete all the newly created trees.
- 
--	NOTE: all the propagation related functionality resides in the file
--	pnode.c
-+	.. Note::
-+	   all the propagation related functionality resides in the file pnode.c
- 
- 
- ------------------------------------------------------------------------
- 
- version 0.1  (created the initial document, Ram Pai linuxram@us.ibm.com)
-+
- version 0.2  (Incorporated comments from Al Viro)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c8851e7c443a..3cf7e6724ca4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18608,7 +18608,7 @@ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ F:	Documentation/ABI/testing/sysfs-fs-xfs
+ F:	Documentation/admin-guide/xfs.rst
+ F:	Documentation/filesystems/xfs-delayed-logging-design.rst
+-F:	Documentation/filesystems/xfs-self-describing-metadata.txt
++F:	Documentation/filesystems/xfs-self-describing-metadata.rst
+ F:	fs/xfs/
+ F:	include/uapi/linux/dqblk_xfs.h
+ F:	include/uapi/linux/fsmap.h
 -- 
 2.25.2
 
