@@ -2,167 +2,189 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BFEC55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3CCC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 400F6206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE052206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SbdGbC/I"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dH0HgPiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgDULFv (ORCPT
+        id S1728643AbgDULF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45300 "EHLO
+        Tue, 21 Apr 2020 07:05:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728285AbgDULFu (ORCPT
+        with ESMTP id S1728285AbgDULFy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:05:50 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C1D0C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:05:50 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id v63so33804pfb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YQowLReDtrDqWyEJqghrzNfGRqjMiBQBGzRSAxJByhg=;
-        b=SbdGbC/IZ+waY6GcW1FEvdinhHukPVmS1p6/7X2InvP61zjhI4qpd7hLtKztakfwBW
-         K/WjnxqclzbwymHpj7ms7y45VRWSoPlhGP1GQNDXoz4U/3RUj4IGyl74e3+eK1/slIgX
-         VzvDNsEsz+ucIetAZgKyCrnP39XwSe2Myt7Z0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YQowLReDtrDqWyEJqghrzNfGRqjMiBQBGzRSAxJByhg=;
-        b=tDZQe5eeZF/r7hIQ9Hh+uYuZEamhbXNBWutOrYAEcF67pEyBDNLKljjABXKzPse4DO
-         FOiP8OC7pBkubul0ImezIFi5l56H2i6wB8bR0advt8LHHpHVwOLpDN8yAA8OQdVGqJu2
-         cHLuVfCoUIgADXWHNZrVx+A8IakE4vIA1Lup+zxbTCrOypdxE6TGkmTZuy5MgkeOlffD
-         jB4ZCp/MZuGTtSM4I+IxdOT7PP8z1ndKh/fVevs/WWDmTx11I+JVKQk//BQFjVd4Lk0+
-         9z/2GEh8MkF/mEdUx9OW3+v4PwQgBj1N0fUDkVgMn7sAM8avaK0Kfg7qexpACGeImjL1
-         bvTg==
-X-Gm-Message-State: AGi0Pub4ZyYmRG0/hVNHC4lkTBXKAQiuYQI9iUkmOAwtUenGRqpjcwbJ
-        z04ZxuZnjMshnVSQ3Jagn4hiCsdgb38=
-X-Google-Smtp-Source: APiQypI1YwJmHmSy0x0sI6jBe5ajdThi9X2rhSR2zjbZmeUsSjXpy1kYTU95kpNEOJjKxjiOS0aNBA==
-X-Received: by 2002:a63:6f4c:: with SMTP id k73mr1751689pgc.241.1587467149882;
-        Tue, 21 Apr 2020 04:05:49 -0700 (PDT)
-Received: from localhost ([2401:fa00:9:14:1105:3e8a:838d:e326])
-        by smtp.gmail.com with ESMTPSA id c84sm2258841pfb.153.2020.04.21.04.05.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 04:05:49 -0700 (PDT)
-From:   Evan Benn <evanbenn@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     xingyu.chen@amlogic.com, jwerner@chromium.org,
-        Evan Benn <evanbenn@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: watchdog: Add ARM smc wdt for mt8173 watchdog
-Date:   Tue, 21 Apr 2020 21:05:19 +1000
-Message-Id: <20200421210403.v2.1.Id96574f1f52479d7a2f3b866b8a0552ab8c03d7f@changeid>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-In-Reply-To: <20200421110520.197930-1-evanbenn@chromium.org>
-References: <20200421110520.197930-1-evanbenn@chromium.org>
+        Tue, 21 Apr 2020 07:05:54 -0400
+X-Greylist: delayed 3467 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 21 Apr 2020 04:05:54 PDT
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 131F6C061A0F;
+        Tue, 21 Apr 2020 04:05:54 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2288D528;
+        Tue, 21 Apr 2020 13:05:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587467152;
+        bh=kvQ+IAMHuBaUG2woEjVdUrWkFameqX531W02vdLCd4c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dH0HgPiQPSwzC2XlzH3ldUuhLL9YFCrKi4At5sPYEAJbyZCfV7da1Nj1mYT4K/E2X
+         J4SvcK8IYOchSkVczi0652h2y+I+vm4k0XgmoPmqcNzUcacst1bATDVt8C72ACzfmm
+         aNybcjcfnxQOWN24V167FFYZ4PnN8IQAkfPWDVDU=
+Date:   Tue, 21 Apr 2020 14:05:37 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
+Message-ID: <20200421110537.GC5983@pendragon.ideasonboard.com>
+References: <20200229003731.2728-1-robh@kernel.org>
+ <20200421100749.GA5429@pendragon.ideasonboard.com>
+ <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This watchdog can be used on ARM systems with a Secure
-Monitor firmware to forward watchdog operations to
-firmware via a Secure Monitor Call.
+Hi Yamada-san,
 
-Signed-off-by: Evan Benn <evanbenn@chromium.org>
+On Tue, Apr 21, 2020 at 07:45:05PM +0900, Masahiro Yamada wrote:
+> On Tue, Apr 21, 2020 at 7:08 PM Laurent Pinchart wrote:
+> > On Fri, Feb 28, 2020 at 06:37:30PM -0600, Rob Herring wrote:
+> > > Most folks only run dt_binding_check on the single schema they care about
+> > > by setting DT_SCHEMA_FILES. That means example is only checked against
+> > > that one schema which is not always sufficient.
+> > >
+> > > Let's address this by splitting processed-schema.yaml into 2 files: one
+> > > that's always all schemas for the examples and one that's just the schema
+> > > in DT_SCHEMA_FILES for dtbs.
+> >
+> > This broke
+> >
+> > make DT_SCHEMA_FILES=Documentation/devicetree/.. dt_binding_check
+> 
+> What is intended by
+> "DT_SCHEMA_FILES=Documentation/devicetree/.."  ?
 
----
+My bad, I forgot to write that ... is the continuation of the string.
+It's any yaml schema file that has an example.
 
-Changes in v4:
-- Add arm,smc-id property
+> > for me :-(
+> >
+> > make[1]: Entering directory '/home/laurent/src/linux/output/arm32'
+> > make[2]: execvp: /bin/sh: Argument list too long
+> > make[2]: *** [/home/laurent/src/linux/Documentation/devicetree/bindings/Makefile:35: Documentation/devicetree/bindings/processed-schema-examples.yaml] Error 127
+> > make[1]: *** [/home/laurent/src/linux/Makefile:1296: dt_binding_check] Error 2
+> > make[1]: Leaving directory '/home/laurent/src/linux/output/arm32'
+> > make: *** [Makefile:180: sub-make] Error 2
+> >
+> > Before the patch, dt-mk-schema was called with DT_SCHEMA_FILES only, and
+> > it is now called with DT_DOCS unconditionally.
+> >
+> > > Cc: Michal Marek <michal.lkml@markovi.net>
+> > > Cc: linux-kbuild@vger.kernel.org
+> > > Co-developed-by: Masahiro Yamada <masahiroy@kernel.org>
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > Masahiro, given you pretty much re-wrote this, I added you as
+> > > Co-developed-by.
+> > >
+> > > Based on next/master
+> > >
+> > >  Documentation/devicetree/bindings/.gitignore |  2 +-
+> > >  Documentation/devicetree/bindings/Makefile   | 22 +++++++++++++-------
+> > >  scripts/Makefile.lib                         |  3 ++-
+> > >  3 files changed, 17 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
+> > > index ef82fcfcccab..57afa1533a5f 100644
+> > > --- a/Documentation/devicetree/bindings/.gitignore
+> > > +++ b/Documentation/devicetree/bindings/.gitignore
+> > > @@ -1,2 +1,2 @@
+> > >  *.example.dts
+> > > -processed-schema.yaml
+> > > +processed-schema*.yaml
+> > > diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+> > > index 646cb3525373..7c40d5ba1b51 100644
+> > > --- a/Documentation/devicetree/bindings/Makefile
+> > > +++ b/Documentation/devicetree/bindings/Makefile
+> > > @@ -2,7 +2,6 @@
+> > >  DT_DOC_CHECKER ?= dt-doc-validate
+> > >  DT_EXTRACT_EX ?= dt-extract-example
+> > >  DT_MK_SCHEMA ?= dt-mk-schema
+> > > -DT_MK_SCHEMA_FLAGS := $(if $(DT_SCHEMA_FILES), -u)
+> > >
+> > >  quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
+> > >        cmd_chk_binding = $(DT_DOC_CHECKER) -u $(srctree)/$(src) $< ; \
+> > > @@ -11,26 +10,33 @@ quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
+> > >  $(obj)/%.example.dts: $(src)/%.yaml FORCE
+> > >       $(call if_changed,chk_binding)
+> > >
+> > > -DT_TMP_SCHEMA := processed-schema.yaml
+> > > +# Use full schemas when checking %.example.dts
+> > > +DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+> > >
+> > >  quiet_cmd_mk_schema = SCHEMA  $@
+> > >        cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
+> > >
+> > > -DT_DOCS = $(shell \
+> > > +DT_DOCS = $(addprefix $(src)/, \
+> > > +     $(shell \
+> > >       cd $(srctree)/$(src) && \
+> > >       find * \( -name '*.yaml' ! \
+> > > -             -name $(DT_TMP_SCHEMA) ! \
+> > > +             -name 'processed-schema*' ! \
+> > >               -name '*.example.dt.yaml' \) \
+> > > -     )
+> > > +     ))
+> > >
+> > > -DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
+> > > +DT_SCHEMA_FILES ?= $(DT_DOCS)
+> > >
+> > >  ifeq ($(CHECK_DTBS),)
+> > >  extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+> > >  extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
+> > > +extra-y += processed-schema-examples.yaml
+> > > +
+> > > +$(obj)/processed-schema-examples.yaml: $(DT_DOCS) FORCE
+> > > +     $(call if_changed,mk_schema)
+> > >  endif
+> > >
+> > > -$(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
+> > > +$(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := -u
+> > > +$(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) FORCE
+> > >       $(call if_changed,mk_schema)
+> > >
+> > > -extra-y += $(DT_TMP_SCHEMA)
+> > > +extra-y += processed-schema.yaml
+> > > diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> > > index f5ff506e4a24..b12dd5ba4896 100644
+> > > --- a/scripts/Makefile.lib
+> > > +++ b/scripts/Makefile.lib
+> > > @@ -307,7 +307,8 @@ $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
+> > >
+> > >  DT_CHECKER ?= dt-validate
+> > >  DT_BINDING_DIR := Documentation/devicetree/bindings
+> > > -DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
+> > > +# DT_TMP_SCHEMA may be overridden from Documentation/devicetree/bindings/Makefile
+> > > +DT_TMP_SCHEMA ?= $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
+> > >
+> > >  quiet_cmd_dtb_check =        CHECK   $@
+> > >        cmd_dtb_check =        $(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@
 
-Changes in v3:
-- Change name back to arm
-
-Changes in v2:
-- Change name arm > mt8173
-
- .../bindings/watchdog/arm-smc-wdt.yaml        | 36 +++++++++++++++++++
- MAINTAINERS                                   |  6 ++++
- 2 files changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
-
-diff --git a/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
-new file mode 100644
-index 0000000000000..5379d9f798d84
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/arm-smc-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM Secure Monitor Call based watchdog
-+
-+allOf:
-+  - $ref: "watchdog.yaml#"
-+
-+maintainers:
-+  - Julius Werner <jwerner@chromium.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt8173-smc-wdt
-+  arm,smc-id:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - default: 0x82003D06
-+    description:
-+      The ATF smc function id used by the firmware.
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    watchdog {
-+      compatible = "mediatek,mt8173-smc-wdt";
-+      timeout-sec = <15>;
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b816a453b10eb..0f2b39767bfa9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1457,6 +1457,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
- F:	drivers/irqchip/irq-vic.c
- 
-+ARM SMC WATCHDOG DRIVER
-+M:	Julius Werner <jwerner@chromium.org>
-+R:	Evan Benn <evanbenn@chromium.org>
-+S:	Maintained
-+F:	devicetree/bindings/watchdog/arm-smc-wdt.yaml
-+
- ARM SMMU DRIVERS
- M:	Will Deacon <will@kernel.org>
- R:	Robin Murphy <robin.murphy@arm.com>
 -- 
-2.26.1.301.g55bc3eb7cb9-goog
+Regards,
 
+Laurent Pinchart
