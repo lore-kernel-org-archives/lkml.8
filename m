@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF855C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE31DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD8FE206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE12B2071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CZsghUFK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NGgecMLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgDUQQ0 (ORCPT
+        id S1726530AbgDUQQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:16:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
+        Tue, 21 Apr 2020 12:16:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729203AbgDUQQQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726012AbgDUQQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:16:16 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01141C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:16:16 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k11so17128448wrp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:16:15 -0700 (PDT)
+        Tue, 21 Apr 2020 12:16:09 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E282CC061A41
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:16:08 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u127so4390758wmg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:16:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ci6ooCorfZ5Pyg0EKRJeiIb8tL4fvaY6SA1psV8+SCw=;
-        b=CZsghUFKKEdEnCXBx5yRz8bnB6CwWg98QhPAYZgiYWQg29CIv9EXkORt8/EMnBQKR9
-         bzMSY1fNGJ8xzGgsC3F8NAlxf9IC4UgBmm2A9iC0GeQNt1QLitlNhy2R45XbVbGC30r3
-         U9k0TfjNExMloDx788rUtRtS//gSnxuruqMhpV3FxfwyybiwAcMWKJniE/FSPST6mmod
-         1Z/wMgAMf91sVWKknMzcOwTQs2SpNACL2XChbrH1Aq3ilCTdSFTAQlJar4H5f/cHWuc/
-         6shuEUUD4vDUUPO4bXLzrJAap+5TupXRQb2ABdGkub4TcbLYwSBspT95A5aP/jVLTuXA
-         qxnA==
+        bh=wEt0VLaSvhUT7nyu4RhagnuYQaTu9Oo49aJG5CKXEWA=;
+        b=NGgecMLbtC3PDBUY6z/AYFi1locTndBe2dvXfhXuoT58q4xdHw4EWuhWQrT4AEepwJ
+         rNDUYpKQnKVSC4ulOjpKkAL3AtXaWs/6ddc6Rqa5zbPUIgifptOHCtw4A2YBVZjn/9/P
+         HTESIv5cj56mRjKJOb6zpszwPHwBKL2XzTxGmTkR5CzJheM8NWw4wdLAHa7aDkd9knxh
+         OUvzYbI8Ig+gcy67146tEFuosPOTq+KikWJLSiy5fbskn8PzX66zbDwiWqdPIv4vItaJ
+         oBvR6tJzVtmZfTMeeBq6MPaf5tmvEnP1O9QTKj1eCsQQ1XQQ5tB79W6VeFS7RmbKauEr
+         gHeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ci6ooCorfZ5Pyg0EKRJeiIb8tL4fvaY6SA1psV8+SCw=;
-        b=L9sZ5xxuF95PXd5EJPjS99pCcRHkWtd+wEliOMo/adS1xsW0L1k89lusokcOUj2cCq
-         10LJKrntg3C7gVl9/p68hi0VPlcb6PPxZ3QfU4z4i5r9/N6dXoxTcThmqEidv2UcenWf
-         WyfuiaRTfKJWProY621BPB9MS4YohB2qYHwFEgNZppUO8cczrCPAjY1+0rmTnJBLIQ5a
-         Qb44VKf09H6NbOveltLKDQ4Twrrth9HZTuxtibEVdAX64tc+Pr9upKD4sjoAv+Hd+vWy
-         NXoqeb6pMbvs7ZWt6N8t8SgSAcx5dWlmIbYjX0CbqgmLI6QgZF0Oh7DmxpgynQ1EV4H0
-         +myw==
-X-Gm-Message-State: AGi0PuZ/YegJ+zg69J/04yKfGXt4p/jWf1EpX7zWI0a/UPkn1J1DFU2R
-        CfYFfU+03DgRbp5Y0mNEFSqezw==
-X-Google-Smtp-Source: APiQypKwYPQ71CJFtmAJoTCOud6H58QEiRqlFpGieecpxyw4BgGvPadsdyAP66urvT+CQZz9fK3Qyg==
-X-Received: by 2002:a5d:6647:: with SMTP id f7mr26373687wrw.41.1587485774529;
-        Tue, 21 Apr 2020 09:16:14 -0700 (PDT)
+        bh=wEt0VLaSvhUT7nyu4RhagnuYQaTu9Oo49aJG5CKXEWA=;
+        b=PdrtEr6+2B64f4073z1la3GM4QcINd3sAo0Trim0GEpBrsxD3w5dXp+dS34eEhGOSJ
+         0A+iQBRm3VMvRy3YtUSQ4KsuV3d2Uw1iLbDJQTzfom97USUG24eqpmzOsEhKIRbq276+
+         6tnfjMB2KvunEJn7T5Igaff/NKhsBeHtNCUYjHGPRXl67JK4VR8wAH5OhRZ0ep3OIDA1
+         hv4MqCujLgVgPJxsCrRc3tNLQiP9Ya+N0NrNuSDHcYkrX8doFBYnwwp6yajg/8vg1FZN
+         icvoJbDU54Ms+H1vxFqqLMfjttqzq1wSW2Rx0Erg9jEZ4U+7umFXLEUvr7kRytN0zJ6H
+         W0OQ==
+X-Gm-Message-State: AGi0PuZP8zPoaKzUpjtWVCgnGCic+G1QGeCeC483P77wfcgWe9cfdDmV
+        Fo/Tc7t4ncSZZpd6elrYg4ZwCA==
+X-Google-Smtp-Source: APiQypI3cie8pkqJDDqXzSqoQ2mnR5NO+rWE/2lxIKLD/sckQ4zuzNmDLYDnaGtbYCraqJ9NfSJ/uw==
+X-Received: by 2002:a1c:6a0b:: with SMTP id f11mr5608062wmc.123.1587485767562;
+        Tue, 21 Apr 2020 09:16:07 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
-        by smtp.gmail.com with ESMTPSA id m8sm4410873wrx.54.2020.04.21.09.16.12
+        by smtp.gmail.com with ESMTPSA id m8sm4410873wrx.54.2020.04.21.09.16.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 09:16:13 -0700 (PDT)
+        Tue, 21 Apr 2020 09:16:06 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH v6 6/6] drm/meson: crtc: handle commit of Amlogic FBC frames
-Date:   Tue, 21 Apr 2020 18:15:59 +0200
-Message-Id: <20200421161559.2347-7-narmstrong@baylibre.com>
+Subject: [PATCH v6 2/6] drm/meson: add Amlogic Video FBC registers
+Date:   Tue, 21 Apr 2020 18:15:55 +0200
+Message-Id: <20200421161559.2347-3-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200421161559.2347-1-narmstrong@baylibre.com>
 References: <20200421161559.2347-1-narmstrong@baylibre.com>
@@ -78,158 +78,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the VD1 Amlogic FBC decoder is now configured by the overlay driver,
-commit the right registers to decode the Amlogic FBC frame.
+Add the registers of the VPU VD1 Amlogic FBC decoder module, and routing
+register.
 
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/gpu/drm/meson/meson_crtc.c | 118 +++++++++++++++++++++--------
- 1 file changed, 88 insertions(+), 30 deletions(-)
+ drivers/gpu/drm/meson/meson_registers.h | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/gpu/drm/meson/meson_crtc.c b/drivers/gpu/drm/meson/meson_crtc.c
-index e66b6271ff58..2854272dc2d9 100644
---- a/drivers/gpu/drm/meson/meson_crtc.c
-+++ b/drivers/gpu/drm/meson/meson_crtc.c
-@@ -291,6 +291,10 @@ static void meson_crtc_enable_vd1(struct meson_drm *priv)
- 			    VPP_VD1_PREBLEND | VPP_VD1_POSTBLEND |
- 			    VPP_COLOR_MNG_ENABLE,
- 			    priv->io_base + _REG(VPP_MISC));
-+
-+	writel_bits_relaxed(VIU_CTRL0_AFBC_TO_VD1,
-+			    priv->viu.vd1_afbc ? VIU_CTRL0_AFBC_TO_VD1 : 0,
-+			    priv->io_base + _REG(VIU_MISC_CTRL0));
- }
+diff --git a/drivers/gpu/drm/meson/meson_registers.h b/drivers/gpu/drm/meson/meson_registers.h
+index 8ea00546cd4e..08631fdfe4b9 100644
+--- a/drivers/gpu/drm/meson/meson_registers.h
++++ b/drivers/gpu/drm/meson/meson_registers.h
+@@ -144,10 +144,15 @@
+ #define		VIU_SW_RESET_OSD1               BIT(0)
+ #define VIU_MISC_CTRL0 0x1a06
+ #define		VIU_CTRL0_VD1_AFBC_MASK         0x170000
++#define		VIU_CTRL0_AFBC_TO_VD1		BIT(20)
+ #define VIU_MISC_CTRL1 0x1a07
+ #define		MALI_AFBC_MISC			GENMASK(15, 8)
+ #define D2D3_INTF_LENGTH 0x1a08
+ #define D2D3_INTF_CTRL0 0x1a09
++#define VD1_AFBCD0_MISC_CTRL 0x1a0a
++#define		VD1_AXI_SEL_AFBC		(1 << 12)
++#define		AFBC_VD1_SEL			(1 << 10)
++#define VD2_AFBCD1_MISC_CTRL 0x1a0b
+ #define VIU_OSD1_CTRL_STAT 0x1a10
+ #define		VIU_OSD1_OSD_BLK_ENABLE         BIT(0)
+ #define		VIU_OSD1_OSD_MEM_MODE_LINEAR	BIT(2)
+@@ -365,6 +370,23 @@
+ #define VIU_OSD1_OETF_LUT_ADDR_PORT 0x1add
+ #define VIU_OSD1_OETF_LUT_DATA_PORT 0x1ade
+ #define AFBC_ENABLE 0x1ae0
++#define AFBC_MODE 0x1ae1
++#define AFBC_SIZE_IN 0x1ae2
++#define AFBC_DEC_DEF_COLOR 0x1ae3
++#define AFBC_CONV_CTRL 0x1ae4
++#define AFBC_LBUF_DEPTH 0x1ae5
++#define AFBC_HEAD_BADDR 0x1ae6
++#define AFBC_BODY_BADDR 0x1ae7
++#define AFBC_SIZE_OUT 0x1ae8
++#define AFBC_OUT_YSCOPE 0x1ae9
++#define AFBC_STAT 0x1aea
++#define AFBC_VD_CFMT_CTRL 0x1aeb
++#define AFBC_VD_CFMT_W 0x1aec
++#define AFBC_MIF_HOR_SCOPE 0x1aed
++#define AFBC_MIF_VER_SCOPE 0x1aee
++#define AFBC_PIXEL_HOR_SCOPE 0x1aef
++#define AFBC_PIXEL_VER_SCOPE 0x1af0
++#define AFBC_VD_CFMT_H 0x1af1
  
- static void meson_g12a_crtc_enable_vd1(struct meson_drm *priv)
-@@ -300,6 +304,10 @@ static void meson_g12a_crtc_enable_vd1(struct meson_drm *priv)
- 		       VD_BLEND_POSTBLD_SRC_VD1 |
- 		       VD_BLEND_POSTBLD_PREMULT_EN,
- 		       priv->io_base + _REG(VD1_BLEND_SRC_CTRL));
-+
-+	writel_relaxed(priv->viu.vd1_afbc ?
-+		       (VD1_AXI_SEL_AFBC | AFBC_VD1_SEL) : 0,
-+		       priv->io_base + _REG(VD1_AFBCD0_MISC_CTRL));
- }
- 
- void meson_crtc_irq(struct meson_drm *priv)
-@@ -383,36 +391,86 @@ void meson_crtc_irq(struct meson_drm *priv)
- 	/* Update the VD1 registers */
- 	if (priv->viu.vd1_enabled && priv->viu.vd1_commit) {
- 
--		switch (priv->viu.vd1_planes) {
--		case 3:
--			meson_canvas_config(priv->canvas,
--					    priv->canvas_id_vd1_2,
--					    priv->viu.vd1_addr2,
--					    priv->viu.vd1_stride2,
--					    priv->viu.vd1_height2,
--					    MESON_CANVAS_WRAP_NONE,
--					    MESON_CANVAS_BLKMODE_LINEAR,
--					    MESON_CANVAS_ENDIAN_SWAP64);
--		/* fallthrough */
--		case 2:
--			meson_canvas_config(priv->canvas,
--					    priv->canvas_id_vd1_1,
--					    priv->viu.vd1_addr1,
--					    priv->viu.vd1_stride1,
--					    priv->viu.vd1_height1,
--					    MESON_CANVAS_WRAP_NONE,
--					    MESON_CANVAS_BLKMODE_LINEAR,
--					    MESON_CANVAS_ENDIAN_SWAP64);
--		/* fallthrough */
--		case 1:
--			meson_canvas_config(priv->canvas,
--					    priv->canvas_id_vd1_0,
--					    priv->viu.vd1_addr0,
--					    priv->viu.vd1_stride0,
--					    priv->viu.vd1_height0,
--					    MESON_CANVAS_WRAP_NONE,
--					    MESON_CANVAS_BLKMODE_LINEAR,
--					    MESON_CANVAS_ENDIAN_SWAP64);
-+		if (priv->viu.vd1_afbc) {
-+			writel_relaxed(priv->viu.vd1_afbc_head_addr,
-+				       priv->io_base +
-+				       _REG(AFBC_HEAD_BADDR));
-+			writel_relaxed(priv->viu.vd1_afbc_body_addr,
-+				       priv->io_base +
-+				       _REG(AFBC_BODY_BADDR));
-+			writel_relaxed(priv->viu.vd1_afbc_en,
-+				       priv->io_base +
-+				       _REG(AFBC_ENABLE));
-+			writel_relaxed(priv->viu.vd1_afbc_mode,
-+				       priv->io_base +
-+				       _REG(AFBC_MODE));
-+			writel_relaxed(priv->viu.vd1_afbc_size_in,
-+				       priv->io_base +
-+				       _REG(AFBC_SIZE_IN));
-+			writel_relaxed(priv->viu.vd1_afbc_dec_def_color,
-+				       priv->io_base +
-+				       _REG(AFBC_DEC_DEF_COLOR));
-+			writel_relaxed(priv->viu.vd1_afbc_conv_ctrl,
-+				       priv->io_base +
-+				       _REG(AFBC_CONV_CTRL));
-+			writel_relaxed(priv->viu.vd1_afbc_size_out,
-+				       priv->io_base +
-+				       _REG(AFBC_SIZE_OUT));
-+			writel_relaxed(priv->viu.vd1_afbc_vd_cfmt_ctrl,
-+				       priv->io_base +
-+				       _REG(AFBC_VD_CFMT_CTRL));
-+			writel_relaxed(priv->viu.vd1_afbc_vd_cfmt_w,
-+				       priv->io_base +
-+				       _REG(AFBC_VD_CFMT_W));
-+			writel_relaxed(priv->viu.vd1_afbc_mif_hor_scope,
-+				       priv->io_base +
-+				       _REG(AFBC_MIF_HOR_SCOPE));
-+			writel_relaxed(priv->viu.vd1_afbc_mif_ver_scope,
-+				       priv->io_base +
-+				       _REG(AFBC_MIF_VER_SCOPE));
-+			writel_relaxed(priv->viu.vd1_afbc_pixel_hor_scope,
-+				       priv->io_base+
-+				       _REG(AFBC_PIXEL_HOR_SCOPE));
-+			writel_relaxed(priv->viu.vd1_afbc_pixel_ver_scope,
-+				       priv->io_base +
-+				       _REG(AFBC_PIXEL_VER_SCOPE));
-+			writel_relaxed(priv->viu.vd1_afbc_vd_cfmt_h,
-+				       priv->io_base +
-+				       _REG(AFBC_VD_CFMT_H));
-+		} else {
-+			switch (priv->viu.vd1_planes) {
-+			case 3:
-+				meson_canvas_config(priv->canvas,
-+						    priv->canvas_id_vd1_2,
-+						    priv->viu.vd1_addr2,
-+						    priv->viu.vd1_stride2,
-+						    priv->viu.vd1_height2,
-+						    MESON_CANVAS_WRAP_NONE,
-+						    MESON_CANVAS_BLKMODE_LINEAR,
-+						    MESON_CANVAS_ENDIAN_SWAP64);
-+				fallthrough;
-+			case 2:
-+				meson_canvas_config(priv->canvas,
-+						    priv->canvas_id_vd1_1,
-+						    priv->viu.vd1_addr1,
-+						    priv->viu.vd1_stride1,
-+						    priv->viu.vd1_height1,
-+						    MESON_CANVAS_WRAP_NONE,
-+						    MESON_CANVAS_BLKMODE_LINEAR,
-+						    MESON_CANVAS_ENDIAN_SWAP64);
-+				fallthrough;
-+			case 1:
-+				meson_canvas_config(priv->canvas,
-+						    priv->canvas_id_vd1_0,
-+						    priv->viu.vd1_addr0,
-+						    priv->viu.vd1_stride0,
-+						    priv->viu.vd1_height0,
-+						    MESON_CANVAS_WRAP_NONE,
-+						    MESON_CANVAS_BLKMODE_LINEAR,
-+						    MESON_CANVAS_ENDIAN_SWAP64);
-+			}
-+
-+			writel_relaxed(0, priv->io_base + _REG(AFBC_ENABLE));
- 		}
- 
- 		writel_relaxed(priv->viu.vd1_if0_gen_reg,
+ /* vpp */
+ #define VPP_DUMMY_DATA 0x1d00
 -- 
 2.22.0
 
