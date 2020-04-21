@@ -2,36 +2,36 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595A8C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F132C55185
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F20520735
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E452071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgDUSqu (ORCPT
+        id S1726407AbgDUSrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:46:50 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19074 "EHLO mga02.intel.com"
+        Tue, 21 Apr 2020 14:47:06 -0400
+Received: from mga04.intel.com ([192.55.52.120]:22250 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbgDUSqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:46:49 -0400
-IronPort-SDR: KPAw5Fk760DiDEjjkXyim4YQDcM2HNNIPoeHNSMRQQngwytiYWM7ykZ6OtN91w5LkYonCXzqeB
- rW+Q0TCzhUdw==
+        id S1725886AbgDUSrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:47:05 -0400
+IronPort-SDR: v6q5zadySag1mZAZAR9Q89x8umrul83xBbZabk+etWSZSoKE1xdzwcWqrAU31XtDFcbgrUbQ7G
+ AhltwOZ9keRg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 11:46:49 -0700
-IronPort-SDR: FKstTcYzg9UVqpN2Pu8Uj1E55yW02DfEITIoFyOQ4ADGVcK7x95LKRQ0Zp1G5ElY495PdT8GwN
- ysN6+C8Rq1xA==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 11:46:48 -0700
+IronPort-SDR: 0QmsZMol2UineBPjnJLcnI3Ht6x5MX1mZ16KJtDN+aMETxOpMG0zx7HB+0Ys7gp3S2h+k023rM
+ cu0dgEx7gZ5Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
-   d="scan'208";a="334367888"
+   d="scan'208";a="334367858"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 21 Apr 2020 11:46:48 -0700
+  by orsmga001.jf.intel.com with ESMTP; 21 Apr 2020 11:46:47 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     "Lu Baolu" <baolu.lu@linux.intel.com>,
         iommu@lists.linux-foundation.org,
@@ -47,153 +47,192 @@ Cc:     "Yi Liu" <yi.l.liu@intel.com>,
         "Christoph Hellwig" <hch@infradead.org>,
         Jonathan Cameron <jic23@kernel.org>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v12 7/8] iommu/vt-d: Enlightened PASID allocation
-Date:   Tue, 21 Apr 2020 11:52:44 -0700
-Message-Id: <1587495165-80096-8-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v12 0/8] Nested Shared Virtual Address (SVA) VT-d support
+Date:   Tue, 21 Apr 2020 11:52:37 -0700
+Message-Id: <1587495165-80096-1-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587495165-80096-1-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1587495165-80096-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+Shared virtual address (SVA), a.k.a, Shared virtual memory (SVM) on Intel
+platforms allow address space sharing between device DMA and applications.
+SVA can reduce programming complexity and enhance security.
+This series is intended to enable SVA virtualization, i.e. enable use of SVA
+within a guest user application.
 
-Enabling IOMMU in a guest requires communication with the host
-driver for certain aspects. Use of PASID ID to enable Shared Virtual
-Addressing (SVA) requires managing PASID's in the host. VT-d 3.0 spec
-provides a Virtual Command Register (VCMD) to facilitate this.
-Writes to this register in the guest are trapped by vIOMMU which
-proxies the call to the host driver.
+This is the remaining portion of the original patchset that is based on
+Joerg's x86/vt-d branch. The preparatory and cleanup patches are merged here.
+(git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git)
 
-This virtual command interface consists of a capability register,
-a virtual command register, and a virtual response register. Refer
-to section 10.4.42, 10.4.43, 10.4.44 for more information.
+Only IOMMU portion of the changes are included in this series. Additional
+support is needed in VFIO and QEMU (will be submitted separately) to complete
+this functionality.
 
-This patch adds the enlightened PASID allocation/free interfaces
-via the virtual command interface.
+To make incremental changes and reduce the size of each patchset. This series
+does not inlcude support for page request services.
 
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
----
- drivers/iommu/intel-pasid.c | 57 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/iommu/intel-pasid.h | 13 ++++++++++-
- include/linux/intel-iommu.h |  1 +
- 3 files changed, 70 insertions(+), 1 deletion(-)
+In VT-d implementation, PASID table is per device and maintained in the host.
+Guest PASID table is shadowed in VMM where virtual IOMMU is emulated.
 
-diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-index 708bfa08a3d7..5cfe44f8824a 100644
---- a/drivers/iommu/intel-pasid.c
-+++ b/drivers/iommu/intel-pasid.c
-@@ -27,6 +27,63 @@
- static DEFINE_SPINLOCK(pasid_lock);
- u32 intel_pasid_max_id = PASID_MAX;
+    .-------------.  .---------------------------.
+    |   vIOMMU    |  | Guest process CR3, FL only|
+    |             |  '---------------------------'
+    .----------------/
+    | PASID Entry |--- PASID cache flush -
+    '-------------'                       |
+    |             |                       V
+    |             |                CR3 in GPA
+    '-------------'
+Guest
+------| Shadow |--------------------------|--------
+      v        v                          v
+Host
+    .-------------.  .----------------------.
+    |   pIOMMU    |  | Bind FL for GVA-GPA  |
+    |             |  '----------------------'
+    .----------------/  |
+    | PASID Entry |     V (Nested xlate)
+    '----------------\.------------------------------.
+    |             |   |SL for GPA-HPA, default domain|
+    |             |   '------------------------------'
+    '-------------'
+Where:
+ - FL = First level/stage one page tables
+ - SL = Second level/stage two page tables
+
+This is the remaining VT-d only portion of V5 since the uAPIs and IOASID common
+code have been applied to Joerg's IOMMU core branch.
+(https://lkml.org/lkml/2019/10/2/833)
+
+The complete set with VFIO patches are here:
+https://github.com/jacobpan/linux.git:siov_sva
+
+The complete nested SVA upstream patches are divided into three phases:
+    1. Common APIs and PCI device direct assignment
+    2. Page Request Services (PRS) support
+    3. Mediated device assignment
+
+With this set and the accompanied VFIO code, we will achieve phase #1.
+
+Thanks,
+
+Jacob
+
+ChangeLog:
+	- v12
+	  - Fixed IA64 cross compile error
+	  - Squashed two patches that add macros with its users
+	  - Use ratelimited prints for all user called APIs
+	  - Check domain nesting attr for vSVA APIs.
+	  - Misc style improvements
+
+	- v11 Misc fixes and improvements based on review by Kevin & Eric
+	  - Fixed devTLB granularity conversion
+	  - Simplified VT-d granulairy lookup by replacing 2D map array
+	    with invalid entries.
+	  - Fixed locking in bind guest PASID
+	  - Added nesting domain attr check
+	  - Squashed agaw checking patch with user
+	  - Use rate limitted error message for all user originated calls
  
-+int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid)
-+{
-+	unsigned long flags;
-+	u8 status_code;
-+	int ret = 0;
-+	u64 res;
-+
-+	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-+	dmar_writeq(iommu->reg + DMAR_VCMD_REG, VCMD_CMD_ALLOC);
-+	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-+		      !(res & VCMD_VRSP_IP), res);
-+	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-+
-+	status_code = VCMD_VRSP_SC(res);
-+	switch (status_code) {
-+	case VCMD_VRSP_SC_SUCCESS:
-+		*pasid = VCMD_VRSP_RESULT_PASID(res);
-+		break;
-+	case VCMD_VRSP_SC_NO_PASID_AVAIL:
-+		pr_info("IOMMU: %s: No PASID available\n", iommu->name);
-+		ret = -ENOSPC;
-+		break;
-+	default:
-+		ret = -ENODEV;
-+		pr_warn("IOMMU: %s: Unexpected error code %d\n",
-+			iommu->name, status_code);
-+	}
-+
-+	return ret;
-+}
-+
-+void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid)
-+{
-+	unsigned long flags;
-+	u8 status_code;
-+	u64 res;
-+
-+	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-+	dmar_writeq(iommu->reg + DMAR_VCMD_REG,
-+		    VCMD_CMD_OPERAND(pasid) | VCMD_CMD_FREE);
-+	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-+		      !(res & VCMD_VRSP_IP), res);
-+	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-+
-+	status_code = VCMD_VRSP_SC(res);
-+	switch (status_code) {
-+	case VCMD_VRSP_SC_SUCCESS:
-+		break;
-+	case VCMD_VRSP_SC_INVALID_PASID:
-+		pr_info("IOMMU: %s: Invalid PASID\n", iommu->name);
-+		break;
-+	default:
-+		pr_warn("IOMMU: %s: Unexpected error code %d\n",
-+			iommu->name, status_code);
-+	}
-+}
-+
- /*
-  * Per device pasid table management:
-  */
-diff --git a/drivers/iommu/intel-pasid.h b/drivers/iommu/intel-pasid.h
-index ccd50c2ae75c..a41b09b3ffde 100644
---- a/drivers/iommu/intel-pasid.h
-+++ b/drivers/iommu/intel-pasid.h
-@@ -23,6 +23,16 @@
- #define is_pasid_enabled(entry)		(((entry)->lo >> 3) & 0x1)
- #define get_pasid_dir_size(entry)	(1 << ((((entry)->lo >> 9) & 0x7) + 7))
- 
-+/* Virtual command interface for enlightened pasid management. */
-+#define VCMD_CMD_ALLOC			0x1
-+#define VCMD_CMD_FREE			0x2
-+#define VCMD_VRSP_IP			0x1
-+#define VCMD_VRSP_SC(e)			(((e) >> 1) & 0x3)
-+#define VCMD_VRSP_SC_SUCCESS		0
-+#define VCMD_VRSP_SC_NO_PASID_AVAIL	1
-+#define VCMD_VRSP_SC_INVALID_PASID	1
-+#define VCMD_VRSP_RESULT_PASID(e)	(((e) >> 8) & 0xfffff)
-+#define VCMD_CMD_OPERAND(e)		((e) << 8)
- /*
-  * Domain ID reserved for pasid entries programmed for first-level
-  * only and pass-through transfer modes.
-@@ -111,5 +121,6 @@ int intel_pasid_setup_nested(struct intel_iommu *iommu,
- 			     struct dmar_domain *domain, int addr_width);
- void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
- 				 struct device *dev, int pasid);
--
-+int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid);
-+void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid);
- #endif /* __INTEL_PASID_H */
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 9a44245c0f7d..1af16c6d3aec 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -169,6 +169,7 @@
- #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
- #define ecap_flts(e)		(((e) >> 47) & 0x1)
- #define ecap_slts(e)		(((e) >> 46) & 0x1)
-+#define ecap_vcs(e)		(((e) >> 44) & 0x1)
- #define ecap_smts(e)		(((e) >> 43) & 0x1)
- #define ecap_dit(e)		((e >> 41) & 0x1)
- #define ecap_pasid(e)		((e >> 40) & 0x1)
+	- v10
+	  - Addressed Eric's review in v7 and v9. Most fixes are in 3/10 and
+	    6/10. Extra condition checks and consolidation of duplicated codes.
+
+	- v9
+	  - Addressed Baolu's comments for v8 for IOTLB flush consolidation,
+	    bug fixes
+	  - Removed IOASID notifier code which will be submitted separately
+	    to address PASID life cycle management with multiple users.
+
+	- v8
+	  - Extracted cleanup patches from V7 and accepted into maintainer's
+	    tree (https://lkml.org/lkml/2019/12/2/514).
+	  - Added IOASID notifier and VT-d handler for termination of PASID
+	    IOMMU context upon free. This will ensure success of VFIO IOASID
+	    free API regardless PASID is in use.
+	    (https://lore.kernel.org/linux-iommu/1571919983-3231-1-git-send-email-yi.l.liu@intel.com/)
+
+	- V7
+	  - Respect vIOMMU PASID range in virtual command PASID/IOASID allocator
+	  - Caching virtual command capabilities to avoid runtime checks that
+	    could cause vmexits.
+
+	- V6
+	  - Rebased on top of Joerg's core branch
+	  (git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git core)
+	  - Adapt to new uAPIs and IOASID allocators
+
+	- V5
+	  Rebased on v5.3-rc4 which has some of the IOMMU fault APIs merged.
+ 	  Addressed v4 review comments from Eric Auger, Baolu Lu, and
+	    Jonathan Cameron. Specific changes are as follows:
+	  - Refined custom IOASID allocator to support multiple vIOMMU, hotplug
+	    cases.
+	  - Extracted vendor data from IOMMU guest PASID bind data, for VT-d
+	    will support all necessary guest PASID entry fields for PASID
+	    bind.
+	  - Support non-identity host-guest PASID mapping
+	  - Exception handling in various cases
+
+	- V4
+	  - Redesigned IOASID allocator such that it can support custom
+	  allocators with shared helper functions. Use separate XArray
+	  to store IOASIDs per allocator. Took advice from Eric Auger to
+	  have default allocator use the generic allocator structure.
+	  Combined into one patch in that the default allocator is just
+	  "another" allocator now. Can be built as a module in case of
+	  driver use without IOMMU.
+	  - Extended bind guest PASID data to support SMMU and non-identity
+	  guest to host PASID mapping https://lkml.org/lkml/2019/5/21/802
+	  - Rebased on Jean's sva/api common tree, new patches starts with
+	   [PATCH v4 10/22]
+
+	- V3
+	  - Addressed thorough review comments from Eric Auger (Thank you!)
+	  - Moved IOASID allocator from driver core to IOMMU code per
+	    suggestion by Christoph Hellwig
+	    (https://lkml.org/lkml/2019/4/26/462)
+	  - Rebased on top of Jean's SVA API branch and Eric's v7[1]
+	    (git://linux-arm.org/linux-jpb.git sva/api)
+	  - All IOMMU APIs are unmodified (except the new bind guest PASID
+	    call in patch 9/16)
+
+	- V2
+	  - Rebased on Joerg's IOMMU x86/vt-d branch v5.1-rc4
+	  - Integrated with Eric Auger's new v7 series for common APIs
+	  (https://github.com/eauger/linux/tree/v5.1-rc3-2stage-v7)
+	  - Addressed review comments from Andy Shevchenko and Alex Williamson on
+	    IOASID custom allocator.
+	  - Support multiple custom IOASID allocators (vIOMMUs) and dynamic
+	    registration.
+
+
+
+Jacob Pan (7):
+  iommu/vt-d: Move domain helper to header
+  iommu/vt-d: Use a helper function to skip agaw for SL
+  iommu/vt-d: Add nested translation helper function
+  iommu/vt-d: Add bind guest PASID support
+  iommu/vt-d: Support flushing more translation cache types
+  iommu/vt-d: Add svm/sva invalidate function
+  iommu/vt-d: Add custom allocator for IOASID
+
+Lu Baolu (1):
+  iommu/vt-d: Enlightened PASID allocation
+
+ drivers/iommu/dmar.c        |  40 ++++++
+ drivers/iommu/intel-iommu.c | 295 +++++++++++++++++++++++++++++++++----
+ drivers/iommu/intel-pasid.c | 344 ++++++++++++++++++++++++++++++++++++++++++--
+ drivers/iommu/intel-pasid.h |  23 ++-
+ drivers/iommu/intel-svm.c   | 204 ++++++++++++++++++++++++++
+ include/linux/intel-iommu.h |  71 ++++++++-
+ include/linux/intel-svm.h   |  17 +++
+ include/uapi/linux/iommu.h  |   5 +
+ 8 files changed, 948 insertions(+), 51 deletions(-)
+
 -- 
 2.7.4
 
