@@ -2,124 +2,78 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B71C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD0FC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D64C206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42EE0206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="h3wxWueI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yh9NPA4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgDUTmq (ORCPT
+        id S1726144AbgDUTr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:42:46 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3074 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgDUTmp (ORCPT
+        Tue, 21 Apr 2020 15:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgDUTr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:42:45 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9f4ca80001>; Tue, 21 Apr 2020 12:42:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 21 Apr 2020 12:42:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 21 Apr 2020 12:42:45 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
- 2020 19:42:45 +0000
-Received: from [10.26.73.24] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
- 2020 19:42:42 +0000
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "Wolfram Sang" <wsa@the-dreams.de>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-CC:     <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200324191217.1829-1-digetx@gmail.com>
- <20200324191217.1829-2-digetx@gmail.com>
- <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
- <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
- <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
- <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
- <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
- <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
- <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
-Date:   Tue, 21 Apr 2020 20:42:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 15:47:59 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06BD7C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:47:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xWfW0nwfxRCQ7wQd6L3Rz9ECsecJi1GV2Mml2YkU8Qc=; b=Yh9NPA4kNtR+QhBk1k4gTRqSyG
+        hjf2ckD8gia+UmRKUvrCcePIe1SEh86WbR246xzBjVYVh8XbGbGhrxxLH0v6syUh+iq5fkTj31M+2
+        W57lFG+DhOkRyy5wlpObUx0AEJPBAhrvSvGFnHsG49z07Zi8BrO/1JENN/Hep9M9OclkHa4+UpLYP
+        E47DQFXmnoXDmOJHdOGHzOwK/wuS1k8KBPTgWwrlprxodHzFlbtNUWQgxOfRmw7DVYemf5R3Ap/Rs
+        rzyyC0QYoXHkEcrmx0LOPqlCLJTf3/Q3OOJmSD7IgJaFKym8nNr63wHSdqepgLVKvbW535+1NtPr/
+        x8NtRLzw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQys4-0002kw-5F; Tue, 21 Apr 2020 19:47:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5F853300739;
+        Tue, 21 Apr 2020 21:47:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2ED2E2BB16BBF; Tue, 21 Apr 2020 21:47:49 +0200 (CEST)
+Date:   Tue, 21 Apr 2020 21:47:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] objtool: optimize insn_hash for split sections
+Message-ID: <20200421194749.GX20730@hirez.programming.kicks-ass.net>
+References: <20200421180724.245410-1-samitolvanen@google.com>
+ <20200421180724.245410-3-samitolvanen@google.com>
 MIME-Version: 1.0
-In-Reply-To: <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587498152; bh=/6J0M2JR25SBCbaG9GKcmtfg56nuGtX/szS0WdPB7Dw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=h3wxWueIYlEZ7hhNyhqUm9JbuIRN/F2x1dKrVbcl0sxRU+KCmbEgEJ9/C0uNdv0iS
-         pwqWjkDCPp2MzEZHchdlI2jT9H2XwFGujBqGsex3PPsBqNa2s4GX+qOi9g4Hkmgm2Y
-         FdZkMPLT76Ik3Irrq5SoVLHCRjwFtAYV1qZduaJyVoqL9PgRJOMv+QvjgxH5JAuuyg
-         vD8hQ2JuivuFlKNSlBjlBQXC6s/irwY1cUDjOzrpMq5J+a2PLdMX1HLHOpiWbf/Z42
-         FArtF+dvmbMDhCTYfyQZNESjaKVuVappgpKmgrjqw/fXkKXzUqjvmV6UC3Ko9TcEnQ
-         huJmuQbfQXoqQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421180724.245410-3-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 21, 2020 at 11:07:23AM -0700, Sami Tolvanen wrote:
+> When running objtool on vmlinux.o compiled with -ffunction-sections,
+> we end up with a ton of collisions in the insn_hash table as each
+> function is in its own section. This results in a runtime of minutes
+> instead of seconds. Use both section index and offset as the key to
+> avoid this, similarly to rela_hash.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-On 21/04/2020 16:08, Dmitry Osipenko wrote:
-> 21.04.2020 17:40, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 21/04/2020 14:25, Dmitry Osipenko wrote:
->>> 21.04.2020 12:49, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>> I can try the above, but I agree it would be best to avoid messing wit=
-h
->>>> the suspend levels if possible.
->>>
->>> Will be awesome if you could try it and report back the result.
->>>
->>
->> I gave it a try but suspend still fails.
->=20
-> Perhaps the RPM's -EACCES is returned from here:
->=20
-> https://elixir.free-electrons.com/linux/v5.7-rc2/source/drivers/base/powe=
-r/runtime.c#L723
->=20
-> Which suggests that I2C is accessed after being suspended. I guess the
-> PCIe driver suspends after the I2C and somehow my change affected the
-> suspension order, although not sure how.
->=20
-> Jon, could you please try to enable PM logging and post the log? Please
-> also post log of the working kernel version, so that we could compare
-> the PM sequence.
->=20
-> Something like this should enable the logging: "echo 1 >
-> /sys/power/pm_trace" + there is RPM tracing.
+I already have this queued:
 
-Unfortunately, after enabling that I don't any output and so no help there.
+  https://lkml.kernel.org/r/20200416115119.227240432@infradead.org
 
-Jon
-
---=20
-nvpublic
+which looks very similar.
