@@ -2,101 +2,165 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89108C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185E1C55185
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63A47215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16762087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:28:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kjkGTa31"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NZaH3atk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgDUN1i (ORCPT
+        id S1728983AbgDUN23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:27:38 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53860 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDUN1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:27:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=BAwqzBbAoY3Q7WUm7rKW8PArz02f/a05BHX0yBvFBGA=; b=kjkGTa313jGFL7AFCrKIMMNFWv
-        5pPSWqCkUvv4GsmN/1oLNjld29lXro0yTXjTVkY7Nv9wopJzKLRpWCGbsWY2vvnDM5Hy7QpYrchHq
-        BeDbQTNYSP5urAw3xZKhC1psF5qKZKn0K9iRU2jHDATrM6i7Ab05ROCsE8N2rWtq3Egw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jQsw0-0041o2-US; Tue, 21 Apr 2020 15:27:32 +0200
-Date:   Tue, 21 Apr 2020 15:27:32 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, mkl@pengutronix.de,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        David Jander <david@protonic.nl>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: dsa: sja1105: regression after patch: "net: dsa: configure the
- MTU for switch ports"
-Message-ID: <20200421132732.GC937199@lunn.ch>
-References: <20200421113324.vxh2lyasylf5kgkz@pengutronix.de>
- <CA+h21ho2YnUfzMja1Y7=B7Yrqk=WD6jm-OoKKzX4uS3WJiU5aw@mail.gmail.com>
- <20200421125828.jb44qzfzgd7sh436@pengutronix.de>
+        Tue, 21 Apr 2020 09:28:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726018AbgDUN22 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:28:28 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D792CC061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:28:27 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id z26so13954023ljz.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:28:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZpOgd+6tBNR92ThUfOn8ssI33bmd2mNNbQ4Gq8e+gNY=;
+        b=NZaH3atkU27z/iPaioAdL3OKPfIwH50RfopQgsIPOjhtuobequkDWTlhheAGtYr9IO
+         8/v7+RatAeh9crYvxe1PFVVqHyD+br7d80G5AQV5LvIwiOJD1FZu7QYn7b45DJvytWrM
+         LWReSUsl3XAlomw3nBivuVeg/DI/f0+ZX74ysCxikxSDB3QDbnuUo+x2v1Vi6Nbh67Gw
+         YiU+SRFLsamW2vRPmPOg8lQ2E9XhkkokjiIDGgS1e6DCOkj+ozvmVY5f5dlbodV8YT9Z
+         z5APRp1N8NGpL0jB3COf3NylYsE7veqGh0jDKmQnmvdkAmkWNWO36RuYQrJf6KscnrHk
+         yhFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZpOgd+6tBNR92ThUfOn8ssI33bmd2mNNbQ4Gq8e+gNY=;
+        b=V8N1F6DeG874+g3iVp4djaaXaQkQauouCPfnDCyvoTuuvvIodo8h+STmkrqtGHVsMy
+         IkQrGMQbPVAnJOx0/l4+3wgYCERTnW2woMYAx0enwMI4A2jXuL7q+dBnemVLLp58v+rU
+         20XWkgU818GxzuBL1yutQ9NuSyGK9cv5oKifjgPC3GIKQ4UhsM6KMi5aYdj1xvuo+2GS
+         sXUFCEMxAeu6lJdDz1t0eC7i9mUUxzM9N6+dz+5dQKu4d4df7I5ttdwJW+aI8U4w8qDf
+         rupWOxx4bnaCnuUDytOgvESKuOqIEZVfqDuNtSmr/NduEX3Tl1rIba5GmLR8NGFQUlAO
+         wuiQ==
+X-Gm-Message-State: AGi0Pub1f3iFW+9NeoNqNkMg8xCn8+lExf2KT3cCkFp69yjMuLpQ0heC
+        X2ol1P0pyHmOif6gJP4GO3Mh5HHpbThjm5Yjwgxzeg==
+X-Google-Smtp-Source: APiQypIUI4a1kX8xFJVSw9OW5Hjn1NpSMwaABa2/cdBVCpxsKxHPKfaKXD5B58yOMl9AM4j2nOPgV5R0yO9r5jSEQhE=
+X-Received: by 2002:a2e:888e:: with SMTP id k14mr13381134lji.4.1587475706237;
+ Tue, 21 Apr 2020 06:28:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421125828.jb44qzfzgd7sh436@pengutronix.de>
+References: <20200414150556.10920-1-qais.yousef@arm.com> <jhjh7xlvqqe.mognet@arm.com>
+ <20200421121305.ziu3dfqwo7cw6ymu@e107158-lin.cambridge.arm.com> <jhjv9ltkmel.mognet@arm.com>
+In-Reply-To: <jhjv9ltkmel.mognet@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 21 Apr 2020 15:28:14 +0200
+Message-ID: <CAKfTPtB9gYh_7qV0y_t7HRg7HOpYfkJ96fXCYFFTBmcJxnnXEA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] sched/rt: Distribute tasks in find_lowest_rq()
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        Paul Turner <pjt@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Josh Don <joshdon@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > The code which is causing problems seems to be this one:
-> > 
-> >     mtu_limit = min_t(int, master->max_mtu, dev->max_mtu);
-> >     old_master_mtu = master->mtu;
-> >     new_master_mtu = largest_mtu + cpu_dp->tag_ops->overhead;
-> >     if (new_master_mtu > mtu_limit)
-> >         return -ERANGE;
-> > 
-> > called from
-> > 
-> >     rtnl_lock();
-> >     ret = dsa_slave_change_mtu(slave_dev, ETH_DATA_LEN);
-> >     rtnl_unlock();
-> >     if (ret && ret != -EOPNOTSUPP) {
-> >         dev_err(ds->dev, "error %d setting MTU on port %d\n",
-> >             ret, port->index);
-> >         goto out_free;
-> >     }
-> > 
-> > Before this patch, it was silently failing, now it's preventing the
-> > probing of the ports which I might agree with you is not better.
-> > Andrew warned about this, and I guess that during probe, we should
-> > warn but ignore any nonzero return code, not just EOPNOTSUPP. I'll
-> > send a patch out shortly to correct this.
-> > 
-> > Out of curiosity, what DSA master port do you have? Does it not
-> > support an MTU of 1504 bytes? Does MTU-sized traffic pass correctly
-> > through your interface? (you can test with iperf3)
-> 
-> It is FEC@iMX6QP attached to the port 4 of the sja1105 switch.
-> I'll try to make some tests tomorrow.
+On Tue, 21 Apr 2020 at 15:18, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+>
+> On 21/04/20 13:13, Qais Yousef wrote:
+> > On 04/14/20 19:58, Valentin Schneider wrote:
+> >>
+> >> I'm a bit wary about such blanket changes. I feel like most places impacted
+> >> by this change don't gain anything by using the random thing. In sched land
+> >> that would be:
+> >
+> > The API has always been clear that cpumask_any return a random cpu within the
+> > mask. And the fact it's a one liner with cpumask_first() directly visible,
+> > a user made the choice to stick to cpumask_any() indicates that that's what
+> > they wanted.
+> >
+> > Probably a lot of them they don't care what cpu is returned and happy with the
+> > random value. I don't see why it has to have an effect. Some could benefit,
+> > like my use case here. Or others truly don't care, then it's fine to return
+> > anything, as requested.
+> >
+>
+> Exactly, *some* (which AFAICT is a minority) might benefit. So why should
+> all the others pay the price for a functionality they do not need?
+>
+> I don't think your change would actually cause a splat somewhere; my point
+> is about changing existing behaviour without having a story for it. The
+> thing said 'pick a "random" cpu', sure, but it never did that, it always
+> picked the first.
+>
+> I've pointed out two examples that want to be cpumask_first(), and I'm
+> absolutely certain there are more than these two out there. What if folks
+> ran some performance test and were completely fine with the _first()
+> behaviour? What tells you randomness won't degrade some cases?
 
-Ah, interesting. I've been testing recently on a Vybrid, so also
-FEC. I had the warning, but it kept going.
+I tend to agree that any doesn't mean random and using a random cpu
+will create strange behavior
 
-I don't particularly like this warning in this case. We have hardware
-which happy works, but is now issuing a warning on boot. I would
-prefer if it warned when only trying to configure an MTU bigger than
-the minimum needed for DSA, i.e. only the jumbo use case.
+One example is the irq affinity on b.L system. Right now, the irq are
+always pinned to the same CPU (the 1st one which is most probably a
+Little) but with your change we can imagine that this will change and
+might ever change over 2 consecutives boot if for whatever reason (and
+this happen) the drivers are not probed in the same order . At the end
+you will run some tests with irq on little and other time irq on big.
+And more generally speaking and a SMP system can be impacted because
+the irq will not be pinned to the same CPU with always the same other
+irqs
 
-    Andrew
+>
+> IMO the correct procedure is to keep everything as it is and improve the
+> specific callsites that benefit from randomness. I get your point that
+
+I agree with this point
+
+> using cpumask_any() should be a good enough indicator of the latter, but I
+> don't think it can realistically be followed. To give my PoV, if in the
+> past someone had used a cpumask_any() where a cpumask_first() could do, I
+> would've acked it (disclaimer: super representative population of sample
+> size = 1).
+>
+> Flipping the switch on everyone to then have a series of patches "oh this
+> one didn't need it", "this one neither", "I actually need this to be the
+> first" just feels sloppy.
+>
+> > I CCed Marc who's the maintainer of this file who can clarify better if this
+> > really breaks anything.
+> >
+> > If any interrupt expects to be affined to a specific CPU then this must be
+> > described in DT/driver. I think the GIC controller is free to distribute them
+> > to any cpu otherwise if !force. Which is usually done by irq_balancer anyway
+> > in userspace, IIUC.
+> >
+> > I don't see how cpumask_any_and() break anything here too. I actually think it
+> > improves on things by better distribute the irqs on the system by default.
+> >
+>
+> As you say, if someone wants smarter IRQ affinity they can do irq_balancer
+> and whatnot. The default kernel policy for now has been to shove everything
+> on the lowest-numbered CPU, and I see no valid reason to change that.
