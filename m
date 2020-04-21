@@ -2,100 +2,98 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA62C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E15C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD36B206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC68206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587489609;
-	bh=Tkhv5FZI2lpcXSiwylUJy+SpFY9x+7AFo3ppBxZ0m70=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zflJiWKVjOYsTTS07w0gDNTE1Qa/N296H+zppdQdA6r5Htdtzk5KIiduRbOXiA/BC
-	 wkwZg4Gl+3xuGJgQVLZ82rr2Gc4dFm4xu4hXPmzayAOROBg5K7pMq+wMFGaMpn5CdO
-	 Hx3GPGDDQbodPq7FDS7ximxqZ6PfaDi4rKMK8Uuo=
+	s=default; t=1587489644;
+	bh=GyFjRzvYxdD4ZwLuuOBRPWTOr25c6+hKcxBTYD9OxxE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Y/PXUs42sQdkYIl9BgxL2Zy7+pqYnz8IEhMIDM4lcwhTpyJ05BVMl45NQkLhcagiP
+	 BARHcbARBjmw6hDBO7Ot1wzd/EMBt44c0zENUc8sqZpXHJdKfJhvWZuVqki2sNIDcl
+	 WOPgUUT8S0LMfyfMdIQrpQLE96ap67IhlfnoyDzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgDURUJ (ORCPT
+        id S1729107AbgDURUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:20:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbgDURUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 13:20:08 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A816206D5;
-        Tue, 21 Apr 2020 17:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587489608;
-        bh=Tkhv5FZI2lpcXSiwylUJy+SpFY9x+7AFo3ppBxZ0m70=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0YsZKbRvFLNmt7aYxNscTQiCjhYPZi4jt46Kt10VY0Vg0MMOtzBUQ6wd9/YvnaByj
-         JaWR/j0BcX3xft91Hm6mJpEkiefM8zCqeHqM9+Bzc5n7BBPDPTzr/g3Mf+rd01VinX
-         56m7GnDg1ks2mcSPB64l/RX8A50NO0bow8BFgiGo=
-Date:   Tue, 21 Apr 2020 18:20:05 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [Patch v3 1/9] spi: bcm-qspi: Handle clock probe deferral
-Message-ID: <20200421172005.GG4540@sirena.org.uk>
-References: <20200420190853.45614-1-kdasu.kdev@gmail.com>
- <20200420190853.45614-2-kdasu.kdev@gmail.com>
- <158748156553.18089.8164001089518853868.b4-ty@kernel.org>
- <2d810e4f-5f05-4257-59a8-882ae790ecd1@gmail.com>
- <20200421171558.GE4540@sirena.org.uk>
- <0d91f426-e767-2e69-bcb7-ddc4d7611861@gmail.com>
+        Tue, 21 Apr 2020 13:20:43 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:52159 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbgDURUm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 13:20:42 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 03LHKKav006129;
+        Wed, 22 Apr 2020 02:20:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 03LHKKav006129
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587489621;
+        bh=IZDOvI93ZiEs2ySqKJLK+IJjqkugZDH4i3dH/lP0Wc4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Q2K4Eqxi9WkQpZ3H5GI7/C4lPlhj2ZZypnj8V9O0Os1uoHtk3MCM0FTER80sakIrd
+         yhjrj6YT2WTtjLkQS/d7zLkS1Yjnrl48KxS7d7gyoOlhPj0/gM9AU8JqbLBsrYhqFh
+         qiv11uvOjDvqqEE+KA70xzQehp1qF3f9x3rAsa2/ohO77MEq/QN/A1ENP9mnkv5Qf9
+         PXNS4mLqUVQnvahdpjL/LswA0AAF6i8JINZgPhjjysC2zf8SBdDCzh82bViVRec3f+
+         qtNxZQLavYu84XNtN9HgRwTFMILUhAoS6JNq97mTYPyb5U/eI1w2h0T+DzGFddm15r
+         wQZ+KgbJVB9zw==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id y185so8937041vsy.8;
+        Tue, 21 Apr 2020 10:20:21 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaFsLgAMF87UnfQlPLX9xee6H1KRfgi17MjRRy7BG0EGVR4kF9k
+        zwsXBIRSYbv34Ww+4vi4fvLBLc22P+BT1If6oLE=
+X-Google-Smtp-Source: APiQypIO/mg952cAkpo/UKnpWumkr9bju/j1AcYRzLPShWlvdpVvTkp2+164266qYKziJBhb5oWiFReVc6rLVQIOvng=
+X-Received: by 2002:a67:6e07:: with SMTP id j7mr10361884vsc.181.1587489620053;
+ Tue, 21 Apr 2020 10:20:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yZnyZsPjQYjG7xG7"
-Content-Disposition: inline
-In-Reply-To: <0d91f426-e767-2e69-bcb7-ddc4d7611861@gmail.com>
-X-Cookie: Non-sequiturs make me eat lampshades.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200421151537.19241-1-will@kernel.org> <20200421151537.19241-12-will@kernel.org>
+In-Reply-To: <20200421151537.19241-12-will@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 22 Apr 2020 02:19:43 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATuvjY=SKuc-otRg0zPoJZeKOoTFzdyuyY_9X78p+twxQ@mail.gmail.com>
+Message-ID: <CAK7LNATuvjY=SKuc-otRg0zPoJZeKOoTFzdyuyY_9X78p+twxQ@mail.gmail.com>
+Subject: Re: [PATCH v4 11/11] gcov: Remove old GCC 3.4 support
+To:     Will Deacon <will@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 22, 2020 at 12:16 AM Will Deacon <will@kernel.org> wrote:
+>
+> The kernel requires at least GCC 4.8 in order to build, and so there is
+> no need to cater for the pre-4.7 gcov format.
+>
+> Remove the obsolete code.
+>
+> Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
 
---yZnyZsPjQYjG7xG7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Apr 21, 2020 at 10:17:10AM -0700, Florian Fainelli wrote:
+Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
 
-> > That then doesn't work with git itself unfortunately, someone's got to
-> > loose out :/
+Thanks!
 
-> Could you provide both links with a market at the front, e.g.:
 
-> Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
-> for-5.7
-> CGIT URL: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git/log/?h=for-5.7
-
-Ask Konstantin to implement it (I'm using b4 ty now) and I might!
-
---yZnyZsPjQYjG7xG7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6fK0QACgkQJNaLcl1U
-h9CXvAf/UAZv8UO4t1Uin3jqj6OCGFmCstSiXzKLQb6UC83EXEXtZndbgTidnKMv
-42qXpXqGgImz//y91Bv35peHhy3Ugd6d2NpBGOpgozLfUiyJXJEWXGAvr9cpd/v7
-TgLtQSuXEvKixIV6byhSNRI8huDsoFIRRcUUrLk1eg/zXY5sjQURC6O6fHZwCKXz
-/bSEIKCUTohvzJC6wh/wVxWXzlBuy85zvsUnG2WgJ9u58IxFJIJGZGpqkoipqNtJ
-357ztZeYezZAYB+St91NNk12GPW/n6IkWptiI52wrIGBoyBUU4QZTk6/jsxaOPve
-I9M/jwmVHX3d2H18f47isum/9rP01Q==
-=93nF
------END PGP SIGNATURE-----
-
---yZnyZsPjQYjG7xG7--
+-- 
+Best Regards
+Masahiro Yamada
