@@ -2,126 +2,111 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD7DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C7FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B56D20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F1C2098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vXEjVxcO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PU/ARCnz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgDUJZW (ORCPT
+        id S1728473AbgDUJZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725920AbgDUJZV (ORCPT
+        Tue, 21 Apr 2020 05:25:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37725 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725920AbgDUJZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:25:21 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7761CC061A0F;
-        Tue, 21 Apr 2020 02:25:21 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f18so7197406lja.13;
-        Tue, 21 Apr 2020 02:25:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2eNqUxlHmQxZbjBzvIB+cVBxtzTHZdPGuWALU+1BuQc=;
-        b=vXEjVxcORyaMBSTK1kx8PIUh5Fi/3zOokaX15T18YWg72ZNVunm119x10n0tH2VEIg
-         mxiL49BkBqH3ETDrVH+7cpFbfIvkVx9dXxjm1WZkhI2qGUA+oQC2Wj24xCeQefbX2WkM
-         +Z9Q0IanckD0dv7zXPi5a2VjACyhanlR746/9SA81lOvF0bxBaZppD+D9k3hkcSqQt5P
-         LD0aHgiFpdayW/IRn8MpKjp0bPc0gEkzs/tFwhsroZmqLEhiIwvbwWODXWNp7rIXWcrt
-         RjvpxscxU6Hzq3eZRBRXlenTm03NL4HY7qs3KRnrp++on+g0fBawizA5SvUcIjWEvDJs
-         y6wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2eNqUxlHmQxZbjBzvIB+cVBxtzTHZdPGuWALU+1BuQc=;
-        b=CwzTJI6pUDY3+hqMgEmBkfAwMwWh5PAJGDqcahHfACKDX0iIkZtmYK4V9KosEH9fhD
-         8/xrLtmzZOMonO47H1uW3tWtbW/TgxKl4b708198++zPgfINiiSKmtu2wYywVtm9aeUK
-         3P0t94hhwd58SJkhdTCqz0T6Flj06IZVPJ4bpfpkhn6pTIOfcrV65usGu1pO7HOUwO+k
-         z6XHhIfHOYR6EGFqmvwZZUIG5i2W0OCGeHa0sXpyJfsazLg9slqlWTTqpOfuFr5ytNCh
-         HcDtuloHuEENba6Tgjt5FTgCm9pgFx7LedDLXhHxghcfiDh64iG1Wbf/kRsUs1d09KHM
-         Yqpg==
-X-Gm-Message-State: AGi0Pubbqn/pUVk8I/a0rQAovkVdkRzX75wMH0Pd4C3Vi/QWT+RuleK8
-        qDV9AFWap0rEqDvyfLhhPDQ=
-X-Google-Smtp-Source: APiQypL4MV/KhiOjRRXGIdWeqiujdIveb9NTnyDSR5pHsTaz94rf55nsUVZl3Nwxl4VxUjkylkvAgg==
-X-Received: by 2002:a2e:85d1:: with SMTP id h17mr8912054ljj.70.1587461119870;
-        Tue, 21 Apr 2020 02:25:19 -0700 (PDT)
-Received: from luk-pc.lan (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
-        by smtp.googlemail.com with ESMTPSA id c203sm1670534lfd.38.2020.04.21.02.25.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 02:25:19 -0700 (PDT)
-From:   LuK1337 <priv.luk@gmail.com>
-Cc:     =?UTF-8?q?=C5=81ukasz=20Patron?= <priv.luk@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: xpad - Add custom init packet for Xbox One S controllers
-Date:   Tue, 21 Apr 2020 11:24:33 +0200
-Message-Id: <20200421092434.3360503-1-priv.luk@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <436c79ed-ca21-c075-e2da-0934da5000a2@gmail.com>
-References: <436c79ed-ca21-c075-e2da-0934da5000a2@gmail.com>
+        Tue, 21 Apr 2020 05:25:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587461137;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=s6kZIJazKnfeWw9rqRwxCTiV7lo+E1jRmgFL7mG8v1w=;
+        b=PU/ARCnzbHoIRw+5duN7yCVlaG+rYGBTgq6xo5xCGcjPJGdPAfoI5Y/KFqgvNJuEh2cLdE
+        QEM63eIFH43krdmX1Pahv763B0cevLwlT1LGgCGnqZbdkvA4D/taptJdFz/qSszOibq9ep
+        xbqwtS7ZLK2sQVfapxH9e5eTDlDlcC4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-252-pZMfjWLMOayjYnBl4uIC7Q-1; Tue, 21 Apr 2020 05:25:36 -0400
+X-MC-Unique: pZMfjWLMOayjYnBl4uIC7Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFCE48017F3;
+        Tue, 21 Apr 2020 09:25:34 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-114-101.ams2.redhat.com [10.36.114.101])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A499A60C87;
+        Tue, 21 Apr 2020 09:25:28 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     davem@davemloft.net
+Cc:     virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        kvm@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Gerard Garcia <ggarcia@abra.uab.cat>
+Subject: [PATCH net] vsock/virtio: postpone packet delivery to monitoring devices
+Date:   Tue, 21 Apr 2020 11:25:27 +0200
+Message-Id: <20200421092527.41651-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Łukasz Patron <priv.luk@gmail.com>
+We delivering packets to monitoring devices, before to check if
+the virtqueue has enough space.
 
-Sending [ 0x05, 0x20, 0x02, 0x0f, 0x06 ] packet for
-Xbox One S controllers fixes an issue where controller
-is stuck in Bluetooth mode and not sending any inputs.
+If the virtqueue is full, the transmitting packet is queued up
+and it will be sent in the next iteration. This causes the same
+packet to be delivered multiple times to monitoring devices.
 
-Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
+This patch fixes this issue, postponing the packet delivery
+to monitoring devices, only when it is properly queued in the
+virqueue.
+
+Fixes: 82dfb540aeb2 ("VSOCK: Add virtio vsock vsockmon hooks")
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- drivers/input/joystick/xpad.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ net/vmw_vsock/virtio_transport.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
-index 6b40a1c68f9f..4e1781968411 100644
---- a/drivers/input/joystick/xpad.c
-+++ b/drivers/input/joystick/xpad.c
-@@ -458,6 +458,15 @@ static const u8 xboxone_fw2015_init[] = {
- 	0x05, 0x20, 0x00, 0x01, 0x00
- };
- 
-+/*
-+ * This packet is required for Xbox One S pads (0x045e:0x02ea)
-+ * to initialize the controller that was previously used in
-+ * Bluetooth mode.
-+ */
-+static const u8 xboxone_s_init[] = {
-+	0x05, 0x20, 0x02, 0x0f, 0x06
-+};
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_tran=
+sport.c
+index dfbaf6bd8b1c..d8db837a96fe 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -115,8 +115,6 @@ virtio_transport_send_pkt_work(struct work_struct *wo=
+rk)
+ 		list_del_init(&pkt->list);
+ 		spin_unlock_bh(&vsock->send_pkt_list_lock);
+=20
+-		virtio_transport_deliver_tap_pkt(pkt);
+-
+ 		reply =3D pkt->reply;
+=20
+ 		sg_init_one(&hdr, &pkt->hdr, sizeof(pkt->hdr));
+@@ -137,6 +135,11 @@ virtio_transport_send_pkt_work(struct work_struct *w=
+ork)
+ 			break;
+ 		}
+=20
++		/* Deliver to monitoring devices all correctly transmitted
++		 * packets.
++		 */
++		virtio_transport_deliver_tap_pkt(pkt);
 +
- /*
-  * This packet is required for the Titanfall 2 Xbox One pads
-  * (0x0e6f:0x0165) to finish initialization and for Hori pads
-@@ -516,6 +525,7 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
- 	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
- 	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
-+	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
- 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
--- 
-2.26.0
+ 		if (reply) {
+ 			struct virtqueue *rx_vq =3D vsock->vqs[VSOCK_VQ_RX];
+ 			int val;
+--=20
+2.25.3
 
