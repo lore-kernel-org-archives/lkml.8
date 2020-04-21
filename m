@@ -2,120 +2,99 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16B0C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED6CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AACDF2077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0781205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgDULPT (ORCPT
+        id S1728632AbgDULQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:15:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:33308 "EHLO foss.arm.com"
+        Tue, 21 Apr 2020 07:16:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:33334 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDULPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:15:18 -0400
+        id S1726018AbgDULQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:16:19 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0F0C1FB;
-        Tue, 21 Apr 2020 04:15:17 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9217C3F73D;
-        Tue, 21 Apr 2020 04:15:16 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 12:15:14 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Oliver Neukum <oneukum@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
-Message-ID: <20200421111513.fy3oqebij6fnvbnc@e107158-lin.cambridge.arm.com>
-References: <Pine.LNX.4.44L0.2003251631360.1724-100000@netrider.rowland.org>
- <Pine.LNX.4.44L0.2004201622260.22032-100000@netrider.rowland.org>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B041AC14;
+        Tue, 21 Apr 2020 04:16:18 -0700 (PDT)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B19C93F73D;
+        Tue, 21 Apr 2020 04:16:15 -0700 (PDT)
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Qais Yousef <qais.yousef@arm.com>
+Cc:     Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200403123020.13897-1-qais.yousef@arm.com>
+ <20200414182152.GB20442@darkstar>
+ <54ac2709-54e5-7a33-a6af-0a07e272365c@arm.com>
+ <20200420151941.47ualxul5seqwdgh@e107158-lin.cambridge.arm.com>
+ <20200420205210.7217651c@oasis.local.home>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <1abbe4a5-61e6-a918-ff89-3dea0c7a277c@arm.com>
+Date:   Tue, 21 Apr 2020 13:16:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200420205210.7217651c@oasis.local.home>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.2004201622260.22032-100000@netrider.rowland.org>
-User-Agent: NeoMutt/20171215
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/20/20 16:26, Alan Stern wrote:
-> On Wed, 25 Mar 2020, Alan Stern wrote:
+On 21/04/2020 02:52, Steven Rostedt wrote:
+> On Mon, 20 Apr 2020 16:19:42 +0100
+> Qais Yousef <qais.yousef@arm.com> wrote:
 > 
-> > On Wed, 25 Mar 2020, Qais Yousef wrote:
-> > 
-> > > Thanks for all the hints Alan.
-> > > 
-> > > I think I figured it out, the below patch seems to fix it for me. Looking
-> > > at other drivers resume functions it seems we're missing the
-> > > pm_runtime_disable()->set_active()->enable() dance. Doing that fixes the
-> > > warning and the dev_err() in driver/base/power.
-> > 
-> > Ah, yes.  This should have been added years ago; guess I forgot.  :-(
-> > 
-> > > I don't see xhci-plat.c doing that, I wonder if it needs it too.
-> > > 
-> > > I'm not well versed about the details and the rules here. So my fix could be
-> > > a hack, though it does seem the right thing to do.
-> > > 
-> > > I wonder why the power core doesn't handle this transparently..
-> > 
-> > Initially, we didn't want the PM core to do this automatically because
-> > we thought some devices might want to remain runtime-suspended
-> > following a system resume, and only the device driver would know what 
-> > to do.
+>>> root@h960:~# find / -name "*util_clamp*"
+>>> /proc/sys/kernel/sched_rt_default_util_clamp_min
+>>> /proc/sys/kernel/sched_util_clamp_max
+>>> /proc/sys/kernel/sched_util_clamp_min
+>>>
+>>> IMHO, keeping the common 'sched_util_clamp_' would be helpful here, e.g.
+>>>
+>>> /proc/sys/kernel/sched_util_clamp_rt_default_min  
+>>
+>> All RT related knobs are prefixed with 'sched_rt'. I kept the 'util_clamp_min'
+>> coherent with the current sysctl (sched_util_clamp_min). Quentin suggested
+>> adding 'default' to be more obvious, so I ended up with
+>>
+>> 	'sched_rt' + '_default' + '_util_clamp_min'.
+>>
+>> I think this is the logical and most consistent form. Given that Patrick seems
+>> to be okay with the 'default' now, does this look good to you too?
 > 
-> Qais:
+> There's only two files with "sched_rt" and they are tightly coupled
+> (they define how much an RT task may use the CPU).
 > 
-> So it looks like the discussion with Rafael will lead to changes in the
-> PM core, but they won't go into the -stable kernels, and they won't
-> directly fix the problem here.
+> My question is, is this "sched_rt_default_util_clamp_min" related in
+> any way to those other two files that start with "sched_rt", or is it
+> more related to the files that start with "sched_util_clamp"?
 > 
-> In the meantime, why don't you write up your patch below and submit it
-> properly?  Even better, create similar patches for ehci-platform.c and
-> xhci-plat.c and submit them too.
+> If the latter, then I would suggest using
+> "sched_util_clamp_min_rt_default", as it looks to be more related to
+> the "sched_util_clamp_min" than to anything else.
 
-Sure.
-
-Thanks
-
---
-Qais Yousef
-
-> 
-> Alan Stern
-> 
-> > > diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-> > > index 7addfc2cbadc..eb92c8092fae 100644
-> > > --- a/drivers/usb/host/ohci-platform.c
-> > > +++ b/drivers/usb/host/ohci-platform.c
-> > > @@ -299,6 +299,10 @@ static int ohci_platform_resume(struct device *dev)
-> > >         }
-> > > 
-> > >         ohci_resume(hcd, false);
-> > > +
-> > > +       pm_runtime_disable(dev);
-> > > +       pm_runtime_set_active(dev);
-> > > +       pm_runtime_enable(dev);
-> > >         return 0;
-> > >  }
-> > >  #endif /* CONFIG_PM_SLEEP */
-> > > 
-> > > 
-> > > Thanks
-> > > 
-> > > --
-> > > Qais Yousef
-> > 
-> > 
-> > 
-> 
+For me it's the latter.
