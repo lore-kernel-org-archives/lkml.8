@@ -2,148 +2,72 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FC0C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC09C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C003D2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587468792;
-	bh=wuWcfKVVQJWBIvO//gYpP6cdrjsK4jOZs78nE2BpXGo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=05sZupBdqA5uAUqziF77Gi/xknghEWcC/h5LoAXydDykm7C6oDX4XHYmX0KETiKrg
-	 bU2cwSV3zLE2dCJnpJVgRpmjcDhIF4Ub5+0OxImTzgVu22B+CCYZ2SbME/QqlnZSOr
-	 E7apG65RjOF5KHux7hJ1zaUq1rOQVXCSlDwrosMc=
+	by mail.kernel.org (Postfix) with ESMTP id 66D5320753
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:33:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hL1FZmTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgDULdM (ORCPT
+        id S1728659AbgDULd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:33:12 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37883 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbgDULdL (ORCPT
+        Tue, 21 Apr 2020 07:33:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726018AbgDULd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:33:11 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r25so11723615oij.4;
-        Tue, 21 Apr 2020 04:33:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HW9k9kfTW78ME8X5ahcJnyYNk11gvYfm0hTWpxib3PU=;
-        b=kYvcoUfMP/IQ7Y6lMxW/hMoH6vfLAB8YNs0GbF86ZOQVMVLOUTKQP2lxTEekdIsDG2
-         4D+YgLjQ4nG+RF0UfYG+gjNjm/bsGNoI4m3bCc/tbXsURFclaCoj1wO6QHUeCOSvnnmA
-         qLYmDxVxpoOVePbkjlkZ5dlpyz0CjySv402aFuvvALMn3YqVA6QoPkR4c1Js1hdw0sVM
-         dEUZCM85svc8SlKV/782qF1dR1QgAwE4ujVaM6ptsVpfERBtR5cy9OrKnxGTrIbjWYxv
-         xgnh6yZn953cam1OUmga8jb+NCUd15z078f5WYFuN4KYe4TTdgJfdiKr3K8KSYyFL2rR
-         vu5A==
-X-Gm-Message-State: AGi0PuaHaSS7sjkPjqcZpMa9uBZWkCfVM15K1oiUEYL9356Vk1qrsFgP
-        przzXsJgKtk5DyuDqqru6H3i0NW58iE8wqnbf1o=
-X-Google-Smtp-Source: APiQypLN96ZexQcfh1NyKo0/zqGY6oMeGu2AGd9i5r1cD0mnDcePTx9i44H4ZpIkfqEAujnUYUtfIKys73CXfTqBwXU=
-X-Received: by 2002:a05:6808:81:: with SMTP id s1mr2709126oic.68.1587468790638;
- Tue, 21 Apr 2020 04:33:10 -0700 (PDT)
+        Tue, 21 Apr 2020 07:33:28 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2F2C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yNJ/QJc8XHgJr/R5jKJcnRf3U73GYXUc4W2dWj5+6Go=; b=hL1FZmTaJEJm0pTUR+S/zg1zjX
+        xjDayfSFX6+W0vOmfMBmxxPmIeNGGsK8o1DD5eeefMCpivobhGPAiFJZZ/B0PAAxH+ryuUV/HmD9D
+        CaFn39Ku/lCb026mSkWMhWGks+cfQn+GtzN3SXaE2+hDyiqoib9d8fqj4QYgasV9kcrUvXNY+6DLl
+        XWd2ornZFs1Co01ekviBTx87s2rsVY08igERWZeGcWIo78HF21k01xmUtl5Fyx+Ah96rrqJDXbNJp
+        U5WdMawH5AQJNFtyIOAmrOCeWU2Ts6EfzHHKI34CPGZbqyh0v/Vi0NsIJgaUsj/UgbrhIVHYv/sK/
+        OGPHDhUA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQr9b-0005rA-DC; Tue, 21 Apr 2020 11:33:27 +0000
+Date:   Tue, 21 Apr 2020 04:33:27 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Ma, Jianpeng" <jianpeng.ma@intel.com>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: block: remove unused header
+Message-ID: <20200421113327.GA21053@infradead.org>
+References: <6AA21C22F0A5DA478922644AD2EC308C73C546B1@SHSMSX101.ccr.corp.intel.com>
 MIME-Version: 1.0
-References: <1888197.j9z7NJ8yPn@kreacher> <5673945.BT02kTCndr@kreacher> <CAPDyKFoV-gMn34nghBBK91pRYy3c90D8jrA4-OP2SGxQPzxgdg@mail.gmail.com>
-In-Reply-To: <CAPDyKFoV-gMn34nghBBK91pRYy3c90D8jrA4-OP2SGxQPzxgdg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 21 Apr 2020 13:32:50 +0200
-Message-ID: <CAJZ5v0hsVZQpm5SFfvCQQMNURJ28RNd+i6Cyh=ZUmt+izZhvRw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
- power management flags
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans De Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6AA21C22F0A5DA478922644AD2EC308C73C546B1@SHSMSX101.ccr.corp.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 12:30 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Sat, 18 Apr 2020 at 19:11, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > Hi,
-> >
-> > This is an update including some fixes and extra patches based on the
-> > continuation of the discussion [1].
-> >
-> > On Friday, April 10, 2020 5:46:27 PM CEST Rafael J. Wysocki wrote:
-> > > Hi Alan,
-> > >
-> > > Following our recent discussion regarding the DPM_FLAG_* family of flags [1],
-> > > I have decided to follow some of your recommendations and make changes to the
-> > > core code handling those flags.
-> > >
-> > > The purpose of this is basically to make the code more consistent internally,
-> > > easier to follow and better documented.
-> > >
-> > > First of all, patch [1/7] changes the PM core to skip driver-level "late"
-> > > and "noirq" suspend callbacks for devices with SMART_SUSPEND set if they are
-> > > still runtime-suspended during the "late" system-wide suspend phase (without
-> > > the patch it does that only if subsystem-level late/noirq/early suspend/resume
-> > > callbacks are not present for the device, which is demonstrably inconsistent)
-> > > and updates the resume part of the code accordingly (it doesn't need to check
-> > > whether or not the subsystem-level callbacks are present any more).
-> > >
-> > > The next patch, [2/7], is purely cosmetic and its only purpose is to reduce
-> > > the LOC number and move related pieces of code closer to each other.
-> >
-> > The first two patches have not changed.
-> >
-> > > Patch [3/7] changes the PM core so that it doesn't skip any subsystem-level
-> > > callbacks during system-wide resume (without the patch they may be skipped in
-> > > the "early resume" and "resume" phases due to LEAVE_SUSPENDED being set which
-> > > may be problematic) and to always run the driver's ->resume callback if the
-> > > corresponding subsystem-level callback is not present (without the patch it
-> > > may be skipped if LEAVE_SUSPENDED is set) to let it reverse the changes made
-> > > by the driver's ->suspend callback (which always runs too) if need be.
-> >
-> > The difference between this one and patch [3/9] in the v2 is the fixed
-> > definition of dev_pm_may_skip_resume(), renamed to dev_pm_skip_resume() by
-> > one of the next patches.
-> >
-> > Patch [4/9] changes the handling of the power.may_skip_resume flag to set it
-> > to 'true' by default and updates the subsystems aware of it to clear it when
-> > they don't want devices to stay in suspend.
-> >
-> > > Patches [4-6/7] rename one function in the PM core and two driver PM flags to
-> > > make their names better reflect their purpose.
-> >
-> > These are patches [5/9] and [7-8/9] in the v2 and patch [6/9] renames
-> > dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
-> >
-> > > Finally, patch [7/7] updates the documentation of the driver PM flags to
-> > > reflect the new code flows.
-> >
-> > This patch [9/9] now and it has been updated to reflect the new code changes.
-> >
-> > The pm-sleep-core branch:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-> >   pm-sleep-core
-> >
-> > contains the v2 now.
-> >
-> > Cheers!
->
-> Rafael, apologize for taking some time to review and respond. I
-> noticed you have queued this up on your next branch by now, good.
->
-> In any case, I have looked through the series and I think it looks good, thanks!
+On Tue, Apr 21, 2020 at 05:48:46AM +0000, Ma, Jianpeng wrote:
+> >From 95218bc1d79f2bcbdd8819be26efa698868a34ca Mon Sep 17 00:00:00 2001
+> From: Jianpeng Ma <jianpeng.ma@intel.com>
+> Date: Tue, 21 Apr 2020 01:15:24 -0400
+> Subject: [PATCH] block: remove unused header.
+> 
+> Dax related code already removed from this file.
+> 
+> Signed-off-by: Jianpeng Ma <jianpeng.ma@intel.com>
 
-Thanks for letting me know!
+Except for the mangled patch format this looks good:
 
-Cheers!
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+Can you resend it with proper patch headers?
