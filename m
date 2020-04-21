@@ -2,134 +2,111 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545B9C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BCDC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 420C7206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A86206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbgDUSh0 (ORCPT
+        id S1729269AbgDUSlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728419AbgDUSh0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:37:26 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DACC0610D5;
-        Tue, 21 Apr 2020 11:37:26 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jQxlq-0000Wo-7b; Tue, 21 Apr 2020 20:37:22 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B14801C0315;
-        Tue, 21 Apr 2020 20:37:21 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 18:37:21 -0000
-From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/vdso] x86/vdso/Makefile: Add vobjs32
-Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200420183256.660371-5-dima@arista.com>
-References: <20200420183256.660371-5-dima@arista.com>
+        Tue, 21 Apr 2020 14:41:45 -0400
+Received: from mga02.intel.com ([134.134.136.20]:18744 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbgDUSlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:41:44 -0400
+IronPort-SDR: PTS5lSis9Qt1jcgpVsovZUVlq9tuDb5w1WAIklpW8/WycJl9kUkYLfiY4f0EBG0XfYInt7Pxon
+ l+ti4t5Jdrog==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 11:41:43 -0700
+IronPort-SDR: wxusfE3TwKkqUex+ckbUR0PXgl6jp5AVs0GAuZF2Yz11Cf+4DqLyaVx0NvE14wZ+R9dSrr7+R9
+ Si+SLKcEFIRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
+   d="scan'208";a="429625590"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga005.jf.intel.com with ESMTP; 21 Apr 2020 11:41:43 -0700
+Date:   Tue, 21 Apr 2020 11:41:43 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/8] fs/ext4: Disallow encryption if inode is DAX
+Message-ID: <20200421184143.GA3004764@iweiny-DESK2.sc.intel.com>
+References: <20200414040030.1802884-1-ira.weiny@intel.com>
+ <20200414040030.1802884-4-ira.weiny@intel.com>
+ <20200415160307.GJ90651@mit.edu>
+ <20200415195433.GC2305801@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Message-ID: <158749424129.28353.14783565552513059887.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415195433.GC2305801@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/vdso branch of tip:
+On Wed, Apr 15, 2020 at 12:54:34PM -0700, 'Ira Weiny' wrote:
+> On Wed, Apr 15, 2020 at 12:03:07PM -0400, Theodore Y. Ts'o wrote:
+> > On Mon, Apr 13, 2020 at 09:00:25PM -0700, ira.weiny@intel.com wrote:
+ 
+[snip]
 
-Commit-ID:     cd2f45b7514cdddabbf3f81a98a20ae02f99efa1
-Gitweb:        https://git.kernel.org/tip/cd2f45b7514cdddabbf3f81a98a20ae02f99efa1
-Author:        Dmitry Safonov <dima@arista.com>
-AuthorDate:    Mon, 20 Apr 2020 19:32:56 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 21 Apr 2020 20:33:17 +02:00
+> > 
+> > Also note that encrypted files are read/write so we must never allow
+> > the combination of ENCRPYT_FL and DAX_FL.  So that may be something
+> > where we should teach __ext4_iget() to check for this, and declare the
+> > file system as corrupted if it sees this combination.
+> 
+> ok...
 
-x86/vdso/Makefile: Add vobjs32
+After thinking about this...
 
-Treat ia32/i386 objects in array the same as 64-bit vdso objects.
+Do we really want to declare the FS corrupted?
 
-Co-developed-by: Andrei Vagin <avagin@openvz.org>
-Signed-off-by: Andrei Vagin <avagin@openvz.org>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lkml.kernel.org/r/20200420183256.660371-5-dima@arista.com
+If so, I think we need to return errors when such a configuration is attempted.
+If in the future we have an encrypted mode which can co-exist with DAX (such as
+Dan mentioned) we can change this.
 
----
- arch/x86/entry/vdso/Makefile | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+FWIW I think we should return errors when such a configuration is attempted but
+_not_ declare the FS corrupted.  That allows users to enable this configuration
+later if we can figure out how to support it.
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 433a125..54e03ab 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -24,6 +24,8 @@ VDSO32-$(CONFIG_IA32_EMULATION)	:= y
- 
- # files to link into the vdso
- vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
-+vobjs32-y := vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
-+vobjs32-y += vdso32/vclock_gettime.o
- 
- # files to link into kernel
- obj-y				+= vma.o
-@@ -37,10 +39,12 @@ vdso_img-$(VDSO32-y)		+= 32
- obj-$(VDSO32-y)			+= vdso32-setup.o
- 
- vobjs := $(foreach F,$(vobjs-y),$(obj)/$F)
-+vobjs32 := $(foreach F,$(vobjs32-y),$(obj)/$F)
- 
- $(obj)/vdso.o: $(obj)/vdso.so
- 
- targets += vdso.lds $(vobjs-y)
-+targets += vdso32/vdso32.lds $(vobjs32-y)
- 
- # Build the vDSO image C files and link them in.
- vdso_img_objs := $(vdso_img-y:%=vdso-image-%.o)
-@@ -130,10 +134,6 @@ $(obj)/vdsox32.so.dbg: $(obj)/vdsox32.lds $(vobjx32s) FORCE
- CPPFLAGS_vdso32/vdso32.lds = $(CPPFLAGS_vdso.lds)
- VDSO_LDFLAGS_vdso32.lds = -m elf_i386 -soname linux-gate.so.1
- 
--targets += vdso32/vdso32.lds
--targets += vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
--targets += vdso32/vclock_gettime.o
--
- KBUILD_AFLAGS_32 := $(filter-out -m64,$(KBUILD_AFLAGS)) -DBUILD_VDSO
- $(obj)/vdso32.so.dbg: KBUILD_AFLAGS = $(KBUILD_AFLAGS_32)
- $(obj)/vdso32.so.dbg: asflags-$(CONFIG_X86_64) += -m32
-@@ -158,12 +158,7 @@ endif
- 
- $(obj)/vdso32.so.dbg: KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
- 
--$(obj)/vdso32.so.dbg: FORCE \
--		      $(obj)/vdso32/vdso32.lds \
--		      $(obj)/vdso32/vclock_gettime.o \
--		      $(obj)/vdso32/note.o \
--		      $(obj)/vdso32/system_call.o \
--		      $(obj)/vdso32/sigreturn.o
-+$(obj)/vdso32.so.dbg: $(obj)/vdso32/vdso32.lds $(vobjs32) FORCE
- 	$(call if_changed,vdso_and_check)
- 
- #
+> 
+> > (For VERITY_FL
+> > && DAX_FL that is a combo that we might want to support in the future,
+> > so that's probably a case where arguably, we should just ignore the
+> > DAX_FL for now.)
+> 
+> ok...
+
+I think this should work the same.
+
+It looks like VERITY_FL and ENCRYPT_FL are _not_ user modifiable?  Is that
+correct?
+
+You said that ENCRPYT_FL is set from the parent directory?  But I'm not seeing
+where that occurs?
+
+Similarly I don't see where VERITY_FL is being set either?  :-/
+
+I think to make this work correctly we should restrict setting those flags if
+DAX_FL is set and vice versa.  But I'm not finding where to do that.  :-/
+
+Ira
+
+> 
+> Ira
+> 
