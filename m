@@ -2,154 +2,210 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85311C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964CAC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 573262076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:51:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZteWt5y"
+	by mail.kernel.org (Postfix) with ESMTP id 7A08A2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgDUMvJ (ORCPT
+        id S1728877AbgDUMwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:51:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33201 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728719AbgDUMvD (ORCPT
+        Tue, 21 Apr 2020 08:52:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728422AbgDUMwa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:51:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587473462;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9VQx7vBDubdqeq6vbUpGhjqdpwRyZm3JoiWtX88v3CA=;
-        b=OZteWt5yn33uD31FPBkrHFZkKVZ7Id85vNoxfLrcOD1O9qWhG/ONB1grVj5ceL76ZACyP3
-        6zbNwhJhbaRBqUEzH0toJATuw+rde7SZuWkxZE9RfGSdQK4LkmUxD6lP0TCt136pR9ccMt
-        cPdm6rU8JCmfE9zR6Ls5Yqu49u2LobQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-484-p6BdAMSrMWmfiBBhi8JTZQ-1; Tue, 21 Apr 2020 08:50:58 -0400
-X-MC-Unique: p6BdAMSrMWmfiBBhi8JTZQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 147FC802560;
-        Tue, 21 Apr 2020 12:50:56 +0000 (UTC)
-Received: from krava (unknown [10.40.196.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E8C635DA66;
-        Tue, 21 Apr 2020 12:50:52 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 14:50:50 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Tue, 21 Apr 2020 08:52:30 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F163C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:52:30 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jQsNz-0004N4-SG; Tue, 21 Apr 2020 14:52:23 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jQsNx-0002HJ-8F; Tue, 21 Apr 2020 14:52:21 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V6 13/15] perf intel-pt: Add support for text poke events
-Message-ID: <20200421125050.GG809467@krava>
-References: <20200405201327.7332-1-adrian.hunter@intel.com>
- <20200405201327.7332-14-adrian.hunter@intel.com>
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: [PATCH net-next v4 2/4] net: phy: tja11xx: add initial TJA1102 support
+Date:   Tue, 21 Apr 2020 14:52:17 +0200
+Message-Id: <20200421125219.8402-3-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200421125219.8402-1-o.rempel@pengutronix.de>
+References: <20200421125219.8402-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200405201327.7332-14-adrian.hunter@intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 11:13:25PM +0300, Adrian Hunter wrote:
-> Select text poke events when available and the kernel is being traced.
-> Process text poke events to invalidate entries in Intel PT's instruction
-> cache.
-> 
-> Example:
-> 
->   The example requires kernel config:
->     CONFIG_PROC_SYSCTL=y
->     CONFIG_SCHED_DEBUG=y
->     CONFIG_SCHEDSTATS=y
-> 
->   Before:
-> 
->     # perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M &
->     # cat /proc/sys/kernel/sched_schedstats
->     0
->     # echo 1 > /proc/sys/kernel/sched_schedstats
->     # cat /proc/sys/kernel/sched_schedstats
->     1
->     # echo 0 > /proc/sys/kernel/sched_schedstats
->     # cat /proc/sys/kernel/sched_schedstats
->     0
->     # kill %1
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 3.341 MB perf.data.before ]
->     [1]+  Terminated                 perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M
->     # perf script -i perf.data.before --itrace=e >/dev/null
->     Warning:
->     474 instruction trace errors
-> 
->   After:
-> 
->     # perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
->     # cat /proc/sys/kernel/sched_schedstats
->     0
->     # echo 1 > /proc/sys/kernel/sched_schedstats
->     # cat /proc/sys/kernel/sched_schedstats
->     1
->     # echo 0 > /proc/sys/kernel/sched_schedstats
->     # cat /proc/sys/kernel/sched_schedstats
->     0
->     # kill %1
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 2.646 MB perf.data.after ]
->     [1]+  Terminated                 perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M
->     # perf script -i perf.data.after --itrace=e >/dev/null
+TJA1102 is an dual T1 PHY chip. Both PHYs are separately addressable.
+Both PHYs are similar but have different amount of functionality. For
+example PHY 1 has no PHY ID and no health monitor.
 
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/nxp-tja11xx.c | 91 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
 
-I'm still seeing some, probably I'm missing some CONFIG, will check
-
-	# ./perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
-	[1] 5880
-	# cat /proc/sys/kernel/sched_schedstats
-	0
-	# echo 1 > /proc/sys/kernel/sched_schedstats
-	# cat /proc/sys/kernel/sched_schedstats
-	1
-	# echo 0 > /proc/sys/kernel/sched_schedstats
-	# kill %1
-	# [ perf record: Woken up 1 times to write data ]
-	[ perf record: Captured and wrote 6.181 MB perf.data.after ]
-	[1]+  Terminated              ./perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M
-	# ./perf script --itrace=e -i perf.data.after > /dev/null
-	Warning:
-	18837 instruction trace errors
-
-	# ./perf script --itrace=e -i perf.data.after | head
-	instruction trace error type 1 time 9274.420582345 cpu 9 pid 845 tid 845 ip 0xffffffff814e6cf2 code 6: Trace doesn't match instruction
-	instruction trace error type 1 time 9274.422229726 cpu 39 pid 5880 tid 5880 ip 0xffffffffa030a320 code 6: Trace doesn't match instruction
-	instruction trace error type 1 time 9274.422231972 cpu 39 pid 5880 tid 5880 ip 0xffffffffa0315c1c code 6: Trace doesn't match instruction
-	instruction trace error type 1 time 9274.422236141 cpu 39 pid 5880 tid 5880 ip 0xffffffff81143263 code 6: Trace doesn't match instruction
-	instruction trace error type 1 time 9274.422237424 cpu 39 pid 5880 tid 5880 ip 0xffffffff8115c388 code 6: Trace doesn't match instruction
-	instruction trace error type 1 time 9274.422239028 cpu 39 pid 5880 tid 5880 ip 0xffffffff811428c9 code 6: Trace doesn't match instruction
-	instruction trace error type 1 time 9274.422239028 cpu 39 pid 5880 tid 5880 ip 0xffffffffa13279fb code 5: Failed to get instruction
-	instruction trace error type 1 time 9274.422242556 cpu 39 pid 5880 tid 5880 ip 0xffffffff814e9c73 code 6: Trace doesn't match instruction
-	instruction trace error type 1 time 9274.422258915 cpu 39 pid 5880 tid 5880 ip 0xffffffff810d7da2 code 6: Trace doesn't match instruction
-	instruction trace error type 1 time 9274.422258915 cpu 39 pid 5880 tid 5880 ip 0xffffffffa030a0b2 code 6: Trace doesn't match instruction
-
-jirka
+diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+index b705d0bd798b..a064e4ab3616 100644
+--- a/drivers/net/phy/nxp-tja11xx.c
++++ b/drivers/net/phy/nxp-tja11xx.c
+@@ -15,6 +15,7 @@
+ #define PHY_ID_MASK			0xfffffff0
+ #define PHY_ID_TJA1100			0x0180dc40
+ #define PHY_ID_TJA1101			0x0180dd00
++#define PHY_ID_TJA1102			0x0180dc80
+ 
+ #define MII_ECTRL			17
+ #define MII_ECTRL_LINK_CONTROL		BIT(15)
+@@ -40,6 +41,10 @@
+ #define MII_INTSRC_TEMP_ERR		BIT(1)
+ #define MII_INTSRC_UV_ERR		BIT(3)
+ 
++#define MII_INTEN			22
++#define MII_INTEN_LINK_FAIL		BIT(10)
++#define MII_INTEN_LINK_UP		BIT(9)
++
+ #define MII_COMMSTAT			23
+ #define MII_COMMSTAT_LINK_UP		BIT(15)
+ 
+@@ -190,6 +195,7 @@ static int tja11xx_config_init(struct phy_device *phydev)
+ 			return ret;
+ 		break;
+ 	case PHY_ID_TJA1101:
++	case PHY_ID_TJA1102:
+ 		ret = phy_set_bits(phydev, MII_COMMCFG, MII_COMMCFG_AUTO_OP);
+ 		if (ret)
+ 			return ret;
+@@ -354,6 +360,55 @@ static int tja11xx_probe(struct phy_device *phydev)
+ 	return PTR_ERR_OR_ZERO(priv->hwmon_dev);
+ }
+ 
++static int tja1102_match_phy_device(struct phy_device *phydev, bool port0)
++{
++	int ret;
++
++	if ((phydev->phy_id & PHY_ID_MASK) != PHY_ID_TJA1102)
++		return 0;
++
++	ret = phy_read(phydev, MII_PHYSID2);
++	if (ret < 0)
++		return ret;
++
++	/* TJA1102 Port 1 has phyid 0 and doesn't support temperature
++	 * and undervoltage alarms.
++	 */
++	if (port0)
++		return ret ? 1 : 0;
++
++	return !ret;
++}
++
++static int tja1102_p0_match_phy_device(struct phy_device *phydev)
++{
++	return tja1102_match_phy_device(phydev, true);
++}
++
++static int tja1102_p1_match_phy_device(struct phy_device *phydev)
++{
++	return tja1102_match_phy_device(phydev, false);
++}
++
++static int tja11xx_ack_interrupt(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = phy_read(phydev, MII_INTSRC);
++
++	return (ret < 0) ? ret : 0;
++}
++
++static int tja11xx_config_intr(struct phy_device *phydev)
++{
++	int value = 0;
++
++	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
++		value = MII_INTEN_LINK_FAIL | MII_INTEN_LINK_UP;
++
++	return phy_write(phydev, MII_INTEN, value);
++}
++
+ static struct phy_driver tja11xx_driver[] = {
+ 	{
+ 		PHY_ID_MATCH_MODEL(PHY_ID_TJA1100),
+@@ -385,6 +440,41 @@ static struct phy_driver tja11xx_driver[] = {
+ 		.get_sset_count = tja11xx_get_sset_count,
+ 		.get_strings	= tja11xx_get_strings,
+ 		.get_stats	= tja11xx_get_stats,
++	}, {
++		.name		= "NXP TJA1102 Port 0",
++		.features       = PHY_BASIC_T1_FEATURES,
++		.probe		= tja11xx_probe,
++		.soft_reset	= tja11xx_soft_reset,
++		.config_init	= tja11xx_config_init,
++		.read_status	= tja11xx_read_status,
++		.match_phy_device = tja1102_p0_match_phy_device,
++		.suspend	= genphy_suspend,
++		.resume		= genphy_resume,
++		.set_loopback   = genphy_loopback,
++		/* Statistics */
++		.get_sset_count = tja11xx_get_sset_count,
++		.get_strings	= tja11xx_get_strings,
++		.get_stats	= tja11xx_get_stats,
++		.ack_interrupt	= tja11xx_ack_interrupt,
++		.config_intr	= tja11xx_config_intr,
++
++	}, {
++		.name		= "NXP TJA1102 Port 1",
++		.features       = PHY_BASIC_T1_FEATURES,
++		/* currently no probe for Port 1 is need */
++		.soft_reset	= tja11xx_soft_reset,
++		.config_init	= tja11xx_config_init,
++		.read_status	= tja11xx_read_status,
++		.match_phy_device = tja1102_p1_match_phy_device,
++		.suspend	= genphy_suspend,
++		.resume		= genphy_resume,
++		.set_loopback   = genphy_loopback,
++		/* Statistics */
++		.get_sset_count = tja11xx_get_sset_count,
++		.get_strings	= tja11xx_get_strings,
++		.get_stats	= tja11xx_get_stats,
++		.ack_interrupt	= tja11xx_ack_interrupt,
++		.config_intr	= tja11xx_config_intr,
+ 	}
+ };
+ 
+@@ -393,6 +483,7 @@ module_phy_driver(tja11xx_driver);
+ static struct mdio_device_id __maybe_unused tja11xx_tbl[] = {
+ 	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1100) },
+ 	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1101) },
++	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1102) },
+ 	{ }
+ };
+ 
+-- 
+2.25.1
 
