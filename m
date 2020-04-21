@@ -2,94 +2,107 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11784C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD80C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D53B0206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488747;
-	bh=wYIADnQG0TmxTbGgrJkqaa5SVwPVM6qbSyF3hlZwcKA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=L1XHG+A3jFsr5QtiUUnCEoKnPrQR+syjnqDzBkCciJsYoyqsPJ6+OHTsiqO38ebZ9
-	 DOfnIrZXf8wMY5NmyxEXxAjVPX83VodapBJIE1OXSLNQKC6rpDCd55Bedsi0/hwmDF
-	 yg66R434KIZtxrnuGy+mbarJPNK+SQiHwS5Jorpk=
+	by mail.kernel.org (Postfix) with ESMTP id C9986206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUDNecfn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgDURFr (ORCPT
+        id S1729202AbgDURGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbgDURFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 13:05:46 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BE94206E9;
-        Tue, 21 Apr 2020 17:05:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587488746;
-        bh=wYIADnQG0TmxTbGgrJkqaa5SVwPVM6qbSyF3hlZwcKA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=P79Hz8d5IV5O7NFjvVSKIdCAyFw4KwV+1hWCceAW0TSzHR1gARbC8TAtcTZhU2CET
-         MPykn8PV4S9XYLq++7aF+t7goD9S70xjSs998b9F3OfT0fkVDK7Rzcn2qKj2jxuPIL
-         kWklk4PF2zGQTJdU3t01hGmd5aJX6INmpGYD9q4E=
-Date:   Tue, 21 Apr 2020 10:05:44 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     khalasa@piap.pl, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Subject: Re: [PATCH] net: ethernet: ixp4xx: Add error handling
- inixp4xx_eth_probe()
-Message-ID: <20200421100544.0de3fbba@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <71697844-cc03-9206-1594-b8af02f38018@cmss.chinamobile.com>
-References: <20200412092728.8396-1-tangbin@cmss.chinamobile.com>
-        <20200412113538.517669d9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <71697844-cc03-9206-1594-b8af02f38018@cmss.chinamobile.com>
+        Tue, 21 Apr 2020 13:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725987AbgDURGi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 13:06:38 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E93A3C061A41;
+        Tue, 21 Apr 2020 10:06:37 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f13so17270686wrm.13;
+        Tue, 21 Apr 2020 10:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hRby/GaY4ncpy7xXsgQhDkX3RBVaqXic4ZU9biVTX/M=;
+        b=RUDNecfnjYrJmr+hFUi5bG1OlRyIRXcFPWEbOz+cNMgTuapSQeOvXp+91Nu5u/h65a
+         kVHiu2E/e2yOM7L5YbjDYeDu2vALohoMTi+cyleLuWgk0YL3N3JO7teWCmh+im6TAh9F
+         bWJXRhZVrfr3+18kXwEM8Ql+I/uP7auoepsXGSemaesvzkCggAlyT7tz8P6HbTEvkqo3
+         ltxN7P2h5JXTtu92ykaPHPZ5K5PnQMbEodK9Dj7vYWkN2n95+YZl+bfSQaZ86U+C7pKP
+         iHwjtyTczyfZCkikBd3zJwZdWCdyiezhRIIbPWLLz6AKj2vUXbXRZv/jCI2bRklOtZ7R
+         bA2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hRby/GaY4ncpy7xXsgQhDkX3RBVaqXic4ZU9biVTX/M=;
+        b=Ab5tkhKVhdkDaxCABJcuTJ8tWxQ9csQyQKsatpfeDG7kLAtHAsLK7nYyezz0wXRb4F
+         TjnZueI6ScL4wQ/OHEm/tM6A78ezQMlENqTHBaZTdCNs+fepnzFshGLJjvgJcwjVYcTP
+         gwPXMMRerkbtN3ufunrpJtlUYgREwnIrljOIBTrtn2T0Qgs6Pw7eQlaDbHL5jpmEhwxl
+         ML2s7tOUYxN2zGyd5M6RjtbGHASwRGhfZ811eO+OInHKwqT9WUpjSxpg7bB5MyaEU8qE
+         PnIt+79VJIJ0so0GvrSmBGSvgDIg1Shqc6n7XlBbTWo633nnr3h10O0Bc2fvD9hwzCvD
+         y+Fg==
+X-Gm-Message-State: AGi0PubnvT5N8XdtCg0PBUYtmDhv9YO0/rpMQ8pRsnMWdPMzHKi/QhlC
+        yxhjL6bA2a6wza+eUJZIJg==
+X-Google-Smtp-Source: APiQypJxUZJy3HyvKPVhz8Qax15+yRpUuaFg555QpaaDLpVMBAUS6QYq6+pxY49PIHmGXdRih3nljQ==
+X-Received: by 2002:adf:8363:: with SMTP id 90mr23739359wrd.233.1587488796755;
+        Tue, 21 Apr 2020 10:06:36 -0700 (PDT)
+Received: from avx2 ([46.53.252.84])
+        by smtp.gmail.com with ESMTPSA id l5sm4051806wmi.22.2020.04.21.10.06.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 10:06:36 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 20:06:34 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk
+Subject: Re: [PATCH 01/15] sched: make nr_running() return "unsigned int"
+Message-ID: <20200421170634.GA31089@avx2>
+References: <20200420205743.19964-1-adobriyan@gmail.com>
+ <20200420210557.GG5820@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200420210557.GG5820@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 12:46:37 +0800 Tang Bin wrote:
-> Hi Jakub:
->=20
-> On 2020/4/13 2:35, Jakub Kicinski wrote:
-> > On Sun, 12 Apr 2020 17:27:28 +0800 Tang Bin wrote: =20
-> >> The function ixp4xx_eth_probe() does not perform sufficient error
-> >> checking after executing devm_ioremap_resource(),which can result
-> >> in crashes if a critical error path is encountered.
-> >> =20
-> > Please provide an appropriate Fixes: tag. =20
->=20
-> Thanks for your reply.
->=20
-> I don't know whether the commit message affect this patch's result. If so,
->=20
-> I think the commit message in v2 needs more clarification. As follows:
->=20
->  =C2=A0=C2=A0=C2=A0 The function ixp4xx_eth_probe() does not perform suff=
-icient error=20
-> checking
->=20
-> after executing devm_ioremap_resource(), which can result in crashes if=20
-> a critical
->=20
-> error path is encountered.
->=20
->  =C2=A0=C2=A0=C2=A0 Fixes: f458ac479777 ("ARM/net: ixp4xx: Pass ethernet =
-physical base=20
-> as resource").
->=20
->=20
-> I'm waiting for you reply actively.
+On Mon, Apr 20, 2020 at 02:05:57PM -0700, Matthew Wilcox wrote:
+> On Mon, Apr 20, 2020 at 11:57:29PM +0300, Alexey Dobriyan wrote:
+> > I don't anyone have been crazy enough to spawn 2^32 threads.
+> > It'd require absurd amounts of physical memory,  and bump into futex pid
+> > limit anyway.
+> > 
+> > Meanwhile save few bits on REX prefixes and some stack space for upcoming
+> > print_integer() stuff.
+> > 
+> > And remove "extern" from prototypes while I'm at it.
+> 
+> It seems like there's a few more places to fix in this regard?
+> 
+> kernel/sched/fair.c:static u64 __sched_period(unsigned long nr_running)
+> kernel/sched/sched.h:   unsigned long           dl_nr_running;
+> kernel/sched/core.c:unsigned long nr_iowait_cpu(int cpu)
+> kernel/sched/core.c:unsigned long nr_iowait(void)
+> kernel/sched/loadavg.c: long nr_active, delta = 0;
+> kernel/sched/sched.h:   unsigned long           rt_nr_migratory;
+> kernel/sched/sched.h:   unsigned long           rt_nr_total;
+> kernel/sched/sched.h:   unsigned long           rt_nr_boosted;
+> kernel/sched/sched.h:   unsigned long           dl_nr_running;
+> kernel/sched/sched.h:   unsigned long           dl_nr_migratory;
+> kernel/sched/sched.h:   unsigned long           nr_uninterruptible;
 
-Please repost with the tag included.
+Sure. I changed nr_running() and nr_iowait() because they're in format
+strings in /proc as %lu.
