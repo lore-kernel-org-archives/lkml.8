@@ -2,145 +2,122 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150E8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD06C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E491F2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:40:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aFGdBAse"
+	by mail.kernel.org (Postfix) with ESMTP id 9A3C72098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587454869;
+	bh=Nbpcjvf4OfQ6/2rbNcF4XSAXJpyKzoe6+kQqdiYXyL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CYB7oxRe0RYrATLwogyRZq7eroTIDg1imQV1jPNBfjdrhQNDlXU2065pvGQkfjtU+
+	 T0N/BThnXyxj/YojYILCwYRDqP2UTBT0s2XoszlD/oxti8cyjdvbWCZLZ6y99u48rO
+	 kzDrgE1dshkI7l76P51MxCKa671CKoeB2xHSRIe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgDUHkX (ORCPT
+        id S1727924AbgDUHlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:40:23 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38100 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726628AbgDUHkW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:40:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587454821;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+us8s3+TLsdGNnZMoTiZF6Ytfj6NBMCN4gguLEIxdtQ=;
-        b=aFGdBAseniVBn7J4fh9urCMjNgN5Bs3Y7HuxqEWLyK7fO2Z3y8Wrl5Q4rSKPYzIbGs8qRA
-        5xtYefpZuBwA6eItS0duJFgTs5dOBIcRqD/Y/upgFUL8EcQ4O8PFixUzRXx+YqgkCmKhxv
-        htfcH/3fUhVs+Tgn2X9K0ENdigZM+hs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-cl6xhkBJPzq05fL8WtJL5g-1; Tue, 21 Apr 2020 03:40:10 -0400
-X-MC-Unique: cl6xhkBJPzq05fL8WtJL5g-1
-Received: by mail-wr1-f70.google.com with SMTP id a3so7116137wro.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 00:40:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+us8s3+TLsdGNnZMoTiZF6Ytfj6NBMCN4gguLEIxdtQ=;
-        b=XrmVQ6Y338taFmXsTlOfmyjxMk09cIaaCY+m+omllkqHw+vnMjwbIY34qk3RKIgIB0
-         6/+2/AhmMwrao/vK9v1yS6BVIclgrp9+X1YqYXGDGkVWO9OJtmY1p5/r2+Arkin9coxV
-         B4gybiysrKJZnotLVrqtCYMEQYXsn6mSq4OB+FMcREnk5qiHn+dn81hKpcB/9MEQ33PS
-         M5pbOLnSOfJ8okeJztj1qze8dqxfRjUGUNToIKt7DcSAKUVqLY/ysrWuphZSZ5F8c5ko
-         8YbzUEpXH0Nmmtu8rPKUK1LaZrGu2Z2eON6ELXh8d1RbXg+lsF5ZOCyGttOoVEn50dVE
-         dDhg==
-X-Gm-Message-State: AGi0PuZn7Jq30gfMScxXlUlmeEdiG9XcXiWhKrtWAquo+ldnO+LRYidd
-        tfPhl87AtrkqU3uCPI8Xx8sLKd+g1AKJey9JvOPIIAAMSU99Be8nP/k4q2eHPR5W9ai9O976Urv
-        0DTy5rDzEk9TQdscPGxtsCSl6
-X-Received: by 2002:a5d:4b90:: with SMTP id b16mr24211693wrt.16.1587454809426;
-        Tue, 21 Apr 2020 00:40:09 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIscKJFG2sAbiYiJ0K2c8RaMl7hB9OOkoo2bRUwbF9yAD4GP4X7AKWvXg51YPHtGx3nroITVg==
-X-Received: by 2002:a5d:4b90:: with SMTP id b16mr24211675wrt.16.1587454809210;
-        Tue, 21 Apr 2020 00:40:09 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id t2sm2442383wmt.15.2020.04.21.00.40.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 00:40:08 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: surface3_power: i2c_acpi_new_device()
- returns a PTR_ERR
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200420220421.171298-1-hdegoede@redhat.com>
- <CAHp75VfC7-saRXnGDpee1dxAqDSDcveHMoC872WN9-SL4sDH4Q@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <b01d598f-f3ae-b092-3be8-07e178370289@redhat.com>
-Date:   Tue, 21 Apr 2020 09:40:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 21 Apr 2020 03:41:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbgDUHlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 03:41:08 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 765932084D;
+        Tue, 21 Apr 2020 07:41:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587454867;
+        bh=Nbpcjvf4OfQ6/2rbNcF4XSAXJpyKzoe6+kQqdiYXyL8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ux6xM77N6e3zjcMhKqKkdPDzL8BNNWgNngXIeQat43yqC0nlQLUhfbDvC0IRskK4a
+         lzXX4ZT/0h9u4DpM21iqQivITIIy8PZvfZnm9XI2slLBPWpJY6DkcnyZ0ZnL+Yq49u
+         drScS8rGC++743FnPenRISkU6YuS2/Gft9+GbSfU=
+Date:   Tue, 21 Apr 2020 08:41:02 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Alex Belits <abelits@marvell.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Prasun Kapoor <pkapoor@marvell.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "frederic@kernel.org" <frederic@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH v3 03/13] task_isolation: add instruction
+ synchronization memory barrier
+Message-ID: <20200421074101.GA15021@willie-the-truck>
+References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
+ <aed12dd15ea2981bc9554cfa8b5e273c1342c756.camel@marvell.com>
+ <07c25c246c55012981ec0296eee23e68c719333a.camel@marvell.com>
+ <d995795c731d6ecceb36bdf1c1df3d72fefd023d.camel@marvell.com>
+ <20200415124427.GB28304@C02TD0UTHF1T.local>
+ <e4d2cda6f011e80a0d8e482b85bca1c57665fcfd.camel@marvell.com>
+ <20200420122350.GB12889@willie-the-truck>
+ <20200420123628.GB69441@C02TD0UTHF1T.local>
+ <20200420135523.GA18711@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfC7-saRXnGDpee1dxAqDSDcveHMoC872WN9-SL4sDH4Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420135523.GA18711@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 4/21/20 12:33 AM, Andy Shevchenko wrote:
-> On Tue, Apr 21, 2020 at 1:04 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> i2c_acpi_new_device() never returns NULL, it either returns an i2c_client
->> or a PTR_ERR. Adjust the mshw0011_probe() error handling to take this
->> into account.
->>
->> Note the goto out_err will cause i2c_unregister_device() to get called
->> even though the i2c_acpi_new_device() fails, this is ok as it accepts
->> a NULL pointer argument (and treats it as a no-op).
->>
+On Mon, Apr 20, 2020 at 02:55:23PM +0100, Will Deacon wrote:
+> On Mon, Apr 20, 2020 at 01:36:28PM +0100, Mark Rutland wrote:
+> > On Mon, Apr 20, 2020 at 01:23:51PM +0100, Will Deacon wrote:
+> > > IIUC, we don't need to do anything on arm64 because taking an exception acts
+> > > as a context synchronization event, so I don't think you should try to
+> > > expose this as a new barrier macro. Instead, just make it a pre-requisite
+> > > that architectures need to ensure this behaviour when entering the kernel
+> > > from userspace if they are to select HAVE_ARCH_TASK_ISOLATION.
+> > 
+> > The CSE from the exception isn't sufficient here, because it needs to
+> > occur after the CPU has re-registered to receive IPIs for
+> > kick_all_cpus_sync(). Otherwise there's a window between taking the
+> > exception and re-registering where a necessary context synchronization
+> > event can be missed. e.g.
+> > 
+> > CPU A				CPU B
+> > [ Modifies some code ]		
+> > 				[ enters exception ]
+> > [ D cache maintenance ]
+> > [ I cache maintenance ]
+> > [ IPI ]				// IPI not taken
+> >   ...				[ register for IPI ] 
+> > [ IPI completes ] 
+> > 				[ execute stale code here ]
 > 
-> Thanks, I guess it repeats [1].
+> Thanks.
 > 
-> [1]: http://git.infradead.org/linux-platform-drivers-x86.git/commitdiff/4dbccb873f2b35ad1b26419ff88c80509e2d4cbb
-
-I guess it does and Dan's solution for the error handling is
-claner then mine, a direct return indeed is the proper thing
-to do here.
-
-Regards,
-
-Hans
-
-
-
+> > However, I think 'IMB' is far too generic, and we should have an arch
+> > hook specific to task isolation, as it's far less likely to be abused as
+> > IMB will.
 > 
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/platform/x86/surface3_power.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/surface3_power.c b/drivers/platform/x86/surface3_power.c
->> index 946ac2dc08ae..32e6e86e27dd 100644
->> --- a/drivers/platform/x86/surface3_power.c
->> +++ b/drivers/platform/x86/surface3_power.c
->> @@ -522,8 +522,10 @@ static int mshw0011_probe(struct i2c_client *client)
->>          strlcpy(board_info.type, "MSHW0011-bat0", I2C_NAME_SIZE);
->>
->>          bat0 = i2c_acpi_new_device(dev, 1, &board_info);
->> -       if (!bat0)
->> -               return -ENOMEM;
->> +       if (IS_ERR(bat0)) {
->> +               error = PTR_ERR(bat0);
->> +               goto out_err;
->> +       }
->>
->>          data->bat0 = bat0;
->>          i2c_set_clientdata(bat0, data);
->> --
->> 2.26.0
->>
-> 
-> 
+> What guarantees we don't run any unsynchronised module code between
+> exception entry and registering for the IPI? It seems like we'd want that
+> code to run as early as possible, e.g. as part of
+> task_isolation_user_exit() but that doesn't seem to be what's happening.
 
+Sorry, I guess that's more a question for Alex.
+
+Alex -- do you think we could move the "register for IPI" step earlier
+so that it's easier to reason about the code that runs in the dead zone
+during exception entry?
+
+Will
