@@ -2,163 +2,203 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC31C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C7BC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB352075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AEE62075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:23:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="1+MTefLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgDUMWr (ORCPT
+        id S1728811AbgDUMW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:22:47 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2855 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726018AbgDUMWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:22:46 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DD693E80D4C4184FD20D;
-        Tue, 21 Apr 2020 20:22:42 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Apr 2020
- 20:22:35 +0800
-Subject: Re: [PATCH v1 6/6] arm64: tlb: Set the TTL field in flush_tlb_range
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-CC:     <mark.rutland@arm.com>, <will@kernel.org>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
-        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
-        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
-        <broonie@kernel.org>, <guohanjun@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-References: <20200403090048.938-1-yezhenyu2@huawei.com>
- <20200403090048.938-7-yezhenyu2@huawei.com>
- <20200420121055.GF20696@hirez.programming.kicks-ass.net>
- <20200420200616.44c7c7ea@oasis.local.home>
- <20200421083043.GP20730@hirez.programming.kicks-ass.net>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <25267000-9c39-cd1c-33c8-c62bfb41d905@huawei.com>
-Date:   Tue, 21 Apr 2020 20:22:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 21 Apr 2020 08:22:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726018AbgDUMW6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 08:22:58 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BDCC061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:22:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3Z2RFbR3SDVpdahpgAdwxxD2MyeutNvasm9kZ/3o1Qw=; b=1+MTefLgrcUUGRryRNn4I5Ubg
+        NHqCHj3Jg51ilBg/oUOHXkVDM8km4QX7so379adQEIytm9Bmgs9WeaR1gAXjx3aUFD+fWFw5ksryK
+        iURih+rN0fFeZOQqS3I46QS6KcxWuAX8y6QgX0jmae6Do6NpBNNL56xjwSAdSl2StR4DlLQVbqExb
+        XnI93Q2kXAg5zY3dKlcw+TsnY7xtqD0Mu24LL4OM3rbJq3+qwQ4p88+k8oDTu0k9lqe8GzFIUkWog
+        bwvOdsIFG7WSQIUWc4b000Ekx0ptcW0seVV/kfmYurUKaDNHt+uZM7AW6JjSaJ+L/igGD6oOn2sNG
+        7hY/S96OQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:53236)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jQrv5-0001Q5-Dv; Tue, 21 Apr 2020 13:22:31 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jQruy-00071c-Nf; Tue, 21 Apr 2020 13:22:24 +0100
+Date:   Tue, 21 Apr 2020 13:22:24 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Tian Tao <tiantao6@hisilicon.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org,
+        gregkh@linuxfoundation.org, info@metux.net, allison@lohutok.net,
+        james.morse@arm.com, tglx@linutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jonathan.cameron@huawei.com, linuxarm@huawei.com
+Subject: Re: [PATCH] arm32: fix flushcache syscall with device address
+Message-ID: <20200421122224.GC25745@shell.armlinux.org.uk>
+References: <1587456514-61156-1-git-send-email-tiantao6@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <20200421083043.GP20730@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587456514-61156-1-git-send-email-tiantao6@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/21 16:30, Peter Zijlstra wrote:
-> On Mon, Apr 20, 2020 at 08:06:16PM -0400, Steven Rostedt wrote:
->> Peter Zijlstra <peterz@infradead.org> wrote:
->>> On Fri, Apr 03, 2020 at 05:00:48PM +0800, Zhenyu Ye wrote:
+On Tue, Apr 21, 2020 at 04:08:34PM +0800, Tian Tao wrote:
+> An issue has been observed on our Kungpeng916 systems when using a PCI
+> express GPU. This occurs when a 32 bit application running on a 64 bit
+> kernel issues a cache flush operation to a memory address that is in
+> a PCI BAR of the GPU.The results in an illegal operation and
+> subsequent crash.
+
+The arm32 cacheflush interface is *NOT* for syncing memory for accesses
+performed by another device.  This can't be said strongly enough.
+
+It is _only_ to support synchronisation of the I/D caches for
+applications that need to "write their own code", i.o.w.
+self-modification.
+
+Your use of this interface is therefore incorrect.
+
+If you have the privileges of being able to map PCI BARs, then you
+already have privileged access to the system.
+
+Please stop pointing the metaphorical gun at your foot.
+
 > 
->>>> +static inline int tlb_get_level(struct mmu_gather *tlb)
->>>> +{
->>>> +	int sum = tlb->cleared_ptes + tlb->cleared_pmds +
->>>> +		  tlb->cleared_puds + tlb->cleared_p4ds;
->>>> +
->>>> +	if (sum != 1)
->>>> +		return 0;
->>>> +	else if (tlb->cleared_ptes)
->>>> +		return 3;
->>>> +	else if (tlb->cleared_pmds)
->>>> +		return 2;
->>>> +	else if (tlb->cleared_puds)
->>>> +		return 1;
->>>> +
->>>> +	return 0;
->>>> +}  
->>>
->>> That's some mighty wonky code. Please look at the generated asm.
->>
->> Without even looking at the generated asm, if a condition returns,
->> there's no reason to add an else for that condition.
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> Signed-off-by: Lixin Chen <chenlixin1@huawei.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> ---
+>  arch/arm64/kernel/sys_compat.c | 69 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
 > 
-> Not really the point; he wants to guarantee he only returns >0 when
-> there's a single bit set. But the thing is, cleared_* is a bitfield, and
-> I'm afraid that the above will result in some terrible code-gen.
+> diff --git a/arch/arm64/kernel/sys_compat.c b/arch/arm64/kernel/sys_compat.c
+> index 3c18c24..6c07944 100644
+> --- a/arch/arm64/kernel/sys_compat.c
+> +++ b/arch/arm64/kernel/sys_compat.c
+> @@ -15,12 +15,74 @@
+>  #include <linux/slab.h>
+>  #include <linux/syscalls.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/hugetlb.h>
+>  
+>  #include <asm/cacheflush.h>
+>  #include <asm/system_misc.h>
+>  #include <asm/tlbflush.h>
+>  #include <asm/unistd.h>
+>  
+> +static long __check_pt_cacheable(unsigned long vaddr)
+> +{
+> +	struct mm_struct *mm = current->mm;
+> +	pgd_t *pgd;
+> +	p4d_t *p4d;
+> +	pud_t *pud;
+> +	pudval_t pudval;
+> +	pmd_t *pmd;
+> +	pmdval_t pmdval;
+> +	pte_t *pte;
+> +	pteval_t pteval;
+> +	pgprot_t pgprot;
+> +
+> +	spin_lock(&mm->page_table_lock);
+> +	pgd = pgd_offset(mm, vaddr);
+> +	if (pgd_none(*pgd) || unlikely(pgd_bad(*pgd)))
+> +		goto no_page;
+> +
+> +	p4d = p4d_offset(pgd, vaddr);
+> +	if (p4d_none(*p4d) || unlikely(p4d_bad(*p4d)))
+> +		goto no_page;
+> +
+> +	pud = pud_offset(p4d, vaddr);
+> +	if (pud_none(*pud) || unlikely(pud_bad(*pud)))
+> +		goto no_page;
+> +	if (pud_huge(*pud)) {
+> +		pudval = pud_val(*pud);
+> +		pgprot = __pgprot(pudval);
+> +		goto out;
+> +	}
+> +
+> +	pmd = pmd_offset(pud, vaddr);
+> +	if (pmd_none(*pmd) || unlikely(pmd_bad(*pmd)))
+> +		goto no_page;
+> +	if (pmd_huge(*pmd)) {
+> +		pmdval = pmd_val(*pmd);
+> +		pgprot = __pgprot(pmdval);
+> +		goto out;
+> +	}
+> +
+> +	pte = pte_offset_map(pmd, vaddr);
+> +	if (!pte_present(*pte) || pte_none(*pte))
+> +		goto no_page;
+> +	pteval = pte_val(*pte);
+> +	pgprot = __pgprot(pteval);
+> +
+> +out:
+> +	pgprot.pgprot &= PTE_ATTRINDX_MASK;
+> +	if (pgprot.pgprot != PTE_ATTRINDX(MT_NORMAL)) {
+> +		pr_debug("non-cache page pgprot value=0x%llx.\n",
+> +			pgprot.pgprot);
+> +		goto no_page;
+> +	}
+> +	spin_unlock(&mm->page_table_lock);
+> +	return 1;
+> +
+> +no_page:
+> +	spin_unlock(&mm->page_table_lock);
+> +	return 0;
+> +}
+> +
+>  static long
+>  __do_compat_cache_op(unsigned long start, unsigned long end)
+>  {
+> @@ -32,6 +94,13 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
+>  		if (fatal_signal_pending(current))
+>  			return 0;
+>  
+> +		 /* do not flush page table is non-cacheable */
+> +		if (!__check_pt_cacheable(start)) {
+> +			cond_resched();
+> +			start += chunk;
+> +			continue;
+> +		}
+> +
+>  		if (cpus_have_const_cap(ARM64_WORKAROUND_1542419)) {
+>  			/*
+>  			 * The workaround requires an inner-shareable tlbi.
+> -- 
+> 2.7.4
 > 
-> Maybe something like:
 > 
-> 	if (tlb->cleared_ptes && !(tlb->cleared_pmds ||
-> 				   tlb->cleared_puds ||
-> 				   tlb->cleared_p4ds))
-> 		return 3;
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-> 	if (tlb->cleared_pmds && !(tlb->cleared_ptes ||
-> 				   tlb->cleared_puds ||
-> 				   tlb->cleared_p4ds))
-> 		return 2;
-> 
-> 	if (tlb->cleared_puds && !(tlb->cleared_ptes ||
-> 				   tlb->cleared_pmds ||
-> 				   tlb->cleared_p4ds))
-> 		return 1;
-> 
-> 	return 0;
-> 
-> Which I admit is far too much typing, but I suspect it generates far
-> saner code (just a few masks and branches).
-> 
-> But maybe the compiler surprises us, what do I konw.
 
-Thanks for your review.  In my view, the asm-code should behave the same
-as the C code, even if cleared_* are bitfields (below 02 optimization).
-
-Below is the generated asm of my code (gcc version is 7.3.0):
-
-<tlb_flush_mmu_tlbonly.part.110>:
-	...
-	ubfx	x5, x2, #3, #1		// x2 stores the values of cleared_*
-	ubfx	x1, x2, #4, #1
-	add	w1, w1, w5
-	ubfx	x5, x2, #5, #1
-	add	w1, w1, w5
-	ubfx	x2, x2, #6, #1
-	add	w1, w1, w2		// then the w1 = sum of cleared_*
-	tbnz	w3, #3, 001030f8b8
-	tbz	w3, #4, 001030fac0
-	cmp	w1, #0x1		// cmp the w1 to select branch
-	mov	w5, #0x2
-	...				// do the if-else below...
-
-
-Then with your code above, the generated asm is:
-
-<tlb_flush_mmu_tlbonly.part.110>:
-	...
-	tbnz    w1, #3, 001030f8a0	// w1 stores the values of cleared_*
-	tbz     w1, #4, 001030fac0
-	and     w2, w1, #0x78		// mask the cleared_* to w2
-	mov     x4, #0x200000
-	mov     w7, #0x15
-	mov     w6, #0x3
-	cmp     w2, #0x8		// cmp the w2 to 0x8, 0x10, 0x20 to
-					// select branch
-	b.ne    ffff80001030f8b8
-	...				// do the if-else below...
-
-So at the gen-asm level, both of our codes are OK.  But your code is really
-more saner than mine at the gen-asm level.
-
-Thanks for your suggestion of this, I will send a new patch series soon.
-
-Zhenyu
-
-.
-
-
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
