@@ -2,260 +2,90 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C8AC55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1540AC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 133CE206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA814206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:17:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MW/oJMIh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FeweVQjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgDUUQ5 (ORCPT
+        id S1726328AbgDUURf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:16:57 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50394 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgDUUQ4 (ORCPT
+        Tue, 21 Apr 2020 16:17:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgDUURe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:16:56 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LKChWM130006;
-        Tue, 21 Apr 2020 20:16:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=OCOmcA/EbqbnfR5qxSOf5Te+dlx77iTjwt8pJeOpOac=;
- b=MW/oJMIh2yvcAdfm0g+NWS1S11ympKoBOVWOQg6JaOb1U/WNzhtTWX7jxkjhXx/jdjkb
- sHFIy1uSjZ3o5UM23YStmxqvOGWK72LYrsg85JGcKBLbn5hJ1MNrTEVpY5OTZK75rbKu
- Oz1Mbz+QWt4yQwjvjddY8pemaF7LecLvEcb1Ydz28SyomQl9bI2C8IIkoSVL7hj1H9ol
- TWQSkuAKf9KGYCasDm5tXsi3YpJrRvKHJhO5WxwgKwdWgPi83Qzky1PJsiqh+veOSDoU
- qtJCRLuDwWNHRJ9uAIKWtQys3qJabR+MVFnsC5ssKihaRAqeG+P+zXx8xr/XdNwKGrp8 7A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 30ft6n73gw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 20:16:45 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LKCEdG162045;
-        Tue, 21 Apr 2020 20:16:45 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 30gb1gv584-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 20:16:44 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03LKGhw3006266;
-        Tue, 21 Apr 2020 20:16:43 GMT
-Received: from localhost (/10.159.227.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Apr 2020 13:16:43 -0700
-Date:   Tue, 21 Apr 2020 13:16:41 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.comg
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V9 05/11] fs/xfs: Make DAX mount option a tri-state
-Message-ID: <20200421201641.GA6742@magnolia>
-References: <20200421191754.3372370-1-ira.weiny@intel.com>
- <20200421191754.3372370-6-ira.weiny@intel.com>
+        Tue, 21 Apr 2020 16:17:34 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 875DAC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:17:34 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id np7so24030pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:17:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lZc2+7DRgAsbezSSNe7oioLU23tyafgFH/vdWcacCz0=;
+        b=FeweVQjh8oiWTFR5SXCzZBaTLKgwwHNi8q+ouI4VFB4xICUiV1xiYsuZo8hhp3yO07
+         pV0JrV3uCy4GeVN6jMuZAIHnnxA77d4xF0dwXMUiV3WZQt65QQ95YcFfXYkp3aDiQdAy
+         p82ndXRfSbPS0Zsb6Y90BAE/aKbhhe+t+YFzU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lZc2+7DRgAsbezSSNe7oioLU23tyafgFH/vdWcacCz0=;
+        b=hVy5c+cstVaEnc0nV+I3QsO5IgdhzXQZJQ75chmBfoTXHPcQHHmqGUnuTlxdImSXxe
+         exXCU7QJD1ZESqMPDc73vSmc92ncOkNdbPs/gv2/VWkVqN/PAmmQm7OCNftfEqWM5kVS
+         OpZbQDRVerdpEetRViZBUftiECcE4z08Fjlhm0amCKfiZTaJtjbw2DkWwrG+oU+fGdvR
+         9JreyXXM+s5G1gG7hI3U2IVs1I4Vjrd+Vv5lr5RYEHis5aFnsHXg9MjifU+euWXO31Sj
+         0UdggEBKkE55hEwDDRG9QfM2YOmV8tc9ngTtS8B2SvlMflhKdd9LI3TaiQ/i9gs1xgrC
+         ILYw==
+X-Gm-Message-State: AGi0Pubm+zJXQQM7xMQbs7Yos4aVDR8lI0lOcNNsLw5+6oGirSl0I9Hu
+        YDgD4U8u/imx4iWCzVQPYc3ZLw==
+X-Google-Smtp-Source: APiQypI+LyriAApJbHZH/T0REdTsFVryDminGf7v51A37cYBeeQQVF/c/zkYrJ0htoZ5vGoByyJJaA==
+X-Received: by 2002:a17:902:6947:: with SMTP id k7mr23464993plt.222.1587500254136;
+        Tue, 21 Apr 2020 13:17:34 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e4sm3129642pjv.30.2020.04.21.13.17.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 13:17:33 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 13:17:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] objtool: optimize add_dead_ends for split sections
+Message-ID: <202004211315.BE5B8D94FE@keescook>
+References: <20200421180724.245410-1-samitolvanen@google.com>
+ <20200421180724.245410-4-samitolvanen@google.com>
+ <20200421201305.66y2u473htzcuhfu@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200421191754.3372370-6-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
- mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004210151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1011 mlxlogscore=999 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004210151
+In-Reply-To: <20200421201305.66y2u473htzcuhfu@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 12:17:47PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> As agreed upon[1].  We make the dax mount option a tri-state.  '-o dax'
-> continues to operate the same.  We add 'always', 'never', and 'inode'
-> (default).
-> 
-> [1] https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from v8:
-> 	Move NEVER bit to 27
-> 	Use xfs signature style
-> 	use xfs_dax_mode enum
-> 
-> Changes from v7:
-> 	Change to XFS_MOUNT_DAX_NEVER
-> 
-> Changes from v6:
-> 	Use 2 flag bits rather than a field.
-> 	change iflag to inode
-> 
-> Changes from v5:
-> 	New Patch
-> ---
->  fs/xfs/xfs_mount.h |  1 +
->  fs/xfs/xfs_super.c | 51 ++++++++++++++++++++++++++++++++++++++++++----
->  2 files changed, 48 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> index f6123fb0113c..37bfb50db809 100644
-> --- a/fs/xfs/xfs_mount.h
-> +++ b/fs/xfs/xfs_mount.h
-> @@ -238,6 +238,7 @@ typedef struct xfs_mount {
->  						   allocator */
->  #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
->  #define XFS_MOUNT_DAX_ALWAYS	(1ULL << 26)
-> +#define XFS_MOUNT_DAX_NEVER	(1ULL << 27)
->  
->  /*
->   * Max and min values for mount-option defined I/O
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index ce169d1c7474..0d0f74786799 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -47,6 +47,39 @@ static struct kset *xfs_kset;		/* top-level xfs sysfs dir */
->  static struct xfs_kobj xfs_dbg_kobj;	/* global debug sysfs attrs */
->  #endif
->  
-> +enum xfs_dax_mode {
-> +	XFS_DAX_INODE = 0,
-> +	XFS_DAX_ALWAYS = 1,
-> +	XFS_DAX_NEVER = 2,
-> +};
-> +
-> +static void
-> +xfs_mount_set_dax_mode(
-> +	struct xfs_mount *mp,
-> +	enum xfs_dax_mode mode)
+On Tue, Apr 21, 2020 at 03:13:05PM -0500, Josh Poimboeuf wrote:
+> BTW, just curious, what's your use case for -ffunction-sections?  Is it
+> for fgkaslr?
 
-Indent between the type name and the variable name, please.
+Both Sami's LTO+CFI work[1] and Kristen's FGKASLR series use it.
 
-static void
-xfs_mount_set_dax_mode(
-	struct xfs_mount	*mp,
-	enum xfs_dax_mode	mode)
+-Kees
 
-> +{
-> +	switch (mode) {
-> +		case XFS_DAX_INODE:
-> +			mp->m_flags &= ~(XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER);
-> +			break;
-> +		case XFS_DAX_ALWAYS:
-> +			mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
-> +			mp->m_flags &= ~XFS_MOUNT_DAX_NEVER;
-> +			break;
-> +		case XFS_DAX_NEVER:
-> +			mp->m_flags |= XFS_MOUNT_DAX_NEVER;
-> +			mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
-> +			break;
+[1] https://github.com/samitolvanen/linux/commits/clang-cfi
+    https://lwn.net/Articles/810077/
 
-You can skip one level of indentation, e.g.
-
-	switch (mode) {
-	case XFS_DAX_INODE:
-		mp->m_flags &= ~(XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER);
-		break;
-
-> +	}
-> +}
-> +
-> +static const struct constant_table dax_param_enums[] = {
-> +	{"inode",	XFS_DAX_INODE },
-> +	{"always",	XFS_DAX_ALWAYS },
-> +	{"never",	XFS_DAX_NEVER },
-> +	{}
-> +};
-> +
->  /*
->   * Table driven mount option parser.
->   */
-> @@ -59,7 +92,7 @@ enum {
->  	Opt_filestreams, Opt_quota, Opt_noquota, Opt_usrquota, Opt_grpquota,
->  	Opt_prjquota, Opt_uquota, Opt_gquota, Opt_pquota,
->  	Opt_uqnoenforce, Opt_gqnoenforce, Opt_pqnoenforce, Opt_qnoenforce,
-> -	Opt_discard, Opt_nodiscard, Opt_dax,
-> +	Opt_discard, Opt_nodiscard, Opt_dax, Opt_dax_enum,
->  };
->  
->  static const struct fs_parameter_spec xfs_fs_parameters[] = {
-> @@ -103,6 +136,7 @@ static const struct fs_parameter_spec xfs_fs_parameters[] = {
->  	fsparam_flag("discard",		Opt_discard),
->  	fsparam_flag("nodiscard",	Opt_nodiscard),
->  	fsparam_flag("dax",		Opt_dax),
-> +	fsparam_enum("dax",		Opt_dax_enum, dax_param_enums),
->  	{}
->  };
->  
-> @@ -129,7 +163,6 @@ xfs_fs_show_options(
->  		{ XFS_MOUNT_GRPID,		",grpid" },
->  		{ XFS_MOUNT_DISCARD,		",discard" },
->  		{ XFS_MOUNT_LARGEIO,		",largeio" },
-> -		{ XFS_MOUNT_DAX_ALWAYS,		",dax" },
->  		{ 0, NULL }
->  	};
->  	struct xfs_mount	*mp = XFS_M(root->d_sb);
-> @@ -185,6 +218,13 @@ xfs_fs_show_options(
->  	if (!(mp->m_qflags & XFS_ALL_QUOTA_ACCT))
->  		seq_puts(m, ",noquota");
->  
-> +	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS)
-> +		seq_puts(m, ",dax=always");
-> +	else if (mp->m_flags & XFS_MOUNT_DAX_NEVER)
-> +		seq_puts(m, ",dax=never");
-> +	else
-> +		seq_puts(m, ",dax=inode");
-
-No need to report dax=inode, since that's the default.
-
---D
-
-> +
->  	return 0;
->  }
->  
-> @@ -1261,7 +1301,10 @@ xfs_fc_parse_param(
->  		return 0;
->  #ifdef CONFIG_FS_DAX
->  	case Opt_dax:
-> -		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
-> +		xfs_mount_set_dax_mode(mp, XFS_DAX_ALWAYS);
-> +		return 0;
-> +	case Opt_dax_enum:
-> +		xfs_mount_set_dax_mode(mp, result.uint_32);
->  		return 0;
->  #endif
->  	default:
-> @@ -1468,7 +1511,7 @@ xfs_fc_fill_super(
->  		if (!rtdev_is_dax && !datadev_is_dax) {
->  			xfs_alert(mp,
->  			"DAX unsupported by block device. Turning off DAX.");
-> -			mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
-> +			xfs_mount_set_dax_mode(mp, XFS_DAX_NEVER);
->  		}
->  		if (xfs_sb_version_hasreflink(&mp->m_sb)) {
->  			xfs_alert(mp,
-> -- 
-> 2.25.1
-> 
+-- 
+Kees Cook
