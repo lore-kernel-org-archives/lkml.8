@@ -2,300 +2,116 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506CFC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B364CC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21E962068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587482395;
-	bh=6pQ5Fl6XDDkIlYeisUC+JGG6bIFAxA2suWc1oOnu2Bk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IFHY661MjXY6kRlJaInyRmBtvZhQ1wDxwWVDmmIcs+pM3UjI20zoeXLQWzmJkA+e2
-	 jTiXlIA9Je/NZjoIJqVBY96/yfqQynvZ1ajzoS30UMRO6cvDDJ2yyRhytPLjBwBXEF
-	 89F0mGs3uNVxKjwhvfcB5lJx38pPWPF1U7dyXfDw=
+	by mail.kernel.org (Postfix) with ESMTP id 66B382068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:20:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="VEkFTSh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgDUPTy (ORCPT
+        id S1726753AbgDUPUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:19:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725613AbgDUPTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:19:53 -0400
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 21 Apr 2020 11:20:25 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:37199 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbgDUPUY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 11:20:24 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30B802071E;
-        Tue, 21 Apr 2020 15:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587482392;
-        bh=6pQ5Fl6XDDkIlYeisUC+JGG6bIFAxA2suWc1oOnu2Bk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=o51SkeQVBeMTzvfrkUyqvhkauOLwyIKOYOX6wk0qe5Y39xmulFt1ZJYE9yRaLMuDo
-         B2Y5OUiX5y2pKhzCBf26MxcRfj9LFQpkuTXD6kS5lLZvWbOS2pm53Q2ky2x+2k72hi
-         M5yArvlwpRvMYWac/RKzPzhTvOFSz7dkG0vNgzs8=
-Received: by mail-io1-f45.google.com with SMTP id e9so7802835iok.9;
-        Tue, 21 Apr 2020 08:19:52 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY2+aJVFgfgeUEYZnMgGyip7yyq9UnRNPwDClEd1TTfn0u5SX4I
-        ctNgAqPpWnOOJcGCPqV/8DPoxw07AUQhsKCl/ME=
-X-Google-Smtp-Source: APiQypK86d/gbXZ9XjywCEBYarrScAdD3A/GQPWxFzXW0yGEmlTCtRK2vk5QK6EZWIf5M3cLWqI7T9TtzGOFx6vL42s=
-X-Received: by 2002:a6b:ef03:: with SMTP id k3mr21408289ioh.203.1587482391395;
- Tue, 21 Apr 2020 08:19:51 -0700 (PDT)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id CF11923059;
+        Tue, 21 Apr 2020 17:20:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587482423;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=11Is5HZRKmOiZumdMUwNkL7ciOuq8bgi7k2YfmGDNpI=;
+        b=VEkFTSh0uY4eQcKr7G1Ri0EFROHJz5Dlss5bT0wVp6+UlpFMj7EfhrU/KNDBGe3jVnJrRW
+        MB+6ApsUEiALMQDfLtFaAb93h7SVgbovYkwATRjaIdEkKGmwwxKb8Hv0+9ExkqzN+SyXQ9
+        TQ8FEQM7VI/6bcfrJfHCuY9g24a4JpI=
 MIME-Version: 1.0
-References: <20200415153409.30112-1-geert+renesas@glider.be>
-In-Reply-To: <20200415153409.30112-1-geert+renesas@glider.be>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 21 Apr 2020 17:19:40 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHm=xA4gafwAaBn8=YcAsQCYDNmZ=4REsfvEUgZShm3Ww@mail.gmail.com>
-Message-ID: <CAMj1kXHm=xA4gafwAaBn8=YcAsQCYDNmZ=4REsfvEUgZShm3Ww@mail.gmail.com>
-Subject: Re: [PATCH v5] ARM: boot: Obtain start of physical memory from DTB
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Miao <eric.miao@nvidia.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 21 Apr 2020 17:20:22 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [RFC PATCH net-next 1/3] net: phy: add concept of shared storage
+ for PHYs
+In-Reply-To: <20200421145214.GD933345@lunn.ch>
+References: <20200420232624.9127-1-michael@walle.cc>
+ <20200421143455.GB933345@lunn.ch>
+ <20200421144302.GD25745@shell.armlinux.org.uk>
+ <20200421145214.GD933345@lunn.ch>
+Message-ID: <f297cb3c07554ef55d3040329978f8d4@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: CF11923059
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         NEURAL_HAM(-0.00)[-0.975];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[armlinux.org.uk,vger.kernel.org,gmail.com,davemloft.net,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020 at 17:34, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> Currently, the start address of physical memory is obtained by masking
-> the program counter with a fixed mask of 0xf8000000.  This mask value
-> was chosen as a balance between the requirements of different platforms.
-> However, this does require that the start address of physical memory is
-> a multiple of 128 MiB, precluding booting Linux on platforms where this
-> requirement is not fulfilled.
->
-> Fix this limitation by obtaining the start address from the DTB instead,
-> if available (either explicitly passed, or appended to the kernel).
-> Fall back to the traditional method when needed.
->
-> This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of SDRAM
-> on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 space),
-> i.e. not at a multiple of 128 MiB.
->
-> Suggested-by: Nicolas Pitre <nico@fluxnic.net>
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
-> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Am 2020-04-21 16:52, schrieb Andrew Lunn:
+> On Tue, Apr 21, 2020 at 03:43:02PM +0100, Russell King - ARM Linux 
+> admin wrote:
+>> On Tue, Apr 21, 2020 at 04:34:55PM +0200, Andrew Lunn wrote:
+>> > > +static inline bool phy_package_init_once(struct phy_device *phydev)
+>> > > +{
+>> > > +	struct phy_package_shared *shared = phydev->shared;
+>> > > +
+>> > > +	if (!shared)
+>> > > +		return false;
+>> > > +
+>> > > +	return !test_and_set_bit(PHY_SHARED_F_INIT_DONE, &shared->flags);
+>> > > +}
+>> >
+>> > I need to look at how you actually use this, but i wonder if this is
+>> > sufficient. Can two PHYs probe at the same time? Could we have one PHY
+>> > be busy setting up the global init, and the other thinks the global
+>> > setup is complete?
 
-This is ready to go into the patch system, no?
+So with Russells answer below, this should be clarified and the
+test_and_set_bit() is enough correct?
 
-The sooner Russell picks it up, the sooner I can respin my patches
-that go on top.
+>> > Do we want a comment like: 'Returns true when the
+>> > global package initialization is either under way or complete'?
 
-Thanks,
+I've forgot the whole annotation here.
 
-> ---
-> v5:
->   - Add Tested-by, Reviewed-by,
->   - Round up start of memory to satisfy 16 MiB alignment rule,
->
-> v4:
->   - Fix stack location after commit 184bf653a7a452c1 ("ARM:
->     decompressor: factor out routine to obtain the inflated image
->     size"),
->
-> v3:
->   - Add Reviewed-by,
->   - Fix ATAGs with appended DTB,
->   - Add Tested-by,
->
-> v2:
->   - Use "cmp r0, #-1", instead of "cmn r0, #1",
->   - Add missing stack setup,
->   - Support appended DTB.
-> ---
->  arch/arm/boot/compressed/Makefile            |  6 ++-
->  arch/arm/boot/compressed/fdt_get_mem_start.c | 57 ++++++++++++++++++++
->  arch/arm/boot/compressed/head.S              | 54 ++++++++++++++++++-
->  3 files changed, 115 insertions(+), 2 deletions(-)
->  create mode 100644 arch/arm/boot/compressed/fdt_get_mem_start.c
->
-> diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-> index 9c11e7490292f0e0..82e4cee97cb5d905 100644
-> --- a/arch/arm/boot/compressed/Makefile
-> +++ b/arch/arm/boot/compressed/Makefile
-> @@ -86,12 +86,15 @@ libfdt_objs := $(addsuffix .o, $(basename $(libfdt)))
->  $(addprefix $(obj)/,$(libfdt) $(libfdt_hdrs)): $(obj)/%: $(srctree)/scripts/dtc/libfdt/%
->         $(call cmd,shipped)
->
-> -$(addprefix $(obj)/,$(libfdt_objs) atags_to_fdt.o): \
-> +$(addprefix $(obj)/,$(libfdt_objs) atags_to_fdt.o fdt_get_mem_start.o): \
->         $(addprefix $(obj)/,$(libfdt_hdrs))
->
->  ifeq ($(CONFIG_ARM_ATAG_DTB_COMPAT),y)
->  OBJS   += $(libfdt_objs) atags_to_fdt.o
->  endif
-> +ifeq ($(CONFIG_USE_OF),y)
-> +OBJS   += $(libfdt_objs) fdt_get_mem_start.o
-> +endif
->
->  targets       := vmlinux vmlinux.lds piggy_data piggy.o \
->                  lib1funcs.o ashldi3.o bswapsdi2.o \
-> @@ -115,6 +118,7 @@ CFLAGS_fdt.o := $(nossp-flags-y)
->  CFLAGS_fdt_ro.o := $(nossp-flags-y)
->  CFLAGS_fdt_rw.o := $(nossp-flags-y)
->  CFLAGS_fdt_wip.o := $(nossp-flags-y)
-> +CFLAGS_fdt_get_mem_start.o := $(nossp-flags-y)
->
->  ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
->              -I$(obj) $(DISABLE_ARM_SSP_PER_TASK_PLUGIN)
-> diff --git a/arch/arm/boot/compressed/fdt_get_mem_start.c b/arch/arm/boot/compressed/fdt_get_mem_start.c
-> new file mode 100644
-> index 0000000000000000..e29caa4cbfecb36a
-> --- /dev/null
-> +++ b/arch/arm/boot/compressed/fdt_get_mem_start.c
-> @@ -0,0 +1,57 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/sizes.h>
-> +
-> +#include <libfdt.h>
-> +
-> +static const void *getprop(const void *fdt, const char *node_path,
-> +                          const char *property)
-> +{
-> +       int offset = fdt_path_offset(fdt, node_path);
-> +
-> +       if (offset == -FDT_ERR_NOTFOUND)
-> +               return NULL;
-> +
-> +       return fdt_getprop(fdt, offset, property, NULL);
-> +}
-> +
-> +static uint32_t get_addr_size(const void *fdt)
-> +{
-> +       const __be32 *addr_len = getprop(fdt, "/", "#address-cells");
-> +
-> +       if (!addr_len) {
-> +               /* default */
-> +               return 1;
-> +       }
-> +
-> +       return fdt32_to_cpu(*addr_len);
-> +}
-> +
-> +/*
-> + * Get the start of physical memory
-> + */
-> +
-> +unsigned long fdt_get_mem_start(const void *fdt)
-> +{
-> +       uint32_t addr_size, mem_start;
-> +       const __be32 *memory;
-> +
-> +       if (!fdt)
-> +               return -1;
-> +
-> +       if (*(__be32 *)fdt != cpu_to_fdt32(FDT_MAGIC))
-> +               return -1;
-> +
-> +       /* Find the first memory node */
-> +       memory = getprop(fdt, "/memory", "reg");
-> +       if (!memory)
-> +               return -1;
-> +
-> +       /* There may be multiple cells on LPAE platforms */
-> +       addr_size = get_addr_size(fdt);
-> +
-> +       mem_start = fdt32_to_cpu(memory[addr_size - 1]);
-> +       /* Must be a multiple of 16 MiB for phys/virt patching */
-> +       return round_up(mem_start, SZ_16M);
-> +}
-> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-> index cabdd8f4a2482e2b..2d2a42865b3974da 100644
-> --- a/arch/arm/boot/compressed/head.S
-> +++ b/arch/arm/boot/compressed/head.S
-> @@ -254,8 +254,58 @@ not_angel:
->                 .text
->
->  #ifdef CONFIG_AUTO_ZRELADDR
-> +#ifdef CONFIG_USE_OF
->                 /*
-> -                * Find the start of physical memory.  As we are executing
-> +                * Find the start of physical memory.
-> +                * Try the DTB first, if available.
-> +                */
-> +               adr     r0, LC0
-> +               ldr     r1, [r0]        @ get absolute LC0
-> +               ldr     sp, [r0, #24]   @ get stack location
-> +               sub     r1, r0, r1      @ compute relocation offset
-> +               add     sp, sp, r1      @ apply relocation
-> +
-> +#ifdef CONFIG_ARM_APPENDED_DTB
-> +               /*
-> +                * Look for an appended DTB. If found, use it and
-> +                * move stack away from it.
-> +                */
-> +               ldr     r6, [r0, #12]   @ get &_edata
-> +               add     r6, r6, r1      @ relocate it
-> +               ldmia   r6, {r0, r5}    @ get DTB signature and size
-> +#ifndef __ARMEB__
-> +               ldr     r1, =0xedfe0dd0 @ sig is 0xd00dfeed big endian
-> +               /* convert DTB size to little endian */
-> +               eor     r2, r5, r5, ror #16
-> +               bic     r2, r2, #0x00ff0000
-> +               mov     r5, r5, ror #8
-> +               eor     r5, r5, r2, lsr #8
-> +#else
-> +               ldr     r1, =0xd00dfeed
-> +#endif
-> +               cmp     r0, r1          @ do we have a DTB there?
-> +               bne     1f
-> +
-> +               /* preserve 64-bit alignment */
-> +               add     r5, r5, #7
-> +               bic     r5, r5, #7
-> +               add     sp, sp, r5      @ if so, move stack above DTB
-> +               mov     r0, r6          @ and extract memory start from DTB
-> +               b       2f
-> +
-> +1:
-> +#endif /* CONFIG_ARM_APPENDED_DTB */
-> +
-> +               mov     r0, r8
-> +2:
-> +               bl      fdt_get_mem_start
-> +               mov     r4, r0
-> +               cmp     r0, #-1
-> +               bne     1f
-> +#endif /* CONFIG_USE_OF */
-> +
-> +               /*
-> +                * Fall back to the traditional method.  As we are executing
->                  * without the MMU on, we are in the physical address space.
->                  * We just need to get rid of any offset by aligning the
->                  * address.
-> @@ -273,6 +323,8 @@ not_angel:
->                  */
->                 mov     r4, pc
->                 and     r4, r4, #0xf8000000
-> +
-> +1:
->                 /* Determine final kernel image address. */
->                 add     r4, r4, #TEXT_OFFSET
->  #else
-> --
-> 2.17.1
->
+>> IIRC, probe locking in the driver model is by per-driver locks, so
+>> any particular driver won't probe more than one device at a time.
+
+-michael
