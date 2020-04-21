@@ -1,112 +1,120 @@
-Return-Path: <SRS0=QXtz=6E=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007A8C54FCC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCAAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D035A207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Apr 2020 23:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F9F20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:06:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgDTXvH (ORCPT
+        id S1726413AbgDUAGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 19:51:07 -0400
-Received: from mga18.intel.com ([134.134.136.126]:4341 "EHLO mga18.intel.com"
+        Mon, 20 Apr 2020 20:06:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725550AbgDTXvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 19:51:07 -0400
-IronPort-SDR: bUMclkSmag1JzDUo+nf7oltyKpxylWDEfbwJDRV2daPZaiqGofXyJwMBZFfSG8ie+ciikR+o/V
- Zizj4iv57O2g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 16:51:06 -0700
-IronPort-SDR: TxOk3O2Dhoc6fgNZ71oBbd5aQobkmOl/CzsllG7ZKqwTruJ1t3l3OLbyty3MAGvweDuONf9o3i
- OJMXmyO60rTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,408,1580803200"; 
-   d="scan'208";a="290270618"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Apr 2020 16:51:03 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <tim.c.chen@linux.intel.com>
-Subject: Re: [PATCH 3/4] mm/swapfile.c: compare tmp and max after trying to iterate on swap_map
-References: <20200419013921.14390-1-richard.weiyang@gmail.com>
-        <20200419013921.14390-3-richard.weiyang@gmail.com>
-        <87ftczt1cg.fsf@yhuang-dev.intel.com>
-        <20200420213726.juehv5yr5kyhlbxv@master>
-Date:   Tue, 21 Apr 2020 07:51:02 +0800
-In-Reply-To: <20200420213726.juehv5yr5kyhlbxv@master> (Wei Yang's message of
-        "Mon, 20 Apr 2020 21:37:26 +0000")
-Message-ID: <87h7xdsom1.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        id S1725550AbgDUAGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 20:06:20 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E69C20782;
+        Tue, 21 Apr 2020 00:06:18 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 20:06:16 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Zhenyu Ye <yezhenyu2@huawei.com>, mark.rutland@arm.com,
+        will@kernel.org, catalin.marinas@arm.com,
+        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
+        npiggin@gmail.com, arnd@arndb.de, maz@kernel.org,
+        suzuki.poulose@arm.com, tglx@linutronix.de, yuzhao@google.com,
+        Dave.Martin@arm.com, steven.price@arm.com, broonie@kernel.org,
+        guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, arm@kernel.org, xiexiangyou@huawei.com,
+        prime.zeng@hisilicon.com, zhangshaokun@hisilicon.com,
+        kuhn.chenqun@huawei.com
+Subject: Re: [PATCH v1 6/6] arm64: tlb: Set the TTL field in flush_tlb_range
+Message-ID: <20200420200616.44c7c7ea@oasis.local.home>
+In-Reply-To: <20200420121055.GF20696@hirez.programming.kicks-ass.net>
+References: <20200403090048.938-1-yezhenyu2@huawei.com>
+        <20200403090048.938-7-yezhenyu2@huawei.com>
+        <20200420121055.GF20696@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wei Yang <richard.weiyang@gmail.com> writes:
+On Mon, 20 Apr 2020 14:10:55 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> On Mon, Apr 20, 2020 at 09:03:43AM +0800, Huang, Ying wrote:
->>Wei Yang <richard.weiyang@gmail.com> writes:
->>
->>> There are two duplicate code to handle the case when there is no
->>> available swap entry. Just let the code go through and do the check at
->>> second place.
->>>
->>> No functional change is expected.
->>>
->>> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->>> ---
->>>  mm/swapfile.c | 4 ----
->>>  1 file changed, 4 deletions(-)
->>>
->>> diff --git a/mm/swapfile.c b/mm/swapfile.c
->>> index 3aae700f9931..07b0bc095411 100644
->>> --- a/mm/swapfile.c
->>> +++ b/mm/swapfile.c
->>> @@ -629,10 +629,6 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
->>>  	tmp = cluster->next;
->>>  	max = min_t(unsigned long, si->max,
->>>  		    (cluster_next(&cluster->index) + 1) * SWAPFILE_CLUSTER);
->>> -	if (tmp >= max) {
->>> -		cluster_set_null(&cluster->index);
->>> -		goto new_cluster;
->>> -	}
->>
->>The code is to avoid to acquire the cluster lock unnecessarily.  So I think
->>we should keep this.
->>
->
-> If you really want to avoid the lock, my suggestion is to add:
->
->   if (tmp < max) {
->       ci = lock_cluster(si, tmp);
->           while (tmp < max) {
-> 	  ...
-> 	  }
->       unlock_cluster(ci);
->   }
->
-> Instead of do the similar thing twice.
+> On Fri, Apr 03, 2020 at 05:00:48PM +0800, Zhenyu Ye wrote:
+> > This patch uses the cleared_* in struct mmu_gather to set the
+> > TTL field in flush_tlb_range().
+> > 
+> > Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+> > ---
+> >  arch/arm64/include/asm/tlb.h      | 26 +++++++++++++++++++++++++-
+> >  arch/arm64/include/asm/tlbflush.h | 14 ++++++++------
+> >  2 files changed, 33 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
+> > index b76df828e6b7..d5ab72eccff4 100644
+> > --- a/arch/arm64/include/asm/tlb.h
+> > +++ b/arch/arm64/include/asm/tlb.h
+> > @@ -21,11 +21,34 @@ static void tlb_flush(struct mmu_gather *tlb);
+> >  
+> >  #include <asm-generic/tlb.h>
+> >  
+> > +/*
+> > + * get the tlbi levels in arm64.  Default value is 0 if more than one
+> > + * of cleared_* is set or neither is set.
+> > + * Arm64 doesn't support p4ds now.
+> > + */
+> > +static inline int tlb_get_level(struct mmu_gather *tlb)
+> > +{
+> > +	int sum = tlb->cleared_ptes + tlb->cleared_pmds +
+> > +		  tlb->cleared_puds + tlb->cleared_p4ds;
+> > +
+> > +	if (sum != 1)
+> > +		return 0;
+> > +	else if (tlb->cleared_ptes)
+> > +		return 3;
+> > +	else if (tlb->cleared_pmds)
+> > +		return 2;
+> > +	else if (tlb->cleared_puds)
+> > +		return 1;
+> > +
+> > +	return 0;
+> > +}  
+> 
+> That's some mighty wonky code. Please look at the generated asm.
 
-This is a coding style problem.  The original code is common to avoid
-too many nested code block.  But in this case, I think both works.
+Without even looking at the generated asm, if a condition returns,
+there's no reason to add an else for that condition.
 
-Best Regards,
-Huang, Ying
+	if (x)
+		return 1;
+	else if (y)
+		return 2;
+	else
+		return 3;
 
->>Best Regards,
->>Huang, Ying
->>
->>>  	ci = lock_cluster(si, tmp);
->>>  	while (tmp < max) {
->>>  		if (!si->swap_map[tmp])
+Is exactly the same as:
+
+	if (x)
+		return 1;
+	if (y)
+		return 2;
+	return 3;
+
+-- Steve
+
