@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346E8C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E658C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA3A2098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62A72073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:17:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="d1EGEWeH"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VzMHbZmG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgDUIRk (ORCPT
+        id S1728567AbgDUIRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47608 "EHLO
+        Tue, 21 Apr 2020 04:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728513AbgDUIRf (ORCPT
+        with ESMTP id S1728497AbgDUIRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:17:35 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6518BC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:17:34 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t9so1062408pjw.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:17:34 -0700 (PDT)
+        Tue, 21 Apr 2020 04:17:37 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F95EC061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:17:37 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id p25so6271515pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:17:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ESIASWIVcw318N0kQ2X0Oi3Z+uroC+zqbTtsgDKDwxc=;
-        b=d1EGEWeHYHIQOJqJjvQeV7F5XbEP5dKBW7WEsc7KqFePlpur3HEhURVt2nLAxU8R+t
-         LZja7jNyrv/MqDehV+bIv3O2awu6Vc6wo5ja/99Fg3/zkOA/b8rUd12iwLrEVBqYNlL8
-         LTf7evXymEDmOXlZdm6r9x20Y2/6tY/73gMtdIWA1Ts91bYya8o7iZL7Qbyo1a9l5cHq
-         Mb2NIZKnrqizgtSPU1Euc0ALQsGOdKx8TVzUdXCIOumRJtoGHAnWec62IkND8QTrmOQM
-         nPH12sz33bLqzDbK623zAsgvXfGv/SPO4JkjRvc6iRfRE03SIsd9LDw4+o2qcXqrSP8N
-         SPpw==
+        bh=R51EKoGdprYIzq4mz86f7ksK2LhT5dJfZ4/kQMPqWXU=;
+        b=VzMHbZmGtC1cli7/MzDUNjXVYWUl1NxixqtpJm0/9P/EzaLVRa8g8WgYud0Qm6Rchk
+         /0trL5SM2/Zrj2mYcg8pq0A+qXdeLRNhfMiAZsy5X8Q7FkKkUcxE3FT4l8B0EtAmdA+a
+         qWQTbQU8+OIZBMPZCnCgj1bgpLATeorKYHYYWZhPAzfAJg7qSDI1mvGlLkPsXDXc0xmQ
+         nHxUsek7TS8kNEMxedKCaVU/PPk6efmG7yA1N7bxrcxILkRxr4XHk7vAf799he9GgfVg
+         ZXr8nDGGsq+0uBoSEWHxoMPWrO9TNXqLg4+rs5s/lfX6Mf18km5fSJ2iKKhhbu7/Mopp
+         enAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ESIASWIVcw318N0kQ2X0Oi3Z+uroC+zqbTtsgDKDwxc=;
-        b=OlfhIPL6giXaFW6BT7szYRIT4ZFvjBF534y27PH+cd3QMWMXWDxR+k9SXAtZ2jSvJx
-         qTITndsn6/oRxzrkdOhOTzeVXxn5ozg3LrKZR2H8p793m1GFejpiWscILDg5bRGvZZ9l
-         QUFyh82x+x9xEQI/ImGPG/dOaPDz6qCcGHD7RqJJnFnr+61A7RYcVdomLUD8aUn4mecV
-         6HpuLiFv4INHCpOLWjK9+iEyLatCSpcyFAKS5/VpcQ5e6reXP1JmwqZxNCn2QTNrfZ8C
-         ZxgMBYWXIUBqMlRdaV8+M2H81qbm0XzICk+bBtnaFY2LlvppFoXbBi/0rImeJmWaiwDa
-         TUIw==
-X-Gm-Message-State: AGi0PuaVn4FKkNkKnyCLzNeBUEmI/jrIVAghYyzWEJ/UndQvDj1yw5Ag
-        Ol9KBGzX6SuvO7gOqvv6WmtJOQ==
-X-Google-Smtp-Source: APiQypI7y+F6n5TeayUTsoUy+jp+f5r/1IV7aARGN/1mj8/tNHv7iVWTrDqjni/i9mOVUg3YAWeuFQ==
-X-Received: by 2002:a17:90a:7e4:: with SMTP id m91mr4322055pjm.155.1587457053972;
-        Tue, 21 Apr 2020 01:17:33 -0700 (PDT)
+        bh=R51EKoGdprYIzq4mz86f7ksK2LhT5dJfZ4/kQMPqWXU=;
+        b=Ya77saszxe2EG8M8sTlc+Ra5JZWWyksbjLA0QJx/ZBhCF0H/N9xtglsE2Oc1JVvMG9
+         peKYfZyH9JHfpxZwGU8LN1PCiEN0l4+FPKrOXZA/9yLhRMLr/4c+MJiarnXXsRQh1mSy
+         nahZlMtEkK53BFCBof8V/jvDrCWnZ8ZrD9vK+Gt+96AxE41tO3BUr9yCHL9CrMfHybCB
+         2N2kEHB9Q66BrWiYrOZ1wpf87Tod3+TOrsiE+V0yD4LNnhERWkjMRVilx4lTyDEgdKic
+         +bml1FDwInCQwOzwjJTJdk6TW5UxovbDC7HFpPnXcF5Gpb8T9lBqCzZj24HA1KYNN9gI
+         kK6g==
+X-Gm-Message-State: AGi0PuYVBNMjDvRtfq2Nfiv5T0Bn3lcDx/LWeVrakSAfKWriWqp0b5bm
+        U559ReZ3Yywo4U/+2kknX7Tq2g==
+X-Google-Smtp-Source: APiQypJD+fzqoCjmoNF33zw6GUvSp1zVm+GJEMjBcSfH6XjMDUyeBTOm2mgFujSrzxWUd3wuELt89Q==
+X-Received: by 2002:a63:4e21:: with SMTP id c33mr21379911pgb.305.1587457056828;
+        Tue, 21 Apr 2020 01:17:36 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id v9sm1610067pju.3.2020.04.21.01.17.31
+        by smtp.gmail.com with ESMTPSA id v9sm1610067pju.3.2020.04.21.01.17.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 01:17:33 -0700 (PDT)
+        Tue, 21 Apr 2020 01:17:36 -0700 (PDT)
 From:   Zong Li <zong.li@sifive.com>
 To:     akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
@@ -67,9 +67,9 @@ To:     akpm@linux-foundation.org, linux-mm@kvack.org,
         hpa@zytor.com, catalin.marinas@arm.com, will@kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH 3/4] x86: mm: use ARCH_HAS_DEBUG_WX instead of arch defined
-Date:   Tue, 21 Apr 2020 16:17:14 +0800
-Message-Id: <430736828d149df3f5b462d291e845ec690e0141.1587455584.git.zong.li@sifive.com>
+Subject: [PATCH 4/4] arm64: mm: use ARCH_HAS_DEBUG_WX instead of arch defined
+Date:   Tue, 21 Apr 2020 16:17:15 +0800
+Message-Id: <e19709e7576f65e303245fe520cad5f7bae72763.1587455584.git.zong.li@sifive.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <cover.1587455584.git.zong.li@sifive.com>
 References: <cover.1587455584.git.zong.li@sifive.com>
@@ -85,29 +85,29 @@ ARCH_HAS_DEBUG_WX instead of DEBUG_WX defined by arch port.
 
 Signed-off-by: Zong Li <zong.li@sifive.com>
 ---
- arch/x86/Kconfig       |  1 +
- arch/x86/Kconfig.debug | 27 ---------------------------
- 2 files changed, 1 insertion(+), 27 deletions(-)
+ arch/arm64/Kconfig       |  1 +
+ arch/arm64/Kconfig.debug | 29 -----------------------------
+ 2 files changed, 1 insertion(+), 29 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 1d6104ea8af0..310a49ee3c25 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -80,6 +80,7 @@ config X86
- 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
- 	select ARCH_HAS_SYSCALL_WRAPPER
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 40fb05d96c60..a16e2ce80854 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -9,6 +9,7 @@ config ARM64
+ 	select ACPI_MCFG if (ACPI && PCI)
+ 	select ACPI_SPCR_TABLE if ACPI
+ 	select ACPI_PPTT if ACPI
 +	select ARCH_HAS_DEBUG_WX
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_MIGHT_HAVE_ACPI_PDC		if ACPI
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index 2e74690b028a..de1846ed41b3 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -72,33 +72,6 @@ config EFI_PGT_DUMP
- 	  issues with the mapping of the EFI runtime regions into that
- 	  table.
+ 	select ARCH_HAS_DEBUG_VIRTUAL
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_DMA_PREP_COHERENT
+diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
+index a1efa246c9ed..cdf7ec0b975e 100644
+--- a/arch/arm64/Kconfig.debug
++++ b/arch/arm64/Kconfig.debug
+@@ -23,35 +23,6 @@ config ARM64_RANDOMIZE_TEXT_OFFSET
+ 	  of TEXT_OFFSET and platforms must not require a specific
+ 	  value.
  
 -config DEBUG_WX
 -	bool "Warn on W+X mappings at boot"
@@ -117,14 +117,16 @@ index 2e74690b028a..de1846ed41b3 100644
 -
 -	  This is useful for discovering cases where the kernel is leaving
 -	  W+X mappings after applying NX, as such mappings are a security risk.
+-	  This check also includes UXN, which should be set on all kernel
+-	  mappings.
 -
 -	  Look for a message in dmesg output like this:
 -
--	    x86/mm: Checked W+X mappings: passed, no W+X pages found.
+-	    arm64/mm: Checked W+X mappings: passed, no W+X pages found.
 -
 -	  or like this, if the check failed:
 -
--	    x86/mm: Checked W+X mappings: FAILED, <N> W+X pages found.
+-	    arm64/mm: Checked W+X mappings: FAILED, <N> W+X pages found.
 -
 -	  Note that even if the check fails, your kernel is possibly
 -	  still fine, as W+X mappings are not a security hole in
@@ -136,9 +138,9 @@ index 2e74690b028a..de1846ed41b3 100644
 -
 -	  If in doubt, say "Y".
 -
- config DOUBLEFAULT
- 	default y
- 	bool "Enable doublefault exception handler" if EXPERT && X86_32
+ config DEBUG_EFI
+ 	depends on EFI && DEBUG_INFO
+ 	bool "UEFI debugging"
 -- 
 2.26.1
 
