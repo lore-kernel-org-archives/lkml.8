@@ -2,94 +2,82 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB703C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA53C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3D82098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35BF2098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgDUIhp (ORCPT
+        id S1728281AbgDUIhs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:37:45 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29758 "EHLO mga14.intel.com"
+        Tue, 21 Apr 2020 04:37:48 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:46282 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDUIhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:37:45 -0400
-IronPort-SDR: r29xraq78hBiIhTHoza3FL1uTErqPK4A0EdPgKDte7i4WhRSgedea6wXNA2S5Sadw8TJ0ZURd0
- XPCxg0WYpr5Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 01:37:44 -0700
-IronPort-SDR: CEHbwDgISfbBnr3/OcAdWR6P1aWQPaTA2mGHl9y6W7jCn4K1uZuWdDCyELQdmIw/me8+TRYmwq
- EpTe7YWZRMBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,409,1580803200"; 
-   d="scan'208";a="456688398"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Apr 2020 01:37:42 -0700
-Date:   Tue, 21 Apr 2020 16:38:12 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+        id S1726018AbgDUIhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 04:37:47 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jQoPZ-0001XI-1R; Tue, 21 Apr 2020 10:37:45 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH 2/2] sched: Extract the task putting code from
- pick_next_task()
-Message-ID: <20200421083812.GE9721@chenyu-office.sh.intel.com>
-References: <cover.1587309963.git.yu.c.chen@intel.com>
- <7c1eab789cb4b53ec5f54644c089ce27ea14088a.1587309963.git.yu.c.chen@intel.com>
- <20200420183232.16b83374@gandalf.local.home>
- <jhjwo69lqcm.mognet@arm.com>
- <20200420231355.GU2483@worktop.programming.kicks-ass.net>
- <20200420222319.34f9f646@oasis.local.home>
- <CAKfTPtBG=Nu+76NywfD0rk-BmT=2egTd_9FaPU4oCP1D_eyuBQ@mail.gmail.com>
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: add bus-width properties to mmc nodes for rk3328.dtsi
+Date:   Tue, 21 Apr 2020 10:37:44 +0200
+Message-ID: <4769044.6T0MzsmYic@diego>
+In-Reply-To: <CAGb2v67vV2Bxff5Gj1R8Qx3Cj+nzA5ine12hoXbhGP5Z+S7=UA@mail.gmail.com>
+References: <20200416181944.5879-1-jbx6244@gmail.com> <2710874.PL6qFFFsBp@diego> <CAGb2v67vV2Bxff5Gj1R8Qx3Cj+nzA5ine12hoXbhGP5Z+S7=UA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtBG=Nu+76NywfD0rk-BmT=2egTd_9FaPU4oCP1D_eyuBQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 09:42:26AM +0200, Vincent Guittot wrote:
-> On Tue, 21 Apr 2020 at 04:23, Steven Rostedt <rostedt@goodmis.org> wrote:
+Am Dienstag, 21. April 2020, 10:29:49 CEST schrieb Chen-Yu Tsai:
+> On Tue, Apr 21, 2020 at 4:23 PM Heiko Stübner <heiko@sntech.de> wrote:
 > >
-> > On Tue, 21 Apr 2020 01:13:55 +0200
-> > Peter Zijlstra <peterz@infradead.org> wrote:
+> > Hi ChenYu,
 > >
-> > > > The 'finish' thing isn't too far from the truth; it's the last thing we
-> > > > need to do with the prev task (in terms of sched bookkeeping, I mean) -
-> > > > and in Chen's defence ISTR Peter suggested that name.
+> > Am Dienstag, 21. April 2020, 05:48:52 CEST schrieb Chen-Yu Tsai:
+> > > On Fri, Apr 17, 2020 at 2:19 AM Johan Jonker <jbx6244@gmail.com> wrote:
 > > > >
-> > > > Seeing as it's a "supercharged" put_prev_task(), I could live with the
-> > > > marginally shorter "put_prev_task_balance()".
+> > > > 'bus-width' and pinctrl containing the bus-pins
+> > > > should be in the same file, so add them to
+> > > > all mmc nodes in 'rk3328.dtsi'.
 > > >
-> > > What Valentin said; it's the last put we do before picking a new task.
-> > > Also, I don't like long names. That said, I'm open to short and
-> > > appropriate suggestions.
+> > > Nope. First of all, pinctrl usage is with pinctrl-N properties, not the
+> > > pinctrl device, and there are no defaults set for any of the mmc nodes.
+> > > Second, these are board design specific. For example, boards are free to
+> > > use just 4 bits for the eMMC if they so desire. So this should be in each
+> > > board dts file. If a board is missing this property, fix the board.
 > >
-> > I wont bikeshed this too much.
+> > you are correct that the pinctrl entries are missing from the patches,
+> > bus-width and pinctrl should be defined in the same file each time,
+> > but for the whole idea I tend to disagree.
 > >
-> > Is the "finish" more appropriate with the other use cases that are
-> > coming. I do like that "put_prev_task_balance()" too.
+> > So far every board with a Rockchip socs follows Rockchip's reference design
+> > for a lot of parts - for example I only see sdmmc nodes with bus-width=4
+> > etc.
+> >
+> > So the basic idea is to have default pinctrl settings for the settings
+> > everybody uses predefined ... if a board comes along that needs different
+> > settings it is free to redefine that.
 > 
-> This name looks reasonnable
->
-Okay, I'll change it to this name.
+> I think having a default is a great idea. :)
 
-Thanks,
-Chenyu
-> >
-> > -- Steve
+especially for controllers that only ever use the same settings anyway.
+
+
+
