@@ -2,249 +2,89 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC72BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E34C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86D352082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67DB22082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:26:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QdQMa4F3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OFlCEJI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDUAZ0 (ORCPT
+        id S1726644AbgDUA0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:25:26 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59393 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbgDUAZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 20:25:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 495kqQ2mtrz9sSJ;
-        Tue, 21 Apr 2020 10:25:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587428722;
-        bh=4xUTtO2SNg9WQdVKIwgg2gtvt0w/E4L61n7U8thqfQg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QdQMa4F34NML50do8dWrNfJ/nsvl9l37tEH/H3Fg3cAf3p4Z1tT/ElD6LZriXVR8Q
-         sUuoEiJnomz6gLn4zQVhalmAHSLz7gUWiokNIBdQMggvfzoA6vEpjlYMq5Rb+9YhUa
-         fpRm4sNylMZEQ90qfJalJRZ99Q6weN9LsgfcNiDFoLOfGB5bb90PpvzNSlIMT6W+NV
-         AblhaCO/RHZHEsQ43GMKzJM92mhSDQyTk111SYXnnw04JaE2DVuV7uivZ/sMw6LaFD
-         po9zSWyMnKyfr/oRQfCgv7enzp66DvEi+afhwFzwfnc8pR1fZXz/N6+t3OvHTLbwED
-         xhGtup6S7htyg==
-Date:   Tue, 21 Apr 2020 10:25:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qu Wenruo <wqu@suse.com>
-Subject: linux-next: build failure after merge of the btrfs tree
-Message-ID: <20200421102520.53623f09@canb.auug.org.au>
+        Mon, 20 Apr 2020 20:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726056AbgDUA0H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 20:26:07 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305F4C061A0E;
+        Mon, 20 Apr 2020 17:26:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=Ls7V5eRm0M7hlg17zUFuXhOBW3Ybwk4LdSmc8ysz8kM=; b=OFlCEJI0Io366vesuYb2P9vhAe
+        CkBOcnjzx01Bd7b6WH4cIGinoBL1/Mlt9krJ/lue36AuqKiiHPSKopfmatLmEZRkWI1qqJPBslU+E
+        b0S0lQFHewNCz+F9sLER8kUo5xfRFsDALZw7r3OSoEaiS4u6Yo4lolziRvNfcThsjTvkM7gUkiqyi
+        A+FhLIljNN9KmGxI3ROqKhu0Z6s1DLpKyKV7ugrSMIUSiQkd+w3cAXPGvsq5YDiuVGeI8D6ETo4Jg
+        vm1EXoMJN7PRKp2AP+RG2nCxkMfgBBUykwqmpl1GfcCqPor+hX2fnElpcNRZ1HdTRJETI5tc32Bto
+        7TJjtfSA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQgjj-0001U7-Vn; Tue, 21 Apr 2020 00:26:04 +0000
+To:     Vinod Koul <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: drivers/dma/iop-adma.c cast build warnings
+Message-ID: <5019a2d6-bace-26dc-dda2-c263efc30185@infradead.org>
+Date:   Mon, 20 Apr 2020 17:26:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kpltGz3om1ny/1TFa7uFp9Y";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kpltGz3om1ny/1TFa7uFp9Y
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+On i386, when CONFIG_ARCH_DMA_ADDR_T_64BIT=y,
+but long and void* are only 32 bits, there are a few build warnings:
 
-After merging the btrfs tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+  CC [M]  drivers/dma/iop-adma.o
+../drivers/dma/iop-adma.c: In function 'iop_adma_alloc_chan_resources':
+../drivers/dma/iop-adma.c:448:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+   hw_desc = (char *) iop_chan->device->dma_desc_pool;
+             ^
+../drivers/dma/iop-adma.c:450:4: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    (dma_addr_t) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
+    ^
+In file included from ../include/linux/printk.h:328:0,
+                 from ../include/linux/kernel.h:15,
+                 from ../include/linux/list.h:9,
+                 from ../include/linux/module.h:12,
+                 from ../drivers/dma/iop-adma.c:13:
+../drivers/dma/iop-adma.c: In function 'iop_adma_probe':
+../drivers/dma/iop-adma.c:1302:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+   (void *) adev->dma_desc_pool);
+   ^
 
-In file included from <command-line>:32:
-./usr/include/linux/btrfs_tree.h:1127:2: error: unknown type name 'u8'
- 1127 |  u8 tree_root_level;
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1128:2: error: unknown type name 'u8'
- 1128 |  u8 chunk_root_level;
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1129:2: error: unknown type name 'u8'
- 1129 |  u8 extent_root_level;
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1130:2: error: unknown type name 'u8'
- 1130 |  u8 fs_root_level;
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1131:2: error: unknown type name 'u8'
- 1131 |  u8 dev_root_level;
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1132:2: error: unknown type name 'u8'
- 1132 |  u8 csum_root_level;
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1134:2: error: unknown type name 'u8'
- 1134 |  u8 unused_8[10];
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1148:2: error: unknown type name 'u8'
- 1148 |  u8 csum[BTRFS_CSUM_SIZE];
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1150:2: error: unknown type name 'u8'
- 1150 |  u8 fsid[BTRFS_FSID_SIZE];
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1177:2: error: unknown type name 'u8'
- 1177 |  u8 root_level;
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1178:2: error: unknown type name 'u8'
- 1178 |  u8 chunk_root_level;
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1179:2: error: unknown type name 'u8'
- 1179 |  u8 log_root_level;
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1188:2: error: unknown type name 'u8'
- 1188 |  u8 metadata_uuid[BTRFS_FSID_SIZE];
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1192:2: error: unknown type name 'u8'
- 1192 |  u8 sys_chunk_array[BTRFS_SYSTEM_CHUNK_ARRAY_SIZE];
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1283:2: error: unknown type name 'u8'
- 1283 |  u8 csum[BTRFS_CSUM_SIZE];
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1284:2: error: unknown type name 'u8'
- 1284 |  u8 fsid[BTRFS_FSID_SIZE]; /* FS specific uuid */
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1289:2: error: unknown type name 'u8'
- 1289 |  u8 chunk_tree_uuid[BTRFS_UUID_SIZE];
-      |  ^~
-./usr/include/linux/btrfs_tree.h:1293:2: error: unknown type name 'u8'
- 1293 |  u8 level;
-      |  ^~
+This is on linux-next 20200420.
 
-Caused by commit
+Are DMA addresses for this driver/hw device limited to 32 bits?
 
-  8d80a063d508 ("btrfs: move on-disk structure definitions to btrfs_tree.h")
-
-They should probably all be __u8 ...
-
-I have applied the following patch for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 21 Apr 2020 10:19:20 +1000
-Subject: [PATCH] btrfs: uapi headers should use __<type>
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- include/uapi/linux/btrfs_tree.h | 36 ++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
-
-diff --git a/include/uapi/linux/btrfs_tree.h b/include/uapi/linux/btrfs_tre=
-e.h
-index a02318e4d2a9..1adf5971a966 100644
---- a/include/uapi/linux/btrfs_tree.h
-+++ b/include/uapi/linux/btrfs_tree.h
-@@ -1124,14 +1124,14 @@ struct btrfs_root_backup {
- 	/* future */
- 	__le64 unused_64[4];
-=20
--	u8 tree_root_level;
--	u8 chunk_root_level;
--	u8 extent_root_level;
--	u8 fs_root_level;
--	u8 dev_root_level;
--	u8 csum_root_level;
-+	__u8 tree_root_level;
-+	__u8 chunk_root_level;
-+	__u8 extent_root_level;
-+	__u8 fs_root_level;
-+	__u8 dev_root_level;
-+	__u8 csum_root_level;
- 	/* future and to align */
--	u8 unused_8[10];
-+	__u8 unused_8[10];
- } __attribute__ ((__packed__));
-=20
- /*
-@@ -1145,9 +1145,9 @@ struct btrfs_root_backup {
- /* The super block basically lists the main trees of the FS. */
- struct btrfs_super_block {
- 	/* The first 4 fields must match struct btrfs_header */
--	u8 csum[BTRFS_CSUM_SIZE];
-+	__u8 csum[BTRFS_CSUM_SIZE];
- 	/* FS specific UUID, visible to user */
--	u8 fsid[BTRFS_FSID_SIZE];
-+	__u8 fsid[BTRFS_FSID_SIZE];
- 	__le64 bytenr; /* this block number */
- 	__le64 flags;
-=20
-@@ -1174,9 +1174,9 @@ struct btrfs_super_block {
- 	__le64 compat_ro_flags;
- 	__le64 incompat_flags;
- 	__le16 csum_type;
--	u8 root_level;
--	u8 chunk_root_level;
--	u8 log_root_level;
-+	__u8 root_level;
-+	__u8 chunk_root_level;
-+	__u8 log_root_level;
- 	struct btrfs_dev_item dev_item;
-=20
- 	char label[BTRFS_LABEL_SIZE];
-@@ -1185,11 +1185,11 @@ struct btrfs_super_block {
- 	__le64 uuid_tree_generation;
-=20
- 	/* The UUID written into btree blocks */
--	u8 metadata_uuid[BTRFS_FSID_SIZE];
-+	__u8 metadata_uuid[BTRFS_FSID_SIZE];
-=20
- 	/* Future expansion */
- 	__le64 reserved[28];
--	u8 sys_chunk_array[BTRFS_SYSTEM_CHUNK_ARRAY_SIZE];
-+	__u8 sys_chunk_array[BTRFS_SYSTEM_CHUNK_ARRAY_SIZE];
- 	struct btrfs_root_backup super_roots[BTRFS_NUM_BACKUP_ROOTS];
- } __attribute__ ((__packed__));
-=20
-@@ -1280,17 +1280,17 @@ struct btrfs_super_block {
- /* Every tree block (leaf or node) starts with this header. */
- struct btrfs_header {
- 	/* These first four must match the super block */
--	u8 csum[BTRFS_CSUM_SIZE];
--	u8 fsid[BTRFS_FSID_SIZE]; /* FS specific uuid */
-+	__u8 csum[BTRFS_CSUM_SIZE];
-+	__u8 fsid[BTRFS_FSID_SIZE]; /* FS specific uuid */
- 	__le64 bytenr; /* Which block this node is supposed to live in */
- 	__le64 flags;
-=20
- 	/* Allowed to be different from the super from here on down. */
--	u8 chunk_tree_uuid[BTRFS_UUID_SIZE];
-+	__u8 chunk_tree_uuid[BTRFS_UUID_SIZE];
- 	__le64 generation;
- 	__le64 owner;
- 	__le32 nritems;
--	u8 level;
-+	__u8 level;
- } __attribute__ ((__packed__));
-=20
- /*
---=20
-2.25.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kpltGz3om1ny/1TFa7uFp9Y
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6ePXAACgkQAVBC80lX
-0GzFcQf/cv7+mEE+TzG7VPcJbkUZeJYwrzfeH5ZQgRdF9Qmi395GrBjH2LRuHVkO
-lWDFwNmH1oyJBn1DQdw1TNs5E/lh3aQjgakcNkvxDOSRd4iqDlme6Es9aeHm+esT
-9vm/F8CI2Pxb+sp8RNnT1fhe2u+KH5+vua7u7vw14Ee1F/UpeeE4jOPUj/fQmI2a
-/kt4iy8X+8TBu3NlZaiz8HpB5qYUZQfiyJIpuJE6Ehsuk19tBWq5CbdkSSPDjcqm
-r9l9jAomze8muEciYRDOtj28MOb3hQp+moSSHkPJEPaO1shQPo5wlspMNClT1lah
-E79GupaY2w34nHfUTsjsKOlBwgah5w==
-=jjgi
------END PGP SIGNATURE-----
-
---Sig_/kpltGz3om1ny/1TFa7uFp9Y--
+thanks.
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
