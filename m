@@ -2,216 +2,163 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D8AC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD46C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A999B20753
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:09:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="VpXGl8Zj"
+	by mail.kernel.org (Postfix) with ESMTP id A5881206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:11:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbgDUNJx (ORCPT
+        id S1728866AbgDUNLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:09:53 -0400
-Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:14101 "EHLO
-        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728878AbgDUNJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:09:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1587474585; x=1619010585;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=AHfHaIhBE3pINRzw08uLgGJsllJoDvSSX2nJpBKqOCg=;
-  b=VpXGl8ZjjT3+1JnBfUbT4125DuFJnsng2bWBwFllU35DNyS89OGNjZVx
-   pdE7go8e8juOHa41WyP2kDfirMKg61Egk1kFMoCVqH5/1pXlf0dbmPq50
-   IdMrxCYRlXiwa/QHvCG6A7JvdRO40lE6kGZYI2FxAQwvsYsB8dpWGFvDq
-   2drwl748vLu6m3CQ5kzDewNRNZvTuDTFRoEbbc9X8T9e6rW4h7fSyIzOx
-   GbnxtM+GNPILeKhYvnExJ8xngTmEUHRJMvGnN5uLmYhxCncCnsvRPwnCI
-   AacrZQRC7dp/fw0R0Kt4lcd5DMREQqormmv/6HFU455p++nFs+rH+r1AD
-   w==;
-IronPort-SDR: m/D2+G8uvw09Crqdaipyxtnyk3cd6wYxLNTbR7Tp5IraqfRuQ8jUtH77MX0otl6HG8x6lCM7ss
- npdiExKoX2rg==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v5 2/3] leds: pwm: add support for default-state device
- property
-Thread-Topic: [PATCH v5 2/3] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHWF94OqlLslpUgKkSqRQxJq3wL1Q==
-Date:   Tue, 21 Apr 2020 13:09:14 +0000
-Message-ID: <20200421130644.16059-3-Denis.Osterland@diehl.com>
-References: <20200421130644.16059-1-Denis.Osterland@diehl.com>
-In-Reply-To: <20200421130644.16059-1-Denis.Osterland@diehl.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 Apr 2020 09:11:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:29274 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728391AbgDUNLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:11:11 -0400
+IronPort-SDR: VFW/L/ffRbArTvc27FdpF9A6WLhSKqT3pD6/W20EZuSj4w7QMSSVeSazGtQQ344zAVp3QanMU3
+ eKSE6ykdlyXA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 06:11:10 -0700
+IronPort-SDR: Nsc146F6G/ikanEz1OmM/4qxk7byp2Eo9/KOjyv61k9TBCyF/uWaW/SpEr1XMcKOxgmRho9OYW
+ cf7tq3Mxo8VQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,410,1580803200"; 
+   d="scan'208";a="300603447"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
+  by FMSMGA003.fm.intel.com with ESMTP; 21 Apr 2020 06:11:06 -0700
+Subject: Re: [PATCH V6 13/15] perf intel-pt: Add support for text poke events
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20200405201327.7332-1-adrian.hunter@intel.com>
+ <20200405201327.7332-14-adrian.hunter@intel.com>
+ <20200421125050.GG809467@krava>
+ <4308a61d-cbed-e0ed-d8a9-c7306a933e7b@intel.com>
+ <20200421130613.GH809467@krava>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <65e3e544-62cc-1d0c-4daa-9425f06d903e@intel.com>
+Date:   Tue, 21 Apr 2020 16:10:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: byQFdw3ukCM+zy1/poiPc5jn58Xuz5PjrByvaI+9Wpm8OchGK4Zr2IYZ9xDMTQFo
+In-Reply-To: <20200421130613.GH809467@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for =22default-state=22 devicetree property, whic=
-h
-allows to defer pwm init to first use of led.
+On 21/04/20 4:06 pm, Jiri Olsa wrote:
+> On Tue, Apr 21, 2020 at 04:02:32PM +0300, Adrian Hunter wrote:
+>> On 21/04/20 3:50 pm, Jiri Olsa wrote:
+>>> On Sun, Apr 05, 2020 at 11:13:25PM +0300, Adrian Hunter wrote:
+>>>> Select text poke events when available and the kernel is being traced.
+>>>> Process text poke events to invalidate entries in Intel PT's instruction
+>>>> cache.
+>>>>
+>>>> Example:
+>>>>
+>>>>   The example requires kernel config:
+>>>>     CONFIG_PROC_SYSCTL=y
+>>>>     CONFIG_SCHED_DEBUG=y
+>>>>     CONFIG_SCHEDSTATS=y
+>>>>
+>>>>   Before:
+>>>>
+>>>>     # perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M &
+>>>>     # cat /proc/sys/kernel/sched_schedstats
+>>>>     0
+>>>>     # echo 1 > /proc/sys/kernel/sched_schedstats
+>>>>     # cat /proc/sys/kernel/sched_schedstats
+>>>>     1
+>>>>     # echo 0 > /proc/sys/kernel/sched_schedstats
+>>>>     # cat /proc/sys/kernel/sched_schedstats
+>>>>     0
+>>>>     # kill %1
+>>>>     [ perf record: Woken up 1 times to write data ]
+>>>>     [ perf record: Captured and wrote 3.341 MB perf.data.before ]
+>>>>     [1]+  Terminated                 perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M
+>>>>     # perf script -i perf.data.before --itrace=e >/dev/null
+>>>>     Warning:
+>>>>     474 instruction trace errors
+>>>>
+>>>>   After:
+>>>>
+>>>>     # perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
+>>>>     # cat /proc/sys/kernel/sched_schedstats
+>>>>     0
+>>>>     # echo 1 > /proc/sys/kernel/sched_schedstats
+>>>>     # cat /proc/sys/kernel/sched_schedstats
+>>>>     1
+>>>>     # echo 0 > /proc/sys/kernel/sched_schedstats
+>>>>     # cat /proc/sys/kernel/sched_schedstats
+>>>>     0
+>>>>     # kill %1
+>>>>     [ perf record: Woken up 1 times to write data ]
+>>>>     [ perf record: Captured and wrote 2.646 MB perf.data.after ]
+>>>>     [1]+  Terminated                 perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M
+>>>>     # perf script -i perf.data.after --itrace=e >/dev/null
+>>>
+>>>
+>>> I'm still seeing some, probably I'm missing some CONFIG, will check
+>>>
+>>> 	# ./perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
+>>> 	[1] 5880
+>>> 	# cat /proc/sys/kernel/sched_schedstats
+>>> 	0
+>>> 	# echo 1 > /proc/sys/kernel/sched_schedstats
+>>> 	# cat /proc/sys/kernel/sched_schedstats
+>>> 	1
+>>> 	# echo 0 > /proc/sys/kernel/sched_schedstats
+>>> 	# kill %1
+>>> 	# [ perf record: Woken up 1 times to write data ]
+>>> 	[ perf record: Captured and wrote 6.181 MB perf.data.after ]
+>>> 	[1]+  Terminated              ./perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M
+>>> 	# ./perf script --itrace=e -i perf.data.after > /dev/null
+>>> 	Warning:
+>>> 	18837 instruction trace errors
+>>>
+>>> 	# ./perf script --itrace=e -i perf.data.after | head
+>>> 	instruction trace error type 1 time 9274.420582345 cpu 9 pid 845 tid 845 ip 0xffffffff814e6cf2 code 6: Trace doesn't match instruction
+>>> 	instruction trace error type 1 time 9274.422229726 cpu 39 pid 5880 tid 5880 ip 0xffffffffa030a320 code 6: Trace doesn't match instruction
+>>> 	instruction trace error type 1 time 9274.422231972 cpu 39 pid 5880 tid 5880 ip 0xffffffffa0315c1c code 6: Trace doesn't match instruction
+>>> 	instruction trace error type 1 time 9274.422236141 cpu 39 pid 5880 tid 5880 ip 0xffffffff81143263 code 6: Trace doesn't match instruction
+>>> 	instruction trace error type 1 time 9274.422237424 cpu 39 pid 5880 tid 5880 ip 0xffffffff8115c388 code 6: Trace doesn't match instruction
+>>> 	instruction trace error type 1 time 9274.422239028 cpu 39 pid 5880 tid 5880 ip 0xffffffff811428c9 code 6: Trace doesn't match instruction
+>>> 	instruction trace error type 1 time 9274.422239028 cpu 39 pid 5880 tid 5880 ip 0xffffffffa13279fb code 5: Failed to get instruction
+>>> 	instruction trace error type 1 time 9274.422242556 cpu 39 pid 5880 tid 5880 ip 0xffffffff814e9c73 code 6: Trace doesn't match instruction
+>>> 	instruction trace error type 1 time 9274.422258915 cpu 39 pid 5880 tid 5880 ip 0xffffffff810d7da2 code 6: Trace doesn't match instruction
+>>> 	instruction trace error type 1 time 9274.422258915 cpu 39 pid 5880 tid 5880 ip 0xffffffffa030a0b2 code 6: Trace doesn't match instruction
+>>
+>> I don't think it can be CONFIG.  Can you share the branch you are using?
+>> Then I can test it.
+>>
+> 
+> I built the one you mentioned in cover email:
+>   git://git.infradead.org/users/ahunter/linux-perf.git text_poke
 
-This allows to configure the PWM early in bootloader to let the LED
-blink until an application in Linux userspace sets something different.
+The tools and the kernel?
 
-Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
----
- drivers/leds/leds-pwm.c | 54 ++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 48 insertions(+), 6 deletions(-)
+Does it successfully decode anything? e.g.
+./perf script --itrace=be -i perf.data.after | head
 
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index ef7b91bd2064..7b199c151768 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -18,10 +18,15 @@
- #include <linux/pwm.h>
- #include <linux/slab.h>
-=20
-+#define LEDS_PWM_DEFSTATE_OFF	0
-+#define LEDS_PWM_DEFSTATE_ON	1
-+#define LEDS_PWM_DEFSTATE_KEEP	2
-+
- struct led_pwm {
- 	const char	*name;
- 	const char	*default_trigger;
- 	u8		active_low;
-+	u8		default_state;
- 	unsigned int	max_brightness;
- };
-=20
-@@ -88,7 +93,30 @@ static int led_pwm_add(struct device *dev, struct led_=
-pwm_priv *priv,
-=20
- 	led_data->cdev.brightness_set_blocking =3D led_pwm_set;
-=20
--	pwm_init_state(led_data->pwm, &led_data->pwmstate);
-+	/* init PWM state */
-+	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
-+		pwm_get_state(led_data->pwm, &led_data->pwmstate);
-+		if (!led_data->pwmstate.period) {
-+			led->default_state =3D LEDS_PWM_DEFSTATE_OFF;
-+			dev_warn(dev,
-+				=22failed to read period for %s, default to off=22,
-+				led->name);
-+		}
-+	}
-+	if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP)
-+		pwm_init_state(led_data->pwm, &led_data->pwmstate);
-+
-+	/* set brightness */
-+	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_ON)
-+		led_data->cdev.brightness =3D led->max_brightness;
-+	else if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
-+		uint64_t brightness;
-+
-+		brightness =3D led->max_brightness;
-+		brightness *=3D led_data->pwmstate.duty_cycle;
-+		do_div(brightness, led_data->pwmstate.period);
-+		led_data->cdev.brightness =3D brightness;
-+	}
-=20
- 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
- 	if (ret) {
-@@ -97,11 +125,13 @@ static int led_pwm_add(struct device *dev, struct le=
-d_pwm_priv *priv,
- 		return ret;
- 	}
-=20
--	ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
--	if (ret) {
--		dev_err(dev, =22failed to set led PWM value for %s: %d=22,
--			led->name, ret);
--		return ret;
-+	if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP) {
-+		ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
-+		if (ret) {
-+			dev_err(dev, =22failed to set led PWM value for %s: %d=22,
-+				led->name, ret);
-+			return ret;
-+		}
- 	}
-=20
- 	priv->num_leds++;
-@@ -117,6 +147,8 @@ static int led_pwm_create_fwnode(struct device *dev, =
-struct led_pwm_priv *priv)
- 	memset(&led, 0, sizeof(led));
-=20
- 	device_for_each_child_node(dev, fwnode) {
-+		const char *state =3D NULL;
-+
- 		ret =3D fwnode_property_read_string(fwnode, =22label=22, &led.name);
- 		if (ret && is_of_node(fwnode))
- 			led.name =3D to_of_node(fwnode)->name;
-@@ -134,6 +166,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
- struct led_pwm_priv *priv)
- 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
- 					 &led.max_brightness);
-=20
-+		if (!fwnode_property_read_string(fwnode, =22default-state=22,
-+						 &state)) {
-+			if (!strcmp(state, =22keep=22))
-+				led.default_state =3D LEDS_PWM_DEFSTATE_KEEP;
-+			else if (!strcmp(state, =22on=22))
-+				led.default_state =3D LEDS_PWM_DEFSTATE_ON;
-+			else
-+				led.default_state =3D LEDS_PWM_DEFSTATE_OFF;
-+		}
-+
- 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
- 		if (ret) {
- 			fwnode_handle_put(fwnode);
---=20
-2.26.2
-
-
-
-Diehl Connectivity Solutions GmbH
-Gesch=E4ftsf=FChrung: Horst Leonberger
-Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
-N=FCrnberg: HRB 32315
-_________________________________________________________________________=
-__________________________
-
-Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
-ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
-Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
-ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
-Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
- und/oder Publikation dieser E-Mail ist strengstens untersagt.
-- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
-Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
-chten/
-
-The contents of the above mentioned e-mail is not legally binding. This e=
--mail contains confidential and/or legally protected information. Please =
-inform us if you have received this e-mail by
-mistake and delete it in such a case. Each unauthorized reproduction, dis=
-closure, alteration, distribution and/or publication of this e-mail is st=
-rictly prohibited.=20
-- For general information on data protection and your respective rights p=
-lease visit https://www.diehl.com/group/en/transparency-and-information-o=
-bligations/
