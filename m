@@ -2,139 +2,150 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0858C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77457C55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B490206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57ED8206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:23:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="P0iCesRl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSVKMtXh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgDUUWD (ORCPT
+        id S1726195AbgDUUXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:22:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46916 "EHLO
+        Tue, 21 Apr 2020 16:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgDUUWD (ORCPT
+        with ESMTP id S1726050AbgDUUXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:22:03 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 075D7C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:22:03 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p8so7304783pgi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:22:03 -0700 (PDT)
+        Tue, 21 Apr 2020 16:23:23 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270C8C0610D5;
+        Tue, 21 Apr 2020 13:23:23 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id ay1so5696691plb.0;
+        Tue, 21 Apr 2020 13:23:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=uWDtBnrnHZNGBJOZ1uLZhpYXVa58EWkVMTVyh/sHeFo=;
-        b=P0iCesRlhwF4dxcTYweoKhkr6tEsMx451LuE6i5dtJgdaOqLEJC7Ut2ULKUb+gwMSS
-         PX3tYEcNipS5kHZ+2cUg9iJ+NjEtzqcPSsvgqa9OukJPme68Mc+NtlSe0uFVC77s+vp5
-         bTQoylRublbwF+jzM3Z8Vr3emVlAUTVRf5NaODMOSoHqq0As6lu9c7VvHkX0zcJBnZKA
-         te9Op/+TS/RUKMoXlPjyLBRPpVu1LlusRlkgO1mCmbakznoRaxlhpNbVybEj9w3sejSo
-         zziKkjaBeodPzkOE6RQqarGviorXMfXRrRUPoew4KDtbXjxvEASeWjGIzWbmwyNQIfvg
-         oZGg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zl40T50FPbwBzCKH7/OEcPTWE7rgN74/mA60zW5oOTo=;
+        b=kSVKMtXhsAi8UcAwt4iulSL7+eVDGadF0SrWh1wVO8+gwbi2E3F2/Bu88eqAMDqnNC
+         aZ2mjX0aG8et1NQWeo8ZoqL86PFMAa9v96WA6g5JD4PlRfZEH0jzquzVm9R6IChZKIhb
+         zcY8v9xaimsRqlZD3L00+wNkc2bvpGkgsA4MSxRZvyOGgRs3kAMODPQAfqLSRs2OSJqh
+         BcNdlAijqbWjZzMYeVHCEUzCC2faFEgiPzbSIl3mFI1991GqAT/ycuXtVyi9GAtgp9qw
+         WIkb7B71vc+P6LPbsdJKzeE5C7bacRjKervPeUmo9fHz2TSRbjWv9YZNWlE9xPV6oFpe
+         Di8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=uWDtBnrnHZNGBJOZ1uLZhpYXVa58EWkVMTVyh/sHeFo=;
-        b=Z6LirEoTT65IuABfafbOVDQck//R4DUPN0EUaOZSYCh2njn6fx6IKvSDzFAY4z6Ou/
-         fITWDw9xpTY1ciVqlF9RTZoaW8oN9ndUYj+aaZyTVHSIKdIHgNEjMg3/QTeoKwAaNAU0
-         rJG88EtbYwRx6qhQMJZHf1s3t42lw3CMaVSTq2YKXbuLTuA5q4oIc09YE9BA26Ys6ynV
-         E/SzKg4Xglio8ZMC/fx1XPQicp+Z7BwnJDng54Jg+QFyC3x12lA+SVa8XoaK7JP94kcg
-         gXu5EQUhk8L70KquIA4cSR1hGjHiaQ4hJympQh4T0WdvZnRukRgQPDrE0/buTUrELYhX
-         070w==
-X-Gm-Message-State: AGi0PubfyVGfPabhAXo/XmQ+hZQy4Znp1VLHK9E8Ma2XwQ9kLiNTaV1C
-        s2FBQxnKFoDzQoXfH/7216NWKA==
-X-Google-Smtp-Source: APiQypIMbG8k643bhsXUdoT15BGwG/GR7htXdaFnd0b8giF0dw4V8mXF0zoDCU0QYh6RS+fk37jveA==
-X-Received: by 2002:a62:178b:: with SMTP id 133mr23576737pfx.61.1587500522476;
-        Tue, 21 Apr 2020 13:22:02 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:2979:437c:2c39:9d85? ([2601:646:c200:1ef2:2979:437c:2c39:9d85])
-        by smtp.gmail.com with ESMTPSA id i16sm3394250pfd.108.2020.04.21.13.22.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 13:22:01 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v9 00/17] Enable FSGSBASE instructions
-Date:   Tue, 21 Apr 2020 13:21:39 -0700
-Message-Id: <5957D3CC-B54B-4A1A-998A-0E6F58589CF4@amacapital.net>
-References: <20200421195629.GE608746@tassilo.jf.intel.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
-        "Metzger, Markus T" <markus.t.metzger@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Pedro Alves <palves@redhat.com>,
-        Simon Marchi <simark@simark.ca>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200421195629.GE608746@tassilo.jf.intel.com>
-To:     Andi Kleen <ak@linux.intel.com>
-X-Mailer: iPhone Mail (17E255)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zl40T50FPbwBzCKH7/OEcPTWE7rgN74/mA60zW5oOTo=;
+        b=cY3t05GscfJbY08quxK/bL2BiGnsftewrmnK/Lae9xALiiRyVjJs1K2CKzWwos2xn6
+         aPG8LjjNDXYVv0iPQtT4LxpdznRsQkLhuOYY1JphRpgOwlQxGfF4LnZEQj493Dlgrj28
+         /sVxaUeirFOyclbBtKY0eB5sqB9FsLddaCqgvuDTpB59gJH0RsRTt8jGxElhpT7q0788
+         50N7f5qi1iWI9VPkf4dwkOtN+4dbCxIqFX4JBnCphi61INVCNtMgLXYQG7rClmQaDxu6
+         5ft0hbUhlmxKLnrpcHHg/3DdLSzR6ezJu7+FfRom9jKiWcAJNjYcCAdZ0d4ofAMK362v
+         5gGQ==
+X-Gm-Message-State: AGi0PuYAmniL6kAlbKMg2Ss23scbj7nUB+U6ANCEG0B0151mdKuBWirn
+        RVzluqD3kGDPS1wi4G40NSuV5rRb7oM/ijejd4o=
+X-Google-Smtp-Source: APiQypLAu9QTbWNgbPerC9FiXf54TGJy1cCm8ZU48UUMzfczq3a63vgoRJ4CWI4WeYnDtbGa2fmkEOryIT/jGVwyPhs=
+X-Received: by 2002:a17:90a:2401:: with SMTP id h1mr7862503pje.1.1587500602433;
+ Tue, 21 Apr 2020 13:23:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200421194005.6295-1-i.mikhaylov@yadro.com> <20200421194005.6295-3-i.mikhaylov@yadro.com>
+In-Reply-To: <20200421194005.6295-3-i.mikhaylov@yadro.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 21 Apr 2020 23:23:11 +0300
+Message-ID: <CAHp75VdZ=jmQFt68+iniDbhGY9Q-ueT6QzrL82mLmsoGwftxFg@mail.gmail.com>
+Subject: Re: [PATCH v10 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 21, 2020 at 10:39 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+>
+> Proximity sensor driver based on light/vcnl4000.c code.
+> For now supports only the single on-demand measurement.
+>
+> The VCNL3020 is a fully integrated proximity sensor. Fully
+> integrated means that the infrared emitter is included in the
+> package. It has 16-bit resolution. It includes a signal
+> processing IC and features standard I2C communication
+> interface. It features an interrupt function.
 
+...
 
-> On Apr 21, 2020, at 12:56 PM, Andi Kleen <ak@linux.intel.com> wrote:
->=20
-> =EF=BB=BF
->>=20
->> Andi's point is that there is no known user it breaks, and the Intel
->> folks did some digging into potential users who might be affected by
->> this, including 'rr' brought up by Andy, and concluded that there won't
->> be breakage as a result of this patchset:
->>=20
->>    https://mail.mozilla.org/pipermail/rr-dev/2018-March/000616.html
->>=20
->> Sure, if you poke at it you could see a behavior change, but is there
->> an actual user that will be affected by it? I suspect not.
->=20
-> Actually we don't know of any behavior changes caused by the kernel
-> with selectors.
->=20
-> The application can change itself of course, but only if it uses the=20
-> new instructions, which no current application does.
+> +static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
+> +                                          const char *prop, u32 reg)
+> +{
+> +       int rc;
+> +       u32 val;
+> +
+> +       rc = device_property_read_u32(data->dev, prop, &val);
+> +       if (rc)
+> +               return 0;
+> +
 
-If you use ptrace to change the gs selector, the behavior is different on a p=
-atched kernel.
+> +       /* An example of conversion from uA to reg val:
+> +        * 200000 uA == 200 mA == 20
+> +        */
+> +       if (!strcmp(prop, "vishay,led-current-microamp"))
+> +               val /= 10000;
 
-Again, I=E2=80=99m not saying that the change is problematic. But I will say=
- that the fact that anyone involved in this series keeps ignoring this fact m=
-akes me quite uncomfortable with the patch set.
+I probably missed the point why this function is needed at all, since
+we always call only for a single property.
 
->=20
-> [This was different in the original patch kit long ago which could
-> change behavior on context switch for programs with out of sync selectors,=
+On top of that, why do we have this nasty strcmp()? Can't we simple do
+something like
 
-> but this has been long fixed]
+static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
+const char *prop, u32 reg, u32 div)
+{
+...
+  val /= div;
+...
+}
 
-That=E2=80=99s the issue I was referring to.
+static int vcnl3020_get_and_apply_led_current_property(struct
+vcnl3020_data *data)
+{
+  /*
+   * An example of conversion from uA to reg val:
+   * 200000 uA == 200 mA == 20
+   */
+// Note by the way comments style
+  return vcnl3020_get_and_apply_property(data, "vishay,led-current-microamp",
+                                              VCNL_LED_CURRENT, 10000);
+}
 
->=20
-> A debugger can also change behavior, but we're not aware of any case
-> that it would break.
+?
 
-How hard did you look?
+> +       rc = regmap_write(data->regmap, reg, val);
+> +       if (rc) {
+> +               dev_err(data->dev, "Error (%d) setting property (%s)\n",
+> +                       rc, prop);
+> +       }
+> +
+> +       return rc;
+> +}
 
->=20
-> For rr or criu we're also not aware of any case that could break.
->=20
-> I honestly don't know what else could be done in due diligence.
->=20
-> Also just to reiterate merging this would immediately shave off
-> hundreds of cycles in most context switches.
->=20
-> -Andi
+-- 
+With Best Regards,
+Andy Shevchenko
