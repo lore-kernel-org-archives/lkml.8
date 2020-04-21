@@ -2,242 +2,215 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E91C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91037C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 857B1206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FC2206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="EwbWieUT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qDjbi1rT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgDUScF (ORCPT
+        id S1729269AbgDUSdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:32:05 -0400
-Received: from mail-mw2nam12on2070.outbound.protection.outlook.com ([40.107.244.70]:58945
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725987AbgDUScF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:32:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HpSdNwL2JVNkIoeVrx5q1KAXywHL8aGWis6bP4iKrWU7P5UjpIjWFO4thUMNjDWgiS0uMxEabQQ90ANA5ERLz/lwH3XzzvKqDrGi40K+3ZCvobeyYK7NIriG2YX8iyb/UEukjukbo7LU2XHKx28hAeoV1WX/nr6Z73Ng0jO1v1RCGCegIo9NVZlwQj4ebSk5jUdD9NQ6m8PEjgFbvSdDOEfLyrAxgHj8S6UrL3Ddl81JOMh+qynM229YTU3FOsHGMOW+VMh0ZaHQRJKEajYt5Vc2hoapKgLyX0ZWEuSqVEHbGXZwKr7jZg/PoYWbA8qjf0jk4eUYs7IGndEoU47ohw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eu+qLSuzZ72tG4LsNbFsd0GkqwSxs1qvCT/a7rLh9/E=;
- b=EdYJ4If3Po1yuSJI8FM6no4tEgxc34lCZuTw8jmvBlqVk/4z45AftZ93ey8IM0uUZA2HN48d6EVXuYnJQf+Mkoz/WH619/IF8gR9UoA7rVea6ctAmN372I2yCZwlkOHtzipF6PFQTwjT5km9+QjC3Mb6984oA2gCtB8iQxCZf96sqqoFYN0AEA1T//IUXqM4/YAdPThScmpt/2jgvFwZDfIq9pSpFuxMFluhL32R28zoV/uvZNTISYck/Oobh7yq97zM5qXCyB2kMncnzsjiMwMDIBeL1DgcbVox+7KQf8DDjm36zLlxcl85EjKicOyp1MErKf4zD9gtIcGn8mZsEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eu+qLSuzZ72tG4LsNbFsd0GkqwSxs1qvCT/a7rLh9/E=;
- b=EwbWieUTvdfi44FoKBPS6kDXLCNITBls9NQhQrJyBKT6kvbRbT40917GAFCqE6YPdWwrSnVDcWyItkqqgZ43AJTDXdjNnOixpMmM88MZcXW4ThFmDxAsDPL2npSHYnlPtAX0D6GS3hj9iq8Xw+nQWFZm1cKN2RK4qtkf4O19duE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Nehal-bakulchandra.Shah@amd.com; 
-Received: from BN6PR1201MB2467.namprd12.prod.outlook.com (2603:10b6:404:a7::8)
- by BN6PR1201MB0209.namprd12.prod.outlook.com (2603:10b6:405:4d::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Tue, 21 Apr
- 2020 18:32:00 +0000
-Received: from BN6PR1201MB2467.namprd12.prod.outlook.com
- ([fe80::8daf:74d4:cbe4:759]) by BN6PR1201MB2467.namprd12.prod.outlook.com
- ([fe80::8daf:74d4:cbe4:759%12]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
- 18:32:00 +0000
-Subject: Re: [PATCH v4 2/4] SFH: PCI driver to add support of AMD sensor
- fusion Hub using HID framework
-To:     Richard Neumann <mail@richard-neumann.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Sandeep Singh <Sandeep.Singh@amd.com>, Shyam-sundar.S-k@amd.com,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-References: <1582779537-25662-1-git-send-email-Sandeep.Singh@amd.com>
- <1582779537-25662-3-git-send-email-Sandeep.Singh@amd.com>
- <4fe47b0323c1d65d429ee89b000e8bfcd984495f.camel@richard-neumann.de>
- <896f84bc-f0d6-59a5-c894-809695aa348f@amd.com>
- <CAHp75Vfr6q_H6z6tRFfaKedF7oR7nhmZvRWL4mxx3W7uypUFvA@mail.gmail.com>
- <9aea760f9abdd2f90f36642af77de7bfae719485.camel@richard-neumann.de>
- <3ffc343e-c44b-1b4e-993e-179a13dc928c@amd.com>
- <7683f875aa617b3003a1949131ce79bd0e3c4dcb.camel@richard-neumann.de>
-From:   "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>
-Message-ID: <f4c08c96-bbaf-c42e-0dff-a02c5bbed6ed@amd.com>
-Date:   Wed, 22 Apr 2020 00:01:46 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-In-Reply-To: <7683f875aa617b3003a1949131ce79bd0e3c4dcb.camel@richard-neumann.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: BMXPR01CA0023.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:d::33) To BN6PR1201MB2467.namprd12.prod.outlook.com
- (2603:10b6:404:a7::8)
+        Tue, 21 Apr 2020 14:33:40 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34282 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgDUSdk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:33:40 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LIMxuC128769;
+        Tue, 21 Apr 2020 18:33:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=wt6K3+CRx09YefsrFlOtcnotTl/nc2fqGVjoZ5/7pH4=;
+ b=qDjbi1rTtkhJ8sfmPthiPveKv8kEyk0kUPo81pnOQh2wKORtfL0dCH+Dh8kIrzOSWN2d
+ QC0p/9GPPqMr1Z7kNeNCsOb3KXNKZ1ptXS+J5pHV7l6lE2X6am9xsjjap1sxrd0aO+86
+ gZWnt+k1sVsCeW9WVom8SORNKDiMqxvyQrl2Xn5ULwTkd2hh5vOMDPl9M75d/gI1Uk0y
+ lPnOvPlLaETD4YocL9cfWeCSm8bQJIrPk4s5vPdVf5e4yLe+Qcvo77gDdtAZak4pscx1
+ swwU+b+0TCVLN6yqX/DhxSXj1+YYdaygm+zb7KNK7DcTK8z8HxLA0hrjfv6QdPvI4vaB yA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 30ft6n6mgy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 18:33:29 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LIMFaJ008806;
+        Tue, 21 Apr 2020 18:31:29 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 30gb1gp19d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 18:31:29 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03LIVNba015884;
+        Tue, 21 Apr 2020 18:31:23 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 11:31:22 -0700
+Date:   Tue, 21 Apr 2020 11:31:21 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        ira.weiny@intel.com
+Subject: Re: [PATCH 12/34] docs: filesystems: convert dax.txt to ReST
+Message-ID: <20200421183121.GC6733@magnolia>
+References: <cover.1586960617.git.mchehab+huawei@kernel.org>
+ <71b1f910b2c3569a9fdaa8778378dd734f4f0091.1586960617.git.mchehab+huawei@kernel.org>
+ <20200415154144.GA6733@magnolia>
+ <20200421183117.2bf2b716@coco.lan>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.103] (202.62.82.154) by BMXPR01CA0023.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:d::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Tue, 21 Apr 2020 18:31:56 +0000
-X-Originating-IP: [202.62.82.154]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 03ae17a6-6178-44f9-7cad-08d7e62247bc
-X-MS-TrafficTypeDiagnostic: BN6PR1201MB0209:|BN6PR1201MB0209:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR1201MB0209EB5BDF945BBD11962948A0D50@BN6PR1201MB0209.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 038002787A
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1201MB2467.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(396003)(366004)(346002)(5660300002)(6486002)(55236004)(31686004)(26005)(478600001)(52116002)(7416002)(36756003)(966005)(6666004)(956004)(31696002)(110136005)(83080400001)(4326008)(8676002)(16576012)(316002)(186003)(53546011)(2616005)(54906003)(16526019)(81156014)(66946007)(66476007)(86362001)(8936002)(66556008)(2906002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hZHbyDMa7TDWST7+QN7xYZmx6BV6P2P/9O6ObGCWjVq6gUU+uI0/hzYb9GZBfr8G1gn+KM9McwGhcKL2QnAuknJTqwVE8dOfdpsRLtZvHOMyXk7vJGaNCuh8zyf9EXXPxjCeuRyLnN2ztRCByQ+aFaRfeFDwo37LFyxL/WkBdnCWTbqQgbeKeN0yjer2R/B5GnZau/OZaEXzk4gqDnNAAwLPjSzT22b8mu18OD/x1+5OhnRKikRBrqsX+4vjcOdKTAB1N+uNP+Ibil5jFLV+Ch4jTkrFQlSOZ8ANGNNmeKo4sd4L2NCAre4blWCXvpDIVS6bDdG9h+TipEm1ApSK3pytWyrqI32cajaA9tXShb4VMhfo8UrxWzJAw0f0llwI+V5hCAY4065/6Qg3k49dipmDak9Ont+8uoNnjpNnl5T8e2liRxwjiK2HoWSBwBWhttED/BepwRnt1DNdpPwwwKh7GY0ClJxZEbx9vj845J0g1cX7+ZZ5wtHwHYm2C9/0daDM7EioMZIl+gX23NgQTA==
-X-MS-Exchange-AntiSpam-MessageData: miMClg2EpLWXsk8IsFJcAlJHAtytLeTaH0izhKQ+9TmD/V70znNso/37PM2j5oxxmkvbNi8orToiWlKVWudY1fUKf+mWOryAG6FRpL0bNgJAVx2kSrFrqRSOMMUXEzm5CJ+9eqqVlswszQV06nY95A==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03ae17a6-6178-44f9-7cad-08d7e62247bc
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2020 18:32:00.5015
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L6COXRli21oK4amLGoql0o3ae2yFI90I0Jpx12+aEOnSKcFZlmA2nWxkC71WvNOU
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0209
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421183117.2bf2b716@coco.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004210139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxlogscore=999 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+On Tue, Apr 21, 2020 at 06:31:17PM +0200, Mauro Carvalho Chehab wrote:
+> Em Wed, 15 Apr 2020 08:41:44 -0700
+> "Darrick J. Wong" <darrick.wong@oracle.com> escreveu:
+> 
+> > [add ira weiny to cc]
+> > 
+> > On Wed, Apr 15, 2020 at 04:32:25PM +0200, Mauro Carvalho Chehab wrote:
+> > > - Add a SPDX header;
+> > > - Adjust document title;
+> > > - Some whitespace fixes and new line breaks;
+> > > - Add it to filesystems/index.rst.
+> > > 
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > ---
+> > >  Documentation/admin-guide/ext4.rst             | 2 +-
+> > >  Documentation/filesystems/{dax.txt => dax.rst} | 9 +++++++--
+> > >  Documentation/filesystems/ext2.rst             | 2 +-
+> > >  Documentation/filesystems/index.rst            | 1 +
+> > >  4 files changed, 10 insertions(+), 4 deletions(-)
+> > >  rename Documentation/filesystems/{dax.txt => dax.rst} (97%)
+> > > 
+> > > diff --git a/Documentation/admin-guide/ext4.rst b/Documentation/admin-guide/ext4.rst
+> > > index 9443fcef1876..103bcc345bad 100644
+> > > --- a/Documentation/admin-guide/ext4.rst
+> > > +++ b/Documentation/admin-guide/ext4.rst
+> > > @@ -392,7 +392,7 @@ When mounting an ext4 filesystem, the following option are accepted:
+> > >  
+> > >    dax
+> > >          Use direct access (no page cache).  See
+> > > -        Documentation/filesystems/dax.txt.  Note that this option is
+> > > +        Documentation/filesystems/dax.rst.  Note that this option is
+> > >          incompatible with data=journal.
+> > >  
+> > >  Data Mode
+> > > diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.rst
+> > > similarity index 97%
+> > > rename from Documentation/filesystems/dax.txt
+> > > rename to Documentation/filesystems/dax.rst
+> > > index 735f3859b19f..5838144f80f0 100644
+> > > --- a/Documentation/filesystems/dax.txt
+> > > +++ b/Documentation/filesystems/dax.rst  
+> > 
+> > Err, this will collide with the work that Ira's doing on DAX for 5.8[1].
+> > Can the dax.txt conversion wait?
+> 
+> Well, I can re-schedule it to 5.9. Or, if you merge the dax changes
+> at linux-next, I can rebase my patch on the top of it.
 
-On 4/13/2020 7:03 PM, Richard Neumann wrote:
-> Am Montag, den 06.04.2020, 10:56 +0530 schrieb Shah, Nehal-
-> bakulchandra:
->> HI
->>
->> On 4/1/2020 9:58 PM, Richard Neumann wrote:
->>> Am Dienstag, den 31.03.2020, 20:24 +0300 schrieb Andy Shevchenko:
->>>> On Tue, Mar 31, 2020 at 4:26 PM Shah, Nehal-bakulchandra
->>>> <nehal-bakulchandra.shah@amd.com> wrote:
->>>>> On 3/31/2020 6:01 PM, Richard Neumann wrote:
->>>>>> Not a real review, but your patch series seems to be
->>>>>> repeating a
->>>>>> lot
->>>>>> from drivers/i2c/busses/i2c-amd-mp2*.
->>>>>> Is there any chance we could re-use the code?
->>>>>> E.g. the AMD_C2P_* definitions from drivers/i2c/busses/i2c-
->>>>>> amd-
->>>>>> mp2.h?
->>>>> Thanks for the mail. Yes there are some common structures,
->>>>> however
->>>>> as of now we have kept separately considering both
->>>>>
->>>>> are part of different sub systems. But may be will consider
->>>>> this
->>>>> input for future enhancement.
->>>> It can be done in a form of shared definitions at least in
->>>> include/linux/platform_data/x86/amd-mp2.h or alike ...
->>>>
->>> I managed to add support for the AMD SFH PCI device to i2c-amd-mp2* 
->>> and
->>> outsourced the headers to include/linux/i2c-amd-mp2.h. [1]
->>> I also refactored the patch series (excluded the documentation) [2]
->>> to
->>> use the PCI device now provided by i2c_amd_mp2_pci and removed some
->>> duplicate and unncessary code.
->>> The driver now consist of just one module (amd_sfhtp_hid).
->>> Unfortunately I was not able to solve the problem, that I get AMD-
->>> Vi
->>> IO_PAGE_FAULT errors when not booted with amd_iommu=off.
->>>
->>> [1] 
->>> https://gist.githubusercontent.com/conqp/4d726f86da8a8397d6e70091a124de67/raw/f97e88a0b44d98bfa1258cb73c8afe4dce7afa87/i2c-amd-mp2.patch
->>> [2] 
->>> https://gist.githubusercontent.com/conqp/67036e690aca89d08b958971edac283d/raw/2a1ef122f9c8c8e07164b6d597962ce7bbad6d45/amd-sfhtp.patch
->> Thanks for the patch and appreciate your efforts. At this point of
->> time, we would like to have our first patch for SFH to be upstreamed
->> and dont want to complicate the
->>
->> with two sub systems and maintainers. Surely will consider this input
->> for future enhancement. Thanks for your understanding.
->>
->> Thanks
->>
->>
->> Nehal
->>
->>
-> Hi all,
->
-> I spent the last two weeks learning the HID API and refactored [1] the
-> patch series again. I also took into consideration Nehal's input
-> regarding the two subsystems. After tinkering with the integration of
-> the SFH PCI driver into the existing i2c-amd-mp2-pci driver, I realized
-> that this was a futile effort at this point of time, since the SFH
-> protocol, as far as I understand it, does not really implement the I2C
-> protocol. Thusly I turned away from trying to integrate the two
-> drivers. The core changes I did, is to refactor the PCI driver to use a
-> similar initialization as the i2c-amd-mp2-pci driver. The registers are
-> now mapped correctly on initial setup (1 << 2) and not mapped to zero
-> (1 >> 2) and the ioremapped later. With this change, the AMD-Vi page
-> faults when not booting with amd_iommu=off also automagically
-> disappeared. 
-> The second change is the HID device handling. I now implemented the
-> hid_ll_driver API with the respective functions to process raw events
-> as well device start / stop and open / close routines. I also
-> refactored the platform driver wich is now solely responsible for
-> spawning and despawning the HID devices. I also reduced the commonly
-> used structures and constats to those that were actually being used by
-> the driver and renamed the PCI registers to express what they are used
-> for in this driver. I also commented most functions and shared
-> structures. The only problem I keep having on my machine is, that the
-> register for the bit-shifted active sensors mask 0x1068C keeps
-> returning zero on readout and thusly I need to override it.
-> I tried to get the sensor mask by sending the "dump_sensorinfo" and
-> "number_of_sensors_discovered" commands to different C2P registers and
-> dumping the corresponding P2C registers. But so far I could not get any
-> information that could be interpreted as the sensor info and mask that
-> I need. Maybe Nehal or Sandeep could provide the information, if and
-> how it ts possible to get information about the amount, position and
-> type of the connected sensors in another way. I also found out, by
-> sweeping the SFH registers (from 0 to 31), that there seem to be other
-> sensors connected on my machine, namely at positions 0, 1, 2, 3, 4, 7,
-> 8 and 9. The ALS at 19 does not seem to be present on my system. I
-> suspect that at least one of those is an additional accelerometer,
-> since the only one working right now ist the accelerometer at position
-> 0, which is located in the sceen / lid. I suspect that the other one is
-> located in the chassis, allowing the use of both to perform tablet mode
-> detection by processing their relative orientation. I'd appreciate a
-> hint on this assumption as well. ;-)
->
-> Sincere regards,
->
-> Richard
->
-> [1] https://gist.github.com/conqp/33baa079d9524914c4c0c196200e4f89
+That depends on how quick Ira can get the series merged. :)
 
-Thanks for the refactoring  the patch. The .raw_request in hid_ll_driver is not correct, the output of sensor is not raw but it is processed one,
+I personally think (hope) everyone's tired of arguing and we can just
+get it done for 5.8, but past experience tells me that rescheduling the
+rst conversion to 5.90 is at least a safer bet.
 
-so better to move it to .request function. Regarding your question for sensor position well it comes from firmware. So i am not sure about the firmware
+--D
 
-for sensor , what you have.Also, regarding the IOMMU, we figured out the issue, earlier patch series has bug that during DMA allocation pdev was passed
-
-from platform driver context, where in for IOMMU needs context PCI pdev. So that is taken care in your refactored patch hence issue is disappeared.
-
-
-Now regarding the patch (with your changes) i need to validate at our side. Due to lockdown i dont have access to the system, so may be we can wait on that.
-
-
-Thanks
-
-Nehal Shah
-
-
-
+> > 
+> > --D
+> > 
+> > [1] https://lore.kernel.org/linux-xfs/20200415152942.GS6742@magnolia/T/#m804562299416d865d8829caa82589a522b2080a5
+> > 
+> > > @@ -1,5 +1,8 @@
+> > > +.. SPDX-License-Identifier: GPL-2.0
+> > > +
+> > > +=======================
+> > >  Direct Access for files
+> > > ------------------------
+> > > +=======================
+> > >  
+> > >  Motivation
+> > >  ----------
+> > > @@ -46,6 +49,7 @@ stall the CPU for an extended period, you should also not attempt to
+> > >  implement direct_access.
+> > >  
+> > >  These block devices may be used for inspiration:
+> > > +
+> > >  - brd: RAM backed block device driver
+> > >  - dcssblk: s390 dcss block device driver
+> > >  - pmem: NVDIMM persistent memory driver
+> > > @@ -55,6 +59,7 @@ Implementation Tips for Filesystem Writers
+> > >  ------------------------------------------
+> > >  
+> > >  Filesystem support consists of
+> > > +
+> > >  - adding support to mark inodes as being DAX by setting the S_DAX flag in
+> > >    i_flags
+> > >  - implementing ->read_iter and ->write_iter operations which use dax_iomap_rw()
+> > > @@ -127,6 +132,6 @@ by adding optional struct page support for pages under the control of
+> > >  the driver (see CONFIG_NVDIMM_PFN in drivers/nvdimm for an example of
+> > >  how to do this). In the non struct page cases O_DIRECT reads/writes to
+> > >  those memory ranges from a non-DAX file will fail (note that O_DIRECT
+> > > -reads/writes _of a DAX file_ do work, it is the memory that is being
+> > > +reads/writes _of a DAX ``file_`` do work, it is the memory that is being
+> > >  accessed that is key here).  Other things that will not work in the
+> > >  non struct page case include RDMA, sendfile() and splice().
+> > > diff --git a/Documentation/filesystems/ext2.rst b/Documentation/filesystems/ext2.rst
+> > > index d83dbbb162e2..fa416b7a5802 100644
+> > > --- a/Documentation/filesystems/ext2.rst
+> > > +++ b/Documentation/filesystems/ext2.rst
+> > > @@ -24,7 +24,7 @@ check=none, nocheck	(*)	Don't do extra checking of bitmaps on mount
+> > >  				(check=normal and check=strict options removed)
+> > >  
+> > >  dax				Use direct access (no page cache).  See
+> > > -				Documentation/filesystems/dax.txt.
+> > > +				Documentation/filesystems/dax.rst.
+> > >  
+> > >  debug				Extra debugging information is sent to the
+> > >  				kernel syslog.  Useful for developers.
+> > > diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+> > > index c4f95f76ba6a..8e3ccb4ed483 100644
+> > > --- a/Documentation/filesystems/index.rst
+> > > +++ b/Documentation/filesystems/index.rst
+> > > @@ -24,6 +24,7 @@ algorithms work.
+> > >     splice
+> > >     locking
+> > >     directory-locking
+> > > +   dax
+> > >  
+> > >     automount-support
+> > >  
+> > > -- 
+> > > 2.25.2
+> > >   
+> 
+> 
+> 
+> Thanks,
+> Mauro
