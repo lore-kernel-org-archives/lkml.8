@@ -2,121 +2,163 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B2FC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC31C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 286A22076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB352075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbgDUMWc (ORCPT
+        id S1728799AbgDUMWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:22:32 -0400
-Received: from m176115.mail.qiye.163.com ([59.111.176.115]:64838 "EHLO
-        m176115.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbgDUMWb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:22:31 -0400
-Received: from ubuntu.localdomain (unknown [157.0.31.122])
-        by m176115.mail.qiye.163.com (Hmail) with ESMTPA id 232B9664480;
-        Tue, 21 Apr 2020 20:22:25 +0800 (CST)
-From:   Bernard Zhao <bernard@vivo.com>
-To:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: [PATCH v4] amdgpu: remove unnecessary condition check
-Date:   Tue, 21 Apr 2020 05:22:18 -0700
-Message-Id: <20200421122218.1849-1-bernard@vivo.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 21 Apr 2020 08:22:47 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2855 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726018AbgDUMWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 08:22:46 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DD693E80D4C4184FD20D;
+        Tue, 21 Apr 2020 20:22:42 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Apr 2020
+ 20:22:35 +0800
+Subject: Re: [PATCH v1 6/6] arm64: tlb: Set the TTL field in flush_tlb_range
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+CC:     <mark.rutland@arm.com>, <will@kernel.org>,
+        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
+        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+References: <20200403090048.938-1-yezhenyu2@huawei.com>
+ <20200403090048.938-7-yezhenyu2@huawei.com>
+ <20200420121055.GF20696@hirez.programming.kicks-ass.net>
+ <20200420200616.44c7c7ea@oasis.local.home>
+ <20200421083043.GP20730@hirez.programming.kicks-ass.net>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <25267000-9c39-cd1c-33c8-c62bfb41d905@huawei.com>
+Date:   Tue, 21 Apr 2020 20:22:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVPSkNLS0tJSUpJTklPT1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mj46Pjo6OTgxQwMODhYyPhE6
-        FxUKFE1VSlVKTkNMT0xKTE9DT0NLVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
-        S1VISlVKSUlZV1kIAVlBSEtMQzcG
-X-HM-Tid: 0a719cb081279373kuws232b9664480
+In-Reply-To: <20200421083043.GP20730@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to if check again, maybe we could merge
-into the above else branch.
+On 2020/4/21 16:30, Peter Zijlstra wrote:
+> On Mon, Apr 20, 2020 at 08:06:16PM -0400, Steven Rostedt wrote:
+>> Peter Zijlstra <peterz@infradead.org> wrote:
+>>> On Fri, Apr 03, 2020 at 05:00:48PM +0800, Zhenyu Ye wrote:
+> 
+>>>> +static inline int tlb_get_level(struct mmu_gather *tlb)
+>>>> +{
+>>>> +	int sum = tlb->cleared_ptes + tlb->cleared_pmds +
+>>>> +		  tlb->cleared_puds + tlb->cleared_p4ds;
+>>>> +
+>>>> +	if (sum != 1)
+>>>> +		return 0;
+>>>> +	else if (tlb->cleared_ptes)
+>>>> +		return 3;
+>>>> +	else if (tlb->cleared_pmds)
+>>>> +		return 2;
+>>>> +	else if (tlb->cleared_puds)
+>>>> +		return 1;
+>>>> +
+>>>> +	return 0;
+>>>> +}  
+>>>
+>>> That's some mighty wonky code. Please look at the generated asm.
+>>
+>> Without even looking at the generated asm, if a condition returns,
+>> there's no reason to add an else for that condition.
+> 
+> Not really the point; he wants to guarantee he only returns >0 when
+> there's a single bit set. But the thing is, cleared_* is a bitfield, and
+> I'm afraid that the above will result in some terrible code-gen.
+> 
+> Maybe something like:
+> 
+> 	if (tlb->cleared_ptes && !(tlb->cleared_pmds ||
+> 				   tlb->cleared_puds ||
+> 				   tlb->cleared_p4ds))
+> 		return 3;
+> 
+> 	if (tlb->cleared_pmds && !(tlb->cleared_ptes ||
+> 				   tlb->cleared_puds ||
+> 				   tlb->cleared_p4ds))
+> 		return 2;
+> 
+> 	if (tlb->cleared_puds && !(tlb->cleared_ptes ||
+> 				   tlb->cleared_pmds ||
+> 				   tlb->cleared_p4ds))
+> 		return 1;
+> 
+> 	return 0;
+> 
+> Which I admit is far too much typing, but I suspect it generates far
+> saner code (just a few masks and branches).
+> 
+> But maybe the compiler surprises us, what do I konw.
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
+Thanks for your review.  In my view, the asm-code should behave the same
+as the C code, even if cleared_* are bitfields (below 02 optimization).
 
-Changes since V1:
-*commit message improve
-*code style refactoring
+Below is the generated asm of my code (gcc version is 7.3.0):
 
-Changes since V2:
-*code style adjust
+<tlb_flush_mmu_tlbonly.part.110>:
+	...
+	ubfx	x5, x2, #3, #1		// x2 stores the values of cleared_*
+	ubfx	x1, x2, #4, #1
+	add	w1, w1, w5
+	ubfx	x5, x2, #5, #1
+	add	w1, w1, w5
+	ubfx	x2, x2, #6, #1
+	add	w1, w1, w2		// then the w1 = sum of cleared_*
+	tbnz	w3, #3, 001030f8b8
+	tbz	w3, #4, 001030fac0
+	cmp	w1, #0x1		// cmp the w1 to select branch
+	mov	w5, #0x2
+	...				// do the if-else below...
 
-Changes since V3:
-*find the best way to merge unnecessary if/else check branch
 
-Link for V1:
-*https://lore.kernel.org/patchwork/patch/1226587/
----
- .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  | 20 +++++++++----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+Then with your code above, the generated asm is:
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index 9dff792c9290..acb612c53b9c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -660,15 +660,15 @@ static int reserve_bo_and_vm(struct kgd_mem *mem,
- 
- 	ret = ttm_eu_reserve_buffers(&ctx->ticket, &ctx->list,
- 				     false, &ctx->duplicates);
--	if (!ret)
--		ctx->reserved = true;
--	else {
--		pr_err("Failed to reserve buffers in ttm\n");
-+	if (ret) {
-+		pr_err("Failed to reserve buffers in ttm.\n");
- 		kfree(ctx->vm_pd);
- 		ctx->vm_pd = NULL;
-+		return ret;
- 	}
- 
--	return ret;
-+	ctx->reserved = true;
-+	return 0;
- }
- 
- /**
-@@ -733,17 +733,15 @@ static int reserve_bo_and_cond_vms(struct kgd_mem *mem,
- 
- 	ret = ttm_eu_reserve_buffers(&ctx->ticket, &ctx->list,
- 				     false, &ctx->duplicates);
--	if (!ret)
--		ctx->reserved = true;
--	else
--		pr_err("Failed to reserve buffers in ttm.\n");
--
- 	if (ret) {
-+		pr_err("Failed to reserve buffers in ttm.\n");
- 		kfree(ctx->vm_pd);
- 		ctx->vm_pd = NULL;
-+		return ret;
- 	}
- 
--	return ret;
-+	ctx->reserved = true;
-+	return 0;
- }
- 
- /**
--- 
-2.26.2
+<tlb_flush_mmu_tlbonly.part.110>:
+	...
+	tbnz    w1, #3, 001030f8a0	// w1 stores the values of cleared_*
+	tbz     w1, #4, 001030fac0
+	and     w2, w1, #0x78		// mask the cleared_* to w2
+	mov     x4, #0x200000
+	mov     w7, #0x15
+	mov     w6, #0x3
+	cmp     w2, #0x8		// cmp the w2 to 0x8, 0x10, 0x20 to
+					// select branch
+	b.ne    ffff80001030f8b8
+	...				// do the if-else below...
+
+So at the gen-asm level, both of our codes are OK.  But your code is really
+more saner than mine at the gen-asm level.
+
+Thanks for your suggestion of this, I will send a new patch series soon.
+
+Zhenyu
+
+.
+
+
 
