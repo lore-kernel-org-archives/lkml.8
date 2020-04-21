@@ -2,115 +2,123 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959B0C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34692C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71DEE2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:08:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="erYyRWGV"
+	by mail.kernel.org (Postfix) with ESMTP id 15BCB2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587485578;
+	bh=z7wSBxgXchis2Hm2lDH4M1aMg9c6rd9UE2dcLatcCrg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IxSTo/1DD70F7d3w5YY+sY14wf8NUNNpo6VI4d70WBuuEDG9LiuyhagQB37s4EuO5
+	 oes2ptygc3+kshngSelnPoSmJivUtDLPgwOAkAeqcrsrUVyL0kN1tAby4DU+gm7X7s
+	 glECuwBuHYAx70h9KCNc35MT2I+qYlvA7J5Y1a4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgDUQIU (ORCPT
+        id S1726378AbgDUQM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:08:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47254 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725990AbgDUQIT (ORCPT
+        Tue, 21 Apr 2020 12:12:57 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:42832 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgDUQM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:08:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587485298;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zX1gMKclpqnAEoBMDkK5PhMtrskM3KRZZa0iKX4TUNw=;
-        b=erYyRWGV/0ocYHOU6uK5EhYmyY7NmrnJovFmRBsggadTyCJVIsrKfDqOpOoxwrvUAHkVFy
-        uj1/OpH38NWS0bp8grYdAxNpCby6/AR5W3G0a1WU49/NHt7oEyKQcyOPmtOAqDK6vi24gs
-        tdwT3RUF59UnF3WQVGU7t6JREtkUe3Q=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-244-s0ziHU3lOwm_Xx0qu341Yg-1; Tue, 21 Apr 2020 12:08:17 -0400
-X-MC-Unique: s0ziHU3lOwm_Xx0qu341Yg-1
-Received: by mail-wr1-f72.google.com with SMTP id d17so7719339wrr.17
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:08:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zX1gMKclpqnAEoBMDkK5PhMtrskM3KRZZa0iKX4TUNw=;
-        b=kryY6OQ0NTlxw62uzvc/7GjjTq/wVDUGQhWFaKK+6idszSoo8XpeV0Ckynt5Z0eQrq
-         Zg1x78dT+iA00AxDaHUZrjOvAp7GDhiEM5eK1XvyIuB0CQKKU4JrxlkT3Io0v/amyu/6
-         g4GODZ5Z8y8e94hqzLZQffPKenQGsLULkFxPd5rOF3So5s0NAHcxkihblaL4JMuj1GuX
-         fYaahG9yHb2uXd6D3ghI5B0Np8Uq4WHZKkbUA+D/Ppi9DorCG+Z2Mck67r0JQlNJONid
-         YUKXvR1Gd5KC8MQkku53olrV/ukhvRAT5yuUlf8jo++W+xW4YZl4SicEr1w7Nvgs4tqV
-         QdTQ==
-X-Gm-Message-State: AGi0PuY5Zuth4OZdzlawszXXt8JRPp9KnXTpbrlS3PxLYP/BDNhNMrTW
-        oPprN1D1mbgOaxToc5DAfC1ri6UcyY4/3kXOhD4+gPXPg4Qc2UVmH3dwbQ3BGMnYpCl6t5pgYVj
-        1CKB5HB0zmHo4MSFDwiu0pQM0
-X-Received: by 2002:a5d:4cc2:: with SMTP id c2mr7833689wrt.130.1587485295142;
-        Tue, 21 Apr 2020 09:08:15 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLvIubcHMY+bL+zO//2Pbr43uhrB1dGEYg7deIwhIyQZYcUlf8RLmjST2V4p2KxDgWpDL0OHQ==
-X-Received: by 2002:a5d:4cc2:: with SMTP id c2mr7833673wrt.130.1587485294887;
-        Tue, 21 Apr 2020 09:08:14 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
-        by smtp.gmail.com with ESMTPSA id x18sm4235851wrs.11.2020.04.21.09.08.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 09:08:14 -0700 (PDT)
-Subject: Re: [PATCH] kvm/eventfd: remove unneeded conversion to bool
-To:     Jason Yan <yanaijie@huawei.com>, peterx@redhat.com,
-        tglx@linutronix.de, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200420123805.4494-1-yanaijie@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <7a0d78d8-e5db-30fb-a2a2-62113a791e49@redhat.com>
-Date:   Tue, 21 Apr 2020 18:08:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 21 Apr 2020 12:12:57 -0400
+X-Greylist: delayed 150238 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Apr 2020 12:12:55 EDT
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 03LGCekp020474;
+        Wed, 22 Apr 2020 01:12:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 03LGCekp020474
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587485561;
+        bh=BOK4GJk6lNAkiI6IDH+s6d6MtXYf70lyowyocUXT72c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mw32Y8mKjVvb7z4EktZyDrmoyglbEDKnp13uCbKcWcnJddeET/eVNTheVoA9YnIHf
+         TMdIlZGv7Cmr7ovsKz8cuJvOv/O7uJ4fZXgcGLG/5dW2fxO+Dhkjoe6+9FGFlOiGyt
+         pUZtAL+8BYzAzERzHvmPfk3XQhCLR5SBl2nzz5QjKJiQX0L8hTqWQRqiq7Oxb7Rffh
+         aNaKsh5fERspl8K4rqoSSxVRQLBxRJgtKXg6svOnkMFnIP0Ls/aGuFVFPecrPTGJ53
+         SpgdLSbcT280wSRBzJM1H0VoPcHbWBgGmHjl0wG1j6FzAIz/0U7ITdybuSj8j/v7+J
+         f0X+9RVumY2rw==
+X-Nifty-SrcIP: [209.85.221.173]
+Received: by mail-vk1-f173.google.com with SMTP id f7so1606230vkl.6;
+        Tue, 21 Apr 2020 09:12:41 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZfexYeb1AtTpiXxBITOvGY13L9ovqnjzDRn7ILC0BiDCatKqri
+        F52zHP1fqFS/y6+thiIA15YokbCzOS+UX1r5nuM=
+X-Google-Smtp-Source: APiQypJI+pUyv3Bc1PqCLhSPKkJ8B/Zvm2eRwcJb4kn/U1qeaRikieZ17KGnPDYDyNAabqKt/aIKsKB1iHXajx/yjew=
+X-Received: by 2002:a1f:d182:: with SMTP id i124mr15305782vkg.26.1587485560166;
+ Tue, 21 Apr 2020 09:12:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200420123805.4494-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200419222804.483191-1-masahiroy@kernel.org> <202004212303.QGojecQx%lkp@intel.com>
+In-Reply-To: <202004212303.QGojecQx%lkp@intel.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 22 Apr 2020 01:12:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASKocVHOSSiEJ4BH+YQcoEt1-p8yXdRwsesGUoQwU8+OQ@mail.gmail.com>
+Message-ID: <CAK7LNASKocVHOSSiEJ4BH+YQcoEt1-p8yXdRwsesGUoQwU8+OQ@mail.gmail.com>
+Subject: Re: [PATCH] arch: split MODULE_ARCH_VERMAGIC definitions out to <asm/vermagic.h>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild-all@lists.01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/04/20 14:38, Jason Yan wrote:
-> The '==' expression itself is bool, no need to convert it to bool again.
-> This fixes the following coccicheck warning:
-> 
-> virt/kvm/eventfd.c:724:38-43: WARNING: conversion to bool not needed
-> here
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  virt/kvm/eventfd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-> index 67b6fc153e9c..0c4ede45e6bd 100644
-> --- a/virt/kvm/eventfd.c
-> +++ b/virt/kvm/eventfd.c
-> @@ -721,7 +721,7 @@ ioeventfd_in_range(struct _ioeventfd *p, gpa_t addr, int len, const void *val)
->  		return false;
->  	}
->  
-> -	return _val == p->datamatch ? true : false;
-> +	return _val == p->datamatch;
->  }
->  
->  /* MMIO/PIO writes trigger an event if the addr/val match */
-> 
+On Wed, Apr 22, 2020 at 12:56 AM kbuild test robot <lkp@intel.com> wrote:
+>
+> Hi Masahiro,
+>
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v5.7-rc2 next-20200421]
+> [cannot apply to arm/for-next arm64/for-next/core ia64/next powerpc/next jeyu/modules-next arc/for-next tip/x86/core]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Masahiro-Yamada/arch-split-MODULE_ARCH_VERMAGIC-definitions-out-to-asm-vermagic-h/20200421-194238
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ae83d0b416db002fe95601e7f97f64b59514d936
+> config: nios2-3c120_defconfig (attached as .config)
+> compiler: nios2-linux-gcc (GCC) 9.3.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=nios2
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    In file included from include/linux/vermagic.h:6,
+>                     from net/ethtool/ioctl.c:20:
+> >> ./arch/nios2/include/generated/asm/vermagic.h:1:10: fatal error: asm-generic/vermagic.h: No such file or directory
+>        1 | #include <asm-generic/vermagic.h>
+>          |          ^~~~~~~~~~~~~~~~~~~~~~~~
+>    compilation terminated.
+>
 
-Queued, thanks.
 
-Paolo
+Thanks.
+include/asm-generic/vermagic.h is a new file.
 
+I forgot to do "git add include/asm-generic/vermagic.h"
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
