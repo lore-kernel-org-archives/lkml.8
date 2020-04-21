@@ -2,112 +2,155 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A607C55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8968C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD59720B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC0F2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgDUIJj (ORCPT
+        id S1728263AbgDUIJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:09:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:59616 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgDUIJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:09:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B5261FB;
-        Tue, 21 Apr 2020 01:09:37 -0700 (PDT)
-Received: from [10.163.1.9] (unknown [10.163.1.9])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03BAA3F6CF;
-        Tue, 21 Apr 2020 01:09:29 -0700 (PDT)
-Subject: Re: [PATCH 2/2] mm/thp: Rename pmd_mknotpresent() as pmd_mknotvalid()
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-mm@kvack.org, Vineet Gupta <vgupta@synopsys.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        nouveau@lists.freedesktop.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1584680057-13753-1-git-send-email-anshuman.khandual@arm.com>
- <1584680057-13753-3-git-send-email-anshuman.khandual@arm.com>
- <20200420210354.GD29998@willie-the-truck>
- <78fee884-78fc-6102-1a37-12106dc21336@arm.com>
- <20200421070703.GC14448@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <73e2d20a-4009-c2f3-03b7-fcd29d098491@arm.com>
-Date:   Tue, 21 Apr 2020 13:39:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 21 Apr 2020 04:09:43 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56568 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727889AbgDUIJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 04:09:42 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4E462C5A192B1903B93A;
+        Tue, 21 Apr 2020 16:09:35 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 21 Apr 2020 16:09:27 +0800
+From:   Tian Tao <tiantao6@hisilicon.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <gregkh@linuxfoundation.org>, <info@metux.net>,
+        <allison@lohutok.net>, <james.morse@arm.com>, <tglx@linutronix.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <jonathan.cameron@huawei.com>
+CC:     <linuxarm@huawei.com>
+Subject: [PATCH] arm32: fix flushcache syscall with device address
+Date:   Tue, 21 Apr 2020 16:08:34 +0800
+Message-ID: <1587456514-61156-1-git-send-email-tiantao6@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20200421070703.GC14448@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+An issue has been observed on our Kungpeng916 systems when using a PCI
+express GPU. This occurs when a 32 bit application running on a 64 bit
+kernel issues a cache flush operation to a memory address that is in
+a PCI BAR of the GPU.The results in an illegal operation and
+subsequent crash.
 
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+Signed-off-by: Lixin Chen <chenlixin1@huawei.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+---
+ arch/arm64/kernel/sys_compat.c | 69 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-On 04/21/2020 12:37 PM, Will Deacon wrote:
-> On Tue, Apr 21, 2020 at 04:57:26AM +0530, Anshuman Khandual wrote:
->>
->>
->> On 04/21/2020 02:33 AM, Will Deacon wrote:
->>> On Fri, Mar 20, 2020 at 10:24:17AM +0530, Anshuman Khandual wrote:
->>>> pmd_present() is expected to test positive after pmdp_mknotpresent() as the
->>>> PMD entry still points to a valid huge page in memory. pmdp_mknotpresent()
->>>> implies that given PMD entry is just invalidated from MMU perspective while
->>>> still holding on to pmd_page() referred valid huge page thus also clearing
->>>> pmd_present() test. This creates the following situation which is counter
->>>> intuitive.
->>>>
->>>> [pmd_present(pmd_mknotpresent(pmd)) = true]
->>>>
->>>> This renames pmd_mknotpresent() as pmd_mknotvalid() reflecting the helper's
->>>> functionality more accurately while changing the above mentioned situation
->>>> as follows. This does not create any functional change.
->>>>
->>>> [pmd_present(pmd_mknotvalid(pmd)) = true]
->>>>
->>>> This is not applicable for platforms that define own pmdp_invalidate() via
->>>> __HAVE_ARCH_PMDP_INVALIDATE. Suggestion for renaming came during a previous
->>>> discussion here.
->>>
->>> Bikeshed alert: maybe pmd_mkinvalid() would be better, given that this is
->>> a one-trick pony for pmdp_invalidate()?
->>
->> I had thought about making it pmd_mkinvalid() earlier. But as we were replacing
->> pmd_mknotpresent(), hence went with similar pattern pmd_mknotvalid() which was
->> originally suggested by Catalin. There is an existing pte_mknotpresent() in arc
->> platform as well. I dont have a very strong opinion either way, will be happy
->> to rename. But then still wondering if we really need to.
-> 
-> I just think that having pmdp_invalidate() call pmd_mkinvalid() makes a lot
-> of sense and, since this is a pure renaming patch, then that's worth taking
-> into consideration.
+diff --git a/arch/arm64/kernel/sys_compat.c b/arch/arm64/kernel/sys_compat.c
+index 3c18c24..6c07944 100644
+--- a/arch/arm64/kernel/sys_compat.c
++++ b/arch/arm64/kernel/sys_compat.c
+@@ -15,12 +15,74 @@
+ #include <linux/slab.h>
+ #include <linux/syscalls.h>
+ #include <linux/uaccess.h>
++#include <linux/hugetlb.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/system_misc.h>
+ #include <asm/tlbflush.h>
+ #include <asm/unistd.h>
+ 
++static long __check_pt_cacheable(unsigned long vaddr)
++{
++	struct mm_struct *mm = current->mm;
++	pgd_t *pgd;
++	p4d_t *p4d;
++	pud_t *pud;
++	pudval_t pudval;
++	pmd_t *pmd;
++	pmdval_t pmdval;
++	pte_t *pte;
++	pteval_t pteval;
++	pgprot_t pgprot;
++
++	spin_lock(&mm->page_table_lock);
++	pgd = pgd_offset(mm, vaddr);
++	if (pgd_none(*pgd) || unlikely(pgd_bad(*pgd)))
++		goto no_page;
++
++	p4d = p4d_offset(pgd, vaddr);
++	if (p4d_none(*p4d) || unlikely(p4d_bad(*p4d)))
++		goto no_page;
++
++	pud = pud_offset(p4d, vaddr);
++	if (pud_none(*pud) || unlikely(pud_bad(*pud)))
++		goto no_page;
++	if (pud_huge(*pud)) {
++		pudval = pud_val(*pud);
++		pgprot = __pgprot(pudval);
++		goto out;
++	}
++
++	pmd = pmd_offset(pud, vaddr);
++	if (pmd_none(*pmd) || unlikely(pmd_bad(*pmd)))
++		goto no_page;
++	if (pmd_huge(*pmd)) {
++		pmdval = pmd_val(*pmd);
++		pgprot = __pgprot(pmdval);
++		goto out;
++	}
++
++	pte = pte_offset_map(pmd, vaddr);
++	if (!pte_present(*pte) || pte_none(*pte))
++		goto no_page;
++	pteval = pte_val(*pte);
++	pgprot = __pgprot(pteval);
++
++out:
++	pgprot.pgprot &= PTE_ATTRINDX_MASK;
++	if (pgprot.pgprot != PTE_ATTRINDX(MT_NORMAL)) {
++		pr_debug("non-cache page pgprot value=0x%llx.\n",
++			pgprot.pgprot);
++		goto no_page;
++	}
++	spin_unlock(&mm->page_table_lock);
++	return 1;
++
++no_page:
++	spin_unlock(&mm->page_table_lock);
++	return 0;
++}
++
+ static long
+ __do_compat_cache_op(unsigned long start, unsigned long end)
+ {
+@@ -32,6 +94,13 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
+ 		if (fatal_signal_pending(current))
+ 			return 0;
+ 
++		 /* do not flush page table is non-cacheable */
++		if (!__check_pt_cacheable(start)) {
++			cond_resched();
++			start += chunk;
++			continue;
++		}
++
+ 		if (cpus_have_const_cap(ARM64_WORKAROUND_1542419)) {
+ 			/*
+ 			 * The workaround requires an inner-shareable tlbi.
+-- 
+2.7.4
 
-Sure np, will do.
-
-> 
-> If you go with pmd_mkinvalid(), then:
-> 
-> Acked-by: Will Deacon <will@kernel.org>
-> 
-> Will
-> 
