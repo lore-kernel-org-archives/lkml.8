@@ -2,168 +2,183 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4E9C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA59EC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA6A320679
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2D9206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgDUK5T (ORCPT
+        id S1728490AbgDULCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 06:57:19 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60090 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgDUK5S (ORCPT
+        Tue, 21 Apr 2020 07:02:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57038 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726018AbgDULCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 06:57:18 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id E04372A1265
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     devicetree@vger.kernel.org
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Rob Herring <robh@kernel.org>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v2] dt-bindings: display: dw_mipi_dsi.txt: convert to yaml
-Date:   Tue, 21 Apr 2020 13:58:14 +0300
-Message-Id: <20200421105814.1364900-1-adrian.ratiu@collabora.com>
-X-Mailer: git-send-email 2.26.0
+        Tue, 21 Apr 2020 07:02:47 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LB2iZS089165
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 07:02:46 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gg27mw4n-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 07:02:44 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Tue, 21 Apr 2020 12:01:50 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 Apr 2020 12:01:47 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03LB2VZd61997204
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 11:02:31 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9FD91A4067;
+        Tue, 21 Apr 2020 11:02:31 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6DC44A4054;
+        Tue, 21 Apr 2020 11:02:31 +0000 (GMT)
+Received: from pic2.home (unknown [9.145.42.232])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Apr 2020 11:02:31 +0000 (GMT)
+Subject: Re: [PATCH AUTOSEL 5.4 69/78] powerpc/powernv/ioda: Fix ref count for
+ devices with their own PE
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20200418144047.9013-1-sashal@kernel.org>
+ <20200418144047.9013-69-sashal@kernel.org>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Tue, 21 Apr 2020 13:02:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200418144047.9013-69-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042111-0016-0000-0000-000003088DB2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042111-0017-0000-0000-0000336CA446
+Message-Id: <b4fcb316-4fe8-47ec-81c7-4a79b0543b15@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_04:2020-04-20,2020-04-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 clxscore=1031 adultscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the Synopsis MIPI DSI binding documentation to yaml and
-should be quite straightforward. I've added a missing ref clk and also
-added Philippe as maintainer b/c he's the original txt author following
-the algorithm provided in Message-ID 20200420175909.GA5810@ravnborg.org.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: Philippe CORNU <philippe.cornu@st.com>
-Cc: devicetree@vger.kernel.org
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
----
-Changes in v2:
-  - Removed unnecessary descriptions and maxItems (Rob)
-  - Changed maintainers entry / dropped Mark (Rob)
-  - Added dsi-controller.yaml ref (Rob)
----
- .../bindings/display/bridge/dw_mipi_dsi.txt   | 32 -----------
- .../display/bridge/snps,dw-mipi-dsi.yaml      | 56 +++++++++++++++++++
- 2 files changed, 56 insertions(+), 32 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
- create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
-deleted file mode 100644
-index b13adf30b8d3b..0000000000000
---- a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
-+++ /dev/null
-@@ -1,32 +0,0 @@
--Synopsys DesignWare MIPI DSI host controller
--============================================
--
--This document defines device tree properties for the Synopsys DesignWare MIPI
--DSI host controller. It doesn't constitue a device tree binding specification
--by itself but is meant to be referenced by platform-specific device tree
--bindings.
--
--When referenced from platform device tree bindings the properties defined in
--this document are defined as follows. The platform device tree bindings are
--responsible for defining whether each optional property is used or not.
--
--- reg: Memory mapped base address and length of the DesignWare MIPI DSI
--  host controller registers. (mandatory)
--
--- clocks: References to all the clocks specified in the clock-names property
--  as specified in [1]. (mandatory)
--
--- clock-names:
--  - "pclk" is the peripheral clock for either AHB and APB. (mandatory)
--  - "px_clk" is the pixel clock for the DPI/RGB input. (optional)
--
--- resets: References to all the resets specified in the reset-names property
--  as specified in [2]. (optional)
--
--- reset-names: string reset name, must be "apb" if used. (optional)
--
--- panel or bridge node: see [3]. (mandatory)
--
--[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
--[2] Documentation/devicetree/bindings/reset/reset.txt
--[3] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-diff --git a/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
-new file mode 100644
-index 0000000000000..d9ab464f79ff4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/snps,dw-mipi-dsi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synopsys DesignWare MIPI DSI host controller
-+
-+maintainers:
-+  - Philippe CORNU <philippe.cornu@st.com>
-+
-+description: |
-+  This document defines device tree properties for the Synopsys DesignWare MIPI
-+  DSI host controller. It doesn't constitue a device tree binding specification
-+  by itself but is meant to be referenced by platform-specific device tree
-+  bindings.
-+
-+  When referenced from platform device tree bindings the properties defined in
-+  this document are defined as follows. The platform device tree bindings are
-+  responsible for defining whether each property is required or optional.
-+
-+allOf:
-+  - $ref: ../dsi-controller.yaml#
-+
-+properties:
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Module clock
-+      - description: DSI bus clock for either AHB and APB
-+      - description: Pixel clock for the DPI/RGB input
-+    minItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+      - const: pclk
-+      - const: px_clk
-+    minItems: 2
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    const: apb
-+
-+patternProperties:
-+  "^panel@[0-3]$":
-+    type: object
-+
-+required:
-+  - reg
-+  - clocks
-+  - clock-names
--- 
-2.26.0
+Le 18/04/2020 à 16:40, Sasha Levin a écrit :
+> From: Frederic Barrat <fbarrat@linux.ibm.com>
+> 
+> [ Upstream commit 05dd7da76986937fb288b4213b1fa10dbe0d1b33 ]
+
+
+This shouldn't be backported to stable.
+
+   Fred
+
+
+> The pci_dn structure used to store a pointer to the struct pci_dev, so
+> taking a reference on the device was required. However, the pci_dev
+> pointer was later removed from the pci_dn structure, but the reference
+> was kept for the npu device.
+> See commit 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary
+> pcidev from pci_dn").
+> 
+> We don't need to take a reference on the device when assigning the PE
+> as the struct pnv_ioda_pe is cleaned up at the same time as
+> the (physical) device is released. Doing so prevents the device from
+> being released, which is a problem for opencapi devices, since we want
+> to be able to remove them through PCI hotplug.
+> 
+> Now the ugly part: nvlink npu devices are not meant to be
+> released. Because of the above, we've always leaked a reference and
+> simply removing it now is dangerous and would likely require more
+> work. There's currently no release device callback for nvlink devices
+> for example. So to be safe, this patch leaks a reference on the npu
+> device, but only for nvlink and not opencapi.
+> 
+> Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> Link: https://lore.kernel.org/r/20191121134918.7155-2-fbarrat@linux.ibm.com
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 19 ++++++++++++-------
+>   1 file changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 058223233088e..e9cda7e316a50 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -1062,14 +1062,13 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
+>   		return NULL;
+>   	}
+>   
+> -	/* NOTE: We get only one ref to the pci_dev for the pdn, not for the
+> -	 * pointer in the PE data structure, both should be destroyed at the
+> -	 * same time. However, this needs to be looked at more closely again
+> -	 * once we actually start removing things (Hotplug, SR-IOV, ...)
+> +	/* NOTE: We don't get a reference for the pointer in the PE
+> +	 * data structure, both the device and PE structures should be
+> +	 * destroyed at the same time. However, removing nvlink
+> +	 * devices will need some work.
+>   	 *
+>   	 * At some point we want to remove the PDN completely anyways
+>   	 */
+> -	pci_dev_get(dev);
+>   	pdn->pe_number = pe->pe_number;
+>   	pe->flags = PNV_IODA_PE_DEV;
+>   	pe->pdev = dev;
+> @@ -1084,7 +1083,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_dev_PE(struct pci_dev *dev)
+>   		pnv_ioda_free_pe(pe);
+>   		pdn->pe_number = IODA_INVALID_PE;
+>   		pe->pdev = NULL;
+> -		pci_dev_put(dev);
+>   		return NULL;
+>   	}
+>   
+> @@ -1205,6 +1203,14 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
+>   	struct pci_controller *hose = pci_bus_to_host(npu_pdev->bus);
+>   	struct pnv_phb *phb = hose->private_data;
+>   
+> +	/*
+> +	 * Intentionally leak a reference on the npu device (for
+> +	 * nvlink only; this is not an opencapi path) to make sure it
+> +	 * never goes away, as it's been the case all along and some
+> +	 * work is needed otherwise.
+> +	 */
+> +	pci_dev_get(npu_pdev);
+> +
+>   	/*
+>   	 * Due to a hardware errata PE#0 on the NPU is reserved for
+>   	 * error handling. This means we only have three PEs remaining
+> @@ -1228,7 +1234,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_npu_PE(struct pci_dev *npu_pdev)
+>   			 */
+>   			dev_info(&npu_pdev->dev,
+>   				"Associating to existing PE %x\n", pe_num);
+> -			pci_dev_get(npu_pdev);
+>   			npu_pdn = pci_get_pdn(npu_pdev);
+>   			rid = npu_pdev->bus->number << 8 | npu_pdn->devfn;
+>   			npu_pdn->pe_number = pe_num;
+> 
 
