@@ -2,108 +2,89 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF37C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB90C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA5992068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:25:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="duObSLhe"
+	by mail.kernel.org (Postfix) with ESMTP id 943D1206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgDUPZW (ORCPT
+        id S1726403AbgDUP00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbgDUPZV (ORCPT
+        Tue, 21 Apr 2020 11:26:26 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38433 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbgDUP00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:25:21 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B28C061A10;
-        Tue, 21 Apr 2020 08:25:21 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5776323059;
-        Tue, 21 Apr 2020 17:25:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587482719;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8QsvXJy4QN7Mhtq+sVqR6fne5if5MqXv+cU/VAiszjI=;
-        b=duObSLhe+gutB6BVnKAuL4/s+7UfON76l+ghN0faiJPKhgX5tO8nEWxTY0MP5SYpK1JIAH
-        rnmWQnFQXlD0Tm+4rra8AJBa2J4atfb24lZZywzwVoCVQYkOyhXa+ziy+9URAKUPtsVaAR
-        CySjExY++bC35ycrNpAGcPDvonBn1tI=
+        Tue, 21 Apr 2020 11:26:26 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p8so6898645pgi.5;
+        Tue, 21 Apr 2020 08:26:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZoAlc7VTUrpcd1kNRj5A6zpWc6WzY7omp1v+WZzPafQ=;
+        b=hSiYE7XczJOQgiXTJ2saiTfIArhvg9pVRSWSojfu4bgpo4MRpHRU+k0tF4MBUescPV
+         q4v1Oe5p6poH8Lb1ROcjjZKnVtfr3/K5TwG3I+RAwqGH6MIObioUsDCFUHQBriRklk+Q
+         AdhOhW0L0JniBvo/za7a3QMz1ky5m+5nrahMqChaUdHwv5zLmOmkZ7P6BfXavF8D1fR6
+         5MeotPsLaNGWfKu7g9O83QAuUufoyLPD5lkBr+bAplEWryPth4WSe0alt835D/dOzY3T
+         6YZ9wmTJBp93Ha3Q11bTUQC6bdH+0TKAbJczfWvLSNeCKJZT/lmIgGXQcgzp/Vlx4tT7
+         9e4A==
+X-Gm-Message-State: AGi0Pubza+LXXWF1pKeF3SDxVeM4I8q7jBLxf4iMuUgQc2R/JV0V5nuR
+        IpIzh7ocsdQATivqVAfhLxk=
+X-Google-Smtp-Source: APiQypL5ML0n0kEj+B/B+d1l8zNw3oKHsp8jcJEG7P50+2EB0m6PFrXSZF/3mUr25jP9R7X1nVFgOA==
+X-Received: by 2002:a63:610a:: with SMTP id v10mr1533278pgb.49.1587482785367;
+        Tue, 21 Apr 2020 08:26:25 -0700 (PDT)
+Received: from [100.124.9.192] ([104.129.199.3])
+        by smtp.gmail.com with ESMTPSA id y10sm2719929pfb.53.2020.04.21.08.26.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 08:26:24 -0700 (PDT)
+Subject: Re: [PATCH 1/4] loop: Refactor size calculation.
+To:     Martijn Coenen <maco@android.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>,
+        Narayan Kamath <narayan@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@google.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+References: <20200420080409.111693-1-maco@android.com>
+ <20200420080409.111693-2-maco@android.com>
+ <b546eff4-616a-8488-fc11-9b7e23d44bcf@acm.org>
+ <CAB0TPYHXCRq-SVGsNBviyCAyP75oKam77W9vdsyri9fzA2tp+g@mail.gmail.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <398b9d9e-bb7c-6b95-4766-3e9bf2769a61@acm.org>
+Date:   Tue, 21 Apr 2020 08:26:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CAB0TPYHXCRq-SVGsNBviyCAyP75oKam77W9vdsyri9fzA2tp+g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 21 Apr 2020 17:25:19 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC PATCH net-next 1/3] net: phy: add concept of shared storage
- for PHYs
-In-Reply-To: <20200420232624.9127-1-michael@walle.cc>
-References: <20200420232624.9127-1-michael@walle.cc>
-Message-ID: <7bcd7a65740a6f85637ef17ed6b6a1e3@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 5776323059
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.972];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[lunn.ch,gmail.com,armlinux.org.uk,davemloft.net,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-21 01:26, schrieb Michael Walle:
-> +
-> +/* Represents a shared structure between different phydev's in the 
-> same
-> + * package, for example a quad PHY. See phy_package_join() and
-> + * phy_package_leave().
-> + */
-> +struct phy_package_shared {
-> +	int addr;
-> +	refcount_t refcnt;
-> +	unsigned long flags;
-> +
-> +	/* private data pointer */
-> +	/* note that this pointer is shared between different phydevs and
-> +	 * the user has to take care of appropriate locking.
-> +	 */
-> +	void *priv;
+On 4/21/20 4:48 AM, Martijn Coenen wrote:
+> On Mon, Apr 20, 2020 at 3:22 PM Bart Van Assche <bvanassche@acm.org> wrote:
+>> Please also change the "kill_bdev should have truncated all the pages"
+>> comment into something like "return -EAGAIN if any pages have been
+>> dirtied after kill_bdev() returned".
+> 
+> Sure - would you prefer this to be in a separate change?
 
-btw. how should a driver actually use this? I mean, it can allocate
-memory if its still NULL but when will it be freed again. Do we need
-a callback? Is there something better than a callback?
+Since the comment "kill_bdev should have truncated all the pages" has to 
+be moved, I think that it's fine to integrate the fix for that comment 
+in this patch.
 
--michael
+Thanks,
+
+Bart.
