@@ -2,57 +2,109 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C40C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD05C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3BB7206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D7F206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587481569;
+	bh=4ADim16T+0u2BglcyovCuf/IIjoL8W8PhOujJLyZSGY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=qGlPR5bQ3IL1KqWP5TWu8Yiaq1ArqEhJvvDiVEeibKwcrky+YXeYMecKxndrQ73TB
+	 Q3jSC4PL31UmNCzNuz1RJr28aGXbqN37/FmdSfSLCgFRx+oOP1RvjwhLDM0kr6PMQn
+	 sLnlco7eoV8iWk1yrIyYDUa0g5O0bUKNCqmyRAlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgDUPD6 (ORCPT
+        id S1729065AbgDUPGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:03:58 -0400
-Received: from verein.lst.de ([213.95.11.211]:47161 "EHLO verein.lst.de"
+        Tue, 21 Apr 2020 11:06:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728316AbgDUPD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:03:58 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C972768C4E; Tue, 21 Apr 2020 17:03:54 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 17:03:54 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: stop using ioctl_by_bdev in the s390 DASD driver
-Message-ID: <20200421150354.GA10191@lst.de>
-References: <20200421061226.33731-1-hch@lst.de> <b4f38eb4-ab32-6713-fb8a-0c8e81efc645@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4f38eb4-ab32-6713-fb8a-0c8e81efc645@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1726628AbgDUPGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 11:06:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D99A5206D6;
+        Tue, 21 Apr 2020 15:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587481568;
+        bh=4ADim16T+0u2BglcyovCuf/IIjoL8W8PhOujJLyZSGY=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=Kxm3YcSHyHIXzDQAStma9KNvqYRZ5pyKFzGDqMVKNNj4lHR5mJ679glTavCTRbGU6
+         cFJ9Fpfxyp/jynNwxRkBw0dKGDeHsKyEeVE8buMsRGqHtTDFj5h6wlBDhCpE+OWg7q
+         GwDjN6E5JhHlh6/7qLHWGQ4XcO5DUnnUYtZinMS0=
+Date:   Tue, 21 Apr 2020 16:06:05 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+In-Reply-To: <20200420190853.45614-2-kdasu.kdev@gmail.com>
+References: <20200420190853.45614-1-kdasu.kdev@gmail.com> <20200420190853.45614-2-kdasu.kdev@gmail.com>
+Subject: Re: [Patch v3 1/9] spi: bcm-qspi: Handle clock probe deferral
+Message-Id: <158748156553.18089.8164001089518853868.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 04:17:53PM +0200, Stefan Haberland wrote:
-> I can imagine some ways to get rid of this ioctl_by_bdev. Maybe having a
-> udev
-> rule to add a partition from userspace or having the driver add the implicit
-> partition at the end. Or maybe something else.
+On Mon, 20 Apr 2020 15:08:45 -0400, Kamal Dasu wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
 > 
-> If it is OK I will have a look at this and discuss this issue with my
-> colleagues and come up with a different approach.
+> The clock provider may not be ready by the time spi-bcm-qspi gets
+> probed, handle probe deferral using devm_clk_get_optional().
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> 
+> [...]
 
-Sure, we can wait a few days.  Note that I don't want to break existing
-userspace, which kinda speaks against a udev solution.
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.7
+
+Thanks!
+
+[1/9] spi: bcm-qspi: Handle clock probe deferral
+      commit: 0392727c261bab65a35cd4f82ee9459bc237591d
+[2/9] dt: bindings: spi: Add support for mspi on brcmstb SoCs
+      (not applied)
+[3/9] spi: bcm-qspi: Handle lack of MSPI_REV offset
+      (not applied)
+[4/9] spi: bcm-qspi: Drive MSPI peripheral SSb pin on cs_change
+      commit: 742d5958062488d03082a9ff01a6afb3cf7bd634
+[5/9] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
+      commit: 4df3bea7f9d2ddd9ac2c29ba945c7c4db2def29c
+[6/9] spi: bcm-qspi: Make PM suspend/resume work with SCMI clock management
+      commit: 1b7ad8c405c3dc0ad6c2dc61fe21fe7a446cceeb
+[7/9] spi: bcm-qspi: Use fastbr setting to allow faster MSPI speeds
+      (not applied)
+[8/9] spi: bcm-qspi: add support for MSPI sys clk 108Mhz
+      (not applied)
+[9/9] spi: bcm-qspi: MSPI_SPCR0_MSB MSTR bit exists only on legacy controllers
+      (not applied)
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
