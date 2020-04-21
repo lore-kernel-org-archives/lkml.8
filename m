@@ -2,139 +2,136 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3C8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB7CC55183
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 822EF2071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4650C21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587456350;
+	bh=MIsMOSthC5x1b/v9D2P+kZ/IzkE0C1W/5y/jCBKmXJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1VPY3Zoiwc1WfdbpKSIItfiFFsOSoF9k99RhYR7yWuJBwlXjKxq2/kYBQrh8DhPuT
+	 MIAptLqYjqOvdRAzHRiYjnGWPGf95ZVKmOWunT8Nr1dTfNkeoC08eQG68JPifBrF3l
+	 Zny7gsxxyTxreabtC44oE2bz5gKkMgDoljfDNVNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgDUIF3 (ORCPT
+        id S1728199AbgDUIFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:05:29 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:25913 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726691AbgDUIF2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:05:28 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-194-bOrZo3U0OfCgfC1rgonSRA-1; Tue, 21 Apr 2020 09:05:23 +0100
-X-MC-Unique: bOrZo3U0OfCgfC1rgonSRA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 21 Apr 2020 09:05:22 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 21 Apr 2020 09:05:22 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Ard Biesheuvel' <ardb@kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-CC:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: FPU register granularity [Was: Re: [PATCH crypto-stable] crypto:
- arch/lib - limit simd usage to PAGE_SIZE chunks]
-Thread-Topic: FPU register granularity [Was: Re: [PATCH crypto-stable] crypto:
- arch/lib - limit simd usage to PAGE_SIZE chunks]
-Thread-Index: AQHWF6rUb3STV3+On0alUpvKAanXNqiDN3TA
-Date:   Tue, 21 Apr 2020 08:05:22 +0000
-Message-ID: <c9e0cabe2d6844ac9fc8c00f6bb3bc27@AcuMS.aculab.com>
-References: <20200420075711.2385190-1-Jason@zx2c4.com>
- <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
- <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
- <CAMj1kXEdWu1v0tGT2Co0oMqWDJS_FNx97qZJmp3GPrrj8MrnrQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXEdWu1v0tGT2Co0oMqWDJS_FNx97qZJmp3GPrrj8MrnrQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 21 Apr 2020 04:05:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726691AbgDUIFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 04:05:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 557F32071C;
+        Tue, 21 Apr 2020 08:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587456346;
+        bh=MIsMOSthC5x1b/v9D2P+kZ/IzkE0C1W/5y/jCBKmXJE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yu5yyQyNv4XIUAiv3IrPdT9binnqLDUcLtF7ShkV4r61pPbSv6Au4+iJXCqCjh/fi
+         tiP+gTI/LQ36uKxAfSnU3sqBXrqR2nA9HcuR6BUtj+q2brAM+lrlX6zkJZbvB/18Vw
+         jcZFKMEUb0ULBEhzpnRvj1BNYgQDXY0zSfDsD9ng=
+Date:   Tue, 21 Apr 2020 10:05:44 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        driverdevel <devel@driverdev.osuosl.org>, nd <nd@arm.com>,
+        Todd Kjos <tkjos@android.com>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Laura Abbott <laura@labbott.name>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Anders Pedersen <anders.pedersen@arm.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        =?iso-8859-1?Q?=D8rjan?= Eide <orjan.eide@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Martijn Coenen <maco@android.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian Brauner <christian@brauner.io>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] staging: android: ion: Skip sync if not mapped
+Message-ID: <20200421080544.GA611314@kroah.com>
+References: <20200414134629.54567-1-orjan.eide@arm.com>
+ <20200414141849.55654-1-orjan.eide@arm.com>
+ <20200414142810.GA958163@kroah.com>
+ <CALAqxLX-SUhHPH6ewt-s9cEMc8DtMTgXem=JruAkLofuJf1syg@mail.gmail.com>
+ <20200416102508.GA820251@kroah.com>
+ <20200420082207.ui7iyg7dsnred2vv@wittgenstein>
+ <CALAqxLW-txNEqW=P_9VTxvOVu_fgpjzHHDbR5BhtpYwhg1SXgw@mail.gmail.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALAqxLW-txNEqW=P_9VTxvOVu_fgpjzHHDbR5BhtpYwhg1SXgw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQXJkIEJpZXNoZXV2ZWwNCj4gU2VudDogMjEgQXByaWwgMjAyMCAwODowMg0KPiBPbiBU
-dWUsIDIxIEFwciAyMDIwIGF0IDA2OjE1LCBKYXNvbiBBLiBEb25lbmZlbGQgPEphc29uQHp4MmM0
-LmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBEYXZpZCwNCj4gPg0KPiA+IE9uIE1vbiwgQXByIDIw
-LCAyMDIwIGF0IDI6MzIgQU0gRGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRAYWN1bGFiLmNvbT4g
-d3JvdGU6DQo+ID4gPiBNYXliZSBrZXJuZWxfZnBfYmVnaW4oKSBzaG91bGQgYmUgcGFzc2VkIHRo
-ZSBhZGRyZXNzIG9mIHNvbWV3aGVyZQ0KPiA+ID4gdGhlIGFkZHJlc3Mgb2YgYW4gZnB1IHNhdmUg
-YXJlYSBidWZmZXIgY2FuIGJlIHdyaXR0ZW4gdG8uDQo+ID4gPiBUaGVuIHRoZSBwcmUtZW1wdGlv
-biBjb2RlIGNhbiBhbGxvY2F0ZSB0aGUgYnVmZmVyIGFuZCBzYXZlIHRoZQ0KPiA+ID4gc3RhdGUg
-aW50byBpdC4NCj4gPg0KPiA+IEludGVyZXN0aW5nIGlkZWEuIEl0IGxvb2tzIGxpa2UgYHN0cnVj
-dCB4cmVnc19zdGF0ZWAgaXMgb25seSA1NzYNCj4gPiBieXRlcy4gVGhhdCdzIG5vdCBleGFjdGx5
-IHNtYWxsLCBidXQgaXQncyBub3QgaW5zYW5lbHkgaHVnZSBlaXRoZXIsDQo+ID4gYW5kIG1heWJl
-IHdlIGNvdWxkIGp1c3RpZmlhYmx5IHN0aWNrIHRoYXQgb24gdGhlIHN0YWNrLCBvciBldmVuDQo+
-ID4gcmVzZXJ2ZSBwYXJ0IG9mIHRoZSBzdGFjayBhbGxvY2F0aW9uIGZvciB0aGF0IHRoYXQgdGhl
-IGZ1bmN0aW9uIHdvdWxkDQo+ID4ga25vdyBhYm91dCwgd2l0aG91dCBuZWVkaW5nIHRvIHNwZWNp
-ZnkgYW55IGFkZHJlc3MuDQo+ID4NCj4gPiA+IGtlcm5lbF9mcHVfYmVnaW4oKSBvdWdodCBhbHNv
-IGJlIHBhc3NlZCBhIHBhcmFtZXRlciBzYXlpbmcgd2hpY2gNCj4gPiA+IGZwdSBmZWF0dXJlcyBh
-cmUgcmVxdWlyZWQsIGFuZCByZXR1cm4gd2hpY2ggYXJlIGFsbG9jYXRlZC4NCj4gPiA+IE9uIHg4
-NiB0aGlzIGNvdWxkIGJlIHVzZWQgdG8gY2hlY2sgZm9yIEFWWDUxMiAoZXRjKSB3aGljaCBtYXkg
-YmUNCj4gPiA+IGF2YWlsYWJsZSBpbiBhbiBJU1IgdW5sZXNzIGl0IGludGVycnVwdGVkIGluc2lk
-ZSBhIGtlcm5lbF9mcHVfYmVnaW4oKQ0KPiA+ID4gc2VjdGlvbiAoZXRjKS4NCj4gPiA+IEl0IHdv
-dWxkIGFsc28gYWxsb3cgb3B0aW1pc2F0aW9ucyBpZiBvbmx5IDEgb3IgMiBmcHUgcmVnaXN0ZXJz
-IGFyZQ0KPiA+ID4gbmVlZGVkIChlZyBmb3Igc29tZSBvZiB0aGUgY3J5cHRvIGZ1bmN0aW9ucykg
-cmF0aGVyIHRoYW4gdGhlIHdob2xlDQo+ID4gPiBmcHUgcmVnaXN0ZXIgc2V0Lg0KPiA+DQo+ID4g
-Rm9yIEFWWDUxMiB0aGlzIHByb2JhYmx5IG1ha2VzIHNlbnNlLCBJIHN1cHBvc2UuIEJ1dCBJJ20g
-bm90IHN1cmUgaWYNCj4gPiB0aGVyZSBhcmUgdG9vIG1hbnkgYml0cyBvZiBjcnlwdG8gY29kZSB0
-aGF0IG9ubHkgdXNlIGEgZmV3IHJlZ2lzdGVycy4NCj4gPiBUaGVyZSBhcmUgdGhvc2UgYWNjZWxl
-cmF0ZWQgbWVtY3B5IHJvdXRpbmVzIGluIGk5MTUgdGhvdWdoIC0tIGV2ZXIgc2VlDQo+ID4gZHJp
-dmVycy9ncHUvZHJtL2k5MTUvaTkxNV9tZW1jcHkuYz8gc29ydCBvZiB3aWxkLiBCdXQgaWYgd2Ug
-ZGlkIGdvDQo+ID4gdGhpcyB3YXksIEkgd29uZGVyIGlmIGl0J2QgbWFrZSBzZW5zZSB0byB0b3Rh
-bGx5IG92ZXJlbmdpbmVlciBpdCBhbmQNCj4gPiB3cml0ZSBhIGdjYy9hcyBwbHVnaW4gdG8gY3Jl
-YXRlIHRoZSByZWdpc3RlciBtYXNrIGZvciB1cy4gT3IsIG1heWJlDQo+ID4gc29tZSBjaGVja2Vy
-IGluc2lkZSBvZiBvYmp0b29sIGNvdWxkIGhlbHAgaGVyZS4NCj4gPg0KPiA+IEFjdHVhbGx5LCB0
-aG91Z2gsIHRoZSB0aGluZyBJJ3ZlIGJlZW4gd29uZGVyaW5nIGFib3V0IGlzIGFjdHVhbGx5DQo+
-ID4gbW92aW5nIGluIHRoZSBjb21wbGV0ZSBvcHBvc2l0ZSBkaXJlY3Rpb246IGlzIHRoZXJlIHNv
-bWUNCj4gPiBlZmZpY2llbnQtZW5vdWdoIHdheSB0aGF0IHdlIGNvdWxkIGFsbG93IEZQVSByZWdp
-c3RlcnMgaW4gYWxsIGNvbnRleHRzDQo+ID4gYWx3YXlzLCB3aXRob3V0IHRoZSBuZWVkIGZvciBr
-ZXJuZWxfZnB1X2JlZ2luL2VuZD8gSSB3YXMgcmV2ZXJzaW5nDQo+ID4gbnRvc2tybmwuZXhlIGFu
-ZCB3YXMga2luZCBvZiBpbXByZXNzZWQgKG1heWJlIG5vdCB0aGUgcmlnaHQgd29yZD8pIGJ5DQo+
-ID4gdGhlaXIganVkaWNpb3VzIHVzZSBvZiB2ZWN0b3Jpc2F0aW9uIGV2ZXJ5d2hlcmUuIEkgYXNz
-dW1lIGEgbG90IG9mDQo+ID4gdGhhdCBpcyBiZWluZyBnZW5lcmF0ZWQgYnkgdGhlaXIgY29tcGls
-ZXIsIHdoaWNoIG9mIGNvdXJzZSBnY2MgY291bGQNCj4gPiBkbyBmb3IgdXMgaWYgd2UgbGV0IGl0
-LiBJcyB0aGF0IGFuIGludGVyZXN0aW5nIGF2ZW51ZSB0byBjb25zaWRlcj8gT3INCj4gPiBhcmUg
-eW91IHByZXR0eSBjZXJ0YWluIHRoYXQgaXQnZCBiZSBhIGh1Z2UgbWlzdGFrZSwgd2l0aCBhbg0K
-PiA+IGlycmV2ZXJzaWJsZSBzcGVlZCBoaXQ/DQo+ID4NCj4gDQo+IFdoZW4gSSBhZGRlZCBzdXBw
-b3J0IGZvciBrZXJuZWwgbW9kZSBTSU1EIHRvIGFybTY0IG9yaWdpbmFsbHksIHRoZXJlDQo+IHdh
-cyBhIGtlcm5lbF9uZW9uX2JlZ2luX3BhcnRpYWwoKSB0aGF0IHRvb2sgYW4gaW50IHRvIHNwZWNp
-ZnkgaG93IG1hbnkNCj4gcmVnaXN0ZXJzIHdlcmUgYmVpbmcgdXNlZCwgdGhlIHJlYXNvbiBiZWlu
-ZyB0aGF0IE5FT04gcHJlc2VydmUvc3RvcmUNCj4gd2FzIGZ1bGx5IGVhZ2VyIGF0IHRoaXMgcG9p
-bnQsIGFuZCBhcm02NCBoYXMgMzIgU0lNRCByZWdpc3RlcnMsIG1hbnkNCj4gb2Ygd2hpY2ggd2Vy
-ZW4ndCByZWFsbHkgdXNlZCwgZS5nLiwgaW4gdGhlIGJhc2ljIGltcGxlbWVudGF0aW9uIG9mIEFF
-Uw0KPiBiYXNlZCBvbiBzcGVjaWFsIGluc3RydWN0aW9ucy4NCj4gDQo+IFdpdGggdGhlIGludHJv
-ZHVjdGlvbiBvZiBsYXp5IHJlc3RvcmUsIGFuZCBTVkUgaGFuZGxpbmcgZm9yIHVzZXJzcGFjZSwN
-Cj4gd2UgZGVjaWRlZCB0byByZW1vdmUgdGhpcyBiZWNhdXNlIGl0IGRpZG4ndCByZWFsbHkgaGVs
-cCBhbnltb3JlLCBhbmQNCj4gbWFkZSB0aGUgY29kZSBtb3JlIGRpZmZpY3VsdCB0byBtYW5hZ2Uu
-DQo+IA0KPiBIb3dldmVyLCBJIHRoaW5rIGl0IHdvdWxkIG1ha2Ugc2Vuc2UgdG8gaGF2ZSBzb21l
-dGhpbmcgbGlrZSB0aGlzIGluDQo+IHRoZSBnZW5lcmFsIGNhc2UuIEkuZS4sIE5FT04gcmVnaXN0
-ZXJzIDAtMyBhcmUgYWx3YXlzIHByZXNlcnZlZCB3aGVuDQo+IGFuIGV4Y2VwdGlvbiBvciBpbnRl
-cnJ1cHQgKG9yIHN5c2NhbGwpIGlzIHRha2VuLCBhbmQgc28gdGhleSBjYW4gYmUNCj4gdXNlZCBh
-bnl3aGVyZSBpbiB0aGUga2VybmVsLiBJZiB5b3Ugd2FudCB0aGUgd2hvbGUgc2V0LCB5b3Ugd2ls
-bCBoYXZlDQo+IHRvIHVzZSBiZWdpbi9lbmQgYXMgYmVmb3JlLiBUaGlzIHdvdWxkIGFscmVhZHkg
-dW5sb2NrIGEgZmV3DQo+IGludGVyZXN0aW5nIGNhc2UsIGxpa2UgbWVtY3B5LCB4b3IsIGFuZCBz
-ZXF1ZW5jZXMgdGhhdCBjYW4gZWFzaWx5IGJlDQo+IGltcGxlbWVudGVkIHdpdGggb25seSBhIGZl
-dyByZWdpc3RlcnMgc3VjaCBhcyBpbnN0cnVjdGlvIGJhc2VkIEFFUy4NCj4gDQo+IFVuZm9ydHVu
-YXRlbHksIHRoZSBjb21waWxlciBuZWVkcyB0byBiZSB0YXVnaHQgYWJvdXQgdGhpcyB0byBiZQ0K
-PiBjb21wbGV0ZWx5IHVzZWZ1bCwgd2hpY2ggbWVhbnMgbG90cyBvZiBwcm90b3R5cGluZyBhbmQg
-YmVuY2htYXJraW5nDQo+IHVwZnJvbnQsIGFzIHRoZSBjb250cmFjdCB3aWxsIGJlIHNldCBpbiBz
-dG9uZSBvbmNlIHRoZSBjb21waWxlcnMgZ2V0DQo+IG9uIGJvYXJkLg0KDQpZb3UgY2FuIGFsd2F5
-cyBqdXN0IHVzZSBhc20gd2l0aCBleHBsaWNpdCByZWdpc3RlcnMuDQoNCglEYXZpZA0KDQotDQpS
-ZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWls
-dG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMp
-DQo=
+On Mon, Apr 20, 2020 at 01:03:39PM -0700, John Stultz wrote:
+> On Mon, Apr 20, 2020 at 1:22 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> > On Thu, Apr 16, 2020 at 12:25:08PM +0200, Greg Kroah-Hartman wrote:
+> > > On Tue, Apr 14, 2020 at 09:41:31PM -0700, John Stultz wrote:
+> > > > But I do think we can mark it as deprecated and let folks know that
+> > > > around the end of the year it will be deleted.
+> > >
+> > > No one ever notices "depreciated" things, they only notice if the code
+> > > is no longer there :)
+> > >
+> > > So I'm all for just deleting it and seeing who even notices...
+> >
+> > Agreed.
+> 
+> I mean, I get there's not much love for ION in staging, and I too am
+> eager to see it go, but I also feel like in the discussions around
+> submitting the dmabuf heaps at talks, etc, that there was clear value
+> in removing ION after a short time so that folks could transition
+> being able to test both implementations against the same kernel so
+> performance regressions, etc could be worked out.
+> 
+> I am actively getting many requests for help for vendors who are
+> looking at dmabuf heaps and are starting the transition process, and
+> I'm trying my best to motivate them to directly work within the
+> community so their needed heap functionality can go upstream. But it's
+> going to be a process, and their first attempts aren't going to
+> magically land upstream.  I think being able to really compare their
+> implementations as they iterate and push things upstream will help in
+> order to be able to have upstream solutions that are also properly
+> functional for production usage.
 
+But we are not accepting any new ion allocators or changes at the
+moment, so I don't see how the ion code in the kernel is helping/hurting
+anything here.
+
+There has been a bunch of changes to the ion code recently, in the
+Android kernel trees, in order to get a lot of the different
+manufacturer "forks" of ion back together into one place.  But again,
+those patches are not going to be sent upstream for merging so how is
+ion affecting the dmabuf code at all here?
+
+> The dmabuf heaps have been in an official kernel now for all of three
+> weeks. So yea, we can "delete [ION] and see who even notices", but I
+> worry that may seem a bit like contempt for the folks doing the work
+> on transitioning over, which doesn't help getting them to participate
+> within the community.
+
+But they aren't participating in the community today as no one is
+touching the ion code.  So I fail to see how keeping a dead-end-version
+of ion in the kernel tree really affects anyone these days.
+
+thanks,
+
+greg k-h
