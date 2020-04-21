@@ -2,128 +2,168 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4589FC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF41C55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24BB420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="E5nwg9HR"
+	by mail.kernel.org (Postfix) with ESMTP id 3A2EC21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587452140;
+	bh=zJ60yvTqB3tFZq6e5i0uFpw0aBM0sbkbs4gVEDscwcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hmWzpbB/xIN8bY5MIgc5txJl62OaiTxsPk747yW1wdRXfMRSw/9JMgQ1q5r8N7wxL
+	 3TqNzhBPfaV27FdCqN2rJh0nqfSHYsw3locip4tWdLGA1nUhejDBVA9a7J63TElyHf
+	 RSMdBLgvHk1UhHNnq+rdxGkhuQLJhBd5SHRzRgjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDUGxp (ORCPT
+        id S1726801AbgDUGzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 02:53:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725926AbgDUGxo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 02:53:44 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C826C061A0F;
-        Mon, 20 Apr 2020 23:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fR1NqAKRcDcvju0ewc8DInHgEpyMK6T3//JWLHgIwrs=; b=E5nwg9HRQ3wDFu/t/mct+wWJRS
-        iBQv0E1ZY9dliaFMIvhkeU8OQkTnw+6p49qika7cyI5o/LXwjGbXxmXEjGO5m6nCDenrw8cpjxcOq
-        juKAyLj4nLjF2Jn8ngSNcZJ9umIRFTN0cK4tbYAkUKNd+n4FCMWODNQDiFrp/btU76oI=;
-Received: from p200300ccff1389001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff13:8900:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jQmmn-0005R2-Jg; Tue, 21 Apr 2020 08:53:38 +0200
-Date:   Tue, 21 Apr 2020 08:53:36 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
- autosuspend
-Message-ID: <20200421085336.32cf8ffe@aktux>
-In-Reply-To: <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com>
-References: <20191217004048.46298-1-tony@atomide.com>
-        <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com>
-        <20200416184638.GI37466@atomide.com>
-        <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
-        <20200417164340.3d9043d1@aktux>
-        <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com>
-        <20200417150721.GL37466@atomide.com>
-        <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com>
-        <20200420150802.GR37466@atomide.com>
-        <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 21 Apr 2020 02:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbgDUGzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 02:55:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFF8D2072D;
+        Tue, 21 Apr 2020 06:55:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587452137;
+        bh=zJ60yvTqB3tFZq6e5i0uFpw0aBM0sbkbs4gVEDscwcc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rOvT1pf71YXBkdb+1cDESYAuVzGz9Pfk05UHBuTjyKfXBGV8Jwl3nLgA8xfppe4Gy
+         3rQRUzHq43ryklylYJLxHNa0hUAmBU4i2wDKLh3QDBBLU8xmzuY6g/vZ/rjhX3FvfR
+         l9NazMlSeEbaWkalX0L3KNeQ72f9/by4M0/j7BI8=
+Date:   Tue, 21 Apr 2020 08:55:35 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/10] blktrace: add checks for created debugfs files
+ on setup
+Message-ID: <20200421065535.GC347130@kroah.com>
+References: <20200419194529.4872-1-mcgrof@kernel.org>
+ <20200419194529.4872-9-mcgrof@kernel.org>
+ <38240225-e48e-3035-0baa-4929948b23a3@acm.org>
+ <20200419230537.GG11244@42.do-not-panic.com>
+ <c69b67d1-f887-600b-f3ab-54ab0b7dcb13@acm.org>
+ <20200420114038.GE3906674@kroah.com>
+ <20200420184445.GK11244@42.do-not-panic.com>
+ <20200420201101.GB302402@kroah.com>
+ <20200420202046.GN11244@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420202046.GN11244@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 23:11:18 +0200
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-
-> Hi Tony,
-> 
-> > Am 20.04.2020 um 17:08 schrieb Tony Lindgren <tony@atomide.com>:
+On Mon, Apr 20, 2020 at 08:20:46PM +0000, Luis Chamberlain wrote:
+> On Mon, Apr 20, 2020 at 10:11:01PM +0200, Greg KH wrote:
+> > On Mon, Apr 20, 2020 at 06:44:45PM +0000, Luis Chamberlain wrote:
+> > > On Mon, Apr 20, 2020 at 01:40:38PM +0200, Greg KH wrote:
+> > > > On Sun, Apr 19, 2020 at 04:17:46PM -0700, Bart Van Assche wrote:
+> > > > > On 4/19/20 4:05 PM, Luis Chamberlain wrote:
+> > > > > > On Sun, Apr 19, 2020 at 03:57:58PM -0700, Bart Van Assche wrote:
+> > > > > > > On 4/19/20 12:45 PM, Luis Chamberlain wrote:
+> > > > > > > > Even though debugfs can be disabled, enabling BLK_DEV_IO_TRACE will
+> > > > > > > > select DEBUG_FS, and blktrace exposes an API which userspace uses
+> > > > > > > > relying on certain files created in debugfs. If files are not created
+> > > > > > > > blktrace will not work correctly, so we do want to ensure that a
+> > > > > > > > blktrace setup creates these files properly, and otherwise inform
+> > > > > > > > userspace.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> > > > > > > > ---
+> > > > > > > >    kernel/trace/blktrace.c | 8 +++++---
+> > > > > > > >    1 file changed, 5 insertions(+), 3 deletions(-)
+> > > > > > > > 
+> > > > > > > > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> > > > > > > > index 9cc0153849c3..fc32a8665ce8 100644
+> > > > > > > > --- a/kernel/trace/blktrace.c
+> > > > > > > > +++ b/kernel/trace/blktrace.c
+> > > > > > > > @@ -552,17 +552,19 @@ static int blk_trace_create_debugfs_files(struct blk_user_trace_setup *buts,
+> > > > > > > >    					  struct dentry *dir,
+> > > > > > > >    					  struct blk_trace *bt)
+> > > > > > > >    {
+> > > > > > > > -	int ret = -EIO;
+> > > > > > > > -
+> > > > > > > >    	bt->dropped_file = debugfs_create_file("dropped", 0444, dir, bt,
+> > > > > > > >    					       &blk_dropped_fops);
+> > > > > > > > +	if (!bt->dropped_file)
+> > > > > > > > +		return -ENOMEM;
+> > > > > > > >    	bt->msg_file = debugfs_create_file("msg", 0222, dir, bt, &blk_msg_fops);
+> > > > > > > > +	if (!bt->msg_file)
+> > > > > > > > +		return -ENOMEM;
+> > > > > > > >    	bt->rchan = relay_open("trace", dir, buts->buf_size,
+> > > > > > > >    				buts->buf_nr, &blk_relay_callbacks, bt);
+> > > > > > > >    	if (!bt->rchan)
+> > > > > > > > -		return ret;
+> > > > > > > > +		return -EIO;
+> > > > > > > >    	return 0;
+> > > > > > > >    }
+> > > > > > > 
+> > > > > > > I should have had a look at this patch before I replied to the previous
+> > > > > > > patch.
+> > > > > > > 
+> > > > > > > Do you agree that the following code can be triggered by
+> > > > > > > debugfs_create_file() and also that debugfs_create_file() never returns
+> > > > > > > NULL?
+> > > > > > 
+> > > > > > If debugfs is enabled, and not that we know it is in this blktrace code,
+> > > > > > as we select it, it can return ERR_PTR(-ERROR) if an error occurs.
+> > > > > 
+> > > > > This is what I found in include/linux/debugfs.h in case debugfs is disabled:
+> > > > > 
+> > > > > static inline struct dentry *debugfs_create_file(const char *name,
+> > > > > 	umode_t mode, struct dentry *parent, void *data,
+> > > > > 	const struct file_operations *fops)
+> > > > > {
+> > > > > 	return ERR_PTR(-ENODEV);
+> > > > > }
+> > > > > 
+> > > > > I have not found any code path that can cause debugfs_create_file() to
+> > > > > return NULL. Did I perhaps overlook something? If not, it's not clear to me
+> > > > > why the above patch adds checks that check whether debugfs_create_file()
+> > > > > returns NULL?
+> > > > 
+> > > > Short answer, yes, it can return NULL.  Correct answer is, you don't
+> > > > care, don't check the value and don't do anything about it.  It's
+> > > > debugging code, userspace doesn't care, so just keep moving on.
+> > > 
+> > > Thing is this code *exposes* knobs to userspace for an API that *does*
+> > > exepect those files to exist. That is, blktrace *relies* on these
+> > > debugfs files to exist. So the kconfig which enables blktrace
+> > > CONFIG_BLK_DEV_IO_TRACE selects DEBUG_FS.
 > > 
-> > * H. Nikolaus Schaller <hns@goldelico.com> [200417 21:04]:  
-> >> To me it looks as if reading hqd too quickly after omap_hdq_runtime_resume()
-> >> may be part of the problem, although it is 0.4 seconds between [   18.355163]
-> >> and [   18.745269]. So I am not sure about my interpretation.
-> >> 
-> >> A different attempt for interpretation may be that trying to read the
-> >> slave triggers omap_hdq_runtime_resume() just before doing the
-> >> first hdq_read_byte().  
-> > 
-> > Hmm so I wonder if adding msleep(100) at the end of
-> > omap_hdq_runtime_resume() might help?  
+> > That's nice, but again, no kernel code should do anything different
+> > depending on what debugfs happens to be doing at that point in time.
 > 
-> I have tried and initially it did boot and work once.
-> But after the second boot/reboot the effect was back.
+> So even if the debugfs files were *not* created, and this code executes only
+> if DEBUG_FS, you don't think we should inform userspace if the blktrace
+> setup ioctl, which sets up these debugfs, didn't happen?
 > 
-> This is something I have observed previously, that the issue
-> is there in ca. 9 or 10 boot attempts. So I would assume
-> some race condition with udev reading the uevent file of the
-> bq27xxx bus client and hence through hdq.
-> 
-> I already had noticed some hqd_read activity right after probing
-> success.
-> 
-> I had also tried to change pm_runtime_set_autosuspend_delay(, 1000)
-> with no success. And I tried to call omap_hdq_runtime_resume() at the
-> end of probe.
-> 
-> The only maybe important observation was when I disabled all
-> kernel modules except *hdq*.ko and *bq27*.ko. Then I did only
-> get an emergency shell so that it is quite similar to the
-> scenario Andreas has tested. With this setup it did work.
-> 
-So I guess without idling uarts?
+> The "recovery" here would just be to destroy the blktrace setup, and
+> inform userspace that the blktrace setup ioctl failed.
 
-> I then tried to reenable other kernel modules but the result
-> wasn't convincing that it gives a reliable result.
-> 
-> So I have still no clear indication when the problem occurs and
-> when not.
-> 
-Hmm, last summer I had problems even without that patch reading
-temperature while doing umts transfers. Maybe there are some
-connections,
-maybe not. For that scenario we might have emc issues, thermal problems
-or a real kernel problem.
+Hm, ok, but comment the heck out of this saying _why_ you are testing
+the return value, and how that differs from 99% of the other users of
+this function in the kernel tree please.
 
-Regards,
-Andreas
+Otherwise I will end up removing the checks again with my semi-regular
+sweep of the tree...
+
+thanks,
+
+greg k-h
