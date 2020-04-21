@@ -2,220 +2,141 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49044C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02B4C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21DD52071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:59:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Cje0RUyU"
+	by mail.kernel.org (Postfix) with ESMTP id A6E1420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgDUN7M (ORCPT
+        id S1728841AbgDUOAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728745AbgDUN7L (ORCPT
+        Tue, 21 Apr 2020 10:00:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59926 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728316AbgDUOAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:59:11 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ADC6C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:59:11 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id e26so3664548wmk.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:59:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GFhVcwNkH19cbR+cE1ypfH56nXaAVZCLec2xJqB4kFg=;
-        b=Cje0RUyUW8yZe79iZsor+8dzm23NXNZJ6S9VH8UVO9QRfVvhQ3rggw5tCYa3jMeE7p
-         3qJjIF8mqBY9qgK1Htwamf5L8vvpm7FUqIK8p1ZB11DdtpdZ3YeJxD5P999SiexzhLNA
-         P3E77WgVZvTJGej9UVAmIT7dFemOmy5x3SZ20=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=GFhVcwNkH19cbR+cE1ypfH56nXaAVZCLec2xJqB4kFg=;
-        b=G/Z1o26KnaFjZgZr5hPcADsNsN7YafpqAMnFXHSuxy4T4aCXdFspxiagNhxtd6LYFy
-         TTot7q65Kd4adG2LCBXHFOJhkZBiiTcr7KHzMvoCplWHzdsbrbrdIYH5nRmJ4KV11GqZ
-         iWsAm93ZiP45jQO8xeEUtVlWy8xwl0plvQ7GigFvkXRO/UsKYdIBGFstxOwG79FTNQTV
-         yMlI0IV2i5vLUhU6v1pXAaasfE1k6HJrsEqD4O6CSyvUgjg4CEMDe+rxOMra7G+vMnXP
-         /2izwmi2lPf0pHiz2KBamMYCmo2HveOM021pF9y5S6r4qrGVDxHhyFZkRe2jvKAeq85d
-         KR5A==
-X-Gm-Message-State: AGi0PuahjyX8UCwecqvjGc/j1vDXt0sdi4nrjwnZCse/2J5/tl7BFiIt
-        xjuKJCmQusxRQGwapUXSn3k84g==
-X-Google-Smtp-Source: APiQypIThebpIsiA00RlINe3F/bJOmBXZSBWSdmsF3bQaYRTVrY4O3DozqrT76sEJG1Uw2UhgdLnBA==
-X-Received: by 2002:a7b:cdfa:: with SMTP id p26mr5000192wmj.186.1587477550341;
-        Tue, 21 Apr 2020 06:59:10 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id d5sm3863822wrp.44.2020.04.21.06.59.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 06:59:09 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 15:59:07 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] drm/meson: add mode selection limits against specific
- SoC revisions
-Message-ID: <20200421135907.GC3456981@phenom.ffwll.local>
-Mail-Followup-To: Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200421134410.30603-1-narmstrong@baylibre.com>
+        Tue, 21 Apr 2020 10:00:15 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jQtRN-0000iS-5e; Tue, 21 Apr 2020 13:59:57 +0000
+To:     Raed Salem <raeds@mellanox.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Cc:     Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: re: net/mlx5: IPsec, Refactor SA handle creation and destruction
+Message-ID: <ffb0bca8-003f-bb7a-51ac-171b1f4e4a75@canonical.com>
+Date:   Tue, 21 Apr 2020 14:59:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421134410.30603-1-narmstrong@baylibre.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 03:44:10PM +0200, Neil Armstrong wrote:
-> The Amlogic S805X/Y uses the same die as the S905X, but with more
-> limited graphics capabilities.
-> 
-> This adds a soc version detection adding specific limitations on the HDMI
-> mode selections.
-> 
-> Here, we limit to HDMI 1.3a max HDMI PHY clock frequency.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Hi,
 
-Just a drive-by, but the code organization between the dw-hdmi bridge and
-the driver looks pretty terribly and really leaky. Can't we do better?
-Either by fixing the dw-hdmi bridge abstraction to actually abstract
-something, or by givin up the dw-hdmi is a bridge and convert it to some
-helper to implement a drm_encoder. Current status just doesn't make too
-much sense to me.
--Daniel
+Static analysis with Coverity has detected a potential issue with the
+following commit:
 
-> ---
->  drivers/gpu/drm/meson/meson_drv.c     | 29 ++++++++++++++++++++++++++-
->  drivers/gpu/drm/meson/meson_drv.h     |  6 ++++++
->  drivers/gpu/drm/meson/meson_dw_hdmi.c |  7 +++++++
->  3 files changed, 41 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
-> index 6f29fab79952..621f6de0f076 100644
-> --- a/drivers/gpu/drm/meson/meson_drv.c
-> +++ b/drivers/gpu/drm/meson/meson_drv.c
-> @@ -11,6 +11,7 @@
->  #include <linux/component.h>
->  #include <linux/module.h>
->  #include <linux/of_graph.h>
-> +#include <linux/sys_soc.h>
->  #include <linux/platform_device.h>
->  #include <linux/soc/amlogic/meson-canvas.h>
->  
-> @@ -183,6 +184,24 @@ static void meson_remove_framebuffers(void)
->  	kfree(ap);
->  }
->  
-> +struct meson_drm_soc_attr {
-> +	struct meson_drm_soc_limits limits;
-> +	const struct soc_device_attribute *attrs;
-> +};
-> +
-> +static const struct meson_drm_soc_attr meson_drm_soc_attrs[] = {
-> +	/* S805X/S805Y HDMI PLL won't lock for HDMI PHY freq > 1,65GHz */
-> +	{
-> +		.limits = {
-> +			.max_hdmi_phy_freq = 1650000,
-> +		},
-> +		.attrs = (const struct soc_device_attribute []) {
-> +			{ .soc_id = "GXL (S805*)", },
-> +			{ /* sentinel */ },
-> +		}
-> +	},
-> +};
-> +
->  static int meson_drv_bind_master(struct device *dev, bool has_components)
->  {
->  	struct platform_device *pdev = to_platform_device(dev);
-> @@ -191,7 +210,7 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
->  	struct drm_device *drm;
->  	struct resource *res;
->  	void __iomem *regs;
-> -	int ret;
-> +	int ret, i;
->  
->  	/* Checks if an output connector is available */
->  	if (!meson_vpu_has_available_connectors(dev)) {
-> @@ -281,6 +300,14 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
->  	if (ret)
->  		goto free_drm;
->  
-> +	/* Assign limits per soc revision/package */
-> +	for (i = 0 ; i < ARRAY_SIZE(meson_drm_soc_attrs) ; ++i) {
-> +		if (soc_device_match(meson_drm_soc_attrs[i].attrs)) {
-> +			priv->limits = &meson_drm_soc_attrs[i].limits;
-> +			break;
-> +		}
-> +	}
-> +
->  	/* Remove early framebuffers (ie. simplefb) */
->  	meson_remove_framebuffers();
->  
-> diff --git a/drivers/gpu/drm/meson/meson_drv.h b/drivers/gpu/drm/meson/meson_drv.h
-> index 04fdf3826643..5b23704a80d6 100644
-> --- a/drivers/gpu/drm/meson/meson_drv.h
-> +++ b/drivers/gpu/drm/meson/meson_drv.h
-> @@ -30,6 +30,10 @@ struct meson_drm_match_data {
->  	struct meson_afbcd_ops *afbcd_ops;
->  };
->  
-> +struct meson_drm_soc_limits {
-> +	unsigned int max_hdmi_phy_freq;
-> +};
-> +
->  struct meson_drm {
->  	struct device *dev;
->  	enum vpu_compatible compat;
-> @@ -48,6 +52,8 @@ struct meson_drm {
->  	struct drm_plane *primary_plane;
->  	struct drm_plane *overlay_plane;
->  
-> +	const struct meson_drm_soc_limits *limits;
-> +
->  	/* Components Data */
->  	struct {
->  		bool osd1_enabled;
-> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> index e8c94915a4fc..dc3d5122475a 100644
-> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> @@ -695,6 +695,13 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
->  	dev_dbg(connector->dev->dev, "%s: vclk:%d phy=%d venc=%d hdmi=%d\n",
->  		__func__, phy_freq, vclk_freq, venc_freq, hdmi_freq);
->  
-> +	/* Check against soc revision/package limits */
-> +	if (priv->limits) {
-> +		if (priv->limits->max_hdmi_phy_freq &&
-> +		    phy_freq > priv->limits->max_hdmi_phy_freq)
-> +			return MODE_CLOCK_HIGH;
-> +	}
-> +
->  	return meson_vclk_vic_supported_freq(phy_freq, vclk_freq);
->  }
->  
-> -- 
-> 2.22.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+commit 7dfee4b1d79e1800818abcfb47747b162c9a2d31
+Author: Raed Salem <raeds@mellanox.com>
+Date:   Wed Oct 23 17:04:13 2019 +0300
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+    net/mlx5: IPsec, Refactor SA handle creation and destruction
+
+The issue is in mlx5_fpga_is_ipsec_device() in
+drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c as follows:
+
+
+710  Bitwise-and with zero
+     bit_and_with_zero: accel_xfrm->attrs.action &
+MLX5_ACCEL_ESP_ACTION_DECRYPT is always 0.  This occurs as the logical
+operand of if.
+
+711        if (accel_xfrm->attrs.action & MLX5_ACCEL_ESP_ACTION_DECRYPT) {
+Logically dead code (DEADCODE)
+
+712                err = ida_simple_get(&fipsec->halloc, 1, 0, GFP_KERNEL);
+713                if (err < 0) {
+714                        context = ERR_PTR(err);
+715                        goto exists;
+716                }
+717
+718                sa_ctx->sa_handle = err;
+719                if (sa_handle)
+720                        *sa_handle = sa_ctx->sa_handle;
+721        }
+
+in include/linux/mlx5/accel.h MLX5_ACCEL_ESP_ACTION_DECRYPT is defined
+as zero:
+
+50 enum mlx5_accel_esp_action {
+51        MLX5_ACCEL_ESP_ACTION_DECRYPT,
+52        MLX5_ACCEL_ESP_ACTION_ENCRYPT,
+53 };
+
+
+I believe there are some other instances of this bit-wise and-ing with
+zero, e.g. in mlx5_fpga_ipsec_release_sa_ctx() we have:
+
+855     if (sa_ctx->fpga_xfrm->accel_xfrm.attrs.action &
+856         MLX5_ACCEL_ESP_ACTION_DECRYPT)
+
+Colin
