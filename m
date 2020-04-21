@@ -2,123 +2,223 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5274AC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B93BC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2381120CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C312072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:47:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="VdSpN6le"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgDUIpV (ORCPT
+        id S1728309AbgDUIrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:45:21 -0400
-Received: from m176149.mail.qiye.163.com ([59.111.176.149]:40009 "EHLO
-        m176149.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgDUIpU (ORCPT
+        Tue, 21 Apr 2020 04:47:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726691AbgDUIrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:45:20 -0400
-Received: from vivo.com (wm-9.qy.internal [127.0.0.1])
-        by m176149.mail.qiye.163.com (Hmail) with ESMTP id E5B7F282304;
-        Tue, 21 Apr 2020 16:44:43 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AIsA-wCZCFCxiq0WKb3WjKr*.3.1587458683834.Hmail.bernard@vivo.com>
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com, Elfring <Markus.Elfring@web.de>,
-        christian.koenig@amd.com
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCBWM10gYW1kZ3B1OiByZW1vdmUgdW5uZWNlc3NhcnkgY29uZGl0aW9uIGNoZWNr?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 157.0.31.122
-In-Reply-To: <4c027bd0-c2ff-b587-6389-62a3d25dec1b@amd.com>
+        Tue, 21 Apr 2020 04:47:20 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36C25C061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:47:19 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id u10so10439819lfo.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:47:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=sGIJHh/puT6NxbufoFpsfxcnGoUe2JqTWxhpfJYWZlA=;
+        b=VdSpN6leoifwtGtjB3IGgSy/AZ+Mo5F4Bd+mqGoCnHE/dKoMc6b+xU6PV3Mrcfm1Xl
+         7RX2TybRi+nrKN4IaMdvg6eux8iYv58gDxh6PjJ8L9yTfvtu2Y72us1ZJsnnbO8pSgQW
+         v5OjFrZkaBe1/6g/wDNDdhIKnertxEyMqs2ss=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sGIJHh/puT6NxbufoFpsfxcnGoUe2JqTWxhpfJYWZlA=;
+        b=jxjaYu8vFjbLMBejJP8NP8oKPD1FHtq/bOEHt92+/DQfe3hGnQG9ubrguRKl1QuVjH
+         YHuHvPOAQsP9Ure6W3ggLGGXlT55NK9Dq3Fs/j3aTmJftfYsTigs6Xco9j9HJ+7ayAt0
+         l6Pj+u2GyjkpI7a3noi2+udNNvU7EzWJ+X7ZwltuM1YhTgVfVf6xSnp6TTWB64L3BP9d
+         Zxc7l6Uqyqm9MprVntfpgw9D84+9g6G3sLG+HntGmb1ZCfgFZ4xMecrRTPF/VfwYLZkw
+         zvor3RQ/4/minx1epFoqqeurkjRPwBYt/GN6PR0tdIybTNtLDR1jzhZ6e8RKUsUUXYFs
+         1NCQ==
+X-Gm-Message-State: AGi0Pua5Qq8FFL5RTsh5NmyYu1QmrtHDhy5inr4l04qRkVVi0XyoOcg5
+        WwaIdiGxD2LQXu6VHKMrxVWikA==
+X-Google-Smtp-Source: APiQypIp+ogKAd8XLPsuyNcaf1ueDSdIbnt3T72uCftWix9EPz/LgOfEGyJFERgsfWE2wG6EPZBQPQ==
+X-Received: by 2002:ac2:5559:: with SMTP id l25mr13237048lfk.55.1587458837586;
+        Tue, 21 Apr 2020 01:47:17 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id h7sm1414259ljg.37.2020.04.21.01.47.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 01:47:16 -0700 (PDT)
+Subject: Re: [PATCH net-next 10/13] bridge: mrp: Implement netlink interface
+ to configure MRP
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>, davem@davemloft.net,
+        jiri@resnulli.us, ivecera@redhat.com, kuba@kernel.org,
+        roopa@cumulusnetworks.com, olteanv@gmail.com, andrew@lunn.ch,
+        UNGLinuxDriver@microchip.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bridge@lists.linux-foundation.org
+References: <20200420150947.30974-1-horatiu.vultur@microchip.com>
+ <20200420150947.30974-11-horatiu.vultur@microchip.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <4d989958-0c2b-69de-2015-1808e2ce94db@cumulusnetworks.com>
+Date:   Tue, 21 Apr 2020 11:47:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 21 Apr 2020 16:44:43 +0800 (GMT+08:00)
-From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
-Date:   Tue, 21 Apr 2020 16:44:43 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVJQ0tCQkJNTUtPQkpCT1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSEhCTUJOSUNLN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6Mgg6Vgw4ITg9OAMSCkssMBlILBEwCVFVSFVKTkNMT05DTUNMS0pKVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTE9DTjcG
-X-HM-Tid: 0a719be934309395kuwse5b7f282304
+In-Reply-To: <20200420150947.30974-11-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpGcm9tOiAiQ2hyaXN0aWFuIEvDtm5pZyIgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4KRGF0
-ZTogMjAyMC0wNC0yMSAxNjowNjowMwpUbzogIDE1ODcxODAwMzctMTEzODQwLTEtZ2l0LXNlbmQt
-ZW1haWwtYmVybmFyZEB2aXZvLmNvbSxGZWxpeCBLdWVobGluZyA8RmVsaXguS3VlaGxpbmdAYW1k
-LmNvbT4sQWxleCBEZXVjaGVyIDxhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPiwiRGF2aWQgKENo
-dW5NaW5nKSBaaG91IiA8RGF2aWQxLlpob3VAYW1kLmNvbT4sRGF2aWQgQWlybGllIDxhaXJsaWVk
-QGxpbnV4LmllPixEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+LGFtZC1nZnhAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnLGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZwpDYzogIG9wZW5zb3VyY2Uua2VybmVsQHZpdm8uY29tLEJlcm5h
-cmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KU3ViamVjdDogUmU6IFtQQVRDSCBWM10gYW1kZ3B1
-OiByZW1vdmUgdW5uZWNlc3NhcnkgY29uZGl0aW9uIGNoZWNrPkFtIDIxLjA0LjIwIHVtIDEwOjAz
-IHNjaHJpZWIgQmVybmFyZCBaaGFvOgo+PiBUaGVyZSBpcyBubyBuZWVkIHRvIGlmIGNoZWNrIGFn
-YWluLCBtYXliZSB3ZSBjb3VsZCBtZXJnZQo+PiBpbnRvIHRoZSBhYm92ZSBlbHNlIGJyYW5jaC4K
-Pj4KPj4gU2lnbmVkLW9mZi1ieTogQmVybmFyZCBaaGFvIDxiZXJuYXJkQHZpdm8uY29tPgo+Pgo+
-PiBDaGFuZ2VzIHNpbmNlIFYxOgo+PiAqY29tbWl0IG1lc3NhZ2UgaW1wcm92ZQo+PiAqY29kZSBz
-dHlsZSByZWZhY3RvcmluZwo+Pgo+PiBDaGFuZ2VzIHNpbmNlIFYyOgo+PiAqY29kZSBzdHlsZSBh
-ZGp1c3QKPj4KPj4gTGluayBmb3IgVjE6Cj4+ICpodHRwczovL25hbTExLnNhZmVsaW5rcy5wcm90
-ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZsb3JlLmtlcm5lbC5vcmclMkZw
-YXRjaHdvcmslMkZwYXRjaCUyRjEyMjY1ODclMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q2NocmlzdGlh
-bi5rb2VuaWclNDBhbWQuY29tJTdDMGI4ZmZmYWZiNzE1NDc0Mjg5YjIwOGQ3ZTVjYTdmNmMlN0Mz
-ZGQ4OTYxZmU0ODg0ZTYwOGUxMWE4MmQ5OTRlMTgzZCU3QzAlN0MwJTdDNjM3MjMwNTMwMjAxMjgw
-MzUwJmFtcDtzZGF0YT1TZXd2NUVTWCUyQjBCNERiRmJFMDN1TTVzaWZyRWNtSmxsQzhwdDdKNDJJ
-N00lM0QmYW1wO3Jlc2VydmVkPTAKPj4gLS0tCj4+ICAgLi4uL2dwdS9kcm0vYW1kL2FtZGdwdS9h
-bWRncHVfYW1ka2ZkX2dwdXZtLmMgICB8IDE4ICsrKysrKystLS0tLS0tLS0tLQo+PiAgIDEgZmls
-ZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2FtZGtmZF9ncHV2bS5jIGIv
-ZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2FtZGtmZF9ncHV2bS5jCj4+IGluZGV4
-IDlkZmY3OTJjOTI5MC4uNTQyNGJkOTIxYTdiIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9k
-cm0vYW1kL2FtZGdwdS9hbWRncHVfYW1ka2ZkX2dwdXZtLmMKPj4gKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2FtZGtmZF9ncHV2bS5jCj4+IEBAIC02NjAsMTMgKzY2MCwx
-MiBAQCBzdGF0aWMgaW50IHJlc2VydmVfYm9fYW5kX3ZtKHN0cnVjdCBrZ2RfbWVtICptZW0sCj4+
-ICAgCj4+ICAgCXJldCA9IHR0bV9ldV9yZXNlcnZlX2J1ZmZlcnMoJmN0eC0+dGlja2V0LCAmY3R4
-LT5saXN0LAo+PiAgIAkJCQkgICAgIGZhbHNlLCAmY3R4LT5kdXBsaWNhdGVzKTsKPj4gLQlpZiAo
-IXJldCkKPj4gLQkJY3R4LT5yZXNlcnZlZCA9IHRydWU7Cj4+IC0JZWxzZSB7Cj4+IC0JCXByX2Vy
-cigiRmFpbGVkIHRvIHJlc2VydmUgYnVmZmVycyBpbiB0dG1cbiIpOwo+PiArCWlmIChyZXQpIHsK
-Pj4gKwkJcHJfZXJyKCJGYWlsZWQgdG8gcmVzZXJ2ZSBidWZmZXJzIGluIHR0bS5cbiIpOwo+PiAg
-IAkJa2ZyZWUoY3R4LT52bV9wZCk7Cj4+ICAgCQljdHgtPnZtX3BkID0gTlVMTDsKPj4gLQl9Cj4+
-ICsJfSBlbHNlCj4+ICsJCWN0eC0+cmVzZXJ2ZWQgPSB0cnVlOwo+Cj5UaGF0IGlzIHN0aWxsIG5v
-dCBjb3JyZWN0IGNvZGluZyBzdHlsZS4gSW4gZ2VuZXJhbCB3aGVuIG9uZSBicmFuY2ggb2YgYW4g
-Cj5pZi9lbHNlIHVzZXMge30gdGhlIG90aGVyIG9uZSBzaG91bGQgdXNlIGl0IGFzIHdlbGwuCj4K
-PkJ1dCBJIGFncmVlIHdpdGggRmVsaXggdGhhdCB0aGlzIGNoYW5nZSBsb29rcyByYXRoZXIgc3Vw
-ZXJmbHVvdXMgdG8gbWUgCj5hcyB3ZWxsLgo+Cj5SZWdhcmRzLAo+Q2hyaXN0aWFuLgoKQWJvdXQg
-dGhlIGNvZGUgc3R5bGUsIHlvdSBhcmUgcmlnaHQsIEkgY2hlY2tlZCB0aGUgcmVmZXJzOgpodHRw
-czovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51
-eC5naXQvdHJlZS9Eb2N1bWVudGF0aW9uL3Byb2Nlc3MvY29kaW5nLXN0eWxlLnJzdD9pZD05MDI4
-MGVhYTg4YWMxYTkxNDBkYzc1OTk0MTEyMzUzMGQ1NTQ1YmI2I24xOTEKVGhlIGlmIGFuZCBlbHNl
-IHNob3VsZCB1c2UgdGhlIHNhbWUgc3R5bGUuCkJ1dCBpIGhhdmUgdG8gc2F5IHRoZXJlIGFyZSBz
-byBtYW55IGNvZGUgbm90IGZvbGxvdyB0aGUga2VybmVsIGNvZGUtc3R5bGUgaW4gYW1kZ3B1IG1v
-ZHVsZS4KQW5kIGFsc28gdGhlIC4vc2NyaXB0cy9jaGVja3BhdGNoLnBsIGRpZCBub3QgdGhyb3cg
-YW55IHdhcm5pbmcgb3IgZXJyb3IuCgpJZiB0aGlzIGNoYW5nZSBsb29rcyByYXRoZXIgc3VwZXJm
-bHVvdXMgdG8gYWxsIG9mIHlvdSwgc2hvdWxkIGkgY2hhbmdlIHRvIHRoZSBWMSBjaGFuZ2U/CkFm
-dGVyIGFsbCBpIGRvbmB0IHRoaW5rIHRoZXJlIGlzIGFueSBuZWNlc3NhcnkgdG8gY2hlY2sgInJl
-dCIgYWdhaW4sIG1lcmdlIHRoZSA8ZWxzZSBhbmQgaWYgKHJldCk+Cm1heWJlIGJldHRlci4KT3Jp
-Z2luYWwgY29kZToKc3RhdGljIGludCByZXNlcnZlX2JvX2FuZF9jb25kX3ZtcyhzdHJ1Y3Qga2dk
-X21lbSAqbWVtLC4uLi4uCglpZiAoIXJldCkKCQljdHgtPnJlc2VydmVkID0gdHJ1ZTsKCWVsc2UK
-CQlwcl9lcnIoIkZhaWxlZCB0byByZXNlcnZlIGJ1ZmZlcnMgaW4gdHRtLlxuIik7CgoJaWYgKHJl
-dCkgewoJCWtmcmVlKGN0eC0+dm1fcGQpOwoJCWN0eC0+dm1fcGQgPSBOVUxMOwoJfQoKQlIvL2Jl
-cm5hcmQKCj4+ICAgCj4+ICAgCXJldHVybiByZXQ7Cj4+ICAgfQo+PiBAQCAtNzMzLDE1ICs3MzIs
-MTIgQEAgc3RhdGljIGludCByZXNlcnZlX2JvX2FuZF9jb25kX3ZtcyhzdHJ1Y3Qga2dkX21lbSAq
-bWVtLAo+PiAgIAo+PiAgIAlyZXQgPSB0dG1fZXVfcmVzZXJ2ZV9idWZmZXJzKCZjdHgtPnRpY2tl
-dCwgJmN0eC0+bGlzdCwKPj4gICAJCQkJICAgICBmYWxzZSwgJmN0eC0+ZHVwbGljYXRlcyk7Cj4+
-IC0JaWYgKCFyZXQpCj4+IC0JCWN0eC0+cmVzZXJ2ZWQgPSB0cnVlOwo+PiAtCWVsc2UKPj4gLQkJ
-cHJfZXJyKCJGYWlsZWQgdG8gcmVzZXJ2ZSBidWZmZXJzIGluIHR0bS5cbiIpOwo+PiAtCj4+ICAg
-CWlmIChyZXQpIHsKPj4gKwkJcHJfZXJyKCJGYWlsZWQgdG8gcmVzZXJ2ZSBidWZmZXJzIGluIHR0
-bS5cbiIpOwo+PiAgIAkJa2ZyZWUoY3R4LT52bV9wZCk7Cj4+ICAgCQljdHgtPnZtX3BkID0gTlVM
-TDsKPj4gLQl9Cj4+ICsJfSBlbHNlCj4+ICsJCWN0eC0+cmVzZXJ2ZWQgPSB0cnVlOwo+PiAgIAo+
-PiAgIAlyZXR1cm4gcmV0Owo+PiAgIH0KPgoNCg0K
+On 20/04/2020 18:09, Horatiu Vultur wrote:
+> Implement netlink interface to configure MRP. The implementation
+> will do sanity checks over the attributes and then eventually call the MRP
+> interface.
+> 
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  net/bridge/br_mrp_netlink.c | 117 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 117 insertions(+)
+>  create mode 100644 net/bridge/br_mrp_netlink.c
+> 
+> diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
+> new file mode 100644
+> index 000000000000..0ff42e7c7f57
+> --- /dev/null
+> +++ b/net/bridge/br_mrp_netlink.c
+> @@ -0,0 +1,117 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#include <net/genetlink.h>
+> +
+> +#include <uapi/linux/mrp_bridge.h>
+> +#include "br_private.h"
+> +#include "br_private_mrp.h"
+> +
+> +static const struct nla_policy br_mrp_policy[IFLA_BRIDGE_MRP_MAX + 1] = {
+> +	[IFLA_BRIDGE_MRP_UNSPEC]	= { .type = NLA_REJECT },
+> +	[IFLA_BRIDGE_MRP_INSTANCE]	= { .type = NLA_EXACT_LEN,
+> +					    .len = sizeof(struct br_mrp_instance)},
+> +	[IFLA_BRIDGE_MRP_PORT_STATE]	= { .type = NLA_U32 },
+> +	[IFLA_BRIDGE_MRP_PORT_ROLE]	= { .type = NLA_EXACT_LEN,
+> +					    .len = sizeof(struct br_mrp_port_role)},
+> +	[IFLA_BRIDGE_MRP_RING_STATE]	= { .type = NLA_EXACT_LEN,
+> +					    .len = sizeof(struct br_mrp_ring_state)},
+> +	[IFLA_BRIDGE_MRP_RING_ROLE]	= { .type = NLA_EXACT_LEN,
+> +					    .len = sizeof(struct br_mrp_ring_role)},
+> +	[IFLA_BRIDGE_MRP_START_TEST]	= { .type = NLA_EXACT_LEN,
+> +					    .len = sizeof(struct br_mrp_start_test)},
+> +};
+> +
+> +int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
+> +		 struct nlattr *attr, int cmd, struct netlink_ext_ack *extack)
+> +{
+
+Note that "p" can be NULL here if br_afspec() was called for the bridge device.
+Some of the functions below dereference it without any checks and will deref a
+null ptr.
+
+> +	struct nlattr *tb[IFLA_BRIDGE_MRP_MAX + 1];
+> +	int err;
+> +
+> +	if (br->stp_enabled != BR_NO_STP) {
+> +		NL_SET_ERR_MSG_MOD(extack, "MRP can't be enabled if STP is already enabled\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_MAX, attr,
+> +			       NULL, extack);
+> +	if (err)
+> +		return err;
+> +
+> +	if (tb[IFLA_BRIDGE_MRP_INSTANCE]) {
+> +		struct br_mrp_instance *instance =
+> +			nla_data(tb[IFLA_BRIDGE_MRP_INSTANCE]);
+> +
+> +		if (cmd == RTM_SETLINK)
+> +			err = br_mrp_add(br, instance);
+> +		else
+> +			err = br_mrp_del(br, instance);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	if (tb[IFLA_BRIDGE_MRP_PORT_STATE]) {
+> +		enum br_mrp_port_state_type state =
+> +			nla_get_u32(tb[IFLA_BRIDGE_MRP_PORT_STATE]);
+> +
+> +		err = br_mrp_set_port_state(p, state);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	if (tb[IFLA_BRIDGE_MRP_PORT_ROLE]) {
+> +		struct br_mrp_port_role *role =
+> +			nla_data(tb[IFLA_BRIDGE_MRP_PORT_ROLE]);
+> +
+> +		err = br_mrp_set_port_role(p, role);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	if (tb[IFLA_BRIDGE_MRP_RING_STATE]) {
+> +		struct br_mrp_ring_state *state =
+> +			nla_data(tb[IFLA_BRIDGE_MRP_RING_STATE]);
+> +
+> +		err = br_mrp_set_ring_state(br, state);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	if (tb[IFLA_BRIDGE_MRP_RING_ROLE]) {
+> +		struct br_mrp_ring_role *role =
+> +			nla_data(tb[IFLA_BRIDGE_MRP_RING_ROLE]);
+> +
+> +		err = br_mrp_set_ring_role(br, role);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	if (tb[IFLA_BRIDGE_MRP_START_TEST]) {
+> +		struct br_mrp_start_test *test =
+> +			nla_data(tb[IFLA_BRIDGE_MRP_START_TEST]);
+> +
+> +		err = br_mrp_start_test(br, test);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int br_mrp_port_open(struct net_device *dev, u8 loc)
+> +{
+> +	struct net_bridge_port *p;
+> +	int err = 0;
+> +
+> +	p = br_port_get_rcu(dev);
+> +	if (!p) {
+> +		err = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	p->loc = loc;
+> +	br_ifinfo_notify(RTM_NEWLINK, NULL, p);
+> +
+> +out:
+> +	return err;
+> +}
+> +EXPORT_SYMBOL(br_mrp_port_open);
+> 
+
