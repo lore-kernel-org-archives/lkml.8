@@ -2,145 +2,107 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF49BC55184
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AAFC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDC742070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C75206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:19:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fLaw4mDF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AsoVVWdB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgDUQRf (ORCPT
+        id S1728463AbgDUQTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:17:35 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20247 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726067AbgDUQRd (ORCPT
+        Tue, 21 Apr 2020 12:19:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43371 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725963AbgDUQTY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:17:33 -0400
+        Tue, 21 Apr 2020 12:19:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587485852;
+        s=mimecast20190719; t=1587485963;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6AGRVLAb8VV2GGBt9FCUOJrCOZqz3yE3pnkPMqPpaZ4=;
-        b=fLaw4mDFAiAUyt3HFsE9oUivBaoPBLz8vYuBl+PmmSagFLVEAqoHwnl6pq0D7hd5Z2VwC6
-        k+3ZpIPdCpt3XJNxBWGgmThqT8hlPzGFfNlyFyLIIq+8sNEEPpq9grqrBRBIGdm3DaZRtd
-        K99BwHoBHnJW3DSyFKc3FigvNbr3o7U=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-136-poYXOUfoNbi_rpL1ILAFTw-1; Tue, 21 Apr 2020 12:17:30 -0400
-X-MC-Unique: poYXOUfoNbi_rpL1ILAFTw-1
-Received: by mail-wr1-f71.google.com with SMTP id e5so7735187wrs.23
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:17:30 -0700 (PDT)
+        bh=OMcMRkM6CTuHPozam45N2SC6f9ykAvtZFSzHRVou/uA=;
+        b=AsoVVWdBWRH9cesQdRTu4ouK+9eHzMPngDf4Wme+bgYVFv7xn0WmI/GdCFumsk8u1N9iMr
+        MJSu+XAhIaJZ41duAnEriFm69xyxcCS6N+4fwYqk+84QY16H/2WkSAAu34Kc4eI9biON4r
+        BQ+dhkAUF+UDM1Q593WHMj41+IJGM8g=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-9-Gj5_K_4hOPOnqKI3PX4JEQ-1; Tue, 21 Apr 2020 12:19:18 -0400
+X-MC-Unique: Gj5_K_4hOPOnqKI3PX4JEQ-1
+Received: by mail-wr1-f69.google.com with SMTP id y10so2620270wrn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:19:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6AGRVLAb8VV2GGBt9FCUOJrCOZqz3yE3pnkPMqPpaZ4=;
-        b=WanhnccgI/g6o2TUkU9wk65xXn92pnk85W7+q1U4UG3v33HhgCmNU4w/xG6Q23GTC+
-         /qebxAd6gBdPzCNZ/ESHX4xBjJqJRgQVd2Jo2iZYkEmiCDgRqPYbMjrlT9k6xgKOcIli
-         X7T60P8bkkJmsya1Mt1Aw7B4GSqX+09Vw8kHJtJ/fxaMUBuuUX+2aCYMeqZ0lOpdrCXZ
-         EM+bls7xMFdzWDH+3L30B9ix0IFvp+2aqZ28bD5WbvaJGunWl0jm8CT7BSR64EtPa4yE
-         aZisIPaaybvZNHDeysHU13yBA7GMwNGEirgS+5jM3Zkk8qD+OoLpoASu0+WQvgtHJfny
-         5vhA==
-X-Gm-Message-State: AGi0PuYTQjQ23D+q2HVNysPxk9wGC/Gdi9QjIhc5+26O3rCDhtaP1oHT
-        bCQxC+JvsHSQahpb7QTo5MyaXazg0jkgHNp0fjY6VSh5hlcbf55IYI7bPeYYI9qul6D490/x1E/
-        zA8/6K/pPqiCK4Udec7iUmcDV
-X-Received: by 2002:adf:db41:: with SMTP id f1mr23709660wrj.13.1587485849058;
-        Tue, 21 Apr 2020 09:17:29 -0700 (PDT)
-X-Google-Smtp-Source: APiQypINqkJ2dm7HlXLMWrMoVJcXlSBgzF2ec7b2hdUNDNYkmeWZUjNIFZKliARHFyJyRzZXDY7ReQ==
-X-Received: by 2002:adf:db41:: with SMTP id f1mr23709639wrj.13.1587485848793;
-        Tue, 21 Apr 2020 09:17:28 -0700 (PDT)
-Received: from steredhat (host108-207-dynamic.49-79-r.retail.telecomitalia.it. [79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id h2sm4500324wro.9.2020.04.21.09.17.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 09:17:27 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 18:17:24 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-Cc:     davem@davemloft.net, Gerard Garcia <ggarcia@abra.uab.cat>,
-        kvm@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH net] vsock/virtio: postpone packet delivery to monitoring
- devices
-Message-ID: <20200421161724.c3pnecltfz4jajww@steredhat>
-References: <20200421092527.41651-1-sgarzare@redhat.com>
- <20200421154246.GA47385@stefanha-x1.localdomain>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OMcMRkM6CTuHPozam45N2SC6f9ykAvtZFSzHRVou/uA=;
+        b=R45whyDyeDnPWZ/Iz9xwLaS9rUzpd8nrf9k5NFRkefdFOIJ9+gsicY8cZ7YOhzgd5N
+         49HIPQuIr+nXlpfg3F9X09mEx4Hnk83R36LSZtsutE59DBcup14YHCYzF00RnYZ1QmSD
+         LGeMzU+Z58xNzq14TBAyhWGvi17DgiqvacQ0jkBsuT70B8bydTXapxANvJjjaLhvEaWt
+         /gW3nSIUZFeRquP3KrnPvlGFBLndDtN6Zab5EKdb3CYtu+Oi+PB9n0rV3n8+oLtEIP+E
+         ZLxtm+RMESViTJ1QSVz0o0qsk9GtlgDUqWVkjjJgeSXuFUvN+GINNsQ92nRB5QKxPC9S
+         eIaA==
+X-Gm-Message-State: AGi0PubLcLahJaIgA2hQS2hieAFzHj9homlRlvxSFgw5i6OwBa17rqzY
+        eVeUNO9RPw+PG3KYcZ9K+zVbzI8zZz3vTJFm3S7qFNyy3G1CGzYL7og+pWZTUMFcWPw/likbC4z
+        n5p2umZa5ZPRTVdxJmLoRqd9I
+X-Received: by 2002:a5d:6504:: with SMTP id x4mr26598662wru.164.1587485957603;
+        Tue, 21 Apr 2020 09:19:17 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLBExtm46kFG/q5uOgEqHEeaUuSrp481aTEfOfkh5uRE39whBLwSFtgA3GXRG/Qo3jvvfG+iQ==
+X-Received: by 2002:a5d:6504:: with SMTP id x4mr26598644wru.164.1587485957403;
+        Tue, 21 Apr 2020 09:19:17 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
+        by smtp.gmail.com with ESMTPSA id s8sm4112831wru.38.2020.04.21.09.19.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 09:19:16 -0700 (PDT)
+Subject: Re: [PATCH v3 0/2] KVM: VMX: Unionize vcpu_vmx.exit_reason
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20200421075328.14458-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <bcf9cbba-6cce-f10b-da94-232403a3f7f6@redhat.com>
+Date:   Tue, 21 Apr 2020 18:19:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421154246.GA47385@stefanha-x1.localdomain>
+In-Reply-To: <20200421075328.14458-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 04:42:46PM +0100, Stefan Hajnoczi wrote:
-> On Tue, Apr 21, 2020 at 11:25:27AM +0200, Stefano Garzarella wrote:
-> > We delivering packets to monitoring devices, before to check if
-> > the virtqueue has enough space.
+On 21/04/20 09:53, Sean Christopherson wrote:
+> Minor fixup patch for a mishandled conflict between the vmcs.INTR_INFO
+> caching series and the union series, plus the actual unionization patch
+> rebased onto kvm/queue, commit 604e8bba0dc5 ("KVM: Remove redundant ...").
 > 
-> "We [are] delivering packets" and "before to check" -> "before
-> checking".  Perhaps it can be rewritten as:
+> Sean Christopherson (2):
+>   KVM: nVMX: Drop a redundant call to vmx_get_intr_info()
+>   KVM: VMX: Convert vcpu_vmx.exit_reason to a union
 > 
->   Packets are delivered to monitoring devices before checking if the
->   virtqueue has enough space.
-> 
-
-Yeah, it is better :-)
-
-> > 
-> > If the virtqueue is full, the transmitting packet is queued up
-> > and it will be sent in the next iteration. This causes the same
-> > packet to be delivered multiple times to monitoring devices.
-> > 
-> > This patch fixes this issue, postponing the packet delivery
-> > to monitoring devices, only when it is properly queued in the
-> 
-> s/,//
-> 
-> > virqueue.
-> 
-> s/virqueue/virtqueue/
+>  arch/x86/kvm/vmx/nested.c | 39 ++++++++++++++---------
+>  arch/x86/kvm/vmx/vmx.c    | 65 ++++++++++++++++++++-------------------
+>  arch/x86/kvm/vmx/vmx.h    | 25 ++++++++++++++-
+>  3 files changed, 83 insertions(+), 46 deletions(-)
 > 
 
-Thanks, I'll fix in the v2!
+Thanks, I queued patch 1.  I am not too enthusiastic about patch 2, but
+when SGX comes around it may be a better idea.
 
-> > @@ -137,6 +135,11 @@ virtio_transport_send_pkt_work(struct work_struct *work)
-> >  			break;
-> >  		}
-> >  
-> > +		/* Deliver to monitoring devices all correctly transmitted
-> > +		 * packets.
-> > +		 */
-> > +		virtio_transport_deliver_tap_pkt(pkt);
-> > +
-> 
-> The device may see the tx packet and therefore receive a reply to it
-> before we can call virtio_transport_deliver_tap_pkt().  Does this mean
-> that replies can now appear in the packet capture before the transmitted
-> packet?
-
-hmm, you are right!
-
-And the same thing can already happen in vhost-vsock where we call
-virtio_transport_deliver_tap_pkt() after the vhost_add_used(), right?
-
-The vhost-vsock case can be fixed in a simple way, but here do you think
-we should serialize them? (e.g. mutex, spinlock)
-
-In this case I'm worried about performance.
-
-Or is there some virtqueue API to check availability?
-
-Thanks,
-Stefano
+Paolo
 
