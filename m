@@ -2,87 +2,110 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFFDC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A00C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F26722072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:30:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UhkMmxc5"
+	by mail.kernel.org (Postfix) with ESMTP id E93192074B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587497495;
+	bh=FbedF9MkS5eUgPiKSYbu2gEhsu/YFqRKU2igx1LyO0A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x8gr+n4avmQab3c6wp88oRx5WHXPVvEVrQQN+MfpjVDM8oaMR4VjEaCde8Z4T1Hs4
+	 R8fA2eOb0ru3SicOKcRQB9JgxQQ/ZFHsdwCpNpaTA7QpKbST0TppKOFxn+EKKgB7it
+	 9Lr2VzeSGYK55SFUGHLnN653SGZMHVNTF7UYoUw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgDUTa6 (ORCPT
+        id S1726271AbgDUTbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:30:58 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:54842 "EHLO vps0.lunn.ch"
+        Tue, 21 Apr 2020 15:31:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgDUTa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:30:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=869WgTAm8fPzHRXk0oXeeK3XJ3W9FcEBHCf2mBhSQ8A=; b=UhkMmxc5rqjccfJlOUb2dLymev
-        FkmPpIzQPLpgPvbZQTymH6ckC4KQ290Bf+VA/7DqWrGBz2AXOif24oj03RgSwL5uVRqRUsneEeEND
-        KBMiGYQQ1d7hYGHxolQFrl02K/4dNhxwBK5qhTSdWzdKs+hJTYINL3FmYiFBDJ1ouySk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jQybf-0044tp-73; Tue, 21 Apr 2020 21:30:55 +0200
-Date:   Tue, 21 Apr 2020 21:30:55 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC PATCH net-next 1/3] net: phy: add concept of shared storage
- for PHYs
-Message-ID: <20200421193055.GI933345@lunn.ch>
-References: <20200420232624.9127-1-michael@walle.cc>
- <7bcd7a65740a6f85637ef17ed6b6a1e3@walle.cc>
- <20200421155031.GE933345@lunn.ch>
- <47bdeaf298a09f20ad6631db13df37d2@walle.cc>
+        id S1725930AbgDUTbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:31:33 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 781A72074B;
+        Tue, 21 Apr 2020 19:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587497492;
+        bh=FbedF9MkS5eUgPiKSYbu2gEhsu/YFqRKU2igx1LyO0A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=heh7HSg0OO64M2XG26/1/H7Oyc2lGiZMLU3ctWLMjlBATqKdQ+oKtEuw79g7TPuuX
+         ni5S9ABu+Pcl8TRa74jXlwPCWOhIgEhkx/VuVt+4Rer7X20zdyhMZDtndDzN0qPA7G
+         gkzwg90dVHF6QaHFW5p9G5n/JVJSu7bj1uoGr+KA=
+Received: by mail-qk1-f173.google.com with SMTP id x66so15764017qkd.9;
+        Tue, 21 Apr 2020 12:31:32 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua9gKhpMXo5Jo534kblIwhb2uYQAc48cy+ZB9ocLzYR4K0j2q1M
+        ERHtSprdzr4hJC9yqKduqezcghDoqBP63sIonA==
+X-Google-Smtp-Source: APiQypK+SNrDy3Sm4PczTJQzUksQronXA87RGw2UOqjJ46tD8crLtew/o7kmZa8CWFruSj8e2XxBtDl12SpaD3UpgRg=
+X-Received: by 2002:a37:61cd:: with SMTP id v196mr22897372qkb.393.1587497491552;
+ Tue, 21 Apr 2020 12:31:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <47bdeaf298a09f20ad6631db13df37d2@walle.cc>
+References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
+ <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
+ <20200421110537.GC5983@pendragon.ideasonboard.com> <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
+ <20200421134654.GD5983@pendragon.ideasonboard.com> <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
+ <CAK7LNASe9ahgo04=cAuXcsaoffb9CtnUCYOObJd5=Awaak+YZw@mail.gmail.com>
+In-Reply-To: <CAK7LNASe9ahgo04=cAuXcsaoffb9CtnUCYOObJd5=Awaak+YZw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 21 Apr 2020 14:31:19 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKV4UQeSX1ArJb4es1_kkMp1kbkd2kd17qVc=Oy988F7Q@mail.gmail.com>
+Message-ID: <CAL_JsqKV4UQeSX1ArJb4es1_kkMp1kbkd2kd17qVc=Oy988F7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Speaking of it. Does anyone have an idea how I could create the hwmon
-> device without the PHY device? At the moment it is attached to the
-> first PHY device and is removed when the PHY is removed, although
-> there might be still other PHYs in this package. Its unlikely to
-> happen though, but if someone has a good idea how to handle that,
-> I'd give it a try.
+On Tue, Apr 21, 2020 at 11:57 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi Rob,
+>
+>
+> On Tue, Apr 21, 2020 at 11:01 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > It seems to only fail with out of tree builds (O=...). I expect that
+> > > failures will become more common the more YAML bindings we have, even
+> > > without long directory names.
+> >
+> > dt-mk-schema can take and recurse a single directory already, so does
+> > this fix it for you:
+> >
+> > @@ -22,7 +22,7 @@ $(obj)/%.example.dts: $(src)/%.yaml
+> > check_dtschema_version FORCE
+> >  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+> >
+> >  quiet_cmd_mk_schema = SCHEMA  $@
+> > -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+> > $(real-prereqs)
+> > +      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+> > $(srctree)/$(src)
+>
+>
+> I am just curious.
+>
+> How come the tool excludes 'processed-schema*' and '*.example.dt.yaml'
+> from $(srctree)/$(src) ?
 
-There is a somewhat similar problem with Marvell Ethernet switches and
-their internal PHYs. The PHYs are the same as the discrete PHYs, and
-the usual Marvell PHY driver is used. But there is only one
-temperature sensor for the whole switch, and it is mapped into all the
-PHYs. So we end up creating multiple hwmon devices for the one
-temperature sensor, one per PHY.
+Uggg, it wouldn't. Can't everyone build out of tree. ;) I guess the options are:
 
-You could take the same approach here. Each PHY exposes a hwmon
-device?
+- Call dt-mk-schema on each file individually appending the result
+- Make dt-mk-schema take stdin or a file with a list of files as
+Masahiro suggested
 
-Looking at
-static struct device *
-__hwmon_device_register(struct device *dev, const char *name, void *drvdata,
-                        const struct hwmon_chip_info *chip,
-                        const struct attribute_group **groups)
+I'd like to avoid a dt-mk-schema change so I'll try to make the former
+work. It's only been a day since adding a minimum version. :(
 
-I think it is O.K. to pass dev as NULL. You don't have to associate it
-to a device. So you could create the hwmon device as part of package
-initialisation and put it into shared->priv.
-
-	Andrew
+Rob
