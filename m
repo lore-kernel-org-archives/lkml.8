@@ -2,75 +2,109 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5F0C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F99C55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F05320753
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA13E206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:02:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="juAWy4UL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgDUUCl (ORCPT
+        id S1726361AbgDUUCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:02:41 -0400
-Received: from mga06.intel.com ([134.134.136.31]:1449 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgDUUCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:02:41 -0400
-IronPort-SDR: 9LMCkZh6WqQfef3hyLjgYEId+QPsf/GuENHrfZrTkyQ46bB39l3oGPtA0tAMjIeKROPmyxTKJ6
- hTqkm7kFRpqA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 13:02:39 -0700
-IronPort-SDR: WGO5L1b5M/SkryVnOfAy0jnwxIRI1aVohTJFLb5GtiSS48MxksDrmoyJJOkdTf3nxB3nh1UTcN
- gf4S1rIQoxLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
-   d="scan'208";a="290589627"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Apr 2020 13:02:38 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id C5CCC3019B6; Tue, 21 Apr 2020 13:02:37 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 13:02:37 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
-        "Metzger, Markus T" <markus.t.metzger@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Pedro Alves <palves@redhat.com>,
-        Simon Marchi <simark@simark.ca>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 00/17] Enable FSGSBASE instructions
-Message-ID: <20200421200237.GF608746@tassilo.jf.intel.com>
-References: <20200421160622.GJ1809@sasha-vm>
- <BB51CFEA-A635-4664-821C-B57094AE95F0@amacapital.net>
+        Tue, 21 Apr 2020 16:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgDUUCm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 16:02:42 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFEA4C0610D5;
+        Tue, 21 Apr 2020 13:02:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=spA0yht61SX/nlft9ZjTifopY+knPCrtbt6HVKbDaj0=; b=juAWy4ULyiTHIGDhaOz70MnkO2
+        BT6z0CYCa5cdd84BF+WeivLQiDsLhiGLr9tDzFuLEQAhjC9reHf9SDRsXIWUNXl+MQ7Xa2fNXPW3X
+        rEa0o0OuLpk/zwwZ1n177BTwj50DadzLUJAtZFGQLgIfCM7vHANnuhBwkSYecbXCyZEqTBw9pKdKZ
+        bgdFcNgy+UZcMQu1y9Iri6a9uLxqZ0qpSprU4MRrNCFCrUj+PXbI8ixpDBOHTy/QhM0rhkxDeaLFS
+        M3jFi//gvDzqcHBMTiZwqV+vPKYuopQtZHhAedzTYxwoTNm5TS8st1O8bTjEPx04V8aYV1TwrevyU
+        FYol1LbA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQz6P-0004R8-Nf; Tue, 21 Apr 2020 20:02:41 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] Documentation: admin-guide: sysctl/kernel.h: fix
+ underlines and headings
+Message-ID: <83eef4ae-8a31-aef6-038e-1d1de51a5c00@infradead.org>
+Date:   Tue, 21 Apr 2020 13:02:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BB51CFEA-A635-4664-821C-B57094AE95F0@amacapital.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The very early versions had severely problematic ABIs. The new ones are probably okay except for, maybe, ptrace.  If we had merged the old ones, then we might have gotten stuck with the old, problematic ABI.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-This is beyond vague. Is there a problem with the ABI or not?
+Fix underline length warnings and drop the ending semi-colon from the
+title so that they match other title lines.
 
-If yes please point it out in an actionable concrete way that it can
-be addressed.
+linux-next-20200420/Documentation/admin-guide/sysctl/kernel.rst:281: WARNING: Title underline too short.
 
-If not there shouldn't be any reason to further block it.
+hung_task_all_cpu_backtrace:
+================
 
-Thanks
+linux-next-20200420/Documentation/admin-guide/sysctl/kernel.rst:564: WARNING: Title underline too short.
 
--Andi
+oops_all_cpu_backtrace:
+================
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+---
+
+@Andrew: Jonathan says that this needs to go via you since it fixes something
+that went via your tree. ("introduced by patch 93a0fba3de9a")
+
+
+ Documentation/admin-guide/sysctl/kernel.rst |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- linux-next-20200420.orig/Documentation/admin-guide/sysctl/kernel.rst
++++ linux-next-20200420/Documentation/admin-guide/sysctl/kernel.rst
+@@ -277,8 +277,8 @@ Path for the hotplug policy agent.
+ Default value is "``/sbin/hotplug``".
+ 
+ 
+-hung_task_all_cpu_backtrace:
+-================
++hung_task_all_cpu_backtrace
++===========================
+ 
+ If this option is set, the kernel will send an NMI to all CPUs to dump
+ their backtraces when a hung task is detected. This file shows up if
+@@ -560,8 +560,8 @@ rate for each task.
+ scanned for a given scan.
+ 
+ 
+-oops_all_cpu_backtrace:
+-================
++oops_all_cpu_backtrace
++======================
+ 
+ If this option is set, the kernel will send an NMI to all CPUs to dump
+ their backtraces when an oops event occurs. It should be used as a last
+
