@@ -6,74 +6,152 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6879C55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2E3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CD72073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B4A2074B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgDUHmu (ORCPT
+        id S1727100AbgDUHqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:42:50 -0400
-Received: from verein.lst.de ([213.95.11.211]:45118 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728233AbgDUHms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:42:48 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1C8B568CEC; Tue, 21 Apr 2020 09:42:42 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 09:42:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH 6/6] sysctl: pass kernel pointers to ->proc_handler
-Message-ID: <20200421074241.GB15772@lst.de>
-References: <20200417064146.1086644-1-hch@lst.de> <20200417064146.1086644-7-hch@lst.de> <20200417181718.GN5820@bombadil.infradead.org>
+        Tue, 21 Apr 2020 03:46:10 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:42345 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725992AbgDUHqK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 03:46:10 -0400
+Received: from [37.160.45.76] (port=22553 helo=[192.168.42.159])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jQnbW-008XoL-Sf; Tue, 21 Apr 2020 09:46:03 +0200
+Subject: Re: [PATCH v11 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem driver
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Vishal Sagar <vishal.sagar@xilinx.com>,
+        Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>
+References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
+ <20200409194424.45555-3-vishal.sagar@xilinx.com>
+ <20200419180222.GB8117@pendragon.ideasonboard.com>
+ <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
+ <20200420195714.GB8195@pendragon.ideasonboard.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <0a3ea86b-cb4c-a1db-664e-cfa555d8ccf8@lucaceresoli.net>
+Date:   Tue, 21 Apr 2020 09:45:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417181718.GN5820@bombadil.infradead.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200420195714.GB8195@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:17:18AM -0700, Matthew Wilcox wrote:
-> >  	if (error)
-> > -		goto out;
-> > +		goto out_free_buf;
-> >  
-> >  	/* careful: calling conventions are nasty here */
+Hi Laurent,
+
+On 20/04/20 21:57, Laurent Pinchart wrote:
+> Hi Luca,
 > 
-> I think this comment can go now ;-)
-
-It actually long predates the set_fs that was only added for BPF,
-and goes back to:
-
-330d57fb98a91 ("[PATCH] Fix sysctl unregistration oops (CVE-2005-2709)")
-in the history.git tree.
-
-> > -	} else {
-> > -		error = table->proc_handler(table, write, buf, &count, ppos);
-> > -	}
-> > +	error = table->proc_handler(table, write, kbuf, &count, ppos);
-> > +	if (error)
-> > +		goto out_free_buf;
-> > +
-> > +	error = -EFAULT;
-> > +	if (copy_to_user(ubuf, kbuf, count))
-> > +		goto out_free_buf;
+> On Mon, Apr 20, 2020 at 09:24:25PM +0200, Luca Ceresoli wrote:
+>> On 19/04/20 20:02, Laurent Pinchart wrote:
+>> [...]
+>>>> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *dev_id)
+>>>> +{
+>>>> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)dev_id;
+>>>> +	struct xcsi2rxss_core *core = &state->core;
+>>>> +	u32 status;
+>>>> +
+>>>> +	status = xcsi2rxss_read(core, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
+>>>> +	dev_dbg_ratelimited(core->dev, "interrupt status = 0x%08x\n", status);
+>>>
+>>> As this is expected to occur for every frame, I would drop the message,
+>>> even if rate-limited.
+>>>
+>>>> +
+>>>> +	if (!status)
+>>>> +		return IRQ_NONE;
+>>>> +
+>>>> +	/* Received a short packet */
+>>>> +	if (status & XCSI_ISR_SPFIFONE) {
+>>>> +		dev_dbg_ratelimited(core->dev, "Short packet = 0x%08x\n",
+>>>> +				    xcsi2rxss_read(core, XCSI_SPKTR_OFFSET));
+>>>> +	}
+>>>
+>>> Same here, this will occur all the time, I'd remove this message. You
+>>> need to read XCSI_SPKTR_OFFSET though, and you should do so in a loop
+>>> until the XCSI_CSR_SPFIFONE in XCSI_CSR_OFFSET is cleared in case
+>>> multiple short packets are received before the interrupt handler
+>>> executes.
+>>>
+>>> I also wonder if it would make sense to extract the frame number from
+>>> the FS short packet, and make it available through the subdev API. I
+>>> think it should be reported through a V4L2_EVENT_FRAME_SYNC event. This
+>>> can be implemented later.
+>>>
+>>>> +
+>>>> +	/* Short packet FIFO overflow */
+>>>> +	if (status & XCSI_ISR_SPFIFOF)
+>>>> +		dev_dbg_ratelimited(core->dev, "Short packet FIFO overflowed\n");
+>>>> +
+>>>> +	/*
+>>>> +	 * Stream line buffer full
+>>>> +	 * This means there is a backpressure from downstream IP
+>>>> +	 */
+>>>> +	if (status & XCSI_ISR_SLBF) {
+>>>> +		dev_alert_ratelimited(core->dev, "Stream Line Buffer Full!\n");
+>>>> +		xcsi2rxss_stop_stream(state);
+>>>> +		if (core->rst_gpio) {
+>>>> +			gpiod_set_value(core->rst_gpio, 1);
+>>>> +			/* minimum 40 dphy_clk_200M cycles */
+>>>> +			ndelay(250);
+>>>> +			gpiod_set_value(core->rst_gpio, 0);
+>>>> +		}
+>>>
+>>> I don't think you should stop the core here. xcsi2rxss_stop_stream()
+>>> calls the source .s_stream(0) operation, which usually involves I2C
+>>> writes that will sleep.
+>>>
+>>> You should instead report an event to userspace (it looks like we have
+>>> no error event defined in V4L2, one should be added), and rely on the
+>>> normal stop procedure.
+>>
+>> FWIW, since a long time I've been using a modified version of this
+>> routine, where after a Stream Line Buffer Full condition I just stop and
+>> restart the csi2rx core and the stream continues after a minimal glitch.
+>> Other subdev are unaware that anything has happened and keep on streaming.
+>>
+>> Not sure this is the correct thing to do, but it's working for me. Also
+>> I proposed this topic in one of the previous iterations of this patch,
+>> but the situation was different because the stream on/off was not
+>> propagated back at that time.
 > 
-> Can we skip this if !write?  Indeed, don't we have to in case the user has
-> passed a pointer to a read-only memory page?
+> Thanks for the feedback. How often does this occur in practice ?
 
-Indeed.
+Quite often indeed in my case, as the MIPI stream comes from a remote
+sensor via a video serdes chipset, and both the cable and the remote
+sensor module are subject to heavy EMI. Depending on the setup I
+observed SLBF happening up to 5~10 times per hour.
+
+-- 
+Luca
