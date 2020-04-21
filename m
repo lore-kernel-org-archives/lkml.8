@@ -2,68 +2,110 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE6AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79E5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFC021D94
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34DA2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:15:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587438936;
+	bh=Dv18RkM/i/aNmqHhDlxgNPltdMz92rPWl42vH2eEQjg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qWO4XsbGYVpV8bpWbXOxK2efpCHv9u4jso/lPlitFt4DB3gCvSY9l/JeFV9WZOFqJ
+	 X90Q+iQnDDDQId2AZd8x7nmYCBLulOI4qQJXx0k2cBSBXidN+0HhuI7mutYXKxoqJ8
+	 iPsfCFeXgTvrdhO+I5eRvzmTa1RB/Zbf1dajEuMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgDUDKc (ORCPT
+        id S1727083AbgDUDPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:10:32 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39318 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726325AbgDUDKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:10:32 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CFB5FF6C1523A0C6D6D6;
-        Tue, 21 Apr 2020 11:10:27 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Apr 2020
- 11:10:17 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>,
-        <yuehaibing@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] ila: remove unused macro 'ILA_HASH_TABLE_SIZE'
-Date:   Tue, 21 Apr 2020 11:09:12 +0800
-Message-ID: <20200421030912.37200-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+        Mon, 20 Apr 2020 23:15:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgDUDPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 23:15:30 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25D0A2078C;
+        Tue, 21 Apr 2020 03:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587438928;
+        bh=Dv18RkM/i/aNmqHhDlxgNPltdMz92rPWl42vH2eEQjg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aUsrVfvDLG9F2d9reZ0pddGudkYrEt1bkskJ86vx0WNg7NjV8Fdo7DrSvjr0hk/ET
+         uFSwiA+q7ZwyGROzOHZTF77Ne9ndJIoQ4up9rwVaSQEWa383jx+e5LMCSK+7Axnxuk
+         SrdSeKdUo8v0c4Uqal4IfVxKE/nG/VbaPcGmMQYc=
+Date:   Mon, 20 Apr 2020 20:15:27 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        RCU <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v1 5/6] rcu: rename kfree_call_rcu()/__kfree_rcu()
+Message-Id: <20200420201527.679247f6fa76cba4331f3cd3@linux-foundation.org>
+In-Reply-To: <20200316190144.GB10577@pc636>
+References: <20200315181840.6966-1-urezki@gmail.com>
+        <20200315181840.6966-6-urezki@gmail.com>
+        <20200316152541.GD190951@google.com>
+        <20200316190144.GB10577@pc636>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-net/ipv6/ila/ila_xlat.c:604:0: warning: macro "ILA_HASH_TABLE_SIZE" is not used [-Wunused-macros]
+On Mon, 16 Mar 2020 20:01:44 +0100 Uladzislau Rezki <urezki@gmail.com> wrote:
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/ipv6/ila/ila_xlat.c | 2 --
- 1 file changed, 2 deletions(-)
+> On Mon, Mar 16, 2020 at 11:25:41AM -0400, Joel Fernandes wrote:
+> > On Sun, Mar 15, 2020 at 07:18:39PM +0100, Uladzislau Rezki (Sony) wrote:
+> > > Rename kfree_call_rcu() to the kvfree_call_rcu().
+> > > The reason is, it is capable of freeing vmalloc()
+> > > memory now.
+> > > 
+> > > Do the same with __kfree_rcu() macro, it becomes
+> > > __kvfree_rcu(), the reason is the same as pointed
+> > > above.
+> > 
+> > Vlad, this patch does not apply to my branch that I shared with you. Sorry if
+> > I was not clear earlier, could we work on the same branch to avoid conflicts?
+> > 
+> It was clear to me. Basically i knew that you would be able to apply it
+> because of slim changes. I based my work on latest Paul's branch simply
+> because that my current setup was based on that, it would take more time
+> to switch.
+> 
+> Next changes i will base on your branch.
+> 
+> > I based the kfree_rcu shrinker patches on an 'rcu/kfree' branch in my git
+> > tree: https://github.com/joelagnel/linux-kernel/tree/rcu/kfree
+> > 
+> > For now I manually applied 5/6. All others applied cleanly.
+> > 
+> > Updated the tree as I continue to review your patches.
+> >
 
-diff --git a/net/ipv6/ila/ila_xlat.c b/net/ipv6/ila/ila_xlat.c
-index 5fc1f4e0c0cf..a1ac0e3d8c60 100644
---- a/net/ipv6/ila/ila_xlat.c
-+++ b/net/ipv6/ila/ila_xlat.c
-@@ -601,8 +601,6 @@ int ila_xlat_nl_dump(struct sk_buff *skb, struct netlink_callback *cb)
- 	return ret;
- }
- 
--#define ILA_HASH_TABLE_SIZE 1024
--
- int ila_xlat_init_net(struct net *net)
- {
- 	struct ila_net *ilan = net_generic(net, ila_net_id);
--- 
-2.17.1
+I'm not sure what's happening here - these patches aren't yet in
+linux-next.
 
+A couple of thoughts:
+
+- Please cc linux-mm@kvack.org on this patchset and anything else
+  which impacts MM.
+
+- It's a bit strange to create new infrastructure which has but a
+  single call site.  Please tell us much more about "there was also
+  request/interest so there will be new comers" to set minds at ease. 
+
+  Who/where are these possible new callsites and when can we expect to
+  see that code?
 
