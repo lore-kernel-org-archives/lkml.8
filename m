@@ -2,130 +2,326 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D027C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643A7C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A25120724
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD0B20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ie6ohRqy"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VxjovD5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgDUUbj (ORCPT
+        id S1726337AbgDUUb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:31:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgDUUbj (ORCPT
+        Tue, 21 Apr 2020 16:31:58 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46536 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbgDUUb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:31:39 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5E5C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:31:37 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id e9so8866863iok.9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DgynPmoHWquo2i6Yyvm5x5n+FCVjD0yzZNoB+cTueB0=;
-        b=ie6ohRqyPbI+C4yBuHi6QA74OoL4yfStj7tBGqZwCMM1CSqVDKrZo5EzljVuI4Nwbh
-         E8w+vvHv6vtOly2PHR4bf5m/LDCu6LXowc5Tv2F49VGJ+gHtIvdW7VpJTdKQDUsGlSXS
-         JS2dURYAU+iGzaWXuh4lmrsMHOChsYSg3Z7aM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DgynPmoHWquo2i6Yyvm5x5n+FCVjD0yzZNoB+cTueB0=;
-        b=iEC7xdCw9LUutfFLHNyQER2D/JZPIXRcM5afCwu0ACcRtHiUjjAvwjq4NnSuOb0P6O
-         njxaxEhkQFLQm+lEUvb3M4p2lkdFDJmE2qbFEdETmfoEVjz64B3Lf+gIorVyyfu5s3Dk
-         sWJPCxQFewAqQxhzBrZOsG+CV9SMyBlHZdPvYu1FE0gfsaw3zixMBhugDmPDiXNAtIlZ
-         6rVRxAuli4GOu5RBa1JLpoU3UOZEforBxRbr2LYVNrSSEHChJ1LvJz17fNoabSEUWJrN
-         nwN41N53eB8PTEOSSood2UyYSvobQYaqSpqlep/xisdso2ETz/pmXwADnOyjV+vcOCWF
-         HSmQ==
-X-Gm-Message-State: AGi0PuaHmYbbL+GFWu9BtUsIxS6kcK5FY7VTkNHkfWkc8hOjnNUs0y+1
-        yF0+H6KvB8eMKwCRbK9G3ymSn/JF+nn7VuAcLv+PqA==
-X-Google-Smtp-Source: APiQypIcsdGYB8kMa8Ef+QUbCPlWkfdqxPhfOwVS4UVzcXSmpGcF+MidhHbAyxQF165SEW5wUu6EYFT0GGPRKs8fm9c=
-X-Received: by 2002:a02:90cd:: with SMTP id c13mr21792999jag.83.1587501096755;
- Tue, 21 Apr 2020 13:31:36 -0700 (PDT)
+        Tue, 21 Apr 2020 16:31:58 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LKIasU160601;
+        Tue, 21 Apr 2020 20:31:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=WEoBxXbx2NztmxlxhFZr7b7x9VQPbvJsFvnC9qZBjXo=;
+ b=VxjovD5NgI5KsFfpWUrCqOkgaHfjfWkaJXuCDkQYYiM3Pytofc6ay76dPxdz/L1QIXrE
+ W/ugsIeoDjUKNni1BRzvahtl4+OVOYc5pyRfEFeRYrTansFYV/VU+SWUkbRPKq7valuO
+ 9qPRhdDpTqwtNh+cN7ArCx7DIcQ85yH/JxiOg3S/ZXGdRYdlnqtIzUzWR+QLdqvlf4yX
+ QfdCkWVpSooOQFkUT+NThbCxu+eGAqnABiQQaTlngrXpTTB09BP0Wnv0qyJIVoL8CNkp
+ 68FcRfJJZWAoM60Uw3XA+Cmeti7BTCe7qGUqQVQCY1xCjQxMUdUWerH++8u4WL4rwqVh Iw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30fsgky7dp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 20:31:45 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LKDSZf193352;
+        Tue, 21 Apr 2020 20:31:45 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30gb90wuqe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 20:31:45 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03LKVhq7014249;
+        Tue, 21 Apr 2020 20:31:43 GMT
+Received: from localhost (/10.159.227.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 13:31:43 -0700
+Date:   Tue, 21 Apr 2020 13:31:40 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V9 10/11] fs/xfs: Update
+ xfs_ioctl_setattr_dax_invalidate()
+Message-ID: <20200421203140.GD6742@magnolia>
+References: <20200421191754.3372370-1-ira.weiny@intel.com>
+ <20200421191754.3372370-11-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20200421110520.197930-1-evanbenn@chromium.org> <20200421210403.v2.2.Ia92bb4d4ce84bcefeba1d00aaa1c1e919b6164ef@changeid>
-In-Reply-To: <20200421210403.v2.2.Ia92bb4d4ce84bcefeba1d00aaa1c1e919b6164ef@changeid>
-From:   Julius Werner <jwerner@chromium.org>
-Date:   Tue, 21 Apr 2020 13:31:25 -0700
-Message-ID: <CAODwPW9MtDLSL_up9W0TO1PcjyA_9cUtNo3No7XXusiwqKBLDw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] watchdog: Add new arm_smc_wdt watchdog driver
-To:     Evan Benn <evanbenn@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Julius Werner <jwerner@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Olof Johansson <olof@lixom.net>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421191754.3372370-11-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 suspectscore=3 malwarescore=0 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 bulkscore=0 phishscore=0 suspectscore=3 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static int smcwd_call(unsigned long smc_func_id, enum smcwd_call call,
-> +                     unsigned long arg, struct arm_smccc_res *res)
+On Tue, Apr 21, 2020 at 12:17:52PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Because of the separation of FS_XFLAG_DAX from S_DAX and the delayed
+> setting of S_DAX, data invalidation no longer needs to happen when
+> FS_XFLAG_DAX is changed.
+> 
+> Change xfs_ioctl_setattr_dax_invalidate() to be
+> xfs_ioctl_dax_check_set_cache() and alter the code to reflect the new
+> functionality.
+> 
+> Furthermore, we no longer need the locking so we remove the join_flags
+> logic.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from V8:
+> 	Change name of function to xfs_ioctl_dax_check_set_cache()
+> 	Update commit message
+> 	Fix bit manipulations
+> 
+> Changes from V7:
+> 	Use new flag_inode_dontcache()
+> 	Skip don't cache if mount over ride is active.
+> 
+> Changes from v6:
+> 	Fix completely broken implementation and update commit message.
+> 	Use the new VFS layer I_DONTCACHE to facilitate inode eviction
+> 	and S_DAX changing on drop_caches
+> 
+> Changes from v5:
+> 	New patch
+> ---
+>  fs/xfs/xfs_ioctl.c | 108 +++++++++------------------------------------
+>  1 file changed, 20 insertions(+), 88 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index 104495ac187c..b87b571a6748 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -1245,64 +1245,26 @@ xfs_ioctl_setattr_xflags(
+>  	return 0;
+>  }
+>  
+> -/*
+> - * If we are changing DAX flags, we have to ensure the file is clean and any
+> - * cached objects in the address space are invalidated and removed. This
+> - * requires us to lock out other IO and page faults similar to a truncate
+> - * operation. The locks need to be held until the transaction has been committed
+> - * so that the cache invalidation is atomic with respect to the DAX flag
+> - * manipulation.
+> - */
+> -static int
+> -xfs_ioctl_setattr_dax_invalidate(
+> +static void
+> +xfs_ioctl_dax_check_set_cache(
 
-I think you should just take a struct watchdog_device* here and do the
-drvdata unpacking inside the function.
+That's a ... strange name.  Set cache on what?
 
-> +static int smcwd_probe(struct platform_device *pdev)
-> +{
-> +       struct watchdog_device *wdd;
-> +       int err;
-> +       struct arm_smccc_res res;
-> +       u32 *smc_func_id;
-> +
-> +       smc_func_id =
-> +               devm_kzalloc(&pdev->dev, sizeof(*smc_func_id), GFP_KERNEL);
-> +       if (!smc_func_id)
-> +               return -ENOMEM;
+Oh, this is the function that sets I_DONTCACHE if an FS_XFLAG_DAX change
+could have an immediate effect on S_DAX (assuming no other users).  What
+do you think of the following?
 
-nit: Could save the allocation by just casting the value itself to a
-pointer? Or is that considered too hacky?
+	/*
+	 * If a change to FS_XFLAG_DAX will result in an change to S_DAX
+	 * the next time the incore inode is initialized, set the VFS
+	 * I_DONTCACHE flag to try to hurry that along.
+	 */
+	static void
+	xfs_ioctl_try_change_vfs_dax(...)
 
-> +static const struct of_device_id smcwd_dt_ids[] = {
-> +       { .compatible = "mediatek,mt8173-smc-wdt" },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(of, smcwd_dt_ids);
+--D
 
-So I'm a bit confused about this... I thought the plan was to either
-use arm,smc-id and then there'll be no reason to put platform-specific
-quirks into the driver, so we can just use a generic "arm,smc-wdt"
-compatible string on all platforms; or we put individual compatible
-strings for each platform and use them to hardcode platform-specific
-differences (like the SMC ID) in the driver. But now you're kinda
-doing both by making the driver code platform-independent but still
-using a platform-specific compatible string, that doesn't seem to fit
-together. (If the driver can be platform independent, I think it's
-nicer to have a generic compatible string so that future platforms
-which support the same interface don't have to land code changes in
-order to just use the driver.)
+>  	struct xfs_inode	*ip,
+> -	struct fsxattr		*fa,
+> -	int			*join_flags)
+> +	struct fsxattr		*fa)
+>  {
+> -	struct inode		*inode = VFS_I(ip);
+> -	struct super_block	*sb = inode->i_sb;
+> -	int			error;
+> -
+> -	*join_flags = 0;
+> -
+> -	/*
+> -	 * It is only valid to set the DAX flag on regular files and
+> -	 * directories on filesystems where the block size is equal to the page
+> -	 * size. On directories it serves as an inherited hint so we don't
+> -	 * have to check the device for dax support or flush pagecache.
+> -	 */
+> -	if (fa->fsx_xflags & FS_XFLAG_DAX) {
+> -		struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
+> -
+> -		if (!bdev_dax_supported(target->bt_bdev, sb->s_blocksize))
+> -			return -EINVAL;
+> -	}
+> -
+> -	/* If the DAX state is not changing, we have nothing to do here. */
+> -	if ((fa->fsx_xflags & FS_XFLAG_DAX) && IS_DAX(inode))
+> -		return 0;
+> -	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
+> -		return 0;
+> +	struct xfs_mount	*mp = ip->i_mount;
+> +	struct inode            *inode = VFS_I(ip);
+>  
+>  	if (S_ISDIR(inode->i_mode))
+> -		return 0;
+> -
+> -	/* lock, flush and invalidate mapping in preparation for flag change */
+> -	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> -	error = filemap_write_and_wait(inode->i_mapping);
+> -	if (error)
+> -		goto out_unlock;
+> -	error = invalidate_inode_pages2(inode->i_mapping);
+> -	if (error)
+> -		goto out_unlock;
+> -
+> -	*join_flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
+> -	return 0;
+> +		return;
+>  
+> -out_unlock:
+> -	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> -	return error;
+> +	if ((mp->m_flags & XFS_MOUNT_DAX_ALWAYS) ||
+> +	    (mp->m_flags & XFS_MOUNT_DAX_NEVER))
+> +		return;
+>  
+> +	if (((fa->fsx_xflags & FS_XFLAG_DAX) &&
+> +	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)) ||
+> +	    (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
+> +	     (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)))
+> +		mark_inode_dontcache(inode);
+>  }
+>  
+>  /*
+> @@ -1310,17 +1272,10 @@ xfs_ioctl_setattr_dax_invalidate(
+>   * have permission to do so. On success, return a clean transaction and the
+>   * inode locked exclusively ready for further operation specific checks. On
+>   * failure, return an error without modifying or locking the inode.
+> - *
+> - * The inode might already be IO locked on call. If this is the case, it is
+> - * indicated in @join_flags and we take full responsibility for ensuring they
+> - * are unlocked from now on. Hence if we have an error here, we still have to
+> - * unlock them. Otherwise, once they are joined to the transaction, they will
+> - * be unlocked on commit/cancel.
+>   */
+>  static struct xfs_trans *
+>  xfs_ioctl_setattr_get_trans(
+> -	struct xfs_inode	*ip,
+> -	int			join_flags)
+> +	struct xfs_inode	*ip)
+>  {
+>  	struct xfs_mount	*mp = ip->i_mount;
+>  	struct xfs_trans	*tp;
+> @@ -1337,8 +1292,7 @@ xfs_ioctl_setattr_get_trans(
+>  		goto out_unlock;
+>  
+>  	xfs_ilock(ip, XFS_ILOCK_EXCL);
+> -	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL | join_flags);
+> -	join_flags = 0;
+> +	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+>  
+>  	/*
+>  	 * CAP_FOWNER overrides the following restrictions:
+> @@ -1359,8 +1313,6 @@ xfs_ioctl_setattr_get_trans(
+>  out_cancel:
+>  	xfs_trans_cancel(tp);
+>  out_unlock:
+> -	if (join_flags)
+> -		xfs_iunlock(ip, join_flags);
+>  	return ERR_PTR(error);
+>  }
+>  
+> @@ -1486,7 +1438,6 @@ xfs_ioctl_setattr(
+>  	struct xfs_dquot	*pdqp = NULL;
+>  	struct xfs_dquot	*olddquot = NULL;
+>  	int			code;
+> -	int			join_flags = 0;
+>  
+>  	trace_xfs_ioctl_setattr(ip);
+>  
+> @@ -1510,18 +1461,9 @@ xfs_ioctl_setattr(
+>  			return code;
+>  	}
+>  
+> -	/*
+> -	 * Changing DAX config may require inode locking for mapping
+> -	 * invalidation. These need to be held all the way to transaction commit
+> -	 * or cancel time, so need to be passed through to
+> -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
+> -	 * appropriately.
+> -	 */
+> -	code = xfs_ioctl_setattr_dax_invalidate(ip, fa, &join_flags);
+> -	if (code)
+> -		goto error_free_dquots;
+> +	xfs_ioctl_dax_check_set_cache(ip, fa);
+>  
+> -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
+> +	tp = xfs_ioctl_setattr_get_trans(ip);
+>  	if (IS_ERR(tp)) {
+>  		code = PTR_ERR(tp);
+>  		goto error_free_dquots;
+> @@ -1651,7 +1593,6 @@ xfs_ioc_setxflags(
+>  	struct fsxattr		fa;
+>  	struct fsxattr		old_fa;
+>  	unsigned int		flags;
+> -	int			join_flags = 0;
+>  	int			error;
+>  
+>  	if (copy_from_user(&flags, arg, sizeof(flags)))
+> @@ -1668,18 +1609,9 @@ xfs_ioc_setxflags(
+>  	if (error)
+>  		return error;
+>  
+> -	/*
+> -	 * Changing DAX config may require inode locking for mapping
+> -	 * invalidation. These need to be held all the way to transaction commit
+> -	 * or cancel time, so need to be passed through to
+> -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
+> -	 * appropriately.
+> -	 */
+> -	error = xfs_ioctl_setattr_dax_invalidate(ip, &fa, &join_flags);
+> -	if (error)
+> -		goto out_drop_write;
+> +	xfs_ioctl_dax_check_set_cache(ip, &fa);
+>  
+> -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
+> +	tp = xfs_ioctl_setattr_get_trans(ip);
+>  	if (IS_ERR(tp)) {
+>  		error = PTR_ERR(tp);
+>  		goto out_drop_write;
+> -- 
+> 2.25.1
+> 
