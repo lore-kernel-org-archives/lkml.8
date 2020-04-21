@@ -2,88 +2,62 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E70C55186
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EA7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77026206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12649206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgDUWxU (ORCPT
+        id S1726383AbgDUWyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 18:53:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42042 "EHLO
+        Tue, 21 Apr 2020 18:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725850AbgDUWxT (ORCPT
+        by vger.kernel.org with ESMTP id S1725850AbgDUWyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 18:53:19 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81917C0610D5;
-        Tue, 21 Apr 2020 15:53:19 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id CB82D378;
-        Tue, 21 Apr 2020 22:53:18 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 16:53:17 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Becker <jlbec@evilplan.org>, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 08/29] docs: filesystems: convert configfs.txt to
- ReST
-Message-ID: <20200421165317.277f52ee@lwn.net>
-In-Reply-To: <20200421172337.GA18305@lst.de>
-References: <cover.1587487612.git.mchehab+huawei@kernel.org>
-        <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org>
-        <20200421165534.GA16511@lst.de>
-        <20200421170223.GP5820@bombadil.infradead.org>
-        <20200421172337.GA18305@lst.de>
-Organization: LWN.net
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 21 Apr 2020 18:54:17 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C99EEC0610D5;
+        Tue, 21 Apr 2020 15:54:17 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6B0BB128E92AE;
+        Tue, 21 Apr 2020 15:54:17 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 15:54:16 -0700 (PDT)
+Message-Id: <20200421.155416.260842337991054528.davem@davemloft.net>
+To:     zhengdejin5@gmail.com
+Cc:     ynezz@true.cz, swboyd@chromium.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Markus.Elfring@web.de
+Subject: Re: [PATCH net-next v1] net: broadcom: convert to
+ devm_platform_ioremap_resource_byname()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200420150641.2528-1-zhengdejin5@gmail.com>
+References: <20200420150641.2528-1-zhengdejin5@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 21 Apr 2020 15:54:17 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 19:23:37 +0200
-Christoph Hellwig <hch@lst.de> wrote:
+From: Dejin Zheng <zhengdejin5@gmail.com>
+Date: Mon, 20 Apr 2020 23:06:41 +0800
 
-> On Tue, Apr 21, 2020 at 10:02:23AM -0700, Matthew Wilcox wrote:
-> > On Tue, Apr 21, 2020 at 06:55:34PM +0200, Christoph Hellwig wrote:  
-> > > NAK, this makes the document significantly harder to read.  
-> > 
-> > Really?  It reads more easily to me in the new format.  Enclosing
-> > section headers in [] is really weird.  
+> Use the function devm_platform_ioremap_resource_byname() to simplify
+> source code which calls the functions platform_get_resource_byname()
+> and devm_ioremap_resource(). Remove also a few error messages which
+> became unnecessary with this software refactoring.
 > 
-> It wasn't entirely uncommon, but that's not really the point.  The
-> Problem is all the weird ".." or "::" annotations that really kill
-> the flow, or things like "|copy|" that have no reason to exist.
+> Suggested-by: Markus Elfring <Markus.Elfring@web.de>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 
-This sounds sort of like "my markup is good, yours is bad", honestly.  If
-somebody were trying to add bracketed headings to a new document, I
-suspect we'd get similar complaints.
-
-The markup can certainly be toned down.  If you don't like |copy|, it can
-just as easily remain "(c)" or become ©, or just go away entirely.  That
-would get rid of the ".. include:: <isonum.txt>" line too.  I would
-happily make a rule that we don't bother with markup like |copy|
-anywhere in the kernel docs.
-
-The SPDX line is supposed to exist in all files, of course.
-
-If Mauro does that, can you live with "::" to mark a literal block?  It
-doesn't seem like a whole lot of noise...?
-
-Thanks,
-
-jon
+Applied.
