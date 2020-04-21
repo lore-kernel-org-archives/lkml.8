@@ -2,115 +2,92 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B521C55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C492BC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B961206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 946B82070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:35:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tLk1gJX3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="AV+bEDEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbgDUOep (ORCPT
+        id S1729181AbgDUOe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:34:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728884AbgDUOeo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:34:44 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D3FC061A10;
-        Tue, 21 Apr 2020 07:34:44 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k18so5303787pll.6;
-        Tue, 21 Apr 2020 07:34:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zq9Rc02OpG34TOhlty/dIpBCWMI3R3IYAzvpFb7L/0s=;
-        b=tLk1gJX35GlvoIa/Xe6AMS2xhthM6FYWHJ3voPV5yh97aLD7f45gMcoyxgb8wmx7+X
-         yR0EymyBRUErFfdo8YAUuBpeCAOUGgjPVz1K/qbbgYsIL/QEtBSLw4T/SAwffU4UItXf
-         okQHHgdy0qiO/oVBVnXFKW9DB6g2M9EompBRycV6zEy/1F8aa2U37X2ry6IQeYhmPcXh
-         /ieTHz6wgoxGLvkae7Lf/VS6KhaWSl8srWGbmyWOboEFS/AOBmZ+h3MDZNYzovOTDq06
-         jxeywBRitu6C/666/ebdbQ/2H6JFpUCZWiIe205kPChdcZg1EAFJOtpv1IY3rQoyuJNU
-         QsjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zq9Rc02OpG34TOhlty/dIpBCWMI3R3IYAzvpFb7L/0s=;
-        b=syRrEy8TEbmYRRfnUPKIHF6tUgYzk0w+ZaQ99pC/W6lwPFCmXjJrElqx8/lj1TwSjP
-         xWTDtQnLDjlhdLxnGgHEETQhxfJ5Re+UvRuV86xxNQihd0jGK/rEH4KYq7273PxSrsy1
-         HfJoFrZ8UvoWyKE3Kn3pL4nsccmdKPdW2nezGM4OI+BmKlwRiBUa8dJ3+r0EC2Fae3Um
-         8+V27YOi/M4grz0uT2F3toCjaKC5tVV+KK+e03Gt6GQKWPSpT7xw9ZwzLTHx9G/p3u4v
-         Ny2fRGxHOwJMZ1pIEkQSj2Ngb/yFCWjAt7sVAg1H/mvY6np76buhSwnvwdbZy7xVebp2
-         XhAg==
-X-Gm-Message-State: AGi0PuaStPrrl6t/MiW2Ck/A0zGOV7q7Ch5YwdRG8zahwtdFbR0iL6OY
-        atkDQEEHNgVhINlAxYhOjpU=
-X-Google-Smtp-Source: APiQypJ8EXwXe4ktFM9Rku6oLkjtfKkl3MYdvdW6wmw27A6j0XO4zh1LottWdophDgQs3HXCUpNlnw==
-X-Received: by 2002:a17:90a:2602:: with SMTP id l2mr6280579pje.110.1587479683563;
-        Tue, 21 Apr 2020 07:34:43 -0700 (PDT)
-Received: from localhost ([89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id h13sm2687822pfk.86.2020.04.21.07.34.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Apr 2020 07:34:43 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 22:34:38 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, geert+renesas@glider.be,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, jun.nie@linaro.org,
-        stephan@gerhold.net, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1] pinctrl: fix several typos
-Message-ID: <20200421143438.GA9613@nuc8i5>
-References: <20200419164956.3484-1-zhengdejin5@gmail.com>
- <f54d6f0a6c31ab3911c2b35caef49df340ab1196.camel@perches.com>
+        Tue, 21 Apr 2020 10:34:59 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54082 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728576AbgDUOe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:34:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=J1AuJQiIlCTITQnSwQKoytdV/lQf6CuoRK5vm4/7pXw=; b=AV+bEDErl9lng9eY1CI2IlzLdw
+        SGeLgOBygKOyJNMkjJoUp+SjDsSpf/r45nkZH9CpIx/akEKJzXt2uI6Q5AdTeeOax+AMad0Gc6dWl
+        vnOgSUH1xT8QuLWZLbU4CiuZi+obtVHBCAx+rGWv40XUut+pOnOSHM95JCNWKtUrLY9A=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQtzD-0042Oq-4F; Tue, 21 Apr 2020 16:34:55 +0200
+Date:   Tue, 21 Apr 2020 16:34:55 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [RFC PATCH net-next 1/3] net: phy: add concept of shared storage
+ for PHYs
+Message-ID: <20200421143455.GB933345@lunn.ch>
+References: <20200420232624.9127-1-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f54d6f0a6c31ab3911c2b35caef49df340ab1196.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200420232624.9127-1-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 09:41:09AM -0700, Joe Perches wrote:
-> On Mon, 2020-04-20 at 00:49 +0800, Dejin Zheng wrote:
-> > use codespell to fix lots of typos over frontends.
-> []
-> > diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-> []
-> > @@ -418,7 +418,7 @@ static const unsigned lcdvsi1_a_1_pins[] = { DB8500_PIN_E2 };
-> >  static const unsigned lcd_d0_d7_a_1_pins[] = {
-> >  	DB8500_PIN_G5, DB8500_PIN_G4, DB8500_PIN_H4, DB8500_PIN_H3,
-> >  	DB8500_PIN_J3, DB8500_PIN_H2, DB8500_PIN_J2, DB8500_PIN_H1 };
-> > -/* D8 thru D11 often used as TVOUT lines */
-> > +/* D8 through D11 often used as TVOUT lines */
+On Tue, Apr 21, 2020 at 01:26:22AM +0200, Michael Walle wrote:
+> There are packages which contain multiple PHY devices, eg. a quad PHY
+> transceiver. Provide functions to allocate and free shared storage.
 > 
-> thru is _really_ common and a generally accepted informal
-> for through so I suggest this not be changed.
-> 
-> https://www.dictionary.com/browse/thru
-> preposition, adverb, adjective
-> an informal, simplified spelling of through.
-> 
-> https://www.merriam-webster.com/dictionary/thru
-> While never extremely common, tho and thru have a long history of
-> occasional use as spelling variants of though and through.
-> 
-> Their greatest popularity occurred in the late 19th and early 20th 
-> centuries, when their adoption was advocated by spelling reformers. 
-> Their current use occurs chiefly in informal writing (as in personal 
-> letters) and in some technical journals.
->
-Joe, Thanks!
+> Usually, a quad PHY contains global registers, which don't belong to any
+> PHY. Provide convenience functions to access these registers.
+
+Hi Michael
+
+Please provide a patch 0/3 cover note. DaveM will uses it for the
+merge commit, etc.
+
+> +void phy_package_leave(struct phy_device *phydev)
+> +{
+> +	struct mii_bus *bus = phydev->mdio.bus;
+> +	struct phy_package_shared *shared = phydev->shared;
+
+Reverse Christmas tree.
+
+> +static inline bool phy_package_init_once(struct phy_device *phydev)
+> +{
+> +	struct phy_package_shared *shared = phydev->shared;
+> +
+> +	if (!shared)
+> +		return false;
+> +
+> +	return !test_and_set_bit(PHY_SHARED_F_INIT_DONE, &shared->flags);
+> +}
+
+I need to look at how you actually use this, but i wonder if this is
+sufficient. Can two PHYs probe at the same time? Could we have one PHY
+be busy setting up the global init, and the other thinks the global
+setup is complete? Do we want a comment like: 'Returns true when the
+global package initialization is either under way or complete'?
+
+       Andrew
