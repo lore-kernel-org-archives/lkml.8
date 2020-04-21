@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE06FC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166BAC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABA03206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E360D206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U6qcIuKj"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cBw1EmTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbgDUOdC (ORCPT
+        id S1729329AbgDUOdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:33:02 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:38639 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729295AbgDUOc6 (ORCPT
+        Tue, 21 Apr 2020 10:33:08 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:10368 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729317AbgDUOdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:32:58 -0400
+        Tue, 21 Apr 2020 10:33:06 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587479577; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1587479586; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=sqX+vw/JMt2d9YIaemJYxFNU3ZR/6minw4o+HGtf5Vk=; b=U6qcIuKjrYVXc0XU4eQc8lY1zjJMVoQE/yp45o02k8eH42UYXUQK1o4PLCiUIt/E6MPv070P
- FpdxEFJxf2WZaTUj5jujZRQw/Y/lF2c/WjbRmjhhrry+kxQK2nuLr+GhE9WI29fzAVJbXjNr
- 1ICYsaKjRYZGkJ20AFq/SUpOoSE=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ Sender; bh=mNkd366fBI/Mx9MCE5qcOzNQoIGuapc6hsXcqID2Ecc=; b=cBw1EmTWwmZMzNBFbQYX1ma2knfa4+mFmEdH9IRVTEs8VQcuXNvJXccwmPbewi0/hbOvLpfZ
+ EdPTusCcKCRNCHAzqUipMRmLZ1qb2kkaUORKq1TVq2t5mrGvhCS3azrc6y0+ntTffHOLLkPS
+ LPKFUNFt67Qr2yP26UaVILEiq0Q=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9f0419.7f8d5ab9dd88-smtp-out-n02;
- Tue, 21 Apr 2020 14:32:57 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e9f0421.7f3fa9b54998-smtp-out-n03;
+ Tue, 21 Apr 2020 14:33:05 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 57B07C44788; Tue, 21 Apr 2020 14:32:56 +0000 (UTC)
+        id AE60BC44792; Tue, 21 Apr 2020 14:33:01 +0000 (UTC)
 Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D9EFC44798;
-        Tue, 21 Apr 2020 14:32:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5D9EFC44798
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C25DDC44799;
+        Tue, 21 Apr 2020 14:32:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C25DDC44799
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -52,9 +52,9 @@ Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
         evgreen@chromium.org, ohad@wizery.com, mka@chromium.org,
         dianders@chromium.org, devicetree@vger.kernel.org,
         Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 3/7] dt-bindings: remoteproc: qcom: Use memory-region to reference memory
-Date:   Tue, 21 Apr 2020 20:02:24 +0530
-Message-Id: <20200421143228.8981-4-sibis@codeaurora.org>
+Subject: [PATCH v2 4/7] remoteproc: qcom_q6v5_mss: Extract mba/mpss from memory-region
+Date:   Tue, 21 Apr 2020 20:02:25 +0530
+Message-Id: <20200421143228.8981-5-sibis@codeaurora.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200421143228.8981-1-sibis@codeaurora.org>
 References: <20200421143228.8981-1-sibis@codeaurora.org>
@@ -65,32 +65,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use memory-region property to reference mba and mpss memory regions.
+In the absence of mba and mpss sub-child extract the mba/mpss regions
+from the memory-region property.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- .../devicetree/bindings/remoteproc/qcom,q6v5.txt          | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/remoteproc/qcom_q6v5_mss.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index bffddd15eb910..1f9a62e13ebe0 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -102,6 +102,14 @@ on the Qualcomm Hexagon core.
- 		    must be "mss_restart", "pdc_reset" for the modem
- 		    sub-system on SC7180, SDM845 SoCs
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 3a7352776a319..5c8d04c51af71 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1503,8 +1503,17 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
+ 	struct resource r;
+ 	int ret;
  
-+For devices where the mba and mpss sub-nodes are not specified, mba/mpss region
-+should be referenced as follows:
-+- memory-region:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to the reserved-memory for the mba region followed
-+		    by the mpss region
++	/*
++	 * In the absence of mba/mpss sub-child, extract the mba and mpss
++	 * reserved memory regions from device's memory-region property.
++	 */
+ 	child = of_get_child_by_name(qproc->dev->of_node, "mba");
+-	node = of_parse_phandle(child, "memory-region", 0);
++	if (!child)
++		node = of_parse_phandle(qproc->dev->of_node,
++					"memory-region", 0);
++	else
++		node = of_parse_phandle(child, "memory-region", 0);
 +
- For the compatible strings below the following supplies are required:
-   "qcom,q6v5-pil"
-   "qcom,msm8916-mss-pil",
+ 	ret = of_address_to_resource(node, 0, &r);
+ 	if (ret) {
+ 		dev_err(qproc->dev, "unable to resolve mba region\n");
+@@ -1521,8 +1530,14 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
+ 		return -EBUSY;
+ 	}
+ 
+-	child = of_get_child_by_name(qproc->dev->of_node, "mpss");
+-	node = of_parse_phandle(child, "memory-region", 0);
++	if (!child) {
++		node = of_parse_phandle(qproc->dev->of_node,
++					"memory-region", 1);
++	} else {
++		child = of_get_child_by_name(qproc->dev->of_node, "mpss");
++		node = of_parse_phandle(child, "memory-region", 0);
++	}
++
+ 	ret = of_address_to_resource(node, 0, &r);
+ 	if (ret) {
+ 		dev_err(qproc->dev, "unable to resolve mpss region\n");
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
