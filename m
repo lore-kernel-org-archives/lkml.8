@@ -2,31 +2,30 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E48C55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D16FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0DBB20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2D420CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:22:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgDUJWL (ORCPT
+        id S1728162AbgDUJWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:22:11 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:46602 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725920AbgDUJWK (ORCPT
+        Tue, 21 Apr 2020 05:22:37 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:47543 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725920AbgDUJWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:22:10 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TwDn7z8_1587460926;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TwDn7z8_1587460926)
+        Tue, 21 Apr 2020 05:22:36 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TwDn81a_1587460953;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TwDn81a_1587460953)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Apr 2020 17:22:07 +0800
-Subject: Re: [PATCH 18/18] mm: memcontrol: update page->mem_cgroup stability
- rules
+          Tue, 21 Apr 2020 17:22:34 +0800
+Subject: Re: [PATCH 16/18] mm: memcontrol: charge swapin pages on
+ instantiation
 To:     Johannes Weiner <hannes@cmpxchg.org>,
         Joonsoo Kim <js1304@gmail.com>
 Cc:     Shakeel Butt <shakeelb@google.com>,
@@ -37,14 +36,14 @@ Cc:     Shakeel Butt <shakeelb@google.com>,
         cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com
 References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-19-hannes@cmpxchg.org>
+ <20200420221126.341272-17-hannes@cmpxchg.org>
 From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <1f905391-5676-2db6-efb9-74ade130740e@linux.alibaba.com>
-Date:   Tue, 21 Apr 2020 17:20:59 +0800
+Message-ID: <6f03ed4e-f917-2ccc-26c0-c438c84d3d97@linux.alibaba.com>
+Date:   Tue, 21 Apr 2020 17:21:26 +0800
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
  Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200420221126.341272-19-hannes@cmpxchg.org>
+In-Reply-To: <20200420221126.341272-17-hannes@cmpxchg.org>
 Content-Type: text/plain; charset=gbk
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,72 +54,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 ÔÚ 2020/4/21 ÉÏÎç6:11, Johannes Weiner Ð´µÀ:
-> The previous patches have simplified the access rules around
-> page->mem_cgroup somewhat:
+> Right now, users that are otherwise memory controlled can easily
+> escape their containment and allocate significant amounts of memory
+> that they're not being charged for. That's because swap readahead
+> pages are not being charged until somebody actually faults them into
+> their page table. This can be exploited with MADV_WILLNEED, which
+> triggers arbitrary readahead allocations without charging the pages.
 > 
-> 1. We never change page->mem_cgroup while the page is isolated by
->    somebody else. This was by far the biggest exception to our rules
->    and it didn't stop at lock_page() or lock_page_memcg().
+> There are additional problems with the delayed charging of swap pages:
 > 
-> 2. We charge pages before they get put into page tables now, so the
->    somewhat fishy rule about "can be in page table as long as it's
->    still locked" is now gone and boiled down to having an exclusive
->    reference to the page.
+> 1. To implement refault/workingset detection for anonymous pages, we
+>    need to have a target LRU available at swapin time, but the LRU is
+>    not determinable until the page has been charged.
 > 
-> Document the new rules. Any of the following will stabilize the
-> page->mem_cgroup association:
+> 2. To implement per-cgroup LRU locking, we need page->mem_cgroup to be
+>    stable when the page is isolated from the LRU; otherwise, the locks
+>    change under us. But swapcache gets charged after it's already on
+>    the LRU, and even if we cannot isolate it ourselves (since charging
+>    is not exactly optional).
 > 
-> - the page lock
-> - LRU isolation
-> - lock_page_memcg()
-> - exclusive access to the page
+> The previous patch ensured we always maintain cgroup ownership records
+> for swap pages. This patch moves the swapcache charging point from the
+> fault handler to swapin time to fix all of the above problems.
 > 
 > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
 Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
-
-> ---
->  mm/memcontrol.c | 21 +++++++--------------
->  1 file changed, 7 insertions(+), 14 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index a8cce52b6b4d..7b63260c9b57 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1201,9 +1201,8 @@ int mem_cgroup_scan_tasks(struct mem_cgroup *memcg,
->   * @page: the page
->   * @pgdat: pgdat of the page
->   *
-> - * This function is only safe when following the LRU page isolation
-> - * and putback protocol: the LRU lock must be held, and the page must
-> - * either be PageLRU() or the caller must have isolated/allocated it.
-> + * This function relies on page->mem_cgroup being stable - see the
-> + * access rules in commit_charge().
->   */
->  struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgdat)
->  {
-> @@ -2605,18 +2604,12 @@ static void commit_charge(struct page *page, struct mem_cgroup *memcg)
->  {
->  	VM_BUG_ON_PAGE(page->mem_cgroup, page);
->  	/*
-> -	 * Nobody should be changing or seriously looking at
-> -	 * page->mem_cgroup at this point:
-> -	 *
-> -	 * - the page is uncharged
-> -	 *
-> -	 * - the page is off-LRU
-> -	 *
-> -	 * - an anonymous fault has exclusive page access, except for
-> -	 *   a locked page table
-> +	 * Any of the following ensures page->mem_cgroup stability:
->  	 *
-> -	 * - a page cache insertion, a swapin fault, or a migration
-> -	 *   have the page locked
-> +	 * - the page lock
-> +	 * - LRU isolation
-> +	 * - lock_page_memcg()
-> +	 * - exclusive reference
->  	 */
->  	page->mem_cgroup = memcg;
->  }
-> 
