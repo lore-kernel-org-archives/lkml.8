@@ -2,87 +2,132 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3087C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 385B9C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B252A206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:38:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587461897;
-	bh=Wwmy5yMfOOS/GCTIsUM1/NwOzDNkNh6C9kXX+XiAPg4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BxuMgsqVIemWku/T0X3ZhtGNCUiNu9Js316rfg28kvtmVjLJbpzh2E3xExlVpE30m
-	 CnPA5lH52XzBxBgvOpm0VMu1M6EPG9kh2Kgew/FP5MMFhtfWSxO1udH/AQPv/9dtpB
-	 sKJxGVXKwD4EQRl7s02yCDIaClsiiBspPLj06pBg=
+	by mail.kernel.org (Postfix) with ESMTP id 19E6C206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:39:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wNADBHYf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgDUJiR (ORCPT
+        id S1728413AbgDUJj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:38:17 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:43053 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbgDUJiQ (ORCPT
+        Tue, 21 Apr 2020 05:39:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726403AbgDUJjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:38:16 -0400
-Received: by mail-ej1-f67.google.com with SMTP id gr25so10474796ejb.10;
-        Tue, 21 Apr 2020 02:38:14 -0700 (PDT)
+        Tue, 21 Apr 2020 05:39:25 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 036F1C061A41
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 02:39:24 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id h200so3433702vke.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 02:39:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J6xX4UX3gD4CgRlcECeL2t8r4Bb9qOAjl08Y9GivdCk=;
+        b=wNADBHYfBqrmYLagYMXhvkFyUT8BxHFDmwzkIw/FRVt1EftHXgipIT5yJYjq9ocehu
+         GrZB6OVK67pjdwBAL3ZpBnNYXCYFWesoXkeoHo0e+Ys2ree61WWYf4q1s6aM2pRu8zzE
+         AejCt13Zo1guyVsMD5GmA9rvmocxaeUAi4sNkPEfOLyZk1Y2qbJjkD6tKDgzsKIF5CWZ
+         bLLAKSp0UWZJvyvTPaV6DLqfwXjGE7lCNhM1KyduORgSrcceVXJfhY1vVq4+4BSaq4zN
+         YVaXK4yTyH5sWOKbHxJKYqWhedO0PsZU5jTNO2D9GxGo88EZ/BqFQXR4VHF3pC6Bn3an
+         zNPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hGBcI73VU2JONip5DkkM7BykwieGTB1otFveN1pvYmE=;
-        b=REGek+KsgVl1C28U/v9NV3ociTKxEAwHLPXMrFYZ5MYS6XGxA6izg7m7aafY2CtJva
-         IvxoQHCG5wqE37P0Czre2ykcDL0nThRSRA+uvs5LLTR3ZLlCEZUd4Pr5voPlXkMftmsT
-         npM+xykFsomqPFTOBYrCWi4YoUd8I6N5SpKaDVvGt/HbWc1SHFL7sVeqT9WcX9XYGxVn
-         qXWB1kDkbaYp8D6CTceAZ+MN6FeHHhvE6qwRKpuJHrkMxA/kYU+UaF+3QhghDZrSc29h
-         VLv5H8afXHDf3zr8tzbyYaPPv+AD6gpcfpzotX8bMwLmUa8SxAnxom6fAQ1rPjrWEcHb
-         VVwA==
-X-Gm-Message-State: AGi0PuY2ITiLU3E5crrr4n78G2RUqCTxFqkI09jZL7+tdoyx8GhE761G
-        hWdpf7eaZUkERWkanR02FywO5sho
-X-Google-Smtp-Source: APiQypIvWtysc4ninhQola2RZmSLC9gKOAScPv8GH1q630D+x/ENlDK5A4qXDOXskHD8rD8D2axIVw==
-X-Received: by 2002:a17:906:14c:: with SMTP id 12mr20545531ejh.125.1587461894089;
-        Tue, 21 Apr 2020 02:38:14 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id sb17sm414298ejb.75.2020.04.21.02.38.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Apr 2020 02:38:13 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 11:38:10 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     kgene@kernel.org, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-Subject: Re: [PATCH] ARM: samsung: Omit superfluous error message in
- s3c_adc_probe()
-Message-ID: <20200421093810.GB30127@kozik-lap>
-References: <20200419070541.14820-1-tangbin@cmss.chinamobile.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J6xX4UX3gD4CgRlcECeL2t8r4Bb9qOAjl08Y9GivdCk=;
+        b=nIIGd6oMf9H95fIrX1AWDOVqjiP5DLKOtVApJTRrXIjcwPNPxjyNnXxY7fEyHWLzQv
+         hBVuMYDAGLbGUE6SaEIIC388ungmTvhe2sMJfMCk1P6uezM37qixRTrWajj5AydXiiwm
+         p8YQbRDEmJPXLfjlHNKNZ/90fINbve78NsZF88bD2+LQQExHP/TGg0GVvmZPsA8W95nQ
+         xlRnQcyRWG9juSpcLKUJg7a6XxmYDsIOUHKmTEbMcuBIShv3X866tOvCILpNkUGgFnq0
+         wjTdceHPxsqb3UmZE7XF28vsrDUKl/d879VXJtByFYoc//lw55pzCYjhNu48gnfnxfjw
+         pIjg==
+X-Gm-Message-State: AGi0PubKgk3I4SlbmTSY3/3urnRZuol0qRrN0ZjnYlUoEs4YqO/w9jEQ
+        ZEjbmIAyaEkwEUAdk3stSkt54QGhR75RW/keTpiqTcxfI84=
+X-Google-Smtp-Source: APiQypLnPZE96uN80G6KHYHQ5XnaUSopJzzVTgfYzGF7mgcTRi/zaOA8wN0KNmuIrTuTzZyPCglj01kkbBVX93uXS2o=
+X-Received: by 2002:a1f:31cf:: with SMTP id x198mr4295427vkx.101.1587461963161;
+ Tue, 21 Apr 2020 02:39:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200419070541.14820-1-tangbin@cmss.chinamobile.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200420161831.5043-1-ludovic.barre@st.com> <CAPDyKFqC3fdnQ9CMYhS-=5MiCET=r5Az2S5oFoA2v1gdDeGO3w@mail.gmail.com>
+In-Reply-To: <CAPDyKFqC3fdnQ9CMYhS-=5MiCET=r5Az2S5oFoA2v1gdDeGO3w@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 21 Apr 2020 11:38:47 +0200
+Message-ID: <CAPDyKFrHcoVd=GKPB70gOFE8STOnTJrJbcZzE_DEgFWh1Vhszg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: mmci_sdmmc: fix power on issue due to pwr_reg initialization
+To:     Ludovic Barre <ludovic.barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 03:05:41PM +0800, Tang Bin wrote:
-> In the function s3c_adc_probe(), when get irq failed,
-> the function platform_get_irq() logs an error message,
-> so remove redundant message here.
-> 
-> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> ---
->  arch/arm/plat-samsung/adc.c | 4 +---
+On Tue, 21 Apr 2020 at 11:25, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Mon, 20 Apr 2020 at 18:18, Ludovic Barre <ludovic.barre@st.com> wrote:
+> >
+> > This patch fix a power-on issue, and avoid to retry the power sequence.
+> >
+> > In power off sequence: sdmmc must set pwr_reg in "power-cycle" state
+> > (value 0x2), to prevent the card from being supplied through the signal
+> > lines (all the lines are driven low).
+> >
+> > In power on sequence: when the power is stable, sdmmc must set pwr_reg
+> > in "power-off" state (value 0x0) to drive all signal to high before to
+> > set "power-on".
+>
+> Just a question to gain further understanding.
+>
+> Let's assume that the controller is a power-on state, because it's
+> been initialized by the boot loader. When the mmc core then starts the
+> power-on sequence (not doing a power-off first), would $subject patch
+> then cause the
+> MMCIPOWER to remain as is, or is it going to be overwritten?
+>
+> I am a little worried that we may start to rely on boot loader
+> conditions, which isn't really what we want either...
+>
+> >
+> > To avoid writing the same value to the power register several times, this
+> > register is cached by the pwr_reg variable. At probe pwr_reg is initialized
+> > to 0 by kzalloc of mmc_alloc_host.
+> >
+> > Like pwr_reg value is 0 at probing, the power on sequence fail because
+> > the "power-off" state is not writes (value 0x0) and the lines
+> > remain drive to low.
+> >
+> > This patch initializes "pwr_reg" variable with power register value.
+> > This it done in sdmmc variant init to not disturb default mmci behavior.
+> >
+> > Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>
+> Besides the comment, the code and the approach seems reasonable to me.
 
-Thanks, applied.
+Another related question. I just realized why you probably haven't set
+.pwrreg_nopower for the variant_stm32_sdmmc and variant_stm32_sdmmcv2.
 
-Best regards,
-Krzysztof
+I guess it's because you need a slightly different way to restore the
+context of MMCIPOWER register at ->runtime_resume(), rather than just
+re-writing it with the saved register values. Is this something that
+you are looking into as well?
 
+[...]
+
+Kind regards
+Uffe
