@@ -2,127 +2,116 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74216C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88C5C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47070206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953B7206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cnEk74tX"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ItEbQCyb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgDUPbe (ORCPT
+        id S1726063AbgDUPec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:31:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725870AbgDUPbd (ORCPT
+        Tue, 21 Apr 2020 11:34:32 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6461 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbgDUPec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:31:33 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22D2DC061A10;
-        Tue, 21 Apr 2020 08:31:32 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w20so8153238ljj.0;
-        Tue, 21 Apr 2020 08:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wtUCUiYZffBnrc+hszmiZBVbrcWDpLsAMtA40Limz8k=;
-        b=cnEk74tXOooz70SpqP7DT3KV7T9QZmQbO4RFs8pWicqYrphIYWhuRBA1JeQDVa8iAj
-         tCuG7RzMweHretX84CxyA53xPl0w1WqVpa4zSF67dXQ0IHa8gYb24N/QNkMeIJGm66wG
-         wrWroxjqbaDcpMybh9TJnAzRGaBqj4LaiSK3owx+xke2lDCit/D7XWzy8fLFHnxjVfRh
-         TvWrl9W476OczqA56ben2Zk7X6C7sq/RDZggBAiMWsmbziYUmy8JlYMq/i14gMm5nP29
-         6W62YGfkY/PGWUQsVLEvm4N+s2xpN02ocYEL/av1G/YIF8pNrJaLaQ8tvpVx0mWrQNCg
-         rm5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wtUCUiYZffBnrc+hszmiZBVbrcWDpLsAMtA40Limz8k=;
-        b=LiXjrM6mBY+0TRGcWwp2DWioJNnm9Ql9agcfuAbhZMjAWC8ltTLDqlLDJeOKfLYiAy
-         dzw7H6swze4zBvAdF8Ci6wwCCY1HO5gIFLtTHXfi3jspqWtG+L/PFi/SWKhEvDtH3sux
-         6fp+PrFsUkDbG3mXmwlJPEiYDjaPFv1ChsOwrG3dirjKlYNZAdNdjw/oi6GknOeiv14E
-         WmoONHHtSRkOf/v1z0lyJPsLwv//1DhRb8kqfL05IHaJO6OSXIobVWZD+O3wSnagpdFP
-         SmxafHMugNWiKV1LUA3e8QPcWFj2Mhv0hvXoBQ6mZzGXDCP3DLEaOYm1kUYkPQZ14sas
-         SPHw==
-X-Gm-Message-State: AGi0PuaI4NKEAjjznYyA8ga205iOvYxWWQWOWAAAXuMOF7n69G1ooxtd
-        CC0IcluytDGyl5PeRTVeGGtu3XN5
-X-Google-Smtp-Source: APiQypIv0yCfzacWSwYjpZnJL0NsfUjoXNHzP9kQruZGSH1JvuatBTBYOvzzT7arz2q0DKwR7Uzx0w==
-X-Received: by 2002:a2e:910e:: with SMTP id m14mr5092458ljg.141.1587483090376;
-        Tue, 21 Apr 2020 08:31:30 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id z15sm2342483ljk.99.2020.04.21.08.31.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 08:31:29 -0700 (PDT)
-Subject: Re: [PATCH v5] ARM: boot: Obtain start of physical memory from DTB
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Miao <eric.miao@nvidia.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200415153409.30112-1-geert+renesas@glider.be>
- <CAMj1kXHm=xA4gafwAaBn8=YcAsQCYDNmZ=4REsfvEUgZShm3Ww@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5419f6b6-2d75-763f-abe1-4c6a2c67dc3d@gmail.com>
-Date:   Tue, 21 Apr 2020 18:31:28 +0300
+        Tue, 21 Apr 2020 11:34:32 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9f127b0000>; Tue, 21 Apr 2020 08:34:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 21 Apr 2020 08:34:31 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 21 Apr 2020 08:34:31 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
+ 2020 15:34:31 +0000
+Received: from [10.26.73.24] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
+ 2020 15:34:29 +0000
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "Wolfram Sang" <wsa@the-dreams.de>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+CC:     <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200324191217.1829-1-digetx@gmail.com>
+ <20200324191217.1829-2-digetx@gmail.com>
+ <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
+ <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
+ <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
+ <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
+ <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
+ <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
+ <93b738f2-ccf2-68ed-3ca5-30945bd40521@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <61c9f5a7-3a48-8200-1cfe-d5d0524511f7@nvidia.com>
+Date:   Tue, 21 Apr 2020 16:34:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXHm=xA4gafwAaBn8=YcAsQCYDNmZ=4REsfvEUgZShm3Ww@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <93b738f2-ccf2-68ed-3ca5-30945bd40521@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587483259; bh=dfH21pJMGp2TfX6zyXnZ+Ik+c16DfCdxRpvDYe/WEyU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ItEbQCybEuWHLbIyZf8BYqAPDXF32uVlv2cta+J6vli0ktZqDrjdwCNNXYv/uF4qU
+         5BmmNgBl6izQFyGbBOUL61SdocrNvO6rfuHCvhxU8/DAVFBmWtQKcunrG8fsqnCKi6
+         apa33hYEBldvy0ZtEpot6JM7k/Qqegxc2VFSWiUCDL3drJNBfnqYn4yd+YScWa5Jgk
+         L/1b7G51DiKlZomIMwYWSDetpQM0X54wWIsyYEYv3qEg9bl3zr38tfpOh/Cgi+qyFp
+         poaK2TRvTKoKcnc3KgOcthB1g/d/RSaXMgkT29z0isVG0Y5Hl8O1ucBupdDC68NiTo
+         G6RBqYts4CNRw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.04.2020 18:19, Ard Biesheuvel пишет:
-> On Wed, 15 Apr 2020 at 17:34, Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
->>
->> Currently, the start address of physical memory is obtained by masking
->> the program counter with a fixed mask of 0xf8000000.  This mask value
->> was chosen as a balance between the requirements of different platforms.
->> However, this does require that the start address of physical memory is
->> a multiple of 128 MiB, precluding booting Linux on platforms where this
->> requirement is not fulfilled.
->>
->> Fix this limitation by obtaining the start address from the DTB instead,
->> if available (either explicitly passed, or appended to the kernel).
->> Fall back to the traditional method when needed.
->>
->> This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of SDRAM
->> on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 space),
->> i.e. not at a multiple of 128 MiB.
->>
->> Suggested-by: Nicolas Pitre <nico@fluxnic.net>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
->> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
->> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> This is ready to go into the patch system, no?
-> 
-> The sooner Russell picks it up, the sooner I can respin my patches
-> that go on top.
-> 
-> Thanks,
 
-The v5 works for me on NVIDIA Tegra, just in case.
+On 21/04/2020 16:18, Dmitry Osipenko wrote:
+> 21.04.2020 17:40, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 21/04/2020 14:25, Dmitry Osipenko wrote:
+>>> 21.04.2020 12:49, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> ...
+>>>> I can try the above, but I agree it would be best to avoid messing wit=
+h
+>>>> the suspend levels if possible.
+>>>
+>>> Will be awesome if you could try it and report back the result.
+>>>
+>>
+>> I gave it a try but suspend still fails.
+>=20
+> Is this regulator error gone with my changes?
+>=20
+> [   60.450346] WARNING: CPU: 0 PID: 653 at
+> /home/jonathanh/workdir/tegra/mlt-linux_next/kernel/drivers/regulator/cor=
+e.c:2603
+> _regulator_disable+0xb8/0x1b4
+> [   60.463959] unbalanced disables for vdd_pexa,vdd_pexb
 
+The above is still there with your changes.
+
+Jon
+
+--=20
+nvpublic
