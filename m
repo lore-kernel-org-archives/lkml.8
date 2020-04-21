@@ -2,115 +2,156 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3344AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E93CC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05970206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B8C206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgDUI2R (ORCPT
+        id S1728096AbgDUI2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:28:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:46899 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDUI2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:28:15 -0400
-IronPort-SDR: Gu50vmakIoIE4FDTjt+k31+AFj9dM+IahIFe0n2Zm/Vxta6SBx2IM9JSgl7cfQuqWR+WOqvNuE
- S5zMe6ojU44Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 01:28:04 -0700
-IronPort-SDR: tYpd9XYj0rIS1xtRZpb6mUnsjXJcZoLdqcfdWMVuWRC181uxqpzHgPi/YbH884TIR9QNfQ54zt
- 046xbfesXN7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,409,1580803200"; 
-   d="scan'208";a="300540575"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Apr 2020 01:28:02 -0700
-Date:   Tue, 21 Apr 2020 16:28:32 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH 2/2] sched: Extract the task putting code from
- pick_next_task()
-Message-ID: <20200421082832.GD9721@chenyu-office.sh.intel.com>
-References: <cover.1587309963.git.yu.c.chen@intel.com>
- <7c1eab789cb4b53ec5f54644c089ce27ea14088a.1587309963.git.yu.c.chen@intel.com>
- <20200420183232.16b83374@gandalf.local.home>
+        Tue, 21 Apr 2020 04:28:44 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:42176 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgDUI2n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 04:28:43 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 8B2911C01E0; Tue, 21 Apr 2020 10:28:41 +0200 (CEST)
+Date:   Tue, 21 Apr 2020 10:28:40 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 2/4] serdev: ngsm-motmdm: Add Motorola TS 27.010 serdev
+ modem driver for droid4
+Message-ID: <20200421082840.GA4540@amd>
+References: <20200319173755.65082-1-tony@atomide.com>
+ <20200319173755.65082-3-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
 Content-Disposition: inline
-In-Reply-To: <20200420183232.16b83374@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200319173755.65082-3-tony@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 06:32:32PM -0400, Steven Rostedt wrote:
-> On Mon, 20 Apr 2020 00:31:52 +0800
-> Chen Yu <yu.c.chen@intel.com> wrote:
-> 
-> > Introduce a new function finish_prev_task() to do the balance
-> > when necessary, and then put previous task back to the run queue.
-> > This function is extracted from pick_next_task() to prepare for
-> > future usage by other type of task picking logic.
-> > 
-> > No functional change.
-> > 
-> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> > ---
-> >  kernel/sched/core.c | 39 +++++++++++++++++++++++----------------
-> >  1 file changed, 23 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 3a61a3b8eaa9..bf59a5cf030c 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -3904,6 +3904,28 @@ static inline void schedule_debug(struct task_struct *prev, bool preempt)
-> >  	schedstat_inc(this_rq()->sched_count);
-> >  }
-> >  
-> > +static void finish_prev_task(struct rq *rq, struct task_struct *prev,
-> > +			     struct rq_flags *rf)
-> > +{
-> > +	const struct sched_class *class;
-> > +#ifdef CONFIG_SMP
-> > +	/*
-> > +	 * We must do the balancing pass before put_next_task(), such
-> 
-> I know this is just a cut and paste move, but I'm thinking that this
-> comment is wrong. Shouldn't this be "put_prev_task()" as we have no
-> "put_next_task()" function.
-> 
->
-Okay, I'll fix it in v3.
-> > +	finish_prev_task(rq, prev, rf);
-> 
-> I'm not sure I like the name of this function. Perhaps
-> "balance_and_put_prev_task()"? Something more in kind to what the function
-> does.
->
-Per the discussion, I think put_prev_task_balance() might be an
-appropriate one.
 
-Thanks,
-Chenyu
-> -- Steve
-> 
-> >  
-> >  	for_each_class(class) {
-> >  		p = class->pick_next_task(rq);
-> 
+--AhhlLboLdkugWU4S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> $ printf "ATH\r" > /dev/motmdm1
+> H:OK
+>=20
+> Also SMS can be sent with this patch using /dev/motmdm3 for sending,
+> and /dev/motmdm9 for receiving messages, and /dev/motmdm10 can be
+> used for SIM access.
+>=20
+> Note that the audio mixer needs additional patches though. I will be
+> sending those as a separate series of patches.
+>=20
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+
+Some minor comments are below.
+
+> +++ b/drivers/tty/serdev/protocol/Kconfig
+> @@ -0,0 +1,14 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Serial bus device driver protocol specific configuration
+> +#
+> +
+> +config SERIAL_DEV_NGSM_MOTMDM
+> +	tristate "Motorola Modem TS 27.010 Serdev Protocol Driver"
+> +	depends on N_GSM && PHY_MAPPHONE_MDM6600
+> +	help
+> +	  Select this for Motorola modems using TS 27.010 serial line
+> +	  discipline such as MDM6600 modem found on Motorola Mapphone
+> +	  devices like Droid4
+
+I'd add "." at the end of sentence.
+
+> +/*
+> + * Character devices for DLCI channels with no serdev drivers
+> + */
+> +static int motmdm_cdev_open(struct inode *inode, struct file *file)
+> +{
+> +	struct motmdm_cdev *cdata;
+> +	int ret =3D 0;
+> +
+> +	cdata =3D container_of(inode->i_cdev, struct motmdm_cdev, cdev);
+> +	get_device(cdata->dev);
+> +	nonseekable_open(inode, file);
+> +	file->private_data =3D cdata;
+> +
+> +	down_write(&cdata->rwsem);
+> +	if (cdata->disconnected) {
+> +		ret =3D -ENODEV;
+> +		goto unlock;
+> +	}
+> +
+> +unlock:
+> +	up_write(&cdata->rwsem);
+
+You can delete goto and the label here.
+
+> +static int motmdm_cdev_release(struct inode *inode, struct file *file)
+> +{
+> +	struct motmdm_cdev *cdata =3D file->private_data;
+> +
+> +	down_write(&cdata->rwsem);
+> +	if (cdata->disconnected)
+> +		goto unlock;
+> +
+> +unlock:
+> +	up_write(&cdata->rwsem);
+
+And here... unless it is some kind of preparation for next patch?
+
+> +MODULE_DESCRIPTION("Motorola Modem TS 27.010 serdev driver");
+> +MODULE_AUTHOR("Tony Lindgren <tony@atomide.com");
+
+Missing ">" at the end of email address.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--AhhlLboLdkugWU4S
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl6errgACgkQMOfwapXb+vLKngCgkkW+3ZbDTRZSC7kzmpY07JCQ
+TVMAnRS8p/yLo9zJbEAFPgQyYe7v11+4
+=5CCg
+-----END PGP SIGNATURE-----
+
+--AhhlLboLdkugWU4S--
