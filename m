@@ -4,64 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F213BC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260ACC38A30
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB87B208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 019B12084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q3Znj2JK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rprfLeuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgDUCP3 (ORCPT
+        id S1727863AbgDUCPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 22:15:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48300 "EHLO
+        Mon, 20 Apr 2020 22:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727109AbgDUCP0 (ORCPT
+        by vger.kernel.org with ESMTP id S1727814AbgDUCP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 22:15:26 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A480CC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 19:15:24 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id x16so11785511pgi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 19:15:24 -0700 (PDT)
+        Mon, 20 Apr 2020 22:15:27 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B88BC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 19:15:27 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id w15so13939632ybp.16
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 19:15:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=fmDIIvZxhD4Qz7j+wQz+cg0h7Uav/MFkAMZG+HSiNhc=;
-        b=Q3Znj2JKTQDjJ9AtVQa9SlDWVy67S5Os3GkR86PFUbKNay/M9+Tf6sl6w+fw+XIwk6
-         Ioheosds6Jmo5t0P7WNRlTpO2ptSqHlo3eIJw8OCnjYMQ23Yd5B7siAepCbDRYFrahJ+
-         BztZcJusaVR5p/k1SeS9/pX+F8y7qErPvLWbWiADXCzX9beJCFfGlv5BMt1AZCRmwnPY
-         ZCmw4JN4e8Nv5jj0xbxDWtwow9lsc6LRX0BxN+cXZdRYUyiQUmW3Xt4kEvyMZzFPEfWH
-         JYhyGcgXXCG+xyF/Okyi+vt2zkCaUkp/YchRv4JGn0VZbGlUv8YY/0qjSUdgKrsZKZC+
-         qkqQ==
+        bh=0RQ1N542RT3QYdW6h+S0B1gn+F6MhyfTNdXGmDt/FSM=;
+        b=rprfLeuLS2/09QHh/+y7xWTflZnqrv4ouAc/OGi0JspjqJm6eS46yKUFVvDRBA7xrD
+         IsViCxyeg1EAE5/s87qdzXUUiSf8TnxPVsuAIEAzrr3sqXBZqrbtjCRgovWji//XWbZQ
+         xcpiVJbVBTm7m/L4++NSnlJY0nFfQmhsqhI7X6papIZyD9mnE6qKALG0X6wbzmG68IwR
+         NV/C9sJ2akeM/VxVHXv1UPXM8tN6ST0/kppmOPac277uAdAe7X5IMbeLQ3XxJTYzxblF
+         bzhvQzjWFL0p41IeJx5ZGURPl6ZqYdcPqRjHl+2oWSLxp524C0oH+hXSgGEVR7rzQoiC
+         gbPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=fmDIIvZxhD4Qz7j+wQz+cg0h7Uav/MFkAMZG+HSiNhc=;
-        b=h2psJ6tOQXUvKk1vTXsaQQbVNSQU1QuaLKhEz2AuLPQOqa1gwxukEXpMIlUkCGkToR
-         W5wmhu6dDGJsxsgLqdzXmUiN0djz9nmvOq4WovBWKp1/aieCNe4yqDOSlPjbsx+LccYy
-         0Sjq0aaEq7xvTDEVfeAZBuJnBaC4imhWib49SWBr6AvvuUfDX7CJqclEmzcj3bg5SEpu
-         yoODOVjm5yOUOR47BS5H0k7aVILkjdw5N8Z9AEwWoirzL0ERSaN4OHRqK7OSAlxt3FQP
-         xcmsT5tk0GgTaH25MmfsXrNr2WrDIPYbRKHaQPW8znyOMJMNlPahHIV9pszWzEjuj15K
-         Dgcw==
-X-Gm-Message-State: AGi0PuZzFqmE9qMvf+WjeLZ1X1/R/5cs1eljVNjBlc7Juz4gRjx4/FTg
-        uAta6+cAGoe1vp4a+h0fQoZdB8W1Hfh/rEOdhI4=
-X-Google-Smtp-Source: APiQypKP0rnpkpovisrv5VEIou1w3/73lQO+VReT/uCmoOssza/QtX3Z0Kia4pqf4dQTquCPQ6LCYUDifPUCspPK5Pw=
-X-Received: by 2002:a65:6859:: with SMTP id q25mr13037367pgt.437.1587435324149;
- Mon, 20 Apr 2020 19:15:24 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 19:14:52 -0700
+        bh=0RQ1N542RT3QYdW6h+S0B1gn+F6MhyfTNdXGmDt/FSM=;
+        b=RNGbDXsGj8LFnhdQr6cP2XIznGcyUX1QX759q59emHifHDbAZHlT4T81NRzyjojt01
+         idlb724ZN3NIZsB4yxDu/38IiJiw5GEopr0JGQ/5a/bAD1vCsITw6lo4TTOpupQ5gxXi
+         lqL4H0S0qNeISl418qMgLZ8IibRnoA4cJuNmY8uECBfjRRt1jQZ57DKZ1nAPM9/0lkPl
+         Y6X6mQjQAv8TKhRlT/hlMIXOgVOzl/5UvdTZevuF5kvowkJ+Cu6hcxOLLzGsPRUUD4YF
+         OWjo/jobJP2Ckbqd0nQwTKGV7POR8URe+w3Qz0KL1ErBPK5VOZrOxmwYQ4WvhyYwf5f8
+         jmxA==
+X-Gm-Message-State: AGi0Pua/F1ELyH1lxqvP5ncW6p4OfpPsJkCDY8V0amaufS12+RpjePOG
+        aJxi7WONmaLsjqvtd2ygDZegQIztEB8/xl0TORs=
+X-Google-Smtp-Source: APiQypKVaa6EVfAXEUsgkxuszfVQpEqhSdTwtpRewqbIvj3iqtNn3hSJPBlIieXNvYTQbT7aDUwDMoQW4Qa/HRJl/w4=
+X-Received: by 2002:a5b:112:: with SMTP id 18mr24192885ybx.103.1587435326655;
+ Mon, 20 Apr 2020 19:15:26 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 19:14:53 -0700
 In-Reply-To: <20200421021453.198187-1-samitolvanen@google.com>
-Message-Id: <20200421021453.198187-12-samitolvanen@google.com>
+Message-Id: <20200421021453.198187-13-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20200421021453.198187-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH v12 11/12] arm64: scs: add shadow stacks for SDEI
+Subject: [PATCH v12 12/12] efi/libstub: disable SCS
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -86,76 +87,38 @@ Cc:     Dave Martin <Dave.Martin@arm.com>,
         clang-built-linux@googlegroups.com,
         kernel-hardening@lists.openwall.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds per-CPU shadow call stacks for the SDEI handler.
-Similarly to how the kernel stacks are handled, we add separate shadow
-stacks for normal and critical events.
+Shadow stacks are not available in the EFI stub, filter out SCS flags.
 
+Suggested-by: James Morse <james.morse@arm.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-Tested-by: James Morse <james.morse@arm.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm64/kernel/entry.S | 14 +++++++++++++-
- arch/arm64/kernel/scs.c   |  5 +++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/libstub/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 14f0ff763b39..9f7be489d26d 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -1058,13 +1058,16 @@ SYM_CODE_START(__sdei_asm_handler)
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 094eabdecfe6..b52ae8c29560 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -32,6 +32,9 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
+ 				   $(call cc-option,-fno-stack-protector) \
+ 				   -D__DISABLE_EXPORTS
  
- 	mov	x19, x1
- 
-+#if defined(CONFIG_VMAP_STACK) || defined(CONFIG_SHADOW_CALL_STACK)
-+	ldrb	w4, [x19, #SDEI_EVENT_PRIORITY]
-+#endif
++# remove SCS flags from all objects in this directory
++KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
 +
- #ifdef CONFIG_VMAP_STACK
- 	/*
- 	 * entry.S may have been using sp as a scratch register, find whether
- 	 * this is a normal or critical event and switch to the appropriate
- 	 * stack for this CPU.
- 	 */
--	ldrb	w4, [x19, #SDEI_EVENT_PRIORITY]
- 	cbnz	w4, 1f
- 	ldr_this_cpu dst=x5, sym=sdei_stack_normal_ptr, tmp=x6
- 	b	2f
-@@ -1074,6 +1077,15 @@ SYM_CODE_START(__sdei_asm_handler)
- 	mov	sp, x5
- #endif
- 
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	/* Use a separate shadow call stack for normal and critical events */
-+	cbnz	w4, 3f
-+	adr_this_cpu dst=x18, sym=sdei_shadow_call_stack_normal, tmp=x6
-+	b	4f
-+3:	adr_this_cpu dst=x18, sym=sdei_shadow_call_stack_critical, tmp=x6
-+4:
-+#endif
-+
- 	/*
- 	 * We may have interrupted userspace, or a guest, or exit-from or
- 	 * return-to either of these. We can't trust sp_el0, restore it.
-diff --git a/arch/arm64/kernel/scs.c b/arch/arm64/kernel/scs.c
-index 086ad97bba86..656262736eca 100644
---- a/arch/arm64/kernel/scs.c
-+++ b/arch/arm64/kernel/scs.c
-@@ -14,3 +14,8 @@
- 		__aligned(SCS_SIZE)
- 
- DEFINE_SCS(irq_shadow_call_stack);
-+
-+#ifdef CONFIG_ARM_SDE_INTERFACE
-+DEFINE_SCS(sdei_shadow_call_stack_normal);
-+DEFINE_SCS(sdei_shadow_call_stack_critical);
-+#endif
+ GCOV_PROFILE			:= n
+ KASAN_SANITIZE			:= n
+ UBSAN_SANITIZE			:= n
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
