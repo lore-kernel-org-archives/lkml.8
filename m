@@ -2,146 +2,100 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948EFC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64206C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1E420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A74A2071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="K9v4tXy+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="l9pbCK2E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5ZLuleR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgDUSX5 (ORCPT
+        id S1729345AbgDUSYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:23:57 -0400
-Received: from pb-smtp20.pobox.com ([173.228.157.52]:61107 "EHLO
-        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDUSX5 (ORCPT
+        Tue, 21 Apr 2020 14:24:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDUSYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:23:57 -0400
-Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id D8BFAB9C22;
-        Tue, 21 Apr 2020 14:23:53 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=XIF+lHQmIGJlgPyKUKfgN7ocejk=; b=K9v4tX
-        y+mRt6OcJpt6RtETLC+W9D+ACu1UExe3jrOmLpVlTYRM7WUkdB5vj6aVE0UUlaOa
-        udNMfKiGLYjYYQnlms8Q8l4NuSpG5qfsyHSEL4vnmz924SUs/rKOtmgh3hhQ0GoU
-        8Tx850K4b0tY8POWlok71ONxLxRftDMBlvk6Y=
-Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id CF244B9C20;
-        Tue, 21 Apr 2020 14:23:53 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=x7fL8/5SX4Xr9sIGNCqUqMxcBILv9SZc87FE2gx3TwU=; b=l9pbCK2ETrm+QZLPaoOv8fFZyWmAeWWOcrwsohSI96G4dsavFYhV75RPBJuBptQ+TVkiyTSt0xvsNiImlBKmr0Nc/3ymXLeFFapNutfiMCQTSzAmNkDskibrOJ1IruUKnCIf8iEqBL/QX3nIAX+clCx7CHu9e0LroUCrPgn7Ht8=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id 44DE3B9C1F;
-        Tue, 21 Apr 2020 14:23:49 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 544F62DA014B;
-        Tue, 21 Apr 2020 14:23:47 -0400 (EDT)
-Date:   Tue, 21 Apr 2020 14:23:47 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Saeed Mahameed <saeedm@mellanox.com>
-cc:     "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "leon@kernel.org" <leon@kernel.org>
-Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
-In-Reply-To: <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com>
-Message-ID: <nycvar.YSQ.7.76.2004211411500.2671@knanqh.ubzr>
-References: <20200417011146.83973-1-saeedm@mellanox.com> <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com> <nycvar.YSQ.7.76.2004181509030.2671@knanqh.ubzr> <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
- <87v9lu1ra6.fsf@intel.com> <45b9efec57b2e250e8e39b3b203eb8cee10cb6e8.camel@mellanox.com> <nycvar.YSQ.7.76.2004210951160.2671@knanqh.ubzr> <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Tue, 21 Apr 2020 14:24:12 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D4AC0610D5;
+        Tue, 21 Apr 2020 11:24:12 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id h6so3520340qvz.8;
+        Tue, 21 Apr 2020 11:24:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1MpibdzZKUcWDPxbG1corhK5+ajDsK8Y+8yjQ5ScihQ=;
+        b=B5ZLuleRvVuEnP3GDHokJgx7lo+qLJYkVM0wzkxOrBWtY0WKsdpbmFVbxW819LaToB
+         VRj00+31R6wouGqtzN3SnitnTZ1cEN6GlaVGdEo3+0u8rdwCv0U8HJeZJ6ZASV4roWpg
+         ueA9YujFUn1j5pr/C+XW2RjJ5CTYf2J++wt4z3cQAC8WBRyyWDOv9QiX536GXeTxdOOj
+         lANT7y6quUtL2IfixkMG3WbXMolwfa5LWu4Mcz/h59ptEU6NnnZ60E+sbk79JcUnlx38
+         LHiUnnuSWMsoJBCkfeTFGUrtHrJyfgS/KZ7VmSxdmhOLfJtmVjcVCWC0VYcKGPOhH0s/
+         BD4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1MpibdzZKUcWDPxbG1corhK5+ajDsK8Y+8yjQ5ScihQ=;
+        b=Qzfw7aCe6fpNYEB/5eirCY7k6Dv83VO5cpsEaKjNoTehg0JR3jaEDLine3sQypX3OZ
+         DJ6ijREubJx+Udu3rKt2ARGvHso8IvXnGSbUxtVvAYWZ7MKj/DYePC/RsTlSfvxkxPsu
+         83WFgdxpIgMtLyl8Cqyl0k5aI2qYO6pyR2I2U//rc8PPm5yK4yi78SQXqXtud0TE6v5n
+         q0Ui0KAzNYaO9Nxfv8OCV1+16rZMZPvUYfQpqCSsnaxgH0AcsY/ZAnwBEI1Aj7TH0NIz
+         bxqqCR/Vegf5yPtFyNo5m6Iy3Id7gMKVrInEMs/PpWc8fXrXF71iDo50kPNgDWNRkqFv
+         FP1A==
+X-Gm-Message-State: AGi0Pub6KZrCARDIYHhf3pXxHZSXMtBGIrUHI7ct1zYMfuHPUwq1RvJq
+        HHRKLxtcVpjTsc8mxjnXpeI+N3x44I/2+gkQIfg=
+X-Google-Smtp-Source: APiQypLGodTlsU/FAWNnj/SkZhv8GRJUUU4rOCqNo0xwHflyuX+RI+UJFU5cv3dzgb+x29ge1yIlVVY3hzaQxFf4PG8=
+X-Received: by 2002:ad4:4c03:: with SMTP id bz3mr8359756qvb.224.1587493451343;
+ Tue, 21 Apr 2020 11:24:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 3EDF1E74-83FD-11EA-8A3A-B0405B776F7B-78420484!pb-smtp20.pobox.com
+References: <20200420083046.GB28749@infradead.org> <C266KL0CLET8.Z2G09QJ83ZWK@maharaja>
+In-Reply-To: <C266KL0CLET8.Z2G09QJ83ZWK@maharaja>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 21 Apr 2020 11:24:00 -0700
+Message-ID: <CAEf4BzYfEuiMsn_MWAFHRHYSMB0dFP10dgdKixXATD=65F6SqA@mail.gmail.com>
+Subject: Re: [RFC] uapi: Convert stat.h #define flags to enums
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Kernel Team <kernel-team@fb.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020, Saeed Mahameed wrote:
+On Mon, Apr 20, 2020 at 9:39 AM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> Hi Christoph,
+>
+> On Sun Apr 19, 2020 at 6:30 PM PST, Christoph Hellwig wrote:
+> > And that breaks every userspace program using ifdef to check if a
+> > symbolic name has been defined.
+>
+> How about shadowing #define's? Like for `enum nfnetlink_groups` in
+> include/uapi/linux/netfilter/nfnetlink.h .
+>
 
-> On Tue, 2020-04-21 at 09:58 -0400, Nicolas Pitre wrote:
-> > On Tue, 21 Apr 2020, Saeed Mahameed wrote:
-> > 
-> > > I wonder how many of those 8889 cases wanted a weak dependency but
-> > > couldn't figure out how to do it ? 
-> > > 
-> > > Users of depends on FOO || !FOO
-> > > 
-> > > $ git ls-files | grep Kconfig | xargs grep -E \
-> > >   "depends\s+on\s+([A-Za-z0-9_]+)\s*\|\|\s*(\!\s*\1|\1\s*=\s*n)" \
-> > >  | wc -l
-> > > 
-> > > 156
-> > > 
-> > > a new keyword is required :) .. 
-> > > 
-> > > 
-> > > > In another mail I suggested
-> > > > 
-> > > > 	optionally depends on FOO
-> > > > 
-> > > > might be a better alternative than "uses".
-> > > > 
-> > > > 
-> > > 
-> > > how about just:
-> > >       optional FOO
-> > > 
-> > > It is clear and easy to document .. 
-> > 
-> > I don't dispute your argument for having a new keyword. But the most 
-> > difficult part as Arnd said is to find it. You cannot pretend that 
-> 
-> kconfig-language.rst  ?
-> 
-> > "optional FOO" is clear when it actually imposes a restriction when 
-> > FOO=m. Try to justify to people why they cannot select y because of
-> > this 
-> > "optional" thing.
-> > 
-> 
-> Then let's use "uses" it is more assertive. Documentation will cover
-> any vague anything about it .. 
+FWIW, we did #define to enum conversion for big chunks of BPF UAPI
+headers ([0]) and that greatly improved BPF user experience. A bunch
+of other kernel headers are already using enums for constants. I think
+converting more Linux headers to use enums for constants and capture
+them as part of type information is a good step forward that should
+further simplify writing all kinds of introspection and monitoring
+tools.
 
-It uses what? And why can't I configure this with "uses FOO" when FOO=m?
-That's not any clearer. And saying that "this is weird but it is 
-described in the documentation" is not good enough. We must make things 
-clear in the first place.
+  [0] https://patchwork.ozlabs.org/project/netdev/patch/20200303003233.3496043-2-andriin@fb.com/
 
-This is really a conditional dependency. That's all this is about.
-So why not simply making it so rather than fooling ourselves? All that 
-is required is an extension that would allow:
-
-	depends on (expression) if (expression)
-
-This construct should be obvious even without reading the doc, is 
-already used extensively for other things already, and is flexible 
-enough to cover all sort of cases in addition to this particular one.
-
-
-Nicolas
+> Thanks,
+> Daniel
