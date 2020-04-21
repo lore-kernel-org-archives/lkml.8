@@ -2,97 +2,175 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AB5C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396E2C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A10C22087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="Rvix9lKb"
+	by mail.kernel.org (Postfix) with ESMTP id 1C2A32087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgDUJx6 (ORCPT
+        id S1728608AbgDUJyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:53:58 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.10]:48785 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726874AbgDUJx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:53:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
-        Message-ID:References:MIME-Version:Content-Type:
-        Content-Disposition:In-Reply-To; bh=hvdiuPl0KIHv2INqIIAEKyZp2lS6
-        iCXMohdB936WJOg=; b=Rvix9lKbxZ76GRlzsowkAXD1+NRZCwEcTPCwo2VRIy4h
-        4rIwDYNeRtMV681t3Q1OnPwjcyEwHxJckDLdqdhkJBXMHAhuu2pDmp4kG+0Cqfks
-        bO28oyEI5/zanPyOPyfydz6iDnL5O+L4BbyGpdrFDufRBRINFnpzbgcsLYyut3A=
-Received: from localhost (unknown [120.229.255.67])
-        by app1 (Coremail) with SMTP id XAUFCgAXHaGhwp5elmElAA--.192S2;
-        Tue, 21 Apr 2020 17:53:39 +0800 (CST)
-Date:   Tue, 21 Apr 2020 17:53:37 +0800
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
-        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
-Subject: Re: [PATCH] btrfs: Fix btrfs_block_group refcnt leak
-Message-ID: <20200421095337.GA88633@sherlly>
-References: <1587361120-83160-1-git-send-email-xiyuyang19@fudan.edu.cn>
- <20200420224315.GI18421@twin.jikos.cz>
+        Tue, 21 Apr 2020 05:54:11 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:56002 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726874AbgDUJyK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 05:54:10 -0400
+Received: from [37.161.214.89] (port=49523 helo=[192.168.42.159])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jQpbN-009P7k-IS; Tue, 21 Apr 2020 11:54:05 +0200
+Subject: Re: [PATCH v11 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem driver
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Vishal Sagar <vishal.sagar@xilinx.com>,
+        Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>
+References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
+ <20200409194424.45555-3-vishal.sagar@xilinx.com>
+ <20200419180222.GB8117@pendragon.ideasonboard.com>
+ <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
+ <20200420195714.GB8195@pendragon.ideasonboard.com>
+ <0a3ea86b-cb4c-a1db-664e-cfa555d8ccf8@lucaceresoli.net>
+ <20200421083807.GB5983@pendragon.ideasonboard.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <66ad4341-8066-6b09-5473-12825fe26828@lucaceresoli.net>
+Date:   Tue, 21 Apr 2020 11:53:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420224315.GI18421@twin.jikos.cz>
-X-CM-TRANSID: XAUFCgAXHaGhwp5elmElAA--.192S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7JFyxAr4xKw4kWr48Zr4DCFg_yoW8JrWUpr
-        WDKayj9r98Kr17ta1xJ3yYv3WFka97Gw18Jrn8CrWxX343X343AFZ2gr15Zryj9F1fAryI
-        q3WYvFW5C3ZI9FUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkab7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x2
-        0xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18Mc
-        Ij6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK
-        82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
-        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-        IF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
-        x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j1iihUUUUU=
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+In-Reply-To: <20200421083807.GB5983@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 12:43:15AM +0200, David Sterba wrote:
-> On Mon, Apr 20, 2020 at 01:38:40PM +0800, Xiyu Yang wrote:
-> > btrfs_remove_block_group() invokes btrfs_lookup_block_group(), which
-> > returns a local reference of the blcok group that contains the given
-> > bytenr to "block_group" with increased refcount.
-> > 
-> > When btrfs_remove_block_group() returns, "block_group" becomes invalid,
-> > so the refcount should be decreased to keep refcount balanced.
-> > 
-> > The reference counting issue happens in several exception handling paths
-> > of btrfs_remove_block_group(). When those error scenarios occur such as
-> > btrfs_alloc_path() returns NULL, the function forgets to decrease its
-> > refcnt increased by btrfs_lookup_block_group() and will cause a refcnt
-> > leak.
-> > 
-> > Fix this issue by jumping to "out_put_group" label and calling
-> > btrfs_put_block_group() when those error scenarios occur.
-> > 
-> > Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> > Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Hi Laurent,
+
+On 21/04/20 10:38, Laurent Pinchart wrote:
+> Hi Luca,
 > 
-> Thanks for the fix. May I ask if this was found by code inspection or by
-> some analysis tool?
+> On Tue, Apr 21, 2020 at 09:45:56AM +0200, Luca Ceresoli wrote:
+>> On 20/04/20 21:57, Laurent Pinchart wrote:
+>>> On Mon, Apr 20, 2020 at 09:24:25PM +0200, Luca Ceresoli wrote:
+>>>> On 19/04/20 20:02, Laurent Pinchart wrote:
+>>>> [...]
+>>>>>> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *dev_id)
+>>>>>> +{
+>>>>>> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)dev_id;
+>>>>>> +	struct xcsi2rxss_core *core = &state->core;
+>>>>>> +	u32 status;
+>>>>>> +
+>>>>>> +	status = xcsi2rxss_read(core, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
+>>>>>> +	dev_dbg_ratelimited(core->dev, "interrupt status = 0x%08x\n", status);
+>>>>>
+>>>>> As this is expected to occur for every frame, I would drop the message,
+>>>>> even if rate-limited.
+>>>>>
+>>>>>> +
+>>>>>> +	if (!status)
+>>>>>> +		return IRQ_NONE;
+>>>>>> +
+>>>>>> +	/* Received a short packet */
+>>>>>> +	if (status & XCSI_ISR_SPFIFONE) {
+>>>>>> +		dev_dbg_ratelimited(core->dev, "Short packet = 0x%08x\n",
+>>>>>> +				    xcsi2rxss_read(core, XCSI_SPKTR_OFFSET));
+>>>>>> +	}
+>>>>>
+>>>>> Same here, this will occur all the time, I'd remove this message. You
+>>>>> need to read XCSI_SPKTR_OFFSET though, and you should do so in a loop
+>>>>> until the XCSI_CSR_SPFIFONE in XCSI_CSR_OFFSET is cleared in case
+>>>>> multiple short packets are received before the interrupt handler
+>>>>> executes.
+>>>>>
+>>>>> I also wonder if it would make sense to extract the frame number from
+>>>>> the FS short packet, and make it available through the subdev API. I
+>>>>> think it should be reported through a V4L2_EVENT_FRAME_SYNC event. This
+>>>>> can be implemented later.
+>>>>>
+>>>>>> +
+>>>>>> +	/* Short packet FIFO overflow */
+>>>>>> +	if (status & XCSI_ISR_SPFIFOF)
+>>>>>> +		dev_dbg_ratelimited(core->dev, "Short packet FIFO overflowed\n");
+>>>>>> +
+>>>>>> +	/*
+>>>>>> +	 * Stream line buffer full
+>>>>>> +	 * This means there is a backpressure from downstream IP
+>>>>>> +	 */
+>>>>>> +	if (status & XCSI_ISR_SLBF) {
+>>>>>> +		dev_alert_ratelimited(core->dev, "Stream Line Buffer Full!\n");
+>>>>>> +		xcsi2rxss_stop_stream(state);
+>>>>>> +		if (core->rst_gpio) {
+>>>>>> +			gpiod_set_value(core->rst_gpio, 1);
+>>>>>> +			/* minimum 40 dphy_clk_200M cycles */
+>>>>>> +			ndelay(250);
+>>>>>> +			gpiod_set_value(core->rst_gpio, 0);
+>>>>>> +		}
+>>>>>
+>>>>> I don't think you should stop the core here. xcsi2rxss_stop_stream()
+>>>>> calls the source .s_stream(0) operation, which usually involves I2C
+>>>>> writes that will sleep.
+>>>>>
+>>>>> You should instead report an event to userspace (it looks like we have
+>>>>> no error event defined in V4L2, one should be added), and rely on the
+>>>>> normal stop procedure.
+>>>>
+>>>> FWIW, since a long time I've been using a modified version of this
+>>>> routine, where after a Stream Line Buffer Full condition I just stop and
+>>>> restart the csi2rx core and the stream continues after a minimal glitch.
+>>>> Other subdev are unaware that anything has happened and keep on streaming.
+>>>>
+>>>> Not sure this is the correct thing to do, but it's working for me. Also
+>>>> I proposed this topic in one of the previous iterations of this patch,
+>>>> but the situation was different because the stream on/off was not
+>>>> propagated back at that time.
+>>>
+>>> Thanks for the feedback. How often does this occur in practice ?
+>>
+>> Quite often indeed in my case, as the MIPI stream comes from a remote
+>> sensor via a video serdes chipset, and both the cable and the remote
+>> sensor module are subject to heavy EMI. Depending on the setup I
+>> observed SLBF happening up to 5~10 times per hour.
+> 
+> Ouch, that is a lot !
 
-Thanks for your advice about the patch! We are looking for some automated ways
-to find this kind of bug.
+That is the worst case, but yes, its a lot.
 
+> Is that really caused by EMI though ? I thought
+> SLBF was due to the downstream components applying backpressure.
+
+Hum, good point. I might be wrong, I did the tests several months ago
+and cannot do them again at the moment to confirm. But at some point my
+suspect was that in case of noise at the upstream side, on the MIPI line
+there can be an excess of packets w.r.t. the normal streams (perhaps
+short packets?) that produces frames with more lines than expected. But
+it's just a wild idea I got, never had an opportunity to examine it in
+depth, sorry.
+
+-- 
+Luca
