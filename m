@@ -2,107 +2,135 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AAFC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0FBC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89C75206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AsoVVWdB"
+	by mail.kernel.org (Postfix) with ESMTP id 4CF9F206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgDUQTZ (ORCPT
+        id S1728524AbgDUQTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:19:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43371 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725963AbgDUQTY (ORCPT
+        Tue, 21 Apr 2020 12:19:46 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36098 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDUQTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:19:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587485963;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OMcMRkM6CTuHPozam45N2SC6f9ykAvtZFSzHRVou/uA=;
-        b=AsoVVWdBWRH9cesQdRTu4ouK+9eHzMPngDf4Wme+bgYVFv7xn0WmI/GdCFumsk8u1N9iMr
-        MJSu+XAhIaJZ41duAnEriFm69xyxcCS6N+4fwYqk+84QY16H/2WkSAAu34Kc4eI9biON4r
-        BQ+dhkAUF+UDM1Q593WHMj41+IJGM8g=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-Gj5_K_4hOPOnqKI3PX4JEQ-1; Tue, 21 Apr 2020 12:19:18 -0400
-X-MC-Unique: Gj5_K_4hOPOnqKI3PX4JEQ-1
-Received: by mail-wr1-f69.google.com with SMTP id y10so2620270wrn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:19:18 -0700 (PDT)
+        Tue, 21 Apr 2020 12:19:45 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b13so11634326oti.3;
+        Tue, 21 Apr 2020 09:19:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OMcMRkM6CTuHPozam45N2SC6f9ykAvtZFSzHRVou/uA=;
-        b=R45whyDyeDnPWZ/Iz9xwLaS9rUzpd8nrf9k5NFRkefdFOIJ9+gsicY8cZ7YOhzgd5N
-         49HIPQuIr+nXlpfg3F9X09mEx4Hnk83R36LSZtsutE59DBcup14YHCYzF00RnYZ1QmSD
-         LGeMzU+Z58xNzq14TBAyhWGvi17DgiqvacQ0jkBsuT70B8bydTXapxANvJjjaLhvEaWt
-         /gW3nSIUZFeRquP3KrnPvlGFBLndDtN6Zab5EKdb3CYtu+Oi+PB9n0rV3n8+oLtEIP+E
-         ZLxtm+RMESViTJ1QSVz0o0qsk9GtlgDUqWVkjjJgeSXuFUvN+GINNsQ92nRB5QKxPC9S
-         eIaA==
-X-Gm-Message-State: AGi0PubLcLahJaIgA2hQS2hieAFzHj9homlRlvxSFgw5i6OwBa17rqzY
-        eVeUNO9RPw+PG3KYcZ9K+zVbzI8zZz3vTJFm3S7qFNyy3G1CGzYL7og+pWZTUMFcWPw/likbC4z
-        n5p2umZa5ZPRTVdxJmLoRqd9I
-X-Received: by 2002:a5d:6504:: with SMTP id x4mr26598662wru.164.1587485957603;
-        Tue, 21 Apr 2020 09:19:17 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLBExtm46kFG/q5uOgEqHEeaUuSrp481aTEfOfkh5uRE39whBLwSFtgA3GXRG/Qo3jvvfG+iQ==
-X-Received: by 2002:a5d:6504:: with SMTP id x4mr26598644wru.164.1587485957403;
-        Tue, 21 Apr 2020 09:19:17 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
-        by smtp.gmail.com with ESMTPSA id s8sm4112831wru.38.2020.04.21.09.19.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 09:19:16 -0700 (PDT)
-Subject: Re: [PATCH v3 0/2] KVM: VMX: Unionize vcpu_vmx.exit_reason
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200421075328.14458-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <bcf9cbba-6cce-f10b-da94-232403a3f7f6@redhat.com>
-Date:   Tue, 21 Apr 2020 18:19:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rMu3klCIHTko91xLqiY17Crj+p7Y4rNwVMkOgmrRdjc=;
+        b=pxduWfmlrPL9eMlfnEDnTrONIXCUMy1+VSw0GgwEkPXusOpvbbCYXC67X5b3uUQi3C
+         cT5NhaWkrefsBmj0HOxb6oNAXxNbA1TTpTDZxqViB2ZAlhkEvCee2xde4Of4VTYWdgzu
+         Qb/lbpRl9esnCDhZwpyp7lipADg+prCahmvVFBx7lihWUrCnGCtmdkwKhGP+Hj0RFk9l
+         RkWv/KsgbzX8M/ZY1sN0oaZ8/m7hugUmXfBoR9X/il2TnNvSpIwNaBw6bIPWpUca76lc
+         juWA3B4p8PsCll1j0T6Tff6gAlINXBa8O++ZzRqGcjSR4OwMbLgxGFeBRzWtxgLAQIZq
+         5slQ==
+X-Gm-Message-State: AGi0PuZisTacgXLuf50cD2Hvm9vvVOWSfl0nadM2aqhWSK7UDRhtTWPJ
+        j0b82HNL9z/A9NA2jpNeQSfaLLuHxELKh6N00QY=
+X-Google-Smtp-Source: APiQypJsqzlVBwBP0EqDIPyCl00zSKE/zjVy6OIFCkatDQTt1ohKrYd6rQIJlptwqNv4riX8sdI+OYsGaKBUVHcWaYo=
+X-Received: by 2002:a9d:76c7:: with SMTP id p7mr13880170otl.145.1587485983529;
+ Tue, 21 Apr 2020 09:19:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200421075328.14458-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200415153409.30112-1-geert+renesas@glider.be>
+ <CAMj1kXHm=xA4gafwAaBn8=YcAsQCYDNmZ=4REsfvEUgZShm3Ww@mail.gmail.com> <20200421160137.GE25745@shell.armlinux.org.uk>
+In-Reply-To: <20200421160137.GE25745@shell.armlinux.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 21 Apr 2020 18:19:31 +0200
+Message-ID: <CAMuHMdWt_XkDk+t8tZJcx43kFEGj-POAqwYEu6uGLmg3iUFRxw@mail.gmail.com>
+Subject: Re: [PATCH v5] ARM: boot: Obtain start of physical memory from DTB
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/20 09:53, Sean Christopherson wrote:
-> Minor fixup patch for a mishandled conflict between the vmcs.INTR_INFO
-> caching series and the union series, plus the actual unionization patch
-> rebased onto kvm/queue, commit 604e8bba0dc5 ("KVM: Remove redundant ...").
-> 
-> Sean Christopherson (2):
->   KVM: nVMX: Drop a redundant call to vmx_get_intr_info()
->   KVM: VMX: Convert vcpu_vmx.exit_reason to a union
-> 
->  arch/x86/kvm/vmx/nested.c | 39 ++++++++++++++---------
->  arch/x86/kvm/vmx/vmx.c    | 65 ++++++++++++++++++++-------------------
->  arch/x86/kvm/vmx/vmx.h    | 25 ++++++++++++++-
->  3 files changed, 83 insertions(+), 46 deletions(-)
-> 
+Hi Russell,
 
-Thanks, I queued patch 1.  I am not too enthusiastic about patch 2, but
-when SGX comes around it may be a better idea.
+On Tue, Apr 21, 2020 at 6:01 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+> On Tue, Apr 21, 2020 at 05:19:40PM +0200, Ard Biesheuvel wrote:
+> > On Wed, 15 Apr 2020 at 17:34, Geert Uytterhoeven
+> > <geert+renesas@glider.be> wrote:
+> > > Currently, the start address of physical memory is obtained by masking
+> > > the program counter with a fixed mask of 0xf8000000.  This mask value
+> > > was chosen as a balance between the requirements of different platforms.
+> > > However, this does require that the start address of physical memory is
+> > > a multiple of 128 MiB, precluding booting Linux on platforms where this
+> > > requirement is not fulfilled.
+> > >
+> > > Fix this limitation by obtaining the start address from the DTB instead,
+> > > if available (either explicitly passed, or appended to the kernel).
+> > > Fall back to the traditional method when needed.
+> > >
+> > > This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of SDRAM
+> > > on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 space),
+> > > i.e. not at a multiple of 128 MiB.
+> > >
+> > > Suggested-by: Nicolas Pitre <nico@fluxnic.net>
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
+> > > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> >
+> > This is ready to go into the patch system, no?
+> >
+> > The sooner Russell picks it up, the sooner I can respin my patches
+> > that go on top.
+>
+> This seems to be a particularly risky change (it's already been subject
+> to various failures for people) so I do not intend to rush to pick it
+> up.
 
-Paolo
+Yeah, I'm fully aware head.S is fragile ;-)
 
+> In any case, Masahiro Yamada has resubmitted a patch to sort out the
+> libfdt builds that he's been trying to get merged for some time now,
+> so I'm going to be giving that priority. Your change conflicts with
+> this libfdt build change.
+
+OK, will resubmit after his changes have landed (in your tree?).
+
+> So, I think all in all, it needs to spend a bit longer being provenly
+> tested before I merged it (and eventually fixed up for the libfdt
+> change), and I don't think merging it so it appears in linux-next
+> will help with that.
+
+Please note that I also have a DTS patch that depends on this.
+Hence if this patch doesn't make it into v5.8, the board support DTS
+patch that depends on this will have to be postponed one more cycle,
+too...
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
