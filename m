@@ -2,239 +2,290 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2FAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71020C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 990482064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546E120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgDUK2R (ORCPT
+        id S1728719AbgDUKaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 06:28:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52878 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgDUK2R (ORCPT
+        Tue, 21 Apr 2020 06:30:12 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:34187 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727120AbgDUKaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 06:28:17 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jQq8R-0001tQ-Md; Tue, 21 Apr 2020 10:28:11 +0000
-Date:   Tue, 21 Apr 2020 12:28:11 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linux Containers <containers@lists.linux-foundation.org>,
-        Christof Meerwald <cmeerw@cmeerw.org>,
-        linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH] signal: Avoid corrupting si_pid and si_uid in
- do_notify_parent
-Message-ID: <20200421102811.cozgsjy5s3mpufed@wittgenstein>
-References: <20200419201336.GI22017@edge.cmeerw.net>
- <87sggyytnh.fsf@x220.int.ebiederm.org>
- <20200421083031.5wapruzncjkagvhf@wittgenstein>
+        Tue, 21 Apr 2020 06:30:11 -0400
+Received: from [37.161.214.89] (port=49522 helo=[192.168.42.159])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jQqAA-009drc-8X; Tue, 21 Apr 2020 12:30:02 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [PATCH v11 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem driver
+To:     Vishal Sagar <vishal.sagar@xilinx.com>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Hyun Kwon <hyun.kwon@xilinx.com>
+References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
+ <20200409194424.45555-3-vishal.sagar@xilinx.com>
+Message-ID: <4331afd6-3891-2dd5-b5b8-2ffc5d1cbed5@lucaceresoli.net>
+Date:   Tue, 21 Apr 2020 12:29:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200409194424.45555-3-vishal.sagar@xilinx.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200421083031.5wapruzncjkagvhf@wittgenstein>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 10:30:31AM +0200, Christian Brauner wrote:
-> On Mon, Apr 20, 2020 at 12:05:38PM -0500, Eric W. Biederman wrote:
-> > 
-> > Christof Meerwald <cmeerw@cmeerw.org> writes:
-> > > Hi,
-> > >
-> > > this is probably related to commit
-> > > 7a0cf094944e2540758b7f957eb6846d5126f535 (signal: Correct namespace
-> > > fixups of si_pid and si_uid).
-> > >
-> > > With a 5.6.5 kernel I am seeing SIGCHLD signals that don't include a
-> > > properly set si_pid field - this seems to happen for multi-threaded
-> > > child processes.
-> > >
-> > > A simple test program (based on the sample from the signalfd man page):
-> > >
-> > > #include <sys/signalfd.h>
-> > > #include <signal.h>
-> > > #include <unistd.h>
-> > > #include <spawn.h>
-> > > #include <stdlib.h>
-> > > #include <stdio.h>
-> > >
-> > > #define handle_error(msg) \
-> > >     do { perror(msg); exit(EXIT_FAILURE); } while (0)
-> > >
-> > > int main(int argc, char *argv[])
-> > > {
-> > >   sigset_t mask;
-> > >   int sfd;
-> > >   struct signalfd_siginfo fdsi;
-> > >   ssize_t s;
-> > >
-> > >   sigemptyset(&mask);
-> > >   sigaddset(&mask, SIGCHLD);
-> > >
-> > >   if (sigprocmask(SIG_BLOCK, &mask, NULL) == -1)
-> > >     handle_error("sigprocmask");
-> > >
-> > >   pid_t chldpid;
-> > >   char *chldargv[] = { "./sfdclient", NULL };
-> > >   posix_spawn(&chldpid, "./sfdclient", NULL, NULL, chldargv, NULL);
-> > >
-> > >   sfd = signalfd(-1, &mask, 0);
-> > >   if (sfd == -1)
-> > >     handle_error("signalfd");
-> > >
-> > >   for (;;) {
-> > >     s = read(sfd, &fdsi, sizeof(struct signalfd_siginfo));
-> > >     if (s != sizeof(struct signalfd_siginfo))
-> > >       handle_error("read");
-> > >
-> > >     if (fdsi.ssi_signo == SIGCHLD) {
-> > >       printf("Got SIGCHLD %d %d %d %d\n",
-> > >           fdsi.ssi_status, fdsi.ssi_code,
-> > >           fdsi.ssi_uid, fdsi.ssi_pid);
-> > >       return 0;
-> > >     } else {
-> > >       printf("Read unexpected signal\n");
-> > >     }
-> > >   }
-> > > }
-> > >
-> > >
-> > > and a multi-threaded client to test with:
-> > >
-> > > #include <unistd.h>
-> > > #include <pthread.h>
-> > >
-> > > void *f(void *arg)
-> > > {
-> > >   sleep(100);
-> > > }
-> > >
-> > > int main()
-> > > {
-> > >   pthread_t t[8];
-> > >
-> > >   for (int i = 0; i != 8; ++i)
-> > >   {
-> > >     pthread_create(&t[i], NULL, f, NULL);
-> > >   }
-> > > }
-> > >
-> > > I tried to do a bit of debugging and what seems to be happening is
-> > > that
-> > >
-> > >   /* From an ancestor pid namespace? */
-> > >   if (!task_pid_nr_ns(current, task_active_pid_ns(t))) {
-> > >
-> > > fails inside task_pid_nr_ns because the check for "pid_alive" fails.
-> > >
-> > > This code seems to be called from do_notify_parent and there we
-> > > actually have "tsk != current" (I am assuming both are threads of the
-> > > current process?)
-> > 
-> > I instrumented the code with a warning and received the following backtrace:
-> > > WARNING: CPU: 0 PID: 777 at kernel/pid.c:501 __task_pid_nr_ns.cold.6+0xc/0x15
-> > > Modules linked in:
-> > > CPU: 0 PID: 777 Comm: sfdclient Not tainted 5.7.0-rc1userns+ #2924
-> > > Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-> > > RIP: 0010:__task_pid_nr_ns.cold.6+0xc/0x15
-> > > Code: ff 66 90 48 83 ec 08 89 7c 24 04 48 8d 7e 08 48 8d 74 24 04 e8 9a b6 44 00 48 83 c4 08 c3 48 c7 c7 59 9f ac 82 e8 c2 c4 04 00 <0f> 0b e9 3fd
-> > > RSP: 0018:ffffc9000042fbf8 EFLAGS: 00010046
-> > > RAX: 000000000000000c RBX: 0000000000000000 RCX: ffffc9000042faf4
-> > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff81193d29
-> > > RBP: ffffc9000042fc18 R08: 0000000000000000 R09: 0000000000000001
-> > > R10: 000000100f938416 R11: 0000000000000309 R12: ffff8880b941c140
-> > > R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880b941c140
-> > > FS:  0000000000000000(0000) GS:ffff8880bca00000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 00007f2e8c0a32e0 CR3: 0000000002e10000 CR4: 00000000000006f0
-> > > Call Trace:
-> > >  send_signal+0x1c8/0x310
-> > >  do_notify_parent+0x50f/0x550
-> > >  release_task.part.21+0x4fd/0x620
-> > >  do_exit+0x6f6/0xaf0
-> > >  do_group_exit+0x42/0xb0
-> > >  get_signal+0x13b/0xbb0
-> > >  do_signal+0x2b/0x670
-> > >  ? __audit_syscall_exit+0x24d/0x2b0
-> > >  ? rcu_read_lock_sched_held+0x4d/0x60
-> > >  ? kfree+0x24c/0x2b0
-> > >  do_syscall_64+0x176/0x640
-> > >  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> > >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > 
-> > The immediate problem is as Christof noticed that "pid_alive(current) == false".
-> > This happens because do_notify_parent is called from the last thread to exit
-> > in a process after that thread has been reaped.
-> > 
-> > The bigger issue is that do_notify_parent can be called from any
-> > process that manages to wait on a thread of a multi-threaded process
-> > from wait_task_zombie.  So any logic based upon current for
-> > do_notify_parent is just nonsense, as current can be pretty much
-> > anything.
-> > 
-> > So change do_notify_parent to call __send_signal directly.
-> > 
-> > Inspecting the code it appears this problem has existed since the pid
-> > namespace support started handling this case in 2.6.30.  This fix only
-> > backports to 7a0cf094944e ("signal: Correct namespace fixups of si_pid and si_uid")
-> > where the problem logic was moved out of __send_signal and into send_signal.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: 6588c1e3ff01 ("signals: SI_USER: Masquerade si_pid when crossing pid ns boundary
-> > Ref: 921cf9f63089 ("signals: protect cinit from unblocked SIG_DFL signals")
-> > Link: https://lore.kernel.org/lkml/20200419201336.GI22017@edge.cmeerw.net/
-> > Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> > ---
-> > 
-> > Unless someone has an objection I will apply this one and send it to
-> > Linus.
-> > 
-> >  kernel/signal.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/signal.c b/kernel/signal.c
-> > index 9899c5f91ee1..a88a89422227 100644
-> > --- a/kernel/signal.c
-> > +++ b/kernel/signal.c
-> > @@ -1993,8 +1993,12 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
-> >  		if (psig->action[SIGCHLD-1].sa.sa_handler == SIG_IGN)
-> >  			sig = 0;
-> >  	}
-> > +	/*
-> > +	 * Bypass send_signal as the si_pid and si_uid values have
-> > +	 * been generated in the parent's namespaces.
-> > +	 */
-> 
-> At first I misread that comment as saying that we're skipping sending a
-> signal not that it relates to a specific function (and I won't admit that
-> I wrote a whole long paragraph on why I'm confused we're skipping
-> sending signals on invalid si_pid and si_uid...).
-> 
-> I think it would be worth to say something that simply states the facts
-> such as:
-> "If we're not autoreaping, send a signal with si_pid and si_uid set
->  as generated in the parent's namespaces."
-> which imho is way clearer then pointing to out that we're skipping
-> send_signal(). The logic here and the comment in its current form are
-> hard to correlate, especially since send_signal() was never called
-> directly here but is rather called by __group_send_sig_info().
-> The details of why we switched from __group_send_sign_info() to
-> __send_signal() could just go into the commit message. It's more
-> confusing in the code.
+Hi Vishal,
 
-Forgot before, otherwise:
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+thanks for having resumed this patchset!
 
-Thanks!
-Christian
+On 09/04/20 21:44, Vishal Sagar wrote:
+[...]
+> +static int xcsi2rxss_parse_of(struct xcsi2rxss_state *xcsi2rxss)
+> +{
+> +	struct xcsi2rxss_core *core = &xcsi2rxss->core;
+> +	struct device_node *node = xcsi2rxss->core.dev->of_node;
+
+Can be simplified as:
+
+	struct device_node *node = core.dev->of_node;
+
+> +	unsigned int nports, irq;
+> +	bool en_csi_v20, vfb;
+> +	int ret;
+> +
+> +	en_csi_v20 = of_property_read_bool(node, "xlnx,en-csi-v2-0");
+> +	if (en_csi_v20)
+> +		core->en_vcx = of_property_read_bool(node, "xlnx,en-vcx");
+> +
+> +	core->enable_active_lanes =
+> +		of_property_read_bool(node, "xlnx,en-active-lanes");
+> +
+> +	ret = of_property_read_u32(node, "xlnx,csi-pxl-format",
+> +				   &core->datatype);
+> +	if (ret < 0) {
+> +		dev_err(core->dev, "missing xlnx,csi-pxl-format property\n");
+> +		return ret;
+> +	}
+> +
+> +	switch (core->datatype) {
+> +	case XCSI_DT_YUV4228B:
+> +	case XCSI_DT_RGB444:
+> +	case XCSI_DT_RGB555:
+> +	case XCSI_DT_RGB565:
+> +	case XCSI_DT_RGB666:
+> +	case XCSI_DT_RGB888:
+> +	case XCSI_DT_RAW6:
+> +	case XCSI_DT_RAW7:
+> +	case XCSI_DT_RAW8:
+> +	case XCSI_DT_RAW10:
+> +	case XCSI_DT_RAW12:
+> +	case XCSI_DT_RAW14:
+> +		break;
+> +	case XCSI_DT_YUV42210B:
+> +	case XCSI_DT_RAW16:
+> +	case XCSI_DT_RAW20:
+> +		if (!en_csi_v20) {
+> +			ret = -EINVAL;
+> +			dev_dbg(core->dev, "enable csi v2 for this pixel format");
+> +		}
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +	}
+> +	if (ret < 0) {
+> +		dev_err(core->dev, "invalid csi-pxl-format property!\n");
+> +		return ret;
+> +	}
+> +
+> +	vfb = of_property_read_bool(node, "xlnx,vfb");
+> +	if (!vfb) {
+> +		dev_err(core->dev, "failed as VFB is disabled!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	for (nports = 0; nports < XCSI_MEDIA_PADS; nports++) {
+> +		struct fwnode_handle *ep;
+> +		struct v4l2_fwnode_endpoint vep = {
+> +			.bus_type = V4L2_MBUS_CSI2_DPHY
+> +		};
+> +
+> +		ep = fwnode_graph_get_endpoint_by_id(dev_fwnode(core->dev),
+> +						     nports, 0,
+> +						     FWNODE_GRAPH_ENDPOINT_NEXT);
+> +		if (!ep)
+> +			break;
+> +		/*
+> +		 * since first port is sink port and it contains
+> +		 * all info about data-lanes and cfa-pattern,
+> +		 * don't parse second port but only check if exists
+> +		 */
+> +		if (nports == XVIP_PAD_SOURCE) {
+> +			dev_dbg(core->dev, "no need to parse source port");
+> +			fwnode_handle_put(ep);
+> +			continue;
+> +		}
+> +
+> +		ret = v4l2_fwnode_endpoint_parse(ep, &vep);
+> +		if (ret) {
+> +			dev_err(core->dev, "error parsing sink port");
+> +			fwnode_handle_put(ep);
+> +			return ret;
+> +		}
+> +
+> +		dev_dbg(core->dev, "port %d bus type = %d\n", nports,
+> +			vep.bus_type);
+> +
+> +		if (vep.bus_type == V4L2_MBUS_CSI2_DPHY) {
+> +			dev_dbg(core->dev, "base.port = %d base.id = %d\n",
+> +				vep.base.port, vep.base.id);
+> +
+> +			dev_dbg(core->dev, "mipi number lanes = %d\n",
+> +				vep.bus.mipi_csi2.num_data_lanes);
+> +
+> +			core->max_num_lanes =
+> +				vep.bus.mipi_csi2.num_data_lanes;
+> +		}
+> +		fwnode_handle_put(ep);
+> +	}
+> +
+> +	if (nports != XCSI_MEDIA_PADS) {
+> +		dev_err(core->dev, "invalid number of ports %u\n", nports);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Register interrupt handler */
+> +	irq = irq_of_parse_and_map(node, 0);
+> +	ret = devm_request_irq(core->dev, irq, xcsi2rxss_irq_handler,
+> +			       IRQF_SHARED, "xilinx-csi2rxss", xcsi2rxss);
+> +	if (ret) {
+> +		dev_err(core->dev, "Err = %d Interrupt handler reg failed!\n",
+> +			ret);
+> +		return ret;
+> +	}
+
+When using this driver I have changed this to a threaded IRQ, moving
+most of the management out of interrupt context. The patch is super
+simple and it works fine, for my use case at least. Do you think a
+strict IRQ is really needed for some reason?
+
+> +	xcsi2rxss_log_ipconfig(xcsi2rxss);
+> +
+> +	return 0;
+
+This function references 'core->dev' a lot of times, so I'd rather add
+at the top of the function:
+
+  struct device * const dev = &pdev->dev;
+
+and then use simply 'dev' everywhere. This would keep lines shorter and
+more readable. It is also handy when copying/moving a line of code from
+one function to another if all of them have 'dev' called the same way so
+I tend to do use this pattern often.
+
+> +}
+> +
+> +static int xcsi2rxss_probe(struct platform_device *pdev)
+> +{
+> +	struct v4l2_subdev *subdev;
+> +	struct xcsi2rxss_state *xcsi2rxss;
+> +	struct xcsi2rxss_core *core;
+> +	struct resource *res;
+> +	int num_clks = ARRAY_SIZE(xcsi2rxss_clks);
+> +	int ret;
+> +
+> +	xcsi2rxss = devm_kzalloc(&pdev->dev, sizeof(*xcsi2rxss), GFP_KERNEL);
+> +	if (!xcsi2rxss)
+> +		return -ENOMEM;
+> +
+> +	core = &xcsi2rxss->core;
+> +	core->dev = &pdev->dev;
+
+This function references 'dev' many times, sometimes as &pdev->dev,
+thers as 'core->dev', thus as above why not adding at the top of the
+function:
+
+  struct device * const dev = &pdev->dev;
+
+and simplify code using 'dev' always?
+
+> +	core->clks = devm_kmemdup(core->dev, xcsi2rxss_clks,
+> +				  sizeof(xcsi2rxss_clks), GFP_KERNEL);
+> +	if (!core->clks)
+> +		return -ENOMEM;
+> +
+> +	/* Reset GPIO */
+> +	core->rst_gpio = devm_gpiod_get_optional(core->dev, "reset",
+> +						 GPIOD_OUT_HIGH);
+> +	if (IS_ERR(core->rst_gpio)) {
+> +		if (PTR_ERR(core->rst_gpio) != -EPROBE_DEFER)
+> +			dev_err(core->dev, "Video Reset GPIO not setup in DT");
+> +		return PTR_ERR(core->rst_gpio);
+> +	}
+> +
+> +	mutex_init(&xcsi2rxss->lock);
+
+There are 3 'return' statements after this call, and mutex_destroy()
+won't be called if they trigger. Ok, probably no real effect as
+mutex_init() is just initializing data, but for the sake of well-written
+code you can simply move mutex_init()...
+
+> +	ret = xcsi2rxss_parse_of(xcsi2rxss);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	core->iomem = devm_ioremap_resource(core->dev, res);
+> +	if (IS_ERR(core->iomem))
+> +		return PTR_ERR(core->iomem);
+> +
+> +	ret = clk_bulk_get(core->dev, num_clks, core->clks);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_bulk_prepare_enable(num_clks, core->clks);
+> +	if (ret)
+> +		goto err_clk_put;
+
+...here.
+
+> +	if (core->rst_gpio) {
+> +		gpiod_set_value_cansleep(core->rst_gpio, 1);
+> +		/* minimum of 40 dphy_clk_200M cycles */
+> +		usleep_range(1, 2);
+> +		gpiod_set_value_cansleep(core->rst_gpio, 0);
+> +	}
+
+
+-- 
+Luca
