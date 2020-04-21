@@ -2,340 +2,177 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA87C55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F32C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61BC6206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8EEF2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:30:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EBRtV21I"
+	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="g9fSM/1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbgDUR34 (ORCPT
+        id S1729191AbgDURaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:29:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48394 "EHLO
+        Tue, 21 Apr 2020 13:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726530AbgDUR3u (ORCPT
+        by vger.kernel.org with ESMTP id S1726628AbgDURaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 13:29:50 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4F54C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:29:50 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id z6so5486294plk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:29:50 -0700 (PDT)
+        Tue, 21 Apr 2020 13:30:08 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C98E1C0610D6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:30:07 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f13so17347695wrm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:30:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9rz6rrT6JS8gYjAobTtkYKP4z/sTny8QWqFoZElORnw=;
-        b=EBRtV21IlL6LgpAascZ0qEd/iwHnkvajsKftBGT9dkMt2qh4djdfS5byXkgme35b2X
-         x0A8sWm8yjqXu76q+PCDCml87tYS1gf4GOc13TKbosjzVnlXP++oyBHRaNREiL8owwkm
-         vHn3RcgIb/VX03Yh31EnwqqF++pV1MVFc0L34=
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TqOZ+NIxx7CWkAc2Z7tIWcdMGQ0rKBuiSDleHFlId2w=;
+        b=g9fSM/1mOQ8JhLXjvEAT44BjKSCUS05HYGGctXhqW0SL/vlyMFcaFjr7QjobHlV5g7
+         t1lv6BTJzwmxXK0MeqbycCPy1qDf6jW3MvwiZdm6Ax+YnsOwi752gyD7RrdCigNe85Q3
+         XT/7Bak1Vio3Vj0UA73N0ze5mbj60iDMf/38CTtK4bR4GJyHWWWgaKSb2PYH/FaoAPaN
+         puKtbXD0U7DMTOzqdmBPFJMRDOJ76At8MSAJH9ISkeq68N+UPIzpLNiU/6m5BUOOwFaW
+         FVe5v0qaaDqzbZOKoZDzQKit6MPiOhfy0axa97GmsqyJTYsQQzq8okwvRUmuXhuoLtF1
+         fILw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9rz6rrT6JS8gYjAobTtkYKP4z/sTny8QWqFoZElORnw=;
-        b=GpNgczblc6EkFy9GJHJ2j0l5Av4RJVCR5sRlF1Wr6hzSMnWDdkyWePc260P0NO0Pzk
-         fQcGcfXtmmeWrIpKyDcKb5XaqBC0IXEsZIJ1G4oDiGCjIDSwUoPzMJ5M3BdPbvwBPl18
-         cP03Z87RNdiuHndcK2fgdGS2A88G2LtipXwtR/+27Z7cvnqCpfyiBi68qYFhinCj1jq6
-         VCQ/2p3+cAJD0lYRb5019ghwaLgfu3AZdUl8rH5V/kefYBcgeve2YK2XUlJyCCnV/g11
-         DzL9ZZ+4j8HViNG8jKz7O4uZpU8gMJEJRpZOh7y2daEQ3fzh/wxdWlJ8OUBJhL0mpiqG
-         RsIQ==
-X-Gm-Message-State: AGi0PuYdnafOmRUDiuVZEBnlAqHKKF/JZdEiZ+PxmkQbPB2NWoJ8G0is
-        P9ylDNYAfZLa/Yj8YUviAxVMkw==
-X-Google-Smtp-Source: APiQypJkr9V3JpyUMxdLmmas3PwNv9yxm81ERtQmpZ5jI9NNajrFSr6az47FhGo+DqAvQsiyc+zS+Q==
-X-Received: by 2002:a17:902:904a:: with SMTP id w10mr17503360plz.17.1587490190199;
-        Tue, 21 Apr 2020 10:29:50 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id v127sm2874816pfv.77.2020.04.21.10.29.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 10:29:49 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael.j.wysocki@intel.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mkshah@codeaurora.org, swboyd@chromium.org, mka@chromium.org,
-        evgreen@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] soc: qcom: rpmh-rsc: Remove the pm_lock
-Date:   Tue, 21 Apr 2020 10:29:08 -0700
-Message-Id: <20200421102745.v3.3.I295cb72bc5334a2af80313cbe97cb5c9dcb1442c@changeid>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-In-Reply-To: <20200421102745.v3.1.I2d44fc0053d019f239527a4e5829416714b7e299@changeid>
-References: <20200421102745.v3.1.I2d44fc0053d019f239527a4e5829416714b7e299@changeid>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TqOZ+NIxx7CWkAc2Z7tIWcdMGQ0rKBuiSDleHFlId2w=;
+        b=A+KPCej/xoeBfxjt34DjnfjRONDKuU+7zyC7Q96SXT1spkLDcA+99tJ9N/R4G4jpSf
+         qAIX1zmwr9YIetOsCuhnlzns8isT4bPsJBT5E1eriJvOirPhssbhybPtxEJ7c+aTdGyP
+         4u91nyMffPAoRTCEtfhbTtnq1JFApZYgNJRB2fDqYzoyfUi/PPZmiIRStFwmsIh4nkAv
+         3b6S0vdRgiOf7vOlw5LY2W++j8IywrWAx73OIuATtVSCOFla//kLdTHoHznzmpuh58I6
+         fRL8/gZ5A9eUCQ2YZy1COX2NWU/MpaXiyvMSdlC27wTFJ4s7dmDMNDChfYYZscEtAo5C
+         asnQ==
+X-Gm-Message-State: AGi0PuYtUa6fhXaOysUP4R5F6udBdCv45BcyovO8wnQifF9dfFstpQDP
+        WI/MyqPFpesybU6jCXr8OcoXZdMRy1qazmeG6rSw
+X-Google-Smtp-Source: APiQypKwTgmDh5dweCPXKSpnKdXbfJfMUJkZfbPD8dt0zPOvwlJJ58AVBwoIgpbu3/5RiL/cVKnV3rc2Bn1Qof2L61g=
+X-Received: by 2002:adf:ab5c:: with SMTP id r28mr21585012wrc.384.1587490206521;
+ Tue, 21 Apr 2020 10:30:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200421033336.9663-1-atish.patra@wdc.com> <CAMj1kXEXTq8RhD-AM4i3ZmXRcLDTW8waNDbWNa0V8V1nz4zb_A@mail.gmail.com>
+In-Reply-To: <CAMj1kXEXTq8RhD-AM4i3ZmXRcLDTW8waNDbWNa0V8V1nz4zb_A@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Tue, 21 Apr 2020 10:29:55 -0700
+Message-ID: <CAOnJCUK3kTVo7fMWto0GtQ2RCVeP_WgFhkCgdnGj1XOteMjT-Q@mail.gmail.com>
+Subject: Re: [v4 PATCH 0/3] Add UEFI support for RISC-V
+To:     Ard Biesheuvel <ardb@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It has been postulated that the pm_lock is bad for performance because
-a CPU currently running rpmh_flush() could block other CPUs from
-coming out of idle.  Similarly CPUs coming out of / going into idle
-all need to contend with each other for the spinlock just to update
-the variable tracking who's in PM.
+On Tue, Apr 21, 2020 at 12:24 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Tue, 21 Apr 2020 at 05:34, Atish Patra <atish.patra@wdc.com> wrote:
+> >
+> > This series adds UEFI support for RISC-V. Currently, only boot time
+> > services have been added. Runtime services will be added in a separate
+> > series. This series depends on some core EFI patches
+> > present in current in efi-next and following other patches.
+> >
+> > U-Boot: Adds the boot hartid under chosen node.
+> > https://lists.denx.de/pipermail/u-boot/2020-April/405726.html
+> >
+> > Linux kernel: 5.7-rc1
+> >
+> > OpenSBI: master
+> >
+> > Patch 1 just moves arm-stub code to a generic code so that it can be used
+> > across different architecture.
+> >
+> > Patch 3 adds fixmap bindings so that CONFIG_EFI can be compiled and we do not
+> > have create separate config to enable boot time services.
+> > As runtime services are not enabled at this time, full generic early ioremap
+> > support is also not added in this series.
+> >
+> > Patch 4 and 5 adds the PE/COFF header and EFI stub code support for RISC-V
+> > respectively.
+> >
+> > The patches can also be found in following git repo.
+> >
+> > https://github.com/atishp04/linux/tree/wip_uefi_riscv_v4
+> >
+> > The patches have been verified on Qemu using bootefi command in U-Boot.
+> >
+> > Changes from v3->v4:
+> > 1. Rebased on top of efi-next.
+> > 2. Dropped patch 1 & 2 from this series as it is already queued in efi-next.
+> > Changes from v2->v3:
+> > 3. Improved handle_kernel_image() for RISC-V.
+> >
+>
+> Thanks Atish. This looks nice and simple now.
+>
+> I will need an ack from the RISC-V maintainers on these, and it is up
+> to them to consider whether the changes to core kconfigs and makefiles
+> are likely to cause trouble or not. If so, I am happy to work out a
+> way to merge this via a shared stable branch.
+>
+@Palmer Dabbelt : Can you take a look at the series whenever you have
+some free cycles ?
+We would like to merge the series sooner than later.
 
-Let's optimize this a bit.  Specifically:
+>
+>
+> > Changes from v1->v2:
+> > 1. Rebased on 5.7-rc1.
+> > 2. Fixed minor typos and removed redundant macros/comments.
+> >
+> > Changes from previous version:
+> > 1. Renamed to the generic efi stub macro.
+> > 2. Address all redundant comments.
+> > 3. Supported EFI kernel image with normal booti command.
+> > 4. Removed runtime service related macro defines.
+> >
+> > Atish Patra (3):
+> > RISC-V: Define fixmap bindings for generic early ioremap support
+> > RISC-V: Add PE/COFF header for EFI stub
+> > RISC-V: Add EFI stub support.
+> >
+> > arch/riscv/Kconfig                        |  21 +++++
+> > arch/riscv/Makefile                       |   1 +
+> > arch/riscv/configs/defconfig              |   1 +
+> > arch/riscv/include/asm/Kbuild             |   1 +
+> > arch/riscv/include/asm/efi.h              |  44 +++++++++
+> > arch/riscv/include/asm/fixmap.h           |  18 ++++
+> > arch/riscv/include/asm/io.h               |   1 +
+> > arch/riscv/include/asm/sections.h         |  13 +++
+> > arch/riscv/kernel/Makefile                |   4 +
+> > arch/riscv/kernel/efi-header.S            |  99 ++++++++++++++++++++
+> > arch/riscv/kernel/head.S                  |  16 ++++
+> > arch/riscv/kernel/image-vars.h            |  53 +++++++++++
+> > arch/riscv/kernel/vmlinux.lds.S           |  20 +++-
+> > drivers/firmware/efi/Kconfig              |   2 +-
+> > drivers/firmware/efi/libstub/Makefile     |  10 ++
+> > drivers/firmware/efi/libstub/riscv-stub.c | 106 ++++++++++++++++++++++
+> > 16 files changed, 407 insertions(+), 3 deletions(-)
+> > create mode 100644 arch/riscv/include/asm/efi.h
+> > create mode 100644 arch/riscv/include/asm/sections.h
+> > create mode 100644 arch/riscv/kernel/efi-header.S
+> > create mode 100644 arch/riscv/kernel/image-vars.h
+> > create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+> >
+> > --
+> > 2.24.0
+> >
 
-- Use a count rather than a bitmask.  This is faster to access and
-  also means we can use the atomic_inc_return() function to really
-  detect who the last one to enter PM was.
-- Accept that it's OK if we race and are doing the flush (because we
-  think we're last) while another CPU is coming out of idle.  As long
-  as we block that CPU if/when it tries to do an active-only transfer
-  we're OK.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
 
-Changes in v3:
-- Rebased atop patch to get rid of per-TCS lock.
-- Removed bogus comment in rpmh_flush().
-- thelock => the lock.
-- Do one last double-check to try to avoid returning NOTIFY_BAD.
-
-Changes in v2:
-- Always grab drv->lock first to ensure lock ordering.
-- Grab the cache_lock in rpmh_flush().
-- Comments about why num_online_cpus() is OK.
-- Return NOTIFY_DONE for things we don't care about.
-- Use trylock to avoid spinning in CPU_PM code.
-- !rpmh_flush() should have been rpmh_flush(), so we were alwys failing.
-- Account for CPU_PM_ENTER_FAILED not being called if we return NOTIFY_BAD.
-
- drivers/soc/qcom/rpmh-internal.h | 11 +++--
- drivers/soc/qcom/rpmh-rsc.c      | 70 +++++++++++++++++++++-----------
- drivers/soc/qcom/rpmh.c          | 25 ++++++++----
- 3 files changed, 68 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
-index 1f2857b3f38e..ef60e790a750 100644
---- a/drivers/soc/qcom/rpmh-internal.h
-+++ b/drivers/soc/qcom/rpmh-internal.h
-@@ -95,7 +95,7 @@ struct rpmh_ctrlr {
-  * @num_tcs:            Number of TCSes in this DRV.
-  * @rsc_pm:             CPU PM notifier for controller.
-  *                      Used when solver mode is not present.
-- * @cpus_entered_pm:    CPU mask for cpus in idle power collapse.
-+ * @cpus_in_pm:         Number of CPUs not in idle power collapse.
-  *                      Used when solver mode is not present.
-  * @tcs:                TCS groups.
-  * @tcs_in_use:         S/W state of the TCS; only set for ACTIVE_ONLY
-@@ -103,9 +103,9 @@ struct rpmh_ctrlr {
-  *                      it was borrowed for an active_only transfer.  You
-  *                      must hold the lock in this struct (AKA drv->lock) in
-  *                      order to update this.
-- * @lock:               Synchronize state of the controller.
-- * @pm_lock:            Synchronize during PM notifications.
-- *                      Used when solver mode is not present.
-+ * @lock:               Synchronize state of the controller.  If RPMH's cache
-+ *                      lock will also be held, the order is: drv->lock then
-+ *                      cache_lock.
-  * @client:             Handle to the DRV's client.
-  */
- struct rsc_drv {
-@@ -114,11 +114,10 @@ struct rsc_drv {
- 	int id;
- 	int num_tcs;
- 	struct notifier_block rsc_pm;
--	struct cpumask cpus_entered_pm;
-+	atomic_t cpus_in_pm;
- 	struct tcs_group tcs[TCS_TYPE_NR];
- 	DECLARE_BITMAP(tcs_in_use, MAX_TCS_NR);
- 	spinlock_t lock;
--	spinlock_t pm_lock;
- 	struct rpmh_ctrlr client;
- };
- 
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index 992c79920e69..060be10bc491 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -736,6 +736,8 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
-  * SLEEP and WAKE sets. If AMCs are busy, controller can not enter
-  * power collapse, so deny from the last cpu's pm notification.
-  *
-+ * Context: Must be called with the drv->lock held.
-+ *
-  * Return:
-  * * False		- AMCs are idle
-  * * True		- AMCs are busy
-@@ -750,9 +752,6 @@ static bool rpmh_rsc_ctrlr_is_busy(struct rsc_drv *drv)
- 	 * dedicated TCS for active state use, then re-purposed wake TCSes
- 	 * should be checked for not busy, because we used wake TCSes for
- 	 * active requests in this case.
--	 *
--	 * Since this is called from the last cpu, need not take drv->lock
--	 * before checking tcs_is_free().
- 	 */
- 	if (!tcs->num_tcs)
- 		tcs = &drv->tcs[WAKE_TCS];
-@@ -787,36 +786,62 @@ static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
- {
- 	struct rsc_drv *drv = container_of(nfb, struct rsc_drv, rsc_pm);
- 	int ret = NOTIFY_OK;
--
--	spin_lock(&drv->pm_lock);
-+	int cpus_in_pm;
- 
- 	switch (action) {
- 	case CPU_PM_ENTER:
--		cpumask_set_cpu(smp_processor_id(), &drv->cpus_entered_pm);
--
--		if (!cpumask_equal(&drv->cpus_entered_pm, cpu_online_mask))
--			goto exit;
-+		cpus_in_pm = atomic_inc_return(&drv->cpus_in_pm);
-+		/*
-+		 * NOTE: comments for num_online_cpus() point out that it's
-+		 * only a snapshot so we need to be careful. It should be OK
-+		 * for us to use, though.  It's important for us not to miss
-+		 * if we're the last CPU going down so it would only be a
-+		 * problem if a CPU went offline right after we did the check
-+		 * AND that CPU was not idle AND that CPU was the last non-idle
-+		 * CPU. That can't happen. CPUs would have to come out of idle
-+		 * before the CPU could go offline.
-+		 */
-+		if (cpus_in_pm < num_online_cpus())
-+			return NOTIFY_OK;
- 		break;
- 	case CPU_PM_ENTER_FAILED:
- 	case CPU_PM_EXIT:
--		cpumask_clear_cpu(smp_processor_id(), &drv->cpus_entered_pm);
--		goto exit;
-+		atomic_dec(&drv->cpus_in_pm);
-+		return NOTIFY_OK;
-+	default:
-+		return NOTIFY_DONE;
- 	}
- 
--	ret = rpmh_rsc_ctrlr_is_busy(drv);
--	if (ret) {
--		ret = NOTIFY_BAD;
--		goto exit;
-+	/*
-+	 * It's likely we're on the last CPU. Grab the drv->lock and write
-+	 * out the sleep/wake commands to RPMH hardware. Grabbing the lock
-+	 * means that if we race with another CPU coming up we are still
-+	 * guaranteed to be safe. If another CPU came up just after we checked
-+	 * and has grabbed the lock or started an active transfer then we'll
-+	 * notice we're busy and abort. If another CPU comes up after we start
-+	 * flushing it will be blocked from starting an active transfer until
-+	 * we're done flushing. If another CPU starts an active transfer after
-+	 * we release the lock we're still OK because we're no longer the last
-+	 * CPU.
-+	 */
-+	if (spin_trylock(&drv->lock)) {
-+		if (rpmh_rsc_ctrlr_is_busy(drv) || rpmh_flush(&drv->client))
-+			ret = NOTIFY_BAD;
-+		spin_unlock(&drv->lock);
-+	} else {
-+		/* Another CPU must be up */
-+		return NOTIFY_OK;
- 	}
- 
--	ret = rpmh_flush(&drv->client);
--	if (ret)
--		ret = NOTIFY_BAD;
--	else
--		ret = NOTIFY_OK;
-+	if (ret == NOTIFY_BAD) {
-+		/* Double-check if we're here because someone else is up */
-+		if (cpus_in_pm < num_online_cpus())
-+			ret = NOTIFY_OK;
-+		else
-+			/* We won't be called w/ CPU_PM_ENTER_FAILED */
-+			atomic_dec(&drv->cpus_in_pm);
-+	}
- 
--exit:
--	spin_unlock(&drv->pm_lock);
- 	return ret;
- }
- 
-@@ -959,7 +984,6 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
- 	solver_config = solver_config >> DRV_HW_SOLVER_SHIFT;
- 	if (!solver_config) {
- 		drv->rsc_pm.notifier_call = rpmh_rsc_cpu_pm_callback;
--		spin_lock_init(&drv->pm_lock);
- 		cpu_pm_register_notifier(&drv->rsc_pm);
- 	}
- 
-diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-index d1626a1328d7..f2b5b46ccd1f 100644
---- a/drivers/soc/qcom/rpmh.c
-+++ b/drivers/soc/qcom/rpmh.c
-@@ -435,9 +435,6 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
-  *
-  * @ctrlr: Controller making request to flush cached data
-  *
-- * This function is called from sleep code on the last CPU
-- * (thus no spinlock needed).
-- *
-  * Return:
-  * * 0          - Success
-  * * Error code - Otherwise
-@@ -445,13 +442,21 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
- int rpmh_flush(struct rpmh_ctrlr *ctrlr)
- {
- 	struct cache_req *p;
--	int ret;
-+	int ret = 0;
- 
- 	lockdep_assert_irqs_disabled();
- 
-+	/*
-+	 * Currently rpmh_flush() is only called when we think we're running
-+	 * on the last processor.  If the lock is busy it means another
-+	 * processor is up and it's better to abort than spin.
-+	 */
-+	if (!spin_trylock(&ctrlr->cache_lock))
-+		return -EBUSY;
-+
- 	if (!ctrlr->dirty) {
- 		pr_debug("Skipping flush, TCS has latest data.\n");
--		return 0;
-+		goto exit;
- 	}
- 
- 	/* Invalidate the TCSes first to avoid stale data */
-@@ -460,7 +465,7 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
- 	/* First flush the cached batch requests */
- 	ret = flush_batch(ctrlr);
- 	if (ret)
--		return ret;
-+		goto exit;
- 
- 	list_for_each_entry(p, &ctrlr->cache, list) {
- 		if (!is_req_valid(p)) {
-@@ -471,16 +476,18 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
- 		ret = send_single(ctrlr, RPMH_SLEEP_STATE, p->addr,
- 				  p->sleep_val);
- 		if (ret)
--			return ret;
-+			goto exit;
- 		ret = send_single(ctrlr, RPMH_WAKE_ONLY_STATE, p->addr,
- 				  p->wake_val);
- 		if (ret)
--			return ret;
-+			goto exit;
- 	}
- 
- 	ctrlr->dirty = false;
- 
--	return 0;
-+exit:
-+	spin_unlock(&ctrlr->cache_lock);
-+	return ret;
- }
- 
- /**
 -- 
-2.26.1.301.g55bc3eb7cb9-goog
-
+Regards,
+Atish
