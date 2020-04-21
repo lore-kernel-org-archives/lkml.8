@@ -2,126 +2,99 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0496CC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9F9C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D708220753
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:19:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9x5mxHF"
+	by mail.kernel.org (Postfix) with ESMTP id 824F52075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587475355;
+	bh=A5iNwUnYfVcplxMAFs2F56euY/pwlC7lC0GbKQZVvGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UNez9CjsIaLLm92VcJisv93pZ94RHQgLjHQkdi1RorxR1xP7lGsoaqE6m7zbOzOG0
+	 zY0FLy79Oze/bQNTsLa0+RgYtU0A2Qy3TNkHoojwZxG3D44ua3bxtSDm+FcIeWGocH
+	 UbN4qodOYfj4nt/4zvPjUFLg1YdHKDS0DXPsAplE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbgDUNTl (ORCPT
+        id S1728783AbgDUNWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726691AbgDUNTk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:19:40 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B5F0C061A10;
-        Tue, 21 Apr 2020 06:19:40 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x25so3550698wmc.0;
-        Tue, 21 Apr 2020 06:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TAO+0ZkQGzRlz79i9so3eTTstzU170GvA9NPAGQEIMQ=;
-        b=D9x5mxHFMGg+HnZopS9+Zgl4ocxvopuSEo6BqEwDW+5f7Jn7eo+EHmjtUGZw43My+S
-         nIDulDrnrMxWXgjM4y+tGlVDAEjZkxqJfKld3UD7pDfmcQWp7ayYOkwv3kHM9k3z3L4B
-         y5BRcojU/DG5+0lIoEZ9XlRNCvYgxfhnxkwo3KIpIcdX7iZZSfh5ZbR7OrNk/g0LvUCs
-         Lf84VWlivj4vXdm6uRvwXD+7ay1CdeqM6cDVKe7MNMOVKUryPAnqYJDMGUwlWZc1zEvL
-         O76dUv+liatt0wUeHHESLmXa+leq7LgDWVVEXEf+nAEFNd5+7kvSQVgncU87Xi2rarAD
-         Ok5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TAO+0ZkQGzRlz79i9so3eTTstzU170GvA9NPAGQEIMQ=;
-        b=DXP+6cR1TQYsUf649J0ij4gQNtQcfS70MwPi3Qfy/5DnwM84Vs3wxXXvI/QQSAEygC
-         waNs2FBXPHVZr1SmgRvGunCdPnTxWZNAlVAmV3EM4s2BTve7obb9+OKZA6YXVqkTu/Tw
-         r1ItWUHIHLuRJy/CFYuopToEkks1nRY9XLf2RljmqyMTh7eOrADKtbZG2ZFJ8lyIgE0j
-         5vZdVRiLOgHV8ePbs+/Ixiuq/ncy9cr3dUaGj1FpWHNX1CdTqO8+ghXe+oJgZYLRy0AO
-         2j72HLNGI2FmR6f6bkcUi5PIRePLBxJe6AYgN42GLUvhVvFVOwChovoQGywn+I7VqZeT
-         Pl7A==
-X-Gm-Message-State: AGi0PuYHbUPkMVdZUYET/jQXvHLnZpDGJY88Rh07QKlrIs1pjWoUsU5x
-        quB6vchIV1Tjo3h9t+5L5cY=
-X-Google-Smtp-Source: APiQypLr/7nO9p+xL01dDsn1rdwzQMyND4hb6/GRHkqQt+WjCBL145fU5drl2P0dW+IH4WO5WuiZew==
-X-Received: by 2002:a7b:ce0b:: with SMTP id m11mr4981350wmc.67.1587475178825;
-        Tue, 21 Apr 2020 06:19:38 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id w6sm3847410wrm.86.2020.04.21.06.19.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 06:19:38 -0700 (PDT)
-Subject: Re: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to
- json-schema
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     ezequiel@collabora.com, devicetree@vger.kernel.org,
-        hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        mark.rutland@arm.com, robh@kernel.org
-References: <20200326191343.1989-1-ezequiel@collabora.com>
- <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
-Message-ID: <9328212d-139f-6a0e-7d0c-3a5529a392f2@gmail.com>
-Date:   Tue, 21 Apr 2020 15:19:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 21 Apr 2020 09:22:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726691AbgDUNWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:22:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F14620753;
+        Tue, 21 Apr 2020 13:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587475353;
+        bh=A5iNwUnYfVcplxMAFs2F56euY/pwlC7lC0GbKQZVvGc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Pp5NWDguCXrpaftsHaRgdBBYUC8Bs91EQS8DkM+9b+ldZybRMm3xHxA5DyoKb/hCl
+         P2RYil9mCB9yc66DSt8bRwxHF7mdr67NeNhzhtd45FcbNFk7Zrrep+HVRNdvSLEUsO
+         Lv2MZJBmW6fdHMbqbYQqGM/f8wX2gpemjRMXRxA0=
+Date:   Tue, 21 Apr 2020 15:22:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.6 00/71] 5.6.6-rc1 review
+Message-ID: <20200421132231.GB794782@kroah.com>
+References: <20200420121508.491252919@linuxfoundation.org>
+ <59a68f6a-d37d-6a74-14e4-648861637185@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <59a68f6a-d37d-6a74-14e4-648861637185@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 21, 2020 at 10:55:36AM +0100, Jon Hunter wrote:
+> 
+> On 20/04/2020 13:38, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.6 release.
+> > There are 71 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed, 22 Apr 2020 12:10:36 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.6-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.6:
+>     13 builds:	13 pass, 0 fail
+>     24 boots:	24 pass, 0 fail
+>     40 tests:	40 pass, 0 fail
+> 
+> Linux version:	5.6.6-rc1-g906ecc0031ed
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>                 tegra30-cardhu-a04
+> 
 
-Question for the media maintainers Hans & Co. :
+Thanks for testing all of these and letting me know.
 
-What's nxp,imx8mq-vpu.yaml doing under rga?
-Why is rockchip-vpu.yaml inserted under rga instead of vpu?
-
-Johan
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f0e7b4d17fcc..0cfd86594b0b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14471,7 +14471,8 @@ M:	Jacob Chen <jacob-chen@iotwrt.com>
->  M:	Ezequiel Garcia <ezequiel@collabora.com>
->  L:	linux-media@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/devicetree/bindings/media/rockchip-rga.txt
-> +F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
-> +F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
->  F:	drivers/media/platform/rockchip/rga/
-
-HANTRO VPU CODEC DRIVER
-M:	Ezequiel Garcia <ezequiel@collabora.com>
-M:	Philipp Zabel <p.zabel@pengutronix.de>
-L:	linux-media@vger.kernel.org
-L:	linux-rockchip@lists.infradead.org
-S:	Maintained
-F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
-F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
-F:	drivers/staging/media/hantro/
-
-ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
-M:	Jacob Chen <jacob-chen@iotwrt.com>
-M:	Ezequiel Garcia <ezequiel@collabora.com>
-L:	linux-media@vger.kernel.org
-S:	Maintained
-F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
-F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-F:	drivers/media/platform/rockchip/rga/
+greg k-h
