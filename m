@@ -2,152 +2,134 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE09EC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D2CC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB9992075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:15:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="SVdRKmSX"
+	by mail.kernel.org (Postfix) with ESMTP id 4FEE82075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:16:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587474963;
+	bh=3j/oFeWz+hwOrk5tKW3/Cu/F9vILBarM/uTwnySRWKA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MNNavyEr7jgCwHTDPKcq9nx4/YZFHI04cN7tW5jBz+rpNU9DzIm0rNlORAJv/O6Ic
+	 wSgcz6Hna5RWnzJmbUujIYH7XI0g92Oi9ERxcNi9SL+9OrQ1bNy4b+E1CX7v+NKUzX
+	 B0uS052kxc5h4mKZDEIx5Krfmth3+tfIyXGoGUuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgDUNPX (ORCPT
+        id S1728982AbgDUNQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:15:23 -0400
-Received: from mail-bn8nam12on2075.outbound.protection.outlook.com ([40.107.237.75]:63585
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728864AbgDUNPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:15:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a3yenT52Zp9soF035NXfsVtw9WJz1hUCDn9xdApBOIEF8S1tJ1JltXrtZI0i71s6HhQO2em3WmEv2enQPNdF3wsYvOwEOrjDPCNIUS3AtHjnOkbuq7tlr+lWFAttx/kVVk7w3BbdTG9/Cu+PdfIZK5pWAaJDGf1AoS4XCJ3G1VjMSdLw9Entx6NzhovDWKjPPQ6iF4B44RXMy0Sf3tEBgJgPN4f/YwUQK/Egz+li91Y6RJXMs2PH0l2LljYXJsfPoC5YzVbbmV/NIVwUpaPO37P7CZ7E1wZt8l7anARboL++9wweD9c/cG0RriKmal2ifLQSmSh/m6IerKD4qFFVwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1a8iec2p6hvtnn4WIpgz98E8hxI4ZRKagsE23dA11ro=;
- b=fYAeiI6umzZYBPQqjEmH32Ck/rTST0+L0ksb554Awh/44q3VeXAU4E+pEbnWKC688tDidL1h2CP3H+1lu6MTjO8+tIsbJhW3Pdw+omMf2hHoOL6vGb0vf35wnfHa0Pj6/cSypDlmx+PjlYHz/sG/FfCPwRspFHYif2xmVZ39Sxa9fPoFcB9aKFwWgtzdSuKZWBp1sHrzNyghdu+YzRg7ADjH9P7NqD0OZAMqUxL3LRYi9yJnIumBWBDMXXoZclOy48Jgj6ZzseejaLpEss0tiRe6TzrYXBdBqIGc+Q+5fw7px8nom5erViaJe3IT1R9kXcWT37bmVCdlHdM3AWbvSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1a8iec2p6hvtnn4WIpgz98E8hxI4ZRKagsE23dA11ro=;
- b=SVdRKmSXTmniFqve0iA5QBoA0ync926oLyuevmeQk4akD5GdkT9dnlxfgeALDE35E/hZ/r7e67gVyvAnr9C2lrIVJaeKOork7RpSvxQ2hc4IxN9NEMaDQVnrb8MVQCR9y1+sY8pVwX/bdN1w+oYIIpciv2P2Y05Ixsxp1oyqeyU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
- by DM6PR12MB3482.namprd12.prod.outlook.com (2603:10b6:5:3d::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Tue, 21 Apr
- 2020 13:15:19 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9ae:cb95:c925:d5bf]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9ae:cb95:c925:d5bf%4]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
- 13:15:19 +0000
-Subject: Re: [PATCH] crypto: ccp: Add support for SEV-ES to the PSP driver
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Miller <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Brijesh Singh <brijesh.singh@amd.com>
-References: <134926f3bcd38e51d5d0b0919afc7a16311d9c0f.1587412498.git.thomas.lendacky@amd.com>
- <20200421123311.GJ21900@8bytes.org>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <c609bc22-735a-0db9-3367-0713898707ab@amd.com>
-Date:   Tue, 21 Apr 2020 08:15:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200421123311.GJ21900@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN2PR01CA0015.prod.exchangelabs.com (2603:10b6:804:2::25)
- To DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
+        Tue, 21 Apr 2020 09:16:02 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:33235 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728621AbgDUNQB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:16:01 -0400
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 03LDFdQZ018599;
+        Tue, 21 Apr 2020 22:15:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 03LDFdQZ018599
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587474940;
+        bh=1BJDwjQB7G9abt/U83QIzg6NdbKts7PDKbztJPZLt24=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=R4QCTuNWwDcRuz/yFMQzdJrCSA76pdP2s/cDiBVD5Z+/M3lOILBBGiX/2YPt7zt1U
+         qu1Y22pf/YFAXeopWFf+3iA69wYrgNFIVy35lw9bM+Xi6NSEPyTkHx1H7tdNhYAzzb
+         5/o5luAv8lx1faPRdAkWUVISO5iMEnJYQrw1XZkQYFHSF+UyFCeqDCmNen9WbZlNbJ
+         tLh9X5xxaxh+kY3jR1ahCXUFOh9hSkuQsZ65OV7eh/OTRmrgWhv3Yk2R2W/E/ryWIs
+         UeGM/Wxs3XPHYCf1F7KNIdWrJVI++PKO7Ku4d9yOZkohZjefX6jvikrcOGS7FgXQeU
+         Mi0w/1yq2doug==
+X-Nifty-SrcIP: [209.85.217.43]
+Received: by mail-vs1-f43.google.com with SMTP id l25so5664910vso.6;
+        Tue, 21 Apr 2020 06:15:39 -0700 (PDT)
+X-Gm-Message-State: AGi0Pubg0rmu81Q+7jxh9s+R6H/FPtMGaB7PA61kOHX/FETMYFKapvfE
+        hjO9Z19S82EQk70gu10CAP1vSXACcOAITOvGRkc=
+X-Google-Smtp-Source: APiQypJ05lC28dt8eVxZ6JdJ6omCKZaDtWBRo8fc27BPU7748NxdblRCMr93fcGZvmIWPGHtU7QQVCQLHWCmSiv0jBQ=
+X-Received: by 2002:a67:3293:: with SMTP id y141mr16095552vsy.54.1587474938732;
+ Tue, 21 Apr 2020 06:15:38 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from office-linux.texastahm.com (67.79.209.213) by SN2PR01CA0015.prod.exchangelabs.com (2603:10b6:804:2::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29 via Frontend Transport; Tue, 21 Apr 2020 13:15:18 +0000
-X-Originating-IP: [67.79.209.213]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: cf6959c8-2d5e-4c25-b37f-08d7e5f60a04
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3482:|DM6PR12MB3482:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB34826EE296627C183AC0A8B5ECD50@DM6PR12MB3482.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 038002787A
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(366004)(136003)(39860400002)(346002)(396003)(316002)(6506007)(53546011)(81156014)(6512007)(8936002)(36756003)(6486002)(8676002)(5660300002)(956004)(2616005)(6916009)(31686004)(26005)(4326008)(478600001)(186003)(16526019)(54906003)(66556008)(31696002)(52116002)(2906002)(86362001)(66946007)(66476007);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Yg1EQ0YwV2hsDYbN6UQLcnqlAGrlNjqszscXONbl2JrIb3cbz+a4CJQz7usC7UfOmH1MbeWHKSFZQOhcJu51iycEW2gZ1nYvBC//i5k6+UOJNanhhn0tSuEoBWKYWAuoUXwyjAKCcvB16TWpohno1zMpeaAId3UQ/hoBaLiItYqgMwde9tRd7r6GZPvysfLz8nKE2/e3pM5z33Izkv657bTyY12cxx4r//1YyzK4M/Aeo/X43G8HU+oZUXqZOBEQo5MZexHtDGpjWFGU3MyiZ7dwS86Cye8RZzWDtny0igntwqL/glIkW/MuvZqbICFogQvvsAeGhwi5yoSijq2aIGQB/fKrN/ShXp7/7ABFFIhmLvMUDDAvkAT1NqOhhdFy6PoaE0WEH4OjxlWxTk4zVhj4vOwHqhwSJ/9yCTD9iRJt99pojINUG3hSAlzhNhuX
-X-MS-Exchange-AntiSpam-MessageData: VvEyRc7cidEo3tnuet+DKyxXtsRqdatmBDxVIxdf5hNAaiXd4lasPW12AInEVth+0SZGp+5mHMB+MEzJIfmXDx1jsWeTVGI4oETQNcXsQQcC6kRnL3d5FwlJQ2slS/mtbJ7WqV5f+rG8uo/r4v6K2A==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf6959c8-2d5e-4c25-b37f-08d7e5f60a04
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2020 13:15:19.2028
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ualcNeEBUrbPrv0ldIys0VRBHQN6GvWfD2BeYqxrPVf0RP7MVQt5AAr4OZEKJEirvf+Nc4Cr6mPesCrwort9aA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3482
+References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
+ <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com> <20200421110537.GC5983@pendragon.ideasonboard.com>
+In-Reply-To: <20200421110537.GC5983@pendragon.ideasonboard.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 21 Apr 2020 22:15:02 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
+Message-ID: <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/21/20 7:33 AM, Joerg Roedel wrote:
-> Hi Tom,
-> 
-> On Mon, Apr 20, 2020 at 02:54:58PM -0500, Tom Lendacky wrote:
->>   static inline bool sev_version_greater_or_equal(u8 maj, u8 min)
->>   {
->>   	struct sev_device *sev = psp_master->sev_data;
->> @@ -214,6 +226,21 @@ static int __sev_platform_init_locked(int *error)
->>   	if (sev->state == SEV_STATE_INIT)
->>   		return 0;
->>   
->> +	if (sev_es_tmr) {
->> +		u64 tmr_pa;
->> +
->> +		/*
->> +		 * Do not include the encryption mask on the physical
->> +		 * address of the TMR (firmware should clear it anyway).
->> +		 */
->> +		tmr_pa = __pa(sev_es_tmr);
->> +		tmr_pa = ALIGN(tmr_pa, SEV_ES_TMR_ALIGN);
-> 
-> No need to manually align the region, see below.
-> 
->> +	/* Obtain the TMR memory area for SEV-ES use */
->> +	tmr_page = alloc_pages(GFP_KERNEL, get_order(SEV_ES_TMR_LEN));
->> +	if (tmr_page) {
->> +		sev_es_tmr = page_address(tmr_page);
->> +	} else {
->> +		sev_es_tmr = NULL;
->> +		dev_warn(sev->dev,
->> +			 "SEV: TMR allocation failed, SEV-ES support unavailable\n");
->> +	}
-> 
-> This allocates a 2M region where 1M is needed. The page allocator gives
-> you naturally aligned region for any allocation order, so when you
-> allocate 1M, it will automatically be 1M aligned.
+Hi Laurent,
 
-Ah, I did not realize that. I'll update the patch to allocate just 1M then.
+On Tue, Apr 21, 2020 at 8:05 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Yamada-san,
+>
+> On Tue, Apr 21, 2020 at 07:45:05PM +0900, Masahiro Yamada wrote:
+> > On Tue, Apr 21, 2020 at 7:08 PM Laurent Pinchart wrote:
+> > > On Fri, Feb 28, 2020 at 06:37:30PM -0600, Rob Herring wrote:
+> > > > Most folks only run dt_binding_check on the single schema they care about
+> > > > by setting DT_SCHEMA_FILES. That means example is only checked against
+> > > > that one schema which is not always sufficient.
+> > > >
+> > > > Let's address this by splitting processed-schema.yaml into 2 files: one
+> > > > that's always all schemas for the examples and one that's just the schema
+> > > > in DT_SCHEMA_FILES for dtbs.
+> > >
+> > > This broke
+> > >
+> > > make DT_SCHEMA_FILES=Documentation/devicetree/.. dt_binding_check
+> >
+> > What is intended by
+> > "DT_SCHEMA_FILES=Documentation/devicetree/.."  ?
+>
+> My bad, I forgot to write that ... is the continuation of the string.
+> It's any yaml schema file that has an example.
 
-Thanks,
-Tom
+Ah, OK. I just input verbatim.
 
-> 
-> Other than that this patch looks good to me.
-> 
-> Regards,
-> 
-> 	Joerg
-> 
+Is it broken?
+
+You can specify any individual file(s) under Documentation/devicetree/bindings/.
+
+For example, the following worked for me.
+
+$ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml
+ dt_binding_check
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/data.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/checks.o
+  HOSTCC  scripts/dtc/util.o
+  LEX     scripts/dtc/dtc-lexer.lex.c
+  YACC    scripts/dtc/dtc-parser.tab.[ch]
+  HOSTCC  scripts/dtc/dtc-lexer.lex.o
+  HOSTCC  scripts/dtc/dtc-parser.tab.o
+  HOSTCC  scripts/dtc/yamltree.o
+  HOSTLD  scripts/dtc/dtc
+  CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+  DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+
+
+-- 
+Best Regards
+Masahiro Yamada
