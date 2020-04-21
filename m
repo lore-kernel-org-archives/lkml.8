@@ -2,150 +2,170 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CD5C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3993C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 05:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 330B42084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0AF206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 05:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0wA5N5r"
+	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="TbbEcTtb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgDUE47 (ORCPT
+        id S1726201AbgDUFGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 00:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44892 "EHLO
+        Tue, 21 Apr 2020 01:06:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725992AbgDUE47 (ORCPT
+        by vger.kernel.org with ESMTP id S1725881AbgDUFGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 00:56:59 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF92EC061A0F;
-        Mon, 20 Apr 2020 21:56:58 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id n24so4803273plp.13;
-        Mon, 20 Apr 2020 21:56:58 -0700 (PDT)
+        Tue, 21 Apr 2020 01:06:20 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F00CC061A10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 22:06:20 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id k1so14932991wrx.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 22:06:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/kZQBZrT7d+NZ7hXhFjqvc0yPUpSInT9Q68O6DIDCdE=;
-        b=I0wA5N5rgHL+QS3JC/e8E9bDZFN/3qd4hMle1jsvTBxkIiwSzozu+78n6FTeGXtrhB
-         lC3DadWUjWrFS9w3p7+30CmgG7oDR5d8f8CS/hOcTVG2Ghn8geYcKtimk121BI3u2/vk
-         LGy6PICsN7xHo/6dad9UdPt7TePMAUQsXtpcZJqwJHZn0RUEiHeCL4YXzgJv7G5dMWPD
-         Mw2lUMo3B7LEBONMW8nzbX2e1MABimYIHJAOGIaB9lCelMLCIjtBeybOWbsDnSZxTQSj
-         wqhYir3DDRK3AkRKlGxbViNhs+qaKGbKzpU77R6LmUjCkM4YgF2K54F9BTXsfuy/J/J7
-         jn9w==
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T22n9ZgIUDB3iwAvu4Bq1V9WbDX7+F8NlJ84vbdyBpU=;
+        b=TbbEcTtbkUhu5j2yaYH+f+uFPiIpZ3yBjYVhCleGgNsF1aO4CgYh+UrghN6KBPBQcT
+         IgpjQfPvPR6qPJN8AcPFeMzbjZxCPnbtdVHHHGMaGyO69yqPxQxRY7/l5L8NfejCVxIb
+         wVPpsjcTehCzi4zdDmGXRhGX3uNGF+JmfmzQkUQExl0RbRk/bxjggB830/4xJrQlUMoE
+         Ck3FVQ8pguhwrBJHadOAhR4PSQ2Hr/E3VFGt0+imcpMzUH7vhJePvH5s/42uFtQF1Kd6
+         Hl4dXHcvKSlIPs1a7HK3qH4h1h8NVBPk+1AuCoHJbvG1pyNDHSsouqLo7zPDvtZu8NaL
+         iGuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/kZQBZrT7d+NZ7hXhFjqvc0yPUpSInT9Q68O6DIDCdE=;
-        b=XRN7KVO79J/dnJj8Uz6EMXw+MZy9+dwQpaq/KBxLFwFx4ML+MmV07RE/G0ZSACeS/a
-         BBuAf96ogBHpPaiDoO/jhlIdsRWJLP9edl8IeEb8CteCjjPuWUWQcEUYPmGDK8oOoEEW
-         gh/uFKK7fLT8J08/sobibdwOQvI+l6wFpCiMlCJvbgahKChVROX9w7iuItru6gwpZUHx
-         uQ6GcNjLa1W3PDdWRThbp4osOyo7vfhKvAnsYxrRYRg0RTzTl8AaBiE4sdgc44pL0C7a
-         NosV9YGbfuH4CZPVpupImCHGV7WUOjYBSBobj3cZeppoCnr/C5g2PLkHy2YX/w2sv4iY
-         N3xQ==
-X-Gm-Message-State: AGi0PubhXioPriCleZdlCPsQmv69QJpy0nAqXKYpOjuF3wYM2dALBQ5w
-        wvBKcvtv2f4ImT96MLlLUXAerzZjrEGKtg==
-X-Google-Smtp-Source: APiQypJ8l1ZFE+2LscthXeCV9bRn2vId8DTmm8NGy5NgWvtedGfnryVUDbV7XfSU7mmHY5HKj81ZIA==
-X-Received: by 2002:a17:90a:2347:: with SMTP id f65mr3219502pje.165.1587445017642;
-        Mon, 20 Apr 2020 21:56:57 -0700 (PDT)
-Received: from ?IPv6:2604:4080:1012:8d30:9eb6:d0ff:fe8b:175f? ([2604:4080:1012:8d30:9eb6:d0ff:fe8b:175f])
-        by smtp.gmail.com with ESMTPSA id h9sm1163323pfo.129.2020.04.20.21.56.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 21:56:57 -0700 (PDT)
-Subject: Re: [PATCH] Input: xpad - Update xboxone fw2015 init packet
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        LuK1337 <priv.luk@gmail.com>, Mark Furneaux <mark@furneaux.ca>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200419041651.GD166864@dtor-ws>
- <20200419074624.9955-1-priv.luk@gmail.com> <20200419180136.GK166864@dtor-ws>
-From:   Cameron Gutman <aicommander@gmail.com>
-Message-ID: <436c79ed-ca21-c075-e2da-0934da5000a2@gmail.com>
-Date:   Mon, 20 Apr 2020 21:56:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T22n9ZgIUDB3iwAvu4Bq1V9WbDX7+F8NlJ84vbdyBpU=;
+        b=NyIAYuaik8aSkyFLomwNc56WbnyDDCzR+qa5JOthdXII+olb6xXo9e5ecPvGdeNF3D
+         Ws017CEemso43IwmCO4eicwh/zwqD5X1OM7m4Ue8w6cgl+nuvJtUyfd/s2KBY5TqBzwl
+         thOcBul8Kjxi/6uvxAHwPCYXbeRu7C3xRoE6E+ME8qqvFSv6xV4lt0YciIU8sAi79dAr
+         cQJIfsP+3rvy7n0oZm2a9HefiPgFPTulSFIWAiR3JnqUbHab7xKnYygbWp/jHibCMYty
+         Pjo3F1TfQZqHuQMR0t2Ykf7nidyslIBzN0e8AZrKTm66B4rybT3bHQ+QhZdKirRzHvbi
+         +YSw==
+X-Gm-Message-State: AGi0PuZY0kcIaQWQe1fGs+/r6zVe3rtXfkQqjPGuX6xKpWJaq5U2BRyL
+        MXhLeuz4DRUBpBGVQvx2m1qM0LvUWwLc2X1y1qV0
+X-Google-Smtp-Source: APiQypJdeYoX/nAoBxN2T6KVPr0GIDpVnjQRxKWUzukLBPcV1cQk8qEU5rEoNiNslRHmr2WT5DXNuroelRKk35B9rcI=
+X-Received: by 2002:a5d:4443:: with SMTP id x3mr21644255wrr.162.1587445578746;
+ Mon, 20 Apr 2020 22:06:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200419180136.GK166864@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200415195422.19866-1-atish.patra@wdc.com> <20200415195422.19866-6-atish.patra@wdc.com>
+ <CAMj1kXFRqTYr7_M_j6oN1-xnQ6V4uCYK49yAbjvrf1BB823Cng@mail.gmail.com>
+ <CAOnJCUK3fqsR93ewYMUkanh+x1EJN_3QwkFjSDDZZr2MjzpnUQ@mail.gmail.com>
+ <CAMj1kXFOkARJ9k81pu-LuHEd7H7AZRRrquzVN-WQ3J239JUZTw@mail.gmail.com>
+ <CAMj1kXGv8XrXJ=Tx88O38a9UYM3iuBevg5NXRpMrny1XJZGB7A@mail.gmail.com>
+ <CAOnJCUJOY_84eesRreVyEQKjL2awkehcFi5ydMv0USNeaFHd6A@mail.gmail.com>
+ <CAMj1kXHLfXOp=JQhAeFx6oazFp=kqiS0TMTV06ZthTFg6QdzWw@mail.gmail.com>
+ <b6a28d62be4d42319fca2adaad755612ef094667.camel@wdc.com> <CAMj1kXEQVdQ4ysMoyJk+ue7iZApLLgkhy65Fm7JDPOjNyETx9Q@mail.gmail.com>
+ <CAOnJCUKZUNm_0xZtFyOxQMaust79Q0_m7gUS1eQPFkK29uyJMQ@mail.gmail.com> <CAMj1kXHpHnhOjYJaBvj5XhYnOzbH5MzBJePy7dDpd-S3s029CQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXHpHnhOjYJaBvj5XhYnOzbH5MzBJePy7dDpd-S3s029CQ@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Mon, 20 Apr 2020 22:06:07 -0700
+Message-ID: <CAOnJCUKpLg8EzyaQ59kGVx0Fwfb--T9M2GuBSAAPdoTZfxHSbQ@mail.gmail.com>
+Subject: Re: [v3 PATCH 5/5] RISC-V: Add EFI stub support.
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Atish Patra <Atish.Patra@wdc.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, Anup Patel <Anup.Patel@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/20 11:01 AM, Dmitry Torokhov wrote:
-> On Sun, Apr 19, 2020 at 09:46:23AM +0200, LuK1337 wrote:
->> From: Łukasz Patron <priv.luk@gmail.com>
->>
->> Appending { 0x05, 0x20, 0x02, 0x0f, 0x06 } to
->> xboxone_fw2015_init fixes an issue where the
->> controller is somewhat stuck in bluetooth
->> mode until you plug it into Windows PC.
->>
->> Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
-> 
-> Thank you Łukasz. Could you please tell me what device(s) have you
-> observed the issue with? I am a bit worried if this may interfere with
-> other devices that currently work fine with the driver. Cameron, Mark,
-> do you have any concerns here?
-> 
+On Mon, Apr 20, 2020 at 1:02 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Mon, 20 Apr 2020 at 09:59, Atish Patra <atishp@atishpatra.org> wrote:
+> >
+> > On Mon, Apr 20, 2020 at 12:04 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >
+> > > On Mon, 20 Apr 2020 at 06:20, Atish Patra <Atish.Patra@wdc.com> wrote:
+> > > >
+> ...
+> > > >
+> > > > "If the preferred address is set as the base of DRAM, efi_bs_call is
+> > > > bound to fail as well because the base of DRAM is reserved by the
+> > > > firmware. So the efi memory allocator can't allocate at that address.
+> > > > Technically, it will work but it is no different than passing
+> > > > ULONG_MAX. So I thought ULONG_MAX will avoid the confusion.
+> > > >
+> > > > We try to allocate as low as possible so I am passing dram_base as the
+> > > > minimum address anyways. As the firmware reserved the first few KBs,
+> > > >
+> > >
+> > >
+> > > OK, so the preferred address *is* the base of DRAM (assuming it is 2
+> > > MB aligned). However, in the general case, you keep some firmware
+> > > state there (couple of KB) and so you typically end up at DRAM base
+> > > plus 2 MB?
+> > >
+> >
+> > Yes.
+> >
+> > > So first question: why does the firmware put this stuff at the base of
+> > > DRAM in the first place? Does it *have* to live there?
+> > >
+> >
+> > The firmware includes the RISC-V specific supervisor binary interface (SBI)[[1]
+> > implementation. As it is a RISC-V specific run time service provider,
+> > it has to be resident in memory.
+> > The arm equivalent of SBI would be PSCI.
+> >
+> > [1] https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
+> >
+>
+> I am not asking why it has to be resident in memory. I am asking why
+> it has to be at the *base* of memory.
+>
 
-Yes, I gave it a try here, and it looks like there's definitely some
-breakages for non-updated controllers. It breaks the Covert Forces
-edition Xbox One controller (0x045e, 0x02dd) and also another non-upgraded
-Xbox One S controller of the same model as the affected controller
-(0x045e, 0x02ea, firmware 3.1.1221.0).
+Sorry. I misunderstood the question. I think it is kept at the start
+of dram to accommodate
+embedded systems with smaller memory. It was also easier to manage at
+the beginning of
+the memory because all other next stages in the boot process just
+ignores first few KBs of
+the memory. We also did not have a memory reservation scheme back then.
 
-On the plus side, it _does_ seem to fix the issue.
+Having said that, this parameter is configurable for each platform in
+OpenSBI. In future, this restriction
+can be relaxed if a platform vendor wants. IIRC, linux kernel can't
+use  the memory below the kernel start
+address (where PAGE_OFFSET is mapped) because of generic mm code limitations.
 
->> ---
->>  drivers/input/joystick/xpad.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
->> index 6b40a1c68f9f..894fa81f717a 100644
->> --- a/drivers/input/joystick/xpad.c
->> +++ b/drivers/input/joystick/xpad.c
->> @@ -455,7 +455,8 @@ struct xboxone_init_packet {
->>   * or later firmware installed (or present from the factory).
->>   */
->>  static const u8 xboxone_fw2015_init[] = {
->> -	0x05, 0x20, 0x00, 0x01, 0x00
->> +	0x05, 0x20, 0x00, 0x01, 0x00,
->> +	0x05, 0x20, 0x02, 0x0f, 0x06
->>  };
+Added Anup (In case he wants to add something to this)
 
-One thing that strikes me as odd about this init packet is that it looks
-like 2 packets strung together. Most of the other init packets have 0x20
-as their second byte, and there's even something resembling a sequence
-number in the third byte (0x02). Maybe these are supposed to be separate
-init packets?
+> > > Then, if the base of DRAM is guaranteed to be occupied, why not make
+> > > the preferred address base of DRAM + 2 MB ? (or 4 MB for the 32-bit
+> > > case)
+> >
+> > I guess that will work too. I was inclined to use low_alloc_above so
+> > that we ensure that the kernel
+> > boots from the lowest possible address given the alignment
+> > restriction. If the alignment restrictions are relaxed,
+> > in future, we just have to change the macro.
+> >
+> > However, I think calling relocate_kernel with a preferred offset
+> > (dram_base + KIMG_ALIGN) is
+> > better because it will always fall back to low_alloc_above anyways. I
+> > will send the patch.
+>
+> Indeed. In the common case, it will just do the allocate_pages()
+> directly, which is preferred. It will fall back to
+> efi_low_alloc_aboce() [and do the memory map parsing and traversal
+> etc] only if needed.
 
-Hopefully we can find some init sequence that at least the One S controller
-can tolerate on all known firmware versions. If not, the firmware rev is
-available to us in bcdDevice, but I'd only like to use an explicit version
-check as a last resort.
 
->>  /*
->> -- 
->> 2.26.0
->>
-> 
-> Thanks.
-> 
 
+-- 
 Regards,
-Cameron
+Atish
