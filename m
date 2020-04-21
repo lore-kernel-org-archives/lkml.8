@@ -2,105 +2,134 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2A0C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BFBC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 686A420738
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDEC20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:35:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="KGVt1GTI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ksnc7upI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgDUNex (ORCPT
+        id S1728994AbgDUNfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:34:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40194 "EHLO
+        Tue, 21 Apr 2020 09:35:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728422AbgDUNew (ORCPT
+        by vger.kernel.org with ESMTP id S1728519AbgDUNfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:34:52 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C794AC061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:34:51 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4964LH5jycz9sSY;
-        Tue, 21 Apr 2020 23:34:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1587476088;
-        bh=Y+z6/rcJIObmZtZ51xGieSwpLR256JCEweZeuezbpcY=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=KGVt1GTIlQZOPxOIid++1szONXTthboUOft5u/6EE6JysRPJ8O3iv3vAb+Ihm6B41
-         2cWtWSpLVTDTgAtQYInJePYFBXqa31pJ2H2LtW1YCjjhfeyYaK/1BOM/y63Ndfx61F
-         +2Z05AzNnKItYukVZO6EckdQVK/oQC5HjIxrJss7+2q0YTdpRwbANP94m9qVl1fBQH
-         ZxK5XTabGGImV8mfAnOERHQffGm8D4Z3DOHbFFwTqJqDf006IT8h5JTjmOh/FVjGNp
-         7M4aWACvFXqgMhLc59XWbdSFubep7HPt419o68jfI5bOs3y4XRQOzUN7zajxALFiDz
-         5g/ux86TtXjfA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Laurent Dufour <ldufour@linux.ibm.com>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     paulus@samba.org, linux-kernel@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>, benh@kernel.crashing.org
-Subject: Re: [PATCH] KVM: PPC: Book3S HV: read ibm,secure-memory nodes
-In-Reply-To: <20200416162715.45846-1-ldufour@linux.ibm.com>
-References: <20200416162715.45846-1-ldufour@linux.ibm.com>
-Date:   Tue, 21 Apr 2020 23:34:59 +1000
-Message-ID: <87k129gdx8.fsf@mpe.ellerman.id.au>
+        Tue, 21 Apr 2020 09:35:51 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1816EC061A10;
+        Tue, 21 Apr 2020 06:35:51 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id k22so5897154eds.6;
+        Tue, 21 Apr 2020 06:35:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BLQDNAuvH+mmBxzp8zXWscwYeRoxDbrIpyjNqdhp4xc=;
+        b=Ksnc7upICOS18e31lHFtJIN5mjX4AClAiqKIZQ8MBdQmyanG7D7U9cAY4iDhRgvWBQ
+         7pDx4iqEtXXnYZe6hHmTDPC8MnTBYgo4CeTY/lBvrFey7iJGJ2yBU7LtMkM5VSvkTHyA
+         afXf0abexFyZdZ3PkOtsSvmWavBatjq0bL/zgDWSbzDIjPk/biyk9XODFHW2k6clICqf
+         ss6UhIh4gXSAttrenyaeSFY+p2Ig3vtMPIvEz5JwUPSSLDIJ+F2OKWviIosWdCt2nXGU
+         r0TES0pPBzqpRzsRHr7VbHK2epK6W+ET2t4T/2pCfMfVr45/3XdeHxlPZUAuutcxBN9L
+         tuQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BLQDNAuvH+mmBxzp8zXWscwYeRoxDbrIpyjNqdhp4xc=;
+        b=CvjC7odOixSEB6hxyMVuMMd7ixKvfEaNxjRsI64dEuOUf0vhibNieVgWnqomyqwmtG
+         RzHTWexjQET94/5pYHCz5f+mw99I51qVPxLBdmc7yPaYJkRMlxoXixGxz/UzLmT0O+kj
+         uXuUkTNG0lWt44gpp1JRsc+BrUBNcfAH4CF3KiJMjZ2U4BkY8ERc3rBpXV/2meFc8WpX
+         s2Qz5i9gHLCcmNAaBJdNiZ+92xOXAAiFpLIPdbZp7ZfDITbHFwjqVQH9kKZHCafqz5UX
+         NN/SPpUg93Xa/+sAnAikvYQbadWycX/Wd2L8t0+BBAcSwl/XsRTpszQeGQIw7XAUdbT/
+         RLQg==
+X-Gm-Message-State: AGi0PuZv+BqmHpcY4C6wkgPpsJ3vE/PNk/jOeVNJqYcAbO5zAcaXNUn8
+        PAF+yRoiFF1dS4KfzNQm0U3E4DDrUTXW6J9j3h0=
+X-Google-Smtp-Source: APiQypJ2dyJzCOGH+eeAPWl1+OLIkd+h4bnkMfY2KVb5ffM8FvTAPOhLIxcv86n3se/TxUsI3Gei07wBFoyHqUw3xlY=
+X-Received: by 2002:a50:f288:: with SMTP id f8mr14096159edm.337.1587476149783;
+ Tue, 21 Apr 2020 06:35:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200421113324.vxh2lyasylf5kgkz@pengutronix.de>
+ <CA+h21ho2YnUfzMja1Y7=B7Yrqk=WD6jm-OoKKzX4uS3WJiU5aw@mail.gmail.com>
+ <20200421125828.jb44qzfzgd7sh436@pengutronix.de> <20200421132732.GC937199@lunn.ch>
+In-Reply-To: <20200421132732.GC937199@lunn.ch>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 21 Apr 2020 16:35:40 +0300
+Message-ID: <CA+h21hoH4u4TGMPPGpuF9dgW5SHd3DYm4mR8AMmuVs=nevYSYg@mail.gmail.com>
+Subject: Re: dsa: sja1105: regression after patch: "net: dsa: configure the
+ MTU for switch ports"
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>, mkl@pengutronix.de,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        David Jander <david@protonic.nl>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-
-Laurent Dufour <ldufour@linux.ibm.com> writes:
-> The newly introduced ibm,secure-memory nodes supersede the
-> ibm,uv-firmware's property secure-memory-ranges.
-
-Is either documented in a device tree binding document anywhere?
-
-cheers
-
-> Firmware will no more expose the secure-memory-ranges property so first
-> read the new one and if not found rollback to the older one.
+On Tue, 21 Apr 2020 at 16:27, Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> ---
->  arch/powerpc/kvm/book3s_hv_uvmem.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> > > The code which is causing problems seems to be this one:
+> > >
+> > >     mtu_limit = min_t(int, master->max_mtu, dev->max_mtu);
+> > >     old_master_mtu = master->mtu;
+> > >     new_master_mtu = largest_mtu + cpu_dp->tag_ops->overhead;
+> > >     if (new_master_mtu > mtu_limit)
+> > >         return -ERANGE;
+> > >
+> > > called from
+> > >
+> > >     rtnl_lock();
+> > >     ret = dsa_slave_change_mtu(slave_dev, ETH_DATA_LEN);
+> > >     rtnl_unlock();
+> > >     if (ret && ret != -EOPNOTSUPP) {
+> > >         dev_err(ds->dev, "error %d setting MTU on port %d\n",
+> > >             ret, port->index);
+> > >         goto out_free;
+> > >     }
+> > >
+> > > Before this patch, it was silently failing, now it's preventing the
+> > > probing of the ports which I might agree with you is not better.
+> > > Andrew warned about this, and I guess that during probe, we should
+> > > warn but ignore any nonzero return code, not just EOPNOTSUPP. I'll
+> > > send a patch out shortly to correct this.
+> > >
+> > > Out of curiosity, what DSA master port do you have? Does it not
+> > > support an MTU of 1504 bytes? Does MTU-sized traffic pass correctly
+> > > through your interface? (you can test with iperf3)
+> >
+> > It is FEC@iMX6QP attached to the port 4 of the sja1105 switch.
+> > I'll try to make some tests tomorrow.
 >
-> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
-> index 53b88cae3e73..ad950f8996e0 100644
-> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
-> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
-> @@ -735,6 +735,20 @@ static u64 kvmppc_get_secmem_size(void)
->  	const __be32 *prop;
->  	u64 size = 0;
->  
-> +	/*
-> +	 * First try the new ibm,secure-memory nodes which supersede the
-> +	 * secure-memory-ranges property.
-> +	 * If we found somes, no need to read the deprecated one.
-> +	 */
-> +	for_each_compatible_node(np, NULL, "ibm,secure-memory") {
-> +		prop = of_get_property(np, "reg", &len);
-> +		if (!prop)
-> +			continue;
-> +		size += of_read_number(prop + 2, 2);
-> +	}
-> +	if (size)
-> +		return size;
-> +
->  	np = of_find_compatible_node(NULL, NULL, "ibm,uv-firmware");
->  	if (!np)
->  		goto out;
-> -- 
-> 2.26.1
+> Ah, interesting. I've been testing recently on a Vybrid, so also
+> FEC. I had the warning, but it kept going.
+>
+> I don't particularly like this warning in this case. We have hardware
+> which happy works, but is now issuing a warning on boot. I would
+> prefer if it warned when only trying to configure an MTU bigger than
+> the minimum needed for DSA, i.e. only the jumbo use case.
+>
+>     Andrew
+
+Looks like FEC is one of those drivers that don't touch
+netdev->max_mtu. So I sent a patch to reduce your switch MTU to 1496
+or whereabouts. About the error, I caved in and turned it into an
+warning, but with the new logic of limiting the MTU on bootup to the
+limit given by the master there is really no reason to fail now, so I
+think we shouldn't remove the print.
+
+Thanks,
+-Vladimir
