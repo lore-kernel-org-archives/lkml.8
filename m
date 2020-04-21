@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F0CC55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C29EC55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A4F20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34BF420857
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbgDUJ1C (ORCPT
+        id S1728584AbgDUJ1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58294 "EHLO
+        Tue, 21 Apr 2020 05:27:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728528AbgDUJ1B (ORCPT
+        by vger.kernel.org with ESMTP id S1728539AbgDUJ1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:27:01 -0400
+        Tue, 21 Apr 2020 05:27:06 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3DC6C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 02:27:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 934D9C061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 02:27:06 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jQpB6-0007ym-PQ; Tue, 21 Apr 2020 11:26:53 +0200
+        id 1jQpB7-0007zE-WF; Tue, 21 Apr 2020 11:26:54 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2C987104099;
-        Tue, 21 Apr 2020 11:26:52 +0200 (CEST)
-Message-Id: <20200421092558.939985695@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 660631002EE;
+        Tue, 21 Apr 2020 11:26:53 +0200 (CEST)
+Message-Id: <20200421092559.049499158@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 21 Apr 2020 11:20:29 +0200
+Date:   Tue, 21 Apr 2020 11:20:30 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Christoph Hellwig <hch@lst.de>,
@@ -43,7 +43,7 @@ Cc:     x86@kernel.org, Christoph Hellwig <hch@lst.de>,
         Thomas Lendacky <Thomas.Lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [patch V2 02/16] x86/cpu: Uninline CR4 accessors
+Subject: [patch V2 03/16] x86/cr4: Sanitize CR4.PCE update
 References: <20200421092027.591582014@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -56,18 +56,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cpu_tlbstate is exported because various TLB related functions need access
-to it, but cpu_tlbstate is sensitive information which should only be
-accessed by well contained kernel functions and not be directly exposed to
-modules.
+load_mm_cr4_irqsoff() is really a strange name for a function which has
+only one purpose: Update the CR4.PCE bit depending on the perf state.
 
-The various CR4 accessors require cpu_tlbstate as the CR4 shadow cache is
-located there.
+Rename it to update_cr4_pce_mm(), move it into the tlb code and provide a
+function which can be invoked by the perf smp function calls.
 
-In preparation of unexporting cpu_tlbstate create a builtin function for
-manipulating CR4 and rework the various helpers to use it.
-
-Export native_write_cr4() only when CONFIG_LKTDM=m.
+Another step to remove exposure of cpu_tlbstate.
 
 No functional change.
 
@@ -75,129 +70,113 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/include/asm/tlbflush.h |   36 +++++-------------------------------
- arch/x86/kernel/cpu/common.c    |   25 ++++++++++++++++++++++++-
- arch/x86/kernel/process.c       |   11 +++++++++++
- 3 files changed, 40 insertions(+), 32 deletions(-)
+ arch/x86/events/core.c             |   11 +++--------
+ arch/x86/include/asm/mmu_context.h |   14 +-------------
+ arch/x86/mm/tlb.c                  |   22 +++++++++++++++++++++-
+ 3 files changed, 25 insertions(+), 22 deletions(-)
 
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -276,37 +276,25 @@ static inline bool nmi_uaccess_okay(void
- 
- #define nmi_uaccess_okay nmi_uaccess_okay
- 
-+void cr4_update_irqsoff(unsigned long set, unsigned long clear);
-+unsigned long cr4_read_shadow(void);
-+
- /* Initialize cr4 shadow for this CPU. */
- static inline void cr4_init_shadow(void)
- {
- 	this_cpu_write(cpu_tlbstate.cr4, __read_cr4());
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2162,11 +2162,6 @@ static int x86_pmu_event_init(struct per
+ 	return err;
  }
  
--static inline void __cr4_set(unsigned long cr4)
+-static void refresh_pce(void *ignored)
 -{
--	lockdep_assert_irqs_disabled();
--	this_cpu_write(cpu_tlbstate.cr4, cr4);
--	__write_cr4(cr4);
+-	load_mm_cr4_irqsoff(this_cpu_read(cpu_tlbstate.loaded_mm));
 -}
 -
- /* Set in this cpu's CR4. */
- static inline void cr4_set_bits_irqsoff(unsigned long mask)
+ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
  {
--	unsigned long cr4;
+ 	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
+@@ -2185,7 +2180,7 @@ static void x86_pmu_event_mapped(struct
+ 	lockdep_assert_held_write(&mm->mmap_sem);
+ 
+ 	if (atomic_inc_return(&mm->context.perf_rdpmc_allowed) == 1)
+-		on_each_cpu_mask(mm_cpumask(mm), refresh_pce, NULL, 1);
++		on_each_cpu_mask(mm_cpumask(mm), cr4_update_pce, NULL, 1);
+ }
+ 
+ static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *mm)
+@@ -2195,7 +2190,7 @@ static void x86_pmu_event_unmapped(struc
+ 		return;
+ 
+ 	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
+-		on_each_cpu_mask(mm_cpumask(mm), refresh_pce, NULL, 1);
++		on_each_cpu_mask(mm_cpumask(mm), cr4_update_pce, NULL, 1);
+ }
+ 
+ static int x86_pmu_event_idx(struct perf_event *event)
+@@ -2253,7 +2248,7 @@ static ssize_t set_attr_rdpmc(struct dev
+ 		else if (x86_pmu.attr_rdpmc == 2)
+ 			static_branch_dec(&rdpmc_always_available_key);
+ 
+-		on_each_cpu(refresh_pce, NULL, 1);
++		on_each_cpu(cr4_update_pce, NULL, 1);
+ 		x86_pmu.attr_rdpmc = val;
+ 	}
+ 
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -24,21 +24,9 @@ static inline void paravirt_activate_mm(
+ #endif	/* !CONFIG_PARAVIRT_XXL */
+ 
+ #ifdef CONFIG_PERF_EVENTS
 -
--	cr4 = this_cpu_read(cpu_tlbstate.cr4);
--	if ((cr4 | mask) != cr4)
--		__cr4_set(cr4 | mask);
-+	cr4_update_irqsoff(mask, 0);
- }
- 
- /* Clear in this cpu's CR4. */
- static inline void cr4_clear_bits_irqsoff(unsigned long mask)
- {
--	unsigned long cr4;
+ DECLARE_STATIC_KEY_FALSE(rdpmc_never_available_key);
+ DECLARE_STATIC_KEY_FALSE(rdpmc_always_available_key);
 -
--	cr4 = this_cpu_read(cpu_tlbstate.cr4);
--	if ((cr4 & ~mask) != cr4)
--		__cr4_set(cr4 & ~mask);
-+	cr4_update_irqsoff(0, mask);
- }
- 
- /* Set in this cpu's CR4. */
-@@ -329,20 +317,6 @@ static inline void cr4_clear_bits(unsign
- 	local_irq_restore(flags);
- }
- 
--static inline void cr4_toggle_bits_irqsoff(unsigned long mask)
+-static inline void load_mm_cr4_irqsoff(struct mm_struct *mm)
 -{
--	unsigned long cr4;
--
--	cr4 = this_cpu_read(cpu_tlbstate.cr4);
--	__cr4_set(cr4 ^ mask);
+-	if (static_branch_unlikely(&rdpmc_always_available_key) ||
+-	    (!static_branch_unlikely(&rdpmc_never_available_key) &&
+-	     atomic_read(&mm->context.perf_rdpmc_allowed)))
+-		cr4_set_bits_irqsoff(X86_CR4_PCE);
+-	else
+-		cr4_clear_bits_irqsoff(X86_CR4_PCE);
 -}
--
--/* Read the CR4 shadow. */
--static inline unsigned long cr4_read_shadow(void)
--{
--	return this_cpu_read(cpu_tlbstate.cr4);
--}
--
- /*
-  * Mark all other ASIDs as invalid, preserves the current.
-  */
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -387,7 +387,30 @@ void native_write_cr4(unsigned long val)
- 			  bits_missing);
+-#else
+-static inline void load_mm_cr4_irqsoff(struct mm_struct *mm) {}
++void cr4_update_pce(void *ignored);
+ #endif
+ 
+ #ifdef CONFIG_MODIFY_LDT_SYSCALL
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -272,6 +272,26 @@ static void cond_ibpb(struct task_struct
  	}
  }
--EXPORT_SYMBOL(native_write_cr4);
-+#if IS_MODULE(CONFIG_LKDTM)
-+EXPORT_SYMBOL_GPL(native_write_cr4);
+ 
++#ifdef CONFIG_PERF_EVENTS
++static inline void cr4_update_pce_mm(struct mm_struct *mm)
++{
++	if (static_branch_unlikely(&rdpmc_always_available_key) ||
++	    (!static_branch_unlikely(&rdpmc_never_available_key) &&
++	     atomic_read(&mm->context.perf_rdpmc_allowed)))
++		cr4_set_bits_irqsoff(X86_CR4_PCE);
++	else
++		cr4_clear_bits_irqsoff(X86_CR4_PCE);
++}
++
++void cr4_update_pce(void *ignored)
++{
++	cr4_update_pce_mm(this_cpu_read(cpu_tlbstate.loaded_mm));
++}
++
++#else
++static inline void cr4_update_pce_mm(struct mm_struct *mm) { }
 +#endif
 +
-+void cr4_update_irqsoff(unsigned long set, unsigned long clear)
-+{
-+	unsigned long newval, cr4 = this_cpu_read(cpu_tlbstate.cr4);
-+
-+	lockdep_assert_irqs_disabled();
-+
-+	newval = (cr4 & ~clear) | set;
-+	if (newval != cr4) {
-+		this_cpu_write(cpu_tlbstate.cr4, newval);
-+		__write_cr4(newval);
-+	}
-+}
-+EXPORT_SYMBOL(cr4_update_irqsoff);
-+
-+/* Read the CR4 shadow. */
-+unsigned long cr4_read_shadow(void)
-+{
-+	return this_cpu_read(cpu_tlbstate.cr4);
-+}
-+EXPORT_SYMBOL_GPL(cr4_read_shadow);
- 
- void cr4_init(void)
+ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ 			struct task_struct *tsk)
  {
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -612,6 +612,17 @@ void speculation_ctrl_update_current(voi
- 	preempt_enable();
+@@ -440,7 +460,7 @@ void switch_mm_irqs_off(struct mm_struct
+ 	this_cpu_write(cpu_tlbstate.loaded_mm_asid, new_asid);
+ 
+ 	if (next != real_prev) {
+-		load_mm_cr4_irqsoff(next);
++		cr4_update_pce_mm(next);
+ 		switch_ldt(real_prev, next);
+ 	}
  }
- 
-+static inline void cr4_toggle_bits_irqsoff(unsigned long mask)
-+{
-+	unsigned long newval, cr4 = this_cpu_read(cpu_tlbstate.cr4);
-+
-+	newval = cr4 ^ mask;
-+	if (newval != cr4) {
-+		this_cpu_write(cpu_tlbstate.cr4, newval);
-+		__write_cr4(newval);
-+	}
-+}
-+
- void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
- {
- 	unsigned long tifp, tifn;
 
