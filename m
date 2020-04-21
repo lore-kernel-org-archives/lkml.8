@@ -2,140 +2,240 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750DFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8181C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59D522076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C532D20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Fu+lvdF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgDUM6d convert rfc822-to-8bit (ORCPT
+        id S1728931AbgDUM6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728802AbgDUM6d (ORCPT
+        Tue, 21 Apr 2020 08:58:52 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:39826 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728337AbgDUM6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:58:33 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A398C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:58:33 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jQsTt-00059t-Oe; Tue, 21 Apr 2020 14:58:29 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jQsTs-0007Sp-Pl; Tue, 21 Apr 2020 14:58:28 +0200
-Date:   Tue, 21 Apr 2020 14:58:28 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     mkl@pengutronix.de, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        David Jander <david@protonic.nl>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: dsa: sja1105: regression after patch: "net: dsa: configure the
- MTU for switch ports"
-Message-ID: <20200421125828.jb44qzfzgd7sh436@pengutronix.de>
-References: <20200421113324.vxh2lyasylf5kgkz@pengutronix.de>
- <CA+h21ho2YnUfzMja1Y7=B7Yrqk=WD6jm-OoKKzX4uS3WJiU5aw@mail.gmail.com>
+        Tue, 21 Apr 2020 08:58:51 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LCwL95026707;
+        Tue, 21 Apr 2020 14:58:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=r+b9cQQQrzKV/Yu/DP7Ku0tDYpN9ESE+SznlYMlhwgw=;
+ b=Fu+lvdF4U3XYsVidOxO3j2M8xLSzItNtcVvf9Al/9WJ326PFov+lXG33XJ285ATCBha0
+ 2EHUZ3E/hVtWXm8JyXq6q+Q9oS09FgYNXXB8Va9Pxa/XTpoOWF67wU086+GFGRGYM4C/
+ IB3mQ40lYY6p8NNKpY0H8yt9rnV5ybsVqkCrM+WfFhC3sH5dw4unGYADPFeCf4vQEJl3
+ BpaaaZNdlpHgKBx8Ol1iisn1JuMd6lABDeDdCjLTuy3K8XP0RsjNoE2lvzUu20gWh1cv
+ 8JK6RTN5Ohb4AAAPUjNiRDZSnWNL6N2U1QVM/sxniQoelqSMdZgCmswYDAabioQIonPL EQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30fregg2wx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Apr 2020 14:58:36 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 31A3410002A;
+        Tue, 21 Apr 2020 14:58:36 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1BAFA2B188F;
+        Tue, 21 Apr 2020 14:58:36 +0200 (CEST)
+Received: from [10.211.6.179] (10.75.127.44) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
+ 2020 14:58:34 +0200
+Subject: Re: [PATCH v3 2/2] tty: serial: Add modem control gpio support for
+ STM32 UART
+To:     <mani@kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <robh+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <andy.shevchenko@gmail.com>, <linux-serial@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200420170204.24541-1-mani@kernel.org>
+ <20200420170204.24541-3-mani@kernel.org>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <035edfe7-1799-51c1-58aa-2498e5991aee@st.com>
+Date:   Tue, 21 Apr 2020 14:58:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <CA+h21ho2YnUfzMja1Y7=B7Yrqk=WD6jm-OoKKzX4uS3WJiU5aw@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:54:18 up 158 days,  4:12, 168 users,  load average: 0.09, 0.08,
- 0.03
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200420170204.24541-3-mani@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_05:2020-04-20,2020-04-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 02:56:37PM +0300, Vladimir Oltean wrote:
-> Hi Oleksij,
+On 4/20/20 7:02 PM, mani@kernel.org wrote:
+> From: Manivannan Sadhasivam <mani@kernel.org>
 > 
-> On Tue, 21 Apr 2020 at 14:33, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> >
-> > Hi Vladimir,
-> >
-> > I have a regression after this patch:
-> > |commit bfcb813203e619a8960a819bf533ad2a108d8105
-> > |Author:     Vladimir Oltean <vladimir.oltean@nxp.com>
-> > |
-> > |  net: dsa: configure the MTU for switch ports
-> >
-> > with following log:
-> > [    3.044065] sja1105 spi1.0: Probed switch chip: SJA1105Q
-> > [    3.071385] sja1105 spi1.0: Enabled switch tagging
-> > [    3.076484] sja1105 spi1.0: error -34 setting MTU on port 0
-> > [    3.082795] sja1105: probe of spi1.0 failed with error -34
-> >
-> > this is devicetree snippet for the port 0:
-> >         port@0 {
-> >                 reg = <0>;
-> >                 label = "usb";
-> >                 phy-handle = <&usbeth_phy>;
-> >                 phy-mode = "rmii";
-> >         };
-> >
-> >
-> > Is it know issue?
-> >
- 
-> The code which is causing problems seems to be this one:
+> STM32 UART controllers have the built in modem control support using
+> dedicated gpios which can be enabled using 'st,hw-flow-ctrl' flag in DT.
+> But there might be cases where the board design need to use different
+> gpios for modem control.
 > 
->     mtu_limit = min_t(int, master->max_mtu, dev->max_mtu);
->     old_master_mtu = master->mtu;
->     new_master_mtu = largest_mtu + cpu_dp->tag_ops->overhead;
->     if (new_master_mtu > mtu_limit)
->         return -ERANGE;
+> For supporting such cases, this commit adds modem control gpio support
+> to STM32 UART controller using mctrl_gpio driver.
 > 
-> called from
-> 
->     rtnl_lock();
->     ret = dsa_slave_change_mtu(slave_dev, ETH_DATA_LEN);
->     rtnl_unlock();
->     if (ret && ret != -EOPNOTSUPP) {
->         dev_err(ds->dev, "error %d setting MTU on port %d\n",
->             ret, port->index);
->         goto out_free;
->     }
-> 
-> Before this patch, it was silently failing, now it's preventing the
-> probing of the ports which I might agree with you is not better.
-> Andrew warned about this, and I guess that during probe, we should
-> warn but ignore any nonzero return code, not just EOPNOTSUPP. I'll
-> send a patch out shortly to correct this.
-> 
-> Out of curiosity, what DSA master port do you have? Does it not
-> support an MTU of 1504 bytes? Does MTU-sized traffic pass correctly
-> through your interface? (you can test with iperf3)
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
+>  drivers/tty/serial/Kconfig       |  1 +
+>  drivers/tty/serial/stm32-usart.c | 53 ++++++++++++++++++++++++++++++--
+>  drivers/tty/serial/stm32-usart.h |  1 +
+>  3 files changed, 53 insertions(+), 2 deletions(-)
 
-It is FEC@iMX6QP attached to the port 4 of the sja1105 switch.
-I'll try to make some tests tomorrow.
+Hi Mani,
 
-Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+You can add my:
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+
+Thanks,
+Fabrice
+
+> 
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 0aea76cd67ff..e7a6f2130684 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -1462,6 +1462,7 @@ config SERIAL_STM32
+>  	tristate "STMicroelectronics STM32 serial port support"
+>  	select SERIAL_CORE
+>  	depends on ARCH_STM32 || COMPILE_TEST
+> +	select SERIAL_MCTRL_GPIO if GPIOLIB
+>  	help
+>  	  This driver is for the on-chip Serial Controller on
+>  	  STMicroelectronics STM32 MCUs.
+> diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+> index 5e93e8d40f59..17c2f3276888 100644
+> --- a/drivers/tty/serial/stm32-usart.c
+> +++ b/drivers/tty/serial/stm32-usart.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/tty_flip.h>
+>  #include <linux/tty.h>
+>  
+> +#include "serial_mctrl_gpio.h"
+>  #include "stm32-usart.h"
+>  
+>  static void stm32_stop_tx(struct uart_port *port);
+> @@ -510,12 +511,29 @@ static void stm32_set_mctrl(struct uart_port *port, unsigned int mctrl)
+>  		stm32_set_bits(port, ofs->cr3, USART_CR3_RTSE);
+>  	else
+>  		stm32_clr_bits(port, ofs->cr3, USART_CR3_RTSE);
+> +
+> +	mctrl_gpio_set(stm32_port->gpios, mctrl);
+>  }
+>  
+>  static unsigned int stm32_get_mctrl(struct uart_port *port)
+>  {
+> +	struct stm32_port *stm32_port = to_stm32_port(port);
+> +	unsigned int ret;
+> +
+>  	/* This routine is used to get signals of: DCD, DSR, RI, and CTS */
+> -	return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
+> +	ret = TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
+> +
+> +	return mctrl_gpio_get(stm32_port->gpios, &ret);
+> +}
+> +
+> +static void stm32_enable_ms(struct uart_port *port)
+> +{
+> +	mctrl_gpio_enable_ms(to_stm32_port(port)->gpios);
+> +}
+> +
+> +static void stm32_disable_ms(struct uart_port *port)
+> +{
+> +	mctrl_gpio_disable_ms(to_stm32_port(port)->gpios);
+>  }
+>  
+>  /* Transmit stop */
+> @@ -626,6 +644,9 @@ static void stm32_shutdown(struct uart_port *port)
+>  	u32 val, isr;
+>  	int ret;
+>  
+> +	/* Disable modem control interrupts */
+> +	stm32_disable_ms(port);
+> +
+>  	val = USART_CR1_TXEIE | USART_CR1_TE;
+>  	val |= stm32_port->cr1_irq | USART_CR1_RE;
+>  	val |= BIT(cfg->uart_enable_bit);
+> @@ -764,6 +785,12 @@ static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
+>  		cr3 |= USART_CR3_CTSE | USART_CR3_RTSE;
+>  	}
+>  
+> +	/* Handle modem control interrupts */
+> +	if (UART_ENABLE_MS(port, termios->c_cflag))
+> +		stm32_enable_ms(port);
+> +	else
+> +		stm32_disable_ms(port);
+> +
+>  	usartdiv = DIV_ROUND_CLOSEST(port->uartclk, baud);
+>  
+>  	/*
+> @@ -898,6 +925,7 @@ static const struct uart_ops stm32_uart_ops = {
+>  	.throttle	= stm32_throttle,
+>  	.unthrottle	= stm32_unthrottle,
+>  	.stop_rx	= stm32_stop_rx,
+> +	.enable_ms	= stm32_enable_ms,
+>  	.break_ctl	= stm32_break_ctl,
+>  	.startup	= stm32_startup,
+>  	.shutdown	= stm32_shutdown,
+> @@ -960,10 +988,31 @@ static int stm32_init_port(struct stm32_port *stm32port,
+>  
+>  	stm32port->port.uartclk = clk_get_rate(stm32port->clk);
+>  	if (!stm32port->port.uartclk) {
+> -		clk_disable_unprepare(stm32port->clk);
+>  		ret = -EINVAL;
+> +		goto err_clk;
+> +	}
+> +
+> +	stm32port->gpios = mctrl_gpio_init(&stm32port->port, 0);
+> +	if (IS_ERR(stm32port->gpios)) {
+> +		ret = PTR_ERR(stm32port->gpios);
+> +		goto err_clk;
+>  	}
+>  
+> +	/* Both CTS/RTS gpios and "st,hw-flow-ctrl" should not be specified */
+> +	if (stm32port->hw_flow_control) {
+> +		if (mctrl_gpio_to_gpiod(stm32port->gpios, UART_GPIO_CTS) ||
+> +		    mctrl_gpio_to_gpiod(stm32port->gpios, UART_GPIO_RTS)) {
+> +			dev_err(&pdev->dev, "Conflicting RTS/CTS config\n");
+> +			ret = -EINVAL;
+> +			goto err_clk;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +
+> +err_clk:
+> +	clk_disable_unprepare(stm32port->clk);
+> +
+>  	return ret;
+>  }
+>  
+> diff --git a/drivers/tty/serial/stm32-usart.h b/drivers/tty/serial/stm32-usart.h
+> index db8bf0d4982d..d4c916e78d40 100644
+> --- a/drivers/tty/serial/stm32-usart.h
+> +++ b/drivers/tty/serial/stm32-usart.h
+> @@ -274,6 +274,7 @@ struct stm32_port {
+>  	bool fifoen;
+>  	int wakeirq;
+>  	int rdr_mask;		/* receive data register mask */
+> +	struct mctrl_gpios *gpios; /* modem control gpios */
+>  };
+>  
+>  static struct stm32_port stm32_ports[STM32_MAX_PORTS];
+> 
