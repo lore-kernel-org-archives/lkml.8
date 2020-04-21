@@ -2,117 +2,185 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436FFC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A797C55185
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17A4C2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:09:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="AvoLb6Ie"
+	by mail.kernel.org (Postfix) with ESMTP id 53CD62072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgDUVJF (ORCPT
+        id S1726310AbgDUVMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:09:05 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:35740 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgDUVJE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 17:09:04 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 496GQR4XBHz9vCD5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 21:09:03 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id moJxc8Ynzn_B for <linux-kernel@vger.kernel.org>;
-        Tue, 21 Apr 2020 16:09:03 -0500 (CDT)
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 496GQR3Rrqz9vCFT
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 16:09:03 -0500 (CDT)
-Received: by mail-qk1-f197.google.com with SMTP id v6so305283qkd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=W230/sPUtrSZ9ChaTDlVXjpS2KjEcvhlwm/p53ONQvg=;
-        b=AvoLb6Ieal43ACfvqYH880cV9d+xFvKYLVpWPUEur08gn0owG/q4oVdMu9+JKefMRS
-         qrvwUh9FamMtxKj8hXcp7iEUpZj1An04ckZ0PoOu/yUEQsc7lI7fxZE0srTFziyx4J9r
-         FM6gLG/9OfV+CTlEMPlz5MkjxuTABowbbbEzDgOTksvQbcNN8de/wFYlxHhi6OO00G4Q
-         st+P3/lxaXPyitgwiOXxbCBYQsJINtOBs975NKt/pSGDB7wD/ZXHelWF63B68Ro6KcC3
-         oa03+fLq2hcxZHOW76sXjtOGhypo4mGKv9smNuAYCZMtu80DwYfpsxJP4khssv4bvXJS
-         Pl2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=W230/sPUtrSZ9ChaTDlVXjpS2KjEcvhlwm/p53ONQvg=;
-        b=umoGWutBJnCgKJH4f31esJMI0pUVj1PS+oV099mWBqAbNmkPlwUBC5hKeYZ/ydfLzw
-         E47dkNocEdiVDkSN0rHi8cMx6/r/EN0Roazu90pqLaNCI3ifl8ecuPxJ2v416O8OvQyX
-         r0EJsee0xItTeIUJq0kjwrVGe0dW47fFt8oAxm8gVrp7v9CZDA1EBREh7woFyUtJtTNE
-         x/X+4CT8cBFKSpVf0i44j3RpVWgA1WfbsZ/48xAGfLuXq/4+fC9vTnMynq2ZZBBswbGM
-         Bv5NVCc9G9EkVxsbTQEWHiKWzQ9vELl0FDk0qPTkFXok9UAjQRFhmkLEmdI+QSRY2ypn
-         f1KQ==
-X-Gm-Message-State: AGi0PuZP1HGmQ6CkV/RIbuVK2seZq1Ul7XbhUX97CkIMqNMGVCp4CNwX
-        QRUv5VrHUCECS5vqEpAV9RM73VW7o+dfLagPhcxnuZnPw5gaVvTx5pRj5JQ6x2zynZjWUauIpsn
-        pXVv/wXPrLgqMHWTS/U1/Aug7Baz7
-X-Received: by 2002:aed:2ac4:: with SMTP id t62mr23981529qtd.381.1587503342773;
-        Tue, 21 Apr 2020 14:09:02 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLdR3F1Di5Dew+F3+Kr/c7o2DI0FiW0dSLJ1NG40UhZMsxQKBkOwhJHe3/Hmrcpl4D4OAcL0Q==
-X-Received: by 2002:aed:2ac4:: with SMTP id t62mr23981500qtd.381.1587503342361;
-        Tue, 21 Apr 2020 14:09:02 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id z40sm2641551qtj.45.2020.04.21.14.08.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 14:08:37 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     jejb@linux.ibm.com
-Cc:     QLogic-Storage-Upstream@qlogic.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kjlu@umn.edu, wu000273@umn.edu
-Subject: [PATCH] scsi: qla4xxx: Fix a potential race condition.
-Date:   Tue, 21 Apr 2020 16:08:22 -0500
-Message-Id: <20200421210822.18994-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Apr 2020 17:12:39 -0400
+Received: from mga03.intel.com ([134.134.136.65]:24972 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbgDUVMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 17:12:39 -0400
+IronPort-SDR: 9oETLL7C1MIYWnDhyGd3TXxYVwagYWscmVxKugSYeBqYZmZTGPvfsQeH7smeXxgtVJPqdMsYBb
+ Ignnpmd89VKg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 14:12:38 -0700
+IronPort-SDR: atT7CDRdJWr96xt7Wf0s7aW4IZ8bN3Kgnv8gR1SNBrNSnn+lWjhTYwJUti2BQOVos/TjTZlvLy
+ s10ukQSE8daA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
+   d="scan'208";a="247279049"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga008.fm.intel.com with ESMTP; 21 Apr 2020 14:12:37 -0700
+Date:   Tue, 21 Apr 2020 14:12:37 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V9 08/11] fs: Lift XFS_IDONTCACNE to the VFS layer
+Message-ID: <20200421211237.GB3372712@iweiny-DESK2.sc.intel.com>
+References: <20200421191754.3372370-1-ira.weiny@intel.com>
+ <20200421191754.3372370-9-ira.weiny@intel.com>
+ <20200421202314.GB6742@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421202314.GB6742@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On Tue, Apr 21, 2020 at 01:23:14PM -0700, Darrick J. Wong wrote:
+> > Subject: [PATCH V9 08/11] fs: Lift XFS_IDONTCACNE to the VFS layer
+> 
+> This still has a misspelling in the subject line.
 
-In the function qla4xxx_eh_abort, we should use lock protect both
-kref_get() and kref_put(), because we must serialize access where a
-kref_put() cannot occur during the kref_get(). Otherwise, the object
-"srb" may not remain valid during the kref_get(), and a race condition
-can happen.
+Sorry...  My reliance on spell check is thwarted by macros again!  ;-)
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/scsi/qla4xxx/ql4_os.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> On Tue, Apr 21, 2020 at 12:17:50PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > DAX effective mode (S_DAX) changes requires inode eviction.
+> > 
+> > XFS has an advisory flag (XFS_IDONTCACHE) to prevent caching of the
+> > inode if no other additional references are taken.  We lift this flag to
+> > the VFS layer and change the behavior slightly by allowing the flag to
+> > remain even if multiple references are taken.
+> > 
+> > This will expedite the eviction of inodes to change S_DAX.
+> > 
+> > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from V8:
+> > 	Remove XFS_IDONTCACHE
+> > ---
+> >  fs/xfs/xfs_icache.c | 4 ++--
+> >  fs/xfs/xfs_inode.h  | 2 +-
+> >  fs/xfs/xfs_super.c  | 2 +-
+> >  include/linux/fs.h  | 6 +++++-
+> >  4 files changed, 9 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> > index 17a0b86fe701..de76f7f60695 100644
+> > --- a/fs/xfs/xfs_icache.c
+> > +++ b/fs/xfs/xfs_icache.c
+> > @@ -477,7 +477,7 @@ xfs_iget_cache_hit(
+> >  		xfs_ilock(ip, lock_flags);
+> >  
+> >  	if (!(flags & XFS_IGET_INCORE))
+> > -		xfs_iflags_clear(ip, XFS_ISTALE | XFS_IDONTCACHE);
+> > +		xfs_iflags_clear(ip, XFS_ISTALE);
+> >  	XFS_STATS_INC(mp, xs_ig_found);
+> >  
+> >  	return 0;
+> > @@ -559,7 +559,7 @@ xfs_iget_cache_miss(
+> >  	 */
+> >  	iflags = XFS_INEW;
+> >  	if (flags & XFS_IGET_DONTCACHE)
+> > -		iflags |= XFS_IDONTCACHE;
+> > +		VFS_I(ip)->i_state |= I_DONTCACHE;
+> >  	ip->i_udquot = NULL;
+> >  	ip->i_gdquot = NULL;
+> >  	ip->i_pdquot = NULL;
+> > diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+> > index 83073c883fbf..52b8ee21a0b1 100644
+> > --- a/fs/xfs/xfs_inode.h
+> > +++ b/fs/xfs/xfs_inode.h
+> > @@ -218,7 +218,7 @@ static inline bool xfs_inode_has_cow_data(struct xfs_inode *ip)
+> >  #define XFS_IFLOCK		(1 << __XFS_IFLOCK_BIT)
+> >  #define __XFS_IPINNED_BIT	8	 /* wakeup key for zero pin count */
+> >  #define XFS_IPINNED		(1 << __XFS_IPINNED_BIT)
+> > -#define XFS_IDONTCACHE		(1 << 9) /* don't cache the inode long term */
+> > +/* Was XFS_IDONTCACHE 9 */
+> >  #define XFS_IEOFBLOCKS		(1 << 10)/* has the preallocblocks tag set */
+> 
+> These are incore state flags, you can change XFS_IEOFBLOCKS to (1 << 9).
 
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index 5504ab11decc..a1400cadb91a 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -9222,8 +9222,10 @@ static int qla4xxx_eh_abort(struct scsi_cmnd *cmd)
- 		    ha->host_no, id, lun));
- 		wait = 1;
- 	}
--
-+
-+	spin_lock_irqsave(&ha->hardware_lock, flags);
- 	kref_put(&srb->srb_ref, qla4xxx_srb_compl);
-+	spin_unlock_irqrestore(&ha->hardware_lock, flags);
- 
- 	/* Wait for command to complete */
- 	if (wait) {
--- 
-2.17.1
+Sounds good changed.
 
+Thanks,
+Ira
+
+> 
+> --D
+> 
+> >  /*
+> >   * If this unlinked inode is in the middle of recovery, don't let drop_inode
+> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> > index 0d0f74786799..2e165e226e15 100644
+> > --- a/fs/xfs/xfs_super.c
+> > +++ b/fs/xfs/xfs_super.c
+> > @@ -742,7 +742,7 @@ xfs_fs_drop_inode(
+> >  		return 0;
+> >  	}
+> >  
+> > -	return generic_drop_inode(inode) || (ip->i_flags & XFS_IDONTCACHE);
+> > +	return generic_drop_inode(inode);
+> >  }
+> >  
+> >  static void
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index a87cc5845a02..44bd45af760f 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -2156,6 +2156,8 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+> >   *
+> >   * I_CREATING		New object's inode in the middle of setting up.
+> >   *
+> > + * I_DONTCACHE		Evict inode as soon as it is not used anymore.
+> > + *
+> >   * Q: What is the difference between I_WILL_FREE and I_FREEING?
+> >   */
+> >  #define I_DIRTY_SYNC		(1 << 0)
+> > @@ -2178,6 +2180,7 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+> >  #define I_WB_SWITCH		(1 << 13)
+> >  #define I_OVL_INUSE		(1 << 14)
+> >  #define I_CREATING		(1 << 15)
+> > +#define I_DONTCACHE		(1 << 16)
+> >  
+> >  #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
+> >  #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
+> > @@ -3049,7 +3052,8 @@ extern int inode_needs_sync(struct inode *inode);
+> >  extern int generic_delete_inode(struct inode *inode);
+> >  static inline int generic_drop_inode(struct inode *inode)
+> >  {
+> > -	return !inode->i_nlink || inode_unhashed(inode);
+> > +	return !inode->i_nlink || inode_unhashed(inode) ||
+> > +		(inode->i_state & I_DONTCACHE);
+> >  }
+> >  
+> >  extern struct inode *ilookup5_nowait(struct super_block *sb,
+> > -- 
+> > 2.25.1
+> > 
