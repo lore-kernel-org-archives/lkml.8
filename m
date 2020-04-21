@@ -2,95 +2,88 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DE5C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F4DC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 464872073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587468270;
-	bh=NbCDk91j43b+HXjIK4e56+3cYFJx4JGlFrDIBX44mKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vz3XSuZWCdgLfbE+8I7zOgEhu8AONj0kTZwJsW7v9XtPtEEYJNYWzfsKaKoi0l6gG
-	 Sz19dXz0U2cePrAGzKT6GbfSwpkvTyhMHYmvLdhBJOv7PC0X7viDRd/CvVgqcXQ5Cw
-	 EnvZVl5nage0WIbpFicrsQ7qOcODFq1MgEozkWh4=
+	by mail.kernel.org (Postfix) with ESMTP id 222AC206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbgDULY3 (ORCPT
+        id S1728799AbgDULYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:24:29 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42624 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728337AbgDULY1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:24:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j2so16019244wrs.9;
-        Tue, 21 Apr 2020 04:24:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uw5Mt3dr851vXMgQW7w805be/4p/xjN24EpU6Jg+KuI=;
-        b=U+N1LdOvCnF5dNiwvHg6EkD9zXMtH5p8EBLP6ji8/LHF4gFwKs4UOh9BYcRLW1XSp0
-         Xi2Cd2BzUvzg6xZ7JTq2kyIrGLBxw4fXlUKxP23ZfI2mqzN/Y5s9oB1PpHETDRFgnAPt
-         NrGkCn49VT2eZvVFkxjKM3cJjn8gEpYtlBiwaaHi40qlEgL38YRqNxeqHaFeFic/0Dcu
-         20Y7EiipAcIGsRUKW9tkD9BIWYDPH1vwvNlBYbTmfpNSbYNGxCcO4C6A1+czy9AWk+f5
-         XdeU/U9j62HbRUjUkvLJ15ka/pV5YjoHsgFjxVOD0EFb/hsfFRQBEJjiGsbOuOtaQdMK
-         +r9w==
-X-Gm-Message-State: AGi0PuYZYcafIW2pHXdQ7YtYkGHYfICt0SS+Onr9tso0etLj1aeRMwC/
-        wYd9NmZ0KoC7q8eu7SaJ7PA=
-X-Google-Smtp-Source: APiQypKIOz64WBIPNC1vP7IZm+bGZABOXsf+uqklLx137SNl/bO/F/ZPKc/k4XFnhiCePsMafSCWRg==
-X-Received: by 2002:a5d:670d:: with SMTP id o13mr3695315wru.29.1587468265518;
-        Tue, 21 Apr 2020 04:24:25 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id j10sm3142275wmi.18.2020.04.21.04.24.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 04:24:24 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 12:24:22 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 0/4] Split hyperv-tlfs.h into generic and arch specific
- files
-Message-ID: <20200421112422.j4ihb4se7i5tddih@debian>
-References: <20200420173838.24672-1-mikelley@microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420173838.24672-1-mikelley@microsoft.com>
-User-Agent: NeoMutt/20180716
+        Tue, 21 Apr 2020 07:24:34 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:57440 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728621AbgDULYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:24:33 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD97O155eNIYqAA--.18S3;
+        Tue, 21 Apr 2020 19:23:58 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v2 1/3] MIPS: Do not initialise globals to 0
+Date:   Tue, 21 Apr 2020 19:23:56 +0800
+Message-Id: <1587468238-24032-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1587468238-24032-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1587468238-24032-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9DxD97O155eNIYqAA--.18S3
+X-Coremail-Antispam: 1UD129KBjvdXoWruFy8tw4fur1DJrWDCry5twb_yoWfKwb_KF
+        1xtw4vgrn0vFWjvw47Gw4rWFWYqw45Wry5AwnIgay2v3sIvryUA39xAw1Sqrs5JFZ5ArZY
+        v3sxGrn8Gw4fWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbSAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
+        0Ec7CjxVAFwI0_Jrv_JF4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+        vE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+        r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8KwCF04k20x
+        vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+        3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
+        AIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAI
+        cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2js
+        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU33kZUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 10:38:34AM -0700, Michael Kelley wrote:
-> Michael Kelley (4):
->   KVM: x86: hyperv: Remove duplicate definitions of Reference TSC Page
->   x86/hyperv: Remove HV_PROCESSOR_POWER_STATE #defines
->   x86/hyperv: Split hyperv-tlfs.h into arch dependent and independent
->     files
->   asm-generic/hyperv: Add definitions for Get/SetVpRegister hypercalls
-> 
->  arch/x86/include/asm/hyperv-tlfs.h | 472 +++--------------------------
->  arch/x86/include/asm/kvm_host.h    |   2 +-
->  arch/x86/kvm/hyperv.c              |   4 +-
->  include/asm-generic/hyperv-tlfs.h  | 470 ++++++++++++++++++++++++++++
->  4 files changed, 509 insertions(+), 439 deletions(-)
->  create mode 100644 include/asm-generic/hyperv-tlfs.h
+Fix the following checkpatch error:
 
-This series looks good to me.
+ERROR: do not initialise globals to 0
+#834: FILE: arch/mips/kernel/setup.c:834:
++int hw_coherentio = 0;	/* Actual hardware supported DMA coherency setting. */
 
-I will wait for a few days before actually queueing it to hyperv-next so
-that other people can have a chance to comment.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-Wei.
+v2:
+  - no changes
+
+ arch/mips/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 10bef8f..b1e2d43 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -831,7 +831,7 @@ arch_initcall(debugfs_mips);
+ /* User defined DMA coherency from command line. */
+ enum coherent_io_user_state coherentio = IO_COHERENCE_DEFAULT;
+ EXPORT_SYMBOL_GPL(coherentio);
+-int hw_coherentio = 0;	/* Actual hardware supported DMA coherency setting. */
++int hw_coherentio;	/* Actual hardware supported DMA coherency setting. */
+ 
+ static int __init setcoherentio(char *str)
+ {
+-- 
+2.1.0
+
