@@ -2,225 +2,157 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCD3C55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C13C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 352CB2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:40:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VF7E9qyM"
+	by mail.kernel.org (Postfix) with ESMTP id 94D212074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587472802;
+	bh=IBTzn8dLkgJARiHQLlR080LrFf201bFhi1Mx/PTqPhk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=19prQkjmxX827DOYBdyzV+EITHiqXC7uJ+s+2QHiiQ6QpayLEBV84RAC7u5J1WGb+
+	 +zgWzaUOFKFpJrcxAvYILPUrtVURsKpKeOPBDdeZsek8VefbSu0JPwY/IZ2/mylT78
+	 +LRcUaIPKlrzjwpRKe7OH1StyRBr/Ekid2e9lyo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgDUMj7 (ORCPT
+        id S1728765AbgDUMkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:39:59 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9916 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728422AbgDUMj5 (ORCPT
+        Tue, 21 Apr 2020 08:40:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39538 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728285AbgDUMj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:39:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9ee92a0000>; Tue, 21 Apr 2020 05:38:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 21 Apr 2020 05:39:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 21 Apr 2020 05:39:57 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
- 2020 12:39:57 +0000
-Received: from [10.40.201.173] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
- 2020 12:39:51 +0000
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Vidya Sagar <vidyas@nvidia.com>
-CC:     <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200324191217.1829-1-digetx@gmail.com>
- <20200324191217.1829-2-digetx@gmail.com>
- <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
- <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
- <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
- <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
-X-Nvconfidentiality: public
-From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Message-ID: <2e99c2f0-4bba-2ea6-dada-3190c0303dcf@nvidia.com>
-Date:   Tue, 21 Apr 2020 18:09:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 08:39:58 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y24so3492280wma.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:39:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AuPLFkimWuCWGUf4RTGB0fzJ4keg1cVbd+1olbT2/Z8=;
+        b=NvCiSxNS1b2tHyBBZ3pRos8wPqaAZXFbzVDbkPfEV+Aoq/zc4MVk4MPNo7Jwwlv8My
+         ohkgDa6PB3vQ8PhBC3gN5tWPOp71T5MJKz6IQVNWvFwgT1Nog8bF28qAwHKBOd9nG3s2
+         pGIwhKSqDpfuoGFFVYbpwMnu/XDP9rEvgBy8V49vCO7mfHieyQ08GqQf1GbCuFTr8+dc
+         5eLyJBZ6+ZODMPLfodFmTfsinkmVOzPe/Xkviz8JUBuP/PQBq/ech2M1/aiyW2jL3LCk
+         Nn8pwqzOyB+62OQsGi8iXoMItBpFb3WiOeRtR2nSmeFAwM9WGArEA42OZyxxGX8T5jek
+         jfXA==
+X-Gm-Message-State: AGi0Pub+Fqs+dhDFMzc+IP+KoODZ+Js7Lgxvn3FAGn83EF4DY9CF89ui
+        CLczov8Nj7Jblxbfln/+0jc=
+X-Google-Smtp-Source: APiQypI/CyQCAErgAxIZZX5m7BAQjn7WjN3SwqKqvewCm1OVxVlfTYE5d6yPmGJodNZr+y0h7QoV4Q==
+X-Received: by 2002:a05:600c:2316:: with SMTP id 22mr4607519wmo.164.1587472795013;
+        Tue, 21 Apr 2020 05:39:55 -0700 (PDT)
+Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
+        by smtp.gmail.com with ESMTPSA id l19sm3409777wmj.14.2020.04.21.05.39.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 05:39:53 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 14:39:53 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH RFC 2/2] mm/memory_hotplug: handle memblocks only with
+ CONFIG_ARCH_KEEP_MEMBLOCK
+Message-ID: <20200421123953.GF27314@dhcp22.suse.cz>
+References: <20200416104707.20219-1-david@redhat.com>
+ <20200416104707.20219-3-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587472682; bh=jpQJhxznkwdF5wraZB2dN5lqYhMy98eo9ytcoOL9yiE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=VF7E9qyMAJ83Za9iiAKFuwlMOGrygozzSeP/stn6lq8M3tc8t0z3Xpu2C/YM181NI
-         KkpfNdLkcOPZd7a6m03pm5X/e6uXxtZnSOOg3IRLOMpnwPLms9zZ/bsx/g+u5KGG+D
-         i3Xem1OPug+KMbZcdi0wt4uCmrY6rJ7jg+E1FKPaJyBnUdIeLXC4T1k1M8fK9qg53F
-         3ywPmVlXZMZhUCoB2Rl0rqqtdp2MnxGKDS7cDuaIIYq7utgoLxfH2M/QVXDDV2JnRE
-         pWbFxuxOiqObX4LnAPUY2groPF+8P1tC1lSO6vjok7FX4JvXTCIDWgRhBr/MLZujAi
-         5/AatM9gHA3pg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416104707.20219-3-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 16-04-20 12:47:07, David Hildenbrand wrote:
+> The comment in add_memory_resource() is stale: hotadd_new_pgdat() will
+> no longer call get_pfn_range_for_nid(), as a hotadded pgdat will simply
+> span no pages at all, until memory is moved to the zone/node via
+> move_pfn_range_to_zone() - e.g., when onlining memory blocks.
+> 
+> The only archs that care about memblocks for hotplugged memory (either
+> for iterating over all system RAM or testing for memory validity) are
+> arm64, s390x, and powerpc - due to CONFIG_ARCH_KEEP_MEMBLOCK. Without
+> CONFIG_ARCH_KEEP_MEMBLOCK, we can simply stop messing with memblocks.
 
+OK, makes sense to me.
 
-On 21-Apr-20 3:19 PM, Jon Hunter wrote:
-> Hi Dmitry,
->
-> On 21/04/2020 01:32, Dmitry Osipenko wrote:
->> 21.04.2020 01:11, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> Hello Jon,
->>>
->>> 20.04.2020 22:53, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> Hi Dmitry,
->>>>
->>>> On 24/03/2020 19:12, Dmitry Osipenko wrote:
->>>>> Boot CPU0 always handle I2C interrupt and under some rare circumstanc=
-es
->>>>> (like running KASAN + NFS root) it may stuck in uninterruptible state=
- for
->>>>> a significant time. In this case we will get timeout if I2C transfer =
-is
->>>>> running on a sibling CPU, despite of IRQ being raised. In order to ha=
-ndle
->>>>> this rare condition, the IRQ status needs to be checked after complet=
-ion
->>>>> timeout.
->>>>>
->>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>> ---
->>>>>  drivers/i2c/busses/i2c-tegra.c | 27 +++++++++++++++------------
->>>>>  1 file changed, 15 insertions(+), 12 deletions(-)
->>>>
->>>> I have noticed a regression on tegra30-cardhu-a04 when testing system
->>>> suspend. Git bisect is pointing to this commit and reverting it fixes
->>>> the problem. In the below console log I2C fails to resume ...
->>>>
->>> ...
->>>> [   60.690035] PM: Device 3000.pcie failed to resume noirq: error -16
->>> ...
->>>> [   60.696859] tegra-mc 7000f000.memory-controller: fdcdwr2: write @0x=
-877e8400: EMEM address decode error (SMMU translation error [--S])
->>>>
->>>> [   60.708876] tegra-mc 7000f000.memory-controller: fdcdwr2: write @0x=
-877e8400: Page fault (SMMU translation error [--S])
->>> This looks very wrong, the error tells that 3d hardware is active and
->>> doing something odd. Are you running some 3d tests?
-> I am not running any GFX tests. However, I am not sure if the above is
-> unrelated.
->
->>>> Have you seen this?
->>> No, I haven't seen that. I'm not using PCIE and it looks like it's the
->>> problem.
->>>
->>> Looking at the PCIE driver code, seems it's not syncing the RPM state o=
-n
->>> suspend/resume.
->>>
->>> Please try this change:
->>>
->>> --- >8 ---
->>> diff --git a/drivers/pci/controller/pci-tegra.c
->>> b/drivers/pci/controller/pci-tegra.c
->>> index 3e64ba6a36a8..b1fcbae4109c 100644
->>> --- a/drivers/pci/controller/pci-tegra.c
->>> +++ b/drivers/pci/controller/pci-tegra.c
->>> @@ -2870,8 +2870,8 @@ static int __maybe_unused
->>> tegra_pcie_pm_resume(struct device *dev)
->>>
->>>  static const struct dev_pm_ops tegra_pcie_pm_ops =3D {
->>>  	SET_RUNTIME_PM_OPS(tegra_pcie_pm_suspend, tegra_pcie_pm_resume, NULL)
->>> -	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_pcie_pm_suspend,
->>> -				      tegra_pcie_pm_resume)
->>> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->>> +				      pm_runtime_force_resume)
->>>  };
->>>
->>>
->>>  static struct platform_driver tegra_pcie_driver =3D {
->>> --- >8 ---
->>>
->>> Secondly, I2C driver suspends on NOIRQ level, while APBDMA driver
->>> suspends on default level. This is also wrong, please try to apply this
->>> hunk as well:
->>>
->>> --- >8 ---
->>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dm=
-a.c
->>> index f6a2f42ffc51..e682ac86bd27 100644
->>> --- a/drivers/dma/tegra20-apb-dma.c
->>> +++ b/drivers/dma/tegra20-apb-dma.c
->>> @@ -1653,7 +1653,7 @@ static int __maybe_unused
->>> tegra_dma_dev_resume(struct device *dev)
->>>  static const struct dev_pm_ops tegra_dma_dev_pm_ops =3D {
->>>  	SET_RUNTIME_PM_OPS(tegra_dma_runtime_suspend, tegra_dma_runtime_resum=
-e,
->>>  			   NULL)
->>> -	SET_SYSTEM_SLEEP_PM_OPS(tegra_dma_dev_suspend, tegra_dma_dev_resume)
->>> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_dma_dev_suspend, tegra_dma_dev_re=
-sume)
->>>  };
->>>
->>>  static const struct of_device_id tegra_dma_of_match[] =3D {
->>> --- >8 ---
->>>
->> Although, I'm now having a second though about the APBDMA change... I'm
->> recalling that there are some complications in regards to PCIE driver
->> suspending, requiring it to be at NOIRQ level, but this should be wrong
->> because PCIE driver uses voltage regulator driver at NOIRQ level, while
->> regulator drivers suspend on default level. The current behavior of the
->> PCIE driver should be wrong, I think it needs to be moved to the default
->> suspend-resume level somehow.
-> I can try the above, but I agree it would be best to avoid messing with
-> the suspend levels if possible.
->
-> I am adding Manikanta to get some feedback on why we moved the PCI
-> suspend to the NOIRQ phase because it is not clear to me if we need to
-> do this here.
->
-> Manikanta, can you comment on whether we really need to suspend Tegra
-> PCI during the noirq phase?
+> For s390x, it seems to be fairly easy to avoid CONFIG_ARCH_KEEP_MEMBLOCK.
+> arm64 could rework most code (esp., pfn_valid(), valid_phys_addr_range()
+> and kexec_file_load()) to not require memblocks for hotplugged
+> memory. E.g., as hotplugged memory has no holes and can be identified
+> using !early_section(), arm64's variant of pfn_valid() could be reworked
+> fairly easily to not require memblocks for hotadded memory. powerpc might
+> be more involed.
 
-PCIe subsystem driver implemented noirq PM callbacks, it will save & restor=
-e
-endpoint config space in these PM callbacks. PCIe controller should be
-available during this time, so noirq PM callbacks are implemented in Tegra
-PCIe driver.
+I haven't checked these architectures but is the information really
+useful for this patch?
 
-file: drivers/pci/pci-driver.c
-static const struct dev_pm_ops pci_dev_pm_ops =3D {
-	...
-        .suspend_noirq =3D pci_pm_suspend_noirq,
-        .resume_noirq =3D pci_pm_resume_noirq,
-        ...
-};
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Thanks,
-Manikanta
+Acked-by: Michal Hocko <mhocko@suse.com>
 
->  =09
-> Cheers
-> Jon
->
+with a minor nit
 
+> -	/*
+> -	 * Add new range to memblock so that when hotadd_new_pgdat() is called
+> -	 * to allocate new pgdat, get_pfn_range_for_nid() will be able to find
+> -	 * this new range and calculate total pages correctly.  The range will
+> -	 * be removed at hot-remove time.
+> -	 */
+> +#ifdef CONFIG_ARCH_KEEP_MEMBLOCK
+
+	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)
+
+would be slightly nicer. This should work for all the ifedefs in this
+patch.
+
+>  	memblock_add_node(start, size, nid);
+> +#endif
+>  
+>  	ret = __try_online_node(nid, false);
+>  	if (ret < 0)
+> @@ -1075,7 +1071,9 @@ int __ref add_memory_resource(int nid, struct resource *res)
+>  	/* rollback pgdat allocation and others */
+>  	if (new_node)
+>  		rollback_node_hotadd(nid);
+> +#ifdef CONFIG_ARCH_KEEP_MEMBLOCK
+>  	memblock_remove(start, size);
+> +#endif
+>  	mem_hotplug_done();
+>  	return ret;
+>  }
+> @@ -1751,8 +1749,11 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+>  	mem_hotplug_begin();
+>  
+>  	arch_remove_memory(nid, start, size, NULL);
+> +
+> +#ifdef CONFIG_ARCH_KEEP_MEMBLOCK
+>  	memblock_free(start, size);
+>  	memblock_remove(start, size);
+> +#endif
+>  	__release_memory_resource(start, size);
+>  
+>  	try_offline_node(nid);
+> -- 
+> 2.25.1
+
+-- 
+Michal Hocko
+SUSE Labs
