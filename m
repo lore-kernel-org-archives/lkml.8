@@ -2,163 +2,115 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FB0C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060A7C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 437D3206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587491901;
-	bh=oH3D3wW81vM+XAyd0PlDCJfJGYGDphzLmObR7cqzafY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=sQhqOwYJMyhBuMfrf4Sl8RefvjlyG3IT2ncAbPYR0+YE+S4e3yEl93n4uExuOkFT2
-	 reMaQW6tHIDTAMRD4Y4WDN4V0OLsVDk6DnsWNONsn7wojCFe1PuRWkyokgotyzXixG
-	 vDrbBdfqnFS9T9yOhKFruH3sDBYP1oaeX9ZCy1mo=
+	by mail.kernel.org (Postfix) with ESMTP id E05092071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nwQ42tRv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgDUR6U (ORCPT
+        id S1729058AbgDUSBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbgDUR6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 13:58:20 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3592820663;
-        Tue, 21 Apr 2020 17:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587491899;
-        bh=oH3D3wW81vM+XAyd0PlDCJfJGYGDphzLmObR7cqzafY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=0SWGGMZ06asXScTJ8MfuNaK9TrSpnZy+/ZKmI3vB6kEXBj6d7PVVtroBvv/FuslGZ
-         wlUsp+e3ncKpnFGhHiX2h53nORYZz/6Z9bqZRgPMPrgfvKIu/xxb2KuBq0CkF1e6+f
-         8uJeZkBe1pyUKQXI93w21sYPEPfiC03QO5Az217g=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 08D133523441; Tue, 21 Apr 2020 10:58:19 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 10:58:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Joe Stringer <joe@wand.net.nz>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jakub Sitnicki <jakub@cloudflare.com>, rcu@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        zhanglin <zhang.lin16@zte.com.cn>, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 00/10] Manually convert RCU text files to ReST format
-Message-ID: <20200421175818.GS17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <cover.1587488137.git.mchehab+huawei@kernel.org>
+        Tue, 21 Apr 2020 14:01:23 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:57562 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgDUSBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:01:22 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LHwabV118752;
+        Tue, 21 Apr 2020 18:01:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=QGVtEOqCgBB+Nv3ETNm0ncvtWTeDNDelHZbNu+wNNYg=;
+ b=nwQ42tRv1Wbt9K+XBtbw1IMUiEwtCbSLIhgOO8tqXver3yYbKYCa9BIXlA4BdRMZNgS4
+ gaTBD3VsRhGEzhBaUW0Thax5QSSOdE+Yq9Os7BQ6swnpO/M5Eo2ZEja71mZvb2l5dl0b
+ VkGSk7V5d5oBc+1sQGVKEf/8JhGZpjkNaA4oZhvR+uQHnzyJZZhT7/taqH0sFNnoJK9Q
+ eVQuYFiepGMsiKTpdnd+m0/42ALhW0j3HEPX7tkIok5gpmrvrE8++eubDAV2IQq+Rzsb
+ 0oHBcZwy7vKam9hIYwe7/BSl6w0JdKXQZFF9gpAMIoyJKxuhHJoDiXR0foKcE05ZXxFT PQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30fsgkxhjk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 18:01:15 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LHuT3W140790;
+        Tue, 21 Apr 2020 18:01:15 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 30gbbeesen-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 18:01:14 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03LI1BSF000995;
+        Tue, 21 Apr 2020 18:01:12 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 11:01:11 -0700
+Date:   Tue, 21 Apr 2020 21:01:02 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Denis Straghkov <d.straghkov@ispras.ru>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: rtl8723bs: rtw_wlan_util: Add size check of
+ SSID IE
+Message-ID: <20200421180102.GF2659@kadam>
+References: <20200421170806.18783-1-d.straghkov@ispras.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1587488137.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20200421170806.18783-1-d.straghkov@ispras.ru>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ suspectscore=21 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210138
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 bulkscore=0 phishscore=0 suspectscore=21 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 07:04:01PM +0200, Mauro Carvalho Chehab wrote:
-> This patch series convert RCU patches to ReST.
-> 
-> One interesting point to be noticed hereis that the RTFP.txt file contain a 
-> broken TeX bib file. I suspect that someone added some new articles
-> directly there without trying to use LaTeX to check if the addition is
-> valid. Or maybe it is just due to some version differences from the time
-> such references were added.
-> 
-> During the RTFP.txt conversion, I fixed the bibtex problems in order for it
-> to be properly parsed by LaTeX, and used the fixed file to produce a list of
-> the actually used references inside the RTFP.txt file., manually adding them
-> to the converted RTFP.rst. 
-> 
-> As not all references were mentioned there, I opted to preserve the 
-> converted RTFP.bib, as it could be useful for someone doing any 
-> research around RCU.
-> 
-> The results of those changes (together with other changes from my pending
-> doc patches) are available at:
-> 
->    https://www.infradead.org/~mchehab/kernel_docs/RCU/index.html
-> 
-> And the series is on my git tree:
-> 
->   https://git.linuxtv.org/mchehab/experimental.git/log/?h=rcu-docs
+On Tue, Apr 21, 2020 at 08:08:06PM +0300, Denis Straghkov wrote:
+>  	/* checking SSID */
+> +	ssid_len = 0;
+>  	p = rtw_get_ie(bssid->IEs + _FIXED_IE_LENGTH_, _SSID_IE_, &len, bssid->IELength - _FIXED_IE_LENGTH_);
+> -	if (!p) {
+> -		DBG_871X("%s marc: cannot find SSID for survey event\n", __func__);
+> -		hidden_ssid = true;
+> -	} else {
+> -		hidden_ssid = false;
+> -	}
+> -
+> -	if ((NULL != p) && (false == hidden_ssid && (*(p + 1)))) {
+> -		memcpy(bssid->Ssid.Ssid, (p + 2), *(p + 1));
+> -		bssid->Ssid.SsidLength = *(p + 1);
+> -	} else {
+> -		bssid->Ssid.SsidLength = 0;
+> -		bssid->Ssid.Ssid[0] = '\0';
+> -	}
+> +        if (p) {
+> +                ssid_len = *(p + 1);
+> +                if (ssid_len > NDIS_802_11_LENGTH_SSID)
+> +                        ssid_len = 0;
+> +        }
+> +        memcpy(bssid->Ssid.Ssid, (p + 2), ssid_len);
+> +        bssid->Ssid.SsidLength = ssid_len;
 
-I queued all but 7/10 and 8/10, for which I have the bibtex-to-ReST
-conversion question.  Thank you for dragging these files kicking and
-screaming into the year 2020!  ;-)
+This is using spaces instead of tabs.  Please run ./scripts/checkpatch.pl
+on your patch.
 
-							Thanx, Paul
+regargs,
+dan carpenter
 
-> Mauro Carvalho Chehab (10):
->   docs: RCU: convert checklist.txt to ReST
->   docs: RCU: convert lockdep-splat.txt to ReST
->   docs: RCU: convert lockdep.txt to ReST
->   docs: RCU: convert rculist_nulls.txt to ReST
->   docs: RCU: convert torture.txt to ReST
->   docs: RCU: convert rcuref.txt to ReST
->   docs: RCU: RTFP: fix bibtex entries
->   docs: RCU: convert RTFP.txt to ReST
->   docs: RCU: stallwarn.txt: convert it to ReST
->   docs: RCU: rculist_nulls.rst: don't duplicate chapter names
-> 
->  Documentation/RCU/{RTFP.txt => RTFP.bib}      | 323 ++--------
->  Documentation/RCU/RTFP.rst                    | 593 ++++++++++++++++++
->  .../RCU/{checklist.txt => checklist.rst}      |  17 +-
->  Documentation/RCU/index.rst                   |  11 +
->  .../{lockdep-splat.txt => lockdep-splat.rst}  |  99 +--
->  .../RCU/{lockdep.txt => lockdep.rst}          |  12 +-
->  Documentation/RCU/rcu.rst                     |   4 +-
->  Documentation/RCU/rculist_nulls.rst           | 200 ++++++
->  Documentation/RCU/rculist_nulls.txt           | 172 -----
->  Documentation/RCU/{rcuref.txt => rcuref.rst}  | 193 +++---
->  .../RCU/{stallwarn.txt => stallwarn.rst}      |  55 +-
->  .../RCU/{torture.txt => torture.rst}          | 115 ++--
->  Documentation/locking/locktorture.rst         |   2 +-
->  MAINTAINERS                                   |   4 +-
->  include/linux/rculist_nulls.h                 |   2 +-
->  kernel/rcu/rcutorture.c                       |   2 +-
->  kernel/rcu/tree_stall.h                       |   4 +-
->  net/core/sock.c                               |   4 +-
->  18 files changed, 1139 insertions(+), 673 deletions(-)
->  rename Documentation/RCU/{RTFP.txt => RTFP.bib} (82%)
->  create mode 100644 Documentation/RCU/RTFP.rst
->  rename Documentation/RCU/{checklist.txt => checklist.rst} (98%)
->  rename Documentation/RCU/{lockdep-splat.txt => lockdep-splat.rst} (54%)
->  rename Documentation/RCU/{lockdep.txt => lockdep.rst} (96%)
->  create mode 100644 Documentation/RCU/rculist_nulls.rst
->  delete mode 100644 Documentation/RCU/rculist_nulls.txt
->  rename Documentation/RCU/{rcuref.txt => rcuref.rst} (50%)
->  rename Documentation/RCU/{stallwarn.txt => stallwarn.rst} (90%)
->  rename Documentation/RCU/{torture.txt => torture.rst} (76%)
-> 
-> -- 
-> 2.25.2
-> 
-> 
