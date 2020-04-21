@@ -2,162 +2,120 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0F1C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167F0C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C290206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90B420724
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="RvXhuxRe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OKA7Cqag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgDUTwK (ORCPT
+        id S1726307AbgDUTw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:52:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgDUTwJ (ORCPT
+        Tue, 21 Apr 2020 15:52:58 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59647 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726039AbgDUTw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:52:09 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86967C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:52:09 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o10so4031991pgb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=neTotun9xvyLxtrGYKrhEcqeY2lnlgT841hPhcr3iwk=;
-        b=RvXhuxReyrpoxbZ3nHgXGf/SZuUU7csTsLgM+H0XcLuiRX4Vx3Pe9iHu4NgZhAfwJi
-         c8Ok4DlFPTrlxLeuqhZD8SBj7dgBJnq3a+6LO6ENQsEHXqIS4VP2q2xq1NHi+g0kgnSR
-         vAoZkntCGW3OpDOA0/1UwQPtGdiCRGCLAi4akCNn9tnwcH1h+fykVG/1xembcWHNgtUV
-         wf0ZimevjRlfwlUXkxqh5SiwMq8+cCTNnosyY6XoPaLx+iN7bGKTBDVYGf9J00dW9z/X
-         DFR7NMxeB+Jxd6v3E/do3uYVzaiYT7FSHfrshpXtVYbUxYqE1zndC9PWgUA6WNllQ+WZ
-         MVtQ==
+        Tue, 21 Apr 2020 15:52:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587498772;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TTdCjw+xJyiyOVepRoiBzPpX6UPTHW6RSy1+eF5nCoY=;
+        b=OKA7CqagVR8YJzhv3BP5d/4LXlmwR9B72PI+za5vSt9aKcCss+YcZnwM860ZfhQj0DUAN+
+        Sg+yHE6uGqfnoYoutwIEYKkeQRqSURHX1c6Pvo6v7SQ5U4jTEF1zR6+usFdfwtfCN4o2XT
+        02ioOqsbExewzZlU6whFtbws/Yd3K0A=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-245-oJhYh3o-OV-v8nhpARUK3w-1; Tue, 21 Apr 2020 15:52:50 -0400
+X-MC-Unique: oJhYh3o-OV-v8nhpARUK3w-1
+Received: by mail-wr1-f70.google.com with SMTP id s11so8287246wru.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:52:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=neTotun9xvyLxtrGYKrhEcqeY2lnlgT841hPhcr3iwk=;
-        b=VCiY5RDnKA4859wiVone6CQ4OqmU0QkUeOf6NGNUXfBohmSI6XJuWWRv+QSI2KHRiy
-         6sRPujeTZp0d6mdBngjfV3pzA4cIvKBtKWbMirJOymxDAUbCr2I8KfjyrtHLwrdbVFwU
-         jzSw1WH5y1OU5UlAA7T6SnGxgITqKAMSUmzkxiw02HaX0AAfZ8uWF4nBPIxiWWoNt29G
-         dqOanEIkMHIWB6qV5YmCDkGVNjksfuykOTR/AvDXAc1KB5YEo89OTaGYLhL4ZCwHpgUU
-         ocEP4afBet9mE9SWa6AO0yEhUBUEu5OYxuRaoKehf76S02JxKmwKrqmdGNv2Cj2NUK7t
-         xatA==
-X-Gm-Message-State: AGi0PuahdQU4qlrWaya/IvjiLy+TyVf3PvV5qjU4AfjQ5scZDbTvna8M
-        Ew+Is+qXbimk3VjyjU1Vr9VgR5QiAC09Nw==
-X-Google-Smtp-Source: APiQypKmTOXNZB7xwi87IfFfpxa8Nzp6hEUEvM5xoGvvGASLbuaDC0up054cw6JLM4XxzFHBeJCEfA==
-X-Received: by 2002:a63:3306:: with SMTP id z6mr22822734pgz.147.1587498726451;
-        Tue, 21 Apr 2020 12:52:06 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id p24sm2784468pff.92.2020.04.21.12.52.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 12:52:05 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 12:52:05 -0700 (PDT)
-X-Google-Original-Date: Tue, 21 Apr 2020 12:47:58 PDT (-0700)
-Subject:     Re: [v4 PATCH 1/3] RISC-V: Define fixmap bindings for generic early ioremap support
-In-Reply-To: <20200421033336.9663-2-atish.patra@wdc.com>
-CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        ardb@kernel.org, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org, masahiroy@kernel.org,
-        xypron.glpk@gmx.de
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Message-ID: <mhng-613ec31b-83df-4a01-998c-e2d682787c1b@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TTdCjw+xJyiyOVepRoiBzPpX6UPTHW6RSy1+eF5nCoY=;
+        b=XZBGfs4gy8T/H5OVJ+3akMjYL4YlLn6RVeQRPzphR1Sd5xE95RTfkelXFbNTcXkfUx
+         KEMsQcEXq0hyZEaXyFjEbjDNTQtyn8jZa+FX/VMYkEupUnXjmdBSjQNPr9NKLEMDqWqJ
+         z2CMj2ZYkD0vIlzqUph0C5i8ZMgbhglpbvNBlyTyTFsKz86KPdC1Y38FqN7h85YjCzWi
+         ZbSCuOv2lVZ1fbwdTcVYHNJk0oXq12whtaPD/XEXINW4BNN0Y1IKLpduZOeYzMtH70XO
+         /FGYGTW2DoubKm8Dhz/gqbxkHCp20Vr70vFNXXxZqwtF2xHmPQQIZdczsEufSTr1IzEa
+         3IJQ==
+X-Gm-Message-State: AGi0Pubj7tOZ2GUlTryjIDSezXh0f52uHC8LZt1a+Gaxx1ABHedboCuu
+        b+6ipS0CQlANFlVB6Fk+2wQo+VWCUg7L0ZNQ2j5DFTelpE6XPpCYtSCRnWmN9Mbr5Lq3N9s8XtA
+        aC6L5Um0G+UmosaVtDt6LvX7e
+X-Received: by 2002:adf:bc05:: with SMTP id s5mr25183111wrg.70.1587498769683;
+        Tue, 21 Apr 2020 12:52:49 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLppZDmxlXD8GhpLz87T+p+wy/ipriyB1TljFwkP+/SqFt2cdsfkDNAw/S0mujJ1KBuTCSHFg==
+X-Received: by 2002:adf:bc05:: with SMTP id s5mr25183091wrg.70.1587498769480;
+        Tue, 21 Apr 2020 12:52:49 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
+        by smtp.gmail.com with ESMTPSA id 5sm4473852wmg.34.2020.04.21.12.52.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 12:52:48 -0700 (PDT)
+Subject: Re: [PATCH v2] kvm: Replace vcpu->swait with rcuwait
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Marc Zyngier <maz@kernel.org>, tglx@linutronix.de,
+        kvm@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>,
+        peterz@infradead.org, torvalds@linux-foundation.org,
+        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, linux-mips@vger.kernel.org,
+        Paul Mackerras <paulus@ozlabs.org>, joel@joelfernandes.org,
+        will@kernel.org, kvmarm@lists.cs.columbia.edu
+References: <20200324044453.15733-1-dave@stgolabs.net>
+ <20200324044453.15733-4-dave@stgolabs.net>
+ <20200420164132.tjzk5ebx35m66yce@linux-p48b>
+ <418acdb5001a9ae836095b7187338085@misterjones.org>
+ <20200420205641.6sgsllj6pmsnwrvp@linux-p48b>
+ <f7cc83fe-3e91-0057-9af2-26c201456689@redhat.com>
+ <20200420215014.sarodevmhphnkkn7@linux-p48b>
+ <02e1b00d-a8ea-a947-bbe6-0b1380aa7ec4@redhat.com>
+ <20200421180733.xrl5ta6cuo2weuva@linux-p48b>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <ab78bbc8-aa03-6e88-940e-5e1c041f48e4@redhat.com>
+Date:   Tue, 21 Apr 2020 21:52:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200421180733.xrl5ta6cuo2weuva@linux-p48b>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I missed that there's a v4 now, so I'm jumping over here
+On 21/04/20 20:07, Davidlohr Bueso wrote:
+>> 
+> 
+> I should have looked closer here - I was thinking about the return
+> value of rcuwait_wait_event. Yes, that signal_pending check you
+> mention makes the sleep semantics change bogus as interruptible is no
+> longer just to avoid contributing to the load balance.
+> 
+> And yes, unfortunately adding prepare_to and finish_rcuwait() looks
+> like the most reasonable approach to keeping the tracepoint
+> semantics. I also considered extending rcuwait_wait_event() by
+> another parameter to pass back to the caller if there was any wait at
+> all, but that enlarges the call and is probably less generic.
 
-On Mon, 20 Apr 2020 20:33:34 PDT (-0700), Atish Patra wrote:
-> UEFI uses early IO or memory mappings for runtime services before
-> normal ioremap() is usable. This patch only adds minimum necessary
-> fixmap bindings and headers for generic ioremap support to work.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/riscv/Kconfig              |  1 +
->  arch/riscv/include/asm/Kbuild   |  1 +
->  arch/riscv/include/asm/fixmap.h | 18 ++++++++++++++++++
->  arch/riscv/include/asm/io.h     |  1 +
->  4 files changed, 21 insertions(+)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index a197258595ef..f39e326a7a42 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -68,6 +68,7 @@ config RISCV
->  	select ARCH_HAS_GCOV_PROFILE_ALL
->  	select HAVE_COPY_THREAD_TLS
->  	select HAVE_ARCH_KASAN if MMU && 64BIT
-> +	select GENERIC_EARLY_IOREMAP
->
->  config ARCH_MMAP_RND_BITS_MIN
->  	default 18 if 64BIT
-> diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-> index 3d9410bb4de0..59dd7be55005 100644
-> --- a/arch/riscv/include/asm/Kbuild
-> +++ b/arch/riscv/include/asm/Kbuild
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +generic-y += early_ioremap.h
->  generic-y += extable.h
->  generic-y += flat.h
->  generic-y += kvm_para.h
-> diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
-> index 2368d49eb4ef..ba5096d65fb0 100644
-> --- a/arch/riscv/include/asm/fixmap.h
-> +++ b/arch/riscv/include/asm/fixmap.h
-> @@ -30,6 +30,24 @@ enum fixed_addresses {
->  	FIX_TEXT_POKE1,
->  	FIX_TEXT_POKE0,
->  	FIX_EARLYCON_MEM_BASE,
-> +	/*
-> +	 * Make sure that it is 2MB aligned.
-> +	 */
-> +#define NR_FIX_SZ_2M	(SZ_2M / PAGE_SIZE)
-> +	FIX_THOLE = NR_FIX_SZ_2M - FIX_PMD - 1,
-> +
-> +	__end_of_permanent_fixed_addresses,
-> +	/*
-> +	 * Temporary boot-time mappings, used by early_ioremap(),
-> +	 * before ioremap() is functional.
-> +	 */
-> +#define NR_FIX_BTMAPS		(SZ_256K / PAGE_SIZE)
-> +#define FIX_BTMAPS_SLOTS	7
-> +#define TOTAL_FIX_BTMAPS	(NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
-> +
-> +	FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
-> +	FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
-> +
->  	__end_of_fixed_addresses
->  };
->
-> diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
-> index 0f477206a4ed..047f414b6948 100644
-> --- a/arch/riscv/include/asm/io.h
-> +++ b/arch/riscv/include/asm/io.h
-> @@ -14,6 +14,7 @@
->  #include <linux/types.h>
->  #include <asm/mmiowb.h>
->  #include <asm/pgtable.h>
-> +#include <asm/early_ioremap.h>
->
->  /*
->   * MMIO access functions are separated out to break dependency cycles
+Yes, at some point the usual prepare_to/finish APIs become simpler.
 
-Just so it doesn't get lost (the patch is the same)
+> I'll send another version keeping the current sleep and tracepoint 
+> semantics.
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Thanks---and sorry, I should have noticed that way earlier.
+
+Paolo
+
