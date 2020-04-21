@@ -2,208 +2,133 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FD0C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEE6C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA622071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE7E20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:08:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fpmx15OT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGQUedw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbgDUSHn (ORCPT
+        id S1729320AbgDUSI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:07:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54204 "EHLO
+        Tue, 21 Apr 2020 14:08:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728974AbgDUSHj (ORCPT
+        with ESMTP id S1725930AbgDUSI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:07:39 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A40C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:38 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id o6so4025598pjl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:38 -0700 (PDT)
+        Tue, 21 Apr 2020 14:08:56 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED78C0610D5;
+        Tue, 21 Apr 2020 11:08:55 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id nu11so1728448pjb.1;
+        Tue, 21 Apr 2020 11:08:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=au6uumjT1zWMK8KDLrkHDsklveSUNzLhdmZb1DNGngU=;
-        b=fpmx15OTRr3+QAzH+yoCVT5PkrBO6/jyUfC6ePBBca/zz12ZoK7bbNuCPJat8YIrlc
-         jpVy115I+rNwCC3AZ5pj3TxOXF0X40MONWVBzCYd9wY5IiHU+XIPl0uyNrFFhK1fSMKG
-         SeVieulfgGVwIkqgeH9aPgMN5g6oXA2ODFW1HEGGqGTLFukOTL+BNr1p+ep+/usVdtC0
-         A4bNPbSnftASqIfIAsV92V3pbn9kmx5d3U9XUdl68htx/Fm59BMTOZYBbMd8RZMcPkWV
-         BCscd1+Ftf2bAeiJ9F7qNu6zojb5yvU572UA+Apf7jJIS+HbNaEusPawwgmDfCuZQHhh
-         0Jaw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=m9lXZn3MmGvJ6fy8fXnibPNE/fmaQNvKRPayueyEtMw=;
+        b=CGQUedw9NSlP1gDfogNyqIARyPJuoOvtgiSi16qFFUkfQWoYDZKRTiq0faGhL+WIwg
+         a3J6duO47B20WIVaEyBayyKBLtp3V85IRA7XQD1rg6Zts/WPDVYGU+TpU1E3DNGwhizC
+         wrvOSJ/pngMJf14ZhVmH9aQ7aLEKYbb3qIu+70JzkYl8WhRX10+NcEFhPyHS7NZUh668
+         eS19lUYSOZaw0eYzFAO7GL6Nz4mk/T82E4TZ3ae1j2z47FJ7XENZusuonJKKNmHh2YPR
+         UOWczeZkm/ptoYPdraq70YYpKv6exp3zkflxr+5awDfE7X9Xj7ZGtsUgJByP9qK0BuBJ
+         kzlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=au6uumjT1zWMK8KDLrkHDsklveSUNzLhdmZb1DNGngU=;
-        b=YDptBSqyA1nbxXLzYvbq12qdSHzsiF8Ge0unQuk+i0pCOW8tgPq2BjkTC+l2qJ5xQj
-         W25wYOyL3+v3oI8M88bP/TA6v+EJ/B5UvzNt7FTbHqMnDK1NUCW1Km6kaPospmMrZQzs
-         GZNS1qSc8v/Lt8E/YU8fUtEkzkwjGiVM4TSxgS3TLp5WIoCU53hPnV0HIZEMJeEahqYA
-         IecyXRoQIw5F/8+89HSNsc6nk+qovFhRCEP4537MRwLHpRfrAmdHhkKkBNmP1Ok1D2om
-         SMMHnVBxEQSzwfhS8p0mDNLubM4DdSS9qIxGH5G9y8ZlSNFqOkVl6BKEBWZ0gEZ6rWfD
-         wHRg==
-X-Gm-Message-State: AGi0PuaajWZtnkBxAyoNGWRlgWz6/Qvmrelx/tdV42rCm4xei24gGvMi
-        QsFE21yz53jedOebTlRUqca1PF9vzAFeJoA9YwU=
-X-Google-Smtp-Source: APiQypIFE/p55Ry6sL96Gs0HWYmVuj/HgnvBESSfawHZ1FkRSX612AAHTmcTqO2ctUvpKAw3DqNgcdWCS7hmUAUphT0=
-X-Received: by 2002:a17:90a:77cb:: with SMTP id e11mr7360422pjs.0.1587492457823;
- Tue, 21 Apr 2020 11:07:37 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 11:07:24 -0700
-In-Reply-To: <20200421180724.245410-1-samitolvanen@google.com>
-Message-Id: <20200421180724.245410-4-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20200421180724.245410-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH 3/3] objtool: optimize add_dead_ends for split sections
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=m9lXZn3MmGvJ6fy8fXnibPNE/fmaQNvKRPayueyEtMw=;
+        b=PT9/aXG296Hcweu01qJdOw+EHbPSN+8QKISsh1Lp1jTlZdX57aISRoLdh4cdBtIp6p
+         OOGYcf0dtkpHRlaKf74jsrAG2XaTQqWmFwDKL/soZswyvwLdVVGrB3YP3oMAz0hTrCG1
+         OvhiHM/hnq0wknGHkUfrl90dWlWHWFEG4y6w/IUZpla18DWdXzZdk2WYF/2mU91aigEa
+         dY4sapb3HMj1UaHV+0GckcU28iicBL/T0SEmluOh0sNoxEMCSzZqQJHORINaHAO5CACL
+         7pWRW4pqTk3cQfLWpIj6lBs0CxLErWFeOGoToc+txvG9z7tyLCOUbIeo+4FiF0hCpYZd
+         wJqQ==
+X-Gm-Message-State: AGi0PuZW/wctVoAZt4cD0fcMkoN/6aEi6A/ASLUg2QbY0FWyp1D7U4nU
+        8GLU+x6dKoeoi6GNhP5ysuc=
+X-Google-Smtp-Source: APiQypI6Dc7PludFPpf1A9/FaEImf3oR+IiJksNyGnEMCTsSj0T0AlbnDeB3uwgNI+7KiXTcJLUtEQ==
+X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr6919192pjb.129.1587492534715;
+        Tue, 21 Apr 2020 11:08:54 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id w2sm3048963pfc.194.2020.04.21.11.08.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 11:08:53 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 11:08:51 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     LuK1337 <priv.luk@gmail.com>,
+        Cameron Gutman <aicommander@gmail.com>
+Cc:     Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: xpad - Add custom init packet for Xbox One S
+ controllers
+Message-ID: <20200421180851.GA125362@dtor-ws>
+References: <436c79ed-ca21-c075-e2da-0934da5000a2@gmail.com>
+ <20200421092434.3360503-1-priv.luk@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200421092434.3360503-1-priv.luk@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running objtool on vmlinux.o compiled with -ffunction-sections,
-.rela.discard.(un)reachable often contains relocations that point to
-a different section. Instead of iterating through the list of all
-instructions each time, store a pointer to the last instruction of
-each section when decoding instructions.
+Adding Cameron...
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- tools/objtool/check.c | 43 ++++++++++++++++++++++++++-----------------
- tools/objtool/check.h |  4 ++++
- tools/objtool/elf.h   |  1 +
- 3 files changed, 31 insertions(+), 17 deletions(-)
+On Tue, Apr 21, 2020 at 11:24:33AM +0200, LuK1337 wrote:
+> From: Łukasz Patron <priv.luk@gmail.com>
+> 
+> Sending [ 0x05, 0x20, 0x02, 0x0f, 0x06 ] packet for
+> Xbox One S controllers fixes an issue where controller
+> is stuck in Bluetooth mode and not sending any inputs.
+> 
+> Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
+> ---
+>  drivers/input/joystick/xpad.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
+> index 6b40a1c68f9f..4e1781968411 100644
+> --- a/drivers/input/joystick/xpad.c
+> +++ b/drivers/input/joystick/xpad.c
+> @@ -458,6 +458,15 @@ static const u8 xboxone_fw2015_init[] = {
+>  	0x05, 0x20, 0x00, 0x01, 0x00
+>  };
+>  
+> +/*
+> + * This packet is required for Xbox One S pads (0x045e:0x02ea)
+> + * to initialize the controller that was previously used in
+> + * Bluetooth mode.
+> + */
+> +static const u8 xboxone_s_init[] = {
+> +	0x05, 0x20, 0x02, 0x0f, 0x06
+> +};
+> +
+>  /*
+>   * This packet is required for the Titanfall 2 Xbox One pads
+>   * (0x0e6f:0x0165) to finish initialization and for Hori pads
+> @@ -516,6 +525,7 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
+>  	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
+>  	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
+>  	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
+> +	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
+>  	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
+>  	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
+>  	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
+> -- 
+> 2.26.0
+> 
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 4770fb07b365..7d4104de0a5e 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -237,6 +237,7 @@ static void clear_insn_state(struct insn_state *state)
- static int decode_instructions(struct objtool_file *file)
- {
- 	struct section *sec;
-+	struct section_info *sec_info = NULL;
- 	struct symbol *func;
- 	unsigned long offset;
- 	struct instruction *insn;
-@@ -253,6 +254,8 @@ static int decode_instructions(struct objtool_file *file)
- 		    strncmp(sec->name, ".discard.", 9))
- 			sec->text = true;
- 
-+		insn = NULL;
-+
- 		for (offset = 0; offset < sec->len; offset += insn->len) {
- 			insn = malloc(sizeof(*insn));
- 			if (!insn) {
-@@ -279,6 +282,17 @@ static int decode_instructions(struct objtool_file *file)
- 			nr_insns++;
- 		}
- 
-+		if (insn) {
-+			sec_info = malloc(sizeof(*sec_info));
-+			if (!sec_info) {
-+				WARN("malloc failed");
-+				return -1;
-+			}
-+
-+			sec_info->last_insn = insn;
-+			sec->section_info = sec_info;
-+		}
-+
- 		list_for_each_entry(func, &sec->symbol_list, list) {
- 			if (func->type != STT_FUNC || func->alias != func)
- 				continue;
-@@ -312,7 +326,6 @@ static int add_dead_ends(struct objtool_file *file)
- 	struct section *sec;
- 	struct rela *rela;
- 	struct instruction *insn;
--	bool found;
- 
- 	/*
- 	 * By default, "ud2" is a dead end unless otherwise annotated, because
-@@ -338,15 +351,13 @@ static int add_dead_ends(struct objtool_file *file)
- 		if (insn)
- 			insn = list_prev_entry(insn, list);
- 		else if (rela->addend == rela->sym->sec->len) {
--			found = false;
--			list_for_each_entry_reverse(insn, &file->insn_list, list) {
--				if (insn->sec == rela->sym->sec) {
--					found = true;
--					break;
--				}
--			}
-+			struct section_info *sec_info = (struct section_info *)
-+				rela->sym->sec->section_info;
-+
-+			if (sec_info)
-+				insn = sec_info->last_insn;
- 
--			if (!found) {
-+			if (!insn) {
- 				WARN("can't find unreachable insn at %s+0x%x",
- 				     rela->sym->sec->name, rela->addend);
- 				return -1;
-@@ -380,15 +391,13 @@ static int add_dead_ends(struct objtool_file *file)
- 		if (insn)
- 			insn = list_prev_entry(insn, list);
- 		else if (rela->addend == rela->sym->sec->len) {
--			found = false;
--			list_for_each_entry_reverse(insn, &file->insn_list, list) {
--				if (insn->sec == rela->sym->sec) {
--					found = true;
--					break;
--				}
--			}
-+			struct section_info *sec_info = (struct section_info *)
-+				rela->sym->sec->section_info;
-+
-+			if (sec_info)
-+				insn = sec_info->last_insn;
- 
--			if (!found) {
-+			if (!insn) {
- 				WARN("can't find reachable insn at %s+0x%x",
- 				     rela->sym->sec->name, rela->addend);
- 				return -1;
-diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index bc78eca7982e..353677ec85d4 100644
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -47,6 +47,10 @@ struct instruction {
- 	struct orc_entry orc;
- };
- 
-+struct section_info {
-+	struct instruction *last_insn;
-+};
-+
- struct objtool_file {
- 	struct elf *elf;
- 	struct list_head insn_list;
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index ebbb10c61e24..98f2b41d18e4 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -40,6 +40,7 @@ struct section {
- 	int idx;
- 	unsigned int len;
- 	bool changed, text, rodata;
-+	void *section_info;
- };
- 
- struct symbol {
 -- 
-2.26.1.301.g55bc3eb7cb9-goog
-
+Dmitry
