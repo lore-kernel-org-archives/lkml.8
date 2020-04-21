@@ -2,158 +2,92 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A4EC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81323C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBD52074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:09:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="mpSnJHUl"
+	by mail.kernel.org (Postfix) with ESMTP id 58B5A20736
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587496207;
+	bh=Ik09S1jIqdqvQ4CcbK4ov8YDtTyuU2hWKtLKw7ont34=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=s10dQjDsg/4m7b0H680GZF3jFPWu6X10ycsLMrDZmgxJ0l6O4LeKy1ilIIho2daNo
+	 g1FFo97BKN5ebcbqu/o5hGhkKYSiZYlOZTTUCvKYuAR56K2LsryJUjac3sfaatxg9A
+	 S+8bDtMsnRJn2kK/rKQ5MYsg1lO7gaaQpTMAoWv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgDUTJL (ORCPT
+        id S1726321AbgDUTKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:09:11 -0400
-Received: from mail.codeweavers.com ([50.203.203.244]:38176 "EHLO
-        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbgDUTJJ (ORCPT
+        Tue, 21 Apr 2020 15:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726001AbgDUTKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:09:09 -0400
-X-Greylist: delayed 940 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Apr 2020 15:09:08 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codeweavers.com; s=6377696661; h=To:References:Message-Id:
-        Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
-        Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1b/gE5Wx8BbM9MjbWUVMc+EWAcqscOsveJTWROOiXcU=; b=mpSnJHUlfSqJPnjT8h6x4C7fE
-        We3wKZiZLGFQ1xcnsq/C0IBE4WGisZhe88IY3giPRkkftch2C1+XmXc5nUk38XIlw3CMADOOxSbKP
-        EN+svioBW8pNgNMM/+82Lu5NiU7rTAir/yfofa0Nk9GLhEd1BY5Z3XpxX2QE/wEwAW+84=;
-Received: from cpe-107-184-2-226.socal.res.rr.com ([107.184.2.226] helo=[192.168.2.117])
-        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <bshanks@codeweavers.com>)
-        id 1jQy1K-0003fV-A3; Tue, 21 Apr 2020 13:53:23 -0500
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: BUG: ff_effects lost after a fork
-From:   Brendan Shanks <bshanks@codeweavers.com>
-In-Reply-To: <20191127101008.GA327265@nuka.localdomain>
-Date:   Tue, 21 Apr 2020 11:53:19 -0700
-Cc:     dmitry.torokhov@gmail.com, rydberg@bitmath.org,
-        linux-kernel@vger.kernel.org,
-        Mathieu Maret <mathieu.maret@gmail.com>,
-        mmaret@pixium-vision.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5404D7D5-47EF-4399-B0D9-B3C68A3D5895@codeweavers.com>
-References: <20191127101008.GA327265@nuka.localdomain>
-To:     linux-input@vger.kernel.org
-X-Mailer: Apple Mail (2.3445.104.14)
+        Tue, 21 Apr 2020 15:10:05 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE31C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:10:05 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z26so15154829ljz.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:10:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ajj5Q+DdYTDZzsTrHebQKgCxBHJoa9tpFwRTxZ5/p6Y=;
+        b=T8xwxOgULy4Fxj6V9wsOjFc+COJFgPQFOMHn2kJaGKIUwhUYF1pWBLTgt+ezr/6qZG
+         VKY/wUxTYirJfWP5zMwCqDpU/jw7xyxJwepTGzLi4lsoxxZmUY8gXfn0OzBvORHd0x79
+         u6pQ5+ZOFbhPUVNGeK55xvK34N9WwTQRbiiNI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ajj5Q+DdYTDZzsTrHebQKgCxBHJoa9tpFwRTxZ5/p6Y=;
+        b=frYju5gjcC1fXjYzDIHaaO1gN74Rsfh5A8Rusymc+8ZthVNnEWRfT38ODlqFOtK7rx
+         kuJsCXGrGxoAhz5OSyuWssp4xHBxWS0pusHgXtwFpUCJVKynpgJtHXb5WgNoPVT54x7I
+         lY225M/qO5zMRyabP9DBNIy/aEHnxQx7WuXTQTvpjmvzFz5VmBNLtnOQIHPMN8EI4RL2
+         71XRNGsPuWGamv9cY1g9Ht3I2LbA+6tmrs6EQDdZndSke9YV/psPbxq6wGiUttSNnifu
+         28ADpBdK0DpHN7cw9D5irOHKqBjQ9dlNciNAGlwThnp4Vo013NN36C7pcLiWa/pLs60w
+         AkYg==
+X-Gm-Message-State: AGi0PuYaeJkR/tYYzeMlDu8HoyAxMA44VkSY1OR//AtRPtoW9g6z/eAV
+        mRxgafUAfzQOigIPvCYCvWPSAiBKcGI=
+X-Google-Smtp-Source: APiQypLF6p741Lq47nrHogGuWkRCvwHfJ6SSGitsjcxVp4UhMAIMiI08iqj4lFIghRQeKPZfxQWymA==
+X-Received: by 2002:a2e:89cf:: with SMTP id c15mr7875037ljk.149.1587496203705;
+        Tue, 21 Apr 2020 12:10:03 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id x23sm2742429lfe.51.2020.04.21.12.10.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 12:10:02 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id 198so12036586lfo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:10:02 -0700 (PDT)
+X-Received: by 2002:a19:7706:: with SMTP id s6mr14637564lfc.31.1587496202252;
+ Tue, 21 Apr 2020 12:10:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200420190916.GA11695@gmail.com>
+In-Reply-To: <20200420190916.GA11695@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 21 Apr 2020 12:09:46 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiejBvKnrDysDva=DNFgyX02TZred_JMjzUnjFgVOUtOg@mail.gmail.com>
+Message-ID: <CAHk-=wiejBvKnrDysDva=DNFgyX02TZred_JMjzUnjFgVOUtOg@mail.gmail.com>
+Subject: Re: [GIT PULL] clang-format for v5.7-rc3
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 20, 2020 at 12:09 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+>  - Don't indent C++ namespaces (Ian Rogers)
 
-> On Nov 27, 2019, at 2:10 AM, Mathieu Maret <mathieu.maret@gmail.com> =
-wrote:
->=20
-> Hi,
->=20
-> I'm using evdev for vibrator interface.
-> I can register ff_effect and play them.
-> But, if I do any kind of fork, all the effects are flush and cannot be
-> used.
->=20
-> You can find, below, an example of such a program.
-> =46rom some trace have put in the kernel, it's seems that at the end =
-of
-> the system() call, evdev_flush get called.
->=20
-> evdev_flush() will call flush_effects() that will remove all the
-> registered effects.
->=20
-> I've only one device with vibrator and it's a imx6 4.1.15 kernel. But
-> code looks the same that in linus master that why I'm posting it here. =
-I
-> hope that it will not waste people time
->=20
+I've taken this, since it doesn't matter, but I'm wondering at the
+motivation for it (exactly because it shouldn't matter).
 
-Hi everyone,
-
-I=E2=80=99m also hitting this bug with games that use force-feedback =
-steering wheels under Wine/Proton. It typically shows up as EVIOCSFF =
-ioctls failing with EINVAL, since all the effects were unexpectedly =
-flushed.
-
-The problem is that input_ff_flush() is called whenever a file =
-descriptor is closed, but there can be multiple descriptors open to the =
-same file description (through fork(), dup(), etc). input_ff_flush() =
-removes all effects added by that file description, which the users of =
-the other descriptors certainly don't expect.
-
-As for the fix, maybe fd_ops->flush() shouldn=E2=80=99t be implemented =
-at all?
-In the current design, effects =E2=80=9Cbelong=E2=80=9D to a file =
-description (a struct file *), not a descriptor. This seems sensible to =
-me: a process could open a device, upload an effect, then fork(), and it =
-makes sense that the child would have full control of the effects =
-created by the parent. It seems to me like nothing should be done when a =
-descriptor is closed, and input_ff_flush() should be called only when =
-the whole struct file is released.
-
-I=E2=80=99ve attached a modified copy of Mathieu=E2=80=99s code, which =
-reproduces the problem for me with a Logitech G25 steering wheel.
-
-Brendan Shanks
-CodeWeavers
-
-
-
-
-#include <errno.h>
-#include <fcntl.h>
-#include <linux/input.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdlib.h>
-
-#define DEV_PATH "/dev/input/event10"
-
-int main(int argc, char *argv[])
-{
-    int fd =3D open(DEV_PATH, O_RDWR);
-    if (fd < 0) {
-        printf("Cannot open " DEV_PATH);
-    }
-    // Register an effect
-    struct ff_effect effects;
-    memset(&effects, 0, sizeof(effects));
-    effects.type                      =3D FF_CONSTANT;
-    effects.id                        =3D -1;
-    effects.replay.length             =3D 1000;
-    effects.replay.delay              =3D 0;
-    if (ioctl(fd, EVIOCSFF, &effects) < 0) {
-        printf("Cannot upload effect %s\n", strerror(errno));
-        return -1;
-    }
-
-    int fd2 =3D dup(fd);
-    close(fd2);
-
-    // ioctl fails with EINVAL
-    if (ioctl(fd, EVIOCSFF, &effects) < 0) {
-        printf("Cannot upload effect %s\n", strerror(errno));
-        return -1;
-    }
-
-    close(fd);
-    return 0;
-}=
+                   Linus
