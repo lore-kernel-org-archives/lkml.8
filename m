@@ -2,122 +2,120 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8FBC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF26C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE2A20747
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4276720736
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6fGuliG"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PLNHhMYX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgDUTH7 (ORCPT
+        id S1726117AbgDUTIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725902AbgDUTH6 (ORCPT
+        Tue, 21 Apr 2020 15:08:46 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:54821 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbgDUTIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:07:58 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A284C0610D5;
-        Tue, 21 Apr 2020 12:07:58 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id m2so11997211lfo.6;
-        Tue, 21 Apr 2020 12:07:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qYwBjMSRVv3C9c5/CO1vbBsMdHkPfVeO/WaQB5IXEdI=;
-        b=l6fGuliGWJouW55mIF1TsEYCzpo0eq7/N0nHvmeHTy9KOJtxhi9wpuLvgJxIngRxok
-         aXdWFJVVfthOlemUe+NYJEyZ0IbbUdp7rO6d2ee1gOkKyQxmwTQq7O2jQdd3PWWsEukM
-         /DknuZUdWI0MSROedMYh30KUhcBpYO3cbMHB4e7rzEXzrfD9+m7+aCfvwDBRW3ye/iwv
-         mW5R8rNwz4i/L3MGNXTRp1NBIQDTvCGptqgDK9hvQ7bXInJmjDNt5vYQ/VR7VtAGZOiO
-         PXh0P44m+hlnxjb8Qu49PxWtNksHoZ7J6T3rdFiAr5ia/HMY9AF8D4TUKZXM50axvZ9p
-         FCGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qYwBjMSRVv3C9c5/CO1vbBsMdHkPfVeO/WaQB5IXEdI=;
-        b=e/i0NHkpvCyHjyGF3sW6igxQZIWdHUGEhryVG+wwjBIfUQd5ZQ4JDzTLz7gqWonM2y
-         yRDaNjfxdxsw/yhHMDms/Rg3NinbkX+gHfDEGHeqmuIff2+91UHKkoXlXFIYa7BSPl6x
-         fRcbPQ2eT7hrQcOjqH11QsNEnVZPRZ3OM2wf1YjrEWNZTHbWclrV7q2LbMVaQJzHyynX
-         uhqQwBL6pGx0xAjzTBaAVihowNTs7u6lZGbD9z6tyqSsQhsFK9rpK01THswxDyG4kldq
-         UCDdV+DL1WsdAhPWk/Xi6gedvteD74niRiI2IlqhRrmCGVTT82cPbyCJ+ba8E2vsF6yz
-         M6jg==
-X-Gm-Message-State: AGi0PuaVo8Ycu/uAdlnsesyLeawrD+ikW/595oDtUyYjITXEgKpSm+Xs
-        SKzbdcUSkU246Q5IXN32iLBQTltY
-X-Google-Smtp-Source: APiQypIvjrukNgwYETiyLmzCUHffaGyhyA3i8/6dksguAdWoZm7jbSdE5xsWskwEsiGxXR+CuVR+jA==
-X-Received: by 2002:a05:6512:686:: with SMTP id t6mr14963960lfe.163.1587496076465;
-        Tue, 21 Apr 2020 12:07:56 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id r20sm2509295ljj.44.2020.04.21.12.07.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 12:07:55 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200324191217.1829-1-digetx@gmail.com>
- <20200324191217.1829-2-digetx@gmail.com>
- <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
- <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
- <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
- <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
- <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
- <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
- <93b738f2-ccf2-68ed-3ca5-30945bd40521@gmail.com>
- <61c9f5a7-3a48-8200-1cfe-d5d0524511f7@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <07351901-a533-0319-b2fd-f49f6540c238@gmail.com>
-Date:   Tue, 21 Apr 2020 22:07:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 15:08:46 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C17EB22723;
+        Tue, 21 Apr 2020 21:08:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587496121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=73o0/lLPbuNG3CEmG0vdyF6uHhA+u4rQ0S0mMdDJmPA=;
+        b=PLNHhMYXQt8s5WACaP/047QMnhgp8j5FVaiDUVikAvB428loQHyNLw/hQEYD4uu/LqY4on
+        Xpa2Ulf75Y5UD0cdPo6CgGLjdum2kNqmdPOIg/sB1QxXK4eYAbhZdCjQnB3ecsHg2QagJP
+        imoerBWrEN89HiNL92AFPZ20WOmijDU=
 MIME-Version: 1.0
-In-Reply-To: <61c9f5a7-3a48-8200-1cfe-d5d0524511f7@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 21 Apr 2020 21:08:40 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [RFC PATCH net-next 1/3] net: phy: add concept of shared storage
+ for PHYs
+In-Reply-To: <20200421155031.GE933345@lunn.ch>
+References: <20200420232624.9127-1-michael@walle.cc>
+ <7bcd7a65740a6f85637ef17ed6b6a1e3@walle.cc>
+ <20200421155031.GE933345@lunn.ch>
+Message-ID: <47bdeaf298a09f20ad6631db13df37d2@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C17EB22723
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         NEURAL_HAM(-0.00)[-0.972];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,armlinux.org.uk,davemloft.net,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.04.2020 18:34, Jon Hunter пишет:
+Am 2020-04-21 17:50, schrieb Andrew Lunn:
+> On Tue, Apr 21, 2020 at 05:25:19PM +0200, Michael Walle wrote:
+>> Am 2020-04-21 01:26, schrieb Michael Walle:
+>> > +
+>> > +/* Represents a shared structure between different phydev's in the same
+>> > + * package, for example a quad PHY. See phy_package_join() and
+>> > + * phy_package_leave().
+>> > + */
+>> > +struct phy_package_shared {
+>> > +	int addr;
+>> > +	refcount_t refcnt;
+>> > +	unsigned long flags;
+>> > +
+>> > +	/* private data pointer */
+>> > +	/* note that this pointer is shared between different phydevs and
+>> > +	 * the user has to take care of appropriate locking.
+>> > +	 */
+>> > +	void *priv;
+>> 
+>> btw. how should a driver actually use this? I mean, it can allocate
+>> memory if its still NULL but when will it be freed again. Do we need
+>> a callback? Is there something better than a callback?
 > 
-> On 21/04/2020 16:18, Dmitry Osipenko wrote:
->> 21.04.2020 17:40, Jon Hunter пишет:
->>>
->>> On 21/04/2020 14:25, Dmitry Osipenko wrote:
->>>> 21.04.2020 12:49, Jon Hunter пишет:
->>>> ...
->>>>> I can try the above, but I agree it would be best to avoid messing with
->>>>> the suspend levels if possible.
->>>>
->>>> Will be awesome if you could try it and report back the result.
->>>>
->>>
->>> I gave it a try but suspend still fails.
->>
->> Is this regulator error gone with my changes?
->>
->> [   60.450346] WARNING: CPU: 0 PID: 653 at
->> /home/jonathanh/workdir/tegra/mlt-linux_next/kernel/drivers/regulator/core.c:2603
->> _regulator_disable+0xb8/0x1b4
->> [   60.463959] unbalanced disables for vdd_pexa,vdd_pexb
+> Good point. phy_package_join() should take a size_t and do the
+> allocation. phy_package_leave() would then free it.
 > 
-> The above is still there with your changes.
+> But since we don't have a user at the moment, maybe leave it out.
 
-Interesting, hopefully the PM logs will point out the source of the problem.
+Speaking of it. Does anyone have an idea how I could create the hwmon
+device without the PHY device? At the moment it is attached to the
+first PHY device and is removed when the PHY is removed, although
+there might be still other PHYs in this package. Its unlikely to
+happen though, but if someone has a good idea how to handle that,
+I'd give it a try.
+
+-michael
