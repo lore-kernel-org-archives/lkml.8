@@ -2,119 +2,153 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813ECC54FCB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC34C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 640C8206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A13206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgDUAPN (ORCPT
+        id S1726373AbgDUAT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:15:13 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:53892 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgDUAPM (ORCPT
+        Mon, 20 Apr 2020 20:19:29 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:35569 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725550AbgDUAT3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 20:15:12 -0400
-Received: by mail-il1-f199.google.com with SMTP id 9so14548630ill.20
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:15:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=e7tbGnQOw9ScmhkM05mN4FRYPqxD9li27999npT/skU=;
-        b=M0HI2ydEMPqin+n5xl74Uz9T8aBXA2I8ejEHyYB5QZGgSisYE5aIrCbUEhn2Qw95uQ
-         BSV12slncUV2Avzt2HmEkBXolF5cL+FZKThOySWL4x9w1AwLBLp/nrWuYhTkgABQq2uC
-         hpJgwI2YMESHQ8zlkC41QXdMW056EIQE6n49muw5EMDbZpS66EcbYRK5pRZf7Qdb4Vmi
-         tw3/uidVJDSeSoQNimCrzSzhwNaavMq2KC55IIO23ldXB+0C07vDXB08JvEd33oP4HI/
-         7KTEo0bhlD0gO24sfJGW64MZiFnuUXO/9g35zXewHfC0NeRofuL6OaK3qmA1mIpRJUhh
-         GqsQ==
-X-Gm-Message-State: AGi0PuamJ2cr/AFNgIaFIe90iqiP0O+scS3TONl2Xs9fBYMD6WVwRgg9
-        GAzhiAhUtUiRNnRFfZlyF2GwR0YpH8RESRJ1VUEYAKiGfpYW
-X-Google-Smtp-Source: APiQypK2oxzMcVjMaAjUZbJ5UFJDdFif3UDI31S7agiTfM9mWKWx4JcocFJQv3QDpVm4tU98Irz77V3iVc9BvLbfoRX34BoYcQKZ
+        Mon, 20 Apr 2020 20:19:29 -0400
+Received: from dread.disaster.area (pa49-180-0-232.pa.nsw.optusnet.com.au [49.180.0.232])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2C5783A43C6;
+        Tue, 21 Apr 2020 10:19:24 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jQgdH-00074C-Bj; Tue, 21 Apr 2020 10:19:23 +1000
+Date:   Tue, 21 Apr 2020 10:19:23 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V8 10/11] fs/xfs: Change
+ xfs_ioctl_setattr_dax_invalidate()
+Message-ID: <20200421001923.GS9800@dread.disaster.area>
+References: <20200415064523.2244712-1-ira.weiny@intel.com>
+ <20200415064523.2244712-11-ira.weiny@intel.com>
+ <20200420023131.GC9800@dread.disaster.area>
+ <20200420183617.GB2838440@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c804:: with SMTP id y4mr18439396iol.58.1587428111906;
- Mon, 20 Apr 2020 17:15:11 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 17:15:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b77ac905a3c1e81f@google.com>
-Subject: KASAN: out-of-bounds Write in nested_sync_vmcs12_to_shadow
-From:   syzbot <syzbot+6ad11779184a3afe9f7e@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420183617.GB2838440@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=XYjVcjsg+1UI/cdbgX7I7g==:117 a=XYjVcjsg+1UI/cdbgX7I7g==:17
+        a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10 a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8
+        a=7-415B0cAAAA:8 a=v_MXh98pven9RYxNG_0A:9 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Apr 20, 2020 at 11:36:17AM -0700, Ira Weiny wrote:
+> On Mon, Apr 20, 2020 at 12:31:31PM +1000, Dave Chinner wrote:
+> > On Tue, Apr 14, 2020 at 11:45:22PM -0700, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > -out_unlock:
+> > > -	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> > > -	return error;
+> > > +	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS ||
+> > > +	    mp->m_flags & XFS_MOUNT_DAX_NEVER)
+> > > +		return;
+> > 
+> > 	if (mp->m_flags & (XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER))
+> > 		return;
+> > > +	if (((fa->fsx_xflags & FS_XFLAG_DAX) &&
+> > > +	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)) ||
+> > > +	    (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
+> > > +	     (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)))
+> > > +		flag_inode_dontcache(inode);
+> > 
+> > This doesn't set the XFS inode's "don't cache" flag, despite it
+> > having one that serves exactly the same purpose.  IOWs, if the XFS_IDONTCACHE
+> > flag is now redundant, please replace it's current usage with this new flag
+> > and get rid of the XFS inode flag. i.e.  the only place we set XFS_IDONTCACHE
+> > can be replaced with a call to this mark_inode_dontcache() call...
+> 
+> I agree, and I would have removed XFS_IDONTCACHE, except I was not convinced
+> that XFS_IDONTCACHE was redundant.
+> 
+> Currently XFS_IDONTCACHE can be cleared if the inode is found in the cache and
+> I was unable to convince myself that it would be ok to remove it.  I mentioned
+> this to Darrick in V7.
+> 
+> https://lore.kernel.org/lkml/20200413194432.GD1649878@iweiny-DESK2.sc.intel.com/
+> 
+> What am I missing with this code?
+> 
+> xfs_iget_cache_hit():
+> ...
+>         if (!(flags & XFS_IGET_INCORE))
+> 		xfs_iflags_clear(ip, XFS_ISTALE | XFS_IDONTCACHE);
+> ...
+> 
+> Why is XFS_IDONTCACHE not 'sticky'?
+> And why does xfs_iget_cache_hit() clear it
 
-syzbot found the following crash on:
+Because it was designed to do exactly what bulkstat required, and
+nothing else.  xfs_iget() is an internal filesystem interface, not a
+VFS level interface. Hence we can make up whatever semantics we
+want. And if we get a cache hit, we have multiple references to the
+inode so we probably should cache it regardless of whether the
+original lookup said "I'm a one-shot wonder, so don't cache me".
 
-HEAD commit:    9786cab6 Merge tag 'selinux-pr-20200416' of git://git.kern..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1110c920100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
-dashboard link: https://syzkaller.appspot.com/bug?extid=6ad11779184a3afe9f7e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=141f46abe00000
+IOWs, it's a classic "don't cache unless a second reference comes
+along during the current life cycle" algorithm.
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
+This isn't actually a frequently travelled path - bulkstat is a
+pretty rare thing to be doing - so the behaviour is "be nice to the
+cache because we can do it easily", not a hard requirement.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12b44c73e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=11b44c73e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16b44c73e00000
+> rather than fail when XFS_IDONTCACHE is set?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6ad11779184a3afe9f7e@syzkaller.appspotmail.com
+Because then it would be impossible to access an inode that has
+IDONTCACHE set on it. e.g. bulkstat an inode, now you can't open()
+it because it has XFS_IDONTCACHE set and VFS pathwalk lookups fail
+trying to resolve the inode number to a struct inode....
 
-==================================================================
-BUG: KASAN: out-of-bounds in copy_vmcs12_to_enlightened arch/x86/kvm/vmx/nested.c:1820 [inline]
-BUG: KASAN: out-of-bounds in nested_sync_vmcs12_to_shadow+0x49e3/0x4a60 arch/x86/kvm/vmx/nested.c:2000
-Write of size 2 at addr ffffc90004db72e8 by task syz-executor.4/8294
+Same goes for I_DONTCACHE - this does not prevent new lookups from
+taking references to the inode while it is still referenced. i.e.
+the reference count can still go up after the flag is set. The flag
+only takes effect when the reference count goes to zero.
 
-CPU: 1 PID: 8294 Comm: syz-executor.4 Not tainted 5.7.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0x5/0x315 mm/kasan/report.c:382
- __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- copy_vmcs12_to_enlightened arch/x86/kvm/vmx/nested.c:1820 [inline]
- nested_sync_vmcs12_to_shadow+0x49e3/0x4a60 arch/x86/kvm/vmx/nested.c:2000
- </IRQ>
+Hence the only difference between XFS_IDONTCACHE and I_DONTCACHE is
+the behaviour when cache hits on existing XFS_IDONTCACHE inodes
+occur. It's not going to make a significant difference to cache
+residency if we leave the I_DONTCACHE flag in place, because the
+vast majority of inodes with that flag (from bulkstat) are still
+one-shot wonders and hence the reclaim decision is still the
+overwhelmingly correct decision to be making...
 
+And, realistically, we have a second layer of inode caching in XFS
+(the cluster buffers) and so it's likely if we evict and reclaim an
+inode just before it gets re-used, then we'll hit the buffer cache
+anyway. i.e. we still avoid the IO to read the inode back into
+memory, we just burn a little more CPU re-instantiating it from the
+buffer....
 
-Memory state around the buggy address:
- ffffc90004db7180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffffc90004db7200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffffc90004db7280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                                                             ^
- ffffc90004db7300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffffc90004db7380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
+Cheers,
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
