@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B7FC55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D8EC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0D3C206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16132071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lrtXSJeH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BkiXl71J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgDUSHg (ORCPT
+        id S1729234AbgDUSHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54184 "EHLO
+        Tue, 21 Apr 2020 14:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgDUSHf (ORCPT
+        with ESMTP id S1728974AbgDUSHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:07:35 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD67C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:33 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id s1so841741plp.21
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:33 -0700 (PDT)
+        Tue, 21 Apr 2020 14:07:36 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01F9C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:35 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id e18so12090332pld.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=u84nMYTM/aCcuXjZBK5Ir58g2g4r7pb0sY8hFgtOygc=;
-        b=lrtXSJeHdqS4AlGPwl5fcpakFrIFrBwi1BvieZiR2diHOi7Aek6vh9r0caWr42mygV
-         j27zEh/lKO11txBRZud5+PPnEUUDio26goEhFdkfBZyTXpfZ+g//bd+TE/+5zQa8B0lR
-         xNC+7wRGDazkhwObDUHVxx0vrKXnAE1PUVJz4DubNHh4q+lrt0/ku4NGsbsX/y40Hk/v
-         OmpxcTejoZy+SPgBawB+RxdlUb0mqpH8OxhQ/maRXB2TIxPNv/DAFU0SCNtb4lyBE4W2
-         oWyd3h9hba5OLCkc5GVm6A7YVDOXCAnW1U3psgduHG1hnYr/uRlxLsv4BTFMIqNVSyVF
-         8daw==
+        bh=mKZgWKTP9nyB3m6imB1oWbJmLGuM3Run3ACrycwRXo0=;
+        b=BkiXl71Ju4RoZwGuop1242f7nPTIl1QtJbh0t1/aJS5V1RbTj0ig+XmGT4ANz+ObG2
+         JbmwyufL7tqvPmoqkImWWmAgQ1G9l16RL+ocbWy5WDJljW1KdTK1Xlk6miC5G1GJyfSC
+         CnBHK8d8ZICOQ1NCQJOqdduvYbt2h5cvgc8ujidiZ6vGCjJWN5F6zZEYrVUhHDHVdDKd
+         yZGNzA+FarHu383z1bpWfYdsOpnpHLTSIc1Nit1aI9v6Lk+ciEsp4E8bY+SRVk+rBo4q
+         F3M74IMWQhKrkzUOXarzuelT0A6fRUQCkPIVWn+15BEaUWOSGA3Hy5BphgNS4Fuw2TpM
+         Hj3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=u84nMYTM/aCcuXjZBK5Ir58g2g4r7pb0sY8hFgtOygc=;
-        b=Ezs8tn8MzXj934DLCfWpHYXlo1bz6FNG/q48Jruztnz5PjZiTl2789AQo2wXlopVNg
-         612+AGiFxVi0nj62c0onjnGHvOOYpJLlH3zHSZvJQZV7xGegUkNlNNS8HdQoUszXnzI8
-         otOKL8ktVnc5B3ZWGLZ44BrxUkfsavHodGZYUqYpHXcNcLLxM/0FyXtv2HTW9EE7RhLH
-         ulDSCWunOtNi+wtbeximcaE/7J3jhJqsgrNxFpu2na1m/6pwxVwF8p87XyvgmzMCT1Vs
-         bEQlBfpQzcRxuVB2Hq4UA9TfMzrKiP7gJvsJfPmy9jkl8znXOlSYWWaq+/gIjfbA++zX
-         G11A==
-X-Gm-Message-State: AGi0Pubpk4/wf9VS0dkDSx55HbUaibovEVAlGjXvAAk1+qMherlWhEjp
-        CypJSArtuuZ6ThJqCRAT9UvT6U07wqNeq5MAgSQ=
-X-Google-Smtp-Source: APiQypIHr6HZh1mJWTTDwEDmTgx8aECtimv9lvVH5+70PNToGcK9taxaKTFYUKVXOvOdZYsw/H0M7F1vNCSAW/DQRPI=
-X-Received: by 2002:a63:545:: with SMTP id 66mr22531339pgf.66.1587492453152;
- Tue, 21 Apr 2020 11:07:33 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 11:07:22 -0700
+        bh=mKZgWKTP9nyB3m6imB1oWbJmLGuM3Run3ACrycwRXo0=;
+        b=UMuH5hM16csGEnKjNB/uXGzMLyOCwpXDlScdNPMYg2gtyMsDjEjuQHWcH0LQyCVLkg
+         HJkxpTLf6UXmYExBAHcwLSYecRAyiod1cKe2SSYymIxsiyt0HuXOPJWr5cZea2a1cWR6
+         KX9fGHz4auymiW+DndHHiZ63StDIFBBFWlUt8ldctkAjH4huOQjEijSnRUoBWrYfHwic
+         CAw8nGPH2A8NQU2D4/seK+HGuTUdPIRfyCmWG4NCO8WCpnRgiIw8IOkEsT8x7Wr9Rim2
+         WDSc9RcXUFZaKzoxuD3xegbSOCmdoOBcTEzTfKMBDJ9GS4WfX/jAXSU3ZLN3U7ItREXf
+         46YA==
+X-Gm-Message-State: AGi0PuZxjVLMRgF2bFLRAN49p9/N9hDlb+WsrcCs6g7rRUmr46LxLPBb
+        KmpHRehV013QkCTfcOH9fTJuoJfqIe2py8dpPJ8=
+X-Google-Smtp-Source: APiQypIB1Hn2TWcwGvGfZLdETbRCDJ/Wqg5d98rBz4Ei2HyNE+9LmwS7HVGo2ypBkYFB63iTI0DsX1wWPUhsRqa+oQY=
+X-Received: by 2002:a63:5d60:: with SMTP id o32mr22283536pgm.172.1587492455521;
+ Tue, 21 Apr 2020 11:07:35 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 11:07:23 -0700
 In-Reply-To: <20200421180724.245410-1-samitolvanen@google.com>
-Message-Id: <20200421180724.245410-2-samitolvanen@google.com>
+Message-Id: <20200421180724.245410-3-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20200421180724.245410-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH 1/3] objtool: use gelf_getsymshndx to handle >64k sections
+Subject: [PATCH 2/3] objtool: optimize insn_hash for split sections
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>
@@ -73,76 +73,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, objtool fails to load the correct section for symbols when
-the index is greater than SHN_LORESERVE. Use gelf_getsymshndx instead
-of gelf_getsym to handle >64k sections.
+When running objtool on vmlinux.o compiled with -ffunction-sections,
+we end up with a ton of collisions in the insn_hash table as each
+function is in its own section. This results in a runtime of minutes
+instead of seconds. Use both section index and offset as the key to
+avoid this, similarly to rela_hash.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- tools/objtool/elf.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ tools/objtool/check.c | 5 +++--
+ tools/objtool/check.h | 5 +++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 09ddc8f1def3..887445e87380 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -327,12 +327,14 @@ static int read_sections(struct elf *elf)
- 
- static int read_symbols(struct elf *elf)
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 4b170fd08a28..4770fb07b365 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -34,7 +34,8 @@ struct instruction *find_insn(struct objtool_file *file,
  {
--	struct section *symtab, *sec;
-+	struct section *symtab, *symtab_shndx, *sec;
- 	struct symbol *sym, *pfunc;
- 	struct list_head *entry;
- 	struct rb_node *pnode;
- 	int symbols_nr, i;
- 	char *coldstr;
-+	Elf_Data *shndx_data = NULL;
-+	Elf32_Word shndx;
+ 	struct instruction *insn;
  
- 	symtab = find_section_by_name(elf, ".symtab");
- 	if (!symtab) {
-@@ -340,6 +342,10 @@ static int read_symbols(struct elf *elf)
- 		return -1;
- 	}
+-	hash_for_each_possible(file->insn_hash, insn, hash, offset)
++	hash_for_each_possible(file->insn_hash, insn, hash,
++			       sec_offset_hash(sec, offset))
+ 		if (insn->sec == sec && insn->offset == offset)
+ 			return insn;
  
-+	symtab_shndx = find_section_by_name(elf, ".symtab_shndx");
-+	if (symtab_shndx)
-+		shndx_data = symtab_shndx->data;
-+
- 	symbols_nr = symtab->sh.sh_size / symtab->sh.sh_entsize;
+@@ -273,7 +274,7 @@ static int decode_instructions(struct objtool_file *file)
+ 			if (ret)
+ 				goto err;
  
- 	for (i = 0; i < symbols_nr; i++) {
-@@ -353,8 +359,9 @@ static int read_symbols(struct elf *elf)
- 
- 		sym->idx = i;
- 
--		if (!gelf_getsym(symtab->data, i, &sym->sym)) {
--			WARN_ELF("gelf_getsym");
-+		if (!gelf_getsymshndx(symtab->data, shndx_data, i, &sym->sym,
-+				      &shndx)) {
-+			WARN_ELF("gelf_getsymshndx");
- 			goto err;
+-			hash_add(file->insn_hash, &insn->hash, insn->offset);
++			hash_add(file->insn_hash, &insn->hash, insn_hash(insn));
+ 			list_add_tail(&insn->list, &file->insn_list);
+ 			nr_insns++;
  		}
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index f0ce8ffe7135..bc78eca7982e 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -56,6 +56,11 @@ struct objtool_file {
  
-@@ -368,10 +375,13 @@ static int read_symbols(struct elf *elf)
- 		sym->type = GELF_ST_TYPE(sym->sym.st_info);
- 		sym->bind = GELF_ST_BIND(sym->sym.st_info);
+ int check(const char *objname, bool orc);
  
--		if (sym->sym.st_shndx > SHN_UNDEF &&
--		    sym->sym.st_shndx < SHN_LORESERVE) {
--			sym->sec = find_section_by_index(elf,
--							 sym->sym.st_shndx);
-+		if ((sym->sym.st_shndx > SHN_UNDEF &&
-+		     sym->sym.st_shndx < SHN_LORESERVE) ||
-+		    (shndx_data && sym->sym.st_shndx == SHN_XINDEX)) {
-+			if (sym->sym.st_shndx != SHN_XINDEX)
-+				shndx = sym->sym.st_shndx;
++static inline u32 insn_hash(struct instruction *insn)
++{
++	return sec_offset_hash(insn->sec, insn->offset);
++}
 +
-+			sym->sec = find_section_by_index(elf, shndx);
- 			if (!sym->sec) {
- 				WARN("couldn't find section for symbol %s",
- 				     sym->name);
+ struct instruction *find_insn(struct objtool_file *file,
+ 			      struct section *sec, unsigned long offset);
+ 
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
