@@ -2,155 +2,114 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E75EC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C48C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01E65206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A344F206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587492837;
-	bh=0TT0L66H3oFxmX6WwJme2Bh+aMVhD0ckmx2GZykmn4c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GHp8C22TZmhxVDRwtfe0rHG9LFZ6aHxt4M1drWsPtleo6BzasyL6UiGlZAsHgbunM
-	 hCbz1J2p9iSdKqQnOx+ij3nOL/JQ35dMlb7mdPBd4x4KJLEkdkFovDLdA++JKrkekb
-	 9pc5gpqBd8ICn/dYjOJkZ1DDBVfC5i1iEhSfy9Uk=
+	s=default; t=1587492839;
+	bh=1r2YT2MwVBclZi0yBJtvnmVPr+pwRzYsdkT5t1PhyWo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SIpMiDui4TUMcEaHFZJuaxowPyRaklQiVyI8T58XQGFmQWIaGQM39rv51k0h+200e
+	 ou8F6y88GRl8W+lRaEweJObegg3AUuNbJPtaQV2va1WTqzOGFCtzuI9pid6X5oOOeC
+	 f0pC9uAZkP0u5U2MFN9voVVTlJ7gDr+qWDQGHokY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgDUSN4 (ORCPT
+        id S1729310AbgDUSN6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 21 Apr 2020 14:13:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53048 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729083AbgDUSN4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 14:13:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbgDUSNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:13:55 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-8jo4PPKNN6GUc1SdNnEATA-1; Tue, 21 Apr 2020 14:13:47 -0400
+X-MC-Unique: 8jo4PPKNN6GUc1SdNnEATA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DEBF206D5;
-        Tue, 21 Apr 2020 18:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587492834;
-        bh=0TT0L66H3oFxmX6WwJme2Bh+aMVhD0ckmx2GZykmn4c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tI0tBHitsSsvQV5/YVgJ70h59rYxHJIl5Wm7OUyc/dwDkclA7eB2CdO856exPzXRD
-         P1S9HlOcAOIBMbQCEmC7MCaIh6X8yjbvrCoyb2qxVXnSvJy0w87jiwouTfkroN90ci
-         LgaS/N9I5EZNcR4mA8MyqKkrYeyAcdgWiSvZTdVY=
-Date:   Tue, 21 Apr 2020 11:13:52 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Luo bin <luobin9@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-Subject: Re: [PATCH net-next 1/3] hinic: add mailbox function support
-Message-ID: <20200421111352.263c7cbb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200421045635.8128-2-luobin9@huawei.com>
-References: <20200421045635.8128-1-luobin9@huawei.com>
-        <20200421045635.8128-2-luobin9@huawei.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7ED8107ACC4;
+        Tue, 21 Apr 2020 18:13:43 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.196.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EC6FB3A76;
+        Tue, 21 Apr 2020 18:13:38 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCHv2 0/3] perf tools: Add support for user defined metric
+Date:   Tue, 21 Apr 2020 20:13:33 +0200
+Message-Id: <20200421181337.988681-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 04:56:33 +0000 Luo bin wrote:
-> virtual function and physical function can communicate with each
-> other through mailbox channel supported by hw
-> 
-> Signed-off-by: Luo bin <luobin9@huawei.com>
+hi,
+Joe asked for possibility to add user defined metrics. Given that
+we already have metrics support, I added --metrics-file option that
+allows to specify custom metrics.
 
-> +static int recv_vf_mbox_handler(struct hinic_mbox_func_to_func *func_to_func,
-> +				struct hinic_recv_mbox *recv_mbox,
-> +				void *buf_out, u16 *out_size)
-> +{
-> +	hinic_vf_mbox_cb cb;
-> +	int ret = 0;
-> +
-> +	if (recv_mbox->mod >= HINIC_MOD_MAX) {
-> +		dev_err(&func_to_func->hwif->pdev->dev, "Receive illegal mbox message, mod = %d\n",
-> +			recv_mbox->mod);
+  $ cat metrics
+  # IPC
+  mine1 = instructions / cycles;
+  /* DECODED_ICACHE_UOPS% */
+  mine2 = 100 * (idq.dsb_uops / \ (idq.ms_uops + idq.mite_uops + idq.dsb_uops + lsd.uops));
 
-You may want to rate limit these, otherwise VF may spam PFs logs.
+  $ sudo perf stat --metrics-file ./metrics -M mine1,mine2 --metric-only -a -I 1000
+  #           time       insn per cycle                mine1                mine2
+       1.000536263                0.71                   0.7                 41.4
+       2.002069025                0.31                   0.3                 14.1
+       3.003427684                0.27                   0.3                 14.8
+       4.004807132                0.25                   0.2                 12.1
+  ...
 
-> +		return -EINVAL;
-> +	}
+v2 changes:
+  - add new --metrics-file option
+  - rebased on current perf/core expression bison/flex enhancements
 
-> +static int mbox_func_params_valid(struct hinic_mbox_func_to_func *func_to_func,
-> +				  void *buf_in, u16 in_size)
-> +{
-> +	if (!buf_in || !in_size)
-> +		return -EINVAL;
+Also available in:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  perf/metric
 
-This is defensive programming, we don't do that in the kernel, callers
-should not pass NULL buffer and 0 size.
+thanks,
+jirka
 
-Also you probably want the size to be size_t, otherwise it may get
-truncated before the check below.
 
-> +	if (in_size > HINIC_MBOX_DATA_SIZE) {
-> +		dev_err(&func_to_func->hwif->pdev->dev,
-> +			"Mbox msg len(%d) exceed limit(%d)\n",
-> +			in_size, HINIC_MBOX_DATA_SIZE);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int hinic_mbox_to_pf(struct hinic_hwdev *hwdev,
-> +		     enum hinic_mod_type mod, u8 cmd, void *buf_in,
-> +		     u16 in_size, void *buf_out, u16 *out_size, u32 timeout)
-> +{
-> +	struct hinic_mbox_func_to_func *func_to_func = hwdev->func_to_func;
-> +	int err = mbox_func_params_valid(func_to_func, buf_in, in_size);
-> +
-> +	if (err)
-> +		return err;
-> +
-> +	if (!HINIC_IS_VF(hwdev->hwif)) {
-> +		dev_err(&hwdev->hwif->pdev->dev, "Params error, func_type: %d\n",
-> +			HINIC_FUNC_TYPE(hwdev->hwif));
-> +		return -EINVAL;
-> +	}
-> +
-> +	err = hinic_mbox_to_func(func_to_func, mod, cmd,
-> +				 hinic_pf_id_of_vf_hw(hwdev->hwif), buf_in,
-> +				 in_size, buf_out, out_size, timeout);
-> +	return err;
+---
+Jiri Olsa (3):
+      perf expr: Add parsing support for multiple expressions
+      perf expr: Allow comments in custom metric file
+      perf stat: Add --metrics-file option
 
-return hinic_mbox_to...
+ tools/perf/Documentation/perf-stat.txt |  3 +++
+ tools/perf/builtin-stat.c              |  7 +++++--
+ tools/perf/tests/expr.c                | 13 +++++++++++++
+ tools/perf/util/expr.c                 |  6 ++++++
+ tools/perf/util/expr.h                 | 19 +++++++++++++++++--
+ tools/perf/util/expr.l                 | 24 ++++++++++++++++++++++++
+ tools/perf/util/expr.y                 | 13 ++++++++++++-
+ tools/perf/util/metricgroup.c          | 66 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ tools/perf/util/metricgroup.h          |  3 ++-
+ tools/perf/util/stat.h                 |  1 +
+ 10 files changed, 142 insertions(+), 13 deletions(-)
 
-directly
-
-> +}
-
-> +static int comm_pf_mbox_handler(void *handle, u16 vf_id, u8 cmd, void *buf_in,
-> +				u16 in_size, void *buf_out, u16 *out_size)
-> +{
-> +	struct hinic_hwdev *hwdev = handle;
-> +	struct hinic_pfhwdev *pfhwdev;
-> +	int err = 0;
-> +
-> +	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
-> +
-> +	if (cmd == HINIC_COMM_CMD_START_FLR) {
-> +		*out_size = 0;
-> +	} else {
-> +		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
-> +					cmd, buf_in, in_size, buf_out, out_size,
-> +					HINIC_MGMT_MSG_SYNC);
-> +		if (err  && err != HINIC_MBOX_PF_BUSY_ACTIVE_FW)
-
-Double space, please run checkpatch --strict on the patches
-
-> +			dev_err(&hwdev->hwif->pdev->dev,
-> +				"PF mbox common callback handler err: %d\n",
-> +				err);
-> +	}
-> +
-> +	return err;
-> +}
