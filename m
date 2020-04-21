@@ -2,165 +2,129 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AACAC55186
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135D6C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2327206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E62206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="skhg49Ka"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="N47qBMdQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgDUWUD (ORCPT
+        id S1726116AbgDUWYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 18:20:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36914 "EHLO
+        Tue, 21 Apr 2020 18:24:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgDUWUC (ORCPT
+        with ESMTP id S1726012AbgDUWYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 18:20:02 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3420FC0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 15:20:02 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id h205so141295ybg.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 15:20:02 -0700 (PDT)
+        Tue, 21 Apr 2020 18:24:33 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C7EC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 15:24:33 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 18so16883pfx.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 15:24:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MC0jPjUAF87njqcFfXpyBAMtvGlBWKw+opsjZyshW2I=;
-        b=skhg49KaofoTpg/aElVY1IA1b6I+SlbfFSQAkyPYZus3M01ys9T36s4EGHkzpC/q6I
-         5lGZ9hcZGO905lQWFO4mXczkMMhvSolqnLwFEb7xXzyHhvSYCtTS9LQcvj48kyHYt2Y+
-         KJPxcGsKVzVvCqqZezgqCriIRAmVxeNaWV31jvWJOeTibs7fO4i6k5Ay+TOz3sPQiFgu
-         jZVxVCp9dAGconaL5tfrQp8awoZLa/XFvZdyfW+Bo73s+aylPaUJb75abnh5ssju7gnj
-         XdArXert6bzfC7lE5DgVwrKZ7XGDdejF9XCBpg6L9lo4X2RXOYya8lruwsqjA3wIeR8R
-         9VYg==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7EQSergzjvpSiVEiJAnccFwyc23McE189ccKP2C8IZU=;
+        b=N47qBMdQYynOCMe8tPIGMk7163MLOoNGicsdZX87gb7l1Yr9yrAon0jajrPBP3GUsC
+         cKj3FoUKYCQclKrENa2xyI6d9C+OplSscBn3XdyOUP2bric1otxXTOLOlmU6anYkMlaR
+         EWpwcCDf3TtLygFmQzHWu5ZQASCoNU0EJFdPTKKjW+RwV6mYmVU4M5aDFo4ahOT+PRde
+         oT3pwuCyu4Mf4eJWNuK530PQaUcVfmJLsWyRivVGsgbOgHOlc4grdGo+LscUZ/aJxbNZ
+         jQkV4I9YOh5zfZiwg215OgQbPTSBpdub1NGUMZfMkcyXjjJTGEPaeptrFPvUx3t3hOdz
+         p/sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MC0jPjUAF87njqcFfXpyBAMtvGlBWKw+opsjZyshW2I=;
-        b=lg9w517Bh0CoYAnD7ywcigowOsFzV2lnwN2gglCBDTByHrJcEdx28EXSfkhZ3S1QQC
-         e5RPRKJV+peOBvvTE9wxtfDdT8Vc1llED8tOfEkbERBnj/L/NLCCtYlnT4cmLfzoGJhH
-         mtXai+qALGaKz8RnxRBxQ2xwU7353PSLwGphUGVdbRdUtAgcrSOfksSpilPer+loxJX5
-         KkATKXSBd1Nk8J5tG2RIS6vVcsXpspeXNldcJYfubeXPvWQATeueDRVHySL8MF/Gs1Rd
-         TJmsxdk4iuJPzixwEIbZ/zn3pvUrAvAtE8Pm2aNZUE+ffm2iIqa1+WSVMVjf4ZnyUU16
-         z18Q==
-X-Gm-Message-State: AGi0PuYbg0NBmb1UIMQHNdg8L+SJ8B4znVHzCSVAM0TQN/yg45D/25iJ
-        UQD1YTx6Ga4R65YLYeU2a99Uri8dU93x2sw4PM7yb9/lOQM=
-X-Google-Smtp-Source: APiQypK37BYP/Eez/Zhebxt8WCtCGQeewVQKmA9gIxCYMCxous5sLNrFWuF47M2PAkh4q4K5DT6nrBgQ+I3osamIpgI=
-X-Received: by 2002:a25:12c1:: with SMTP id 184mr21241316ybs.162.1587507601048;
- Tue, 21 Apr 2020 15:20:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200415004353.130248-11-walken@google.com> <202004211357.utKPLP8t%lkp@intel.com>
-In-Reply-To: <202004211357.utKPLP8t%lkp@intel.com>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Tue, 21 Apr 2020 15:19:48 -0700
-Message-ID: <CANN689FB5M591_xcJC6M_5n3HMJk8nrYnV_Wepnnt85v0PK4ZQ@mail.gmail.com>
-Subject: Re: [PATCH v4 10/10] mmap locking API: rename mmap_sem to mmap_lock
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, kbuild-all@lists.01.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=7EQSergzjvpSiVEiJAnccFwyc23McE189ccKP2C8IZU=;
+        b=cQ9OnQtwCoAZXEH0BZ3PGc3nEA9XXBSfyD8/uxUFsT2Rbrl7394IIoX5MyyLWp2qBp
+         i/HA7hKXnZPh/D4RIx4paDoVHk9W6HTJm4LXnMkQmwOAu7SmsCyqZU/7j60guFP4gsnt
+         DDloCwnScsp32/dAt41d7sG/qZfJQPkqtwF7GAiplv87U8B0DE0d91MluYHxaTKrIwXj
+         ey8M+vL+zUaFE5hMaYQlKkxUzmQGECQ8YetAWgZldtAQhUJ0y1/P44WLrslnWbpnMXQg
+         SAu/VWlYtUyWVu8vCKfEN5h8fxhcrvJyHiQd864O9cl4SehxffiqU3rm5ypS1keXxQM2
+         Sh+w==
+X-Gm-Message-State: AGi0PubBFogBtn+39diVqY7zAZMvL2QjTnc1I0vhvsM9xVsIHDB2+9st
+        xWz66eM2/PqL3KnahEROwli6NA==
+X-Google-Smtp-Source: APiQypJDBXss1fi6+/Ym5brO0L44dDM/JDTSGL3T1UlfzUfLR2N7U1fsx9kunrUqZz5PBVvwmrk+MA==
+X-Received: by 2002:a63:4650:: with SMTP id v16mr20371642pgk.99.1587507872358;
+        Tue, 21 Apr 2020 15:24:32 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id r63sm3534644pfr.42.2020.04.21.15.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 15:24:31 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 15:24:31 -0700 (PDT)
+X-Google-Original-Date: Tue, 21 Apr 2020 15:24:12 PDT (-0700)
+Subject:     Re: [PATCH v2] riscv: fix vdso build with lld
+In-Reply-To: <20200415142959.25673-1-ilie.halip@gmail.com>
+CC:     linux-riscv@lists.infradead.org, maskray@google.com,
+        rupprecht@google.com, ilie.halip@gmail.com,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, Nick Desaulniers <ndesaulniers@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>, tglx@linutronix.de,
+        han_mao@c-sky.com, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     ilie.halip@gmail.com
+Message-ID: <mhng-8737e015-5064-456d-99cb-3e275321db5e@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the report. It's an easy fix, which I will fold into change
-05/10 of the series.
-
-On Mon, Apr 20, 2020 at 10:34 PM kbuild test robot <lkp@intel.com> wrote:
+On Wed, 15 Apr 2020 07:29:58 PDT (-0700), ilie.halip@gmail.com wrote:
+> When building with the LLVM linker this error occurrs:
+>     LD      arch/riscv/kernel/vdso/vdso-syms.o
+>   ld.lld: error: no input files
 >
-> Hi Michel,
+> This happens because the lld treats -R as an alias to -rpath, as opposed
+> to ld where -R means --just-symbols.
 >
-> Thank you for the patch! Yet something to improve:
+> Use the long option name for compatibility between the two.
 >
-> [auto build test ERROR on rdma/for-next]
-> [also build test ERROR on kvms390/next linus/master v5.7-rc2]
-> [cannot apply to powerpc/next uml/linux-next next-20200420]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Michel-Lespinasse/Add-a-new-mmap-locking-API-wrapping-mmap_sem-calls/20200415-084649
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
-> config: riscv-randconfig-a001-20200421 (attached as .config)
-> compiler: riscv64-linux-gcc (GCC) 9.3.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=riscv
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->    arch/riscv/mm/pageattr.c: In function '__set_memory':
-> >> arch/riscv/mm/pageattr.c:120:21: error: 'struct mm_struct' has no member named 'mmap_sem'; did you mean 'mmap_base'?
->      120 |  down_read(&init_mm.mmap_sem);
->          |                     ^~~~~~~~
->          |                     mmap_base
->    arch/riscv/mm/pageattr.c:123:19: error: 'struct mm_struct' has no member named 'mmap_sem'; did you mean 'mmap_base'?
->      123 |  up_read(&init_mm.mmap_sem);
->          |                   ^~~~~~~~
->          |                   mmap_base
->
-> vim +120 arch/riscv/mm/pageattr.c
->
-> d3ab332a502123 Zong Li 2020-03-10  105
-> d3ab332a502123 Zong Li 2020-03-10  106  static int __set_memory(unsigned long addr, int numpages, pgprot_t set_mask,
-> d3ab332a502123 Zong Li 2020-03-10  107                          pgprot_t clear_mask)
-> d3ab332a502123 Zong Li 2020-03-10  108  {
-> d3ab332a502123 Zong Li 2020-03-10  109          int ret;
-> d3ab332a502123 Zong Li 2020-03-10  110          unsigned long start = addr;
-> d3ab332a502123 Zong Li 2020-03-10  111          unsigned long end = start + PAGE_SIZE * numpages;
-> d3ab332a502123 Zong Li 2020-03-10  112          struct pageattr_masks masks = {
-> d3ab332a502123 Zong Li 2020-03-10  113                  .set_mask = set_mask,
-> d3ab332a502123 Zong Li 2020-03-10  114                  .clear_mask = clear_mask
-> d3ab332a502123 Zong Li 2020-03-10  115          };
-> d3ab332a502123 Zong Li 2020-03-10  116
-> d3ab332a502123 Zong Li 2020-03-10  117          if (!numpages)
-> d3ab332a502123 Zong Li 2020-03-10  118                  return 0;
-> d3ab332a502123 Zong Li 2020-03-10  119
-> d3ab332a502123 Zong Li 2020-03-10 @120          down_read(&init_mm.mmap_sem);
-> d3ab332a502123 Zong Li 2020-03-10  121          ret =  walk_page_range_novma(&init_mm, start, end, &pageattr_ops, NULL,
-> d3ab332a502123 Zong Li 2020-03-10  122                                       &masks);
-> d3ab332a502123 Zong Li 2020-03-10  123          up_read(&init_mm.mmap_sem);
-> d3ab332a502123 Zong Li 2020-03-10  124
-> d3ab332a502123 Zong Li 2020-03-10  125          flush_tlb_kernel_range(start, end);
-> d3ab332a502123 Zong Li 2020-03-10  126
-> d3ab332a502123 Zong Li 2020-03-10  127          return ret;
-> d3ab332a502123 Zong Li 2020-03-10  128  }
-> d3ab332a502123 Zong Li 2020-03-10  129
->
-> :::::: The code at line 120 was first introduced by commit
-> :::::: d3ab332a5021235a74fd832a49c6a99404920d88 riscv: add ARCH_HAS_SET_MEMORY support
->
-> :::::: TO: Zong Li <zong.li@sifive.com>
-> :::::: CC: Palmer Dabbelt <palmerdabbelt@google.com>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/805
+> Reported-by: Dmitry Golovin <dima@golovin.in>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
 >
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> Changed in v2:
+>   * a comment line dropped, another one slightly reworded
+>   * added Nick's Reviewed-by
+> ---
+>  arch/riscv/kernel/vdso/Makefile | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+> index 33b16f4212f7..a4ee3a0e7d20 100644
+> --- a/arch/riscv/kernel/vdso/Makefile
+> +++ b/arch/riscv/kernel/vdso/Makefile
+> @@ -33,15 +33,15 @@ $(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
+>  	$(call if_changed,vdsold)
+>
+>  # We also create a special relocatable object that should mirror the symbol
+> -# table and layout of the linked DSO.  With ld -R we can then refer to
+> -# these symbols in the kernel code rather than hand-coded addresses.
+> +# table and layout of the linked DSO. With ld --just-symbols we can then
+> +# refer to these symbols in the kernel code rather than hand-coded addresses.
+>
+>  SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
+>  	-Wl,--build-id -Wl,--hash-style=both
+>  $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
+>  	$(call if_changed,vdsold)
+>
+> -LDFLAGS_vdso-syms.o := -r -R
+> +LDFLAGS_vdso-syms.o := -r --just-symbols
+>  $(obj)/vdso-syms.o: $(obj)/vdso-dummy.o FORCE
+>  	$(call if_changed,ld)
 
-
-
--- 
-Michel "Walken" Lespinasse
-A program is never fully debugged until the last user dies.
+Thanks, this is on fixes.
