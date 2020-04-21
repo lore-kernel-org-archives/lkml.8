@@ -2,72 +2,139 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17577C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C12C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02D932068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8122068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:50:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fHCnLkAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgDUSuG (ORCPT
+        id S1726576AbgDUSub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:50:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
+        Tue, 21 Apr 2020 14:50:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726164AbgDUSuF (ORCPT
+        by vger.kernel.org with ESMTP id S1725886AbgDUSub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:50:05 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA758C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:50:05 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQxxl-007lIL-Bu; Tue, 21 Apr 2020 18:49:41 +0000
-Date:   Tue, 21 Apr 2020 19:49:41 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] powerpc/spufs: simplify spufs core dumping
-Message-ID: <20200421184941.GD23230@ZenIV.linux.org.uk>
-References: <20200421154204.252921-1-hch@lst.de>
- <20200421154204.252921-2-hch@lst.de>
+        Tue, 21 Apr 2020 14:50:31 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55082C0610D5;
+        Tue, 21 Apr 2020 11:50:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=yPMqIkcWHkz3THVCYl7z3197UQiTeNurLglX61WGoIM=; b=fHCnLkAF8AouzjXU7Dj/vz9FUM
+        WbpqZebgK96Zl5Bha1aTo+i3oNH3cuMDbTcwKr8spRxjEibY/7E5E/XaunV8yfY7dZuZNA3LVtneo
+        j2sMbpcr0hqv1D4wV2QpcSqt0fZUI/HV+USDwGfqMtPAM1Xb4Wx1gsfdJ4oCqugI87g1Woxnpqa5i
+        8pICEEkAu9/rHO2oaNGskK7QZ6cMgIy2ssRmYSo/p3rUMK3pLx2BoVwlCu6AuV1ou7mPMkEw0hqiS
+        FW9UWNgJL852hHFlDJMNCCn6YhF4OG7o3B/DSiK8EbdITSGaxah0kQgiLvmjBXVDZMYP1a2YLcE6b
+        l+Es1AXA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQxyY-0001SO-Ft; Tue, 21 Apr 2020 18:50:30 +0000
+Subject: Re: [PATCH v1 13/15] nitro_enclaves: Add Kconfig for the Nitro
+ Enclaves driver
+To:     Andra Paraschiv <andraprs@amazon.com>, linux-kernel@vger.kernel.org
+Cc:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <20200421184150.68011-14-andraprs@amazon.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <0b169445-a0c6-8eef-86b8-71a09021e143@infradead.org>
+Date:   Tue, 21 Apr 2020 11:50:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421154204.252921-2-hch@lst.de>
+In-Reply-To: <20200421184150.68011-14-andraprs@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 05:41:58PM +0200, Christoph Hellwig wrote:
+Hi--
 
->  static ssize_t spufs_proxydma_info_read(struct file *file, char __user *buf,
->  				   size_t len, loff_t *pos)
->  {
->  	struct spu_context *ctx = file->private_data;
-> +	struct spu_proxydma_info info;
->  	int ret;
+On 4/21/20 11:41 AM, Andra Paraschiv wrote:
+> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+> ---
+>  drivers/virt/Kconfig        |  2 ++
+>  drivers/virt/amazon/Kconfig | 28 ++++++++++++++++++++++++++++
+>  2 files changed, 30 insertions(+)
+>  create mode 100644 drivers/virt/amazon/Kconfig
+> 
+> diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
+> index 363af2eaf2ba..06bb5cfa191d 100644
+> --- a/drivers/virt/Kconfig
+> +++ b/drivers/virt/Kconfig
+> @@ -32,4 +32,6 @@ config FSL_HV_MANAGER
+>  	     partition shuts down.
 >  
-> +	if (len < sizeof(info))
-> +		return -EINVAL;
-> +	if (!access_ok(buf, len))
-> +		return -EFAULT;
+>  source "drivers/virt/vboxguest/Kconfig"
 > +
->  	ret = spu_acquire_saved(ctx);
->  	if (ret)
->  		return ret;
->  	spin_lock(&ctx->csa.register_lock);
-> -	ret = __spufs_proxydma_info_read(ctx, buf, len, pos);
-> +	__spufs_proxydma_info_read(ctx, &info);
-> +	ret = simple_read_from_buffer(buf, len, pos, &info, sizeof(info));
+> +source "drivers/virt/amazon/Kconfig"
+>  endif
+> diff --git a/drivers/virt/amazon/Kconfig b/drivers/virt/amazon/Kconfig
+> new file mode 100644
+> index 000000000000..57fd0aa58803
+> --- /dev/null
+> +++ b/drivers/virt/amazon/Kconfig
+> @@ -0,0 +1,28 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> +#
+> +# This program is free software; you can redistribute it and/or modify it
+> +# under the terms and conditions of the GNU General Public License,
+> +# version 2, as published by the Free Software Foundation.
+> +#
+> +# This program is distributed in the hope that it will be useful,
+> +# but WITHOUT ANY WARRANTY; without even the implied warranty of
+> +# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> +# GNU General Public License for more details.
+> +#
+> +# You should have received a copy of the GNU General Public License
+> +# along with this program; if not, see <http://www.gnu.org/licenses/>.
+> +
+> +# Amazon Nitro Enclaves (NE) support.
+> +# Nitro is a hypervisor that has been developed by Amazon.
+> +
+> +config NITRO_ENCLAVES
+> +	tristate "Nitro Enclaves Support"
+> +	depends on HOTPLUG_CPU
+> +	---help---
 
-IDGI...  What's that access_ok() for?  If you are using simple_read_from_buffer(),
-the damn thing goes through copy_to_user().  Why bother with separate access_ok()
-here?
+For v2:
+We are moving away from the use of "---help---" to just "help".
+
+> +	  This driver consists of support for enclave lifetime management
+> +	  for Nitro Enclaves (NE).
+> +
+> +	  To compile this driver as a module, choose M here.
+> +	  The module will be called nitro_enclaves.
+> 
+
+thanks.
+-- 
+~Randy
+
