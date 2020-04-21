@@ -2,117 +2,109 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF5CC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1267FC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42BA42068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQDOQIuY"
+	by mail.kernel.org (Postfix) with ESMTP id E0B302068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587482605;
+	bh=ea8OArjmAgA49X9tl0fwklnyYJwyIJxto7WI8nmGG/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TdRd3QFdwvaoFGZHYqTLgRV/+HPMf++GYkfsvvdVcqR4ghJ2XIplZa7rL1e/gBhMa
+	 hVGGpm4SV9xnSeXyKUfpF71wbAY6cDKI3BHGtR3usHprmD4ueGZ3um57Z6lbVm0d8+
+	 kCUvoxud+uwD9kJ5duWoA4XQnc5hBZaIeHS7VplU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgDUPVx (ORCPT
+        id S1727775AbgDUPXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:21:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56648 "EHLO
+        Tue, 21 Apr 2020 11:23:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgDUPVx (ORCPT
+        with ESMTP id S1726018AbgDUPXY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:21:53 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910ADC061A10;
-        Tue, 21 Apr 2020 08:21:52 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 131so11394555lfh.11;
-        Tue, 21 Apr 2020 08:21:52 -0700 (PDT)
+        Tue, 21 Apr 2020 11:23:24 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332B3C061A10;
+        Tue, 21 Apr 2020 08:23:24 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id t8so4743881qvw.5;
+        Tue, 21 Apr 2020 08:23:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:mime-version
-         :content-disposition:user-agent;
-        bh=G5VKAhwHSCkO13lB215fVqAbEvC64vZ494rjxezJpPQ=;
-        b=KQDOQIuYneRe17hjshDQMNMWIVYgSnxDl/MUcQO7/ctdXD/OwiKyztSJ9kBBozfphB
-         wTBUackTJYCmsg3lv7OPDU2u/t4J+/uy/R9l1/uoJRcFGNjbvn4fF7yOY7notipPWj3P
-         Sl/G0dSNp7if+lJ6JGoK7Ort4AgC5yjBc/qCMqPx664s1PT/cbKDDzK7C6jBoiLCKTLD
-         PhejT2sgf5I4vmbzWJ/jMza/VtHlB52cU3zC2Qo83ZpgvWJ6d4Fuho8topf1atJPuVbJ
-         A/s5HANrEO+C0eLN67wDFyqoySr0p+xAQW2PjQulfwQD+6fGXlcZNlYZnboECZeC1uIL
-         e5hQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=OG6A1jRYYqPSmMaTzEw16/A1Bcu4nZISBy/88lFWE84=;
+        b=oCTLEGPR9mXoGyzRTKA8Mekf+odzSlBbGAJScxkacWMjSTFAk6B3ABJ17Pbys7jKn4
+         aSw9Q7aYhRp2vAkcPH384Z3WuGcSpB3WToFKY+9o/J974L5FrwDMroGZR8koKQQqBMXa
+         ybPmTfbxHaNtUHw6bap1grCFoa3B5fdEPF3PjyUmQ80sUnt9mFbQW+y/seFhKPo/hZuT
+         pnxKNUeo4cJMXpUcfYgyYxqKuF0YjBRRHHGDaAIsmLh+npa9okkaKcbCp9OBl0VSJQVw
+         rd+bQ4uMZdL6SFMLEwQ0+JxT9RRoNcNOeuev4oZ/j+KTx4vBsuhLWQ3CNmnJ0G9fbo6Z
+         O7Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mime-version:content-disposition:user-agent;
-        bh=G5VKAhwHSCkO13lB215fVqAbEvC64vZ494rjxezJpPQ=;
-        b=eHfFSS/eQ5KLaVBQDr37yabMlwGl/a0ik3AxeCQurB+GQYvEy1KaXrum5K3I1kzofk
-         m0oOthUqkvIvFRaxrzpTNeDQuvpueGEJAZ36Z5AYRMiiTSBPmQ8177/mIQPKxNXXVg8G
-         t1srXNb9qOyveOxkF2H1MW1UrBgKDLd+uKjgidfbPDCSIs3C4I5W7GZa3Bn1pIqEkXn1
-         AmIBVNhTekAPZm+U05rTZeb5Fri+gif6dou8r+Cotn//kMpy8SpSRNxuLyFzQC2Oddn0
-         Xcv6G9Rl9543Tgy8xFDoi1DXgIwIcggNxRBD/WTweVDfRDN2TlwmwXdKzcMG/JUsdZQG
-         0FOQ==
-X-Gm-Message-State: AGi0Pua4+YMM31I/rVcBcu2Kkl0nJbtED7wPHAlP8Kb2FfDKoEXO+KY7
-        QzjZyJtHr6GdnIMIxIA6HC8=
-X-Google-Smtp-Source: APiQypLsR0OuLTnQmGywi2EGGHlC8QJupSgTFfb2fbNmeMRTUt8E9BhC0cHHQyCBDe+ZmPqM8p13kQ==
-X-Received: by 2002:a05:6512:3081:: with SMTP id z1mr14129181lfd.102.1587482510651;
-        Tue, 21 Apr 2020 08:21:50 -0700 (PDT)
-Received: from localhost ([176.212.68.26])
-        by smtp.gmail.com with ESMTPSA id 125sm2373382lfb.89.2020.04.21.08.21.48
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=OG6A1jRYYqPSmMaTzEw16/A1Bcu4nZISBy/88lFWE84=;
+        b=RSVKqiPCIECeaTqEBrgaU50Jr9Qcj/r471hJHsMjuPITjMFUeZyCCG2zyrKOP4LhMV
+         C/s+Av6frdT2E8uG7ny4k9wO1Njki0S8EBKbrmftQeIVGmUbMm5y+iFLmr38Ahb5U5HY
+         3QR63df2qcXW3YN/EA56dzoSCPIGC2KwGbKgWrkRb0JyiPpKHG0Syj4ih232BApFO2yt
+         Cc/r/tQsfPz7QGzEi/LKtdqGY5zsCs/TG0kMwzVKnhe3CjunsMIgnSJItTbccgi+Z6Ws
+         7H3if/u+/Wc5YmufBOqamOaS9SLAAD8WbrtSWJjBxxO//SOqpNbSNLBlJZ/WBLkUcBRA
+         KRWg==
+X-Gm-Message-State: AGi0PuYu9aHuNb5078SxZmu9RIRBcs4OQ2srgocVMDPHgfi9kjOGMBzB
+        GlJauQxu7Ag3TrYfkOvr2O8=
+X-Google-Smtp-Source: APiQypIFjEG81MJ2KZ1F5DcGMqpb8mQqZqmnRhJZunNpX5a+p8tvT/NRkBH5hCIFm7uUmJSg1ia9hg==
+X-Received: by 2002:a05:6214:16c8:: with SMTP id d8mr17794531qvz.93.1587482603265;
+        Tue, 21 Apr 2020 08:23:23 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:6b75])
+        by smtp.gmail.com with ESMTPSA id d23sm1900612qtj.9.2020.04.21.08.23.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 08:21:49 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 08:21:48 -0700
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Alex Belits <abelits@marvell.com>
-Cc:     yury.norov@gmail.com, "frederic@kernel.org" <frederic@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Prasun Kapoor <pkapoor@marvell.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-mm@vger.kernel.org" <linux-mm@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH 00/12] "Task_isolation" mode
-Message-ID: <20200421152148.GA16576@yury-thinkpad>
-Reply-To: 4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com
+        Tue, 21 Apr 2020 08:23:22 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 11:23:21 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH] blk-iocost: Fix systemtap error on iocost_ioc_vrate_adj
+Message-ID: <20200421152321.GB5462@mtj.thefacebook.com>
+References: <20200421130755.18370-1-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200421130755.18370-1-longman@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This is an update of task isolation work that was originally done by
-> Chris Metcalf <cmetcalf@mellanox.com> and maintained by him until
-> November 2017. It is adapted to the current kernel and cleaned up to
-> make this functionality both more complete (as in, prevent isolation
-> breaking in situations that were not covered before) and cleaner (as
-> in, avoid any dubious or fragile use of kernel interfaces, and provide
-> clean and reliable isolation breaking procedure).
+On Tue, Apr 21, 2020 at 09:07:55AM -0400, Waiman Long wrote:
+> Systemtap 4.2 is unable to correctly interpret the "u32 (*missed_ppm)[2]"
+> argument of the iocost_ioc_vrate_adj trace entry defined in
+> include/trace/events/iocost.h leading to the following error:
 > 
-> I guess, I have to explain why such a thing exists.
+>   /tmp/stapAcz0G0/stap_c89c58b83cea1724e26395efa9ed4939_6321_aux_6.c:78:8:
+>   error: expected ‘;’, ‘,’ or ‘)’ before ‘*’ token
+>    , u32[]* __tracepoint_arg_missed_ppm
 > 
-> ...
+> That argument type is indeed rather complex and hard to read. Looking
+> at block/blk-iocost.c. It is just a 2-entry u32 array. By simplifying
+> the argument to a simple "u32 *missed_ppm" and adjusting the trace
+> entry accordingly, the compilation error was gone.
 > 
-> My thanks to Chris Metcalf for design and maintenance of the original
-> task isolation patch, Francis Giraldeau <francis.giraldeau@gmail.com>
-> and Yuri Norov <ynorov@marvell.com> for various contributions to this
-> work, and Frederic Weisbecker <frederic@kernel.org> for his work on
-> CPU isolation and housekeeping that made possible to remove some less
-> elegant solutions that I had to devise for earlier, <4.17 kernels.
-> 
-> The previous patch (v16 by Chris Metcalf) is at:
-> 
-> https://lore.kernel.org/lkml/1509728692-10460-1-git-send-email-cmetcalf@mellanox.com
+> Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Alex,
+Acked-by: Tejun Heo <tj@kernel.org>
 
-For patches that are not authored by you, you removed authors' SOB, like in
-patch 8 of this series.
+Thanks.
 
-Please CC me for next revisions.
-
-Thanks,
-Yury
+-- 
+tejun
