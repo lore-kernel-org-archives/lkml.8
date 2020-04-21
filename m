@@ -2,107 +2,139 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00774C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96E6C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3B35214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BE42223D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="tGIrIQih"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z66vAOf3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgDUEPE (ORCPT
+        id S1726104AbgDUESV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 00:15:04 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:42415 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgDUEPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 00:15:03 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id f5e862ce;
-        Tue, 21 Apr 2020 04:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=SCC7Nyh/luGgw0Jn0MvH0KrPL5g=; b=tGIrIQ
-        ihiZmCQXqw1aQyKisuH3Tluqj48c4ZbQtiMf2ArKqDzQP9zqT6z34tQitr5TrHGt
-        jNb168YP7ncsCgDRaVAj0R2F//qfkOm8/vi/kRrWV8mzOEGzVp5MHznRTqqP2fQR
-        ECJ9Z0azAjvYlROusS3sGm43e7b1zLdLEI8OqxZYJNhUFDqlne4iMNevJVtlPxwN
-        aEXHnF1VXPgkP9DPBsMScshRUV6UMiy8OtoG89mN8CQNbNQp9voH1SdsU0aW19Oc
-        nN0j+SHPqkZsoWXUdouWEsFEzf7X79emB4UoDnrbmm7t4FPcTowK7HHFtIacOnci
-        STEbTOXtXsZJYnVw==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id cb957bb6 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 21 Apr 2020 04:04:19 +0000 (UTC)
-Received: by mail-il1-f178.google.com with SMTP id x2so10829291ilp.13;
-        Mon, 20 Apr 2020 21:15:00 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZXTN0Ql8Lc+4AbAILHkf6jURlU5MZLiPocHglLvcA9iKLa0yYS
-        JQmGQpUmUwov89qaIcvVzvqmvn+QKUD1GrPSVLM=
-X-Google-Smtp-Source: APiQypKs3xcAonoYbr0zq9wk52DzVARE1y8W5SScl+cyeH4qIm5NFAbKA6Cteu0VTtRe9tOKsiDvPBa+7sbONYqzXLo=
-X-Received: by 2002:a92:d98c:: with SMTP id r12mr19565542iln.224.1587442500210;
- Mon, 20 Apr 2020 21:15:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200420075711.2385190-1-Jason@zx2c4.com> <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
-In-Reply-To: <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 20 Apr 2020 22:14:49 -0600
-X-Gmail-Original-Message-ID: <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
-Message-ID: <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
-Subject: FPU register granularity [Was: Re: [PATCH crypto-stable] crypto:
- arch/lib - limit simd usage to PAGE_SIZE chunks]
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 Apr 2020 00:18:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725904AbgDUESU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 00:18:20 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AEC5C061A41
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 21:18:20 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id g30so6046848pfr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 21:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=8e6fmLjhn9iA1rR0EhCdHo59ETG2z9t4z8p3W3x9ZsE=;
+        b=Z66vAOf3VQVmIh3G/f3v+6AhWFW/rGAlD7zhpbTN+8JTLOCQmy3sn1cR8uwLZOsUbf
+         CsqLN6Ll2QQIj07DvacoMIIY9VqBt5A4RcgY26IOwDFYrWR5oS3Tcvel8CM2DF/cgFC3
+         Z4JHFm1o5plpW7mK4ZHM2sHW2Bc3R1ou5MUG+54JXkCnIuKvnKJS6h7gfJMpnV2W8oGu
+         UEgm4W/+Shn+cjTdAWgMA842Oe5/C8ZV7ypvyInb5oaiTYz8al1a05rHl4eANNd8wtgV
+         mkH2EAR3og9LeL3pW8Wirhw0IwqHyyN08rBAZ8JNA8jGbPl5+nKGY99uLHlNyC7eLgsl
+         390A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8e6fmLjhn9iA1rR0EhCdHo59ETG2z9t4z8p3W3x9ZsE=;
+        b=Z+RJsA/wN6ClZf6/T7meBPnauQApXawCrybGY9KASwFQTMSzaXV96g+hwR3Z9OKmlL
+         KWxIHrfjNCUP+y6K7GQy+pw8pcTO011qMX/ElCHwJDo8OIYgjsBLzUOM8UGdAfQ1DKpg
+         0AbxY5m32wB8PIDCoJMpTBFwTPV9a4jU2y+fNcLsFjV+/1nt/z8iepylnP70LCwIP5i3
+         zBQijVD6BWBNIm5broczTTddzMmXvvzIUxCS808pJTpW4pBR/g1zxDThjsA8xjXRuUqj
+         JwmHm0b+vDS0WKCIeQIqfZaPRFG55mRHljUZQy3qtqz/TkxfDGaH8YDL/uU9ot1z1RHf
+         mbng==
+X-Gm-Message-State: AGi0Pua9jCQ4Se4sGyCvxBU1lEXImkGnkqNG8BmprcS6y9Yl9WGdKz5d
+        YLogal/p4h44uViuV4BxvZOADDHjvxg=
+X-Google-Smtp-Source: APiQypIWgC4Ikb23fi2/xY/q7/ojPQJBPkkRf3Hnp9tPWOb2+PCZ1n6vZSajOCgL3d/OC6zb5dVLnA==
+X-Received: by 2002:a63:3814:: with SMTP id f20mr10279254pga.283.1587442699578;
+        Mon, 20 Apr 2020 21:18:19 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id a136sm1083262pfa.99.2020.04.20.21.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 21:18:18 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [RESEND x2][PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
+Date:   Tue, 21 Apr 2020 04:18:15 +0000
+Message-Id: <20200421041815.1808-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+This patch fixes a regression in 5.7-rc1+
 
-On Mon, Apr 20, 2020 at 2:32 AM David Laight <David.Laight@aculab.com> wrote:
-> Maybe kernel_fp_begin() should be passed the address of somewhere
-> the address of an fpu save area buffer can be written to.
-> Then the pre-emption code can allocate the buffer and save the
-> state into it.
+In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
+PHY support"), the change was made to add "qcom,qusb2-v2-phy"
+as a generic compat string. However the change also removed
+the "qcom,sdm845-qusb2-phy" compat string, which is documented
+in the binding and already in use.
 
-Interesting idea. It looks like `struct xregs_state` is only 576
-bytes. That's not exactly small, but it's not insanely huge either,
-and maybe we could justifiably stick that on the stack, or even
-reserve part of the stack allocation for that that the function would
-know about, without needing to specify any address.
+This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
+which allows the driver to continue to work with existing dts
+entries such as found on the db845c.
 
-> kernel_fpu_begin() ought also be passed a parameter saying which
-> fpu features are required, and return which are allocated.
-> On x86 this could be used to check for AVX512 (etc) which may be
-> available in an ISR unless it interrupted inside a kernel_fpu_begin()
-> section (etc).
-> It would also allow optimisations if only 1 or 2 fpu registers are
-> needed (eg for some of the crypto functions) rather than the whole
-> fpu register set.
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: Manu Gautam <mgautam@codeaurora.org>
+Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+Cc: Matthias Kaehlcke <mka@chromium.org>
+Cc: Stephen Boyd <swboyd@chromium.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
+Reported-by: YongQin Liu <yongqin.liu@linaro.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+v2: Add deprecation note on "qcom,sdm845-qusb2-phy" string
+    as suggested by Doug.
+---
+ drivers/phy/qualcomm/phy-qcom-qusb2.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-For AVX512 this probably makes sense, I suppose. But I'm not sure if
-there are too many bits of crypto code that only use a few registers.
-There are those accelerated memcpy routines in i915 though -- ever see
-drivers/gpu/drm/i915/i915_memcpy.c? sort of wild. But if we did go
-this way, I wonder if it'd make sense to totally overengineer it and
-write a gcc/as plugin to create the register mask for us. Or, maybe
-some checker inside of objtool could help here.
+diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+index 3708d43b7508..393011a05b48 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
++++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+@@ -815,6 +815,13 @@ static const struct of_device_id qusb2_phy_of_match_table[] = {
+ 	}, {
+ 		.compatible	= "qcom,msm8998-qusb2-phy",
+ 		.data		= &msm8998_phy_cfg,
++	}, {
++		/*
++		 * Deprecated. Only here to support legacy device
++		 * trees that didn't include "qcom,qusb2-v2-phy"
++		 */
++		.compatible	= "qcom,sdm845-qusb2-phy",
++		.data		= &qusb2_v2_phy_cfg,
+ 	}, {
+ 		.compatible	= "qcom,qusb2-v2-phy",
+ 		.data		= &qusb2_v2_phy_cfg,
+-- 
+2.17.1
 
-Actually, though, the thing I've been wondering about is actually
-moving in the complete opposite direction: is there some
-efficient-enough way that we could allow FPU registers in all contexts
-always, without the need for kernel_fpu_begin/end? I was reversing
-ntoskrnl.exe and was kind of impressed (maybe not the right word?) by
-their judicious use of vectorisation everywhere. I assume a lot of
-that is being generated by their compiler, which of course gcc could
-do for us if we let it. Is that an interesting avenue to consider? Or
-are you pretty certain that it'd be a huge mistake, with an
-irreversible speed hit?
-
-Jason
