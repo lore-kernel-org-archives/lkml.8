@@ -2,127 +2,155 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05327C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623C2C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D320720672
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CB4820672
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l3vkA+1F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LmvZvg2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgDUNum (ORCPT
+        id S1728951AbgDUNvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:50:42 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13201 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgDUNul (ORCPT
+        Tue, 21 Apr 2020 09:51:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29295 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728772AbgDUNvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:50:41 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9ef9be0000>; Tue, 21 Apr 2020 06:48:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 21 Apr 2020 06:50:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 21 Apr 2020 06:50:41 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
- 2020 13:50:41 +0000
-Received: from [10.40.201.173] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
- 2020 13:50:37 +0000
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Vidya Sagar <vidyas@nvidia.com>
-CC:     <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200324191217.1829-1-digetx@gmail.com>
- <20200324191217.1829-2-digetx@gmail.com>
- <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
- <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
- <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
- <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
- <2e99c2f0-4bba-2ea6-dada-3190c0303dcf@nvidia.com>
- <1a5e5455-597f-7724-f992-32a2492c1e24@nvidia.com>
-X-Nvconfidentiality: public
-From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Message-ID: <f055806b-83ec-612c-9654-0af62feaf9bd@nvidia.com>
-Date:   Tue, 21 Apr 2020 19:19:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 09:51:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587477103;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IInilyB2ckeUfP1pJZsdQY8G2HWtqy1MvibEpjmv5kQ=;
+        b=LmvZvg2I11XAbDZc/v16ulUtX5/yN/Qr1RKH/fEYFr+sbuqJk1u/HrUZJUCOvDstR0yqa2
+        hpPpv8ceSBWzkGi6Cej95MQPzrt4iOMPovPn/Tg+F7g3VuuZrms01O+xf/g7RFhoIwBzYa
+        9dvFTI2GlIhBvTd7frzVUBY1+GS/0B8=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-14-Z9o3j7djMkGpgVt14Mw6eQ-1; Tue, 21 Apr 2020 09:51:41 -0400
+X-MC-Unique: Z9o3j7djMkGpgVt14Mw6eQ-1
+Received: by mail-wr1-f71.google.com with SMTP id p2so6764048wrx.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:51:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IInilyB2ckeUfP1pJZsdQY8G2HWtqy1MvibEpjmv5kQ=;
+        b=Ze1iu036PsNdntrcn4vasXb0CU/YEXfWReVLP5p3jBwtTW7DMf9oGitdYsbVy0QLm9
+         cQYaXWU+IGXQeFHdwvgZ3J/U9aEOC9GqKjjHgRpVZugWqcvXWPyDq1D8gNxZ1q21X6SQ
+         RJJwvjWpx7jE5zjTsn/vW5Q4J9oP02O3TfJpqsOkcVym5zVW6MNEP3wjztdJkXLwegHM
+         nuhl3lay4m4UgFNTZ7uYRioTjyazqTmBhmYTQVSywO1DBOqpZuuQtdlQGg2BkPzjoS2i
+         A/DaF9MqXd+ednTQPVOhn+3XXG05TJTCa/9pi8a9wBBMb/dem62eCtzQrBnVZCkVZ93W
+         9Zeg==
+X-Gm-Message-State: AGi0PubBdc2pMunsj8ucO3Wl+EnWf1M3qKo/ana2sKDDP8MIu+Jqa28Z
+        dIWawHbZvQQMMgUicz6Tj7rb9zrzO8Zt+ouehr6FL+gZjjmTam/XPNZfo7Byjx5OjAAnExMksSz
+        /2lB8iTWCxIeazplgMXaW6EOV
+X-Received: by 2002:a1c:bd89:: with SMTP id n131mr4916130wmf.3.1587477100743;
+        Tue, 21 Apr 2020 06:51:40 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL9ml34u2SXsT4cym73Fj9YcZ5gNZl/Vlb+iTik+1IYxflheOGQshudBA/kLdh/qIi+ct+15w==
+X-Received: by 2002:a1c:bd89:: with SMTP id n131mr4916110wmf.3.1587477100572;
+        Tue, 21 Apr 2020 06:51:40 -0700 (PDT)
+Received: from localhost.localdomain.com ([194.230.155.194])
+        by smtp.gmail.com with ESMTPSA id a187sm3565830wmh.40.2020.04.21.06.51.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 06:51:40 -0700 (PDT)
+From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Manoj N. Kumar" <manoj@linux.ibm.com>,
+        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
+        Uma Krishnan <ukrishn@linux.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        John Johansen <john.johansen@canonical.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Subject: [PATCH v2 0/7] libfs: group and simplify linux fs code
+Date:   Tue, 21 Apr 2020 15:51:12 +0200
+Message-Id: <20200421135119.30007-1-eesposit@redhat.com>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-In-Reply-To: <1a5e5455-597f-7724-f992-32a2492c1e24@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587476926; bh=+KdwucmFE0z3FF/0f3hhnMGhWbDJWnngi7Kzmuk5Zd8=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=l3vkA+1FYgsF+YjmBzs+IEFswuFAKLW1MUfYoZ7BvELfx9kSAmiGynbun/kRhmBpn
-         WB4aNn8Jkj1Hcw56oek0wwGSDaj39BJWLGODWHS3Zf9yehFQ79Fu2dnPp7vH5709Rs
-         d1bpkXhQIBj2AZ3TPS7L5Kak7KuXoen+nUGqm1J4QviWbu8M2ABHWmrbDZB7hr2yJG
-         NzuUGKk3/6TJekM+b/AWSp+HsV6SjcYlcCTdI4XNqacBmkwEDNYlyM7UmGJx46aT/W
-         0RWmzFygeS2GotKW5NNgEC6we1KvsbL3s9INW+N/uT/xABxLnPazbDrfbHfJyZJ6zb
-         maG3Xcli2O5GA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+libfs.c has many functions that are useful to implement dentry and inode
+operations, but not many at the filesystem level.  As a result, code to
+create files and inodes has a lot of duplication, to the point that
+tracefs has copied several hundred lines from debugfs.
 
+The main two libfs.c functions for filesystems are simple_pin_fs and
+simple_release_fs, which hide a somewhat complicated locking sequence
+that is needed to serialize vfs_kern_mount and mntget.  In this series,
+my aim is to add functions that create dentries and inodes of various
+kinds (either anonymous inodes, or directory/file/symlink).  These
+functions take the code that was duplicated across debugfs and tracefs
+and move it to libfs.c.
 
-On 21-Apr-20 6:38 PM, Jon Hunter wrote:
->
-> On 21/04/2020 13:39, Manikanta Maddireddy wrote:
->
-> ...
->
->>> I am adding Manikanta to get some feedback on why we moved the PCI
->>> suspend to the NOIRQ phase because it is not clear to me if we need to
->>> do this here.
->>>
->>> Manikanta, can you comment on whether we really need to suspend Tegra
->>> PCI during the noirq phase?
->> PCIe subsystem driver implemented noirq PM callbacks, it will save & restore
->> endpoint config space in these PM callbacks. PCIe controller should be
->> available during this time, so noirq PM callbacks are implemented in Tegra
->> PCIe driver.
->>
->> file: drivers/pci/pci-driver.c
->> static const struct dev_pm_ops pci_dev_pm_ops = {
->> 	...
->>         .suspend_noirq = pci_pm_suspend_noirq,
->>         .resume_noirq = pci_pm_resume_noirq,
->>         ...
->> };
-> Thanks, however, it is still not clear why this needs to be done during
-> this phase. When you say PCIe subsystem driver, specifically which
-> driver are you referring too? Are you referring to the
-> pci_pm_suspend_noirq() in the drivers/pci/pci-driver.c driver? If so,
-> just out of curiosity why does this need to be handled in the noirq phase?
+In order to limit the number of arguments to the new functions, the
+series first creates a data type that is passed to both
+simple_pin_fs/simple_release_fs and the new creation functions.  The new
+struct, introduced in patch 2, simply groups the "mount" and "count"
+arguments to simple_pin_fs and simple_release_fs.
 
-If PCIe device is not in valid state it might cause interrupt issues and
-can lead to system lockup. Please refer to below paper for complete details.
-https://www.kernel.org/doc/ols/2009/ols2009-pages-319-330.pdf
+Patches 1-4 are preparations to introduce the new simple_fs struct and
+new functions that are useful in the remainder of the series.  Patch 5
+introduces the dentry and inode creation functions.  Patch 6-7 can then
+adopt them in debugfs and tracefs.
 
->
-> Thanks
-> Jon
->
+Signed-off-by: Emanuele Giuseppe Esposito <eesposit@redhat.com>
+
+v1->v2: rename simple_new_inode in new_inode_current_time,
+more detailed explanations, put all common code in fs/libfs.c
+
+Emanuele Giuseppe Esposito (7):
+  apparmor: just use vfs_kern_mount to make .null
+  libfs: wrap simple_pin_fs/simple_release_fs arguments in a struct
+  libfs: introduce new_inode_current_time
+  libfs: add alloc_anon_inode wrapper
+  libfs: add file creation functions
+  debugfs: switch to simplefs inode creation API
+  tracefs: switch to simplefs inode creation API
+
+ drivers/gpu/drm/drm_drv.c       |  11 +-
+ drivers/misc/cxl/api.c          |  13 +-
+ drivers/scsi/cxlflash/ocxl_hw.c |  14 +-
+ fs/binfmt_misc.c                |   9 +-
+ fs/configfs/mount.c             |  10 +-
+ fs/debugfs/inode.c              | 158 +++--------------
+ fs/libfs.c                      | 299 ++++++++++++++++++++++++++++++--
+ fs/tracefs/inode.c              |  96 ++--------
+ include/linux/fs.h              |  31 +++-
+ security/apparmor/apparmorfs.c  |  38 ++--
+ security/inode.c                |  11 +-
+ 11 files changed, 399 insertions(+), 291 deletions(-)
+
+-- 
+2.25.2
 
