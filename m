@@ -2,78 +2,101 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD0FC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74038C55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42EE0206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F72206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yh9NPA4k"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bw7FfE6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgDUTr7 (ORCPT
+        id S1726141AbgDUTvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:47:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgDUTr7 (ORCPT
+        Tue, 21 Apr 2020 15:51:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54663 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725930AbgDUTvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:47:59 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06BD7C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xWfW0nwfxRCQ7wQd6L3Rz9ECsecJi1GV2Mml2YkU8Qc=; b=Yh9NPA4kNtR+QhBk1k4gTRqSyG
-        hjf2ckD8gia+UmRKUvrCcePIe1SEh86WbR246xzBjVYVh8XbGbGhrxxLH0v6syUh+iq5fkTj31M+2
-        W57lFG+DhOkRyy5wlpObUx0AEJPBAhrvSvGFnHsG49z07Zi8BrO/1JENN/Hep9M9OclkHa4+UpLYP
-        E47DQFXmnoXDmOJHdOGHzOwK/wuS1k8KBPTgWwrlprxodHzFlbtNUWQgxOfRmw7DVYemf5R3Ap/Rs
-        rzyyC0QYoXHkEcrmx0LOPqlCLJTf3/Q3OOJmSD7IgJaFKym8nNr63wHSdqepgLVKvbW535+1NtPr/
-        x8NtRLzw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQys4-0002kw-5F; Tue, 21 Apr 2020 19:47:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5F853300739;
-        Tue, 21 Apr 2020 21:47:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2ED2E2BB16BBF; Tue, 21 Apr 2020 21:47:49 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 21:47:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] objtool: optimize insn_hash for split sections
-Message-ID: <20200421194749.GX20730@hirez.programming.kicks-ass.net>
-References: <20200421180724.245410-1-samitolvanen@google.com>
- <20200421180724.245410-3-samitolvanen@google.com>
+        Tue, 21 Apr 2020 15:51:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587498710;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qGYpXz6VdCPTKs7yYyKCHLyhRb5XfP8CRNgtLy4ommU=;
+        b=Bw7FfE6RTuKgjurtcFw7VywuN9Gnvcg7eDmOQZeBUseVx6kpHqoi2BgcAKbmUFwxmoc5cY
+        9fcIHB71HAcAhxKGtwTAFgeWUsnFVbYkoPbId6o79HLNQtSk66d/nbQMUQSzWjqEzkW/AJ
+        38Pf6aPXUvSSBVrR6abVQz/k2F/w2XI=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-152-77OFOxSsMqegJYPXc6u6dg-1; Tue, 21 Apr 2020 15:51:46 -0400
+X-MC-Unique: 77OFOxSsMqegJYPXc6u6dg-1
+Received: by mail-wr1-f69.google.com with SMTP id h95so8257478wrh.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:51:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qGYpXz6VdCPTKs7yYyKCHLyhRb5XfP8CRNgtLy4ommU=;
+        b=Gvpu1tIixNWjVT2VSY8Ce7m/ztuP7H6NlHVhKOrglFtA3Ccs5ItUKWpUuTUxHX22uW
+         f6SVNcsMPzZd9EMtBvpYCFFJB+Cyk4xHmntIPLs8cUCRixjJRghzaiW9DoPjyBAJP5aA
+         pIZAJPd/VvaTRUYhNhEYzNNV483XvF0mH5ocAjQR3MNcv1bFHOrQbah1rFUD/wtOBlvp
+         KabNg8fzy8XYWw0HZzr0v7GUrCmE+/9coSbuxZ4r43vhj5HNwBfcxNbwEaIRHoGq8I4R
+         R7wyAgcalf+BcK4/+T9eWB0Jq7INP3cCkKtcz8XhtcdftizzXMzpFg3M8ZwiR7WZvICm
+         w8KQ==
+X-Gm-Message-State: AGi0Pua4zJUNzjIjClFm1w496byHabE0/HbWP/holEeJ6nwVfVKJCWD7
+        jM4cu8m45OIgUYuxKJiwr4hLqn9DfPqxFFuA9S7UFXJsNuODYjpRUaxVD4WO4dUHUhzNWT23Oyz
+        oBGKxSbgeRMXQ7t+xI82WlhDx
+X-Received: by 2002:a1c:9dd1:: with SMTP id g200mr6999170wme.82.1587498705645;
+        Tue, 21 Apr 2020 12:51:45 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKCm0OdoTbIs/9fTEnN7H+32sVw2+Ijze7xR/UCwljoIR89/XFefVi/yu08ILmptP0S3k6XUA==
+X-Received: by 2002:a1c:9dd1:: with SMTP id g200mr6999153wme.82.1587498705368;
+        Tue, 21 Apr 2020 12:51:45 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
+        by smtp.gmail.com with ESMTPSA id d7sm4918133wrn.78.2020.04.21.12.51.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 12:51:44 -0700 (PDT)
+Subject: Re: [GIT PULL] KVM changes for Linux 5.7-rc3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>
+References: <20200421160651.19274-1-pbonzini@redhat.com>
+ <CAHk-=whVo7CzzjEYp+G7+MjNSg4cURR4SeUTvQSYVBFn3o5TPw@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <04150cae-6fbf-70c6-d968-b287f478a674@redhat.com>
+Date:   Tue, 21 Apr 2020 21:51:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421180724.245410-3-samitolvanen@google.com>
+In-Reply-To: <CAHk-=whVo7CzzjEYp+G7+MjNSg4cURR4SeUTvQSYVBFn3o5TPw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 11:07:23AM -0700, Sami Tolvanen wrote:
-> When running objtool on vmlinux.o compiled with -ffunction-sections,
-> we end up with a ton of collisions in the insn_hash table as each
-> function is in its own section. This results in a runtime of minutes
-> instead of seconds. Use both section index and offset as the key to
-> avoid this, similarly to rela_hash.
+On 21/04/20 21:35, Linus Torvalds wrote:
+> On Tue, Apr 21, 2020 at 9:07 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>>
+>>   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+>>
+>> for you to fetch changes up to 00a6a5ef39e7db3648b35c86361058854db84c83:
 > 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Did you perhaps forget to force-update that tag?
+> 
+> That tree still shows the tag from April 7 (that I merged in commit
+> 0339eb95403f).
 
-I already have this queued:
+Oops, yes I did.  /me goes and adds "set -e" to the script.
 
-  https://lkml.kernel.org/r/20200416115119.227240432@infradead.org
+Paolo
 
-which looks very similar.
