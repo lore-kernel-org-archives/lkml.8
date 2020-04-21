@@ -2,188 +2,114 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C76FC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857F6C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D90C1206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655B9206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZaE1gM6d"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OFLiLcky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbgDUOYS (ORCPT
+        id S1728908AbgDUOZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:24:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726741AbgDUOYR (ORCPT
+        Tue, 21 Apr 2020 10:25:53 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52444 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbgDUOZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:24:17 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A43CC061A10;
-        Tue, 21 Apr 2020 07:24:17 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id h11so5285921plr.11;
-        Tue, 21 Apr 2020 07:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A1eMOz2nD0A99gDTpSwCxCwc0K9Rie/82wne8kdt1x0=;
-        b=ZaE1gM6dOoSFCCbM5iLPlcTG33W2VSY/uIKveD5P69gWTeEqj3AuuKGEaJAxOyLKRh
-         fvd9dwKhYCvmIB6y6TX7ix9zU0TM6KNQ7eyB/VX/qSRO8tvvPJBdJ+NvwNETUwITxx8G
-         wmmDiX9XjJyhYK4NDtkuD2/FQQ/OUuAp6o9bqyI9AVKNwaIrAlZIrhSPI9SuK6XYjJ4j
-         5W9cn4G7mfAt7bC+AohT5KLIaT9IKh3j7jjCWr0g0GzoJqF7j63mWMGHsm1CuKPxb2E6
-         ywUGWFwqyte78Hb+Gsf33vXp9KVqGbhwBJvfhEmx69pVMwwG6vmgQPRGOSaBc+2lr1XY
-         7bqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A1eMOz2nD0A99gDTpSwCxCwc0K9Rie/82wne8kdt1x0=;
-        b=m2gpDHxDiOMiwE8tCbaEWRhPVxm/TvNpBOhxE3OOuwj+0NT0CUJHJbtIKVM99mXxOK
-         g8efwnmi1sU50XJQ3DlLXLaqrehdD1mDm5lpndGBoalTEmxb84pN8o5adgFFN3ZNrMfC
-         MzSXpoGZV4Vbdy1+FgItbsza/3zsu+ErmgGIXVELr9fXuXsgQOo4e61uoN3A5usAnsG6
-         6Iq/3AYhREWH/niSqnpI1L8an2vdA3atmx8UviPTxyCTO6iqOEmeRKwyD8PK5aLNDPMk
-         mkKuFbjSxkA1YaF51FM2u3mrKf4t2zgW9BTaYBM33nhpOPOfD/YtefslbsSYygZQuAFK
-         sSLw==
-X-Gm-Message-State: AGi0Pua5JrrrnDSerVbxZpE4fTwr/HvRL0xhaQU2Gy+Q9e3TCpUU1959
-        H81okBXYdFWyWu3Vvx5uSGI=
-X-Google-Smtp-Source: APiQypI+MqPDxvWshFgIsS6T6ewqXjall3pJ9Hp6NPBIiNtgZIA8ZoUH3FAvz1iJVYAPc9RyHiMXnA==
-X-Received: by 2002:a17:90b:3018:: with SMTP id hg24mr6125648pjb.130.1587479056588;
-        Tue, 21 Apr 2020 07:24:16 -0700 (PDT)
-Received: from localhost ([89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id t3sm2552052pfq.110.2020.04.21.07.24.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Apr 2020 07:24:15 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, geert+renesas@glider.be,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-gpio@vger.kernel.org, joe@perches.com
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v3] pinctrl: fix several typos
-Date:   Tue, 21 Apr 2020 22:24:02 +0800
-Message-Id: <20200421142402.9524-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 21 Apr 2020 10:25:53 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LECPuf104152;
+        Tue, 21 Apr 2020 14:16:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=KH7JSrOcrG0YkK05NQHdKXeBwOzqSpU/M/EkFRPsDJU=;
+ b=OFLiLckynNhGGR/eAiiEYrtmckqtERtrg3zbWlTXTubdUgYeX6D8zCfogsqLvU5hIMy1
+ nLESg71meqYz9dk8pt5Qxsf7x3FWIDchid7Dtuu1yrZ98A4heR6OSFHEg5OV0XTDhEaY
+ fKD+nKPUYNw093M51+HnMNsMQ49lg+6lVI2UAntsxguELIUpy20Ju5GDDeobCplLYtlD
+ yGZwDSjp4c4r1lfz0Wix1mQzL901RpGgx0gwIfNaS0+2Arvnv6SoV1fh/Z2QVwXEw61S
+ LyM+gtTLd5DFsWH6iHv/mYHG0a8GiWPzsSjhrhWXe9WVxZIO9EfGj/JpAySuPxAtmXb2 WA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30fsgkw880-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 14:16:40 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LEBd5o143244;
+        Tue, 21 Apr 2020 14:14:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 30gb3sa2jh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 14:14:39 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03LEEaDS007921;
+        Tue, 21 Apr 2020 14:14:36 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 07:14:35 -0700
+Date:   Tue, 21 Apr 2020 17:14:26 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, bp@alien8.de,
+        james.morse@arm.com, helgaas@kernel.org, lenb@kernel.org,
+        tony.luck@intel.com, gregkh@linuxfoundation.org,
+        zhangliguang@linux.alibaba.com, tglx@linutronix.de,
+        linuxarm@huawei.com, jonathan.cameron@huawei.com,
+        tanxiaofei@huawei.com, yangyicong@hisilicon.com
+Subject: Re: [RESEND PATCH v7 4/6] ACPI / APEI: Add callback for ARM HW
+ errors to the GHES notifier
+Message-ID: <20200421141426.GD2682@kadam>
+References: <ShijuJose>
+ <20200421132136.1595-1-shiju.jose@huawei.com>
+ <20200421132136.1595-5-shiju.jose@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421132136.1595-5-shiju.jose@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9597 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004210112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9597 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use codespell to fix lots of typos over frontends.
+On Tue, Apr 21, 2020 at 02:21:34PM +0100, Shiju Jose wrote:
+>  static BLOCKING_NOTIFIER_HEAD(ghes_event_notify_list);
+> @@ -670,12 +692,7 @@ static void ghes_do_proc(struct ghes *ghes,
+>  			pr_warn(GHES_PFX "ghes event queue full\n");
+>  			break;
+>  		}
+> -
+> -		if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
+> -			struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
+> -
+> -			log_arm_hw_error(err);
+> -		} else {
+> +		{
+>  			void *err = acpi_hest_get_payload(gdata);
 
-CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v2 -> v3:
-	- remove the changed of "thru -> through" in the
-	  pinctrl-nomadik-db8500.c by Joe's suggestion.
+This is ugly.  Just move the "void *err;" declaration to the top of the
+function so we can delete this block.
 
-v1 -> v2:
-	- Geert help me Reviewed the pfc-sh7269.c and Thanks Geert.
-	- Geert advised me modify [0..16] to [0..15] in the pfc-sh7269.c
-	- Uwe advised me modify "control register are" to "control
-	  registers are", Thanks Uwe.
+>  
+>  			log_non_standard_event(sec_type, fru_id, fru_text,
+> -- 
 
- drivers/pinctrl/freescale/pinctrl-imx1-core.c | 2 +-
- drivers/pinctrl/pinctrl-lantiq.c              | 2 +-
- drivers/pinctrl/pinctrl-sx150x.c              | 2 +-
- drivers/pinctrl/sh-pfc/pfc-sh7269.c           | 5 +++--
- drivers/pinctrl/tegra/pinctrl-tegra-xusb.c    | 2 +-
- drivers/pinctrl/zte/pinctrl-zx.c              | 2 +-
- 6 files changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-index c00d0022d311..0c1c0e72fa8e 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-@@ -60,7 +60,7 @@ struct imx1_pinctrl {
- 
- /*
-  * IMX1 IOMUXC manages the pins based on ports. Each port has 32 pins. IOMUX
-- * control register are seperated into function, output configuration, input
-+ * control registers are separated into function, output configuration, input
-  * configuration A, input configuration B, GPIO in use and data direction.
-  *
-  * Those controls that are represented by 1 bit have a direct mapping between
-diff --git a/drivers/pinctrl/pinctrl-lantiq.c b/drivers/pinctrl/pinctrl-lantiq.c
-index aa92f141b865..626e02d7a1ba 100644
---- a/drivers/pinctrl/pinctrl-lantiq.c
-+++ b/drivers/pinctrl/pinctrl-lantiq.c
-@@ -221,7 +221,7 @@ static int match_mux(const struct ltq_mfp_pin *mfp, unsigned mux)
- 	return i;
- }
- 
--/* dont assume .mfp is linearly mapped. find the mfp with the correct .pin */
-+/* don't assume .mfp is linearly mapped. find the mfp with the correct .pin */
- static int match_mfp(const struct ltq_pinmux_info *info, int pin)
- {
- 	int i;
-diff --git a/drivers/pinctrl/pinctrl-sx150x.c b/drivers/pinctrl/pinctrl-sx150x.c
-index 6e74bd87d959..708bc91862fe 100644
---- a/drivers/pinctrl/pinctrl-sx150x.c
-+++ b/drivers/pinctrl/pinctrl-sx150x.c
-@@ -988,7 +988,7 @@ static unsigned int sx150x_maybe_swizzle(struct sx150x_pinctrl *pctl,
- /*
-  * In order to mask the differences between 16 and 8 bit expander
-  * devices we set up a sligthly ficticious regmap that pretends to be
-- * a set of 32-bit (to accomodate RegSenseLow/RegSenseHigh
-+ * a set of 32-bit (to accommodate RegSenseLow/RegSenseHigh
-  * pair/quartet) registers and transparently reconstructs those
-  * registers via multiple I2C/SMBus reads
-  *
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7269.c b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-index d20974a55d93..e2916aaa8304 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-@@ -1963,8 +1963,9 @@ static const struct pinmux_func pinmux_func_gpios[] = {
- static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	/* "name" addr register_size Field_Width */
- 
--	/* where Field_Width is 1 for single mode registers or 4 for upto 16
--	   mode registers and modes are described in assending order [0..16] */
-+	/* where Field_Width is 1 for single mode registers or 4 for up to 16
-+	 * mode registers and modes are described in assending order [0..15]
-+	 */
- 
- 	{ PINMUX_CFG_REG("PAIOR0", 0xfffe3812, 16, 1, GROUP(
- 		0, 0, 0, 0, 0, 0, 0, 0,
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
-index 6f7b3767f453..43922ab81666 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
-@@ -123,7 +123,7 @@ static int tegra_xusb_padctl_get_group_pins(struct pinctrl_dev *pinctrl,
- 					    unsigned *num_pins)
- {
- 	/*
--	 * For the tegra-xusb pad controller groups are synonomous
-+	 * For the tegra-xusb pad controller groups are synonymous
- 	 * with lanes/pins and there is always one lane/pin per group.
- 	 */
- 	*pins = &pinctrl->desc->pins[group].number;
-diff --git a/drivers/pinctrl/zte/pinctrl-zx.c b/drivers/pinctrl/zte/pinctrl-zx.c
-index 786bf89487d6..80d00ab8c110 100644
---- a/drivers/pinctrl/zte/pinctrl-zx.c
-+++ b/drivers/pinctrl/zte/pinctrl-zx.c
-@@ -94,7 +94,7 @@ static int zx_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
- 	if (data->aon_pin) {
- 		/*
- 		 * It's an AON pin, whose mux register offset and bit position
--		 * can be caluculated from pin number.  Each register covers 16
-+		 * can be calculated from pin number.  Each register covers 16
- 		 * pins, and each pin occupies 2 bits.
- 		 */
- 		u16 aoffset = pindesc->number / 16 * 4;
--- 
-2.25.0
-
+regards,
+dan carpenter
