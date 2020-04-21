@@ -2,104 +2,101 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B11C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02790C55186
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1E45206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE072073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:05:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="faz134qp"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tQeP9nkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgDUWDH (ORCPT
+        id S1726200AbgDUWF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 18:03:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34312 "EHLO
+        Tue, 21 Apr 2020 18:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgDUWDH (ORCPT
+        with ESMTP id S1725850AbgDUWF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 18:03:07 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A06C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 15:03:05 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x3so7254944pfp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 15:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WXkzL4dOrbJQFvSwAu9xq5cucC+v1u0vYRxTZPwycIY=;
-        b=faz134qp9HFo4Ei6cS8vm+HKRVAvrPlCNs5BUxgWQGoPpr69XIP76TKD3PVgO3AulV
-         RLKSRnXXIt0zJ/M/7onvDQFd6Q8PNOr/7e/y6X/sYFS3dSiFaVvuWohFuNkJw5dcBGbo
-         mMUMwkb6dg1xzv1Ppn4CFY3vsuu/V4jSFPBaXKOaPlHk8uYYVwbj8GDocZq9uxIRqoNh
-         iBLTpIzsFIjZQ0uKZUezJ6wnRdv7mMYAFapSySu12lqlZWOoJQsnVCdEzZkr/Q+9NK1/
-         lpSe33WwkGjL0gRMVd9ngpT0Tnbyz6RJxMNmvSWfRSd+H8TCyv2eukKhaDZE53Tqx0Ky
-         zAJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WXkzL4dOrbJQFvSwAu9xq5cucC+v1u0vYRxTZPwycIY=;
-        b=mJZ1fpW/JBYCv/jWRj4qsB4HlWTm9bFK+/WxVT54Y0f1njj+DNk7i6LakGfTGJ6zKz
-         He+uh2ermYkFjGMNI6xP0iYKY+6FXN+/krqw3DzpjPCbX4YnHZ/wXQT0iCFjFh9Y2/6G
-         6opwIWe4GrP4vHGkopbzue+PSoGl7Pb1PIvzdGbxHNREFhBAv1R5eNQUSxgDC1ZNMk6T
-         /CtOxzSCJ6tRuRuH9h434XTb/TW1xtSEaC8Sv379VqTw+wzcaMQrcfULCmcRUxlY+5dX
-         vdWweAn226MoUVGgcchivvqRhAy0Zxk5cgSZaKacWUkA4HOWe82APw5Ienaw8bPNrT5J
-         NNYg==
-X-Gm-Message-State: AGi0PubRIWnMIBg8ng69IGVimvlTN66D/FMIVP4doyduRWVIMzLhioTP
-        SzY1c/DfrHn5YiA3WNym3U+Kkg==
-X-Google-Smtp-Source: APiQypJ4BC8yw7C2m1DYZzBfrbDYBdk8gquAtELvbi87GDW40aeMcbmDAOYgYG/sNqXRKgy0vJeCXA==
-X-Received: by 2002:a65:611a:: with SMTP id z26mr22635406pgu.341.1587506584593;
-        Tue, 21 Apr 2020 15:03:04 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id w186sm3418987pff.83.2020.04.21.15.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 15:03:03 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 15:02:58 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] objtool: optimize add_dead_ends for split sections
-Message-ID: <20200421220258.GA85573@google.com>
-References: <20200421180724.245410-1-samitolvanen@google.com>
- <20200421180724.245410-4-samitolvanen@google.com>
- <20200421201305.66y2u473htzcuhfu@treble>
+        Tue, 21 Apr 2020 18:05:26 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76016C0610D5;
+        Tue, 21 Apr 2020 15:05:26 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 496HgN52Xkz9sSM;
+        Wed, 22 Apr 2020 08:05:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587506723;
+        bh=GK1CYGCdk6i+naXgyQ9LSnhWR1e3C0+EZY/yit/lwA8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tQeP9nkXWEiEP0Kv85pXxLwN3do6n30Mh66GmGeBVniIfNa2/StMU+PregPLCR8fn
+         U7mu/sNaJTjK1Qy2fO5GutI2QEiuHu7ozKT4DzetnViGKqTZPChk2Cr8R9PKdMVEkd
+         c4fUg8oMv/8ppELbvugy2O8s5kOoHvgtMoitv8bQPuR28gq8mVkpQlDLinGJfTn702
+         t80erOvIf7uRIfLr4GtreuvPh+pzAcOVG8f6/z2OXpe4OsD0sAGW3iYna0KMl0Ryl9
+         vLOCuKz6TkjATSXOorz2GnA/HO+6EIUhoM4mLL3rgoU6sPXUbSi9eIzp6XGz5nvduS
+         K/Fg3/YJAczRg==
+Date:   Wed, 22 Apr 2020 08:05:18 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Trond Myklebust <trondmy@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the nfs tree
+Message-ID: <20200422080518.3c5727e0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421201305.66y2u473htzcuhfu@treble>
+Content-Type: multipart/signed; boundary="Sig_/3poIhWV55NQEb.HbpWm3hBr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 03:13:05PM -0500, Josh Poimboeuf wrote:
-> Also, the unreachable annotation at the end of a section is really an
-> edge case.  I'm sort of wondering if there's a way to accomplish the
-> same thing without storing the last_insn.
-> 
-> For example, I wonder if we could use find_insn() for some bytes at the
-> end of the section.  Most of the time I _think_ there will be a two-byte
-> UD2 instruction there anyway.  So maybe we could do something like:
-> 
-> 	for (offset = rela->sym->sec->len - 1;
-> 	     offset > rela->sym->sec->len - 10;
-> 	     offset --) {
-> 
-> 	     insn = find_insn(file, rela->sym->sec, offset);
-> 	     if (insn)
-> 	     	break;
-> 	}
-> 
-> It's kind of ugly, but then we could maybe avoid the need for the
-> last_insn thing.
+--Sig_/3poIhWV55NQEb.HbpWm3hBr
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sure, that looks fine. I tested this and it looks like the performance
-is roughly the same. I'll send v2 shortly.
+Hi all,
 
-Sami
+In commit
+
+  115677dcbc45 ("SUNRPC: Remove unreachable error condition")
+
+Fixes tag
+
+  Fixes: 7f554890587c ("SUNRPC: Allow addition of new transports to a
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/3poIhWV55NQEb.HbpWm3hBr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6fbh4ACgkQAVBC80lX
+0GwPIAf9EeQiJCXubChuk1cbhaEnd2f25pVGttkRCivBnFpHfLgfPDqvpkmSuPbT
+zD8sOPrPsrLH/gGTnxyaGiFU9ONqsEh9AmNb9u3QhOT4H1SekQYMVYtfamK4WLRk
+zNa6XzJURqm1iKIG0f+kiwQerfBFmtXhUKcNjTRqf+HZagQLHTbIcsapswqMohdp
+2M+g4bcEOhak+qJDziq1FjlYiliBhJogo9R7KjycYJhniV3CUYBb4jccyrl0QvYz
+m2xTgDflstCoSzJr4WDqz9j3U+du/oNqw78UF+Ml7yzs9pE2gbYLxPugPOjHB3io
+bckoh9J6kqPea7JEoSzxWgKIKJbwaw==
+=HlZE
+-----END PGP SIGNATURE-----
+
+--Sig_/3poIhWV55NQEb.HbpWm3hBr--
