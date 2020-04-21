@@ -2,111 +2,137 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C3CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00202C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28270206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D568F20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587452534;
-	bh=Z+fmf3MZTanUK1eDlZtoFdJGrDCVH0CGd4BwENIe5E0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OXJbeLxrV8/6a/un5NMfSKM3q7aDaAOc2phVKHHLzM8C4jHcu0hZaCjpowOmHloH9
-	 khNos3AkFNJ8Fpw0/9vrQ7vYareidsk+sV5fQ5+Is0a03cuq8jBSFepXZNnVbdku23
-	 T5qfmTuJUYi4j0CS6CcgD0r+gbLKzIeZTkFIILFk=
+	s=default; t=1587452550;
+	bh=yvErlf1ujCEjMuZ1HZhQNIJgQdLtBuEUCgoQdnqZWIc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=teSg66BEFNw/zUakHS3mkV4dvtcNYZVhZFdLS+s7v940vrJeoH0tVI77x623rxk2p
+	 5eaaxF9Mn9sZ0MjOx3UGyClagPfmlkns2D8mJIZlQQHyzg53dFpwlrWGFxj9x/ekqc
+	 XKIBdc3nsev7uVA8AQ66BcZyreTxsRUXNTpKMVus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgDUHCN (ORCPT
+        id S1727061AbgDUHC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:02:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58052 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 03:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbgDUHCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:02:13 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725926AbgDUHC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 03:02:29 -0400
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2DC8206A5;
-        Tue, 21 Apr 2020 07:02:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 518F22087E;
+        Tue, 21 Apr 2020 07:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587452532;
-        bh=Z+fmf3MZTanUK1eDlZtoFdJGrDCVH0CGd4BwENIe5E0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GBUY2Mu1pH5QqANYe1GJjosD6c/oF6gvLuIOBkUU4xMMIBCPQc8eHirwbD/lIN+fo
-         pUy9A2APpR3RQVTYdoe85rp+Z4PEu0b/7iqs2G14lfRh1kJ+t8bXU8/q58TDECxLfu
-         Zii20HSrpehI+Mop+ZzV1HtSTFSAZqshN53NFF/4=
-Date:   Tue, 21 Apr 2020 08:02:06 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] arm64: entry: Enable random_kstack_offset support
-Message-ID: <20200421070206.GB14448@willie-the-truck>
-References: <20200324203231.64324-1-keescook@chromium.org>
- <20200324203231.64324-6-keescook@chromium.org>
- <20200420205458.GC29998@willie-the-truck>
- <202004201529.BB787BB@keescook>
+        s=default; t=1587452548;
+        bh=yvErlf1ujCEjMuZ1HZhQNIJgQdLtBuEUCgoQdnqZWIc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y0ypIU01zjeTlzT53B8egS3zgE+CoGdF87n9WorvBDR9TlY51Nnqz5sevwJSayFWQ
+         VAM6zmWgjEbe5QWMAgg5I0qToX2KyMmlIQgFDTszV1NpT4s+lkqG8dPcLP+20AAOUw
+         WHp8QwbOG7cfkhHP3wXHd6wt+qi+dZIahIfrK2J8=
+Received: by mail-io1-f51.google.com with SMTP id n10so13915387iom.3;
+        Tue, 21 Apr 2020 00:02:28 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZlU27pKRX19Wy7aHiQ9KeKvJX3RNPSSNZWRJeC/sI6btFXzDQD
+        8l8tn7uK7IFoUc3PO2rH2ELHOHZHhqKbDVUFAaM=
+X-Google-Smtp-Source: APiQypJ7U9stCkpY+B3uQDUazOYm7Gv5hkpH/DE6YibToZivYDs+sA9EjIN2vouOcJjK6KTOFzro6D3C6jpn/y7lRBQ=
+X-Received: by 2002:a02:8247:: with SMTP id q7mr17940310jag.68.1587452547702;
+ Tue, 21 Apr 2020 00:02:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202004201529.BB787BB@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200420075711.2385190-1-Jason@zx2c4.com> <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
+ <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
+In-Reply-To: <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 21 Apr 2020 09:02:16 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEdWu1v0tGT2Co0oMqWDJS_FNx97qZJmp3GPrrj8MrnrQ@mail.gmail.com>
+Message-ID: <CAMj1kXEdWu1v0tGT2Co0oMqWDJS_FNx97qZJmp3GPrrj8MrnrQ@mail.gmail.com>
+Subject: Re: FPU register granularity [Was: Re: [PATCH crypto-stable] crypto:
+ arch/lib - limit simd usage to PAGE_SIZE chunks]
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 03:34:57PM -0700, Kees Cook wrote:
-> On Mon, Apr 20, 2020 at 09:54:58PM +0100, Will Deacon wrote:
-> > On Tue, Mar 24, 2020 at 01:32:31PM -0700, Kees Cook wrote:
-> > > +	/*
-> > > +	 * Since the compiler chooses a 4 bit alignment for the stack,
-> > > +	 * let's save one additional bit (9 total), which gets us up
-> > > +	 * near 5 bits of entropy.
-> > > +	 */
-> > > +	choose_random_kstack_offset(get_random_int() & 0x1FF);
-> > 
-> > Hmm, this comment doesn't make any sense to me. I mean, I get that 0x1ff
-> > is 9 bits, and that is 4+5 but so what?
-> 
-> Er, well, yes. I guess I was just trying to explain why there were 9
-> bits saved here and to document what I was seeing the compiler actually
-> doing with the values. (And it serves as a comparison to the x86 comment
-> which is explaining similar calculations in the face of x86_64 vs ia32.)
-> 
-> Would something like this be better?
-> 
-> /*
->  * Since the compiler uses 4 bit alignment for the stack (1 more than
->  * x86_64), let's try to match the 5ish-bit entropy seen in x86_64,
->  * instead of having needlessly lower entropy. As a result, keep the
->  * low 9 bits.
->  */
+On Tue, 21 Apr 2020 at 06:15, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> Hi David,
+>
+> On Mon, Apr 20, 2020 at 2:32 AM David Laight <David.Laight@aculab.com> wrote:
+> > Maybe kernel_fp_begin() should be passed the address of somewhere
+> > the address of an fpu save area buffer can be written to.
+> > Then the pre-emption code can allocate the buffer and save the
+> > state into it.
+>
+> Interesting idea. It looks like `struct xregs_state` is only 576
+> bytes. That's not exactly small, but it's not insanely huge either,
+> and maybe we could justifiably stick that on the stack, or even
+> reserve part of the stack allocation for that that the function would
+> know about, without needing to specify any address.
+>
+> > kernel_fpu_begin() ought also be passed a parameter saying which
+> > fpu features are required, and return which are allocated.
+> > On x86 this could be used to check for AVX512 (etc) which may be
+> > available in an ISR unless it interrupted inside a kernel_fpu_begin()
+> > section (etc).
+> > It would also allow optimisations if only 1 or 2 fpu registers are
+> > needed (eg for some of the crypto functions) rather than the whole
+> > fpu register set.
+>
+> For AVX512 this probably makes sense, I suppose. But I'm not sure if
+> there are too many bits of crypto code that only use a few registers.
+> There are those accelerated memcpy routines in i915 though -- ever see
+> drivers/gpu/drm/i915/i915_memcpy.c? sort of wild. But if we did go
+> this way, I wonder if it'd make sense to totally overengineer it and
+> write a gcc/as plugin to create the register mask for us. Or, maybe
+> some checker inside of objtool could help here.
+>
+> Actually, though, the thing I've been wondering about is actually
+> moving in the complete opposite direction: is there some
+> efficient-enough way that we could allow FPU registers in all contexts
+> always, without the need for kernel_fpu_begin/end? I was reversing
+> ntoskrnl.exe and was kind of impressed (maybe not the right word?) by
+> their judicious use of vectorisation everywhere. I assume a lot of
+> that is being generated by their compiler, which of course gcc could
+> do for us if we let it. Is that an interesting avenue to consider? Or
+> are you pretty certain that it'd be a huge mistake, with an
+> irreversible speed hit?
+>
 
-Yes, thank you! I was missing the comparison to x86_64 and so the one
-"additional" bit didn't make sense to me.
+When I added support for kernel mode SIMD to arm64 originally, there
+was a kernel_neon_begin_partial() that took an int to specify how many
+registers were being used, the reason being that NEON preserve/store
+was fully eager at this point, and arm64 has 32 SIMD registers, many
+of which weren't really used, e.g., in the basic implementation of AES
+based on special instructions.
 
-With the new comment:
+With the introduction of lazy restore, and SVE handling for userspace,
+we decided to remove this because it didn't really help anymore, and
+made the code more difficult to manage.
 
-Acked-by: Will Deacon <will@kernel.org>
+However, I think it would make sense to have something like this in
+the general case. I.e., NEON registers 0-3 are always preserved when
+an exception or interrupt (or syscall) is taken, and so they can be
+used anywhere in the kernel. If you want the whole set, you will have
+to use begin/end as before. This would already unlock a few
+interesting case, like memcpy, xor, and sequences that can easily be
+implemented with only a few registers such as instructio based AES.
 
-I'm assuming you're merging this via some other tree, but let me know
-if you need anything else from me.
-
-Cheers,
-
-Will
+Unfortunately, the compiler needs to be taught about this to be
+completely useful, which means lots of prototyping and benchmarking
+upfront, as the contract will be set in stone once the compilers get
+on board.
