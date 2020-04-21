@@ -2,110 +2,146 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE917C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948EFC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C24902072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587493353;
-	bh=FwcHGUYdMnDibj/tRCqmioRk8NJPli42GayBPx027Pw=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=PWya0Zlh7BkEhEKe5JUYxwJ5+zwnRI+mNeZU7IVC+7JfpVfF9fdzrh+63v3F0Ggjn
-	 VZC9n3oQuZpWYNR4VcD1L/18AO9tb8rmd8C0dQmOktILW6AopyjkWzzIUcEn19Gio0
-	 dkPwEbf9MuU6WMDuAVutcAJU3t2YeVcb7fz4gDvU=
+	by mail.kernel.org (Postfix) with ESMTP id 7A1E420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:23:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="K9v4tXy+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="l9pbCK2E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgDUSWd (ORCPT
+        id S1729287AbgDUSX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:22:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgDUSWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:22:32 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Tue, 21 Apr 2020 14:23:57 -0400
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:61107 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDUSX5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:23:57 -0400
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id D8BFAB9C22;
+        Tue, 21 Apr 2020 14:23:53 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=XIF+lHQmIGJlgPyKUKfgN7ocejk=; b=K9v4tX
+        y+mRt6OcJpt6RtETLC+W9D+ACu1UExe3jrOmLpVlTYRM7WUkdB5vj6aVE0UUlaOa
+        udNMfKiGLYjYYQnlms8Q8l4NuSpG5qfsyHSEL4vnmz924SUs/rKOtmgh3hhQ0GoU
+        8Tx850K4b0tY8POWlok71ONxLxRftDMBlvk6Y=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id CF244B9C20;
+        Tue, 21 Apr 2020 14:23:53 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=x7fL8/5SX4Xr9sIGNCqUqMxcBILv9SZc87FE2gx3TwU=; b=l9pbCK2ETrm+QZLPaoOv8fFZyWmAeWWOcrwsohSI96G4dsavFYhV75RPBJuBptQ+TVkiyTSt0xvsNiImlBKmr0Nc/3ymXLeFFapNutfiMCQTSzAmNkDskibrOJ1IruUKnCIf8iEqBL/QX3nIAX+clCx7CHu9e0LroUCrPgn7Ht8=
+Received: from yoda.home (unknown [24.203.50.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56F05206D9;
-        Tue, 21 Apr 2020 18:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587493351;
-        bh=FwcHGUYdMnDibj/tRCqmioRk8NJPli42GayBPx027Pw=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=eK2EvRMqCoy5KAlgM/CatYGa7aZv9+O9BbdwG0SYk1b29oAlt7ThQMoKL3REtyXkO
-         rpz4apg98lYR4E9JXQTCCofMqT6leAp9UCThGk2rPKjkEJOa2eZovD9dUgaFdZUniE
-         2orodMJywuJiOar76mwN+At/k9AiGOztnVPpN56Q=
-Date:   Tue, 21 Apr 2020 19:22:29 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Xiubo.Lee@gmail.com, devicetree@vger.kernel.org,
-        nicoleotsuka@gmail.com, perex@perex.cz, lgirdwood@gmail.com,
-        alsa-devel@alsa-project.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        timur@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        festevam@gmail.com, tiwai@suse.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <cover.1587038908.git.shengjiu.wang@nxp.com>
-References: <cover.1587038908.git.shengjiu.wang@nxp.com>
-Subject: Re: [PATCH v9 0/7] ASoC: Add new module driver for new ASRC
-Message-Id: <158749333764.13706.16975370508037163881.b4-ty@kernel.org>
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id 44DE3B9C1F;
+        Tue, 21 Apr 2020 14:23:49 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 544F62DA014B;
+        Tue, 21 Apr 2020 14:23:47 -0400 (EDT)
+Date:   Tue, 21 Apr 2020 14:23:47 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Saeed Mahameed <saeedm@mellanox.com>
+cc:     "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "leon@kernel.org" <leon@kernel.org>
+Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+In-Reply-To: <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com>
+Message-ID: <nycvar.YSQ.7.76.2004211411500.2671@knanqh.ubzr>
+References: <20200417011146.83973-1-saeedm@mellanox.com> <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com> <nycvar.YSQ.7.76.2004181509030.2671@knanqh.ubzr> <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
+ <87v9lu1ra6.fsf@intel.com> <45b9efec57b2e250e8e39b3b203eb8cee10cb6e8.camel@mellanox.com> <nycvar.YSQ.7.76.2004210951160.2671@knanqh.ubzr> <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 3EDF1E74-83FD-11EA-8A3A-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 20:25:30 +0800, Shengjiu Wang wrote:
-> Add new module driver for new ASRC in i.MX8MN, several commits
-> are added for new property fsl,asrc-format
+On Tue, 21 Apr 2020, Saeed Mahameed wrote:
+
+> On Tue, 2020-04-21 at 09:58 -0400, Nicolas Pitre wrote:
+> > On Tue, 21 Apr 2020, Saeed Mahameed wrote:
+> > 
+> > > I wonder how many of those 8889 cases wanted a weak dependency but
+> > > couldn't figure out how to do it ? 
+> > > 
+> > > Users of depends on FOO || !FOO
+> > > 
+> > > $ git ls-files | grep Kconfig | xargs grep -E \
+> > >   "depends\s+on\s+([A-Za-z0-9_]+)\s*\|\|\s*(\!\s*\1|\1\s*=\s*n)" \
+> > >  | wc -l
+> > > 
+> > > 156
+> > > 
+> > > a new keyword is required :) .. 
+> > > 
+> > > 
+> > > > In another mail I suggested
+> > > > 
+> > > > 	optionally depends on FOO
+> > > > 
+> > > > might be a better alternative than "uses".
+> > > > 
+> > > > 
+> > > 
+> > > how about just:
+> > >       optional FOO
+> > > 
+> > > It is clear and easy to document .. 
+> > 
+> > I don't dispute your argument for having a new keyword. But the most 
+> > difficult part as Arnd said is to find it. You cannot pretend that 
 > 
-> Shengjiu Wang (7):
->   ASoC: fsl_asrc: rename asrc_priv to asrc
->   ASoC: dt-bindings: fsl_asrc: Add new property fsl,asrc-format
->   ASoC: fsl-asoc-card: Support new property fsl,asrc-format
->   ASoC: fsl_asrc: Support new property fsl,asrc-format
->   ASoC: fsl_asrc: Move common definition to fsl_asrc_common
->   ASoC: dt-bindings: fsl_easrc: Add document for EASRC
->   ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
+> kconfig-language.rst  ?
 > 
-> [...]
+> > "optional FOO" is clear when it actually imposes a restriction when 
+> > FOO=m. Try to justify to people why they cannot select y because of
+> > this 
+> > "optional" thing.
+> > 
+> 
+> Then let's use "uses" it is more assertive. Documentation will cover
+> any vague anything about it .. 
 
-Applied to
+It uses what? And why can't I configure this with "uses FOO" when FOO=m?
+That's not any clearer. And saying that "this is weird but it is 
+described in the documentation" is not good enough. We must make things 
+clear in the first place.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+This is really a conditional dependency. That's all this is about.
+So why not simply making it so rather than fooling ourselves? All that 
+is required is an extension that would allow:
 
-Thanks!
+	depends on (expression) if (expression)
 
-[1/7] ASoC: fsl_asrc: rename asrc_priv to asrc
-      commit: 7470704d8b425c4c7045884690f92cf015563aac
-[2/7] ASoC: dt-bindings: fsl_asrc: Add new property fsl, asrc-format
-      commit: b84b4c9a688d803b0e7cf91fec9a5d8b3ba47768
-[3/7] ASoC: fsl-asoc-card: Support new property fsl, asrc-format
-      commit: 859e364302c510cfdd9abda13a3c4c1d1bc68c57
-[4/7] ASoC: fsl_asrc: Support new property fsl,asrc-format
-      commit: 4520af41fd21863d026d53c7e1eb987509cb3c24
-[5/7] ASoC: fsl_asrc: Move common definition to fsl_asrc_common
-      commit: be7bd03f0201b5a513ced98c08444a140eab92ea
-[6/7] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
-      commit: a960de4da241d409a73e318ab19e6b5fdcd95a83
-[7/7] ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
-      commit: 955ac624058f91172b3b8820280556e699e1e0ff
+This construct should be obvious even without reading the doc, is 
+already used extensively for other things already, and is flexible 
+enough to cover all sort of cases in addition to this particular one.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Nicolas
