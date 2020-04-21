@@ -2,115 +2,90 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BB6C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D7FC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1952071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CF5206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hucnDYjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgDUSC2 (ORCPT
+        id S1726628AbgDUSHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:02:28 -0400
-Received: from muru.com ([72.249.23.125]:50758 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbgDUSC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:02:27 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C86768081;
-        Tue, 21 Apr 2020 18:03:11 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 11:02:20 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
- autosuspend
-Message-ID: <20200421180220.GB37466@atomide.com>
-References: <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com>
- <20200416184638.GI37466@atomide.com>
- <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
- <20200417164340.3d9043d1@aktux>
- <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com>
- <20200417150721.GL37466@atomide.com>
- <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com>
- <20200420150802.GR37466@atomide.com>
- <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com>
- <20200421085336.32cf8ffe@aktux>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200421085336.32cf8ffe@aktux>
+        Tue, 21 Apr 2020 14:07:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgDUSHe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:07:34 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B76D5C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:32 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id l9so3848857pjq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=kEBaA/Sh9DZjU6rhJczeK9hcyL832LNh924kuJMa3Eg=;
+        b=hucnDYjYLCsHVrzEZqVw+IzJqJfansfvfknmCGCfCUfqXARxTZZWgCxhy4beLvPT2e
+         8xm0Z0ELOpVxfg0eFVgqxaFsTYusfQH25XzgLCuJqw8DZuAvCH5v/qm4cJUBk4kTjTYI
+         GNbMEbw3VInkcdPCzDWUsydKPlYzAPDYANe6p2SmQAbDWBP1MDz6Re0JuMHvtWX0siVa
+         CUwr1FxtrSCFAd5Gq/ciglKKeqTOF5ClEmznW5Etfccq+cB32mh9CsDTQ/XP8QTLsQxe
+         NB1UuiJrsVNSeQVB3oR+MfwNEVEW3Jgl83QDY9DWQzDAApNc/AvSXTAcSJNyCI92HEb4
+         pWCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=kEBaA/Sh9DZjU6rhJczeK9hcyL832LNh924kuJMa3Eg=;
+        b=ErZj5GhGRj1UwJukchOR0daiJNpRTb23pdH98UbW1JSXhGNgpIc8XvuASKPTZyhu5G
+         SjSnAMIduhyRHOl6fkuhtpfXeNMciqewfL4GsM1C+tdvXw/KEhE1Yfj4faqa42yrmibM
+         TZYU9ICwERhmbV3QGKooIdr+kqP1MpRAC6fBR8wb25b8xbLPSJF6xzfj4zI0TkyKFQsd
+         u2qGPSCykVS1LdpTm91SEcAtHVFCrr/FOsxWyQd16pO3Z2zf/lDWGIv6ull5UQ6d6dmm
+         oPG8dbAXsD3WMRzsiKXdfQOEnU0Z+Lu/V0C7pockB2J2iE3IEUjuleUMZsOunl1V6vXI
+         o22g==
+X-Gm-Message-State: AGi0Pub+iNQvbTpcb+CwDz9Ir88BSX1w2z8hSK6ChIS/NIYrz8psf9AD
+        6Q6uhkSdpGuHBYP/rEiWPzOkayAkDTexrnAZPok=
+X-Google-Smtp-Source: APiQypJxrzgIk0NV3dowQVMZzYqYkacdn1aJomcM8WofRQIRFuZ7K54v4I/3jwWQj+42J2HhAJ1tOzkGq9g3LurCm80=
+X-Received: by 2002:a17:90a:315:: with SMTP id 21mr6452651pje.96.1587492450843;
+ Tue, 21 Apr 2020 11:07:30 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 11:07:21 -0700
+Message-Id: <20200421180724.245410-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+Subject: [PATCH 0/3] objtool: add support for >64k sections
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andreas Kemnade <andreas@kemnade.info> [200421 06:54]:
-> On Mon, 20 Apr 2020 23:11:18 +0200
-> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-> > The only maybe important observation was when I disabled all
-> > kernel modules except *hdq*.ko and *bq27*.ko. Then I did only
-> > get an emergency shell so that it is quite similar to the
-> > scenario Andreas has tested. With this setup it did work.
-> > 
-> So I guess without idling uarts?
-> 
-> > I then tried to reenable other kernel modules but the result
-> > wasn't convincing that it gives a reliable result.
-> > 
-> > So I have still no clear indication when the problem occurs and
-> > when not.
-> > 
-> Hmm, last summer I had problems even without that patch reading
-> temperature while doing umts transfers. Maybe there are some
-> connections,
-> maybe not. For that scenario we might have emc issues, thermal problems
-> or a real kernel problem.
+This series fixes objtool for binaries with >64k sections, and
+includes optimizations to reduce the runtime for a binary with
+~130k sections from >15 minutes to ~4 seconds.
 
-I have confimed here that logicpd torpedo devkit with battery
-works just fine while entering off mode during idle. I can see
-the temperature just fine with:
+Sami Tolvanen (3):
+  objtool: use gelf_getsymshndx to handle >64k sections
+  objtool: optimize insn_hash for split sections
+  objtool: optimize add_dead_ends for split sections
 
-# cat /sys/class/power_supply/bq27000-battery/uevent
-POWER_SUPPLY_NAME=bq27000-battery
-POWER_SUPPLY_STATUS=Charging
-POWER_SUPPLY_PRESENT=1
-POWER_SUPPLY_VOLTAGE_NOW=3829000
-POWER_SUPPLY_CURRENT_NOW=-592084
-POWER_SUPPLY_CAPACITY_LEVEL=Normal
-POWER_SUPPLY_TEMP=306
-POWER_SUPPLY_TECHNOLOGY=Li-ion
-POWER_SUPPLY_CHARGE_FULL_DESIGN=2056320
-POWER_SUPPLY_CYCLE_COUNT=0
-POWER_SUPPLY_POWER_AVG=0
-POWER_SUPPLY_MANUFACTURER=Texas Instruments
+ tools/objtool/check.c | 48 ++++++++++++++++++++++++++-----------------
+ tools/objtool/check.h |  9 ++++++++
+ tools/objtool/elf.c   | 24 +++++++++++++++-------
+ tools/objtool/elf.h   |  1 +
+ 4 files changed, 56 insertions(+), 26 deletions(-)
 
-This is 37xx though, maybe you have 35xx and there's some errata
-that we're not handling?
 
-I'm only seeing "2.7. HDQTM/1-Wire® Communication Constraints"
-for external pull-up resitor in 34xx errata at [0].
-
-I wonder if wrong external pull could cause flakyeness after
-enabling the hdq module?
-
-If nothing else helps, you could try to block idle for hdq
-module, but I have a feeling that's a workaround for something
-else.
-
-Regards,
-
-Tony
-
-[0] https://www.ti.com/pdfs/wtbu/SWPZ009A_OMAP4430_Errata_Public_vA.pdf
+base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
 
