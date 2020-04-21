@@ -2,72 +2,80 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E86FC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF73C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5477E206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:14:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="zC4u9JMi"
+	by mail.kernel.org (Postfix) with ESMTP id 00476206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbgDUTOd (ORCPT
+        id S1726104AbgDUTQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:14:33 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:60960 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725902AbgDUTOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:14:32 -0400
-Received: from localhost.localdomain (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 476EFC4CA6;
-        Tue, 21 Apr 2020 19:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1587496469; bh=uN6Y6A8DTNuiV7e2MudBISx2fjf0/H0BvRP4mfJU1e4=;
-        h=From:To:Cc:Subject:Date;
-        b=zC4u9JMiQNrblvuC/A4RV27RcUEPcxzT0+Z8op6Wa+XnQsIT3/I6tbalVOi2GIbQc
-         K5/OfWhIKxV+mOSQEGLGJX5utwHRGqVmHZe2vuRA07a612+gSoZI+S2i0v4Y8QJzv2
-         Na0E/8E8vaNFBGyTofMC1G2zvEE6w8rqKHhJqB/I=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-leds@vger.kernel.org
-Cc:     Dan Murphy <dmurphy@ti.com>, Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH v3 0/2] Add sgm3140 flash led driver
-Date:   Tue, 21 Apr 2020 21:13:52 +0200
-Message-Id: <20200421191354.1443017-1-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.26.1
+        Tue, 21 Apr 2020 15:16:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725902AbgDUTQY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:16:24 -0400
+X-Greylist: delayed 1579 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 21 Apr 2020 12:16:24 PDT
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C516AC0610D5;
+        Tue, 21 Apr 2020 12:16:24 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQyNT-007mDc-HD; Tue, 21 Apr 2020 19:16:15 +0000
+Date:   Tue, 21 Apr 2020 20:16:15 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 5/5] sysctl: pass kernel pointers to ->proc_handler
+Message-ID: <20200421191615.GE23230@ZenIV.linux.org.uk>
+References: <20200421171539.288622-1-hch@lst.de>
+ <20200421171539.288622-6-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421171539.288622-6-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series introduces a driver for the SGMICRO SGM3140 charge pump
-used in the PinePhone smartphone.
+On Tue, Apr 21, 2020 at 07:15:39PM +0200, Christoph Hellwig wrote:
+> Instead of having all the sysctl handlers deal with user pointers, which
+> is rather hairy in terms of the BPF interaction, copy the input to and
+> from  userspace in common code.  This also means that the strings are
+> always NUL-terminated by the common code, making the API a little bit
+> safer.
+> 
+> As most handler just pass through the data to one of the common handlers
+> a lot of the changes are mechnical.
 
-Luca Weiss (2):
-  dt-bindings: leds: Add binding for sgm3140
-  leds: add sgm3140 driver
+> @@ -564,27 +564,38 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *buf,
+>  	if (!table->proc_handler)
+>  		goto out;
+>  
+> -	error = BPF_CGROUP_RUN_PROG_SYSCTL(head, table, write, buf, &count,
+> -					   ppos, &new_buf);
+> +	if (write) {
+> +		kbuf = memdup_user_nul(ubuf, count);
+> +		if (IS_ERR(kbuf)) {
+> +			error = PTR_ERR(kbuf);
+> +			goto out;
+> +		}
+> +	} else {
+> +		error = -ENOMEM;
+> +		kbuf = kzalloc(count, GFP_KERNEL);
 
- .../bindings/leds/leds-sgm3140.yaml           |  62 ++++
- drivers/leds/Kconfig                          |   8 +
- drivers/leds/Makefile                         |   1 +
- drivers/leds/leds-sgm3140.c                   | 320 ++++++++++++++++++
- 4 files changed, 391 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
- create mode 100644 drivers/leds/leds-sgm3140.c
-
--- 
-2.26.1
-
+Better allocate count + 1 bytes here, that way a lot of insanity in the
+instances can be simply converted to snprintf().  Yes, I know it'll bring
+the Church Of Avoiding The Abomination Of Sprintf out of the woodwork,
+but...
