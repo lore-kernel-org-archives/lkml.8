@@ -2,208 +2,135 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3CFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2652C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13F15206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0B7206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:14:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="L6soEEZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgDUMNM (ORCPT
+        id S1728748AbgDUMOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:13:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:33898 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbgDUMNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:13:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDDB531B;
-        Tue, 21 Apr 2020 05:13:10 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 57E1A3F68F;
-        Tue, 21 Apr 2020 05:13:08 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 13:13:05 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yury Norov <yury.norov@gmail.com>,
-        Paul Turner <pjt@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Josh Don <joshdon@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 0/4] sched/rt: Distribute tasks in find_lowest_rq()
-Message-ID: <20200421121305.ziu3dfqwo7cw6ymu@e107158-lin.cambridge.arm.com>
-References: <20200414150556.10920-1-qais.yousef@arm.com>
- <jhjh7xlvqqe.mognet@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Tue, 21 Apr 2020 08:14:12 -0400
+Received: from mail-eopbgr30068.outbound.protection.outlook.com ([40.107.3.68]:47513
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726741AbgDUMOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 08:14:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NFFcMR5gmHTimwEDSTDsNSZp9qRGAH2/OGhKprnaLZa2tr8YrJOltzI0UiHo8y1zIc5RQ5flYp404UzG/lFEF7Q5Wb95h0FjLqEKz/Drb+pBfXcRHncBUzGTauMVRVasixgEJzZwLhleg+k+5K2YCUZS1a/b0D5kpJRdLT7Z32c/Zo7SKIDBTCOd3E3dEC3fZ7MFxM+hYCURMdnsJqHwzjoFXvhMrii5KXOWnZucX8I7ua4UHwOKTB25tR/eFxwPGKlHHzY6XAZz5Lgp19lPZbdWv9BCfoyQ7zYtiHPcilgv8jUy+0o4i3MiSThk5WYGZ65maWKlg3wPFXHWjByb9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EBQ/7yzuwHmMWR52NNmGNMPX8cnApTfuM5/B6CtkA/4=;
+ b=Ab/wBaL0pWuPM6A4SphmdOhC67gVMzkehA9rNRuKry6FRF3WjiTeyMMK/9niXpK9SZ6Kz3O61MRUHbRrXZSzmJ82R+9Ye40bOmk/AEn7x5QzkRqnvbFCTPL95duhWjCgvsW7lKdBiom9lyStG2HvCaJn5B3OvoqonpOTV0J4ApsvwE9WZVv6XZNWGcAo3yL2GmOyDbGPe55Vcww2xA92zM1mQZ7Rm8L7uAAY1KZbbuGTV94++2S8scGxbIQur3qAHHM4/8Yd2R5mLasJ0pFreBnoV/6L/pG4Po8DmgpEcJ2Bd/DvToyew3zamKQipC9W4ipa5gv3kU3gDMj8Y7824g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EBQ/7yzuwHmMWR52NNmGNMPX8cnApTfuM5/B6CtkA/4=;
+ b=L6soEEZritBmjXXVT0uKE0AXeZaoVRR1kNOUNf78A4kltLVhyXSp8SLa7H3PyVYchZyTwhwEH1L/cCrEqz+ShzTlRh5BVgOtyjSX6hj7eN5p+m2+2BtI65cT8ZpXWhMC1XappBYEjFuipzVNO6k76SU1s4/oxa/dJ2uSnHAmv6U=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=leonro@mellanox.com; 
+Received: from AM6PR05MB6408.eurprd05.prod.outlook.com (2603:10a6:20b:b8::23)
+ by AM6PR05MB5670.eurprd05.prod.outlook.com (2603:10a6:20b:2b::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Tue, 21 Apr
+ 2020 12:14:07 +0000
+Received: from AM6PR05MB6408.eurprd05.prod.outlook.com
+ ([fe80::1466:c39b:c016:3301]) by AM6PR05MB6408.eurprd05.prod.outlook.com
+ ([fe80::1466:c39b:c016:3301%4]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
+ 12:14:07 +0000
+Date:   Tue, 21 Apr 2020 15:14:04 +0300
+From:   Leon Romanovsky <leonro@mellanox.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Andy Gospodarek <andy@greyhouse.net>, Borislav Petkov <bp@suse.de>,
+        Ion Badulescu <ionut@badula.org>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Jessica Yu <jeyu@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, netdev@vger.kernel.org,
+        oss-drivers@netronome.com, Salil Mehta <salil.mehta@huawei.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Shannon Nelson <snelson@pensando.io>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>
+Subject: Re: [PATCH net-next v2 0/4] Remove vermagic header from global
+ include folder
+Message-ID: <20200421121404.GL121146@unreal>
+References: <20200419141850.126507-1-leon@kernel.org>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <jhjh7xlvqqe.mognet@arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200419141850.126507-1-leon@kernel.org>
+X-ClientProxiedBy: AM0PR10CA0001.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:17c::11) To AM6PR05MB6408.eurprd05.prod.outlook.com
+ (2603:10a6:20b:b8::23)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (2a00:a040:183:2d::a43) by AM0PR10CA0001.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:17c::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Tue, 21 Apr 2020 12:14:06 +0000
+X-Originating-IP: [2a00:a040:183:2d::a43]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3c79b26b-3716-449b-50e5-08d7e5ed7d6c
+X-MS-TrafficTypeDiagnostic: AM6PR05MB5670:
+X-Microsoft-Antispam-PRVS: <AM6PR05MB5670E4C9729042FC786E6894B0D50@AM6PR05MB5670.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 038002787A
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6408.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(7916004)(4636009)(366004)(54906003)(5660300002)(1076003)(110136005)(7416002)(4326008)(186003)(16526019)(66946007)(33656002)(9686003)(498600001)(81156014)(6496006)(66556008)(2906002)(966005)(66476007)(33716001)(6486002)(8936002)(52116002)(86362001)(8676002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Hn2tq0NjBcmyLYe+R3XXL0h/NlyPjwBJkXdXkjKCyCOuk6YsSVZwkWZtnQj7fv9Sn5eJTnCtWf7CLfCnQa17iwiw/xzRW6XwvX9LU9m/O2Y/q7kNqK56h9u6W3hbpy0Z8c9lP3jbKAyFakhHZ+tyhzO97FzYx8uENx/7Mw6dzwrW+lm3Wiyx96Mmm6dTtmYwrB118QkW/Ji1yKLABoTD9hac/w9+2gMR5NX9L1BVsfoqqNbpVee7yxHio0LH3LQy7rnzIVDL1rrvn87cI7gMHM2dQs7bGMTqHEYCABvCspDOPWTkMu38SuVI932KAcVd9Dz/cXjbemlhwU/pjLoj0vsruGekoWYWZ1kKoWxttYcog1Bi/jhgDhMJVPp/kuQXyssy13a1HSF4wGyVyeDjDKLvvGwreuXPUq/QJBhjauIw2awp7w4GrJNAQUTx01XfC6meIy8HLK+vakYLxhBkoYBdqh7N7SLw8Uu/5gUCg2UsFn5hX4bq6/KVDtO1PxxG5Wn4RIaC6akxVXy1mnQBrQ==
+X-MS-Exchange-AntiSpam-MessageData: o1q4clD8ytWbIVzvFeJc7GopcdGai3BMNhlJhFhjUbPOVbqerIsP0fbGaRHLRAUdMoG2ThMDRgeqknLvIn284oDZi69sDctGx+XOrebuXz2vKrX+7F5TRdx4/Vxi1+X7MOCCwrAcXoU6bX10ndlE+bRILqGQdXWYbix1U5U/Ukk=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c79b26b-3716-449b-50e5-08d7e5ed7d6c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2020 12:14:07.2903
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: G7FmDldzABDmNTXvopn+GwagdJrjw8dmDaku+wSXUpUxwg3sZpGFPFFZrSBiIQB/Makb1MLnq+BuZqrA9xIPsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5670
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Rafael +Marc
+On Sun, Apr 19, 2020 at 05:18:46PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
+>
+> Changelog:
+> v2:
+>  * Changed the implementation of patch #4 to be like Masahiro wants.
+> I personally don't like this implementation and changing it just to move forward
+> this this patchset.
+> v1:
+> https://lore.kernel.org/lkml/20200415133648.1306956-1-leon@kernel.org
+>  * Added tags
+>  * Updated patch #4 with test results
+>  * Changed scripts/mod/modpost.c to create inclusion of vermagic.h
+>    from kernel folder and not from general include/linux. This is
+>    needed to generate *.mod.c files, while building modules.
+> v0:
+> https://lore.kernel.org/lkml/20200414155732.1236944-1-leon@kernel.org
+> ----------------------------------------------------------------------------
 
-(There's a question about a function that you maintain below, the context is
-that cpumask_any() now truly returns a random cpu in the mask and there were
-concern it might break something you maintain)
+Dave,
 
-On 04/14/20 19:58, Valentin Schneider wrote:
-> Hi,
-> 
-> On 14/04/20 16:05, Qais Yousef wrote:
-> > Now that we have a proper function that returns a 'random' CPU in a mask [1]
-> > utilize that in find_lowest_rq() to solve the thundering herd issue described
-> > in this thread
-> >
-> >       https://lore.kernel.org/lkml/20200219140243.wfljmupcrwm2jelo@e107158-lin/
-> >
-> > But as a pre-amble, I noticed that the new cpumask_any_and_distribute() is
-> > actually an alias for cpumask_any_and() which is documented as returning
-> > a 'random' cpu but actually just does cpumask_first_and().
-> >
-> > The first 3 patches cleanup the API so that the whole family of
-> > cpumask_any*() take advantage of the new 'random' behavior
-> 
-> I'm a bit wary about such blanket changes. I feel like most places impacted
-> by this change don't gain anything by using the random thing. In sched land
-> that would be:
+I see in the patchworks that this series is marked as "Needs Review/ACK".
+Can you please help me to understand who is needed to be approached?
 
-The API has always been clear that cpumask_any return a random cpu within the
-mask. And the fact it's a one liner with cpumask_first() directly visible,
-a user made the choice to stick to cpumask_any() indicates that that's what
-they wanted.
-
-Probably a lot of them they don't care what cpu is returned and happy with the
-random value. I don't see why it has to have an effect. Some could benefit,
-like my use case here. Or others truly don't care, then it's fine to return
-anything, as requested.
-
-> 
-> - The single cpumask_any() in core.c::select_task_rq()
-> - Pretty much any function that wants a CPU id to dereference a
->   root_domain; there's some of them in deadline.c, topology.c
-> 
-> Looking some more into it, there's shadier things:
-> 
-> - cpufreq_offline() uses cpumask_any() to figure out the new policy
->   leader... That one should be cpumask_first()
-
-I CCed Rafael who's the maintainer of this file who can speak better of what
-should be expected.
-
-I don't see why it _should_ be cpumask_first(). AFAICT any cpu can be the new
-leader. So nothing breaks here.
-
-> - gic_set_affinity() uses cpumask_any_and() (in the common case). If this
->   starts using randomness, you will stop affining e.g. all SPIs to CPU0
->   by default (!!!)
-
-I CCed Marc who's the maintainer of this file who can clarify better if this
-really breaks anything.
-
-If any interrupt expects to be affined to a specific CPU then this must be
-described in DT/driver. I think the GIC controller is free to distribute them
-to any cpu otherwise if !force. Which is usually done by irq_balancer anyway
-in userspace, IIUC.
-
-I don't see how cpumask_any_and() break anything here too. I actually think it
-improves on things by better distribute the irqs on the system by default.
-
-Marc will know better for sure. It's been a long time I looked at irqchip code.
-
-> - ... and there might be more
-
-I can appreciate you have some concerns this might break something. But IMO
-this will be isolated cases of bad copy/paste. I think the blanket conversion
-of cpumask_any() to cpumask_first() is the bad one because it dishonours the
-choice developers made to pick one over the other. As I mention above the doc
-was clear it will return a random value and the oneliner gave a clear
-alternative to the user if they missed the cpumask_first() API.
-
-The name of the API is so descriptive anyway to think that most users got it
-wrong. And I think it acts as a good natural documentation of the code.
-
-> 
-> I think people went with cpumask_any_* mostly because there is just
-> cpumask_first() while there are more cpumask_any_* variants, and since
-> those have been returning the first set CPU for over a decade people just
-> went with it.
-
-This is speculation. Unless we ask every developer we can't tell. Given the
-clear documentation of cpumask_any() returns a random value, the natural
-conclusion is that people want that or just truly don't care.
-
-> 
-> To move this forward, I would suggest renaming the current cpumask_any_*()
-> into cpumask_first_*(), and THEN introduce the new pseudo-random
-> ones. People are then free to hand-fix specific locations if it makes sense
-> there, like you're doing for RT.
-
-I strongly disagree with this. I'd rather keep the status-quo instead and just
-use the new function in rt.c as it's currently named.
-
-> 
-> I think it's safe to say the vast majority of the current callers do not
-> require randomness - the exceptions should mainly be scheduler / workqueues
-> and the like.
-
-It's hard to judge. As the API clearly says this returns a random value,
-I think assuming that most users got it wrong is the unnatural way of
-thinking. If there happened to be bad users, that's an isolated cases and bugs
-that we can certainly be easily fixed.
+https://patchwork.ozlabs.org/project/netdev/list/?series=171189
 
 Thanks
-
---
-Qais Yousef
-
-> 
-> > and in patch
-> > 4 I convert the cpumask_first_and() --> cpumask_any_and() in find_lowest_rq()
-> > to allow to better distribute the RT tasks that wake up simultaneously.
-> >
-> > [1] https://lore.kernel.org/lkml/20200311010113.136465-1-joshdon@google.com/
-> >
-> > CC: Juri Lelli <juri.lelli@redhat.com>
-> > CC: Vincent Guittot <vincent.guittot@linaro.org>
-> > CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> > CC: Steven Rostedt <rostedt@goodmis.org>
-> > CC: Ben Segall <bsegall@google.com>
-> > CC: Mel Gorman <mgorman@suse.de>
-> > CC: Andrew Morton <akpm@linux-foundation.org>
-> > CC: Thomas Gleixner <tglx@linutronix.de>
-> > CC: Yury Norov <yury.norov@gmail.com>
-> > CC: Paul Turner <pjt@google.com>
-> > CC: Alexey Dobriyan <adobriyan@gmail.com>
-> > CC: Josh Don <joshdon@google.com>
-> > CC: Pavan Kondeti <pkondeti@codeaurora.org>
-> > CC: linux-kernel@vger.kernel.org
-> >
-> > Qais Yousef (4):
-> >   cpumask: Rename cpumask_any_and_distribute
-> >   cpumask: Make cpumask_any() truly random
-> >   cpumask: Convert cpumask_any_but() to the new random function
-> >   sched/rt: Better distribute tasks that wakeup simultaneously
-> >
-> >  include/linux/cpumask.h | 33 ++++++-----------
-> >  kernel/sched/core.c     |  2 +-
-> >  kernel/sched/rt.c       |  4 +-
-> >  lib/cpumask.c           | 82 +++++++++++++++++++++++++++--------------
-> >  4 files changed, 68 insertions(+), 53 deletions(-)
