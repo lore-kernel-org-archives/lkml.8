@@ -2,103 +2,170 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E66C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF29C55189
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 533F520724
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587503836;
-	bh=kFU2dgolJgSwGTDef1I5rI/vXFpK+Nlf0oa4fBuvSqo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Rpipyo3R9/3wS3KC2O68VgyPLzx2Ql/IyiAYfFhLvx8kdTwLQevXh8ox15E/7E52x
-	 RS4PP3MDOTeQr1SJejy87ma8eO/i96gLl8qNwT+pk7J6IQfSMHj9leqI42yKoOpIrE
-	 dfHDfN61UNqFkjDNAd1fVwuP1G+GtJ6rE4AuGp1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 2733520724
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgDUVRP (ORCPT
+        id S1726377AbgDUVSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726151AbgDUVRO (ORCPT
+        Tue, 21 Apr 2020 17:18:45 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:39369 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDUVSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 17:17:14 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64BF0C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:17:14 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id f8so12293487lfe.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b5pLl+D5tNip97GFPQ+tLS3+5WUwZ1zuA/I0ykv4UqE=;
-        b=GJM81lIK3eo2XovGG5vBhA2ndv5S6gnrXVRfHf4R3TiUc6Xb+F0svBJRHZsPsTf6pt
-         pLeWZrS3E/cSwGAou5y0Obvsp5+HTLH6XKr0OaRHcyBdU2Fu9AWeM9V+HkvG7SpPKOjc
-         GbzjIUODzR4GrMODTgAQo56kyr4aXnNKLO40I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b5pLl+D5tNip97GFPQ+tLS3+5WUwZ1zuA/I0ykv4UqE=;
-        b=OCVbhSAfxNjQGO0aNOhtaQJY84l+Kyteriap5NcxtSoiIJ2bXygusPiB5NLuFD2QKk
-         MvVJdk8gYcHs+0xhLlaqi9yQIU6h7IcdCkUqR08tE0ev7Cq2sRVLI6hJRnLErryhRP0S
-         mQ2dumqA8ZMYVKYrrzgvgLmEodBHE8Q2pIM+0sY7wvlrezrFkfBWMdbUtL1n19lcgybs
-         H4pGw3eLWNdDxyskWP5DuJtAKOv6PWWkxEhd8kkfUswH7hdUtzcao+HY/iLb47pt5L25
-         s+qQ3g4sBXBiQPWoKEExbaV4u5IpXJ0II+GkkZh91p+hhg4MeFrA0Ke1vNKniTo6uu5t
-         zmmw==
-X-Gm-Message-State: AGi0PubyB0AG2f+wo60UJ+5Dy5KDqco0/3qtOz6prDJ35v6tRa3Ev56k
-        sGTLB9WMkYSCsy2AosFjpE3LHeg8T2M=
-X-Google-Smtp-Source: APiQypKxvB9U1lkwBawN72OpDFO5sDRnf4kNYSAPhHXR3GM4cTLpsj2W/aNM7dxrI53qyC6jCL/XNA==
-X-Received: by 2002:ac2:4551:: with SMTP id j17mr14837831lfm.147.1587503832347;
-        Tue, 21 Apr 2020 14:17:12 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id j14sm3051252lfm.73.2020.04.21.14.17.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 14:17:11 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id j14so12293073lfg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:17:11 -0700 (PDT)
-X-Received: by 2002:a05:6512:405:: with SMTP id u5mr14628462lfk.192.1587503831120;
- Tue, 21 Apr 2020 14:17:11 -0700 (PDT)
+        Tue, 21 Apr 2020 17:18:44 -0400
+Received: from envy ([82.207.214.61]) by mrelayeu.kundenserver.de (mreue009
+ [212.227.15.167]) with ESMTPSA (Nemesis) id 1M6URd-1jK9bH0505-006sqo; Tue, 21
+ Apr 2020 23:18:26 +0200
+Message-ID: <c6831429000eeb2132c68c44d4d171063fa53d56.camel@richard-neumann.de>
+Subject: Re: [PATCH v4 2/4] SFH: PCI driver to add support of AMD sensor
+ fusion Hub using HID framework
+From:   Richard Neumann <mail@richard-neumann.de>
+To:     "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Sandeep Singh <Sandeep.Singh@amd.com>, Shyam-sundar.S-k@amd.com,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Date:   Tue, 21 Apr 2020 23:18:23 +0200
+In-Reply-To: <f4c08c96-bbaf-c42e-0dff-a02c5bbed6ed@amd.com>
+References: <1582779537-25662-1-git-send-email-Sandeep.Singh@amd.com>
+         <1582779537-25662-3-git-send-email-Sandeep.Singh@amd.com>
+         <4fe47b0323c1d65d429ee89b000e8bfcd984495f.camel@richard-neumann.de>
+         <896f84bc-f0d6-59a5-c894-809695aa348f@amd.com>
+         <CAHp75Vfr6q_H6z6tRFfaKedF7oR7nhmZvRWL4mxx3W7uypUFvA@mail.gmail.com>
+         <9aea760f9abdd2f90f36642af77de7bfae719485.camel@richard-neumann.de>
+         <3ffc343e-c44b-1b4e-993e-179a13dc928c@amd.com>
+         <7683f875aa617b3003a1949131ce79bd0e3c4dcb.camel@richard-neumann.de>
+         <f4c08c96-bbaf-c42e-0dff-a02c5bbed6ed@amd.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-qKskeWVPLD7TB1ApjQF3"
+User-Agent: Evolution 3.36.1 
 MIME-Version: 1.0
-References: <20200420190916.GA11695@gmail.com> <CAHk-=wiejBvKnrDysDva=DNFgyX02TZred_JMjzUnjFgVOUtOg@mail.gmail.com>
- <CAP-5=fVhWREzzjnXH4j+dcnP-GbSMnT_07qVrZM8huAhx6wtVw@mail.gmail.com>
-In-Reply-To: <CAP-5=fVhWREzzjnXH4j+dcnP-GbSMnT_07qVrZM8huAhx6wtVw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 21 Apr 2020 14:16:55 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wifecOQcL6vbL0uOY68jH4i3nBCksmc+As9hrUm_hjw1Q@mail.gmail.com>
-Message-ID: <CAHk-=wifecOQcL6vbL0uOY68jH4i3nBCksmc+As9hrUm_hjw1Q@mail.gmail.com>
-Subject: Re: [GIT PULL] clang-format for v5.7-rc3
-To:     Ian Rogers <irogers@google.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:MEfE3I7hfcltTmoofx/Sk9X2L2Rsx4r1czXM8UQR5m3eXhcdtJE
+ FQkLSJzTHehzjsLHwTtXts+T32txJuXhpMmGcp0oAB7D8zzCU6w6KE7VITqvy5uAyJ7RBcF
+ I8CD8DrmJyQxU7zfTRQN2keVwtG1uOY9Y3PrHliveZ8yiexHNvHlHXlu5BlLkSU9M8FWiPb
+ rp9aQukTYY3Sxz7blJ6VQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bEb9qy7t5V8=:jZa391THHBj2FnwxkZJpt+
+ Eh1rWsIsrjBlp2K2RnVU5PTyB8xaeW+MpbrFYwNHgm29ZutExAj3pitOspN6x3RxVsCKZo2ZJ
+ rCN5vqLxcc2OAseuJ85d2Lj/rQH58p8PDVLYQxvsaH5mN4ROaiU+EZg7YZhI3K7vF/sUIqZ4W
+ by++CIl7RS1/ITPPKeIm+GmNGgX1rsJ2OyOTbqBV1Dmu5xTevR9bc/j15dcTLXswsTXz8iHVI
+ HvIg3onfmHPhdkmRe9JV+WC2nn+2ISattINvuL2AjG0QW/GOQr/zbw+hDGsFN/jutydY3EE81
+ hF69M9POZYy1AkWWJ35ueM9CsIO2jM+JPR8b27ASPBxzFnTJo0J+MfyZ1OceUVURGgYN6St32
+ kA25ELwczRU/Ty9B/9oeMzi9xyrwF65Rrwdh9y2fmzY9Dx1pQMrXN7Pv47P0kGBbjPo3CH7Er
+ W5HfQHTOhIp/uf1DsQsvYkl5D6ZgGtVftrBYJTRCqU9RhsQKx9aUO0uznQ0D9Sb3NZ+q8sOTZ
+ Vy5d2OXVh+FcCOL+EcOT7r2pARBQpA2lFkoxctSAvblFTsO3gW3ex45xRavmmYJt7wS2ypnd4
+ XcNRJjUyYCB3Gepo9aXLDd7SeegARWKnrAt7lYKyKUHHLpp+COfwmP22fmQDVxIbg+/j1T1hU
+ H9gi4MUtYL3mcbbQh6Md0idKc3gGnS1VLfUf6XBQU9YFuL8GtnIw33zJV1uTNajk5IEnLcaY3
+ pZApomV6EPkXbrn58xhqilJAonmuHkYTEZCSruPL6tsIkSzLnp0wrDBYqhcGRy/9/wpT561BL
+ KgvIxpOXCnQrBnqI6M9AMEiQIh46wqU15sbIC2aVb2gAj/EplZ1CBwsKZYCOFaBeP3khXqB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 2:03 PM Ian Rogers <irogers@google.com> wrote:
->
-> We (Google, Stephane Eranian, ..) have a tool that converts Intel's
-> topdown metrics:
-> https://download.01.org/perfmon/TMA_Metrics.xlsx
-> into the json format used for metrics in perf. It is written in C++
-> and we are planning to upstream it.
 
-Oh, ok.
+--=-qKskeWVPLD7TB1ApjQF3
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> There's a little more motivation in the commit message too.
+Am Mittwoch, den 22.04.2020, 00:01 +0530 schrieb Shah, Nehal-
+bakulchandra:
+> Hi Richard,
+>=20
+> Thanks for the refactoring  the patch. The .raw_request in
+> hid_ll_driver is not correct, the output of sensor is not raw but it
+> is processed one,
+>=20
+> so better to move it to .request function. Regarding your question
+> for sensor position well it comes from firmware. So i am not sure
+> about the firmware
+>=20
+> for sensor , what you have.Also, regarding the IOMMU, we figured out
+> the issue, earlier patch series has bug that during DMA allocation
+> pdev was passed
+>=20
+> from platform driver context, where in for IOMMU needs context PCI
+> pdev. So that is taken care in your refactored patch hence issue is
+> disappeared.
+>=20
+>=20
+> Now regarding the patch (with your changes) i need to validate at our
+> side. Due to lockdown i dont have access to the system, so may be we
+> can wait on that.
+>=20
+>=20
+> Thanks
+>=20
+> Nehal Shah
 
-Well, not really. I _did_ check the commit message. It says nothing
-very useful at all, in that the kernel doesn't use C++ (aside from a
-couple of clang tests), so the commit message didn't at all clarify
-why we should care about C++ namespace rules..
+Hi Nehal
 
-              Linus
+and thank you for the feedback.
+
+Regarding the raw_request / request, I think the "raw" here is meant to
+indicate, that the implementation is expected to write "raw bytes" [1]
+into a buffer rather than handling a "struct hid_report", which is
+exactly what the get_feature_report() and get_input_report() from the
+original patch seem to be intended to do.
+However it should be easy to migrate this to ".report", since it'd
+probably look a lot like __hid_request() [2], which is currently doing
+the magic automatically for me.
+Furthermore a ll_driver needs a raw_request implementation anyways as
+it's being tested for in hid_add_device() [3].
+
+Regarding the validation on your side: Of course! I do in no way want
+to undermine your work on this in any way. I'm just offering what I've
+learned so far and what is working for me. If you find parts of it
+worth taking into a refactored version for upstream, awesome. If you
+don't agree with other parts, that's fine, too. I'm quite new to this
+and eager to learn. Also I am in no rush. Good things take time.
+
+In case you're missing my patch on gist.github.com, I decided to
+further develop the driver in a forked linux source tree [4].
+
+It's on the branch amd-sfh. You can just diff to the master branch to
+get the entire patch. The changed files are still under
+drivers/hid/amd-sfh-hid and Documentation/hid respectively.
+
+You'll find that in the meantime I did some more work / learning and
+implemented some rudimentary IRQ handling.
+
+Kind regards,
+
+Richard
+
+[1] https://elixir.bootlin.com/linux/latest/source/include/linux/hid.h#L107=
+0
+[2] https://elixir.bootlin.com/linux/latest/source/drivers/hid/hid-core.c#L=
+1688
+[3] https://elixir.bootlin.com/linux/latest/source/drivers/hid/hid-core.c#L=
+2386
+[3] https://github.com/conqp/linux/tree/amd-sfh
+
+--=-qKskeWVPLD7TB1ApjQF3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQT62wKwhMqSt8WaustMqNUjvThq9wUCXp9jHwAKCRBMqNUjvThq
+99I7AP9vmpENS45P92BDw1vV5wR4JcPiqpoc3lYzTupHbHyjXQD+OcnvH+UeIapi
+7dK8yJqSiySCtpBMjt5Nh43DbwBAegs=
+=CNx3
+-----END PGP SIGNATURE-----
+
+--=-qKskeWVPLD7TB1ApjQF3--
+
