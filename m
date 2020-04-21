@@ -2,124 +2,115 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481F5C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E8DC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 242CF206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:02:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Wv6j/tRp"
+	by mail.kernel.org (Postfix) with ESMTP id DDA882068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgDUQCS (ORCPT
+        id S1727787AbgDUQE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:02:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725930AbgDUQCR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:02:17 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1222C061A10;
-        Tue, 21 Apr 2020 09:02:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FMOKi9JN1zmL3ex+upDVJ+JPiBtToBzeS9dSmqwVosg=; b=Wv6j/tRpqNiXWtF1allIjgglQ
-        wCkIn+1dSOjzx9s33cJ53XlMgapGXUtnCb87O5un+VMg1aZajWfMzSGd2TLBW8Ha6HdyQFbcmaA+v
-        tWr5M4uIJJL8JlK8h+oeULeBZkaTITb/e+qz/iY3KKQusbXCUnh0eQyPlKeifFOAIuLwgz6GrXi+A
-        HPLTTUh3Jh80t9DHH3VzrBbmkW8I3f09LA/iFFNnaOrM+wJl3c7CNREETRaIphmZwgMZ87zjSdxEj
-        CHV4voJDJ7W4lRx797+SBuXSukrYpeOouAJK0WPecaqpr/j2txC5GXfdYzeLjbT4xNEP9p0Mjkw9j
-        i4qtFisaQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:41646)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jQvLE-0002XX-Id; Tue, 21 Apr 2020 17:01:44 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jQvL7-00079R-7Q; Tue, 21 Apr 2020 17:01:37 +0100
-Date:   Tue, 21 Apr 2020 17:01:37 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Miao <eric.miao@nvidia.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5] ARM: boot: Obtain start of physical memory from DTB
-Message-ID: <20200421160137.GE25745@shell.armlinux.org.uk>
-References: <20200415153409.30112-1-geert+renesas@glider.be>
- <CAMj1kXHm=xA4gafwAaBn8=YcAsQCYDNmZ=4REsfvEUgZShm3Ww@mail.gmail.com>
+        Tue, 21 Apr 2020 12:04:57 -0400
+Received: from mga01.intel.com ([192.55.52.88]:6986 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgDUQE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:04:56 -0400
+IronPort-SDR: yii7rNWjbB2ZqdxRO7ovcA4thHBneoG7SbotbLsNP7aQuDe4oOxirmM60aiZP9+5lcbU8vcO4e
+ F7mj6T2296ZQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 09:04:56 -0700
+IronPort-SDR: qRcJMXn+SpuAzjLVQ+pUxSoamDQ1pOkcUjVQ5GA9MbDsuXFxcr2tJthsMkbiuG/coEFXn5/EYX
+ q0jpOS2/4lhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,410,1580803200"; 
+   d="scan'208";a="279691377"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Apr 2020 09:04:56 -0700
+Message-ID: <6eb0a398097d16f7247accdfa9c21c1da90e0461.camel@intel.com>
+Subject: Re: [PATCH] fs/binfmt_elf.c: allocate initialized memory in
+ fill_thread_core_info()
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Jann Horn <jannh@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, sunhaoyl@outlook.com
+Date:   Tue, 21 Apr 2020 09:04:57 -0700
+In-Reply-To: <CAG48ez1u9=Uqcx2dH=7xea1R+WpnL239DSoVHLwV09=FxZUevQ@mail.gmail.com>
+References: <20200419100848.63472-1-glider@google.com>
+         <20200420153352.6682533e794f591dae7aafbc@linux-foundation.org>
+         <202004201540.01C8F82B@keescook>
+         <20200421034249.GB23230@ZenIV.linux.org.uk>
+         <CAG_fn=X_eQ4G-0+oAO_q+_zRnkfMf4uhfMcnoYt4i1N_noKgdA@mail.gmail.com>
+         <CAG48ez1u9=Uqcx2dH=7xea1R+WpnL239DSoVHLwV09=FxZUevQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHm=xA4gafwAaBn8=YcAsQCYDNmZ=4REsfvEUgZShm3Ww@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 05:19:40PM +0200, Ard Biesheuvel wrote:
-> On Wed, 15 Apr 2020 at 17:34, Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> >
-> > Currently, the start address of physical memory is obtained by masking
-> > the program counter with a fixed mask of 0xf8000000.  This mask value
-> > was chosen as a balance between the requirements of different platforms.
-> > However, this does require that the start address of physical memory is
-> > a multiple of 128 MiB, precluding booting Linux on platforms where this
-> > requirement is not fulfilled.
-> >
-> > Fix this limitation by obtaining the start address from the DTB instead,
-> > if available (either explicitly passed, or appended to the kernel).
-> > Fall back to the traditional method when needed.
-> >
-> > This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of SDRAM
-> > on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 space),
-> > i.e. not at a multiple of 128 MiB.
-> >
-> > Suggested-by: Nicolas Pitre <nico@fluxnic.net>
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
-> > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Tested-by: Dmitry Osipenko <digetx@gmail.com>
+On Tue, 2020-04-21 at 17:09 +0200, Jann Horn wrote:
+> +x86 folks
 > 
-> This is ready to go into the patch system, no?
+> (rest of thread is on lore
+> <https://lore.kernel.org/lkml/20200419100848.63472-1-glider@google.com/>;,
+> with original bug report on github
+> <https://github.com/google/kmsan/issues/76>;)
 > 
-> The sooner Russell picks it up, the sooner I can respin my patches
-> that go on top.
+> On Tue, Apr 21, 2020 at 2:54 PM Alexander Potapenko <glider@google.com> wrote:
+> > On Tue, Apr 21, 2020 at 5:42 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > > On Mon, Apr 20, 2020 at 03:41:40PM -0700, Kees Cook wrote:
+> > > > On Mon, Apr 20, 2020 at 03:33:52PM -0700, Andrew Morton wrote:
+> > > > > On Sun, 19 Apr 2020 12:08:48 +0200 glider@google.com wrote:
+> > > > > 
+> > > > > > KMSAN reported uninitialized data being written to disk when dumping
+> > > > > > core. As a result, several kilobytes of kmalloc memory may be written to
+> > > > > > the core file and then read by a non-privileged user.
+> > > > 
+> > > > Ewww. That's been there for 12 years. Did something change in
+> > > > regset_size() or regset->get()? Do you know what leaves the hole?
+> > > 
+> > > Not lately and I would also like to hear the details; which regset it is?
+> > > Should be reasonably easy to find - just memset() the damn thing to something
+> > > recognizable, do whatever triggers that KMSAN report and look at that
+> > > resulting coredump.
+> > > 
+> > 
+> > Seems to be REGSET_XSTATE filled by xstateregs_get().
+> > Is there a ptrace interface also using that function?
+> 
+> It looks to me like the problem KMSAN found is that
+> copy_xstate_to_kernel() will not fill out memory for unused xstates? I
+> think this may have been introduced by commit 91c3dba7dbc1
+> ("x86/fpu/xstate: Fix PTRACE frames for XSAVES", introduced in v4.8).
+> 
+> There seem to be no other functions that reach that path other than
+> coredumping; I think the correct fix would be to change
+> copy_xstate_to_kernel() to always fully initialize the output buffer.
 
-This seems to be a particularly risky change (it's already been subject
-to various failures for people) so I do not intend to rush to pick it
-up.
+Yes, that makes sense.  On the other hand, the kzalloc() fix prevents potential
+similar problems for other regsets.
 
-In any case, Masahiro Yamada has resubmitted a patch to sort out the
-libfdt builds that he's been trying to get merged for some time now,
-so I'm going to be giving that priority. Your change conflicts with
-this libfdt build change.
+Yu-cheng
 
-So, I think all in all, it needs to spend a bit longer being provenly
-tested before I merged it (and eventually fixed up for the libfdt
-change), and I don't think merging it so it appears in linux-next
-will help with that.
+> 
+> The ptrace path uses copy_xstate_to_user(); there, instead of leaking
+> kernel memory to userspace, parts of the userspace buffer are simply
+> not written to at all.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
