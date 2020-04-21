@@ -2,121 +2,197 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FCAC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F731C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6ED720753
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A0C20672
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:44:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="MGvCzKGi"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wAdOMM8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbgDUNoT (ORCPT
+        id S1729099AbgDUNo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:44:19 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:46805 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728745AbgDUNoS (ORCPT
+        Tue, 21 Apr 2020 09:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728963AbgDUNoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 09:44:18 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id QtC4jlYNblKa1QtC7j15or; Tue, 21 Apr 2020 15:44:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1587476655; bh=nzCZ64gPxIoM/j+JyeXGQ/ySy+plAMu9pIDfwkwYt6c=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=MGvCzKGiVXtR3xzMsKksuQC2abAPuOsl2d2sj01xJtAkH2mGZl6f9J+LipDrhUCFi
-         fq+M033mKeIBN/bzdy5L+czBCVqGYxJalyfsrZIG1ZbkJAboJnZSKopzP/pp+uq4ZX
-         SVrwC3v9uMwJJP99JV+o7mTCn2s4xiog/QixFL3SkaX3vT4opaUS2t71JNKe/ml652
-         tnwmcg9wzldpnL2jMIV2aFJHPo+HgMjghCvvB27bX4Z9xGJ2CbXUkKMh8IctY9sG57
-         B/2AmLr7CN3tqPwJSZPI++qWO5ahCzVxD23ys1C2rbMflHA7krh4qqPcqLPGjwzckq
-         eTOxTjOQxnMhQ==
-Subject: Re: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to
- json-schema
-To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
-Cc:     ezequiel@collabora.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh@kernel.org
-References: <20200326191343.1989-1-ezequiel@collabora.com>
- <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
- <9328212d-139f-6a0e-7d0c-3a5529a392f2@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <30717aac-f589-ffbd-aefb-07c2934f7a2e@xs4all.nl>
-Date:   Tue, 21 Apr 2020 15:44:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D3DC061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:44:18 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k1so16557305wrx.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:44:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dX9SsJrE5hBWZMCB/PsZv22atY0++ttj3tkMV3dDs0Q=;
+        b=wAdOMM8Y4A0ygcev7r3LEJy6/ZEs7Rtg9U1GZXegnRmd37n2aFQq89ytgXuMqov+aY
+         8j4tKi0c6Ebm8QT9cSFKk60ivx+MNgflnxuoF+GESmrHlsGgE4Law9yevtLxqViztRl1
+         xC7GyCZpBnX5loqzujb0MbfvwJqrtkN+ngJ9pnjgJ7Mcfg2cOkYFVJM42jR4bQBEbt2M
+         GgwoIH8AYqJKG7RXPa0iicSVSnnyFZyYBbTswnfesr1hVaV8E2YWHcKPmm8OIV/AmVOz
+         MQOR1azT28LRFB7UsSNtCGPn4xzxN+Ty7SN4oDi4jX2jzbuStybR3eKmQQ7HV9Ep/bZs
+         Dtdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dX9SsJrE5hBWZMCB/PsZv22atY0++ttj3tkMV3dDs0Q=;
+        b=hqeHImJFfeXa0UK6Peq5kqBNzygpZIt/4fpgIOfuSuKY1YgA1/nQGJ8+A5geyjP76C
+         7nZTJjMBkcuDkysj0NqaYwiQaaAtQ6bKCfBv510cgvbtqKAiQsKZUdikocmeIjYEr4EZ
+         9FMYd5vE6v9/VgRpXA6ogv6vrwyij7Kh2UDNcxUA23tb3+ORDI/kzoiU+VHcP7qHrXgy
+         xIYa6NigHpYlXDGuMRU/Cg6HBJkDKs90svQT4nm1pYxtDOSty3Z82CbEKeEhTv7iPefs
+         8k1D9KriwOSLudzPiZWcBEK/KmKAaDalmVMxlsmCHmRQfGEGXzt8Lka1U3z71onOCL5U
+         gCVA==
+X-Gm-Message-State: AGi0PuaVfY7WZ+yVNxrdPR/koK28YUjysKgje8D4+upgBX6Esp3D9A/o
+        KYOjzdfukX2jysqzuRYWJLYk4Q==
+X-Google-Smtp-Source: APiQypIKm+M6SMpWmaYV4K+934zXv6wdnVmpZd13gbye74FjG+URTgYgVwpXyg3Nh+qlr1d4JJ5IOw==
+X-Received: by 2002:adf:f146:: with SMTP id y6mr25802017wro.132.1587476656747;
+        Tue, 21 Apr 2020 06:44:16 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
+        by smtp.gmail.com with ESMTPSA id a20sm4000854wra.26.2020.04.21.06.44.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 06:44:16 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] drm/meson: add mode selection limits against specific SoC revisions
+Date:   Tue, 21 Apr 2020 15:44:10 +0200
+Message-Id: <20200421134410.30603-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <9328212d-139f-6a0e-7d0c-3a5529a392f2@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfFOD3+wi8uRwj+8VMeKVJAVRmyaCf97nXh7DTYhJ/GTwnfn03wdMnQ2R6vwD2I2C30SNPt/yaF2SYIz2mc8V60m9aOERfxj+viHcuNDmX49kufGAyme4
- jBztzH57g3sFqQRuyxXEqwOWEsd0WEt3+jmlj0d7nLVV65O5lyqM5wUCkwNEJ0XMLt99HovguvLNV59IHn3rbKjIiEqP1gcS8ufKXbrfChZYzkQIRYCH59kN
- ddpzFS70DPlLbjMJqNZ8T0HheZVn5xGR8I05J5FbJzkvHxLpt8RI2RGGWYzR8v6f9P4xWdv3ZKq3V54jq0CHyR+lMIszB9qhNpzIfKYGcnuC/IAAMf2DkVkG
- ie6RUDNMi5+rrv3bqy2YyWDpoW3DSN6yLERrBy/TK9jIK1rILzwPdD/xqhJfdwu+i42mp0b+38cdCbwkYiRNTO9/S040gWLnoIJ7fxPtFKk1sQKcX+0=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/2020 15:19, Johan Jonker wrote:
-> Hi,
-> 
-> Question for the media maintainers Hans & Co. :
-> 
-> What's nxp,imx8mq-vpu.yaml doing under rga?
-> Why is rockchip-vpu.yaml inserted under rga instead of vpu?
+The Amlogic S805X/Y uses the same die as the S905X, but with more
+limited graphics capabilities.
 
-That's clearly wrong. Probably my fault when trying to resolve
-a conflict.
+This adds a soc version detection adding specific limitations on the HDMI
+mode selections.
 
-Ezequiel, can you make a patch fixing this? It's probably a good
-idea if you double-check these entries to make sure I didn't inadvertently
-introduce more mistakes.
+Here, we limit to HDMI 1.3a max HDMI PHY clock frequency.
 
-Regards,
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/gpu/drm/meson/meson_drv.c     | 29 ++++++++++++++++++++++++++-
+ drivers/gpu/drm/meson/meson_drv.h     |  6 ++++++
+ drivers/gpu/drm/meson/meson_dw_hdmi.c |  7 +++++++
+ 3 files changed, 41 insertions(+), 1 deletion(-)
 
-	Hans
-
-> 
-> Johan
-> 
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index f0e7b4d17fcc..0cfd86594b0b 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -14471,7 +14471,8 @@ M:	Jacob Chen <jacob-chen@iotwrt.com>
->>  M:	Ezequiel Garcia <ezequiel@collabora.com>
->>  L:	linux-media@vger.kernel.org
->>  S:	Maintained
->> -F:	Documentation/devicetree/bindings/media/rockchip-rga.txt
->> +F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
->> +F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
->>  F:	drivers/media/platform/rockchip/rga/
-> 
-> HANTRO VPU CODEC DRIVER
-> M:	Ezequiel Garcia <ezequiel@collabora.com>
-> M:	Philipp Zabel <p.zabel@pengutronix.de>
-> L:	linux-media@vger.kernel.org
-> L:	linux-rockchip@lists.infradead.org
-> S:	Maintained
-> F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
-> F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
-> F:	drivers/staging/media/hantro/
-> 
-> ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
-> M:	Jacob Chen <jacob-chen@iotwrt.com>
-> M:	Ezequiel Garcia <ezequiel@collabora.com>
-> L:	linux-media@vger.kernel.org
-> S:	Maintained
-> F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
-> F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-> F:	drivers/media/platform/rockchip/rga/
-> 
+diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+index 6f29fab79952..621f6de0f076 100644
+--- a/drivers/gpu/drm/meson/meson_drv.c
++++ b/drivers/gpu/drm/meson/meson_drv.c
+@@ -11,6 +11,7 @@
+ #include <linux/component.h>
+ #include <linux/module.h>
+ #include <linux/of_graph.h>
++#include <linux/sys_soc.h>
+ #include <linux/platform_device.h>
+ #include <linux/soc/amlogic/meson-canvas.h>
+ 
+@@ -183,6 +184,24 @@ static void meson_remove_framebuffers(void)
+ 	kfree(ap);
+ }
+ 
++struct meson_drm_soc_attr {
++	struct meson_drm_soc_limits limits;
++	const struct soc_device_attribute *attrs;
++};
++
++static const struct meson_drm_soc_attr meson_drm_soc_attrs[] = {
++	/* S805X/S805Y HDMI PLL won't lock for HDMI PHY freq > 1,65GHz */
++	{
++		.limits = {
++			.max_hdmi_phy_freq = 1650000,
++		},
++		.attrs = (const struct soc_device_attribute []) {
++			{ .soc_id = "GXL (S805*)", },
++			{ /* sentinel */ },
++		}
++	},
++};
++
+ static int meson_drv_bind_master(struct device *dev, bool has_components)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+@@ -191,7 +210,7 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
+ 	struct drm_device *drm;
+ 	struct resource *res;
+ 	void __iomem *regs;
+-	int ret;
++	int ret, i;
+ 
+ 	/* Checks if an output connector is available */
+ 	if (!meson_vpu_has_available_connectors(dev)) {
+@@ -281,6 +300,14 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
+ 	if (ret)
+ 		goto free_drm;
+ 
++	/* Assign limits per soc revision/package */
++	for (i = 0 ; i < ARRAY_SIZE(meson_drm_soc_attrs) ; ++i) {
++		if (soc_device_match(meson_drm_soc_attrs[i].attrs)) {
++			priv->limits = &meson_drm_soc_attrs[i].limits;
++			break;
++		}
++	}
++
+ 	/* Remove early framebuffers (ie. simplefb) */
+ 	meson_remove_framebuffers();
+ 
+diff --git a/drivers/gpu/drm/meson/meson_drv.h b/drivers/gpu/drm/meson/meson_drv.h
+index 04fdf3826643..5b23704a80d6 100644
+--- a/drivers/gpu/drm/meson/meson_drv.h
++++ b/drivers/gpu/drm/meson/meson_drv.h
+@@ -30,6 +30,10 @@ struct meson_drm_match_data {
+ 	struct meson_afbcd_ops *afbcd_ops;
+ };
+ 
++struct meson_drm_soc_limits {
++	unsigned int max_hdmi_phy_freq;
++};
++
+ struct meson_drm {
+ 	struct device *dev;
+ 	enum vpu_compatible compat;
+@@ -48,6 +52,8 @@ struct meson_drm {
+ 	struct drm_plane *primary_plane;
+ 	struct drm_plane *overlay_plane;
+ 
++	const struct meson_drm_soc_limits *limits;
++
+ 	/* Components Data */
+ 	struct {
+ 		bool osd1_enabled;
+diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+index e8c94915a4fc..dc3d5122475a 100644
+--- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
++++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+@@ -695,6 +695,13 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
+ 	dev_dbg(connector->dev->dev, "%s: vclk:%d phy=%d venc=%d hdmi=%d\n",
+ 		__func__, phy_freq, vclk_freq, venc_freq, hdmi_freq);
+ 
++	/* Check against soc revision/package limits */
++	if (priv->limits) {
++		if (priv->limits->max_hdmi_phy_freq &&
++		    phy_freq > priv->limits->max_hdmi_phy_freq)
++			return MODE_CLOCK_HIGH;
++	}
++
+ 	return meson_vclk_vic_supported_freq(phy_freq, vclk_freq);
+ }
+ 
+-- 
+2.22.0
 
