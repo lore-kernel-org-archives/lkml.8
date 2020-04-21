@@ -2,209 +2,80 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6901AC55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5438BC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC46206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587498802;
-	bh=9CQUlrC6I3zdb3MwnmyL7p4wbLljz1e6KpVFkkjBUWE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0SzC2grmgLbd/1C0sUDzNgGAYzoFMziwQhVmojS7BDhtPLdqVVW+/dzhOCxZOwNee
-	 gvWFnXN5Uj6gjpOMT5uIIuuo8vr/oZPgEwkwIeGuFuyqUtYl5IzB42yvz5LXTjpRIj
-	 Jb4mu3uz5J+gvqitdfmHfVvIP1CgTzGOZYfiTQ5Q=
+	by mail.kernel.org (Postfix) with ESMTP id 39B8B206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgDUTxV (ORCPT
+        id S1726335AbgDUTyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:53:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45972 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 15:54:07 -0400
+Received: from mga17.intel.com ([192.55.52.151]:48553 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbgDUTxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:53:20 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D18F206D9;
-        Tue, 21 Apr 2020 19:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587498799;
-        bh=9CQUlrC6I3zdb3MwnmyL7p4wbLljz1e6KpVFkkjBUWE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IbaJjE2yCaHwvsE+Gf5R9HULObEdPcY315s9bXU/UX3i97gXcsY60pU/6U4SRK55E
-         6uk2AALA2TD3SmPibf+SgFfx77vxHsZFSXEG670HfRyvwgIJ4iBZz90nBu0dXCGj0E
-         22sn23iN8k/LX4wLKJkQMrln6TbhE+y/Os4LlIU4=
-Date:   Tue, 21 Apr 2020 21:53:15 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        ira.weiny@intel.com
-Subject: Re: [PATCH 12/34] docs: filesystems: convert dax.txt to ReST
-Message-ID: <20200421215315.4f591021@coco.lan>
-In-Reply-To: <20200421183121.GC6733@magnolia>
-References: <cover.1586960617.git.mchehab+huawei@kernel.org>
-        <71b1f910b2c3569a9fdaa8778378dd734f4f0091.1586960617.git.mchehab+huawei@kernel.org>
-        <20200415154144.GA6733@magnolia>
-        <20200421183117.2bf2b716@coco.lan>
-        <20200421183121.GC6733@magnolia>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1725987AbgDUTyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:54:06 -0400
+IronPort-SDR: sRFZdjmZfWE7GSX/iJccG5wnFLZ7P7RogLTw2PqqGmD5QJRmfs09PcS0NBvv9u65R8zfnCZULW
+ /+A0MGGDAdUA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 12:54:06 -0700
+IronPort-SDR: u0PucUAwlTW5D/vEtBMVccgXiyEn4WGQVAczLuFaWatEh/EbMdaAfn9ZmlhHEG39aYysNO3bSz
+ gxfIScmQTOqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
+   d="scan'208";a="247264606"
+Received: from mnchalux-mobl2.gar.corp.intel.com (HELO localhost) ([10.252.44.234])
+  by fmsmga008.fm.intel.com with ESMTP; 21 Apr 2020 12:54:04 -0700
+Date:   Tue, 21 Apr 2020 22:54:03 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] tpm/tpm_tis: Free IRQ if probing fails
+Message-ID: <20200421195403.GA46589@linux.intel.com>
+References: <20200416160751.180791-1-jarkko.sakkinen@linux.intel.com>
+ <fa25cd78-2535-d26d-dd66-d64111af857a@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa25cd78-2535-d26d-dd66-d64111af857a@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 21 Apr 2020 11:31:21 -0700
-"Darrick J. Wong" <darrick.wong@oracle.com> escreveu:
-
-> On Tue, Apr 21, 2020 at 06:31:17PM +0200, Mauro Carvalho Chehab wrote:
-> > Em Wed, 15 Apr 2020 08:41:44 -0700
-> > "Darrick J. Wong" <darrick.wong@oracle.com> escreveu:
-> >   
-> > > [add ira weiny to cc]
-> > > 
-> > > On Wed, Apr 15, 2020 at 04:32:25PM +0200, Mauro Carvalho Chehab wrote:  
-> > > > - Add a SPDX header;
-> > > > - Adjust document title;
-> > > > - Some whitespace fixes and new line breaks;
-> > > > - Add it to filesystems/index.rst.
-> > > > 
-> > > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > > > ---
-> > > >  Documentation/admin-guide/ext4.rst             | 2 +-
-> > > >  Documentation/filesystems/{dax.txt => dax.rst} | 9 +++++++--
-> > > >  Documentation/filesystems/ext2.rst             | 2 +-
-> > > >  Documentation/filesystems/index.rst            | 1 +
-> > > >  4 files changed, 10 insertions(+), 4 deletions(-)
-> > > >  rename Documentation/filesystems/{dax.txt => dax.rst} (97%)
-> > > > 
-> > > > diff --git a/Documentation/admin-guide/ext4.rst b/Documentation/admin-guide/ext4.rst
-> > > > index 9443fcef1876..103bcc345bad 100644
-> > > > --- a/Documentation/admin-guide/ext4.rst
-> > > > +++ b/Documentation/admin-guide/ext4.rst
-> > > > @@ -392,7 +392,7 @@ When mounting an ext4 filesystem, the following option are accepted:
-> > > >  
-> > > >    dax
-> > > >          Use direct access (no page cache).  See
-> > > > -        Documentation/filesystems/dax.txt.  Note that this option is
-> > > > +        Documentation/filesystems/dax.rst.  Note that this option is
-> > > >          incompatible with data=journal.
-> > > >  
-> > > >  Data Mode
-> > > > diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.rst
-> > > > similarity index 97%
-> > > > rename from Documentation/filesystems/dax.txt
-> > > > rename to Documentation/filesystems/dax.rst
-> > > > index 735f3859b19f..5838144f80f0 100644
-> > > > --- a/Documentation/filesystems/dax.txt
-> > > > +++ b/Documentation/filesystems/dax.rst    
-> > > 
-> > > Err, this will collide with the work that Ira's doing on DAX for 5.8[1].
-> > > Can the dax.txt conversion wait?  
-> > 
-> > Well, I can re-schedule it to 5.9. Or, if you merge the dax changes
-> > at linux-next, I can rebase my patch on the top of it.  
+On Tue, Apr 21, 2020 at 03:23:19PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> That depends on how quick Ira can get the series merged. :)
-> 
-> I personally think (hope) everyone's tired of arguing and we can just
-> get it done for 5.8, but past experience tells me that rescheduling the
-> rst conversion to 5.90 is at least a safer bet.
-
-I can't tell much about Ira's patches, but, in the case of the ReST
-conversion, there are not much left to convert anymore. The vast majority
-of files under Documentation/*.txt are already in ReST format. They just
-need to be renamed/moved to a better place. Besides that, there are
-the fs patches on this series, network and a few misc text files.
-
-I have patches for the remaining stuff already.
-
-> 
-> --D
-> 
-> > > 
-> > > --D
-> > > 
-> > > [1] https://lore.kernel.org/linux-xfs/20200415152942.GS6742@magnolia/T/#m804562299416d865d8829caa82589a522b2080a5
-> > >   
-> > > > @@ -1,5 +1,8 @@
-> > > > +.. SPDX-License-Identifier: GPL-2.0
-> > > > +
-> > > > +=======================
-> > > >  Direct Access for files
-> > > > ------------------------
-> > > > +=======================
-> > > >  
-> > > >  Motivation
-> > > >  ----------
-> > > > @@ -46,6 +49,7 @@ stall the CPU for an extended period, you should also not attempt to
-> > > >  implement direct_access.
-> > > >  
-> > > >  These block devices may be used for inspiration:
-> > > > +
-> > > >  - brd: RAM backed block device driver
-> > > >  - dcssblk: s390 dcss block device driver
-> > > >  - pmem: NVDIMM persistent memory driver
-> > > > @@ -55,6 +59,7 @@ Implementation Tips for Filesystem Writers
-> > > >  ------------------------------------------
-> > > >  
-> > > >  Filesystem support consists of
-> > > > +
-> > > >  - adding support to mark inodes as being DAX by setting the S_DAX flag in
-> > > >    i_flags
-> > > >  - implementing ->read_iter and ->write_iter operations which use dax_iomap_rw()
-> > > > @@ -127,6 +132,6 @@ by adding optional struct page support for pages under the control of
-> > > >  the driver (see CONFIG_NVDIMM_PFN in drivers/nvdimm for an example of
-> > > >  how to do this). In the non struct page cases O_DIRECT reads/writes to
-> > > >  those memory ranges from a non-DAX file will fail (note that O_DIRECT
-> > > > -reads/writes _of a DAX file_ do work, it is the memory that is being
-> > > > +reads/writes _of a DAX ``file_`` do work, it is the memory that is being
-> > > >  accessed that is key here).  Other things that will not work in the
-> > > >  non struct page case include RDMA, sendfile() and splice().
-> > > > diff --git a/Documentation/filesystems/ext2.rst b/Documentation/filesystems/ext2.rst
-> > > > index d83dbbb162e2..fa416b7a5802 100644
-> > > > --- a/Documentation/filesystems/ext2.rst
-> > > > +++ b/Documentation/filesystems/ext2.rst
-> > > > @@ -24,7 +24,7 @@ check=none, nocheck	(*)	Don't do extra checking of bitmaps on mount
-> > > >  				(check=normal and check=strict options removed)
-> > > >  
-> > > >  dax				Use direct access (no page cache).  See
-> > > > -				Documentation/filesystems/dax.txt.
-> > > > +				Documentation/filesystems/dax.rst.
-> > > >  
-> > > >  debug				Extra debugging information is sent to the
-> > > >  				kernel syslog.  Useful for developers.
-> > > > diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-> > > > index c4f95f76ba6a..8e3ccb4ed483 100644
-> > > > --- a/Documentation/filesystems/index.rst
-> > > > +++ b/Documentation/filesystems/index.rst
-> > > > @@ -24,6 +24,7 @@ algorithms work.
-> > > >     splice
-> > > >     locking
-> > > >     directory-locking
-> > > > +   dax
-> > > >  
-> > > >     automount-support
-> > > >  
-> > > > -- 
-> > > > 2.25.2
-> > > >     
+> On 4/16/20 6:07 PM, Jarkko Sakkinen wrote:
+> > Call disable_interrupts() if we have to revert to polling in order not to
+> > unnecessarily reserve the IRQ for the life-cycle of the driver.
 > > 
-> > 
-> > 
-> > Thanks,
-> > Mauro  
+> > Cc: stable@vger.kernel.org # 4.5.x
+> > Reported-by: Hans de Goede <hdegoede@redhat.com>
+> > Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 
+> I can confirm that this fixes the "irq 31 nobody cared" oops for me:
+> 
+> Tested-by: Hans de Goede <hdegoede@redhat.com>
 
+Hi, thanks a lot! Unfortunately I already put this out given the
+criticality of the issue:
 
+https://lkml.org/lkml/2020/4/20/1544
 
-Thanks,
-Mauro
+Sincere apologies that I couldn't include your tested-by but the most
+important thing is to know that it works now.
+
+/Jarkko
