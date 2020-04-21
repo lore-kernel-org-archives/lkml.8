@@ -2,133 +2,94 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AA8C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DB5C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 067AE2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C793D2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587440160;
+	bh=tcMJgOdJYTK2DCQx6Q/Q8rhF+NrgCct1feulE1dILv8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=e4iA70NY1Edc3DJMXeAjQaPi/lRYyFoTCc/zU2aKbAuYKfE7pzvaCa1ZfSY5XqqWB
+	 5M583do3lTbRL0mwEfTpl9RTKzRkL91+i4Rx2f5fpaEUtwmeGUIXe/XNpeewX60INW
+	 6yWeE1qovjAiqPjrla3JUBkf3eexdqzzU6Be/d4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgDUDez (ORCPT
+        id S1728127AbgDUDgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:34:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:29353 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgDUDex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:34:53 -0400
-IronPort-SDR: oZ/zheVjPYfLMJtYzZSl0qbfppY65QX5gkJx0AnQ8ICE4T6coOx050d6h0KbhWBafxOGkQamCK
- WazYzrRJkFHQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 20:34:53 -0700
-IronPort-SDR: /QUx7vGWhN0FyE594Jo7yF6w8Dhwu7BOs4MqQtdudlT2yf9cG8m4MHrZZx3eGaZizlr/4wO6Ne
- 6vK7BNsnarjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,408,1580803200"; 
-   d="scan'208";a="300469608"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Apr 2020 20:34:53 -0700
-Date:   Mon, 20 Apr 2020 20:34:53 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        Mon, 20 Apr 2020 23:36:00 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:52350 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbgDUDf7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 23:35:59 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 03L3ZdWg001233;
+        Tue, 21 Apr 2020 12:35:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 03L3ZdWg001233
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587440139;
+        bh=XyRdHJjb8MoEiKRt48oj/OQ5B9m4bbw7cOjjdMtRtVE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0cU3jv+kmbuvcgsDRBo2orNdJvrvp2Ajo1ZOvtehWhvQi8VQAV2y0AwEeadX/hJb+
+         6syaGBXmENROHsee++Uqq0K0qyIzWIM8bT82+IlHjU3yBP4vloV+GxU5lm+Mo+WgHb
+         YI8eMyROpTuxiEev7pDRxguphe4y3cdl2DON/7aYsl+Nx4vQxcUwuACm16cVNGyU7l
+         Bq19pA/dtZ4waL+mYElWnS94UcyEWZ8M/FFm6kt0JCW8YCfM/DcfeGy/bYpwd4Ci9H
+         szEnBo8oKPEdRu65BM3x1p2x9KE50JHfpcCO0tStiLcFaQxA+OVYqsC3P5+ql0lx6v
+         33Iz/QjZsWTYg==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH] vfio/type1: Fix VA->PA translation for PFNMAP VMAs in
- vaddr_get_pfn()
-Message-ID: <20200421033453.GC11134@linux.intel.com>
-References: <20200416225057.8449-1-sean.j.christopherson@intel.com>
- <20200420134005.456151fe@w520.home>
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/2] kbuild: fix DT binding schema rule again to avoid needless rebuilds
+Date:   Tue, 21 Apr 2020 12:35:28 +0900
+Message-Id: <20200421033529.487366-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420134005.456151fe@w520.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 01:40:05PM -0600, Alex Williamson wrote:
-> > I'm mostly confident this is correct from the standpoint that it generates
-> > the correct VA->PA.  I'm far less confident the end result is what VFIO
-> > wants, there appears to be a fair bit of magic going on that I don't fully
-> > understand, e.g. I'm a bit mystified as to how this ever worked in any
-> > capacity.
-> 
-> Yeah, that magic was copied from KVM's hva_to_pfn(), which split this
-> part out into hva_to_pfn_remapped() in 92176a8ede57 and then in
+Since commit 7a0496056064 ("kbuild: fix DT binding schema rule to detect
+command line changes"), this rule is every time re-run even if you change
+nothing.
 
-Wowsers.  I don't suppose anyone knows how/if KVM prevented that BUG_ON()
-in hva_to_pfn() from being triggered by a malicious/miconfigured userspace?
+cmd_dtc takes one additional parameter to pass to the -O option of dtc.
 
-> add6a0cd1c5b adopted a follow_pfn() approach, but also added forcing a
-> user fault and retry mechanism, iiuc.  Cc'ing Paolo and Andrea to see
-> if we should consider something similar.  We'd be forcing the fault on
-> user mapping, not first access though, so I'm not sure if it's still
-> useful.
+We need to pass 'yaml' to if_changed_rule. Otherwise, cmd-check invoked
+from if_changed_rule is false positive.
 
-Hmm, because the fault would trigger on map, userspace could provide the
-same effective result by touching the page before calling into VFIO, i.e.
-doesn't seem like adding fixup_user_fault() would add much other than
-complexity.
+Fixes: 7a0496056064 ("kbuild: fix DT binding schema rule to detect command line changes")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-> > Mapping PFNMAP VMAs into the IOMMU without using a mmu_notifier also
-> > seems dangerous, e.g. if the subsystem associated with the VMA
-> > unmaps/remaps the VMA then the IOMMU will end up with stale
-> > translations.
-> 
-> The original use case was to support mapping MMIO ranges between
-> devices to support p2p within a VM instance, so remapping the VMA was
-> not a concern.  But yes, as this might be used beyond that limited
-> case for something like rdma, it should be expanded.  Patches?
+ scripts/Makefile.lib | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Heh, I don't have a use case for any of this.  Quite the opposite actually,
-this was encountered because the VFIO memory listener in Qemu was trying to
-map SGX EPC memory for DMA.  I segued into this patch only because the WARN
-on PA!=0 caught my eye.
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 97547108ee7f..4b799737722c 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -309,7 +309,7 @@ define rule_dtc
+ endef
+ 
+ $(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
+-	$(call if_changed_rule,dtc)
++	$(call if_changed_rule,dtc,yaml)
+ 
+ dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
+ 
+-- 
+2.25.1
 
-> > Last thought, using PA==0 for the error seems unnecessarily risky,
-> > e.g. why not use something similar to KVM_PFN_ERR_* or an explicit
-> > return code?
-> 
-> We're just consuming what the IOMMU driver provide.  Both Intel and AMD
-> return zero for a page not found.  In retrospect, yeah, we probably
-> should have balked at that.
-> 
-> >  drivers/vfio/vfio_iommu_type1.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c
-> > b/drivers/vfio/vfio_iommu_type1.c index 85b32c325282..c2ada190c5cb
-> > 100644 --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -342,8 +342,8 @@ static int vaddr_get_pfn(struct mm_struct *mm,
-> > unsigned long vaddr, vma = find_vma_intersection(mm, vaddr, vaddr +
-> > 1); 
-> >  	if (vma && vma->vm_flags & VM_PFNMAP) {
-> > -		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) +
-> > vma->vm_pgoff;
-> > -		if (is_invalid_reserved_pfn(*pfn))
-> > +		if (!follow_pfn(vma, vaddr, pfn) &&
-> > +		    is_invalid_reserved_pfn(*pfn))
-> >  			ret = 0;
-> >  	}
-> >  done:
-> 
-> Should we consume that error code?
-> 
-> 	ret = follow_pfn(vma, vaddr, pfn);
-> 	if (!ret && !is_invalid_reserved_pfn(*pfn))
-> 		ret = -EINVAL;
-
-Not sure it matters?  gup() returns -EINVAL on PFNMAP, follow_pfn() returns
--EINVAL for all error cases, and the delta would also return -EINVAL.
-Generally speaking, letting the first error "win" usually seems like the
-way to go, e.g. to avoid squashing a meaningful error code.  But AFAICT
-it's a moot point.
