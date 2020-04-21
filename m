@@ -2,161 +2,206 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74DBC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D86DC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACB59206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22980206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="r3C7ZPWn"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ih+okrN7";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XdhBk5zd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgDUTTm (ORCPT
+        id S1726106AbgDUTYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:19:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726551AbgDUTTk (ORCPT
+        Tue, 21 Apr 2020 15:24:01 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:51766 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725963AbgDUTYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:19:40 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E1D7C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:19:40 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id w3so5630054plz.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:19:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hPVhiHCru66F7M87+182p9Tvtpc85gfkzQRDqIRO1ko=;
-        b=r3C7ZPWnB+/BSMYac/cFV6GVQaCwnWAzI9frvjDJLQJR9jPwOhTonM3kEUjmpl4L+j
-         a3b25Q+Me2vR+TR33Cc9mp0t9k9AFV03JP9k6k2XYvuWbYyCHCZOWQGB3RYjMjGPpdsp
-         pr/Br9+xNw0bAaHb5zRMaYp0pSBSk3qkO7dyjVI54G40sbnt7iz3w1dHKBtMKl8Pqn0k
-         0rkFqLQ3FwTIn86ZUeObV+i+tZgjpGexmA5F+2PaDHBsF126dAzWbuh2xb6KYqkJKrGl
-         NVkZWpY0UrIl5iMLGM7D1P8IU6mGulUTyns47YhRZWP2kGD/vnVFoDzu9sXDhTS0X4vQ
-         W2Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=hPVhiHCru66F7M87+182p9Tvtpc85gfkzQRDqIRO1ko=;
-        b=Jqgk5dsFRxAZEQ8m9kdQXjXjpzdB2HLFrYXuUdnSwOpi3Gzmom5MJ6nl6yFvPhuR/G
-         JGfQzl0uNxtA+sYsnx/WnnpXcirGO07NlyQPeNL4FOJcEhAMLDtUafm8pBDzHnRrf1sa
-         9jksb3wJcuOWBpUw/KbGo2Ae2z6T6OMq3JRkVIR46F+g/pPxBwFPoABIGjLkuYItXmxv
-         NafLX7WGBNdNn6BXHoCcJMgyn7WFS5togsITOxhrAMuv7lY6zG1JHdJqL+NKOYclTTPC
-         zTMoP9YvCtfecyNdmb5Jh9UVwvatoIfeEjWm841/eK/NZb+3dyK40oIFAMJNlODYYvh+
-         JpHA==
-X-Gm-Message-State: AGi0PuYT8I/Ut31yz7xIjLNOX3RoO3qVPzusJfFP60vyHbhJpGHIOyfz
-        vfLrgYd61KUup7wcwQEZjrxo/1/N6zKENg==
-X-Google-Smtp-Source: APiQypJtA1GPjuyjU1rDoIKjs5ei8Wc2RGLVpz0+8Vkr8sWRjn179ks5m9kyaVeEtaU2mYrSUVbc1g==
-X-Received: by 2002:a17:902:aa94:: with SMTP id d20mr22883245plr.313.1587496779466;
-        Tue, 21 Apr 2020 12:19:39 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id b11sm2934507pgj.92.2020.04.21.12.19.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 12:19:38 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 12:19:38 -0700 (PDT)
-X-Google-Original-Date: Tue, 21 Apr 2020 12:19:13 PDT (-0700)
-Subject:     Re: [v2 PATCH 3/5] RISC-V: Define fixmap bindings for generic early ioremap support
-In-Reply-To: <20200413212907.29244-4-atish.patra@wdc.com>
-CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        ardb@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        catalin.marinas@arm.com, Greg KH <gregkh@linuxfoundation.org>,
-        mingo@kernel.org, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, masahiroy@kernel.org,
-        linux@armlinux.org.uk, will@kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Message-ID: <mhng-bccab71a-2ee1-4f4b-a7c3-90c1340e525b@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 21 Apr 2020 15:24:00 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LJ8t3g021869;
+        Tue, 21 Apr 2020 12:23:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=ZW+mP98htNB7VsqrWiYjT1DH/cybCDD4F+LstqPLgps=;
+ b=ih+okrN7mVPNia8HphWajkkEUdxkV5n1DTqpuxgdzpslLXeuf8aGup9iavobTlg3rIEj
+ fyoJZGDQXf6IsO29OEOPTTBmUf0NLvEtQ+Dw9M/2ak6ZnGtAU5JKEkFLMUfdPksHXzK9
+ i2CK7Rtt7w1/Hjp+KZ4+o/RzIc78vReH6QE= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 30ghjwcvnb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 21 Apr 2020 12:23:35 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 21 Apr 2020 12:23:34 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SmhXmxsvS6MCCAOfQJ1uxD8T2eunOu/nS0BOC6Kz8n5IbhdEwe6n+1rwK/P4ssBs1IUtJ1ipxA04KoaU/z2037i4X0mnlyoOyw/yYbEtyia7EderDt9QcyxcsV/rAzjWenkU49qs6YkfVJfUf7aw8N8cqAU48etx9zrE8Osqdwu5x9+rvQKBUstCdZFfl6+EQvelWde/GNM6xgmq7V5v+vEDN6+U+7q5vzwg14rAu/vTG+k2ZhdH3hy5zNKfjVfPcBSVS33aWH4GBXt8AOWWU7Yn1JZ5siptHv1ECiuz0S9E6E91/wfA1UH5x4djf8ooD9aN0iNjQMqYRh32wdVVWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZW+mP98htNB7VsqrWiYjT1DH/cybCDD4F+LstqPLgps=;
+ b=ECO1eWMIcoDcb08VvBKhFRPBr5n6Z9Wr6I6eWfjnMi7u3flispr15hlz6V+YTlq9uhx1U5AgVJMF8WRPrLhl0MEEvD+S3YGoF3GRMMtIvMkl1gslwGbNk54DZY6azMujv2y6Cpy7TwM0kpMEDRiAsLiyMv0HenDOGaqaDp5hzN4LX+DmGWcqp/xI97TzVjbdz7dwX0bfjd8uSe+qTV/X6nIFkxk36mDSFh0/OVap7k3uka49sb+kjUuHP9NekyhH49o0qRFtqD455NCSNAVABpVKfU75oLeGM0xxSycYDo5kUuERnVk0ixTkdTc00TQle1oQM7Bv52I0Z0XgwK0abA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZW+mP98htNB7VsqrWiYjT1DH/cybCDD4F+LstqPLgps=;
+ b=XdhBk5zdfOFySrZ5EXjSI0F8V1W+WyIrjhFzM+qrSs4VuK0F9AQA3PVqXEqtaCwmDY5kZxIegjvIicnJ+r/1KPKM3JoZiRHW/a8fk/do94z+zJcWliOG7+MIymTlyDj9mOmosXDnUyo+3QhOAfjyynkgxVeLU4trvUDFCout9xU=
+Received: from BYAPR15MB4119.namprd15.prod.outlook.com (2603:10b6:a02:cd::20)
+ by BYAPR15MB3048.namprd15.prod.outlook.com (2603:10b6:a03:fc::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Tue, 21 Apr
+ 2020 19:23:33 +0000
+Received: from BYAPR15MB4119.namprd15.prod.outlook.com
+ ([fe80::90d6:ec75:fde:e992]) by BYAPR15MB4119.namprd15.prod.outlook.com
+ ([fe80::90d6:ec75:fde:e992%7]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
+ 19:23:32 +0000
+Date:   Tue, 21 Apr 2020 12:23:30 -0700
+From:   Andrey Ignatov <rdna@fb.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>
+Subject: Re: [PATCH 5/5] sysctl: pass kernel pointers to ->proc_handler
+Message-ID: <20200421192330.GA60879@rdna-mbp.dhcp.thefacebook.com>
+References: <20200421171539.288622-1-hch@lst.de>
+ <20200421171539.288622-6-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200421171539.288622-6-hch@lst.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-ClientProxiedBy: MWHPR22CA0053.namprd22.prod.outlook.com
+ (2603:10b6:300:12a::15) To BYAPR15MB4119.namprd15.prod.outlook.com
+ (2603:10b6:a02:cd::20)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (2620:10d:c090:400::5:90b1) by MWHPR22CA0053.namprd22.prod.outlook.com (2603:10b6:300:12a::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Tue, 21 Apr 2020 19:23:32 +0000
+X-Originating-IP: [2620:10d:c090:400::5:90b1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8cab8a8a-2fdc-4da5-3645-08d7e6297af2
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3048:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3048D1E71E016EB04BA83053A8D50@BYAPR15MB3048.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:576;
+X-Forefront-PRVS: 038002787A
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4119.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(376002)(39860400002)(346002)(396003)(366004)(316002)(16526019)(9686003)(2906002)(33656002)(66946007)(8936002)(8676002)(186003)(4326008)(86362001)(66556008)(7416002)(66476007)(81156014)(478600001)(1076003)(54906003)(52116002)(5660300002)(6916009)(6486002)(6496006);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UfEYhyEN1kjJ0nYO2c8wU5uxwN0rPHzhhUd0+7pteTt8AwQB41WRtm+31nhWpn004M2XIl4KjahY1s+MXUKLGkXXY62Qp6t+W1eagTLMxzAzuLS5H9GFH0H1ig99tGq7VUMPt+FQTQAOch2SkRCoATWSJ7OfJBYaNuTQPbNON94fRL2n/vpePFDI1jUYePky/1iaU5HkbhufqLhv7Q8ceM2oIsMI5u8HpuEz88OcH7bgM0NawNI/ajQ3VOW5aVQRymlPqv/Wy2JO99TI9O8IdVS0Oh9mF6ekHXG9eQrrXoLHenTq2N1D7xt12N4MMgPzM4vvGLyhtNS4INUJap94Oj6mN2g4VGXHORaDo+oebazs59P79wFdlSSPMAQ939LPlGsHnwrL7opR/+E3u8QP46UdAl0C+AYb21oZv5RldAcgd9SUg7CbNPu2MhFtoBsP
+X-MS-Exchange-AntiSpam-MessageData: NMmlGC6LsbbqLwJ1gGkLJEEFPW+yd2r0cVFamFFLq6lZsQLq7E63O8cgj1fIFKPhW35UkK5uw8bGqq8r48v5zUEdma7LLZwRiNphBnLLxnoBl2VGnTHQp0/AX4RvPhm0RbMBCbeymxJ0YZBia0nqLt9M5JJ6kjp4LlJRrf7BBkBO8GD/cQ50ZcPhBEA36fWu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cab8a8a-2fdc-4da5-3645-08d7e6297af2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2020 19:23:32.9054
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: v6iiCGiOG+6+LyLEBj4CS2/ldkg2S45BNj27aCcZVnJVIBEs+Nqt2mslVCCQL4qA
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3048
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_08:2020-04-21,2020-04-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 phishscore=0
+ mlxscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210144
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Apr 2020 14:29:05 PDT (-0700), Atish Patra wrote:
-> UEFI uses early IO or memory mappings for runtime services before
-> normal ioremap() is usable. This patch only adds minimum necessary
-> fixmap bindings and headers for generic ioremap support to work.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/riscv/Kconfig              |  1 +
->  arch/riscv/include/asm/Kbuild   |  1 +
->  arch/riscv/include/asm/fixmap.h | 18 ++++++++++++++++++
->  arch/riscv/include/asm/io.h     |  1 +
->  4 files changed, 21 insertions(+)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index a197258595ef..f39e326a7a42 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -68,6 +68,7 @@ config RISCV
->  	select ARCH_HAS_GCOV_PROFILE_ALL
->  	select HAVE_COPY_THREAD_TLS
->  	select HAVE_ARCH_KASAN if MMU && 64BIT
-> +	select GENERIC_EARLY_IOREMAP
->
->  config ARCH_MMAP_RND_BITS_MIN
->  	default 18 if 64BIT
-> diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-> index 3d9410bb4de0..59dd7be55005 100644
-> --- a/arch/riscv/include/asm/Kbuild
-> +++ b/arch/riscv/include/asm/Kbuild
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +generic-y += early_ioremap.h
->  generic-y += extable.h
->  generic-y += flat.h
->  generic-y += kvm_para.h
-> diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
-> index 2368d49eb4ef..ba5096d65fb0 100644
-> --- a/arch/riscv/include/asm/fixmap.h
-> +++ b/arch/riscv/include/asm/fixmap.h
-> @@ -30,6 +30,24 @@ enum fixed_addresses {
->  	FIX_TEXT_POKE1,
->  	FIX_TEXT_POKE0,
->  	FIX_EARLYCON_MEM_BASE,
-> +	/*
-> +	 * Make sure that it is 2MB aligned.
-> +	 */
-> +#define NR_FIX_SZ_2M	(SZ_2M / PAGE_SIZE)
-> +	FIX_THOLE = NR_FIX_SZ_2M - FIX_PMD - 1,
-> +
-> +	__end_of_permanent_fixed_addresses,
-> +	/*
-> +	 * Temporary boot-time mappings, used by early_ioremap(),
-> +	 * before ioremap() is functional.
-> +	 */
-> +#define NR_FIX_BTMAPS		(SZ_256K / PAGE_SIZE)
-> +#define FIX_BTMAPS_SLOTS	7
-> +#define TOTAL_FIX_BTMAPS	(NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
-> +
-> +	FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
-> +	FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
-> +
->  	__end_of_fixed_addresses
->  };
->
-> diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
-> index 0f477206a4ed..047f414b6948 100644
-> --- a/arch/riscv/include/asm/io.h
-> +++ b/arch/riscv/include/asm/io.h
-> @@ -14,6 +14,7 @@
->  #include <linux/types.h>
->  #include <asm/mmiowb.h>
->  #include <asm/pgtable.h>
-> +#include <asm/early_ioremap.h>
->
->  /*
->   * MMIO access functions are separated out to break dependency cycles
+Christoph Hellwig <hch@lst.de> [Tue, 2020-04-21 10:17 -0700]:
+> Instead of having all the sysctl handlers deal with user pointers, which
+> is rather hairy in terms of the BPF interaction, copy the input to and
+> from  userspace in common code.  This also means that the strings are
+> always NUL-terminated by the common code, making the API a little bit
+> safer.
+> 
+> As most handler just pass through the data to one of the common handlers
+> a lot of the changes are mechnical.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+...
+
+> @@ -1172,36 +1168,28 @@ int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
+>  		.new_updated = 0,
+>  	};
+>  	struct cgroup *cgrp;
+> +	loff_t pos = 0;
+>  	int ret;
+>  
+>  	ctx.cur_val = kmalloc_track_caller(ctx.cur_len, GFP_KERNEL);
+> -	if (ctx.cur_val) {
+> -		mm_segment_t old_fs;
+> -		loff_t pos = 0;
+> -
+> -		old_fs = get_fs();
+> -		set_fs(KERNEL_DS);
+> -		if (table->proc_handler(table, 0, (void __user *)ctx.cur_val,
+> -					&ctx.cur_len, &pos)) {
+> -			/* Let BPF program decide how to proceed. */
+> -			ctx.cur_len = 0;
+> -		}
+> -		set_fs(old_fs);
+> -	} else {
+> +	if (!ctx.cur_val ||
+> +	    table->proc_handler(table, 0, ctx.cur_val, &ctx.cur_len, &pos)) {
+>  		/* Let BPF program decide how to proceed. */
+>  		ctx.cur_len = 0;
+>  	}
+>  
+> -	if (write && buf && *pcount) {
+> +	if (write && *buf && *pcount) {
+>  		/* BPF program should be able to override new value with a
+>  		 * buffer bigger than provided by user.
+>  		 */
+>  		ctx.new_val = kmalloc_track_caller(PAGE_SIZE, GFP_KERNEL);
+>  		ctx.new_len = min_t(size_t, PAGE_SIZE, *pcount);
+> -		if (!ctx.new_val ||
+> -		    copy_from_user(ctx.new_val, buf, ctx.new_len))
+> +		if (ctx.new_val) {
+> +			memcpy(ctx.new_val, *buf, ctx.new_len);
+> +		} else {
+>  			/* Let BPF program decide how to proceed. */
+>  			ctx.new_len = 0;
+> +		}
+>  	}
+>  
+>  	rcu_read_lock();
+> @@ -1212,7 +1200,7 @@ int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
+>  	kfree(ctx.cur_val);
+>  
+>  	if (ret == 1 && ctx.new_updated) {
+> -		*new_buf = ctx.new_val;
+> +		*buf = ctx.new_val;
+
+Original value of *buf should be freed before overriding it here
+otherwise it's lost/leaked unless I missed something.
+
+Other than this BPF part of this patch looks good to me. Feel free to
+add my Ack on the next iteration with this fix.
+
+
+>  		*pcount = ctx.new_len;
+>  	} else {
+>  		kfree(ctx.new_val);
+
+-- 
+Andrey Ignatov
