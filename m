@@ -2,73 +2,102 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA890C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4E5C55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0525206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587498024;
-	bh=EdT/q7UFfZCJ31DJSxP12Wv8fYBVt6LXEKfaUOq3cKk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Pf7VM13xSTEnGRW9p67wrQkWa67LxCLltnod6EjribM2CCPtx0+ZUdM8jZhl1HRfU
-	 rA8QFO3Qz0dr/qslP/Wrh6JoN3CwFmyN2ABHzf0STuWOrc/kzoiXdYjEOR+mf3nUUR
-	 AyeS4s8yUJo6uy0Ds9D9Y0qqS694cCCRwJdKUv20=
+	by mail.kernel.org (Postfix) with ESMTP id A682D206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:40:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgDUTkY (ORCPT
+        id S1726432AbgDUTke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39158 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 15:40:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49798 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbgDUTkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:40:21 -0400
-Subject: Re: [GIT PULL v2] vhost: cleanups and fixes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587498020;
-        bh=EdT/q7UFfZCJ31DJSxP12Wv8fYBVt6LXEKfaUOq3cKk=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ksZauvLKnCWKE88mDN9PHb1ELnMSZjfAyUeR5AXARuo99zjbilN/ya1702AYdcM1l
-         WFr/a4K6IQ49UcRqh/Y+GLb/yRqOITIctLlddEepYymYB8mQCCjoeW4qspaTJIsd8e
-         6Q0kIG/VXukPYsyypOicpW6i97bM40fb+8l3dREU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200420160001-mutt-send-email-mst@kernel.org>
-References: <20200420160001-mutt-send-email-mst@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200420160001-mutt-send-email-mst@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
-X-PR-Tracked-Commit-Id: d085eb8ce727e581abf8145244eaa3339021be2f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 189522da8b3a796d56d802e067d591d2ffff7f40
-Message-Id: <158749802063.25518.14503910452719540577.pr-tracker-bot@kernel.org>
-Date:   Tue, 21 Apr 2020 19:40:20 +0000
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alexander.h.duyck@linux.intel.com, arnd@arndb.de,
-        bjorn.andersson@linaro.org, eli@mellanox.com, eperezma@redhat.com,
-        gustavo@embeddedor.com, hulkci@huawei.com, jasowang@redhat.com,
-        mst@redhat.com, sfr@canb.auug.org.au, yanaijie@huawei.com,
-        yuehaibing@huawei.com
+        id S1726056AbgDUTkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:40:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0C86EAE28;
+        Tue, 21 Apr 2020 19:40:31 +0000 (UTC)
+Date:   Tue, 21 Apr 2020 21:40:30 +0200
+Message-ID: <s5ho8rk1vbl.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc:     alsa-devel@alsa-project.org, Roy Spliet <nouveau@spliet.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: Unrecoverable AER error when resuming from RAM (hda regression in 5.7-rc2)
+In-Reply-To: <1587494585.7pihgq0z3i.none@localhost>
+References: <1587494585.7pihgq0z3i.none.ref@localhost>
+        <1587494585.7pihgq0z3i.none@localhost>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 20 Apr 2020 16:00:01 -0400:
+On Tue, 21 Apr 2020 21:08:44 +0200,
+Alex Xu (Hello71) wrote:
+> 
+> With 5.7-rc2, after resuming from suspend to RAM, I get:
+> 
+> [   55.679382] pcieport 0000:00:03.1: AER: Multiple Uncorrected (Non-Fatal) error received: 0000:00:00.0
+> [   55.679405] pcieport 0000:00:03.1: AER: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+> [   55.679410] pcieport 0000:00:03.1: AER:   device [1022:1453] error status/mask=00100000/04400000
+> [   55.679414] pcieport 0000:00:03.1: AER:    [20] UnsupReq               (First)
+> [   55.679417] pcieport 0000:00:03.1: AER:   TLP Header: 40000004 0a0000ff fffc0e80 00000000
+> [   55.679423] amdgpu 0000:0a:00.0: AER: can't recover (no error_detected callback)
+> [   55.679425] snd_hda_intel 0000:0a:00.1: AER: can't recover (no error_detected callback)
+> [   55.679455] pcieport 0000:00:03.1: AER: device recovery failed
+> 
+> Then the display freezes and the system basically falls apart (can't 
+> even sudo reboot -f, need to use magic sysrq).
+> 
+> I bisected this to "ALSA: hda: Skip controller resume if not needed". 
+> Setting snd_hda_intel.power_save=0 resolves the issue.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+Hrm, it means the condition to skip the controller resume doesn't fit
+well.  Does the patch below help?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/189522da8b3a796d56d802e067d591d2ffff7f40
+But looking at the dmesg output:
+> [    1.021452] snd_hda_codec_generic hdaudioC0D0: ignore pin 0x7, too many assigned pins
+> [    1.021461] snd_hda_codec_generic hdaudioC0D0: ignore pin 0x9, too many assigned pins
+> [    1.021471] snd_hda_codec_generic hdaudioC0D0: ignore pin 0xb, too many assigned pins
+> [    1.021480] snd_hda_codec_generic hdaudioC0D0: ignore pin 0xd, too many assigned pins
+> [    1.021482] snd_hda_codec_generic hdaudioC0D0: autoconfig for Generic: line_outs=0 (0x0/0x0/0x0/0x0/0x0) type:line
+> [    1.021482] snd_hda_codec_generic hdaudioC0D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
+> [    1.021483] snd_hda_codec_generic hdaudioC0D0:    hp_outs=0 (0x0/0x0/0x0/0x0/0x0)
+> [    1.021484] snd_hda_codec_generic hdaudioC0D0:    mono: mono_out=0x0
+> [    1.021484] snd_hda_codec_generic hdaudioC0D0:    dig-out=0x3/0x5
+> [    1.021485] snd_hda_codec_generic hdaudioC0D0:    inputs:
 
-Thank you!
+... it looks like snd-hda-codec-generic is used for HDMI/DP codec.
+This can't work well.  Did you enable CONFIG_SND_HDA_HDMI?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+In anyway, please give alsa-info.sh output.  Run the script with
+--no-upload option and attach the output.
+
+
+thanks,
+
+Takashi
+
+---
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1060,7 +1060,7 @@ static int azx_resume(struct device *dev)
+ 
+ 	/* check for the forced resume */
+ 	list_for_each_codec(codec, &chip->bus) {
+-		if (hda_codec_need_resume(codec)) {
++		if (!codec->relaxed_resume) {
+ 			forced_resume = true;
+ 			break;
+ 		}
