@@ -2,151 +2,85 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D6AC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D22C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCD0E206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92D6206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hIFpCxzS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbgDUL1m (ORCPT
+        id S1728621AbgDUL2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:27:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:33574 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDUL1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:27:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE2F81FB;
-        Tue, 21 Apr 2020 04:27:38 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EB3A3F73D;
-        Tue, 21 Apr 2020 04:27:36 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 12:27:34 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200421112733.4jbguidgbqwzhv23@e107158-lin.cambridge.arm.com>
-References: <20200403123020.13897-1-qais.yousef@arm.com>
- <292dbd54-e590-dc4f-41e6-5f86e478c0ee@arm.com>
- <20200420151341.7zni3bwroso2kpdc@e107158-lin.cambridge.arm.com>
- <de020088-3b06-3674-dab9-244ae577cc54@arm.com>
+        Tue, 21 Apr 2020 07:28:40 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34650 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726018AbgDUL2j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:28:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587468518;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fi9gazHfvgbNH4vVnBQ4u/0lTDUCnMDsJilS89wFh+E=;
+        b=hIFpCxzSXNHuWZnaRby4PCOj3cmbz64Xuw9hGnt1b2OfgLykjYw03goNnfmcKWP68Oz6Pc
+        Mfl8HKgFCw3g6dqJODiJ+31ugxcowbfH/j1gO2eDmgF2mWhUsLDLoSCd9bgTqWUPDB8zDB
+        b+JDlmv3cA3xOanteLw64jEQyeAsJag=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-61-plzc8nxCN7yl48DFpeXF-w-1; Tue, 21 Apr 2020 07:28:35 -0400
+X-MC-Unique: plzc8nxCN7yl48DFpeXF-w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C71D61B18BC0;
+        Tue, 21 Apr 2020 11:28:33 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.130])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7EB6219C58;
+        Tue, 21 Apr 2020 11:28:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 21 Apr 2020 13:28:33 +0200 (CEST)
+Date:   Tue, 21 Apr 2020 13:28:31 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Christof Meerwald <cmeerw@cmeerw.org>
+Subject: Re: [PATCH] signal: Avoid corrupting si_pid and si_uid in
+ do_notify_parent
+Message-ID: <20200421112831.GD6787@redhat.com>
+References: <20200419201336.GI22017@edge.cmeerw.net>
+ <87sggyytnh.fsf@x220.int.ebiederm.org>
+ <20200421083031.5wapruzncjkagvhf@wittgenstein>
+ <20200421092846.GB6787@redhat.com>
+ <20200421102104.6pt34jknxmtu5ygm@wittgenstein>
+ <20200421111139.GC6787@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <de020088-3b06-3674-dab9-244ae577cc54@arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200421111139.GC6787@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/21/20 13:18, Dietmar Eggemann wrote:
-> On 20/04/2020 17:13, Qais Yousef wrote:
-> > On 04/20/20 10:29, Dietmar Eggemann wrote:
-> >> On 03.04.20 14:30, Qais Yousef wrote:
-> >>
-> >> [...]
-> >>
-> >>> @@ -924,6 +945,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
-> >>>  	return uc_req;
-> >>>  }
-> >>>  
-> >>> +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
-> >>> +{
-> >>> +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-> >>> +
-> >>> +	if (!uc_se->user_defined)
-> >>> +		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
-> >>> +}
-> >>> +
-> >>>  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
-> >>>  {
-> >>>  	struct uclamp_se uc_eff;
-> >>> @@ -1030,6 +1059,12 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-> >>>  	if (unlikely(!p->sched_class->uclamp_enabled))
-> >>>  		return;
-> >>>  
-> >>> +	/*
-> >>> +	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
-> >>> +	 * user, we apply any new value on the next wakeup, which is here.
-> >>> +	 */
-> >>> +	uclamp_rt_sync_default_util_min(p);
-> >>> +
-> >>
-> >> Does this have to be an extra function? Can we not reuse
-> >> uclamp_tg_restrict() by slightly rename it to uclamp_restrict()?
-> > 
-> > Hmm the thing is that we're not restricting here. In contrary we're boosting,
-> > so the name would be misleading.
-> 
-> I always thought that we're restricting p->uclamp_req[UCLAMP_MIN].value (default 1024) to
-> sysctl_sched_rt_default_uclamp_util_min (0-1024)?
+On 04/21, Oleg Nesterov wrote:
+>
+> The corner case is release_task() when the last exiting sub-thread sends
+> a signal on behalf of its ->group_leader, and at this point all the tsk's
+> pid pointers are NULL, that is why "force" can be falsely "true".
 
-The way I look at it is that we're *setting* it to
-sysctl_sched_rt_default_uclamp_util_min if !user_defined.
+Or do_notify_parent() can be called by debugger from the parent namespace,
+in this case "force" can be falsely "true" too.
 
-The restriction mechanism that ensures this set value doesn't escape
-cgroup/global restrictions setup.
+Oleg.
 
-> 
-> root@h960:~# echo 999 > /proc/sys/kernel/sched_rt_default_util_clamp_min
-> 
-> [  118.028582] uclamp_eff_get() [rtkit-daemon 410] tag=0 uclamp_id=0 uc_req.value=1024
-> [  118.036290] uclamp_eff_get() [rtkit-daemon 410] tag=1 uclamp_id=0 uc_req.value=1024
-> [  125.181747] uclamp_eff_get() [rtkit-daemon 410] tag=0 uclamp_id=0 uc_req.value=1024
-> [  125.189443] uclamp_eff_get() [rtkit-daemon 410] tag=1 uclamp_id=0 uc_req.value=1024
-> [  131.213211] uclamp_restrict() [rtkit-daemon 410] p->uclamp_req[0].value=999
-> [  131.220201] uclamp_eff_get() [rtkit-daemon 410] tag=0 uclamp_id=0 uc_req.value=999
-> [  131.227792] uclamp_eff_get() [rtkit-daemon 410] tag=1 uclamp_id=0 uc_req.value=999
-> [  137.181544] uclamp_eff_get() [rtkit-daemon 410] tag=0 uclamp_id=0 uc_req.value=999
-> [  137.189170] uclamp_eff_get() [rtkit-daemon 410] tag=1 uclamp_id=0 uc_req.value=999
-> 
-> >> This function will then deal with enforcing restrictions, whether system
-> >> and taskgroup hierarchy related or default value (latter only for rt-min
-> >> right now since the others are fixed) related.
-> >>
-> >> uclamp_eff_get() -> uclamp_restrict() is called from:
-> >>
-> >>   'enqueue_task(), uclamp_update_active() -> uclamp_rq_inc() -> uclamp_rq_inc_id()' and
-> >>
-> >>   'task_fits_capacity() -> clamp_task_util(), rt_task_fits_capacity() -> uclamp_eff_value()' and
-> >>
-> >>   'schedutil_cpu_util(), find_energy_efficient_cpu() -> uclamp_rq_util_with() -> uclamp_eff_value()'
-> >>
-> >> so there would be more check-points than the one in 'enqueue_task() -> uclamp_rq_inc()' now.
-> > 
-> > I think you're revolving around the same idea that Patrick was suggesting.
-> > I think it is possible to do something in uclamp_eff_get() too.
-> 
-> Yeah, I read https://lore.kernel.org/linux-doc/20200415074600.GA26984@darkstar again.
-> 
-> Everything which moves enforcing sysctl_sched_rt_default_uclamp_util_min closer to 'uclamp_eff_get() -> 
-> uclamp_(tg_)restrict()' is fine with me.
-
-Cool.
-
-Thanks
-
---
-Qais Yousef
