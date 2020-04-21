@@ -2,80 +2,173 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7872DC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD6BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4B720679
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:47:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhsSdZ/4"
+	by mail.kernel.org (Postfix) with ESMTP id 38CA1206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587480579;
+	bh=SgQiBrSQ+PD4FbQVsWRH9o97ApUK/0hXOneHAMyuIM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VhNMiMLcUqWlrRsVxuYJqhDcFhDKVRHDdXsnoteKy0LtqMwwApLybRh/FftSJfD9t
+	 MUtV/cAOM4LY9MzU8F4no2ZTlmhSNOSJZseO8/6iSB9FfWaYcTthKBQcMbBT02I5jL
+	 fTPkyaE/RmwM7t3PLHfRBKprFUFgbmIPKPI2jbW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgDUOrr (ORCPT
+        id S1728864AbgDUOti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:47:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgDUOrq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:47:46 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA95FC061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 07:47:46 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a22so1434274pjk.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 07:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=REDanlIn51eutGNf5uVqUmrvAhwfniHOxSyexe3EO7o=;
-        b=MhsSdZ/4Ernny2tfflH1JcnoiLoZ2DKPh4A5fhT5NpP4y71c1+QQIIvpnAM+gUA/Sk
-         5r0fs3pLBBWtXfsrzta4fj7YurjuqhK3iG4tjw+6LW7lUWje82/NIvcXLCW5e8Ex8m3O
-         Az7WrSFn3OE3CsAU+ui1uAUaiV9+Gyjc5hTJ0jOexnSF+c7CAwD5vs04NA//qYRVtr6S
-         kVvCVxygQH0iXWuv+MstOWJVvPnUAfmj3pjXB7DkfS0q3BxtG6ipg9h5k9ZNmVor1c5G
-         cH+9Z67oexE2YPOuQ0OlZmH0Tsv/uoV/HJuiV7AlIG2j1C4EbjcVq0aA1khF/b3j2mc+
-         rbRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=REDanlIn51eutGNf5uVqUmrvAhwfniHOxSyexe3EO7o=;
-        b=ZBOuAbN48iQ3GnIKH7mpx68NaCf/gbyy1m+jGIrIWv8LQmprGzmEZ4+qvDuAw7hBHu
-         KvoFJLaEDS+m1aAi03x/O/JfP5/lOcEuzZE5q0r1NCP2x+lOtoCEmv7m31+JVdVJwz+c
-         gNlyo8GAk+SOn05mkNUygffu7+v0hAQ+m3tOh591PiAS9t1nKHxwd8wMG3nIIZmbeXBj
-         Vwi66xytrDnGPS7QWkqNxWf0bweU18QMO3hZI1QvB6nx4KUL9Wzlj6kvJTCVkwPuOSEU
-         5X3fXSg1Qwj6MiLYU7SRi0VgvZsRaw6o+qE9haJqD3v1/fESjHZUFPSC0pW6RCdPQDae
-         vcHQ==
-X-Gm-Message-State: AGi0PuauQEVEhnzVVRCzuEmB/rD7gZ8F2pluDx+74Nv7xvI0ial5P4/G
-        UziqUyMvuwfrFhwCEGVKkQM=
-X-Google-Smtp-Source: APiQypKQa+TqQjd0MruXmB8XqNPgNGRN53IKCiUW8GNlKz6cdzaFtF+m/rMGX1T/HKSArVUZiNrVbQ==
-X-Received: by 2002:a17:90a:730a:: with SMTP id m10mr6292027pjk.9.1587480465940;
-        Tue, 21 Apr 2020 07:47:45 -0700 (PDT)
-Received: from localhost.localdomain ([2408:821b:3c17:9da0:b0c4:dd31:5ddb:af0d])
-        by smtp.gmail.com with ESMTPSA id q63sm2617337pfb.178.2020.04.21.07.47.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 07:47:45 -0700 (PDT)
-From:   youling257 <youling257@gmail.com>
-To:     peterz@infradead.org
-Cc:     tglx@linutronix.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz, brgerst@gmail.com,
-        youling257 <youling257@gmail.com>
-Subject: Re: [PATCH v3 14/26] objtool: Optimize read_sections()
-Date:   Tue, 21 Apr 2020 22:47:14 +0800
-Message-Id: <20200421144714.12479-1-youling257@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200324160924.739153726@infradead.org>
-References: <20200324160924.739153726@infradead.org>
+        Tue, 21 Apr 2020 10:49:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728337AbgDUOth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:49:37 -0400
+Received: from linux-8ccs (p5B281662.dip0.t-ipconnect.de [91.40.22.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AAD5206A1;
+        Tue, 21 Apr 2020 14:49:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587480577;
+        bh=SgQiBrSQ+PD4FbQVsWRH9o97ApUK/0hXOneHAMyuIM4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0L8bmATeCztOdFcTU5cEDz0mnDPS7WMXwF9DzQ6s2ZMQy1B+s3B/IXhqUrpouSRxc
+         cQs5ROhMlVbtU+7Dhb8t8E6pabowPHrBxaJsexUOu9SxZ1w87JPcKk7fHN6bLbM22q
+         VJd8+j2qqwLXKmHzNqjDe5oi9kjjDeQaDlrYZVYQ=
+Date:   Tue, 21 Apr 2020 16:49:32 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v3 3/4] kmod: Return directly if module name is empty in
+ request_module()
+Message-ID: <20200421144931.GA20103@linux-8ccs>
+References: <1587386035-5188-1-git-send-email-yangtiezhu@loongson.cn>
+ <1587386035-5188-4-git-send-email-yangtiezhu@loongson.cn>
+ <20200420181931.GJ11244@42.do-not-panic.com>
+ <675147f7-2762-c574-4c3d-de6b25a5a44a@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <675147f7-2762-c574-4c3d-de6b25a5a44a@loongson.cn>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this patch cause 64bit kernel build failed on 32bit userspace, please fix.
++++ Tiezhu Yang [21/04/20 11:07 +0800]:
+>On 04/21/2020 02:19 AM, Luis Chamberlain wrote:
+>>On Mon, Apr 20, 2020 at 08:33:54PM +0800, Tiezhu Yang wrote:
+>>>If module name is empty, it is better to return directly at the beginning
+>>>of request_module() without doing the needless call_modprobe() operation.
+>>>
+>>>Call trace:
+>>>
+>>>request_module()
+>>>       |
+>>>       |
+>>>__request_module()
+>>>       |
+>>>       |
+>>>call_modprobe()
+>>>       |
+>>>       |
+>>>call_usermodehelper_exec() -- retval = sub_info->retval;
+>>>       |
+>>>       |
+>>>call_usermodehelper_exec_work()
+>>>       |
+>>>       |
+>>>call_usermodehelper_exec_sync() -- sub_info->retval = ret;
+>>>       |
+>>>       | --> call_usermodehelper_exec_async() --> do_execve()
+>>>       |
+>>>kernel_wait4(pid, (int __user *)&ret, 0, NULL);
+>>>
+>>>sub_info->retval is 256 after call kernel_wait4(), the function
+>>>call_usermodehelper_exec() returns sub_info->retval which is 256,
+>>>then call_modprobe() and __request_module() returns 256.
+>>>
+>>>Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>Thanks for looking into this. I still cannot find where
+>>userspace it returns 256. Can you? If I run modprobe without
+>>an argument I see 1 returned.
+>>
+>>At least kmod [0] has a series of cmd helper structs, the one for modprobe
+>>seems to be kmod_cmd_compat_modprobe, and I can see -1 returned which
+>>can be converted to 255. It can also return EXIT_FAILURE or EXIT_SUCCESS
+>>and /usr/include/stdlib.h defines these as 1 and 0 respectively.
+
+I'm also seeing modprobe return 1 as exit status when I run it without
+arguments. I don't think the 256 value is coming from modprobe though,
+see below -
+
+>>https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git/
+>>
+>>   Luis
+>
+>Here is my understanding:
+>
+>When build and execute the following application, we can see the exit 
+>status is 256.
+>
+>$ ./system
+>modprobe: FATAL: Module  not found in directory 
+>/lib/modules/4.18.0-147.5.1.el8_1.x86_64
+>exit status = 256
+>
+>$ ./execl
+>modprobe: FATAL: Module  not found in directory 
+>/lib/modules/4.18.0-147.5.1.el8_1.x86_64
+>exit status = 256
+
+I am going to guess this has something to do with how system() and
+waitpid() (and the wait family of syscalls in general) encode the exit
+status in their return values. According to their man pages, you need
+to use the appropriate WIF* macros to get the actual exit code of the
+child process.
+
+From system(3):
+
+    the return value is a "wait status" that can be examined using the
+    macros described in waitpid(2).  (i.e., WIFEXITED(),
+    WEXITSTATUS(), and so on)
+
+From waitpid(2):
+
+     If  wstatus  is  not  NULL,  wait()  and  waitpid() store status
+     information in the int to which it points.  This integer can be
+     inspected with the following macros (which take the integer
+     itself as an argument, not a pointer to it, as is done in wait()
+     and waitpid()!):
+
+       WEXITSTATUS(wstatus)
+              returns the exit status of the child.  This consists of
+              the least significant 8 bits of the status argument that
+              the child specified in a call to exit(3) or _exit(2) or
+              as the argument for a return statement in main().  This
+              macro should be employed only if WIFEXITED returned
+              true.
+
+In your test code, you are reading &status directly. To obtain the
+exit status, you need to use WEXITSTATUS(status), or right shift the
+value by 8 bits. That gives you 1, which was the original exit code
+given by modprobe. That's why you see an exit code of 1 when running
+modprobe directly and you see 256 when using system() and waitpid()
+and don't use the WIF* macros.
+
+As for why __request_module() returns 256, I am guessing this would
+come from kernel_wait4(), but I did not dive into the call path to
+verify this yet.
+
+Jessica
