@@ -2,90 +2,74 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7822C55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96988C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD4392076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:59:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CUkdYXQY"
+	by mail.kernel.org (Postfix) with ESMTP id 80EB220775
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgDUM7Q (ORCPT
+        id S1728964AbgDUM7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:59:16 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:43539 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728813AbgDUM7P (ORCPT
+        Tue, 21 Apr 2020 08:59:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58058 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728938AbgDUM7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:59:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587473955; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=YtfAXEXFjPsB+JY6QMaE7heGtGH15YpE1RkTM1QT/TY=;
- b=CUkdYXQYo4BmEegTTVs0GOE7xIl3GHKCljA+avDEAD+wcsri46XyUnZ+/GcGfqEKST6485Cb
- 8NYEbUdq2ivyLxV/dIxXy0uuhNPZPZfG/J7OKq8tsjY71hWgapnji/FMwKCS9CYVxOL6qQjo
- QW0AtBsQXEsnghOQI5hfJ+49brY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9eee10.7f9dbfb35c38-smtp-out-n01;
- Tue, 21 Apr 2020 12:58:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F290CC44791; Tue, 21 Apr 2020 12:58:54 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A96C9C433CB;
-        Tue, 21 Apr 2020 12:58:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A96C9C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 21 Apr 2020 08:59:17 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jQsUX-000449-GM; Tue, 21 Apr 2020 12:59:09 +0000
+Date:   Tue, 21 Apr 2020 14:59:08 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Linux Containers <containers@lists.linux-foundation.org>,
+        Christof Meerwald <cmeerw@cmeerw.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] signal: Avoid corrupting si_pid and si_uid in
+ do_notify_parent
+Message-ID: <20200421125908.ls5nwgkl4q7hjoov@wittgenstein>
+References: <20200419201336.GI22017@edge.cmeerw.net>
+ <87sggyytnh.fsf@x220.int.ebiederm.org>
+ <20200421083031.5wapruzncjkagvhf@wittgenstein>
+ <20200421092846.GB6787@redhat.com>
+ <20200421102104.6pt34jknxmtu5ygm@wittgenstein>
+ <20200421111139.GC6787@redhat.com>
+ <20200421112606.ay4cck2dphguqazb@wittgenstein>
+ <20200421121722.GE6787@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtlwifi: rtl8723ae: fix warning comparison to bool
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200420042658.18733-1-yanaijie@huawei.com>
-References: <20200420042658.18733-1-yanaijie@huawei.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     <pkshih@realtek.com>, <davem@davemloft.net>, <yanaijie@huawei.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200421125854.F290CC44791@smtp.codeaurora.org>
-Date:   Tue, 21 Apr 2020 12:58:54 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200421121722.GE6787@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason Yan <yanaijie@huawei.com> wrote:
-
-> Fix the following coccicheck warning:
+On Tue, Apr 21, 2020 at 02:17:22PM +0200, Oleg Nesterov wrote:
+> On 04/21, Christian Brauner wrote:
+> >
+> > process B setnses into
+> > <pidnsC> which is a sibling pid namespace,
 > 
-> drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c:617:14-20: WARNING:
-> Comparison to bool
-> drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c:622:13-19: WARNING:
-> Comparison to bool
-> drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c:627:14-20: WARNING:
-> Comparison to bool
-> drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c:632:13-19: WARNING:
-> Comparison to bool
-> drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c:937:5-13: WARNING:
-> Comparison to bool
+> please see pidns_install(), it verifies that
 > 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> 	* Only allow entering the current active pid namespace
+> 	* or a child of the current active pid namespace.
 
-Patch applied to wireless-drivers-next.git, thanks.
+I forgot about that.
 
-887e74239805 rtlwifi: rtl8723ae: fix warning comparison to bool
+Though, don't we have the same problem in:
 
--- 
-https://patchwork.kernel.org/patch/11498041/
+static void do_notify_parent_cldstop(struct task_struct *tsk,
+				     bool for_ptracer, int why)
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+at least for the for_ptrace is false case?
+
+Christian
