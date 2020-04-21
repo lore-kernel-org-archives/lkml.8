@@ -2,88 +2,144 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F4DC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203D5C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 222AC206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE6C32073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOG4tZNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgDULYe (ORCPT
+        id S1728807AbgDULYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:24:34 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:57440 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728621AbgDULYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:24:33 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD97O155eNIYqAA--.18S3;
-        Tue, 21 Apr 2020 19:23:58 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2 1/3] MIPS: Do not initialise globals to 0
-Date:   Tue, 21 Apr 2020 19:23:56 +0800
-Message-Id: <1587468238-24032-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1587468238-24032-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1587468238-24032-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9DxD97O155eNIYqAA--.18S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruFy8tw4fur1DJrWDCry5twb_yoWfKwb_KF
-        1xtw4vgrn0vFWjvw47Gw4rWFWYqw45Wry5AwnIgay2v3sIvryUA39xAw1Sqrs5JFZ5ArZY
-        v3sxGrn8Gw4fWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbSAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
-        0Ec7CjxVAFwI0_Jrv_JF4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-        vE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-        r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8KwCF04k20x
-        vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
-        3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
-        AIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAI
-        cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2js
-        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU33kZUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 21 Apr 2020 07:24:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728621AbgDULYh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:24:37 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E6CC061A10;
+        Tue, 21 Apr 2020 04:24:37 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id p25so6456936pfn.11;
+        Tue, 21 Apr 2020 04:24:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/nyZHnIln5SMvHTDYDPunqthnn+W6+8Xnre7urXhwVU=;
+        b=mOG4tZNBITuLYVAvk5EmokI/PBxfJ81UacvSZUJMUBYH+Nqx7/qNaWaep6LO11k/uo
+         kobKQyu9ZvqiFH481jOR6kBhGVLqmSa3IkVbagWWdfFoNhANdRFNtJl85kv224/61Lj7
+         HYYk5cSKPGNRUvcQl3ueKj0FWzNouX89mqbBwFEr8+GB7ktaafmZOAngOLHwcSHldWeJ
+         mxrH/M3UGyADMvu4t/bkX+9OLJPAUMpzbmK+dRmW/PGWa77/ihr2YPN/NaSPm/urCC5U
+         1z0vNCBS+ErWvgFUlJhnk/o7rSbveHP5rDWRLd6V9dy26JPmtbiVS3LnY3s+CfeTP2VG
+         K9sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/nyZHnIln5SMvHTDYDPunqthnn+W6+8Xnre7urXhwVU=;
+        b=Mcfk2dz30EDaFeXp3oUzfrRjpOVjUa2R4Kl3UknYdunv4HY2F7hSKntfyhJS/vuqHi
+         yUHo624IfqVB1sWj1/NSz85j/hbNZjxMI2WO2JntqJJ5C6RJ2KxODObZS/Dh6Uymqnea
+         DXrAUWqLudHn6qwZTKUMz8qhxkPOab1mDf2vDh8FEXn9s7IOs2NnsSU550RCg+0mxfz5
+         91qgEdEeEdqEIcUaQiOx/LsdkTV1MB7ZR2SA3rmGWLr4rTQNHnmgstql6dB0fYGl9yfC
+         fLMflons3jNStDrhuWmOsRTf4iKznozLYHjHN2pzUxKKkcL50QXcKdNTetgTAS29vkI/
+         DChA==
+X-Gm-Message-State: AGi0PubnyaEGRQrXXMNyeWl64yugmCChlZ8TowKxoAUnL3hp3XSEVnsG
+        qIRSlbUXm5P2r9GvPVYmtBpOKeLtW3LLpYKNd4s=
+X-Google-Smtp-Source: APiQypIVzlWfRnaxaJumLw77nPa/kSeajFst1dOacYBx6oSGxO0JU/IhLBjyOF19HfaOcTod4y++nlu4L6veLzfHZ3Y=
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr20189317pgb.74.1587468276844;
+ Tue, 21 Apr 2020 04:24:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200421075532.19192-1-m.othacehe@gmail.com> <20200421075532.19192-3-m.othacehe@gmail.com>
+In-Reply-To: <20200421075532.19192-3-m.othacehe@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 21 Apr 2020 14:24:30 +0300
+Message-ID: <CAHp75Veqp=tb0Z9h2cey5DE_KpNBp3Jdmh2gLzSoo-N5CsGpvw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] iio: vcnl4000: Add event support for VCNL4010/20.
+To:     Mathieu Othacehe <m.othacehe@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following checkpatch error:
+On Tue, Apr 21, 2020 at 10:57 AM Mathieu Othacehe <m.othacehe@gmail.com> wrote:
+>
+> The VCNL4010 and VCNL4020 chips are able to raise interrupts on proximity
+> threshold events. Add support for threshold rising and falling events for
+> those two chips.
 
-ERROR: do not initialise globals to 0
-#834: FILE: arch/mips/kernel/setup.c:834:
-+int hw_coherentio = 0;	/* Actual hardware supported DMA coherency setting. */
+Some nitpicks below (up to you and maintainer to address)
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+...
 
-v2:
-  - no changes
+> +static bool vcnl4010_in_periodic_mode(struct vcnl4000_data *data)
 
- arch/mips/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Since it's boolean I would name it ..._is_in_prediodic_mode().
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 10bef8f..b1e2d43 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -831,7 +831,7 @@ arch_initcall(debugfs_mips);
- /* User defined DMA coherency from command line. */
- enum coherent_io_user_state coherentio = IO_COHERENCE_DEFAULT;
- EXPORT_SYMBOL_GPL(coherentio);
--int hw_coherentio = 0;	/* Actual hardware supported DMA coherency setting. */
-+int hw_coherentio;	/* Actual hardware supported DMA coherency setting. */
- 
- static int __init setcoherentio(char *str)
- {
+>  {
+> +       int ret;
+>
+> +       ret = i2c_smbus_read_byte_data(data->client, VCNL4000_COMMAND);
+> +       if (ret < 0)
+> +               return false;
+>
+
+> +       return (ret & VCNL4000_SELF_TIMED_EN) > 0;
+
+This > 0  for bitmasked values looks slightly strange. And actually if
+a sign bit is included, potentially wrong.
+
+I would rather go without any comparison, or do !!(foo & BAR).
+
+> +}
+
+...
+
+> +static bool vcnl4010_thr_enabled(struct vcnl4000_data *data)
+
+_is_thr_enabled() ?
+
+> +{
+> +       int ret;
+> +
+> +       ret = i2c_smbus_read_byte_data(data->client, VCNL4010_INT_CTRL);
+> +       if (ret < 0)
+> +               return false;
+> +
+
+> +       return (ret & VCNL4010_INT_THR_EN) > 0;
+
+Ditto.
+
+> +}
+
+...
+
+> +               ret = devm_request_threaded_irq(&client->dev, client->irq,
+> +                                               NULL, vcnl4010_irq_thread,
+> +                                               IRQF_TRIGGER_FALLING |
+
+> +                                               IRQF_ONESHOT,
+
+Isn't it by default when threaded IRQ is asked with NULL for hw handler?
+
+> +                                               "vcnl4010_irq",
+> +                                               indio_dev);
+
+
 -- 
-2.1.0
-
+With Best Regards,
+Andy Shevchenko
