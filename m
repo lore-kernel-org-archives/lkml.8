@@ -2,98 +2,89 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8835FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4536C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67B342070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7EC1206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:50:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwBRCgKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbgDURqg (ORCPT
+        id S1726303AbgDURub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:46:36 -0400
-Received: from muru.com ([72.249.23.125]:50736 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbgDURqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 13:46:36 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A41C38081;
-        Tue, 21 Apr 2020 17:47:16 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 10:46:25 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Philipp Rossak <embed3d@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
- PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Message-ID: <20200421174625.GA37466@atomide.com>
-References: <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
- <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
- <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
- <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
- <20200420073842.nx4xb3zqvu23arkc@gilmour.lan>
- <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com>
- <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
- <20200421141543.GU37466@atomide.com>
- <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com>
- <20200421173938.GZ37466@atomide.com>
+        Tue, 21 Apr 2020 13:50:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgDURub (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 13:50:31 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D886EC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:50:29 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id i19so15906168ioh.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=gSTzqBizHSTlhzyjEwq6twWtVxRUF+eJqd6sBDuTq6s=;
+        b=XwBRCgKPTIpGHdBwf8/eZ51DLEyl5Gjzwm3TSxrFc/+F3QAP/ao4dlNbSDGlgKsdOq
+         hrBOK9muophHSApmdlc1z6wmtKMUnlRMrWl0VFivol5wUsm3IoQN5h9LEbaT+UAxzzRn
+         qYq2PYYTCg+W4FTqELfAKEq7Lp+5QAMPvDte0Wy+J/ZQv+n/auE27xiIBVyuCDBQ8hZZ
+         BUhIpI3PIcFh1kIwK5Jg+OZsxibh8qp1ad6hrNISG+G5a9rs0iRzyk+n//UVUEj3n0Jr
+         f83E/G9eX7u5iTTameSikiUdsxSoZ2JdFEWUNPP9RRkYYuy7y/85nKTJj3VCcbx6r6pf
+         tW5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=gSTzqBizHSTlhzyjEwq6twWtVxRUF+eJqd6sBDuTq6s=;
+        b=P+RTkH3dXgoFThBJHh4XjcLRkQfc375Fe9fP5542ZEmeBcasAdmCTV2eo3PNCuC0S8
+         +7BXJJXyM/e3cOYdW5u99s4TiC1icwaWSnv7CWYh9kYwhczK4Xp6g+0UjxQ+BL0QWaWi
+         4/JiZa7zqokg6gL5nOaDQ1fytZIB9ankYFqq6YGIXyG6i+w+T5LuRtbgdHVi7lErCGAT
+         mK/I99UZtr91R6zMgshs397QIWBQDsNNoFF0LBMFAqV9VeMoR8cdqyy9AbGaXLlmqK+k
+         SXAegAvn+5XImOaGs07W95yoyGLNAkkd9BeybpOPMJT56BYhWL65tvtq1+BvaGMmOVUJ
+         Bg7w==
+X-Gm-Message-State: AGi0PubXWTLW+paktBZt9XcFHkqucxpRCqnc0zxcl+W1t3fiX8ERHJUL
+        +sESsaNbA0++uKTe0ee58+FkLOpMvwHn+rbxpyjLe4/TMG7HuA==
+X-Google-Smtp-Source: APiQypIqhtP8sp5F5Lx9cNRvBG3m8VENNQOatt91bbZtafDKxjpNYRTDPUIpQeYN5fqOPyzN2omXyRiEJD12tIldrko=
+X-Received: by 2002:a5d:8613:: with SMTP id f19mr12105062iol.173.1587491429103;
+ Tue, 21 Apr 2020 10:50:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421173938.GZ37466@atomide.com>
+Received: by 2002:ac0:a58b:0:0:0:0:0 with HTTP; Tue, 21 Apr 2020 10:50:28
+ -0700 (PDT)
+In-Reply-To: <20200421154928.GU20730@hirez.programming.kicks-ass.net>
+References: <20200324160924.739153726@infradead.org> <20200421144714.12479-1-youling257@gmail.com>
+ <20200421154928.GU20730@hirez.programming.kicks-ass.net>
+From:   youling 257 <youling257@gmail.com>
+Date:   Wed, 22 Apr 2020 01:50:28 +0800
+Message-ID: <CAOzgRda_dykZ1NU15scNRnx3VQunWKSgbD7A+CWw5mZheNQbhA@mail.gmail.com>
+Subject: Re: [PATCH v3 14/26] objtool: Optimize read_sections()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
+        mbenes@suse.cz, brgerst@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [200421 10:39]:
-> See for example the standard 8250 uart for am335x with:
-> 
-> $ git grep -B20 -A10 uart0 arch/arm/boot/dts/am33xx-l4.dtsi
-> 
-> The 8250 device configuration is described in the standard 8250
-> dts binding, and the am335x module in the ti-sysc binding.
-> The are separate devices :)
+linux 5.7rc3 will fix? please submit the patch.
 
-Just to clarify why it's like that, see for example
-arch/arm/boot/dts/am33xx.dtsi, and target-module@47400000
-in that file for the musb controller.
-
-There's a single ti-sysc interconnect target module, but it has
-multiple devices. There are two musb controler instances, two phy
-instances and a cppi41 dma instance within a single module.
-
-With sgx, I belive there is only the sgx IP within the
-ti-sysc interconnect target module. They are still seprate
-devices with their own control registers.
-
-Regards,
-
-Tony
+2020-04-21 23:49 GMT+08:00, Peter Zijlstra <peterz@infradead.org>:
+> On Tue, Apr 21, 2020 at 10:47:14PM +0800, youling257 wrote:
+>> this patch cause 64bit kernel build failed on 32bit userspace, please
+>> fix.
+>
+> You've now spend more time and effort complaining about this than it
+> would've been to fix it yourself. The fix is absolutely trivial.
+>
+> Anyway, I have a fix, it'll get there eventually. Excuse me for not
+> considering 32bit a priority.
+>
