@@ -2,136 +2,69 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB7CC55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB14C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4650C21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587456350;
-	bh=MIsMOSthC5x1b/v9D2P+kZ/IzkE0C1W/5y/jCBKmXJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1VPY3Zoiwc1WfdbpKSIItfiFFsOSoF9k99RhYR7yWuJBwlXjKxq2/kYBQrh8DhPuT
-	 MIAptLqYjqOvdRAzHRiYjnGWPGf95ZVKmOWunT8Nr1dTfNkeoC08eQG68JPifBrF3l
-	 Zny7gsxxyTxreabtC44oE2bz5gKkMgDoljfDNVNY=
+	by mail.kernel.org (Postfix) with ESMTP id C8D022084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:06:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h8c6i4hD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgDUIFt (ORCPT
+        id S1728268AbgDUIGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:05:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbgDUIFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:05:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 557F32071C;
-        Tue, 21 Apr 2020 08:05:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587456346;
-        bh=MIsMOSthC5x1b/v9D2P+kZ/IzkE0C1W/5y/jCBKmXJE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yu5yyQyNv4XIUAiv3IrPdT9binnqLDUcLtF7ShkV4r61pPbSv6Au4+iJXCqCjh/fi
-         tiP+gTI/LQ36uKxAfSnU3sqBXrqR2nA9HcuR6BUtj+q2brAM+lrlX6zkJZbvB/18Vw
-         jcZFKMEUb0ULBEhzpnRvj1BNYgQDXY0zSfDsD9ng=
-Date:   Tue, 21 Apr 2020 10:05:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        driverdevel <devel@driverdev.osuosl.org>, nd <nd@arm.com>,
-        Todd Kjos <tkjos@android.com>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Laura Abbott <laura@labbott.name>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Anders Pedersen <anders.pedersen@arm.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        =?iso-8859-1?Q?=D8rjan?= Eide <orjan.eide@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Martijn Coenen <maco@android.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian Brauner <christian@brauner.io>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: android: ion: Skip sync if not mapped
-Message-ID: <20200421080544.GA611314@kroah.com>
-References: <20200414134629.54567-1-orjan.eide@arm.com>
- <20200414141849.55654-1-orjan.eide@arm.com>
- <20200414142810.GA958163@kroah.com>
- <CALAqxLX-SUhHPH6ewt-s9cEMc8DtMTgXem=JruAkLofuJf1syg@mail.gmail.com>
- <20200416102508.GA820251@kroah.com>
- <20200420082207.ui7iyg7dsnred2vv@wittgenstein>
- <CALAqxLW-txNEqW=P_9VTxvOVu_fgpjzHHDbR5BhtpYwhg1SXgw@mail.gmail.com>
+        Tue, 21 Apr 2020 04:06:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgDUIGB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 04:06:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3AECC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=h+r1x9KhnyPt84Iz/3/Xv5cxPC5WTNlXZPYBrogn23Q=; b=h8c6i4hDi/WuPaCeqF6nsa6PXI
+        me37IaFVT3j6NBaYmD131z0Zg2JBC5WChtksoFSRqzubiDoTxpqk5L3icaUri3ow4tD3LE+slKlyt
+        HhojzTa9HfJ8zQPhpXsFLNDCqDCHzWz2p83bgtS7m98PHZWraiVynKvR++XioCU0ON/AH/syEqR/l
+        OymJ9R33kgLvZnkz7noBOB4+gT0YTMzi73zR5FWK8VSfV6wyoqGkrLt8RrDoEnIeuoUhOScMKTyNo
+        CEPZXb+JrbHv4vufwLEnxITJWbFmyGYyrRWJVJsx5rkUewlLfJsfHTg9QfhB8uNFog8RgIzlN/liJ
+        Aq5uC1Tg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQnuq-0006zR-Rn; Tue, 21 Apr 2020 08:06:00 +0000
+Date:   Tue, 21 Apr 2020 01:06:00 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Sidong Yang <realwakka@gmail.com>
+Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: qlge: replace deprecated apis pci_dma_*
+Message-ID: <20200421080600.GA26595@infradead.org>
+References: <20200420154009.21161-1-realwakka@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALAqxLW-txNEqW=P_9VTxvOVu_fgpjzHHDbR5BhtpYwhg1SXgw@mail.gmail.com>
+In-Reply-To: <20200420154009.21161-1-realwakka@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 01:03:39PM -0700, John Stultz wrote:
-> On Mon, Apr 20, 2020 at 1:22 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> > On Thu, Apr 16, 2020 at 12:25:08PM +0200, Greg Kroah-Hartman wrote:
-> > > On Tue, Apr 14, 2020 at 09:41:31PM -0700, John Stultz wrote:
-> > > > But I do think we can mark it as deprecated and let folks know that
-> > > > around the end of the year it will be deleted.
-> > >
-> > > No one ever notices "depreciated" things, they only notice if the code
-> > > is no longer there :)
-> > >
-> > > So I'm all for just deleting it and seeing who even notices...
-> >
-> > Agreed.
+On Tue, Apr 21, 2020 at 12:40:09AM +0900, Sidong Yang wrote:
+> From: realwakka <realwakka@gmail.com>
 > 
-> I mean, I get there's not much love for ION in staging, and I too am
-> eager to see it go, but I also feel like in the discussions around
-> submitting the dmabuf heaps at talks, etc, that there was clear value
-> in removing ION after a short time so that folks could transition
-> being able to test both implementations against the same kernel so
-> performance regressions, etc could be worked out.
+> Replace legacy/depreacted pci_dma_* functions to new dma_* functions.
+> Also replace PCI_DMA_* macro to DMA* macro.
 > 
-> I am actively getting many requests for help for vendors who are
-> looking at dmabuf heaps and are starting the transition process, and
-> I'm trying my best to motivate them to directly work within the
-> community so their needed heap functionality can go upstream. But it's
-> going to be a process, and their first attempts aren't going to
-> magically land upstream.  I think being able to really compare their
-> implementations as they iterate and push things upstream will help in
-> order to be able to have upstream solutions that are also properly
-> functional for production usage.
+> Signed-off-by: realwakka <realwakka@gmail.com>
 
-But we are not accepting any new ion allocators or changes at the
-moment, so I don't see how the ion code in the kernel is helping/hurting
-anything here.
+Looks good:
 
-There has been a bunch of changes to the ion code recently, in the
-Android kernel trees, in order to get a lot of the different
-manufacturer "forks" of ion back together into one place.  But again,
-those patches are not going to be sent upstream for merging so how is
-ion affecting the dmabuf code at all here?
-
-> The dmabuf heaps have been in an official kernel now for all of three
-> weeks. So yea, we can "delete [ION] and see who even notices", but I
-> worry that may seem a bit like contempt for the folks doing the work
-> on transitioning over, which doesn't help getting them to participate
-> within the community.
-
-But they aren't participating in the community today as no one is
-touching the ion code.  So I fail to see how keeping a dead-end-version
-of ion in the kernel tree really affects anyone these days.
-
-thanks,
-
-greg k-h
+Reviewed-by: Christoph Hellwig <hch@lst.de>
