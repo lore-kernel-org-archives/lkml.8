@@ -2,200 +2,171 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A20BC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECF2C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4D6206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587477707;
-	bh=0/vQA+06myS9w12zgVJltCpDyjHNAbrJL3ofBd0iyqs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wB+dxISIPAEey3oNPuM5X2XhSZRjIUPZ8d3LEgeE3OXSFW523jypsQwRHnJCohqSa
-	 /ZHhxKCdZyIg2HnM9UlUpoWkcStIDDjJ6lwg0SXZsPpDog++DX1bxE1jLlX95BPmGi
-	 yuBvV1rNh3R+aXnRttytX95LQ10DdR9x4Vq4EI6g=
+	by mail.kernel.org (Postfix) with ESMTP id 59FF620679
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgDUOBq (ORCPT
+        id S1729018AbgDUOCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:01:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDUOBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:01:46 -0400
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E94A20679;
-        Tue, 21 Apr 2020 14:01:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587477705;
-        bh=0/vQA+06myS9w12zgVJltCpDyjHNAbrJL3ofBd0iyqs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Kz2e4XnCFbk6VbsPQIcV3zjxNZYM1a1OFHKEbEfX5WpOIqCu/yjJc77Os4fCLubWH
-         hwXo4yyb2Zt0yN9I+jIPm4gmEMxvcxttbUkhOpv24NSGy4uoFaDDyCnqReFSVsfFoT
-         e6HZDtycaaBEFfILCfF2uUY8ePnHTnHk4Iub9BL4=
-Received: by mail-qt1-f177.google.com with SMTP id z90so11555406qtd.10;
-        Tue, 21 Apr 2020 07:01:45 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZcaT/3kcrQN37gTePm6VV8yx9ue128eOAXLyyOQfeGeWc5PdpR
-        eTthRMhQR3CkvZG1Hg5Og06Q04xS0JK7n3yj1g==
-X-Google-Smtp-Source: APiQypKbFgwXWO0X+MdJIdqnmE60P1/zCgH5EWDZARwe6ZtYF6Vf583clemWqHDkdhmu0JX82hpeUDHUlbCtHKEhIMA=
-X-Received: by 2002:aed:3ac8:: with SMTP id o66mr9578884qte.110.1587477704278;
- Tue, 21 Apr 2020 07:01:44 -0700 (PDT)
+        Tue, 21 Apr 2020 10:02:18 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36378 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726018AbgDUOCR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:02:17 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LDZ3TO083329
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:02:17 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmuynwfc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:02:16 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Tue, 21 Apr 2020 15:01:30 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 Apr 2020 15:01:21 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03LE24dv53608476
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 14:02:04 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0AFD5A4057;
+        Tue, 21 Apr 2020 14:02:04 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2FEB3A405B;
+        Tue, 21 Apr 2020 14:02:03 +0000 (GMT)
+Received: from thinkpad (unknown [9.145.65.41])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Apr 2020 14:02:03 +0000 (GMT)
+Date:   Tue, 21 Apr 2020 16:02:01 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: Re: [PATCH v3 0/4] Clean up hugetlb boot command line processing
+In-Reply-To: <20200417185049.275845-1-mike.kravetz@oracle.com>
+References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
- <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
- <20200421110537.GC5983@pendragon.ideasonboard.com> <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
- <20200421134654.GD5983@pendragon.ideasonboard.com>
-In-Reply-To: <20200421134654.GD5983@pendragon.ideasonboard.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 21 Apr 2020 09:01:32 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
-Message-ID: <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042114-4275-0000-0000-000003C3FB90
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042114-4276-0000-0000-000038D9805D
+Message-Id: <20200421160201.0ddb9763@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_05:2020-04-20,2020-04-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 adultscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 8:47 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Yamada-san,
->
-> On Tue, Apr 21, 2020 at 10:15:02PM +0900, Masahiro Yamada wrote:
-> > On Tue, Apr 21, 2020 at 8:05 PM Laurent Pinchart wrote:
-> > > On Tue, Apr 21, 2020 at 07:45:05PM +0900, Masahiro Yamada wrote:
-> > > > On Tue, Apr 21, 2020 at 7:08 PM Laurent Pinchart wrote:
-> > > > > On Fri, Feb 28, 2020 at 06:37:30PM -0600, Rob Herring wrote:
-> > > > > > Most folks only run dt_binding_check on the single schema they care about
-> > > > > > by setting DT_SCHEMA_FILES. That means example is only checked against
-> > > > > > that one schema which is not always sufficient.
-> > > > > >
-> > > > > > Let's address this by splitting processed-schema.yaml into 2 files: one
-> > > > > > that's always all schemas for the examples and one that's just the schema
-> > > > > > in DT_SCHEMA_FILES for dtbs.
-> > > > >
-> > > > > This broke
-> > > > >
-> > > > > make DT_SCHEMA_FILES=Documentation/devicetree/.. dt_binding_check
-> > > >
-> > > > What is intended by
-> > > > "DT_SCHEMA_FILES=Documentation/devicetree/.."  ?
-> > >
-> > > My bad, I forgot to write that ... is the continuation of the string.
-> > > It's any yaml schema file that has an example.
-> >
-> > Ah, OK. I just input verbatim.
-> >
-> > Is it broken?
-> >
-> > You can specify any individual file(s) under Documentation/devicetree/bindings/.
-> >
-> > For example, the following worked for me.
-> >
-> > $ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml
-> >  dt_binding_check
-> >   HOSTCC  scripts/basic/fixdep
-> >   HOSTCC  scripts/dtc/dtc.o
-> >   HOSTCC  scripts/dtc/flattree.o
-> >   HOSTCC  scripts/dtc/fstree.o
-> >   HOSTCC  scripts/dtc/data.o
-> >   HOSTCC  scripts/dtc/livetree.o
-> >   HOSTCC  scripts/dtc/treesource.o
-> >   HOSTCC  scripts/dtc/srcpos.o
-> >   HOSTCC  scripts/dtc/checks.o
-> >   HOSTCC  scripts/dtc/util.o
-> >   LEX     scripts/dtc/dtc-lexer.lex.c
-> >   YACC    scripts/dtc/dtc-parser.tab.[ch]
-> >   HOSTCC  scripts/dtc/dtc-lexer.lex.o
-> >   HOSTCC  scripts/dtc/dtc-parser.tab.o
-> >   HOSTCC  scripts/dtc/yamltree.o
-> >   HOSTLD  scripts/dtc/dtc
-> >   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
-> >   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
-> >   DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
-> >   CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
-> >   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
->
-> This is getting interesting.
->
-> ~/src/kernel/linux $ make O=output/x86 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dt_binding_check
-> make[1]: Entering directory '/home/laurent/src/kernel/linux/output/x86'
->   HOSTCC  scripts/basic/fixdep
->   HOSTCC  scripts/dtc/dtc.o
->   HOSTCC  scripts/dtc/flattree.o
->   HOSTCC  scripts/dtc/fstree.o
->   HOSTCC  scripts/dtc/data.o
->   HOSTCC  scripts/dtc/livetree.o
->   HOSTCC  scripts/dtc/treesource.o
->   HOSTCC  scripts/dtc/srcpos.o
->   HOSTCC  scripts/dtc/checks.o
->   HOSTCC  scripts/dtc/util.o
->   LEX     scripts/dtc/dtc-lexer.lex.c
->   YACC    scripts/dtc/dtc-parser.tab.[ch]
->   HOSTCC  scripts/dtc/dtc-lexer.lex.o
->   HOSTCC  scripts/dtc/dtc-parser.tab.o
->   HOSTCC  scripts/dtc/yamltree.o
->   HOSTLD  scripts/dtc/dtc
->   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
->   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
->   DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
->   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-> make[1]: Leaving directory '/home/laurent/src/kernel/linux/output/x86'
->
-> ~/src/kernel/this_is_a_long_directory_name/linux $ make O=output/x86 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dt_binding_check
-> make[1]: Entering directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
->   HOSTCC  scripts/basic/fixdep
->   HOSTCC  scripts/dtc/dtc.o
->   HOSTCC  scripts/dtc/flattree.o
->   HOSTCC  scripts/dtc/fstree.o
->   HOSTCC  scripts/dtc/data.o
->   HOSTCC  scripts/dtc/livetree.o
->   HOSTCC  scripts/dtc/treesource.o
->   HOSTCC  scripts/dtc/srcpos.o
->   HOSTCC  scripts/dtc/checks.o
->   HOSTCC  scripts/dtc/util.o
->   LEX     scripts/dtc/dtc-lexer.lex.c
->   YACC    scripts/dtc/dtc-parser.tab.[ch]
->   HOSTCC  scripts/dtc/dtc-lexer.lex.o
->   HOSTCC  scripts/dtc/dtc-parser.tab.o
->   HOSTCC  scripts/dtc/yamltree.o
->   HOSTLD  scripts/dtc/dtc
->   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
-> make[2]: execvp: /bin/sh: Argument list too long
-> make[2]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Documentation/devicetree/bindings/Makefile:38: Documentation/devicetree/bindings/processed-schema-examples.yaml] Error 127
-> make[1]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Makefile:1300: dt_binding_check] Error 2
-> make[1]: Leaving directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
-> make: *** [Makefile:180: sub-make] Error 2
->
-> It seems to only fail with out of tree builds (O=...). I expect that
-> failures will become more common the more YAML bindings we have, even
-> without long directory names.
+On Fri, 17 Apr 2020 11:50:45 -0700
+Mike Kravetz <mike.kravetz@oracle.com> wrote:
 
-dt-mk-schema can take and recurse a single directory already, so does
-this fix it for you:
+> v3 -
+>    Used weak attribute method of defining arch_hugetlb_valid_size.
+>      This eliminates changes to arch specific hugetlb.h files (Peter)
+>    Updated documentation (Peter, Randy)
+>    Fixed handling of implicitly specified gigantic page preallocation
+>      in existing code and removed documentation of such.  There is now
+>      no difference between handling of gigantic and non-gigantic pages.
+>      (Peter, Nitesh).
+>      This requires the most review as there is a small change to
+>      undocumented behavior.  See patch 4 commit message for details.
+>    Added Acks and Reviews (Mina, Peter)
+> 
+> v2 -
+>    Fix build errors with patch 1 (Will)
+>    Change arch_hugetlb_valid_size arg to unsigned long and remove
+>      irrelevant 'extern' keyword (Christophe)
+>    Documentation and other misc changes (Randy, Christophe, Mina)
+>    Do not process command line options if !hugepages_supported()
+>      (Dave, but it sounds like we may want to additional changes to
+>       hugepages_supported() for x86?  If that is needed I would prefer
+>       a separate patch.)
+> 
+> Longpeng(Mike) reported a weird message from hugetlb command line processing
+> and proposed a solution [1].  While the proposed patch does address the
+> specific issue, there are other related issues in command line processing.
+> As hugetlbfs evolved, updates to command line processing have been made to
+> meet immediate needs and not necessarily in a coordinated manner.  The result
+> is that some processing is done in arch specific code, some is done in arch
+> independent code and coordination is problematic.  Semantics can vary between
+> architectures.
+> 
+> The patch series does the following:
+> - Define arch specific arch_hugetlb_valid_size routine used to validate
+>   passed huge page sizes.
+> - Move hugepagesz= command line parsing out of arch specific code and into
+>   an arch independent routine.
+> - Clean up command line processing to follow desired semantics and
+>   document those semantics.
+> 
+> [1] https://lore.kernel.org/linux-mm/20200305033014.1152-1-longpeng2@huawei.com
+> 
+> Mike Kravetz (4):
+>   hugetlbfs: add arch_hugetlb_valid_size
+>   hugetlbfs: move hugepagesz= parsing to arch independent code
+>   hugetlbfs: remove hugetlb_add_hstate() warning for existing hstate
+>   hugetlbfs: clean up command line processing
+> 
+>  .../admin-guide/kernel-parameters.txt         |  40 ++--
+>  Documentation/admin-guide/mm/hugetlbpage.rst  |  35 ++++
+>  arch/arm64/mm/hugetlbpage.c                   |  30 +--
+>  arch/powerpc/mm/hugetlbpage.c                 |  30 +--
+>  arch/riscv/mm/hugetlbpage.c                   |  24 +--
+>  arch/s390/mm/hugetlbpage.c                    |  24 +--
+>  arch/sparc/mm/init_64.c                       |  43 +---
+>  arch/x86/mm/hugetlbpage.c                     |  23 +--
+>  include/linux/hugetlb.h                       |   2 +-
+>  mm/hugetlb.c                                  | 190 +++++++++++++++---
+>  10 files changed, 271 insertions(+), 170 deletions(-)
+> 
 
-@@ -22,7 +22,7 @@ $(obj)/%.example.dts: $(src)/%.yaml
-check_dtschema_version FORCE
- DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+Looks good and works fine for s390, thanks for cleaning up!
 
- quiet_cmd_mk_schema = SCHEMA  $@
--      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-$(real-prereqs)
-+      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-$(srctree)/$(src)
+Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com> # s390
 
- DT_DOCS = $(addprefix $(src)/, \
-        $(shell \
