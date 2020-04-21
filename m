@@ -2,127 +2,257 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B07C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1B1C55183
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84CFA20661
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977A3206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QGgo4tZ7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g2D8ulEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgDUPjm (ORCPT
+        id S1726833AbgDUPm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:39:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59382 "EHLO
+        Tue, 21 Apr 2020 11:42:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725613AbgDUPjk (ORCPT
+        by vger.kernel.org with ESMTP id S1725613AbgDUPm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:39:40 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D08E6C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 08:39:39 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id hi11so1485644pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 08:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2mmoGh7NbU2I6i6mTnfpxZZ+azD3XtCswEGTNXCLuyA=;
-        b=QGgo4tZ7skjSV+mL+s3apHVRj1cNzDRfziKAXEk/Ph5dhpMbSxC6LSaVrBDyOosNOK
-         STKijhMpCZRlfYKcDyKnjKpDuEHgukjsG9QksyLsh5tsPHAPKnt4bap11a7mmVPNCeHk
-         kuWjNX41klD3xtfSylSX8LTC+fZOmuDBCrXcPO4f4CdRE/jS7WJ/cp39nzoEn7PUccHx
-         TrpoAUzxh06+NnuC5LnWIpvkQlA7I/fkXcnLdtOil2mnUCUohVyB1FYcc6g+yFf8C4Qe
-         1yuzm/rPeZYK0RCv0VwfkhwwK0vPV6pAkaCnEBAAl71uN+PquwZPGfK3Bljp7QkApEUm
-         4MJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2mmoGh7NbU2I6i6mTnfpxZZ+azD3XtCswEGTNXCLuyA=;
-        b=BlINY/8yVaK9VMwGlPs9B4OQttxgcrK84Re1tzLsbd8CWjH9rWcFpdXdd9huSX8LJ3
-         bUV7WpWZJBdITfVLS2xzk9sKrt8QfCz+RdDiSCAAZlt+6h/9Jfpv7gbDy57Eg53L2Y+9
-         KyL4Uq8DXaXjNJ0JzoPgFah1qTfp/7WOnX7HUrfyfTzfOAIlmd/Jjl1gyj2JpG/yRM2I
-         iOGHjgPDWjtY6i+3K3wNEevTO8C+x2YWIO26OYWLqf/sZMvFLw4qwvsYi7Me4VHBNsj2
-         CgxIl47oGseTGkaVFoQQW6R+tODLo2m7+191sE7CK3S5rS+V1coVCjDSlISqY8C9pxiC
-         uuiQ==
-X-Gm-Message-State: AGi0PuY2b9oEKyyamq5zXownTNCzUdVk5DOKTOerEB0kMKzRdrhjpLtO
-        GAtjwd5gDVnAiNJvWadb6fn6uyq120OhN0NzFBzwfA==
-X-Google-Smtp-Source: APiQypJzBHkISyaNz7vwdfY/AkaRhLOXFBDWiH/NMWMtB4A2nC8aZl7bqmoYjFzGBpD6t1rKnGOME089iTi7pJ+kTj0=
-X-Received: by 2002:a17:90a:8c93:: with SMTP id b19mr6142175pjo.90.1587483579220;
- Tue, 21 Apr 2020 08:39:39 -0700 (PDT)
+        Tue, 21 Apr 2020 11:42:26 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5106BC061A41;
+        Tue, 21 Apr 2020 08:42:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=6gLec4LXQwws698KQKyzKBWNmEzGj/Ewh/ELHYs7gBE=; b=g2D8ulEmqU8y1ZfkF9PHrrgWvh
+        ZlzpWjXJweULKOKWxONLptnk9AUBG37mcY6bH5IQhWAbV3NlMxbiIUzwLVrzQav2OFazd59FYg3ZJ
+        D6DwuIW7K/Ia4kVuw5/aMLypEVOUW2fjt4GpME9qM+crl4yaUC188KaQRTJiMjxdjzu9S1PlaWvCC
+        tWOF7wmmb89LZaK9TvYeqDdQ8YmGCX/el6keN1L38P9mlhSUbywEh0O9C3/MEWELZSfoxMes4ERmF
+        xE1rqQgUL1cp9Az2hFPKpVw0WQltYovr6l2t2YzfnymQamDNsqDeFIZd6rk0brJdGZexuqApRXWiV
+        Pa7S+NYw==;
+Received: from [2001:4bb8:191:e12c:c70:4a89:bc61:3] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQv2K-0007qS-Cw; Tue, 21 Apr 2020 15:42:12 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/7] signal: factor copy_siginfo_to_external32 from copy_siginfo_to_user32
+Date:   Tue, 21 Apr 2020 17:41:59 +0200
+Message-Id: <20200421154204.252921-3-hch@lst.de>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200421154204.252921-1-hch@lst.de>
+References: <20200421154204.252921-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200418031833.234942-1-davidgow@google.com> <20200418031833.234942-6-davidgow@google.com>
-In-Reply-To: <20200418031833.234942-6-davidgow@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 21 Apr 2020 17:39:28 +0200
-Message-ID: <CAAeHK+xBnxfmS7Q6oY94JRqzVtSzpUpWtsM3u+1S5kixJfZ+yw@mail.gmail.com>
-Subject: Re: [PATCH v6 5/5] mm: kasan: Do not panic if both panic_on_warn and
- kasan_multishot set
-To:     David Gow <davidgow@google.com>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 5:19 AM 'David Gow' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
->
-> KASAN errors will currently trigger a panic when panic_on_warn is set.
-> This renders kasan_multishot useless, as further KASAN errors won't be
-> reported if the kernel has already paniced. By making kasan_multishot
-> disable this behaviour for KASAN errors, we can still have the benefits
-> of panic_on_warn for non-KASAN warnings, yet be able to use
-> kasan_multishot.
->
-> This is particularly important when running KASAN tests, which need to
-> trigger multiple KASAN errors: previously these would panic the system
-> if panic_on_warn was set, now they can run (and will panic the system
-> should non-KASAN warnings show up).
->
-> Signed-off-by: David Gow <davidgow@google.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+To remove the use of set_fs in the coredump code there needs to be a
+way to convert a kernel siginfo to a userspace compat siginfo.
 
-> ---
->  mm/kasan/report.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 0c206bbf9cb3..79fe23bd4f60 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -94,7 +94,7 @@ static void end_report(unsigned long *flags)
->         pr_err("==================================================================\n");
->         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
->         spin_unlock_irqrestore(&report_lock, *flags);
-> -       if (panic_on_warn) {
-> +       if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags)) {
->                 /*
->                  * This thread may hit another WARN() in the panic path.
->                  * Resetting this prevents additional WARN() from panicking the
-> --
-> 2.26.1.301.g55bc3eb7cb9-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200418031833.234942-6-davidgow%40google.com.
+Call that function copy_siginfo_to_compat and factor it out of
+copy_siginfo_to_user32.
+
+The existence of x32 complicates this code.  On x32 SIGCHLD uses 64bit
+times for utime and stime.  As only SIGCHLD is affected and SIGCHLD
+never causes a coredump I have avoided handling that case.
+
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/compat.h |   2 +
+ kernel/signal.c        | 109 +++++++++++++++++++++++------------------
+ 2 files changed, 64 insertions(+), 47 deletions(-)
+
+diff --git a/include/linux/compat.h b/include/linux/compat.h
+index 0480ba4db592..adbfe8f688d9 100644
+--- a/include/linux/compat.h
++++ b/include/linux/compat.h
+@@ -402,6 +402,8 @@ long compat_get_bitmap(unsigned long *mask, const compat_ulong_t __user *umask,
+ 		       unsigned long bitmap_size);
+ long compat_put_bitmap(compat_ulong_t __user *umask, unsigned long *mask,
+ 		       unsigned long bitmap_size);
++void copy_siginfo_to_external32(struct compat_siginfo *to,
++		const struct kernel_siginfo *from);
+ int copy_siginfo_from_user32(kernel_siginfo_t *to, const struct compat_siginfo __user *from);
+ int copy_siginfo_to_user32(struct compat_siginfo __user *to, const kernel_siginfo_t *from);
+ int get_compat_sigevent(struct sigevent *event,
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 713104884414..d8eb30914771 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -3231,94 +3231,109 @@ int copy_siginfo_from_user(kernel_siginfo_t *to, const siginfo_t __user *from)
+ }
+ 
+ #ifdef CONFIG_COMPAT
+-int copy_siginfo_to_user32(struct compat_siginfo __user *to,
+-			   const struct kernel_siginfo *from)
+-#if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
+-{
+-	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
+-}
+-int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
+-			     const struct kernel_siginfo *from, bool x32_ABI)
+-#endif
++void copy_siginfo_to_external32(struct compat_siginfo *to,
++				const struct kernel_siginfo *from)
+ {
+-	struct compat_siginfo new;
+-	memset(&new, 0, sizeof(new));
++	/*
++	 * This function does not work properly for SIGCHLD on x32,
++	 * but it does not need to as SIGCHLD never causes a coredump.
++	 */
++	memset(to, 0, sizeof(*to));
+ 
+-	new.si_signo = from->si_signo;
+-	new.si_errno = from->si_errno;
+-	new.si_code  = from->si_code;
++	to->si_signo = from->si_signo;
++	to->si_errno = from->si_errno;
++	to->si_code  = from->si_code;
+ 	switch(siginfo_layout(from->si_signo, from->si_code)) {
+ 	case SIL_KILL:
+-		new.si_pid = from->si_pid;
+-		new.si_uid = from->si_uid;
++		to->si_pid = from->si_pid;
++		to->si_uid = from->si_uid;
+ 		break;
+ 	case SIL_TIMER:
+-		new.si_tid     = from->si_tid;
+-		new.si_overrun = from->si_overrun;
+-		new.si_int     = from->si_int;
++		to->si_tid     = from->si_tid;
++		to->si_overrun = from->si_overrun;
++		to->si_int     = from->si_int;
+ 		break;
+ 	case SIL_POLL:
+-		new.si_band = from->si_band;
+-		new.si_fd   = from->si_fd;
++		to->si_band = from->si_band;
++		to->si_fd   = from->si_fd;
+ 		break;
+ 	case SIL_FAULT:
+-		new.si_addr = ptr_to_compat(from->si_addr);
++		to->si_addr = ptr_to_compat(from->si_addr);
+ #ifdef __ARCH_SI_TRAPNO
+-		new.si_trapno = from->si_trapno;
++		to->si_trapno = from->si_trapno;
+ #endif
+ 		break;
+ 	case SIL_FAULT_MCEERR:
+-		new.si_addr = ptr_to_compat(from->si_addr);
++		to->si_addr = ptr_to_compat(from->si_addr);
+ #ifdef __ARCH_SI_TRAPNO
+-		new.si_trapno = from->si_trapno;
++		to->si_trapno = from->si_trapno;
+ #endif
+-		new.si_addr_lsb = from->si_addr_lsb;
++		to->si_addr_lsb = from->si_addr_lsb;
+ 		break;
+ 	case SIL_FAULT_BNDERR:
+-		new.si_addr = ptr_to_compat(from->si_addr);
++		to->si_addr = ptr_to_compat(from->si_addr);
+ #ifdef __ARCH_SI_TRAPNO
+-		new.si_trapno = from->si_trapno;
++		to->si_trapno = from->si_trapno;
+ #endif
+-		new.si_lower = ptr_to_compat(from->si_lower);
+-		new.si_upper = ptr_to_compat(from->si_upper);
++		to->si_lower = ptr_to_compat(from->si_lower);
++		to->si_upper = ptr_to_compat(from->si_upper);
+ 		break;
+ 	case SIL_FAULT_PKUERR:
+-		new.si_addr = ptr_to_compat(from->si_addr);
++		to->si_addr = ptr_to_compat(from->si_addr);
+ #ifdef __ARCH_SI_TRAPNO
+-		new.si_trapno = from->si_trapno;
++		to->si_trapno = from->si_trapno;
+ #endif
+-		new.si_pkey = from->si_pkey;
++		to->si_pkey = from->si_pkey;
+ 		break;
+ 	case SIL_CHLD:
+-		new.si_pid    = from->si_pid;
+-		new.si_uid    = from->si_uid;
+-		new.si_status = from->si_status;
++		to->si_pid    = from->si_pid;
++		to->si_uid    = from->si_uid;
++		to->si_status = from->si_status;
++		to->si_utime = from->si_utime;
++		to->si_stime = from->si_stime;
+ #ifdef CONFIG_X86_X32_ABI
+ 		if (x32_ABI) {
+-			new._sifields._sigchld_x32._utime = from->si_utime;
+-			new._sifields._sigchld_x32._stime = from->si_stime;
++			to->_sifields._sigchld_x32._utime = from->si_utime;
++			to->_sifields._sigchld_x32._stime = from->si_stime;
+ 		} else
+ #endif
+ 		{
+-			new.si_utime = from->si_utime;
+-			new.si_stime = from->si_stime;
+ 		}
+ 		break;
+ 	case SIL_RT:
+-		new.si_pid = from->si_pid;
+-		new.si_uid = from->si_uid;
+-		new.si_int = from->si_int;
++		to->si_pid = from->si_pid;
++		to->si_uid = from->si_uid;
++		to->si_int = from->si_int;
+ 		break;
+ 	case SIL_SYS:
+-		new.si_call_addr = ptr_to_compat(from->si_call_addr);
+-		new.si_syscall   = from->si_syscall;
+-		new.si_arch      = from->si_arch;
++		to->si_call_addr = ptr_to_compat(from->si_call_addr);
++		to->si_syscall   = from->si_syscall;
++		to->si_arch      = from->si_arch;
+ 		break;
+ 	}
++}
++
++int copy_siginfo_to_user32(struct compat_siginfo __user *to,
++			   const struct kernel_siginfo *from)
++#if defined(CONFIG_X86_X32_ABI) || defined(CONFIG_IA32_EMULATION)
++{
++	return __copy_siginfo_to_user32(to, from, in_x32_syscall());
++}
++int __copy_siginfo_to_user32(struct compat_siginfo __user *to,
++			     const struct kernel_siginfo *from, bool x32_ABI)
++#endif
++{
++	struct compat_siginfo new;
+ 
++	copy_siginfo_to_external32(&new, from);
++#ifdef CONFIG_X86_X32_ABI
++	if (x32_ABI && from->si_signo == SIGCHLD) {
++		new._sifields._sigchld_x32._utime = from->si_utime;
++		new._sifields._sigchld_x32._stime = from->si_stime;
++	}
++#endif
+ 	if (copy_to_user(to, &new, sizeof(struct compat_siginfo)))
+ 		return -EFAULT;
+-
+ 	return 0;
+ }
+ 
+-- 
+2.26.1
+
