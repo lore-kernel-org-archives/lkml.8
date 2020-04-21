@@ -2,63 +2,99 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99828C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0668C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4652064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8985C206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:36:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgDULf7 (ORCPT
+        id S1728621AbgDULgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:35:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2819 "EHLO huawei.com"
+        Tue, 21 Apr 2020 07:36:38 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41394 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726403AbgDULf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:35:59 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5100D55BC0460382B078;
-        Tue, 21 Apr 2020 19:35:53 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 21 Apr
- 2020 19:35:49 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: remove redundant assignment to variable
- err
-To:     Colin King <colin.king@canonical.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200420220057.98796-1-colin.king@canonical.com>
+        id S1726403AbgDULgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:36:38 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E3F3D244BF4870A871B2;
+        Tue, 21 Apr 2020 19:36:33 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 21 Apr 2020 19:36:24 +0800
 From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <881187e9-68c0-6766-d462-881371973974@huawei.com>
-Date:   Tue, 21 Apr 2020 19:35:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: compress: don't handle non-compressed data in workqueue
+Date:   Tue, 21 Apr 2020 19:36:21 +0800
+Message-ID: <20200421113621.60996-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20200420220057.98796-1-colin.king@canonical.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/21 6:00, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable err is being assigned with a value that is never read
-> and it is being updated later with a new value. The initialization is
-> redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+If bio has no compressed data, we don't need to handle end_io work in
+workqueue, instead, it should just let interrupter handle it directly
+to speed up IO response.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/data.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Thanks,
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index ff8a92df8d99..8607c02e8f96 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -114,7 +114,8 @@ static enum count_type __read_io_type(struct page *page)
+ /* postprocessing steps for read bios */
+ enum bio_post_read_step {
+ 	STEP_DECRYPT,
+-	STEP_DECOMPRESS,
++	STEP_DECOMPRESS_NOWQ,		/* handle normal cluster data inplace */
++	STEP_DECOMPRESS,		/* handle compressed cluster data in workqueue */
+ 	STEP_VERITY,
+ };
+ 
+@@ -990,7 +991,7 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
+ 	if (f2fs_encrypted_file(inode))
+ 		post_read_steps |= 1 << STEP_DECRYPT;
+ 	if (f2fs_compressed_file(inode))
+-		post_read_steps |= 1 << STEP_DECOMPRESS;
++		post_read_steps |= 1 << STEP_DECOMPRESS_NOWQ;
+ 	if (f2fs_need_verity(inode, first_idx))
+ 		post_read_steps |= 1 << STEP_VERITY;
+ 
+@@ -2189,6 +2190,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+ 	for (i = 0; i < dic->nr_cpages; i++) {
+ 		struct page *page = dic->cpages[i];
+ 		block_t blkaddr;
++		struct bio_post_read_ctx *ctx;
+ 
+ 		blkaddr = data_blkaddr(dn.inode, dn.node_page,
+ 						dn.ofs_in_node + i + 1);
+@@ -2225,6 +2227,11 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+ 		if (bio_add_page(bio, page, blocksize, 0) < blocksize)
+ 			goto submit_and_realloc;
+ 
++		/* tag STEP_DECOMPRESS to handle IO in wq */
++		ctx = bio->bi_private;
++		if (!(ctx->enabled_steps & (1 << STEP_DECOMPRESS)))
++			ctx->enabled_steps |= 1 << STEP_DECOMPRESS;
++
+ 		inc_page_count(sbi, F2FS_RD_DATA);
+ 		f2fs_update_iostat(sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
+ 		ClearPageError(page);
+-- 
+2.18.0.rc1
+
