@@ -2,212 +2,127 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9BBC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74216C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1B29206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47070206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:31:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yH6aMjiH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cnEk74tX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgDUPap (ORCPT
+        id S1726530AbgDUPbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:30:45 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42168 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDUPao (ORCPT
+        Tue, 21 Apr 2020 11:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725870AbgDUPbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:30:44 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03LFULav048654;
-        Tue, 21 Apr 2020 10:30:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587483021;
-        bh=SqS4rr3BfxnSzLgPx1JoL8+qkQ9DLPAefk5MFj5dqPM=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=yH6aMjiH+Ot5jJ512oB3wK+NLRKenM5UmRmRAXmjQ6bjskhiprJSZecsDr2KH0rAd
-         Ducw0AKThPdP4noyB1/f85TcoybuWFv0gERmlVmZd4+SJVPt5xlDlWjr4nd4OCtI8o
-         MMId2FSvS8yvnjYzfdwlzZgiqMIhnbU2eTGjjR3M=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03LFUKLQ071348
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Apr 2020 10:30:20 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 21
- Apr 2020 10:30:20 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 21 Apr 2020 10:30:20 -0500
-Received: from [10.250.70.56] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03LFUJ6P067959;
-        Tue, 21 Apr 2020 10:30:19 -0500
-Subject: Re: [PATCH v2] remoteproc: remove rproc_elf32_sanity_check
-From:   Suman Anna <s-anna@ti.com>
-To:     Clement Leger <cleger@kalray.eu>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200331083336.7459-1-cleger@kalray.eu>
- <0fc07250-c62c-cb10-58e5-04ccdd6ee176@ti.com>
-Message-ID: <a7994631-7a63-5477-df70-e40b995fe14f@ti.com>
-Date:   Tue, 21 Apr 2020 10:30:19 -0500
+        Tue, 21 Apr 2020 11:31:33 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22D2DC061A10;
+        Tue, 21 Apr 2020 08:31:32 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w20so8153238ljj.0;
+        Tue, 21 Apr 2020 08:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wtUCUiYZffBnrc+hszmiZBVbrcWDpLsAMtA40Limz8k=;
+        b=cnEk74tXOooz70SpqP7DT3KV7T9QZmQbO4RFs8pWicqYrphIYWhuRBA1JeQDVa8iAj
+         tCuG7RzMweHretX84CxyA53xPl0w1WqVpa4zSF67dXQ0IHa8gYb24N/QNkMeIJGm66wG
+         wrWroxjqbaDcpMybh9TJnAzRGaBqj4LaiSK3owx+xke2lDCit/D7XWzy8fLFHnxjVfRh
+         TvWrl9W476OczqA56ben2Zk7X6C7sq/RDZggBAiMWsmbziYUmy8JlYMq/i14gMm5nP29
+         6W62YGfkY/PGWUQsVLEvm4N+s2xpN02ocYEL/av1G/YIF8pNrJaLaQ8tvpVx0mWrQNCg
+         rm5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wtUCUiYZffBnrc+hszmiZBVbrcWDpLsAMtA40Limz8k=;
+        b=LiXjrM6mBY+0TRGcWwp2DWioJNnm9Ql9agcfuAbhZMjAWC8ltTLDqlLDJeOKfLYiAy
+         dzw7H6swze4zBvAdF8Ci6wwCCY1HO5gIFLtTHXfi3jspqWtG+L/PFi/SWKhEvDtH3sux
+         6fp+PrFsUkDbG3mXmwlJPEiYDjaPFv1ChsOwrG3dirjKlYNZAdNdjw/oi6GknOeiv14E
+         WmoONHHtSRkOf/v1z0lyJPsLwv//1DhRb8kqfL05IHaJO6OSXIobVWZD+O3wSnagpdFP
+         SmxafHMugNWiKV1LUA3e8QPcWFj2Mhv0hvXoBQ6mZzGXDCP3DLEaOYm1kUYkPQZ14sas
+         SPHw==
+X-Gm-Message-State: AGi0PuaI4NKEAjjznYyA8ga205iOvYxWWQWOWAAAXuMOF7n69G1ooxtd
+        CC0IcluytDGyl5PeRTVeGGtu3XN5
+X-Google-Smtp-Source: APiQypIv0yCfzacWSwYjpZnJL0NsfUjoXNHzP9kQruZGSH1JvuatBTBYOvzzT7arz2q0DKwR7Uzx0w==
+X-Received: by 2002:a2e:910e:: with SMTP id m14mr5092458ljg.141.1587483090376;
+        Tue, 21 Apr 2020 08:31:30 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id z15sm2342483ljk.99.2020.04.21.08.31.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 08:31:29 -0700 (PDT)
+Subject: Re: [PATCH v5] ARM: boot: Obtain start of physical memory from DTB
+To:     Ard Biesheuvel <ardb@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200415153409.30112-1-geert+renesas@glider.be>
+ <CAMj1kXHm=xA4gafwAaBn8=YcAsQCYDNmZ=4REsfvEUgZShm3Ww@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5419f6b6-2d75-763f-abe1-4c6a2c67dc3d@gmail.com>
+Date:   Tue, 21 Apr 2020 18:31:28 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <0fc07250-c62c-cb10-58e5-04ccdd6ee176@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAMj1kXHm=xA4gafwAaBn8=YcAsQCYDNmZ=4REsfvEUgZShm3Ww@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Clement,
-
-On 3/31/20 10:13 AM, Suman Anna wrote:
-> On 3/31/20 3:33 AM, Clement Leger wrote:
->> Since checks are present in the remoteproc elf loader before calling
->> da_to_va, loading a elf64 will work on 32bits flavors of kernel.
->> Indeed, if a segment size is larger than what size_t can hold, the
->> loader will return an error so the functionality is equivalent to
->> what exists today.
+21.04.2020 18:19, Ard Biesheuvel пишет:
+> On Wed, 15 Apr 2020 at 17:34, Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
 >>
->> Signed-off-by: Clement Leger <cleger@kalray.eu>
-> 
-> Acked-by: Suman Anna <s-anna@ti.com>
-
-Can you repost this after rebasing on top of the rproc-next branch
-which has the rproc_alloc refactoring changes pushed now?
-
-regards
-Suman
-
-> 
-> regards
-> Suman
-> 
->> ---
->> Changes from v1 -> v2:
->>   - Remove possibity to override sanity_check operation
+>> Currently, the start address of physical memory is obtained by masking
+>> the program counter with a fixed mask of 0xf8000000.  This mask value
+>> was chosen as a balance between the requirements of different platforms.
+>> However, this does require that the start address of physical memory is
+>> a multiple of 128 MiB, precluding booting Linux on platforms where this
+>> requirement is not fulfilled.
 >>
->>   drivers/remoteproc/remoteproc_core.c       |  3 +--
->>   drivers/remoteproc/remoteproc_elf_loader.c | 21 ---------------------
->>   drivers/remoteproc/remoteproc_internal.h   |  1 -
->>   drivers/remoteproc/st_remoteproc.c         |  2 +-
->>   drivers/remoteproc/st_slim_rproc.c         |  2 +-
->>   drivers/remoteproc/stm32_rproc.c           |  2 +-
->>   6 files changed, 4 insertions(+), 27 deletions(-)
+>> Fix this limitation by obtaining the start address from the DTB instead,
+>> if available (either explicitly passed, or appended to the kernel).
+>> Fall back to the traditional method when needed.
 >>
->> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->> index a9ac1d01e09b..191560048c1a 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -2068,8 +2068,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->>   		rproc->ops->load = rproc_elf_load_segments;
->>   		rproc->ops->parse_fw = rproc_elf_load_rsc_table;
->>   		rproc->ops->find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table;
->> -		if (!rproc->ops->sanity_check)
->> -			rproc->ops->sanity_check = rproc_elf32_sanity_check;
->> +		rproc->ops->sanity_check = rproc_elf_sanity_check;
->>   		rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
->>   	}
->>   
->> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
->> index 16e2c496fd45..29034f99898d 100644
->> --- a/drivers/remoteproc/remoteproc_elf_loader.c
->> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
->> @@ -112,27 +112,6 @@ int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
->>   }
->>   EXPORT_SYMBOL(rproc_elf_sanity_check);
->>   
->> -/**
->> - * rproc_elf_sanity_check() - Sanity Check ELF32 firmware image
->> - * @rproc: the remote processor handle
->> - * @fw: the ELF32 firmware image
->> - *
->> - * Make sure this fw image is sane.
->> - */
->> -int rproc_elf32_sanity_check(struct rproc *rproc, const struct firmware *fw)
->> -{
->> -	int ret = rproc_elf_sanity_check(rproc, fw);
->> -
->> -	if (ret)
->> -		return ret;
->> -
->> -	if (fw_elf_get_class(fw) == ELFCLASS32)
->> -		return 0;
->> -
->> -	return -EINVAL;
->> -}
->> -EXPORT_SYMBOL(rproc_elf32_sanity_check);
->> -
->>   /**
->>    * rproc_elf_get_boot_addr() - Get rproc's boot address.
->>    * @rproc: the remote processor handle
->> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
->> index b389dc79da81..31994715fd43 100644
->> --- a/drivers/remoteproc/remoteproc_internal.h
->> +++ b/drivers/remoteproc/remoteproc_internal.h
->> @@ -54,7 +54,6 @@ void *rproc_da_to_va(struct rproc *rproc, u64 da, size_t len);
->>   phys_addr_t rproc_va_to_pa(void *cpu_addr);
->>   int rproc_trigger_recovery(struct rproc *rproc);
->>   
->> -int rproc_elf32_sanity_check(struct rproc *rproc, const struct firmware *fw);
->>   int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw);
->>   u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
->>   int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw);
->> diff --git a/drivers/remoteproc/st_remoteproc.c b/drivers/remoteproc/st_remoteproc.c
->> index a6cbfa452764..a3268d95a50e 100644
->> --- a/drivers/remoteproc/st_remoteproc.c
->> +++ b/drivers/remoteproc/st_remoteproc.c
->> @@ -233,7 +233,7 @@ static const struct rproc_ops st_rproc_ops = {
->>   	.parse_fw		= st_rproc_parse_fw,
->>   	.load			= rproc_elf_load_segments,
->>   	.find_loaded_rsc_table	= rproc_elf_find_loaded_rsc_table,
->> -	.sanity_check		= rproc_elf32_sanity_check,
->> +	.sanity_check		= rproc_elf_sanity_check,
->>   	.get_boot_addr		= rproc_elf_get_boot_addr,
->>   };
->>   
->> diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
->> index 3cca8b65a8db..09bcb4d8b9e0 100644
->> --- a/drivers/remoteproc/st_slim_rproc.c
->> +++ b/drivers/remoteproc/st_slim_rproc.c
->> @@ -203,7 +203,7 @@ static const struct rproc_ops slim_rproc_ops = {
->>   	.da_to_va       = slim_rproc_da_to_va,
->>   	.get_boot_addr	= rproc_elf_get_boot_addr,
->>   	.load		= rproc_elf_load_segments,
->> -	.sanity_check	= rproc_elf32_sanity_check,
->> +	.sanity_check	= rproc_elf_sanity_check,
->>   };
->>   
->>   /**
->> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
->> index 6a66dbf2df40..2e07a95439c8 100644
->> --- a/drivers/remoteproc/stm32_rproc.c
->> +++ b/drivers/remoteproc/stm32_rproc.c
->> @@ -505,7 +505,7 @@ static struct rproc_ops st_rproc_ops = {
->>   	.load		= rproc_elf_load_segments,
->>   	.parse_fw	= stm32_rproc_parse_fw,
->>   	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
->> -	.sanity_check	= rproc_elf32_sanity_check,
->> +	.sanity_check	= rproc_elf_sanity_check,
->>   	.get_boot_addr	= rproc_elf_get_boot_addr,
->>   };
->>   
+>> This allows to boot Linux on r7s9210/rza2mevb using the 64 MiB of SDRAM
+>> on the RZA2MEVB sub board, which is located at 0x0C000000 (CS3 space),
+>> i.e. not at a multiple of 128 MiB.
 >>
+>> Suggested-by: Nicolas Pitre <nico@fluxnic.net>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
+>> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> Tested-by: Dmitry Osipenko <digetx@gmail.com>
 > 
+> This is ready to go into the patch system, no?
+> 
+> The sooner Russell picks it up, the sooner I can respin my patches
+> that go on top.
+> 
+> Thanks,
+
+The v5 works for me on NVIDIA Tegra, just in case.
 
