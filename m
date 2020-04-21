@@ -2,232 +2,338 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A23C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337D8C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1DE206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:41:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="h8iyN+76"
+	by mail.kernel.org (Postfix) with ESMTP id 100B1206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587476602;
+	bh=TWaaJ55L92/KiRAEQPOv4SHbGoJfIbq8uP/8ybGoclA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=P9qabufVpiMet9HNDrhx0EzemoTX0TZIw8t1BbYDzsqQe7vpNvMLNpYCAT8j084Kp
+	 UiZ8wRSPBbZJAAy6KnIW7d+4+GB4sxBe09mJhHenAPftYBhLOUhEsaUFYmAYxUqccx
+	 7Btmg60AOBDxwVIfDGOq+pw1PjvdE/rm24uQcpRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgDUNla (ORCPT
+        id S1728943AbgDUNnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:41:30 -0400
-Received: from forward104j.mail.yandex.net ([5.45.198.247]:47698 "EHLO
-        forward104j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728337AbgDUNl3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:41:29 -0400
-Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
-        by forward104j.mail.yandex.net (Yandex) with ESMTP id 4E4314A20FC;
-        Tue, 21 Apr 2020 16:41:21 +0300 (MSK)
-Received: from mxback12q.mail.yandex.net (mxback12q.mail.yandex.net [IPv6:2a02:6b8:c0e:1b3:0:640:3818:d096])
-        by forward101q.mail.yandex.net (Yandex) with ESMTP id 460A9CF40002;
-        Tue, 21 Apr 2020 16:41:21 +0300 (MSK)
-Received: from vla4-d1b041059520.qloud-c.yandex.net (vla4-d1b041059520.qloud-c.yandex.net [2a02:6b8:c17:914:0:640:d1b0:4105])
-        by mxback12q.mail.yandex.net (mxback/Yandex) with ESMTP id 93xlLFHrpE-fIB0fnjQ;
-        Tue, 21 Apr 2020 16:41:21 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1587476481;
-        bh=xCogxVJggB4U0WxqK21fNHt81GXV7XMyn6/5t3LcMbA=;
-        h=Subject:To:From:Cc:Date:Message-Id;
-        b=h8iyN+76zznVlaSgkJSHKBzd+V/7zOQG160+7quNxObd2jljOUq6wQchjPfcyKg0K
-         thZ5XwDNLtpkM4Md/ngAUb5yr4YWuraTezhtDrcr2yzM3Gf+apfwx80soLY+5PacVo
-         zC8b3m2igt0SSBbBj4jIojJ1w5FqtG9xXL0ulWEc=
-Authentication-Results: mxback12q.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by vla4-d1b041059520.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id X5d09Yh5QJ-fG2W9Rr2;
-        Tue, 21 Apr 2020 16:41:17 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Alexander Lobakin <bloodyreaper@yandex.ru>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Mao Wenan <maowenan@huawei.com>,
-        Alexander Lobakin <bloodyreaper@yandex.ru>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 net-next] net: dsa: add GRO support via gro_cells
-Date:   Tue, 21 Apr 2020 16:41:08 +0300
-Message-Id: <20200421134108.167646-1-bloodyreaper@yandex.ru>
-X-Mailer: git-send-email 2.26.2
+        Tue, 21 Apr 2020 09:43:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728337AbgDUNnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:43:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADF76206A5;
+        Tue, 21 Apr 2020 13:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587476599;
+        bh=TWaaJ55L92/KiRAEQPOv4SHbGoJfIbq8uP/8ybGoclA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KIUF+5rQgla5OiJLQKuZzJFO6lyeJNwPYmr2y96ANwFCgBslHvnJNJTRMaP4KO/2k
+         AivAre3/1jdsMmxGWQ4oQJGKp5DYZVj/dtTXS8NS4+pr5s6ySfW5BA4LeM9ueCRrf/
+         lMitlHuqDtn8jGIzhwrKE0TuRs1VxlAyrt+8Ski8=
+Date:   Tue, 21 Apr 2020 15:43:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.4.34
+Message-ID: <20200421134317.GA797615@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gro_cells lib is used by different encapsulating netdevices, such as
-geneve, macsec, vxlan etc. to speed up decapsulated traffic processing.
-CPU tag is a sort of "encapsulation", and we can use the same mechs to
-greatly improve overall DSA performance.
-skbs are passed to the GRO layer after removing CPU tags, so we don't
-need any new packet offload types as it was firstly proposed by me in
-the first GRO-over-DSA variant [1].
 
-The size of struct gro_cells is sizeof(void *), so hot struct
-dsa_slave_priv becomes only 4/8 bytes bigger, and all critical fields
-remain in one 32-byte cacheline.
-The other positive side effect is that drivers for network devices
-that can be shipped as CPU ports of DSA-driven switches can now use
-napi_gro_frags() to pass skbs to kernel. Packets built that way are
-completely non-linear and are likely being dropped without GRO.
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This was tested on to-be-mainlined-soon Ethernet driver that uses
-napi_gro_frags(), and the overall performance was on par with the
-variant from [1], sometimes even better due to minimal overhead.
-net.core.gro_normal_batch tuning may help to push it to the limit
-on particular setups and platforms.
+I'm announcing the release of the 5.4.34 kernel.
 
-iperf3 IPoE VLAN NAT TCP forwarding (port1.218 -> port0) setup
-on 1.2 GHz MIPS board:
+All users of the 5.4 kernel series must upgrade.
 
-5.7-rc2 baseline:
+The updated 5.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-5.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-[ID]  Interval         Transfer     Bitrate        Retr
-[ 5]  0.00-120.01 sec  9.00 GBytes  644 Mbits/sec  413  sender
-[ 5]  0.00-120.00 sec  8.99 GBytes  644 Mbits/sec       receiver
+thanks,
 
-Iface      RX packets  TX packets
-eth0       7097731     7097702
-port0      426050      6671829
-port1      6671681     425862
-port1.218  6671677     425851
+greg k-h
 
-With this patch:
+------------
 
-[ID]  Interval         Transfer     Bitrate        Retr
-[ 5]  0.00-120.01 sec  12.2 GBytes  870 Mbits/sec  122  sender
-[ 5]  0.00-120.00 sec  12.2 GBytes  870 Mbits/sec       receiver
+ Makefile                                                |    2=20
+ arch/arm/boot/dts/imx7-colibri.dtsi                     |    9 +
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts |    1=20
+ arch/arm64/kernel/vdso.c                                |   13 --
+ arch/x86/include/asm/microcode_amd.h                    |    2=20
+ arch/x86/kernel/cpu/resctrl/core.c                      |    2=20
+ arch/x86/kernel/cpu/resctrl/internal.h                  |    1=20
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c                  |   16 ++
+ drivers/acpi/ec.c                                       |    6=20
+ drivers/acpi/nfit/core.c                                |   10 -
+ drivers/acpi/nfit/nfit.h                                |    1=20
+ drivers/clk/at91/clk-usb.c                              |    2=20
+ drivers/clk/at91/sam9x60.c                              |    5=20
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c              |    2=20
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c        |    5=20
+ drivers/i2c/busses/i2c-designware-platdrv.c             |   14 +-
+ drivers/irqchip/irq-ti-sci-inta.c                       |    3=20
+ drivers/net/dsa/mt7530.c                                |  103 +----------=
+-----
+ drivers/net/dsa/mt7530.h                                |   17 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-drv.c                |    2=20
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c             |   24 +++
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h             |    8 +
+ drivers/net/ethernet/mellanox/mlx5/core/devlink.c       |    5=20
+ drivers/net/ethernet/mellanox/mlx5/core/en.h            |    7 -
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c    |   10 -
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c       |   49 +++++--
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c        |    9 -
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c         |    5=20
+ drivers/net/ethernet/mellanox/mlx5/core/health.c        |    2=20
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c       |    2=20
+ drivers/net/phy/micrel.c                                |    2=20
+ drivers/net/tun.c                                       |    3=20
+ drivers/net/wireless/mac80211_hwsim.c                   |   12 -
+ drivers/platform/chrome/cros_ec_rpmsg.c                 |   16 ++
+ drivers/pwm/pwm-pca9685.c                               |   85 +++++++----=
+--
+ drivers/scsi/ufs/ufshcd.c                               |    5=20
+ drivers/target/iscsi/iscsi_target.c                     |   79 +++---------
+ drivers/target/iscsi/iscsi_target.h                     |    1=20
+ drivers/target/iscsi/iscsi_target_configfs.c            |    5=20
+ drivers/target/iscsi/iscsi_target_login.c               |    5=20
+ drivers/usb/dwc3/gadget.c                               |    4=20
+ fs/btrfs/relocation.c                                   |    4=20
+ fs/ext4/extents.c                                       |    8 -
+ fs/ext4/super.c                                         |    6=20
+ fs/jbd2/commit.c                                        |    7 -
+ fs/overlayfs/inode.c                                    |    4=20
+ include/net/ip6_route.h                                 |    1=20
+ include/target/iscsi/iscsi_target_core.h                |    2=20
+ kernel/trace/trace_events_trigger.c                     |   10 -
+ net/bpfilter/main.c                                     |    1=20
+ net/core/dev.c                                          |    3=20
+ net/hsr/hsr_netlink.c                                   |   10 +
+ net/ipv4/devinet.c                                      |   13 +-
+ net/l2tp/l2tp_netlink.c                                 |   16 +-
+ net/mac80211/main.c                                     |   24 ++-
+ net/qrtr/qrtr.c                                         |    7 -
+ net/wireless/nl80211.c                                  |    6=20
+ security/keys/proc.c                                    |    2=20
+ sound/pci/hda/patch_realtek.c                           |    1=20
+ sound/soc/intel/atom/sst-atom-controls.c                |    2=20
+ sound/soc/intel/atom/sst/sst_pci.c                      |    2=20
+ sound/usb/mixer.c                                       |   31 ++--
+ sound/usb/mixer_maps.c                                  |    4=20
+ tools/perf/builtin-report.c                             |    9 -
+ 64 files changed, 371 insertions(+), 356 deletions(-)
 
-Iface      RX packets  TX packets
-eth0       9474792     9474777
-port0      455200      353288
-port1      9019592     455035
-port1.218  353144      455024
+Adam Barber (1):
+      ALSA: hda/realtek - Enable the headset mic on Asus FX505DT
 
-v2:
- - Add some performance examples in the commit message;
- - No functional changes.
+Amir Goldstein (1):
+      ovl: fix value of i_ino for lower hardlink corner case
 
-[1] https://lore.kernel.org/netdev/20191230143028.27313-1-alobakin@dlink.ru/
+Angus Ainslie (Purism) (1):
+      arm64: dts: librem5-devkit: add a vbus supply to usb0
 
-Signed-off-by: Alexander Lobakin <bloodyreaper@yandex.ru>
----
- net/dsa/Kconfig    |  1 +
- net/dsa/dsa.c      |  2 +-
- net/dsa/dsa_priv.h |  3 +++
- net/dsa/slave.c    | 10 +++++++++-
- 4 files changed, 14 insertions(+), 2 deletions(-)
+Atsushi Nemoto (1):
+      net: phy: micrel: use genphy_read_status for KSZ9131
 
-diff --git a/net/dsa/Kconfig b/net/dsa/Kconfig
-index 92663dcb3aa2..739613070d07 100644
---- a/net/dsa/Kconfig
-+++ b/net/dsa/Kconfig
-@@ -9,6 +9,7 @@ menuconfig NET_DSA
- 	tristate "Distributed Switch Architecture"
- 	depends on HAVE_NET_DSA
- 	depends on BRIDGE || BRIDGE=n
-+	select GRO_CELLS
- 	select NET_SWITCHDEV
- 	select PHYLINK
- 	select NET_DEVLINK
-diff --git a/net/dsa/dsa.c b/net/dsa/dsa.c
-index ee2610c4d46a..0384a911779e 100644
---- a/net/dsa/dsa.c
-+++ b/net/dsa/dsa.c
-@@ -234,7 +234,7 @@ static int dsa_switch_rcv(struct sk_buff *skb, struct net_device *dev,
- 	if (dsa_skb_defer_rx_timestamp(p, skb))
- 		return 0;
- 
--	netif_receive_skb(skb);
-+	gro_cells_receive(&p->gcells, skb);
- 
- 	return 0;
- }
-diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
-index 904cc7c9b882..6d9a1ef65fa0 100644
---- a/net/dsa/dsa_priv.h
-+++ b/net/dsa/dsa_priv.h
-@@ -11,6 +11,7 @@
- #include <linux/netdevice.h>
- #include <linux/netpoll.h>
- #include <net/dsa.h>
-+#include <net/gro_cells.h>
- 
- enum {
- 	DSA_NOTIFIER_AGEING_TIME,
-@@ -77,6 +78,8 @@ struct dsa_slave_priv {
- 
- 	struct pcpu_sw_netstats	*stats64;
- 
-+	struct gro_cells	gcells;
-+
- 	/* DSA port data, such as switch, port index, etc. */
- 	struct dsa_port		*dp;
- 
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index 5390ff541658..36c7491e8e5f 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -1762,6 +1762,11 @@ int dsa_slave_create(struct dsa_port *port)
- 		free_netdev(slave_dev);
- 		return -ENOMEM;
- 	}
-+
-+	ret = gro_cells_init(&p->gcells, slave_dev);
-+	if (ret)
-+		goto out_free;
-+
- 	p->dp = port;
- 	INIT_LIST_HEAD(&p->mall_tc_list);
- 	p->xmit = cpu_dp->tag_ops->xmit;
-@@ -1781,7 +1786,7 @@ int dsa_slave_create(struct dsa_port *port)
- 	ret = dsa_slave_phy_setup(slave_dev);
- 	if (ret) {
- 		netdev_err(master, "error %d setting up slave phy\n", ret);
--		goto out_free;
-+		goto out_gcells;
- 	}
- 
- 	dsa_slave_notify(slave_dev, DSA_PORT_REGISTER);
-@@ -1800,6 +1805,8 @@ int dsa_slave_create(struct dsa_port *port)
- 	phylink_disconnect_phy(p->dp->pl);
- 	rtnl_unlock();
- 	phylink_destroy(p->dp->pl);
-+out_gcells:
-+	gro_cells_destroy(&p->gcells);
- out_free:
- 	free_percpu(p->stats64);
- 	free_netdev(slave_dev);
-@@ -1820,6 +1827,7 @@ void dsa_slave_destroy(struct net_device *slave_dev)
- 	dsa_slave_notify(slave_dev, DSA_PORT_UNREGISTER);
- 	unregister_netdev(slave_dev);
- 	phylink_destroy(dp->pl);
-+	gro_cells_destroy(&p->gcells);
- 	free_percpu(p->stats64);
- 	free_netdev(slave_dev);
- }
--- 
-2.26.0
+Bruno Meneguele (1):
+      net/bpfilter: remove superfluous testing message
 
+Can Guo (1):
+      scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
+
+Claudiu Beznea (2):
+      clk: at91: sam9x60: fix usb clock parents
+      clk: at91: usb: use proper usbs_mask
+
+Colin Ian King (2):
+      ASoC: Intel: mrfld: fix incorrect check on p->sink
+      ASoC: Intel: mrfld: return error codes when an error occurs
+
+DENG Qingfang (1):
+      net: dsa: mt7530: fix tagged frames pass-through in VLAN-unaware mode
+
+Dan Carpenter (1):
+      acpi/nfit: improve bounds checking for 'func'
+
+Dmytro Linkin (1):
+      net/mlx5e: Fix nest_level for vlan pop action
+
+Eran Ben Elisha (1):
+      net/mlx5e: Add missing release firmware call
+
+Florian Fainelli (1):
+      net: stmmac: dwmac-sunxi: Provide TX and RX fifo sizes
+
+Gilberto Bertin (1):
+      net: tun: record RX queue in skb before do_xdp_generic()
+
+Greg Kroah-Hartman (2):
+      Revert "ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()"
+      Linux 5.4.34
+
+Grygorii Strashko (1):
+      irqchip/ti-sci-inta: Fix processing of masked irqs
+
+Hans de Goede (1):
+      i2c: designware: platdrv: Remove DPM_FLAG_SMART_SUSPEND flag on BYT a=
+nd CHT
+
+James Morse (1):
+      x86/resctrl: Preserve CDP enable over CPU hotplug
+
+Jan Kara (1):
+      ext4: do not zeroout extents beyond i_disksize
+
+Jin Yao (1):
+      perf report: Fix no branch type statistics report issue
+
+Johannes Berg (1):
+      nl80211: fix NL80211_ATTR_FTM_RESPONDER policy
+
+John Allen (1):
+      x86/microcode/AMD: Increase microcode PATCH_MAX_SIZE
+
+Josef Bacik (1):
+      btrfs: check commit root generation in should_ignore_root
+
+Josh Triplett (2):
+      ext4: fix incorrect group count in ext4_fill_super error message
+      ext4: fix incorrect inodes per group in error message
+
+Konstantin Khlebnikov (1):
+      net: revert default NAPI poll timeout to 2 jiffies
+
+Mark Rutland (1):
+      arm64: vdso: don't free unallocated pages
+
+Maurizio Lombardi (2):
+      scsi: target: remove boilerplate code
+      scsi: target: fix hang when multiple threads try to destroy the same =
+iscsi session
+
+Maxim Mikityanskiy (3):
+      net/mlx5e: Encapsulate updating netdev queues into a function
+      net/mlx5e: Rename hw_modify to preactivate
+      net/mlx5e: Use preactivate hook to set the indirection table
+
+Michael Wei=DF (1):
+      l2tp: Allow management of tunnels and session in user namespace
+
+Moshe Shemesh (1):
+      net/mlx5: Fix frequent ioread PCI access during recovery
+
+Oleksandr Suvorov (1):
+      ARM: dts: imx7-colibri: fix muxing of usbc_det pin
+
+Parav Pandit (1):
+      net/mlx5e: Fix pfnum in devlink port attribute
+
+Pi-Hsun Shih (1):
+      platform/chrome: cros_ec_rpmsg: Fix race with host event
+
+Prike Liang (1):
+      drm/amdgpu: fix the hw hang during perform system reboot and reset
+
+Reinette Chatre (1):
+      x86/resctrl: Fix invalid attempt at removing the default resource gro=
+up
+
+Ren=E9 van Dorst (2):
+      net: dsa: mt7530: move mt7623 settings out off the mt7530
+      net: ethernet: mediatek: move mt7623 settings out off the mt7530
+
+Sebastian Andrzej Siewior (1):
+      amd-xgbe: Use __napi_schedule() in BH context
+
+Sergei Lopatin (1):
+      drm/amd/powerplay: force the trim of the mclk dpm_levels if OD is ena=
+bled
+
+Sumit Garg (1):
+      mac80211: fix race in ieee80211_register_hw()
+
+Sven Van Asbroeck (1):
+      pwm: pca9685: Fix PWM/GPIO inter-operation
+
+Taehee Yoo (1):
+      hsr: check protocol version in hsr_newlink()
+
+Takashi Iwai (4):
+      ALSA: usb-audio: Filter error from connector kctl ops, too
+      ALSA: usb-audio: Don't override ignore_ctl_error value from the map
+      ALSA: usb-audio: Don't create jack controls for PCM terminals
+      ALSA: usb-audio: Check mapping at creating connector controls, too
+
+Taras Chornyi (1):
+      net: ipv4: devinet: Fix crash when add/del multicast IP with autojoin
+
+Thinh Nguyen (1):
+      usb: dwc3: gadget: Don't clear flags before transfer ended
+
+Tim Stallard (1):
+      net: ipv6: do not consider routes via gateways for anycast address ch=
+eck
+
+Tuomas Tynkkynen (1):
+      mac80211_hwsim: Use kstrndup() in place of kasprintf()
+
+Vasily Averin (1):
+      keys: Fix proc_keys_next to increase position index
+
+Wang Wenhu (1):
+      net: qrtr: send msgs from local of same id as broadcast
+
+Xiao Yang (1):
+      tracing: Fix the race between registering 'snapshot' event trigger an=
+d triggering 'snapshot' operation
+
+zhangyi (F) (1):
+      jbd2: improve comments about freeing data buffers whose page mapping =
+is NULL
+
+
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl6e+HIACgkQONu9yGCS
+aT7qrg//aDn1oAOMQYdtXiJDCFow+SwfKacJXqA+GCnWWO4B6yCSWnBq/jM+HbOI
+V6U9GaA3XgrECsjwzAStJjgNngMCBimgNRMPhkfpOyIVFZzUomsnaxxAGPz+D1GI
+OzypcuhY4miJT5cRM8BEntA0Yym/zjI+7jU+6mF1DxV+7+XM4IUyKCRsS4nMebwV
+KS7D+QA6w9IS7eQQszHb8BMCnx0CrfpP6ovDfYcHqBRIgeJF27fB+gbJlp+oPxva
+X5vxUSHiMbIF1pnohTZQpNVX/4bYqJr4dCL/suOUUXFt5BcigYLFjnzgNrWYTRQn
+JmyDk2EVC75BZn8+7D6KWjbb/At/HqSIcZ36UnyG/5KY7p1SHiQepfhoMW2Dto0W
+eJBzrAo6evrh+ExqRUI5ckhjiNr2u2om2Hx/PIjGn/SqElTr53RfyJm/mkmzn/wE
+OQl74uRZRg8eNiQfgi6cZ5MelhGIsXgSCHKPBnt18X6xxYCXQ49e3Nb04ZC2iMSH
+qcOYNn83EKrOIcNZ9pgkUWfut7AHQnl5BTucB6ECTFYpaUp+dJ57zdBg7Fb986Zq
+EiQdBaqB4s5BrdJKX/xbaXZbewFFbCiOha4lM856MvFWifIs8kpGjdyGVYWwITWM
+ICL0jkdQSBxcM8Wu2H98fBE3A6sYyolqbKyce07hxLmLo7KFoHA=
+=RXzH
+-----END PGP SIGNATURE-----
+
+--u3/rZRmxL6MmkK24--
