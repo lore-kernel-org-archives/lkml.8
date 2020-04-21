@@ -2,67 +2,95 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4A8C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DE5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08A7D206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 464872073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587468270;
+	bh=NbCDk91j43b+HXjIK4e56+3cYFJx4JGlFrDIBX44mKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vz3XSuZWCdgLfbE+8I7zOgEhu8AONj0kTZwJsW7v9XtPtEEYJNYWzfsKaKoi0l6gG
+	 Sz19dXz0U2cePrAGzKT6GbfSwpkvTyhMHYmvLdhBJOv7PC0X7viDRd/CvVgqcXQ5Cw
+	 EnvZVl5nage0WIbpFicrsQ7qOcODFq1MgEozkWh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgDULYW (ORCPT
+        id S1728758AbgDULY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:24:22 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:57316 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728123AbgDULYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:24:21 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD97O155eNIYqAA--.18S2;
-        Tue, 21 Apr 2020 19:23:58 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2 0/3] MIPS: Fix some issues about arch_mem_init()
-Date:   Tue, 21 Apr 2020 19:23:55 +0800
-Message-Id: <1587468238-24032-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxD97O155eNIYqAA--.18S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY57AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2js
-        IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-        5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeV
-        CFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
-        c2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
-        AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcV
-        CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE
-        14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x0JUzMKZUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 21 Apr 2020 07:24:29 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42624 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728337AbgDULY1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:24:27 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j2so16019244wrs.9;
+        Tue, 21 Apr 2020 04:24:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uw5Mt3dr851vXMgQW7w805be/4p/xjN24EpU6Jg+KuI=;
+        b=U+N1LdOvCnF5dNiwvHg6EkD9zXMtH5p8EBLP6ji8/LHF4gFwKs4UOh9BYcRLW1XSp0
+         Xi2Cd2BzUvzg6xZ7JTq2kyIrGLBxw4fXlUKxP23ZfI2mqzN/Y5s9oB1PpHETDRFgnAPt
+         NrGkCn49VT2eZvVFkxjKM3cJjn8gEpYtlBiwaaHi40qlEgL38YRqNxeqHaFeFic/0Dcu
+         20Y7EiipAcIGsRUKW9tkD9BIWYDPH1vwvNlBYbTmfpNSbYNGxCcO4C6A1+czy9AWk+f5
+         XdeU/U9j62HbRUjUkvLJ15ka/pV5YjoHsgFjxVOD0EFb/hsfFRQBEJjiGsbOuOtaQdMK
+         +r9w==
+X-Gm-Message-State: AGi0PuYZYcafIW2pHXdQ7YtYkGHYfICt0SS+Onr9tso0etLj1aeRMwC/
+        wYd9NmZ0KoC7q8eu7SaJ7PA=
+X-Google-Smtp-Source: APiQypKIOz64WBIPNC1vP7IZm+bGZABOXsf+uqklLx137SNl/bO/F/ZPKc/k4XFnhiCePsMafSCWRg==
+X-Received: by 2002:a5d:670d:: with SMTP id o13mr3695315wru.29.1587468265518;
+        Tue, 21 Apr 2020 04:24:25 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id j10sm3142275wmi.18.2020.04.21.04.24.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 04:24:24 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 12:24:22 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 0/4] Split hyperv-tlfs.h into generic and arch specific
+ files
+Message-ID: <20200421112422.j4ihb4se7i5tddih@debian>
+References: <20200420173838.24672-1-mikelley@microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420173838.24672-1-mikelley@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v2:
-  - modify the subject of patch 3/3
+On Mon, Apr 20, 2020 at 10:38:34AM -0700, Michael Kelley wrote:
+> Michael Kelley (4):
+>   KVM: x86: hyperv: Remove duplicate definitions of Reference TSC Page
+>   x86/hyperv: Remove HV_PROCESSOR_POWER_STATE #defines
+>   x86/hyperv: Split hyperv-tlfs.h into arch dependent and independent
+>     files
+>   asm-generic/hyperv: Add definitions for Get/SetVpRegister hypercalls
+> 
+>  arch/x86/include/asm/hyperv-tlfs.h | 472 +++--------------------------
+>  arch/x86/include/asm/kvm_host.h    |   2 +-
+>  arch/x86/kvm/hyperv.c              |   4 +-
+>  include/asm-generic/hyperv-tlfs.h  | 470 ++++++++++++++++++++++++++++
+>  4 files changed, 509 insertions(+), 439 deletions(-)
+>  create mode 100644 include/asm-generic/hyperv-tlfs.h
 
-Tiezhu Yang (3):
-  MIPS: Do not initialise globals to 0
-  MIPS: Cleanup code about plat_mem_setup()
-  MIPS: Make sparse_init() using top-down allocation
+This series looks good to me.
 
- arch/mips/include/asm/bootinfo.h |  2 +-
- arch/mips/kernel/setup.c         | 14 +++++++++++---
- 2 files changed, 12 insertions(+), 4 deletions(-)
+I will wait for a few days before actually queueing it to hyperv-next so
+that other people can have a chance to comment.
 
--- 
-2.1.0
-
+Wei.
