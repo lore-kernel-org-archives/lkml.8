@@ -4,102 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CE0C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66759C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F65C206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3FA206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:52:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOzRVb4R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9EbP1qi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728700AbgDUKvx (ORCPT
+        id S1728717AbgDUKwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 06:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43108 "EHLO
+        Tue, 21 Apr 2020 06:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbgDUKvw (ORCPT
+        with ESMTP id S1728335AbgDUKwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 06:51:52 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F1AFC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 03:51:51 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id q2so3295698qvd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 03:51:51 -0700 (PDT)
+        Tue, 21 Apr 2020 06:52:04 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7A61C061A0F;
+        Tue, 21 Apr 2020 03:52:04 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id w20so14535925iob.2;
+        Tue, 21 Apr 2020 03:52:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ivbFUkwRL9S7N1wT7PKkBXOsZsaEcUNHKgJGMoPGLUE=;
-        b=OOzRVb4RfJPdYn4zpXtOEhyi979GugRYT98eayitSgigmRN7GGovTmLYdlPS6gENC7
-         eyJC1JWayXcESfs32HRksxLNTDphXS9fVFCMcfvS7Eyj/FDcpBXP+MMNhvt2Z9fbkmt4
-         5nW+MavhMgBAqGwwB5gEee5Rep+J1L5gCEmyPW+TwaZneNL4L8fmrF74tNgClC80QnyO
-         UylThTlptOWK3nNpMymBJopquDsk1lfiqU1lSyaOWdY0BomJdlfgugcZbcznAACmecku
-         rPrFPph1m2QjfJqcuk6gORLIB1dVJJWvVUq28TRJjOVHbO3Pnlf1J1zX12M575sZGbbB
-         NtKQ==
+        bh=O929yg+fLvoN/by1jc0EwDCf8KvNlk29JcmtP7raFgM=;
+        b=S9EbP1qiavrPpV7afPpIf7pc2PBE8l8unmYOzYF967yvTE8KJXSvneeKNTjuvwgIW2
+         hdtGwMb4SflsyrCZvhFZPLlX+ZKm1dyyZqKYDYIlONAlwB2q18M2Gg2LR9VAKPVY86An
+         O5ReM6OKN/6Xc9vFjt3KLPdwJUTaqct0u+cmCUh69Nr8AnDVZFXn9bc19CRj/uSPn9H4
+         iRQSdrk2ndv61RH7zrRxgsFxMBANYDWbfgeey7JQMjumCTNZuyFb1bfbpnMgebLNpb2Q
+         7l1kbgwTNXqejvX208PO82RcjgIVMxKKJnOKpa3Lqp/5rGwanGkruZfV3CUkeEI8zSdz
+         WbvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ivbFUkwRL9S7N1wT7PKkBXOsZsaEcUNHKgJGMoPGLUE=;
-        b=q3gpJksX9++1P5evNnb7P4KNNIrdgFldR+x4TqfiZWO9MHQ9zmCHitn9EJkVHEEJlb
-         rRUbYgazFy3zhzI8Wj3NH9sh6z14DOeoJ9XYbtifLQtb3Dfg9Kzd7164IXkR/xcoEEvV
-         TdsreEE6Es7C+hGbZoFzOolMHEUmrDrsEsd+R4XskSpym43TWltpWSy3JdVOho9+3I/+
-         DL94X7z1N2yo7MlAz8uQ5qSYIAcWtPQtKX4lifPDb0cz5Nik5EdzaVzaOBrt/XDi9qqZ
-         hzOWMT+lZrmEk2TuQ4AbGll/sJDoM7e5kOTeJUeg6PDn5hcJ3vt6Bmw+XOrBI2nHC3hk
-         +wEg==
-X-Gm-Message-State: AGi0Pua6wMnLxjqkoYPPKj4gcrr/8ozQ2jP3uzbfWluM2U4nulc9TggM
-        BhYcm+G3ucmSzGoImNqrQI9TWvgL4ysqw/eQg0k=
-X-Google-Smtp-Source: APiQypJwJ2uOOAPfmeM5nJfx+WsYkHo/Ya0/fvk6XSZOAthRD5GU8swYyAKAdYf6f9Qx1lIW0rGPP6tS1dPTrjZa4Ek=
-X-Received: by 2002:ad4:4e65:: with SMTP id ec5mr10315478qvb.32.1587466310751;
- Tue, 21 Apr 2020 03:51:50 -0700 (PDT)
+        bh=O929yg+fLvoN/by1jc0EwDCf8KvNlk29JcmtP7raFgM=;
+        b=Vkr00bRA7qZWtsgNHir/i8XBjCNqk9JItEloXK0AEhZg0pz65eXU4oB/wDEz1CGWfg
+         Vkqf7J0jwmPBH+L/5vRei8YuscuAvzc81a5uzLZT0bxfpBoOgQgFwspQh9Wtt3eJYkHD
+         ec+A3FmdudJmIZa80PtNEY4PxK+07aXvBuL9TiJtUqJaJnIWe9um4zWOYNUUt8n/uoSr
+         Phvt3syn7m6uKfu8wE9I4e6HUTwJ6cqQv3JpPGEziUldTwksX5QRVuV9DxgG9EEYUjFC
+         VNnNGMoDkdC7ZdxHoe44Ba4PqvB5HvIqoGMm8RNDJOLw/Ubh88io830jndRd1uWVcmfL
+         u+HQ==
+X-Gm-Message-State: AGi0PuZ+QHF7RgBJVUbhGHmOZnPXKY7bs+IVdnsBPIKRPvJGujPd8MQT
+        SmGD+4a7QLu5nr1tRictfTpp715MjjYSJavVsDo=
+X-Google-Smtp-Source: APiQypKk4tW88JY76r9/Er7wZ18e8ryyyi/UBlfc+uddacQ/gIzzjrB215ZfXqIkXrcyo8blfz9mbVHnS3qseIWlPn0=
+X-Received: by 2002:a6b:b8d6:: with SMTP id i205mr20857175iof.123.1587466324033;
+ Tue, 21 Apr 2020 03:52:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587458483-2166-1-git-send-email-shengjiu.wang@nxp.com> <20200421095139.GA4540@sirena.org.uk>
-In-Reply-To: <20200421095139.GA4540@sirena.org.uk>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Tue, 21 Apr 2020 18:51:39 +0800
-Message-ID: <CAA+D8APjn7FrOvYRiTorfSyswm7G5SMcegnJm9sKB8EQKDMgFg@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_esai: Remove expensive print in irq handler
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1585733475-5222-1-git-send-email-chakragithub@gmail.com> <CAJfpegtk=pbLgBzM92tRq8UMUh+vxcDcwLL77iAcv=Mxw3r4Lw@mail.gmail.com>
+In-Reply-To: <CAJfpegtk=pbLgBzM92tRq8UMUh+vxcDcwLL77iAcv=Mxw3r4Lw@mail.gmail.com>
+From:   Chakra Divi <chakragithub@gmail.com>
+Date:   Tue, 21 Apr 2020 16:21:52 +0530
+Message-ID: <CAH7=fosGV3AOcU9tG0AK3EJ2yTXZL3KGfsuVUA5gMBjC4Nn-WQ@mail.gmail.com>
+Subject: Re: [PATCH] fuse:rely on fuse_perm for exec when no mode bits set
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
-
-On Tue, Apr 21, 2020 at 5:53 PM Mark Brown <broonie@kernel.org> wrote:
+On Mon, Apr 20, 2020 at 4:55 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
 >
-> On Tue, Apr 21, 2020 at 04:41:23PM +0800, Shengjiu Wang wrote:
-> > Use dev_dbg instead of dev_err in irq handler, the dev_err
-> > is expensive, we don't need the message to be printed everytime,
-> > which is almost a debug option.
->
-> >       if (esr & ESAI_ESR_RFF_MASK)
-> > -             dev_warn(&pdev->dev, "isr: Receiving overrun\n");
-> > +             dev_dbg(&pdev->dev, "isr: Receiving overrun\n");
+> On Wed, Apr 1, 2020 at 11:31 AM Chakra Divi <chakragithub@gmail.com> wrote:
 > >
-> >       if (esr & ESAI_ESR_TFE_MASK)
-> > -             dev_warn(&pdev->dev, "isr: Transmission underrun\n");
-> > +             dev_dbg(&pdev->dev, "isr: Transmission underrun\n");
+> > In current code, for exec we are checking mode bits
+> > for x bit set even though the fuse_perm_getattr returns
+> > success. Changes in this patch avoids mode bit explicit
+> > check, leaves the exec checking to fuse file system
+> > in uspace.
 >
-> These are error messages which would suggest a problem that'd lead to
-> data corruption, it seems bad not to try to flag that to the user -
-> surely we've got bigger problems than performance if this happens?
-> Perhaps convert to a ratelimited print if the issue is that when errors
-> happen they happen a lot?
+> Why is this needed?
 
-Thanks for review, I will rethink about this.
+Thanks for responding Miklos. We have an use case with our remote file
+system mounted on fuse , where permissions checks will happen remotely
+without the need of mode bits. In case of read, write it worked
+without issues. But for executable files, we found that fuse kernel is
+explicitly checking 'x' mode bit set on the file. We want this
+checking also to be pushed to remote instead of kernel doing it - so
+modified the kernel code to send getattr op to usespace in exec case
+too.
 
-best regards
-wang shengjiu
+> Thanks,
+> Miklos
