@@ -2,126 +2,235 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2195C55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE63C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A953920738
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:31:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GS20hJWb"
+	by mail.kernel.org (Postfix) with ESMTP id 9FF8C20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgDUNbM (ORCPT
+        id S1728881AbgDUNeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729032AbgDUNbD (ORCPT
+        Tue, 21 Apr 2020 09:34:15 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38680 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728422AbgDUNeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:31:03 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE37C061A10;
-        Tue, 21 Apr 2020 06:31:02 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y4so13952026ljn.7;
-        Tue, 21 Apr 2020 06:31:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=n1eN8tSv2qXvNukDnxakUVcpdfWKIz8N5kuJXZzI10Q=;
-        b=GS20hJWbYfCcVAO5njfSRnIIESF6ZVXjfh95iNDyCUQnRwoFrekQHqyaqJNf61Amdm
-         hTD6sx9Y0zhYLokcb+xIMEYUeIjkklCF0wVfLp4SyJR1y60ThyKyU+OWBYzrBB0wqqFK
-         lbKeYdkl6jBOMJjkll1jWQ2djJhB7PCNSq2/KceQEbDNd96HvJJO8cJmbW4HXSsi/Q/u
-         jeIOPzhjjiPv4juZhxYE5G0fpzkCVGBOjX5KJSf0AK1uW2fAoI3qXgr6ZyRmKptzAMmX
-         pGCwaq8VmlBscpaEe34YLYpk1aiWmOWPWQvRDfoiHGzC5noIk6KqMUSaPi5kafhElHea
-         GWUA==
+        Tue, 21 Apr 2020 09:34:14 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g19so1070170otk.5;
+        Tue, 21 Apr 2020 06:34:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=n1eN8tSv2qXvNukDnxakUVcpdfWKIz8N5kuJXZzI10Q=;
-        b=kqFT9UcryRd1dCMUhCBGez0qBbQRAKCML/y3GMz8vCwG6z1h+3M2WCFeE5vYyB7hP6
-         9IiLEi9rUKcx4ZbE3Ih78smOj8O9bnjQimtAMYn1N/wB+2hndTVFahLAftk/dulACPxK
-         ukzu3uxefa2FJFzDZGPppjQrNPJGdUmDvichMk84pdeHZfZQUAgsTlaeew93EB2wD4nJ
-         9CoLCrH/B7dc83PqfqtIxF/+cCvbs+eNjYOiCL3Uf8zpRMGSlSe3L7FrkS52H4AszgmF
-         IkQzC/zPjIKJHPTlvZUqW/0dXk5WKfw9dgoOikK9h9U56TKCEV9amjfoS8s0iToXRCeW
-         YL+w==
-X-Gm-Message-State: AGi0PubhpjvrOAiOtDwpFBiCnHuHoEV8QxJn/y9kfEd2v5RO96sefPWq
-        CozH0/nAVEM2/xOCXxgo6bA=
-X-Google-Smtp-Source: APiQypJqldYtw+MCDISwcjrRXbbmeAda49u/EROFnkj/F7LWMYZN6Zyb1s/7Vm3GeO/+0VqFe67s5g==
-X-Received: by 2002:a2e:97d4:: with SMTP id m20mr12754498ljj.159.1587475861272;
-        Tue, 21 Apr 2020 06:31:01 -0700 (PDT)
-Received: from oak.local ([188.123.231.141])
-        by smtp.gmail.com with ESMTPSA id v17sm2031456lfi.49.2020.04.21.06.30.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 06:31:00 -0700 (PDT)
-From:   matwey.kornilov@gmail.com
-To:     stern@rowland.harvard.edu, Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org (open list:MUSB MULTIPOINT HIGH SPEED
-        DUAL-ROLE CONTROLLER), linux-kernel@vger.kernel.org (open list)
-Cc:     "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        linux-usb@vger.kernel.org (open list:MUSB MULTIPOINT HIGH SPEED
-        DUAL-ROLE CONTROLLER), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 5/6] usb: musb: Introduce musb_start_urb()
-Date:   Tue, 21 Apr 2020 16:30:18 +0300
-Message-Id: <20200421133019.27167-6-matwey.kornilov@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200421133019.27167-1-matwey.kornilov@gmail.com>
-References: <20200421133019.27167-1-matwey.kornilov@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lh5pVJZRcLVBFtKesabUO59pO9pTmaMQl3f9s4jugGY=;
+        b=rMjeWykbnunU7DIQCZ+K054kvjWz4FsTtfu7x4d6fSoL108s8HCXry/A5kRmojSF6u
+         Fflu5IEluoy6FLqDaNFIxBIRltUKoAsAPvpGtFiWUBzdmzmFPsR2/uah9y06wt7Gb4M/
+         Cl1/mQGwjcw/x45fSM6m9QvzqVo6Pt3Ye6gIzYaL7arC7vU6uw9fQTifvqdjsnZrL7hc
+         OgduFSXh6nYuLdFTbSadBVoATrMln9Jf3rxznvhXrIZlivMK/6gLZK5zQ7F8MnRlVTHr
+         tG3DpLYjA9AyDuHSOfs3I1I+bSiJnDLx2mKm5o5ZXG5TJaBsmrBBDKF3LUlsVObGz2L9
+         WoIw==
+X-Gm-Message-State: AGi0PuZc9S3ZK3+CRuedtRJrIUCuR0JHE9w3zwOiKg+wm/EA/gQR9Zy5
+        NOIFZs4m7elOm9FNwyajmA6IIKFHuEVY5kc42Wg=
+X-Google-Smtp-Source: APiQypKjSLZvCUom9i5XEMJJRF+xev9IVN+sAhLGeyV7fqmrQYYuyDhWvpuOL/sM0BJlaEAL07MAxjJetD+5d4xBD78=
+X-Received: by 2002:a9d:76c7:: with SMTP id p7mr13264034otl.145.1587476053078;
+ Tue, 21 Apr 2020 06:34:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
+ <1585289423-18440-3-git-send-email-hadar.gat@arm.com> <CAMuHMdV6Uce79MPs7jfJfX3WOqAMH22vf2V_=Ui0zLHYqsJ+Xg@mail.gmail.com>
+ <DB6PR0802MB25338BD19DD2F7E662BB1065E9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+In-Reply-To: <DB6PR0802MB25338BD19DD2F7E662BB1065E9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 21 Apr 2020 15:34:01 +0200
+Message-ID: <CAMuHMdWujabV8dr=EojXFBVD0TcUuZ2kCGjjo93u=PE-AmzVHA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] hw_random: cctrng: introduce Arm CryptoCell driver
+To:     Hadar Gat <Hadar.Gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matwey V. Kornilov" <matwey@sai.msu.ru>
+Hi Hadar,
 
-This function allows us to start arbitrary urb.
+On Tue, Apr 21, 2020 at 3:16 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
+> > -----Original Message-----
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Sent: Monday, 20 April 2020 16:45
+> >
+> > On Fri, Mar 27, 2020 at 7:11 AM Hadar Gat <hadar.gat@arm.com> wrote:
+> > > Introduce low level Arm CryptoCell TRNG HW support.
+> > >
+> > > Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- /dev/null
+> > > +++ b/drivers/char/hw_random/cctrng.c
+> >
+> > > +static int cctrng_probe(struct platform_device *pdev) {
+> > > +       struct resource *req_mem_cc_regs = NULL;
+> > > +       struct cctrng_drvdata *drvdata;
+> > > +       struct device *dev = &pdev->dev;
+> > > +       int rc = 0;
+> > > +       u32 val;
+> > > +       int irq;
+> > > +
+> > > +       drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> > > +       if (!drvdata)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       drvdata->rng.name = devm_kstrdup(dev, dev_name(dev),
+> > GFP_KERNEL);
+> > > +       if (!drvdata->rng.name)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       drvdata->rng.read = cctrng_read;
+> > > +       drvdata->rng.priv = (unsigned long)drvdata;
+> > > +       drvdata->rng.quality = CC_TRNG_QUALITY;
+> > > +
+> > > +       platform_set_drvdata(pdev, drvdata);
+> > > +       drvdata->pdev = pdev;
+> > > +
+> > > +       drvdata->circ.buf = (char *)drvdata->data_buf;
+> > > +
+> > > +       /* Get device resources */
+> > > +       /* First CC registers space */
+> > > +       req_mem_cc_regs = platform_get_resource(pdev,
+> > IORESOURCE_MEM, 0);
+> > > +       /* Map registers space */
+> > > +       drvdata->cc_base = devm_ioremap_resource(dev,
+> > req_mem_cc_regs);
+> > > +       if (IS_ERR(drvdata->cc_base)) {
+> > > +               dev_err(dev, "Failed to ioremap registers");
+> > > +               return PTR_ERR(drvdata->cc_base);
+> > > +       }
+> > > +
+> > > +       dev_dbg(dev, "Got MEM resource (%s): %pR\n", req_mem_cc_regs-
+> > >name,
+> > > +               req_mem_cc_regs);
+> > > +       dev_dbg(dev, "CC registers mapped from %pa to 0x%p\n",
+> > > +               &req_mem_cc_regs->start, drvdata->cc_base);
+> > > +
+> > > +       /* Then IRQ */
+> > > +       irq = platform_get_irq(pdev, 0);
+> > > +       if (irq < 0) {
+> > > +               dev_err(dev, "Failed getting IRQ resource\n");
+> > > +               return irq;
+> > > +       }
+> > > +
+> > > +       /* parse sampling rate from device tree */
+> > > +       rc = cc_trng_parse_sampling_ratio(drvdata);
+> > > +       if (rc) {
+> > > +               dev_err(dev, "Failed to get legal sampling ratio for rosc\n");
+> > > +               return rc;
+> > > +       }
+> > > +
+> > > +       rc = cc_trng_clk_init(drvdata);
+> > > +       if (rc) {
+> > > +               dev_err(dev, "cc_trng_clk_init failed\n");
+> > > +               return rc;
+> > > +       }
+> > > +
+> > > +       INIT_WORK(&drvdata->compwork, cc_trng_compwork_handler);
+> > > +       INIT_WORK(&drvdata->startwork, cc_trng_startwork_handler);
+> > > +       spin_lock_init(&drvdata->read_lock);
+> > > +
+> > > +       /* register the driver isr function */
+> > > +       rc = devm_request_irq(dev, irq, cc_isr, IRQF_SHARED, "cctrng",
+> > > + drvdata);
+> >
+> > Shoudn't this be done after clearing the pending interrupts below?
+>
+> I'm not sure what do you mean in your question...
+> I assume you're suggesting that the registration of the driver ISR function should be done only after clearing the pending interrupts?!
 
-Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
----
- drivers/usb/musb/musb_host.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Indeed.
 
-diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
-index c3c9aa8ba973..46d9dd7d6f67 100644
---- a/drivers/usb/musb/musb_host.c
-+++ b/drivers/usb/musb/musb_host.c
-@@ -213,11 +213,10 @@ static struct musb_qh *musb_ep_get_qh(struct musb_hw_ep *ep, int is_in)
-  * Context: controller locked, irqs blocked
-  */
- static void
--musb_start_next_urb(struct musb *musb, int is_in, struct musb_qh *qh)
-+musb_start_urb(struct musb *musb, int is_in, struct musb_qh *qh, struct urb *urb)
- {
- 	u32			len;
- 	void __iomem		*mbase =  musb->mregs;
--	struct urb		*urb = next_urb(qh);
- 	void			*buf = urb->transfer_buffer;
- 	u32			offset = 0;
- 	struct musb_hw_ep	*hw_ep = qh->hw_ep;
-@@ -293,6 +292,14 @@ musb_start_next_urb(struct musb *musb, int is_in, struct musb_qh *qh)
- 	}
- }
- 
-+static void
-+musb_start_next_urb(struct musb *musb, int is_in, struct musb_qh *qh)
-+{
-+	struct urb *urb = next_urb(qh);
-+
-+	musb_start_urb(musb, is_in, qh, urb);
-+}
-+
- /* Context: caller owns controller lock, IRQs are blocked */
- static void musb_giveback(struct musb *musb, struct urb *urb, int status)
- __releases(musb->lock)
+> Anyway, any pending interrupt that might exist is irrelevant to the current cctrng driver which just started (we're in the probe function)
+
+If there is a pending interrupt, your interrupt handler (which returns
+IRQ_NONE in this case) will be called repeatedly, until the driver gets
+to clearing the pending interrupts below, or until the interrupt core
+decides to give up, and disable it for good.
+
+> > > +       if (rc) {
+> > > +               dev_err(dev, "Could not register to interrupt %d\n", irq);
+> > > +               goto post_clk_err;
+> > > +       }
+> > > +       dev_dbg(dev, "Registered to IRQ: %d\n", irq);
+> > > +
+> > > +       /* Clear all pending interrupts */
+> > > +       val = cc_ioread(drvdata, CC_HOST_RGF_IRR_REG_OFFSET);
+> > > +       dev_dbg(dev, "IRR=0x%08X\n", val);
+> > > +       cc_iowrite(drvdata, CC_HOST_RGF_ICR_REG_OFFSET, val);
+> >
+> > The above accesses the engine's registers...
+>
+> That is right.
+>
+> > > +
+> > > +       /* unmask HOST RNG interrupt */
+> > > +       cc_iowrite(drvdata, CC_HOST_RGF_IMR_REG_OFFSET,
+> > > +                  cc_ioread(drvdata, CC_HOST_RGF_IMR_REG_OFFSET) &
+> > > +                  ~CC_HOST_RNG_IRQ_MASK);
+> > > +
+> > > +       /* init PM */
+> > > +       rc = cc_trng_pm_init(drvdata);
+> > > +       if (rc) {
+> > > +               dev_err(dev, "cc_trng_pm_init failed\n");
+> > > +               goto post_clk_err;
+> > > +       }
+> >
+> > > +
+> > > +       /* increment device's usage counter */
+> > > +       rc = cc_trng_pm_get(dev);
+> >
+> > ... but only here is Runtime PM initialized, and the device guaranteed to be
+> > powered.  If a device is accessed while powered down, this may lead to an
+> > asynchronous external abort, or a plain lockup.
+>
+> It is assumed that when the driver is probed it is already powered. Only then, the driver initializes and enables the runtime PM to allow power down of the HW when it is not in use.
+
+Who guarantees it is powered up? Your driver has indeed enabled the
+(optional) clock above, but if the hardware block is part of a power
+domain, it may still be powered down. The only way to make sure a
+hardware block in a power domain is powered, is by enabling Runtime
+PM and calling pm_runtime_get_sync().
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.25.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
