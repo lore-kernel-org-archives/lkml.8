@@ -2,187 +2,93 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DF5C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19489C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B5E206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:43:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BJe/hCjj"
+	by mail.kernel.org (Postfix) with ESMTP id E70CD206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:43:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587480219;
+	bh=5e3Om0tNq5AkjbiSTQR8U7jUZzgzErPBUb1379XOKSw=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=fZq9hmPIm5StjB44oJE01ELL4pYFiLrkdTe1fbj+ItRiAnj3Kk7lk5J6IG83Gjinh
+	 s+asvTSaOBz3DG3b4LzSEbTLDNjSVKGw+kgjm9+pV4m+Z39hXAR6QLh51B+I9D71r0
+	 Vxk6lhnkR6hJQvFoCfrUJe4/AihH1kMPpLMOelZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgDUOna (ORCPT
+        id S1729388AbgDUOnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:43:30 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:10382 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbgDUOnG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:43:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587480186; x=1619016186;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=cV4Xbeo9JPYEAALbCGMZjIGvhQdcDLy7AnK61G5iajQ=;
-  b=BJe/hCjjcUX2dPlCiriP/63mRMkd+hJ4KTJENpfwQDfopjiHd5yxQ0yX
-   8TnG/t5g+l2Q1gUMym/78CG8lVGZe+WSS5/7KR2IKnvlEzLoU/XQi3YGR
-   TN78yWQVWHwDH0BQenqIfDZy9r5a7E/xQ6o8Rfa9vy0erVN34vUFEvG0R
-   1MCxN6vs0qAItTo0YItKVry25wJpwCwuuPvtGR2gzxAKPgCAxjlm5U7YQ
-   N/eV/11zKBNz6ifZHDnaqFY1snZwfLz3fhLr4SRFJhPuy9mpPihW2N7PT
-   FaA87T/orcV86L1jU0StwpjCO774BPRKkrfrknzaD+ABwPhFryxR0W4Qg
-   w==;
-IronPort-SDR: oxH7qF6S3ibqJi/nsKp6+nlJ1PdKHWkCFDQOP06teIqrjm8BBg3qus7hKcE05iwKOsrLviOxx6
- YCc4MB5BoSbDWkuyezs+j9A/5NPXedcxlYtH3I13VcnMpYf049JCFxuuvfDBNZrSg3v7zhyNXb
- 16pN6eJhkt2+taZubO74U6EO02DVwt/8HbaiitTWVAqRojR2X0Bn+4us26YIYsmaRvsRGBUsUY
- hhtadAeT4yVXFjTPgGCt7HyHyBQx4FL+BomXIsr9smF9otFUwMdap3fs96swuBN2vXAcS3xx0/
- pFs=
-X-IronPort-AV: E=Sophos;i="5.72,410,1580799600"; 
-   d="scan'208";a="73284520"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Apr 2020 07:43:06 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 21 Apr 2020 07:42:34 -0700
-Received: from soft-dev3.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 21 Apr 2020 07:43:01 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
-        <jiri@resnulli.us>, <ivecera@redhat.com>, <kuba@kernel.org>,
-        <roopa@cumulusnetworks.com>, <olteanv@gmail.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v2 09/11] bridge: mrp: Implement netlink interface to configure MRP
-Date:   Tue, 21 Apr 2020 16:37:50 +0200
-Message-ID: <20200421143752.2248-10-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200421143752.2248-1-horatiu.vultur@microchip.com>
-References: <20200421143752.2248-1-horatiu.vultur@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 21 Apr 2020 10:43:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729257AbgDUOnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:43:35 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC497206A2;
+        Tue, 21 Apr 2020 14:43:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587480214;
+        bh=5e3Om0tNq5AkjbiSTQR8U7jUZzgzErPBUb1379XOKSw=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=ZSG5SzUn9vFXbtZ+C9VMvFYVgu4YyuOoDliCn6TS/Cz6F7+oxLJDxg5s5JJgBCNLk
+         8YZC2rCVpT7hOlSgGe25cevaZqbaJQnBscgywTE6WRSIo+fGVj2OpHX025f6qbKB9c
+         imvlx2FOW4JPEYO4MoLx+ezeqYoeHe1KIM6ReJek=
+Date:   Tue, 21 Apr 2020 15:43:31 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     tglx@linutronix.de, patches@opensource.cirrus.com, info@metux.net,
+        ckeepax@opensource.wolfsonmicro.com, allison@lohutok.net,
+        alsa-devel@alsa-project.org, kstewart@linuxfoundation.org,
+        perex@perex.cz, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        lgirdwood@gmail.com, tiwai@suse.com, linux-kernel@vger.kernel.org
+In-Reply-To: <1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH] ASoC: wm8960: Fix wrong clock after suspend & resume
+Message-Id: <158748021184.7424.16056997508827972639.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement netlink interface to configure MRP. The implementation
-will do sanity checks over the attributes and then eventually call the MRP
-interface.
+On Tue, 21 Apr 2020 19:28:45 +0800, Shengjiu Wang wrote:
+> After suspend & resume, wm8960_hw_params may be called when
+> bias_level is not SND_SOC_BIAS_ON, then wm8960_configure_clocking
+> is not called. But if sample rate is changed at that time, then
+> the output clock rate will be not correct.
+> 
+> So judgement of bias_level is SND_SOC_BIAS_ON in wm8960_hw_params
+> is not necessary and it causes above issue.
+> 
+> [...]
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- net/bridge/br_mrp_netlink.c | 91 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
+Applied to
 
-diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-index b982db14bbf4..f4a84b1921b2 100644
---- a/net/bridge/br_mrp_netlink.c
-+++ b/net/bridge/br_mrp_netlink.c
-@@ -6,6 +6,97 @@
- #include "br_private.h"
- #include "br_private_mrp.h"
- 
-+static const struct nla_policy br_mrp_policy[IFLA_BRIDGE_MRP_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_UNSPEC]	= { .type = NLA_REJECT },
-+	[IFLA_BRIDGE_MRP_INSTANCE]	= { .type = NLA_EXACT_LEN,
-+					    .len = sizeof(struct br_mrp_instance)},
-+	[IFLA_BRIDGE_MRP_PORT_STATE]	= { .type = NLA_U32 },
-+	[IFLA_BRIDGE_MRP_PORT_ROLE]	= { .type = NLA_EXACT_LEN,
-+					    .len = sizeof(struct br_mrp_port_role)},
-+	[IFLA_BRIDGE_MRP_RING_STATE]	= { .type = NLA_EXACT_LEN,
-+					    .len = sizeof(struct br_mrp_ring_state)},
-+	[IFLA_BRIDGE_MRP_RING_ROLE]	= { .type = NLA_EXACT_LEN,
-+					    .len = sizeof(struct br_mrp_ring_role)},
-+	[IFLA_BRIDGE_MRP_START_TEST]	= { .type = NLA_EXACT_LEN,
-+					    .len = sizeof(struct br_mrp_start_test)},
-+};
-+
-+int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
-+		 struct nlattr *attr, int cmd, struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_MAX + 1];
-+	int err;
-+
-+	if (br->stp_enabled != BR_NO_STP) {
-+		NL_SET_ERR_MSG_MOD(extack, "MRP can't be enabled if STP is already enabled\n");
-+		return -EINVAL;
-+	}
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_MAX, attr,
-+			       NULL, extack);
-+	if (err)
-+		return err;
-+
-+	if (tb[IFLA_BRIDGE_MRP_INSTANCE]) {
-+		struct br_mrp_instance *instance =
-+			nla_data(tb[IFLA_BRIDGE_MRP_INSTANCE]);
-+
-+		if (cmd == RTM_SETLINK)
-+			err = br_mrp_add(br, instance);
-+		else
-+			err = br_mrp_del(br, instance);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (tb[IFLA_BRIDGE_MRP_PORT_STATE]) {
-+		enum br_mrp_port_state_type state =
-+			nla_get_u32(tb[IFLA_BRIDGE_MRP_PORT_STATE]);
-+
-+		err = br_mrp_set_port_state(p, state);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (tb[IFLA_BRIDGE_MRP_PORT_ROLE]) {
-+		struct br_mrp_port_role *role =
-+			nla_data(tb[IFLA_BRIDGE_MRP_PORT_ROLE]);
-+
-+		err = br_mrp_set_port_role(p, role);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (tb[IFLA_BRIDGE_MRP_RING_STATE]) {
-+		struct br_mrp_ring_state *state =
-+			nla_data(tb[IFLA_BRIDGE_MRP_RING_STATE]);
-+
-+		err = br_mrp_set_ring_state(br, state);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (tb[IFLA_BRIDGE_MRP_RING_ROLE]) {
-+		struct br_mrp_ring_role *role =
-+			nla_data(tb[IFLA_BRIDGE_MRP_RING_ROLE]);
-+
-+		err = br_mrp_set_ring_role(br, role);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (tb[IFLA_BRIDGE_MRP_START_TEST]) {
-+		struct br_mrp_start_test *test =
-+			nla_data(tb[IFLA_BRIDGE_MRP_START_TEST]);
-+
-+		err = br_mrp_start_test(br, test);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
- int br_mrp_port_open(struct net_device *dev, u8 loc)
- {
- 	struct net_bridge_port *p;
--- 
-2.17.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
 
+Thanks!
+
+[1/1] ASoC: wm8960: Fix wrong clock after suspend & resume
+      commit: 1e060a453c8604311fb45ae2f84f67ed673329b4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
