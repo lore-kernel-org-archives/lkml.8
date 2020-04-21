@@ -2,152 +2,363 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC081C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A364C38A30
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 01:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8FD02078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8A62078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 01:04:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Pq54sHDj"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Rn3pCEnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDUA7c (ORCPT
+        id S1726450AbgDUBEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:59:32 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:58051 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgDUA7c (ORCPT
+        Mon, 20 Apr 2020 21:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725989AbgDUBEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 20:59:32 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200421005929epoutp0333f10c39cb85eead517d3b20a622351a~Hr9-Xvr6j1887018870epoutp03V
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 00:59:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200421005929epoutp0333f10c39cb85eead517d3b20a622351a~Hr9-Xvr6j1887018870epoutp03V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587430769;
-        bh=LYW5DmJgoPb7LB4JzUV52hR/PII0bF9iE3OA33GLTq0=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=Pq54sHDjw06OaLpkN8RqFZsIM1Xjg+arBQguNlfUti+ITtW/zgKRNI4z805TkbTXa
-         MCitQJ5DUl//mbgUBdOLanJ94FOYBukBJ25txApeCsM+bqPT7dJptnj9QmKFDvPG7s
-         rBq64WgtUvH5T9BwxgW8tvLjrRJipe8qnFWWIfKI=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200421005928epcas5p4f7b51758feb9d1482de7b82c135fda71~Hr9_PTIid1071210712epcas5p4c;
-        Tue, 21 Apr 2020 00:59:28 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        09.2E.04782.0754E9E5; Tue, 21 Apr 2020 09:59:28 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200421005927epcas5p169031aa337f797611b67a8272d997236~Hr99VYeCL0404404044epcas5p1F;
-        Tue, 21 Apr 2020 00:59:27 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200421005927epsmtrp1b8e08e4e3eb40e4e920cbd2ce2ebea3a~Hr99Uid5z2251822518epsmtrp1n;
-        Tue, 21 Apr 2020 00:59:27 +0000 (GMT)
-X-AuditID: b6c32a49-8b3ff700000012ae-e2-5e9e45707a2f
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F6.A2.04024.F654E9E5; Tue, 21 Apr 2020 09:59:27 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200421005923epsmtip1b2a60879cd5b82845f4c5b8ddb555e15~Hr95ZnAWe0436404364epsmtip1H;
-        Tue, 21 Apr 2020 00:59:22 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Avri Altman'" <Avri.Altman@wdc.com>, <robh@kernel.org>
-Cc:     <devicetree@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <krzk@kernel.org>, <martin.petersen@oracle.com>,
-        <kwmad.kim@samsung.com>, <stanley.chu@mediatek.com>,
-        <cang@codeaurora.org>, <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <SN6PR04MB464049754716338FA4202E62FCD40@SN6PR04MB4640.namprd04.prod.outlook.com>
-Subject: RE: [PATCH v6 09/10] scsi: ufs-exynos: add UFS host support for
- Exynos SoCs
-Date:   Tue, 21 Apr 2020 06:29:20 +0530
-Message-ID: <000001d61778$1ad10a70$50731f50$@samsung.com>
+        Mon, 20 Apr 2020 21:04:20 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A60EDC061A0E;
+        Mon, 20 Apr 2020 18:04:19 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id q8so9588591eja.2;
+        Mon, 20 Apr 2020 18:04:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q2OcyMsNOgOJ4QjVwoaZYpXk03Hzr+6I0WrOWZa7y3Q=;
+        b=Rn3pCEnulDE6HTJYfjly0/qCFdbEN8deS+EJtvDTp0+AAtd9M1vyGp4BVYvV4yC3Yf
+         XAykjGDFio38Ouw6DgN8WWTvRKcQqNIa9jIbTk7hZ2VpwFlOhum3g5bJBt5ucarXq3VF
+         0nb6XBUEjEB8RNnemLforAHuVHysLoPMQOGEE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q2OcyMsNOgOJ4QjVwoaZYpXk03Hzr+6I0WrOWZa7y3Q=;
+        b=El1xZnIwD3ii7AK2z6fhi21t4clAvvjq1fMSvOKiwS87cV0V4SB7DGwTMJb/tqyMiu
+         pHtDT9g3WfpM428v+bnVbLuwl1pyGCA2pm95pYQU0kWqQxZAuah3NviSEs4POeAdOO8F
+         Dw3iv6t1EUZTe7J1/uEJpdT14LeuXblo4IiZaM+/+JEfiCWhi8jAycGRWtIsvJXjybSi
+         JBvims+eidup3XQLvGHJoaykaWNOVpRMgnnF4iIy9WngNJ49IHhcQoSe0MURagKeglje
+         3YMPy/YT6zgME50tayehMtsD7KFvnUrl1lbSCRoT/eqS75PxhFZFJ6G5nK5UFlfqUlQm
+         w6mg==
+X-Gm-Message-State: AGi0PubRcKCCFmtahGOKtki/UkJCXYy42nL9W4+Uks9YClcusd5nMvL+
+        qMZa91VNscvJ9ynN5HtGayOh6Jz5ShnDq/kxQkU=
+X-Google-Smtp-Source: APiQypJjXBuoS0eOtHahjvE07p3zTTxEuyWsRwZ1DUaNxJWFPPkybrgdK3q6OnjeXnVf/5ny1Mmq357Z6pHtTI6kON4=
+X-Received: by 2002:a17:906:6444:: with SMTP id l4mr18235261ejn.313.1587431058081;
+ Mon, 20 Apr 2020 18:04:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJQDPill8kAmUENoj8JBCZ49rLenQJwluT7Ac8KJGcDHzROdqdT3pZg
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe+7brsPF4xx6MrMaRGhYSgY3svSDxo0SKqIPUuawi4Zuji0r
-        o0go1Jzv9KLL1KitWB8m2xxDq5n5kkTNmFZa2gddUJnlAkONzO0m+e13zvn/Oef/8LCk3EtH
-        sac0pwWdRlWgZKSU81ns5nhtenNWgsERxn2eG2Y4v9VMcy09r2jO42mTcCOOXoqzTbyhOW9H
-        E8M1eJ4QnOGti+Hu9/8huMVHLglnah9BqaG8t7qK4G2Wqwxvv3eJvzLgpvgZ3yjFVzssiP9p
-        i+HLugzEQTZTmnxSKDh1RtBt25MtzaufNyFtufRc3+Q3sgTdYytQCAs4CRp6fqAKJGXluBPB
-        0PsySiz8COoXDaRYzCJo8A1Ty5bF61eZAMvxYwQTFQpRNIVg7NoXSWDA4Hhw3S0NihQ4GR72
-        1TIBEYnbCOh2W8nAIAQfh5uXF4kAh+Oj8ODlaNBM4U3w7MNssC/DO2HQ/guJHAYDjZPBK0i8
-        Bcx3vpLiRRtgzmemxWV7ocb3ghA1kdA7VxmMANgsgUZPLyMa0mB4yPzPHA5f+h0SkaPgc03p
-        ErNLnA+VHdvF9gUwNff9S58CXUNNVEBC4liwdmwTV62GqoVJQnTKoLxULqo3weXp5XdbC3UG
-        Ay0yDyXjVlSLNhpXBDOuCGZcEcD4f1kroixojaDVq3MF/Q5tokY4u1WvUuuLNLlbcwrVNhT8
-        anH7XMj46kA3wixShsraIpqz5LTqjL5Y3Y2AJZUKGRe31JKdVBWfF3SFJ3RFBYK+G61lKWWk
-        rJ4ePibHuarTQr4gaAXd8pRgQ6JKUER7gp3JjA5diE/yW6iZbKs7Hw4fmkrMDP/oJKNrnWpd
-        2uj6ut3zbS7T9+SGjJmwO2M//CmD4zmd0+5VA4UvzmdeHLJPbPR5Em7L01tSYr491aTPDzjr
-        jtzIWVOYuq5fnb9L0fj71rvns8SniPUjka2D2a+1Cxl4v9uL6Xprs5LS56kS40idXvUXxc5B
-        rmYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsWy7bCSnG6+67w4g5PPhS1e/rzKZvFp/TJW
-        i/lHzrFanD+/gd3i5pajLBabHl9jtbi8aw6bxYzz+5gsuq/vYLNYfvwfk8X/PTvYLZZuvcno
-        wONxua+XyWPTqk42j81L6j1aTu5n8fj49BaLR9+WVYwenzfJebQf6GYK4IjisklJzcksSy3S
-        t0vgypi1pZ+p4BZnxad/R5kaGL+xdzFyckgImEj8n9rJ1sXIxSEksJtRYt29D0wQCWmJ6xsn
-        QBUJS6z895wdougVo8SaxmXMIAk2AV2JHYvb2EBsEQE7iVeTLzKCFDEL7GKS2HpvGxNEx0Qm
-        iV9vF7CCVHEKxEpMb/4PtkJYIESidcM9sEksAqoSh+98A4vzClhKXNj8nRHCFpQ4OfMJC4jN
-        LKAt8fTmUzh72cLXzBDnKUj8fLqMFeIKN4n+p6eZIGrEJY7+7GGewCg8C8moWUhGzUIyahaS
-        lgWMLKsYJVMLinPTc4sNCwzzUsv1ihNzi0vz0vWS83M3MYIjVEtzB+PlJfGHGAU4GJV4eDeI
-        zYsTYk0sK67MPcQowcGsJMJroQUU4k1JrKxKLcqPLyrNSS0+xCjNwaIkzvs071ikkEB6Yklq
-        dmpqQWoRTJaJg1OqgTFFv9jjlfePin2qqQ9CQv/uX+YTlMbQrbWT50yB3jv1pDv749nfBVxd
-        nZUZ6Vq/c9OtuQv1neIvCGVmc7Z6vnzZ6TBfnvmz6+4VW4wEqk9+n334paFg/AVzX/0g4W93
-        Z/YE3PQxkD9xcPXniQ+euW+Omm7uteTIL+60HU+M38/zOivR3Ln4qpcSS3FGoqEWc1FxIgBF
-        eQ44zAIAAA==
-X-CMS-MailID: 20200421005927epcas5p169031aa337f797611b67a8272d997236
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200417181024epcas5p4231ae3dd2598155854e9b7ee52438bcb
-References: <20200417175944.47189-1-alim.akhtar@samsung.com>
-        <CGME20200417181024epcas5p4231ae3dd2598155854e9b7ee52438bcb@epcas5p4.samsung.com>
-        <20200417175944.47189-10-alim.akhtar@samsung.com>
-        <SN6PR04MB464049754716338FA4202E62FCD40@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <a5945463f86c984151962a475a3ee56a2893e85d.1587407777.git.christophe.leroy@c-s.fr>
+ <3911a86d6b5bfa7ad88cd7c82416fbe6bb47e793.1587407777.git.christophe.leroy@c-s.fr>
+In-Reply-To: <3911a86d6b5bfa7ad88cd7c82416fbe6bb47e793.1587407777.git.christophe.leroy@c-s.fr>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 21 Apr 2020 01:04:05 +0000
+Message-ID: <CACPK8XfqnqgkXcBzp=nqd=AJX1MK05eTNiyOdaEuRu3_6RsXSQ@mail.gmail.com>
+Subject: Re: [PATCH 2/5] powerpc: Replace _ALIGN_DOWN() by ALIGN_DOWN()
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Avri,
+On Mon, 20 Apr 2020 at 18:38, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+>
+> _ALIGN_DOWN() is specific to powerpc
+> ALIGN_DOWN() is generic and does the same
+>
+> Replace _ALIGN_DOWN() by ALIGN_DOWN()
 
-> -----Original Message-----
-> From: Avri Altman <Avri.Altman=40wdc.com>
-> Sent: 20 April 2020 15:56
-> To: Alim Akhtar <alim.akhtar=40samsung.com>; robh=40kernel.org
-> Cc: devicetree=40vger.kernel.org; linux-scsi=40vger.kernel.org; krzk=40ke=
-rnel.org;
-> martin.petersen=40oracle.com; kwmad.kim=40samsung.com;
-> stanley.chu=40mediatek.com; cang=40codeaurora.org; linux-samsung-
-> soc=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; linux-
-> kernel=40vger.kernel.org
-> Subject: RE: =5BPATCH v6 09/10=5D scsi: ufs-exynos: add UFS host support =
-for Exynos
-> SoCs
->=20
-> > +       struct exynos_ufs_drv_data *drv_data;
-> > +
-> > +       u32 opts;
-> > +=23define EXYNOS_UFS_OPT_HAS_APB_CLK_CTRL                BIT(0)
-> > +=23define EXYNOS_UFS_OPT_SKIP_CONNECTION_ESTAB   BIT(1)
-> > +=23define EXYNOS_UFS_OPT_BROKEN_AUTO_CLK_CTRL    BIT(2)
-> > +=23define EXYNOS_UFS_OPT_BROKEN_RX_SEL_IDX       BIT(3)
-> > +=23define EXYNOS_UFS_OPT_USE_SW_HIBERN8_TIMER    BIT(4)
-> Could not find where the last 2 are being used.
->=20
-The assignment is done on line=23 988 and 989 in exynos_ufs_init() and used=
- in =7Bpre,post=7D_hibern8,=20
-let me see if I can add these in the list of .opts in drv_data.
-Thanks for pointing this out.
+This one is a bit less obvious. It becomes (leaving the typeof's alone
+for clarity):
 
-> Thanks,
-> Avri
+-((addr)&(~((typeof(addr))(size)-1)))
++((((addr) - ((size) - 1)) + ((typeof(addr))(size) - 1)) &
+~((typeof(addr))(size)-1))
 
+Which I assume the compiler will sort out?
+
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+
+
+
+
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/include/asm/book3s/32/pgtable.h |  2 +-
+>  arch/powerpc/include/asm/nohash/32/pgtable.h |  2 +-
+>  arch/powerpc/kernel/pci_64.c                 |  2 +-
+>  arch/powerpc/kernel/prom.c                   |  6 +++---
+>  arch/powerpc/kernel/prom_init.c              |  8 ++++----
+>  arch/powerpc/mm/book3s64/hash_tlb.c          |  4 ++--
+>  arch/powerpc/mm/init_64.c                    |  4 ++--
+>  arch/powerpc/platforms/powernv/opal-fadump.c |  2 +-
+>  arch/powerpc/platforms/powernv/pci-ioda.c    |  2 +-
+>  arch/powerpc/platforms/ps3/mm.c              | 14 +++++++-------
+>  arch/powerpc/platforms/pseries/rtas-fadump.c |  2 +-
+>  11 files changed, 24 insertions(+), 24 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
+> index 7549393c4c43..53b5c93eaf5d 100644
+> --- a/arch/powerpc/include/asm/book3s/32/pgtable.h
+> +++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
+> @@ -195,7 +195,7 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
+>  #endif
+>
+>  #ifdef CONFIG_KASAN_VMALLOC
+> -#define VMALLOC_END    _ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
+> +#define VMALLOC_END    ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
+>  #else
+>  #define VMALLOC_END    ioremap_bot
+>  #endif
+> diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
+> index b04ba257fddb..5b4d4c4297e1 100644
+> --- a/arch/powerpc/include/asm/nohash/32/pgtable.h
+> +++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
+> @@ -116,7 +116,7 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
+>  #endif
+>
+>  #ifdef CONFIG_KASAN_VMALLOC
+> -#define VMALLOC_END    _ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
+> +#define VMALLOC_END    ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
+>  #else
+>  #define VMALLOC_END    ioremap_bot
+>  #endif
+> diff --git a/arch/powerpc/kernel/pci_64.c b/arch/powerpc/kernel/pci_64.c
+> index f83d1f69b1dd..e5d05af5a9af 100644
+> --- a/arch/powerpc/kernel/pci_64.c
+> +++ b/arch/powerpc/kernel/pci_64.c
+> @@ -130,7 +130,7 @@ static int pcibios_map_phb_io_space(struct pci_controller *hose)
+>         unsigned long size_page;
+>         unsigned long io_virt_offset;
+>
+> -       phys_page = _ALIGN_DOWN(hose->io_base_phys, PAGE_SIZE);
+> +       phys_page = ALIGN_DOWN(hose->io_base_phys, PAGE_SIZE);
+>         size_page = _ALIGN_UP(hose->pci_io_size, PAGE_SIZE);
+>
+>         /* Make sure IO area address is clear */
+> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+> index 6620f37abe73..10b5d5eafd34 100644
+> --- a/arch/powerpc/kernel/prom.c
+> +++ b/arch/powerpc/kernel/prom.c
+> @@ -96,7 +96,7 @@ static inline int overlaps_initrd(unsigned long start, unsigned long size)
+>         if (!initrd_start)
+>                 return 0;
+>
+> -       return  (start + size) > _ALIGN_DOWN(initrd_start, PAGE_SIZE) &&
+> +       return  (start + size) > ALIGN_DOWN(initrd_start, PAGE_SIZE) &&
+>                         start <= _ALIGN_UP(initrd_end, PAGE_SIZE);
+>  #else
+>         return 0;
+> @@ -623,9 +623,9 @@ static void __init early_reserve_mem(void)
+>  #ifdef CONFIG_BLK_DEV_INITRD
+>         /* Then reserve the initrd, if any */
+>         if (initrd_start && (initrd_end > initrd_start)) {
+> -               memblock_reserve(_ALIGN_DOWN(__pa(initrd_start), PAGE_SIZE),
+> +               memblock_reserve(ALIGN_DOWN(__pa(initrd_start), PAGE_SIZE),
+>                         _ALIGN_UP(initrd_end, PAGE_SIZE) -
+> -                       _ALIGN_DOWN(initrd_start, PAGE_SIZE));
+> +                       ALIGN_DOWN(initrd_start, PAGE_SIZE));
+>         }
+>  #endif /* CONFIG_BLK_DEV_INITRD */
+>
+> diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
+> index 806be751c336..4cf5958eebd4 100644
+> --- a/arch/powerpc/kernel/prom_init.c
+> +++ b/arch/powerpc/kernel/prom_init.c
+> @@ -1500,7 +1500,7 @@ static unsigned long __init alloc_down(unsigned long size, unsigned long align,
+>
+>         if (highmem) {
+>                 /* Carve out storage for the TCE table. */
+> -               addr = _ALIGN_DOWN(alloc_top_high - size, align);
+> +               addr = ALIGN_DOWN(alloc_top_high - size, align);
+>                 if (addr <= alloc_bottom)
+>                         return 0;
+>                 /* Will we bump into the RMO ? If yes, check out that we
+> @@ -1518,9 +1518,9 @@ static unsigned long __init alloc_down(unsigned long size, unsigned long align,
+>                 goto bail;
+>         }
+>
+> -       base = _ALIGN_DOWN(alloc_top - size, align);
+> +       base = ALIGN_DOWN(alloc_top - size, align);
+>         for (; base > alloc_bottom;
+> -            base = _ALIGN_DOWN(base - 0x100000, align))  {
+> +            base = ALIGN_DOWN(base - 0x100000, align))  {
+>                 prom_debug("    trying: 0x%lx\n\r", base);
+>                 addr = (unsigned long)prom_claim(base, size, 0);
+>                 if (addr != PROM_ERROR && addr != 0)
+> @@ -1586,7 +1586,7 @@ static void __init reserve_mem(u64 base, u64 size)
+>          * have our terminator with "size" set to 0 since we are
+>          * dumb and just copy this entire array to the boot params
+>          */
+> -       base = _ALIGN_DOWN(base, PAGE_SIZE);
+> +       base = ALIGN_DOWN(base, PAGE_SIZE);
+>         top = _ALIGN_UP(top, PAGE_SIZE);
+>         size = top - base;
+>
+> diff --git a/arch/powerpc/mm/book3s64/hash_tlb.c b/arch/powerpc/mm/book3s64/hash_tlb.c
+> index 4a70d8dd39cd..2242d022b620 100644
+> --- a/arch/powerpc/mm/book3s64/hash_tlb.c
+> +++ b/arch/powerpc/mm/book3s64/hash_tlb.c
+> @@ -196,7 +196,7 @@ void __flush_hash_table_range(struct mm_struct *mm, unsigned long start,
+>         int hugepage_shift;
+>         unsigned long flags;
+>
+> -       start = _ALIGN_DOWN(start, PAGE_SIZE);
+> +       start = ALIGN_DOWN(start, PAGE_SIZE);
+>         end = _ALIGN_UP(end, PAGE_SIZE);
+>
+>         BUG_ON(!mm->pgd);
+> @@ -238,7 +238,7 @@ void flush_tlb_pmd_range(struct mm_struct *mm, pmd_t *pmd, unsigned long addr)
+>         pte_t *start_pte;
+>         unsigned long flags;
+>
+> -       addr = _ALIGN_DOWN(addr, PMD_SIZE);
+> +       addr = ALIGN_DOWN(addr, PMD_SIZE);
+>         /*
+>          * Note: Normally, we should only ever use a batch within a
+>          * PTE locked section. This violates the rule, but will work
+> diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
+> index 4002ced3596f..c7ce4ec5060e 100644
+> --- a/arch/powerpc/mm/init_64.c
+> +++ b/arch/powerpc/mm/init_64.c
+> @@ -203,7 +203,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>         unsigned long page_size = 1 << mmu_psize_defs[mmu_vmemmap_psize].shift;
+>
+>         /* Align to the page size of the linear mapping. */
+> -       start = _ALIGN_DOWN(start, page_size);
+> +       start = ALIGN_DOWN(start, page_size);
+>
+>         pr_debug("vmemmap_populate %lx..%lx, node %d\n", start, end, node);
+>
+> @@ -292,7 +292,7 @@ void __ref vmemmap_free(unsigned long start, unsigned long end,
+>         unsigned long alt_start = ~0, alt_end = ~0;
+>         unsigned long base_pfn;
+>
+> -       start = _ALIGN_DOWN(start, page_size);
+> +       start = ALIGN_DOWN(start, page_size);
+>         if (altmap) {
+>                 alt_start = altmap->base_pfn;
+>                 alt_end = altmap->base_pfn + altmap->reserve +
+> diff --git a/arch/powerpc/platforms/powernv/opal-fadump.c b/arch/powerpc/platforms/powernv/opal-fadump.c
+> index d361d37d975f..9a360ced663b 100644
+> --- a/arch/powerpc/platforms/powernv/opal-fadump.c
+> +++ b/arch/powerpc/platforms/powernv/opal-fadump.c
+> @@ -671,7 +671,7 @@ void __init opal_fadump_dt_scan(struct fw_dump *fadump_conf, u64 node)
+>          * Firmware supports 32-bit field for size. Align it to PAGE_SIZE
+>          * and request firmware to copy multiple kernel boot memory regions.
+>          */
+> -       fadump_conf->max_copy_size = _ALIGN_DOWN(U32_MAX, PAGE_SIZE);
+> +       fadump_conf->max_copy_size = ALIGN_DOWN(U32_MAX, PAGE_SIZE);
+>
+>         /*
+>          * Check if dump has been initiated on last reboot.
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 57d3a6af1d52..276b011cd45d 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -264,7 +264,7 @@ static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
+>                 if (!r->parent || !pnv_pci_is_m64(phb, r))
+>                         continue;
+>
+> -               start = _ALIGN_DOWN(r->start - base, sgsz);
+> +               start = ALIGN_DOWN(r->start - base, sgsz);
+>                 end = _ALIGN_UP(r->end - base, sgsz);
+>                 for (segno = start / sgsz; segno < end / sgsz; segno++) {
+>                         if (pe_bitmap)
+> diff --git a/arch/powerpc/platforms/ps3/mm.c b/arch/powerpc/platforms/ps3/mm.c
+> index 423be34f0f5f..71ed37f7f475 100644
+> --- a/arch/powerpc/platforms/ps3/mm.c
+> +++ b/arch/powerpc/platforms/ps3/mm.c
+> @@ -263,7 +263,7 @@ static int ps3_mm_region_create(struct mem_region *r, unsigned long size)
+>         int result;
+>         u64 muid;
+>
+> -       r->size = _ALIGN_DOWN(size, 1 << PAGE_SHIFT_16M);
+> +       r->size = ALIGN_DOWN(size, 1 << PAGE_SHIFT_16M);
+>
+>         DBG("%s:%d requested  %lxh\n", __func__, __LINE__, size);
+>         DBG("%s:%d actual     %llxh\n", __func__, __LINE__, r->size);
+> @@ -394,7 +394,7 @@ static struct dma_chunk * dma_find_chunk(struct ps3_dma_region *r,
+>         unsigned long bus_addr, unsigned long len)
+>  {
+>         struct dma_chunk *c;
+> -       unsigned long aligned_bus = _ALIGN_DOWN(bus_addr, 1 << r->page_size);
+> +       unsigned long aligned_bus = ALIGN_DOWN(bus_addr, 1 << r->page_size);
+>         unsigned long aligned_len = _ALIGN_UP(len+bus_addr-aligned_bus,
+>                                               1 << r->page_size);
+>
+> @@ -423,7 +423,7 @@ static struct dma_chunk *dma_find_chunk_lpar(struct ps3_dma_region *r,
+>         unsigned long lpar_addr, unsigned long len)
+>  {
+>         struct dma_chunk *c;
+> -       unsigned long aligned_lpar = _ALIGN_DOWN(lpar_addr, 1 << r->page_size);
+> +       unsigned long aligned_lpar = ALIGN_DOWN(lpar_addr, 1 << r->page_size);
+>         unsigned long aligned_len = _ALIGN_UP(len + lpar_addr - aligned_lpar,
+>                                               1 << r->page_size);
+>
+> @@ -775,7 +775,7 @@ static int dma_sb_map_area(struct ps3_dma_region *r, unsigned long virt_addr,
+>         struct dma_chunk *c;
+>         unsigned long phys_addr = is_kernel_addr(virt_addr) ? __pa(virt_addr)
+>                 : virt_addr;
+> -       unsigned long aligned_phys = _ALIGN_DOWN(phys_addr, 1 << r->page_size);
+> +       unsigned long aligned_phys = ALIGN_DOWN(phys_addr, 1 << r->page_size);
+>         unsigned long aligned_len = _ALIGN_UP(len + phys_addr - aligned_phys,
+>                                               1 << r->page_size);
+>         *bus_addr = dma_sb_lpar_to_bus(r, ps3_mm_phys_to_lpar(phys_addr));
+> @@ -830,7 +830,7 @@ static int dma_ioc0_map_area(struct ps3_dma_region *r, unsigned long virt_addr,
+>         struct dma_chunk *c;
+>         unsigned long phys_addr = is_kernel_addr(virt_addr) ? __pa(virt_addr)
+>                 : virt_addr;
+> -       unsigned long aligned_phys = _ALIGN_DOWN(phys_addr, 1 << r->page_size);
+> +       unsigned long aligned_phys = ALIGN_DOWN(phys_addr, 1 << r->page_size);
+>         unsigned long aligned_len = _ALIGN_UP(len + phys_addr - aligned_phys,
+>                                               1 << r->page_size);
+>
+> @@ -889,7 +889,7 @@ static int dma_sb_unmap_area(struct ps3_dma_region *r, dma_addr_t bus_addr,
+>         c = dma_find_chunk(r, bus_addr, len);
+>
+>         if (!c) {
+> -               unsigned long aligned_bus = _ALIGN_DOWN(bus_addr,
+> +               unsigned long aligned_bus = ALIGN_DOWN(bus_addr,
+>                         1 << r->page_size);
+>                 unsigned long aligned_len = _ALIGN_UP(len + bus_addr
+>                         - aligned_bus, 1 << r->page_size);
+> @@ -926,7 +926,7 @@ static int dma_ioc0_unmap_area(struct ps3_dma_region *r,
+>         c = dma_find_chunk(r, bus_addr, len);
+>
+>         if (!c) {
+> -               unsigned long aligned_bus = _ALIGN_DOWN(bus_addr,
+> +               unsigned long aligned_bus = ALIGN_DOWN(bus_addr,
+>                                                         1 << r->page_size);
+>                 unsigned long aligned_len = _ALIGN_UP(len + bus_addr
+>                                                       - aligned_bus,
+> diff --git a/arch/powerpc/platforms/pseries/rtas-fadump.c b/arch/powerpc/platforms/pseries/rtas-fadump.c
+> index 70c3013fdd07..81343908ed33 100644
+> --- a/arch/powerpc/platforms/pseries/rtas-fadump.c
+> +++ b/arch/powerpc/platforms/pseries/rtas-fadump.c
+> @@ -506,7 +506,7 @@ void __init rtas_fadump_dt_scan(struct fw_dump *fadump_conf, u64 node)
+>         fadump_conf->fadump_supported   = 1;
+>
+>         /* Firmware supports 64-bit value for size, align it to pagesize. */
+> -       fadump_conf->max_copy_size = _ALIGN_DOWN(U64_MAX, PAGE_SIZE);
+> +       fadump_conf->max_copy_size = ALIGN_DOWN(U64_MAX, PAGE_SIZE);
+>
+>         /*
+>          * The 'ibm,kernel-dump' rtas node is present only if there is
+> --
+> 2.25.0
+>
