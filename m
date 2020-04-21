@@ -2,93 +2,71 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19489C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13B7C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E70CD206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587480219;
-	bh=5e3Om0tNq5AkjbiSTQR8U7jUZzgzErPBUb1379XOKSw=;
-	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
-	b=fZq9hmPIm5StjB44oJE01ELL4pYFiLrkdTe1fbj+ItRiAnj3Kk7lk5J6IG83Gjinh
-	 s+asvTSaOBz3DG3b4LzSEbTLDNjSVKGw+kgjm9+pV4m+Z39hXAR6QLh51B+I9D71r0
-	 Vxk6lhnkR6hJQvFoCfrUJe4/AihH1kMPpLMOelZ4=
+	by mail.kernel.org (Postfix) with ESMTP id C7C2420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgDUOnh (ORCPT
+        id S1729390AbgDUOoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:43:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52104 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 10:44:19 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:40162 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729257AbgDUOnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:43:35 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC497206A2;
-        Tue, 21 Apr 2020 14:43:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587480214;
-        bh=5e3Om0tNq5AkjbiSTQR8U7jUZzgzErPBUb1379XOKSw=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=ZSG5SzUn9vFXbtZ+C9VMvFYVgu4YyuOoDliCn6TS/Cz6F7+oxLJDxg5s5JJgBCNLk
-         8YZC2rCVpT7hOlSgGe25cevaZqbaJQnBscgywTE6WRSIo+fGVj2OpHX025f6qbKB9c
-         imvlx2FOW4JPEYO4MoLx+ezeqYoeHe1KIM6ReJek=
-Date:   Tue, 21 Apr 2020 15:43:31 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     tglx@linutronix.de, patches@opensource.cirrus.com, info@metux.net,
-        ckeepax@opensource.wolfsonmicro.com, allison@lohutok.net,
-        alsa-devel@alsa-project.org, kstewart@linuxfoundation.org,
-        perex@perex.cz, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        lgirdwood@gmail.com, tiwai@suse.com, linux-kernel@vger.kernel.org
-In-Reply-To: <1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com>
-Subject: Re: [PATCH] ASoC: wm8960: Fix wrong clock after suspend & resume
-Message-Id: <158748021184.7424.16056997508827972639.b4-ty@kernel.org>
+        id S1728337AbgDUOoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:44:18 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 10FFFFB05;
+        Tue, 21 Apr 2020 16:44:16 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 6sxK6Q_KX8VC; Tue, 21 Apr 2020 16:44:14 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 55E64400FB; Tue, 21 Apr 2020 16:44:14 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     "Rob Herring" <robh+dt@kernel.org>,
+        "Shawn Guo" <shawnguo@kernel.org>,
+        "Sascha Hauer" <s.hauer@pengutronix.de>,
+        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+        "Fabio Estevam" <festevam@gmail.com>,
+        "NXP Linux Team" <linux-imx@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        "Martin Kepplinger" <martink@posteo.de>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        "Abel Vesa" <abel.vesa@nxp.com>,
+        "Anson Huang" <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] arm64: dts: imx8mq-librem5-devkit: Use 0.9V for VDD_GPU
+Date:   Tue, 21 Apr 2020 16:44:12 +0200
+Message-Id: <cover.1587480093.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.26.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 19:28:45 +0800, Shengjiu Wang wrote:
-> After suspend & resume, wm8960_hw_params may be called when
-> bias_level is not SND_SOC_BIAS_ON, then wm8960_configure_clocking
-> is not called. But if sample rate is changed at that time, then
-> the output clock rate will be not correct.
-> 
-> So judgement of bias_level is SND_SOC_BIAS_ON in wm8960_hw_params
-> is not necessary and it causes above issue.
-> 
-> [...]
+According to the imx8mq data sheet running VDD_GPU at 0.9V is enough
+when not overclocking to 1GHz (which we currently don't do).
 
-Applied to
+changes from v2:
+ - rebase aginst Shawn's tree
+ - fix a warning for the typec connector
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
+Guido Günther (2):
+  arm64: dts: imx8mq-librem5-devkit: Use 0.9V for VDD_GPU
+  arm64: dts: Don't use underscore in node name
 
-Thanks!
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[1/1] ASoC: wm8960: Fix wrong clock after suspend & resume
-      commit: 1e060a453c8604311fb45ae2f84f67ed673329b4
+-- 
+2.26.1
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
