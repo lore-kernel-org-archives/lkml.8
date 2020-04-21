@@ -2,205 +2,96 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C1EC55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C26C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2138D206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19AE20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQnQ0MOZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UN3S42+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgDUSRw (ORCPT
+        id S1729263AbgDUSTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:17:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55772 "EHLO
+        Tue, 21 Apr 2020 14:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgDUSRv (ORCPT
+        with ESMTP id S1725870AbgDUSTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:17:51 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ABFAC0610D5;
-        Tue, 21 Apr 2020 11:17:51 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id d17so17560130wrg.11;
-        Tue, 21 Apr 2020 11:17:50 -0700 (PDT)
+        Tue, 21 Apr 2020 14:19:49 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03F0C0610D5;
+        Tue, 21 Apr 2020 11:19:49 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id o127so16039367iof.0;
+        Tue, 21 Apr 2020 11:19:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=d+6jESbCvom8boV1Iz569w6jKc+CILAkX582DGmlOlo=;
-        b=mQnQ0MOZb5HAjIp/13NpjEXuDIO7U9B4is6pfGQDxq3kJQmaqO0qZliXaA+crLKeiv
-         hZ3fyzWaKTi36Gji2yKwBR5Vuoh7wNGQKsSW2PGuaHEzamk3jATQ5Mt3rc0+ARve6/Ka
-         t2hiL07+7kcG0iuaoGdIG/QfV9bHL6Jc/LmjqRSWP4GdNMmv11FKpfmquznU0nbxGz91
-         4BYH4vGjLXZ5TXMWuE8L/jSK2LjiRTAYSzVAb8Rn8BdTFnMKWr/YoAcdUZXx/7bA8Ees
-         av41L8pcXPoQK52trQrU347Ym30hgRHNP1koZumWJRnO3DlgTwXFzI5dAN3ui8PL6Sze
-         ki/w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lxQpwQq8B/XSdgKzbh2ahosuLBgTHXKsqcO5uWxCwRw=;
+        b=UN3S42+kISuAL0JElfgUijnqMegdzpd3S5HIX6vcUNGFk8y3zllJ43MfIEkhQUCFic
+         Tku1lzpC75lZwS4Zyjp/0RTKrcuf3aHXJiTmWbrRzyYhJbISG2In4Df9UmYUAdmBmRPm
+         OAPl0zSXkxLKlJ9+PKLU18qkkCYvDRU2jOlRHZSt3OwlWsfCG1Pa9o+PEF4MkrvWxRIW
+         fQXPeaObIL65tZjiQhJ1Cc6y6I1NIHRyyrowBpi2Ao/6PXU7XTTwdRSRBRZM17F4DdWB
+         UJJzJGwVFkmFZrxWklU5D5kNM24V+xUdPaOmL+IOYvr6a6DTQzHHQiTX1mF8n8YjwS8X
+         8lnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d+6jESbCvom8boV1Iz569w6jKc+CILAkX582DGmlOlo=;
-        b=fqVB9IeQwechWtHUUsv1L+rwbqWlT2vgJwUODl8S6a6A/JgMlyySBDDi0E2g+eWQXe
-         0AIvQvQwhA9SkoyvYqVPIuhue97zRteUvI8ABJMKeE6R6w4xjcf1WvJzgS5QosBfQT8U
-         GSofYYbuIZA7TmGrd1U4ignJrOYWW23/+7sROhDAagQWlnYFUqtJh4PKavALI+1P1MPr
-         dDMS3B5G4wKCE+ocj3F5r6tnb2GNiLQWCLQvFlxtzxM6s+c+cYs5Mr1Dy3i22i22Ght0
-         o8juYwZuYUMB4PzySs0V93nJ4QSiDWP+cOUynJYl+jPIRTsBUGjs8TC3OpQuuNKTvtpu
-         mXKg==
-X-Gm-Message-State: AGi0PuYyThQ5ZUpDuYEBQWiq9ZVMASQYsNcpV8m70OL7TGXnz2JIUB0d
-        Wkxfy5416j2LHBA9Fy5oAXmGn4FJ
-X-Google-Smtp-Source: APiQypIxTRtDUCBScSJRt+j/IVmGwz+hgVch8UpwbARQGIcr29Ekhok/1Q6jgx61gq3YOJYzbqHd4w==
-X-Received: by 2002:adf:decb:: with SMTP id i11mr24292487wrn.140.1587493068988;
-        Tue, 21 Apr 2020 11:17:48 -0700 (PDT)
-Received: from ?IPv6:2a02:810d:340:2e50:b4a9:f772:3340:fbf9? ([2a02:810d:340:2e50:b4a9:f772:3340:fbf9])
-        by smtp.gmail.com with ESMTPSA id p5sm5580060wrg.49.2020.04.21.11.17.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 11:17:48 -0700 (PDT)
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
- PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org
-References: <cover.1586939718.git.hns@goldelico.com>
- <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
- <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
- <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
- <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
- <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
- <20200420073842.nx4xb3zqvu23arkc@gilmour.lan>
- <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com>
- <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
-From:   Philipp Rossak <embed3d@gmail.com>
-Message-ID: <5749af21-e707-c998-c83b-50c48867c9e8@gmail.com>
-Date:   Tue, 21 Apr 2020 18:42:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lxQpwQq8B/XSdgKzbh2ahosuLBgTHXKsqcO5uWxCwRw=;
+        b=LEjej7dp2zAlVIcuRWVBZmlL/tQxmrYATpyCNVuXpntbRt5mPTHDc8zy/Sg0cv+ptv
+         tfnfk1xHv5z1zz25HdH2L6Vi0J4DDFMr9rF9bOfHKHfU9jNg+pkImcyFXVilZHn8De5x
+         LcZN/zKHUid2o/7KcuV73unRfZkBSOMa/r6U2Tk37ZBudtdXTmaxdS7/cCtyXXAj1Lox
+         FLGG4AfW/0JJVJ+9wjaGK1QZwdwbZyxzehYKgDItrpGlBO6qLK4Zmo41Bm54BMpNbx6/
+         ovaFwoBelXHai87DjGQwFCjgEcuRDHjVimYSTfG1t1S2TExdn+Ef319w7fZqM7AAX+bU
+         FI/Q==
+X-Gm-Message-State: AGi0PuZrKiWKqU/nVoDEpDSxapadFVu7rmYH3YyP86SbTxQi+TwurJB4
+        mTocE3eAc2u33x5alXUgFKQfFoKAcj00gdxm9/g=
+X-Google-Smtp-Source: APiQypIQH0s4O6zPIpOdsnG/1oem9N6RoPEneIiwVs6RC+JfDHwt2zPz+dHBF1bl2/OdqYNtiSGxbvV6KNK7M6VFA+s=
+X-Received: by 2002:a05:6638:4e:: with SMTP id a14mr20610719jap.108.1587493189031;
+ Tue, 21 Apr 2020 11:19:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200420190853.45614-1-kdasu.kdev@gmail.com> <20200420190853.45614-10-kdasu.kdev@gmail.com>
+ <20200421125025.GB4540@sirena.org.uk> <CAC=U0a35yfnuXN1CXV7YnHCff-Ba+7UZ2dd0rFVFSNuA=O98VQ@mail.gmail.com>
+ <20200421145927.GC4540@sirena.org.uk>
+In-Reply-To: <20200421145927.GC4540@sirena.org.uk>
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+Date:   Tue, 21 Apr 2020 14:19:36 -0400
+Message-ID: <CAC=U0a1oMy-RLdCTJ9=Wkn4o8ET8USL4euU-a6meaCJexRgzTA@mail.gmail.com>
+Subject: Re: [Patch v3 9/9] spi: bcm-qspi: MSPI_SPCR0_MSB MSTR bit exists only
+ on legacy controllers
+To:     Mark Brown <broonie@kernel.org>
+Cc:     bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 21, 2020 at 10:59 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Apr 21, 2020 at 10:53:57AM -0400, Kamal Dasu wrote:
+> > On Tue, Apr 21, 2020 at 8:50 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> > > If this is a fix it should have been near the start of the series before
+> > > any new features to make sure that it can be applied cleanly as a fix.
+>
+> > Yes it could can be after [Patch v3 3/9] spi: bcm-qspi: Handle lack of
+> > MSPI_REV offset
+>
+> That's not a fix though, that's adding support for new devices?
 
-On 21.04.20 13:21, Maxime Ripard wrote:
-> Hi,
-> 
-> On Tue, Apr 21, 2020 at 11:57:33AM +0200, Philipp Rossak wrote:
->> On 20.04.20 09:38, Maxime Ripard wrote:
->>> Hi,
->>>
->>> On Fri, Apr 17, 2020 at 02:09:06PM +0200, Philipp Rossak wrote:
->>>>>> I'm a bit skeptical on that one since it doesn't even list the
->>>>>> interrupts connected to the GPU that the binding mandates.
->>>>>
->>>>> I think he left it out for a future update.
->>>>> But best he comments himself.
->>>>
->>>> I'm currently working on those bindings. They are now 90% done, but they are
->>>> not finished till now. Currently there is some mainline support missing to
->>>> add the full binding. The A83T and also the A31/A31s have a GPU Power Off
->>>> Gating Register in the R_PRCM module, that is not supported right now in
->>>> Mainline. The Register need to be written when the GPU is powered on and
->>>> off.
->>>>
->>>> @Maxime: I totally agree on your point that a demo needs to be provided
->>>> before the related DTS patches should be provided. That's the reason why I
->>>> added the gpu placeholder patches.
->>>> Do you have an idea how a driver for the R_PRCM stuff can look like? I'm not
->>>> that experienced with the clock driver framework.
->>>
->>> It looks like a power-domain to me, so you'd rather plug that into the genpd
->>> framework.
->>
->> I had a look on genpd and I'm not really sure if that fits.
->>
->> It is basically some bit that verify that the clocks should be enabled or
->> disabled.
-> 
-> No, it can do much more than that. It's a framework to control the SoCs power
-> domains, so clocks might be a part of it, but most of the time it's going to be
-> about powering up a particular device.
-> 
-So I think I've found now the right piece of documentation and a driver 
-that implements something similar [1].
+Since its dependent on knowing if the MSPI_REV register exists on a
+given SoC and path 3/9, maybe I can remove the fixes tag for that
+commit.
 
-So I will write a similar driver like linked above that only sets the 
-right bits for A83T and A31/A31s.
-Do you think this is the right approach?
+Kamal
 
->> I think this is better placed somewhere in the clocking framework.
->> I see there more similarities to the gating stuff.
->> Do you think it is suitable to implement it like the clock gating?
-> 
-> I'm really not sure what makes you think that this should be modelled as a
-> clock?
-> 
-
-Looks like I looked in the wrong place and got some information that are 
-not suitable for this.
-
->>>> The big question is right now how to proceed with the A83T and A31s patches.
->>>> I see there three options, which one do you prefer?:
->>>>
->>>> 1. Provide now placeholder patches and send new patches, if everything is
->>>> clear and other things are mainlined
->>>> 2. Provide now patches as complete as possible and provide later patches to
->>>> complete them when the R_PRCM things are mainlined
->>>> 3. Leave them out, till the related work is mainlined and the bindings are
->>>> final.
->>>
->>> Like I said, the DT *has* to be backward-compatible, so for any DT patch that
->>> you are asking to be merged, you should be prepared to support it indefinitely
->>> and be able to run from it, and you won't be able to change the bindings later
->>> on.
->>
->> I agree on your points. But is this also suitable to drivers that are
->> currently off tree and might be merged in one or two years?
-> 
-> This is what we done for the Mali. The devicetree binding was first done for the
-> out-of-tree driver, and then lima/panfrost reused it.
-> 
-> The key thing here is to have enough confidence about how the hardware works so
-> that you can accurately describe it.
-
-Ok thanks! So I will resend my patches when the work got a more mature 
-state and we know enough about the Hardware.
-
-Cheers,
-Philipp
-
-
-[1]: 
-https://elixir.bootlin.com/linux/latest/source/drivers/soc/amlogic/meson-gx-pwrc-vpu.c
+Kamal
