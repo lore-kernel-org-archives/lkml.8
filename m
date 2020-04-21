@@ -2,125 +2,396 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACFAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2078EC55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85EAC2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB77D206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:06:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="goAporC6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgDULGA (ORCPT
+        id S1728675AbgDULGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:06:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56156 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728632AbgDULF4 (ORCPT
+        Tue, 21 Apr 2020 07:06:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728661AbgDULGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:05:56 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LB2xR8056515
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 07:05:55 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghmc3kjn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 07:05:55 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Tue, 21 Apr 2020 12:05:09 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 Apr 2020 12:05:06 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03LB4g8665929586
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 11:04:42 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 754CEA405B;
-        Tue, 21 Apr 2020 11:05:49 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34E50A4054;
-        Tue, 21 Apr 2020 11:05:49 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.42.232])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Apr 2020 11:05:49 +0000 (GMT)
-Subject: Re: [PATCH AUTOSEL 5.4 71/78] ocxl: Add PCI hotplug dependency to
- Kconfig
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20200418144047.9013-1-sashal@kernel.org>
- <20200418144047.9013-71-sashal@kernel.org>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Tue, 21 Apr 2020 13:05:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 07:06:00 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5E3C061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:06:00 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id q18so3070994pgm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:06:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=z6/8C4oa9QlfkP6T/TF0bK1AUsLOdimzyYALyY4eY0M=;
+        b=goAporC6/Dil0Et77TDr7GRh+FrIXEoN1OWLehzLNZQ9KmBbj0XuFzaeVGtcjIZPRe
+         upEXXhrIiHjADUNeXquZW2pCvPUUDNx14BRbhDHoehW0Ma6hvrAhVMCZzZPAC1+NmQ2B
+         JlzCvo0klC2W2GSPbOFnxmW+FqQmAngxczZ9c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=z6/8C4oa9QlfkP6T/TF0bK1AUsLOdimzyYALyY4eY0M=;
+        b=DpJfGoV/9XlmBRBqehku8iGtOyGDI5BmjQwvt7FiMx5ujdGeIcMlX2cCelgm9E/ZRF
+         c3uYrqqi0XCPypnH0utObt2L5QW1WOgMJOC1I6jX8HLrytvxEEfvbKQaKfT/glpgYuzk
+         eIY5o4bONgqtdR6iG89M7991bD0ywYYWy25mtCGG/4Rf5OnJ3863suqyL3uNaHlG1r4g
+         mUz+pZukFzFk4PX/Hp6bLP7OdYhogipevGToZAREMHy8Nqyqgbo1nDI4ddLjE24IjUEs
+         fuzNy/+neGAqt2VfLfA+1ClcCdSzB9YM8pySawDvrU4StDGQLJIMMlkiuT0En6En0rS9
+         2nDg==
+X-Gm-Message-State: AGi0PuaHUMgU7FMbsGQ56xnv8ZVMZfB0+u1sSc43pl/Z7eJCBWymnxKN
+        rXgQKoXhkb+M6zNKCj+pA7blNTWd9Q8=
+X-Google-Smtp-Source: APiQypKXU6B+lNxTQ6z+mmlmD+azeUp0c6GJsncfRgZv3gPxv15vR/XFlyx5vIh1kCmNOHZG4GtG/A==
+X-Received: by 2002:a63:5d7:: with SMTP id 206mr19924816pgf.136.1587467159847;
+        Tue, 21 Apr 2020 04:05:59 -0700 (PDT)
+Received: from localhost ([2401:fa00:9:14:1105:3e8a:838d:e326])
+        by smtp.gmail.com with ESMTPSA id f3sm2209809pfd.144.2020.04.21.04.05.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 04:05:59 -0700 (PDT)
+From:   Evan Benn <evanbenn@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     xingyu.chen@amlogic.com, jwerner@chromium.org,
+        Evan Benn <evanbenn@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
+Subject: [PATCH v2 2/2] watchdog: Add new arm_smc_wdt watchdog driver
+Date:   Tue, 21 Apr 2020 21:05:20 +1000
+Message-Id: <20200421210403.v2.2.Ia92bb4d4ce84bcefeba1d00aaa1c1e919b6164ef@changeid>
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+In-Reply-To: <20200421110520.197930-1-evanbenn@chromium.org>
+References: <20200421110520.197930-1-evanbenn@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200418144047.9013-71-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042111-4275-0000-0000-000003C3E50B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042111-4276-0000-0000-000038D96986
-Message-Id: <efc55677-f8b9-791a-1c02-8c636ac6600e@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-21_04:2020-04-20,2020-04-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- phishscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999 malwarescore=0
- clxscore=1031 mlxscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004210084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Julius Werner <jwerner@chromium.org>
 
+This patch adds a watchdog driver that can be used on ARM systems
+with the appropriate watchdog implemented in Secure Monitor firmware.
+The driver communicates with firmware via a Secure Monitor Call.
+This may be useful for platforms using TrustZone that want
+the Secure Monitor firmware to have the final control over the watchdog.
 
-Le 18/04/2020 à 16:40, Sasha Levin a écrit :
-> From: Frederic Barrat <fbarrat@linux.ibm.com>
-> 
-> [ Upstream commit 49ce94b8677c7d7a15c4d7cbbb9ff1cd8387827b ]
+This is implemented on mt8173 chromebook devices oak, elm and hana in
+arm trusted firmware file plat/mediatek/mt8173/drivers/wdt/wdt.c.
 
-This shouldn't be backported to stable.
+Signed-off-by: Julius Werner <jwerner@chromium.org>
+Signed-off-by: Evan Benn <evanbenn@chromium.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-   Fred
+---
 
+Changes in v4:
+- Get smc-id from of property
+- Return a1 instead of a0 in timeleft
 
-> The PCI hotplug framework is used to update the devices when a new
-> image is written to the FPGA.
-> 
-> Reviewed-by: Alastair D'Silva <alastair@d-silva.org>
-> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-> Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> Link: https://lore.kernel.org/r/20191121134918.7155-12-fbarrat@linux.ibm.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   drivers/misc/ocxl/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/misc/ocxl/Kconfig b/drivers/misc/ocxl/Kconfig
-> index 1916fa65f2f2a..2d2266c1439ef 100644
-> --- a/drivers/misc/ocxl/Kconfig
-> +++ b/drivers/misc/ocxl/Kconfig
-> @@ -11,6 +11,7 @@ config OCXL
->   	tristate "OpenCAPI coherent accelerator support"
->   	depends on PPC_POWERNV && PCI && EEH
->   	select OCXL_BASE
-> +	select HOTPLUG_PCI_POWERNV
->   	default m
->   	help
->   	  Select this option to enable the ocxl driver for Open
-> 
+Changes in v3:
+- Add optional get_timeleft op
+- change name to arm_smc_wdt
+
+Changes in v2:
+- use watchdog_stop_on_reboot
+- use watchdog_stop_on_unregister
+- use devm_watchdog_register_device
+- remove smcwd_shutdown, smcwd_remove
+- change error codes
+
+ MAINTAINERS                    |   1 +
+ arch/arm64/configs/defconfig   |   1 +
+ drivers/watchdog/Kconfig       |  13 +++
+ drivers/watchdog/Makefile      |   1 +
+ drivers/watchdog/arm_smc_wdt.c | 194 +++++++++++++++++++++++++++++++++
+ 5 files changed, 210 insertions(+)
+ create mode 100644 drivers/watchdog/arm_smc_wdt.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0f2b39767bfa9..2b782bbff200a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1462,6 +1462,7 @@ M:	Julius Werner <jwerner@chromium.org>
+ R:	Evan Benn <evanbenn@chromium.org>
+ S:	Maintained
+ F:	devicetree/bindings/watchdog/arm-smc-wdt.yaml
++F:	drivers/watchdog/arm_smc_wdt.c
+ 
+ ARM SMMU DRIVERS
+ M:	Will Deacon <will@kernel.org>
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 24e534d850454..0619df80f7575 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -513,6 +513,7 @@ CONFIG_UNIPHIER_THERMAL=y
+ CONFIG_WATCHDOG=y
+ CONFIG_ARM_SP805_WATCHDOG=y
+ CONFIG_ARM_SBSA_WATCHDOG=y
++CONFIG_ARM_SMC_WATCHDOG=y
+ CONFIG_S3C2410_WATCHDOG=y
+ CONFIG_DW_WATCHDOG=y
+ CONFIG_SUNXI_WATCHDOG=m
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 0663c604bd642..c440b576d23bf 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -867,6 +867,19 @@ config DIGICOLOR_WATCHDOG
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called digicolor_wdt.
+ 
++config ARM_SMC_WATCHDOG
++	tristate "ARM Secure Monitor Call based watchdog support"
++	depends on ARM || ARM64
++	depends on OF
++	depends on HAVE_ARM_SMCCC
++	select WATCHDOG_CORE
++	help
++	  Say Y here to include support for a watchdog timer
++	  implemented by the EL3 Secure Monitor on ARM platforms.
++	  Requires firmware support.
++	  To compile this driver as a module, choose M here: the
++	  module will be called arm_smc_wdt.
++
+ config LPC18XX_WATCHDOG
+ 	tristate "LPC18xx/43xx Watchdog"
+ 	depends on ARCH_LPC18XX || COMPILE_TEST
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index 6de2e4ceef190..97bed1d3d97cb 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -94,6 +94,7 @@ obj-$(CONFIG_UNIPHIER_WATCHDOG) += uniphier_wdt.o
+ obj-$(CONFIG_RTD119X_WATCHDOG) += rtd119x_wdt.o
+ obj-$(CONFIG_SPRD_WATCHDOG) += sprd_wdt.o
+ obj-$(CONFIG_PM8916_WATCHDOG) += pm8916_wdt.o
++obj-$(CONFIG_ARM_SMC_WATCHDOG) += arm_smc_wdt.o
+ 
+ # X86 (i386 + ia64 + x86_64) Architecture
+ obj-$(CONFIG_ACQUIRE_WDT) += acquirewdt.o
+diff --git a/drivers/watchdog/arm_smc_wdt.c b/drivers/watchdog/arm_smc_wdt.c
+new file mode 100644
+index 0000000000000..29d2573b2ca11
+--- /dev/null
++++ b/drivers/watchdog/arm_smc_wdt.c
+@@ -0,0 +1,194 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * ARM Secure Monitor Call watchdog driver
++ *
++ * Copyright 2020 Google LLC.
++ * Julius Werner <jwerner@chromium.org>
++ * Based on mtk_wdt.c
++ */
++
++#include <linux/arm-smccc.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/types.h>
++#include <linux/watchdog.h>
++#include <uapi/linux/psci.h>
++
++#define DRV_NAME		"arm_smc_wdt"
++#define DRV_VERSION		"1.0"
++
++#define get_smc_func_id(wdd) (*(u32 *)watchdog_get_drvdata(wdd))
++enum smcwd_call {
++	SMCWD_INIT		= 0,
++	SMCWD_SET_TIMEOUT	= 1,
++	SMCWD_ENABLE		= 2,
++	SMCWD_PET		= 3,
++	SMCWD_GET_TIMELEFT	= 4,
++};
++
++static bool nowayout = WATCHDOG_NOWAYOUT;
++static unsigned int timeout;
++
++static int smcwd_call(unsigned long smc_func_id, enum smcwd_call call,
++		      unsigned long arg, struct arm_smccc_res *res)
++{
++	struct arm_smccc_res local_res;
++
++	if (!res)
++		res = &local_res;
++
++	arm_smccc_smc(smc_func_id, call, arg, 0, 0, 0, 0, 0, res);
++
++	if (res->a0 == PSCI_RET_NOT_SUPPORTED)
++		return -ENODEV;
++	if (res->a0 == PSCI_RET_INVALID_PARAMS)
++		return -EINVAL;
++	if (res->a0 != PSCI_RET_SUCCESS)
++		return -EIO;
++	return 0;
++}
++
++static int smcwd_ping(struct watchdog_device *wdd)
++{
++	return smcwd_call(get_smc_func_id(wdd), SMCWD_PET, 0, NULL);
++}
++
++static unsigned int smcwd_get_timeleft(struct watchdog_device *wdd)
++{
++	struct arm_smccc_res res;
++
++	smcwd_call(get_smc_func_id(wdd), SMCWD_GET_TIMELEFT, 0, &res);
++	return res.a1;
++}
++
++static int smcwd_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
++{
++	int res;
++
++	res = smcwd_call(get_smc_func_id(wdd), SMCWD_SET_TIMEOUT, timeout,
++			 NULL);
++	if (!res)
++		wdd->timeout = timeout;
++	return res;
++}
++
++static int smcwd_stop(struct watchdog_device *wdd)
++{
++	return smcwd_call(get_smc_func_id(wdd), SMCWD_ENABLE, 0, NULL);
++}
++
++static int smcwd_start(struct watchdog_device *wdd)
++{
++	return smcwd_call(get_smc_func_id(wdd), SMCWD_ENABLE, 1, NULL);
++}
++
++static const struct watchdog_info smcwd_info = {
++	.identity	= DRV_NAME,
++	.options	= WDIOF_SETTIMEOUT |
++			  WDIOF_KEEPALIVEPING |
++			  WDIOF_MAGICCLOSE,
++};
++
++static const struct watchdog_ops smcwd_ops = {
++	.start		= smcwd_start,
++	.stop		= smcwd_stop,
++	.ping		= smcwd_ping,
++	.set_timeout	= smcwd_set_timeout,
++};
++
++static const struct watchdog_ops smcwd_timeleft_ops = {
++	.start		= smcwd_start,
++	.stop		= smcwd_stop,
++	.ping		= smcwd_ping,
++	.set_timeout	= smcwd_set_timeout,
++	.get_timeleft	= smcwd_get_timeleft,
++};
++
++static int smcwd_probe(struct platform_device *pdev)
++{
++	struct watchdog_device *wdd;
++	int err;
++	struct arm_smccc_res res;
++	u32 *smc_func_id;
++
++	smc_func_id =
++		devm_kzalloc(&pdev->dev, sizeof(*smc_func_id), GFP_KERNEL);
++	if (!smc_func_id)
++		return -ENOMEM;
++
++	err = of_property_read_u32(pdev->dev.of_node, "arm,smc-id",
++				   smc_func_id);
++	if (err < 0)
++		return err;
++
++	err = smcwd_call(*smc_func_id, SMCWD_INIT, 0, &res);
++	if (err < 0)
++		return err;
++
++	wdd = devm_kzalloc(&pdev->dev, sizeof(*wdd), GFP_KERNEL);
++	if (!wdd)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, wdd);
++	watchdog_set_drvdata(wdd, smc_func_id);
++
++	wdd->info = &smcwd_info;
++	/* get_timeleft is optional */
++	if (smcwd_call(*smc_func_id, SMCWD_GET_TIMELEFT, 0, NULL))
++		wdd->ops = &smcwd_ops;
++	else
++		wdd->ops = &smcwd_timeleft_ops;
++	wdd->timeout = res.a2;
++	wdd->max_timeout = res.a2;
++	wdd->min_timeout = res.a1;
++	wdd->parent = &pdev->dev;
++
++	watchdog_stop_on_reboot(wdd);
++	watchdog_stop_on_unregister(wdd);
++	watchdog_set_nowayout(wdd, nowayout);
++	watchdog_init_timeout(wdd, timeout, &pdev->dev);
++	err = smcwd_set_timeout(wdd, wdd->timeout);
++	if (err)
++		return err;
++
++	err = devm_watchdog_register_device(&pdev->dev, wdd);
++	if (err)
++		return err;
++
++	dev_info(&pdev->dev,
++		 "Watchdog registered (timeout=%d sec, nowayout=%d)\n",
++		 wdd->timeout, nowayout);
++
++	return 0;
++}
++
++static const struct of_device_id smcwd_dt_ids[] = {
++	{ .compatible = "mediatek,mt8173-smc-wdt" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, smcwd_dt_ids);
++
++static struct platform_driver smcwd_driver = {
++	.probe		= smcwd_probe,
++	.driver		= {
++		.name		= DRV_NAME,
++		.of_match_table	= smcwd_dt_ids,
++	},
++};
++
++module_platform_driver(smcwd_driver);
++
++module_param(timeout, uint, 0);
++MODULE_PARM_DESC(timeout, "Watchdog heartbeat in seconds");
++
++module_param(nowayout, bool, 0);
++MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
++			__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Julius Werner <jwerner@chromium.org>");
++MODULE_DESCRIPTION("ARM Secure Monitor Call Watchdog Driver");
++MODULE_VERSION(DRV_VERSION);
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
 
