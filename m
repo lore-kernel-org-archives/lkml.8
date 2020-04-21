@@ -2,64 +2,95 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A064C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40730C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2AD206F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF4B2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgDUDmz (ORCPT
+        id S1728275AbgDUDoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33570 "EHLO
+        Mon, 20 Apr 2020 23:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbgDUDmz (ORCPT
+        with ESMTP id S1727848AbgDUDoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:42:55 -0400
-X-Greylist: delayed 3185 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 20 Apr 2020 20:42:55 PDT
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13770C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 20:42:55 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQjo9-007Hot-Ua; Tue, 21 Apr 2020 03:42:50 +0000
-Date:   Tue, 21 Apr 2020 04:42:49 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, glider@google.com,
-        adobriyan@gmail.com, linux-kernel@vger.kernel.org,
-        sunhaoyl@outlook.com
-Subject: Re: [PATCH] fs/binfmt_elf.c: allocate initialized memory in
- fill_thread_core_info()
-Message-ID: <20200421034249.GB23230@ZenIV.linux.org.uk>
-References: <20200419100848.63472-1-glider@google.com>
- <20200420153352.6682533e794f591dae7aafbc@linux-foundation.org>
- <202004201540.01C8F82B@keescook>
+        Mon, 20 Apr 2020 23:44:08 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD0A0C061A0E;
+        Mon, 20 Apr 2020 20:44:08 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 499842A1019
+Message-ID: <b175a589070b7f1fad8b7c2eecff2fc816a3ccf0.camel@collabora.com>
+Subject: Re: [PATCH] cedrus: Drop unneeded CONFIG_OF dependency
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>,
+        Maxime Ripard <mripard@kernel.org>
+Date:   Tue, 21 Apr 2020 00:43:59 -0300
+In-Reply-To: <20200420152941.GA610656@aptenodytes>
+References: <20200402194653.13535-1-ezequiel@collabora.com>
+         <20200403082206.GA626942@aptenodytes>
+         <a36a825bc048821b4b7088feea71bd31e9e17211.camel@collabora.com>
+         <20200420152941.GA610656@aptenodytes>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202004201540.01C8F82B@keescook>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 03:41:40PM -0700, Kees Cook wrote:
-> On Mon, Apr 20, 2020 at 03:33:52PM -0700, Andrew Morton wrote:
-> > On Sun, 19 Apr 2020 12:08:48 +0200 glider@google.com wrote:
-> > 
-> > > KMSAN reported uninitialized data being written to disk when dumping
-> > > core. As a result, several kilobytes of kmalloc memory may be written to
-> > > the core file and then read by a non-privileged user.
-> 
-> Ewww. That's been there for 12 years. Did something change in
-> regset_size() or regset->get()? Do you know what leaves the hole?
+Hello Paul,
 
-Not lately and I would also like to hear the details; which regset it is?
-Should be reasonably easy to find - just memset() the damn thing to something
-recognizable, do whatever triggers that KMSAN report and look at that
-resulting coredump.
+On Mon, 2020-04-20 at 17:29 +0200, Paul Kocialkowski wrote:
+> Hi Ezequiel,
+> 
+> On Fri 03 Apr 20, 09:21, Ezequiel Garcia wrote:
+> > On Fri, 2020-04-03 at 10:22 +0200, Paul Kocialkowski wrote:
+> > > Hi Ezequiel,
+> > > 
+> > > On Thu 02 Apr 20, 16:46, Ezequiel Garcia wrote:
+> > > > The driver is perfectly capable of being built without CONFIG_OF.
+> > > > Remove this dependency, which is useful for compile-only tests.
+> > > 
+> > > Thanks for the patch!
+> > > 
+> > > Alas, the driver won't do anything useful without OF enabled, so it seems
+> > > useful to keep that dependency.
+> > 
+> > I'm not convinced about this argument, I like to have
+> > dependencies on things the driver needs to compile
+> > (except the machine option, see below).
+> 
+> Is there a general kernel-wide policy about that?
+> 
+
+I don't think there is.
+
+> I must admit that I never really understood if Kconfig depends are supposed to
+> strictly reflect build dependencies or dependencies that must reasonably be
+> expected for the driver to be useful. The arch dependency (which is farily
+> common) seems to suggest the latter.
+> 
+
+Indeed, it's a good point. Just forget this patch :-)
+
+As a note, some drivers use something like
+(ARCH_FOO && OF) || COMPILE_TEST to allow compile
+testing in the absence of OF support, if that's
+something that you care for.
+
+I do think the ARCH_SUNXI dependency makes sense.
+
+Thanks,
+Ezequiel
 
