@@ -2,143 +2,645 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C15CC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBD3C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 148E3206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F34206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:52:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GrZhM+tC"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Ln1BPRnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgDUQwP (ORCPT
+        id S1728371AbgDUQwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
+        Tue, 21 Apr 2020 12:52:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725963AbgDUQwO (ORCPT
+        by vger.kernel.org with ESMTP id S1726067AbgDUQww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:52:14 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70817C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:52:14 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id b12so15694061ion.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:52:14 -0700 (PDT)
+        Tue, 21 Apr 2020 12:52:52 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BD8CC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:52:52 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id 71so12113073qtc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:52:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dlOb0J7u43lP1vjBfG9ZcRxUmvLKf3oV1hkoW2i8cGM=;
-        b=GrZhM+tCKzL1/Y+RU646etnWXZpICHRv95JyZbGoFtaynACb3kja9TbFXHwyfJ6clF
-         QK4TE5ORpEjlYwAaNMtCTaQ0Fr37EW91RCdPtfUjF7YZg6IS4r0yiYPxFv89oO1YsUEs
-         sfJQC2NVx1nMhCeABHLCYCQvnSG3v3zBKq2fDASijSPyWNRl4+se6mFV9bxORXgt3Dq4
-         lKa/m+X3XK47LUGuWzU7d+THc/bou5LPZ1n+5/fUZ/J+hzUQbaW6iaw5HYBHb3wr3lnk
-         bT+A/luGfcKzEKJA7Qqa8CPqBhFKmdtlDqcKlsSjrAnIu8srH0lXgRZ1T7RbFBjAw6fO
-         eGqQ==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=Hf0qsdTiM9UfcOZ4BXUtLxEaVrI01FBuVOfdi/a4sBs=;
+        b=Ln1BPRnvnUdDdK+/EsujKn32oA+guqj0QLyTtuLCiHpI1eWllYyyGZkI5ciKGfgLCJ
+         Vdj0xN1nQMxeIVVpjLhzgaW5tW0ayg+O4yYLn+j4Q18minxZku5OLBNSuUtR+6dQwINO
+         qJSMvNTDXhkNqN/V7gM7Ja05MU3RJgmSYM7vUvI00Eb5ndmoaTtaoPfkYk2VZvvhn+3o
+         1SzhtuaYIhSnZdAknrjQsE/tKRnGp7K3y5TWxY8PeFHr62DmopaVCC1oaqsJGUCx2p81
+         +Tyo75Xe8bNcEjxS3faBdL+rzbAIN9Y9H2+kyogFkHEK21XP14FsUmnw9rBmdZ2Q6CSQ
+         W0ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dlOb0J7u43lP1vjBfG9ZcRxUmvLKf3oV1hkoW2i8cGM=;
-        b=p6ZEepShOiPjktl5XCGEIMBUjqTEdk8fQNknYYfKJ3vmkGC/us+EbLqI+MpHTVxF6y
-         a7HmNtRLMHS5Vvku7JY9R3Z9+cF1ffDPQHzMtqkFgnY1U8dCbF6LKciTHg3CjyOgDIfG
-         JpMUMT8Td1p+O/EWDKaYEKoig/RQwNXZQCWwYtJ3fo4y5X0BM1+Gkd1H7bddAO5dnoJl
-         5jl2YliktUw37BbaODS8JjwgLrAZBcAsoPDTmWXqzjRw40eH1uWvdb+4bVAxXcYy4ZiG
-         tvXgNEfsZVsyfqVA5WifWE/qVnHbMOj7Gjjamdh+UKOMf4Qdpjus7zEoX0lhmpz8e99g
-         clbg==
-X-Gm-Message-State: AGi0PuYyaaEw27btv7Qp9MNJI/Ufhtv9Nr3878qd5HavWzR8EAWNpm69
-        Yz6Njy0RY6pQyM6tetm61v2E190so3C2ERqhRQilug==
-X-Google-Smtp-Source: APiQypI+utw7ltzeZh5aJ7/aORHVDbVXhkpIjaJ0I86IY9cM5PP2nsrE+DOOUQBRofXFDA/oNhPIXVRxmNA50ocvX5Q=
-X-Received: by 2002:a02:90cd:: with SMTP id c13mr20914233jag.83.1587487933216;
- Tue, 21 Apr 2020 09:52:13 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Hf0qsdTiM9UfcOZ4BXUtLxEaVrI01FBuVOfdi/a4sBs=;
+        b=tchTjbJ4h2mnegeHiM11txyRWAdlgrmK10A8yVOQ0Nl9tc5/BYzgtQGUzTK1ziMFVx
+         mbxABY38gfIGfHPq+LVnPbv29fBA9CeCZn8KkFhA13qx8ia0hM1pXm3wx33yGz7yq7f4
+         p6f5cN0Sf8ZTAJObUWtLSSCn7cRH5pQ7ff8QSuDccxOrMPQDMS3c4vd3R+WNYwv20Vb5
+         MGh+QK3pPfK/AVICEA75XAfjJQj5GrMTagIgU8C/vqrXeWOkC5zaF7KTIIUc1TjrKYZo
+         UjbJkrbbc7ID20dPR+9YlIJFYeNS1UCyhqy7W4SEVq54QrBU4EnECb999cvHnpiRaNyV
+         HKgQ==
+X-Gm-Message-State: AGi0PuYJg5+b0aqaAnGlSODBE4HAMwy6Yc++SObgj/99fSGvkAklRHDs
+        +ICDocAG4sNMo9C471+xj1NlyQdbMQwOdg==
+X-Google-Smtp-Source: APiQypKWp/huFvksbYjP30Z4uMqOvOHJqtePNQHOTqhosMK+O5L0W8szP6C/1rbQEsbd8ZMt3kEgzg==
+X-Received: by 2002:ac8:4686:: with SMTP id g6mr22135025qto.144.1587487970851;
+        Tue, 21 Apr 2020 09:52:50 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id v37sm2134843qtc.7.2020.04.21.09.52.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 09:52:50 -0700 (PDT)
+Subject: Re: [PATCH 4/9] drm/msm/a6xx: HFI v2 for A640 and A650
+To:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200420140313.7263-1-jonathan@marek.ca>
+ <20200420140313.7263-5-jonathan@marek.ca>
+ <20200421163009.GA13825@jcrouse1-lnx.qualcomm.com>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <c8900ca9-fe33-7f29-c6ca-fe9458968f68@marek.ca>
+Date:   Tue, 21 Apr 2020 12:52:40 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200415201420.15958-1-mike.leach@linaro.org> <20200417021113.GB5426@leoy-ThinkPad-X240s>
-In-Reply-To: <20200417021113.GB5426@leoy-ThinkPad-X240s>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Tue, 21 Apr 2020 10:52:02 -0600
-Message-ID: <CANLsYkzx_DeXcJ_dBju_OWWRiREAqzG6opeQAuXf5gTsdgZtQQ@mail.gmail.com>
-Subject: Re: [PATCH] perf: cs-etm: Update to build with latest opencsd version.
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200421163009.GA13825@jcrouse1-lnx.qualcomm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Apr 2020 at 20:11, Leo Yan <leo.yan@linaro.org> wrote:
->
-> Hi Mike,
->
-> On Wed, Apr 15, 2020 at 09:14:20PM +0100, Mike Leach wrote:
-> > OpenCSD version v0.14.0 adds in a new output element. This is represented
-> > by a new value in the generic element type enum, which must be added to
-> > the handling code in perf cs-etm-decoder to prevent build errors due to
-> > build options on the perf project.
-> >
-> > This element is not currently used by the perf decoder.
-> >
-> > Tested on Linux 5.7-rc1.
-> >
-> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > ---
-> >  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> > index cd92a99eb89d..da4737cbc2ab 100644
-> > --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> > +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> > @@ -564,6 +564,10 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
-> >               resp = cs_etm_decoder__set_tid(etmq, packet_queue,
-> >                                              elem, trace_chan_id);
-> >               break;
-> > +     /* Unused packet types */
-> > +#if OCSD_VER_NUM >= 0x0E00
-> > +     case OCSD_GEN_TRC_ELEM_I_RANGE_NOPATH:
-> > +#endif
->
-> I don't think use macros to distinguish OpenCSD version number is a
-> good idea, this will get more and more code to checking version number
-> if later have more these kinds improvement and finally it's hard to
-> maintain.
+On 4/21/20 12:30 PM, Jordan Crouse wrote:
+> On Mon, Apr 20, 2020 at 10:03:08AM -0400, Jonathan Marek wrote:
+>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+>> ---
+>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c |  68 ++++++++++++---
+>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   7 ++
+>>   drivers/gpu/drm/msm/adreno/a6xx_gpu.c |   6 +-
+>>   drivers/gpu/drm/msm/adreno/a6xx_hfi.c | 117 ++++++++++++++++++++++++--
+>>   drivers/gpu/drm/msm/adreno/a6xx_hfi.h |  50 ++++++++++-
+>>   5 files changed, 224 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>> index c6ecb3189ec5..dc2d69837110 100644
+>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>> @@ -126,8 +126,6 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
+>>   	if (ret)
+>>   		dev_err(gmu->dev, "GMU set GPU frequency error: %d\n", ret);
+>>   
+>> -	gmu->freq = gmu->gpu_freqs[index];
+>> -
+>>   	/*
+>>   	 * Eventually we will want to scale the path vote with the frequency but
+>>   	 * for now leave it at max so that the performance is nominal.
+>> @@ -151,7 +149,12 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
+>>   
+>>   	gmu->current_perf_index = perf_index;
+>>   
+>> -	__a6xx_gmu_set_freq(gmu, perf_index);
+>> +	if (gmu->legacy)
+>> +		__a6xx_gmu_set_freq(gmu, perf_index);
+>> +	else
+>> +		a6xx_hfi_set_freq(gmu, perf_index);
+> 
+> Welcome to the first great GMU schism. There are going to be a lot of these if()
+> statements and my guess is that it won't get any cleaner in the future.
+> 
+> The best option in my opinion would be to make two separate GMU implementations
+> and select the probe either from the gpu list or the compatible string and use
+> function pointers for the functions that are called from a6xx_gpu.c and
+> a6xx_gpu_state.c.
+> 
+> We _could_ make the gmu->legacy thing work but if someday there is a another
+> schism we would be sad that we didn't do the ground work now.
+> 
+> We could also do the same for HFI, but I think there is a bit less of a delta
+> there and there isn't a harm in having a _v1 function or two laying around.
+> 
 
-I agree.
+I don't think it makes sense to have two separate GMU implementations at 
+this point, most of the code is still sharable. There's "only" 10 of 
+these gmu->legacy if()s in the final version, and they are very small if()s.
 
->
-> Sugget just simply add the new case for
-> OCSD_GEN_TRC_ELEM_I_RANGE_NOPATH, considering if user uses an old version
-> OpenCSD and doesn't output this new element, the new added case doesn't
-> introduce issue for old OpenCSD lib.
->
-> Futhermore, suggest to change the code in
-> tools/build/feature/test-libopencsd.c, so can reflect the kernel 5.7
-> to require OpenCSD v0.14.0 or later version when build perf.
+>> +
+>> +	gmu->freq = gmu->gpu_freqs[perf_index];
+>>   }
+>>   
+>>   unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
+>> @@ -231,19 +234,26 @@ int a6xx_gmu_set_oob(struct a6xx_gmu *gmu, enum a6xx_gmu_oob_state state)
+>>   
+>>   	switch (state) {
+>>   	case GMU_OOB_GPU_SET:
+>> -		request = GMU_OOB_GPU_SET_REQUEST;
+>> -		ack = GMU_OOB_GPU_SET_ACK;
+>> +		if (gmu->legacy) {
+>> +			request = GMU_OOB_GPU_SET_REQUEST;
+>> +			ack = GMU_OOB_GPU_SET_ACK;
+>> +		} else {
+>> +			request = GMU_OOB_GPU_SET_REQUEST_NEW;
+>> +			ack = GMU_OOB_GPU_SET_ACK_NEW;
+>> +		}
+>>   		name = "GPU_SET";
+>>   		break;
+>>   	case GMU_OOB_BOOT_SLUMBER:
+>>   		request = GMU_OOB_BOOT_SLUMBER_REQUEST;
+>>   		ack = GMU_OOB_BOOT_SLUMBER_ACK;
+>>   		name = "BOOT_SLUMBER";
+>> +		WARN_ON(!gmu->legacy);
+> 
+> This is unlikely to be the case - these should only be called from within the
+> GMU code and we should be able to control it.
+> 
 
-As Leo pointed out, I think we should just continue dealing with new
-versions of the library in test-libopencsd.c.
+These are called from a6xx_gpu.c too, not just from within a6xx_gmu.c. 
+IMO the warnings might be useful to catch errors in the future, but they 
+not absolutely necessary either.
 
->
-> Thanks,
-> Leo
->
-> >       case OCSD_GEN_TRC_ELEM_ADDR_NACC:
-> >       case OCSD_GEN_TRC_ELEM_CYCLE_COUNT:
-> >       case OCSD_GEN_TRC_ELEM_ADDR_UNKNOWN:
-> > --
-> > 2.17.1
-> >
-> > _______________________________________________
-> > CoreSight mailing list
-> > CoreSight@lists.linaro.org
-> > https://lists.linaro.org/mailman/listinfo/coresight
+>>   		break;
+>>   	case GMU_OOB_DCVS_SET:
+>>   		request = GMU_OOB_DCVS_REQUEST;
+>>   		ack = GMU_OOB_DCVS_ACK;
+>>   		name = "GPU_DCVS";
+>> +		WARN_ON(!gmu->legacy);
+> 
+> Same.
+> 
+>>   		break;
+>>   	default:
+>>   		return -EINVAL;
+>> @@ -271,6 +281,13 @@ int a6xx_gmu_set_oob(struct a6xx_gmu *gmu, enum a6xx_gmu_oob_state state)
+>>   /* Clear a pending OOB state in the GMU */
+>>   void a6xx_gmu_clear_oob(struct a6xx_gmu *gmu, enum a6xx_gmu_oob_state state)
+>>   {
+>> +	if (!gmu->legacy) {
+>> +		WARN_ON(state != GMU_OOB_GPU_SET);
+>> +		gmu_write(gmu, REG_A6XX_GMU_HOST2GMU_INTR_SET,
+>> +			1 << GMU_OOB_GPU_SET_CLEAR_NEW);
+>> +		return;
+>> +	}
+> 
+> A good example of the usefulness of per-implementation functions.
+> 
+
+I wouldn't say its a great example, the function is effectively the 
+same, just with a different shift value. It was just simple enough that 
+it felt better to do it this way.
+
+>> +
+>>   	switch (state) {
+>>   	case GMU_OOB_GPU_SET:
+>>   		gmu_write(gmu, REG_A6XX_GMU_HOST2GMU_INTR_SET,
+>> @@ -293,6 +310,9 @@ static int a6xx_sptprac_enable(struct a6xx_gmu *gmu)
+>>   	int ret;
+>>   	u32 val;
+>>   
+>> +	if (!gmu->legacy)
+>> +		return 0;
+>> +
+>>   	gmu_write(gmu, REG_A6XX_GMU_GX_SPTPRAC_POWER_CONTROL, 0x778000);
+>>   
+>>   	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_SPTPRAC_PWR_CLK_STATUS, val,
+>> @@ -312,6 +332,9 @@ static void a6xx_sptprac_disable(struct a6xx_gmu *gmu)
+>>   	u32 val;
+>>   	int ret;
+>>   
+>> +	if (!gmu->legacy)
+>> +		return;
+>> +
+>>   	/* Make sure retention is on */
+>>   	gmu_rmw(gmu, REG_A6XX_GPU_CC_GX_GDSCR, 0, (1 << 11));
+>>   
+>> @@ -355,6 +378,11 @@ static int a6xx_gmu_notify_slumber(struct a6xx_gmu *gmu)
+>>   	if (gmu->idle_level < GMU_IDLE_STATE_SPTP)
+>>   		a6xx_sptprac_disable(gmu);
+>>   
+>> +	if (!gmu->legacy) {
+>> +		ret = a6xx_hfi_send_prep_slumber(gmu);
+>> +		goto out;
+>> +	}
+>> +
+>>   	/* Tell the GMU to get ready to slumber */
+>>   	gmu_write(gmu, REG_A6XX_GMU_BOOT_SLUMBER_OPTION, 1);
+>>   
+>> @@ -370,6 +398,7 @@ static int a6xx_gmu_notify_slumber(struct a6xx_gmu *gmu)
+>>   		}
+>>   	}
+>>   
+>> +out:
+>>   	/* Put fence into allow mode */
+>>   	gmu_write(gmu, REG_A6XX_GMU_AO_AHB_FENCE_CTRL, 0);
+>>   	return ret;
+>> @@ -639,9 +668,11 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> -	ret = a6xx_gmu_gfx_rail_on(gmu);
+>> -	if (ret)
+>> -		return ret;
+>> +	if (gmu->legacy) {
+>> +		ret = a6xx_gmu_gfx_rail_on(gmu);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>>   
+>>   	/* Enable SPTP_PC if the CPU is responsible for it */
+>>   	if (gmu->idle_level < GMU_IDLE_STATE_SPTP) {
+>> @@ -760,7 +791,10 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+>>   	enable_irq(gmu->hfi_irq);
+>>   
+>>   	/* Set the GPU to the current freq */
+>> -	__a6xx_gmu_set_freq(gmu, gmu->current_perf_index);
+>> +	if (gmu->legacy)
+>> +		__a6xx_gmu_set_freq(gmu, gmu->current_perf_index);
+>> +	else
+>> +		a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
+>>   
+>>   	/*
+>>   	 * "enable" the GX power domain which won't actually do anything but it
+>> @@ -1305,6 +1339,7 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
+>>   
+>>   int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+>>   {
+>> +	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
+>>   	struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
+>>   	struct platform_device *pdev = of_find_device_by_node(node);
+>>   	int ret;
+>> @@ -1331,16 +1366,21 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+>>   	if (ret)
+>>   		goto err_put_device;
+>>   
+>> +	if (!adreno_is_a640(adreno_gpu) && !adreno_is_a650(adreno_gpu)) {
+>> +		/* HFI v1, no sptprac */
+> 
+> This comment isn't accurate, 630 and 618 have sptprac, 640 and 650 do not need
+> it.
+> 
+
+Right, this comment is wrong.
+
+>> +		gmu->legacy = true;
+>> +
+>> +		/* Allocate memory for the GMU debug region */
+>> +		gmu->debug = a6xx_gmu_memory_alloc(gmu, SZ_16K, 0);
+>> +		if (IS_ERR(gmu->debug))
+>> +			goto err_memory;
+>> +	}
+>> +
+>>   	/* Allocate memory for for the HFI queues */
+>>   	gmu->hfi = a6xx_gmu_memory_alloc(gmu, SZ_16K, 0);
+>>   	if (IS_ERR(gmu->hfi))
+>>   		goto err_memory;
+>>   
+>> -	/* Allocate memory for the GMU debug region */
+>> -	gmu->debug = a6xx_gmu_memory_alloc(gmu, SZ_16K, 0);
+>> -	if (IS_ERR(gmu->debug))
+>> -		goto err_memory;
+>> -
+>>   	/* Map the GMU registers */
+>>   	gmu->mmio = a6xx_gmu_get_mmio(pdev, "gmu");
+>>   	if (IS_ERR(gmu->mmio))
+>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+>> index 2af91ed7ed0c..781714ffaa91 100644
+>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+>> @@ -80,6 +80,7 @@ struct a6xx_gmu {
+>>   
+>>   	bool initialized;
+>>   	bool hung;
+>> +	bool legacy; /* a618 or a630 */
+>>   };
+>>   
+>>   static inline u32 gmu_read(struct a6xx_gmu *gmu, u32 offset)
+>> @@ -160,10 +161,16 @@ enum a6xx_gmu_oob_state {
+>>   #define GMU_OOB_GPU_SET_ACK	24
+>>   #define GMU_OOB_GPU_SET_CLEAR	24
+>>   
+>> +#define GMU_OOB_GPU_SET_REQUEST_NEW	30
+>> +#define GMU_OOB_GPU_SET_ACK_NEW		31
+>> +#define GMU_OOB_GPU_SET_CLEAR_NEW	31
+>> +
+>>   
+>>   void a6xx_hfi_init(struct a6xx_gmu *gmu);
+>>   int a6xx_hfi_start(struct a6xx_gmu *gmu, int boot_state);
+>>   void a6xx_hfi_stop(struct a6xx_gmu *gmu);
+>> +int a6xx_hfi_send_prep_slumber(struct a6xx_gmu *gmu);
+>> +int a6xx_hfi_set_freq(struct a6xx_gmu *gmu, int index);
+>>   
+>>   bool a6xx_gmu_gx_is_on(struct a6xx_gmu *gmu);
+>>   bool a6xx_gmu_sptprac_is_on(struct a6xx_gmu *gmu);
+>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>> index 68af24150de5..a860d4970e10 100644
+>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>> @@ -566,8 +566,10 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
+>>   	 */
+>>   	a6xx_gmu_clear_oob(&a6xx_gpu->gmu, GMU_OOB_GPU_SET);
+>>   
+>> -	/* Take the GMU out of its special boot mode */
+>> -	a6xx_gmu_clear_oob(&a6xx_gpu->gmu, GMU_OOB_BOOT_SLUMBER);
+>> +	if (a6xx_gpu->gmu.legacy) {
+>> +		/* Take the GMU out of its special boot mode */
+>> +		a6xx_gmu_clear_oob(&a6xx_gpu->gmu, GMU_OOB_BOOT_SLUMBER);
+>> +	}
+>>   
+>>   	return ret;
+>>   }
+>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+>> index e450e0b97211..3d4b142d8fb3 100644
+>> --- a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+>> @@ -17,10 +17,14 @@ static const char * const a6xx_hfi_msg_id[] = {
+>>   	HFI_MSG_ID(HFI_H2F_MSG_BW_TABLE),
+>>   	HFI_MSG_ID(HFI_H2F_MSG_PERF_TABLE),
+>>   	HFI_MSG_ID(HFI_H2F_MSG_TEST),
+>> +	HFI_MSG_ID(HFI_H2F_MSG_START),
+>> +	HFI_MSG_ID(HFI_H2F_MSG_CORE_FW_START),
+>> +	HFI_MSG_ID(HFI_H2F_MSG_GX_BW_PERF_VOTE),
+>> +	HFI_MSG_ID(HFI_H2F_MSG_PREPARE_SLUMBER),
+>>   };
+>>   
+>> -static int a6xx_hfi_queue_read(struct a6xx_hfi_queue *queue, u32 *data,
+>> -		u32 dwords)
+>> +static int a6xx_hfi_queue_read(struct a6xx_gmu *gmu,
+>> +	struct a6xx_hfi_queue *queue, u32 *data, u32 dwords)
+>>   {
+>>   	struct a6xx_hfi_queue_header *header = queue->header;
+>>   	u32 i, hdr, index = header->read_index;
+>> @@ -48,6 +52,9 @@ static int a6xx_hfi_queue_read(struct a6xx_hfi_queue *queue, u32 *data,
+>>   		index = (index + 1) % header->size;
+>>   	}
+>>   
+>> +	if (!gmu->legacy)
+>> +		index = ALIGN(index, 4) % header->size;
+>> +
+>>   	header->read_index = index;
+>>   	return HFI_HEADER_SIZE(hdr);
+>>   }
+>> @@ -73,6 +80,12 @@ static int a6xx_hfi_queue_write(struct a6xx_gmu *gmu,
+>>   		index = (index + 1) % header->size;
+>>   	}
+>>   
+>> +	/* Cookify any non used data at the end of the write buffer */
+>> +	if (!gmu->legacy) {
+>> +		for (; index % 4; index = (index + 1) % header->size)
+>> +			queue->data[index] = 0xfafafafa;
+>> +	}
+>> +
+>>   	header->write_index = index;
+>>   	spin_unlock(&queue->lock);
+>>   
+>> @@ -106,7 +119,7 @@ static int a6xx_hfi_wait_for_ack(struct a6xx_gmu *gmu, u32 id, u32 seqnum,
+>>   		struct a6xx_hfi_msg_response resp;
+>>   
+>>   		/* Get the next packet */
+>> -		ret = a6xx_hfi_queue_read(queue, (u32 *) &resp,
+>> +		ret = a6xx_hfi_queue_read(gmu, queue, (u32 *) &resp,
+>>   			sizeof(resp) >> 2);
+>>   
+>>   		/* If the queue is empty our response never made it */
+>> @@ -195,6 +208,28 @@ static int a6xx_hfi_get_fw_version(struct a6xx_gmu *gmu, u32 *version)
+>>   		version, sizeof(*version));
+>>   }
+>>   
+>> +static int a6xx_hfi_send_perf_table_v1(struct a6xx_gmu *gmu)
+>> +{
+>> +	struct a6xx_hfi_msg_perf_table_v1 msg = { 0 };
+>> +	int i;
+>> +
+>> +	msg.num_gpu_levels = gmu->nr_gpu_freqs;
+>> +	msg.num_gmu_levels = gmu->nr_gmu_freqs;
+>> +
+>> +	for (i = 0; i < gmu->nr_gpu_freqs; i++) {
+>> +		msg.gx_votes[i].vote = gmu->gx_arc_votes[i];
+>> +		msg.gx_votes[i].freq = gmu->gpu_freqs[i] / 1000;
+>> +	}
+>> +
+>> +	for (i = 0; i < gmu->nr_gmu_freqs; i++) {
+>> +		msg.cx_votes[i].vote = gmu->cx_arc_votes[i];
+>> +		msg.cx_votes[i].freq = gmu->gmu_freqs[i] / 1000;
+>> +	}
+>> +
+>> +	return a6xx_hfi_send_msg(gmu, HFI_H2F_MSG_PERF_TABLE, &msg, sizeof(msg),
+>> +		NULL, 0);
+>> +}
+>> +
+>>   static int a6xx_hfi_send_perf_table(struct a6xx_gmu *gmu)
+>>   {
+>>   	struct a6xx_hfi_msg_perf_table msg = { 0 };
+>> @@ -205,6 +240,7 @@ static int a6xx_hfi_send_perf_table(struct a6xx_gmu *gmu)
+>>   
+>>   	for (i = 0; i < gmu->nr_gpu_freqs; i++) {
+>>   		msg.gx_votes[i].vote = gmu->gx_arc_votes[i];
+>> +		msg.gx_votes[i].acd = 0xffffffff;
+>>   		msg.gx_votes[i].freq = gmu->gpu_freqs[i] / 1000;
+>>   	}
+>>   
+>> @@ -306,7 +342,45 @@ static int a6xx_hfi_send_test(struct a6xx_gmu *gmu)
+>>   		NULL, 0);
+>>   }
+>>   
+>> -int a6xx_hfi_start(struct a6xx_gmu *gmu, int boot_state)
+>> +int a6xx_hfi_send_start(struct a6xx_gmu *gmu)
+>> +{
+>> +	struct a6xx_hfi_msg_start msg = { 0 };
+>> +
+>> +	return a6xx_hfi_send_msg(gmu, HFI_H2F_MSG_START, &msg, sizeof(msg),
+>> +		NULL, 0);
+>> +}
+>> +
+>> +int a6xx_hfi_send_core_fw_start(struct a6xx_gmu *gmu)
+>> +{
+>> +	struct a6xx_hfi_msg_core_fw_start msg = { 0 };
+>> +
+>> +	return a6xx_hfi_send_msg(gmu, HFI_H2F_MSG_CORE_FW_START, &msg,
+>> +		sizeof(msg), NULL, 0);
+>> +}
+>> +
+>> +int a6xx_hfi_set_freq(struct a6xx_gmu *gmu, int index)
+>> +{
+>> +	struct a6xx_hfi_gx_bw_perf_vote_cmd msg = { 0 };
+>> +
+>> +	msg.ack_type = 1; /* blocking */
+>> +	msg.freq = index;
+>> +	msg.bw = 0; /* TODO: bus scaling */
+>> +
+>> +	return a6xx_hfi_send_msg(gmu, HFI_H2F_MSG_GX_BW_PERF_VOTE, &msg,
+>> +		sizeof(msg), NULL, 0);
+>> +}
+>> +
+>> +int a6xx_hfi_send_prep_slumber(struct a6xx_gmu *gmu)
+>> +{
+>> +	struct a6xx_hfi_prep_slumber_cmd msg = { 0 };
+>> +
+>> +	/* TODO: should freq and bw fields be non-zero ? */
+>> +
+>> +	return a6xx_hfi_send_msg(gmu, HFI_H2F_MSG_PREPARE_SLUMBER, &msg,
+>> +		sizeof(msg), NULL, 0);
+>> +}
+>> +
+>> +static int a6xx_hfi_start_v1(struct a6xx_gmu *gmu, int boot_state)
+>>   {
+>>   	int ret;
+>>   
+>> @@ -324,7 +398,7 @@ int a6xx_hfi_start(struct a6xx_gmu *gmu, int boot_state)
+>>   	 * the GMU firmware
+>>   	 */
+>>   
+>> -	ret = a6xx_hfi_send_perf_table(gmu);
+>> +	ret = a6xx_hfi_send_perf_table_v1(gmu);
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> @@ -341,6 +415,37 @@ int a6xx_hfi_start(struct a6xx_gmu *gmu, int boot_state)
+>>   	return 0;
+>>   }
+>>   
+>> +int a6xx_hfi_start(struct a6xx_gmu *gmu, int boot_state)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (gmu->legacy)
+>> +		return a6xx_hfi_start_v1(gmu, boot_state);
+>> +
+>> +
+>> +	ret = a6xx_hfi_send_perf_table(gmu);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = a6xx_hfi_send_bw_table(gmu);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = a6xx_hfi_send_core_fw_start(gmu);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * Downstream driver sends this in its "a6xx_hw_init" equivalent,
+>> +	 * but seems to be no harm in sending it here
+>> +	 */
+>> +	ret = a6xx_hfi_send_start(gmu);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   void a6xx_hfi_stop(struct a6xx_gmu *gmu)
+>>   {
+>>   	int i;
+>> @@ -415,5 +520,5 @@ void a6xx_hfi_init(struct a6xx_gmu *gmu)
+>>   	/* GMU response queue */
+>>   	offset += SZ_4K;
+>>   	a6xx_hfi_queue_init(&gmu->queues[1], &headers[1], hfi->virt + offset,
+>> -		hfi->iova + offset, 4);
+>> +		hfi->iova + offset, gmu->legacy ? 4 : 1);
+>>   }
+>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_hfi.h b/drivers/gpu/drm/msm/adreno/a6xx_hfi.h
+>> index 60d1319fa44f..2bd670ca42d6 100644
+>> --- a/drivers/gpu/drm/msm/adreno/a6xx_hfi.h
+>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_hfi.h
+>> @@ -51,7 +51,8 @@ struct a6xx_hfi_queue {
+>>   /* HFI message types */
+>>   
+>>   #define HFI_MSG_CMD 0
+>> -#define HFI_MSG_ACK 2
+>> +#define HFI_MSG_ACK 1
+>> +#define HFI_MSG_ACK_V1 2
+>>   
+>>   #define HFI_F2H_MSG_ACK 126
+>>   
+>> @@ -94,7 +95,13 @@ struct perf_level {
+>>   	u32 freq;
+>>   };
+>>   
+>> -struct a6xx_hfi_msg_perf_table {
+>> +struct perf_gx_level {
+>> +	u32 vote;
+>> +	u32 acd;
+>> +	u32 freq;
+>> +};
+> 
+> These all need to be __packed for the usual sad reasons.
+> 
+>> +
+>> +struct a6xx_hfi_msg_perf_table_v1 {
+>>   	u32 header;
+>>   	u32 num_gpu_levels;
+>>   	u32 num_gmu_levels;
+>> @@ -103,6 +110,15 @@ struct a6xx_hfi_msg_perf_table {
+>>   	struct perf_level cx_votes[4];
+>>   };
+>>   
+>> +struct a6xx_hfi_msg_perf_table {
+>> +	u32 header;
+>> +	u32 num_gpu_levels;
+>> +	u32 num_gmu_levels;
+>> +
+>> +	struct perf_gx_level gx_votes[16];
+>> +	struct perf_level cx_votes[4];
+>> +};
+>> +
+>>   #define HFI_H2F_MSG_BW_TABLE 3
+>>   
+>>   struct a6xx_hfi_msg_bw_table {
+>> @@ -124,4 +140,34 @@ struct a6xx_hfi_msg_test {
+>>   	u32 header;
+>>   };
+>>   
+>> +#define HFI_H2F_MSG_START 10
+>> +
+>> +struct a6xx_hfi_msg_start {
+>> +	u32 header;
+>> +};
+>> +
+>> +#define HFI_H2F_MSG_CORE_FW_START 14
+>> +
+>> +struct a6xx_hfi_msg_core_fw_start {
+>> +	u32 header;
+>> +	u32 handle;
+>> +};
+>> +
+>> +#define HFI_H2F_MSG_GX_BW_PERF_VOTE 30
+>> +
+>> +struct a6xx_hfi_gx_bw_perf_vote_cmd {
+>> +	u32 header;
+>> +	u32 ack_type;
+>> +	u32 freq;
+>> +	u32 bw;
+>> +};
+>> +
+>> +#define HFI_H2F_MSG_PREPARE_SLUMBER 33
+>> +
+>> +struct a6xx_hfi_prep_slumber_cmd {
+>> +	u32 header;
+>> +	u32 bw;
+>> +	u32 freq;
+>> +};
+>> +
+>>   #endif
+>> -- 
+>> 2.26.1
+>>
+> 
