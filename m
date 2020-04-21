@@ -2,178 +2,191 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020DEC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DB3C55185
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D40B02071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488186;
-	bh=5SGT9C418zJdChu60U0dJggX613xFNlx7o6R4imHHjk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kc//nMyXkTCOSo9zfxs+kHtRiaC11kuOD0QN761F5uHqS8tbTamhcqRvhi+yjTLuo
-	 ms6Qj72eGy9gwhO5wdRWp6CPzdrVX/GVsXbYjHUhZL511CcRPwy2eOvMG5hiRvHJ27
-	 aA+0BX928PDk6zjOJF2H+DOR1P/NZbYsTdXXx7so=
+	by mail.kernel.org (Postfix) with ESMTP id A36772071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJCwEkkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbgDUQ4Z (ORCPT
+        id S1729546AbgDUQ42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbgDUQyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:54:46 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FAD02074F;
-        Tue, 21 Apr 2020 16:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587488084;
-        bh=5SGT9C418zJdChu60U0dJggX613xFNlx7o6R4imHHjk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kilHRgeMznk8PTNyqrEJcTyN354hpDAJtwr4FP7nlUmsM66zbnsdC5qB8TidRLU+k
-         NaDVxng4oaMtaU0vgURE/xpcKnDr6NAmGdqwwLmBdMZyKDMnsH7KwtTR6MfOlBiFei
-         +rZmGBT0aI7jott03V5Gzke9wXVcZqBGBY5mVorg=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jQwAU-00CmEC-Dg; Tue, 21 Apr 2020 18:54:42 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 11/29] docs: filesystems: convert devpts.txt to ReST
-Date:   Tue, 21 Apr 2020 18:54:22 +0200
-Message-Id: <9ad13041a4646a77dddf038f8246040ba3e707e6.1587487612.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1587487612.git.mchehab+huawei@kernel.org>
-References: <cover.1587487612.git.mchehab+huawei@kernel.org>
+        Tue, 21 Apr 2020 12:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729522AbgDUQ4U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:56:20 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D537C061A41;
+        Tue, 21 Apr 2020 09:56:20 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id o3so8888093vsd.4;
+        Tue, 21 Apr 2020 09:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=37fOrxE1fKmyrZcZ9uj9U00yYV6qcOdwlC6FHpWLz5o=;
+        b=aJCwEkkTS7Lf+D5PtLNfxTG06ZCZMDnPCk2mronKD6jrzO3Pswn7YY1gtpWoVzO3IL
+         F36IrlqgVicFqfIITTdcnj62P2dkVycu/TZrL51HyFU0l0BsX1x1LGxaIDT6IztoovH6
+         bh4EwbmXnBInbOmk2EBYO7cApQ3YNW23VPmCqcUglyV1mFZoD0ZH/XADATAupn44qJy7
+         DPFFErwP6gc1INmcHzDV0iZrrHvLu4aSktpONVbLZtk/ulBon2tTEnpUmd4TX0zkFZcq
+         oq0vPn06xkcepeP2I1GOQ4wXJP/R8gURQ43Ri211jz/dNwRKmp7bZZ6o5uTYsfDvEUGN
+         wIlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=37fOrxE1fKmyrZcZ9uj9U00yYV6qcOdwlC6FHpWLz5o=;
+        b=cp6SM6RFoueFJSZFI+6EGBbIHmRsi5qeM8GL1JFajpXiZ0A6mIvgt6ckf8QoSoo+//
+         MxnolvD6lKG7A+ldisMGychkUYv8fGenRnb/6qz5mhi9qMjrQ779tBTo4VISDBEWIDOl
+         5tOPa0d9MJ0uXsXtmhmG+Y2pqTkabjlcL3fUzDF1sQ119TqQykPdvRhUIRRYhy/HI9eG
+         gEnQiMr8ftN8i2mVNzn2cpy6FW2RQGW4oUZNSK4z3qdW2Pv/uoBdaChB/y15AQHfbLLI
+         kJvQDCq8P59J5rKvc2/QBv5aOef6LGedvFaRoG8ez3ovdK2q0QaCZgbrVHAozxIM2QMe
+         15vQ==
+X-Gm-Message-State: AGi0PubxRa2O7n+CWpdmxDQLPWpu9QdSnfRzBIlKWXaGSY6JaKKoEkbd
+        kbHVYdhAARr3mgQ4RDTK890z/bu9LKT3ppEoEow=
+X-Google-Smtp-Source: APiQypIY18Sf6NoiOtOYbIxR9HPlyKzHoHfzV8rfCvZ4e9oUlqLt/eeDj+mCotV8G5ALwPIda1o4A6En/JPCDyZus3w=
+X-Received: by 2002:a67:2dcb:: with SMTP id t194mr10831926vst.136.1587488178955;
+ Tue, 21 Apr 2020 09:56:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20200417181018epcas5p1e51c7ca0fe81df16554548df5b82e3e4@epcas5p1.samsung.com>
+ <20200417175944.47189-1-alim.akhtar@samsung.com> <20200417175944.47189-7-alim.akhtar@samsung.com>
+In-Reply-To: <20200417175944.47189-7-alim.akhtar@samsung.com>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Tue, 21 Apr 2020 22:25:43 +0530
+Message-ID: <CAGOxZ51jnbnHjVDQitbvSkrPH2=OdBKQHPnnT8yr+nKARud-WQ@mail.gmail.com>
+Subject: Re: [PATCH v6 06/10] dt-bindings: phy: Document Samsung UFS PHY bindings
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     robh <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kiwoong Kim <kwmad.kim@samsung.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Can Guo <cang@codeaurora.org>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Add a document title;
-- Some whitespace fixes and new line breaks;
-- Mark literal blocks as such;
-- Add it to filesystems/index.rst.
+Hi Rob
+Request you to comment on this dt-bindings documentation.
+Thanks
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/admin-guide/sysctl/kernel.rst |  2 +-
- Documentation/filesystems/devpts.rst        | 36 +++++++++++++++++++++
- Documentation/filesystems/devpts.txt        | 26 ---------------
- Documentation/filesystems/index.rst         |  1 +
- 4 files changed, 38 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/filesystems/devpts.rst
- delete mode 100644 Documentation/filesystems/devpts.txt
+On Fri, Apr 17, 2020 at 11:43 PM Alim Akhtar <alim.akhtar@samsung.com> wrot=
+e:
+>
+> This patch documents Samsung UFS PHY device tree bindings
+>
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> Tested-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+>  .../bindings/phy/samsung,ufs-phy.yaml         | 74 +++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy=
+.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml b=
+/Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+> new file mode 100644
+> index 000000000000..352d5dda320d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/samsung,ufs-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC series UFS PHY Device Tree Bindings
+> +
+> +maintainers:
+> +  - Alim Akhtar <alim.akhtar@samsung.com>
+> +
+> +properties:
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  compatible:
+> +    enum:
+> +      - samsung,exynos7-ufs-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: PHY base register address
+> +
+> +  reg-names:
+> +    items:
+> +      - const: phy-pma
+> +
+> +  clocks:
+> +    items:
+> +      - description: PLL reference clock
+> +      - description: symbol clock for input symbol ( rx0-ch0 symbol cloc=
+k)
+> +      - description: symbol clock for input symbol ( rx1-ch1 symbol cloc=
+k)
+> +      - description: symbol clock for output symbol ( tx0 symbol clock)
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref_clk
+> +      - const: rx1_symbol_clk
+> +      - const: rx0_symbol_clk
+> +      - const: tx0_symbol_clk
+> +
+> +  samsung,pmu-syscon:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +    description: phandle for PMU system controller interface, used to
+> +                 control pmu registers bits for ufs m-phy
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +  - samsung,pmu-syscon
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/exynos7-clk.h>
+> +
+> +    ufs_phy: ufs-phy@15571800 {
+> +        compatible =3D "samsung,exynos7-ufs-phy";
+> +        reg =3D <0x15571800 0x240>;
+> +        reg-names =3D "phy-pma";
+> +        samsung,pmu-syscon =3D <&pmu_system_controller>;
+> +        #phy-cells =3D <0>;
+> +        clocks =3D <&clock_fsys1 SCLK_COMBO_PHY_EMBEDDED_26M>,
+> +                 <&clock_fsys1 PHYCLK_UFS20_RX1_SYMBOL_USER>,
+> +                 <&clock_fsys1 PHYCLK_UFS20_RX0_SYMBOL_USER>,
+> +                 <&clock_fsys1 PHYCLK_UFS20_TX0_SYMBOL_USER>;
+> +        clock-names =3D "ref_clk", "rx1_symbol_clk",
+> +                      "rx0_symbol_clk", "tx0_symbol_clk";
+> +
+> +    };
+> +...
+> --
+> 2.17.1
+>
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 3e68da9fc066..e1cab8f0abb3 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -915,7 +915,7 @@ this sysctl interface anymore.
- pty
- ===
- 
--See Documentation/filesystems/devpts.txt.
-+See Documentation/filesystems/devpts.rst.
- 
- 
- randomize_va_space
-diff --git a/Documentation/filesystems/devpts.rst b/Documentation/filesystems/devpts.rst
-new file mode 100644
-index 000000000000..a03248ddfb4c
---- /dev/null
-+++ b/Documentation/filesystems/devpts.rst
-@@ -0,0 +1,36 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================
-+The Devpts Filesystem
-+=====================
-+
-+Each mount of the devpts filesystem is now distinct such that ptys
-+and their indicies allocated in one mount are independent from ptys
-+and their indicies in all other mounts.
-+
-+All mounts of the devpts filesystem now create a ``/dev/pts/ptmx`` node
-+with permissions ``0000``.
-+
-+To retain backwards compatibility the a ptmx device node (aka any node
-+created with ``mknod name c 5 2``) when opened will look for an instance
-+of devpts under the name ``pts`` in the same directory as the ptmx device
-+node.
-+
-+As an option instead of placing a ``/dev/ptmx`` device node at ``/dev/ptmx``
-+it is possible to place a symlink to ``/dev/pts/ptmx`` at ``/dev/ptmx`` or
-+to bind mount ``/dev/ptx/ptmx`` to ``/dev/ptmx``.  If you opt for using
-+the devpts filesystem in this manner devpts should be mounted with
-+the ``ptmxmode=0666``, or ``chmod 0666 /dev/pts/ptmx`` should be called.
-+
-+Total count of pty pairs in all instances is limited by sysctls::
-+
-+    kernel.pty.max = 4096	- global limit
-+    kernel.pty.reserve = 1024	- reserved for filesystems mounted from the initial mount namespace
-+    kernel.pty.nr		- current count of ptys
-+
-+Per-instance limit could be set by adding mount option ``max=<count>``.
-+
-+This feature was added in kernel 3.4 together with
-+``sysctl kernel.pty.reserve``.
-+
-+In kernels older than 3.4 sysctl ``kernel.pty.max`` works as per-instance limit.
-diff --git a/Documentation/filesystems/devpts.txt b/Documentation/filesystems/devpts.txt
-deleted file mode 100644
-index 9f94fe276dea..000000000000
---- a/Documentation/filesystems/devpts.txt
-+++ /dev/null
-@@ -1,26 +0,0 @@
--Each mount of the devpts filesystem is now distinct such that ptys
--and their indicies allocated in one mount are independent from ptys
--and their indicies in all other mounts.
--
--All mounts of the devpts filesystem now create a /dev/pts/ptmx node
--with permissions 0000.
--
--To retain backwards compatibility the a ptmx device node (aka any node
--created with "mknod name c 5 2") when opened will look for an instance
--of devpts under the name "pts" in the same directory as the ptmx device
--node.
--
--As an option instead of placing a /dev/ptmx device node at /dev/ptmx
--it is possible to place a symlink to /dev/pts/ptmx at /dev/ptmx or
--to bind mount /dev/ptx/ptmx to /dev/ptmx.  If you opt for using
--the devpts filesystem in this manner devpts should be mounted with
--the ptmxmode=0666, or chmod 0666 /dev/pts/ptmx should be called.
--
--Total count of pty pairs in all instances is limited by sysctls:
--kernel.pty.max = 4096		- global limit
--kernel.pty.reserve = 1024	- reserved for filesystems mounted from the initial mount namespace
--kernel.pty.nr			- current count of ptys
--
--Per-instance limit could be set by adding mount option "max=<count>".
--This feature was added in kernel 3.4 together with sysctl kernel.pty.reserve.
--In kernels older than 3.4 sysctl kernel.pty.max works as per-instance limit.
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 4fea22856348..14179987bd4b 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -24,6 +24,7 @@ algorithms work.
-    splice
-    locking
-    directory-locking
-+   devpts
- 
-    automount-support
- 
--- 
-2.25.2
 
+--=20
+Regards,
+Alim
