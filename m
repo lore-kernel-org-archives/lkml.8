@@ -2,84 +2,90 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EEAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6CDC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 166952071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318BF20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:02:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="PyxDIlH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgDUDzi (ORCPT
+        id S1726013AbgDUECr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbgDUDzi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:55:38 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEEEEC061A0E;
-        Mon, 20 Apr 2020 20:55:37 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id B8D3A2A0EF3
-Message-ID: <b7af1fd261a54527be2ea2ab2656756f15452732.camel@collabora.com>
-Subject: Re: [PATCH 2/3] phy-rockchip-dphy-rx0: Drop unneeded CONFIG_OF
- dependency
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Helen Koike <helen.koike@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>
-Date:   Tue, 21 Apr 2020 00:55:21 -0300
-In-Reply-To: <7ced1203-cdea-ad26-f46b-8873bfb85043@collabora.com>
-References: <20200401213721.24173-1-ezequiel@collabora.com>
-         <20200401213721.24173-3-ezequiel@collabora.com>
-         <7ced1203-cdea-ad26-f46b-8873bfb85043@collabora.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Tue, 21 Apr 2020 00:02:47 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:33661 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbgDUECr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 00:02:47 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 9ffef1c0;
+        Tue, 21 Apr 2020 03:52:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=b5Yc33rjro0LOJft6o7awVjkTZ0=; b=PyxDIl
+        H9MWbDtDahbXjBBAyWJvpmLpmvikrFMo2CjFcCKoL+dLt1lHmcBzm7vhC5ZzJxqM
+        v3xJbgeszgVR8hoCwoXK0iLKqjiQIvgvt9Z3R62+3wMIrNt8/HycnK9eJOrg8K5C
+        P/KPeB633xgi/qzzOA7p+IpQprCNegFkxASMfyfEjDzLfWGbHr+U40lCcWV5GlUR
+        gt44UgCYhgb8YuwPxrVF6wSPXMPtyQG8/UlbTcydAWxqziKN4cmBhtVQcMXpuDvA
+        5ajoUGB/IdDPbzdHLbLXxbnfTLqxbRwx5zJun4KvjgbYnVyMZMlRqqGIRP0+JKkF
+        3pj/dSLYtJ7JlOiQ==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f07f93df (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 21 Apr 2020 03:52:01 +0000 (UTC)
+Received: by mail-io1-f47.google.com with SMTP id f3so13647296ioj.1;
+        Mon, 20 Apr 2020 21:02:42 -0700 (PDT)
+X-Gm-Message-State: AGi0PubU/q1Dff67GrvbKvvHPEiwJbzNHCqoTtlsbTamX4ww3Snr5XFv
+        Miw9LgIVI3uxSeiaO3NnHaNOdv1XpjmR7a2epHM=
+X-Google-Smtp-Source: APiQypJdNT8UItWFDKtAKDekJkgZ+KtTzn8bv/h9qcNsTyes4y9VnE4cLcMW9yqKJGy8Pyrq8to9I3nqyEWXr9nt7CI=
+X-Received: by 2002:a05:6602:21d3:: with SMTP id c19mr18626695ioc.29.1587441762080;
+ Mon, 20 Apr 2020 21:02:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200420075711.2385190-1-Jason@zx2c4.com> <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
+In-Reply-To: <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 20 Apr 2020 22:02:31 -0600
+X-Gmail-Original-Message-ID: <CAHmME9qfrHVQ+-4HjqCO2TaGF6DNTHmS1max1KcVaP5_QjUDRQ@mail.gmail.com>
+Message-ID: <CAHmME9qfrHVQ+-4HjqCO2TaGF6DNTHmS1max1KcVaP5_QjUDRQ@mail.gmail.com>
+Subject: Re: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
+ PAGE_SIZE chunks
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-02 at 10:59 -0300, Helen Koike wrote:
-> 
-> On 4/1/20 6:37 PM, Ezequiel Garcia wrote:
-> > The driver is perfectly capable of being built without CONFIG_OF.
-> > Remove this dependency, which is useful for compile-only tests.
-> > 
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> 
-> Acked-by: Helen Koike <helen.koike@collabora.com>
-> 
-> > ---
-> >  drivers/staging/media/phy-rockchip-dphy-rx0/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/staging/media/phy-rockchip-dphy-rx0/Kconfig b/drivers/staging/media/phy-rockchip-dphy-rx0/Kconfig
-> > index bd0147624de1..fb74df829371 100644
-> > --- a/drivers/staging/media/phy-rockchip-dphy-rx0/Kconfig
-> > +++ b/drivers/staging/media/phy-rockchip-dphy-rx0/Kconfig
-> > @@ -2,7 +2,7 @@
-> >  
-> >  config PHY_ROCKCHIP_DPHY_RX0
-> >  	tristate "Rockchip MIPI Synopsys DPHY RX0 driver"
-> > -	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
-> > +	depends on ARCH_ROCKCHIP || COMPILE_TEST
+On Mon, Apr 20, 2020 at 2:32 AM David Laight <David.Laight@aculab.com> wrote:
+> Maybe kernel_fp_begin() should be passed the address of somewhere
+> the address of an fpu save area buffer can be written to.
+> Then the pre-emption code can allocate the buffer and save the
+> state into it.
+>
+> However that doesn't solve the problem for non-preemptive kernels.
+> The may need a cond_resched() in the loop if it might take 1ms (or so).
+>
+> kernel_fpu_begin() ought also be passed a parameter saying which
+> fpu features are required, and return which are allocated.
+> On x86 this could be used to check for AVX512 (etc) which may be
+> available in an ISR unless it interrupted inside a kernel_fpu_begin()
+> section (etc).
+> It would also allow optimisations if only 1 or 2 fpu registers are
+> needed (eg for some of the crypto functions) rather than the whole
+> fpu register set.
 
-After discussing other similar patches, I'm starting to
-think this was a bad idea.
+There might be ways to improve lots of FPU things, indeed. This patch
+here is just a patch to Herbert's branch in order to make uniform
+usage of our existing solution for this, fixing the existing bug. I
+wouldn't mind seeing more involved and better solutions in a patchset
+for crypto-next.
 
-Instead, we want to do have (ARCH_ROCKCHIP && OF) || COMPILE_TEST
-as the other Rockchip PHYs.
-
-Thanks,
-Ezequiel
-
+Will follow up with your suggestion in a different thread, so as not
+to block this one.
