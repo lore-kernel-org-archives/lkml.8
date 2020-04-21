@@ -2,96 +2,135 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F5EC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90B2C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F33720672
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C42C22075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:14:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="cKWjnJNr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="4P15AjXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgDUNN7 (ORCPT
+        id S1728935AbgDUNOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:13:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47190 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728285AbgDUNN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:13:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BC4F9ABE7;
-        Tue, 21 Apr 2020 13:13:56 +0000 (UTC)
-Subject: Re: [PATCH V2] kmalloc_index optimization(code size & runtime stable)
-To:     1587089010-110083-1-git-send-email-bernard@vivo.com,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-References: <20200421032501.127370-1-bernard@vivo.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <339dbb54-b4bc-78e2-e3f0-986814e86d0e@suse.cz>
-Date:   Tue, 21 Apr 2020 15:13:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 09:14:37 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:33463 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726780AbgDUNOg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:14:36 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id A0A285C018D;
+        Tue, 21 Apr 2020 09:14:34 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 21 Apr 2020 09:14:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=zycOR+6bwJZ4JHSqR6NX+uiN3Tw
+        /gGPTY7r2R6DKCBw=; b=cKWjnJNrRwmj77Rinqy5MmebASJv6OyeEPlnrRQl+p3
+        G9JvXjDqrzf1tZ/3O4Ic2p4JpeE9+Cwr1ZWdzRZJBITdh9Ui9l/OY4u7q+Dm3U89
+        nBBJMAFU0vRVbSTrzRbR9rqbeyl5pn3/B9wv0NdEvL9BDZB3o8Dy5ErjGjI3jJXa
+        n1RKTgh64lWaMDLuWYizBr3ShEsctDePpkj+KHt+WnNs0xo7ecg+kHiNcgbADhDf
+        W7m+01HpvXrJYmSFYeVRnWbjPyq7lea6naMsl7vjqA4cfx2PTb5nc2tZuTkz17xn
+        xT4+Ct2l79UvVyuElyRsgTgvOu34ZYeewRSYM9KbUwg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zycOR+
+        6bwJZ4JHSqR6NX+uiN3Tw/gGPTY7r2R6DKCBw=; b=4P15AjXzP6+3Vg8BvUAboo
+        dRYlSfXBPfdaBwPEY+QKBhLBlsMYOAOc50Q402RqxhEmrrnolZRSJaIzUzMjpU3o
+        4Kh2dAinou8YVMqmAreOLJufb2V/f/+mPkg6CZh055FywUikeWh1F7OwAkYetPp5
+        DcMV15QxW+cQLe9YxbQ10W9VUiRWCl7UCrpI0oT8XxEdV9S0ZJMZQqclzwd6+PzM
+        vWlQf3MJNE21ldXZUdC/p1D0bkzUyq4sjtcMaS0I4LhjbOqRreGYGkJVHTWzevzn
+        svoJLAC5R2EzL5/d9ULy1OVpRTvu2oA8AYmSxKg6sdIoy4tyqcZ6JmLoIOQlGBZQ
+        ==
+X-ME-Sender: <xms:ufGeXsNgwLibxkBMiItC1pgLrc_HMaGVsmZAWJp-HfizbnH2Ji3aUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeehgdeitdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledruddtje
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgv
+    gheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:ufGeXjvDcsn9MyfggEELC2s8TcZ8GbTJ8-ftSQws3A1wS5B0RXyDwQ>
+    <xmx:ufGeXnFhnZmsVAWRq2CAPj830ZPNIhgIQkShXsWZ7mI_OviAAGYJOg>
+    <xmx:ufGeXmSx0_me1dYA5FsUcEwYunKSVW89YauQ9r3EE1nZRgwBL-Bqog>
+    <xmx:uvGeXn6bNMRg48tAFBjfXpxN8ksNoyy72wvR8kiQNyBqa0n185eddQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 16FA73065C82;
+        Tue, 21 Apr 2020 09:14:32 -0400 (EDT)
+Date:   Tue, 21 Apr 2020 15:14:31 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Phil Sutter <phil@nwl.cc>, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.5 27/35] netfilter: nf_tables: Allow set
+ back-ends to report partial overlaps on insertion
+Message-ID: <20200421131431.GA793882@kroah.com>
+References: <20200407000058.16423-1-sashal@kernel.org>
+ <20200407000058.16423-27-sashal@kernel.org>
+ <20200407021848.626df832@redhat.com>
+ <20200413163900.GO27528@sasha-vm>
+ <20200413223858.17b0f487@redhat.com>
+ <20200414150840.GD1068@sasha-vm>
+ <20200421113221.rvh3jkjet32m6ng4@salvia>
 MIME-Version: 1.0
-In-Reply-To: <20200421032501.127370-1-bernard@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421113221.rvh3jkjet32m6ng4@salvia>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/21/20 5:25 AM, Bernard Zhao wrote:
-> kmalloc_index inline function code size optimization and runtime
-> performance stability optimization. After optimization, the function
-> kmalloc_index is more stable, the size will never affecte the function`s
-> execution efficiency.
-> And follow test data shows that the performance of new optimization
-> exceeds the original algorithm when applying for more than 512 Bytes
-> (include 512B).And new optimization runtime is more stable than before.
-> Test platform:install vmware ubuntu 16.04, ram 2G, cpu 1, i5-8500 3.00GHz
-> Compiler: gcc -O2 optimization, gcc version 5.4.0.
-> Just test diff code part.
-> Follow is detailed test data:
->             size        time/Per 100 million times
->                         old fun		new fun with optimise
-> 		8	203777		241934
-> 		16	245611		409278
-> 		32	236384		408419
-> 		64	275499		447732
-> 		128	354909		416439
-> 		256	360472		406598
-> 		512	431072		409168
-> 		1024	463822		407401
->         2 * 1024	548519		407710
->         4 * 1024	623378		422326
->         8 * 1024	655932		407457
->        16 * 1024	744673		417574
->        32 * 1024	824889		415316
->        64 * 1024	854374		408577
->       128 * 1024	968079		433582
->       256 * 1024	985527		412080
->       512 * 1024	1196877		448199
->      1024 * 1024	1310315		448969
-> 2  * 1024 * 1024	1367441		513117
-> 4  * 1024 * 1024	1264623		415019
-> 8  * 1024 * 1024	1255727		417197
-> 16 * 1024 * 1024	1401431		411087
-> 32 * 1024 * 1024	1440415		416616
-> 64 * 1024 * 1024	1428122		417459
+On Tue, Apr 21, 2020 at 01:32:21PM +0200, Pablo Neira Ayuso wrote:
+> Hi Sasha,
+> 
+> On Tue, Apr 14, 2020 at 11:08:40AM -0400, Sasha Levin wrote:
+> > On Mon, Apr 13, 2020 at 10:38:58PM +0200, Stefano Brivio wrote:
+> > > On Mon, 13 Apr 2020 12:39:00 -0400
+> > > Sasha Levin <sashal@kernel.org> wrote:
+> > > 
+> > > > On Tue, Apr 07, 2020 at 02:18:48AM +0200, Stefano Brivio wrote:
+> > > > 
+> > > > >I'm used to not Cc: stable on networking patches (Dave's net.git),
+> > > > >but I guess I should instead if they go through nf.git (Pablo's tree),
+> > > > >right?
+> > > > 
+> > > > Yup, this confusion has caused for quite a few netfilter fixes to not
+> > > > land in -stable. If it goes through Pablo's tree (and unless he intructs
+> > > > otherwise), you should Cc stable.
+> > > 
+> > > Hah, thanks for clarifying.
+> > > 
+> > > What do you think I should do specifically with 72239f2795fa
+> > > ("netfilter: nft_set_rbtree: Drop spurious condition for overlap detection
+> > > on insertion")?
+> > > 
+> > > I haven't Cc'ed stable on that one. Can I expect AUTOSEL to pick it up
+> > > anyway?
+> > 
+> > I'll make sure it gets queued up when it hits Linus's tree :)
+> 
+> 5.6.6 is out and this fix is still not included...
+> 
+> Would you please enqueue...
+> 
+> commit 72239f2795fab9a58633bd0399698ff7581534a3
+> Author: Stefano Brivio <sbrivio@redhat.com>
+> Date:   Wed Apr 1 17:14:38 2020 +0200
+> 
+>     netfilter: nft_set_rbtree: Drop spurious condition for overlap detection on insertion
+> 
+> for 5.6.x -stable ?
 
-No, the kernel will never see these time improvements (or non-improvements for
-small sizes). See how kmalloc() and kmalloc_node() both call kmalloc_index()
-only under "if (__builtin_constant_p(size))"
-which means kmalloc is called with a (compile-time) constant size, so this code
-is only evaluated at compile time, not while kernel is running. Otherwise it
-really wouldn't be implemented as a stream of if's :)
-The cases that are not compile time constant size end up in kmalloc_slab(), so
-you can see how that one is implemented and what its performance is.
+Now queued up, thanks.
+
+greg k-h
