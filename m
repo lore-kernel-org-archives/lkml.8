@@ -2,575 +2,298 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F511C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FC8C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD4F2206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ji5qhxy2"
+	by mail.kernel.org (Postfix) with ESMTP id 21430206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgDUP4U (ORCPT
+        id S1728422AbgDUP47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727911AbgDUP4T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:56:19 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67425C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 08:56:19 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id a9so7564153ybc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 08:56:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=74DTtnYPeeEftI+DJz90+b857+M80IqiySHJZYpCKkE=;
-        b=Ji5qhxy2FouOvLD2CFt074w2szmXScutjMXqgXYXykhjIC6PquB0ml0HhM2h4tg3IU
-         mtbq00ZIIY95uzsLAgfAyuxslA4Wu+RWS443qAX4m1loUdvDV5rjEbIgYFYo1hwTKeNf
-         wKgZpG/HCgMZu7tEYY6OFQ1frrLhBa+x7jL+ogBkZ9bEekWG0DwnncLqhx27pGIVNItn
-         1Wmb+nTGi2C/OfEaYZqxvpByX9VKf2y5FRmEwIcAT/vqeDms1PfD06rhFOGWK01TWxYN
-         a/IN7RLASBEiOfKuFGN7gdwe4hjyPTDQEHr/o2USRWhn8OKFId1kYsOXEABgOpwrzChO
-         Vfjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=74DTtnYPeeEftI+DJz90+b857+M80IqiySHJZYpCKkE=;
-        b=lfKS6y4h/92/Pul893/jkZFTbfL77yAHukmE5BQFatXsj7RSMduK7Ini3EG6bbj5YE
-         gFqjTTJiieCWDsmuhKE3y6ESRMDd2H2fwv/nAnMCti1SpSfqZdUBmaML/t3Hos6KpNbk
-         mQlmw9VyrvaXB0c4meu6xhNKoXQwhjtJqLAjyrw2btZiIXr0ov+fjE8KDVDYqOYKOw+2
-         skLkWHIjl+Mgl4hGjANy+HoOF2ojriOtdKVbFPp0aSDLXZec7nYU6y3ZW2iTQ5ioUPkW
-         N9fTejRF8azAYRrmGNzi9Vv+wqF5D11Ge/i+uksCoO7NWD2LCFT9ZL7zXz0wE5tjrhSi
-         26fw==
-X-Gm-Message-State: AGi0PuZPtaqp2LM8DLSj3tUrhtF3aVAb3YB/DDxSgktD9UdKG3z7+yzy
-        NPxiQAP47J4wByYyAqmKRYYsXh0mtS8X8OoNj+UZFg==
-X-Google-Smtp-Source: APiQypLsdE4YMQfgsknD/ezEkbulhYz2MuiCQ6O7zf68qUp+WNAPs6T+pVpFuKWo1YX5EXPKCNRs8pOa9QfGa9KAGyI=
-X-Received: by 2002:a25:bd4c:: with SMTP id p12mr29034435ybm.140.1587484577802;
- Tue, 21 Apr 2020 08:56:17 -0700 (PDT)
+        Tue, 21 Apr 2020 11:56:59 -0400
+Received: from mga01.intel.com ([192.55.52.88]:6406 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725963AbgDUP46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 11:56:58 -0400
+IronPort-SDR: PMoW7R1OL8gpQj2g+OHWnCVk4rjs6v7j4GRa/VDtZJl76aD7DJOFOMjTv6XxDA2odyxTAZNydD
+ oWaBAae7MO+A==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 08:56:55 -0700
+IronPort-SDR: 1TLJ+VKzDLrLxqmaf03G9NyNcdj5ifaBj7PUEGjv4BtksyQwQ2knrIDE7Nm6LN3mxo+ZHj4PqB
+ rH+XY3wRdAWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,410,1580803200"; 
+   d="gz'50?scan'50,208,50";a="273566595"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 21 Apr 2020 08:56:52 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jQvGQ-0004QX-77; Tue, 21 Apr 2020 23:56:46 +0800
+Date:   Tue, 21 Apr 2020 23:56:29 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-kbuild@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, linux-kbuild@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arch: split MODULE_ARCH_VERMAGIC definitions out to
+ <asm/vermagic.h>
+Message-ID: <202004212303.QGojecQx%lkp@intel.com>
+References: <20200419222804.483191-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-References: <20200420163657.60650-1-mathewk@chromium.org> <20200420163657.60650-3-mathewk@chromium.org>
- <AM6PR10MB2263B60191A7240E3F6E0C7A80D50@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <20200421124112.GA618654@kuha.fi.intel.com>
-In-Reply-To: <20200421124112.GA618654@kuha.fi.intel.com>
-From:   Mat King <mathewk@google.com>
-Date:   Tue, 21 Apr 2020 09:56:06 -0600
-Message-ID: <CAL_quvQRJXoZ3MntB_G6c-y_DL2pnkN+_Vp0D2Ykq9sP++RnCA@mail.gmail.com>
-Subject: Re: [PATCH v0 2/2] typec: Add Type-C charger
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Mathew King <mathewk@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="MGYHOYXEY6WxJCY8"
+Content-Disposition: inline
+In-Reply-To: <20200419222804.483191-1-masahiroy@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 6:41 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> On Tue, Apr 21, 2020 at 08:44:38AM +0000, Adam Thomson wrote:
-> > On 20 April 2020 17:37, Mathew King wrote:
-> >
-> > > Add an option to expose USB Type-C ports that can charge system
-> > > batteries as a power_supply class. This implementation only exposes
-> > > three properties of the power supply.
-> > >
-> > > POWER_SUPPLY_PROP_ONLINE - Set to true if the Type-C port is configured
-> > >                            as a sink and is connected to a partner
-> > > POWER_SUPPLY_PROP_STATUS - Set to CHARGING if a partner is connected and
-> > >                            the port is a sink and set to NOT_CHARGING
-> > >                            otherwise
-> > > POWER_SUPPLY_PROP_USB_TYPE - When a partner is conneced set to TYPE_C,
-> > >                              TYPE_PD, or TYPE_PD_DRP depending on the
-> > >                              partner capibilities and set to
-> > >                              TYPE_UNKNOWN otherwise
-> > >
-> > > This implementation can be expanded as the typec class is expaneded. In
-> > > particular the STATUS property should show more than CHARGING and
-> > > NOT_CHARGING. Also properties like VOLTAGE and CURRENT can be added
-> > > when
-> > > the typec class supports getting PDOs.
-> >
-> > Hmm, this functionally looks almost exactly like code already available in TCPM,
-> > except a much smaller subset. This looks like it would duplicate that work so as
-> > it stands doesn't feel sensible to me. It may be that the work in TCPM needs
-> > refactoring, but I don't believe the two should coexist.
->
-> I agree. We can't register a psy for every port and partner
-> unconditionally like that.
->
-> I do think that for the sake of uniformity it would make sense to have
-> the Type-C subsystem supply API that the Type-C drivers can use for
-> registering the psy instead of every Type-C driver doing that directly
-> with the psy API. So this patch should first introduce that API
-> without doing anything automatically.
->
-> Once things settle down, we can consider taking care of the psy
-> registration for the drivers as well.
->
-> Ideally the psy(s) registered here would supply the same information
-> and functionality as the psy registered in TCPM. Then a separate patch
-> that follows (that is part of the series) could simply convert TCPM to
-> use this new API for registering the psy.
->
-> thanks,
 
-Thank you for the feedback Adam and Heikki. I will work on improving
-the port API so that the psy is not created unconditionally and I will
-work on getting to parity with the TCPM psy so that it can be switched
-to this new method.
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
-> > >
-> > > Signed-off-by: Mathew King <mathewk@chromium.org>
-> > > ---
-> > >  drivers/usb/typec/Kconfig   |  11 ++
-> > >  drivers/usb/typec/Makefile  |   1 +
-> > >  drivers/usb/typec/charger.c | 204
-> > > ++++++++++++++++++++++++++++++++++++
-> > >  drivers/usb/typec/charger.h |  33 ++++++
-> > >  drivers/usb/typec/class.c   |  48 +++++++--
-> > >  drivers/usb/typec/class.h   |   2 +
-> > >  6 files changed, 290 insertions(+), 9 deletions(-)
-> > >  create mode 100644 drivers/usb/typec/charger.c
-> > >  create mode 100644 drivers/usb/typec/charger.h
-> > >
-> > > diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-> > > index b4f2aac7ae8a..1040c990cb7e 100644
-> > > --- a/drivers/usb/typec/Kconfig
-> > > +++ b/drivers/usb/typec/Kconfig
-> > > @@ -46,6 +46,17 @@ menuconfig TYPEC
-> > >
-> > >  if TYPEC
-> > >
-> > > +config TYPEC_CHARGER
-> > > +   bool "Type-C Power Supply support"
-> > > +   depends on POWER_SUPPLY
-> > > +   help
-> > > +     Say Y here to enable Type-C charging ports to be exposed as a power
-> > > +     supply class.
-> > > +
-> > > +     If you choose this option Type-C charger support will be built into
-> > > +     the typec driver. This will expose all Type-C ports as a power_supply
-> > > +     class.
-> > > +
-> > >  source "drivers/usb/typec/tcpm/Kconfig"
-> > >
-> > >  source "drivers/usb/typec/ucsi/Kconfig"
-> > > diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
-> > > index 7753a5c3cd46..6fc5424761a1 100644
-> > > --- a/drivers/usb/typec/Makefile
-> > > +++ b/drivers/usb/typec/Makefile
-> > > @@ -1,6 +1,7 @@
-> > >  # SPDX-License-Identifier: GPL-2.0
-> > >  obj-$(CONFIG_TYPEC)                += typec.o
-> > >  typec-y                            := class.o mux.o bus.o
-> > > +typec-$(CONFIG_TYPEC_CHARGER)      += charger.o
-> > >  obj-$(CONFIG_TYPEC)                += altmodes/
-> > >  obj-$(CONFIG_TYPEC_TCPM)   += tcpm/
-> > >  obj-$(CONFIG_TYPEC_UCSI)   += ucsi/
-> > > diff --git a/drivers/usb/typec/charger.c b/drivers/usb/typec/charger.c
-> > > new file mode 100644
-> > > index 000000000000..07c3cd065be8
-> > > --- /dev/null
-> > > +++ b/drivers/usb/typec/charger.c
-> > > @@ -0,0 +1,204 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * USB Type-C Charger Class
-> > > + *
-> > > + * Copyright (C) 2020, Google LLC
-> > > + * Author: Mathew King <mathewk@google.com>
-> > > + */
-> > > +
-> > > +#include <linux/slab.h>
-> > > +
-> > > +#include "charger.h"
-> > > +#include "class.h"
-> > > +
-> > > +static enum power_supply_property typec_charger_props[] = {
-> > > +   POWER_SUPPLY_PROP_ONLINE,
-> > > +   POWER_SUPPLY_PROP_STATUS,
-> > > +   POWER_SUPPLY_PROP_USB_TYPE
-> > > +};
-> > > +
-> > > +static enum power_supply_usb_type typec_charger_usb_types[] = {
-> > > +   POWER_SUPPLY_USB_TYPE_UNKNOWN,
-> > > +   POWER_SUPPLY_USB_TYPE_C,
-> > > +   POWER_SUPPLY_USB_TYPE_PD,
-> > > +   POWER_SUPPLY_USB_TYPE_PD_DRP,
-> > > +};
-> > > +
-> > > +static int typec_charger_get_prop(struct power_supply *psy,
-> > > +                             enum power_supply_property psp,
-> > > +                             union power_supply_propval *val)
-> > > +{
-> > > +   struct typec_charger *charger = power_supply_get_drvdata(psy);
-> > > +
-> > > +   switch (psp) {
-> > > +   case POWER_SUPPLY_PROP_ONLINE:
-> > > +           val->intval = charger->psy_online;
-> > > +           break;
-> > > +   case POWER_SUPPLY_PROP_STATUS:
-> > > +           val->intval = charger->psy_status;
-> > > +           break;
-> > > +   case POWER_SUPPLY_PROP_USB_TYPE:
-> > > +           val->intval = charger->psy_usb_type;
-> > > +           break;
-> > > +   default:
-> > > +           return -EINVAL;
-> > > +   }
-> > > +
-> > > +   return 0;
-> > > +}
-> > > +
-> > > +static int typec_charger_set_prop(struct power_supply *psy,
-> > > +                             enum power_supply_property psp,
-> > > +                             const union power_supply_propval *val)
-> > > +{
-> > > +   return -EINVAL;
-> > > +}
-> > > +
-> > > +static int typec_charger_is_writeable(struct power_supply *psy,
-> > > +                                 enum power_supply_property psp)
-> > > +{
-> > > +   return 0;
-> > > +}
-> > > +
-> > > +/**
-> > > + * typec_charger_changed - Notify of a Type-C charger change
-> > > + * @charger: Type-C charger that changed
-> > > + *
-> > > + * Notifies the Type-C charger that one or more of its attributes may have
-> > > + * changed.
-> > > + */
-> > > +void typec_charger_changed(struct typec_charger *charger)
-> > > +{
-> > > +   int last_psy_status, last_psy_usb_type, last_psy_online;
-> > > +
-> > > +   last_psy_online = charger->psy_online;
-> > > +   last_psy_status = charger->psy_status;
-> > > +   last_psy_usb_type = charger->psy_usb_type;
-> > > +
-> > > +   if (!charger->partner) {
-> > > +           charger->psy_usb_type =
-> > > POWER_SUPPLY_USB_TYPE_UNKNOWN;
-> > > +           charger->psy_online = 0;
-> > > +           charger->psy_status =
-> > > POWER_SUPPLY_STATUS_NOT_CHARGING;
-> > > +           goto out_notify;
-> > > +   }
-> > > +
-> > > +   if (charger->port->pwr_role == TYPEC_SOURCE) {
-> > > +           charger->psy_online = 0;
-> > > +           charger->psy_status =
-> > > POWER_SUPPLY_STATUS_NOT_CHARGING;
-> > > +           if (charger->partner->usb_pd)
-> > > +                   charger->psy_usb_type =
-> > > POWER_SUPPLY_USB_TYPE_PD_DRP;
-> > > +           else
-> > > +                   charger->psy_usb_type =
-> > > POWER_SUPPLY_USB_TYPE_UNKNOWN;
-> > > +
-> > > +           goto out_notify;
-> > > +   }
-> > > +
-> > > +   charger->psy_online = 1;
-> > > +   charger->psy_status = POWER_SUPPLY_STATUS_CHARGING;
-> > > +
-> > > +   if (charger->partner->usb_pd)
-> > > +           charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_PD;
-> > > +   else
-> > > +           charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_C;
-> > > +
-> > > +out_notify:
-> > > +   if (last_psy_usb_type != charger->psy_usb_type ||
-> > > +       last_psy_status != charger->psy_status ||
-> > > +       last_psy_online != charger->psy_online)
-> > > +           power_supply_changed(charger->psy);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(typec_charger_changed);
-> > > +
-> > > +/**
-> > > + * typec_register_charger - Register a USB Type-C Charger
-> > > + * @port: Type-C port to register as a charger
-> > > + *
-> > > + * Registers a Type-C port as a charger.
-> > > + *
-> > > + * Returns handle to the charger on success or ERR_PTR on failure.
-> > > + */
-> > > +struct typec_charger *typec_register_charger(struct typec_port *port)
-> > > +{
-> > > +   struct power_supply_config psy_cfg = {};
-> > > +   struct typec_charger *charger;
-> > > +   struct power_supply *psy;
-> > > +
-> > > +   charger = kzalloc(sizeof(struct typec_charger), GFP_KERNEL);
-> > > +   if (!port)
-> > > +           return ERR_PTR(-ENOMEM);
-> > > +
-> > > +   charger->port = port;
-> > > +   sprintf(charger->name, TYPEC_CHARGER_DIR_NAME, port->id);
-> > > +   charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_UNKNOWN;
-> > > +   charger->psy_online = 0;
-> > > +   charger->psy_status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-> > > +
-> > > +   charger->psy_desc.name = charger->name;
-> > > +   charger->psy_desc.type = POWER_SUPPLY_TYPE_USB;
-> > > +   charger->psy_desc.get_property = typec_charger_get_prop;
-> > > +   charger->psy_desc.set_property = typec_charger_set_prop;
-> > > +   charger->psy_desc.property_is_writeable =
-> > > +           typec_charger_is_writeable;
-> > > +   charger->psy_desc.properties = typec_charger_props;
-> > > +   charger->psy_desc.num_properties =
-> > > +                           ARRAY_SIZE(typec_charger_props);
-> > > +   charger->psy_desc.usb_types = typec_charger_usb_types;
-> > > +   charger->psy_desc.num_usb_types =
-> > > +                   ARRAY_SIZE(typec_charger_usb_types);
-> > > +   psy_cfg.drv_data = charger;
-> > > +
-> > > +   psy = devm_power_supply_register_no_ws(&port->dev, &charger-
-> > > >psy_desc,
-> > > +                                          &psy_cfg);
-> > > +   if (IS_ERR(psy)) {
-> > > +           dev_err(&port->dev, "Failed to register Type-C power
-> > > supply\n");
-> > > +           return ERR_CAST(psy);
-> > > +   }
-> > > +   charger->psy = psy;
-> > > +
-> > > +   return charger;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(typec_register_charger);
-> > > +
-> > > +/**
-> > > + * typec_unregister_charger - Unregister a USB Type-C Charger
-> > > + * @charger: The charger to unregister
-> > > + *
-> > > + * Unregisters a charger created with typec_register_charger().
-> > > + */
-> > > +void typec_unregister_charger(struct typec_charger *charger)
-> > > +{
-> > > +   if (!IS_ERR_OR_NULL(charger))
-> > > +           kfree(charger);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(typec_unregister_charger);
-> > > +
-> > > +/**
-> > > + * typec_charger_register_partner - Register a partner with a USB Type-C
-> > > Charger
-> > > + * @charger: The charger to add the partner too
-> > > + * @partner: The partner to add
-> > > + *
-> > > + * Add a partner to a Type-C charger to indicate that the partner is connected
-> > > + * and may be charging.
-> > > + */
-> > > +void typec_charger_register_partner(struct typec_charger *charger,
-> > > +                               struct typec_partner *partner)
-> > > +{
-> > > +   charger->partner = partner;
-> > > +   typec_charger_changed(charger);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(typec_charger_register_partner);
-> > > +
-> > > +/**
-> > > + * typec_charger_unregister_partner - Unregister a USB Type-C Charger partner
-> > > + * @charger: The charger to remove the partner from
-> > > + *
-> > > + * Remove partner added with typec_charger_register_partner().
-> > > + */
-> > > +void typec_charger_unregister_partner(struct typec_charger *charger)
-> > > +{
-> > > +   if (!IS_ERR_OR_NULL(charger))
-> > > +           charger->partner = NULL;
-> > > +
-> > > +   typec_charger_changed(charger);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(typec_charger_unregister_partner);
-> > > diff --git a/drivers/usb/typec/charger.h b/drivers/usb/typec/charger.h
-> > > new file mode 100644
-> > > index 000000000000..32cdaa7c1a83
-> > > --- /dev/null
-> > > +++ b/drivers/usb/typec/charger.h
-> > > @@ -0,0 +1,33 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > +
-> > > +#ifndef __USB_TYPEC_CHARGER_H__
-> > > +#define __USB_TYPEC_CHARGER_H__
-> > > +
-> > > +#include <linux/power_supply.h>
-> > > +#include <linux/usb/typec.h>
-> > > +
-> > > +#include "class.h"
-> > > +
-> > > +#define TYPEC_CHARGER_DIR_NAME
-> > >     "TYPEC_CHARGER%d"
-> > > +#define TYPEC_CHARGER_DIR_NAME_LENGTH
-> > >     sizeof(TYPEC_CHARGER_DIR_NAME)
-> > > +
-> > > +struct typec_charger {
-> > > +   struct typec_port *port;
-> > > +   struct typec_partner *partner;
-> > > +   char name[TYPEC_CHARGER_DIR_NAME_LENGTH];
-> > > +   struct power_supply *psy;
-> > > +   struct power_supply_desc psy_desc;
-> > > +   int psy_usb_type;
-> > > +   int psy_online;
-> > > +   int psy_status;
-> > > +};
-> > > +
-> > > +struct typec_charger *typec_register_charger(struct typec_port *port);
-> > > +void typec_unregister_charger(struct typec_charger *charger);
-> > > +
-> > > +void typec_charger_register_partner(struct typec_charger *charger,
-> > > +                               struct typec_partner *partner);
-> > > +void typec_charger_unregister_partner(struct typec_charger *charger);
-> > > +void typec_charger_changed(struct typec_charger *charger);
-> > > +
-> > > +#endif /* __USB_TYPEC_CHARGER_H__ */
-> > > diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> > > index 9a1fdce137b9..1542d3af342c 100644
-> > > --- a/drivers/usb/typec/class.c
-> > > +++ b/drivers/usb/typec/class.c
-> > > @@ -13,6 +13,7 @@
-> > >  #include <linux/slab.h>
-> > >
-> > >  #include "bus.h"
-> > > +#include "charger.h"
-> > >  #include "class.h"
-> > >
-> > >  static DEFINE_IDA(typec_index_ida);
-> > > @@ -489,6 +490,12 @@ static void typec_partner_release(struct device *dev)
-> > >  {
-> > >     struct typec_partner *partner = to_typec_partner(dev);
-> > >
-> > > +   if (IS_ENABLED(CONFIG_TYPEC_CHARGER)) {
-> > > +           struct typec_port *port = to_typec_port(dev->parent);
-> > > +
-> > > +           typec_charger_unregister_partner(port->charger);
-> > > +   }
-> > > +
-> > >     ida_destroy(&partner->mode_ids);
-> > >     kfree(partner);
-> > >  }
-> > > @@ -580,6 +587,10 @@ struct typec_partner *typec_register_partner(struct
-> > > typec_port *port,
-> > >             return ERR_PTR(ret);
-> > >     }
-> > >
-> > > +   if (IS_ENABLED(CONFIG_TYPEC_CHARGER) && port->charger) {
-> > > +           typec_charger_register_partner(port->charger, partner);
-> > > +   }
-> > > +
-> > >     return partner;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(typec_register_partner);
-> > > @@ -1283,6 +1294,9 @@ static void typec_release(struct device *dev)
-> > >  {
-> > >     struct typec_port *port = to_typec_port(dev);
-> > >
-> > > +   if (IS_ENABLED(CONFIG_TYPEC_CHARGER))
-> > > +           typec_unregister_charger(port->charger);
-> > > +
-> > >     ida_simple_remove(&typec_index_ida, port->id);
-> > >     ida_destroy(&port->mode_ids);
-> > >     typec_switch_put(port->sw);
-> > > @@ -1564,7 +1578,8 @@ struct typec_port *typec_register_port(struct device
-> > > *parent,
-> > >     id = ida_simple_get(&typec_index_ida, 0, 0, GFP_KERNEL);
-> > >     if (id < 0) {
-> > >             kfree(port);
-> > > -           return ERR_PTR(id);
-> > > +           ret = id;
-> > > +           goto err_return;
-> > >     }
-> > >
-> > >     switch (cap->type) {
-> > > @@ -1617,32 +1632,47 @@ struct typec_port *typec_register_port(struct device
-> > > *parent,
-> > >
-> > >     port->cap = kmemdup(cap, sizeof(*cap), GFP_KERNEL);
-> > >     if (!port->cap) {
-> > > -           put_device(&port->dev);
-> > > -           return ERR_PTR(-ENOMEM);
-> > > +           ret = -ENOMEM;
-> > > +           goto err_put_device;
-> > >     }
-> > >
-> > >     port->sw = typec_switch_get(&port->dev);
-> > >     if (IS_ERR(port->sw)) {
-> > >             ret = PTR_ERR(port->sw);
-> > > -           put_device(&port->dev);
-> > > -           return ERR_PTR(ret);
-> > > +           goto err_put_device;
-> > >     }
-> > >
-> > >     port->mux = typec_mux_get(&port->dev, NULL);
-> > >     if (IS_ERR(port->mux)) {
-> > >             ret = PTR_ERR(port->mux);
-> > > -           put_device(&port->dev);
-> > > -           return ERR_PTR(ret);
-> > > +           goto err_put_device;
-> > >     }
-> > >
-> > >     ret = device_add(&port->dev);
-> > >     if (ret) {
-> > >             dev_err(parent, "failed to register port (%d)\n", ret);
-> > > -           put_device(&port->dev);
-> > > -           return ERR_PTR(ret);
-> > > +           goto err_put_device;
-> > > +   }
-> > > +
-> > > +   if (IS_ENABLED(CONFIG_TYPEC_CHARGER)) {
-> > > +           port->charger = typec_register_charger(port);
-> > > +
-> > > +           if (IS_ERR(port->charger)) {
-> > > +                   ret = PTR_ERR(port->charger);
-> > > +                   goto err_device_del;
-> > > +           }
-> > >     }
-> > >
-> > >     return port;
-> > > +
-> > > +err_device_del:
-> > > +   device_del(&port->dev);
-> > > +
-> > > +err_put_device:
-> > > +   put_device(&port->dev);
-> > > +
-> > > +err_return:
-> > > +   return ERR_PTR(ret);
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(typec_register_port);
-> > >
-> > > diff --git a/drivers/usb/typec/class.h b/drivers/usb/typec/class.h
-> > > index ec933dfe1323..0ff0a590d316 100644
-> > > --- a/drivers/usb/typec/class.h
-> > > +++ b/drivers/usb/typec/class.h
-> > > @@ -41,6 +41,8 @@ struct typec_port {
-> > >     struct typec_switch             *sw;
-> > >     struct typec_mux                *mux;
-> > >
-> > > +   struct typec_charger            *charger;
-> > > +
-> > >     const struct typec_capability   *cap;
-> > >     const struct typec_operations   *ops;
-> > >  };
-> > > --
-> > > 2.26.1.301.g55bc3eb7cb9-goog
->
-> --
-> heikki
+Hi Masahiro,
+
+I love your patch! Yet something to improve:
+
+[auto build test ERROR on linus/master]
+[also build test ERROR on v5.7-rc2 next-20200421]
+[cannot apply to arm/for-next arm64/for-next/core ia64/next powerpc/next jeyu/modules-next arc/for-next tip/x86/core]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Masahiro-Yamada/arch-split-MODULE_ARCH_VERMAGIC-definitions-out-to-asm-vermagic-h/20200421-194238
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ae83d0b416db002fe95601e7f97f64b59514d936
+config: nios2-3c120_defconfig (attached as .config)
+compiler: nios2-linux-gcc (GCC) 9.3.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=nios2 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/vermagic.h:6,
+                    from net/ethtool/ioctl.c:20:
+>> ./arch/nios2/include/generated/asm/vermagic.h:1:10: fatal error: asm-generic/vermagic.h: No such file or directory
+       1 | #include <asm-generic/vermagic.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~
+   compilation terminated.
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+
+--MGYHOYXEY6WxJCY8--
