@@ -2,185 +2,129 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4BDC55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C8FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 511562068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815262068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:45:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="P/FBQyCS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgDUKnN (ORCPT
+        id S1728578AbgDUKp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 06:43:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728480AbgDUKnM (ORCPT
+        Tue, 21 Apr 2020 06:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42082 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgDUKp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 06:43:12 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LAVxbu144167
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:43:12 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmu7y4mv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:43:12 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 21 Apr 2020 11:42:46 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 Apr 2020 11:42:42 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03LAh4ui48234514
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 10:43:04 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 587084C046;
-        Tue, 21 Apr 2020 10:43:04 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D75B84C044;
-        Tue, 21 Apr 2020 10:43:03 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.151.164])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Apr 2020 10:43:03 +0000 (GMT)
-Subject: Re: stop using ioctl_by_bdev in the s390 DASD driver
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200421061226.33731-1-hch@lst.de>
- <b7e4a728-1f58-f304-cb5b-1aa2206a6bb4@de.ibm.com>
- <20200421123256.2f5d9dbd.cohuck@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Tue, 21 Apr 2020 12:43:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 21 Apr 2020 06:45:29 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3545C061A0F;
+        Tue, 21 Apr 2020 03:45:14 -0700 (PDT)
+Received: from flygoat-x1e (unknown [IPv6:240e:390:49b:be80::d68])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id AC459204A5;
+        Tue, 21 Apr 2020 10:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587465913; bh=DnSjaOgoALX2m+iSeVkiSgAR/vBfkUhTJ1AIukm8RPU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=P/FBQyCSpMosEP2ImcpLDQ+rg7+sVgJoUZq86JSCUbnsGa/GfcRcXknXKfr1nD+/U
+         cADK2Led8HtfksaLuX07yKUj/byaAuV7MR8LgX0hInLB9vPJbaR5Lox/o1mX55LHLM
+         E+FoI9zWIcYAn2nCu5ffwlPPcvf17sl3o8UXe7JcMBEG1x0mjMRsjwdgwK+mchXVKW
+         2oeGsJd6xtlHsH1fJhGoAS32EAzmOBGMXi6uvcM1cuTFjFFrRTl8VcAxz6nd7grIyz
+         gVVo63K3XD6bJm0xzzn3Xhih1H/3B41JKdN4hXPPmMEwbD4B1Gs0cloD2lbsep/Uiu
+         536IuqO8Fay1Q==
+Date:   Tue, 21 Apr 2020 18:45:00 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>
+Subject: Re: [PATCH 3/3] MIPS: Reduce possibility of kernel panic under
+ CONFIG_SWIOTLB
+Message-ID: <20200421184500.368b7e2a@flygoat-x1e>
+In-Reply-To: <20200421173525.460949b0@flygoat-x1e>
+References: <1587459869-12183-1-git-send-email-yangtiezhu@loongson.cn>
+        <1587459869-12183-4-git-send-email-yangtiezhu@loongson.cn>
+        <20200421173525.460949b0@flygoat-x1e>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200421123256.2f5d9dbd.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042110-0012-0000-0000-000003A88637
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042110-0013-0000-0000-000021E5D33D
-Message-Id: <427b0095-6a38-5632-8e46-422c7a4a552a@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-21_03:2020-04-20,2020-04-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0
- impostorscore=0 mlxscore=0 malwarescore=0 suspectscore=0 mlxlogscore=692
- clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004210081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 21 Apr 2020 17:35:25 +0800
+Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 
-
-On 21.04.20 12:32, Cornelia Huck wrote:
-> On Tue, 21 Apr 2020 11:58:31 +0200
-> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+> On Tue, 21 Apr 2020 17:04:29 +0800
+> Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 > 
->> On 21.04.20 08:12, Christoph Hellwig wrote:
->>> Hi Jens and DASD maintainers,
->>>
->>> can you take a look at this series, which stops the DASD driver from
->>> issuing ioctls from kernel space, in preparation of removing
->>> ioctl_by_bdev.  I don't really like the new s390-only method, but short
->>> of forcing the dasd driver to be built into the kernel I can't think of
->>> anything better.  But maybe the s390 maintainers are fine with forcing
->>> the DASD driver to be built in, in which case we could go down that
->>> route?  
->>
->> Hmm the defconfig results in dasd built-in anyway. But distros really like
->> to keep it modular.
->>
->> Hmm, we do have
->>
->> obj-$(CONFIG_DASD) += dasd_mod.o
->> obj-$(CONFIG_DASD_DIAG) += dasd_diag_mod.o
->> obj-$(CONFIG_DASD_ECKD) += dasd_eckd_mod.o
->> obj-$(CONFIG_DASD_FBA)  += dasd_fba_mod.o
->>
->> Would it work to make CONFIG_DASD built-in only and keep the other 3 as modules?
->> Not sure about the implications. 
->>
+[...]
 > 
-> I don't think non-eckd dasd drivers are really useful outside of z/VM
-> guests, so keeping at least the disciplines modular would be good.
+> AFAIK there are some reasons that we set it to bottom_up.
+> On some platforms, bootloader won't place cmdline & devicetree into
+> reserved memory but place them just after kernel in memory. That means
+> if you set it as bottom up, then early allocate memory might collide
+> with these boot arguments.
+
+Sorry please ignore it.
+
+I had a wrong impression on memory layout.
+
+It should be fine.
+
+Thanks.
+
 > 
-> Also, what about special purpose environments like the zfcp dumper?
-> Would be good to be able to keep these small.
+> I'm not even sure if it works fine on Loongson with early PMON.
 > 
-> How big is the dasd code in the end?
-
-
-  File: drivers/s390/block/dasd_diag_mod.ko
-  Size: 519976    	Blocks: 1016       IO Block: 4096   regular file
---
-  File: drivers/s390/block/dasd_eckd_mod.ko
-  Size: 2125976   	Blocks: 4160       IO Block: 4096   regular file
---
-  File: drivers/s390/block/dasd_fba_mod.ko
-  Size: 524256    	Blocks: 1024       IO Block: 4096   regular file
---
-  File: drivers/s390/block/dasd_mod.ko
-  Size: 3273464   	Blocks: 6400       IO Block: 4096   regular file
-
-
-So 3 MB seems quite a lot for special purpose Linuxes like the zfcp dumper. 
+> I had met that issue before, the solution for me is to reduce SWIOTLB
+> size.
+> 
+> > 
+> > Reported-by: Juxin Gao <gaojuxin@loongson.cn>
+> > Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+> > Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > ---
+> >  arch/mips/kernel/setup.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+> > index 5481a0c..8db533c 100644
+> > --- a/arch/mips/kernel/setup.c
+> > +++ b/arch/mips/kernel/setup.c
+> > @@ -700,7 +700,17 @@ static void __init arch_mem_init(char
+> > **cmdline_p) memblock_reserve(crashk_res.start,
+> > resource_size(&crashk_res)); #endif
+> >  	device_tree_init();
+> > +
+> > +	/*
+> > +	 * In order to reduce the possibility of kernel panic when
+> > failed to
+> > +	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to
+> > allocate
+> > +	 * low memory as small as possible before
+> > plat_swiotlb_setup(), so
+> > +	 * make sparse_init() using top-down allocation.
+> > +	 */
+> > +	memblock_set_bottom_up(false);
+> >  	sparse_init();
+> > +	memblock_set_bottom_up(true);
+> > +
+> >  	plat_swiotlb_setup();
+> >  
+> >  	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));  
+> 
+> --
+> Jiaxun Yang
+> 
 
