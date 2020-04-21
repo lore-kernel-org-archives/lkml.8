@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62496C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94408C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 422D5206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 648AC20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587482162;
-	bh=uklg+mgdxavZLV9+AiizuXXNfarJAGtL7/umiBXuknU=;
+	s=default; t=1587482164;
+	bh=YVIscHMOrTaQHoHxqIyKIGGcJUXzpYR5yik6aJPF/Cg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2aty6nkIh4/ajp86EUBauxZ+vdhFmFp2s8kFai5HhwPqqOQ4B2nyl/sAK3iZ51uTS
-	 ZqEZjbpZZqFXbx9OZs52USQApXftL3qk9/0mhZOp5SKMt5HI/NpB02XLxDmWgnY058
-	 sYr2DkheGXuZYHX6d8AScYFef8OX/6sW4sTE6bbo=
+	b=IAOpOM0WcSnnp1ThQkuiQnUXjzmoYYUMktv468YjdbvJ/H5kA+Kx5aKsztFwWigPI
+	 RtIDH4AtjR0+eWb0Spk7b08WzuQ4LughpLSJDtU+KyCO+ypCGBYjb811j5HpkHOOGZ
+	 e9U92Ip8RjtU191ymFeBKwa0egg3p7PuPzmggiL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgDUPQB (ORCPT
+        id S1727928AbgDUPQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:16:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34834 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 11:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726688AbgDUPP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:15:57 -0400
+        id S1726946AbgDUPQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 11:16:01 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85933206D9;
-        Tue, 21 Apr 2020 15:15:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9071C2070B;
+        Tue, 21 Apr 2020 15:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587482157;
-        bh=uklg+mgdxavZLV9+AiizuXXNfarJAGtL7/umiBXuknU=;
+        s=default; t=1587482160;
+        bh=YVIscHMOrTaQHoHxqIyKIGGcJUXzpYR5yik6aJPF/Cg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dtXWGwjz6I5F+kGQ68k8ayw0bI65bZkP8kaAXCi7THCQM0ukdXRHZFQ5nt3vugjHP
-         JTXFMatja5sk2QZwu5bcp5B7kZ5jF4h5S1YzFiIRYfc4nCPITF+uSbS2SV/P/+6Fin
-         IpsAHA5kZmqqwLGJUw4Wn18mTeQlp2dujZroH6FM=
+        b=E3FVW4+BW1V++0qO9DOErMnVGSt3t0xhN1WWDXKeeTzYQIIgbKQaQrT+RcFp89mdK
+         JKpqrEtr6r/9FHjgPmvqfNy3tLdIvUaY/ICxW+VNSsBcRtIR0TpptndtMekxDVOhID
+         SW0N+JBf2l/QIKf7X85xEdakm/5UdbmoRQ9zw4mE=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
@@ -54,10 +54,10 @@ Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
         Peter Oberparleiter <oberpar@linux.ibm.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v4 04/11] fault_inject: Don't rely on "return value" from WRITE_ONCE()
-Date:   Tue, 21 Apr 2020 16:15:30 +0100
-Message-Id: <20200421151537.19241-5-will@kernel.org>
+        Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH v4 05/11] arm64: csum: Disable KASAN for do_csum()
+Date:   Tue, 21 Apr 2020 16:15:31 +0100
+Message-Id: <20200421151537.19241-6-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200421151537.19241-1-will@kernel.org>
 References: <20200421151537.19241-1-will@kernel.org>
@@ -68,33 +68,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's a bit weird that WRITE_ONCE() evaluates to the value it stores and
-it's different to smp_store_release(), which can't be used this way.
+do_csum() over-reads the source buffer and therefore abuses
+READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
+READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
+'__no_sanitize_address' annotation, just annotate do_csum() explicitly
+and fall back to normal loads.
 
-In preparation for preventing this in WRITE_ONCE(), change the fault
-injection code to use a local variable instead.
-
-Cc: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- lib/fault-inject.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/lib/csum.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/lib/fault-inject.c b/lib/fault-inject.c
-index 8186ca84910b..ce12621b4275 100644
---- a/lib/fault-inject.c
-+++ b/lib/fault-inject.c
-@@ -106,7 +106,9 @@ bool should_fail(struct fault_attr *attr, ssize_t size)
- 		unsigned int fail_nth = READ_ONCE(current->fail_nth);
+diff --git a/arch/arm64/lib/csum.c b/arch/arm64/lib/csum.c
+index 60eccae2abad..78b87a64ca0a 100644
+--- a/arch/arm64/lib/csum.c
++++ b/arch/arm64/lib/csum.c
+@@ -14,7 +14,11 @@ static u64 accumulate(u64 sum, u64 data)
+ 	return tmp + (tmp >> 64);
+ }
  
- 		if (fail_nth) {
--			if (!WRITE_ONCE(current->fail_nth, fail_nth - 1))
-+			fail_nth--;
-+			WRITE_ONCE(current->fail_nth, fail_nth);
-+			if (!fail_nth)
- 				goto fail;
+-unsigned int do_csum(const unsigned char *buff, int len)
++/*
++ * We over-read the buffer and this makes KASAN unhappy. Instead, disable
++ * instrumentation and call kasan explicitly.
++ */
++unsigned int __no_sanitize_address do_csum(const unsigned char *buff, int len)
+ {
+ 	unsigned int offset, shift, sum;
+ 	const u64 *ptr;
+@@ -42,7 +46,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
+ 	 * odd/even alignment, and means we can ignore it until the very end.
+ 	 */
+ 	shift = offset * 8;
+-	data = READ_ONCE_NOCHECK(*ptr++);
++	data = *ptr++;
+ #ifdef __LITTLE_ENDIAN
+ 	data = (data >> shift) << shift;
+ #else
+@@ -58,10 +62,10 @@ unsigned int do_csum(const unsigned char *buff, int len)
+ 	while (unlikely(len > 64)) {
+ 		__uint128_t tmp1, tmp2, tmp3, tmp4;
  
- 			return false;
+-		tmp1 = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
+-		tmp2 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 2));
+-		tmp3 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 4));
+-		tmp4 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 6));
++		tmp1 = *(__uint128_t *)ptr;
++		tmp2 = *(__uint128_t *)(ptr + 2);
++		tmp3 = *(__uint128_t *)(ptr + 4);
++		tmp4 = *(__uint128_t *)(ptr + 6);
+ 
+ 		len -= 64;
+ 		ptr += 8;
+@@ -85,7 +89,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
+ 		__uint128_t tmp;
+ 
+ 		sum64 = accumulate(sum64, data);
+-		tmp = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
++		tmp = *(__uint128_t *)ptr;
+ 
+ 		len -= 16;
+ 		ptr += 2;
+@@ -100,7 +104,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
+ 	}
+ 	if (len > 0) {
+ 		sum64 = accumulate(sum64, data);
+-		data = READ_ONCE_NOCHECK(*ptr);
++		data = *ptr;
+ 		len -= 8;
+ 	}
+ 	/*
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
