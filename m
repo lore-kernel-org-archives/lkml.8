@@ -2,80 +2,114 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5438BC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE21C55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B8B206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C9B2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587498981;
+	bh=DTATttxvuzHfa4fzpWAGxVB4Wyjpqzha0kx/FnlAHK4=;
+	h=Date:From:To:To:To:To:CC:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+	 References:List-ID:From;
+	b=W0PvO6+pRpmzRhILY8X7nTyHNZf3sj5vZILlcX8zJ7Zl0WUSkM8HifyEL1f+sTDl1
+	 kezYJmJaceVqT+8JDXZ+ERWWeWN4HlpFIKbR9u7DkEFNZ7aXdCHO/RhGx+silyjPbK
+	 cXd2Ve0xJowoIEBrh87zp+Dp+VwNHLu/gy2gXME4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgDUTyH (ORCPT
+        id S1726373AbgDUT4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:54:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48553 "EHLO mga17.intel.com"
+        Tue, 21 Apr 2020 15:56:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgDUTyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:54:06 -0400
-IronPort-SDR: sRFZdjmZfWE7GSX/iJccG5wnFLZ7P7RogLTw2PqqGmD5QJRmfs09PcS0NBvv9u65R8zfnCZULW
- /+A0MGGDAdUA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 12:54:06 -0700
-IronPort-SDR: u0PucUAwlTW5D/vEtBMVccgXiyEn4WGQVAczLuFaWatEh/EbMdaAfn9ZmlhHEG39aYysNO3bSz
- gxfIScmQTOqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
-   d="scan'208";a="247264606"
-Received: from mnchalux-mobl2.gar.corp.intel.com (HELO localhost) ([10.252.44.234])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Apr 2020 12:54:04 -0700
-Date:   Tue, 21 Apr 2020 22:54:03 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] tpm/tpm_tis: Free IRQ if probing fails
-Message-ID: <20200421195403.GA46589@linux.intel.com>
-References: <20200416160751.180791-1-jarkko.sakkinen@linux.intel.com>
- <fa25cd78-2535-d26d-dd66-d64111af857a@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa25cd78-2535-d26d-dd66-d64111af857a@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1726337AbgDUT4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:56:18 -0400
+Received: from localhost (unknown [137.135.114.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6104D20747;
+        Tue, 21 Apr 2020 19:56:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587498977;
+        bh=DTATttxvuzHfa4fzpWAGxVB4Wyjpqzha0kx/FnlAHK4=;
+        h=Date:From:To:To:To:To:CC:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+         References:From;
+        b=i+9oqesRjjkB7oTI4SU5k95k9NX8w4zDF5fjtUuJw2/0MhgVG3hZ9dSQegMHPeYX2
+         VI+VHWLadhHMn0ZWgfxnyzklT2OyQTf5maSiZw1dTnFBUF9rDlr1PKrTosAnqYkvU/
+         M1gmgToSCrslaDpjo9ndIcaRKbwYyjZUmNGsML0Y=
+Date:   Tue, 21 Apr 2020 19:56:16 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     "Longpeng(Mike)" <longpeng2@huawei.com>
+To:     Longpeng <longpeng2@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+CC:     Longpeng <longpeng2@huawei.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Matthew Wilcox <willy@infradead.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH v5] mm/hugetlb: fix a addressing exception caused by huge_pte_offset
+In-Reply-To: <20200413010342.771-1-longpeng2@huawei.com>
+References: <20200413010342.771-1-longpeng2@huawei.com>
+Message-Id: <20200421195617.6104D20747@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 03:23:19PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 4/16/20 6:07 PM, Jarkko Sakkinen wrote:
-> > Call disable_interrupts() if we have to revert to polling in order not to
-> > unnecessarily reserve the IRQ for the life-cycle of the driver.
-> > 
-> > Cc: stable@vger.kernel.org # 4.5.x
-> > Reported-by: Hans de Goede <hdegoede@redhat.com>
-> > Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> 
-> I can confirm that this fixes the "irq 31 nobody cared" oops for me:
-> 
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
+Hi
 
-Hi, thanks a lot! Unfortunately I already put this out given the
-criticality of the issue:
+[This is an automated email]
 
-https://lkml.org/lkml/2020/4/20/1544
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
 
-Sincere apologies that I couldn't include your tested-by but the most
-important thing is to know that it works now.
+The bot has tested the following trees: v5.6.5, v5.5.18, v5.4.33, v4.19.116, v4.14.176, v4.9.219, v4.4.219.
 
-/Jarkko
+v5.6.5: Build OK!
+v5.5.18: Build OK!
+v5.4.33: Build OK!
+v4.19.116: Build OK!
+v4.14.176: Build OK!
+v4.9.219: Failed to apply! Possible dependencies:
+    166f61b9435a ("mm: codgin-style fixes")
+    505a60e22560 ("asm-generic: introduce 5level-fixup.h")
+    82b0f8c39a38 ("mm: join struct fault_env and vm_fault")
+    953c66c2b22a ("mm: THP page cache support for ppc64")
+    c2febafc6773 ("mm: convert generic code to 5-level paging")
+    fd60775aea80 ("mm, thp: avoid unlikely branches for split_huge_pmd")
+
+v4.4.219: Failed to apply! Possible dependencies:
+    01c8f1c44b83 ("mm, dax, gpu: convert vm_insert_mixed to pfn_t")
+    0e749e54244e ("dax: increase granularity of dax_clear_blocks() operations")
+    166f61b9435a ("mm: codgin-style fixes")
+    34c0fd540e79 ("mm, dax, pmem: introduce pfn_t")
+    505a60e22560 ("asm-generic: introduce 5level-fixup.h")
+    52db400fcd50 ("pmem, dax: clean up clear_pmem()")
+    5c6a84a3f455 ("mm/kasan: Switch to using __pa_symbol and lm_alias")
+    82b0f8c39a38 ("mm: join struct fault_env and vm_fault")
+    9973c98ecfda ("dax: add support for fsync/sync")
+    aac453635549 ("mm, oom: introduce oom reaper")
+    ac401cc78242 ("dax: New fault locking")
+    b2e0d1625e19 ("dax: fix lifetime of in-kernel dax mappings with dax_map_atomic()")
+    bae473a423f6 ("mm: introduce fault_env")
+    bc2466e42573 ("dax: Use radix tree entry lock to protect cow faults")
+    c2febafc6773 ("mm: convert generic code to 5-level paging")
+    e4b274915863 ("DAX: move RADIX_DAX_ definitions to dax.c")
+    f9fe48bece3a ("dax: support dirty DAX entries in radix tree")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
