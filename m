@@ -2,92 +2,177 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50677C55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF694C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F288206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C7D2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:22:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="j/6HQPLH"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="tMjqIako"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgDULVw (ORCPT
+        id S1728641AbgDULW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:21:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728778AbgDULVv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:21:51 -0400
-Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84FFC061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:21:50 -0700 (PDT)
-Received: by mail-qv1-xf36.google.com with SMTP id q31so6300726qvf.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:21:50 -0700 (PDT)
+        Tue, 21 Apr 2020 07:22:58 -0400
+Received: from mail-mw2nam10on2084.outbound.protection.outlook.com ([40.107.94.84]:42592
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726018AbgDULW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:22:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ML7tO0PVofd6IohyidasbE+14yBh50DhDsUB/XMchXiOqqbZKHXmvxPfkridfUPd0EDsDiY06jd43ZN5tA9NMrKGSdQCBnKCValiIEdNoUIeKnvVMiPHMGmHqrzO2a8umC2XgJIXca06VuiUbWOrSnGC1LLg4WD2nLv+YQlpEmau3R+Qc4nxBwmWOoMUI0u4/vHpPTYX8BaO0hhge+wKXckd5qOvdpFECKiCgU7vM6iDPS/rU4CyJrR5Tnb+3bNsRvGA2M2zyaAebGw2aR8t62AgAeGkp9xhKS/RvO7bcc2gpyzfQuN7KDL0cDNwXbuxCIon+g8vMCdEKI8IsjPizQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Rs6AICS8p1PCY63kBZimaiO9wK+KBoeM4cctno0bHzU=;
+ b=Idl3GhaqvdI+V4z215OpoIrfUw/Y62QS2kU26yw/AaL+rCZMTeF4RFPqJn9at5Rcd2dTTFznro9mwAOBYjwV9zxvlPh9FBAp1prvq2vDm7RCXBeXv85PEpjH4c6PG+/7x0SxxaD4K8w8keiRFLCGEj8kwmQ4HaI+l1kuNSzzj+vndQM+GCPZkt8SK3AlBVohD1iLEsWZcDvRj9acRhL8vDlIoi+2wRP/MWZNjftX5y+vXlUWWlrLuXjoEfffcgVNc4MQFA1h3HYa5KYgQhBbTnJCsoi4ayl4eulNYnab5t9tYf090Y6njRgbxdC5riAq0PU5r3GEtK7RJcIiqyYhSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=kNM2KRkAMSsc+pYLKtlKu09j47YU3pGF6ToSVV1GC2A=;
-        b=j/6HQPLHk6ynL/FoB4R7yMl5t9W90U39EGGlAjJdv3xTVLAGO1U3fwtR876zviUMgS
-         8h19VkOF136hk6Kyq+tM4kn+M4lYQ5SozOlH39NpV9v5nmttnocXoC+YaoiEJE5/p02I
-         1iSnlkan6Hr5DiOqZoHCgxS5KWE0xbJ6uSN73gAhfr7MuJBmDX8J4oldsj9jWdCiK/BQ
-         BITOyFoOFwJuRR9ZpmxV7fI7yEIX2/C19JDFdOKYGaCavcKouLbSOWDD0gJq4NShxH3I
-         YSzGbmqOUGUhXfIowlrMH/xBmwuVg3pcvOEKpTteoYRaw5IPqLzES5e2e7ptjMBWlOFB
-         Gltw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=kNM2KRkAMSsc+pYLKtlKu09j47YU3pGF6ToSVV1GC2A=;
-        b=JlSRx63tMRJ5RSQonSla8SGTi1lTW1lCH7CmQltG5F9KG5UYJro+70uhSSqnibratQ
-         iyjaYAO2U47JAtBEjBAkPRMWIh1Y5BFQ9ZN1GxrmNCWRogLAEOa9/uSvvv6Nu4D7PLA+
-         pXyPeRsYXT+8qorS9LD0k/xeW1kZUWdgMwDrktMhYyciwt7c/d9ql5CNDrGhwFFCmyJn
-         XbwFlDcWBnKlzW1ig+XAbguvxk0nhMtz8wAoMaS44zoYt/x50D31AtILIbAOk28zTQ+k
-         RDl+aTNCQOxzYdWqqxpL1iQsRw7RGeNmLeTLCp9j3Hd1EtEaCzS7XZsloFyuCfE5L1bP
-         8pKQ==
-X-Gm-Message-State: AGi0Pubh/HU1+M9XrxtTgU7fX3aSnB4Dkwv7wubenkO1Eilz0f4BhqV+
-        9IZmtdt7qqCK6u2b10UexFTq4A==
-X-Google-Smtp-Source: APiQypIz8KpdLC2geW/BC+9l/tMpLTLdQdGdy4IFB0lhF2Q+hFfDhzRYrnPW8u4g9GZV1E2ef7eESg==
-X-Received: by 2002:a0c:b501:: with SMTP id d1mr31042qve.63.1587468110010;
-        Tue, 21 Apr 2020 04:21:50 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i56sm1625973qte.6.2020.04.21.04.21.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 04:21:49 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: linux-next test error: WARNING: suspicious RCU usage in ipmr_device_event
-Date:   Tue, 21 Apr 2020 07:21:48 -0400
-Message-Id: <36C7F018-510E-4555-BC6B-42DEB0468CBA@lca.pw>
-References: <CACT4Y+ZuGaeyyVsCkqJRo4+0hoMP8Eq_JTuU0L-NFqTrQP_czA@mail.gmail.com>
-Cc:     syzbot <syzbot+21f82f61c24a7295edf5@syzkaller.appspotmail.com>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>, kuba@kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-In-Reply-To: <CACT4Y+ZuGaeyyVsCkqJRo4+0hoMP8Eq_JTuU0L-NFqTrQP_czA@mail.gmail.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-X-Mailer: iPhone Mail (17D50)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Rs6AICS8p1PCY63kBZimaiO9wK+KBoeM4cctno0bHzU=;
+ b=tMjqIakoqp29HV31WEJVAq+UdfnwRpWlzwY8OfjsmpRJG5LcmS0M2p8FK/JZyKKBL/MMF/lyTKFjfeBkVX/cPhiEc0B9v5hDuKmb4elkB5/wpoux7f3KT8XyrnihLN+7VSTOHLq0oUXXHaKt62Sd89Gz+oIY2gy44w3kitZGNrk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
+ by DM6PR12MB4092.namprd12.prod.outlook.com (2603:10b6:5:214::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Tue, 21 Apr
+ 2020 11:22:55 +0000
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::7949:b580:a2d5:f766]) by DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::7949:b580:a2d5:f766%3]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
+ 11:22:55 +0000
+Subject: Re: [PATCH] amdgpu: fixes memleak issue when init failed
+To:     Bernard Zhao <bernard@vivo.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tom St Denis <tom.stdenis@amd.com>,
+        Ori Messinger <Ori.Messinger@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com
+References: <20200421111715.1231-1-bernard@vivo.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <738537e5-9a1a-25c8-3dd0-b1f5fd045979@amd.com>
+Date:   Tue, 21 Apr 2020 13:22:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <20200421111715.1231-1-bernard@vivo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM3PR05CA0147.eurprd05.prod.outlook.com
+ (2603:10a6:207:3::25) To DM6PR12MB4401.namprd12.prod.outlook.com
+ (2603:10b6:5:2a9::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM3PR05CA0147.eurprd05.prod.outlook.com (2603:10a6:207:3::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Tue, 21 Apr 2020 11:22:52 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a6d5d009-78b7-4700-2d5b-08d7e5e65657
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4092:|DM6PR12MB4092:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB40926CB0AC40952B26684D7383D50@DM6PR12MB4092.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:901;
+X-Forefront-PRVS: 038002787A
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(8676002)(86362001)(110136005)(81156014)(186003)(6486002)(16526019)(8936002)(316002)(36756003)(31686004)(31696002)(478600001)(2906002)(66946007)(4326008)(66556008)(66476007)(52116002)(6666004)(2616005)(5660300002)(921003);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ro6dKssc6Xoll+rIkVijxGtN9aoaqHLwhva4GPMtJVtkDVKoidvwkF5WEvv9Mm9fkliEi8YY3AgYDQ6CMb4+jVQOaXnhH0WdDFIhWeFoJJSXBVO6ZZx9ABP3LHVRzc57ewNInPRnAUOv7wbuwRTbCXAjY3UL3rIcMbrrQxmXIOjEjRpP3ZQDkgspm6+XOfFJ9rYql9ZMsBjnDPjWNgMiONCfO4fEMSbDK/1BNV5l03Qo96ihKELL8E3XiKvGp64xcsR2TkVsLI9tFSJifBvL0aU6xL4jvKzUNf6S/DeP7bblOuFv0zm/j8JzQar7kXEqMbDyrtQy/1L28mEJwiaMcu+1a40WE7DPZQH4cnZYNKeDhb2HmUTx/9ou/I3kppUD/MA/yXpMok2hgxbH+OBa7Q/htl2IuTsIPrAehWuWr89zKrlEI7qpRxBeAclcPY60m3G7NA6TfzkqOTycZa2nf4K99mT/ss8YZcC+0jRSJY0=
+X-MS-Exchange-AntiSpam-MessageData: CMUz8vPcnBp5m2eXZWij7dBzLD51fL14Get60rJi1vPARrZGT+NNm6L3jbkB4jpJVctQ8r3PbgTJB+7BEK3Ehfb4K1sedD/laAquAf2fDucBJbf8ll3C6oVJ5TzZ96HJURdARUo1H4Dav3jcikcXp/zD3BEOMuyEnD11PvH/yN9dEARPWdWtcXxDujn+aFnCICRluwihcPTmrqNEf5b2Yuxj46NB2l+SBAnRfhuTl0kYbIb51vRWI5mBV3qqzUnTnMyIRIOyGC4sHGKV5aV2SNB+4LPjEoexMSi11HwzbluF1bCdpWZ+jLmhX/bzOJl/GBCBgxGnmOWOujXGzLQ0AwBhruuzvMNWSX/pDUwUSjKlw4/nxzN9KbehZc7Og4F4T+T8K/m0RoEdn2v6SFb2JJdjUuhXi2qhPR2Bk3zkzWhWhac+1eQq9Q4PBCFcOJHcii4A9OzNIGqmaWBpaSPu7/4g7cK3lbIfP8JIeD0xFvBIDrLJteHsJoAfgBunyakALES7iHuFPvFqhD+WM6FW+M4m9a9Jw6ESBU1KYXX/Zthf8jX9xb6vXLzhFsH/lQCn4poWlD6pQ9dPIy7Mfl8m/3pBSvTXgIHOwvtW484DwORL3YyHtGU2sadq2swlRhp4kBiohHcfLotqCDn1JVAcCzjmKs5PVGj8ej8dQ3AQwazAN2AVRQeeBv/x7Cj8h6Zek0SXE7yVLPun7ULkILoGCY7wPN25eTcF/p7+mV1sa7Y/OJGOooNI0AUnvXd1A0r0wvxV36vScbaCy1TXdYV5lt+Nb10XXWyD3D0KuWHdWzMl7qF/uproCmquImtA2IjWnF00WX68wkijaQZ405gBQxvuFCXOwq/I5Qpuo2f+I1k=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6d5d009-78b7-4700-2d5b-08d7e5e65657
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2020 11:22:55.1878
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dVE1zkraV3suuiuUZ7jYwAx2EiAjOsVzfqIxv82hspcyMcuuZEG7ubo/7g5Zud55
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am 21.04.20 um 13:17 schrieb Bernard Zhao:
+> VRAM manager and DRM MM when init failed, there is no operaction
+> to free kzalloc memory & remove device file.
+> This will lead to memleak & cause stability issue.
 
+NAK, failure to create sysfs nodes are not critical.
 
-> On Apr 21, 2020, at 6:51 AM, Dmitry Vyukov <dvyukov@google.com> wrote:
->=20
-> +linux-next, Stephen for a new linux-next breakage
+Christian.
 
-I don=E2=80=99t know why you keep sending the same thing over and over again=
- where I replied you just two days ago for the same thing.=
+>
+> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+> ---
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c | 24 ++++++++++++++++----
+>   1 file changed, 19 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+> index 82a3299e53c0..4c5fb153e6b4 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+> @@ -175,30 +175,44 @@ static int amdgpu_vram_mgr_init(struct ttm_mem_type_manager *man,
+>   	ret = device_create_file(adev->dev, &dev_attr_mem_info_vram_total);
+>   	if (ret) {
+>   		DRM_ERROR("Failed to create device file mem_info_vram_total\n");
+> -		return ret;
+> +		goto VRAM_TOTAL_FAIL;
+>   	}
+>   	ret = device_create_file(adev->dev, &dev_attr_mem_info_vis_vram_total);
+>   	if (ret) {
+>   		DRM_ERROR("Failed to create device file mem_info_vis_vram_total\n");
+> -		return ret;
+> +		goto VIS_VRAM_TOTA_FAIL;
+>   	}
+>   	ret = device_create_file(adev->dev, &dev_attr_mem_info_vram_used);
+>   	if (ret) {
+>   		DRM_ERROR("Failed to create device file mem_info_vram_used\n");
+> -		return ret;
+> +		goto VRAM_USED_FAIL;
+>   	}
+>   	ret = device_create_file(adev->dev, &dev_attr_mem_info_vis_vram_used);
+>   	if (ret) {
+>   		DRM_ERROR("Failed to create device file mem_info_vis_vram_used\n");
+> -		return ret;
+> +		goto VIS_VRAM_USED_FAIL;
+>   	}
+>   	ret = device_create_file(adev->dev, &dev_attr_mem_info_vram_vendor);
+>   	if (ret) {
+>   		DRM_ERROR("Failed to create device file mem_info_vram_vendor\n");
+> -		return ret;
+> +		goto VRAM_VERDOR_FAIL;
+>   	}
+>   
+>   	return 0;
+> +
+> +VRAM_VERDOR_FAIL:
+> +	device_remove_file(adev->dev, &dev_attr_mem_info_vis_vram_used);
+> +VIS_VRAM_USED_FAIL:
+> +	device_remove_file(adev->dev, &dev_attr_mem_info_vram_used);
+> +RVAM_USED_FAIL:
+> +	device_remove_file(adev->dev, &dev_attr_mem_info_vis_vram_total);
+> +VIS_VRAM_TOTA_FAIL:
+> +	device_remove_file(adev->dev, &dev_attr_mem_info_vram_total);
+> +VRAM_TOTAL_FAIL:
+> +	kfree(mgr);
+> +	man->priv = NULL;
+> +
+> +	return ret;
+>   }
+>   
+>   /**
+
