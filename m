@@ -2,124 +2,138 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96946C55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F03C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77221206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:35:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kn5JrMwu"
+	by mail.kernel.org (Postfix) with ESMTP id CCDC7206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbgDUJfr (ORCPT
+        id S1728570AbgDUJgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:35:47 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33840 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbgDUJfr (ORCPT
+        Tue, 21 Apr 2020 05:36:18 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:34788 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727911AbgDUJgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:35:47 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03L9ZEPN092019;
-        Tue, 21 Apr 2020 04:35:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587461714;
-        bh=EeE21hMUOfk3pC387RpavuP6TsxGuhOnVMwPs3H4nSk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kn5JrMwuqadtuMZU6zKFo3/VxCueg+wAfvntp8l6BnvP9ar/ktulDIftrzkIkqRqV
-         gIbAhBJyXPaW0lUfjTB40Ix8pZSp3Bal/Alm632UcAe5MjIEMoR8eR5JA1gjitddGH
-         OYYDaJLcYt9FTvM/143EFgw3l29320GK002ShqRM=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03L9ZEsK034008;
-        Tue, 21 Apr 2020 04:35:14 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 21
- Apr 2020 04:35:14 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 21 Apr 2020 04:35:14 -0500
-Received: from [10.250.234.195] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03L9Z9Qf105015;
-        Tue, 21 Apr 2020 04:35:10 -0500
-Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Mason Yang <masonccyang@mxic.com.tw>
-CC:     <broonie@kernel.org>, <tudor.ambarus@microchip.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <juliensu@mxic.com.tw>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        Pratyush Yadav <p.yadav@ti.com>
-References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>
- <20200421092328.129308f6@collabora.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <56365995-fe30-534f-9dbc-7307d9b9f846@ti.com>
-Date:   Tue, 21 Apr 2020 15:05:08 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 05:36:16 -0400
+Received: by mail-io1-f70.google.com with SMTP id v12so576026iol.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 02:36:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=bXMKuEMVNvJ938hbxaMdfVLd8oEOqxl5+yrMgmXZ3FU=;
+        b=A21ebL6qBjnEyGytwLo0va0evZjAuwH+DpoX0WybX1O2ZCoolnlqBeb22n/GldIQDp
+         TBtbn1GUTlrkf6PFCjsLp4PzCGRyCjg4VtxpE022Qh2UAfBTc5E19Yf4qAiuSOp6bCwJ
+         hz1LV8kJMFbzSgbT1qZO/k1ywJErofBIf+yBReKVy0lcqmRtqFprdMzbvEkgMIYes568
+         PN5BHYL/IcAhqrmO/L1xQ8xNuOhzDKI0PRt8a+SH9dS/tbO7PQ30cOiw4+xknb/c9FlR
+         H9jdLbs60LoTLjBTzAYji/mdb1NZAMp35JtHcgzoUNJs1JJquWV+gmACDaRhHatYKURs
+         fiGA==
+X-Gm-Message-State: AGi0Pua9FtTyXZynALbEh+yzbN808JDKzEQchEnRVBXyw7zw+dFk6rZb
+        QHOaQvrEh/70Kn/Hsbl+yCnIbvHNe3jqVyLVOtMYOXMRtRC/
+X-Google-Smtp-Source: APiQypJinovxSvL4KTXr9Tqzf+1q1R+53iuv6UFYl06/PuKz3No5OXFLCCyNVMyBVAZtiA8hucKZLLzQf36cC+SffBlJeSd7/E+8
 MIME-Version: 1.0
-In-Reply-To: <20200421092328.129308f6@collabora.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Received: by 2002:a6b:6618:: with SMTP id a24mr12582024ioc.85.1587461774308;
+ Tue, 21 Apr 2020 02:36:14 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 02:36:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000026f90605a3c9bf64@google.com>
+Subject: WARNING in cgroup_apply_control_disable
+From:   syzbot <syzbot+5b142e89a1b402a24801@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        cgroups@vger.kernel.org, christian@brauner.io,
+        daniel@iogearbox.net, hannes@cmpxchg.org, john.fastabend@gmail.com,
+        kafai@fb.com, kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+        lizefan@huawei.com, netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    7a56db02 Merge tag 'nfs-for-5.7-3' of git://git.linux-nfs...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11e336abe00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d351a1019ed81a2
+dashboard link: https://syzkaller.appspot.com/bug?extid=5b142e89a1b402a24801
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f0c6abe00000
+
+Bisection is inconclusive: the bug happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1113ec5fe00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1313ec5fe00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1513ec5fe00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+5b142e89a1b402a24801@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 8613 at kernel/cgroup/cgroup.c:3111 cgroup_apply_control_disable+0x404/0x4d0 kernel/cgroup/cgroup.c:3111
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8613 Comm: syz-executor.1 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:cgroup_apply_control_disable+0x404/0x4d0 kernel/cgroup/cgroup.c:3111
+Code: ff ff ff e8 5e 9c 06 00 48 89 ef 41 ff d5 e9 1a ff ff ff e8 4e 9c 06 00 48 89 ef e8 b6 e5 fe ff e9 08 ff ff ff e8 3c 9c 06 00 <0f> 0b e9 ab fd ff ff 48 83 c4 30 5b 5d 41 5c 41 5d 41 5e 41 5f e9
+RSP: 0018:ffffc90005247a90 EFLAGS: 00010293
+RAX: ffff888096aba5c0 RBX: dffffc0000000000 RCX: ffffffff816c956d
+RDX: 0000000000000000 RSI: ffffffff816c97c4 RDI: 0000000000000007
+RBP: ffff8880a601b000 R08: ffff888096aba5c0 R09: ffffed1015cc7104
+R10: ffff8880ae63881b R11: ffffed1015cc7103 R12: 0000000000000008
+R13: 0000000000000002 R14: ffffffff89a30640 R15: ffff8880917de000
+ cgroup_finalize_control kernel/cgroup/cgroup.c:3178 [inline]
+ rebind_subsystems+0x3cd/0xb00 kernel/cgroup/cgroup.c:1750
+ cgroup_setup_root+0x36a/0xa30 kernel/cgroup/cgroup.c:1984
+ cgroup1_root_to_use kernel/cgroup/cgroup-v1.c:1190 [inline]
+ cgroup1_get_tree+0xd69/0x13b6 kernel/cgroup/cgroup-v1.c:1207
+ vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+ do_new_mount fs/namespace.c:2816 [inline]
+ do_mount+0x1306/0x1b30 fs/namespace.c:3141
+ __do_sys_mount fs/namespace.c:3350 [inline]
+ __se_sys_mount fs/namespace.c:3327 [inline]
+ __x64_sys_mount+0x18f/0x230 fs/namespace.c:3327
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45f2da
+Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 4d 8c fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 2a 8c fb ff c3 66 0f 1f 84 00 00 00 00 00
+RSP: 002b:00007ffc7dbf09e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007ffc7dbf0a40 RCX: 000000000045f2da
+RDX: 00000000004cad69 RSI: 00000000004c1465 RDI: 00000000004c1428
+RBP: 0000000000000000 R08: 00000000004cf6b0 R09: 000000000000001c
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000418390
+R13: 00007ffc7dbf0c68 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-On 21/04/20 12:53 pm, Boris Brezillon wrote:
-> +Pratyush who's working on a similar patchet [1].
-> 
-> Hello Mason,
-> 
-> On Tue, 21 Apr 2020 14:39:42 +0800
-> Mason Yang <masonccyang@mxic.com.tw> wrote:
-> 
->> Hello,
->>
->> This is repost of patchset from Boris Brezillon's
->> [RFC,00/18] mtd: spi-nor: Proposal for 8-8-8 mode support [1].
-> 
-> I only quickly went through the patches you sent and saying it's a
-> repost of the RFC is a bit of a lie. You completely ignored the state
-> tracking I was trying to do to avoid leaving the flash in 8D mode when
-> suspending/resetting the board, and I think that part is crucial. If I
-> remember correctly, we already had this discussion so I must say I'm a
-> bit disappointed.
-> 
-> Can you sync with Pratyush? I think his series [1] is better in that it
-> tries to restore the flash in single-SPI mode before suspend (it's
-> missing the shutdown case, but that can be easily added I think). Of
-> course that'd be even better to have proper state tracking at the SPI
-> NOR level.
-> 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-[1] does soft reset on shutdown which should put it to reset default
-state of 1S-1S-1S mode (if thats the POR default)
-
-But, there is still one open question now that we are considering
-supporting stateful modes:
-
-What to do with flashes that power up in 8D mode either due to factory
-defaults or if 8D mode NV bit is set? Do we say SPI NOR framework won't
-support such flashes?
-Auto discovery of such flashes is quite difficult as different flashes
-use different protocols for RDID cmd in 8D mode (address phase may or
-may not be present, dummy cycles vary etc) is almost impossible w/o any
-hint passed to the driver?
-
-
-> Regards,
-> 
-> Boris
-> 
-> [1]https://lkml.org/lkml/2020/3/13/659
-> 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
