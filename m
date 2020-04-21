@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F23C55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E88C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20CE5206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080282068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:09:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="fCsBAAz2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="d6xViBeW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgDUNJp (ORCPT
+        id S1728966AbgDUNJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:09:45 -0400
-Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:14101 "EHLO
-        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726018AbgDUNJn (ORCPT
+        Tue, 21 Apr 2020 09:09:46 -0400
+Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:16642 "EHLO
+        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728824AbgDUNJo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:09:43 -0400
+        Tue, 21 Apr 2020 09:09:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1587474581; x=1619010581;
+  t=1587474583; x=1619010583;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=Kw+nuYFqwHi/+sMdeAJ7EOgIaOWWOEHS7HNoEqJhP/4=;
-  b=fCsBAAz2ct7QA2bOOaMifWqedBmmCTZI9iEtpAW6WaXXeKtArXKg6gta
-   xf6ya1VHjp0/2TbnlE4CcxZZ/YCGSFEgWt4hIS1KRpX51CiJeXnb1w0hI
-   Hge263ZLnrUsE3UC62ogaVFTA13f8lMJT7alqTd/dxIJMoXPP+OlsfCNs
-   lR8GeczCq5V6+wMkHPasT7YOxJ+JwLGDyl05W2d4kWqOusVpeRgsBHkTB
-   bkZoUO6rNEzDktLW2CZ0Q4X4PSYVO+LJQyhzbX/QyBi9xUWSpcbnjDr8H
-   Oec1pXWbItCErw7NC1S+l2jwtIeB7Fca+FgH/dd9zgNiBnYM/ytazFT0F
-   A==;
-IronPort-SDR: pLTHyHopIZBaVBHpFj6OWKek5VaEyk2cQRCKEfRujjVa1GtPhzVrsiWF8yMWsLX1TCYmVlM/9K
- KQQzPkK3AcwQ==
+  bh=fXo4AG5qIH9v2xeOGaiFc3LKkrUI5Iwn9hZSaSZiSW8=;
+  b=d6xViBeWjhdkuS+3+z+wd+xUvIXvHil3fdiTZeMmyiV6YW7MJlG7O3P9
+   CbJ69gfzntfrwoUVFLadAKNsfvoR/hgY5fNCVY32TR8ecEsGlK/fIqrNY
+   ZHhMURDbRRJR5tKlHLaxWPrHbuQLvNj52EcsGLptPaY1wJWf5uvc+Y/uv
+   SkeZMXGErjfTDYPqztf/jVFRCY0RGeJPG1OBetaSw4en499AwUBZAGysS
+   2mR9ZpYsJbxiqV+BxWa72GBo5W/pJN0NwMLWgIV+mlrLmKUH6Z9Jrfrxq
+   N/9fYi9d+BUaLCX9X1uZVB8AIoHFKR/gNkHGb5J9RZ5dYL4T1U4gLswuN
+   g==;
+IronPort-SDR: 9eViOSkg53Ws3jxS76Ir9AqjFk67S6bRMW2tXy2H9mFV/XIaX/d6SlHDt6+bZm+bnPN+sPYnhn
+ 9kwT71ngirRg==
 From:   Denis Osterland-Heim <denis.osterland@diehl.com>
 To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
         "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
+CC:     "robh@kernel.org" <robh@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Denis Osterland-Heim <denis.osterland@diehl.com>,
         "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v5 1/3] leds: pwm: check result of led_pwm_set() in
- led_pwm_add()
-Thread-Topic: [PATCH v5 1/3] leds: pwm: check result of led_pwm_set() in
- led_pwm_add()
-Thread-Index: AQHWF94ON6Wnsc90u0OmrEelu7nAJQ==
-Date:   Tue, 21 Apr 2020 13:09:14 +0000
-Message-ID: <20200421130644.16059-2-Denis.Osterland@diehl.com>
+Subject: [PATCH v5 3/3] leds: pwm: add reference to common leds for
+ default-state
+Thread-Topic: [PATCH v5 3/3] leds: pwm: add reference to common leds for
+ default-state
+Thread-Index: AQHWF94OArUwGDDi3ECluLAI5zwdGw==
+Date:   Tue, 21 Apr 2020 13:09:15 +0000
+Message-ID: <20200421130644.16059-4-Denis.Osterland@diehl.com>
 References: <20200421130644.16059-1-Denis.Osterland@diehl.com>
 In-Reply-To: <20200421130644.16059-1-Denis.Osterland@diehl.com>
 Accept-Language: de-DE, en-US
@@ -65,52 +66,36 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-TrailerSkip: 1
-X-GBS-PROC: PkB65aL1SqtESF35r/jQn2UYU/2HsH9z4KRTZJ+K/+xpyH+PC5zJpKM693q9Uoj7
+X-GBS-PROC: byQFdw3ukCM+zy1/poiPc5jn58Xuz5PjrByvaI+9WpkPjMBQsr17Xs55nywVHSVC
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-led_pwm_set() now returns an error when setting the PWM fails.
+The default-state is now supported for PWM leds.
 
 Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/leds/leds-pwm.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/leds/leds-pwm.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 6c8a724aac51..ef7b91bd2064 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -91,15 +91,21 @@ static int led_pwm_add(struct device *dev, struct led=
-_pwm_priv *priv,
- 	pwm_init_state(led_data->pwm, &led_data->pwmstate);
+diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
+ntation/devicetree/bindings/leds/leds-pwm.txt
+index 6c6583c35f2f..d0f489680594 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
+@@ -19,6 +19,8 @@ LED sub-node properties:
+   see Documentation/devicetree/bindings/leds/common.txt
+ - linux,default-trigger :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
++- default-state : (optional)
++  see Documentation/devicetree/bindings/leds/common.yaml
 =20
- 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
--	if (ret =3D=3D 0) {
--		priv->num_leds++;
--		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
--	} else {
-+	if (ret) {
- 		dev_err(dev, =22failed to register PWM led for %s: %d=5Cn=22,
- 			led->name, ret);
-+		return ret;
- 	}
+ Example:
 =20
--	return ret;
-+	ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
-+	if (ret) {
-+		dev_err(dev, =22failed to set led PWM value for %s: %d=22,
-+			led->name, ret);
-+		return ret;
-+	}
-+
-+	priv->num_leds++;
-+	return 0;
- }
-=20
- static int led_pwm_create_fwnode(struct device *dev, struct led_pwm_priv=
- *priv)
 --=20
 2.26.2
 
