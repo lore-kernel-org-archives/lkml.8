@@ -2,205 +2,106 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37991C55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45A8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 120892098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587458376;
-	bh=UMgsF+kC9TWV3s7/dU1Ph1gFI7QKIr6nayEkvVbuUck=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uHVtFdFqtBufcq84mAY3MSS0uMN0Y2kYmwbUAR4hCWNbIBMY3qKp+qA4aV3c7QTBc
-	 3RGlumfIHxDbh3CwK7mX+AjZeIOcczqJXCB9UBjWlae21lw3w1t5Ysr1CTzh1E65Vj
-	 OG03uBHjrq92KvFRq5vhgolqpyqcQTCY4HOQg6PA=
+	by mail.kernel.org (Postfix) with ESMTP id 9A2AD2098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:43:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KmPWD4qH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgDUIjf (ORCPT
+        id S1727854AbgDUInI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDUIje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:39:34 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 21 Apr 2020 04:43:08 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36847 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726052AbgDUInH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 04:43:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587458586;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9iDz7iWPK0i9U6uK8B+Kq/VOxGdFwzyl3Psdz4sCMdw=;
+        b=KmPWD4qH/aPr/2RrJUUerU6dXmB3un7+/Z4QcEO9rMLsAWcEJ3GcHwKkzP+743oQOxbso1
+        qY8DnGpz8jxROE/hwTegHv1fBjdR9XZLu6kVFwC6+JmxLde11DwAlKissi/GzdOmAbECWa
+        bLwWuvG5yYym8OzaUe5nl0z/5qD4rHg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-267-2FtRnLJzNz2bXqouSQxh6Q-1; Tue, 21 Apr 2020 04:43:04 -0400
+X-MC-Unique: 2FtRnLJzNz2bXqouSQxh6Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E75D72084D;
-        Tue, 21 Apr 2020 08:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587458373;
-        bh=UMgsF+kC9TWV3s7/dU1Ph1gFI7QKIr6nayEkvVbuUck=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=y0OaLO+IOqjutS4JakiH/lriNh0t/Jtrfxy+6rbgcttm5QLk+GDmpQKjGB4OOO4Z5
-         Ck/+ee6y7dfJzjoEA/DbdCL7zI/hzCRpKqegt4k4eenGJPqkGMeWEYz8qsdCmnPJhW
-         vX6M2k3UzPvrVQw2p9p2SRX3q1zfSTRiJ37g0/ME=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jQoRG-0058Vv-VB; Tue, 21 Apr 2020 09:39:31 +0100
-Date:   Tue, 21 Apr 2020 09:39:28 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>, tglx@linutronix.de,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH] genirq/msi: Check null pointer before copying struct
- msi_msg
-Message-ID: <20200421093928.4a600662@why>
-In-Reply-To: <CABEDWGxLKB68iknXtK8-4ke3wGW-6RKBnDEh6rFbBekLyawVOw@mail.gmail.com>
-References: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
-        <20200418122123.10157ddd@why>
-        <CY4PR12MB1271277CEE4F1FE06B71DDE8DAD60@CY4PR12MB1271.namprd12.prod.outlook.com>
-        <8a03b55223b118c6fc605d7204e01460@kernel.org>
-        <CABEDWGxLKB68iknXtK8-4ke3wGW-6RKBnDEh6rFbBekLyawVOw@mail.gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DD0F190B2A0;
+        Tue, 21 Apr 2020 08:43:02 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-113-193.ams2.redhat.com [10.36.113.193])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D5A351001B30;
+        Tue, 21 Apr 2020 08:43:01 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id AB34016E16; Tue, 21 Apr 2020 10:43:00 +0200 (CEST)
+Date:   Tue, 21 Apr 2020 10:43:00 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Caicai <caizhaopeng@uniontech.com>
+Cc:     Dave Airlie <airlied@redhat.com>, David Airlie <airlied@linux.ie>,
+        virtualization@lists.linux-foundation.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Zhangyueqian <zhangyueqian@uniontech.com>,
+        Zhangshuang <zhangshuang@uniontech.com>,
+        Zhangshiwen <zhangshiwen@uniontech.com>
+Subject: Re: [PATCH 1/1] drm/qxl: add mutex_lock/mutex_unlock to ensure the
+ order in which resources are released.
+Message-ID: <20200421084300.zggroiptwbrblzqy@sirius.home.kraxel.org>
+References: <20200418063917.26278-1-caizhaopeng@uniontech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: alan.mikhak@sifive.com, Gustavo.Pimentel@synopsys.com, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, tglx@linutronix.de, kishon@ti.com, paul.walmsley@sifive.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200418063917.26278-1-caizhaopeng@uniontech.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 09:08:27 -0700
-Alan Mikhak <alan.mikhak@sifive.com> wrote:
+On Sat, Apr 18, 2020 at 02:39:17PM +0800, Caicai wrote:
+> When a qxl resource is released, the list that needs to be released is
+> fetched from the linked list ring and cleared. When you empty the list,
+> instead of trying to determine whether the ttm buffer object for each
+> qxl in the list is locked, you release the qxl object and remove the
+> element from the list until the list is empty. It was found that the
+> linked list was cleared first, and that the lock on the corresponding
+> ttm Bo for the QXL had not been released, so that the new qxl could not
+> be locked when it used the TTM.
 
-Alan,
+So the dma_resv_reserve_shared() call in qxl_release_validate_bo() is
+unbalanced?  Because the dma_resv_unlock() call in
+qxl_release_fence_buffer_objects() never happens due to
+qxl_release_free_list() clearing the list beforehand?  Is that correct?
 
-> On Mon, Apr 20, 2020 at 2:14 AM Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > On 2020-04-18 16:19, Gustavo Pimentel wrote:  
-> > > Hi Marc and Alan,
-> > >  
-> > >> I'm not convinced by this. If you know that, by construction, these
-> > >> interrupts are not associated with an underlying MSI, why calling
-> > >> get_cached_msi_msg() the first place?
-> > >>
-> > >> There seem to be some assumptions in the DW EDMA driver that the
-> > >> signaling would be MSI based, so maybe someone from Synopsys
-> > >> (Gustavo?)
-> > >> could clarify that. From my own perspective, running on an endpoint
-> > >> device means that it is *generating* interrupts, and I'm not sure what
-> > >> the MSIs represent here.  
-> > >
-> > > Giving a little context to this topic.
-> > >
-> > > The eDMA IP present on the Synopsys DesignWare PCIe Endpoints can be
-> > > configured and triggered *remotely* as well *locally*.
-> > > For the sake of simplicity let's assume for now the eDMA was
-> > > implemented
-> > > on the EP and that is the IP that we want to configure and use.
-> > >
-> > > When I say *remotely* I mean that this IP can be configurable through
-> > > the
-> > > RC/CPU side, however, for that, it requires the eDMA registers to be
-> > > exposed through a PCIe BAR on the EP. This will allow setting the SAR,
-> > > DAR and other settings, also need(s) the interrupt(s) address(es) to be
-> > > set as well (MSI or MSI-X only) so that it can signal through PCIe (to
-> > > the RC and consecutively the associated EP driver) if the data transfer
-> > > has been completed, aborted or if the Linked List consumer algorithm
-> > > has
-> > > passed in some linked element marked with a watermark.
-> > >
-> > > It was based on this case that the eDMA driver was exclusively
-> > > developed.
-> > >
-> > > However, Alan, wants to expand a little more this, by being able to use
-> > > this driver on the EP side (through
-> > > pcitest/pci_endpoint_test/pci_epf_test) so that he can configure this
-> > > IP
-> > > *locally*.
-> > > In fact, when doing this, he doesn't need to configure the interrupt
-> > > address (MSI or MSI-X), because this IP provides a local interrupt line
-> > > so that be connected to other blocks on the EP side.  
-> >
-> > Right, so this confirms my hunch that the driver is being used in
-> > a way that doesn't reflect the expected use case. Rather than
-> > papering over the problem by hacking the core code, I'd rather see
-> > the eDMA driver be updated to support both host and endpoint cases.
-> > This probably boils down to a PCI vs non-PCI set of helpers.
-> >
-> > Alan, could you confirm whether we got it right?  
-> 
-> Thanks Marc and Gustavo. I appreciate all your comments and feedback.
-> 
-> You both got it right. As Gustavo mentioned, I am trying to expand dw-edma
-> for additional use cases.
-> 
-> First new use case is for integration of dw-edma with pci-epf-test so the latter
-> can initiate dma transfers locally from endpoint memory to host memory over the
-> PCIe bus in response to a user command issued from the host-side command
-> prompt using the pcitest utility. When the locally-initiated dma
-> transfer completes
-> in this use case on the endpoint side, dw-edma issues an interrupt to the local
-> CPU on the endpoint side by way of a legacy interrupt and pci-epf-test issues
-> an interrupt toward the remote host CPU across the PCIe bus by way of legacy,
-> MSI, or possibly MSI-X interrupt.
-> 
-> Second new use case is for integration of dw-edma with pci_endpoint_test
-> running on the host CPU so the latter can initiate dma transfers locally from
-> host-side in response to a user command issued from the host-side command
-> prompt using the pcitest utility. This use case is for host systems that have
-> Synopsys DesignWare PCI eDMA hardware on the host side. When the
-> locally-initiated dma transfer completes in this use case on the host-side,
-> dw-edma issues a legacy interrupt to its local host CPU and pci-epf-test running
-> on the endpoint side issues a legacy, MSI, or possibly MSI-X interrupt
-> across the
-> PCIe bus toward the host CPU.
-> 
-> When both the host and endpoint sides have the Synopsys DesignWare PCI
-> eDMA hardware, more use cases become possible in which eDMA controllers
-> from both systems can be engaged to move data. Embedded DMA controllers
-> from other PCIe IP vendors may also be supported with additional dmaengine
-> drivers under the Linux PCI Endpoint Framework with pci-epf-test, pcitest, and
-> pci_endpoint_test suite as well as new PCI endpoint function drivers for such
-> applications that require dma, for example nvme or virtio_net endpoint function
-> drivers.
-> 
-> I submitted a recent patch [1] and [2] which Gustavo ACk'd to decouple dw-edma
-> from struct pci_dev. This enabled me to exercise dw-edma on some riscv host
-> and endpoint systems that I work with.
-> 
-> I will submit another patch to decouple dw-edma from struct msi_msg such
-> that it would only call get_cached_msi_msg() on the host-side in its
-> original use case with remotely initiated dma transfers using the BAR
-> access method.
-> 
-> The crash that I reported in __get_cached_msi_msg() is probably worth
-> fixing too. It seems to be low impact since get_cached_msi_msg()
-> seems to be called infrequently by a few callers.
+The only way I see for this to happen is that the guest is preempted
+between qxl_push_{cursor,command}_ring_release() and
+qxl_release_fence_buffer_objects() calls.  The host can complete the qxl
+command then, signal the guest, and the IRQ handler calls
+qxl_release_free_list() before qxl_release_fence_buffer_objects() runs.
 
-It isn't about the frequency of the calls, nor the overhead of this
-function. It is about the fundamental difference between a wired
-interrupt (in most case a level triggered one) and a MSI (edge by
-definition on PCI). By making get_cached_msi_msg() "safe" to be called
-for non-MSI IRQs, you hide a variety of design bugs which would
-otherwise be obvious, like the one you are currently dealing with.
+Looking through the code I think it should be safe to simply swap the
+qxl_release_fence_buffer_objects() +
+qxl_push_{cursor,command}_ring_release() calls to close that race
+window.  Can you try that and see if it fixes the bug for you?
 
-Your eDMA driver uses MSI by construction, and is likely to use the MSI
-semantics (edge triggering, coalescing, memory barrier). On the other
-hand, your use case is likely to have interrupts with very different
-semantics (level triggered, no barrier effect). Papering over these
-differences is not the way to go, I'm afraid.
+>  		if (flush)
+> -			flush_work(&qdev->gc_work);
+> +			//can't flush work, it may lead to deadlock
+> +			usleep_range(500, 1000);
+> +
 
-I would recommend that you adapt the driver to have a separate
-interrupt management for the non-MSI case, or at least not blindly use
-MSI-specific APIs when not using them.
+The commit message doesn't explain this chunk.
 
-Thanks,
+take care,
+  Gerd
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
