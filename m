@@ -2,116 +2,215 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D305AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9C0C54FCB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF2C32082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A17206CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:30:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="F5Ecnjii"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RPaDdxzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgDUA2Q (ORCPT
+        id S1726583AbgDUAa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:28:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59230 "EHLO
+        Mon, 20 Apr 2020 20:30:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726341AbgDUA2Q (ORCPT
+        by vger.kernel.org with ESMTP id S1726294AbgDUAa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 20:28:16 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B472C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:28:16 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ng8so633806pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:28:16 -0700 (PDT)
+        Mon, 20 Apr 2020 20:30:26 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 676E5C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:30:26 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id v6so2816841pgh.16
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.washington.edu; s=goo201206;
-        h=from:to:cc:subject:date:message-id;
-        bh=FMzj+KBAT9oKczxa74v3DQRv9Cfu8gbIxOZJWY/KwN4=;
-        b=F5Ecnjii1wOD6Z8F6N/EQ+BJvmRcCDXykdLJXNecm3nPcHmSBK8LG/V4JXCAT7Cxqp
-         2L9yQo5z9bM5Ftq6Sye8tV3ZsqCdsgQXBH3nSq0DSBdCoOXb9i8pPKoHRCmYHNiLy4T0
-         E+RWpg//Wu7E6ucg7Vm0c4gvUqHngOsJU/um4=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Xi5M6qHP3ND0Z/UBJ6rtgvFQC8TVWZYy1Ggc5ZNgU+w=;
+        b=RPaDdxzvAdp7tlM9YXteZK1gqsoaw5TEZ1g9yrSBwkIqONQrU/9LEHSFAqr/eD8EEe
+         8dKlfr9f2YhPiTruVWHY8qfnisMHRe8NlKMK2QNXiAy1QPdJLQ31mZ+sJpsHYe9znRjO
+         cY5Sh0eS1Bq6FpqcspSP8sKy7BZHiDJCQZGdvsPwkChijGi6vSAkJEaqUXjhqshhX9Sh
+         fGvokTfF6lGq35evZ7ZT9NbV3v660FrCdZAaOEQY7WkMgXZhnsK6mb+5tGGowqGRY0Pu
+         RyzOVY3Mufv4BuM7NqjeG9OwNvggSPIRaLis/9qwd5hMqh8/MNaA4e7eN8EVE+D3rbju
+         huig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FMzj+KBAT9oKczxa74v3DQRv9Cfu8gbIxOZJWY/KwN4=;
-        b=TRCljUQAECffKbFAUdRNWFKXFMrJa4HaNhAnBlR22d1S2UWp9doWyHSk3Fs8IfpmTg
-         KlAUlVAkagBIcOm0g4hrV7UefpEjPWwpb3fJhg+ynpgNQAwuft8SpiMg2ZK7MLwlmc9k
-         3Hbbiyl8B+gK3HlC0tltW1ez4VgnIq/uoddwvTfMY7KwVzUXxXlCtpwDFL2TDYScg3jp
-         QWIo3olaA9AVzePnYtQCudIapiJAVwXBan/4JamkuyWqzTDhmrRjKGEs/UIDSNZlYRKy
-         boiQhVvcxhwqfGfmO4DG09EyZAWumFAgpaeqB8yptgde6LDH3f5LbzoczG+gsUeZquvS
-         qhKQ==
-X-Gm-Message-State: AGi0PuZrmcdIcamphxnPR3Vosnb3xYFtrk+0ZNRk4/PdD/woAety52p3
-        uQVlQG0+uNKjJM1gIPXo0ogpuw==
-X-Google-Smtp-Source: APiQypJfRL/P24IvYTwSBmOVCK9iHgVzsETnPpci6H5O5Yc64EM8WVFWpSkRtjhEl62+jhSjad3bFQ==
-X-Received: by 2002:a17:90b:19c1:: with SMTP id nm1mr2367164pjb.73.1587428895331;
-        Mon, 20 Apr 2020 17:28:15 -0700 (PDT)
-Received: from localhost.localdomain (c-73-53-94-119.hsd1.wa.comcast.net. [73.53.94.119])
-        by smtp.gmail.com with ESMTPSA id f2sm547247pju.32.2020.04.20.17.28.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 17:28:14 -0700 (PDT)
-From:   Luke Nelson <lukenels@cs.washington.edu>
-X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
-To:     bpf@vger.kernel.org
-Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
-        netdev@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH bpf] bpf, riscv: Fix tail call count off by one in RV32 BPF JIT
-Date:   Mon, 20 Apr 2020 17:28:04 -0700
-Message-Id: <20200421002804.5118-1-luke.r.nels@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Xi5M6qHP3ND0Z/UBJ6rtgvFQC8TVWZYy1Ggc5ZNgU+w=;
+        b=o9I24Q6o8N5+IoxaD0c56kzCD1cvinic9drl34fugWlSl+x1AS17esQKY+CSJNeOQ3
+         t14kViqd5gnwhVjxM5BPQnbVk5ejRhhnRIRN9CXMdaStjWLlhBN8w4gXTZeilCp9hepM
+         tdIsnYk20v4PcDVzXsfoDkCjWEm/Egi411s3sDIHQO5K5WKZx50F5KLpWYaZrw0hMAjr
+         7poFIe1mJHm1wQ05zSrHXnqDwsqMLhOCHrNJMRGXwPzwhnJlxzv19/JMK7C5rRrAXBBS
+         +uthK9WRgMKsOr/x714feBbj7z/aG2R+80/mwsfBcOEATHVnT/HQP2HQquLJ4hh8M/Le
+         SQsQ==
+X-Gm-Message-State: AGi0PuaY+BYh37iLWGXeRPe/w1oc4dJCDkGqnJ4DKgHSOybTzsRKAt/1
+        dwMCKH3nuq8yZfVVBMj3gu9ncp53tV6c
+X-Google-Smtp-Source: APiQypLylDqcbF9/yP0rtAvO/D027YYA2r5XoecsQQYvaA8sUy5vi4pFA4J6SNjksKUYNIcquX2p1AK1HTnD
+X-Received: by 2002:a17:90a:d504:: with SMTP id t4mr2390923pju.123.1587429025588;
+ Mon, 20 Apr 2020 17:30:25 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 17:30:20 -0700
+Message-Id: <20200421003020.37611-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+Subject: [PATCH v2] perf/record: add num-synthesize-threads option
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes an off by one error in the RV32 JIT handling for BPF
-tail call. Currently, the code decrements TCC before checking if it
-is less than zero. This limits the maximum number of tail calls to 32
-instead of 33 as in other JITs. The fix is to instead check the old
-value of TCC before decrementing.
+From: Stephane Eranian <eranian@google.com>
 
-Fixes: 5f316b65e99f ("riscv, bpf: Add RV32G eBPF JIT")
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+To control degree of parallelism of the synthesize_mmap() code which
+is scanning /proc/PID/task/PID/maps and can be time consuming.
+Mimic perf top way of handling the option.
+If not specified will default to 1 thread, i.e. default behavior before
+this option.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 ---
- arch/riscv/net/bpf_jit_comp32.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/Documentation/perf-record.txt |  4 +++
+ tools/perf/builtin-record.c              | 34 ++++++++++++++++++++++--
+ tools/perf/util/record.h                 |  1 +
+ 3 files changed, 37 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/net/bpf_jit_comp32.c b/arch/riscv/net/bpf_jit_comp32.c
-index 302934177760..11083d4d5f2d 100644
---- a/arch/riscv/net/bpf_jit_comp32.c
-+++ b/arch/riscv/net/bpf_jit_comp32.c
-@@ -770,12 +770,13 @@ static int emit_bpf_tail_call(int insn, struct rv_jit_context *ctx)
- 	emit_bcc(BPF_JGE, lo(idx_reg), RV_REG_T1, off, ctx);
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index b3f3b3f1c161..6e8b4649307c 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -596,6 +596,10 @@ Make a copy of /proc/kcore and place it into a directory with the perf data file
+ Limit the sample data max size, <size> is expected to be a number with
+ appended unit character - B/K/M/G
  
- 	/*
--	 * if ((temp_tcc = tcc - 1) < 0)
-+	 * temp_tcc = tcc - 1;
-+	 * if (tcc < 0)
- 	 *   goto out;
- 	 */
- 	emit(rv_addi(RV_REG_T1, RV_REG_TCC, -1), ctx);
- 	off = (tc_ninsn - (ctx->ninsns - start_insn)) << 2;
--	emit_bcc(BPF_JSLT, RV_REG_T1, RV_REG_ZERO, off, ctx);
-+	emit_bcc(BPF_JSLT, RV_REG_TCC, RV_REG_ZERO, off, ctx);
++--num-thread-synthesize::
++	The number of threads to run when synthesizing events for existing processes.
++	By default, the number of threads equals 1.
++
+ SEE ALSO
+ --------
+ linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 1ab349abe904..2e8011f179f2 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -43,6 +43,7 @@
+ #include "util/time-utils.h"
+ #include "util/units.h"
+ #include "util/bpf-event.h"
++#include "util/util.h"
+ #include "asm/bug.h"
+ #include "perf.h"
  
- 	/*
- 	 * prog = array->ptrs[index];
+@@ -50,6 +51,7 @@
+ #include <inttypes.h>
+ #include <locale.h>
+ #include <poll.h>
++#include <pthread.h>
+ #include <unistd.h>
+ #include <sched.h>
+ #include <signal.h>
+@@ -503,6 +505,20 @@ static int process_synthesized_event(struct perf_tool *tool,
+ 	return record__write(rec, NULL, event, event->header.size);
+ }
+ 
++static int process_locked_synthesized_event(struct perf_tool *tool,
++				     union perf_event *event,
++				     struct perf_sample *sample __maybe_unused,
++				     struct machine *machine __maybe_unused)
++{
++	static pthread_mutex_t synth_lock = PTHREAD_MUTEX_INITIALIZER;
++	int ret;
++
++	pthread_mutex_lock(&synth_lock);
++	ret = process_synthesized_event(tool, event, sample, machine);
++	pthread_mutex_unlock(&synth_lock);
++	return ret;
++}
++
+ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+ {
+ 	struct record *rec = to;
+@@ -1288,6 +1304,7 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	struct perf_tool *tool = &rec->tool;
+ 	int fd = perf_data__fd(data);
+ 	int err = 0;
++	event_op f = process_synthesized_event;
+ 
+ 	if (rec->opts.tail_synthesize != tail)
+ 		return 0;
+@@ -1402,9 +1419,18 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	if (err < 0)
+ 		pr_warning("Couldn't synthesize cgroup events.\n");
+ 
++	if (rec->opts.nr_threads_synthesize > 1) {
++		perf_set_multithreaded();
++		f = process_locked_synthesized_event;
++	}
++
+ 	err = __machine__synthesize_threads(machine, tool, &opts->target, rec->evlist->core.threads,
+-					    process_synthesized_event, opts->sample_address,
+-					    1);
++					    f, opts->sample_address,
++					    rec->opts.nr_threads_synthesize);
++
++	if (rec->opts.nr_threads_synthesize > 1)
++		perf_set_singlethreaded();
++
+ out:
+ 	return err;
+ }
+@@ -2232,6 +2258,7 @@ static struct record record = {
+ 			.default_per_cpu = true,
+ 		},
+ 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
++		.nr_threads_synthesize = 1,
+ 	},
+ 	.tool = {
+ 		.sample		= process_sample_event,
+@@ -2421,6 +2448,9 @@ static struct option __record_options[] = {
+ #endif
+ 	OPT_CALLBACK(0, "max-size", &record.output_max_size,
+ 		     "size", "Limit the maximum size of the output file", parse_output_max_size),
++	OPT_UINTEGER(0, "num-thread-synthesize",
++		     &record.opts.nr_threads_synthesize,
++		     "number of threads to run for event synthesis"),
+ 	OPT_END()
+ };
+ 
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 24316458be20..923565c3b155 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -68,6 +68,7 @@ struct record_opts {
+ 	int	      affinity;
+ 	int	      mmap_flush;
+ 	unsigned int  comp_level;
++	unsigned int  nr_threads_synthesize;
+ };
+ 
+ extern const char * const *record_usage;
 -- 
-2.17.1
+2.26.1.301.g55bc3eb7cb9-goog
 
