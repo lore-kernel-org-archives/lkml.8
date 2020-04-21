@@ -2,125 +2,145 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037E7C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ADCC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07922068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:15:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I9IPejQc"
+	by mail.kernel.org (Postfix) with ESMTP id DAAF4206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587482145;
+	bh=+aKgLByQ6UXETds4VE4kQnDmFrOnvCT2cUPD0WVnbAo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=lV6I0O0Xerlqn9OZgGXz5VR3zAKwc3GcgABPvj0DYPQBdhN5DMP0Bk4e+tpooO4/8
+	 KTddQ4jVs2sSIVKUtCeRrNHeO2Wk4E3GFQaQ0IL7Mla09DUjqi6hu8oxuM0H3XCEmu
+	 VQndfxtJom//fkHta4KfTQQK/tR/7cY8vjnCDX68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgDUPPX (ORCPT
+        id S1726271AbgDUPPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:15:23 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37430 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725902AbgDUPPX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:15:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587482121;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=04PEf90F+6uRCyLy6Mn+cR2kwE1/6Z45D9X5YBg8bFQ=;
-        b=I9IPejQcITuNJIcVNKwq+bOoc3OOKRHJMToxPIZjefsnERsCwW6UN2dmWV5QxDi0jcOXCJ
-        xfe1UrBZLHepA40/84jMZSw0nnoSJc6pbSpdbUjwJ8mXGQywnxXKvQnTeHUvDgVOGpHliq
-        mSKSbvrHSVC3wXjKyAsRekIeussJacs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-349-DnTW3m3TOnWJI0bXu-clzw-1; Tue, 21 Apr 2020 11:15:14 -0400
-X-MC-Unique: DnTW3m3TOnWJI0bXu-clzw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 21 Apr 2020 11:15:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725902AbgDUPPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 11:15:44 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5A2218FE867;
-        Tue, 21 Apr 2020 15:15:11 +0000 (UTC)
-Received: from x2.localnet (ovpn-113-195.phx2.redhat.com [10.3.113.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2781376E92;
-        Tue, 21 Apr 2020 15:15:04 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     linux-audit@redhat.com
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Richard Guy Briggs <rgb@redhat.com>, fw@strlen.de,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v3 3/3] audit: add subj creds to NETFILTER_CFG record to cover async unregister
-Date:   Tue, 21 Apr 2020 11:15:02 -0400
-Message-ID: <2156032.xcGZvdN1jG@x2>
-Organization: Red Hat
-In-Reply-To: <CAHC9VhSbbjFbF0A_-saquZ8B85XaF7SWD2e1QcWsXhFSQrUAbQ@mail.gmail.com>
-References: <cover.1584480281.git.rgb@redhat.com> <20200318213327.ow22q6nnjn3ijq6v@madcap2.tricolour.ca> <CAHC9VhSbbjFbF0A_-saquZ8B85XaF7SWD2e1QcWsXhFSQrUAbQ@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E21C2068F;
+        Tue, 21 Apr 2020 15:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587482144;
+        bh=+aKgLByQ6UXETds4VE4kQnDmFrOnvCT2cUPD0WVnbAo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ddXe43JOrjtoi1DTBU1xzqgc4LsnhmTLdzMIrIwySjZ3rf38YOLUCKRWL3IM+Qj+7
+         VVkklbclK8M3q51/hScO1lReoMYyFyja15EUbnfk0JQuIygF0Aozn4NUO/IE4lx/N+
+         meBX291yBiSTObAqCVdeOBlMvCDa5JT2u60cY4Sw=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH v4 00/11] Rework READ_ONCE() to improve codegen
+Date:   Tue, 21 Apr 2020 16:15:26 +0100
+Message-Id: <20200421151537.19241-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, April 17, 2020 5:53:47 PM EDT Paul Moore wrote:
-> On Wed, Mar 18, 2020 at 5:33 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2020-03-18 17:22, Paul Moore wrote:
-> > > On Wed, Mar 18, 2020 at 9:12 AM Richard Guy Briggs <rgb@redhat.com> 
-wrote:
-> > > > On 2020-03-17 17:30, Richard Guy Briggs wrote:
-> > > > > Some table unregister actions seem to be initiated by the kernel to
-> > > > > garbage collect unused tables that are not initiated by any
-> > > > > userspace actions.  It was found to be necessary to add the subject
-> > > > > credentials to cover this case to reveal the source of these
-> > > > > actions.  A sample record:
-> > > > >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) :
-> > > > >   table=nat family=bridge entries=0 op=unregister pid=153 uid=root
-> > > > >   auid=unset tty=(none) ses=unset
-> > > > >   subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2 exe=(null)
+Hi,
 
-If this is the kernel, why is pid not 0? And if pid is 0, then isn't 
-exe=/boot/vmlinuz-X.Y.Z-blah?
+It's me again. This is version four of the READ_ONCE() codegen improvement
+patches that I previously posted here:
 
-> > > > Given the precedent set by bpf unload, I'd really rather drop this
-> > > > patch that adds subject credentials.
+RFC: https://lore.kernel.org/lkml/20200110165636.28035-1-will@kernel.org
+v2:  https://lore.kernel.org/lkml/20200123153341.19947-1-will@kernel.org
+v3:  https://lore.kernel.org/lkml/20200415165218.20251-1-will@kernel.org/
 
-<snip> 
+Changes since v3 include:
 
-> I'm in the middle of building patches 1/3 and 2/3, assuming all goes
-> well I'll merge them into audit/next (expect mail soon), however I'm
-> going back and forth on this patch.  Like you I kinda don't like it,
-> and with both of us not in love with this patch I have to ask if there
-> is certification requirement for this?
+  * Drop the patch warning for GCC versions prior to 4.8
+  * Move the patch raising the minimum GCC version earlier in the series
+  * Reintroduce the old READ_ONCE_NOCHECK behaviour so that it can continue
+    to be used by stack unwinders
 
-Yes, any change to information flow must be auditable.
+As before, this will break the build for sparc32 without the changes here:
 
-> I know about the generic
-> subj/obj requirements, but in the case where there is no associated
-> task/syscall/etc. information it isn't like the extra fields supplied
-> in this patch are going to have much information in that regard; it's
-> really the *absence* of that information which is telling.
+  https://lore.kernel.org/lkml/20200414214011.2699-1-will@kernel.org
 
-Exactly. But if someone does a search based on the fields, they need to be 
-able to find this record. For example, suppose I want to know what actions 
-have been performed by kernel_t, I can run a  search and find this event. 
+and boy are they proving to be popular (I'm interpreting the silence as
+monumental joy).
 
-> Which brings me to wonder if simply the lack of any associated records in
-> this event is enough?  Before when we weren't associating records into
-> a single event it would have been a problem, but the way things
-> currently are, if there are no other records (and you have configured
-> that) then I think you have everything you need to know.
-> 
-> Thoughts?
+Ta,
 
-You can't search on the absense of information. There are some fields that 
-have meaning. It's OK if they are unset. It happens for daemons, too. But we 
-don't remove the fields because of it. It tells part of the story.
+Will
 
--Steve
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
 
+--->8
+
+Will Deacon (11):
+  compiler/gcc: Raise minimum GCC version for kernel builds to 4.8
+  netfilter: Avoid assigning 'const' pointer to non-const pointer
+  net: tls: Avoid assigning 'const' pointer to non-const pointer
+  fault_inject: Don't rely on "return value" from WRITE_ONCE()
+  arm64: csum: Disable KASAN for do_csum()
+  READ_ONCE: Simplify implementations of {READ,WRITE}_ONCE()
+  READ_ONCE: Enforce atomicity for {READ,WRITE}_ONCE() memory accesses
+  READ_ONCE: Drop pointer qualifiers when reading from scalar types
+  locking/barriers: Use '__unqual_scalar_typeof' for load-acquire macros
+  arm64: barrier: Use '__unqual_scalar_typeof' for acquire/release
+    macros
+  gcov: Remove old GCC 3.4 support
+
+ Documentation/process/changes.rst |   2 +-
+ arch/arm/crypto/Kconfig           |  12 +-
+ arch/arm64/include/asm/barrier.h  |  16 +-
+ arch/arm64/lib/csum.c             |  20 +-
+ crypto/Kconfig                    |   1 -
+ drivers/xen/time.c                |   2 +-
+ include/asm-generic/barrier.h     |  16 +-
+ include/linux/compiler-gcc.h      |   5 +-
+ include/linux/compiler.h          | 145 ++++----
+ include/linux/compiler_types.h    |  21 ++
+ init/Kconfig                      |   1 -
+ kernel/gcov/Kconfig               |  24 --
+ kernel/gcov/Makefile              |   3 +-
+ kernel/gcov/gcc_3_4.c             | 573 ------------------------------
+ lib/fault-inject.c                |   4 +-
+ net/netfilter/core.c              |   2 +-
+ net/tls/tls_main.c                |   2 +-
+ scripts/gcc-plugins/Kconfig       |   2 +-
+ 18 files changed, 132 insertions(+), 719 deletions(-)
+ delete mode 100644 kernel/gcov/gcc_3_4.c
+
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
 
