@@ -2,75 +2,93 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6B0C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D04CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2A320644
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEBB2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NvpZkEOh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oa3l8piB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgDUNxh (ORCPT
+        id S1728712AbgDUNzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:53:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43072 "EHLO
+        Tue, 21 Apr 2020 09:55:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728884AbgDUNxg (ORCPT
+        by vger.kernel.org with ESMTP id S1726691AbgDUNzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:53:36 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF17C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Cm++CYMcsoHl8cG3ue51rLtk5CV6sBkxw+kso6vgYGo=; b=NvpZkEOh9d9dZ42Sx/O1xfgNtp
-        bGhF2PkYFUNGYKyFrPHeKINYmNp/MsvFY+rbz6szP/KJaMGQzie1f0eKsYHzF1pB+ZLxn0wpQLCGq
-        foadxUdbwgobnwwB9t2aRe7Xt3vLRV/nwxtjCguJcO0HQUxTR02Svg7IbTacCpJ1d+8qUZwaWZu+k
-        vfnXtQIBTCmZwPWZFeeLDXFJscCcbuHoiOB1uO1cdu9pQTykRikutnxu6+rWOYgh9Uq8pg7GEypUw
-        giW6Eqsy44ErQHhRHEC8LvPrbs1EqXMxeYaZZzRFKdFJq1Un7Dil+ahaV8QdLcDdI4udyfgaGseHC
-        TsRuwD6g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQtKe-00008i-S5; Tue, 21 Apr 2020 13:53:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B518030275A;
-        Tue, 21 Apr 2020 15:52:58 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9861C2BAC7929; Tue, 21 Apr 2020 15:52:58 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 15:52:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     mingo@kernel.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, paulmck@kernel.org, joel@joelfernandes.org
-Subject: Re: [PATCH] sched/fair: Fix call walk_tg_tree_from() without hold
- rcu_lock
-Message-ID: <20200421135258.GS20730@hirez.programming.kicks-ass.net>
-References: <20200406121008.62903-1-songmuchun@bytedance.com>
+        Tue, 21 Apr 2020 09:55:37 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B449C061A10;
+        Tue, 21 Apr 2020 06:55:37 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id v7so14556472qkc.0;
+        Tue, 21 Apr 2020 06:55:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JdVf9BN3VBYjlAhO1URHy0+Z7z5xubg6gKNXsMj3SD4=;
+        b=Oa3l8piBEzFzpUodpAlB8sX2rIFN5rCXcXoK/64lBT5B4WYoVSwHlYi34Q5qywt28H
+         cfvMFt9WTY5nAH/3jZaU6gCro5xLxShm8sZTIbJ663fFyYihQBaJ2+KIrIjmiuNvsaZH
+         xLXvGjPvLO80jKeV+hYT8pMCUHQ1ECHN+VH4USRvsCwp7x5nC+1YpdZsFWdg6nteG+wS
+         TPWaFEd1X/gT+pZzFfJPhG/793rk8haj9S21poT71hz4YSMj3z9lCUchhCA0+yE2LAyu
+         +JBhENAXBxxMFHMnxjf4MuOG9FD3Womgna2yC/rHmrY24iXI1lb/8e3XQHAhRKi83BwG
+         D9Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JdVf9BN3VBYjlAhO1URHy0+Z7z5xubg6gKNXsMj3SD4=;
+        b=rPN8vrYPtvaG1PZdBEU07g5ErXvFtkil8SOKvvtKPSW877h/TwNSMqIupkBsgzOmtf
+         /5j1ZujVG3ZUlQrH3YkO9TArb62Am5/lL3R1Bj+vBBNBYDDyrCc5v7ZcouO4hwkoMqC2
+         wczaEbSzdBM4HsN25t6RAiFbEYRAz4QttIiMbsQCwSBgbwOkzwh/WuTmO2yCL16oRxBj
+         hYH3b1ZntMUhTlTebXXu6WzRhGb8p1bf1DSQ7Hki/iU/iGpq8i764PAO98tHVp5V2cNn
+         J55ttZ7pY2xFJhsInl8K3X+1lZQBUNi4JAqQ8xQO+ul4LnA6CMuxbo+klA1ReQT4OXuv
+         u0Ew==
+X-Gm-Message-State: AGi0Pua1MRRxLJjqvyNCKM5Q7y4pljWxlR1w60PXzoeAGY4sn+F+CRNB
+        sC1he2TY7hqE5RUU4oCNTGg=
+X-Google-Smtp-Source: APiQypInKCW27Sksr2RruGrr84Fcf0glvObAa7VP5aoCxArIj1/PHlvxTm9HsNw6U4bBzMxqrk+G7w==
+X-Received: by 2002:a37:b93:: with SMTP id 141mr21368378qkl.192.1587477336425;
+        Tue, 21 Apr 2020 06:55:36 -0700 (PDT)
+Received: from dschatzberg-fedora-PC0Y6AEN ([2620:10d:c091:480::1:6809])
+        by smtp.gmail.com with ESMTPSA id g6sm1774808qtc.52.2020.04.21.06.55.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 06:55:35 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 09:55:33 -0400
+From:   Dan Schatzberg <schatzberg.dan@gmail.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 1/4] loop: Use worker per cgroup instead of kworker
+Message-ID: <20200421135533.GA9623@dschatzberg-fedora-PC0Y6AEN>
+References: <20200420223936.6773-1-schatzberg.dan@gmail.com>
+ <20200421024845.6948-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200406121008.62903-1-songmuchun@bytedance.com>
+In-Reply-To: <20200421024845.6948-1-hdanton@sina.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:10:08PM +0800, Muchun Song wrote:
-> The walk_tg_tree_from() caller must hold rcu_lock,
+On Tue, Apr 21, 2020 at 10:48:45AM +0800, Hillf Danton wrote:
+> 
+> On Mon, 20 Apr 2020 18:39:29 -0400 Dan Schatzberg wrote:
+> > 
+> > @@ -1140,8 +1215,17 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+> >  	blk_mq_freeze_queue(lo->lo_queue);
+> >  
+> >  	spin_lock_irq(&lo->lo_lock);
+> > +	destroy_workqueue(lo->workqueue);
+> 
+> Destruct it out of atomic context.
 
-Not quite; with the RCU unification done 'recently' having preemption
-disabled is sufficient. AFAICT preemption is disabled.
-
-In fact; and I mentioned this to someone the other day, perhaps Joel; we
-can go and delete a whole bunch of rcu_read_lock() from the scheduler --
-basically undo all the work we did after RCU was split many years ago.
+I may as well do this, but it doesn't matter, does it? The
+blk_mq_freeze_queue above should drain all I/O so the workqueue will
+be idle.
