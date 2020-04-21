@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57A0C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E749EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85A13206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3D022071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488145;
-	bh=1m0dqMfyqunAzLDkBnbFfXRJYKX/yvOdJ++cF5dHUtI=;
+	s=default; t=1587488139;
+	bh=S+Euk9oHhmfilRY+lsBzopI5g3W+nxnpkfKBSclUXC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltT+DY9MyRbjXMKNhHDxwfHVoSYJJReroGurd7pES7C++MNXUAnHyJHRPLPW6g8lM
-	 uA5ulGFWIbTtTbr6dlH2SGH3iu1IaR0NO+eXoa5H/mY3Mb6oyY1zNnsA/wkX3YT2im
-	 bnMzWmwH8TjRCl77dWAz52VTu92PTkTXYfWPaBSk=
+	b=sg42pNUjJu90YKzfRMvVYGcUMM38ooewD8DT7aWqhXfWXi0vPHXeKXhpmzT9A3jqx
+	 De+pdwDTkdCZVl51n9/aH/Xfs3Cd+wbD6P6LLirCCUwRiyKUJ0/gIwW2DsiRKnGpaR
+	 V695xYPcC+vuoR9K18+ElfH1OChMM3Rwivic/2wI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgDUQzo (ORCPT
+        id S1729403AbgDUQzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:55:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57320 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 12:55:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729130AbgDUQys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729153AbgDUQys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 12:54:48 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7492720CC7;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC54216FD;
         Tue, 21 Apr 2020 16:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587488084;
-        bh=1m0dqMfyqunAzLDkBnbFfXRJYKX/yvOdJ++cF5dHUtI=;
+        bh=S+Euk9oHhmfilRY+lsBzopI5g3W+nxnpkfKBSclUXC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xV+Rt9guKrjb6YjlrDR3s1XDE/t1iRDwUsfr218IfD0IvDV3Ad7gtu2x//iyweZXW
-         dxlNFRoZO/V4YgX7YkvJURvMtadANBATEcy5O/ZCOMgwGPM0cNPX3B1gU9rqaqqE7+
-         NSg30nhcRv0a530K+IWJVmXlytGz2bSsoJMqr7MU=
+        b=iTNMcGVr+qdXCspXHeUOb4qlqN9nsY5mZhCQNurrfHOENdmD/4T+NCwU0AloU2iNJ
+         Tzrvg7HB8Mdb2e/GPGvfwRtXDuQrdz91Mz4g0uIbE1v1O6DuMvlG8hssB8zY+ys/Ea
+         FKhD7h5oZ6qQ8lzhEbaXH0IsDkFrwwtRrZhGe7lQ=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jQwAU-00CmEq-M7; Tue, 21 Apr 2020 18:54:42 +0200
+        id 1jQwAU-00CmFK-T1; Tue, 21 Apr 2020 18:54:42 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jan Kara <jack@suse.com>, Jan Kara <jack@suse.cz>
-Subject: [PATCH v2 19/29] docs: filesystems: convert quota.txt to ReST
-Date:   Tue, 21 Apr 2020 18:54:30 +0200
-Message-Id: <88f4e5b7e0b173b323413e6f410bdcdd7da847bd.1587487612.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 25/29] docs: filesystems: convert spufs/spu_run.txt to ReST
+Date:   Tue, 21 Apr 2020 18:54:36 +0200
+Message-Id: <a1f9e2f268eb4e55fe4c5dbb8f9b3bd740b6d367.1587487612.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1587487612.git.mchehab+huawei@kernel.org>
 References: <cover.1587487612.git.mchehab+huawei@kernel.org>
@@ -60,114 +59,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document title;
-- Some whitespace fixes and new line breaks;
-- Add it to filesystems/index.rst.
+This file is at groff output format. Manually convert it to
+ReST format, trying to preserve a similar output after parsed.
 
-Acked-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/filesystems/index.rst           |  1 +
- .../filesystems/{quota.txt => quota.rst}      | 41 +++++++++++++------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 31 insertions(+), 13 deletions(-)
- rename Documentation/filesystems/{quota.txt => quota.rst} (81%)
+ Documentation/filesystems/spufs/index.rst     |  1 +
+ .../spufs/{spu_run.txt => spu_run.rst}        | 65 ++++++++++++-------
+ 2 files changed, 42 insertions(+), 24 deletions(-)
+ rename Documentation/filesystems/spufs/{spu_run.txt => spu_run.rst} (84%)
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index abfc143434a2..6458891f74e4 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -31,6 +31,7 @@ algorithms work.
-    locks
-    mandatory-locking
-    mount_api
-+   quota
+diff --git a/Documentation/filesystems/spufs/index.rst b/Documentation/filesystems/spufs/index.rst
+index 939cf59a7d9e..5ed4a8494967 100644
+--- a/Documentation/filesystems/spufs/index.rst
++++ b/Documentation/filesystems/spufs/index.rst
+@@ -10,3 +10,4 @@ SPU Filesystem
  
-    automount-support
- 
-diff --git a/Documentation/filesystems/quota.txt b/Documentation/filesystems/quota.rst
-similarity index 81%
-rename from Documentation/filesystems/quota.txt
-rename to Documentation/filesystems/quota.rst
-index 32874b06ebe9..a30cdd47c652 100644
---- a/Documentation/filesystems/quota.txt
-+++ b/Documentation/filesystems/quota.rst
-@@ -1,4 +1,6 @@
+    spufs
+    spu_create
++   spu_run
+diff --git a/Documentation/filesystems/spufs/spu_run.txt b/Documentation/filesystems/spufs/spu_run.rst
+similarity index 84%
+rename from Documentation/filesystems/spufs/spu_run.txt
+rename to Documentation/filesystems/spufs/spu_run.rst
+index d5c6a00d0f97..7fdb1c31cb91 100644
+--- a/Documentation/filesystems/spufs/spu_run.txt
++++ b/Documentation/filesystems/spufs/spu_run.rst
+@@ -1,17 +1,26 @@
+-SPU_RUN(2)                 Linux Programmer's Manual                SPU_RUN(2)
 +.. SPDX-License-Identifier: GPL-2.0
  
-+===============
- Quota subsystem
- ===============
++=======
++spu_run
++=======
  
-@@ -39,6 +41,7 @@ Currently, the interface supports only one message type QUOTA_NL_C_WARNING.
- This command is used to send a notification about any of the above mentioned
- events. Each message has six attributes. These are (type of the argument is
- in parentheses):
+ 
+-NAME
++Name
++====
+        spu_run - execute an spu context
+ 
+ 
+-SYNOPSIS
+-       #include <sys/spu.h>
++Synopsis
++========
+ 
+-       int spu_run(int fd, unsigned int *npc, unsigned int *event);
++       ::
+ 
+-DESCRIPTION
++	    #include <sys/spu.h>
 +
-         QUOTA_NL_A_QTYPE (u32)
- 	  - type of quota being exceeded (one of USRQUOTA, GRPQUOTA)
-         QUOTA_NL_A_EXCESS_ID (u64)
-@@ -48,20 +51,34 @@ in parentheses):
- 	  - UID of a user who caused the event
-         QUOTA_NL_A_WARNING (u32)
- 	  - what kind of limit is exceeded:
--		QUOTA_NL_IHARDWARN - inode hardlimit
--		QUOTA_NL_ISOFTLONGWARN - inode softlimit is exceeded longer
--		  than given grace period
--		QUOTA_NL_ISOFTWARN - inode softlimit
--		QUOTA_NL_BHARDWARN - space (block) hardlimit
--		QUOTA_NL_BSOFTLONGWARN - space (block) softlimit is exceeded
--		  longer than given grace period.
--		QUOTA_NL_BSOFTWARN - space (block) softlimit
++	    int spu_run(int fd, unsigned int *npc, unsigned int *event);
 +
-+		QUOTA_NL_IHARDWARN
-+		    inode hardlimit
-+		QUOTA_NL_ISOFTLONGWARN
-+		    inode softlimit is exceeded longer
-+		    than given grace period
-+		QUOTA_NL_ISOFTWARN
-+		    inode softlimit
-+		QUOTA_NL_BHARDWARN
-+		    space (block) hardlimit
-+		QUOTA_NL_BSOFTLONGWARN
-+		    space (block) softlimit is exceeded
-+		    longer than given grace period.
-+		QUOTA_NL_BSOFTWARN
-+		    space (block) softlimit
-+
- 	  - four warnings are also defined for the event when user stops
- 	    exceeding some limit:
--		QUOTA_NL_IHARDBELOW - inode hardlimit
--		QUOTA_NL_ISOFTBELOW - inode softlimit
--		QUOTA_NL_BHARDBELOW - space (block) hardlimit
--		QUOTA_NL_BSOFTBELOW - space (block) softlimit
-+
-+		QUOTA_NL_IHARDBELOW
-+		    inode hardlimit
-+		QUOTA_NL_ISOFTBELOW
-+		    inode softlimit
-+		QUOTA_NL_BHARDBELOW
-+		    space (block) hardlimit
-+		QUOTA_NL_BSOFTBELOW
-+		    space (block) softlimit
-+
-         QUOTA_NL_A_DEV_MAJOR (u32)
- 	  - major number of a device with the affected filesystem
-         QUOTA_NL_A_DEV_MINOR (u32)
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4c8fc51d3955..ac8ddd91928a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5020,7 +5020,7 @@ W:	http://www.win.tue.nl/~aeb/partitions/partition_types-1.html
- DISKQUOTA
- M:	Jan Kara <jack@suse.com>
- S:	Maintained
--F:	Documentation/filesystems/quota.txt
-+F:	Documentation/filesystems/quota.rst
- F:	fs/quota/
- F:	include/linux/quota*.h
- F:	include/uapi/linux/quota*.h
++Description
++===========
+        The  spu_run system call is used on PowerPC machines that implement the
+        Cell Broadband Engine Architecture in order to access Synergistic  Pro-
+        cessor  Units  (SPUs).  It  uses the fd that was returned from spu_cre-
+@@ -45,24 +54,31 @@ DESCRIPTION
+        If NULL is passed as the event argument, these errors will result in  a
+        signal delivered to the calling process.
+ 
+-RETURN VALUE
++Return Value
++============
+        spu_run  returns the value of the spu_status register or -1 to indicate
+        an error and set errno to one of the error  codes  listed  below.   The
+        spu_status  register  value  contains  a  bit  mask of status codes and
+        optionally a 14 bit code returned from the stop-and-signal  instruction
+        on the SPU. The bit masks for the status codes are:
+ 
+-       0x02   SPU was stopped by stop-and-signal.
++       0x02
++	      SPU was stopped by stop-and-signal.
+ 
+-       0x04   SPU was stopped by halt.
++       0x04
++	      SPU was stopped by halt.
+ 
+-       0x08   SPU is waiting for a channel.
++       0x08
++	      SPU is waiting for a channel.
+ 
+-       0x10   SPU is in single-step mode.
++       0x10
++	      SPU is in single-step mode.
+ 
+-       0x20   SPU has tried to execute an invalid instruction.
++       0x20
++	      SPU has tried to execute an invalid instruction.
+ 
+-       0x40   SPU has tried to access an invalid channel.
++       0x40
++	      SPU has tried to access an invalid channel.
+ 
+        0x3fff0000
+               The  bits  masked with this value contain the code returned from
+@@ -71,7 +87,8 @@ RETURN VALUE
+        There are always one or more of the lower eight bits set  or  an  error
+        code is returned from spu_run.
+ 
+-ERRORS
++Errors
++======
+        EAGAIN or EWOULDBLOCK
+               fd is in non-blocking mode and spu_run would block.
+ 
+@@ -93,29 +110,29 @@ ERRORS
+               not loaded.
+ 
+ 
+-NOTES
++Notes
++=====
+        spu_run  is  meant  to  be  used  from  libraries that implement a more
+        abstract interface to SPUs, not to be used from  regular  applications.
+        See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
+        ommended libraries.
+ 
+ 
+-CONFORMING TO
++Conforming to
++=============
+        This call is Linux specific and only implemented by the ppc64 architec-
+        ture. Programs using this system call are not portable.
+ 
+ 
+-BUGS
++Bugs
++====
+        The code does not yet fully implement all features lined out here.
+ 
+ 
+-AUTHOR
++Author
++======
+        Arnd Bergmann <arndb@de.ibm.com>
+ 
+-SEE ALSO
++See Also
++========
+        capabilities(7), close(2), spu_create(2), spufs(7)
+-
+-
+-
+-
+-Linux                             2005-09-28                        SPU_RUN(2)
 -- 
 2.25.2
 
