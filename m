@@ -2,110 +2,77 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B60EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43013C55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDEB2076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E9B20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgDUMY3 convert rfc822-to-8bit (ORCPT
+        id S1728765AbgDUMZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:24:29 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:34915 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbgDUMY1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:24:27 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id EFAE120000A;
-        Tue, 21 Apr 2020 12:24:24 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 14:24:24 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     "Xia, Hui" <hui.xia@intel.com>
-Cc:     "Li, Philip" <philip.li@intel.com>, lkp <lkp@intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] iio: adc: ti-ads8344: properly byte swap value
-Message-ID: <20200421122424.GK7326@piout.net>
-References: <20200415212257.161238-2-alexandre.belloni@bootlin.com>
- <202004161449.NY5hL54S%lkp@intel.com>
- <20200416205023.GA437042@piout.net>
- <20200419024948.GK21730@intel.com>
- <2A5F4C9150EECB4DAA6291810D6D61B9745DE89F@shsmsx102.ccr.corp.intel.com>
+        Tue, 21 Apr 2020 08:25:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59244 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728576AbgDUMZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 08:25:39 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A1180CA88C4FE8DFBF7B;
+        Tue, 21 Apr 2020 20:25:36 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 21 Apr 2020 20:25:26 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
+        <f.fainelli@gmail.com>, <bcm-kernel-feedback-list@broadcom.com>,
+        <linux-serial@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] tty: serial: bcm63xx: fix missing clk_put() in bcm63xx_uart
+Date:   Tue, 21 Apr 2020 20:31:46 +0800
+Message-ID: <1587472306-105155-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <2A5F4C9150EECB4DAA6291810D6D61B9745DE89F@shsmsx102.ccr.corp.intel.com>
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch fixes below error reported by coccicheck
 
-On 21/04/2020 07:25:01+0000, Xia, Hui wrote:
-> >-----Original Message-----
-> >From: Li, Philip <philip.li@intel.com>
-> >Sent: 2020年4月19日 10:50
-> >To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> >Cc: lkp <lkp@intel.com>; Jonathan Cameron <jic23@kernel.org>; kbuild-
-> >all@lists.01.org; Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen
-> ><lars@metafoo.de>; Peter Meerwald-Stadler <pmeerw@pmeerw.net>; Gregory
-> >CLEMENT <gregory.clement@bootlin.com>; linux-iio@vger.kernel.org; linux-
-> >kernel@vger.kernel.org
-> >Subject: Re: [PATCH 1/3] iio: adc: ti-ads8344: properly byte swap value
-> >
-> >On Thu, Apr 16, 2020 at 10:50:23PM +0200, Alexandre Belloni wrote:
-> >> Hi,
-> >>
-> >> On 16/04/2020 14:22:03+0800, kbuild test robot wrote:
-> >> > Hi Alexandre,
-> >> >
-> >> > I love your patch! Yet something to improve:
-> >> >
-> >> > [auto build test ERROR on iio/togreg] [also build test ERROR on
-> >> > v5.7-rc1 next-20200415] [if your patch is applied to the wrong git
-> >> > tree, please drop us a note to help improve the system. BTW, we also
-> >> > suggest to use '--base' option to specify the base tree in git
-> >> > format-patch, please see https://stackoverflow.com/a/37406982]
-> >> >
-> >> > url:    https://github.com/0day-ci/linux/commits/Alexandre-Belloni/iio-adc-ti-
-> >ads8344-improve-the-driver/20200416-073357
-> >> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-> >> > config: c6x-allyesconfig (attached as .config)
-> >> > compiler: c6x-elf-gcc (GCC) 9.3.0
-> >> > reproduce:
-> >> >         wget https://raw.githubusercontent.com/intel/lkp-
-> >tests/master/sbin/make.cross -O ~/bin/make.cross
-> >> >         chmod +x ~/bin/make.cross
-> >> >         # save the attached .config to linux build tree
-> >> >         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0
-> >> > make.cross ARCH=c6x
-> >> >
-> >>
-> >> I spent some time to reproduce and this is actually not that trivial
-> >> because your toolchains are linked with libisl22 and most
-> >> distributions still ship an older version. Maybe you can do something about that?
-> >Thanks for the feedback, we will resolve this to use old version in earliest time.
-> The cross toolchains has been updated to link with libisl19 the stable version. Please remove the old toolchain and make.cross again.
-> Feel free to let us know if still have problem. Thanks.
-> 
+drivers/tty/serial/bcm63xx_uart.c:848:2-8: ERROR: missing clk_put;
+clk_get on line 842 and execution via conditional on line 846
 
-Thank you, this works properly on more machines now.
+Fixes: ab4382d27412 ("tty: move drivers/serial/ to drivers/tty/serial/")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ drivers/tty/serial/bcm63xx_uart.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/tty/serial/bcm63xx_uart.c b/drivers/tty/serial/bcm63xx_uart.c
+index 5674da2..ed0aa5c 100644
+--- a/drivers/tty/serial/bcm63xx_uart.c
++++ b/drivers/tty/serial/bcm63xx_uart.c
+@@ -843,8 +843,10 @@ static int bcm_uart_probe(struct platform_device *pdev)
+ 	if (IS_ERR(clk) && pdev->dev.of_node)
+ 		clk = of_clk_get(pdev->dev.of_node, 0);
+ 
+-	if (IS_ERR(clk))
++	if (IS_ERR(clk)) {
++		clk_put(clk);
+ 		return -ENODEV;
++	}
+ 
+ 	port->iotype = UPIO_MEM;
+ 	port->irq = res_irq->start;
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.6.2
+
