@@ -2,664 +2,607 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819EAC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ADCC55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 590F820CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F4E20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="EiJPfPpQ"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="vmeo7fs6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgDUIoX (ORCPT
+        id S1728327AbgDUIou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726018AbgDUIoT (ORCPT
+        Tue, 21 Apr 2020 04:44:50 -0400
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.5]:53023 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726018AbgDUIos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:44:19 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C70C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:44:18 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id t11so10427710lfe.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:44:18 -0700 (PDT)
+        Tue, 21 Apr 2020 04:44:48 -0400
+Received: from [100.112.195.143] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-a.eu-west-1.aws.symcld.net id 6A/2A-46089-972BE9E5; Tue, 21 Apr 2020 08:44:41 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1VSbUxTVxjm9N72XhjdLq2Ed91gpkS3KK1Upru
+  SbDHZnyaLAxZHDFNGgQtt1q/0lhRYNnDQJUNABnFESgEROhzyLUwmw+BAviY4TERMBkyaTGBE
+  HMTp5GP39la3/TjJ877P8z7nOScvicnuShQkk21nbGadUSkJwvX7ZGZVdmdNcnRX8W660nsLp
+  wvOt0noouZenL71Q7WEXisZRHS9x4nRlffWicOE1pX/C66tGU3QXnVfJLRrnRHxeJLYYE61ZK
+  eI9bfHlwjrQ0v2+OLveD7ynChCQSSiGjGY6e8SFaFArriOQ3/+awLRheBpyRMJX+DUCAYtY7c
+  RX8ioWhGU9v6KC8Ucgo62TZyfl1A0VIzMS3i8g8qAuuot3wRGbSJodfUinpBTB8D5YAYrQiQn
+  Ogizl9IE/X5oHm7yzeLULuhbaxXzWEqdgNPlJ31YRunhqwttvqyBVCwMPq7HhNzhsH6y2YcxK
+  gzuemt9GqAoaOibxAQcCosLW2JBz8DoF3eQ0I+CG9NexMcBKhIqthOFdjhM1Z7yS47A/KMNv8
+  0eqPt6yI9paDjlxAVshDNDXf5rd0Pfo0F//1XYGPoL478BqAocvqzZ8r8lDVbdN4gyFF31n9g
+  CjoK6K39KBLwXPOeWsSrfV4TA6FkvXofw7xCdajNk6u0mncGo0kRHqzSa/SrNoRjuHFLrclU6
+  NZOlcjCsXaVR6xysms0xpRnT1WbG3om41Uq3DgxfRp6WB+pr6GVSpAyVUk01ybIXUy3pOXodq
+  //YlmVk2GvoDZKkulqabyIFbraYGSVI+zs4XYiNyWSyMwxGblmfSYEMVu6QOts5WspadSbWkC
+  lQY0hFli266zGZz0MRJp3nPShepM8yP7d4tvJTKFwhl6KAgABZsJWxmQz2//NLKIxESrn0nRb
+  OJdhgtj+/aYkLIeJCWA64+BB23b+UIl+kOXxwWxYTN3nxrYH1morLKRPxiZr7ca/ve//oMWe7
+  tWlK21ua2/rKas/3Y40zs8rHKS91n07baXgSKXMV35so3L4+uJDc61aEx57pXhxZjn9zM+l45
+  EJoTGNZYfWlI+1z3s8/Ws0jyvOSzv39x3TkJ2w5Zt787XwcsdJeNbl8//i2yfNhZULBqsey2h
+  0iHZeXFsyJ36vUln9wxfo0diJxyf1j4MZPhIL59k4WmRuzQkTYm4wx0VPV7RJDzl5bT1MB7ox
+  Iu5niaFhxrdV9+kIQ21PS1pBeXEpXvT2bYUvH134+5nAOn82iH8ozm8eORjkKC7bezQv7rGM6
+  IS9zIJG4+k2yEmf1Os0ezMbq/gEcrJUSbQQAAA==
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-24.tower-272.messagelabs.com!1587458680!2224335!1
+X-Originating-IP: [104.47.18.110]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 6195 invoked from network); 21 Apr 2020 08:44:40 -0000
+Received: from mail-am6eur05lp2110.outbound.protection.outlook.com (HELO EUR05-AM6-obe.outbound.protection.outlook.com) (104.47.18.110)
+  by server-24.tower-272.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 21 Apr 2020 08:44:40 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=POl0ISQWJxsx+CjaLcmzMH8mGe+O1JlQ/1KkUM5xQmMf6+Nv6UCXD7LlVnz4oRUK62octG6VDLm8vIxzlOesOFMQt1hjMPWHAw4eki9xT8Nv+kSxIWnvOXppLjUIkZW5lU/Kyp2fzn3tyo3zX10boj9+pPrHcV47GuUrBOsKRp0mBYLl/Ec29g6HN251SLdGenAgbI2EU4R3ortCgMSRlVI7xsTbBD9SRoY+QAkmO8ESiogmP2SHFd3ywDIOzK4dkjbdT21aH3GiTYDfEx7SENw6/w3i1BaSVWHEgQmqVIuIxCvYUQTHOzbWjKngQHWO0GRPp17EX6B12JS3CUDtgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GZ0fRNGsEm1D2XM/MDa1Aexe7+EJ1ZUzG7xO4g/ZQXA=;
+ b=KxK+g4xf8vcEQvWZWi5p8xcdLxJpIB2lyf6+7jQ0QucPCn+zzoaJTKI0BB3Ump/vbFpaP0e0di8ZNblKOCVuyjAWgqQNwAMNpcuaBG57PVXUf3ZQ/goMS8eGCfez2yTAOkZdJFHMV5zZlWI6/bxwsuB+XJp+4BNyCyZj6RFW3cVj9WqUpDRpYBaPWLC1V6OnWHwL8SNEArf40RzyE2nXzoU12fVvdQorzLux90yKyPj59bIw24wCB+kO4+x7wnrc7vFsbeLhfguDx5ADuTzVG8+loscK1npa7+lYcQmYXRD+oJHyKMUJZMARVtlZqPMuMackKSh2GbtZxitNio7hZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=BC2wT+sKuiR4zJbHid9KefpLDnLmCKk8QIahFEaXIbI=;
-        b=EiJPfPpQeA9QRk4yklBdf4LYw17kfiCYJrdE/ss6E2WontLP0scmb87tX/tJ4s0YFw
-         vwhJy9sQIyliAmgoEbhqRowEjjQpj3i6HOQbkV2sdhBeBytkpZMKWsh+itGQp1aXXprM
-         41Dm2XhHCOvPyio5CUtBIsl6uxSghj01O0PL0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BC2wT+sKuiR4zJbHid9KefpLDnLmCKk8QIahFEaXIbI=;
-        b=TubE428tlYnJ38xAW3sYSj1coeXMrFtMmf24yjB+/ObPm4PV6gch3A4tGvBJTt5sBz
-         /eck5LG6XTZX72SqKjnaI7MvjijsgXpy9dqw0AHh2xrtfEHYnBaOFO6RagPgY0hdJflE
-         ahrRfYpdsJ0QfRy1WTgr8raZ59w0IUlaEGSks3XePYec6YkBfu817ckspoEcclo8mZaw
-         3fXFU1M9VPZrmQ2pKNErp2h6Ic2fFjfqeQrlqCl2yBBsgVqp+MTZYwCx8jOxW+65I/RF
-         hy8wxrcOknwKQLPQlXb01gFYuJufpipyOP0DLE89P2rc/pcyXcZBWVTulWmh6UWv0RSY
-         xPkw==
-X-Gm-Message-State: AGi0PubI5m0bi4oIljPGjaukC+YHG2TP8nixs0JulocYCGOelrKnw8Fz
-        5EkjZ2rqGQrhztjvfj3GNJXOaQ==
-X-Google-Smtp-Source: APiQypJL4GH2EGNF9+JiAVKkuAjT9+qMVww0qF9zIlkdruVdZMkLxqkzuXlGBaag1prrw83t3Ja5Aw==
-X-Received: by 2002:ac2:47f0:: with SMTP id b16mr13396732lfp.81.1587458657192;
-        Tue, 21 Apr 2020 01:44:17 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id j22sm1577029lfg.96.2020.04.21.01.44.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 01:44:16 -0700 (PDT)
-Subject: Re: [PATCH net-next 09/13] bridge: mrp: Connect MRP API with the
- switchev API
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>, davem@davemloft.net,
-        jiri@resnulli.us, ivecera@redhat.com, kuba@kernel.org,
-        roopa@cumulusnetworks.com, olteanv@gmail.com, andrew@lunn.ch,
-        UNGLinuxDriver@microchip.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bridge@lists.linux-foundation.org
-References: <20200420150947.30974-1-horatiu.vultur@microchip.com>
- <20200420150947.30974-10-horatiu.vultur@microchip.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <f50f5adb-dd22-4122-33cb-78effa0242a6@cumulusnetworks.com>
-Date:   Tue, 21 Apr 2020 11:44:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200420150947.30974-10-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset=utf-8
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GZ0fRNGsEm1D2XM/MDa1Aexe7+EJ1ZUzG7xO4g/ZQXA=;
+ b=vmeo7fs6I0ED037yqnLam7VpuYwiifv1bAhz7RmiHUTFWWAmvnbYJx6b1zbSyzsNbStVtNu4zXNVqZtQaPVVEZdiHa/mj613gPzZmnHLyPmxB/ifskrKrrb43PR1CcTNIVypysG+efKhM5fkFfN98OXIQeMkSG3x+LgZnBxlRig=
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:52::13)
+ by AM6PR10MB2536.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:51::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Tue, 21 Apr
+ 2020 08:44:38 +0000
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::2539:e4b7:445f:13b6]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::2539:e4b7:445f:13b6%5]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
+ 08:44:38 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Mathew King <mathewk@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: RE: [PATCH v0 2/2] typec: Add Type-C charger
+Thread-Topic: [PATCH v0 2/2] typec: Add Type-C charger
+Thread-Index: AQHWFzIA8tnYoqPII0+yygriEfGPK6iDQGzw
+Date:   Tue, 21 Apr 2020 08:44:38 +0000
+Message-ID: <AM6PR10MB2263B60191A7240E3F6E0C7A80D50@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+References: <20200420163657.60650-1-mathewk@chromium.org>
+ <20200420163657.60650-3-mathewk@chromium.org>
+In-Reply-To: <20200420163657.60650-3-mathewk@chromium.org>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.196.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b90afa2a-c23c-4340-48fc-08d7e5d03a2c
+x-ms-traffictypediagnostic: AM6PR10MB2536:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-microsoft-antispam-prvs: <AM6PR10MB253606C04A1FE99205B4F96EA7D50@AM6PR10MB2536.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 038002787A
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(396003)(136003)(39850400004)(366004)(376002)(76116006)(66446008)(186003)(8676002)(66556008)(66946007)(4326008)(30864003)(9686003)(86362001)(52536014)(6506007)(53546011)(71200400001)(26005)(55236004)(316002)(110136005)(7696005)(33656002)(478600001)(66476007)(81156014)(64756008)(54906003)(2906002)(8936002)(55016002)(5660300002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CqJ0cyeFdi/z4JVhuqpUjnJNshn3vR0OJowBExvu/earj9f7TNnPia4FaFhxmO0ruOK1eFwLje9dfHo8nFBFoaBUmzNYQ6Rrct0MYNylLVqYk5lG4F3hHAJVSt9zE9eu0YNw/JbxeuNYIju9j7Oco4mP5W1f9LdVTErdQa3GvgtAHZhw4XRentH9HM5C53CKIdqQ5fIZCDhXOM16rRqUIKG8eKPPF0Wd7fWX4FgATw/wVDW7Ol8fgq9VfQG/heRDOgtxsCc/go7SqS6vkHuSZoTfXqsvXWoQwYVHw0BCJmW+cDu++IulnaSYTM8FEJVl0yNclY95euyyPWWBgPyYb/nDGV2rxngHvAJiu/NAkjsqOg9yEkoPk2hvN7JONT68vMuA2QFudBauBZL7e0j7cD0ix6y+DuZjRXY/s2On5X2JD8dFg/u8U8wPf8qhsr+C
+x-ms-exchange-antispam-messagedata: NGqB56XOrvMHvUu3UuT8uIke+ygWmONN3eagH16ConUXGVZF7cZU4SKHPFXhVFZ6esQuvjxwqz5jd+AHV81HofRKJIA9dQrR4hnDZc5yQyrA6i+D4JKs+bmam1XjL9NmH1i6lA/jM94QsT6A58BJRA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b90afa2a-c23c-4340-48fc-08d7e5d03a2c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2020 08:44:38.6794
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZX1YetU1F4YUlesSkvkgZ2HNDFY1GK8QHfv/3+WTRFUMv19vmFF7LKbJiSTjT0wvkjqV3jVqlaxF2X8Ogcr9TjUrFt2ysOSZwrO2Xg5G2II=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2536
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/04/2020 18:09, Horatiu Vultur wrote:
-> Implement the MRP API.
-> 
-> In case the HW can't generate MRP Test frames then the SW will try to generate
-> the frames. In case that also the SW will fail in generating the frames then a
-> error is return to the userspace. The userspace is responsible to generate all
-> the other MRP frames regardless if the test frames are generated by HW or SW.
-> 
-> The forwarding/termination of MRP frames is happening in the kernel and is done
-> by the MRP instance. The userspace application doesn't do the forwarding.
-> 
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+On 20 April 2020 17:37, Mathew King wrote:
+
+> Add an option to expose USB Type-C ports that can charge system
+> batteries as a power_supply class. This implementation only exposes
+> three properties of the power supply.
+>=20
+> POWER_SUPPLY_PROP_ONLINE - Set to true if the Type-C port is configured
+>                            as a sink and is connected to a partner
+> POWER_SUPPLY_PROP_STATUS - Set to CHARGING if a partner is connected and
+>                            the port is a sink and set to NOT_CHARGING
+>                            otherwise
+> POWER_SUPPLY_PROP_USB_TYPE - When a partner is conneced set to TYPE_C,
+>                              TYPE_PD, or TYPE_PD_DRP depending on the
+>                              partner capibilities and set to
+>                              TYPE_UNKNOWN otherwise
+>=20
+> This implementation can be expanded as the typec class is expaneded. In
+> particular the STATUS property should show more than CHARGING and
+> NOT_CHARGING. Also properties like VOLTAGE and CURRENT can be added
+> when
+> the typec class supports getting PDOs.
+
+Hmm, this functionally looks almost exactly like code already available in =
+TCPM,
+except a much smaller subset. This looks like it would duplicate that work =
+so as
+it stands doesn't feel sensible to me. It may be that the work in TCPM need=
+s
+refactoring, but I don't believe the two should coexist.
+
+>=20
+> Signed-off-by: Mathew King <mathewk@chromium.org>
 > ---
->  net/bridge/br_mrp.c | 551 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 551 insertions(+)
->  create mode 100644 net/bridge/br_mrp.c
-> 
-> diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
+>  drivers/usb/typec/Kconfig   |  11 ++
+>  drivers/usb/typec/Makefile  |   1 +
+>  drivers/usb/typec/charger.c | 204
+> ++++++++++++++++++++++++++++++++++++
+>  drivers/usb/typec/charger.h |  33 ++++++
+>  drivers/usb/typec/class.c   |  48 +++++++--
+>  drivers/usb/typec/class.h   |   2 +
+>  6 files changed, 290 insertions(+), 9 deletions(-)
+>  create mode 100644 drivers/usb/typec/charger.c
+>  create mode 100644 drivers/usb/typec/charger.h
+>=20
+> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+> index b4f2aac7ae8a..1040c990cb7e 100644
+> --- a/drivers/usb/typec/Kconfig
+> +++ b/drivers/usb/typec/Kconfig
+> @@ -46,6 +46,17 @@ menuconfig TYPEC
+>=20
+>  if TYPEC
+>=20
+> +config TYPEC_CHARGER
+> +	bool "Type-C Power Supply support"
+> +	depends on POWER_SUPPLY
+> +	help
+> +	  Say Y here to enable Type-C charging ports to be exposed as a power
+> +	  supply class.
+> +
+> +	  If you choose this option Type-C charger support will be built into
+> +	  the typec driver. This will expose all Type-C ports as a power_supply
+> +	  class.
+> +
+>  source "drivers/usb/typec/tcpm/Kconfig"
+>=20
+>  source "drivers/usb/typec/ucsi/Kconfig"
+> diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
+> index 7753a5c3cd46..6fc5424761a1 100644
+> --- a/drivers/usb/typec/Makefile
+> +++ b/drivers/usb/typec/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_TYPEC)		+=3D typec.o
+>  typec-y				:=3D class.o mux.o bus.o
+> +typec-$(CONFIG_TYPEC_CHARGER)	+=3D charger.o
+>  obj-$(CONFIG_TYPEC)		+=3D altmodes/
+>  obj-$(CONFIG_TYPEC_TCPM)	+=3D tcpm/
+>  obj-$(CONFIG_TYPEC_UCSI)	+=3D ucsi/
+> diff --git a/drivers/usb/typec/charger.c b/drivers/usb/typec/charger.c
 > new file mode 100644
-> index 000000000000..a52f02f174c3
+> index 000000000000..07c3cd065be8
 > --- /dev/null
-> +++ b/net/bridge/br_mrp.c
-> @@ -0,0 +1,551 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +#include <linux/mrp_bridge.h>
-> +#include "br_private_mrp.h"
-> +
-> +static const u8 mrp_test_dmac[ETH_ALEN] = { 0x1, 0x15, 0x4e, 0x0, 0x0, 0x1 };
-> +
-> +static struct net_bridge_port *br_mrp_get_port(struct net_bridge *br,
-> +					       u32 ifindex)
-> +{
-> +	struct net_bridge_port *res = NULL;
-> +	struct net_bridge_port *port;
-> +
-> +	list_for_each_entry(port, &br->port_list, list) {
-> +		if (port->dev->ifindex == ifindex) {
-> +			res = port;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return res;
-> +}
-> +
-> +static struct br_mrp *br_mrp_find_id(struct net_bridge *br, u32 ring_id)
-> +{
-> +	struct br_mrp *res = NULL;
-> +	struct br_mrp *mrp;
-> +
-> +	list_for_each_entry_rcu(mrp, &br->mrp_list, list,
-> +				lockdep_rtnl_is_held()) {
-> +		if (mrp->ring_id == ring_id) {
-> +			res = mrp;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return res;
-> +}
-> +
-> +static struct br_mrp *br_mrp_find_port(struct net_bridge *br,
-> +				       struct net_bridge_port *p)
-> +{
-> +	struct br_mrp *res = NULL;
-> +	struct br_mrp *mrp;
-> +
-> +	list_for_each_entry_rcu(mrp, &br->mrp_list, list,
-> +				lockdep_rtnl_is_held()) {
-> +		if (rcu_access_pointer(mrp->p_port) == p ||
-> +		    rcu_access_pointer(mrp->s_port) == p) {
-> +			res = mrp;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return res;
-> +}
-> +
-> +static int br_mrp_next_seq(struct br_mrp *mrp)
-> +{
-> +	mrp->seq_id++;
-> +	return mrp->seq_id;
-> +}
-> +
-> +static struct sk_buff *br_mrp_skb_alloc(struct net_bridge_port *p,
-> +					const u8 *src, const u8 *dst)
-> +{
-> +	struct ethhdr *eth_hdr;
-> +	struct sk_buff *skb;
-> +	u16 *version;
-> +
-> +	skb = dev_alloc_skb(MRP_MAX_FRAME_LENGTH);
-> +	if (!skb)
-> +		return NULL;
-> +
-> +	skb->dev = p->dev;
-> +	skb->protocol = htons(ETH_P_MRP);
-> +	skb->priority = MRP_FRAME_PRIO;
-> +	skb_reserve(skb, sizeof(*eth_hdr));
-> +
-> +	eth_hdr = skb_push(skb, sizeof(*eth_hdr));
-> +	ether_addr_copy(eth_hdr->h_dest, dst);
-> +	ether_addr_copy(eth_hdr->h_source, src);
-> +	eth_hdr->h_proto = htons(ETH_P_MRP);
-> +
-> +	version = skb_put(skb, sizeof(*version));
-> +	*version = cpu_to_be16(MRP_VERSION);
-> +
-> +	return skb;
-> +}
-> +
-> +static void br_mrp_skb_tlv(struct sk_buff *skb,
-> +			   enum br_mrp_tlv_header_type type,
-> +			   u8 length)
-> +{
-> +	struct br_mrp_tlv_hdr *hdr;
-> +
-> +	hdr = skb_put(skb, sizeof(*hdr));
-> +	hdr->type = type;
-> +	hdr->length = length;
-> +}
-> +
-> +static void br_mrp_skb_common(struct sk_buff *skb, struct br_mrp *mrp)
-> +{
-> +	struct br_mrp_common_hdr *hdr;
-> +
-> +	br_mrp_skb_tlv(skb, BR_MRP_TLV_HEADER_COMMON, sizeof(*hdr));
-> +
-> +	hdr = skb_put(skb, sizeof(*hdr));
-> +	hdr->seq_id = cpu_to_be16(br_mrp_next_seq(mrp));
-> +	memset(hdr->domain, 0xff, MRP_DOMAIN_UUID_LENGTH);
-> +}
-> +
-> +static struct sk_buff *br_mrp_alloc_test_skb(struct br_mrp *mrp,
-> +					     struct net_bridge_port *p,
-> +					     enum br_mrp_port_role_type port_role)
-> +{
-> +	struct br_mrp_ring_test_hdr *hdr = NULL;
-> +	struct net_bridge *br = p->br;
-> +	struct sk_buff *skb = NULL;
-> +
-> +	if (!p)
-> +		return NULL;
-> +
-> +	br = p->br;
-> +
-> +	skb = br_mrp_skb_alloc(p, p->dev->dev_addr, mrp_test_dmac);
-> +	if (!skb)
-> +		return NULL;
-> +
-> +	br_mrp_skb_tlv(skb, BR_MRP_TLV_HEADER_RING_TEST, sizeof(*hdr));
-> +	hdr = skb_put(skb, sizeof(*hdr));
-> +
-> +	hdr->prio = cpu_to_be16(MRP_DEFAULT_PRIO);
-> +	ether_addr_copy(hdr->sa, p->br->dev->dev_addr);
-> +	hdr->port_role = cpu_to_be16(port_role);
-> +	hdr->state = cpu_to_be16(mrp->ring_state);
-> +	hdr->transitions = cpu_to_be16(mrp->ring_transitions);
-> +	hdr->timestamp = cpu_to_be32(jiffies_to_msecs(jiffies));
-> +
-> +	br_mrp_skb_common(skb, mrp);
-> +	br_mrp_skb_tlv(skb, BR_MRP_TLV_HEADER_END, 0x0);
-> +
-> +	return skb;
-> +}
-> +
-> +static void br_mrp_test_work_expired(struct work_struct *work)
-> +{
-> +	struct delayed_work *del_work = to_delayed_work(work);
-> +	struct br_mrp *mrp = container_of(del_work, struct br_mrp, test_work);
-> +	struct net_bridge_port *p;
-> +	bool notify_open = false;
-> +	struct sk_buff *skb;
-> +
-> +	if (time_before_eq(mrp->test_end, jiffies))
-> +		return;
-> +
-> +	if (mrp->test_count_miss < mrp->test_max_miss) {
-> +		mrp->test_count_miss++;
-> +	} else {
-> +		/* Notify that the ring is open only if the ring state is
-> +		 * closed, otherwise it would continue to notify at every
-> +		 * interval.
-> +		 */
-> +		if (mrp->ring_state == BR_MRP_RING_STATE_CLOSED)
-> +			notify_open = true;
-> +	}
-> +
-> +	rcu_read_lock();
-> +
-> +	p = rcu_dereference(mrp->p_port);
-> +	if (p) {
-> +		skb = br_mrp_alloc_test_skb(mrp, p, BR_MRP_PORT_ROLE_PRIMARY);
-> +		if (!skb)
-> +			goto out;
-> +
-> +		skb_reset_network_header(skb);
-> +		dev_queue_xmit(skb);
-> +
-> +		if (notify_open && !mrp->ring_role_offloaded)
-> +			br_mrp_port_open(p->dev, true);
-> +	}
-> +
-> +	p = rcu_dereference(mrp->s_port);
-> +	if (p) {
-> +		skb = br_mrp_alloc_test_skb(mrp, p, BR_MRP_PORT_ROLE_SECONDARY);
-> +		if (!skb)
-> +			goto out;
-> +
-> +		skb_reset_network_header(skb);
-> +		dev_queue_xmit(skb);
-> +
-> +		if (notify_open && !mrp->ring_role_offloaded)
-> +			br_mrp_port_open(p->dev, true);
-> +	}
-> +
-> +out:
-> +	rcu_read_unlock();
-> +
-> +	queue_delayed_work(system_wq, &mrp->test_work,
-> +			   usecs_to_jiffies(mrp->test_interval));
-> +}
-> +
-> +/* Deletes the MRP instance.
-> + * note: called under rtnl_lock
+> +++ b/drivers/usb/typec/charger.c
+> @@ -0,0 +1,204 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * USB Type-C Charger Class
+> + *
+> + * Copyright (C) 2020, Google LLC
+> + * Author: Mathew King <mathewk@google.com>
 > + */
-> +static void br_mrp_del_impl(struct net_bridge *br, struct br_mrp *mrp)
+> +
+> +#include <linux/slab.h>
+> +
+> +#include "charger.h"
+> +#include "class.h"
+> +
+> +static enum power_supply_property typec_charger_props[] =3D {
+> +	POWER_SUPPLY_PROP_ONLINE,
+> +	POWER_SUPPLY_PROP_STATUS,
+> +	POWER_SUPPLY_PROP_USB_TYPE
+> +};
+> +
+> +static enum power_supply_usb_type typec_charger_usb_types[] =3D {
+> +	POWER_SUPPLY_USB_TYPE_UNKNOWN,
+> +	POWER_SUPPLY_USB_TYPE_C,
+> +	POWER_SUPPLY_USB_TYPE_PD,
+> +	POWER_SUPPLY_USB_TYPE_PD_DRP,
+> +};
+> +
+> +static int typec_charger_get_prop(struct power_supply *psy,
+> +				  enum power_supply_property psp,
+> +				  union power_supply_propval *val)
 > +{
-> +	struct net_bridge_port *p;
+> +	struct typec_charger *charger =3D power_supply_get_drvdata(psy);
 > +
-> +	/* Stop sending MRP_Test frames */
-> +	cancel_delayed_work_sync(&mrp->test_work);
-> +	br_mrp_switchdev_send_ring_test(br, mrp, 0, 0, 0);
-> +
-> +	br_mrp_switchdev_del(br, mrp);
-> +
-> +	/* Reset the ports */
-> +	p = rtnl_dereference(mrp->p_port);
-> +	if (p) {
-> +		spin_lock_bh(&br->lock);
-> +		p->state = BR_STATE_FORWARDING;
-> +		p->flags &= ~BR_MRP_AWARE;
-> +		spin_unlock_bh(&br->lock);
-> +		br_mrp_port_switchdev_set_state(p, BR_STATE_FORWARDING);
-> +		rcu_assign_pointer(mrp->p_port, NULL);
-> +	}
-> +
-> +	p = rtnl_dereference(mrp->s_port);
-> +	if (p) {
-> +		spin_lock_bh(&br->lock);
-> +		p->state = BR_STATE_FORWARDING;
-> +		p->flags &= ~BR_MRP_AWARE;
-> +		spin_unlock_bh(&br->lock);
-> +		br_mrp_port_switchdev_set_state(p, BR_STATE_FORWARDING);
-> +		rcu_assign_pointer(mrp->s_port, NULL);
-> +	}
-> +
-> +	list_del_rcu(&mrp->list);
-> +	kfree_rcu(mrp, rcu);
-> +}
-> +
-> +/* Adds a new MRP instance.
-> + * note: called under rtnl_lock
-> + */
-> +int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance)
-> +{
-> +	struct net_bridge_port *p;
-> +	struct br_mrp *mrp;
-> +	int err;
-> +
-> +	/* If the ring exists, it is not possible to create another one with the
-> +	 * same ring_id
-> +	 */
-> +	mrp = br_mrp_find_id(br, instance->ring_id);
-> +	if (mrp)
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_ONLINE:
+> +		val->intval =3D charger->psy_online;
+> +		break;
+> +	case POWER_SUPPLY_PROP_STATUS:
+> +		val->intval =3D charger->psy_status;
+> +		break;
+> +	case POWER_SUPPLY_PROP_USB_TYPE:
+> +		val->intval =3D charger->psy_usb_type;
+> +		break;
+> +	default:
 > +		return -EINVAL;
-> +
-> +	if (!br_mrp_get_port(br, instance->p_ifindex) ||
-> +	    !br_mrp_get_port(br, instance->s_ifindex))
-> +		return -EINVAL;
-> +
-> +	mrp = kzalloc(sizeof(*mrp), GFP_KERNEL);
-> +	if (!mrp)
-> +		return -ENOMEM;
-> +
-> +	mrp->ring_id = instance->ring_id;
-> +
-> +	p = br_mrp_get_port(br, instance->p_ifindex);
-> +	spin_lock_bh(&br->lock);
-> +	p->state = BR_STATE_FORWARDING;
-> +	p->flags |= BR_MRP_AWARE;
-> +	spin_unlock_bh(&br->lock);
-> +	rcu_assign_pointer(mrp->p_port, p);
-> +
-> +	p = br_mrp_get_port(br, instance->s_ifindex);
-> +	spin_lock_bh(&br->lock);
-> +	p->state = BR_STATE_FORWARDING;
-> +	p->flags |= BR_MRP_AWARE;
-> +	spin_unlock_bh(&br->lock);
-> +	rcu_assign_pointer(mrp->s_port, p);
-> +
-> +	INIT_DELAYED_WORK(&mrp->test_work, br_mrp_test_work_expired);
-> +	list_add_tail_rcu(&mrp->list, &br->mrp_list);
-> +
-> +	err = br_mrp_switchdev_add(br, mrp);
-> +	if (err)
-> +		goto delete_mrp;
-> +
-> +	return 0;
-> +
-> +delete_mrp:
-> +	br_mrp_del_impl(br, mrp);
-> +
-> +	return err;
-> +}
-> +
-> +/* Deletes the MRP instance from which the port is part of
-> + * note: called under rtnl_lock
-> + */
-> +void br_mrp_port_del(struct net_bridge *br, struct net_bridge_port *p)
-> +{
-> +	struct br_mrp *mrp = br_mrp_find_port(br, p);
-> +
-> +	/* If the port is not part of a MRP instance just bail out */
-> +	if (!mrp)
-> +		return;
-> +
-> +	br_mrp_del_impl(br, mrp);
-> +}
-> +
-> +/* Deletes existing MRP instance based on ring_id
-> + * note: called under rtnl_lock
-> + */
-> +int br_mrp_del(struct net_bridge *br, struct br_mrp_instance *instance)
-> +{
-> +	struct br_mrp *mrp = br_mrp_find_id(br, instance->ring_id);
-> +
-> +	if (!mrp)
-> +		return -EINVAL;
-> +
-> +	br_mrp_del_impl(br, mrp);
+> +	}
 > +
 > +	return 0;
 > +}
 > +
-> +/* Set port state, port state can be forwarding, blocked or disabled
-> + * note: already called with rcu_read_lock
-> + */
-> +int br_mrp_set_port_state(struct net_bridge_port *p,
-> +			  enum br_mrp_port_state_type state)
+> +static int typec_charger_set_prop(struct power_supply *psy,
+> +				  enum power_supply_property psp,
+> +				  const union power_supply_propval *val)
 > +{
-> +	spin_lock_bh(&p->br->lock);
+> +	return -EINVAL;
+> +}
 > +
-> +	if (state == BR_MRP_PORT_STATE_FORWARDING)
-> +		p->state = BR_STATE_FORWARDING;
+> +static int typec_charger_is_writeable(struct power_supply *psy,
+> +				      enum power_supply_property psp)
+> +{
+> +	return 0;
+> +}
+> +
+> +/**
+> + * typec_charger_changed - Notify of a Type-C charger change
+> + * @charger: Type-C charger that changed
+> + *
+> + * Notifies the Type-C charger that one or more of its attributes may ha=
+ve
+> + * changed.
+> + */
+> +void typec_charger_changed(struct typec_charger *charger)
+> +{
+> +	int last_psy_status, last_psy_usb_type, last_psy_online;
+> +
+> +	last_psy_online =3D charger->psy_online;
+> +	last_psy_status =3D charger->psy_status;
+> +	last_psy_usb_type =3D charger->psy_usb_type;
+> +
+> +	if (!charger->partner) {
+> +		charger->psy_usb_type =3D
+> POWER_SUPPLY_USB_TYPE_UNKNOWN;
+> +		charger->psy_online =3D 0;
+> +		charger->psy_status =3D
+> POWER_SUPPLY_STATUS_NOT_CHARGING;
+> +		goto out_notify;
+> +	}
+> +
+> +	if (charger->port->pwr_role =3D=3D TYPEC_SOURCE) {
+> +		charger->psy_online =3D 0;
+> +		charger->psy_status =3D
+> POWER_SUPPLY_STATUS_NOT_CHARGING;
+> +		if (charger->partner->usb_pd)
+> +			charger->psy_usb_type =3D
+> POWER_SUPPLY_USB_TYPE_PD_DRP;
+> +		else
+> +			charger->psy_usb_type =3D
+> POWER_SUPPLY_USB_TYPE_UNKNOWN;
+> +
+> +		goto out_notify;
+> +	}
+> +
+> +	charger->psy_online =3D 1;
+> +	charger->psy_status =3D POWER_SUPPLY_STATUS_CHARGING;
+> +
+> +	if (charger->partner->usb_pd)
+> +		charger->psy_usb_type =3D POWER_SUPPLY_USB_TYPE_PD;
 > +	else
-> +		p->state = BR_STATE_BLOCKING;
+> +		charger->psy_usb_type =3D POWER_SUPPLY_USB_TYPE_C;
 > +
-> +	spin_unlock_bh(&p->br->lock);
-> +
-> +	br_mrp_port_switchdev_set_state(p, state);
-> +
-> +	return 0;
+> +out_notify:
+> +	if (last_psy_usb_type !=3D charger->psy_usb_type ||
+> +	    last_psy_status !=3D charger->psy_status ||
+> +	    last_psy_online !=3D charger->psy_online)
+> +		power_supply_changed(charger->psy);
 > +}
+> +EXPORT_SYMBOL_GPL(typec_charger_changed);
 > +
-> +/* Set port role, port role can be primary or secondary
-> + * note: already called with rcu_read_lock
+> +/**
+> + * typec_register_charger - Register a USB Type-C Charger
+> + * @port: Type-C port to register as a charger
+> + *
+> + * Registers a Type-C port as a charger.
+> + *
+> + * Returns handle to the charger on success or ERR_PTR on failure.
 > + */
-> +int br_mrp_set_port_role(struct net_bridge_port *p,
-> +			 struct br_mrp_port_role *role)
+> +struct typec_charger *typec_register_charger(struct typec_port *port)
 > +{
-
-In the previous review I was talking about this function which is called directly from
-the MRP netlink code, one could invoke it with any port - it doesn't need to be MRP_AWARE
-and then upon MRP delete you'll remove the flag from the wrong port. In addition the flag
-on the original port will stay set.
-
-> +	struct br_mrp *mrp = br_mrp_find_id(p->br, role->ring_id);
+> +	struct power_supply_config psy_cfg =3D {};
+> +	struct typec_charger *charger;
+> +	struct power_supply *psy;
 > +
-> +	if (!mrp)
-> +		return -EINVAL;
+> +	charger =3D kzalloc(sizeof(struct typec_charger), GFP_KERNEL);
+> +	if (!port)
+> +		return ERR_PTR(-ENOMEM);
 > +
-> +	if (role->role == BR_MRP_PORT_ROLE_PRIMARY)
-> +		rcu_assign_pointer(mrp->p_port, p);
-> +	else
-> +		rcu_assign_pointer(mrp->s_port, p);
+> +	charger->port =3D port;
+> +	sprintf(charger->name, TYPEC_CHARGER_DIR_NAME, port->id);
+> +	charger->psy_usb_type =3D POWER_SUPPLY_USB_TYPE_UNKNOWN;
+> +	charger->psy_online =3D 0;
+> +	charger->psy_status =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
 > +
-> +	br_mrp_port_switchdev_set_role(p, role->role);
+> +	charger->psy_desc.name =3D charger->name;
+> +	charger->psy_desc.type =3D POWER_SUPPLY_TYPE_USB;
+> +	charger->psy_desc.get_property =3D typec_charger_get_prop;
+> +	charger->psy_desc.set_property =3D typec_charger_set_prop;
+> +	charger->psy_desc.property_is_writeable =3D
+> +		typec_charger_is_writeable;
+> +	charger->psy_desc.properties =3D typec_charger_props;
+> +	charger->psy_desc.num_properties =3D
+> +				ARRAY_SIZE(typec_charger_props);
+> +	charger->psy_desc.usb_types =3D typec_charger_usb_types;
+> +	charger->psy_desc.num_usb_types =3D
+> +			ARRAY_SIZE(typec_charger_usb_types);
+> +	psy_cfg.drv_data =3D charger;
 > +
-> +	return 0;
+> +	psy =3D devm_power_supply_register_no_ws(&port->dev, &charger-
+> >psy_desc,
+> +					       &psy_cfg);
+> +	if (IS_ERR(psy)) {
+> +		dev_err(&port->dev, "Failed to register Type-C power
+> supply\n");
+> +		return ERR_CAST(psy);
+> +	}
+> +	charger->psy =3D psy;
+> +
+> +	return charger;
 > +}
+> +EXPORT_SYMBOL_GPL(typec_register_charger);
 > +
-> +/* Set ring state, ring state can be only Open or Closed
-> + * note: already called with rcu_read_lock
+> +/**
+> + * typec_unregister_charger - Unregister a USB Type-C Charger
+> + * @charger: The charger to unregister
+> + *
+> + * Unregisters a charger created with typec_register_charger().
 > + */
-> +int br_mrp_set_ring_state(struct net_bridge *br,
-> +			  struct br_mrp_ring_state *state)
+> +void typec_unregister_charger(struct typec_charger *charger)
 > +{
-> +	struct br_mrp *mrp = br_mrp_find_id(br, state->ring_id);
-> +
-> +	if (!mrp)
-> +		return -EINVAL;
-> +
-> +	if (mrp->ring_state == BR_MRP_RING_STATE_CLOSED &&
-> +	    state->ring_state != BR_MRP_RING_STATE_CLOSED)
-> +		mrp->ring_transitions++;
-> +
-> +	mrp->ring_state = state->ring_state;
-> +
-> +	br_mrp_switchdev_set_ring_state(br, mrp, state->ring_state);
-> +
-> +	return 0;
+> +	if (!IS_ERR_OR_NULL(charger))
+> +		kfree(charger);
 > +}
+> +EXPORT_SYMBOL_GPL(typec_unregister_charger);
 > +
-> +/* Set ring role, ring role can be only MRM(Media Redundancy Manager) or
-> + * MRC(Media Redundancy Client).
-> + * note: already called with rcu_read_lock
+> +/**
+> + * typec_charger_register_partner - Register a partner with a USB Type-C
+> Charger
+> + * @charger: The charger to add the partner too
+> + * @partner: The partner to add
+> + *
+> + * Add a partner to a Type-C charger to indicate that the partner is con=
+nected
+> + * and may be charging.
 > + */
-> +int br_mrp_set_ring_role(struct net_bridge *br,
-> +			 struct br_mrp_ring_role *role)
+> +void typec_charger_register_partner(struct typec_charger *charger,
+> +				    struct typec_partner *partner)
 > +{
-> +	struct br_mrp *mrp = br_mrp_find_id(br, role->ring_id);
-> +	int err;
-> +
-> +	if (!mrp)
-> +		return -EINVAL;
-> +
-> +	mrp->ring_role = role->ring_role;
-> +
-> +	/* If there is an error just bailed out */
-> +	err = br_mrp_switchdev_set_ring_role(br, mrp, role->ring_role);
-> +	if (err && err != -EOPNOTSUPP)
-> +		return err;
-> +
-> +	/* Now detect if the HW actually applied the role or not. If the HW
-> +	 * applied the role it means that the SW will not to do those operations
-> +	 * anymore. For example if the role ir MRM then the HW will notify the
-> +	 * SW when ring is open, but if the is not pushed to the HW the SW will
-> +	 * need to detect when the ring is open
-> +	 */
-> +	mrp->ring_role_offloaded = err == -EOPNOTSUPP ? 0 : 1;
-> +
-> +	return 0;
+> +	charger->partner =3D partner;
+> +	typec_charger_changed(charger);
 > +}
+> +EXPORT_SYMBOL_GPL(typec_charger_register_partner);
 > +
-> +/* Start to generate MRP test frames, the frames are generated by HW and if it
-> + * fails, they are generated by the SW.
-> + * note: already called with rcu_read_lock
+> +/**
+> + * typec_charger_unregister_partner - Unregister a USB Type-C Charger pa=
+rtner
+> + * @charger: The charger to remove the partner from
+> + *
+> + * Remove partner added with typec_charger_register_partner().
 > + */
-> +int br_mrp_start_test(struct net_bridge *br,
-> +		      struct br_mrp_start_test *test)
+> +void typec_charger_unregister_partner(struct typec_charger *charger)
 > +{
-> +	struct br_mrp *mrp = br_mrp_find_id(br, test->ring_id);
+> +	if (!IS_ERR_OR_NULL(charger))
+> +		charger->partner =3D NULL;
 > +
-> +	if (!mrp)
-> +		return -EINVAL;
-> +
-> +	/* Try to push is to the HW and if it fails then continue to generate in
-> +	 * SW and if that also fails then return error
-> +	 */
-> +	if (!br_mrp_switchdev_send_ring_test(br, mrp, test->interval,
-> +					     test->max_miss, test->period))
-> +		return 0;
-> +
-> +	mrp->test_interval = test->interval;
-> +	mrp->test_end = jiffies + usecs_to_jiffies(test->period);
-> +	mrp->test_max_miss = test->max_miss;
-> +	mrp->test_count_miss = 0;
-> +	queue_delayed_work(system_wq, &mrp->test_work,
-> +			   usecs_to_jiffies(test->interval));
-> +
-> +	return 0;
+> +	typec_charger_changed(charger);
 > +}
+> +EXPORT_SYMBOL_GPL(typec_charger_unregister_partner);
+> diff --git a/drivers/usb/typec/charger.h b/drivers/usb/typec/charger.h
+> new file mode 100644
+> index 000000000000..32cdaa7c1a83
+> --- /dev/null
+> +++ b/drivers/usb/typec/charger.h
+> @@ -0,0 +1,33 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
 > +
-> +/* Process only MRP Test frame. All the other MRP frames are processed by
-> + * userspace application
-> + * note: already called with rcu_read_lock
-> + */
-> +static void br_mrp_mrm_process(struct br_mrp *mrp, struct net_bridge_port *port,
-> +			       struct sk_buff *skb)
-> +{
-> +	struct br_mrp_tlv_hdr *hdr;
+> +#ifndef __USB_TYPEC_CHARGER_H__
+> +#define __USB_TYPEC_CHARGER_H__
 > +
-> +	hdr = (struct br_mrp_tlv_hdr *)(skb->data + sizeof(uint16_t));
+> +#include <linux/power_supply.h>
+> +#include <linux/usb/typec.h>
 > +
-> +	if (!hdr)
-> +		return;
+> +#include "class.h"
 > +
-> +	if (hdr->type != BR_MRP_TLV_HEADER_RING_TEST)
-> +		return;
+> +#define TYPEC_CHARGER_DIR_NAME
+> 	"TYPEC_CHARGER%d"
+> +#define TYPEC_CHARGER_DIR_NAME_LENGTH
+> 	sizeof(TYPEC_CHARGER_DIR_NAME)
 > +
-> +	mrp->test_count_miss = 0;
+> +struct typec_charger {
+> +	struct typec_port *port;
+> +	struct typec_partner *partner;
+> +	char name[TYPEC_CHARGER_DIR_NAME_LENGTH];
+> +	struct power_supply *psy;
+> +	struct power_supply_desc psy_desc;
+> +	int psy_usb_type;
+> +	int psy_online;
+> +	int psy_status;
+> +};
 > +
-> +	/* Notify the userspace that the ring is closed only when the ring is
-> +	 * not closed
-> +	 */
-> +	if (mrp->ring_state != BR_MRP_RING_STATE_CLOSED)
-> +		br_mrp_port_open(port->dev, false);
-> +}
+> +struct typec_charger *typec_register_charger(struct typec_port *port);
+> +void typec_unregister_charger(struct typec_charger *charger);
 > +
-> +/* This will just forward the frame to the other mrp ring port(MRC role) or will
-> + * not do anything.
-> + * note: already called with rcu_read_lock
-> + */
-> +static int br_mrp_rcv(struct net_bridge_port *p,
-> +		      struct sk_buff *skb, struct net_device *dev)
-> +{
-> +	struct net_device *s_dev, *p_dev, *d_dev;
-> +	struct net_bridge_port *p_port, *s_port;
-> +	struct net_bridge *br;
-> +	struct sk_buff *nskb;
-> +	struct br_mrp *mrp;
+> +void typec_charger_register_partner(struct typec_charger *charger,
+> +				    struct typec_partner *partner);
+> +void typec_charger_unregister_partner(struct typec_charger *charger);
+> +void typec_charger_changed(struct typec_charger *charger);
 > +
-> +	/* If port is disabled don't accept any frames */
-> +	if (p->state == BR_STATE_DISABLED)
-> +		return 0;
+> +#endif /* __USB_TYPEC_CHARGER_H__ */
+> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> index 9a1fdce137b9..1542d3af342c 100644
+> --- a/drivers/usb/typec/class.c
+> +++ b/drivers/usb/typec/class.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/slab.h>
+>=20
+>  #include "bus.h"
+> +#include "charger.h"
+>  #include "class.h"
+>=20
+>  static DEFINE_IDA(typec_index_ida);
+> @@ -489,6 +490,12 @@ static void typec_partner_release(struct device *dev=
+)
+>  {
+>  	struct typec_partner *partner =3D to_typec_partner(dev);
+>=20
+> +	if (IS_ENABLED(CONFIG_TYPEC_CHARGER)) {
+> +		struct typec_port *port =3D to_typec_port(dev->parent);
 > +
-> +	br = p->br;
-> +	mrp =  br_mrp_find_port(br, p);
-> +	if (unlikely(!mrp))
-> +		return 0;
-> +
-> +	p_port = rcu_dereference(mrp->p_port);
-> +	if (!p_port)
-> +		return 0;
-> +
-> +	s_port = rcu_dereference(mrp->s_port);
-> +	if (!s_port)
-> +		return 0;
-> +
-> +	/* If the role is MRM then don't forward the frames */
-> +	if (mrp->ring_role == BR_MRP_RING_ROLE_MRM) {
-> +		br_mrp_mrm_process(mrp, p, skb);
-> +		return 1;
+> +		typec_charger_unregister_partner(port->charger);
 > +	}
 > +
-> +	/* Clone the frame and forward it on the other MRP port */
-> +	nskb = skb_clone(skb, GFP_ATOMIC);
-> +	if (!nskb)
-> +		return 0;
+>  	ida_destroy(&partner->mode_ids);
+>  	kfree(partner);
+>  }
+> @@ -580,6 +587,10 @@ struct typec_partner *typec_register_partner(struct
+> typec_port *port,
+>  		return ERR_PTR(ret);
+>  	}
+>=20
+> +	if (IS_ENABLED(CONFIG_TYPEC_CHARGER) && port->charger) {
+> +		typec_charger_register_partner(port->charger, partner);
+> +	}
 > +
-> +	p_dev = p_port->dev;
-> +	s_dev = s_port->dev;
+>  	return partner;
+>  }
+>  EXPORT_SYMBOL_GPL(typec_register_partner);
+> @@ -1283,6 +1294,9 @@ static void typec_release(struct device *dev)
+>  {
+>  	struct typec_port *port =3D to_typec_port(dev);
+>=20
+> +	if (IS_ENABLED(CONFIG_TYPEC_CHARGER))
+> +		typec_unregister_charger(port->charger);
 > +
-> +	if (p_dev == dev)
-> +		d_dev = s_dev;
-> +	else
-> +		d_dev = p_dev;
+>  	ida_simple_remove(&typec_index_ida, port->id);
+>  	ida_destroy(&port->mode_ids);
+>  	typec_switch_put(port->sw);
+> @@ -1564,7 +1578,8 @@ struct typec_port *typec_register_port(struct devic=
+e
+> *parent,
+>  	id =3D ida_simple_get(&typec_index_ida, 0, 0, GFP_KERNEL);
+>  	if (id < 0) {
+>  		kfree(port);
+> -		return ERR_PTR(id);
+> +		ret =3D id;
+> +		goto err_return;
+>  	}
+>=20
+>  	switch (cap->type) {
+> @@ -1617,32 +1632,47 @@ struct typec_port *typec_register_port(struct dev=
+ice
+> *parent,
+>=20
+>  	port->cap =3D kmemdup(cap, sizeof(*cap), GFP_KERNEL);
+>  	if (!port->cap) {
+> -		put_device(&port->dev);
+> -		return ERR_PTR(-ENOMEM);
+> +		ret =3D -ENOMEM;
+> +		goto err_put_device;
+>  	}
+>=20
+>  	port->sw =3D typec_switch_get(&port->dev);
+>  	if (IS_ERR(port->sw)) {
+>  		ret =3D PTR_ERR(port->sw);
+> -		put_device(&port->dev);
+> -		return ERR_PTR(ret);
+> +		goto err_put_device;
+>  	}
+>=20
+>  	port->mux =3D typec_mux_get(&port->dev, NULL);
+>  	if (IS_ERR(port->mux)) {
+>  		ret =3D PTR_ERR(port->mux);
+> -		put_device(&port->dev);
+> -		return ERR_PTR(ret);
+> +		goto err_put_device;
+>  	}
+>=20
+>  	ret =3D device_add(&port->dev);
+>  	if (ret) {
+>  		dev_err(parent, "failed to register port (%d)\n", ret);
+> -		put_device(&port->dev);
+> -		return ERR_PTR(ret);
+> +		goto err_put_device;
+> +	}
 > +
-> +	nskb->dev = d_dev;
-> +	skb_push(nskb, ETH_HLEN);
-> +	dev_queue_xmit(nskb);
+> +	if (IS_ENABLED(CONFIG_TYPEC_CHARGER)) {
+> +		port->charger =3D typec_register_charger(port);
 > +
-> +	return 1;
-> +}
+> +		if (IS_ERR(port->charger)) {
+> +			ret =3D PTR_ERR(port->charger);
+> +			goto err_device_del;
+> +		}
+>  	}
+>=20
+>  	return port;
 > +
-> +/* Check if the frame was received on a port that is part of MRP ring
-> + * and if the frame has MRP eth. In that case process the frame otherwise do
-> + * normal forwarding.
-> + * note: already called with rcu_read_lock
-> + */
-> +int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb)
-> +{
-> +	/* If there is no MRP instance do normal forwarding */
-> +	if (likely(!(p->flags & BR_MRP_AWARE)))
-> +		goto out;
+> +err_device_del:
+> +	device_del(&port->dev);
 > +
-> +	if (unlikely(skb->protocol == htons(ETH_P_MRP)))
-> +		return br_mrp_rcv(p, skb, p->dev);
+> +err_put_device:
+> +	put_device(&port->dev);
 > +
-> +out:
-> +	return 0;
-> +}
+> +err_return:
+> +	return ERR_PTR(ret);
+>  }
+>  EXPORT_SYMBOL_GPL(typec_register_port);
+>=20
+> diff --git a/drivers/usb/typec/class.h b/drivers/usb/typec/class.h
+> index ec933dfe1323..0ff0a590d316 100644
+> --- a/drivers/usb/typec/class.h
+> +++ b/drivers/usb/typec/class.h
+> @@ -41,6 +41,8 @@ struct typec_port {
+>  	struct typec_switch		*sw;
+>  	struct typec_mux		*mux;
+>=20
+> +	struct typec_charger		*charger;
 > +
-> +bool br_mrp_enabled(struct net_bridge *br)
-> +{
-> +	return !list_empty(&br->mrp_list);
-> +}
-> 
+>  	const struct typec_capability	*cap;
+>  	const struct typec_operations   *ops;
+>  };
+> --
+> 2.26.1.301.g55bc3eb7cb9-goog
 
