@@ -2,163 +2,143 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4416AC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C15CC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E90F206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148E3206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:52:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GrZhM+tC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbgDUQua (ORCPT
+        id S1726530AbgDUQwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:50:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:38402 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbgDUQu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:50:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD05E1FB;
-        Tue, 21 Apr 2020 09:50:28 -0700 (PDT)
-Received: from [192.168.0.14] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 738FF3F73D;
-        Tue, 21 Apr 2020 09:50:27 -0700 (PDT)
-Subject: Re: [PATCH] arm32: fix flushcache syscall with device address
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Will Deacon <will@kernel.org>, Tian Tao <tiantao6@hisilicon.com>,
-        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, info@metux.net,
-        allison@lohutok.net
-References: <1587456514-61156-1-git-send-email-tiantao6@hisilicon.com>
- <20200421081239.GA15439@willie-the-truck>
- <20200421121651.000009f0@Huawei.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <d0814ab2-03fc-42c1-e447-bfee2df038da@arm.com>
-Date:   Tue, 21 Apr 2020 17:50:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 21 Apr 2020 12:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725963AbgDUQwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:52:14 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70817C061A41
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:52:14 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id b12so15694061ion.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dlOb0J7u43lP1vjBfG9ZcRxUmvLKf3oV1hkoW2i8cGM=;
+        b=GrZhM+tCKzL1/Y+RU646etnWXZpICHRv95JyZbGoFtaynACb3kja9TbFXHwyfJ6clF
+         QK4TE5ORpEjlYwAaNMtCTaQ0Fr37EW91RCdPtfUjF7YZg6IS4r0yiYPxFv89oO1YsUEs
+         sfJQC2NVx1nMhCeABHLCYCQvnSG3v3zBKq2fDASijSPyWNRl4+se6mFV9bxORXgt3Dq4
+         lKa/m+X3XK47LUGuWzU7d+THc/bou5LPZ1n+5/fUZ/J+hzUQbaW6iaw5HYBHb3wr3lnk
+         bT+A/luGfcKzEKJA7Qqa8CPqBhFKmdtlDqcKlsSjrAnIu8srH0lXgRZ1T7RbFBjAw6fO
+         eGqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dlOb0J7u43lP1vjBfG9ZcRxUmvLKf3oV1hkoW2i8cGM=;
+        b=p6ZEepShOiPjktl5XCGEIMBUjqTEdk8fQNknYYfKJ3vmkGC/us+EbLqI+MpHTVxF6y
+         a7HmNtRLMHS5Vvku7JY9R3Z9+cF1ffDPQHzMtqkFgnY1U8dCbF6LKciTHg3CjyOgDIfG
+         JpMUMT8Td1p+O/EWDKaYEKoig/RQwNXZQCWwYtJ3fo4y5X0BM1+Gkd1H7bddAO5dnoJl
+         5jl2YliktUw37BbaODS8JjwgLrAZBcAsoPDTmWXqzjRw40eH1uWvdb+4bVAxXcYy4ZiG
+         tvXgNEfsZVsyfqVA5WifWE/qVnHbMOj7Gjjamdh+UKOMf4Qdpjus7zEoX0lhmpz8e99g
+         clbg==
+X-Gm-Message-State: AGi0PuYyaaEw27btv7Qp9MNJI/Ufhtv9Nr3878qd5HavWzR8EAWNpm69
+        Yz6Njy0RY6pQyM6tetm61v2E190so3C2ERqhRQilug==
+X-Google-Smtp-Source: APiQypI+utw7ltzeZh5aJ7/aORHVDbVXhkpIjaJ0I86IY9cM5PP2nsrE+DOOUQBRofXFDA/oNhPIXVRxmNA50ocvX5Q=
+X-Received: by 2002:a02:90cd:: with SMTP id c13mr20914233jag.83.1587487933216;
+ Tue, 21 Apr 2020 09:52:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200421121651.000009f0@Huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200415201420.15958-1-mike.leach@linaro.org> <20200417021113.GB5426@leoy-ThinkPad-X240s>
+In-Reply-To: <20200417021113.GB5426@leoy-ThinkPad-X240s>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 21 Apr 2020 10:52:02 -0600
+Message-ID: <CANLsYkzx_DeXcJ_dBju_OWWRiREAqzG6opeQAuXf5gTsdgZtQQ@mail.gmail.com>
+Subject: Re: [PATCH] perf: cs-etm: Update to build with latest opencsd version.
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
-
-(Subject Nit: arm64, as that is what your patch modifies)
-
-On 21/04/2020 12:16, Jonathan Cameron wrote:
-> On Tue, 21 Apr 2020 09:12:39 +0100
-> Will Deacon <will@kernel.org> wrote:
-> 
->> On Tue, Apr 21, 2020 at 04:08:34PM +0800, Tian Tao wrote:
->>> An issue has been observed on our Kungpeng916 systems when using a PCI
->>> express GPU. This occurs when a 32 bit application running on a 64 bit
->>> kernel issues a cache flush operation to a memory address that is in
->>> a PCI BAR of the GPU.The results in an illegal operation and
->>> subsequent crash.  
->>
->> A kernel crash? If so, please can you include the log here?
-> 
-> Deploying my finest copy typing from the image Tian Tao sent out
-> 
->       KERNEL: /root/vmlinux-4.19.36-3patch-00228-debuginfo
->     DUMPFILE: vmcore [PARTIAL DUMP]
->         CPUS: 64
->         DATE: Fri Mar 20 06:59:56 2020
->       UPTIME: 07:01:01
-> LOAD AVERAGE: 33.76, 35.45, 35.79
->        TASKS: 59447
->     NODENAME: cpus-new-ondemand-0509
->      RELEASE: 4.19.36-3patch-0228
->      VERSION: #4 SMP Fri Feb 28 15:18:51 UTC 2020
->      MACHINE: aarch64 (unknown MHz)
->       MEMORY: 255.7 GB
->        PANIC: "kernel panic - not syncing: Asynchronous SError Interrupt"
->          PID: 175108
->      COMMAND: "UnityMain"
->         TASK: ffff80a96999dd00 [THREAD_INFO: ffff80a96999dd00]
->          CPU: 62
->        STATE: TASK_RUNNING (PANIC)
-> 
-> crash> bt
-> PID: 175108 TASK: ffff80a96999dd00 CPU: 62 COMMAND: "UnityMain"
->   #0 [ffff000194e1b920] machine_kexec at ffff0000080a265c
->   #1 [ffff000194e1b980] __crash_kexec at ffff0000081b3ba8
->   #2 [ffff000194e1bb10] panic at ffff0000080ecc98
->   #3 [ffff000194e1bbf0] nmi_panic at ffff0000080ec7f4
->   #4 [ffff000194e1bc10] arm64_serror_panic at fff00000809019c
->   #5 [ffff000194e1bc30] do_serror at ffff00000809039c
->   #6 [ffff000194e1bd90] el1_error at ffff000008083e50
->   #7 [ffff000194e1bda0] __flush_icache_range at ffff0000080a9ec4
->   #8 [ffff000194e1be60] el0_svc_common at fff0000080977d8
->   #9 [ffff000194e1bea0] el0_svc_compat_handler at ffff0000080979b4
->  #10 [ffff000194e1bff0] el0_svc_compat at ffff0000008083874
-> 
->      PC: c90fe7f8  LR: c90ff09c  SP: d2afa8e0  PSTATE: 800b0010
->     X12: c56e96e4 X11: d2afaa48 X10: d0ff1000  X9: d2afab68
->      x8: 000000d6  X7: 000f0002  X6: d3c61840  X5: d3c61001
->      X4: d3c03000  X3: 0004d54a  x2: 00000000  x1: d3c61040
->      X0: d3c61000
-> 
-> 
-> New advanced test for Mavis Beacon teaches typing.
-
-Thanks for doing that!
-
-
-> In summary this is all we have to hand...
-
-
-Jumping back to the patch:
-On 21/04/2020 09:08, Tian Tao wrote:> diff --git a/arch/arm64/kernel/sys_compat.c
-b/arch/arm64/kernel/sys_compat.c
-> index 3c18c24..6c07944 100644
-> --- a/arch/arm64/kernel/sys_compat.c
-> +++ b/arch/arm64/kernel/sys_compat.c
-> @@ -32,6 +94,13 @@ __do_compat_cache_op(unsigned long start, unsigned long end)
->  		if (fatal_signal_pending(current))
->  			return 0;
+On Thu, 16 Apr 2020 at 20:11, Leo Yan <leo.yan@linaro.org> wrote:
 >
-> +		 /* do not flush page table is non-cacheable */
-> +		if (!__check_pt_cacheable(start)) {
-> +			cond_resched();
-> +			start += chunk;
-> +			continue;
-> +		}
+> Hi Mike,
+>
+> On Wed, Apr 15, 2020 at 09:14:20PM +0100, Mike Leach wrote:
+> > OpenCSD version v0.14.0 adds in a new output element. This is represented
+> > by a new value in the generic element type enum, which must be added to
+> > the handling code in perf cs-etm-decoder to prevent build errors due to
+> > build options on the perf project.
+> >
+> > This element is not currently used by the perf decoder.
+> >
+> > Tested on Linux 5.7-rc1.
+> >
+> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > ---
+> >  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > index cd92a99eb89d..da4737cbc2ab 100644
+> > --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > @@ -564,6 +564,10 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+> >               resp = cs_etm_decoder__set_tid(etmq, packet_queue,
+> >                                              elem, trace_chan_id);
+> >               break;
+> > +     /* Unused packet types */
+> > +#if OCSD_VER_NUM >= 0x0E00
+> > +     case OCSD_GEN_TRC_ELEM_I_RANGE_NOPATH:
+> > +#endif
+>
+> I don't think use macros to distinguish OpenCSD version number is a
+> good idea, this will get more and more code to checking version number
+> if later have more these kinds improvement and finally it's hard to
+> maintain.
 
-The Arm-arm expects this to work, so we can't just skip it!
+I agree.
 
-D4.4.8's "Effects of instructions that operate by VA to the PoC" has:
-| For Device memory and Normal memory that is Inner Non-cacheable, Outer Non-cacheable,
-| these instructions must affect the caches of all PEs in the Outer Shareable shareability
-| domain of the PE on which the instruction is operating.
+>
+> Sugget just simply add the new case for
+> OCSD_GEN_TRC_ELEM_I_RANGE_NOPATH, considering if user uses an old version
+> OpenCSD and doesn't output this new element, the new added case doesn't
+> introduce issue for old OpenCSD lib.
+>
+> Futhermore, suggest to change the code in
+> tools/build/feature/test-libopencsd.c, so can reflect the kernel 5.7
+> to require OpenCSD v0.14.0 or later version when build perf.
 
+As Leo pointed out, I think we should just continue dealing with new
+versions of the library in test-libopencsd.c.
 
-What does aarch64 user-space do in the same situation? Surely that also goes down in
-flames too!?
-
-I think the real problem here is you've given this kind of mapping to user-space. If the
-device behind the mapping can respond like this, you must trust user-space not to poke it
-inappropriately.
-
-If its not got all the properties of memory: please don't pretend its memory.
-If its a device, it probably needs to be carefully managed by a dedicated driver.
-
-
-Do you know where the abort comes from and why? (The interconnect, PCIE-root-complex, or
-from the GPU itself?)
-Is it the wrong attributes? Too large an eviction from the cache? Wrong alignment for this
-BAR? It can't handle cache-maintenance?
-
-
-Thanks,
-
-James
+>
+> Thanks,
+> Leo
+>
+> >       case OCSD_GEN_TRC_ELEM_ADDR_NACC:
+> >       case OCSD_GEN_TRC_ELEM_CYCLE_COUNT:
+> >       case OCSD_GEN_TRC_ELEM_ADDR_UNKNOWN:
+> > --
+> > 2.17.1
+> >
+> > _______________________________________________
+> > CoreSight mailing list
+> > CoreSight@lists.linaro.org
+> > https://lists.linaro.org/mailman/listinfo/coresight
