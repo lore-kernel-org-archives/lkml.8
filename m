@@ -2,62 +2,77 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AA5C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2971C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D706620738
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBD720787
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488658;
-	bh=A/gl9GiSINDqJ4PJGJrHlgv4JPVRUB394Q+IiwjdxOw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LcCbbMHxxr8Nt4lyApH2MHSdGBNOHxgb9a7a22P+iwd2BQ2GedMDK/VyOshd0YiqS
-	 0v2tHtk+NoThdAefWmJ4vgwi4iYDRHn9G0po1LQVZGthMnN4fIQ55bM/D0qCbCgRk4
-	 Oyxn6sblJO7+SU62rOZN0FbF03ghJYpv+YIV06Gg=
+	s=default; t=1587488661;
+	bh=TKwQ9ykgax7V0in9J67Gf5It6T8tA6kFCL0qRblfIrI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TDf2Hvl6/IfYrJUAq4Fr36Us8/WCpECpy4kag8NfwEjtDfIDcHV2VLR9jo5k9EiAY
+	 lNe33L0QBSuN4YCJE62FQWx9T4Jt8YQJUKP0tE04ZvIovpfYlX0QEM0ztTXyeU6sXH
+	 lH3/zeRDtLYlP3UFA1wVNtFM0aRPPatCfnq2tfpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgDURES (ORCPT
+        id S1729212AbgDUREU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 13:04:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgDUREO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726741AbgDUREO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 13:04:14 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA0812070B;
+        by mail.kernel.org (Postfix) with ESMTPSA id ED9F22071C;
         Tue, 21 Apr 2020 17:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587488654;
-        bh=A/gl9GiSINDqJ4PJGJrHlgv4JPVRUB394Q+IiwjdxOw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=phBRWglMXtPcapPsj8eK7SRF7NlC1RIOXhbVo/a/GezVoyXq/28PllUsa3njugwmv
-         jUKsJIXiNdjfeVBAT5kVHzJ9lSg5I56PjcVy0qwHCFLRCzFUU6xoigXfiDBXvzW1AW
-         FMNRqUxuJIZEkxb3w66+CZ7kisqQgKipjbnZQem4=
+        bh=TKwQ9ykgax7V0in9J67Gf5It6T8tA6kFCL0qRblfIrI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LafIXWddU/e0Xydt4GgYYdU5GaDFxqylQCmJxnpFAsQ2UlzspnKjfAIwz2UuDLwVR
+         gVRmCny6BzaRVHvJXgLBylroC8orFZoRb4sX4+u8lcB7JlovofGV6Wl8JEqDnyKk4s
+         6Hxr9plhj/JBx6aui9oOtVZHaggRYuIbiXDgG/rM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jQwJg-00CmLe-42; Tue, 21 Apr 2020 19:04:12 +0200
+        id 1jQwJg-00CmLT-1Q; Tue, 21 Apr 2020 19:04:12 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Josh Triplett <josh@joshtriplett.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Joe Stringer <joe@wand.net.nz>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jakub Sitnicki <jakub@cloudflare.com>, rcu@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        zhanglin <zhang.lin16@zte.com.cn>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: [PATCH 03/10] docs: RCU: convert lockdep.txt to ReST
-Date:   Tue, 21 Apr 2020 19:04:04 +0200
-Message-Id: <1ebc0a13f0710a080c2b6f59f546e3c8b60f17b3.1587488137.git.mchehab+huawei@kernel.org>
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 00/10] Manually convert RCU text files to ReST format
+Date:   Tue, 21 Apr 2020 19:04:01 +0200
+Message-Id: <cover.1587488137.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1587488137.git.mchehab+huawei@kernel.org>
-References: <cover.1587488137.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,82 +80,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document title;
-- Mark literal blocks as such;
-- Add it to RCU/index.rst.
+This patch series convert RCU patches to ReST.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/RCU/index.rst                    |  1 +
- Documentation/RCU/{lockdep.txt => lockdep.rst} | 12 ++++++++----
- 2 files changed, 9 insertions(+), 4 deletions(-)
+One interesting point to be noticed hereis that the RTFP.txt file contain a 
+broken TeX bib file. I suspect that someone added some new articles
+directly there without trying to use LaTeX to check if the addition is
+valid. Or maybe it is just due to some version differences from the time
+such references were added.
+
+During the RTFP.txt conversion, I fixed the bibtex problems in order for it
+to be properly parsed by LaTeX, and used the fixed file to produce a list of
+the actually used references inside the RTFP.txt file., manually adding them
+to the converted RTFP.rst. 
+
+As not all references were mentioned there, I opted to preserve the 
+converted RTFP.bib, as it could be useful for someone doing any 
+research around RCU.
+
+The results of those changes (together with other changes from my pending
+doc patches) are available at:
+
+   https://www.infradead.org/~mchehab/kernel_docs/RCU/index.html
+
+And the series is on my git tree:
+
+  https://git.linuxtv.org/mchehab/experimental.git/log/?h=rcu-docs
+
+Mauro Carvalho Chehab (10):
+  docs: RCU: convert checklist.txt to ReST
+  docs: RCU: convert lockdep-splat.txt to ReST
+  docs: RCU: convert lockdep.txt to ReST
+  docs: RCU: convert rculist_nulls.txt to ReST
+  docs: RCU: convert torture.txt to ReST
+  docs: RCU: convert rcuref.txt to ReST
+  docs: RCU: RTFP: fix bibtex entries
+  docs: RCU: convert RTFP.txt to ReST
+  docs: RCU: stallwarn.txt: convert it to ReST
+  docs: RCU: rculist_nulls.rst: don't duplicate chapter names
+
+ Documentation/RCU/{RTFP.txt => RTFP.bib}      | 323 ++--------
+ Documentation/RCU/RTFP.rst                    | 593 ++++++++++++++++++
+ .../RCU/{checklist.txt => checklist.rst}      |  17 +-
+ Documentation/RCU/index.rst                   |  11 +
+ .../{lockdep-splat.txt => lockdep-splat.rst}  |  99 +--
+ .../RCU/{lockdep.txt => lockdep.rst}          |  12 +-
+ Documentation/RCU/rcu.rst                     |   4 +-
+ Documentation/RCU/rculist_nulls.rst           | 200 ++++++
+ Documentation/RCU/rculist_nulls.txt           | 172 -----
+ Documentation/RCU/{rcuref.txt => rcuref.rst}  | 193 +++---
+ .../RCU/{stallwarn.txt => stallwarn.rst}      |  55 +-
+ .../RCU/{torture.txt => torture.rst}          | 115 ++--
+ Documentation/locking/locktorture.rst         |   2 +-
+ MAINTAINERS                                   |   4 +-
+ include/linux/rculist_nulls.h                 |   2 +-
+ kernel/rcu/rcutorture.c                       |   2 +-
+ kernel/rcu/tree_stall.h                       |   4 +-
+ net/core/sock.c                               |   4 +-
+ 18 files changed, 1139 insertions(+), 673 deletions(-)
+ rename Documentation/RCU/{RTFP.txt => RTFP.bib} (82%)
+ create mode 100644 Documentation/RCU/RTFP.rst
+ rename Documentation/RCU/{checklist.txt => checklist.rst} (98%)
+ rename Documentation/RCU/{lockdep-splat.txt => lockdep-splat.rst} (54%)
  rename Documentation/RCU/{lockdep.txt => lockdep.rst} (96%)
+ create mode 100644 Documentation/RCU/rculist_nulls.rst
+ delete mode 100644 Documentation/RCU/rculist_nulls.txt
+ rename Documentation/RCU/{rcuref.txt => rcuref.rst} (50%)
+ rename Documentation/RCU/{stallwarn.txt => stallwarn.rst} (90%)
+ rename Documentation/RCU/{torture.txt => torture.rst} (76%)
 
-diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
-index 430a37132b2c..fa7a2a8949b7 100644
---- a/Documentation/RCU/index.rst
-+++ b/Documentation/RCU/index.rst
-@@ -11,6 +11,7 @@ RCU concepts
- 
-    arrayRCU
-    checklist
-+   lockdep
-    lockdep-splat
-    rcubarrier
-    rcu_dereference
-diff --git a/Documentation/RCU/lockdep.txt b/Documentation/RCU/lockdep.rst
-similarity index 96%
-rename from Documentation/RCU/lockdep.txt
-rename to Documentation/RCU/lockdep.rst
-index 89db949eeca0..f1fc8ae3846a 100644
---- a/Documentation/RCU/lockdep.txt
-+++ b/Documentation/RCU/lockdep.rst
-@@ -1,4 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+========================
- RCU and lockdep checking
-+========================
- 
- All flavors of RCU have lockdep checking available, so that lockdep is
- aware of when each task enters and leaves any flavor of RCU read-side
-@@ -8,7 +12,7 @@ tracking to include RCU state, which can sometimes help when debugging
- deadlocks and the like.
- 
- In addition, RCU provides the following primitives that check lockdep's
--state:
-+state::
- 
- 	rcu_read_lock_held() for normal RCU.
- 	rcu_read_lock_bh_held() for RCU-bh.
-@@ -63,7 +67,7 @@ checking of rcu_dereference() primitives:
- The rcu_dereference_check() check expression can be any boolean
- expression, but would normally include a lockdep expression.  However,
- any boolean expression can be used.  For a moderately ornate example,
--consider the following:
-+consider the following::
- 
- 	file = rcu_dereference_check(fdt->fd[fd],
- 				     lockdep_is_held(&files->file_lock) ||
-@@ -82,7 +86,7 @@ RCU read-side critical sections, in case (2) the ->file_lock prevents
- any change from taking place, and finally, in case (3) the current task
- is the only task accessing the file_struct, again preventing any change
- from taking place.  If the above statement was invoked only from updater
--code, it could instead be written as follows:
-+code, it could instead be written as follows::
- 
- 	file = rcu_dereference_protected(fdt->fd[fd],
- 					 lockdep_is_held(&files->file_lock) ||
-@@ -105,7 +109,7 @@ false and they are called from outside any RCU read-side critical section.
- 
- For example, the workqueue for_each_pwq() macro is intended to be used
- either within an RCU read-side critical section or with wq->mutex held.
--It is thus implemented as follows:
-+It is thus implemented as follows::
- 
- 	#define for_each_pwq(pwq, wq)
- 		list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node,
 -- 
 2.25.2
+
 
