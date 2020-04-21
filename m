@@ -2,198 +2,152 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6A0C55184
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62F1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2200121D79
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B066420CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgDUJ5p (ORCPT
+        id S1728542AbgDUJ6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:57:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:60790 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbgDUJ5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:57:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1BB01FB;
-        Tue, 21 Apr 2020 02:57:43 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 554A83F73D;
-        Tue, 21 Apr 2020 02:57:39 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 10:57:36 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jianyong Wu <jianyong.wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        richardcochran@gmail.com, will@kernel.org, suzuki.poulose@arm.com,
-        steven.price@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com,
-        justin.he@arm.com, nd@arm.com
-Subject: Re: [RFC PATCH v11 5/9] psci: Add hypercall service for ptp_kvm.
-Message-ID: <20200421095736.GB16306@C02TD0UTHF1T.local>
-References: <20200421032304.26300-1-jianyong.wu@arm.com>
- <20200421032304.26300-6-jianyong.wu@arm.com>
+        Tue, 21 Apr 2020 05:58:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38964 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726741AbgDUJ6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 05:58:39 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03L9XJ1u037648
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:58:39 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxpt8qr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:58:38 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 21 Apr 2020 10:58:13 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 Apr 2020 10:58:10 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03L9wWoo65339574
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 09:58:32 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 087954C044;
+        Tue, 21 Apr 2020 09:58:32 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 88C334C04E;
+        Tue, 21 Apr 2020 09:58:31 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.151.164])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Apr 2020 09:58:31 +0000 (GMT)
+Subject: Re: stop using ioctl_by_bdev in the s390 DASD driver
+To:     Christoph Hellwig <hch@lst.de>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200421061226.33731-1-hch@lst.de>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Tue, 21 Apr 2020 11:58:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421032304.26300-6-jianyong.wu@arm.com>
+In-Reply-To: <20200421061226.33731-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042109-0012-0000-0000-000003A88042
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042109-0013-0000-0000-000021E5CD28
+Message-Id: <b7e4a728-1f58-f304-cb5b-1aa2206a6bb4@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_03:2020-04-20,2020-04-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=666 bulkscore=0
+ priorityscore=1501 spamscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 11:23:00AM +0800, Jianyong Wu wrote:
-> ptp_kvm modules will get this service through smccc call.
-> The service offers real time and counter cycle of host for guest.
-> Also let caller determine which cycle of virtual counter or physical counter
-> to return.
+On 21.04.20 08:12, Christoph Hellwig wrote:
+> Hi Jens and DASD maintainers,
 > 
-> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> ---
->  include/linux/arm-smccc.h | 21 +++++++++++++++++++
->  virt/kvm/arm/hypercalls.c | 44 ++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 64 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> index 59494df0f55b..747b7595d0c6 100644
-> --- a/include/linux/arm-smccc.h
-> +++ b/include/linux/arm-smccc.h
-> @@ -77,6 +77,27 @@
->  			   ARM_SMCCC_SMC_32,				\
->  			   0, 0x7fff)
->  
-> +/* PTP KVM call requests clock time from guest OS to host */
-> +#define ARM_SMCCC_HYP_KVM_PTP_FUNC_ID				\
-> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
-> +			   ARM_SMCCC_SMC_32,			\
-> +			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
-> +			   0)
-> +
-> +/* request for virtual counter from ptp_kvm guest */
-> +#define ARM_SMCCC_HYP_KVM_PTP_VIRT				\
-> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
-> +			   ARM_SMCCC_SMC_32,			\
-> +			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
-> +			   1)
-> +
-> +/* request for physical counter from ptp_kvm guest */
-> +#define ARM_SMCCC_HYP_KVM_PTP_PHY				\
-> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
-> +			   ARM_SMCCC_SMC_32,			\
-> +			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
-> +			   2)
+> can you take a look at this series, which stops the DASD driver from
+> issuing ioctls from kernel space, in preparation of removing
+> ioctl_by_bdev.  I don't really like the new s390-only method, but short
+> of forcing the dasd driver to be built into the kernel I can't think of
+> anything better.  But maybe the s390 maintainers are fine with forcing
+> the DASD driver to be built in, in which case we could go down that
+> route?
 
-ARM_SMCCC_OWNER_STANDARD_HYP is for standard calls as defined in SMCCC
-and companion documents, so we should refer to the specific
-documentation here. Where are these calls defined?
+Hmm the defconfig results in dasd built-in anyway. But distros really like
+to keep it modular.
 
-If these calls are Linux-specific then ARM_SMCCC_OWNER_STANDARD_HYP
-isn't appropriate to use, as they are vendor-specific hypervisor service
-call.
+Hmm, we do have
 
-It looks like we don't currently have a ARM_SMCCC_OWNER_HYP for that
-(which IIUC would be 6), but we can add one as necessary. I think that
-Will might have added that as part of his SMCCC probing bits.
+obj-$(CONFIG_DASD) += dasd_mod.o
+obj-$(CONFIG_DASD_DIAG) += dasd_diag_mod.o
+obj-$(CONFIG_DASD_ECKD) += dasd_eckd_mod.o
+obj-$(CONFIG_DASD_FBA)  += dasd_fba_mod.o
 
-> +
->  #ifndef __ASSEMBLY__
->  
->  #include <linux/linkage.h>
-> diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
-> index 550dfa3e53cd..a5309c28d4dc 100644
-> --- a/virt/kvm/arm/hypercalls.c
-> +++ b/virt/kvm/arm/hypercalls.c
-> @@ -3,6 +3,7 @@
->  
->  #include <linux/arm-smccc.h>
->  #include <linux/kvm_host.h>
-> +#include <linux/clocksource_ids.h>
->  
->  #include <asm/kvm_emulate.h>
->  
-> @@ -11,8 +12,11 @@
->  
->  int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
->  {
-> -	u32 func_id = smccc_get_function(vcpu);
-> +	struct system_time_snapshot systime_snapshot;
-> +	long arg[4];
-> +	u64 cycles;
->  	long val = SMCCC_RET_NOT_SUPPORTED;
-> +	u32 func_id = smccc_get_function(vcpu);
->  	u32 feature;
->  	gpa_t gpa;
->  
-> @@ -62,6 +66,44 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
->  		if (gpa != GPA_INVALID)
->  			val = gpa;
->  		break;
-> +	/*
-> +	 * This serves virtual kvm_ptp.
-> +	 * Four values will be passed back.
-> +	 * reg0 stores high 32-bit host ktime;
-> +	 * reg1 stores low 32-bit host ktime;
-> +	 * reg2 stores high 32-bit difference of host cycles and cntvoff;
-> +	 * reg3 stores low 32-bit difference of host cycles and cntvoff.
-> +	 */
-> +	case ARM_SMCCC_HYP_KVM_PTP_FUNC_ID:
+Would it work to make CONFIG_DASD built-in only and keep the other 3 as modules?
+Not sure about the implications. 
 
-Shouldn't the host opt-in to providing this to the guest, as with other
-features?
-
-> +		/*
-> +		 * system time and counter value must captured in the same
-> +		 * time to keep consistency and precision.
-> +		 */
-> +		ktime_get_snapshot(&systime_snapshot);
-> +		if (systime_snapshot.cs_id != CSID_ARM_ARCH_COUNTER)
-> +			break;
-> +		arg[0] = upper_32_bits(systime_snapshot.real);
-> +		arg[1] = lower_32_bits(systime_snapshot.real);
-
-Why exactly does the guest need the host's real time? Neither the cover
-letter nor this commit message have explained that, and for those of us
-unfamliar with PTP it would be very helpful to know that to understand
-what's going on.
-
-> +		/*
-> +		 * which of virtual counter or physical counter being
-> +		 * asked for is decided by the first argument.
-> +		 */
-> +		feature = smccc_get_arg1(vcpu);
-> +		switch (feature) {
-> +		case ARM_SMCCC_HYP_KVM_PTP_PHY:
-> +			cycles = systime_snapshot.cycles;
-> +			break;
-> +		case ARM_SMCCC_HYP_KVM_PTP_VIRT:
-> +		default:
-> +			cycles = systime_snapshot.cycles -
-> +			vcpu_vtimer(vcpu)->cntvoff;
-> +		}
-> +		arg[2] = upper_32_bits(cycles);
-> +		arg[3] = lower_32_bits(cycles);
-> +
-> +		smccc_set_retval(vcpu, arg[0], arg[1], arg[2], arg[3]);
-
-I think the 'arg' buffer is confusing here, and it'd be clearer to have:
-
-	u64 snaphot;
-	u64 cycles;
-
-... and here do:
-
-		smccc_set_retval(vcpu,
-				 upper_32_bits(snaphot),
-				 lower_32_bits(snapshot), 
-				 upper_32_bits(cycles),
-				 lower_32_bits(cycles));
-
-Thanks,
-Mark.
