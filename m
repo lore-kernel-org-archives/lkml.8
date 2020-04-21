@@ -2,122 +2,100 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF74C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215C1C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78DBF20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587464148;
-	bh=/qHKDq3x1BKgXgyJGzsD5R8TaA5U9ZIfbNoCLSPaJkE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=P+1IVhUzI/wVS4NgzQrh4j1ZDCHABxoMo3BfS/Ebz3RLJFDpE4tSK+1b41KKngmFx
-	 2ovE4MPKDc3Pj2/ScvCjivzFe+fL2pm0nUCrY+L1/Bq0WG26i6pUkdNpepBRQqq5C3
-	 jdMlqvJh+dEfvgoJRYWjqDRY4a3HETZrrykZe6NQ=
+	by mail.kernel.org (Postfix) with ESMTP id E47F92075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:19:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aXn5QwDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgDUKPr (ORCPT
+        id S1728337AbgDUKTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 06:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbgDUKPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 06:15:46 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 21 Apr 2020 06:19:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49552 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725920AbgDUKTK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 06:19:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587464349;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nl0oOv7PP8XI+oE2HMT1ZSGDBT22U9zpXC0YWqChw/0=;
+        b=aXn5QwDs44pAu9UR3Qva2rK/8qU5tlsjuyCckSXrEZQ3qxPPxt4O1befljE6a0Gr0AtmOM
+        SYOBEVb9nHfkYLq0KwiO9IFxgpMLUAQTOPa/aK+QE2v+sdMgzt5SAN1Un17auL2TgOTRFT
+        zqvYUqWmCopYcfrQLlS2T4TS93RTg4w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-Zv4dFOB-PYmOa3kwQNgOig-1; Tue, 21 Apr 2020 06:19:07 -0400
+X-MC-Unique: Zv4dFOB-PYmOa3kwQNgOig-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B76232072D;
-        Tue, 21 Apr 2020 10:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587464146;
-        bh=/qHKDq3x1BKgXgyJGzsD5R8TaA5U9ZIfbNoCLSPaJkE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gT5a173moPBUTXYIvTDlmEjckUuRyohDpJunYr1Ff09RDOYN7u3MF4KLOv2lHNu2s
-         8r5tRrjkrrs+67TtQ2uGXlTYXwh+WkVHWvQRxRGe0sYFviTY9yRdUGj79W2oL1Zo2z
-         YR/1Lqc7Flr5ImJimhXIBOGJ/OTrRh/gNMtzpWqA=
-Message-ID: <86562f7eca48dd13a6cbafa4c6465d3a731fab88.camel@kernel.org>
-Subject: Re: [v3] ceph: if we are blacklisted, __do_request returns directly
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Yanhu Cao <gmayyyha@gmail.com>
-Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 21 Apr 2020 06:15:44 -0400
-In-Reply-To: <CAB9OAC1+E6Qs=hr0naT73MNQ5scKOck4vF2gzsCS=0fQMLvG8A@mail.gmail.com>
-References: <20200417110723.12235-1-gmayyyha@gmail.com>
-         <ad6ca41f601d4feb2c3bd2850aeab95c3187bf2d.camel@kernel.org>
-         <CAB9OAC1+E6Qs=hr0naT73MNQ5scKOck4vF2gzsCS=0fQMLvG8A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BEBC61400;
+        Tue, 21 Apr 2020 10:19:06 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.130])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 89C3E76E68;
+        Tue, 21 Apr 2020 10:19:05 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 21 Apr 2020 12:19:06 +0200 (CEST)
+Date:   Tue, 21 Apr 2020 12:19:04 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Christof Meerwald <cmeerw@cmeerw.org>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: [PATCH] remove the no longer needed pid_alive() check in
+ __task_pid_nr_ns()
+Message-ID: <20200421101904.GA9358@redhat.com>
+References: <20200419201336.GI22017@edge.cmeerw.net>
+ <87sggyytnh.fsf@x220.int.ebiederm.org>
+ <20200421090426.GA6787@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421090426.GA6787@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-21 at 10:13 +0800, Yanhu Cao wrote:
-> On Mon, Apr 20, 2020 at 8:16 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > On Fri, 2020-04-17 at 19:07 +0800, Yanhu Cao wrote:
-> > > If we mount cephfs by the recover_session option,
-> > > __do_request can return directly until the client automatically reconnects.
-> > > 
-> > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > > ---
-> > >  fs/ceph/mds_client.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > > 
-> > > diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-> > > index 486f91f9685b..16ac5e5f7f79 100644
-> > > --- a/fs/ceph/mds_client.c
-> > > +++ b/fs/ceph/mds_client.c
-> > > @@ -2708,6 +2708,12 @@ static void __do_request(struct ceph_mds_client *mdsc,
-> > > 
-> > >       put_request_session(req);
-> > > 
-> > > +     if (mdsc->fsc->blacklisted &&
-> > > +         ceph_test_mount_opt(mdsc->fsc, CLEANRECOVER)) {
-> > > +             err = -EBLACKLISTED;
-> > > +             goto finish;
-> > > +     }
-> > > +
-> > 
-> > Why check for CLEANRECOVER? If we're mounted with recover_session=no
-> > wouldn't we want to do the same thing here?
-> > 
-> > Either way, it's still blacklisted. The only difference is that it won't
-> > attempt to automatically recover the session that way.
-> 
-> I think mds will clear the blacklist. In addition to loading cephfs
-> via recover_session=clean, I didn't find a location where
-> fsc->blacklisted is set to false. If the client has been blacklisted,
-> should it always be blacklisted (fsc->blacklisted=true)? Or is there
-> another way to set fsc->blacklised to false?
-> 
+Starting from 2c4704756cab ("pids: Move the pgrp and session pid pointers
+from task_struct to signal_struct") __task_pid_nr_ns() doesn't dereference
+task->group_leader, we can remove the pid_alive() check.
 
-Basically, this patch is just changing it so that when the client is
-blacklisted and the mount is done with recover_session=clean, we'll
-shortcut the rest of the __do_request and just return -EBLACKLISTED.
+pid_nr_ns() has to check pid != NULL anyway, pid_alive() just adds the
+unnecessary confusion.
 
-My question is: why do we need to test for recover_session=clean here? 
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ kernel/pid.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-If the client _knows_ that it is blacklisted, why would it want to
-continue with __do_request in the recover_session=no case? Would it make
-more sense to always return early in __do_request when the client is
-blacklisted?
-
-
-> > 
-> > >       mds = __choose_mds(mdsc, req, &random);
-> > >       if (mds < 0 ||
-> > >           ceph_mdsmap_get_state(mdsc->mdsmap, mds) < CEPH_MDS_STATE_ACTIVE) {
-> > --
-> > Jeff Layton <jlayton@kernel.org>
-> > 
-
+diff --git a/kernel/pid.c b/kernel/pid.c
+index bc21c0fb26d8..47221db038e2 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -475,8 +475,7 @@ pid_t __task_pid_nr_ns(struct task_struct *task, enum pid_type type,
+ 	rcu_read_lock();
+ 	if (!ns)
+ 		ns = task_active_pid_ns(current);
+-	if (likely(pid_alive(task)))
+-		nr = pid_nr_ns(rcu_dereference(*task_pid_ptr(task, type)), ns);
++	nr = pid_nr_ns(rcu_dereference(*task_pid_ptr(task, type)), ns);
+ 	rcu_read_unlock();
+ 
+ 	return nr;
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.25.1.362.g51ebf55
+
 
