@@ -2,171 +2,89 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7E6C55185
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EFEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB01B2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488128;
-	bh=UycoVC/aKHKLY7s11Voo/zCdmO3jMEWmlgVykQShZqc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vvIGYwA6y36Oed9JTGw0T0E6ZUfMLFWE6tqJKx7154VMWvBYHGZfXrUsUfw10/tU4
-	 H0XLJTbfz7HuBQs52PkBYVrwhstQ3f0keva+7vEZXEzZyAt9XwhFofE49XnAJlpFnF
-	 LgP7XP7mTQMOlq4kN8y4tgIBRKOy//9R8+nXVI9I=
+	by mail.kernel.org (Postfix) with ESMTP id 79074206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="PudUaazE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbgDUQz0 (ORCPT
+        id S1729380AbgDUQze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:55:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729169AbgDUQyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:54:49 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B48C4218AC;
-        Tue, 21 Apr 2020 16:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587488084;
-        bh=UycoVC/aKHKLY7s11Voo/zCdmO3jMEWmlgVykQShZqc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a8WZKNSbjSeewOt7yp6GDDhG8GvLcb154/XvYFiJmh3xuCsnePx2minbpEnxYc/mO
-         gdIN1Iu7iDwn8h2zKNR4XEv3IkZ5QPzJPQgn+XCeKUFV0qo61zP+/eH6opnQikqFZj
-         f3kJXXDWAkIoiMFjDT3xHusZIoOOGrgbc/IX6I+g=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jQwAU-00CmFP-U4; Tue, 21 Apr 2020 18:54:42 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 26/29] docs: filesystems: convert sysfs-pci.txt to ReST
-Date:   Tue, 21 Apr 2020 18:54:37 +0200
-Message-Id: <466c3bbacb9fc899435d5b282c01d062fd8607b8.1587487612.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1587487612.git.mchehab+huawei@kernel.org>
-References: <cover.1587487612.git.mchehab+huawei@kernel.org>
+        Tue, 21 Apr 2020 12:55:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729038AbgDUQzc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:55:32 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0511C061A41
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:55:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WjhgbaEbBW3u8OJNr5mxiJDIQfOQFRnAGsSZAkxI4Ck=; b=PudUaazEa9YkVoMl8hUmwa+W8
+        eqSVBuyamU1qlNTP5YiSmxvNv1W2N/KygVbgmFZfSaFy8Rhc4fxLVEHReDHAcs2Tg3xJ55V93G+pT
+        exKQePYAqn7kKK7DwtH20u25uB3sVQHjJK3FtsadgWf9olHRerEkc6U4NeiJp4jUoAZkFm7ZqlkTA
+        Vq0gIeaiLa/Ef4fdpXcY4uepUYDEiIRPx4S7Yr2/krsQARzRnRmazYQMwgFfUsfnCHlPsHQUqhul1
+        UVSofi/+2ykyGifMM9yRez2ZWtPZAyZs19LR9x99Qno3v2rPS/2FHXRrAW3fd5b+g+xAkhZ0buphx
+        BWrbSmvwg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:53318)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jQwB7-0002oI-JN; Tue, 21 Apr 2020 17:55:21 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jQwB2-0007Ba-96; Tue, 21 Apr 2020 17:55:16 +0100
+Date:   Tue, 21 Apr 2020 17:55:16 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     James Morse <james.morse@arm.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>, info@metux.net,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, allison@lohutok.net,
+        gregkh@linuxfoundation.org, Tian Tao <tiantao6@hisilicon.com>,
+        tglx@linutronix.de, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm32: fix flushcache syscall with device address
+Message-ID: <20200421165515.GF25745@shell.armlinux.org.uk>
+References: <1587456514-61156-1-git-send-email-tiantao6@hisilicon.com>
+ <20200421081239.GA15439@willie-the-truck>
+ <20200421121651.000009f0@Huawei.com>
+ <d0814ab2-03fc-42c1-e447-bfee2df038da@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d0814ab2-03fc-42c1-e447-bfee2df038da@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document title;
-- Some whitespace fixes and new line breaks;
-- Mark literal blocks as such;
-- Add table markups;
-- Add it to filesystems/index.rst.
+On Tue, Apr 21, 2020 at 05:50:22PM +0100, James Morse wrote:
+> Hi guys,
+> 
+> (Subject Nit: arm64, as that is what your patch modifies)
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/filesystems/index.rst           |  1 +
- .../{sysfs-pci.txt => sysfs-pci.rst}          | 23 ++++++++++++-------
- 2 files changed, 16 insertions(+), 8 deletions(-)
- rename Documentation/filesystems/{sysfs-pci.txt => sysfs-pci.rst} (92%)
+That is irrelevent.  This is a compatibility interface which is supposed
+to reflect the arm32 implementation.  Augmenting a compatibility
+interface to do more than what it's counterpart that it's supposed to
+be compatible with is senseless.
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 74b1e18af37e..65719684295e 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -34,6 +34,7 @@ algorithms work.
-    quota
-    seq_file
-    sharedsubtree
-+   sysfs-pci
- 
-    automount-support
- 
-diff --git a/Documentation/filesystems/sysfs-pci.txt b/Documentation/filesystems/sysfs-pci.rst
-similarity index 92%
-rename from Documentation/filesystems/sysfs-pci.txt
-rename to Documentation/filesystems/sysfs-pci.rst
-index 06f1d64c6f70..a265f3e2cc80 100644
---- a/Documentation/filesystems/sysfs-pci.txt
-+++ b/Documentation/filesystems/sysfs-pci.rst
-@@ -1,8 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+============================================
- Accessing PCI device resources through sysfs
----------------------------------------------
-+============================================
- 
- sysfs, usually mounted at /sys, provides access to PCI resources on platforms
--that support it.  For example, a given bus might look like this:
-+that support it.  For example, a given bus might look like this::
- 
-      /sys/devices/pci0000:17
-      |-- 0000:17:00.0
-@@ -30,8 +33,9 @@ This bus contains a single function device in slot 0.  The domain and bus
- numbers are reproduced for convenience.  Under the device directory are several
- files, each with their own function.
- 
-+       =================== =====================================================
-        file		   function
--       ----		   --------
-+       =================== =====================================================
-        class		   PCI class (ascii, ro)
-        config		   PCI config space (binary, rw)
-        device		   PCI device (ascii, ro)
-@@ -40,13 +44,16 @@ files, each with their own function.
-        local_cpus	   nearby CPU mask (cpumask, ro)
-        remove		   remove device from kernel's list (ascii, wo)
-        resource		   PCI resource host addresses (ascii, ro)
--       resource0..N	   PCI resource N, if present (binary, mmap, rw[1])
-+       resource0..N	   PCI resource N, if present (binary, mmap, rw\ [1]_)
-        resource0_wc..N_wc  PCI WC map resource N, if prefetchable (binary, mmap)
-        revision		   PCI revision (ascii, ro)
-        rom		   PCI ROM resource, if present (binary, ro)
-        subsystem_device	   PCI subsystem device (ascii, ro)
-        subsystem_vendor	   PCI subsystem vendor (ascii, ro)
-        vendor		   PCI vendor (ascii, ro)
-+       =================== =====================================================
-+
-+::
- 
-   ro - read only file
-   rw - file is readable and writable
-@@ -56,7 +63,7 @@ files, each with their own function.
-   binary - file contains binary data
-   cpumask - file contains a cpumask type
- 
--[1] rw for RESOURCE_IO (I/O port) regions only
-+.. [1] rw for RESOURCE_IO (I/O port) regions only
- 
- The read only files are informational, writes to them will be ignored, with
- the exception of the 'rom' file.  Writable files can be used to perform
-@@ -67,11 +74,11 @@ don't support mmapping of certain resources, so be sure to check the return
- value from any attempted mmap.  The most notable of these are I/O port
- resources, which also provide read/write access.
- 
--The 'enable' file provides a counter that indicates how many times the device 
-+The 'enable' file provides a counter that indicates how many times the device
- has been enabled.  If the 'enable' file currently returns '4', and a '1' is
- echoed into it, it will then return '5'.  Echoing a '0' into it will decrease
- the count.  Even when it returns to 0, though, some of the initialisation
--may not be reversed.  
-+may not be reversed.
- 
- The 'rom' file is special in that it provides read-only access to the device's
- ROM file, if available.  It's disabled by default, however, so applications
-@@ -93,7 +100,7 @@ Accessing legacy resources through sysfs
- 
- Legacy I/O port and ISA memory resources are also provided in sysfs if the
- underlying platform supports them.  They're located in the PCI class hierarchy,
--e.g.
-+e.g.::
- 
- 	/sys/class/pci_bus/0000:17/
- 	|-- bridge -> ../../../devices/pci0000:17
+The API concerned is an ARM32 API which is expected to only be used
+for ensuring I/D cache coherency, it is not for DMA.
+
+Augmenting it on ARM64 for DMA is senseless.
+
 -- 
-2.25.2
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
