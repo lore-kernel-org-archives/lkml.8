@@ -2,110 +2,163 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A879C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E1BC55184
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E51FB2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587495292;
-	bh=4ADim16T+0u2BglcyovCuf/IIjoL8W8PhOujJLyZSGY=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=H/es3aUMuEtVw93e2hpdiBIcps8HOI6l7x9PdoEONm0LH/NtuK34KEnuxlhmnEHYs
-	 NnFSYgj8auq/CI/Wd5SL3o0XB3cWhoat5dZBkKNulNExo+KFLcKmdMCpJdDa3+HVES
-	 eE+70/4B4Yd3TX9bpnLyFPN3pVTeIc0QyxPiqriA=
+	by mail.kernel.org (Postfix) with ESMTP id 17F572068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:57:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="a4cWUdIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgDUSyw (ORCPT
+        id S1726136AbgDUS5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:54:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbgDUSyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:54:51 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B53A2068F;
-        Tue, 21 Apr 2020 18:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587495291;
-        bh=4ADim16T+0u2BglcyovCuf/IIjoL8W8PhOujJLyZSGY=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=ZhkAIp/ZxceWgE67zgqVeVvxd+w2MDywoiQeMW0dyf+uRNYhBa8UU3R1webo45I2i
-         OLLSO3OfNG5OxUwFvAcZCA+hSXg+ZCdlzlS2G2UxtFC3svdquodJpdgHXPGxXU1fPe
-         2gPQ96gG+vEXQ/Yfqa14Uk9a4lSRUKRYcUaII3xk=
-Date:   Tue, 21 Apr 2020 19:54:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-spi@vger.kernel.org
-In-Reply-To: <20200420190853.45614-2-kdasu.kdev@gmail.com>
-References: <20200420190853.45614-1-kdasu.kdev@gmail.com> <20200420190853.45614-2-kdasu.kdev@gmail.com>
-Subject: Re: [Patch v3 1/9] spi: bcm-qspi: Handle clock probe deferral
-Message-Id: <158749528855.30690.4628410015008240508.b4-ty@kernel.org>
+        Tue, 21 Apr 2020 14:57:15 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57398 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDUS5N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:57:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LIv2kU001553;
+        Tue, 21 Apr 2020 18:57:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=WOyKZjY+eI2YMOo8cv9qPTAY/ZyP/gYFXzlUCbXYSH8=;
+ b=a4cWUdIFlDDioH4LRw2Vi4Qbh7qzccfCV+4M+GbiqNrek4Jx2nJhf5c/txZJAMPoArlt
+ Vdkb3z3Lpf0vIZ8BR2DKJ1Lq2wtzAG5I0dBF9S4oAV6wqCfuXKaOt4WcScK6fZc288QY
+ ThWuE7MiWl/N6RLQZ0/NaNkowmnpway4Q13X7lLYayOpbnIRHtYCpgDSOejchH+bLkYD
+ xU9G6aS2uh7qmQqVElTWgsHdBRsxo92TRUd+emoLLnzkdHvjpHfxKWwVRJriMAtf3iTE
+ PHoJHxEV2iXs8dglRwaHE0nwAI3J9aN+/sPcy/1H8ADEst/KRKPSAfoyKJxK4LjqUk7n CQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30ft6n6r5q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 18:57:02 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LIrQUF119834;
+        Tue, 21 Apr 2020 18:57:02 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30gb90rnff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 18:57:02 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03LIuxPi029627;
+        Tue, 21 Apr 2020 18:56:59 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 11:56:59 -0700
+Date:   Tue, 21 Apr 2020 11:56:57 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-kernel@vger.kernel.org,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/8] fs/ext4: Disallow encryption if inode is DAX
+Message-ID: <20200421185657.GK6749@magnolia>
+References: <20200414040030.1802884-1-ira.weiny@intel.com>
+ <20200414040030.1802884-4-ira.weiny@intel.com>
+ <20200415160307.GJ90651@mit.edu>
+ <20200415195433.GC2305801@iweiny-DESK2.sc.intel.com>
+ <20200421184143.GA3004764@iweiny-DESK2.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421184143.GA3004764@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxlogscore=999 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 15:08:45 -0400, Kamal Dasu wrote:
-> From: Florian Fainelli <f.fainelli@gmail.com>
+On Tue, Apr 21, 2020 at 11:41:43AM -0700, Ira Weiny wrote:
+> On Wed, Apr 15, 2020 at 12:54:34PM -0700, 'Ira Weiny' wrote:
+> > On Wed, Apr 15, 2020 at 12:03:07PM -0400, Theodore Y. Ts'o wrote:
+> > > On Mon, Apr 13, 2020 at 09:00:25PM -0700, ira.weiny@intel.com wrote:
+>  
+> [snip]
 > 
-> The clock provider may not be ready by the time spi-bcm-qspi gets
-> probed, handle probe deferral using devm_clk_get_optional().
+> > > 
+> > > Also note that encrypted files are read/write so we must never allow
+> > > the combination of ENCRPYT_FL and DAX_FL.  So that may be something
+> > > where we should teach __ext4_iget() to check for this, and declare the
+> > > file system as corrupted if it sees this combination.
+> > 
+> > ok...
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> After thinking about this...
 > 
-> [...]
+> Do we really want to declare the FS corrupted?
 
-Applied to
+Seeing as we're defining the dax inode flag to be advisory (since its
+value is ignored if the fs isn't on pmem, or the administrator overrode
+with dax=never mount option), I don't see why that's filesystem
+corruption.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.7
+I can see a case for returning errors if you're trying to change ENCRYPT
+or VERITY on a file that's has S_DAX set.  We can't encrypt or set
+verity data for a file that could be changed behind our backs, so the
+kernel cannot satisfy /that/ request.
 
-Thanks!
+As for changing FS_DAX_FL on an encrypted/verity'd file, the API says
+that it might not have an immedate effect on S_DAX and that programs
+have to check S_DAX after changing FS_DAX_FL.  It'll never result in
+S_DAX being set, but the current spec never guarantees that. ;)
 
-[1/9] spi: bcm-qspi: Handle clock probe deferral
-      commit: 0392727c261bab65a35cd4f82ee9459bc237591d
-[2/9] dt: bindings: spi: Add support for mspi on brcmstb SoCs
-      (not applied)
-[3/9] spi: bcm-qspi: Handle lack of MSPI_REV offset
-      (not applied)
-[4/9] spi: bcm-qspi: Drive MSPI peripheral SSb pin on cs_change
-      commit: 742d5958062488d03082a9ff01a6afb3cf7bd634
-[5/9] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
-      commit: 4df3bea7f9d2ddd9ac2c29ba945c7c4db2def29c
-[6/9] spi: bcm-qspi: Make PM suspend/resume work with SCMI clock management
-      commit: 1b7ad8c405c3dc0ad6c2dc61fe21fe7a446cceeb
-[7/9] spi: bcm-qspi: Use fastbr setting to allow faster MSPI speeds
-      (not applied)
-[8/9] spi: bcm-qspi: add support for MSPI sys clk 108Mhz
-      (not applied)
-[9/9] spi: bcm-qspi: MSPI_SPCR0_MSB MSTR bit exists only on legacy controllers
-      (not applied)
+(If FS_DAX_FL were *mandatory* then yes that would be corruption.)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+--D
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> If so, I think we need to return errors when such a configuration is attempted.
+> If in the future we have an encrypted mode which can co-exist with DAX (such as
+> Dan mentioned) we can change this.
+> 
+> FWIW I think we should return errors when such a configuration is attempted but
+> _not_ declare the FS corrupted.  That allows users to enable this configuration
+> later if we can figure out how to support it.
+> 
+> > 
+> > > (For VERITY_FL
+> > > && DAX_FL that is a combo that we might want to support in the future,
+> > > so that's probably a case where arguably, we should just ignore the
+> > > DAX_FL for now.)
+> > 
+> > ok...
+> 
+> I think this should work the same.
+> 
+> It looks like VERITY_FL and ENCRYPT_FL are _not_ user modifiable?  Is that
+> correct?
+> 
+> You said that ENCRPYT_FL is set from the parent directory?  But I'm not seeing
+> where that occurs?
+> 
+> Similarly I don't see where VERITY_FL is being set either?  :-/
+> 
+> I think to make this work correctly we should restrict setting those flags if
+> DAX_FL is set and vice versa.  But I'm not finding where to do that.  :-/
+> 
+> Ira
+> 
+> > 
+> > Ira
+> > 
