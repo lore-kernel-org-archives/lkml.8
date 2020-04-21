@@ -2,153 +2,155 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149D3C55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E75EC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F05F920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:13:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="M2eFPR91"
+	by mail.kernel.org (Postfix) with ESMTP id 01E65206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587492837;
+	bh=0TT0L66H3oFxmX6WwJme2Bh+aMVhD0ckmx2GZykmn4c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GHp8C22TZmhxVDRwtfe0rHG9LFZ6aHxt4M1drWsPtleo6BzasyL6UiGlZAsHgbunM
+	 hCbz1J2p9iSdKqQnOx+ij3nOL/JQ35dMlb7mdPBd4x4KJLEkdkFovDLdA++JKrkekb
+	 9pc5gpqBd8ICn/dYjOJkZ1DDBVfC5i1iEhSfy9Uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgDUSNt (ORCPT
+        id S1729259AbgDUSN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:13:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgDUSNs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:13:48 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E651AC0610D5;
-        Tue, 21 Apr 2020 11:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587492826;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=k1WX4cUqtiApT75DRAINIjIc6nKu2ha9Txwb3LzKu4k=;
-        b=M2eFPR91fHIYUBEZaW2RUIQ1xy3IvUva7gc39isg9NcwT9CrPfpMV2m8wjCAV2+xyP
-        mlmMklGiMkqOgtUwSCQmYg9nZtO20wY9XeCEkC8w9k52sFdqt9dWxOo6QGrLEdL2OMg5
-        I8SBZtCxrnX/dR8Wnz1yfBIdHlH2+p20QY3qgLGG575MH0vQvcVjjz6twtF5PnXKFqiF
-        wiIn5OBgmjGmCGKpWDM5JzQovc+uY3oygswy9K4/hcIkaRIyigbd7kjDQSqjsbJuBGkh
-        7JeKB2t13TLyCRJ2p2TriT0fM+y+h90p3BlR7X5jHLXmADu2oWYArnNGv77ZjFoF+jUG
-        97yg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw43oXkQ="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.5.0 DYNA|AUTH)
-        with ESMTPSA id g06d2dw3LIDdJlX
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Tue, 21 Apr 2020 20:13:39 +0200 (CEST)
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200421180220.GB37466@atomide.com>
-Date:   Tue, 21 Apr 2020 20:13:39 +0200
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com>
-References: <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com> <20200416184638.GI37466@atomide.com> <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com> <20200417164340.3d9043d1@aktux> <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com> <20200417150721.GL37466@atomide.com> <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com> <20200420150802.GR37466@atomide.com> <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com> <20200421085336.32cf8ffe@aktux> <20200421180220.GB37466@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Tue, 21 Apr 2020 14:13:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725963AbgDUSNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:13:55 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DEBF206D5;
+        Tue, 21 Apr 2020 18:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587492834;
+        bh=0TT0L66H3oFxmX6WwJme2Bh+aMVhD0ckmx2GZykmn4c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tI0tBHitsSsvQV5/YVgJ70h59rYxHJIl5Wm7OUyc/dwDkclA7eB2CdO856exPzXRD
+         P1S9HlOcAOIBMbQCEmC7MCaIh6X8yjbvrCoyb2qxVXnSvJy0w87jiwouTfkroN90ci
+         LgaS/N9I5EZNcR4mA8MyqKkrYeyAcdgWiSvZTdVY=
+Date:   Tue, 21 Apr 2020 11:13:52 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Luo bin <luobin9@huawei.com>
+Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
+Subject: Re: [PATCH net-next 1/3] hinic: add mailbox function support
+Message-ID: <20200421111352.263c7cbb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200421045635.8128-2-luobin9@huawei.com>
+References: <20200421045635.8128-1-luobin9@huawei.com>
+        <20200421045635.8128-2-luobin9@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+On Tue, 21 Apr 2020 04:56:33 +0000 Luo bin wrote:
+> virtual function and physical function can communicate with each
+> other through mailbox channel supported by hw
+> 
+> Signed-off-by: Luo bin <luobin9@huawei.com>
 
-> Am 21.04.2020 um 20:02 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * Andreas Kemnade <andreas@kemnade.info> [200421 06:54]:
->> On Mon, 20 Apr 2020 23:11:18 +0200
->> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
->>> The only maybe important observation was when I disabled all
->>> kernel modules except *hdq*.ko and *bq27*.ko. Then I did only
->>> get an emergency shell so that it is quite similar to the
->>> scenario Andreas has tested. With this setup it did work.
->>>=20
->> So I guess without idling uarts?
->>=20
->>> I then tried to reenable other kernel modules but the result
->>> wasn't convincing that it gives a reliable result.
->>>=20
->>> So I have still no clear indication when the problem occurs and
->>> when not.
->>>=20
->> Hmm, last summer I had problems even without that patch reading
->> temperature while doing umts transfers. Maybe there are some
->> connections,
->> maybe not. For that scenario we might have emc issues, thermal =
-problems
->> or a real kernel problem.
->=20
-> I have confimed here that logicpd torpedo devkit with battery
-> works just fine while entering off mode during idle. I can see
-> the temperature just fine with:
->=20
-> # cat /sys/class/power_supply/bq27000-battery/uevent
-> POWER_SUPPLY_NAME=3Dbq27000-battery
-> POWER_SUPPLY_STATUS=3DCharging
-> POWER_SUPPLY_PRESENT=3D1
-> POWER_SUPPLY_VOLTAGE_NOW=3D3829000
-> POWER_SUPPLY_CURRENT_NOW=3D-592084
-> POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-> POWER_SUPPLY_TEMP=3D306
-> POWER_SUPPLY_TECHNOLOGY=3DLi-ion
-> POWER_SUPPLY_CHARGE_FULL_DESIGN=3D2056320
-> POWER_SUPPLY_CYCLE_COUNT=3D0
-> POWER_SUPPLY_POWER_AVG=3D0
-> POWER_SUPPLY_MANUFACTURER=3DTexas Instruments
->=20
-> This is 37xx though, maybe you have 35xx and there's some errata
-> that we're not handling?
+> +static int recv_vf_mbox_handler(struct hinic_mbox_func_to_func *func_to_func,
+> +				struct hinic_recv_mbox *recv_mbox,
+> +				void *buf_out, u16 *out_size)
+> +{
+> +	hinic_vf_mbox_cb cb;
+> +	int ret = 0;
+> +
+> +	if (recv_mbox->mod >= HINIC_MOD_MAX) {
+> +		dev_err(&func_to_func->hwif->pdev->dev, "Receive illegal mbox message, mod = %d\n",
+> +			recv_mbox->mod);
 
-No, it is dm3730 on three different units I have tried.
+You may want to rate limit these, otherwise VF may spam PFs logs.
 
-> I'm only seeing "2.7. HDQTM/1-Wire=C2=AE Communication Constraints"
-> for external pull-up resitor in 34xx errata at [0].
->=20
-> I wonder if wrong external pull could cause flakyeness after
-> enabling the hdq module?
+> +		return -EINVAL;
+> +	}
 
-I have checked and we have 10 kOhm pullup to 1.8 V and a 470 Ohm
-series resistor.
+> +static int mbox_func_params_valid(struct hinic_mbox_func_to_func *func_to_func,
+> +				  void *buf_in, u16 in_size)
+> +{
+> +	if (!buf_in || !in_size)
+> +		return -EINVAL;
 
->=20
-> If nothing else helps, you could try to block idle for hdq
-> module, but I have a feeling that's a workaround for something
-> else.
+This is defensive programming, we don't do that in the kernel, callers
+should not pass NULL buffer and 0 size.
 
-Well, what helps is reverting the patch and using the old driver
-(which did work for several years). So I would not assume that
-there is a hardware influence. It seems to be something the new
-driver is doing differently.
+Also you probably want the size to be size_t, otherwise it may get
+truncated before the check below.
 
-I need more time to understand and trace this issue on what it
-depends... It may depend on the sequence some other modules are
-loaded and what the user-space (udevd) is doing in the meantime.
+> +	if (in_size > HINIC_MBOX_DATA_SIZE) {
+> +		dev_err(&func_to_func->hwif->pdev->dev,
+> +			"Mbox msg len(%d) exceed limit(%d)\n",
+> +			in_size, HINIC_MBOX_DATA_SIZE);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int hinic_mbox_to_pf(struct hinic_hwdev *hwdev,
+> +		     enum hinic_mod_type mod, u8 cmd, void *buf_in,
+> +		     u16 in_size, void *buf_out, u16 *out_size, u32 timeout)
+> +{
+> +	struct hinic_mbox_func_to_func *func_to_func = hwdev->func_to_func;
+> +	int err = mbox_func_params_valid(func_to_func, buf_in, in_size);
+> +
+> +	if (err)
+> +		return err;
+> +
+> +	if (!HINIC_IS_VF(hwdev->hwif)) {
+> +		dev_err(&hwdev->hwif->pdev->dev, "Params error, func_type: %d\n",
+> +			HINIC_FUNC_TYPE(hwdev->hwif));
+> +		return -EINVAL;
+> +	}
+> +
+> +	err = hinic_mbox_to_func(func_to_func, mod, cmd,
+> +				 hinic_pf_id_of_vf_hw(hwdev->hwif), buf_in,
+> +				 in_size, buf_out, out_size, timeout);
+> +	return err;
 
->=20
-> Regards,
->=20
-> Tony
->=20
-> [0] =
-https://www.ti.com/pdfs/wtbu/SWPZ009A_OMAP4430_Errata_Public_vA.pdf
->=20
+return hinic_mbox_to...
 
-BR and thanks,
-Nikolaus
+directly
 
+> +}
+
+> +static int comm_pf_mbox_handler(void *handle, u16 vf_id, u8 cmd, void *buf_in,
+> +				u16 in_size, void *buf_out, u16 *out_size)
+> +{
+> +	struct hinic_hwdev *hwdev = handle;
+> +	struct hinic_pfhwdev *pfhwdev;
+> +	int err = 0;
+> +
+> +	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
+> +
+> +	if (cmd == HINIC_COMM_CMD_START_FLR) {
+> +		*out_size = 0;
+> +	} else {
+> +		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
+> +					cmd, buf_in, in_size, buf_out, out_size,
+> +					HINIC_MGMT_MSG_SYNC);
+> +		if (err  && err != HINIC_MBOX_PF_BUSY_ACTIVE_FW)
+
+Double space, please run checkpatch --strict on the patches
+
+> +			dev_err(&hwdev->hwif->pdev->dev,
+> +				"PF mbox common callback handler err: %d\n",
+> +				err);
+> +	}
+> +
+> +	return err;
+> +}
