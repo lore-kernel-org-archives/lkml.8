@@ -2,199 +2,102 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4A3C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A505EC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22046206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:29:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="O8MylIdt"
+	by mail.kernel.org (Postfix) with ESMTP id 8275D206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgDUS31 (ORCPT
+        id S1728823AbgDUSbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:29:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57570 "EHLO
+        Tue, 21 Apr 2020 14:31:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgDUS31 (ORCPT
+        with ESMTP id S1725930AbgDUSbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:29:27 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103C3C0610D5;
-        Tue, 21 Apr 2020 11:29:27 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 326A6528;
-        Tue, 21 Apr 2020 20:29:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1587493763;
-        bh=Ub+bvuy54/lHHBzdaKAhPdrkxpA4BOORJHhwhd+Euko=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O8MylIdtPq0HfXE73cG8CsePtPPdHUr4qKGIHIsXfObuyeGbfy7+3BRs+BnaQatmh
-         mUvSQ+aquZinMBPk3euVqA/ntt1NXXsx1C+03IVkdna/7rhGjkLFIw/CuPtonV5e6j
-         5+yHIoN4Jz9Ta1vT9KdFA61ExbjF4XU36xMZaepE=
-Date:   Tue, 21 Apr 2020 21:29:09 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Rob Herring <robh@kernel.org>
+        Tue, 21 Apr 2020 14:31:02 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CA0BC0610D6;
+        Tue, 21 Apr 2020 11:31:02 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jQxff-0000RR-5J; Tue, 21 Apr 2020 20:30:59 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 65F3C1C0315;
+        Tue, 21 Apr 2020 20:30:58 +0200 (CEST)
+Date:   Tue, 21 Apr 2020 18:30:58 -0000
+From:   "tip-bot2 for Masahiro Yamada" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] x86/boot/build: Add phony targets in
+ arch/x86/boot/Makefile to PHONY
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
-Message-ID: <20200421182909.GE5983@pendragon.ideasonboard.com>
-References: <20200229003731.2728-1-robh@kernel.org>
- <20200421100749.GA5429@pendragon.ideasonboard.com>
- <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
- <20200421110537.GC5983@pendragon.ideasonboard.com>
- <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
- <20200421134654.GD5983@pendragon.ideasonboard.com>
- <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200215063852.8298-2-masahiroy@kernel.org>
+References: <20200215063852.8298-2-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
+Message-ID: <158749385800.28353.13640320845323735874.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+The following commit has been merged into the x86/build branch of tip:
 
-On Tue, Apr 21, 2020 at 09:01:32AM -0500, Rob Herring wrote:
-> On Tue, Apr 21, 2020 at 8:47 AM Laurent Pinchart wrote:
-> > On Tue, Apr 21, 2020 at 10:15:02PM +0900, Masahiro Yamada wrote:
-> > > On Tue, Apr 21, 2020 at 8:05 PM Laurent Pinchart wrote:
-> > > > On Tue, Apr 21, 2020 at 07:45:05PM +0900, Masahiro Yamada wrote:
-> > > > > On Tue, Apr 21, 2020 at 7:08 PM Laurent Pinchart wrote:
-> > > > > > On Fri, Feb 28, 2020 at 06:37:30PM -0600, Rob Herring wrote:
-> > > > > > > Most folks only run dt_binding_check on the single schema they care about
-> > > > > > > by setting DT_SCHEMA_FILES. That means example is only checked against
-> > > > > > > that one schema which is not always sufficient.
-> > > > > > >
-> > > > > > > Let's address this by splitting processed-schema.yaml into 2 files: one
-> > > > > > > that's always all schemas for the examples and one that's just the schema
-> > > > > > > in DT_SCHEMA_FILES for dtbs.
-> > > > > >
-> > > > > > This broke
-> > > > > >
-> > > > > > make DT_SCHEMA_FILES=Documentation/devicetree/.. dt_binding_check
-> > > > >
-> > > > > What is intended by
-> > > > > "DT_SCHEMA_FILES=Documentation/devicetree/.."  ?
-> > > >
-> > > > My bad, I forgot to write that ... is the continuation of the string.
-> > > > It's any yaml schema file that has an example.
-> > >
-> > > Ah, OK. I just input verbatim.
-> > >
-> > > Is it broken?
-> > >
-> > > You can specify any individual file(s) under Documentation/devicetree/bindings/.
-> > >
-> > > For example, the following worked for me.
-> > >
-> > > $ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml
-> > >  dt_binding_check
-> > >   HOSTCC  scripts/basic/fixdep
-> > >   HOSTCC  scripts/dtc/dtc.o
-> > >   HOSTCC  scripts/dtc/flattree.o
-> > >   HOSTCC  scripts/dtc/fstree.o
-> > >   HOSTCC  scripts/dtc/data.o
-> > >   HOSTCC  scripts/dtc/livetree.o
-> > >   HOSTCC  scripts/dtc/treesource.o
-> > >   HOSTCC  scripts/dtc/srcpos.o
-> > >   HOSTCC  scripts/dtc/checks.o
-> > >   HOSTCC  scripts/dtc/util.o
-> > >   LEX     scripts/dtc/dtc-lexer.lex.c
-> > >   YACC    scripts/dtc/dtc-parser.tab.[ch]
-> > >   HOSTCC  scripts/dtc/dtc-lexer.lex.o
-> > >   HOSTCC  scripts/dtc/dtc-parser.tab.o
-> > >   HOSTCC  scripts/dtc/yamltree.o
-> > >   HOSTLD  scripts/dtc/dtc
-> > >   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
-> > >   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
-> > >   DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
-> > >   CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
-> > >   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-> >
-> > This is getting interesting.
-> >
-> > ~/src/kernel/linux $ make O=output/x86 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dt_binding_check
-> > make[1]: Entering directory '/home/laurent/src/kernel/linux/output/x86'
-> >   HOSTCC  scripts/basic/fixdep
-> >   HOSTCC  scripts/dtc/dtc.o
-> >   HOSTCC  scripts/dtc/flattree.o
-> >   HOSTCC  scripts/dtc/fstree.o
-> >   HOSTCC  scripts/dtc/data.o
-> >   HOSTCC  scripts/dtc/livetree.o
-> >   HOSTCC  scripts/dtc/treesource.o
-> >   HOSTCC  scripts/dtc/srcpos.o
-> >   HOSTCC  scripts/dtc/checks.o
-> >   HOSTCC  scripts/dtc/util.o
-> >   LEX     scripts/dtc/dtc-lexer.lex.c
-> >   YACC    scripts/dtc/dtc-parser.tab.[ch]
-> >   HOSTCC  scripts/dtc/dtc-lexer.lex.o
-> >   HOSTCC  scripts/dtc/dtc-parser.tab.o
-> >   HOSTCC  scripts/dtc/yamltree.o
-> >   HOSTLD  scripts/dtc/dtc
-> >   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
-> >   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
-> >   DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
-> >   CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
-> >   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-> > make[1]: Leaving directory '/home/laurent/src/kernel/linux/output/x86'
-> >
-> > ~/src/kernel/this_is_a_long_directory_name/linux $ make O=output/x86 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dt_binding_check
-> > make[1]: Entering directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
-> >   HOSTCC  scripts/basic/fixdep
-> >   HOSTCC  scripts/dtc/dtc.o
-> >   HOSTCC  scripts/dtc/flattree.o
-> >   HOSTCC  scripts/dtc/fstree.o
-> >   HOSTCC  scripts/dtc/data.o
-> >   HOSTCC  scripts/dtc/livetree.o
-> >   HOSTCC  scripts/dtc/treesource.o
-> >   HOSTCC  scripts/dtc/srcpos.o
-> >   HOSTCC  scripts/dtc/checks.o
-> >   HOSTCC  scripts/dtc/util.o
-> >   LEX     scripts/dtc/dtc-lexer.lex.c
-> >   YACC    scripts/dtc/dtc-parser.tab.[ch]
-> >   HOSTCC  scripts/dtc/dtc-lexer.lex.o
-> >   HOSTCC  scripts/dtc/dtc-parser.tab.o
-> >   HOSTCC  scripts/dtc/yamltree.o
-> >   HOSTLD  scripts/dtc/dtc
-> >   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
-> > make[2]: execvp: /bin/sh: Argument list too long
-> > make[2]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Documentation/devicetree/bindings/Makefile:38: Documentation/devicetree/bindings/processed-schema-examples.yaml] Error 127
-> > make[1]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Makefile:1300: dt_binding_check] Error 2
-> > make[1]: Leaving directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
-> > make: *** [Makefile:180: sub-make] Error 2
-> >
-> > It seems to only fail with out of tree builds (O=...). I expect that
-> > failures will become more common the more YAML bindings we have, even
-> > without long directory names.
-> 
-> dt-mk-schema can take and recurse a single directory already, so does
-> this fix it for you:
+Commit-ID:     675a59b7dec6e03c5fb060f18fc25b2e56be3c7a
+Gitweb:        https://git.kernel.org/tip/675a59b7dec6e03c5fb060f18fc25b2e56be3c7a
+Author:        Masahiro Yamada <masahiroy@kernel.org>
+AuthorDate:    Sat, 15 Feb 2020 15:38:52 +09:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 21 Apr 2020 18:30:58 +02:00
 
-Yes, the change below fixes my problem, thank you.
+x86/boot/build: Add phony targets in arch/x86/boot/Makefile to PHONY
 
-> @@ -22,7 +22,7 @@ $(obj)/%.example.dts: $(src)/%.yaml
-> check_dtschema_version FORCE
->  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
-> 
->  quiet_cmd_mk_schema = SCHEMA  $@
-> -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-> $(real-prereqs)
-> +      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-> $(srctree)/$(src)
-> 
->  DT_DOCS = $(addprefix $(src)/, \
->         $(shell \
+These targets are correctly added to PHONY in arch/x86/Makefile, but
+not in arch/x86/boot/Makefile. Thus, with a file 'install' in the top
+directory, 'make install' does nothing:
 
--- 
-Regards,
+  $ touch install
+  $ make install
+  make[1]: 'install' is up to date.
 
-Laurent Pinchart
+Add them to the PHONY targets in the boot Makefile too.
+
+ [ bp: Massage. ]
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200215063852.8298-2-masahiroy@kernel.org
+---
+ arch/x86/boot/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index f1bf4a7..4c53556 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -128,6 +128,8 @@ quiet_cmd_genimage = GENIMAGE $3
+ cmd_genimage = sh $(srctree)/$(src)/genimage.sh $2 $3 $(obj)/bzImage \
+ 			$(obj)/mtools.conf '$(image_cmdline)' $(FDINITRD)
+ 
++PHONY += bzdisk fdimage fdimage144 fdimage288 isoimage bzlilo install
++
+ # This requires write access to /dev/fd0
+ bzdisk: $(obj)/bzImage $(obj)/mtools.conf
+ 	$(call cmd,genimage,bzdisk,/dev/fd0)
