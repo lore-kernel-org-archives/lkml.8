@@ -2,84 +2,90 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9410EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E58C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA54206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50FE206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgDUO7v (ORCPT
+        id S1728978AbgDUPAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:59:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728676AbgDUO7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:59:51 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27B192068F;
-        Tue, 21 Apr 2020 14:59:50 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 10:59:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ming Lei <ming.lei@redhat.com>
-Subject: Re: [PATCH] blk-iocost: Fix systemtap error on iocost_ioc_vrate_adj
-Message-ID: <20200421105948.4f5a36f5@gandalf.local.home>
-In-Reply-To: <20200421130755.18370-1-longman@redhat.com>
-References: <20200421130755.18370-1-longman@redhat.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 21 Apr 2020 11:00:18 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:52656 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbgDUPAS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 11:00:18 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jQuNk-00011K-8L; Tue, 21 Apr 2020 09:00:16 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jQuNj-0008Pv-43; Tue, 21 Apr 2020 09:00:15 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Christof Meerwald <cmeerw@cmeerw.org>,
+        Oleg Nesterov <oleg@redhat.com>
+References: <20200419201336.GI22017@edge.cmeerw.net>
+        <87sggyytnh.fsf@x220.int.ebiederm.org>
+        <20200421083031.5wapruzncjkagvhf@wittgenstein>
+Date:   Tue, 21 Apr 2020 09:57:09 -0500
+In-Reply-To: <20200421083031.5wapruzncjkagvhf@wittgenstein> (Christian
+        Brauner's message of "Tue, 21 Apr 2020 10:30:31 +0200")
+Message-ID: <871rog6g56.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jQuNj-0008Pv-43;;;mid=<871rog6g56.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+BjMt48Bfgsu37PxcbesKuyDH8b45kCUc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] signal: Avoid corrupting si_pid and si_uid in do_notify_parent
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 09:07:55 -0400
-Waiman Long <longman@redhat.com> wrote:
+Christian Brauner <christian.brauner@ubuntu.com> writes:
 
-> diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
-> index 7ecaa65b7106..c2f580fd371b 100644
-> --- a/include/trace/events/iocost.h
-> +++ b/include/trace/events/iocost.h
-> @@ -130,7 +130,7 @@ DEFINE_EVENT(iocg_inuse_update, iocost_inuse_reset,
->  
->  TRACE_EVENT(iocost_ioc_vrate_adj,
->  
-> -	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 (*missed_ppm)[2],
-> +	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 *missed_ppm,
->  		u32 rq_wait_pct, int nr_lagging, int nr_shortages,
->  		int nr_surpluses),
->  
-> @@ -155,8 +155,8 @@ TRACE_EVENT(iocost_ioc_vrate_adj,
->  		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);;
->  		__entry->new_vrate = new_vrate;
->  		__entry->busy_level = ioc->busy_level;
-> -		__entry->read_missed_ppm = (*missed_ppm)[READ];
-> -		__entry->write_missed_ppm = (*missed_ppm)[WRITE];
-> +		__entry->read_missed_ppm = missed_ppm[READ];
-> +		__entry->write_missed_ppm = missed_ppm[WRITE];
->  		__entry->rq_wait_pct = rq_wait_pct;
->  		__entry->nr_lagging = nr_lagging;
->  		__entry->nr_shortages = nr_shortages;
+> On Mon, Apr 20, 2020 at 12:05:38PM -0500, Eric W. Biederman wrote:
+>> diff --git a/kernel/signal.c b/kernel/signal.c
+>> index 9899c5f91ee1..a88a89422227 100644
+>> --- a/kernel/signal.c
+>> +++ b/kernel/signal.c
+>> @@ -1993,8 +1993,12 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+>>  		if (psig->action[SIGCHLD-1].sa.sa_handler == SIG_IGN)
+>>  			sig = 0;
+>>  	}
+>> +	/*
+>> +	 * Bypass send_signal as the si_pid and si_uid values have
+>> +	 * been generated in the parent's namespaces.
+>> +	 */
+>
+> At first I misread that comment as saying that we're skipping sending a
+> signal not that it relates to a specific function (and I won't admit that
+> I wrote a whole long paragraph on why I'm confused we're skipping
+> sending signals on invalid si_pid and si_uid...).
 
-Regardless if this helps systemtap or not, I like the patch because the
-current code is rather ugly, and this patch makes it more readable.
+I have updated the comment to read:
++       /*
++        * Send with __send_signal as si_pid and si_uid are in the
++        * parent's namespaces.
++        */
 
-Suggestion: change the topic to remove systemtap, as that's not going to be
-the true reason for acceptance of this patch. It should just be about
-cleaning up the trace event itself.
+That should be enough of a hint for someone to read the code and figure
+out what is going on.
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
+Eric
