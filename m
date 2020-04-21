@@ -2,134 +2,79 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2D1C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05950C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 182C020776
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11CD2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgDULy1 (ORCPT
+        id S1728576AbgDULzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:54:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36088 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDULy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:54:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 57FD6AD88;
-        Tue, 21 Apr 2020 11:54:24 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 13:54:24 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
- early
-In-Reply-To: <20200420175751.GA13807@redhat.com>
-Message-ID: <alpine.LSU.2.21.2004211346180.9609@pobox.suse.cz>
-References: <cover.1587131959.git.jpoimboe@redhat.com> <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com> <20200420175751.GA13807@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 21 Apr 2020 07:55:39 -0400
+Received: from m176149.mail.qiye.163.com ([59.111.176.149]:62992 "EHLO
+        m176149.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgDULzi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:55:38 -0400
+Received: from vivo.com (wm-9.qy.internal [127.0.0.1])
+        by m176149.mail.qiye.163.com (Hmail) with ESMTP id 978672824B9;
+        Tue, 21 Apr 2020 19:55:03 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AGEAdwClCFexXOQCGFZtCqqi.3.1587470103606.Hmail.bernard@vivo.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCBWMl0ga21hbGxvY19pbmRleCBvcHRpbWl6YXRpb24oY29kZSBzaXplICYgcnVudGltZSBzdGFibGUp?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <20200421111849.GL5820@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 21 Apr 2020 19:55:03 +0800 (GMT+08:00)
+From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
+Date:   Tue, 21 Apr 2020 19:55:03 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VLSExCQkJNSUJCTE9ITFlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSE9IQ0xOQktON1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6PD46Hww4Fzg9HgMjNCo4PD0hDzgKChJVSFVKTkNMT0xLSktOTUxCVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBT0tOSjcG
+X-HM-Tid: 0a719c9774499395kuws978672824b9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020, Joe Lawrence wrote:
-
-> On Fri, Apr 17, 2020 at 09:04:27AM -0500, Josh Poimboeuf wrote:
-> > 
-> > [ ... snip ... ]
-> > 
-> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> > index 40cfac8156fd..5fda3afc0285 100644
-> > --- a/kernel/livepatch/core.c
-> > +++ b/kernel/livepatch/core.c
-> > 
-> > [ ... snip ... ]
-> > 
-> > +int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-> > +			  const char *shstrtab, const char *strtab,
-> > +			  unsigned int symndx, struct module *pmod,
-> > +			  const char *objname)
-> >  {
-> >  	int i, cnt, ret = 0;
-> > -	const char *objname, *secname;
-> >  	char sec_objname[MODULE_NAME_LEN];
-> >  	Elf_Shdr *sec;
-> >  
-> > -	if (WARN_ON(!klp_is_object_loaded(obj)))
-> > -		return -EINVAL;
-> > -
-> > -	objname = klp_is_module(obj) ? obj->name : "vmlinux";
-> > -
-> >  	/* For each klp relocation section */
-> > -	for (i = 1; i < pmod->klp_info->hdr.e_shnum; i++) {
-> > -		sec = pmod->klp_info->sechdrs + i;
-> > -		secname = pmod->klp_info->secstrings + sec->sh_name;
-> > +	for (i = 1; i < ehdr->e_shnum; i++) {
-> > +		sec = sechdrs + i;
-> 
-> Hi Josh, minor bug:
-> 
-> Note the for loop through the section headers in
-> klp_write_relocations(), but its calling function ...
-> 
-> > [ ... snip ... ]
-> > 
-> > diff --git a/kernel/module.c b/kernel/module.c
-> > index 646f1e2330d2..d36ea8a8c3ec 100644
-> > --- a/kernel/module.c
-> > +++ b/kernel/module.c
-> > @@ -2334,11 +2334,12 @@ static int apply_relocations(struct module *mod, const struct load_info *info)
-> >  		if (!(info->sechdrs[infosec].sh_flags & SHF_ALLOC))
-> >  			continue;
-> >  
-> > -		/* Livepatch relocation sections are applied by livepatch */
-> >  		if (info->sechdrs[i].sh_flags & SHF_RELA_LIVEPATCH)
-> > -			continue;
-> > -
-> > -		if (info->sechdrs[i].sh_type == SHT_REL)
-> > +			err = klp_write_relocations(info->hdr, info->sechdrs,
-> > +						    info->secstrings,
-> > +						    info->strtab,
-> > +						    info->index.sym, mod, NULL);
-> > +		else if (info->sechdrs[i].sh_type == SHT_REL)
-> >  			err = apply_relocate(info->sechdrs, info->strtab,
-> >  					     info->index.sym, i, mod);
-> >  		else if (info->sechdrs[i].sh_type == SHT_RELA)
-> 
-> ... apply_relocations() is also iterating over the section headers (the
-> diff context doesn't show it here, but i is an incrementing index over
-> sechdrs[]).
-> 
-> So if there is more than one KLP relocation section, we'll process them
-> multiple times.  At least the x86 relocation code will detect this and
-> fail the module load with an invalid relocation (existing value not
-> zero).
-
-The last paragraph confused me a little. I'm sending the following, so it 
-is archived publicly.
-
-If there is more than one KLP relocation section in a patch module, let's 
-say for vmlinux and some arbitrary module, klp_write_relocations() will 
-be called multiple times from apply_relocations(). Each time with NULL as 
-the last parameter, so each time vmlinux relocation section will be 
-processed and x86 relocation code will detect this the second time and 
-fail.
-
-If there was no relocation section for vmlinux, but for multiple arbitrary 
-modules, all should be "fine", because klp_write_relocations() would just 
-skip everything.
-
-Anyway, good catch, I missed it completely.
-
-Miroslav
+CgpGcm9tOiBNYXR0aGV3IFdpbGNveCA8d2lsbHlAaW5mcmFkZWFkLm9yZz4KRGF0ZTogMjAyMC0w
+NC0yMSAxOToxODo0OQpUbzogIDE1ODcwODkwMTAtMTEwMDgzLTEtZ2l0LXNlbmQtZW1haWwtYmVy
+bmFyZEB2aXZvLmNvbQpDYzogIENocmlzdG9waCBMYW1ldGVyIDxjbEBsaW51eC5jb20+LFBla2th
+IEVuYmVyZyA8cGVuYmVyZ0BrZXJuZWwub3JnPixEYXZpZCBSaWVudGplcyA8cmllbnRqZXNAZ29v
+Z2xlLmNvbT4sSm9vbnNvbyBLaW0gPGlhbWpvb25zb28ua2ltQGxnZS5jb20+LEFuZHJldyBNb3J0
+b24gPGFrcG1AbGludXgtZm91bmRhdGlvbi5vcmc+LGxpbnV4LW1tQGt2YWNrLm9yZyxsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnLG9wZW5zb3VyY2Uua2VybmVsQHZpdm8uY29tLEJlcm5hcmQg
+WmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KU3ViamVjdDogUmU6IFtQQVRDSCBWMl0ga21hbGxvY19p
+bmRleCBvcHRpbWl6YXRpb24oY29kZSBzaXplICYgcnVudGltZSBzdGFibGUpPk9uIE1vbiwgQXBy
+IDIwLCAyMDIwIGF0IDA4OjI1OjAxUE0gLTA3MDAsIEJlcm5hcmQgWmhhbyB3cm90ZToKPj4ga21h
+bGxvY19pbmRleCBpbmxpbmUgZnVuY3Rpb24gY29kZSBzaXplIG9wdGltaXphdGlvbiBhbmQgcnVu
+dGltZQo+PiBwZXJmb3JtYW5jZSBzdGFiaWxpdHkgb3B0aW1pemF0aW9uLiBBZnRlciBvcHRpbWl6
+YXRpb24sIHRoZSBmdW5jdGlvbgo+PiBrbWFsbG9jX2luZGV4IGlzIG1vcmUgc3RhYmxlLCB0aGUg
+c2l6ZSB3aWxsIG5ldmVyIGFmZmVjdGUgdGhlIGZ1bmN0aW9uYHMKPj4gZXhlY3V0aW9uIGVmZmlj
+aWVuY3kuCj4KPlBsZWFzZSBzdG9wIHBvc3RpbmcgdGhpcyBwYXRjaCB1bnRpbCBpdCdzIGZhc3Rl
+ciAqZm9yIHNtYWxsIHNpemVzKi4KPkFzIEkgZXhwbGFpbmVkIGxhc3QgdGltZSB5b3UgcG9zdGVk
+IGl0LCBpdCdzIG5vdCBhbiBvcHRpbWlzYXRpb24uCj4KPj4gICAgICAgICAgICAgc2l6ZSAgICAg
+ICAgdGltZS9QZXIgMTAwIG1pbGxpb24gdGltZXMKPj4gICAgICAgICAgICAgICAgICAgICAgICAg
+b2xkIGZ1bgkJbmV3IGZ1biB3aXRoIG9wdGltaXNlCj4+IAkJOAkyMDM3NzcJCTI0MTkzNAo+PiAJ
+CTE2CTI0NTYxMQkJNDA5Mjc4Cj4+IAkJMzIJMjM2Mzg0CQk0MDg0MTkKPj4gCQk2NAkyNzU0OTkJ
+CTQ0NzczMgo+PiAJCTEyOAkzNTQ5MDkJCTQxNjQzOQo+Cj5eXl5eIHRoZXNlIGFyZSB0aGUgaW1w
+b3J0YW50IGNhc2VzIHRoYXQgbmVlZCB0byBiZSBmYXN0Lgo+CgpTdXJlLCBpIGp1c3QgcmVjZWl2
+ZWQgc29tZSBrYnVpbGQgY29tcGlsZXIgZXJyb3IgbWFpbHMgYW5kIHByb21wdCBtZSB0byBkbyBz
+b21ldGhpbmc/IApJIGRvbmB0IGtub3cgd2h5IHRoaXMgaGFwcGVuZWQsIHNvIGkgdXBkYXRlIHRo
+ZSBwYXRjaCBhZ2Fpbi4KClJlZ2FyZHMsCkJlcm5hcmQNCg0K
