@@ -2,153 +2,160 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993E3C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A62C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D67D2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7113206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:19:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587475161;
+	bh=zUU5C4PlFIXHSx5tbV3MEWj5AqS2eNayRxU3vyvHeEw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=1gG6lL3l4lUAZ8/KUJNEOazTXPpbT+iK5oDRkmL+7P07xl+s08aY9c0fdgzglkniX
+	 apFCaGRVwRFS5Ug4Bpje8Jm5HOV+4rRcvJiYG4WByQHmthIkNhFlcYN4Od0gpClIUd
+	 998gtaxZAgE9ije0pgqKznJ6qpZzfUyXsQifDcyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgDUNS2 (ORCPT
+        id S1729026AbgDUNTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:18:28 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2075 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726018AbgDUNSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:18:21 -0400
-Received: from lhreml721-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 03865D7CE7C48204ACB2;
-        Tue, 21 Apr 2020 14:18:18 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml721-chm.china.huawei.com (10.201.108.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 21 Apr 2020 14:18:17 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
- Tue, 21 Apr 2020 14:18:17 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        yangyicong <yangyicong@huawei.com>
-Subject: RE: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Topic: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Index: AQHWAsR+4nldebv71E6VKNN8PAfzw6hcw70AgBI/yoCAFI/PUA==
-Date:   Tue, 21 Apr 2020 13:18:17 +0000
-Message-ID: <4d7bfedd175345a198d47e5fa0561ec1@huawei.com>
-References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
- <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
- <c73bb18b-02ef-6c35-f4cf-1738c17a96e5@arm.com>
-In-Reply-To: <c73bb18b-02ef-6c35-f4cf-1738c17a96e5@arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.83.77]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 21 Apr 2020 09:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726691AbgDUNTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:19:20 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A802F20679;
+        Tue, 21 Apr 2020 13:19:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587475159;
+        bh=zUU5C4PlFIXHSx5tbV3MEWj5AqS2eNayRxU3vyvHeEw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=zvYjOhkalKeSPjC86A99nVnEqG+8uyzNbBUIHyyWdeKMtDp0CkW9ZVF0X1LN55Aww
+         qp5tkopu8IlJCbMhGW06tuLPF1mt/5UNX65RENYNtISj2HWzxLP3lp6A7m8Fq4YSbN
+         +o91r6CkCp6op8e585fB+SwTqhRs+O0aeRMwWApk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7617D35226BE; Tue, 21 Apr 2020 06:19:19 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 06:19:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Petko Manolov <petko.manolov@konsulko.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] WRITE_ONCE_INC() and friends
+Message-ID: <20200421131919.GM17661@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200419094439.GA32841@carbon>
+ <491f0b0bc9e4419d93a78974fd7f44c7@AcuMS.aculab.com>
+ <20200419182957.GA36919@carbon>
+ <8e5a0283ed76465aac19a2b97a27ff15@AcuMS.aculab.com>
+ <20200420150545.GB17661@paulmck-ThinkPad-P72>
+ <20200420225715.GA176156@google.com>
+ <20200420231244.GK17661@paulmck-ThinkPad-P72>
+ <CANpmjNOfXNE-Zh3MNP=-gmnhvKbsfUfTtWkyg_=VqTxS4nnptQ@mail.gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNOfXNE-Zh3MNP=-gmnhvKbsfUfTtWkyg_=VqTxS4nnptQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFtZXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IGxpbnV4LXBj
-aS1vd25lckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpsaW51eC1wY2ktDQo+b3duZXJAdmdlci5r
-ZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgSmFtZXMgTW9yc2UNCj5TZW50OiAwOCBBcHJpbCAyMDIw
-IDExOjAzDQo+VG86IEJvcmlzbGF2IFBldGtvdiA8YnBAYWxpZW44LmRlPjsgU2hpanUgSm9zZSA8
-c2hpanUuam9zZUBodWF3ZWkuY29tPg0KPkNjOiBsaW51eC1hY3BpQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+a2VybmVsQHZnZXIua2VybmVsLm9y
-Zzsgcmp3QHJqd3lzb2NraS5uZXQ7IGhlbGdhYXNAa2VybmVsLm9yZzsNCj5sZW5iQGtlcm5lbC5v
-cmc7IHRvbnkubHVja0BpbnRlbC5jb207IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPnpo
-YW5nbGlndWFuZ0BsaW51eC5hbGliYWJhLmNvbTsgdGdseEBsaW51dHJvbml4LmRlOyBMaW51eGFy
-bQ0KPjxsaW51eGFybUBodWF3ZWkuY29tPjsgSm9uYXRoYW4gQ2FtZXJvbg0KPjxqb25hdGhhbi5j
-YW1lcm9uQGh1YXdlaS5jb20+OyB0YW54aWFvZmVpIDx0YW54aWFvZmVpQGh1YXdlaS5jb20+Ow0K
-Pnlhbmd5aWNvbmcgPHlhbmd5aWNvbmdAaHVhd2VpLmNvbT4NCj5TdWJqZWN0OiBSZTogW1BBVENI
-IHY2IDEvMl0gQUNQSSAvIEFQRUk6IEFkZCBzdXBwb3J0IHRvIG5vdGlmeSB0aGUgdmVuZG9yDQo+
-c3BlY2lmaWMgSFcgZXJyb3JzDQo+DQo+SGkgQm9yaXMsIFNoaWp1LA0KPg0KPlNvcnJ5IGZvciBu
-b3Qgc3BvdHRpbmcgdGhpcyByZXBseSBlYXJsaWVyOiBJdHMgaW4tcmVwbHkgdG8gdjEsIHNvIGdl
-dHMgYnVyaWVkLg0KSSB3aWxsIHJlc2VuZCB0aGUgdjcgcGF0Y2ggc29sdmluZyB0aGlzIGlzc3Vl
-Lg0KSSBndWVzcyB0aGUgcmVtYWluaW5nICBxdWVzdGlvbnMgaGVyZSBhcmUgZm9yIEJvcmlzLiBN
-YXkgYmUgY2FuIHdlIGRpc2N1c3MNCnlvdXIgY29tbWVudHMgd2l0aCBWNyBwYXRjaCwgd2hpY2gg
-SSB3aWxsIHNlbmQ/DQoNCj4NCj5PbiAyNy8wMy8yMDIwIDE4OjIyLCBCb3Jpc2xhdiBQZXRrb3Yg
-d3JvdGU6DQo+PiBPbiBXZWQsIE1hciAyNSwgMjAyMCBhdCAwNDo0MjoyMlBNICswMDAwLCBTaGlq
-dSBKb3NlIHdyb3RlOg0KPj4+IFByZXNlbnRseSBBUEVJIGRvZXMgbm90IHN1cHBvcnQgcmVwb3J0
-aW5nIHRoZSB2ZW5kb3Igc3BlY2lmaWMgSFcNCj4+PiBlcnJvcnMsIHJlY2VpdmVkIGluIHRoZSB2
-ZW5kb3IgZGVmaW5lZCB0YWJsZSBlbnRyaWVzLCB0byB0aGUgdmVuZG9yDQo+Pj4gZHJpdmVycyBm
-b3IgYW55IHJlY292ZXJ5Lg0KPj4+DQo+Pj4gVGhpcyBwYXRjaCBhZGRzIHRoZSBzdXBwb3J0IHRv
-IHJlZ2lzdGVyIGFuZCB1bnJlZ2lzdGVyIHRoZQ0KPj4NCj4+IEF2b2lkIGhhdmluZyAiVGhpcyBw
-YXRjaCIgb3IgIlRoaXMgY29tbWl0IiBpbiB0aGUgY29tbWl0IG1lc3NhZ2UuIEl0DQo+PiBpcyB0
-YXV0b2xvZ2ljYWxseSB1c2VsZXNzLg0KPj4NCj4+IEFsc28sIGRvDQo+Pg0KPj4gJCBnaXQgZ3Jl
-cCAnVGhpcyBwYXRjaCcgRG9jdW1lbnRhdGlvbi9wcm9jZXNzDQo+Pg0KPj4gZm9yIG1vcmUgZGV0
-YWlscy4NCj4+DQo+Pj4gZXJyb3IgaGFuZGxpbmcgZnVuY3Rpb24gZm9yIHRoZSB2ZW5kb3Igc3Bl
-Y2lmaWMgSFcgZXJyb3JzIGFuZCBub3RpZnkNCj4+PiB0aGUgcmVnaXN0ZXJlZCBrZXJuZWwgZHJp
-dmVyLg0KPg0KPj4+IEBAIC01MjYsMTAgKzU1MiwxNyBAQCBzdGF0aWMgdm9pZCBnaGVzX2RvX3By
-b2Moc3RydWN0IGdoZXMgKmdoZXMsDQo+Pj4gIAkJCWxvZ19hcm1faHdfZXJyb3IoZXJyKTsNCj4+
-PiAgCQl9IGVsc2Ugew0KPj4+ICAJCQl2b2lkICplcnIgPSBhY3BpX2hlc3RfZ2V0X3BheWxvYWQo
-Z2RhdGEpOw0KPj4+ICsJCQl1OCBlcnJvcl9oYW5kbGVkID0gZmFsc2U7DQo+Pj4gKwkJCWludCBy
-ZXQ7DQo+Pj4gKw0KPj4+ICsJCQlyZXQgPQ0KPmF0b21pY19ub3RpZmllcl9jYWxsX2NoYWluKCZn
-aGVzX2V2ZW50X25vdGlmeV9saXN0LCAwLA0KPj4+ICtnZGF0YSk7DQo+Pg0KPj4gV2VsbCwgdGhp
-cyBpcyBhIG5vdGlmaWVyIHdpdGggc3RhbmRhcmQgbmFtZSBmb3IgYSBub24tc3RhbmRhcmQgZXZl
-bnQuDQo+PiBOb3Qgb3B0aW1hbC4NCj4+DQo+PiBXaHkgZG9lcyBvbmx5IHRoaXMgZXZlbnQgbmVl
-ZCBhIG5vdGlmaWVyPyBCZWNhdXNlIHlvdXIgZHJpdmVyIGlzDQo+PiBpbnRlcmVzdGVkIGluIG9u
-bHkgdGhvc2UgZXZlbnRzPw0KPg0KPkl0cyB0aGUgJ2Vsc2UnIGNhdGNoLWFsbCBmb3Igc3R1ZmYg
-ZHJpdmVycy9hY3BpL2FwZWkgIGRvZXNuJ3Qga25vdyB0byBoYW5kbGUuDQo+DQo+SW4gdGhpcyBj
-YXNlIGl0cyBiZWNhdXNlIGl0cyBhIHZlbmRvciBzcGVjaWZpYyBHVUlEIHRoYXQgb25seSB0aGUg
-dmVuZG9yIGRyaXZlcg0KPmtub3dzIGhvdyB0byBwYXJzZS4NCj4NCj4NCj4+PiArCQkJaWYgKHJl
-dCAmIE5PVElGWV9PSykNCj4+PiArCQkJCWVycm9yX2hhbmRsZWQgPSB0cnVlOw0KPj4+DQo+Pj4g
-IAkJCWxvZ19ub25fc3RhbmRhcmRfZXZlbnQoc2VjX3R5cGUsIGZydV9pZCwgZnJ1X3RleHQsDQo+
-Pj4gIAkJCQkJICAgICAgIHNlY19zZXYsIGVyciwNCj4+PiAtCQkJCQkgICAgICAgZ2RhdGEtPmVy
-cm9yX2RhdGFfbGVuZ3RoKTsNCj4+PiArCQkJCQkgICAgICAgZ2RhdGEtPmVycm9yX2RhdGFfbGVu
-Z3RoLA0KPj4+ICsJCQkJCSAgICAgICBlcnJvcl9oYW5kbGVkKTsNCj4+DQo+PiBXaGF0J3MgdGhh
-dCBlcnJvcl9oYW5kbGVkIHRoaW5nIGZvcj8gVGhhdCdzIGp1c3Qgc2lsbHkuDQo+Pg0KPj4gWW91
-ciBub3RpZmllciByZXR1cm5zIE5PVElGWV9TVE9QIHdoZW4gaXQgaGFzIHF1ZXVlZCB0aGUgZXJy
-b3IuIElmIHlvdQ0KPj4gZG9uJ3Qgd2FudCB0byBsb2cgaXQsIGp1c3QgdGVzdCA9PSBOT1RJRllf
-U1RPUCBhbmQgZG8gbm90IGxvZyBpdCB0aGVuLg0KPg0KPk15IHRoaW5raW5nIGZvciB0aGlzIGJl
-aW5nIG5lZWRlZCB3YXMgc28gdXNlci1zcGFjZSBjb25zdW1lcnMgb2YgdGhvc2UNCj50cmFjZXBv
-aW50cyBrZWVwIHdvcmtpbmcuIE90aGVyd2lzZSB5b3UgdXBncmFkZSwgZ2V0IHRoaXMgZmVhdHVy
-ZSwgYW5kIHlvdXINCj51c2VyLXNwYWNlIGNvdW50ZXJzIHN0b3Agd29ya2luZy4NCj4NCj5Zb3Un
-ZCBuZWVkIHRvIGtub3cgdGhpcyBlcnJvciBzb3VyY2Ugd2FzIG5vdyBtYW5hZ2VkIGJ5IGFuIGlu
-LWtlcm5lbA0KPmRyaXZlciwgd2hpY2ggbWF5IHJlcG9ydCB0aGUgZXJyb3JzIHNvbWV3aGVyZSBl
-bHNlLi4uDQo+DQo+DQo+PiBUaGVuIHlvdXIgbm90aWZpZXIgY2FsbGJhY2sgaXMgcXVldWluZyB0
-aGUgZXJyb3IgaW50byBhIGtmaWZvIGZvcg0KPj4gd2hhdGV2ZXIgcmVhc29uIGFuZCB0aGVuIHNj
-aGVkdWxpbmcgYSB3b3JrcXVldWUgdG8gaGFuZGxlIGl0IGluIHVzZXINCj4+IGNvbnRleHQuLi4N
-Cj4+DQo+PiBTbyBJJ20gdGhpbmtpbmcgdGhhdCBpdCB3b3VsZCBiZSBiZXR0ZXIgaWYgeW91Og0K
-Pj4NCj4+ICogbWFrZSB0aGF0IGtmaWZvIGdlbmVyaWMgYW5kIHBhcnQgb2YgZ2hlcy5jIGFuZCBx
-dWV1ZSBhbGwgdHlwZXMgb2YNCj4+IGVycm9yIHJlY29yZHMgaW50byBpdCBpbiBnaGVzX2RvX3By
-b2MoKSAtIG5vdCBqdXN0IHRoZSBub24tc3RhbmRhcmQNCj4+IG9uZXMuDQo+DQo+TW92ZSB0aGUg
-ZHJvcCB0byBwcm9jZXNzIGNvbnRleHQgaW50byBnaGVzLmM/IFRoaXMgc2hvdWxkIHJlc3VsdCBp
-biBsZXNzIGNvZGUuDQo+DQo+SSBhc2tlZCBmb3IgdGhpcyBob29raW5nIHRvIG9ubHkgYmUgZm9y
-IHRoZSAnY2F0Y2ggYWxsJyBkb24ndC1rbm93IGNhc2Ugc28gdGhhdA0KPndlIGRvbid0IGdldCBk
-cml2ZXJzIHRyeWluZyB0byBob29rIGFuZCBoYW5kbGUgbWVtb3J5IGVycm9ycy4gKGlmIHdlIGV2
-ZXINCj53YW50ZWQgdGhhdCwgaXQgc2hvdWxkIGJlIGZyb20gcGFydCBvZiBtZW1vcnlfZmFpbHVy
-ZSgpIHNvIGl0IGNhdGNoZXMgYWxsIHRoZQ0KPndheXMgb2YgcmVwb3J0aW5nIG1lbW9yeS1mYWls
-dXJlKSAzMmJpdCBhcm0gaGFzIHByaW9yIGluIHRoaXMgYXJlYS4NCj4NCj4NCj4+ICogdGhlbiwg
-d2hlbiB5b3UncmUgZG9uZSBxdWV1aW5nLCB5b3Uga2ljayBhIHdvcmtxdWV1ZS4NCj4+DQo+PiAq
-IHRoYXQgd29ya3F1ZXVlIHJ1bnMgYSBub3JtYWwsIGJsb2NraW5nIG5vdGlmaWVyIHRvIHdoaWNo
-IGRyaXZlcnMNCj4+IHJlZ2lzdGVyLg0KPj4NCj4+IFlvdXIgZHJpdmVyIGNhbiByZWdpc3RlciB0
-byB0aGF0IG5vdGlmaWVyIHRvbyBhbmQgZG8gdGhlIG5vcm1hbA0KPj4gaGFuZGxpbmcgdGhlbiBh
-bmQgbm90IGhhdmUgdGhpcyBhZC1ob2MsIHNlbWktZ2VuZXJpYywgc2VtaS12ZW5kb3Itc3BlY2lm
-aWMNCj50aGluZy4NCj4NCj5BcyBsb25nIGFzIHdlIGRvbid0IHdhbGsgYSBsaXN0IG9mIHRoaW5n
-cyB0aGF0IG1pZ2h0IGhhbmRsZSBhIG1lbW9yeS1lcnJvciwNCj5hbmQgaGF2ZSBzb21lIHJhbmRv
-bSBkcml2ZXIgdHJ5IGFuZCBOT1RJRllfU1RPUCBpdC4uLi4NCj4NCj5hZXJfcmVjb3Zlcl9xdWV1
-ZSgpIHdvdWxkIGJlIHJlcGxhY2VkIGJ5IHRoaXMuIG1lbW9yeV9mYWlsdXJlX3F1ZXVlKCkgaGFz
-DQo+b25lIGFkZGl0aW9uYWwgY2FsbGVyIGluIGRyaXZlcnMvcmFzL2NlYy5jLg0KPg0KPg0KPlRo
-YW5rcywNCj4NCj5KYW1lcw0KVGhhbmtzLA0KU2hpanUNCg==
+On Tue, Apr 21, 2020 at 11:33:57AM +0200, Marco Elver wrote:
+> On Tue, 21 Apr 2020 at 01:12, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Tue, Apr 21, 2020 at 12:57:15AM +0200, Marco Elver wrote:
+> > > On Mon, 20 Apr 2020, Paul E. McKenney wrote:
+> > >
+> > > > On Sun, Apr 19, 2020 at 09:37:10PM +0000, David Laight wrote:
+> > > > > From: Petko Manolov
+> > > > > > Sent: 19 April 2020 19:30
+> > > > > >
+> > > > > > On 20-04-19 18:02:50, David Laight wrote:
+> > > > > > > From: Petko Manolov
+> > > > > > > > Sent: 19 April 2020 10:45
+> > > > > > > > Recently I started reading up on KCSAN and at some point I ran into stuff like:
+> > > > > > > >
+> > > > > > > > WRITE_ONCE(ssp->srcu_lock_nesting[idx], ssp->srcu_lock_nesting[idx] + 1);
+> > > > > > > > WRITE_ONCE(p->mm->numa_scan_seq, READ_ONCE(p->mm->numa_scan_seq) + 1);
+> > > > > > >
+> > > > > > > If all the accesses use READ/WRITE_ONCE() why not just mark the structure
+> > > > > > > field 'volatile'?
+> > > > > >
+> > > > > > This is a bit heavy.  I guess you've read this one:
+> > > > > >
+> > > > > >         https://lwn.net/Articles/233479/
+> > > > >
+> > > > > I remember reading something similar before.
+> > > > > I also remember a very old gcc (2.95?) that did a readback
+> > > > > after every volatile write on sparc (to flush the store buffer).
+> > > > > That broke everything.
+> > > > >
+> > > > > I suspect there is a lot more code that is attempting to be lockless
+> > > > > these days.
+> > > > > Ring buffers (one writer and one reader) are a typical example where
+> > > > > you don't need locks but do need to use a consistent value.
+> > > > >
+> > > > > Now you may also need ordering between accesses - which I think needs
+> > > > > more than volatile.
+> > > >
+> > > > In Petko's patch, all needed ordering is supplied by the fact that it
+> > > > is the same variable being read and written.  But yes, in many other
+> > > > cases, more ordering is required.
+> > > >
+> > > > > > And no, i am not sure all accesses are through READ/WRITE_ONCE().  If, for
+> > > > > > example, all others are from withing spin_lock/unlock pairs then we _may_ not
+> > > > > > need READ/WRITE_ONCE().
+> > > > >
+> > > > > The cost of volatile accesses is probably minimal unless the
+> > > > > code is written assuming the compiler will only access things once.
+> > > >
+> > > > And there are variables marked as volatile, for example, jiffies.
+> > > >
+> > > > But one downside of declaring variables volatile is that it can prevent
+> > > > KCSAN from spotting violations of the concurrency design for those
+> > > > variables.
+> > >
+> > > Note that, KCSAN currently treats volatiles not as special, except a
+> > > list of some known global volatiles (like jiffies). This means, that
+> > > KCSAN will tell us about data races involving unmarked volatiles (unless
+> > > they're in the list).
+> > >
+> > > As far as I can tell, this is what we want. At least according to LKMM.
+> > >
+> > > If, for whatever reason, volatiles should be treated differently, we'll
+> > > have to modify the compilers to emit different instrumentation for the
+> > > kernel.
+> >
+> > I stand corrected, then, thank you!
+> >
+> > In the current arrangement, declaring a variable volatile will cause
+> > KCSAN to generate lots of false positives.
+> >
+> > I don't currently have a strong feeling on changing the current situation
+> > with respect to volatile variables.  Is there a strong reason to change?
+> > The general view of the community, as you say, has been that you don't use
+> > the volatile keyword outside of exceptions such as jiffies, atomic_read(),
+> > atomic_set(), READ_ONCE(), WRITE_ONCE() and perhaps a few others.
+> >
+> > Thoughts?
+> 
+> I certainly agree, and also want to point out that checkpatch.pl
+> complains about volatile. We know using volatile has problems. KCSAN
+> is (along with checkpatch.pl) another tool that can warn us about such
+> problems (warning in case there is real concurrency). Another thing to
+> point out is that volatile is not portable, in case
+> READ_ONCE()/WRITE_ONCE()'s smp_load_barrier_depends() is not a noop.
+> So from what I see, there are strong reasons against changing the
+> situation for volatiles and KCSAN.
+
+All good points, thank you!
+
+							Thanx, Paul
