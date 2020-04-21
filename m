@@ -2,155 +2,133 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4228C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AA8C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE85C2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:34:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ANTDqZHI"
+	by mail.kernel.org (Postfix) with ESMTP id 067AE2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgDUDeq (ORCPT
+        id S1728349AbgDUDez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:34:46 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:10948 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbgDUDem (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:34:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1587440081; x=1618976081;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=I/GiEGyOV5rt1rc9GnsBz8XcyhOtNk7wcIG4+FIGGnk=;
-  b=ANTDqZHIep8ENkqimV9JG8r9JYSIS2WrvHlqTEJIr89TZFk5cjVlRjTY
-   GPCp6vxM0egVRLQHZKh0Cej83xaoKu9I1pxRp8NNttBgrCKvPzmyQK6qh
-   WP0ylB2lme41GO156qWjYOGMP7Djnjn3Jr5RSsYYnd+YWhPJz6lDGbR6g
-   xBh5xtpw5mujn7B0yBBgdQ04W1Tlp0q77TH89MlgYpmVlqtNRKxgXXe12
-   PA7I40kLdBDtC/VOYLaCvkEiNgfO90AFTUjnOOg0bqDatcxwA9H60m5YL
-   l85putZfWulNQtKXrXhNvDSTtR0Nffz2tGbPbL60weKxB39pgub6BBuLd
-   A==;
-IronPort-SDR: WdfQiiGGq26lib/5jMFV9ncCfTlOCzhgiyhWYVovDwSSIkIjNlbiNTFTJP5WRab8PxvkbOvrz8
- ejGHka2DQpHvcXJqwqliZvbEPA7qkARS444NylE9frGf/tHRx7javCM+4G/PnxH+C2KNl04Pjx
- xjIuTXYlWRoocIUS7XZL0Y2PuefHUKzSlLwfrUFdp6Abh3+H9wiGRUPhSbTvcane0WeG3sTXoj
- rO5/ulTfpDx5XYjG+7f2SBPdXbBuC3S95YChOBtBRrWv2Tqn8z4Ov7uaueaVvtpLN+g6W+TMxl
- vWo=
-X-IronPort-AV: E=Sophos;i="5.72,408,1580745600"; 
-   d="scan'208";a="135760536"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Apr 2020 11:34:40 +0800
-IronPort-SDR: zDbW7EHOsbKTSrk/XuhehLrCarbGPV3SOsxc8JgZJUARcTwX5bZDdIowE0XYeaZ6EA/IJ6Glom
- ve62QMVL+vevXsz4x+cVph0Q70GzA7nsM=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 20:25:33 -0700
-IronPort-SDR: JHXhkEYX0dItTAnPSBCVKUVOxNJyRjpf94xhTOczzjC6ML719tFFoZzHv1IQxaqLAidjFJO2SL
- S55lxNyUI0SA==
-WDCIronportException: Internal
-Received: from hqe220030.ad.shared (HELO jedi-01.hgst.com) ([10.86.56.34])
-  by uls-op-cesaip01.wdc.com with ESMTP; 20 Apr 2020 20:34:41 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [v4 PATCH 1/3] RISC-V: Define fixmap bindings for generic early ioremap support
-Date:   Mon, 20 Apr 2020 20:33:34 -0700
-Message-Id: <20200421033336.9663-2-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200421033336.9663-1-atish.patra@wdc.com>
-References: <20200421033336.9663-1-atish.patra@wdc.com>
+        Mon, 20 Apr 2020 23:34:55 -0400
+Received: from mga04.intel.com ([192.55.52.120]:29353 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726793AbgDUDex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 23:34:53 -0400
+IronPort-SDR: oZ/zheVjPYfLMJtYzZSl0qbfppY65QX5gkJx0AnQ8ICE4T6coOx050d6h0KbhWBafxOGkQamCK
+ WazYzrRJkFHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 20:34:53 -0700
+IronPort-SDR: /QUx7vGWhN0FyE594Jo7yF6w8Dhwu7BOs4MqQtdudlT2yf9cG8m4MHrZZx3eGaZizlr/4wO6Ne
+ 6vK7BNsnarjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,408,1580803200"; 
+   d="scan'208";a="300469608"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Apr 2020 20:34:53 -0700
+Date:   Mon, 20 Apr 2020 20:34:53 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH] vfio/type1: Fix VA->PA translation for PFNMAP VMAs in
+ vaddr_get_pfn()
+Message-ID: <20200421033453.GC11134@linux.intel.com>
+References: <20200416225057.8449-1-sean.j.christopherson@intel.com>
+ <20200420134005.456151fe@w520.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420134005.456151fe@w520.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UEFI uses early IO or memory mappings for runtime services before
-normal ioremap() is usable. This patch only adds minimum necessary
-fixmap bindings and headers for generic ioremap support to work.
+On Mon, Apr 20, 2020 at 01:40:05PM -0600, Alex Williamson wrote:
+> > I'm mostly confident this is correct from the standpoint that it generates
+> > the correct VA->PA.  I'm far less confident the end result is what VFIO
+> > wants, there appears to be a fair bit of magic going on that I don't fully
+> > understand, e.g. I'm a bit mystified as to how this ever worked in any
+> > capacity.
+> 
+> Yeah, that magic was copied from KVM's hva_to_pfn(), which split this
+> part out into hva_to_pfn_remapped() in 92176a8ede57 and then in
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/riscv/Kconfig              |  1 +
- arch/riscv/include/asm/Kbuild   |  1 +
- arch/riscv/include/asm/fixmap.h | 18 ++++++++++++++++++
- arch/riscv/include/asm/io.h     |  1 +
- 4 files changed, 21 insertions(+)
+Wowsers.  I don't suppose anyone knows how/if KVM prevented that BUG_ON()
+in hva_to_pfn() from being triggered by a malicious/miconfigured userspace?
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index a197258595ef..f39e326a7a42 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -68,6 +68,7 @@ config RISCV
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select HAVE_COPY_THREAD_TLS
- 	select HAVE_ARCH_KASAN if MMU && 64BIT
-+	select GENERIC_EARLY_IOREMAP
- 
- config ARCH_MMAP_RND_BITS_MIN
- 	default 18 if 64BIT
-diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-index 3d9410bb4de0..59dd7be55005 100644
---- a/arch/riscv/include/asm/Kbuild
-+++ b/arch/riscv/include/asm/Kbuild
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+generic-y += early_ioremap.h
- generic-y += extable.h
- generic-y += flat.h
- generic-y += kvm_para.h
-diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
-index 2368d49eb4ef..ba5096d65fb0 100644
---- a/arch/riscv/include/asm/fixmap.h
-+++ b/arch/riscv/include/asm/fixmap.h
-@@ -30,6 +30,24 @@ enum fixed_addresses {
- 	FIX_TEXT_POKE1,
- 	FIX_TEXT_POKE0,
- 	FIX_EARLYCON_MEM_BASE,
-+	/*
-+	 * Make sure that it is 2MB aligned.
-+	 */
-+#define NR_FIX_SZ_2M	(SZ_2M / PAGE_SIZE)
-+	FIX_THOLE = NR_FIX_SZ_2M - FIX_PMD - 1,
-+
-+	__end_of_permanent_fixed_addresses,
-+	/*
-+	 * Temporary boot-time mappings, used by early_ioremap(),
-+	 * before ioremap() is functional.
-+	 */
-+#define NR_FIX_BTMAPS		(SZ_256K / PAGE_SIZE)
-+#define FIX_BTMAPS_SLOTS	7
-+#define TOTAL_FIX_BTMAPS	(NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
-+
-+	FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
-+	FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
-+
- 	__end_of_fixed_addresses
- };
- 
-diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
-index 0f477206a4ed..047f414b6948 100644
---- a/arch/riscv/include/asm/io.h
-+++ b/arch/riscv/include/asm/io.h
-@@ -14,6 +14,7 @@
- #include <linux/types.h>
- #include <asm/mmiowb.h>
- #include <asm/pgtable.h>
-+#include <asm/early_ioremap.h>
- 
- /*
-  * MMIO access functions are separated out to break dependency cycles
--- 
-2.24.0
+> add6a0cd1c5b adopted a follow_pfn() approach, but also added forcing a
+> user fault and retry mechanism, iiuc.  Cc'ing Paolo and Andrea to see
+> if we should consider something similar.  We'd be forcing the fault on
+> user mapping, not first access though, so I'm not sure if it's still
+> useful.
 
+Hmm, because the fault would trigger on map, userspace could provide the
+same effective result by touching the page before calling into VFIO, i.e.
+doesn't seem like adding fixup_user_fault() would add much other than
+complexity.
+
+> > Mapping PFNMAP VMAs into the IOMMU without using a mmu_notifier also
+> > seems dangerous, e.g. if the subsystem associated with the VMA
+> > unmaps/remaps the VMA then the IOMMU will end up with stale
+> > translations.
+> 
+> The original use case was to support mapping MMIO ranges between
+> devices to support p2p within a VM instance, so remapping the VMA was
+> not a concern.  But yes, as this might be used beyond that limited
+> case for something like rdma, it should be expanded.  Patches?
+
+Heh, I don't have a use case for any of this.  Quite the opposite actually,
+this was encountered because the VFIO memory listener in Qemu was trying to
+map SGX EPC memory for DMA.  I segued into this patch only because the WARN
+on PA!=0 caught my eye.
+
+> > Last thought, using PA==0 for the error seems unnecessarily risky,
+> > e.g. why not use something similar to KVM_PFN_ERR_* or an explicit
+> > return code?
+> 
+> We're just consuming what the IOMMU driver provide.  Both Intel and AMD
+> return zero for a page not found.  In retrospect, yeah, we probably
+> should have balked at that.
+> 
+> >  drivers/vfio/vfio_iommu_type1.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> > b/drivers/vfio/vfio_iommu_type1.c index 85b32c325282..c2ada190c5cb
+> > 100644 --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -342,8 +342,8 @@ static int vaddr_get_pfn(struct mm_struct *mm,
+> > unsigned long vaddr, vma = find_vma_intersection(mm, vaddr, vaddr +
+> > 1); 
+> >  	if (vma && vma->vm_flags & VM_PFNMAP) {
+> > -		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) +
+> > vma->vm_pgoff;
+> > -		if (is_invalid_reserved_pfn(*pfn))
+> > +		if (!follow_pfn(vma, vaddr, pfn) &&
+> > +		    is_invalid_reserved_pfn(*pfn))
+> >  			ret = 0;
+> >  	}
+> >  done:
+> 
+> Should we consume that error code?
+> 
+> 	ret = follow_pfn(vma, vaddr, pfn);
+> 	if (!ret && !is_invalid_reserved_pfn(*pfn))
+> 		ret = -EINVAL;
+
+Not sure it matters?  gup() returns -EINVAL on PFNMAP, follow_pfn() returns
+-EINVAL for all error cases, and the delta would also return -EINVAL.
+Generally speaking, letting the first error "win" usually seems like the
+way to go, e.g. to avoid squashing a meaningful error code.  But AFAICT
+it's a moot point.
