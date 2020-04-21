@@ -2,212 +2,83 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F70C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47D0C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA412070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:42:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ablbdcop"
+	by mail.kernel.org (Postfix) with ESMTP id 981912070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587483794;
+	bh=R/NUADyVb0jPVXUwpPx85cw01ErbiN3Dhg1JGLpE6VI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=vt7tPYOuB17eq4BwcMxwDo1Qor+gendckYBRZVNV7z/hLNlUKSgkzQvoMlIg1GCnd
+	 dt0921aPP6BIGfHFo0L7/e5NRhUPkUdY+Bw8OVr6FnvNZppG32bPGY/Mmb03bXj/hf
+	 p7I+PbRb6xjgUxuZSkzraZNu4rCPuDiJ4yfrrr3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgDUPmz (ORCPT
+        id S1729139AbgDUPnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725994AbgDUPm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:42:26 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B6BBC061BD3;
-        Tue, 21 Apr 2020 08:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=YqMqPP1bOJuWh6c5f5C8pIdJ2QOwE49mdXnpeXx3pPw=; b=Ablbdcopf5wKVWPixh/dTU//dL
-        L92coUpHhBLLLbeitIb+DO1MQ5AGRCdKR9Ldgqdj3+vxyEfr6I6FRgneJ4nx4aozlUxKcR2pN7H5I
-        In37t0a19ykta1JWUROQY+KHZnuMIARQah2kibWbIoYj4/na6zTtSIh9zkgtMfSHnmOTI4jT7WbER
-        khZKrfmNMER8Dl343KxNE87vpCMrOxDjmMYTg8x3bR3k7qe3ivGqRrKuad1He+X4LiW42bHTO3KPv
-        mYsmlvP2CKnBC0rJcWGRTnL8GVNoHUJl7WTV8yF5PlLI5wc7Z+Y0snq03c2EApeKKqck2vvUUP2Gt
-        CfzjJf+A==;
-Received: from [2001:4bb8:191:e12c:c70:4a89:bc61:3] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQv2Q-0007rY-0D; Tue, 21 Apr 2020 15:42:18 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/7] binfmt_elf: remove the set_fs(KERNEL_DS) in elf_core_dump
-Date:   Tue, 21 Apr 2020 17:42:01 +0200
-Message-Id: <20200421154204.252921-5-hch@lst.de>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200421154204.252921-1-hch@lst.de>
-References: <20200421154204.252921-1-hch@lst.de>
+        Tue, 21 Apr 2020 11:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbgDUPnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 11:43:13 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB7D9206E9;
+        Tue, 21 Apr 2020 15:43:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587483792;
+        bh=R/NUADyVb0jPVXUwpPx85cw01ErbiN3Dhg1JGLpE6VI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Ao8x/58ZZn7la+yBfyCFYFfuYED3lx9rg33fSVBDhbUeyu6r+7+Ru8Pj7mzLKt+0A
+         WQZoZJcNG+1Trmv3u/3eNwm5VKgPLCpp/hykxPlpPatRLIpIXBaDlvOjE4T2qorEhn
+         aiS5/YieEeUqadhHEYAdSPgVuKtxZs2IS4QheqKY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C0ED33523432; Tue, 21 Apr 2020 08:43:12 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 08:43:12 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Muchun Song <songmuchun@bytedance.com>, mingo@kernel.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        joel@joelfernandes.org
+Subject: Re: [PATCH] sched/fair: Fix call walk_tg_tree_from() without hold
+ rcu_lock
+Message-ID: <20200421154312.GO17661@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200406121008.62903-1-songmuchun@bytedance.com>
+ <20200421135258.GS20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421135258.GS20730@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no logic in elf_core_dump itself, or in the various arch helpers
-called from it which use uaccess routines on kernel pointers except for
-the file writes thate are nicely encapsulated by using __kernel_write in
-dump_emit.
+On Tue, Apr 21, 2020 at 03:52:58PM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 06, 2020 at 08:10:08PM +0800, Muchun Song wrote:
+> > The walk_tg_tree_from() caller must hold rcu_lock,
+> 
+> Not quite; with the RCU unification done 'recently' having preemption
+> disabled is sufficient. AFAICT preemption is disabled.
+> 
+> In fact; and I mentioned this to someone the other day, perhaps Joel; we
+> can go and delete a whole bunch of rcu_read_lock() from the scheduler --
+> basically undo all the work we did after RCU was split many years ago.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/binfmt_elf.c | 40 +++++++++++++---------------------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
+"If only I knew then what I know now..."
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index a1f57e20c3cf..b29b84595b09 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1355,7 +1355,6 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
- 	    vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ)) {
- 		u32 __user *header = (u32 __user *) vma->vm_start;
- 		u32 word;
--		mm_segment_t fs = get_fs();
- 		/*
- 		 * Doing it this way gets the constant folded by GCC.
- 		 */
-@@ -1368,14 +1367,8 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
- 		magic.elfmag[EI_MAG1] = ELFMAG1;
- 		magic.elfmag[EI_MAG2] = ELFMAG2;
- 		magic.elfmag[EI_MAG3] = ELFMAG3;
--		/*
--		 * Switch to the user "segment" for get_user(),
--		 * then put back what elf_core_dump() had in place.
--		 */
--		set_fs(USER_DS);
- 		if (unlikely(get_user(word, header)))
- 			word = 0;
--		set_fs(fs);
- 		if (word == magic.cmp)
- 			return PAGE_SIZE;
- 	}
-@@ -2183,7 +2176,6 @@ static void fill_extnum_info(struct elfhdr *elf, struct elf_shdr *shdr4extnum,
- static int elf_core_dump(struct coredump_params *cprm)
- {
- 	int has_dumped = 0;
--	mm_segment_t fs;
- 	int segs, i;
- 	size_t vma_data_size = 0;
- 	struct vm_area_struct *vma, *gate_vma;
-@@ -2236,9 +2228,6 @@ static int elf_core_dump(struct coredump_params *cprm)
- 
- 	has_dumped = 1;
- 
--	fs = get_fs();
--	set_fs(KERNEL_DS);
--
- 	offset += sizeof(elf);				/* Elf header */
- 	offset += segs * sizeof(struct elf_phdr);	/* Program headers */
- 
-@@ -2250,7 +2239,7 @@ static int elf_core_dump(struct coredump_params *cprm)
- 
- 		phdr4note = kmalloc(sizeof(*phdr4note), GFP_KERNEL);
- 		if (!phdr4note)
--			goto end_coredump;
-+			goto cleanup;
- 
- 		fill_elf_note_phdr(phdr4note, sz, offset);
- 		offset += sz;
-@@ -2265,7 +2254,7 @@ static int elf_core_dump(struct coredump_params *cprm)
- 	vma_filesz = kvmalloc(array_size(sizeof(*vma_filesz), (segs - 1)),
- 			      GFP_KERNEL);
- 	if (!vma_filesz)
--		goto end_coredump;
-+		goto cleanup;
- 
- 	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
- 			vma = next_vma(vma, gate_vma)) {
-@@ -2283,17 +2272,17 @@ static int elf_core_dump(struct coredump_params *cprm)
- 	if (e_phnum == PN_XNUM) {
- 		shdr4extnum = kmalloc(sizeof(*shdr4extnum), GFP_KERNEL);
- 		if (!shdr4extnum)
--			goto end_coredump;
-+			goto cleanup;
- 		fill_extnum_info(&elf, shdr4extnum, e_shoff, segs);
- 	}
- 
- 	offset = dataoff;
- 
- 	if (!dump_emit(cprm, &elf, sizeof(elf)))
--		goto end_coredump;
-+		goto cleanup;
- 
- 	if (!dump_emit(cprm, phdr4note, sizeof(*phdr4note)))
--		goto end_coredump;
-+		goto cleanup;
- 
- 	/* Write program headers for segments dump */
- 	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
-@@ -2315,22 +2304,22 @@ static int elf_core_dump(struct coredump_params *cprm)
- 		phdr.p_align = ELF_EXEC_PAGESIZE;
- 
- 		if (!dump_emit(cprm, &phdr, sizeof(phdr)))
--			goto end_coredump;
-+			goto cleanup;
- 	}
- 
- 	if (!elf_core_write_extra_phdrs(cprm, offset))
--		goto end_coredump;
-+		goto cleanup;
- 
-  	/* write out the notes section */
- 	if (!write_note_info(&info, cprm))
--		goto end_coredump;
-+		goto cleanup;
- 
- 	if (elf_coredump_extra_notes_write(cprm))
--		goto end_coredump;
-+		goto cleanup;
- 
- 	/* Align to page */
- 	if (!dump_skip(cprm, dataoff - cprm->pos))
--		goto end_coredump;
-+		goto cleanup;
- 
- 	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
- 			vma = next_vma(vma, gate_vma)) {
-@@ -2352,22 +2341,19 @@ static int elf_core_dump(struct coredump_params *cprm)
- 			} else
- 				stop = !dump_skip(cprm, PAGE_SIZE);
- 			if (stop)
--				goto end_coredump;
-+				goto cleanup;
- 		}
- 	}
- 	dump_truncate(cprm);
- 
- 	if (!elf_core_write_extra_data(cprm))
--		goto end_coredump;
-+		goto cleanup;
- 
- 	if (e_phnum == PN_XNUM) {
- 		if (!dump_emit(cprm, shdr4extnum, sizeof(*shdr4extnum)))
--			goto end_coredump;
-+			goto cleanup;
- 	}
- 
--end_coredump:
--	set_fs(fs);
--
- cleanup:
- 	free_note_info(&info);
- 	kfree(shdr4extnum);
--- 
-2.26.1
+Then again, I suspect that we all have ample opportunity to use that
+particular old phrase.  ;-)
 
+							Thanx, Paul
