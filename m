@@ -2,163 +2,234 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD46C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAE7C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5881206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C362076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:12:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pYIPu7HF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbgDUNLL (ORCPT
+        id S1728899AbgDUNMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:11:11 -0400
-Received: from mga07.intel.com ([134.134.136.100]:29274 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728391AbgDUNLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:11:11 -0400
-IronPort-SDR: VFW/L/ffRbArTvc27FdpF9A6WLhSKqT3pD6/W20EZuSj4w7QMSSVeSazGtQQ344zAVp3QanMU3
- eKSE6ykdlyXA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 06:11:10 -0700
-IronPort-SDR: Nsc146F6G/ikanEz1OmM/4qxk7byp2Eo9/KOjyv61k9TBCyF/uWaW/SpEr1XMcKOxgmRho9OYW
- cf7tq3Mxo8VQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,410,1580803200"; 
-   d="scan'208";a="300603447"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Apr 2020 06:11:06 -0700
-Subject: Re: [PATCH V6 13/15] perf intel-pt: Add support for text poke events
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200405201327.7332-1-adrian.hunter@intel.com>
- <20200405201327.7332-14-adrian.hunter@intel.com>
- <20200421125050.GG809467@krava>
- <4308a61d-cbed-e0ed-d8a9-c7306a933e7b@intel.com>
- <20200421130613.GH809467@krava>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <65e3e544-62cc-1d0c-4daa-9425f06d903e@intel.com>
-Date:   Tue, 21 Apr 2020 16:10:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 09:12:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726018AbgDUNMm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:12:42 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD35C061A10;
+        Tue, 21 Apr 2020 06:12:41 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id j3so13867896ljg.8;
+        Tue, 21 Apr 2020 06:12:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YtpKRgNMP/KbXMdVvEJzfMbdjDnlZ2CZdckJrKK2NFk=;
+        b=pYIPu7HFRLvbAbPwzp/xcxQY+IB23v6sqESNUNRXo7jHSSCKpyebQ/8Vu619xpp+yY
+         azF8BfYnviG8F6dSb09x4QBWZYvfdpWGH0gajwK65GOBy44Y5wZMXZTCB3MriqNmvxwF
+         ffVN7kMbcASPiV9SPXAc89nIotKwee1wAr4pENG4NlBSqzpVMPJQ+/DsLuFsLUyIkhZT
+         k0Gm7c3tIM6FGPSIEc+U20QR+HxHJQ3paGbsOabBU5CNhRSVoSl/1cv87nvsaZJ+AIY4
+         h/MAXHq4DLbuAPnDQsKE6e8ms31ESu80o4FdGYKHL0X2foTR7uY41WuGJQXO/2VNyg1J
+         eJLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YtpKRgNMP/KbXMdVvEJzfMbdjDnlZ2CZdckJrKK2NFk=;
+        b=MYZ+2oXuZYs7yt05ARshYltjfV6Xhj+f4rPaR5yoPh9TdtwBdkhkzCK2nLhiXaH0Pi
+         jO+SDi8TA2ffvd6nMSLl7RZ2KRORM1S/9+JR446AfFJm65vSTNmiXel1KVPr0bdUEVbP
+         FA51khLC9apqgAXWDEIrVYcstQUQDTT3xaMZSXhkOoMbBuZyYpsCeEdZ9yhlGjAjqROQ
+         5vA3N3pULJZSGyJaDiLmq5NTaIZD7CffYR7GNuwhocGt98pzPLoLZ2v9UtsTGxg7EVoF
+         W+M48K+jMtAfiiEJCYs7idv/311WOE4tIuQjnGpkTGIqBQYJz/D91gqY6irMvnuGupka
+         L/QQ==
+X-Gm-Message-State: AGi0PubFPatGVXGgsjAuMifDFOVQRJuBuOdjTslTObIJ0gkjK1raiYte
+        i30+XBsC9YaNh9c7GdDiDgE=
+X-Google-Smtp-Source: APiQypKwlVrt1VEJGmPtaI7Q/IERPIzeGu8ppDOjApaaTx5NnfEDdFoYtCMiH+sa7jjX9PEzpSR/vQ==
+X-Received: by 2002:a2e:8805:: with SMTP id x5mr13650347ljh.223.1587474760291;
+        Tue, 21 Apr 2020 06:12:40 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id 64sm2163946lfh.32.2020.04.21.06.12.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 06:12:39 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 21 Apr 2020 15:12:37 +0200
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, urezki@gmail.com,
+        bigeasy@linutronix.de, Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH rcu/dev -fixes 1/4] rcu/tree: Keep kfree_rcu() awake
+ during lock contention
+Message-ID: <20200421131237.GB5695@pc636>
+References: <20200420153837.194532-1-joel@joelfernandes.org>
+ <20200420153837.194532-2-joel@joelfernandes.org>
 MIME-Version: 1.0
-In-Reply-To: <20200421130613.GH809467@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420153837.194532-2-joel@joelfernandes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/20 4:06 pm, Jiri Olsa wrote:
-> On Tue, Apr 21, 2020 at 04:02:32PM +0300, Adrian Hunter wrote:
->> On 21/04/20 3:50 pm, Jiri Olsa wrote:
->>> On Sun, Apr 05, 2020 at 11:13:25PM +0300, Adrian Hunter wrote:
->>>> Select text poke events when available and the kernel is being traced.
->>>> Process text poke events to invalidate entries in Intel PT's instruction
->>>> cache.
->>>>
->>>> Example:
->>>>
->>>>   The example requires kernel config:
->>>>     CONFIG_PROC_SYSCTL=y
->>>>     CONFIG_SCHED_DEBUG=y
->>>>     CONFIG_SCHEDSTATS=y
->>>>
->>>>   Before:
->>>>
->>>>     # perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M &
->>>>     # cat /proc/sys/kernel/sched_schedstats
->>>>     0
->>>>     # echo 1 > /proc/sys/kernel/sched_schedstats
->>>>     # cat /proc/sys/kernel/sched_schedstats
->>>>     1
->>>>     # echo 0 > /proc/sys/kernel/sched_schedstats
->>>>     # cat /proc/sys/kernel/sched_schedstats
->>>>     0
->>>>     # kill %1
->>>>     [ perf record: Woken up 1 times to write data ]
->>>>     [ perf record: Captured and wrote 3.341 MB perf.data.before ]
->>>>     [1]+  Terminated                 perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M
->>>>     # perf script -i perf.data.before --itrace=e >/dev/null
->>>>     Warning:
->>>>     474 instruction trace errors
->>>>
->>>>   After:
->>>>
->>>>     # perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
->>>>     # cat /proc/sys/kernel/sched_schedstats
->>>>     0
->>>>     # echo 1 > /proc/sys/kernel/sched_schedstats
->>>>     # cat /proc/sys/kernel/sched_schedstats
->>>>     1
->>>>     # echo 0 > /proc/sys/kernel/sched_schedstats
->>>>     # cat /proc/sys/kernel/sched_schedstats
->>>>     0
->>>>     # kill %1
->>>>     [ perf record: Woken up 1 times to write data ]
->>>>     [ perf record: Captured and wrote 2.646 MB perf.data.after ]
->>>>     [1]+  Terminated                 perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M
->>>>     # perf script -i perf.data.after --itrace=e >/dev/null
->>>
->>>
->>> I'm still seeing some, probably I'm missing some CONFIG, will check
->>>
->>> 	# ./perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
->>> 	[1] 5880
->>> 	# cat /proc/sys/kernel/sched_schedstats
->>> 	0
->>> 	# echo 1 > /proc/sys/kernel/sched_schedstats
->>> 	# cat /proc/sys/kernel/sched_schedstats
->>> 	1
->>> 	# echo 0 > /proc/sys/kernel/sched_schedstats
->>> 	# kill %1
->>> 	# [ perf record: Woken up 1 times to write data ]
->>> 	[ perf record: Captured and wrote 6.181 MB perf.data.after ]
->>> 	[1]+  Terminated              ./perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M
->>> 	# ./perf script --itrace=e -i perf.data.after > /dev/null
->>> 	Warning:
->>> 	18837 instruction trace errors
->>>
->>> 	# ./perf script --itrace=e -i perf.data.after | head
->>> 	instruction trace error type 1 time 9274.420582345 cpu 9 pid 845 tid 845 ip 0xffffffff814e6cf2 code 6: Trace doesn't match instruction
->>> 	instruction trace error type 1 time 9274.422229726 cpu 39 pid 5880 tid 5880 ip 0xffffffffa030a320 code 6: Trace doesn't match instruction
->>> 	instruction trace error type 1 time 9274.422231972 cpu 39 pid 5880 tid 5880 ip 0xffffffffa0315c1c code 6: Trace doesn't match instruction
->>> 	instruction trace error type 1 time 9274.422236141 cpu 39 pid 5880 tid 5880 ip 0xffffffff81143263 code 6: Trace doesn't match instruction
->>> 	instruction trace error type 1 time 9274.422237424 cpu 39 pid 5880 tid 5880 ip 0xffffffff8115c388 code 6: Trace doesn't match instruction
->>> 	instruction trace error type 1 time 9274.422239028 cpu 39 pid 5880 tid 5880 ip 0xffffffff811428c9 code 6: Trace doesn't match instruction
->>> 	instruction trace error type 1 time 9274.422239028 cpu 39 pid 5880 tid 5880 ip 0xffffffffa13279fb code 5: Failed to get instruction
->>> 	instruction trace error type 1 time 9274.422242556 cpu 39 pid 5880 tid 5880 ip 0xffffffff814e9c73 code 6: Trace doesn't match instruction
->>> 	instruction trace error type 1 time 9274.422258915 cpu 39 pid 5880 tid 5880 ip 0xffffffff810d7da2 code 6: Trace doesn't match instruction
->>> 	instruction trace error type 1 time 9274.422258915 cpu 39 pid 5880 tid 5880 ip 0xffffffffa030a0b2 code 6: Trace doesn't match instruction
->>
->> I don't think it can be CONFIG.  Can you share the branch you are using?
->> Then I can test it.
->>
+On Mon, Apr 20, 2020 at 11:38:34AM -0400, Joel Fernandes (Google) wrote:
+> On PREEMPT_RT kernels, contending on the krcp spinlock can cause
+> sleeping as on these kernels, the spinlock is converted to an rt-mutex.
+> To prevent breakage of possible usage of kfree_rcu() now or in the
+> future, make use of raw spinlocks which are not subject to such
+> conversions.
 > 
-> I built the one you mentioned in cover email:
->   git://git.infradead.org/users/ahunter/linux-perf.git text_poke
+> Vetting all code paths, there is no reason to believe that the raw
+> spinlock will be held for long time so PREEMPT_RT should not suffer from
+> lengthy acquirals of the lock.
+> 
+> Cc: urezki@gmail.com
+> Cc: bigeasy@linutronix.de
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  kernel/rcu/tree.c | 30 +++++++++++++++---------------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index f288477ee1c26..cf68d3d9f5b81 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -2905,7 +2905,7 @@ struct kfree_rcu_cpu {
+>  	struct kfree_rcu_bulk_data *bhead;
+>  	struct kfree_rcu_bulk_data *bcached;
+>  	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
+> -	spinlock_t lock;
+> +	raw_spinlock_t lock;
+>  	struct delayed_work monitor_work;
+>  	bool monitor_todo;
+>  	bool initialized;
+> @@ -2939,12 +2939,12 @@ static void kfree_rcu_work(struct work_struct *work)
+>  	krwp = container_of(to_rcu_work(work),
+>  			    struct kfree_rcu_cpu_work, rcu_work);
+>  	krcp = krwp->krcp;
+> -	spin_lock_irqsave(&krcp->lock, flags);
+> +	raw_spin_lock_irqsave(&krcp->lock, flags);
+>  	head = krwp->head_free;
+>  	krwp->head_free = NULL;
+>  	bhead = krwp->bhead_free;
+>  	krwp->bhead_free = NULL;
+> -	spin_unlock_irqrestore(&krcp->lock, flags);
+> +	raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>  
+>  	/* "bhead" is now private, so traverse locklessly. */
+>  	for (; bhead; bhead = bnext) {
+> @@ -3047,14 +3047,14 @@ static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
+>  	krcp->monitor_todo = false;
+>  	if (queue_kfree_rcu_work(krcp)) {
+>  		// Success! Our job is done here.
+> -		spin_unlock_irqrestore(&krcp->lock, flags);
+> +		raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>  		return;
+>  	}
+>  
+>  	// Previous RCU batch still in progress, try again later.
+>  	krcp->monitor_todo = true;
+>  	schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
+> -	spin_unlock_irqrestore(&krcp->lock, flags);
+> +	raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>  }
+>  
+>  /*
+> @@ -3067,11 +3067,11 @@ static void kfree_rcu_monitor(struct work_struct *work)
+>  	struct kfree_rcu_cpu *krcp = container_of(work, struct kfree_rcu_cpu,
+>  						 monitor_work.work);
+>  
+> -	spin_lock_irqsave(&krcp->lock, flags);
+> +	raw_spin_lock_irqsave(&krcp->lock, flags);
+>  	if (krcp->monitor_todo)
+>  		kfree_rcu_drain_unlock(krcp, flags);
+>  	else
+> -		spin_unlock_irqrestore(&krcp->lock, flags);
+> +		raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>  }
+>  
+>  static inline bool
+> @@ -3142,7 +3142,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  	local_irq_save(flags);	// For safely calling this_cpu_ptr().
+>  	krcp = this_cpu_ptr(&krc);
+>  	if (krcp->initialized)
+> -		spin_lock(&krcp->lock);
+> +		raw_spin_lock(&krcp->lock);
+>  
+>  	// Queue the object but don't yet schedule the batch.
+>  	if (debug_rcu_head_queue(head)) {
+> @@ -3173,7 +3173,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  
+>  unlock_return:
+>  	if (krcp->initialized)
+> -		spin_unlock(&krcp->lock);
+> +		raw_spin_unlock(&krcp->lock);
+>  	local_irq_restore(flags);
+>  }
+>  EXPORT_SYMBOL_GPL(kfree_call_rcu);
+> @@ -3205,11 +3205,11 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+>  		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+>  
+>  		count = krcp->count;
+> -		spin_lock_irqsave(&krcp->lock, flags);
+> +		raw_spin_lock_irqsave(&krcp->lock, flags);
+>  		if (krcp->monitor_todo)
+>  			kfree_rcu_drain_unlock(krcp, flags);
+>  		else
+> -			spin_unlock_irqrestore(&krcp->lock, flags);
+> +			raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>  
+>  		sc->nr_to_scan -= count;
+>  		freed += count;
+> @@ -3236,15 +3236,15 @@ void __init kfree_rcu_scheduler_running(void)
+>  	for_each_online_cpu(cpu) {
+>  		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+>  
+> -		spin_lock_irqsave(&krcp->lock, flags);
+> +		raw_spin_lock_irqsave(&krcp->lock, flags);
+>  		if (!krcp->head || krcp->monitor_todo) {
+> -			spin_unlock_irqrestore(&krcp->lock, flags);
+> +			raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>  			continue;
+>  		}
+>  		krcp->monitor_todo = true;
+>  		schedule_delayed_work_on(cpu, &krcp->monitor_work,
+>  					 KFREE_DRAIN_JIFFIES);
+> -		spin_unlock_irqrestore(&krcp->lock, flags);
+> +		raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>  	}
+>  }
+>  
+> @@ -4140,7 +4140,7 @@ static void __init kfree_rcu_batch_init(void)
+>  	for_each_possible_cpu(cpu) {
+>  		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+>  
+> -		spin_lock_init(&krcp->lock);
+> +		raw_spin_lock_init(&krcp->lock);
+>  		for (i = 0; i < KFREE_N_BATCHES; i++) {
+>  			INIT_RCU_WORK(&krcp->krw_arr[i].rcu_work, kfree_rcu_work);
+>  			krcp->krw_arr[i].krcp = krcp;
+> -- 
+> 2.26.1.301.g55bc3eb7cb9-goog
+Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-The tools and the kernel?
+If we decide to move the schedule_delayed_work() outside of the critical
+section, i think, it would be better to submit separate patch with good
+explanation why we do it.
 
-Does it successfully decode anything? e.g.
-./perf script --itrace=be -i perf.data.after | head
-
+--
+Vlad Rezki
+> 
