@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94546C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DB6C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFB2206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F1842071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587482171;
-	bh=EcepAhAbbjDVQZZ71eMW9AWIepEXOvuDQICxGrphrw4=;
+	s=default; t=1587482176;
+	bh=vjzVo6dVD1zQ5ZhU+t8+amCBrVTU8/hgBe76KRhiEPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dFH1/Dvr68WJiycoEopgHg+/7A5QgzizB68IkbDoFTpxKH/VfMkNpYg5SF0nsJkHK
-	 Z9Q6Xev1oIDEm+ygZEJVWOO8T5EJndcB/5Raq3zuHZGSNqFE0RRnncZmA13gRpXOfr
-	 BMyRRnEWz6BV6FxiuaD4kAfN1YJe3DSSfSdZufss=
+	b=RSK6woyqBimoNtSkr/B6a0MwOzJXdy5Y7xjIwYF00+emIlHnDUKwUPJANOVOBYMnd
+	 kuAoEmftaLEwt2h8sElQsxt/WapnkvF3QLN8Of19LwVuqwxhy15BOLELsJb+h8Zvc1
+	 MTAWCeLL2INgRFrboL/sc/gl42l85vznekCM56rU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgDUPQJ (ORCPT
+        id S1728676AbgDUPQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:16:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 11:16:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbgDUPQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:16:06 -0400
+        id S1727911AbgDUPQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 11:16:12 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B421206F4;
-        Tue, 21 Apr 2020 15:16:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 723432070B;
+        Tue, 21 Apr 2020 15:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587482166;
-        bh=EcepAhAbbjDVQZZ71eMW9AWIepEXOvuDQICxGrphrw4=;
+        s=default; t=1587482171;
+        bh=vjzVo6dVD1zQ5ZhU+t8+amCBrVTU8/hgBe76KRhiEPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M8V4v8I2oo8z+oHqFUMH0pBmgACYJvBIzXIWD/XXvs+syzLnjuN9oEi5viuM0Yj9y
-         xOZdIbh4QvHML95PdfPYM5vo5YTcUvqUUONNHtyXH0mv1GnISOqlviXttDNBcVZNcg
-         rF25tJapuTTvAyILtlNqBW9kjj5KbCgCuXUY1DC4=
+        b=2Y/me0rgokrFHbcRqD/kPlUiAEM/0MHEwDraZERYVKPnxbrwNPBsHZe3QpsC9vYP8
+         nj1cvV4s+CCoI/4TcAkTnP3KNNYYuvS/KGzs+kGLsBxqmP5OxKDjTyk7yzw6P3wPoP
+         UgGif9w0/XoJrYvlfrX2bzDL3nI1MeHxtTHwUSxg=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
@@ -54,9 +54,9 @@ Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
         Peter Oberparleiter <oberpar@linux.ibm.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v4 07/11] READ_ONCE: Enforce atomicity for {READ,WRITE}_ONCE() memory accesses
-Date:   Tue, 21 Apr 2020 16:15:33 +0100
-Message-Id: <20200421151537.19241-8-will@kernel.org>
+Subject: [PATCH v4 09/11] locking/barriers: Use '__unqual_scalar_typeof' for load-acquire macros
+Date:   Tue, 21 Apr 2020 16:15:35 +0100
+Message-Id: <20200421151537.19241-10-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200421151537.19241-1-will@kernel.org>
 References: <20200421151537.19241-1-will@kernel.org>
@@ -67,122 +67,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-{READ,WRITE}_ONCE() cannot guarantee atomicity for arbitrary data sizes.
-This can be surprising to callers that might incorrectly be expecting
-atomicity for accesses to aggregate structures, although there are other
-callers where tearing is actually permissable (e.g. if they are using
-something akin to sequence locking to protect the access).
+Passing volatile-qualified pointers to the asm-generic implementations of
+the load-acquire macros results in a re-load from the stack due to the
+temporary result variable inheriting the volatile semantics thanks to the
+use of 'typeof()'.
 
-Linus sayeth:
+Define these temporary variables using 'unqual_scalar_typeof' to drop
+the volatile qualifier in the case that they are scalar types.
 
-  | We could also look at being stricter for the normal READ/WRITE_ONCE(),
-  | and require that they are
-  |
-  | (a) regular integer types
-  |
-  | (b) fit in an atomic word
-  |
-  | We actually did (b) for a while, until we noticed that we do it on
-  | loff_t's etc and relaxed the rules. But maybe we could have a
-  | "non-atomic" version of READ/WRITE_ONCE() that is used for the
-  | questionable cases?
-
-The slight snag is that we also have to support 64-bit accesses on 32-bit
-architectures, as these appear to be widespread and tend to work out ok
-if either the architecture supports atomic 64-bit accesses (x86, armv7)
-or if the variable being accesses represents a virtual address and
-therefore only requires 32-bit atomicity in practice.
-
-Take a step in that direction by introducing a variant of
-'compiletime_assert_atomic_type()' and use it to check the pointer
-argument to {READ,WRITE}_ONCE(). Expose __{READ,WRITE}_ONCE() variants
-which are allowed to tear and convert the one broken caller over to the
-new macros.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- drivers/xen/time.c       |  2 +-
- include/linux/compiler.h | 33 ++++++++++++++++++++++++++++++---
- 2 files changed, 31 insertions(+), 4 deletions(-)
+ include/asm-generic/barrier.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/xen/time.c b/drivers/xen/time.c
-index 0968859c29d0..108edbcbc040 100644
---- a/drivers/xen/time.c
-+++ b/drivers/xen/time.c
-@@ -64,7 +64,7 @@ static void xen_get_runstate_snapshot_cpu_delta(
- 	do {
- 		state_time = get64(&state->state_entry_time);
- 		rmb();	/* Hypervisor might update data. */
--		*res = READ_ONCE(*state);
-+		*res = __READ_ONCE(*state);
- 		rmb();	/* Hypervisor might update data. */
- 	} while (get64(&state->state_entry_time) != state_time ||
- 		 (state_time & XEN_RUNSTATE_UPDATE));
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 338111a448d0..50bb2461648f 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -198,20 +198,37 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- #include <asm/barrier.h>
- #include <linux/kasan-checks.h>
- 
--#define __READ_ONCE(x)	(*(volatile typeof(x) *)&(x))
-+/*
-+ * Use __READ_ONCE() instead of READ_ONCE() if you do not require any
-+ * atomicity or dependency ordering guarantees. Note that this may result
-+ * in tears!
-+ */
-+#define __READ_ONCE(x)	(*(const volatile typeof(x) *)&(x))
- 
--#define READ_ONCE(x)							\
-+#define __READ_ONCE_SCALAR(x)						\
+diff --git a/include/asm-generic/barrier.h b/include/asm-generic/barrier.h
+index 85b28eb80b11..2eacaf7d62f6 100644
+--- a/include/asm-generic/barrier.h
++++ b/include/asm-generic/barrier.h
+@@ -128,10 +128,10 @@ do {									\
+ #ifndef __smp_load_acquire
+ #define __smp_load_acquire(p)						\
  ({									\
- 	typeof(x) __x = __READ_ONCE(x);					\
- 	smp_read_barrier_depends();					\
- 	__x;								\
+-	typeof(*p) ___p1 = READ_ONCE(*p);				\
++	__unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);		\
+ 	compiletime_assert_atomic_type(*p);				\
+ 	__smp_mb();							\
+-	___p1;								\
++	(typeof(*p))___p1;						\
  })
+ #endif
  
--#define WRITE_ONCE(x, val)				\
-+#define READ_ONCE(x)							\
-+({									\
-+	compiletime_assert_rwonce_type(x);				\
-+	__READ_ONCE_SCALAR(x);						\
-+})
-+
-+#define __WRITE_ONCE(x, val)				\
- do {							\
- 	*(volatile typeof(x) *)&(x) = (val);		\
- } while (0)
+@@ -183,10 +183,10 @@ do {									\
+ #ifndef smp_load_acquire
+ #define smp_load_acquire(p)						\
+ ({									\
+-	typeof(*p) ___p1 = READ_ONCE(*p);				\
++	__unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);		\
+ 	compiletime_assert_atomic_type(*p);				\
+ 	barrier();							\
+-	___p1;								\
++	(typeof(*p))___p1;						\
+ })
+ #endif
  
-+#define WRITE_ONCE(x, val)				\
-+do {							\
-+	compiletime_assert_rwonce_type(x);		\
-+	__WRITE_ONCE(x, val);				\
-+} while (0)
-+
- #ifdef CONFIG_KASAN
- /*
-  * We can't declare function 'inline' because __no_sanitize_address conflicts
-@@ -313,6 +330,16 @@ static inline void *offset_to_ptr(const int *off)
- 	compiletime_assert(__native_word(t),				\
- 		"Need native word sized stores/loads for atomicity.")
+@@ -229,14 +229,14 @@ do {									\
+ #ifndef smp_cond_load_relaxed
+ #define smp_cond_load_relaxed(ptr, cond_expr) ({		\
+ 	typeof(ptr) __PTR = (ptr);				\
+-	typeof(*ptr) VAL;					\
++	__unqual_scalar_typeof(*ptr) VAL;			\
+ 	for (;;) {						\
+ 		VAL = READ_ONCE(*__PTR);			\
+ 		if (cond_expr)					\
+ 			break;					\
+ 		cpu_relax();					\
+ 	}							\
+-	VAL;							\
++	(typeof(*ptr))VAL;					\
+ })
+ #endif
  
-+/*
-+ * Yes, this permits 64-bit accesses on 32-bit architectures. These will
-+ * actually be atomic in many cases (namely x86), but for others we rely on
-+ * the access being split into 2x32-bit accesses for a 32-bit quantity (e.g.
-+ * a virtual address) and a strong prevailing wind.
-+ */
-+#define compiletime_assert_rwonce_type(t)					\
-+	compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),	\
-+		"Unsupported access size for {READ,WRITE}_ONCE().")
-+
- /* &a[0] degrades to a pointer: a different type from an array */
- #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
+@@ -250,10 +250,10 @@ do {									\
+  */
+ #ifndef smp_cond_load_acquire
+ #define smp_cond_load_acquire(ptr, cond_expr) ({		\
+-	typeof(*ptr) _val;					\
++	__unqual_scalar_typeof(*ptr) _val;			\
+ 	_val = smp_cond_load_relaxed(ptr, cond_expr);		\
+ 	smp_acquire__after_ctrl_dep();				\
+-	_val;							\
++	(typeof(*ptr))_val;					\
+ })
+ #endif
  
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
