@@ -2,86 +2,155 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE1BC55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95012C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 406B820781
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707222064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587473304;
-	bh=MX//OISkXMkefkAGS97bnGPUwUOdUgkMZrE4oSc7af0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TRLi7cFaw2kz2Mo8YUtkOs3DJAWVIJPOVQ7qIQaaZQ6hVL9t5WWLOidaORrwmM1RI
-	 2gMWfJ8HdmovKedDj/0Mx5zf0aMl+PnhFTBO9kMqvjKdRL9a1YetrjKw4VRcd0WWrU
-	 yH9KLOexzLs4R6MB2o2szpttZfvOXeLHoJJpa09s=
+	s=default; t=1587473325;
+	bh=LNZcHtjoWqylzeMnuv6UArID5puekmZyNjD3Fj7p+VQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=h9nV+3Eze4+1mVQl4ZdAqVnUakiJi+SV3Frb732mHESQLh4HtcaOCt+qgveIQgPAv
+	 u3Ocr/L3pQhdsMGPkEOEFCp8FN/ikYxZrYJBZDGVyTFQlg+0vUfN+3Wu7mhITT1ifY
+	 266OkMThvX+hQRWPgc7inJbiL5wgiBGFeDtlVWeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgDUMsX (ORCPT
+        id S1728846AbgDUMso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:48:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbgDUMsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:48:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5179D2076E;
-        Tue, 21 Apr 2020 12:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587473302;
-        bh=MX//OISkXMkefkAGS97bnGPUwUOdUgkMZrE4oSc7af0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I61zNOARA45e29Y+vMJPmWFEfryzRhUTwFgUmghn5kTdgaT9VFPaYn7sYVK/88ZxU
-         skzz9Eb3OKBdZvBv4RCa0D1IvH80O7Nyir94yeG5lQk5ilxKf7TKqQCeRh5UEmWyMz
-         RAYA+9XeaKcFuXAhSdQel0SJ9Jsli7axPfagcNVQ=
-Date:   Tue, 21 Apr 2020 14:48:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv5 0/4] n_gsm serdev support and protocol driver for
- droid4 modem
-Message-ID: <20200421124820.GB784065@kroah.com>
-References: <20200319173755.65082-1-tony@atomide.com>
- <20200421115920.GA16890@amd>
+        Tue, 21 Apr 2020 08:48:44 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:38132 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728337AbgDUMsn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 08:48:43 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 03LCm57O000731;
+        Tue, 21 Apr 2020 21:48:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 03LCm57O000731
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587473286;
+        bh=0/WpwSdCDKFUy0QKnGd6kunc4ELKUfh3X/2O2KfXcik=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RL9nsiO4FrpIlW/nZa2iozlGbn/MGfbQQvdA/in0erxhDE1sHMq9u29kCaj2yzj7G
+         CFVwYILcLjEIcX1d3sKeZRZwQ7QXtPG13q7lRmMt0T4K7jvzfnDpufkd4YshbBT3iU
+         izoMI7ruK78C+6NBDTEDSwLDybg+B8fT5VxYiVPU1Cu4qq+bZMmj8ImNDuY+z7QDCb
+         KmdjjAnKSStJM7exoa2ED1enuMAgRVJJiSuKewXJjxj2u8ii4djh/oXJEXdh73Ofuw
+         Ow18/FvHXtYNhtfawrcKc87Rfz7s61SA6uWHcHLUEW4t21fEfLyuF9Kri9RQCANfwI
+         vQqSH7fWX0Giw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] kbuild: ensure full rebuild when the compiler is updated
+Date:   Tue, 21 Apr 2020 21:48:03 +0900
+Message-Id: <20200421124804.1272909-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421115920.GA16890@amd>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 01:59:20PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > Here's v4 set of n_gsm serdev support patches, and the related protocol
-> > driver for the modem found on Motorola Mapphone phones and tablets
-> > like droid4.
-> > 
-> > This series only adds basic character device support for the serdev
-> > driver. Other serdev consumer drivers for specific devices will be
-> > posted separately.
-> > 
-> > The patches are against v5.6-rc series.
-> 
-> And it would be good to get them into v5.7... pretty please :-).
+Commit 21c54b774744 ("kconfig: show compiler version text in the top
+comment") added the environment variable, CC_VERSION_TEXT in the comment
+of the top Kconfig file. It can detect the compiler update, and invoke
+the syncconfig because all environment variables referenced in Kconfig
+files are recorded in include/config/auto.conf.cmd
 
-No, 5.7 is not ok for this, and i think it already needs a respin as
-this is not in my patch queue anymore.
+This commit makes it a CONFIG option in order to ensure the full rebuild
+when the compiler is updated.
 
-thanks,
+This works like as follows:
 
-greg k-h
+include/config/kconfig.h contains "CONFIG_CC_VERSION_TEXT" in the comment
+block.
+
+The top Makefile specifies "-include $(srctree)/include/linux/kconfig.h"
+to guarantee it is included from all kernel source files.
+
+fixdep parses every source file and all headers included from it,
+searching for words prefixed with "CONFIG_". Then, fixdep finds
+CONFIG_CC_VERSION_TEXT in include/config/kconfig.h and adds
+include/config/cc/version/text.h into every .*.cmd file.
+
+When the compiler is updated, syncconfig is invoked since the environment
+variable is referenced. CONFIG_CC_VERSION_TEXT is updated to the new
+version string, and include/config/cc/version/text.h is touched.
+
+In the next rebuild, Make rebuilds every files since the timestamp of
+include/config/cc/version/text.h is newer than that of target.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Kconfig                 |  2 --
+ include/linux/kconfig.h |  9 +++++++++
+ init/Kconfig            | 12 ++++++++++++
+ 3 files changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/Kconfig b/Kconfig
+index e10b3ee084d4..745bc773f567 100644
+--- a/Kconfig
++++ b/Kconfig
+@@ -5,8 +5,6 @@
+ #
+ mainmenu "Linux/$(ARCH) $(KERNELVERSION) Kernel Configuration"
+ 
+-comment "Compiler: $(CC_VERSION_TEXT)"
+-
+ source "scripts/Kconfig.include"
+ 
+ source "init/Kconfig"
+diff --git a/include/linux/kconfig.h b/include/linux/kconfig.h
+index cc8fa109cfa3..406b8a2521b5 100644
+--- a/include/linux/kconfig.h
++++ b/include/linux/kconfig.h
+@@ -2,6 +2,15 @@
+ #ifndef __LINUX_KCONFIG_H
+ #define __LINUX_KCONFIG_H
+ 
++/*
++ * Do not remove this comment block. This contains "CONFIG_CC_VERSION_TEXT"
++ * to ensure the full rebuild when the compiler is updated.
++ *
++ * fixdep parses this header, which is included by every kernel source file,
++ * and adds include/config/cc/version/text.h to the dependency in .*.cmd files.
++ * When the compiler is updated, syncconfig touches it so every file is rebuilt.
++ */
++
+ #include <generated/autoconf.h>
+ 
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+diff --git a/init/Kconfig b/init/Kconfig
+index 9e22ee8fbd75..d3d153815d88 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -8,6 +8,18 @@ config DEFCONFIG_LIST
+ 	default "/boot/config-$(shell,uname -r)"
+ 	default "arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)"
+ 
++config CC_VERSION_TEXT
++	string
++	default "$(CC_VERSION_TEXT)"
++	help
++	  There two purposes for this entry:
++
++	  1. Reference the environment variable, CC_VERSION_TEXT, so Kconfig
++	     is invoked if the compiler is updated.
++
++	  2. Touch include/config/cc/version/text.h to force the full rebuild
++	     if the compiler is updated. See comment in include/linux/kconfig.h
++
+ config CC_IS_GCC
+ 	def_bool $(success,$(CC) --version | head -n 1 | grep -q gcc)
+ 
+-- 
+2.25.1
+
