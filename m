@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614CAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CFDC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 415DC206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46030206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Asw3NHTw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cT7c7uhd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgDUAg2 (ORCPT
+        id S1726465AbgDUAl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:36:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60488 "EHLO
+        Mon, 20 Apr 2020 20:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726055AbgDUAg2 (ORCPT
+        by vger.kernel.org with ESMTP id S1726017AbgDUAl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 20:36:28 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3569FC061A0E;
-        Mon, 20 Apr 2020 17:36:28 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id j7so2369903pgj.13;
-        Mon, 20 Apr 2020 17:36:28 -0700 (PDT)
+        Mon, 20 Apr 2020 20:41:27 -0400
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936CEC061A0E;
+        Mon, 20 Apr 2020 17:41:25 -0700 (PDT)
+Received: by mail-io1-xd2c.google.com with SMTP id i3so13196786ioo.13;
+        Mon, 20 Apr 2020 17:41:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Jr4pepYiKfm1uIftVMCmPnL3b+xwADu0/lF4/xhGC1o=;
-        b=Asw3NHTwrFrFd3xXUg6KCD3TCt1TknJTW3dnS5o7UGUGYRYsg+W9p/OX+kseROXyQs
-         0XeEq89TRm4RPktbiQ8ThmTJIgb2TXEy8RU/TZBYbcJz90pxadmUOPnnnqDxQvGz9kGm
-         CdvMnrPvsAbejuIiMuwu4wvYHXP66Bcr8vId9dSGaLyx/kMdbE84jiIAyrXYviiJQKYs
-         TtSX82jHkGeJMvjjZYfkk7icp1B/2fJ8mAPU81vdHIjVTlZVbZ3hyUc/EDDcUz1zbz9n
-         vNSe5D1WNaR/ZmTIEnuW4YCPVwLKcvPQ6oi5ahXZhuCaKTuQygg1A2fAuPbMde2o0h3M
-         0vxg==
+        bh=lp6vpDhEt9eyN5A2LThz9ErewFsCdZY3Mzy1abOFyOM=;
+        b=cT7c7uhdV9eMRxr29pkmMWATsUGGzY28V+ctNsd8r9ksSQR7IlXpNqh8+eAys81DEa
+         i5N7sgF8ngepHsdKae2d8nzgXXhe7BIxm40fdeirDFhOVl/uGkQj7zrRNpARTn/x45XA
+         y+9LMQmh0ucSPSBYlcxnPTM7j5JX5Ia3gB5a5q/6FSbEfnquNfm5LX0icdBT0t5z0nGE
+         UGflhB48sCNGUQ/pxxe99MfgE3JNcBI7MaNoqeuTKb5I1xpPnwwThfmKzc9z+qPzz0yi
+         aeW8KEFZfQddcWic1B7MevZmfAGJBnwOkSFmqWckb+1AToDJTuDYUA+5F2k15uM1I2cK
+         nVqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Jr4pepYiKfm1uIftVMCmPnL3b+xwADu0/lF4/xhGC1o=;
-        b=R48UwQBM9NWxi5NgNLBv985Tdt9gy/kJt6aDCF1czsBHh7qtT3OrTMXrEOOSu1yMwJ
-         wkmVUfz8bwSaWS6TnDBtO3elGsHMte3Ik1HEuHBV0ktkOWVqliinohLVZrujjXK6olg+
-         OCBRGtSakOWl7bl2QZRR761wreE4XR4Qg9MDfJdZ6CY9KEnDG0y+FyOTyfM+hBi72LIi
-         GSbXRFsetJ2TKfzHgUFWCqFZvpKiz9jk56GnXUdiWzt4RMlzQb9UxwvR/kIBX7LdMRs5
-         C+yDF6W8URYRslDGLOS0pWCFf+kourRp8qggkOjTcjzsTEbC7PsNJCV80eGTpOopXU9p
-         KMrg==
-X-Gm-Message-State: AGi0PuailcX1bDaDk3Gmxp6SCM/f7Z7/74KCkqruexef8bJHkud2I6Qd
-        6pBcrPGOuiSGU/WWlAcquZ9yd8JbYRGRhsYt6cOix4vBBr4=
-X-Google-Smtp-Source: APiQypKT5yvxJB+RFskDNTzXkKxM55ZO5RUfYBByOEqqpOcm36wrNLManMQ9TB+l+iztYURHb9Z5VokY+8ZFHID76EI=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr19974359pgb.203.1587429387467;
- Mon, 20 Apr 2020 17:36:27 -0700 (PDT)
+        bh=lp6vpDhEt9eyN5A2LThz9ErewFsCdZY3Mzy1abOFyOM=;
+        b=JNsptscSyGJ6JTxbVSZFuZcubxoAT4QIPLeeoIQkHvx4nII7TcA85Kc8MjOrtQ6F79
+         iSR2TCCe/9CHP/pr5NBAYnIVjBA6i6ayj/nIXh08Uz8yqAMNJNOjzT3LR9QWf20iC8aM
+         9gWlaINu9thOYCqyYYFe22Fk3NsxuqnFC3CUr3XOO1OX6HAxlqbVZgvmBLBY/W8536yt
+         T9g8hTTtloRE7B/gsdnHPHFZdPaF6ARfBjsM93wRglaE1UzG2kRnC0MWAOZtg2qbJOG0
+         2jDoxhhpKurxOp2KFkYkfRDZgG/lWycgMWM6RONjuFS5VLbd2h6e13aGHjr1ra29sZ2B
+         ALYA==
+X-Gm-Message-State: AGi0PuZ1PTr+lbBj6SzAZzSKM5Os2auf7+igGi9l7GVBqnq1NoBH4mjs
+        gv91D19yDs8/X+29RKYtHWwxs9qr9vPPPM5Axos=
+X-Google-Smtp-Source: APiQypJa/8ktzh53XgWTNmgtLunc8o0bFjpB0e5CpZ50MeLAPsEXoJIMQxsKtx587H9bDXQxhKTI93+8YR1RVJHY904=
+X-Received: by 2002:a6b:580e:: with SMTP id m14mr18198504iob.190.1587429684748;
+ Mon, 20 Apr 2020 17:41:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200420084210.14245-1-m.othacehe@gmail.com> <20200420084210.14245-2-m.othacehe@gmail.com>
-In-Reply-To: <20200420084210.14245-2-m.othacehe@gmail.com>
+References: <20200420084210.14245-1-m.othacehe@gmail.com> <20200420084210.14245-3-m.othacehe@gmail.com>
+In-Reply-To: <20200420084210.14245-3-m.othacehe@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Apr 2020 03:36:15 +0300
-Message-ID: <CAHp75Vd+Ri1qKUkDjOV9R4=AW-++7wp4VPfnTqKEHxR7RWzX0Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] iio: vcnl4000: Factorize data reading and writing.
+Date:   Tue, 21 Apr 2020 03:41:12 +0300
+Message-ID: <CAHp75VektPSwxu3bShk9yQhbNGmYDa2j1Vbapdkrn3rBiaZ0WQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] iio: vcnl4000: Add event support for VCNL4010/20.
 To:     Mathieu Othacehe <m.othacehe@gmail.com>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -77,23 +77,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, Apr 20, 2020 at 11:43 AM Mathieu Othacehe <m.othacehe@gmail.com> wrote:
 >
-> Factorize data reading in vcnl4000_measure into a vcnl4000_read_block_data
-> function. Use it to provide a vcnl4000_read_data function that is able to
-> read sensor data under lock. Also add a vcnl4000_write_data function.
+> The VCNL4010 and VCNL4020 chips are able to raise interrupts on proximity
+> threshold events. Add support for threshold rising and falling events for
+> those two chips.
 
 ...
 
-> +       __be16 buf;
-> +       int ret;
+> +       ret = (ret & VCNL4000_SELF_TIMED_EN) > 0;
+
+This can be done outside of lock.
+And here is type violation. Use bool for the function.
+
+> +end:
+> +       mutex_unlock(&data->vcnl4000_lock);
 > +
-> +       ret = i2c_smbus_read_i2c_block_data(data->client,
+> +       return ret;
+> +}
 
-> +               data_reg, sizeof(buf), (u8 *) &buf);
+...
 
-Why do you need casting?
+> +       ret = (ret & VCNL4010_INT_THR_EN) > 0;
+> +
+> +end:
+> +       mutex_unlock(&data->vcnl4000_lock);
+> +
+> +       return ret;
+> +}
 
-> +       if (ret < 0)
-> +               goto end;
+Ditto.
 
 -- 
 With Best Regards,
