@@ -2,246 +2,411 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B73C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6493C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01B6D206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A038D206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:02:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vA+yRVKs"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="Groa9PCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgDUUBm (ORCPT
+        id S1726310AbgDUUCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:01:42 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:11500 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726168AbgDUUBl (ORCPT
+        Tue, 21 Apr 2020 16:02:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbgDUUCE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:01:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587499300; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=0UuX/wSK45nkB5sU+cHphiivnPfpWOi1oe6fznQzbCU=; b=vA+yRVKsqOu8KKzxXTQW1WBLcJCEE5wUZrZESKDd2TobwBVG0S+b3FYP0ZF0BlT49nA6DYxN
- 6MjP5FSasKImQd4y79BEOfPSoSHsQC3h6LXSZ41fW8Bvm3AvsKV8OF24QXoY+ROQQi1KDTiw
- ty7L/b6A2OQ9imP6YFMn5fqMUDM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9f5101.7f0d00545180-smtp-out-n04;
- Tue, 21 Apr 2020 20:01:05 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5DE0AC44793; Tue, 21 Apr 2020 20:01:03 +0000 (UTC)
-Received: from [192.168.8.111] (cpe-70-95-153-89.san.res.rr.com [70.95.153.89])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 21053C432C2;
-        Tue, 21 Apr 2020 20:01:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 21053C432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v1 1/3] scsi: ufs: add write booster feature support
-To:     Avri Altman <Avri.Altman@wdc.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Cc:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <cover.1586374414.git.asutoshd@codeaurora.org>
- <3c186284280c37c76cf77bf482dde725359b8a8a.1586382357.git.asutoshd@codeaurora.org>
- <SN6PR04MB4640E5A6BAAD89DDC3F2FFE0FCDC0@SN6PR04MB4640.namprd04.prod.outlook.com>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <87344180-7da6-ee3a-3503-39a64a41d552@codeaurora.org>
-Date:   Tue, 21 Apr 2020 13:01:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <SN6PR04MB4640E5A6BAAD89DDC3F2FFE0FCDC0@SN6PR04MB4640.namprd04.prod.outlook.com>
+        Tue, 21 Apr 2020 16:02:04 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F67AC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:02:04 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a32so1822977pje.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:02:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BxubbJ7gHEHEErz2kjhl0p7BCwZJc2DnYIOnoeRrZKo=;
+        b=Groa9PCd4S1i1J0FgENaZ3ni8r65k96Qc7Y5JPLMOACsEg3cU09VwFovCH1mIcyZYc
+         TeJLuU8NimtQM+xV3yDwRnhK4jydyzHYoyRvkPCrBh5TLMQk/KKjN+NK7dxfRKYKI31t
+         nDIJgztqgBwC83EQVT+3sFXXCBuyR4hdFAp6P8jGcpyzAcWV00QKTLtPXUhI2SHpju9l
+         8lEFPZoMM5NsYQDjghmD8TIY6nFXpxB2A4pY9HoU84ObkaPy4EYwPnBd7ptRxdf4gP8q
+         xksS7VgLOKKUk2jndDQ70T1nt/B+d6eDlRFYNBJ0Ex3KqXKm7+cDvMh4CiqIInNZ9Ayr
+         H2gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=BxubbJ7gHEHEErz2kjhl0p7BCwZJc2DnYIOnoeRrZKo=;
+        b=NbTr6YROdBNL4Hnx239tgdG4qkTvPbNxd8TkOBa5MzMqVC2UHlBBsn4iwSri+MCH4X
+         p8lzYZ//IjuKQWPIpXxgXqgevdPfSRhN8T07TIB9Idx8YY8augn04Rj7sbH6+qTbCfHV
+         GXXKCEjlJQwY+pjuKm7QWbLBumNB5vkW5VYlgGE6ypaSDTYJPVtfmho3g81kFcjDKA+3
+         244pMhTY4SKOIbONaKVqZtjp6zNg9rOqIs45ukBrRbFL5+IObtSc2mZVIo1QxNKXnzfo
+         tTuP1hxpQ9JWW/LHGF849aC/9OClCDLckfLSWd2PjcUdoLllEJKmH9qxQ/QTJXwhiiL2
+         SRQQ==
+X-Gm-Message-State: AGi0PubHmpCz1xNtjUqLpcvhYJKgaIPy3tUcDnrGAcUZxID9IlAElD2s
+        xkMM/II2EePdhAkxuhCitCtna97B0Z01ew==
+X-Google-Smtp-Source: APiQypIRcAAuqsYoYKxkjzVouMy24lRUu+Wnce7eqf9+b7NwS4FFhJNREw6yqaj/51RU+3xK9YmzPw==
+X-Received: by 2002:a17:902:a513:: with SMTP id s19mr23840089plq.84.1587499322909;
+        Tue, 21 Apr 2020 13:02:02 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id o1sm3186009pjs.39.2020.04.21.13.02.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 13:02:02 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 13:02:02 -0700 (PDT)
+X-Google-Original-Date: Tue, 21 Apr 2020 13:01:35 PDT (-0700)
+Subject:     Re: [v4 PATCH 2/3] RISC-V: Add PE/COFF header for EFI stub
+In-Reply-To: <20200421033336.9663-3-atish.patra@wdc.com>
+CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
+        ardb@kernel.org, linux-efi@vger.kernel.org,
+        linux-riscv@lists.infradead.org, masahiroy@kernel.org,
+        xypron.glpk@gmx.de
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Message-ID: <mhng-fc4c31fb-8f50-4aa9-82e1-6f2e9d08ac8f@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/2020 5:43 AM, Avri Altman wrote:
-> Hi,
-> 
->>
->>   enum ufs_desc_def_size {
->> -       QUERY_DESC_DEVICE_DEF_SIZE              = 0x40,
->> +       QUERY_DESC_DEVICE_DEF_SIZE              = 0x59,
->>          QUERY_DESC_CONFIGURATION_DEF_SIZE       = 0x90,
->>          QUERY_DESC_UNIT_DEF_SIZE                = 0x23,
-> Might as well update the unit descriptor size - its 0x2D now,
-> As you are adding its new fields
-> 
->>          QUERY_DESC_INTERCONNECT_DEF_SIZE        = 0x06,
->> @@ -219,6 +226,7 @@ enum unit_desc_param {
->>          UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT        = 0x18,
->>          UNIT_DESC_PARAM_CTX_CAPABILITIES        = 0x20,
->>          UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1      = 0x22,
->> +       UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS      = 0x29,
->>   };
->>
->>   /* Device descriptor parameters offsets in bytes*/
->> @@ -258,6 +266,9 @@ enum device_desc_param {
->>          DEVICE_DESC_PARAM_PSA_MAX_DATA          = 0x25,
->>          DEVICE_DESC_PARAM_PSA_TMT               = 0x29,
->>          DEVICE_DESC_PARAM_PRDCT_REV             = 0x2A,
->> +       DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP   = 0x4F,
-> DEVICE_DESC_PARAM_WB_USER_TYPE               = 0x53,
-> 
->> +       DEVICE_DESC_PARAM_WB_TYPE               = 0x54,
->> +       DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNITS = 0x55,
->>   };
->>
-> 
-> 
->> +enum ufs_dev_wb_buf_user_cap_config {
->> +       UFS_WB_BUFF_PRESERVE_USER_SPACE = 1,
->> +       UFS_WB_BUFF_USER_SPACE_RED_EN = 2,
->> +};
-> Maybe better to follow the spec here:
-> Reduced - 0
-> Preserve - 1
+[I just saw there's a v4, so I'm moving over here]
+
+On Mon, 20 Apr 2020 20:33:35 PDT (-0700), Atish Patra wrote:
+> Linux kernel Image can appear as an EFI application With appropriate
+> PE/COFF header fields in the beginning of the Image header. An EFI
+> application loader can directly load a Linux kernel Image and an EFI
+> stub residing in kernel can boot Linux kernel directly.
 >
-I don't think these enums would be needed. Let me check and remove these 
-otherwise.
-  >> +static inline void ufshcd_wb_config(struct ufs_hba *hba)
->> +{
->> +       int ret;
->> +
->> +       if (!ufshcd_wb_sup(hba))
->> +               return;
->> +
->> +       ret = ufshcd_wb_ctrl(hba, true);
-> Why are you setting WB on init?
-During init the clocks are scaled-up. Hence, WB is set at init.
-It gets disabled when the clocks are scaled down, which is almost 
-immediate anyway.
+> Add the necessary PE/COFF header.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/include/asm/sections.h | 13 ++++
+>  arch/riscv/kernel/Makefile        |  4 ++
+>  arch/riscv/kernel/efi-header.S    | 99 +++++++++++++++++++++++++++++++
+>  arch/riscv/kernel/head.S          | 16 +++++
+>  arch/riscv/kernel/image-vars.h    | 53 +++++++++++++++++
+>  arch/riscv/kernel/vmlinux.lds.S   | 20 ++++++-
+>  6 files changed, 203 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/riscv/include/asm/sections.h
+>  create mode 100644 arch/riscv/kernel/efi-header.S
+>  create mode 100644 arch/riscv/kernel/image-vars.h
+>
+> diff --git a/arch/riscv/include/asm/sections.h b/arch/riscv/include/asm/sections.h
+> new file mode 100644
+> index 000000000000..3a9971b1210f
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/sections.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
+> + */
+> +#ifndef __ASM_SECTIONS_H
+> +#define __ASM_SECTIONS_H
+> +
+> +#include <asm-generic/sections.h>
+> +
+> +extern char _start[];
+> +extern char _start_kernel[];
+> +
+> +#endif /* __ASM_SECTIONS_H */
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index 86c83081044f..86ca755f8a9f 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -32,6 +32,10 @@ obj-y	+= patch.o
+>  obj-$(CONFIG_MMU) += vdso.o vdso/
+>
+>  obj-$(CONFIG_RISCV_M_MODE)	+= clint.o traps_misaligned.o
+> +OBJCOPYFLAGS := --prefix-symbols=__efistub_
+> +$(obj)/%.stub.o: $(obj)/%.o FORCE
+> +	$(call if_changed,objcopy)
+> +
+>  obj-$(CONFIG_FPU)		+= fpu.o
+>  obj-$(CONFIG_SMP)		+= smpboot.o
+>  obj-$(CONFIG_SMP)		+= smp.o
+> diff --git a/arch/riscv/kernel/efi-header.S b/arch/riscv/kernel/efi-header.S
+> new file mode 100644
+> index 000000000000..69dde8268527
+> --- /dev/null
+> +++ b/arch/riscv/kernel/efi-header.S
+> @@ -0,0 +1,99 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
+> + * Adapted from arch/arm64/kernel/efi-header.S
+> + */
+> +
+> +#include <linux/pe.h>
+> +#include <linux/sizes.h>
+> +
+> +	.macro	__EFI_PE_HEADER
+> +	.long	PE_MAGIC
+> +coff_header:
+> +	.short	IMAGE_FILE_MACHINE_RISCV64		// Machine
+> +	.short	section_count				// NumberOfSections
+> +	.long	0 					// TimeDateStamp
+> +	.long	0					// PointerToSymbolTable
+> +	.long	0					// NumberOfSymbols
+> +	.short	section_table - optional_header		// SizeOfOptionalHeader
+> +	.short	IMAGE_FILE_DEBUG_STRIPPED | \
+> +		IMAGE_FILE_EXECUTABLE_IMAGE | \
+> +		IMAGE_FILE_LINE_NUMS_STRIPPED		// Characteristics
+> +
+> +optional_header:
+> +	.short	PE_OPT_MAGIC_PE32PLUS			// PE32+ format
+> +	.byte	0x02					// MajorLinkerVersion
+> +	.byte	0x14					// MinorLinkerVersion
+> +	.long	__text_end - efi_header_end		// SizeOfCode
+> +	.long	_end - __text_end			// SizeOfInitializedData
+> +	.long	0					// SizeOfUninitializedData
+> +	.long	__efistub_efi_entry - _start		// AddressOfEntryPoint
+> +	.long	efi_header_end - _start			// BaseOfCode
+> +
+> +extra_header_fields:
+> +	.quad	0					// ImageBase
+> +	.long	SZ_4K					// SectionAlignment
+> +	.long	PECOFF_FILE_ALIGNMENT			// FileAlignment
+> +	.short	0					// MajorOperatingSystemVersion
+> +	.short	0					// MinorOperatingSystemVersion
+> +	.short	LINUX_EFISTUB_MAJOR_VERSION		// MajorImageVersion
+> +	.short	LINUX_EFISTUB_MINOR_VERSION		// MinorImageVersion
+> +	.short	0					// MajorSubsystemVersion
+> +	.short	0					// MinorSubsystemVersion
+> +	.long	0					// Win32VersionValue
+> +
+> +	.long	_end - _start				// SizeOfImage
+> +
+> +	// Everything before the kernel image is considered part of the header
+> +	.long	efi_header_end - _start			// SizeOfHeaders
+> +	.long	0					// CheckSum
+> +	.short	IMAGE_SUBSYSTEM_EFI_APPLICATION		// Subsystem
+> +	.short	0					// DllCharacteristics
+> +	.quad	0					// SizeOfStackReserve
+> +	.quad	0					// SizeOfStackCommit
+> +	.quad	0					// SizeOfHeapReserve
+> +	.quad	0					// SizeOfHeapCommit
+> +	.long	0					// LoaderFlags
+> +	.long	(section_table - .) / 8			// NumberOfRvaAndSizes
+> +
+> +	.quad	0					// ExportTable
+> +	.quad	0					// ImportTable
+> +	.quad	0					// ResourceTable
+> +	.quad	0					// ExceptionTable
+> +	.quad	0					// CertificationTable
+> +	.quad	0					// BaseRelocationTable
+> +
+> +	// Section table
+> +section_table:
+> +	.ascii	".text\0\0\0"
+> +	.long	__text_end - efi_header_end		// VirtualSize
+> +	.long	efi_header_end - _start			// VirtualAddress
+> +	.long	__text_end - efi_header_end		// SizeOfRawData
+> +	.long	efi_header_end - _start			// PointerToRawData
+> +
+> +	.long	0					// PointerToRelocations
+> +	.long	0					// PointerToLineNumbers
+> +	.short	0					// NumberOfRelocations
+> +	.short	0					// NumberOfLineNumbers
+> +	.long	IMAGE_SCN_CNT_CODE | \
+> +		IMAGE_SCN_MEM_READ | \
+> +		IMAGE_SCN_MEM_EXECUTE			// Characteristics
+> +
+> +	.ascii	".data\0\0\0"
+> +	.long	__data_virt_size			// VirtualSize
+> +	.long	__text_end - _start			// VirtualAddress
+> +	.long	__data_raw_size				// SizeOfRawData
+> +	.long	__text_end - _start			// PointerToRawData
+> +
+> +	.long	0					// PointerToRelocations
+> +	.long	0					// PointerToLineNumbers
+> +	.short	0					// NumberOfRelocations
+> +	.short	0					// NumberOfLineNumbers
+> +	.long	IMAGE_SCN_CNT_INITIALIZED_DATA | \
+> +		IMAGE_SCN_MEM_READ | \
+> +		IMAGE_SCN_MEM_WRITE			// Characteristics
+> +
+> +	.set	section_count, (. - section_table) / 40
+> +
+> +efi_header_end:
+> +	.endm
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 98a406474e7d..ddd613dac9d6 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -13,6 +13,7 @@
+>  #include <asm/csr.h>
+>  #include <asm/hwcap.h>
+>  #include <asm/image.h>
+> +#include "efi-header.S"
+>
+>  __HEAD
+>  ENTRY(_start)
+> @@ -22,10 +23,18 @@ ENTRY(_start)
+>  	 * Do not modify it without modifying the structure and all bootloaders
+>  	 * that expects this header format!!
+>  	 */
+> +#ifdef CONFIG_EFI
+> +	/*
+> +	 * This instruction decodes to "MZ" ASCII required by UEFI.
+> +	 */
+> +	li s4,-13
 
-> 
->> +       if (ret)
->> +               dev_err(hba->dev, "%s: Enable WB failed: %d\n", __func__, ret);
->> +       else
->> +               dev_info(hba->dev, "%s: Write Booster Configured\n", __func__);
->> +       ret = ufshcd_wb_toggle_flush_during_h8(hba, true);
->> +       if (ret)
->> +               dev_err(hba->dev, "%s: En WB flush during H8: failed: %d\n",
->> +                       __func__, ret);
->> +       ufshcd_wb_toggle_flush(hba, true);
-> Why set explicit flush on init?
-The design is to enable flush and let the device handle flush when DB's 
-are empty on its own. Hence I'm setting flush at init itself.
-> 
-> 
->> +
->> +
->> +static bool ufshcd_wb_keep_vcc_on(struct ufs_hba *hba)
->> +{
->> +       int ret;
->> +       u32 cur_buf, avail_buf;
->> +
->> +       if (!ufshcd_wb_sup(hba))
->> +               return false;
->> +       /*
->> +        * The ufs device needs the vcc to be ON to flush.
->> +        * With user-space reduction enabled, it's enough to enable flush
->> +        * by checking only the available buffer. The threshold
->> +        * defined here is > 90% full.
->> +        * With user-space preserved enabled, the current-buffer
->> +        * should be checked too because the wb buffer size can reduce
->> +        * when disk tends to be full. This info is provided by current
->> +        * buffer (dCurrentWriteBoosterBufferSize). There's no point in
->> +        * keeping vcc on when current buffer is empty.
->> +        */
->> +       ret = ufshcd_query_attr_retry(hba,
->> UPIU_QUERY_OPCODE_READ_ATTR,
->> +                                     QUERY_ATTR_IDN_AVAIL_WB_BUFF_SIZE,
->> +                                     0, 0, &avail_buf);
->> +       if (ret) {
->> +               dev_warn(hba->dev, "%s dAvailableWriteBoosterBufferSize read
->> failed %d\n",
->> +                        __func__, ret);
->> +               return false;
->> +       }
->> +
->> +       ret = ufshcd_vops_get_user_cap_mode(hba);
-> The Preserve User Space mode should be read from -
-> bWriteBoosterBufferPreserveUserSpaceEn of the device descriptor - 0ffset 0x53.
-> The driver should have no judgement here.
-> Based on what is configured, better to attach a helper pointer that will perform the below check,
-> e.g. ufshcd_wb_preserve_keep_vcc_on() and ufshcd_wb_reduced_keep_vcc_on().
-> Which will simplify the logic here and make it much more readable.
-> This makes the preparations you made for ufshcd_vops_get_user_cap_mode,
-> and your second patch unneeded.
-Thanks, that makes sense.
-> 
-> 
->>   /**
->>    * ufshcd_exception_event_handler - handle exceptions raised by device
->>    * @work: pointer to work data
->> @@ -6632,6 +6829,28 @@ static int ufs_get_device_desc(struct ufs_hba
->> *hba)
->>                                        desc_buf[DEVICE_DESC_PARAM_SPEC_VER + 1];
->>
->>          model_index = desc_buf[DEVICE_DESC_PARAM_PRDCT_NAME];
->> +       /* Enable WB only for UFS-3.1 */
->> +       if (dev_info->wspecversion >= 0x310) {
->> +               hba->dev_info.d_ext_ufs_feature_sup =
->> +                       get_unaligned_be32(desc_buf +
->> +                               DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP);
->> +               /*
->> +                * WB may be supported but not configured while provisioning.
->> +                * The spec says, in dedicated wb buffer mode,
->> +                * a max of 1 lun would have wb buffer configured.
->> +                * Now only shared buffer mode is supported.
->> +                */
->> +               hba->dev_info.b_wb_buffer_type =
->> +                       desc_buf[DEVICE_DESC_PARAM_WB_TYPE];
->> +
->> +               if (!hba->dev_info.b_wb_buffer_type)
->> +                       goto skip_alloc_unit;
->> +               hba->dev_info.d_wb_alloc_units =
->> +                       get_unaligned_be32(desc_buf +
->> +                               DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNITS);
->> +       }
-> Maybe pack the above code in a wb_probe() designated helper,
-> which will establish if WB is supported or not.
-> If one of your validation tests fails, maybe you can just
-> hba->caps &= ~UFSHCD_CAP_WB_EN;
-> which will further simplify your ufshcd_wb_sup()
-> 
-Good idea.
->   
->>          if ((req_dev_pwr_mode != hba->curr_dev_pwr_mode) &&
->> -            ((ufshcd_is_runtime_pm(pm_op) && !hba->auto_bkops_enabled) ||
->> -              !ufshcd_is_runtime_pm(pm_op))) {
->> +           ((ufshcd_is_runtime_pm(pm_op) && !hba->auto_bkops_enabled) ||
->> +            !ufshcd_is_runtime_pm(pm_op))) {
-> Redundant space removal
-> 
-> 
-> 
-> Thanks,
-> Avri
-> 
+This needs to be a c.li in order to encode as "MZ".  It'd be cleaner to
+explicitly write it that way rather that having the assembler transparently
+compress it, but we definately need to have Kconfig make EFI select ISA_C.
 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+> +	j _start_kernel
+> +#else
+>  	/* jump to start kernel */
+>  	j _start_kernel
+>  	/* reserved */
+>  	.word 0
+> +#endif
+>  	.balign 8
+>  #if __riscv_xlen == 64
+>  	/* Image load offset(2MB) from start of RAM */
+> @@ -43,7 +52,14 @@ ENTRY(_start)
+>  	.ascii RISCV_IMAGE_MAGIC
+>  	.balign 4
+>  	.ascii RISCV_IMAGE_MAGIC2
+> +#ifdef CONFIG_EFI
+> +	.word pe_head_start - _start
+> +pe_head_start:
+> +
+> +	__EFI_PE_HEADER
+> +#else
+>  	.word 0
+> +#endif
+>
+>  .align 2
+>  #ifdef CONFIG_MMU
+> diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
+> new file mode 100644
+> index 000000000000..bd8b764f0ad9
+> --- /dev/null
+> +++ b/arch/riscv/kernel/image-vars.h
+> @@ -0,0 +1,53 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
+> + * Linker script variables to be set after section resolution, as
+> + * ld.lld does not like variables assigned before SECTIONS is processed.
+> + * Based on arch/arm64/kerne/image-vars.h
+> + */
+> +#ifndef __RISCV_KERNEL_IMAGE_VARS_H
+> +#define __RISCV_KERNEL_IMAGE_VARS_H
+> +
+> +#ifndef LINKER_SCRIPT
+> +#error This file should only be included in vmlinux.lds.S
+> +#endif
+> +
+> +#ifdef CONFIG_EFI
+> +
+> +__efistub_stext_offset = _start_kernel - _start;
+> +
+> +/*
+> + * The EFI stub has its own symbol namespace prefixed by __efistub_, to
+> + * isolate it from the kernel proper. The following symbols are legally
+> + * accessed by the stub, so provide some aliases to make them accessible.
+> + * Only include data symbols here, or text symbols of functions that are
+> + * guaranteed to be safe when executed at another offset than they were
+> + * linked at. The routines below are all implemented in assembler in a
+> + * position independent manner
+> + */
+> +__efistub_memcmp		= memcmp;
+> +__efistub_memchr		= memchr;
+> +__efistub_memcpy		= memcpy;
+> +__efistub_memmove		= memmove;
+> +__efistub_memset		= memset;
+> +__efistub_strlen		= strlen;
+> +__efistub_strnlen		= strnlen;
+> +__efistub_strcmp		= strcmp;
+> +__efistub_strncmp		= strncmp;
+> +__efistub_strrchr		= strrchr;
+> +
+> +#ifdef CONFIG_KASAN
+> +__efistub___memcpy		= memcpy;
+> +__efistub___memmove		= memmove;
+> +__efistub___memset		= memset;
+> +#endif
+> +
+> +__efistub__start		= _start;
+> +__efistub__start_kernel		= _start_kernel;
+> +__efistub__end			= _end;
+> +__efistub__edata		= _edata;
+> +__efistub_screen_info		= screen_info;
+> +
+> +#endif
+> +
+> +#endif /* __RISCV_KERNEL_IMAGE_VARS_H */
+> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+> index 0339b6bbe11a..20ebf7e8c215 100644
+> --- a/arch/riscv/kernel/vmlinux.lds.S
+> +++ b/arch/riscv/kernel/vmlinux.lds.S
+> @@ -10,6 +10,7 @@
+>  #include <asm/cache.h>
+>  #include <asm/thread_info.h>
+>  #include <asm/set_memory.h>
+> +#include "image-vars.h"
+>
+>  #include <linux/sizes.h>
+>  OUTPUT_ARCH(riscv)
+> @@ -17,6 +18,14 @@ ENTRY(_start)
+>
+>  jiffies = jiffies_64;
+>
+> +PECOFF_FILE_ALIGNMENT = 0x200;
+> +#ifdef CONFIG_EFI
+> +#define PECOFF_EDATA_PADDING	\
+> +	.pecoff_edata_padding : { BYTE(0); . = ALIGN(PECOFF_FILE_ALIGNMENT); }
+> +#else
+> +#define PECOFF_EDATA_PADDING
+> +#endif
+> +
+>  SECTIONS
+>  {
+>  	/* Beginning of code and text segment */
+> @@ -62,6 +71,8 @@ SECTIONS
+>  		_etext = .;
+>  	}
+>
+> +	__text_end = .;
+> +
+>  	/* Start of data section */
+>  	_sdata = .;
+>  	RO_DATA(SECTION_ALIGN)
+> @@ -78,9 +89,12 @@ SECTIONS
+>  	.sdata : {
+>  		__global_pointer$ = . + 0x800;
+>  		*(.sdata*)
+> -		/* End of data section */
+> -		_edata = .;
+>  	}
+> +	PECOFF_EDATA_PADDING
+> +	__data_raw_size = ABSOLUTE(. - __text_end);
+> +
+> +	/* End of data section */
+> +	_edata = .;
+>
+>  	BSS_SECTION(PAGE_SIZE, PAGE_SIZE, 0)
+>
+> @@ -88,6 +102,8 @@ SECTIONS
+>  		*(.rel.dyn*)
+>  	}
+>
+> +	__data_virt_size = ABSOLUTE(. - __text_end);
+> +
+>  	_end = .;
+>
+>  	STABS_DEBUG
