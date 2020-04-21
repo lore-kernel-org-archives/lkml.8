@@ -2,144 +2,213 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BB4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8C6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8340E2074B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519822074B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:25:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgDUHZF (ORCPT
+        id S1727888AbgDUHZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:25:05 -0400
-Received: from mga17.intel.com ([192.55.52.151]:64247 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDUHZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:25:05 -0400
-IronPort-SDR: /X/Aft6/SpRoQTuL0N4mwTkvnzyJrK/TG6Fnk6Vzz1mL+VTQv0k3CzUpGVGigctTFWoTnYZdMM
- S3/QhO2ezGEQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 00:25:05 -0700
-IronPort-SDR: KzWZwGfjjFV+H5dJytaFfyp3whYIeEPMl40J7HFmm9gR0oP/nuv3lEMDb9a3jsnhocicrDT2P8
- TqFMHfyQC8ng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,409,1580803200"; 
-   d="scan'208";a="456001158"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Apr 2020 00:25:05 -0700
-Received: from fmsmsx162.amr.corp.intel.com (10.18.125.71) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 21 Apr 2020 00:25:04 -0700
-Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
- fmsmsx162.amr.corp.intel.com (10.18.125.71) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 21 Apr 2020 00:25:04 -0700
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.138]) by
- SHSMSX103.ccr.corp.intel.com ([169.254.4.146]) with mapi id 14.03.0439.000;
- Tue, 21 Apr 2020 15:25:02 +0800
-From:   "Xia, Hui" <hui.xia@intel.com>
-To:     "Li, Philip" <philip.li@intel.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     lkp <lkp@intel.com>, Jonathan Cameron <jic23@kernel.org>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/3] iio: adc: ti-ads8344: properly byte swap value
-Thread-Topic: [PATCH 1/3] iio: adc: ti-ads8344: properly byte swap value
-Thread-Index: AQHWFDDmE8xKP+EJp0SuTzhbL03ZEah/O+MAgAPxjzA=
-Date:   Tue, 21 Apr 2020 07:25:01 +0000
-Message-ID: <2A5F4C9150EECB4DAA6291810D6D61B9745DE89F@shsmsx102.ccr.corp.intel.com>
-References: <20200415212257.161238-2-alexandre.belloni@bootlin.com>
- <202004161449.NY5hL54S%lkp@intel.com> <20200416205023.GA437042@piout.net>
- <20200419024948.GK21730@intel.com>
-In-Reply-To: <20200419024948.GK21730@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Tue, 21 Apr 2020 03:25:25 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:49720 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgDUHZY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 03:25:24 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1jQnFN-0005gp-BL; Tue, 21 Apr 2020 02:23:09 -0500
+Message-ID: <876d477d6d8db20c41be3eb59850c51e6badbfcf.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Wang Wenhu <wenhu.wang@vivo.com>, gregkh@linuxfoundation.org,
+        arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     kernel@vivo.com, robh@kernel.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>
+Date:   Tue, 21 Apr 2020 02:23:08 -0500
+In-Reply-To: <20200420030538.101696-1-wenhu.wang@vivo.com>
+References: <20200420030538.101696-1-wenhu.wang@vivo.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: wenhu.wang@vivo.com, gregkh@linuxfoundation.org, arnd@arndb.de, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kernel@vivo.com, robh@kernel.org, christophe.leroy@c-s.fr, mpe@ellerman.id.au, rdunlap@infradead.org
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v2,RESEND] misc: new driver sram_uapi for user level
+ SRAM access
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IExpLCBQaGlsaXAgPHBoaWxp
-cC5saUBpbnRlbC5jb20+DQo+U2VudDogMjAyMOW5tDTmnIgxOeaXpSAxMDo1MA0KPlRvOiBBbGV4
-YW5kcmUgQmVsbG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb20+DQo+Q2M6IGxrcCA8
-bGtwQGludGVsLmNvbT47IEpvbmF0aGFuIENhbWVyb24gPGppYzIzQGtlcm5lbC5vcmc+OyBrYnVp
-bGQtDQo+YWxsQGxpc3RzLjAxLm9yZzsgSGFydG11dCBLbmFhY2sgPGtuYWFjay5oQGdteC5kZT47
-IExhcnMtUGV0ZXIgQ2xhdXNlbg0KPjxsYXJzQG1ldGFmb28uZGU+OyBQZXRlciBNZWVyd2FsZC1T
-dGFkbGVyIDxwbWVlcndAcG1lZXJ3Lm5ldD47IEdyZWdvcnkNCj5DTEVNRU5UIDxncmVnb3J5LmNs
-ZW1lbnRAYm9vdGxpbi5jb20+OyBsaW51eC1paW9Admdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+U3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIGlpbzogYWRj
-OiB0aS1hZHM4MzQ0OiBwcm9wZXJseSBieXRlIHN3YXAgdmFsdWUNCj4NCj5PbiBUaHUsIEFwciAx
-NiwgMjAyMCBhdCAxMDo1MDoyM1BNICswMjAwLCBBbGV4YW5kcmUgQmVsbG9uaSB3cm90ZToNCj4+
-IEhpLA0KPj4NCj4+IE9uIDE2LzA0LzIwMjAgMTQ6MjI6MDMrMDgwMCwga2J1aWxkIHRlc3Qgcm9i
-b3Qgd3JvdGU6DQo+PiA+IEhpIEFsZXhhbmRyZSwNCj4+ID4NCj4+ID4gSSBsb3ZlIHlvdXIgcGF0
-Y2ghIFlldCBzb21ldGhpbmcgdG8gaW1wcm92ZToNCj4+ID4NCj4+ID4gW2F1dG8gYnVpbGQgdGVz
-dCBFUlJPUiBvbiBpaW8vdG9ncmVnXSBbYWxzbyBidWlsZCB0ZXN0IEVSUk9SIG9uDQo+PiA+IHY1
-LjctcmMxIG5leHQtMjAyMDA0MTVdIFtpZiB5b3VyIHBhdGNoIGlzIGFwcGxpZWQgdG8gdGhlIHdy
-b25nIGdpdA0KPj4gPiB0cmVlLCBwbGVhc2UgZHJvcCB1cyBhIG5vdGUgdG8gaGVscCBpbXByb3Zl
-IHRoZSBzeXN0ZW0uIEJUVywgd2UgYWxzbw0KPj4gPiBzdWdnZXN0IHRvIHVzZSAnLS1iYXNlJyBv
-cHRpb24gdG8gc3BlY2lmeSB0aGUgYmFzZSB0cmVlIGluIGdpdA0KPj4gPiBmb3JtYXQtcGF0Y2gs
-IHBsZWFzZSBzZWUgaHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9hLzM3NDA2OTgyXQ0KPj4gPg0K
-Pj4gPiB1cmw6ICAgIGh0dHBzOi8vZ2l0aHViLmNvbS8wZGF5LWNpL2xpbnV4L2NvbW1pdHMvQWxl
-eGFuZHJlLUJlbGxvbmkvaWlvLWFkYy10aS0NCj5hZHM4MzQ0LWltcHJvdmUtdGhlLWRyaXZlci8y
-MDIwMDQxNi0wNzMzNTcNCj4+ID4gYmFzZTogICBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9z
-Y20vbGludXgva2VybmVsL2dpdC9qaWMyMy9paW8uZ2l0IHRvZ3JlZw0KPj4gPiBjb25maWc6IGM2
-eC1hbGx5ZXNjb25maWcgKGF0dGFjaGVkIGFzIC5jb25maWcpDQo+PiA+IGNvbXBpbGVyOiBjNngt
-ZWxmLWdjYyAoR0NDKSA5LjMuMA0KPj4gPiByZXByb2R1Y2U6DQo+PiA+ICAgICAgICAgd2dldCBo
-dHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vaW50ZWwvbGtwLQ0KPnRlc3RzL21hc3Rl
-ci9zYmluL21ha2UuY3Jvc3MgLU8gfi9iaW4vbWFrZS5jcm9zcw0KPj4gPiAgICAgICAgIGNobW9k
-ICt4IH4vYmluL21ha2UuY3Jvc3MNCj4+ID4gICAgICAgICAjIHNhdmUgdGhlIGF0dGFjaGVkIC5j
-b25maWcgdG8gbGludXggYnVpbGQgdHJlZQ0KPj4gPiAgICAgICAgIENPTVBJTEVSX0lOU1RBTExf
-UEFUSD0kSE9NRS8wZGF5IEdDQ19WRVJTSU9OPTkuMy4wDQo+PiA+IG1ha2UuY3Jvc3MgQVJDSD1j
-NngNCj4+ID4NCj4+DQo+PiBJIHNwZW50IHNvbWUgdGltZSB0byByZXByb2R1Y2UgYW5kIHRoaXMg
-aXMgYWN0dWFsbHkgbm90IHRoYXQgdHJpdmlhbA0KPj4gYmVjYXVzZSB5b3VyIHRvb2xjaGFpbnMg
-YXJlIGxpbmtlZCB3aXRoIGxpYmlzbDIyIGFuZCBtb3N0DQo+PiBkaXN0cmlidXRpb25zIHN0aWxs
-IHNoaXAgYW4gb2xkZXIgdmVyc2lvbi4gTWF5YmUgeW91IGNhbiBkbyBzb21ldGhpbmcgYWJvdXQg
-dGhhdD8NCj5UaGFua3MgZm9yIHRoZSBmZWVkYmFjaywgd2Ugd2lsbCByZXNvbHZlIHRoaXMgdG8g
-dXNlIG9sZCB2ZXJzaW9uIGluIGVhcmxpZXN0IHRpbWUuDQpUaGUgY3Jvc3MgdG9vbGNoYWlucyBo
-YXMgYmVlbiB1cGRhdGVkIHRvIGxpbmsgd2l0aCBsaWJpc2wxOSB0aGUgc3RhYmxlIHZlcnNpb24u
-IFBsZWFzZSByZW1vdmUgdGhlIG9sZCB0b29sY2hhaW4gYW5kIG1ha2UuY3Jvc3MgYWdhaW4uDQpG
-ZWVsIGZyZWUgdG8gbGV0IHVzIGtub3cgaWYgc3RpbGwgaGF2ZSBwcm9ibGVtLiBUaGFua3MuDQoN
-Cj4NCj4+DQo+PiA+IElmIHlvdSBmaXggdGhlIGlzc3VlLCBraW5kbHkgYWRkIGZvbGxvd2luZyB0
-YWcgYXMgYXBwcm9wcmlhdGUNCj4+ID4gUmVwb3J0ZWQtYnk6IGtidWlsZCB0ZXN0IHJvYm90IDxs
-a3BAaW50ZWwuY29tPg0KPj4gPg0KPj4gPiBBbGwgZXJyb3JzIChuZXcgb25lcyBwcmVmaXhlZCBi
-eSA+Pik6DQo+PiA+DQo+PiA+DQo+PiA+IHZpbSArLzMwMiArOTYgZHJpdmVycy9paW8vYWRjL3Rp
-LWFkczgzNDQuYw0KPj4gPg0KPj4gPiAgICAgNzINCj4+ID4gICAgIDczCXN0YXRpYyBpbnQgYWRz
-ODM0NF9hZGNfY29udmVyc2lvbihzdHJ1Y3QgYWRzODM0NCAqYWRjLCBpbnQNCj5jaGFubmVsLA0K
-Pj4gPiAgICAgNzQJCQkJCSAgYm9vbCBkaWZmZXJlbnRpYWwpDQo+PiA+ICAgICA3NQl7DQo+PiA+
-ICAgICA3NgkJc3RydWN0IHNwaV9kZXZpY2UgKnNwaSA9IGFkYy0+c3BpOw0KPj4gPiAgICAgNzcJ
-CWludCByZXQ7DQo+PiA+ICAgICA3OAkJdTggYnVmWzNdOw0KPj4gPiAgICAgNzkNCj4+ID4gICAg
-IDgwCQlhZGMtPnR4X2J1ZiA9IEFEUzgzNDRfU1RBUlQ7DQo+PiA+ICAgICA4MQkJaWYgKCFkaWZm
-ZXJlbnRpYWwpDQo+PiA+ICAgICA4MgkJCWFkYy0+dHhfYnVmIHw9IEFEUzgzNDRfU0lOR0xFX0VO
-RDsNCj4+ID4gICAgIDgzCQlhZGMtPnR4X2J1ZiB8PSBBRFM4MzQ0X0NIQU5ORUwoY2hhbm5lbCk7
-DQo+PiA+ICAgICA4NAkJYWRjLT50eF9idWYgfD0gQURTODM0NF9DTE9DS19JTlRFUk5BTDsNCj4+
-ID4gICAgIDg1DQo+PiA+ICAgICA4NgkJcmV0ID0gc3BpX3dyaXRlKHNwaSwgJmFkYy0+dHhfYnVm
-LCAxKTsNCj4+ID4gICAgIDg3CQlpZiAocmV0KQ0KPj4gPiAgICAgODgJCQlyZXR1cm4gcmV0Ow0K
-Pj4gPiAgICAgODkNCj4+ID4gICAgIDkwCQl1ZGVsYXkoOSk7DQo+PiA+ICAgICA5MQ0KPj4gPiAg
-ICAgOTIJCXJldCA9IHNwaV9yZWFkKHNwaSwgYnVmLCBzaXplb2YoYnVmKSk7DQo+PiA+ICAgICA5
-MwkJaWYgKHJldCkNCj4+ID4gICAgIDk0CQkJcmV0dXJuIHJldDsNCj4+ID4gICAgIDk1DQo+PiA+
-ICAgPiA5NgkJcmV0dXJuIGJ1ZlswXSA8PCA5IHwgYnVmWzFdIDw8IDEgfMKgYnVmWzJdID4+IDc7
-DQo+PiA+ICAgICA5Nwl9DQo+PiA+ICAgICA5OA0KPj4gPg0KPj4NCj4+IEkgdGFrZSBpdCB0aGlz
-IGlzIGEgZmFsc2UgcG9zaXRpdmUgYXMgSSBkb24ndCBnZXQgYW55IGVycm9ycyB3aGVuDQo+PiBi
-dWlsZGluZyB0aGlzIGRyaXZlciB3aXRoIHRoZSBwcm92aWRlZCB0b29sY2hhaW4uIEhvd2V2ZXIs
-IEkgc2VlIGEgZmV3DQo+PiAiaW50ZXJuYWwgY29tcGlsZXIgZXJyb3I6IGluIHByaW9yaXR5LCBh
-dCBoYWlmYS1zY2hlZC5jOjE1OTkiDQo+Pg0KPj4gLS0NCj4+IEFsZXhhbmRyZSBCZWxsb25pLCBC
-b290bGluDQo+PiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nDQo+PiBodHRw
-czovL2Jvb3RsaW4uY29tDQo+Pg0K
+On Sun, 2020-04-19 at 20:05 -0700, Wang Wenhu wrote:
+> +static void sram_uapi_res_insert(struct sram_uapi *uapi,
+> +				 struct sram_resource *res)
+> +{
+> +	struct sram_resource *cur, *tmp;
+> +	struct list_head *head = &uapi->res_list;
+> +
+> +	list_for_each_entry_safe(cur, tmp, head, list) {
+> +		if (&tmp->list != head &&
+> +		    (cur->info.offset + cur->info.size + res->info.size <=
+> +		    tmp->info.offset)) {
+> +			res->info.offset = cur->info.offset + cur->info.size;
+> +			res->parent = uapi;
+> +			list_add(&res->list, &cur->list);
+> +			return;
+> +		}
+> +	}
+
+We don't need yet another open coded allocator.  If you really need to do this
+then use include/linux/genalloc.h, but maybe keep it simple and just have one
+allocaton per file descriptor so you don't need to manage fd offsets?
+
+> +static struct sram_resource *sram_uapi_find_res(struct sram_uapi *uapi,
+> +						__u32 offset)
+> +{
+> +	struct sram_resource *res;
+> +
+> +	list_for_each_entry(res, &uapi->res_list, list) {
+> +		if (res->info.offset == offset)
+> +			return res;
+> +	}
+> +
+> +	return NULL;
+> +}
+
+What if the allocation is more than one page, and the user mmaps starting
+somewhere other than the first page?
+
+> +	switch (cmd) {
+> +	case SRAM_UAPI_IOC_SET_SRAM_TYPE:
+> +		if (uapi->sa)
+> +			return -EEXIST;
+> +
+> +		get_user(type, (const __u32 __user *)arg);
+> +		uapi->sa = get_sram_api_from_type(type);
+> +		if (uapi->sa)
+> +			ret = 0;
+> +		else
+> +			ret = -ENODEV;
+> +
+> +		break;
+> +
+
+Just expose one device per backing SRAM, especially if the user has any reason
+to care about where the SRAM is coming from (correlating sysfs nodes is much
+more expressive than some vague notion of "type").
+
+> +	case SRAM_UAPI_IOC_ALLOC:
+> +		if (!uapi->sa)
+> +			return -EINVAL;
+> +
+> +		res = kzalloc(sizeof(*res), GFP_KERNEL);
+> +		if (!res)
+> +			return -ENOMEM;
+> +
+> +		size = copy_from_user((void *)&res->info,
+> +				      (const void __user *)arg,
+> +				      sizeof(res->info));
+> +		if (!PAGE_ALIGNED(res->info.size) || !res->info.size)
+> +			return -EINVAL;
+
+Missing EFAULT test (here and elsewhere), and res leaks on error.
+
+> +
+> +		res->virt = (void *)uapi->sa->sram_alloc(res->info.size,
+> +							 &res->phys,
+> +							 PAGE_SIZE);
+
+Do we really need multiple allocators, or could the backend be limited to just
+adding regions to a generic allocator (with that allocator also serving in-
+kernel users)?
+
+If sram_alloc is supposed to return a virtual address, why isn't that the
+return type?
+
+> +		if (!res->virt) {
+> +			kfree(res);
+> +			return -ENOMEM;
+> +		}
+
+ENOSPC might be more appropriate, as this isn't general-purpose RAM.
+
+> +
+> +		sram_uapi_res_insert(uapi, res);
+> +		size = copy_to_user((void __user *)arg,
+> +				    (const void *)&res->info,
+> +				    sizeof(res->info));
+> +
+> +		ret = 0;
+> +		break;
+> +
+> +	case SRAM_UAPI_IOC_FREE:
+> +		if (!uapi->sa)
+> +			return -EINVAL;
+> +
+> +		size = copy_from_user((void *)&info, (const void __user *)arg,
+> +				      sizeof(info));
+> +
+> +		res = sram_uapi_res_delete(uapi, &info);
+> +		if (!res) {
+> +			pr_err("error no sram resource found\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		uapi->sa->sram_free(res->virt);
+> +		kfree(res);
+> +
+> +		ret = 0;
+> +		break;
+
+So you can just delete any arbitrary offset, even if you weren't the one that
+allocated it?  Even if this isn't meant for unprivileged use it seems error-
+prone.  
+
+> +
+> +	default:
+> +		pr_err("error no cmd not supported\n");
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int sram_uapi_mmap(struct file *filp, struct vm_area_struct *vma)
+> +{
+> +	struct sram_uapi *uapi = filp->private_data;
+> +	struct sram_resource *res;
+> +
+> +	res = sram_uapi_find_res(uapi, vma->vm_pgoff);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	if (vma->vm_end - vma->vm_start > res->info.size)
+> +		return -EINVAL;
+> +
+> +	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+> +
+> +	return remap_pfn_range(vma, vma->vm_start,
+> +			       res->phys >> PAGE_SHIFT,
+> +			       vma->vm_end - vma->vm_start,
+> +			       vma->vm_page_prot);
+> +}
+
+Will noncached always be what's wanted here?
+
+-Scott
+
+
