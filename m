@@ -2,96 +2,103 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD56C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05A0C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24194206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:57:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RQiKQXkD"
+	by mail.kernel.org (Postfix) with ESMTP id A3626206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587488240;
+	bh=ZMjic/kHoTu9aQuYEPSO0wAqwNOZUSDBn1RybeMf048=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bgL6cul5MZyXf8p+M6LDmC4LvU39/iiykPSmzIFNmLa2VKlJIuVqMgkZu6Ge5JtLz
+	 dbH1cLp1R5UjHGVZ8+Cp1B0KI/3UNpAyGpvfPDBVK7nyaohmdTIp3RiQlM0AGIOqF5
+	 eS7qjznecr57wpg9HmpUaV4BY64sMRwXirrajkxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgDUQ5L (ORCPT
+        id S1729663AbgDUQ5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:57:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60999 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729568AbgDUQ4k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:56:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587488199;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=Rf0y5DMEXDv12IlLkk2NBKoWJYu1ZKBxtnnwzy0NcJ0=;
-        b=RQiKQXkDckNC4+IfRXjOsRZzFSbUXPywSQQ2c5Sdv0qD1WtFzA4KiYikF+6gdRvLXxeTNA
-        K8fFzGmDEqgLNPgXkKLEWdYEvV1G95jdTJ0GCsIUOYAAKzYyiKWeU7d8k6QjDKJcU7Iuod
-        1okoo7J8xzgh/oliLVIQRDxH4LQjfT0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-Fn-gG8nQN_qT5Vt52099EQ-1; Tue, 21 Apr 2020 12:56:37 -0400
-X-MC-Unique: Fn-gG8nQN_qT5Vt52099EQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 21 Apr 2020 12:57:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729003AbgDUQyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:54:46 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B204DBA5;
-        Tue, 21 Apr 2020 16:56:36 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 693CC48;
-        Tue, 21 Apr 2020 16:56:33 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     peterx@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH v2 0/3] KVM: x86: move nested-related kvm_x86_ops to a separate struct
-Date:   Tue, 21 Apr 2020 12:56:29 -0400
-Message-Id: <20200421165632.20157-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        by mail.kernel.org (Postfix) with ESMTPSA id 44CC12076E;
+        Tue, 21 Apr 2020 16:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587488084;
+        bh=ZMjic/kHoTu9aQuYEPSO0wAqwNOZUSDBn1RybeMf048=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y5bR3LMiOAcD1WrP8uT5evU7aboDnxD22jeCIYBY6c+73QQpd/3Gw6fWsAGC5vl3S
+         iFn0XpD61TM7ytaYLLfusRkpk2qxEFy7ZMxlDxt8Q4JsmE9et82G8Ho4YoKZKbGGZF
+         B5tmLNHBpoZo28jA27qw/9nftbhemd6MUliDO39I=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jQwAU-00CmEW-Hq; Tue, 21 Apr 2020 18:54:42 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 15/29] docs: filesystems: convert fuse-io.txt to ReST
+Date:   Tue, 21 Apr 2020 18:54:26 +0200
+Message-Id: <b32ab688aa4f3392939f5d24666ea96ed2bf456c.1587487612.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1587487612.git.mchehab+huawei@kernel.org>
+References: <cover.1587487612.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch 3 follows the lead of the kvm_pmu_ops and moves callbacks related
-to nested virtualization to a separate struct.  Patches 1 and 2 are
-preparation (patch 1 mostly makes some lines shorter, while patch 2
-avoids semantic changes in KVM_GET_SUPPORTED_HV_CPUID).
+- Add a SPDX header;
+- Add a document title;
+- Add it to filesystems/index.rst.
 
-While this reintroduces some pointer chasing that was removed in
-afaf0b2f9b80 ("KVM: x86: Copy kvm_x86_ops by value to eliminate layer
-of indirection", 2020-03-31), the cost is small compared to retpolines
-and anyway most of the callbacks are not even remotely on a fastpath.
-In fact, only check_nested_events should be called during normal VM
-runtime.  When static calls are merged into Linux my plan is to use them
-instead of callbacks, and that will finally make things fast again by
-removing the retpolines.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/filesystems/{fuse-io.txt => fuse-io.rst} | 6 ++++++
+ Documentation/filesystems/index.rst                    | 1 +
+ 2 files changed, 7 insertions(+)
+ rename Documentation/filesystems/{fuse-io.txt => fuse-io.rst} (95%)
 
-Thanks,
-
-Paolo
-
-v1->v2: shorten names by removing "nested".  I did _not_ introduce copying.
-
-Paolo Bonzini (3):
-  KVM: x86: check_nested_events is never NULL
-  KVM: eVMCS: check if nesting is enabled
-  KVM: x86: move nested-related kvm_x86_ops to a separate struct
-
- arch/x86/include/asm/kvm_host.h | 29 +++++++++++++++-------------
- arch/x86/kvm/hyperv.c           |  4 ++--
- arch/x86/kvm/svm/nested.c       |  6 +++++-
- arch/x86/kvm/svm/svm.c          | 13 +++++--------
- arch/x86/kvm/svm/svm.h          |  3 ++-
- arch/x86/kvm/vmx/evmcs.c        | 24 ++++++++++++-----------
- arch/x86/kvm/vmx/nested.c       | 16 +++++++++-------
- arch/x86/kvm/vmx/nested.h       |  2 ++
- arch/x86/kvm/vmx/vmx.c          |  7 +------
- arch/x86/kvm/x86.c              | 34 ++++++++++++++++-----------------
- 10 files changed, 72 insertions(+), 66 deletions(-)
-
+diff --git a/Documentation/filesystems/fuse-io.txt b/Documentation/filesystems/fuse-io.rst
+similarity index 95%
+rename from Documentation/filesystems/fuse-io.txt
+rename to Documentation/filesystems/fuse-io.rst
+index 07b8f73f100f..255a368fe534 100644
+--- a/Documentation/filesystems/fuse-io.txt
++++ b/Documentation/filesystems/fuse-io.rst
+@@ -1,3 +1,9 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==============
++Fuse I/O Modes
++==============
++
+ Fuse supports the following I/O modes:
+ 
+ - direct-io
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index a996d880025e..844e8065ac82 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -85,6 +85,7 @@ Documentation for filesystem implementations.
+    hfsplus
+    hpfs
+    fuse
++   fuse-io
+    inotify
+    isofs
+    nilfs2
 -- 
-2.18.2
+2.25.2
 
