@@ -2,125 +2,95 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF20C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC14C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8FB02064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5EA2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:46:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NGonbqJQ"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="NKQVLMLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgDULkO (ORCPT
+        id S1728519AbgDULq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:40:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29183 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728335AbgDULkN (ORCPT
+        Tue, 21 Apr 2020 07:46:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726691AbgDULq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:40:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587469211;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WXGo5tMnmRN2aCytbsR/ONxLvJJwfyJk/gIIERFs1mw=;
-        b=NGonbqJQiMhbLJVtcXEs2r8iI920rnwqYQHUFFo72qblv8L9CRH4U8UOGzLyeFq5MMpBST
-        yh3P+THKjlt469vzMSIDlWMgfkihA1O5nN9u6sVvSABGibxDsz2WhexsZ4TzJlKr8E4l8V
-        kNiYvWRMNBr0OL7s7rczqvTvQK4fVWo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-jQjw10mYP3eqesj1HDLelw-1; Tue, 21 Apr 2020 07:40:09 -0400
-X-MC-Unique: jQjw10mYP3eqesj1HDLelw-1
-Received: by mail-wm1-f69.google.com with SMTP id u11so1254686wmc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:40:09 -0700 (PDT)
+        Tue, 21 Apr 2020 07:46:57 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA484C061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:46:56 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b2so8163348ljp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2+H9os75cIo4KHTrHVk8LMtdC9lnVa9Alpi6f3QpAfg=;
+        b=NKQVLMLCfLf1tnVQ/SkrUSgZmpkmJLntDQgHa3XQmJNgd38Ila3CM7WovB8nRFqKyv
+         9VYxQ63+odAnzCgrDHHCMhe0RYb+g0lT+YZ/CooSujIRfc+tvSyrZ/ooJSmCeXP5rovS
+         /NSKdA1bsJurtOR8JqI4ZCQiswLMdaIjKrN8VGn+J3dZLU9ULqnOdLaViZ2jwcHqmNxa
+         Woty4SKmvoALvdi7MVJTYT3ksx++UggI0wGzHc8YM6tRYoU1KQpJIbRh202XJFn04bFX
+         spJVzeKThRJnA7UdAuYdJMB7sQdPJrlUXy5VJuWF4/lyCCaO3HGVV6+P5CVVTEFjVUiE
+         Z3lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WXGo5tMnmRN2aCytbsR/ONxLvJJwfyJk/gIIERFs1mw=;
-        b=Ox/KpnWwFnpwQbXnF2RM0n6fRSpLxinTVjR8f6OHYFDudbf62MUzKwc2v9RxpQVweo
-         h3P8EWzQiC2ybXmQbpBJHn8dO+Qq8nbvU6BR1/Itrq/lLBCbpmzUeHIAT86+zwEGb2lU
-         ueRWTXsUXYZtyHMqWIH3T2VZrny4AnPgWGdv5oQ5hEyspTprjqg67IE2o0WBgBRhZi1X
-         iRlWu5joy//cMm4pVUe/xtzJQgB4Kh72OpXj7gD4We+0hjlyO7tmKVAG5e8aYYHV1IY1
-         Q+pcmfANet74DZuJik6xWgoxmECdELZGyXvcskfjg87pmJJQHCk7q2Itkc8tbPNDfTay
-         EzDQ==
-X-Gm-Message-State: AGi0PuY6WaxKEfYaAxAQoNum+ECCTN/JEtjP+usOd7JMrd1CnTuv1J4u
-        xOGDlo9jUrJ2wSNKCTQj1rYmULiRoEElFdHUu4P0DTaQNRrcvfJpjw0+Uo6V3tC91DrtD44hSZ8
-        ROlWALk0VHBFJuioRaG/JbrfT
-X-Received: by 2002:a05:600c:214b:: with SMTP id v11mr4723221wml.151.1587469208312;
-        Tue, 21 Apr 2020 04:40:08 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLy8DKo++cKyza5NC+5GJmV2GcubZ++IDuuWg27HnTf2+likrC++CmAj2XRFifBSyvGdjLx5w==
-X-Received: by 2002:a05:600c:214b:: with SMTP id v11mr4723195wml.151.1587469208078;
-        Tue, 21 Apr 2020 04:40:08 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
-        by smtp.gmail.com with ESMTPSA id v7sm3846697wmg.3.2020.04.21.04.40.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 04:40:07 -0700 (PDT)
-Subject: Re: [PATCH 2/2] KVM: VMX: Handle preemption timer fastpath
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-References: <1587468026-15753-1-git-send-email-wanpengli@tencent.com>
- <1587468026-15753-3-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <68eb0e46-4c2a-0292-3dfa-db2ae2b2b13d@redhat.com>
-Date:   Tue, 21 Apr 2020 13:40:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2+H9os75cIo4KHTrHVk8LMtdC9lnVa9Alpi6f3QpAfg=;
+        b=JxpA85pthxipZ8JS/X/TJmC3WN7nGOoX7t58C16oJKq9luG/6AmQE0P3Z7qn5mCuoT
+         oHjau5VvKH6xQ5LMv7LsFEx2psGpUEvpO1GfXjuJMdDlv5hq0V5gmZVmxhXJiN168B09
+         VCYVr94Xv3dUwUjyvQGgqBxwg9RWTVeSyOTOXOuH2u+GhI5reflxF6C2zhgpET2t2ZTO
+         ikWX0PvPaA9pBJIuV3U0hLfse9jcsyLW8sb5sCeFYfBrc18dEukJVlW67mo8UGmbB7cw
+         BcK8CduxU3jSd5/m2NM8y/uvkrIc8gPGC4zAd3o1KATHMxM1OYFJXvOCK9LqMDWir1F7
+         Ah7g==
+X-Gm-Message-State: AGi0Pub0cImR7heTn3Ztke1GdoUnIuWkihJd9yj9+6goKFBpqpE2PRca
+        QtogrxFtP5HKJZx0wiToFleo+O+SyoDLx+fWONbotg==
+X-Google-Smtp-Source: APiQypLgsnJow2mpiivOAayYhtuUEJT1TmUYjjrfGeaQB2ofILE7UEw7yn2rngCib3Z1WguRRmyvG7q1r8qOwWU+hRc=
+X-Received: by 2002:a2e:9842:: with SMTP id e2mr7288847ljj.273.1587469615222;
+ Tue, 21 Apr 2020 04:46:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1587468026-15753-3-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200420080409.111693-1-maco@android.com> <20200420080409.111693-3-maco@android.com>
+ <888a008e-bfa0-6323-413b-5c4bf2485726@acm.org>
+In-Reply-To: <888a008e-bfa0-6323-413b-5c4bf2485726@acm.org>
+From:   Martijn Coenen <maco@android.com>
+Date:   Tue, 21 Apr 2020 13:46:44 +0200
+Message-ID: <CAB0TPYEPMx4+507ENX5ErTFprJvV3_B6u9TWUSNd9BDhCVT70A@mail.gmail.com>
+Subject: Re: [PATCH 2/4] loop: Factor out configuring loop from status.
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>,
+        Narayan Kamath <narayan@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@google.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/20 13:20, Wanpeng Li wrote:
-> +
-> +	if (!vmx->req_immediate_exit &&
-> +		!unlikely(vmx->loaded_vmcs->hv_timer_soft_disabled)) {
-> +		if (!vmx_interrupt_allowed(vcpu) ||
-> +			!apic_lvtt_tscdeadline(apic) ||
-> +			vmx->rmode.vm86_active ||
-> +			is_smm(vcpu) ||
-> +			!kvm_apic_hw_enabled(apic))
-> +			return EXIT_FASTPATH_NONE;
-> +
-> +		if (!apic->lapic_timer.hv_timer_in_use)
-> +			return EXIT_FASTPATH_CONT_RUN;
-> +
-> +		WARN_ON(swait_active(&vcpu->wq));
-> +		vmx_cancel_hv_timer(vcpu);
-> +		apic->lapic_timer.hv_timer_in_use = false;
-> +
-> +		if (atomic_read(&apic->lapic_timer.pending))
-> +			return EXIT_FASTPATH_CONT_RUN;
-> +
-> +		ktimer->expired_tscdeadline = ktimer->tscdeadline;
-> +		vmx_fast_deliver_interrupt(vcpu);
-> +		ktimer->tscdeadline = 0;
-> +		return EXIT_FASTPATH_CONT_RUN;
-> +	}
-> +
+On Mon, Apr 20, 2020 at 3:49 PM Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> An additional question: since this function sets the status of 'lo'
+> based on the information in 'info', would "loop_set_status" or
+> "loop_set_status_from_info" be a better name for this function?
 
-Can you explain all the checks you have here, and why you need something
-more complex than apic_timer_expired (possibly by adding some
-optimizations to kvm_apic_local_deliver)?  This code is impossible to
-maintain.
+Yeah, I like the latter. I will rename, and add a comment that
+explains the purpose more clearly.
 
-Paolo
+Thanks,
+Martijn
 
+>
+> Thanks,
+>
+> Bart.
