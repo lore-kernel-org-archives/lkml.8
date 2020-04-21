@@ -2,144 +2,75 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203D5C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB36C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE6C32073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOG4tZNB"
+	by mail.kernel.org (Postfix) with ESMTP id 83A5E206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgDULYj (ORCPT
+        id S1728519AbgDUL0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:24:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728621AbgDULYh (ORCPT
+        Tue, 21 Apr 2020 07:26:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55268 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgDUL0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:24:37 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E6CC061A10;
-        Tue, 21 Apr 2020 04:24:37 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id p25so6456936pfn.11;
-        Tue, 21 Apr 2020 04:24:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/nyZHnIln5SMvHTDYDPunqthnn+W6+8Xnre7urXhwVU=;
-        b=mOG4tZNBITuLYVAvk5EmokI/PBxfJ81UacvSZUJMUBYH+Nqx7/qNaWaep6LO11k/uo
-         kobKQyu9ZvqiFH481jOR6kBhGVLqmSa3IkVbagWWdfFoNhANdRFNtJl85kv224/61Lj7
-         HYYk5cSKPGNRUvcQl3ueKj0FWzNouX89mqbBwFEr8+GB7ktaafmZOAngOLHwcSHldWeJ
-         mxrH/M3UGyADMvu4t/bkX+9OLJPAUMpzbmK+dRmW/PGWa77/ihr2YPN/NaSPm/urCC5U
-         1z0vNCBS+ErWvgFUlJhnk/o7rSbveHP5rDWRLd6V9dy26JPmtbiVS3LnY3s+CfeTP2VG
-         K9sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/nyZHnIln5SMvHTDYDPunqthnn+W6+8Xnre7urXhwVU=;
-        b=Mcfk2dz30EDaFeXp3oUzfrRjpOVjUa2R4Kl3UknYdunv4HY2F7hSKntfyhJS/vuqHi
-         yUHo624IfqVB1sWj1/NSz85j/hbNZjxMI2WO2JntqJJ5C6RJ2KxODObZS/Dh6Uymqnea
-         DXrAUWqLudHn6qwZTKUMz8qhxkPOab1mDf2vDh8FEXn9s7IOs2NnsSU550RCg+0mxfz5
-         91qgEdEeEdqEIcUaQiOx/LsdkTV1MB7ZR2SA3rmGWLr4rTQNHnmgstql6dB0fYGl9yfC
-         fLMflons3jNStDrhuWmOsRTf4iKznozLYHjHN2pzUxKKkcL50QXcKdNTetgTAS29vkI/
-         DChA==
-X-Gm-Message-State: AGi0PubnyaEGRQrXXMNyeWl64yugmCChlZ8TowKxoAUnL3hp3XSEVnsG
-        qIRSlbUXm5P2r9GvPVYmtBpOKeLtW3LLpYKNd4s=
-X-Google-Smtp-Source: APiQypIVzlWfRnaxaJumLw77nPa/kSeajFst1dOacYBx6oSGxO0JU/IhLBjyOF19HfaOcTod4y++nlu4L6veLzfHZ3Y=
-X-Received: by 2002:a63:1d4:: with SMTP id 203mr20189317pgb.74.1587468276844;
- Tue, 21 Apr 2020 04:24:36 -0700 (PDT)
+        Tue, 21 Apr 2020 07:26:12 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jQr2U-0008Un-Ph; Tue, 21 Apr 2020 11:26:06 +0000
+Date:   Tue, 21 Apr 2020 13:26:06 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Linux Containers <containers@lists.linux-foundation.org>,
+        Christof Meerwald <cmeerw@cmeerw.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] signal: Avoid corrupting si_pid and si_uid in
+ do_notify_parent
+Message-ID: <20200421112606.ay4cck2dphguqazb@wittgenstein>
+References: <20200419201336.GI22017@edge.cmeerw.net>
+ <87sggyytnh.fsf@x220.int.ebiederm.org>
+ <20200421083031.5wapruzncjkagvhf@wittgenstein>
+ <20200421092846.GB6787@redhat.com>
+ <20200421102104.6pt34jknxmtu5ygm@wittgenstein>
+ <20200421111139.GC6787@redhat.com>
 MIME-Version: 1.0
-References: <20200421075532.19192-1-m.othacehe@gmail.com> <20200421075532.19192-3-m.othacehe@gmail.com>
-In-Reply-To: <20200421075532.19192-3-m.othacehe@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Apr 2020 14:24:30 +0300
-Message-ID: <CAHp75Veqp=tb0Z9h2cey5DE_KpNBp3Jdmh2gLzSoo-N5CsGpvw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] iio: vcnl4000: Add event support for VCNL4010/20.
-To:     Mathieu Othacehe <m.othacehe@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200421111139.GC6787@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 10:57 AM Mathieu Othacehe <m.othacehe@gmail.com> wrote:
->
-> The VCNL4010 and VCNL4020 chips are able to raise interrupts on proximity
-> threshold events. Add support for threshold rising and falling events for
-> those two chips.
+On Tue, Apr 21, 2020 at 01:11:40PM +0200, Oleg Nesterov wrote:
+> Sorry Christian, I don't understand...
 
-Some nitpicks below (up to you and maintainer to address)
+In my original mail, it was really just a clarification question. I
+said the patch is correct from looking at the codepaths. :) I was just
+trying to see whether there was a potential corner-case we're missing
+where "force" could be _validly_ true.
 
-...
+> 
+> > because child subreapers can't come from outside the pid namespace. If
+> > they could you could create a scenario where the signal is generated
+> > from a sibling pid namespace in which case it would be correctly set to
+> > true.
+> 
+> not sure I understand, but probably the answer is "yes"...
 
-> +static bool vcnl4010_in_periodic_mode(struct vcnl4000_data *data)
-
-Since it's boolean I would name it ..._is_in_prediodic_mode().
-
->  {
-> +       int ret;
->
-> +       ret = i2c_smbus_read_byte_data(data->client, VCNL4000_COMMAND);
-> +       if (ret < 0)
-> +               return false;
->
-
-> +       return (ret & VCNL4000_SELF_TIMED_EN) > 0;
-
-This > 0  for bitmasked values looks slightly strange. And actually if
-a sign bit is included, potentially wrong.
-
-I would rather go without any comparison, or do !!(foo & BAR).
-
-> +}
-
-...
-
-> +static bool vcnl4010_thr_enabled(struct vcnl4000_data *data)
-
-_is_thr_enabled() ?
-
-> +{
-> +       int ret;
-> +
-> +       ret = i2c_smbus_read_byte_data(data->client, VCNL4010_INT_CTRL);
-> +       if (ret < 0)
-> +               return false;
-> +
-
-> +       return (ret & VCNL4010_INT_THR_EN) > 0;
-
-Ditto.
-
-> +}
-
-...
-
-> +               ret = devm_request_threaded_irq(&client->dev, client->irq,
-> +                                               NULL, vcnl4010_irq_thread,
-> +                                               IRQF_TRIGGER_FALLING |
-
-> +                                               IRQF_ONESHOT,
-
-Isn't it by default when threaded IRQ is asked with NULL for hw handler?
-
-> +                                               "vcnl4010_irq",
-> +                                               indio_dev);
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+(This is really purely academic now since it isn't possible, but for
+pure amusement assume that a child subreaper could cross namespace
+boundaries (which they don't). A marks itself as a subreaper and creates
+a new process B in a new pid namespace <pidnsB>, process B setnses into
+<pidnsC> which is a sibling pid namespace, B clones a new proces in
+<pidnsC> which is now a full member of <pidnsC>, B dies and C is
+reparented to A, B exits and then you'd be getting a sigchld from a pid
+in a pid namespace in which you have no pid nr.)
