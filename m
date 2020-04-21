@@ -2,117 +2,100 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870BFC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF20C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE3D20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:10:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u6FSFf5y"
+	by mail.kernel.org (Postfix) with ESMTP id EF3C9206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbgDUSKq (ORCPT
+        id S1729375AbgDUSLF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:10:46 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44053 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725870AbgDUSKq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:10:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587492645; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=H8EubTh7i79BjoFT6UN3le3v6KCqE0B7/X8zxpL77s8=; b=u6FSFf5yDld8D4LAFE5vDXhFdVL/HUbLVG4XE0eyuUi9Cdu598yTlOai1wCT8q/jvUuaBCCX
- Uwr2bNPF+KUiYKuhsk/qMvepVXxeW6X42DowvXx8cmU4C2lr6RqryutZP3YPTtvgmgHmDUvs
- fmBxH5R+1CECfvXlrCcdMkXS/0s=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9f3712.7fc3727ea420-smtp-out-n03;
- Tue, 21 Apr 2020 18:10:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 48218C433F2; Tue, 21 Apr 2020 18:10:26 +0000 (UTC)
-Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4EDAFC433BA;
-        Tue, 21 Apr 2020 18:10:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4EDAFC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
-From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
-To:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
-        ohad@wizery.com, tsoni@codeaurora.org, psodagud@codeaurora.org,
-        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH v3 2/2] remoteproc: core: Register the character device interface
-Date:   Tue, 21 Apr 2020 11:10:18 -0700
-Message-Id: <1587492618-15896-3-git-send-email-rishabhb@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1587492618-15896-1-git-send-email-rishabhb@codeaurora.org>
-References: <1587492618-15896-1-git-send-email-rishabhb@codeaurora.org>
+        Tue, 21 Apr 2020 14:11:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44520 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbgDUSLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:11:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EB498ADDD;
+        Tue, 21 Apr 2020 18:11:01 +0000 (UTC)
+Date:   Tue, 21 Apr 2020 11:07:33 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Marc Zyngier <maz@kernel.org>, tglx@linutronix.de,
+        kvm@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>,
+        peterz@infradead.org, torvalds@linux-foundation.org,
+        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, linux-mips@vger.kernel.org,
+        Paul Mackerras <paulus@ozlabs.org>, joel@joelfernandes.org,
+        will@kernel.org, kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH v2] kvm: Replace vcpu->swait with rcuwait
+Message-ID: <20200421180733.xrl5ta6cuo2weuva@linux-p48b>
+References: <20200324044453.15733-1-dave@stgolabs.net>
+ <20200324044453.15733-4-dave@stgolabs.net>
+ <20200420164132.tjzk5ebx35m66yce@linux-p48b>
+ <418acdb5001a9ae836095b7187338085@misterjones.org>
+ <20200420205641.6sgsllj6pmsnwrvp@linux-p48b>
+ <f7cc83fe-3e91-0057-9af2-26c201456689@redhat.com>
+ <20200420215014.sarodevmhphnkkn7@linux-p48b>
+ <02e1b00d-a8ea-a947-bbe6-0b1380aa7ec4@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <02e1b00d-a8ea-a947-bbe6-0b1380aa7ec4@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the character device during rproc_add. This would create
-a character device node at /dev/remoteproc<index>. Userspace
-applications can interact with the remote processor using this
-interface.
+On Tue, 21 Apr 2020, Paolo Bonzini wrote:
 
-Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
----
- drivers/remoteproc/remoteproc_core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+>On 20/04/20 23:50, Davidlohr Bueso wrote:
+>> On Mon, 20 Apr 2020, Paolo Bonzini wrote:
+>>
+>>> On 20/04/20 22:56, Davidlohr Bueso wrote:
+>>>> On Mon, 20 Apr 2020, Marc Zyngier wrote:
+>>>>
+>>>>> This looks like a change in the semantics of the tracepoint. Before
+>>>>> this
+>>>>> change, 'waited' would have been true if the vcpu waited at all. Here,
+>>>>> you'd
+>>>>> have false if it has been interrupted by a signal, even if the vcpu
+>>>>> has waited
+>>>>> for a period of time.
+>>>>
+>>>> Hmm but sleeps are now uninterruptible as we're using TASK_IDLE.
+>>>
+>>> Hold on, does that mean that you can't anymore send a signal in order to
+>>> kick a thread out of KVM_RUN?  Or am I just misunderstanding?
+>>
+>> Considering that the return value of the interruptible wait is not
+>> checked, I would not think this breaks KVM_RUN.
+>
+>What return value?  kvm_vcpu_check_block checks signal_pending, so you
+>could have a case where the signal is injected but you're not woken up.
+>
+>Admittedly I am not familiar with how TASK_* work under the hood, but it
+>does seem to be like that.
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 097f33e..76ba171 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1916,6 +1916,13 @@ int rproc_add(struct rproc *rproc)
- 	/* create debugfs entries */
- 	rproc_create_debug_dir(rproc);
- 
-+	/* add char device for this remoteproc */
-+	ret = rproc_char_device_add(rproc);
-+	if (ret) {
-+		dev_err(dev, "Failed to add char dev for %s\n", rproc->name);
-+		return ret;
-+	}
-+
- 	/* if rproc is marked always-on, request it to boot */
- 	if (rproc->auto_boot) {
- 		ret = rproc_trigger_auto_boot(rproc);
-@@ -2137,6 +2144,7 @@ int rproc_del(struct rproc *rproc)
- 	mutex_unlock(&rproc->lock);
- 
- 	rproc_delete_debug_dir(rproc);
-+	rproc_char_device_remove(rproc);
- 
- 	/* the rproc is downref'ed as soon as it's removed from the klist */
- 	mutex_lock(&rproc_list_mutex);
-@@ -2220,6 +2228,7 @@ static int __init remoteproc_init(void)
- {
- 	rproc_init_sysfs();
- 	rproc_init_debugfs();
-+	rproc_init_cdev();
- 
- 	return 0;
- }
-@@ -2231,6 +2240,7 @@ static void __exit remoteproc_exit(void)
- 
- 	rproc_exit_debugfs();
- 	rproc_exit_sysfs();
-+	rproc_exit_cdev();
- }
- module_exit(remoteproc_exit);
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I should have looked closer here - I was thinking about the return value
+of rcuwait_wait_event. Yes, that signal_pending check you mention makes
+the sleep semantics change bogus as interruptible is no longer just to
+avoid contributing to the load balance.
+
+And yes, unfortunately adding prepare_to and finish_rcuwait() looks like the
+most reasonable approach to keeping the tracepoint semantics. I also considered
+extending rcuwait_wait_event() by another parameter to pass back to the caller
+if there was any wait at all, but that enlarges the call and is probably less
+generic.
+
+I'll send another version keeping the current sleep and tracepoint semantics.
+
+Thanks,
+Davidlohr
