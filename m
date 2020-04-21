@@ -2,55 +2,53 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED993C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6952C55189
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C89422070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852C22071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488111;
-	bh=qqE1YciB8BMQOJkYXer+PqkcNmj8UN1/HU/5HestGfg=;
+	s=default; t=1587488120;
+	bh=6P3d7tlTVXktXH1qYOmLWzh/BIfI7nP2c8dcG01RCxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bnFD7uwWfQFmZVkklxJoxQHrfz41Dm0TL45mekD8PVXrwlwDjbd/OdIPP9HXeyEkP
-	 T4SK0L6t7ssHGUmvBh4o6ajouRElfbzo2oIOK26sLOIOklG3wyySavxQrDC72X8PRY
-	 eRjxZZmGLT4U+VbWuS3yhGgcszvEAuONQDc+TAVY=
+	b=ALPl92/X5pFqfTbWIYXHb56p3RevY+2RLueOqm1l35n+hXez564AOWJh2kEbC/OnZ
+	 WUV/t0tblcxcIJd1HwnQmEiKGiWjanUwcMWXluJFjNaaL7sddLnDGCq6Pr6Es4StgV
+	 +1PBvqGNx8crRKiZ8y2bmU9JNYAW6DaOzcqDsr74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgDUQzK (ORCPT
+        id S1729324AbgDUQzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:55:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57282 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 12:55:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729186AbgDUQyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:54:50 -0400
+        id S1729166AbgDUQyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:54:49 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C159B2192A;
+        by mail.kernel.org (Postfix) with ESMTPSA id B30CF21835;
         Tue, 21 Apr 2020 16:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587488084;
-        bh=qqE1YciB8BMQOJkYXer+PqkcNmj8UN1/HU/5HestGfg=;
+        bh=6P3d7tlTVXktXH1qYOmLWzh/BIfI7nP2c8dcG01RCxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sYIGV2lNiOnqt1FEOSskNqQruBIyDidjsR0wzjG4RoBUStn+QmZZcH5BGntY2G3o7
-         BUqX+od/xqvSIKRy2whHppF+UK0I5e4X7QHhsv8YiXV/9t3DWVys3+nCoWhPVqIAB5
-         NnObYkqFggEskwdV2nSwpKUZfkR1cg+CYQL6Axig=
+        b=bBffsWa8xietF/t8IPBimM9kxpT/HAR6HMIY0d1hmZ8ghpQJxgos2nZQvg+606uf5
+         0YZU4FXgHlALBqIP/6cguCf+vx5iwZXjbdxnKGuimBQSJ2wE4uIi3Pfg4Lqn47M+XJ
+         EP+6Nk6zg26y58BIKmVOns5LKHcKUSUnuI+WEj50=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jQwAV-00CmFe-0T; Tue, 21 Apr 2020 18:54:43 +0200
+        id 1jQwAU-00CmFU-Ux; Tue, 21 Apr 2020 18:54:42 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH v2 29/29] docs: filesystems: convert xfs-self-describing-metadata.txt to ReST
-Date:   Tue, 21 Apr 2020 18:54:40 +0200
-Message-Id: <42f38837e5c9e9e0787774558f2f7e1320556b3d.1587487612.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 27/29] docs: filesystems: convert sysfs-tagging.txt to ReST
+Date:   Tue, 21 Apr 2020 18:54:38 +0200
+Message-Id: <6f0686877612cdd66147c83a3ad339bdaee6d4f8.1587487612.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1587487612.git.mchehab+huawei@kernel.org>
 References: <cover.1587487612.git.mchehab+huawei@kernel.org>
@@ -62,307 +60,83 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - Add a SPDX header;
-- Adjust document and section titles;
+- Adjust document title;
 - Some whitespace fixes and new line breaks;
 - Mark literal blocks as such;
 - Add it to filesystems/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/filesystems/index.rst           |   1 +
- ...a.txt => xfs-self-describing-metadata.rst} | 182 +++++++++---------
- MAINTAINERS                                   |   2 +-
- 3 files changed, 94 insertions(+), 91 deletions(-)
- rename Documentation/filesystems/{xfs-self-describing-metadata.txt => xfs-self-describing-metadata.rst} (83%)
+ Documentation/filesystems/index.rst           |  1 +
+ .../{sysfs-tagging.txt => sysfs-tagging.rst}  | 22 ++++++++++++-------
+ 2 files changed, 15 insertions(+), 8 deletions(-)
+ rename Documentation/filesystems/{sysfs-tagging.txt => sysfs-tagging.rst} (72%)
 
 diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 477496763473..4c536e66dc4c 100644
+index 65719684295e..11852bf3e758 100644
 --- a/Documentation/filesystems/index.rst
 +++ b/Documentation/filesystems/index.rst
-@@ -120,4 +120,5 @@ Documentation for filesystem implementations.
-    virtiofs
-    vfat
-    xfs-delayed-logging-design
-+   xfs-self-describing-metadata
-    zonefs
-diff --git a/Documentation/filesystems/xfs-self-describing-metadata.txt b/Documentation/filesystems/xfs-self-describing-metadata.rst
-similarity index 83%
-rename from Documentation/filesystems/xfs-self-describing-metadata.txt
-rename to Documentation/filesystems/xfs-self-describing-metadata.rst
-index 8db0121d0980..51cdafe01ab1 100644
---- a/Documentation/filesystems/xfs-self-describing-metadata.txt
-+++ b/Documentation/filesystems/xfs-self-describing-metadata.rst
-@@ -1,8 +1,11 @@
+@@ -35,6 +35,7 @@ algorithms work.
+    seq_file
+    sharedsubtree
+    sysfs-pci
++   sysfs-tagging
+ 
+    automount-support
+ 
+diff --git a/Documentation/filesystems/sysfs-tagging.txt b/Documentation/filesystems/sysfs-tagging.rst
+similarity index 72%
+rename from Documentation/filesystems/sysfs-tagging.txt
+rename to Documentation/filesystems/sysfs-tagging.rst
+index c7c8e6438958..8888a05c398e 100644
+--- a/Documentation/filesystems/sysfs-tagging.txt
++++ b/Documentation/filesystems/sysfs-tagging.rst
+@@ -1,5 +1,8 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+============================
- XFS Self Describing Metadata
------------------------------
-+============================
++=============
+ Sysfs tagging
+--------------
++=============
  
- Introduction
--------------
-+============
+ (Taken almost verbatim from Eric Biederman's netns tagging patch
+ commit msg)
+@@ -18,25 +21,28 @@ in the directories and applications only see a limited set of
+ the network devices.
  
- The largest scalability problem facing XFS is not one of algorithmic
- scalability, but of verification of the filesystem structure. Scalabilty of the
-@@ -34,7 +37,7 @@ required for basic forensic analysis of the filesystem structure.
+ Each sysfs directory entry may be tagged with a namespace via the
+-void *ns member of its kernfs_node.  If a directory entry is tagged,
+-then kernfs_node->flags will have a flag between KOBJ_NS_TYPE_NONE
++``void *ns member`` of its ``kernfs_node``.  If a directory entry is tagged,
++then ``kernfs_node->flags`` will have a flag between KOBJ_NS_TYPE_NONE
+ and KOBJ_NS_TYPES, and ns will point to the namespace to which it
+ belongs.
  
+-Each sysfs superblock's kernfs_super_info contains an array void
+-*ns[KOBJ_NS_TYPES].  When a task in a tagging namespace
++Each sysfs superblock's kernfs_super_info contains an array
++``void *ns[KOBJ_NS_TYPES]``.  When a task in a tagging namespace
+ kobj_nstype first mounts sysfs, a new superblock is created.  It
+ will be differentiated from other sysfs mounts by having its
+-s_fs_info->ns[kobj_nstype] set to the new namespace.  Note that
++``s_fs_info->ns[kobj_nstype]`` set to the new namespace.  Note that
+ through bind mounting and mounts propagation, a task can easily view
+ the contents of other namespaces' sysfs mounts.  Therefore, when a
+ namespace exits, it will call kobj_ns_exit() to invalidate any
+ kernfs_node->ns pointers pointing to it.
  
- Self Describing Metadata
--------------------------
-+========================
- 
- One of the problems with the current metadata format is that apart from the
- magic number in the metadata block, we have no other way of identifying what it
-@@ -142,7 +145,7 @@ modification occurred between the corruption being written and when it was
- detected.
- 
- Runtime Validation
--------------------
-+==================
- 
- Validation of self-describing metadata takes place at runtime in two places:
- 
-@@ -183,18 +186,18 @@ error occurs during this process, the buffer is again marked with a EFSCORRUPTED
- error for the higher layers to catch.
- 
- Structures
------------
-+==========
- 
--A typical on-disk structure needs to contain the following information:
-+A typical on-disk structure needs to contain the following information::
- 
--struct xfs_ondisk_hdr {
--        __be32  magic;		/* magic number */
--        __be32  crc;		/* CRC, not logged */
--        uuid_t  uuid;		/* filesystem identifier */
--        __be64  owner;		/* parent object */
--        __be64  blkno;		/* location on disk */
--        __be64  lsn;		/* last modification in log, not logged */
--};
-+    struct xfs_ondisk_hdr {
-+	    __be32  magic;		/* magic number */
-+	    __be32  crc;		/* CRC, not logged */
-+	    uuid_t  uuid;		/* filesystem identifier */
-+	    __be64  owner;		/* parent object */
-+	    __be64  blkno;		/* location on disk */
-+	    __be64  lsn;		/* last modification in log, not logged */
-+    };
- 
- Depending on the metadata, this information may be part of a header structure
- separate to the metadata contents, or may be distributed through an existing
-@@ -214,24 +217,24 @@ level of information is generally provided. For example:
- 	  well. hence the additional metadata headers change the overall format
- 	  of the metadata.
- 
--A typical buffer read verifier is structured as follows:
-+A typical buffer read verifier is structured as follows::
- 
--#define XFS_FOO_CRC_OFF		offsetof(struct xfs_ondisk_hdr, crc)
-+    #define XFS_FOO_CRC_OFF		offsetof(struct xfs_ondisk_hdr, crc)
- 
--static void
--xfs_foo_read_verify(
--	struct xfs_buf	*bp)
--{
--       struct xfs_mount *mp = bp->b_mount;
-+    static void
-+    xfs_foo_read_verify(
-+	    struct xfs_buf	*bp)
-+    {
-+	struct xfs_mount *mp = bp->b_mount;
- 
--        if ((xfs_sb_version_hascrc(&mp->m_sb) &&
--             !xfs_verify_cksum(bp->b_addr, BBTOB(bp->b_length),
--					XFS_FOO_CRC_OFF)) ||
--            !xfs_foo_verify(bp)) {
--                XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
--                xfs_buf_ioerror(bp, EFSCORRUPTED);
--        }
--}
-+	    if ((xfs_sb_version_hascrc(&mp->m_sb) &&
-+		!xfs_verify_cksum(bp->b_addr, BBTOB(bp->b_length),
-+					    XFS_FOO_CRC_OFF)) ||
-+		!xfs_foo_verify(bp)) {
-+		    XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
-+		    xfs_buf_ioerror(bp, EFSCORRUPTED);
-+	    }
-+    }
- 
- The code ensures that the CRC is only checked if the filesystem has CRCs enabled
- by checking the superblock of the feature bit, and then if the CRC verifies OK
-@@ -239,83 +242,83 @@ by checking the superblock of the feature bit, and then if the CRC verifies OK
- 
- The verifier function will take a couple of different forms, depending on
- whether the magic number can be used to determine the format of the block. In
--the case it can't, the code is structured as follows:
-+the case it can't, the code is structured as follows::
- 
--static bool
--xfs_foo_verify(
--	struct xfs_buf		*bp)
--{
--        struct xfs_mount	*mp = bp->b_mount;
--        struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+    static bool
-+    xfs_foo_verify(
-+	    struct xfs_buf		*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
- 
--        if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
--                return false;
-+	    if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
-+		    return false;
- 
--        if (!xfs_sb_version_hascrc(&mp->m_sb)) {
--		if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
--			return false;
--		if (bp->b_bn != be64_to_cpu(hdr->blkno))
--			return false;
--		if (hdr->owner == 0)
--			return false;
--	}
-+	    if (!xfs_sb_version_hascrc(&mp->m_sb)) {
-+		    if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
-+			    return false;
-+		    if (bp->b_bn != be64_to_cpu(hdr->blkno))
-+			    return false;
-+		    if (hdr->owner == 0)
-+			    return false;
-+	    }
- 
--	/* object specific verification checks here */
-+	    /* object specific verification checks here */
- 
--        return true;
--}
-+	    return true;
-+    }
- 
- If there are different magic numbers for the different formats, the verifier
--will look like:
-+will look like::
- 
--static bool
--xfs_foo_verify(
--	struct xfs_buf		*bp)
--{
--        struct xfs_mount	*mp = bp->b_mount;
--        struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+    static bool
-+    xfs_foo_verify(
-+	    struct xfs_buf		*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
- 
--        if (hdr->magic == cpu_to_be32(XFS_FOO_CRC_MAGIC)) {
--		if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
--			return false;
--		if (bp->b_bn != be64_to_cpu(hdr->blkno))
--			return false;
--		if (hdr->owner == 0)
--			return false;
--	} else if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
--		return false;
-+	    if (hdr->magic == cpu_to_be32(XFS_FOO_CRC_MAGIC)) {
-+		    if (!uuid_equal(&hdr->uuid, &mp->m_sb.sb_uuid))
-+			    return false;
-+		    if (bp->b_bn != be64_to_cpu(hdr->blkno))
-+			    return false;
-+		    if (hdr->owner == 0)
-+			    return false;
-+	    } else if (hdr->magic != cpu_to_be32(XFS_FOO_MAGIC))
-+		    return false;
- 
--	/* object specific verification checks here */
-+	    /* object specific verification checks here */
- 
--        return true;
--}
-+	    return true;
-+    }
- 
- Write verifiers are very similar to the read verifiers, they just do things in
--the opposite order to the read verifiers. A typical write verifier:
-+the opposite order to the read verifiers. A typical write verifier::
- 
--static void
--xfs_foo_write_verify(
--	struct xfs_buf	*bp)
--{
--	struct xfs_mount	*mp = bp->b_mount;
--	struct xfs_buf_log_item	*bip = bp->b_fspriv;
-+    static void
-+    xfs_foo_write_verify(
-+	    struct xfs_buf	*bp)
-+    {
-+	    struct xfs_mount	*mp = bp->b_mount;
-+	    struct xfs_buf_log_item	*bip = bp->b_fspriv;
- 
--	if (!xfs_foo_verify(bp)) {
--		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
--		xfs_buf_ioerror(bp, EFSCORRUPTED);
--		return;
--	}
-+	    if (!xfs_foo_verify(bp)) {
-+		    XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bp->b_addr);
-+		    xfs_buf_ioerror(bp, EFSCORRUPTED);
-+		    return;
-+	    }
- 
--	if (!xfs_sb_version_hascrc(&mp->m_sb))
--		return;
-+	    if (!xfs_sb_version_hascrc(&mp->m_sb))
-+		    return;
- 
- 
--	if (bip) {
--		struct xfs_ondisk_hdr	*hdr = bp->b_addr;
--		hdr->lsn = cpu_to_be64(bip->bli_item.li_lsn);
--	}
--	xfs_update_cksum(bp->b_addr, BBTOB(bp->b_length), XFS_FOO_CRC_OFF);
--}
-+	    if (bip) {
-+		    struct xfs_ondisk_hdr	*hdr = bp->b_addr;
-+		    hdr->lsn = cpu_to_be64(bip->bli_item.li_lsn);
-+	    }
-+	    xfs_update_cksum(bp->b_addr, BBTOB(bp->b_length), XFS_FOO_CRC_OFF);
-+    }
- 
- This will verify the internal structure of the metadata before we go any
- further, detecting corruptions that have occurred as the metadata has been
-@@ -324,7 +327,7 @@ update the LSN field (when it was last modified) and calculate the CRC on the
- metadata. Once this is done, we can issue the IO.
- 
- Inodes and Dquots
-------------------
-+=================
- 
- Inodes and dquots are special snowflakes. They have per-object CRC and
- self-identifiers, but they are packed so that there are multiple objects per
-@@ -347,4 +350,3 @@ XXX: inode unlinked list modification doesn't recalculate the inode CRC! None of
- the unlinked list modifications check or update CRCs, neither during unlink nor
- log recovery. So, it's gone unnoticed until now. This won't matter immediately -
- repair will probably complain about it - but it needs to be fixed.
--
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c8851e7c443a..3cf7e6724ca4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18608,7 +18608,7 @@ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- F:	Documentation/ABI/testing/sysfs-fs-xfs
- F:	Documentation/admin-guide/xfs.rst
- F:	Documentation/filesystems/xfs-delayed-logging-design.rst
--F:	Documentation/filesystems/xfs-self-describing-metadata.txt
-+F:	Documentation/filesystems/xfs-self-describing-metadata.rst
- F:	fs/xfs/
- F:	include/uapi/linux/dqblk_xfs.h
- F:	include/uapi/linux/fsmap.h
+ Users of this interface:
+-- define a type in the kobj_ns_type enumeration.
+-- call kobj_ns_type_register() with its kobj_ns_type_operations which has
++
++- define a type in the ``kobj_ns_type`` enumeration.
++- call kobj_ns_type_register() with its ``kobj_ns_type_operations`` which has
++
+   - current_ns() which returns current's namespace
+   - netlink_ns() which returns a socket's namespace
+   - initial_ns() which returns the initial namesapce
++
+ - call kobj_ns_exit() when an individual tag is no longer valid
 -- 
 2.25.2
 
