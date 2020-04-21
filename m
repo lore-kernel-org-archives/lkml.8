@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CA3C55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A004C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE18F21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2684920B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="cj0aBop9"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JRJeJlPb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgDUIRe (ORCPT
+        id S1728542AbgDUIRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47588 "EHLO
+        Tue, 21 Apr 2020 04:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728513AbgDUIR2 (ORCPT
+        with ESMTP id S1728497AbgDUIRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:17:28 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C310DC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:17:28 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x3so6278209pfp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:17:28 -0700 (PDT)
+        Tue, 21 Apr 2020 04:17:31 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BBDAC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:17:31 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id nu11so1058506pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:17:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qCOK+HxEBj2bh5BFlG2zt/46BhY0DW9NF3gypZJ6i18=;
-        b=cj0aBop907dm+mkl5z5Mfm3dfJHK382iyGGadBdhXTU4SezE2MCsVNmjWKHydO1MeY
-         hFpq9McPFpfy4rmx7G+Ad1j8hWL2TnkmF0IkMCtKAGmpU+zQZ6aqaTdmOppP8E8jMoFd
-         Fk88jdQI+8R4LkqajRqwVMi8EwnmwqLx6QnbQ8a9F0T2Mu69VHyd9ana73iFO3tfR1QY
-         WOG8lsevniXIBle/Wpw32M1HPnUM/cXVhVfyULOzUIUxNwMYRjXLGcKHakrVVhIkdCst
-         HcA/EUYHskjCRFk4RGeoZHsmrSkm/oL6EadoBmaeDy9n6/Ei3y51wlw/4DW50BwDLHDj
-         41mw==
+        bh=x1q1dIc4oOXMLuGJhmG405YIgkstM/KJ0hlFL0aEcs0=;
+        b=JRJeJlPbvECowqMMqAqWbzZ8nqW0b1fVx207l4nQs0G9+u8AyrE8inMOe8Uu+Z6mGj
+         oEOZzr8Klh+dWRbsfgOaINRJsKMd/aRX3NBYE5XqzRJkaxfMatym5xIbV3ooZL9jnaaM
+         +HNfMZHP/TNdCf+PfqN1VPRK3J4JEGjE/ewraiaQV5Hg6+Ddm8v+G1yXlEhe/L1wUJsC
+         baY1iJBav4DXjyhX63v9oHhvFi0vhSpYSODaovIkLUeCbp0OKzfU1xWU0XnbBOC1jzjx
+         sc81wyIHXiBh5pXITuvhWZg3AI1x327mOGasYIohrkBPXI/7uBC/YKfXZ3fW0DizX8rC
+         IIvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qCOK+HxEBj2bh5BFlG2zt/46BhY0DW9NF3gypZJ6i18=;
-        b=du2hnmBg5+Th16D2zRIkYyOq920hrxjsCT0dycyIOJjdq7BUqOJ5E8VFwGEvjXDVwf
-         6nTjOFDRyknh48OASaXXrW/NbZ8HihLVC74LGZQqw6BUUrkNzl98V7/fLW2dhIpRBzOk
-         jTasIrc6Ta7BrYpmlprXCjr8e3hj9zSZmcmbwMf0TdtlQsncgJ6rJUvdzF439gRp7Y27
-         ihwbqGKgAN5qUIuG7qAFFEpGskd1Lq392pfgDcIgsFAPsh1Ph1h6EchGvEfwFAFkGIDE
-         1JRfRfdNv0ItKbYTtOKvwB8bq1kk48YVzfK5CCidhh8InhoaAoAOcPFCicqr8wFWx28V
-         lKRg==
-X-Gm-Message-State: AGi0PuZdFubhQstXVdAOXm1lo5AbAMJ/pViw3KJ7kUxVR1KV2LC13dwc
-        fgES4I1+Oo64ggB4ErlVyGiewQ==
-X-Google-Smtp-Source: APiQypLl5oCj7vFGv7zZNaxGJsgDSRmBearvlFa0TCQKMUrRrSskifrV8HFOIzfmSxRHB+7OBiCjMA==
-X-Received: by 2002:a62:18c8:: with SMTP id 191mr21232603pfy.255.1587457048276;
-        Tue, 21 Apr 2020 01:17:28 -0700 (PDT)
+        bh=x1q1dIc4oOXMLuGJhmG405YIgkstM/KJ0hlFL0aEcs0=;
+        b=K4MX782zVb52GpJnPylVnBJMXvomCP1DLQ52ppI7ZS51xHH1HD1GBiMMQoo06BCd9H
+         GY5a06qPxlMkd3GSzc/T4NmEl+M+dB0UQFItJbkbqTeBY/uEYwlgwyQ6SLZIC1+JXgkw
+         ed2RwQ+6dDnXinyPsIOiIRiXIEwxt6pCy2rJDK/ebp3Ey8WyMQHEU8hmDkE9CvMwUuNO
+         Vyf5JrqddpMGOh0bFuEcyXD26HZwTx0/YblkdFfZlqKzscVEG7ijDbMtYmiFn3vjFnA4
+         WDevGbf3wWoMuBK1olGOXHQ+Av2nnRDJsJxWgxPCZq7WycFOzvofj6bDpyLrjDox7Nmt
+         cbeg==
+X-Gm-Message-State: AGi0PuYYBinBIhY8234GLtr15NzOKPUKrPTRffjKzXOs4eK52DmN5Jw6
+        jtD57yfTKIoWGdscvDTqyYCi3A==
+X-Google-Smtp-Source: APiQypJ6TDv1BUeEjsdzkZkCUKbnTrPG7TD+P1kqLfxoAk/M5KRTxIjpkFX2KILsnIQRT2ae8Ou8Jw==
+X-Received: by 2002:a17:90a:1da6:: with SMTP id v35mr4465596pjv.44.1587457051158;
+        Tue, 21 Apr 2020 01:17:31 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id v9sm1610067pju.3.2020.04.21.01.17.25
+        by smtp.gmail.com with ESMTPSA id v9sm1610067pju.3.2020.04.21.01.17.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 01:17:27 -0700 (PDT)
+        Tue, 21 Apr 2020 01:17:30 -0700 (PDT)
 From:   Zong Li <zong.li@sifive.com>
 To:     akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
@@ -67,9 +67,9 @@ To:     akpm@linux-foundation.org, linux-mm@kvack.org,
         hpa@zytor.com, catalin.marinas@arm.com, will@kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH 1/4] mm: add DEBUG_WX support
-Date:   Tue, 21 Apr 2020 16:17:12 +0800
-Message-Id: <23980cd0f0e5d79e24a92169116407c75bcc650d.1587455584.git.zong.li@sifive.com>
+Subject: [PATCH 2/4] riscv: support DEBUG_WX
+Date:   Tue, 21 Apr 2020 16:17:13 +0800
+Message-Id: <282e266311bced080bc6f7c255b92f87c1eb65d6.1587455584.git.zong.li@sifive.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <cover.1587455584.git.zong.li@sifive.com>
 References: <cover.1587455584.git.zong.li@sifive.com>
@@ -80,58 +80,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some architectures support DEBUG_WX function, it's verbatim from each
-others. Extract to mm/Kconfig.debug for shared use.
+Support DEBUG_WX to check whether there are mapping with write and
+execute permission at the same time.
 
 Signed-off-by: Zong Li <zong.li@sifive.com>
-Suggested-by: Palmer Dabbelt <palmer@dabbelt.com>
 ---
- mm/Kconfig.debug | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/riscv/Kconfig              | 1 +
+ arch/riscv/include/asm/ptdump.h | 6 ++++++
+ arch/riscv/mm/init.c            | 3 +++
+ 3 files changed, 10 insertions(+)
 
-diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
-index 0271b22e063f..077458ad968d 100644
---- a/mm/Kconfig.debug
-+++ b/mm/Kconfig.debug
-@@ -118,6 +118,39 @@ config DEBUG_RODATA_TEST
-     ---help---
-       This option enables a testcase for the setting rodata read-only.
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 62f7bfeb709e..612bf0a258d0 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -68,6 +68,7 @@ config RISCV
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_ARCH_KASAN if MMU && 64BIT
++	select ARCH_HAS_DEBUG_WX
  
-+config ARCH_HAS_DEBUG_WX
-+	bool
+ config ARCH_MMAP_RND_BITS_MIN
+ 	default 18 if 64BIT
+diff --git a/arch/riscv/include/asm/ptdump.h b/arch/riscv/include/asm/ptdump.h
+index e29af7191909..eb2a1cc5f22c 100644
+--- a/arch/riscv/include/asm/ptdump.h
++++ b/arch/riscv/include/asm/ptdump.h
+@@ -8,4 +8,10 @@
+ 
+ void ptdump_check_wx(void);
+ 
++#ifdef CONFIG_DEBUG_WX
++#define debug_checkwx() ptdump_check_wx()
++#else
++#define debug_checkwx() do { } while (0)
++#endif
 +
-+config DEBUG_WX
-+	bool "Warn on W+X mappings at boot"
-+	depends on ARCH_HAS_DEBUG_WX
-+	select PTDUMP_CORE
-+	help
-+	  Generate a warning if any W+X mappings are found at boot.
+ #endif /* _ASM_RISCV_PTDUMP_H */
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index b55be44ff9bd..86606e4d1860 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -19,6 +19,7 @@
+ #include <asm/sections.h>
+ #include <asm/pgtable.h>
+ #include <asm/io.h>
++#include <asm/ptdump.h>
+ 
+ #include "../kernel/head.h"
+ 
+@@ -529,6 +530,8 @@ void mark_rodata_ro(void)
+ 	set_memory_ro(rodata_start, (data_start - rodata_start) >> PAGE_SHIFT);
+ 	set_memory_nx(rodata_start, (data_start - rodata_start) >> PAGE_SHIFT);
+ 	set_memory_nx(data_start, (max_low - data_start) >> PAGE_SHIFT);
 +
-+	  This is useful for discovering cases where the kernel is leaving
-+	  W+X mappings after applying NX, as such mappings are a security risk.
-+	  This check also includes UXN, which should be set on all kernel
-+	  mappings.
-+
-+	  Look for a message in dmesg output like this:
-+
-+	    <arch>/mm: Checked W+X mappings: passed, no W+X pages found.
-+
-+	  or like this, if the check failed:
-+
-+	    <arch>/mm: Checked W+X mappings: failed, <N> W+X pages found.
-+
-+	  Note that even if the check fails, your kernel is possibly
-+	  still fine, as W+X mappings are not a security hole in
-+	  themselves, what they do is that they make the exploitation
-+	  of other unfixed kernel bugs easier.
-+
-+	  There is no runtime or memory usage effect of this option
-+	  once the kernel has booted up - it's a one time check.
-+
-+	  If in doubt, say "Y".
-+
- config GENERIC_PTDUMP
- 	bool
++	debug_checkwx();
+ }
+ #endif
  
 -- 
 2.26.1
