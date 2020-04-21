@@ -2,150 +2,204 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77457C55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7FBC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57ED8206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22084206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSVKMtXh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qRP4PhZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbgDUUXX (ORCPT
+        id S1726361AbgDUUXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:23:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgDUUXX (ORCPT
+        Tue, 21 Apr 2020 16:23:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39632 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgDUUXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:23:23 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270C8C0610D5;
-        Tue, 21 Apr 2020 13:23:23 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id ay1so5696691plb.0;
-        Tue, 21 Apr 2020 13:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zl40T50FPbwBzCKH7/OEcPTWE7rgN74/mA60zW5oOTo=;
-        b=kSVKMtXhsAi8UcAwt4iulSL7+eVDGadF0SrWh1wVO8+gwbi2E3F2/Bu88eqAMDqnNC
-         aZ2mjX0aG8et1NQWeo8ZoqL86PFMAa9v96WA6g5JD4PlRfZEH0jzquzVm9R6IChZKIhb
-         zcY8v9xaimsRqlZD3L00+wNkc2bvpGkgsA4MSxRZvyOGgRs3kAMODPQAfqLSRs2OSJqh
-         BcNdlAijqbWjZzMYeVHCEUzCC2faFEgiPzbSIl3mFI1991GqAT/ycuXtVyi9GAtgp9qw
-         WIkb7B71vc+P6LPbsdJKzeE5C7bacRjKervPeUmo9fHz2TSRbjWv9YZNWlE9xPV6oFpe
-         Di8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zl40T50FPbwBzCKH7/OEcPTWE7rgN74/mA60zW5oOTo=;
-        b=cY3t05GscfJbY08quxK/bL2BiGnsftewrmnK/Lae9xALiiRyVjJs1K2CKzWwos2xn6
-         aPG8LjjNDXYVv0iPQtT4LxpdznRsQkLhuOYY1JphRpgOwlQxGfF4LnZEQj493Dlgrj28
-         /sVxaUeirFOyclbBtKY0eB5sqB9FsLddaCqgvuDTpB59gJH0RsRTt8jGxElhpT7q0788
-         50N7f5qi1iWI9VPkf4dwkOtN+4dbCxIqFX4JBnCphi61INVCNtMgLXYQG7rClmQaDxu6
-         5ft0hbUhlmxKLnrpcHHg/3DdLSzR6ezJu7+FfRom9jKiWcAJNjYcCAdZ0d4ofAMK362v
-         5gGQ==
-X-Gm-Message-State: AGi0PuYAmniL6kAlbKMg2Ss23scbj7nUB+U6ANCEG0B0151mdKuBWirn
-        RVzluqD3kGDPS1wi4G40NSuV5rRb7oM/ijejd4o=
-X-Google-Smtp-Source: APiQypLAu9QTbWNgbPerC9FiXf54TGJy1cCm8ZU48UUMzfczq3a63vgoRJ4CWI4WeYnDtbGa2fmkEOryIT/jGVwyPhs=
-X-Received: by 2002:a17:90a:2401:: with SMTP id h1mr7862503pje.1.1587500602433;
- Tue, 21 Apr 2020 13:23:22 -0700 (PDT)
+        Tue, 21 Apr 2020 16:23:32 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LKIROA048521;
+        Tue, 21 Apr 2020 20:23:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=PNBTje6Tq7TanFHBen71LMdqVY9zmKz3SkN8MVgIt9o=;
+ b=qRP4PhZBVFbZi6s5PX9eCI+MUU3v/an2DigAsT7zQYigHsrvKodH6dPUqY8v5++3X2hr
+ v++KmNvU3XGLsQHwzYlqJud4BAOMyBP7HCsivuWk3BVVJd2M8oEVM5OudSNO6eQ7+ZBM
+ vH5XIQPrjDYR6hPcOXP6bEbKg1QW6i4wxHI9UyicNB3OcUbFs20lOmIH/7st9K5AfVSW
+ VIrXxzNLfOZfbVg1+T4JRPAjKaWcn01dHeJx0x43zbl0vuHBprxG9WfsNfYoszmLCft2
+ qR7+cZuVRMmutCFfNTw8IW2opYrEnSGRe/MKslk7oVVdE6IDOt7efqoibe1s8MnWLHQD XA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30grpgkmcr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 20:23:18 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LKDRBW193184;
+        Tue, 21 Apr 2020 20:23:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 30gb90w138-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 20:23:18 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03LKNG1T009822;
+        Tue, 21 Apr 2020 20:23:16 GMT
+Received: from localhost (/10.159.227.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 13:23:16 -0700
+Date:   Tue, 21 Apr 2020 13:23:14 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V9 08/11] fs: Lift XFS_IDONTCACNE to the VFS layer
+Message-ID: <20200421202314.GB6742@magnolia>
+References: <20200421191754.3372370-1-ira.weiny@intel.com>
+ <20200421191754.3372370-9-ira.weiny@intel.com>
 MIME-Version: 1.0
-References: <20200421194005.6295-1-i.mikhaylov@yadro.com> <20200421194005.6295-3-i.mikhaylov@yadro.com>
-In-Reply-To: <20200421194005.6295-3-i.mikhaylov@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Apr 2020 23:23:11 +0300
-Message-ID: <CAHp75VdZ=jmQFt68+iniDbhGY9Q-ueT6QzrL82mLmsoGwftxFg@mail.gmail.com>
-Subject: Re: [PATCH v10 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421191754.3372370-9-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=906 adultscore=0
+ bulkscore=0 suspectscore=3 malwarescore=0 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=952 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=3 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004210151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 10:39 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->
-> Proximity sensor driver based on light/vcnl4000.c code.
-> For now supports only the single on-demand measurement.
->
-> The VCNL3020 is a fully integrated proximity sensor. Fully
-> integrated means that the infrared emitter is included in the
-> package. It has 16-bit resolution. It includes a signal
-> processing IC and features standard I2C communication
-> interface. It features an interrupt function.
+> Subject: [PATCH V9 08/11] fs: Lift XFS_IDONTCACNE to the VFS layer
 
-...
+This still has a misspelling in the subject line.
 
-> +static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
-> +                                          const char *prop, u32 reg)
-> +{
-> +       int rc;
-> +       u32 val;
-> +
-> +       rc = device_property_read_u32(data->dev, prop, &val);
-> +       if (rc)
-> +               return 0;
-> +
+On Tue, Apr 21, 2020 at 12:17:50PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> DAX effective mode (S_DAX) changes requires inode eviction.
+> 
+> XFS has an advisory flag (XFS_IDONTCACHE) to prevent caching of the
+> inode if no other additional references are taken.  We lift this flag to
+> the VFS layer and change the behavior slightly by allowing the flag to
+> remain even if multiple references are taken.
+> 
+> This will expedite the eviction of inodes to change S_DAX.
+> 
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from V8:
+> 	Remove XFS_IDONTCACHE
+> ---
+>  fs/xfs/xfs_icache.c | 4 ++--
+>  fs/xfs/xfs_inode.h  | 2 +-
+>  fs/xfs/xfs_super.c  | 2 +-
+>  include/linux/fs.h  | 6 +++++-
+>  4 files changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index 17a0b86fe701..de76f7f60695 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -477,7 +477,7 @@ xfs_iget_cache_hit(
+>  		xfs_ilock(ip, lock_flags);
+>  
+>  	if (!(flags & XFS_IGET_INCORE))
+> -		xfs_iflags_clear(ip, XFS_ISTALE | XFS_IDONTCACHE);
+> +		xfs_iflags_clear(ip, XFS_ISTALE);
+>  	XFS_STATS_INC(mp, xs_ig_found);
+>  
+>  	return 0;
+> @@ -559,7 +559,7 @@ xfs_iget_cache_miss(
+>  	 */
+>  	iflags = XFS_INEW;
+>  	if (flags & XFS_IGET_DONTCACHE)
+> -		iflags |= XFS_IDONTCACHE;
+> +		VFS_I(ip)->i_state |= I_DONTCACHE;
+>  	ip->i_udquot = NULL;
+>  	ip->i_gdquot = NULL;
+>  	ip->i_pdquot = NULL;
+> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+> index 83073c883fbf..52b8ee21a0b1 100644
+> --- a/fs/xfs/xfs_inode.h
+> +++ b/fs/xfs/xfs_inode.h
+> @@ -218,7 +218,7 @@ static inline bool xfs_inode_has_cow_data(struct xfs_inode *ip)
+>  #define XFS_IFLOCK		(1 << __XFS_IFLOCK_BIT)
+>  #define __XFS_IPINNED_BIT	8	 /* wakeup key for zero pin count */
+>  #define XFS_IPINNED		(1 << __XFS_IPINNED_BIT)
+> -#define XFS_IDONTCACHE		(1 << 9) /* don't cache the inode long term */
+> +/* Was XFS_IDONTCACHE 9 */
+>  #define XFS_IEOFBLOCKS		(1 << 10)/* has the preallocblocks tag set */
 
-> +       /* An example of conversion from uA to reg val:
-> +        * 200000 uA == 200 mA == 20
-> +        */
-> +       if (!strcmp(prop, "vishay,led-current-microamp"))
-> +               val /= 10000;
+These are incore state flags, you can change XFS_IEOFBLOCKS to (1 << 9).
 
-I probably missed the point why this function is needed at all, since
-we always call only for a single property.
+--D
 
-On top of that, why do we have this nasty strcmp()? Can't we simple do
-something like
-
-static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
-const char *prop, u32 reg, u32 div)
-{
-...
-  val /= div;
-...
-}
-
-static int vcnl3020_get_and_apply_led_current_property(struct
-vcnl3020_data *data)
-{
-  /*
-   * An example of conversion from uA to reg val:
-   * 200000 uA == 200 mA == 20
-   */
-// Note by the way comments style
-  return vcnl3020_get_and_apply_property(data, "vishay,led-current-microamp",
-                                              VCNL_LED_CURRENT, 10000);
-}
-
-?
-
-> +       rc = regmap_write(data->regmap, reg, val);
-> +       if (rc) {
-> +               dev_err(data->dev, "Error (%d) setting property (%s)\n",
-> +                       rc, prop);
-> +       }
-> +
-> +       return rc;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+>  /*
+>   * If this unlinked inode is in the middle of recovery, don't let drop_inode
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index 0d0f74786799..2e165e226e15 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -742,7 +742,7 @@ xfs_fs_drop_inode(
+>  		return 0;
+>  	}
+>  
+> -	return generic_drop_inode(inode) || (ip->i_flags & XFS_IDONTCACHE);
+> +	return generic_drop_inode(inode);
+>  }
+>  
+>  static void
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index a87cc5845a02..44bd45af760f 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2156,6 +2156,8 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+>   *
+>   * I_CREATING		New object's inode in the middle of setting up.
+>   *
+> + * I_DONTCACHE		Evict inode as soon as it is not used anymore.
+> + *
+>   * Q: What is the difference between I_WILL_FREE and I_FREEING?
+>   */
+>  #define I_DIRTY_SYNC		(1 << 0)
+> @@ -2178,6 +2180,7 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+>  #define I_WB_SWITCH		(1 << 13)
+>  #define I_OVL_INUSE		(1 << 14)
+>  #define I_CREATING		(1 << 15)
+> +#define I_DONTCACHE		(1 << 16)
+>  
+>  #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
+>  #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
+> @@ -3049,7 +3052,8 @@ extern int inode_needs_sync(struct inode *inode);
+>  extern int generic_delete_inode(struct inode *inode);
+>  static inline int generic_drop_inode(struct inode *inode)
+>  {
+> -	return !inode->i_nlink || inode_unhashed(inode);
+> +	return !inode->i_nlink || inode_unhashed(inode) ||
+> +		(inode->i_state & I_DONTCACHE);
+>  }
+>  
+>  extern struct inode *ilookup5_nowait(struct super_block *sb,
+> -- 
+> 2.25.1
+> 
