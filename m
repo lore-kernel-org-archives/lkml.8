@@ -2,145 +2,119 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E658C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C275AC55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E62A72073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:17:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VzMHbZmG"
+	by mail.kernel.org (Postfix) with ESMTP id A2E9820CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgDUIRo (ORCPT
+        id S1728574AbgDUISE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:17:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728497AbgDUIRh (ORCPT
+        Tue, 21 Apr 2020 04:18:04 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:35110 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728003AbgDUISD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:17:37 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F95EC061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:17:37 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id p25so6271515pfn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=R51EKoGdprYIzq4mz86f7ksK2LhT5dJfZ4/kQMPqWXU=;
-        b=VzMHbZmGtC1cli7/MzDUNjXVYWUl1NxixqtpJm0/9P/EzaLVRa8g8WgYud0Qm6Rchk
-         /0trL5SM2/Zrj2mYcg8pq0A+qXdeLRNhfMiAZsy5X8Q7FkKkUcxE3FT4l8B0EtAmdA+a
-         qWQTbQU8+OIZBMPZCnCgj1bgpLATeorKYHYYWZhPAzfAJg7qSDI1mvGlLkPsXDXc0xmQ
-         nHxUsek7TS8kNEMxedKCaVU/PPk6efmG7yA1N7bxrcxILkRxr4XHk7vAf799he9GgfVg
-         ZXr8nDGGsq+0uBoSEWHxoMPWrO9TNXqLg4+rs5s/lfX6Mf18km5fSJ2iKKhhbu7/Mopp
-         enAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=R51EKoGdprYIzq4mz86f7ksK2LhT5dJfZ4/kQMPqWXU=;
-        b=Ya77saszxe2EG8M8sTlc+Ra5JZWWyksbjLA0QJx/ZBhCF0H/N9xtglsE2Oc1JVvMG9
-         peKYfZyH9JHfpxZwGU8LN1PCiEN0l4+FPKrOXZA/9yLhRMLr/4c+MJiarnXXsRQh1mSy
-         nahZlMtEkK53BFCBof8V/jvDrCWnZ8ZrD9vK+Gt+96AxE41tO3BUr9yCHL9CrMfHybCB
-         2N2kEHB9Q66BrWiYrOZ1wpf87Tod3+TOrsiE+V0yD4LNnhERWkjMRVilx4lTyDEgdKic
-         +bml1FDwInCQwOzwjJTJdk6TW5UxovbDC7HFpPnXcF5Gpb8T9lBqCzZj24HA1KYNN9gI
-         kK6g==
-X-Gm-Message-State: AGi0PuYVBNMjDvRtfq2Nfiv5T0Bn3lcDx/LWeVrakSAfKWriWqp0b5bm
-        U559ReZ3Yywo4U/+2kknX7Tq2g==
-X-Google-Smtp-Source: APiQypJD+fzqoCjmoNF33zw6GUvSp1zVm+GJEMjBcSfH6XjMDUyeBTOm2mgFujSrzxWUd3wuELt89Q==
-X-Received: by 2002:a63:4e21:: with SMTP id c33mr21379911pgb.305.1587457056828;
-        Tue, 21 Apr 2020 01:17:36 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id v9sm1610067pju.3.2020.04.21.01.17.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 01:17:36 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, linux-riscv@lists.infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH 4/4] arm64: mm: use ARCH_HAS_DEBUG_WX instead of arch defined
-Date:   Tue, 21 Apr 2020 16:17:15 +0800
-Message-Id: <e19709e7576f65e303245fe520cad5f7bae72763.1587455584.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <cover.1587455584.git.zong.li@sifive.com>
-References: <cover.1587455584.git.zong.li@sifive.com>
+        Tue, 21 Apr 2020 04:18:03 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-45-R6erxUPxNwmDnj4dVoOApw-1; Tue, 21 Apr 2020 09:11:10 +0100
+X-MC-Unique: R6erxUPxNwmDnj4dVoOApw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 21 Apr 2020 09:11:10 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 21 Apr 2020 09:11:10 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Jason A. Donenfeld'" <Jason@zx2c4.com>
+CC:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: FPU register granularity [Was: Re: [PATCH crypto-stable] crypto:
+ arch/lib - limit simd usage to PAGE_SIZE chunks]
+Thread-Topic: FPU register granularity [Was: Re: [PATCH crypto-stable] crypto:
+ arch/lib - limit simd usage to PAGE_SIZE chunks]
+Thread-Index: AQHWF5Nwrne9SiRX+kyNbDVRZjwXoqiDOD6g
+Date:   Tue, 21 Apr 2020 08:11:10 +0000
+Message-ID: <77009e0fb2fd442791fa192841a1ae16@AcuMS.aculab.com>
+References: <20200420075711.2385190-1-Jason@zx2c4.com>
+ <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
+ <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
+In-Reply-To: <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extract DEBUG_WX to mm/Kconfig.debug for shared use. Change to use
-ARCH_HAS_DEBUG_WX instead of DEBUG_WX defined by arch port.
-
-Signed-off-by: Zong Li <zong.li@sifive.com>
----
- arch/arm64/Kconfig       |  1 +
- arch/arm64/Kconfig.debug | 29 -----------------------------
- 2 files changed, 1 insertion(+), 29 deletions(-)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 40fb05d96c60..a16e2ce80854 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -9,6 +9,7 @@ config ARM64
- 	select ACPI_MCFG if (ACPI && PCI)
- 	select ACPI_SPCR_TABLE if ACPI
- 	select ACPI_PPTT if ACPI
-+	select ARCH_HAS_DEBUG_WX
- 	select ARCH_HAS_DEBUG_VIRTUAL
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
- 	select ARCH_HAS_DMA_PREP_COHERENT
-diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
-index a1efa246c9ed..cdf7ec0b975e 100644
---- a/arch/arm64/Kconfig.debug
-+++ b/arch/arm64/Kconfig.debug
-@@ -23,35 +23,6 @@ config ARM64_RANDOMIZE_TEXT_OFFSET
- 	  of TEXT_OFFSET and platforms must not require a specific
- 	  value.
- 
--config DEBUG_WX
--	bool "Warn on W+X mappings at boot"
--	select PTDUMP_CORE
--	---help---
--	  Generate a warning if any W+X mappings are found at boot.
--
--	  This is useful for discovering cases where the kernel is leaving
--	  W+X mappings after applying NX, as such mappings are a security risk.
--	  This check also includes UXN, which should be set on all kernel
--	  mappings.
--
--	  Look for a message in dmesg output like this:
--
--	    arm64/mm: Checked W+X mappings: passed, no W+X pages found.
--
--	  or like this, if the check failed:
--
--	    arm64/mm: Checked W+X mappings: FAILED, <N> W+X pages found.
--
--	  Note that even if the check fails, your kernel is possibly
--	  still fine, as W+X mappings are not a security hole in
--	  themselves, what they do is that they make the exploitation
--	  of other unfixed kernel bugs easier.
--
--	  There is no runtime or memory usage effect of this option
--	  once the kernel has booted up - it's a one time check.
--
--	  If in doubt, say "Y".
--
- config DEBUG_EFI
- 	depends on EFI && DEBUG_INFO
- 	bool "UEFI debugging"
--- 
-2.26.1
+RnJvbTogSmFzb24gQS4gRG9uZW5mZWxkDQo+IFNlbnQ6IDIxIEFwcmlsIDIwMjAgMDU6MTUNCj4g
+DQo+IEhpIERhdmlkLA0KPiANCj4gT24gTW9uLCBBcHIgMjAsIDIwMjAgYXQgMjozMiBBTSBEYXZp
+ZCBMYWlnaHQgPERhdmlkLkxhaWdodEBhY3VsYWIuY29tPiB3cm90ZToNCj4gPiBNYXliZSBrZXJu
+ZWxfZnBfYmVnaW4oKSBzaG91bGQgYmUgcGFzc2VkIHRoZSBhZGRyZXNzIG9mIHNvbWV3aGVyZQ0K
+PiA+IHRoZSBhZGRyZXNzIG9mIGFuIGZwdSBzYXZlIGFyZWEgYnVmZmVyIGNhbiBiZSB3cml0dGVu
+IHRvLg0KPiA+IFRoZW4gdGhlIHByZS1lbXB0aW9uIGNvZGUgY2FuIGFsbG9jYXRlIHRoZSBidWZm
+ZXIgYW5kIHNhdmUgdGhlDQo+ID4gc3RhdGUgaW50byBpdC4NCj4gDQo+IEludGVyZXN0aW5nIGlk
+ZWEuIEl0IGxvb2tzIGxpa2UgYHN0cnVjdCB4cmVnc19zdGF0ZWAgaXMgb25seSA1NzYNCj4gYnl0
+ZXMuIFRoYXQncyBub3QgZXhhY3RseSBzbWFsbCwgYnV0IGl0J3Mgbm90IGluc2FuZWx5IGh1Z2Ug
+ZWl0aGVyLA0KPiBhbmQgbWF5YmUgd2UgY291bGQganVzdGlmaWFibHkgc3RpY2sgdGhhdCBvbiB0
+aGUgc3RhY2ssIG9yIGV2ZW4NCj4gcmVzZXJ2ZSBwYXJ0IG9mIHRoZSBzdGFjayBhbGxvY2F0aW9u
+IGZvciB0aGF0IHRoYXQgdGhlIGZ1bmN0aW9uIHdvdWxkDQo+IGtub3cgYWJvdXQsIHdpdGhvdXQg
+bmVlZGluZyB0byBzcGVjaWZ5IGFueSBhZGRyZXNzLg0KDQpBcyB5b3Ugc2FpZCB5b3Vyc2VsZiwg
+d2l0aCBBVlg1MTIgaXQgaXMgbXVjaCBsYXJnZXIuDQpXaGljaCBpcyB3aHkgSSBzdWdnZXN0ZWQg
+dGhlIHNhdmUgY29kZSBjb3VsZCBhbGxvY2F0ZSB0aGUgYXJlYS4NCk5vdGUgdGhhdCB0aGlzIHdv
+dWxkIG9ubHkgYmUgbmVlZGVkIGZvciBuZXN0ZWQgdXNlIChmb3IgYSBmdWxsIHNhdmUpLg0KDQo+
+ID4ga2VybmVsX2ZwdV9iZWdpbigpIG91Z2h0IGFsc28gYmUgcGFzc2VkIGEgcGFyYW1ldGVyIHNh
+eWluZyB3aGljaA0KPiA+IGZwdSBmZWF0dXJlcyBhcmUgcmVxdWlyZWQsIGFuZCByZXR1cm4gd2hp
+Y2ggYXJlIGFsbG9jYXRlZC4NCj4gPiBPbiB4ODYgdGhpcyBjb3VsZCBiZSB1c2VkIHRvIGNoZWNr
+IGZvciBBVlg1MTIgKGV0Yykgd2hpY2ggbWF5IGJlDQo+ID4gYXZhaWxhYmxlIGluIGFuIElTUiB1
+bmxlc3MgaXQgaW50ZXJydXB0ZWQgaW5zaWRlIGEga2VybmVsX2ZwdV9iZWdpbigpDQo+ID4gc2Vj
+dGlvbiAoZXRjKS4NCj4gPiBJdCB3b3VsZCBhbHNvIGFsbG93IG9wdGltaXNhdGlvbnMgaWYgb25s
+eSAxIG9yIDIgZnB1IHJlZ2lzdGVycyBhcmUNCj4gPiBuZWVkZWQgKGVnIGZvciBzb21lIG9mIHRo
+ZSBjcnlwdG8gZnVuY3Rpb25zKSByYXRoZXIgdGhhbiB0aGUgd2hvbGUNCj4gPiBmcHUgcmVnaXN0
+ZXIgc2V0Lg0KPiANCj4gRm9yIEFWWDUxMiB0aGlzIHByb2JhYmx5IG1ha2VzIHNlbnNlLCBJIHN1
+cHBvc2UuIEJ1dCBJJ20gbm90IHN1cmUgaWYNCj4gdGhlcmUgYXJlIHRvbyBtYW55IGJpdHMgb2Yg
+Y3J5cHRvIGNvZGUgdGhhdCBvbmx5IHVzZSBhIGZldyByZWdpc3RlcnMuDQo+IFRoZXJlIGFyZSB0
+aG9zZSBhY2NlbGVyYXRlZCBtZW1jcHkgcm91dGluZXMgaW4gaTkxNSB0aG91Z2ggLS0gZXZlciBz
+ZWUNCj4gZHJpdmVycy9ncHUvZHJtL2k5MTUvaTkxNV9tZW1jcHkuYz8gc29ydCBvZiB3aWxkLiBC
+dXQgaWYgd2UgZGlkIGdvDQo+IHRoaXMgd2F5LCBJIHdvbmRlciBpZiBpdCdkIG1ha2Ugc2Vuc2Ug
+dG8gdG90YWxseSBvdmVyZW5naW5lZXIgaXQgYW5kDQo+IHdyaXRlIGEgZ2NjL2FzIHBsdWdpbiB0
+byBjcmVhdGUgdGhlIHJlZ2lzdGVyIG1hc2sgZm9yIHVzLiBPciwgbWF5YmUNCj4gc29tZSBjaGVj
+a2VyIGluc2lkZSBvZiBvYmp0b29sIGNvdWxkIGhlbHAgaGVyZS4NCg0KSSBzdXNwZWN0IHNvbWUg
+b2YgdGhhdCBjb2RlIGlzIG92ZXJseSB1bnJvbGxlZC4NCg0KPiBBY3R1YWxseSwgdGhvdWdoLCB0
+aGUgdGhpbmcgSSd2ZSBiZWVuIHdvbmRlcmluZyBhYm91dCBpcyBhY3R1YWxseQ0KPiBtb3Zpbmcg
+aW4gdGhlIGNvbXBsZXRlIG9wcG9zaXRlIGRpcmVjdGlvbjogaXMgdGhlcmUgc29tZQ0KPiBlZmZp
+Y2llbnQtZW5vdWdoIHdheSB0aGF0IHdlIGNvdWxkIGFsbG93IEZQVSByZWdpc3RlcnMgaW4gYWxs
+IGNvbnRleHRzDQo+IGFsd2F5cywgd2l0aG91dCB0aGUgbmVlZCBmb3Iga2VybmVsX2ZwdV9iZWdp
+bi9lbmQ/IEkgd2FzIHJldmVyc2luZw0KPiBudG9za3JubC5leGUgYW5kIHdhcyBraW5kIG9mIGlt
+cHJlc3NlZCAobWF5YmUgbm90IHRoZSByaWdodCB3b3JkPykgYnkNCj4gdGhlaXIganVkaWNpb3Vz
+IHVzZSBvZiB2ZWN0b3Jpc2F0aW9uIGV2ZXJ5d2hlcmUuIEkgYXNzdW1lIGEgbG90IG9mDQo+IHRo
+YXQgaXMgYmVpbmcgZ2VuZXJhdGVkIGJ5IHRoZWlyIGNvbXBpbGVyLCB3aGljaCBvZiBjb3Vyc2Ug
+Z2NjIGNvdWxkDQo+IGRvIGZvciB1cyBpZiB3ZSBsZXQgaXQuIElzIHRoYXQgYW4gaW50ZXJlc3Rp
+bmcgYXZlbnVlIHRvIGNvbnNpZGVyPyBPcg0KPiBhcmUgeW91IHByZXR0eSBjZXJ0YWluIHRoYXQg
+aXQnZCBiZSBhIGh1Z2UgbWlzdGFrZSwgd2l0aCBhbg0KPiBpcnJldmVyc2libGUgc3BlZWQgaGl0
+Pw0KDQoNCkkgdGhpbmsgd2luZG93cyB0YWtlcyB0aGUgJ2hpdCcgb2Ygc2F2aW5nIHRoZSBlbnRp
+cmUgZnB1IHN0YXRlIG9uDQpldmVyeSBrZXJuZWwgZW50cnkuDQpOb3RlIHRoYXQgZm9yIHN5c3Rl
+bSBjYWxscyB0aGlzIGlzIGFjdHVhbGx5IG1pbmltYWwuDQpBbGwgdGhlICdjYWxsZWUgc2F2ZWQn
+IHJlZ2lzdGVycyAobW9zdCBvZiB0aGUgZnB1IG9uZXMpIGNhbiBiZQ0KdHJhc2hlZCAtIGllIHJl
+bG9hZGVkIHdpdGggemVyb3MuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFr
+ZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwg
+VUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
