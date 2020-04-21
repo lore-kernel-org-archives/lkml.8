@@ -2,105 +2,120 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F141CC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DE0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57862076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC1820857
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:13:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bcdEPkBf"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fXqbT8tN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgDUGMo (ORCPT
+        id S1727042AbgDUGNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 02:12:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56530 "EHLO
+        Tue, 21 Apr 2020 02:13:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726628AbgDUGMm (ORCPT
+        by vger.kernel.org with ESMTP id S1725902AbgDUGNH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 02:12:42 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844C3C061A0F;
-        Mon, 20 Apr 2020 23:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Fs0wPMYxvGmO2IT3Wvj2CTBXvnvcNivwuYu4FRE1SCI=; b=bcdEPkBfhKOPABDQ5Dsha37HM3
-        eiUij9xN/DG0iEUE2o4+ymVZLXy4WTHEZ93i2poYzXi35OEw0UaBNRCm3UsBgg7WNR3KoPmruhr/f
-        Tt1f1l2KDEI5rtmjNRHaRnSEi8NEoX+foGuKXs/UKBrK4hLSFO5WKIx+MuLWRFDoBZl9/tom0LjvL
-        cMc+fqi77vKCxaNuCR0ezJ69UZ4M47yK9VJWZ+NadNl/qN521hJSN1uCz91OFkf2D96u10vgrxuDg
-        afXttZeFQSKeSpoFZG8emNnEtWtBBpYYGRPESwFvXeXzwCtxh0SUBj/5wVxPD7Kij8oDkhJIYT/m9
-        Ni0TgIVQ==;
-Received: from [2001:4bb8:191:e12c:292e:7dec:cf13:becd] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQm9B-0000MF-HQ; Tue, 21 Apr 2020 06:12:41 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] partitions/ibm: stop using ioctl_by_bdev
-Date:   Tue, 21 Apr 2020 08:12:26 +0200
-Message-Id: <20200421061226.33731-4-hch@lst.de>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200421061226.33731-1-hch@lst.de>
-References: <20200421061226.33731-1-hch@lst.de>
+        Tue, 21 Apr 2020 02:13:07 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFFF7C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 23:13:07 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id v18so6014327qvx.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 23:13:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rBTmKfCIXzIngtyufdXUhtBs7wtsPlplAmGYEm2d3v0=;
+        b=fXqbT8tNzz4SoUsw1oZcdb0sGfCsv1ODvtBztn0qxA3NC43KDEPIWxIvEzpNMmE0Kr
+         3YByCbB4nLaYCcJByVAd7VvnJtq53GVNVHVhmkRBkneVZ58Ljzvbt1voaPXDBU5UTvar
+         3nqocgmlotR7hx1gr+5GYVI8UQtl9Kjry+7ck=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rBTmKfCIXzIngtyufdXUhtBs7wtsPlplAmGYEm2d3v0=;
+        b=dTrnXi28KCrMgcW3zV6TG9r3uhEyKmvPkNAfJi3Wc3GbysLKiUxpPgO9GzCj8IVEdy
+         AVVmv1gdSIkjR3fQRGPIFL0yuAANau77DHHBVMcgbeSPRU9H+zcojgz8XEmsgemCkpjl
+         2yxL94lA7T51Xm/lTrwjluqBGExIuDF0lqHg7mWiyU4x0RHyZEaaHFrbmDLvw4IurPKl
+         MFMLQmzgp67SzxJaaEpjGd3/H3bkJL/NaLqqlMpVbPT1LTEQwzaK1KVgQlXSAM+kdfNc
+         YoHpP5c0HrIdzDLE3enp4kZfTzL/G0tvCxu0U8oRxeC9L0Ww2OmvFtdX0T+1kISCJqbu
+         BpJw==
+X-Gm-Message-State: AGi0PuaVk7WPwv2g/n1HNEbQzHNCUmQSkfF7b2PYfkGa9ILrn2AdeTQj
+        q8rtY7dpFiQsl9G7W0zj7ZjAkYO0MtWB5Z0S2eH3DQ==
+X-Google-Smtp-Source: APiQypJ1/Zw+DrPrY6ElI32Q3lBy/mBaGEXzNpzZWV5hiyXRpJMue+Et8OJTTHKQqxmILXre9E5E83vqjWKvHeOcycE=
+X-Received: by 2002:a0c:e9c5:: with SMTP id q5mr19203866qvo.238.1587449586850;
+ Mon, 20 Apr 2020 23:13:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200421034101.28273-1-yanaijie@huawei.com>
+In-Reply-To: <20200421034101.28273-1-yanaijie@huawei.com>
+From:   Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
+Date:   Tue, 21 Apr 2020 11:44:32 +0530
+Message-ID: <CA+RiK65vudpB_YEM07ydUACD601n4gC-3VSoYA3mJDATAm6L7g@mail.gmail.com>
+Subject: Re: [PATCH] scsi: mpt3sas: use true,false for bool variables
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+        Chaitra Basappa <chaitra.basappa@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        PDL-MPT-FUSIONLINUX <MPT-FusionLinux.pdl@broadcom.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just call the getgeo and biodasdinfo methods directly.
+Acked-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/partitions/ibm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Thanks.
 
-diff --git a/block/partitions/ibm.c b/block/partitions/ibm.c
-index 073faa6a69b8..21dc6da20ff2 100644
---- a/block/partitions/ibm.c
-+++ b/block/partitions/ibm.c
-@@ -289,6 +289,7 @@ static int find_cms1_partitions(struct parsed_partitions *state,
- int ibm_partition(struct parsed_partitions *state)
- {
- 	struct block_device *bdev = state->bdev;
-+	struct gendisk *disk = bdev->bd_disk;
- 	int blocksize, res;
- 	loff_t i_size, offset, size;
- 	dasd_information2_t *info;
-@@ -308,15 +309,16 @@ int ibm_partition(struct parsed_partitions *state)
- 	info = kmalloc(sizeof(dasd_information2_t), GFP_KERNEL);
- 	if (info == NULL)
- 		goto out_exit;
--	geo = kmalloc(sizeof(struct hd_geometry), GFP_KERNEL);
-+	geo = kzalloc(sizeof(struct hd_geometry), GFP_KERNEL);
- 	if (geo == NULL)
- 		goto out_nogeo;
- 	label = kmalloc(sizeof(union label_t), GFP_KERNEL);
- 	if (label == NULL)
- 		goto out_nolab;
--	if (ioctl_by_bdev(bdev, HDIO_GETGEO, (unsigned long)geo) != 0)
-+	geo->start = get_start_sect(bdev);
-+	if (!disk->fops->getgeo || disk->fops->getgeo(bdev, geo))
- 		goto out_freeall;
--	if (ioctl_by_bdev(bdev, BIODASDINFO2, (unsigned long)info) != 0) {
-+	if (!disk->fops->biodasdinfo || disk->fops->biodasdinfo(disk, info)) {
- 		kfree(info);
- 		info = NULL;
- 	}
--- 
-2.26.1
 
+
+On Tue, Apr 21, 2020 at 9:12 AM Jason Yan <yanaijie@huawei.com> wrote:
+>
+> Fix the following coccicheck warning:
+>
+> drivers/scsi/mpt3sas/mpt3sas_base.c:416:6-14: WARNING: Assignment of 0/1
+> to bool variable
+> drivers/scsi/mpt3sas/mpt3sas_base.c:485:2-10: WARNING: Assignment of 0/1
+> to bool variable
+>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  drivers/scsi/mpt3sas/mpt3sas_base.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+> index 06285b03fa00..4544ba4bf47d 100644
+> --- a/drivers/scsi/mpt3sas/mpt3sas_base.c
+> +++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+> @@ -413,7 +413,7 @@ static void _clone_sg_entries(struct MPT3SAS_ADAPTER *ioc,
+>  {
+>         Mpi2SGESimple32_t *sgel, *sgel_next;
+>         u32  sgl_flags, sge_chain_count = 0;
+> -       bool is_write = 0;
+> +       bool is_write = false;
+>         u16 i = 0;
+>         void __iomem *buffer_iomem;
+>         phys_addr_t buffer_iomem_phys;
+> @@ -482,7 +482,7 @@ static void _clone_sg_entries(struct MPT3SAS_ADAPTER *ioc,
+>
+>         if (le32_to_cpu(sgel->FlagsLength) &
+>                         (MPI2_SGE_FLAGS_HOST_TO_IOC << MPI2_SGE_FLAGS_SHIFT))
+> -               is_write = 1;
+> +               is_write = true;
+>
+>         for (i = 0; i < MPT_MIN_PHYS_SEGMENTS + ioc->facts.MaxChainDepth; i++) {
+>
+> --
+> 2.21.1
+>
