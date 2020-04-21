@@ -2,80 +2,160 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F911C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9107C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B96020644
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84AC020724
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:57:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HTj4tJC6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nu3trMDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbgDUN5k (ORCPT
+        id S1728951AbgDUN5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726018AbgDUN5i (ORCPT
+        Tue, 21 Apr 2020 09:57:54 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48456 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728824AbgDUN5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:57:38 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D17A6C061A10;
-        Tue, 21 Apr 2020 06:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Pp2bG4fEbryHc3bEtGL1LFuRU1cWx4G4+7sc9Othu1I=; b=HTj4tJC67EYOgK0QECIFmCjDq2
-        21F8Clxqw+0cNAw8vb5Ch1Z60ErYNeLv3JvecCZTWpnd/y0UHVf2/x3sptdRiRDuLIPfYArRTq0Rh
-        UTxf5Y9PYN16bjwvebhPSiX36ouWYtDHwYsqcf1YINvEOjhA9GWtEM35IhAus34CYcKHAYy/Z3Srw
-        KTeYWcD8/3tarYix+ekD/Hpx9XbhrqyKDv33lxxl/w/IXk3tjcf7bH/4y6V5NMLLi3+0AQUfmWE5j
-        j43DhsWBA67Taj6/B6+RRXxpok6kqcfE2j73Q5djFQJ/XaWu3UOjgIYazNBPQGQ1szPRYOyyO0iJm
-        p6eMMAWQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQtOA-0000CI-6H; Tue, 21 Apr 2020 13:56:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B31F5300739;
-        Tue, 21 Apr 2020 15:56:35 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9906D2BAC7931; Tue, 21 Apr 2020 15:56:35 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 15:56:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Ingo Molnar <mingo@redhat.com>, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, vincent.guittot@linaro.org,
-        Steven Rostedt <rostedt@goodmis.org>, bsegall@google.com,
-        mgorman@suse.de, paulmck@kernel.org, tglx@linutronix.de,
-        "James.Bottomley@hansenpartnership.com" 
-        <James.Bottomley@HansenPartnership.com>, deller@gmx.de,
-        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2] sched/core: fix illegal RCU from offline CPUs
-Message-ID: <20200421135635.GT20730@hirez.programming.kicks-ass.net>
-References: <20200401214033.8448-1-cai@lca.pw>
- <87369mt9kf.fsf@mpe.ellerman.id.au>
- <BBA124FA-7924-4782-AC9D-7B1B98BE817F@lca.pw>
+        Tue, 21 Apr 2020 09:57:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587477469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2wRD9FPTWKMzxCyWJGhqpm27rg8NjVNjjKx55UL7gOU=;
+        b=Nu3trMDKQtUIanQbH665T2r5W69cir4BYnqL/P1xC+skrm/gffIT4BhTOS6jPkTl5objGj
+        BHNhlR18NZV0trlNkBy9l6qhtEKxmvOFYCua/P+dXcGMiqOQ3PTfuhO0Has91F7QzXDDI+
+        14pV7PDCkEi+3gT39hdQsaQLePqKXnc=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-44-K6S-CHKmOrq5ykjxFvIwvg-1; Tue, 21 Apr 2020 09:57:47 -0400
+X-MC-Unique: K6S-CHKmOrq5ykjxFvIwvg-1
+Received: by mail-wm1-f71.google.com with SMTP id n127so1408320wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:57:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2wRD9FPTWKMzxCyWJGhqpm27rg8NjVNjjKx55UL7gOU=;
+        b=MT6Ft0Mpq9aXJ3A1WSRRKxfLAhSn6pzXMBf7M7y4BL/UpEpqdsM7x4OJ4Jzm4RPbyq
+         e0dirKkcBNwy77dO9/7ybcWi49GJMvpk5GOA+WcCx8Ed724wwfaXRa8nmnJKBeLpeCw0
+         bz8W2hSD1iJDl9csfjOF9PjZulKTOdHRwo63ExuzakbcCh+QFsaz5pknXc7IMpMFkXlI
+         AVGrLTLD6bXQwz+acbWoadkfd7r3RfFbZ7cCVVyYaqpxKURbI/1Jm+Cm415tKAeHrL6n
+         weNtc/e4TSwkylzTleBWsU8lK4KOtNs/VnG8O0wFXnlJjcVucKQ1B7oyZHLJIX2WuxBb
+         mp+w==
+X-Gm-Message-State: AGi0Puay70CwqZslXD/vZILj3dVqckmloUJyn4ymXH/2PBwpDGW5MJNF
+        D33OjJK9Q/YobM6MxuDMxJ0CVVn80vMoK+h6z2rfUPPZk1wvYkEi+HvmwexCzim1n7OTRKsdVMR
+        af/BWjrJHcj+335x0stqufh3p
+X-Received: by 2002:a7b:cb17:: with SMTP id u23mr4993985wmj.130.1587477466575;
+        Tue, 21 Apr 2020 06:57:46 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIdMbj9yLvuLA4LwwjCRX8ejEQ6n8RjZ/wI7HQOlXPSbSe/l8j+NErdfsIjBeaz5nCZl4whdg==
+X-Received: by 2002:a7b:cb17:: with SMTP id u23mr4993944wmj.130.1587477466378;
+        Tue, 21 Apr 2020 06:57:46 -0700 (PDT)
+Received: from localhost.localdomain.com ([194.230.155.194])
+        by smtp.gmail.com with ESMTPSA id f23sm3562989wml.4.2020.04.21.06.57.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 06:57:45 -0700 (PDT)
+From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Manoj N. Kumar" <manoj@linux.ibm.com>,
+        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
+        Uma Krishnan <ukrishn@linux.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        John Johansen <john.johansen@canonical.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Subject: [PATCH v2 3/7] libfs: introduce new_inode_current_time
+Date:   Tue, 21 Apr 2020 15:57:37 +0200
+Message-Id: <20200421135741.30657-1-eesposit@redhat.com>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200421135119.30007-1-eesposit@redhat.com>
+References: <20200421135119.30007-1-eesposit@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BBA124FA-7924-4782-AC9D-7B1B98BE817F@lca.pw>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 09:26:56AM -0400, Qian Cai wrote:
+It is a common special case for new_inode to initialize the
+time to the current time and the inode to get_next_ino().
+Introduce a core function that does it.
 
-> > Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-> 
-> Peter, can you take a look at this patch when you have a chance?
+Signed-off-by: Emanuele Giuseppe Esposito <eesposit@redhat.com>
+---
+ fs/libfs.c         | 20 ++++++++++++++++++++
+ include/linux/fs.h |  1 +
+ 2 files changed, 21 insertions(+)
 
-Sorry, -ETOOMUCHEMAIL, got it now, thanks!
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 54e07ae986ca..3fa0cd27ab06 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -594,6 +594,26 @@ int simple_write_end(struct file *file, struct address_space *mapping,
+ }
+ EXPORT_SYMBOL(simple_write_end);
+ 
++/**
++ * new_inode_current_time - create new inode by initializing the
++ * time to the current time and the inode to get_next_ino()
++ * @sb: pointer to super block of the file system
++ *
++ * Returns an inode pointer on success, NULL on failure.
++ */
++struct inode *new_inode_current_time(struct super_block *sb)
++{
++	struct inode *inode = new_inode(sb);
++
++	if (inode) {
++		inode->i_ino = get_next_ino();
++		inode->i_atime = inode->i_mtime =
++			inode->i_ctime = current_time(inode);
++	}
++	return inode;
++}
++EXPORT_SYMBOL(new_inode_current_time);
++
+ /*
+  * the inodes created here are not hashed. If you use iunique to generate
+  * unique inode values later for this filesystem, then you must take care
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index a3691c132b3a..de2577df30ae 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3088,6 +3088,7 @@ extern void clear_inode(struct inode *);
+ extern void __destroy_inode(struct inode *);
+ extern struct inode *new_inode_pseudo(struct super_block *sb);
+ extern struct inode *new_inode(struct super_block *sb);
++extern struct inode *new_inode_current_time(struct super_block *sb);
+ extern void free_inode_nonrcu(struct inode *inode);
+ extern int should_remove_suid(struct dentry *);
+ extern int file_remove_privs(struct file *);
+-- 
+2.25.2
+
