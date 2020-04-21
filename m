@@ -2,151 +2,103 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D972AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0824C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A74DD2074B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD652074B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pCDqqkMc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qh2z0dkU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgDUHSE (ORCPT
+        id S1726988AbgDUHTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38346 "EHLO
+        Tue, 21 Apr 2020 03:19:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgDUHSE (ORCPT
+        with ESMTP id S1725926AbgDUHTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:18:04 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B1D1C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 00:18:04 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id f8so10240670lfe.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 00:18:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BX4Z7l5ylvlpD/cGHF2TlCLLoCRJ2GUG9rjWlG7lI/8=;
-        b=pCDqqkMcZ8vHjCvBaXooqfUmIfX2khXqw1s6Yg3SpnDKlOmiSEv8xbReXpZqKhBfhh
-         6zVHpQmaB9IR1qSmFRPtVPpgsi6i2aHhCe4kF8JlZjHCafKzkw5Ec1rewA9VxKbagYMu
-         soRP69kCOqDjaVLiEUbq1YjNpgAn4yuVZzA6nvVl576LiLB9RA45lbLr+Ba6h6sbV6Ug
-         KlLVy0/1GScs1nWRXNiUb6Bucb61GFQNfqNs77JOQBv9gAQd0QvVIKPVsCqimGoC+uSN
-         8uvkw4dNLVaWQRPHz7b4mZ6QfOJTfBj3Wi3RPidxv1GMzVUfSUToD1fEVqmRUtPMwoAb
-         eQkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BX4Z7l5ylvlpD/cGHF2TlCLLoCRJ2GUG9rjWlG7lI/8=;
-        b=M7QNxE2sHMVVr8fWa8e/WXlH3NjSfNemC0Twks8LyNgyOEwzC9vXEQbWK8/P8OBcot
-         ulXMZ+3j0ZgDT9V7V/YfmCZ4gmjXOdbBKXFSO4IB+8VYmiWirHS5iwarcZRp6/ZDaZ1t
-         B2/zvVblHNzk6erl+OPShH/4h/P1QgwzRlvlNJ8vnTam3xZeDrdIzqfQBJ1bVsalFq5N
-         lkHIH0n1UYvw9ZLfYOSZiLqHqO2ex/S1UC6u5pksretsfGSdAepVFe9UIMYbBivJymc4
-         nCqa+0XharD3ao1/bqDIeNX+93TrG94fwiZFr0Dw2GcMtwmb2KJyCnVHxsPsDRBqiQja
-         62QQ==
-X-Gm-Message-State: AGi0PuZMf+fhApxfwlJJ5hQY18/kJJ0MMRFWTwo8+9tJqhCOi9eShcGj
-        FcG36O4ydRlsYkLc6LUVg8GuxmJsiGqN20rYFIxgpjNB
-X-Google-Smtp-Source: APiQypK+PN9MRPeavkXiNY/zDMA/5bCPt8NvlD44YYisUkDb0UYn+96ndAzPVQnpgAS/jc8q0p8sQPBX38uI96K42yw=
-X-Received: by 2002:a19:c7d8:: with SMTP id x207mr12632280lff.190.1587453482312;
- Tue, 21 Apr 2020 00:18:02 -0700 (PDT)
+        Tue, 21 Apr 2020 03:19:02 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A2AC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 00:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wB7dZFZ/Ju9Qvfbv82JrC+nwTQ54dwvrWz27hhZ8iSA=; b=Qh2z0dkU2bQ4vBWyoXby9G84uc
+        W7RZETzPOwuLZJtla99+BsQZ6ysXh3IofFNE9SIQCsLiYlYZNp2MFnQaN0teJxPC+y3EfmUqFKYUi
+        3Qw+x1FXojqOr59mtemnrUCSJglnqNRblUKzA1H+FS8ZkAzslciBPPkR6fNoQasGIqCIMGkAtWK5t
+        HcVXHRAAYBnns8N4QLEYbHIocekZOyWxv60NaAT/uT1bxKj8phHcFUpOfogY6lc8yJa0kId8ZUv1f
+        bVvZrX587Z1vQHM2i6naVNLrj2e2GZIqRk5mgVmL+neY3pasiKX9re0ZgpPx9FRTksrs1RmTlLh3U
+        I8Ewv4yg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQnBF-0000An-ER; Tue, 21 Apr 2020 07:18:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 039F6301AC6;
+        Tue, 21 Apr 2020 09:18:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E53662BAC6A7F; Tue, 21 Apr 2020 09:18:50 +0200 (CEST)
+Date:   Tue, 21 Apr 2020 09:18:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>,
+        kernel test robot <rong.a.chen@intel.com>
+Subject: Re: [PATCH v12] perf: Sharing PMU counters across compatible events
+Message-ID: <20200421071850.GO20730@hirez.programming.kicks-ass.net>
+References: <20200331075533.2347393-1-songliubraving@fb.com>
+ <20200420230429.GT2483@worktop.programming.kicks-ass.net>
+ <DD112BD6-F623-4039-A0E1-D395D705A528@fb.com>
 MIME-Version: 1.0
-References: <cover.1587393807.git.yu.c.chen@intel.com> <34d7c9496b77c928fcbe6085213115bd4d48d5a2.1587393807.git.yu.c.chen@intel.com>
-In-Reply-To: <34d7c9496b77c928fcbe6085213115bd4d48d5a2.1587393807.git.yu.c.chen@intel.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 21 Apr 2020 09:17:50 +0200
-Message-ID: <CAKfTPtAh0mgPyQLe9W3iPt_7eUZWqa1x+kTmdsP2+qxi_5icWw@mail.gmail.com>
-Subject: Re: [PATCH 1/2][v2] sched: Make newidle_balance() static again
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DD112BD6-F623-4039-A0E1-D395D705A528@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 at 17:01, Chen Yu <yu.c.chen@intel.com> wrote:
->
-> After Commit 6e2df0581f56 ("sched: Fix pick_next_task() vs 'change'
-> pattern race"), there is no need to expose newidle_balance() as it
-> is only used within fair.c file. Change this function back to static again.
->
-> No functional change.
->
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+On Tue, Apr 21, 2020 at 01:13:32AM +0000, Song Liu wrote:
+> >> static inline u64 perf_event_count(struct perf_event *event)
+> >> {
+> >> -	return local64_read(&event->count) + atomic64_read(&event->child_count);
+> >> +	u64 count;
+> >> +
+> >> +	if (likely(event->dup_master != event))
+> >> +		count = local64_read(&event->count);
+> >> +	else
+> >> +		count = local64_read(&event->master_count);
+> >> +
+> >> +	return count + atomic64_read(&event->child_count);
+> >> }
+> > 
+> > So lsat time I said something about SMP ordering here. Where did that
+> > go?
+> 
+> I guess we will need something with EVENT_TOMBSTONE? That's not clean, I guess.
+> 
+> > 
+> > Specifically, without ordering it is possible to observe dup_master and
+> > dup_count out of order. So while we might then see dup_master, we might
+> > then also see an old dup_count, which would give 'interesting' effects.
+> > 
+> > Granted, adding memory barriers all over this will suck :/
+> 
+> Can we somehow guarantee dup_master and the counts sits in the same 
+> cache line? In that way, we can get rid of most of these barriers. 
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
-> v2: Rename the remaining idle_balance() to newidle_balance()
->     to fix an compile error when CONFIG_SMP is not set.
-> ---
->  kernel/sched/fair.c  | 6 ++++--
->  kernel/sched/sched.h | 4 ----
->  2 files changed, 4 insertions(+), 6 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 02f323b85b6d..cca5c9b7b5ae 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -3873,6 +3873,8 @@ static inline unsigned long cfs_rq_load_avg(struct cfs_rq *cfs_rq)
->         return cfs_rq->avg.load_avg;
->  }
->
-> +static int newidle_balance(struct rq *this_rq, struct rq_flags *rf);
-> +
->  static inline unsigned long task_util(struct task_struct *p)
->  {
->         return READ_ONCE(p->se.avg.util_avg);
-> @@ -4054,7 +4056,7 @@ attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
->  static inline void
->  detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
->
-> -static inline int idle_balance(struct rq *rq, struct rq_flags *rf)
-> +static inline int newidle_balance(struct rq *rq, struct rq_flags *rf)
->  {
->         return 0;
->  }
-> @@ -10425,7 +10427,7 @@ static inline void nohz_newidle_balance(struct rq *this_rq) { }
->   *     0 - failed, no new tasks
->   *   > 0 - success, new (fair) tasks present
->   */
-> -int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
-> +static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
->  {
->         unsigned long next_balance = jiffies + HZ;
->         int this_cpu = this_rq->cpu;
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index db3a57675ccf..be83f88495fb 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -1504,14 +1504,10 @@ static inline void unregister_sched_domain_sysctl(void)
->  }
->  #endif
->
-> -extern int newidle_balance(struct rq *this_rq, struct rq_flags *rf);
-> -
->  #else
->
->  static inline void sched_ttwu_pending(void) { }
->
-> -static inline int newidle_balance(struct rq *this_rq, struct rq_flags *rf) { return 0; }
-> -
->  #endif /* CONFIG_SMP */
->
->  #include "stats.h"
-> --
-> 2.17.1
->
+I'm afraid memory ordering doesn't quite work that way. It is also very
+much outside every architectural guarantee ever written.
+
+In specific this does not consider store buffers and snoops.
