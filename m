@@ -2,185 +2,120 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52893C55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16B0C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E67F206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACDF2077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgDULNd (ORCPT
+        id S1728592AbgDULPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:13:33 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:55664 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726018AbgDULNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:13:33 -0400
-Received: from [10.130.0.79] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT2lO1Z5erYUqAA--.59S3;
-        Tue, 21 Apr 2020 19:13:20 +0800 (CST)
-Subject: Re: [PATCH 3/3] MIPS: Reduce possibility of kernel panic under
- CONFIG_SWIOTLB
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1587459869-12183-1-git-send-email-yangtiezhu@loongson.cn>
- <1587459869-12183-4-git-send-email-yangtiezhu@loongson.cn>
- <20200421173525.460949b0@flygoat-x1e>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Juxin Gao <gaojuxin@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <cde19f52-1c13-63f6-8a92-26011d70069c@loongson.cn>
-Date:   Tue, 21 Apr 2020 19:13:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Tue, 21 Apr 2020 07:15:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:33308 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbgDULPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:15:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0F0C1FB;
+        Tue, 21 Apr 2020 04:15:17 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9217C3F73D;
+        Tue, 21 Apr 2020 04:15:16 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 12:15:14 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Oliver Neukum <oneukum@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+Message-ID: <20200421111513.fy3oqebij6fnvbnc@e107158-lin.cambridge.arm.com>
+References: <Pine.LNX.4.44L0.2003251631360.1724-100000@netrider.rowland.org>
+ <Pine.LNX.4.44L0.2004201622260.22032-100000@netrider.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20200421173525.460949b0@flygoat-x1e>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9DxT2lO1Z5erYUqAA--.59S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCF1rGFWxuFyxZw4rZFWxCrg_yoWrJw4fpr
-        yUAa13KF4vqr97A3yxCwn5uFyak3s5Cry7G3ySvr45u3sxuwnxAF1vgr43urWxZr48Xa1I
-        va40vr1q9F43AaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr0_
-        Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb0D73
-        UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.2004201622260.22032-100000@netrider.rowland.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/21/2020 05:35 PM, Jiaxun Yang wrote:
-> On Tue, 21 Apr 2020 17:04:29 +0800
-> Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
->> In the current code, if CONFIG_SWIOTLB is set, when failed to get IO
->> TLB memory from the low pages by plat_swiotlb_setup(), it may lead to
->> the boot process failed with kernel panic.
-> Hi Tiezhu,
->
-> Thanks for you patch.
->
-> Firstly, your commit message should be more straight forward. Please
-> describe what you have changed (e.g. MIPS: Set memblock bottom up)
-> instead of what you solved.
+On 04/20/20 16:26, Alan Stern wrote:
+> On Wed, 25 Mar 2020, Alan Stern wrote:
+> 
+> > On Wed, 25 Mar 2020, Qais Yousef wrote:
+> > 
+> > > Thanks for all the hints Alan.
+> > > 
+> > > I think I figured it out, the below patch seems to fix it for me. Looking
+> > > at other drivers resume functions it seems we're missing the
+> > > pm_runtime_disable()->set_active()->enable() dance. Doing that fixes the
+> > > warning and the dev_err() in driver/base/power.
+> > 
+> > Ah, yes.  This should have been added years ago; guess I forgot.  :-(
+> > 
+> > > I don't see xhci-plat.c doing that, I wonder if it needs it too.
+> > > 
+> > > I'm not well versed about the details and the rules here. So my fix could be
+> > > a hack, though it does seem the right thing to do.
+> > > 
+> > > I wonder why the power core doesn't handle this transparently..
+> > 
+> > Initially, we didn't want the PM core to do this automatically because
+> > we thought some devices might want to remain runtime-suspended
+> > following a system resume, and only the device driver would know what 
+> > to do.
+> 
+> Qais:
+> 
+> So it looks like the discussion with Rafael will lead to changes in the
+> PM core, but they won't go into the -stable kernels, and they won't
+> directly fix the problem here.
+> 
+> In the meantime, why don't you write up your patch below and submit it
+> properly?  Even better, create similar patches for ehci-platform.c and
+> xhci-plat.c and submit them too.
 
-HI Jiaxun,
+Sure.
 
-Thanks for your suggestion.
+Thanks
 
-I will send a v2 patch used with the following subject:
-"MIPS: Make sparse_init() using top-down allocation"
+--
+Qais Yousef
 
->
->> (1) On the Loongson and SiByte platform
->> arch/mips/loongson64/dma.c
->> arch/mips/sibyte/common/dma.c
->> void __init plat_swiotlb_setup(void)
->> {
->> 	swiotlb_init(1);
->> }
->>
->> kernel/dma/swiotlb.c
->> void  __init
->> swiotlb_init(int verbose)
->> {
->> ...
->> 	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
->> 	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs,
->> verbose)) return;
->> ...
->> 	pr_warn("Cannot allocate buffer");
->> 	no_iotlb_memory = true;
->> }
->>
->> phys_addr_t swiotlb_tbl_map_single()
->> {
->> ...
->> 	if (no_iotlb_memory)
->> 		panic("Can not allocate SWIOTLB buffer earlier ...");
->> ...
->> }
->>
->> (2) On the Cavium OCTEON platform
->> arch/mips/cavium-octeon/dma-octeon.c
->> void __init plat_swiotlb_setup(void)
->> {
->> ...
->> 	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
->> 	if (!octeon_swiotlb)
->> 		panic("%s: Failed to allocate %zu bytes align=%lx\n",
->> 		      __func__, swiotlbsize, PAGE_SIZE);
->> ...
->> }
->>
->> Because IO_TLB_DEFAULT_SIZE is 64M, if the rest size of low memory is
->> less than 64M when call plat_swiotlb_setup(), we can easily reproduce
->> the panic case.
->>
->> In order to reduce the possibility of kernel panic when failed to get
->> IO TLB memory under CONFIG_SWIOTLB, it is better to allocate low
->> memory as small as possible before plat_swiotlb_setup(), so make
->> sparse_init() using top-down allocation.
-> AFAIK there are some reasons that we set it to bottom_up.
-> On some platforms, bootloader won't place cmdline & devicetree into
-> reserved memory but place them just after kernel in memory. That means
-> if you set it as bottom up, then early allocate memory might collide
-> with these boot arguments.
->
-> I'm not even sure if it works fine on Loongson with early PMON.
->
-> I had met that issue before, the solution for me is to reduce SWIOTLB
-> size.
->
->> Reported-by: Juxin Gao <gaojuxin@loongson.cn>
->> Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
->> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   arch/mips/kernel/setup.c | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
->> index 5481a0c..8db533c 100644
->> --- a/arch/mips/kernel/setup.c
->> +++ b/arch/mips/kernel/setup.c
->> @@ -700,7 +700,17 @@ static void __init arch_mem_init(char
->> **cmdline_p) memblock_reserve(crashk_res.start,
->> resource_size(&crashk_res)); #endif
->>   	device_tree_init();
->> +
->> +	/*
->> +	 * In order to reduce the possibility of kernel panic when
->> failed to
->> +	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to
->> allocate
->> +	 * low memory as small as possible before
->> plat_swiotlb_setup(), so
->> +	 * make sparse_init() using top-down allocation.
->> +	 */
->> +	memblock_set_bottom_up(false);
->>   	sparse_init();
->> +	memblock_set_bottom_up(true);
->> +
->>   	plat_swiotlb_setup();
->>   
->>   	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
-> --
-> Jiaxun Yang
-
+> 
+> Alan Stern
+> 
+> > > diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+> > > index 7addfc2cbadc..eb92c8092fae 100644
+> > > --- a/drivers/usb/host/ohci-platform.c
+> > > +++ b/drivers/usb/host/ohci-platform.c
+> > > @@ -299,6 +299,10 @@ static int ohci_platform_resume(struct device *dev)
+> > >         }
+> > > 
+> > >         ohci_resume(hcd, false);
+> > > +
+> > > +       pm_runtime_disable(dev);
+> > > +       pm_runtime_set_active(dev);
+> > > +       pm_runtime_enable(dev);
+> > >         return 0;
+> > >  }
+> > >  #endif /* CONFIG_PM_SLEEP */
+> > > 
+> > > 
+> > > Thanks
+> > > 
+> > > --
+> > > Qais Yousef
+> > 
+> > 
+> > 
+> 
