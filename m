@@ -2,98 +2,125 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C7DC55186
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA59C55186
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 489422076B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC73720736
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587501648;
+	bh=WPjD7z+S47NsJvoNNpoPjH0JcfobjHHPouuiRtqoLlc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YaWPg/S7UDqRByL5eQag7+p9gb+BQiG7mj9Tb4/S2DmKzI+iRfZS4oZjNxr3XomV5
+	 u1Vjoll1fdZ2q1Wqb67FPslHl1u0+vUxlZfqFNpVfAK86bwK89NJwGyd90e7pZcQAf
+	 lE6HyJIh93llnQO/zWepAahzi2QNweO8ladtGls0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgDUUjf (ORCPT
+        id S1726323AbgDUUks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:39:35 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:35068 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgDUUjf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:39:35 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 576541C013D; Tue, 21 Apr 2020 22:39:33 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 22:39:32 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv5 0/4] n_gsm serdev support and protocol driver for
- droid4 modem
-Message-ID: <20200421203932.GA21523@duo.ucw.cz>
-References: <20200319173755.65082-1-tony@atomide.com>
- <20200421115920.GA16890@amd>
- <20200421124820.GB784065@kroah.com>
+        Tue, 21 Apr 2020 16:40:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbgDUUkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 16:40:47 -0400
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B972020736;
+        Tue, 21 Apr 2020 20:40:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587501646;
+        bh=WPjD7z+S47NsJvoNNpoPjH0JcfobjHHPouuiRtqoLlc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=X/LSmDV89g9lH05MfV5FMdtZH65HJR472W7TAL+iEb6Pf4nMNLm04XdA5cCaoYo1c
+         ugEC8Z3Ks5QtlYmaErTH9zLTdd1jRF4n3C8Kohw+8OUHS2b2ctFYnJJao6VSPVLnWo
+         /FueaH64nNWtyv//yxWjI9jkp6/JoUqNXVd/vzMA=
+Received: by mail-qk1-f178.google.com with SMTP id n143so137978qkn.8;
+        Tue, 21 Apr 2020 13:40:46 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaixUajdiPHqy2qAs8a1fpsQhFzVSTM7l3a0/lIoNzJ94fp3vKm
+        BcZfA5dJespPmUZ4CAZ3T5C7v2++caNr7dMAeg==
+X-Google-Smtp-Source: APiQypL9lEqMBY0g413ztkmJhsz03wf/mRAORfH1azvObhx0AAUgen3X/vzkaMm75SfIg4yUiygGsZgd1mZKVDmeAoM=
+X-Received: by 2002:a37:c43:: with SMTP id 64mr21464433qkm.119.1587501645887;
+ Tue, 21 Apr 2020 13:40:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
-Content-Disposition: inline
-In-Reply-To: <20200421124820.GB784065@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
+ <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
+ <20200421110537.GC5983@pendragon.ideasonboard.com> <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
+ <20200421134654.GD5983@pendragon.ideasonboard.com> <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
+ <CAK7LNASe9ahgo04=cAuXcsaoffb9CtnUCYOObJd5=Awaak+YZw@mail.gmail.com> <CAL_JsqKV4UQeSX1ArJb4es1_kkMp1kbkd2kd17qVc=Oy988F7Q@mail.gmail.com>
+In-Reply-To: <CAL_JsqKV4UQeSX1ArJb4es1_kkMp1kbkd2kd17qVc=Oy988F7Q@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 21 Apr 2020 15:40:34 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJRsqCW20o3tAxMWE=dQrxts7jG7P=3yfDDx7HP+w38rQ@mail.gmail.com>
+Message-ID: <CAL_JsqJRsqCW20o3tAxMWE=dQrxts7jG7P=3yfDDx7HP+w38rQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 21, 2020 at 2:31 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Apr 21, 2020 at 11:57 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Hi Rob,
+> >
+> >
+> > On Tue, Apr 21, 2020 at 11:01 PM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > It seems to only fail with out of tree builds (O=...). I expect that
+> > > > failures will become more common the more YAML bindings we have, even
+> > > > without long directory names.
+> > >
+> > > dt-mk-schema can take and recurse a single directory already, so does
+> > > this fix it for you:
+> > >
+> > > @@ -22,7 +22,7 @@ $(obj)/%.example.dts: $(src)/%.yaml
+> > > check_dtschema_version FORCE
+> > >  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+> > >
+> > >  quiet_cmd_mk_schema = SCHEMA  $@
+> > > -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+> > > $(real-prereqs)
+> > > +      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+> > > $(srctree)/$(src)
+> >
+> >
+> > I am just curious.
+> >
+> > How come the tool excludes 'processed-schema*' and '*.example.dt.yaml'
+> > from $(srctree)/$(src) ?
+>
+> Uggg, it wouldn't. Can't everyone build out of tree. ;) I guess the options are:
+>
+> - Call dt-mk-schema on each file individually appending the result
+> - Make dt-mk-schema take stdin or a file with a list of files as
+> Masahiro suggested
+>
+> I'd like to avoid a dt-mk-schema change so I'll try to make the former
+> work. It's only been a day since adding a minimum version. :(
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Laurent, does this work for you? I've reproduced the problem, but just
+double checking.
 
-On Tue 2020-04-21 14:48:20, Greg Kroah-Hartman wrote:
-> On Tue, Apr 21, 2020 at 01:59:20PM +0200, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > Here's v4 set of n_gsm serdev support patches, and the related protoc=
-ol
-> > > driver for the modem found on Motorola Mapphone phones and tablets
-> > > like droid4.
-> > >=20
-> > > This series only adds basic character device support for the serdev
-> > > driver. Other serdev consumer drivers for specific devices will be
-> > > posted separately.
-> > >=20
-> > > The patches are against v5.6-rc series.
-> >=20
-> > And it would be good to get them into v5.7... pretty please :-).
->=20
-> No, 5.7 is not ok for this, and i think it already needs a respin as
-> this is not in my patch queue anymore.
+ DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
 
-Umm, I meant v5.8. OTOH it is new hardware support, and phone without
-modem is pretty much useless, so ... v5.7-rc3 should not be
-_completely_ out of question ;-).
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+ quiet_cmd_mk_schema = SCHEMA  $@
+-      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+$(real-prereqs)
++      cmd_mk_schema = $(file >$@.tmp, $(real-prereqs)) \
++                      cat $@.tmp | xargs $(DT_MK_SCHEMA)
+$(DT_MK_SCHEMA_FLAGS) -o $@
 
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXp9aBAAKCRAw5/Bqldv6
-8o94AJ96H+8JzKl/Nq+To644ZocIUfDqFACeMR/pndEi5w/lGOiGaSVnaZLBRk0=
-=F8am
------END PGP SIGNATURE-----
-
---envbJBWh7q8WU6mo--
+ DT_DOCS = $(addprefix $(src)/, \
+        $(shell \
