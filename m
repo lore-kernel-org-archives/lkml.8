@@ -2,116 +2,122 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2F8C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8FBC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA89F206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:03:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587495811;
-	bh=WjLrPEHayUeRDP9VzNdTgShqsYsV9FD0j5Ya14cu9tw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZaKYmNakLmyndrWFF+O8Jm4KREOXY4DuGM6hq1KlnC77iKQa2wt63C74GWgN/HOBm
-	 ouxgg+5OOPfechhBpeky30hiVlp2cHXms+LXSzYficJPGNWl9YqT7VB6Bxr+/yaRCE
-	 /rBx8lC4B4X5C1XvVxtza84bixXE5wAFdKYvJrP8=
+	by mail.kernel.org (Postfix) with ESMTP id 5FE2A20747
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:08:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6fGuliG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgDUTDb (ORCPT
+        id S1726067AbgDUTH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34722 "EHLO
+        Tue, 21 Apr 2020 15:07:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725987AbgDUTDa (ORCPT
+        by vger.kernel.org with ESMTP id S1725902AbgDUTH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:03:30 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033F9C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:03:30 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f18so9133727lja.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:03:29 -0700 (PDT)
+        Tue, 21 Apr 2020 15:07:58 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A284C0610D5;
+        Tue, 21 Apr 2020 12:07:58 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id m2so11997211lfo.6;
+        Tue, 21 Apr 2020 12:07:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ypgvWSUE3Hp+aq8UwpRBxeqBs2PJ/juR1hUTdDpXVsM=;
-        b=hRM+woRxkymnWjkfxYhVHZTtkc/aEqCtO4EREIGDhuTdhHR3znpp8TJJX4VklGajh3
-         J0Avw3mQ7ZFZqf0cuwRsGIKeyTctPKl+Duk4GutpgC9tn32LwAJz2OeTNyzT3gY2x5Pt
-         n6IySZdsqG/2hL2dZvJP3mgokqxOD+I+D2LRY=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qYwBjMSRVv3C9c5/CO1vbBsMdHkPfVeO/WaQB5IXEdI=;
+        b=l6fGuliGWJouW55mIF1TsEYCzpo0eq7/N0nHvmeHTy9KOJtxhi9wpuLvgJxIngRxok
+         aXdWFJVVfthOlemUe+NYJEyZ0IbbUdp7rO6d2ee1gOkKyQxmwTQq7O2jQdd3PWWsEukM
+         /DknuZUdWI0MSROedMYh30KUhcBpYO3cbMHB4e7rzEXzrfD9+m7+aCfvwDBRW3ye/iwv
+         mW5R8rNwz4i/L3MGNXTRp1NBIQDTvCGptqgDK9hvQ7bXInJmjDNt5vYQ/VR7VtAGZOiO
+         PXh0P44m+hlnxjb8Qu49PxWtNksHoZ7J6T3rdFiAr5ia/HMY9AF8D4TUKZXM50axvZ9p
+         FCGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ypgvWSUE3Hp+aq8UwpRBxeqBs2PJ/juR1hUTdDpXVsM=;
-        b=tPJrFrXWOjwrhajakPfIQDU+We/bwd9NlzoIC4GuP2Xoy3s6/oH288AcqMn9IpwUus
-         p+tELnLrpj4s8tCb8D3/lUNqmfcWrY/tQWltS8NdKP74c2CsnVdqVYO4lKoPXpfUZIOc
-         SGdJsPGZvhavFwaQoeoJ9UZI4m4C2Gws2X1FhDwKZ6TjgiKvRkavPaE/9SXYATz6ltwt
-         ua6zyxevc00kscNIcKgCUzYTOzRhtKDmgGuR7wmQLJ5YhjCvghjQo3vpOYtmYbfJSvsM
-         tUu+EEO/Sx6nPi3xPfzUsk9j7aoTaDXlHdqwq/pzTrEMSAxaV8+Gw0rZpnMl5rymClg/
-         Lcdw==
-X-Gm-Message-State: AGi0Pub5vK/jQkCxGgRbUpuZHUD+WGk/0AbkEXlpaZV1L5YBdQYRGM01
-        xvaLhv6eIYw5W4Lx6/FRTxsqP1dATRQ=
-X-Google-Smtp-Source: APiQypIIp5McOWTdYFJy+IcyeOwZJPWV0lPlguiBRfGHmNrwWVnVVChAT3IPexBNWg+yTJuoW3wFdw==
-X-Received: by 2002:a2e:8645:: with SMTP id i5mr13068164ljj.56.1587495807692;
-        Tue, 21 Apr 2020 12:03:27 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id w24sm2777211lfe.58.2020.04.21.12.03.26
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qYwBjMSRVv3C9c5/CO1vbBsMdHkPfVeO/WaQB5IXEdI=;
+        b=e/i0NHkpvCyHjyGF3sW6igxQZIWdHUGEhryVG+wwjBIfUQd5ZQ4JDzTLz7gqWonM2y
+         yRDaNjfxdxsw/yhHMDms/Rg3NinbkX+gHfDEGHeqmuIff2+91UHKkoXlXFIYa7BSPl6x
+         fRcbPQ2eT7hrQcOjqH11QsNEnVZPRZ3OM2wf1YjrEWNZTHbWclrV7q2LbMVaQJzHyynX
+         uhqQwBL6pGx0xAjzTBaAVihowNTs7u6lZGbD9z6tyqSsQhsFK9rpK01THswxDyG4kldq
+         UCDdV+DL1WsdAhPWk/Xi6gedvteD74niRiI2IlqhRrmCGVTT82cPbyCJ+ba8E2vsF6yz
+         M6jg==
+X-Gm-Message-State: AGi0PuaVo8Ycu/uAdlnsesyLeawrD+ikW/595oDtUyYjITXEgKpSm+Xs
+        SKzbdcUSkU246Q5IXN32iLBQTltY
+X-Google-Smtp-Source: APiQypIvjrukNgwYETiyLmzCUHffaGyhyA3i8/6dksguAdWoZm7jbSdE5xsWskwEsiGxXR+CuVR+jA==
+X-Received: by 2002:a05:6512:686:: with SMTP id t6mr14963960lfe.163.1587496076465;
+        Tue, 21 Apr 2020 12:07:56 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id r20sm2509295ljj.44.2020.04.21.12.07.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 12:03:27 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id l19so12627767lje.10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:03:26 -0700 (PDT)
-X-Received: by 2002:a2e:1418:: with SMTP id u24mr14588814ljd.265.1587495806435;
- Tue, 21 Apr 2020 12:03:26 -0700 (PDT)
+        Tue, 21 Apr 2020 12:07:55 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200324191217.1829-1-digetx@gmail.com>
+ <20200324191217.1829-2-digetx@gmail.com>
+ <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
+ <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
+ <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
+ <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
+ <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
+ <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
+ <93b738f2-ccf2-68ed-3ca5-30945bd40521@gmail.com>
+ <61c9f5a7-3a48-8200-1cfe-d5d0524511f7@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <07351901-a533-0319-b2fd-f49f6540c238@gmail.com>
+Date:   Tue, 21 Apr 2020 22:07:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <CAHk-=wiQsJu-ZFjt7+c9FVD5R40khtZiihrT+7O3UaVvHYz=HQ@mail.gmail.com>
- <428bac87-b6dd-0867-c8f8-622cd606de3e@skogtun.org>
-In-Reply-To: <428bac87-b6dd-0867-c8f8-622cd606de3e@skogtun.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 21 Apr 2020 12:03:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiX+NT2yxtdPszH9U_S96MCNQA56GJFXY45mZc47yG5KQ@mail.gmail.com>
-Message-ID: <CAHk-=wiX+NT2yxtdPszH9U_S96MCNQA56GJFXY45mZc47yG5KQ@mail.gmail.com>
-Subject: Re: [BISECTED]: Kernel panic (was: Linux 5.7-rc2)
-To:     Harald Arnesen <harald@skogtun.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <61c9f5a7-3a48-8200-1cfe-d5d0524511f7@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 1:52 AM Harald Arnesen <harald@skogtun.org> wrote:
->
-> Neither rc1 nor rc2 will boot on my laptop. The attached picture is all
-> I have been able to capture.
+21.04.2020 18:34, Jon Hunter пишет:
+> 
+> On 21/04/2020 16:18, Dmitry Osipenko wrote:
+>> 21.04.2020 17:40, Jon Hunter пишет:
+>>>
+>>> On 21/04/2020 14:25, Dmitry Osipenko wrote:
+>>>> 21.04.2020 12:49, Jon Hunter пишет:
+>>>> ...
+>>>>> I can try the above, but I agree it would be best to avoid messing with
+>>>>> the suspend levels if possible.
+>>>>
+>>>> Will be awesome if you could try it and report back the result.
+>>>>
+>>>
+>>> I gave it a try but suspend still fails.
+>>
+>> Is this regulator error gone with my changes?
+>>
+>> [   60.450346] WARNING: CPU: 0 PID: 653 at
+>> /home/jonathanh/workdir/tegra/mlt-linux_next/kernel/drivers/regulator/core.c:2603
+>> _regulator_disable+0xb8/0x1b4
+>> [   60.463959] unbalanced disables for vdd_pexa,vdd_pexb
+> 
+> The above is still there with your changes.
 
-I know you saw the reply about this probably being fixed by
-
-  https://lore.kernel.org/lkml/20200416054745.740-1-ggherdovich@suse.cz/
-
-but it would be lovely if you could actually verify that that series
-of four patches does indeed fix it for you.
-
-Your oops is on that divide instruction:
-
-        freq_scale = div64_u64(acnt, mcnt);
-
-and while we had a check for mcnt not being zero earlier, we did
-
-        mcnt *= arch_max_freq_ratio;
-
-after that check. I could see it becoming zero either due to an
-overflow, or due to arch_max_freq_ratio being 0.
-
-I think the first commit in that series is supposed to fix that
-arch_max_freq_ratio being 0 case, but it still feels like the code
-that does the divide is checking for zero in the wrong place...
-
-                  Linus
+Interesting, hopefully the PM logs will point out the source of the problem.
