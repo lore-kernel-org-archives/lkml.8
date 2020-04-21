@@ -2,145 +2,110 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9A2C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A879C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2AD2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:54:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MA5GTdLk"
+	by mail.kernel.org (Postfix) with ESMTP id E51FB2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:54:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587495292;
+	bh=4ADim16T+0u2BglcyovCuf/IIjoL8W8PhOujJLyZSGY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=H/es3aUMuEtVw93e2hpdiBIcps8HOI6l7x9PdoEONm0LH/NtuK34KEnuxlhmnEHYs
+	 NnFSYgj8auq/CI/Wd5SL3o0XB3cWhoat5dZBkKNulNExo+KFLcKmdMCpJdDa3+HVES
+	 eE+70/4B4Yd3TX9bpnLyFPN3pVTeIc0QyxPiqriA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgDUSyl (ORCPT
+        id S1726081AbgDUSyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:54:41 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46942 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725870AbgDUSyl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:54:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587495278;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MrU2HNJZTQBPSn2z8yAKMiwd+9c1Olx+Jq2ydnHE1vM=;
-        b=MA5GTdLk/icqwNSbDV6VbGrESZfdKtB4Wx43GM6vHaIdABLilkeTvGjVV26iBWVVHzwTMs
-        t+vu7ncqEIhzBtQU1HPWiOe9aylsAClmr2zI6UTYvQ3uGN0OC97Z+yy4o4M9dwmwRY3uhx
-        /tXA1sFnzsaZxbDXsgWkhNqkCRQWhjc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-465-7PWAMLsjMYaygNzxcEJMOg-1; Tue, 21 Apr 2020 14:54:34 -0400
-X-MC-Unique: 7PWAMLsjMYaygNzxcEJMOg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 21 Apr 2020 14:54:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbgDUSyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:54:51 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44AC01083E80;
-        Tue, 21 Apr 2020 18:54:33 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C5471001B30;
-        Tue, 21 Apr 2020 18:54:25 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 14:54:22 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     linux-audit@redhat.com, fw@strlen.de,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v3 3/3] audit: add subj creds to NETFILTER_CFG
- record to cover async unregister
-Message-ID: <20200421185422.ziu2ejdvuofg5fu5@madcap2.tricolour.ca>
-References: <cover.1584480281.git.rgb@redhat.com>
- <20200318213327.ow22q6nnjn3ijq6v@madcap2.tricolour.ca>
- <CAHC9VhSbbjFbF0A_-saquZ8B85XaF7SWD2e1QcWsXhFSQrUAbQ@mail.gmail.com>
- <2156032.xcGZvdN1jG@x2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2156032.xcGZvdN1jG@x2>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B53A2068F;
+        Tue, 21 Apr 2020 18:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587495291;
+        bh=4ADim16T+0u2BglcyovCuf/IIjoL8W8PhOujJLyZSGY=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=ZhkAIp/ZxceWgE67zgqVeVvxd+w2MDywoiQeMW0dyf+uRNYhBa8UU3R1webo45I2i
+         OLLSO3OfNG5OxUwFvAcZCA+hSXg+ZCdlzlS2G2UxtFC3svdquodJpdgHXPGxXU1fPe
+         2gPQ96gG+vEXQ/Yfqa14Uk9a4lSRUKRYcUaII3xk=
+Date:   Tue, 21 Apr 2020 19:54:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-spi@vger.kernel.org
+In-Reply-To: <20200420190853.45614-2-kdasu.kdev@gmail.com>
+References: <20200420190853.45614-1-kdasu.kdev@gmail.com> <20200420190853.45614-2-kdasu.kdev@gmail.com>
+Subject: Re: [Patch v3 1/9] spi: bcm-qspi: Handle clock probe deferral
+Message-Id: <158749528855.30690.4628410015008240508.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-21 11:15, Steve Grubb wrote:
-> On Friday, April 17, 2020 5:53:47 PM EDT Paul Moore wrote:
-> > On Wed, Mar 18, 2020 at 5:33 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-03-18 17:22, Paul Moore wrote:
-> > > > On Wed, Mar 18, 2020 at 9:12 AM Richard Guy Briggs <rgb@redhat.com> 
-> wrote:
-> > > > > On 2020-03-17 17:30, Richard Guy Briggs wrote:
-> > > > > > Some table unregister actions seem to be initiated by the kernel to
-> > > > > > garbage collect unused tables that are not initiated by any
-> > > > > > userspace actions.  It was found to be necessary to add the subject
-> > > > > > credentials to cover this case to reveal the source of these
-> > > > > > actions.  A sample record:
-> > > > > >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) :
-> > > > > >   table=nat family=bridge entries=0 op=unregister pid=153 uid=root
-> > > > > >   auid=unset tty=(none) ses=unset
-> > > > > >   subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2 exe=(null)
+On Mon, 20 Apr 2020 15:08:45 -0400, Kamal Dasu wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
 > 
-> If this is the kernel, why is pid not 0? And if pid is 0, then isn't 
-> exe=/boot/vmlinuz-X.Y.Z-blah?
+> The clock provider may not be ready by the time spi-bcm-qspi gets
+> probed, handle probe deferral using devm_clk_get_optional().
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> 
+> [...]
 
-It isn't PID 0 because it is a kernel thread.
+Applied to
 
-> > > > > Given the precedent set by bpf unload, I'd really rather drop this
-> > > > > patch that adds subject credentials.
-> 
-> <snip> 
-> 
-> > I'm in the middle of building patches 1/3 and 2/3, assuming all goes
-> > well I'll merge them into audit/next (expect mail soon), however I'm
-> > going back and forth on this patch.  Like you I kinda don't like it,
-> > and with both of us not in love with this patch I have to ask if there
-> > is certification requirement for this?
-> 
-> Yes, any change to information flow must be auditable.
-> 
-> > I know about the generic
-> > subj/obj requirements, but in the case where there is no associated
-> > task/syscall/etc. information it isn't like the extra fields supplied
-> > in this patch are going to have much information in that regard; it's
-> > really the *absence* of that information which is telling.
-> 
-> Exactly. But if someone does a search based on the fields, they need to be 
-> able to find this record. For example, suppose I want to know what actions 
-> have been performed by kernel_t, I can run a  search and find this event. 
-> 
-> > Which brings me to wonder if simply the lack of any associated records in
-> > this event is enough?  Before when we weren't associating records into
-> > a single event it would have been a problem, but the way things
-> > currently are, if there are no other records (and you have configured
-> > that) then I think you have everything you need to know.
-> > 
-> > Thoughts?
-> 
-> You can't search on the absense of information. There are some fields that 
-> have meaning. It's OK if they are unset. It happens for daemons, too. But we 
-> don't remove the fields because of it. It tells part of the story.
-> 
-> -Steve
-> 
-> 
-> --
-> Linux-audit mailing list
-> Linux-audit@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-audit
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.7
 
-- RGB
+Thanks!
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+[1/9] spi: bcm-qspi: Handle clock probe deferral
+      commit: 0392727c261bab65a35cd4f82ee9459bc237591d
+[2/9] dt: bindings: spi: Add support for mspi on brcmstb SoCs
+      (not applied)
+[3/9] spi: bcm-qspi: Handle lack of MSPI_REV offset
+      (not applied)
+[4/9] spi: bcm-qspi: Drive MSPI peripheral SSb pin on cs_change
+      commit: 742d5958062488d03082a9ff01a6afb3cf7bd634
+[5/9] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
+      commit: 4df3bea7f9d2ddd9ac2c29ba945c7c4db2def29c
+[6/9] spi: bcm-qspi: Make PM suspend/resume work with SCMI clock management
+      commit: 1b7ad8c405c3dc0ad6c2dc61fe21fe7a446cceeb
+[7/9] spi: bcm-qspi: Use fastbr setting to allow faster MSPI speeds
+      (not applied)
+[8/9] spi: bcm-qspi: add support for MSPI sys clk 108Mhz
+      (not applied)
+[9/9] spi: bcm-qspi: MSPI_SPCR0_MSB MSTR bit exists only on legacy controllers
+      (not applied)
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
