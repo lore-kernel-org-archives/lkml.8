@@ -2,168 +2,134 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F49C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0A3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7C69206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:08:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="ejnAZ/px"
+	by mail.kernel.org (Postfix) with ESMTP id 61F07206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgDUHH7 (ORCPT
+        id S1727103AbgDUHIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:07:59 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:47722 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgDUHH7 (ORCPT
+        Tue, 21 Apr 2020 03:08:42 -0400
+Received: from twhmllg3.macronix.com ([122.147.135.201]:50562 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgDUHIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:07:59 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id A6CDF27E039A;
-        Tue, 21 Apr 2020 09:07:57 +0200 (CEST)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id VnFh86lcJuca; Tue, 21 Apr 2020 09:07:57 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id DFC6727E06C1;
-        Tue, 21 Apr 2020 09:07:56 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu DFC6727E06C1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1587452876;
-        bh=ufm9yZSRtYmx3MHRNMrA5MNRiT5MrRD1Yhw3IeM6pZA=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=ejnAZ/pxGLDwi3zSwxLtUnKn7C6TI+a20eVd1LlWQ+Kz1237P+LBdvKlCqvCZ9+hs
-         L3WOOs0581spu9PyXfeEXsksUlddUiisiv0qdHmHjeVPCnch3f8fsv/T3Igo/3XSWw
-         PBzfe2iIs2Gcv2wWkN0AoEkI2QtSkadvffddzL4I=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id QoHi6CGZQf_D; Tue, 21 Apr 2020 09:07:56 +0200 (CEST)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id C98EC27E039A;
-        Tue, 21 Apr 2020 09:07:56 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 09:07:56 +0200 (CEST)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     Tudor Ambarus <Tudor.Ambarus@microchip.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        richard <richard@nod.at>, vigneshr <vigneshr@ti.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <1220480151.16477138.1587452876610.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <2185268.xDFeLDFsC1@192.168.0.120>
-References: <20200417160839.25880-1-cleger@kalray.eu> <1950407.5XCTmqoEVg@192.168.0.120> <1734428336.16421904.1587394202163.JavaMail.zimbra@kalray.eu> <2185268.xDFeLDFsC1@192.168.0.120>
-Subject: Re: [PATCH] mtd: spi-nor: Add support for is25lp01g
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC81 (Linux)/8.8.15_GA_3895)
-Thread-Topic: spi-nor: Add support for is25lp01g
-Thread-Index: AQHWFw0/tWJ4ISRUwk6rGADNBybaDFUftyjv
+        Tue, 21 Apr 2020 03:08:42 -0400
+X-Greylist: delayed 1726 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Apr 2020 03:08:41 EDT
+Received: from TWHMLLG3.macronix.com (localhost [127.0.0.2] (may be forged))
+        by TWHMLLG3.macronix.com with ESMTP id 03L6dtoH045542
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:39:55 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG3.macronix.com with ESMTP id 03L6dnMW045498;
+        Tue, 21 Apr 2020 14:39:49 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     broonie@kernel.org, tudor.ambarus@microchip.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        boris.brezillon@collabora.com
+Cc:     juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
+Date:   Tue, 21 Apr 2020 14:39:42 +0800
+Message-Id: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+X-MAIL: TWHMLLG3.macronix.com 03L6dnMW045498
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tudor,
+Hello,
 
------ On 21 Apr, 2020, at 06:40, Tudor Ambarus Tudor.Ambarus@microchip.com =
-wrote:
+This is repost of patchset from Boris Brezillon's
+[RFC,00/18] mtd: spi-nor: Proposal for 8-8-8 mode support [1].
 
-> On Monday, April 20, 2020 5:50:02 PM EEST Cl=C3=A9ment Leger wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know t=
-he
->> content is safe
->>=20
->> Hi Tudor,
->=20
-> Hi, Clement,
->=20
->>=20
->> ----- On 20 Apr, 2020, at 14:14, Tudor Ambarus Tudor.Ambarus@microchip.c=
-om
-> wrote:
->> > Hi, Clement,
->> >=20
->> > On Friday, April 17, 2020 7:08:39 PM EEST Clement Leger wrote:
->> >> EXTERNAL EMAIL: Do not click links or open attachments unless you kno=
-w
->> >> the
->> >> content is safe
->> >>=20
->> >> Update the issi_parts table for is25lp01g (128MB) device from ISSI.
->> >> Tested on Kalray K200 board.
->> >>=20
->> >> Signed-off-by: Clement Leger <cleger@kalray.eu>
->> >> ---
->> >>=20
->> >>  drivers/mtd/spi-nor/issi.c | 2 ++
->> >>  1 file changed, 2 insertions(+)
->> >>=20
->> >> diff --git a/drivers/mtd/spi-nor/issi.c b/drivers/mtd/spi-nor/issi.c
->> >> index ffcb60e54a80..c3c3438e3d08 100644
->> >> --- a/drivers/mtd/spi-nor/issi.c
->> >> +++ b/drivers/mtd/spi-nor/issi.c
->> >> @@ -49,6 +49,8 @@ static const struct flash_info issi_parts[] =3D {
->> >>=20
->> >>                              SECT_4K | SPI_NOR_DUAL_READ |
->> >>                              SPI_NOR_QUAD_READ
->> >> |=20
->> >> | SPI_NOR_4B_OPCODES)
->> >> |=20
->> >>                 .fixups =3D &is25lp256_fixups },
->> >>=20
->> >> +       { "is25lp01g",  INFO(0x9d601b, 0, 64 * 1024, 2048,
->> >=20
->> > There is a "K" flavor of this flash which has 512 Byte Page size with =
-256
->> > KB Block size. While the page size can be determined by parsing SFDP, =
-I
->> > think we will have some problems with sector_size because as of now, t=
-he
->> > sector_size is always set to 64KB. An incorrect sector_size will affec=
-t
->> > erases and locking.
->> Thanks, I did not noticed that ! If I understand, this will require to
->> modify the core to handle sector size the same way as page_size and
->> probably add a fixup to detect the "K" options from SFDP ?
->=20
-> Right. You can add a post_bfpt fixup hook for this flash. You can
-> differentiate between the "K" version and the rest by the page size. Sinc=
-e the
-> page size is tightly coupled with the sector size, you can amend both in =
-the
-> post_bfpt hook.
+Background from cover letter for RFC[1].
 
-Ok, this seems clear ! I'll give it a try. By looking quickly at the code I
-think that n_sectors will also have to be updated after discovering the
-sector_size from BFPT (for flash size computation). Since some parameters
-of the nor are initialized early in spi_nor_info_init_params using
-sector_size, should I move the call making use of sector_size later in the
-init (in spi_nor_late_init_params for instance) ?
+The trend has been around Octal NOR Flash lately and the latest mainline
+already supports 1-1-8 and 1-8-8 modes.
 
->=20
->> This is probably more changes than I can handle, and you can probably dr=
-op
->> this patch since not really functional for "K" type flash.
->=20
-> I dropped it. You should try to fix it, I can guide you if needed. Or I c=
-an do
-> it myself, but I'll need some help from you at testing.
+Boris opened a discussion on how we should support stateful modes (X-X-X
+and XD-XD-XD, where X is the bus width and D means Double Transfer Rate).
 
-I will try to do it but I will probably only be able to test the patches in=
- a=20
-couple of weeks due to our architecture not being rebased on 5.7 yet.
+JESD216C has defined specification for Octal 8S-8S-8S and 8D-8D-8D.
+Based on JEDEC216C Basic Flash Parameter Table (BFPT) driver extract:
+DWORD-18: command and command extension type.
+DWORD-19: enable 8S-8S-8S/8D-8D-8D mode sequences by two instructions or
+	  write CFG Reg 2.
+DWORD-20: Maximum operation speed of device in Octal mode.
 
-Thanks,
+and xSPI profile 1.0 table:
+DWORD-1: Read Fast command, the number of dummy cycles and address nbytes
+	 for Read Status Register command.
+DWORD-2: Read/Write volatile Register command for CFG Reg2.
+DWORD-4 and DWORD-5: dummy cycles used for various frequencies.
 
-Cl=C3=A9ment
+The first set of patches is according to JESD216C adding Double Transfer
+Rate(DTR) fields, extension command and command bytes number to the
+spi_mem_op struct. This is from Boris patchset.
 
->=20
-> Cheers,
-> ta
+The second set of patches parse the xSPI profile 1.0 table for parameters
+needed in Octal 8D-8D-8D mode. 
+
+The third set of patches extract BFPT DWORD018,19,20 and define the 
+relevant macros and enum in spi-nor layer for Octal 8S-8S-8S and 
+8D-8D-8D mode operation. Parts of these are refer to Boris patchset but
+we enable Octal 8D-8D-8D mode in spi_nor_late_init_params() rather than
+Boris's adding a change_mode() call-back function.
+
+The last set of patches in the series support Macronix mx25uw51245g
+to tweak flash parameters a correct dummy cycles set for various frequency.
+
+Also patched spi-mxic driver for testing on Macronix's Zynq PicoZed board
+with Macronix's SPI controller (spi-mxic.c) and mx25uw51245g Octal flash.
+
+[1] https://patchwork.ozlabs.org/cover/982926/
+
+
+Summary of change log
+---------------------
+v2: 
+Parse BFPT & xSPI table for Octal 8D-8D-8D mode parameters and enable Octal
+mode in spi_nor_late_init_params().
+Using Macros in spi_nor_spimem_read_data, spi_nor_spimem_write_data and
+so on by Vignesh comments.
+
+v1:
+Without parsing BFPT & xSPI profile 1.0 table and enter Octal 8D-8D-8D
+mode directly in spi_nor_fixups hooks.
+
+
+thnaks for your time and review.
+best regards,
+Mason
+
+Mason Yang (5):
+  mtd: spi-nor: Add support for Octal 8D-8D-8D mode
+  mtd: spi-nor: sfdp: Add support for xSPI profile 1.0 table
+  mtd: spi-nor: Parse BFPT DWORD-18,19 and 20 for Octal 8D-8D-8D mode
+  mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for Macronix
+    mx25uw51245g
+  spi: mxic: Patch for Octal 8D-8D-8D mode support
+
+ drivers/mtd/spi-nor/core.c     | 220 ++++++++++++++++++++++++++++++++++++++--
+ drivers/mtd/spi-nor/core.h     |  31 ++++++
+ drivers/mtd/spi-nor/macronix.c |  41 ++++++++
+ drivers/mtd/spi-nor/sfdp.c     | 222 ++++++++++++++++++++++++++++++++++++++++-
+ drivers/mtd/spi-nor/sfdp.h     |  16 ++-
+ drivers/spi/spi-mem.c          |   8 +-
+ drivers/spi/spi-mxic.c         | 101 +++++++++++++------
+ include/linux/mtd/spi-nor.h    |  51 +++++++++-
+ include/linux/spi/spi-mem.h    |  13 +++
+ 9 files changed, 654 insertions(+), 49 deletions(-)
+
+-- 
+1.9.1
+
