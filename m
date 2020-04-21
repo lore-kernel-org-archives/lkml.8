@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A29C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4A2C55186
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3F2E2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E90C2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LhwsWlb3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YQCSPXa3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbgDUVPu (ORCPT
+        id S1726467AbgDUVPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:15:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55172 "EHLO
+        Tue, 21 Apr 2020 17:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726379AbgDUVP1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726323AbgDUVPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 17:15:27 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A18C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:27 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id j7so3797788pgj.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:27 -0700 (PDT)
+        Tue, 21 Apr 2020 17:15:23 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99BD7C061BD3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:22 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y25so7202894pfn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TFVFnOOpVlGvEFGo5kr3EhCKzBoJW8HCLLx5yUURtKQ=;
-        b=LhwsWlb3lrS/z2Pr98cyoOWe7Ljj6nN+XhJp/7xqppSUb0IsydJ1Sp/7AhyJFH1anJ
-         4ygIGY3Lk61mdaAksl/VU4REMQIy+srUm4YiFpFZt4Bxo38p89fi99bqEAq+Gr6jfwwI
-         +7Ul9JImnnF5XQCwVd0xqpm6mNbk4icsFEMTw=
+        bh=dyr7DgRSAApkGKypjtWiO+J/nBVrflnd2ro7wp+lCpU=;
+        b=YQCSPXa3O6FWgeur8tmhetM7QnBo4yeaYGNe6L/Rh5ocCkAxg2cxAkq4Fwg4HI3OhY
+         yh6G01RnYc0W3jSisfLjS0rnepBRdrEKh0uJZEIj74yY1TB2UwAO4qnVFZMb6YKc++Qk
+         w5QYl+cFLMm8tzfI5gdZXzpEiMNkZcokYmtec=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TFVFnOOpVlGvEFGo5kr3EhCKzBoJW8HCLLx5yUURtKQ=;
-        b=KNC1xOvy+LGC63WDqojLM4VPYi4k9YaarQTqooENNlam9qrIFhbHhRbdc8z98m9ZOq
-         sQ5KqV20wfyJhsaAMyz76QrfGL/XiLEn7mO7FVzqBXxHZJD4ktcsIXLjVADJfyRHIJaZ
-         90mlFi1omDuIuvSxTOMfOD6u+qfdZJVRk2yJQtP4gmSfXu1mPqmiexHU3dCIR1e6Q8JT
-         Gjld0UOkFIhOoLS2BJRHCpCCm6QQh9mTCZAh2A00KZu/j0XHSHz1qBEaqPoZ17K+ptYc
-         OVIafwTY08ITZyMH9pHPlL/dqMRkHlPN0zXcg1rll+t6kSMeEe0re769KCB9+zd3UzHq
-         h7Xg==
-X-Gm-Message-State: AGi0PuayUB0FywgTKIvowF7e/forZDc0H4AgVreOpsLbNuPkMaUAQVML
-        BU7f7+mgZoObagsAN/JYTqP9vA==
-X-Google-Smtp-Source: APiQypKJvdNz3IgpTrkgjxTqsEadteYHeMyWfvW+DGsfOWnP+9OEGG2PONKbDO+uA3mXSsHxEDLQqw==
-X-Received: by 2002:a63:5249:: with SMTP id s9mr10528406pgl.36.1587503726435;
-        Tue, 21 Apr 2020 14:15:26 -0700 (PDT)
+        bh=dyr7DgRSAApkGKypjtWiO+J/nBVrflnd2ro7wp+lCpU=;
+        b=D2Z8D4GEboPgcJcX9l9vejZ1cuPOykOg43XmZ2pnJGL3j/cCO5HkU05ofoRUGPnaKg
+         j1qgKq4+8l7NMJkZ4TzKEWMZSo7fZ35ybRwdmtiLLXRTd1q6Lom/LzWRQvl/eruv35M9
+         4+ojn3HADxbHS4slN/qxRCji7sIN2tqaUmW6/4njYHX+cy9hjBrgosex/OBe9OPLWkfW
+         ordVq4ICr63Kty7eChS7o1zbGpVa7KS/XvZrZshy/wvHU/LJZ14zGrJRtaHH+DHW9+Pm
+         lLW76HX39DDoGu6Zvy16lluB3bKpKOa8dQwi49ANye1My/v40i1LqNQWdkqudFb3lauQ
+         QJlg==
+X-Gm-Message-State: AGi0PuYmw3uNm+3Rq4AojLRVgtDDX5MIVY6eMGeJ0nYonkN1/IlPFwwl
+        u8nQn/W7H8TkbWPQKwb7+QxYaA==
+X-Google-Smtp-Source: APiQypJYAevjNX0zt/cxP4Ps5JCKih9ahvdWxD4Kn/bSHY+zcFSbNZa+IDmvA7VSOHJ1eP897e2+oQ==
+X-Received: by 2002:aa7:8f26:: with SMTP id y6mr24224435pfr.36.1587503722029;
+        Tue, 21 Apr 2020 14:15:22 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id c1sm3287880pfo.152.2020.04.21.14.15.25
+        by smtp.gmail.com with ESMTPSA id c1sm3287880pfo.152.2020.04.21.14.15.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 14:15:25 -0700 (PDT)
+        Tue, 21 Apr 2020 14:15:21 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
         gregkh@linuxfoundation.org
@@ -65,11 +65,10 @@ Cc:     kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
         bjorn.andersson@linaro.org, jslaby@suse.com,
         catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
         Douglas Anderson <dianders@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH v2 6/9] kgdboc: Add earlycon_kgdboc to support early kgdb using boot consoles
-Date:   Tue, 21 Apr 2020 14:14:44 -0700
-Message-Id: <20200421141234.v2.6.I8fba5961bf452ab92350654aa61957f23ecf0100@changeid>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/9] kgdboc: Use a platform device to handle tty drivers showing up late
+Date:   Tue, 21 Apr 2020 14:14:41 -0700
+Message-Id: <20200421141234.v2.3.I4a493cfb0f9f740ce8fd2ab58e62dc92d18fed30@changeid>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 In-Reply-To: <20200421211447.193860-1-dianders@chromium.org>
 References: <20200421211447.193860-1-dianders@chromium.org>
@@ -80,368 +79,268 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want to enable kgdb to debug the early parts of the kernel.
-Unfortunately kgdb normally is a client of the tty API in the kernel
-and serial drivers don't register to the tty layer until fairly late
-in the boot process.
+If you build CONFIG_KGDB_SERIAL_CONSOLE into the kernel then you
+should be able to have KGDB init itself at bootup by specifying the
+"kgdboc=..." kernel command line parameter.  This has worked OK for me
+for many years, but on a new device I switched to it stopped working.
 
-Serial drivers do, however, commonly register a boot console.  Let's
-enable the kgdboc driver to work with boot consoles to provide early
-debugging.
+The problem is that on this new device the serial driver gets its
+probe deferred.  Now when kgdb initializes it can't find the tty
+driver and when it gives up it never tries again.
 
-This change co-opts the existing read() function pointer that's part
-of "struct console".  It's assumed that if a boot console (with the
-flag CON_BOOT) has implemented read() that both the read() and write()
-function are polling functions.  That means they work without
-interrupts and read() will return immediately (with 0 bytes read) if
-there's nothing to read.  This should be a safe assumption since it
-appears that no current boot consoles implement read() right now and
-there seems no reason to do so unless they wanted to support
-"earlycon_kgdboc".
+We could try to find ways to move up the initialization of the serial
+driver and such a thing might be worthwhile, but it's nice to be
+robust against serial drivers that load late.  We could move kgdb to
+init itself later but that penalizes our ability to debug early boot
+code on systems where the driver inits early.  We could roll our own
+system of detecting when new tty drivers get loaded and then use that
+to figure out when kgdb can init, but that's ugly.
 
-The console API isn't really intended to have clients work with it
-like we're doing.  Specifically there doesn't appear to be any way for
-clients to be notified about a boot console being unregistered.  We'll
-work around this by checking that our console is still valid before
-using it.  We'll also try to transition off of the boot console and
-onto the "tty" API as quickly as possible.
+Instead, let's jump on the -EPROBE_DEFER bandwagon.  We'll create a
+singleton instance of a "kgdboc" platform device.  If we can't find
+our tty device when the singleton "kgdboc" probes we'll return
+-EPROBE_DEFER which means that the system will call us back later to
+try again when the tty device might be there.
 
-The normal/expected way to make all this work is to use
-"earlycon_kgdboc" and "kgdboc" together.  You should point them both
-to the same physical serial connection.  At boot time, as the system
-transitions from the boot console to the normal console, kgdb will
-switch over.  If you don't use things in the normal/expected way it's
-a bit of a buyer-beware situation.  Things thought about:
+We won't fully transition all of the kgdboc to a platform device
+because early kgdb initialization (via the "ekgdboc" kernel command
+line parameter) still runs before the platform device has been
+created.  The kgdb platform device is merely used as a convenient way
+to hook into the system's normal probe deferral mechanisms.
 
-- If you specify only "earlycon_kgdboc" but not "kgdboc" you still
-  might end up dropping into kgdb upon a crash/sysrq but you may not
-  be able to type.
-- If you use "keep_bootcon" (which is already a bit of a buyer-beware
-  option) and specify "earlycon_kgdboc" but not "kgdboc" we'll keep
-  trying to use your boot console for kgdb.
-- If your "earlycon_kgdboc" and "kgdboc" devices are not the same
-  device things should work OK, but it'll be your job to switch over
-  which device you're monitoring (including figuring out how to switch
-  over gdb in-flight if you're using it).
-
-When trying to enable "earlycon_kgdboc" it should be noted that the
-names that are registered through the boot console layer and the tty
-layer are not the same for the same port.  For example when debugging
-on one board I'd need to pass "earlycon_kgdboc=qcom_geni
-kgdboc=ttyMSM0" to enable things properly.  Since digging up the boot
-console name is a pain and there will rarely be more than one boot
-console enabled, you can provide the "earlycon_kgdboc" parameter
-without specifying the name of the boot console.  In this case we'll
-just pick the first boot that implements read() that we find.
-
-This new "earlycon_kgdboc" parameter should be contrasted to the
-existing "ekgdboc" parameter.  While both provide a way to debug very
-early, the usage and mechanisms are quite different.  Specifically
-"earlycon_kgdboc" is meant to be used in tandem with "kgdboc" and
-there is a transition from one to the other.  The "ekgdboc" parameter,
-on the other hand, replaces the "kgdboc" parameter.  It runs the same
-logic as the "kgdboc" parameter but just relies on your TTY driver
-being present super early.  The only known usage of the old "ekgdboc"
-parameter is documented as "ekgdboc=kbd earlyprintk=vga".  It should
-be noted that "kbd" has special treatment allowing it to init early as
-a tty device.
+As part of this, we'll ever-so-slightly change how the "kgdboc=..."
+kernel command line parameter works.  Previously if you booted up and
+kgdb couldn't find the tty driver then later reading
+'/sys/module/kgdboc/parameters/kgdboc' would return a blank string.
+Now kgdb will keep track of the string that came as part of the
+command line and give it back to you.  It's expected that this should
+be an OK change.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
-This patch touches files in several different subsystems, but it
-touches a single line and that line is related to kgdb.  I'm assuming
-this can all go through the kgdb tree, but if needed I can always
-introduce a new API call instead of modifying the old one and then
-just have the old API call be a thin wrapper on the new one.
 
-Changes in v2:
-- Assumes we have ("kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb")
-- Fix kgdbts, tty/mips_ejtag_fdc, and usb/early/ehci-dbgp
+Changes in v2: None
 
- drivers/misc/kgdbts.c         |   2 +-
- drivers/tty/mips_ejtag_fdc.c  |   2 +-
- drivers/tty/serial/kgdboc.c   | 132 +++++++++++++++++++++++++++++++++-
- drivers/usb/early/ehci-dbgp.c |   2 +-
- include/linux/kgdb.h          |   3 +-
- kernel/debug/debug_core.c     |  15 +++-
- 6 files changed, 149 insertions(+), 7 deletions(-)
+ drivers/tty/serial/kgdboc.c | 126 +++++++++++++++++++++++++++++-------
+ 1 file changed, 101 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
-index bccd341e9ae1..5c4e4a8771cf 100644
---- a/drivers/misc/kgdbts.c
-+++ b/drivers/misc/kgdbts.c
-@@ -1077,7 +1077,7 @@ static int configure_kgdbts(void)
- 	final_ack = 0;
- 	run_plant_and_detach_test(1);
- 
--	err = kgdb_register_io_module(&kgdbts_io_ops);
-+	err = kgdb_register_io_module(&kgdbts_io_ops, false);
- 	if (err) {
- 		configured = 0;
- 		return err;
-diff --git a/drivers/tty/mips_ejtag_fdc.c b/drivers/tty/mips_ejtag_fdc.c
-index 21e76a2ec182..68817cca39ce 100644
---- a/drivers/tty/mips_ejtag_fdc.c
-+++ b/drivers/tty/mips_ejtag_fdc.c
-@@ -1265,7 +1265,7 @@ static struct kgdb_io kgdbfdc_io_ops = {
- 
- static int __init kgdbfdc_init(void)
- {
--	kgdb_register_io_module(&kgdbfdc_io_ops);
-+	kgdb_register_io_module(&kgdbfdc_io_ops, false);
- 	return 0;
- }
- early_initcall(kgdbfdc_init);
 diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index 519d8cfbfbed..2f526f2d2bea 100644
+index 8a1a4d1b6768..519d8cfbfbed 100644
 --- a/drivers/tty/serial/kgdboc.c
 +++ b/drivers/tty/serial/kgdboc.c
-@@ -21,6 +21,7 @@
+@@ -20,6 +20,7 @@
+ #include <linux/vt_kern.h>
  #include <linux/input.h>
  #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/serial_core.h>
++#include <linux/platform_device.h>
  
  #define MAX_CONFIG_LEN		40
  
-@@ -42,6 +43,14 @@ static int			kgdb_tty_line;
+@@ -27,6 +28,7 @@ static struct kgdb_io		kgdboc_io_ops;
  
- static struct platform_device *kgdboc_pdev;
+ /* -1 = init not run yet, 0 = unconfigured, 1 = configured. */
+ static int configured		= -1;
++DEFINE_MUTEX(config_mutex);
  
-+#ifdef CONFIG_KGDB_SERIAL_CONSOLE
-+static struct kgdb_io		earlycon_kgdboc_io_ops;
-+struct console			*earlycon;
-+bool				earlycon_neutered;
-+#else /* ! CONFIG_KGDB_SERIAL_CONSOLE */
-+#define earlycon NULL
-+#endif /* ! CONFIG_KGDB_SERIAL_CONSOLE */
+ static char config[MAX_CONFIG_LEN];
+ static struct kparam_string kps = {
+@@ -38,6 +40,8 @@ static int kgdboc_use_kms;  /* 1 if we use kernel mode switching */
+ static struct tty_driver	*kgdb_tty_driver;
+ static int			kgdb_tty_line;
+ 
++static struct platform_device *kgdboc_pdev;
 +
  #ifdef CONFIG_KDB_KEYBOARD
  static int kgdboc_reset_connect(struct input_handler *handler,
  				struct input_dev *dev,
-@@ -135,8 +144,46 @@ static void kgdboc_unregister_kbd(void)
- #define kgdboc_restore_input()
- #endif /* ! CONFIG_KDB_KEYBOARD */
+@@ -133,11 +137,13 @@ static void kgdboc_unregister_kbd(void)
  
-+#ifdef CONFIG_KGDB_SERIAL_CONSOLE
-+
-+static void cleanup_earlycon(bool unregister)
-+{
-+	if (earlycon && unregister)
-+		kgdb_unregister_io_module(&earlycon_kgdboc_io_ops);
-+	earlycon = NULL;
-+}
-+
-+static bool is_earlycon_still_valid(void)
-+{
-+	struct console *con;
-+
-+	for_each_console(con)
-+		if (con == earlycon)
-+			return true;
-+	return false;
-+}
-+
-+static void cleanup_earlycon_if_invalid(void)
-+{
-+	console_lock();
-+	if (earlycon && (earlycon_neutered || !is_earlycon_still_valid())) {
-+		pr_warn("earlycon vanished; unregistering\n");
-+		cleanup_earlycon(true);
-+	}
-+	console_unlock();
-+}
-+
-+#else /* ! CONFIG_KGDB_SERIAL_CONSOLE */
-+
-+static inline void cleanup_earlycon(bool unregister) { ; }
-+static inline void cleanup_earlycon_if_invalid(void) { ; }
-+
-+#endif /* ! CONFIG_KGDB_SERIAL_CONSOLE */
-+
  static void cleanup_kgdboc(void)
  {
-+	cleanup_earlycon(true);
++	if (configured != 1)
++		return;
 +
- 	if (configured != 1)
+ 	if (kgdb_unregister_nmi_console())
  		return;
- 
-@@ -188,9 +235,10 @@ static int configure_kgdboc(void)
- 	kgdb_tty_line = tty_line;
- 
- do_register:
--	err = kgdb_register_io_module(&kgdboc_io_ops);
-+	err = kgdb_register_io_module(&kgdboc_io_ops, earlycon != NULL);
- 	if (err)
- 		goto noconfig;
-+	cleanup_earlycon(false);
- 
- 	err = kgdb_register_nmi_console();
- 	if (err)
-@@ -206,6 +254,14 @@ static int configure_kgdboc(void)
  	kgdboc_unregister_kbd();
- 	configured = 0;
+-	if (configured == 1)
+-		kgdb_unregister_io_module(&kgdboc_io_ops);
++	kgdb_unregister_io_module(&kgdboc_io_ops);
+ }
  
-+	/*
-+	 * Each time we run configure_kgdboc() but don't find a console, use
-+	 * that as a chance to validate that our earlycon didn't vanish on
-+	 * us.  If it vanished we should unregister which will disable kgdb
-+	 * if we're the last I/O module.
-+	 */
-+	cleanup_earlycon_if_invalid();
-+
+ static int configure_kgdboc(void)
+@@ -198,20 +204,79 @@ static int configure_kgdboc(void)
+ 	kgdb_unregister_io_module(&kgdboc_io_ops);
+ noconfig:
+ 	kgdboc_unregister_kbd();
+-	config[0] = 0;
+ 	configured = 0;
+-	cleanup_kgdboc();
+ 
  	return err;
  }
  
-@@ -409,6 +465,80 @@ static int __init kgdboc_early_init(char *opt)
- }
- 
- early_param("ekgdboc", kgdboc_early_init);
-+
-+static int earlycon_kgdboc_get_char(void)
++static int kgdboc_probe(struct platform_device *pdev)
 +{
-+	char c;
++	int ret = 0;
 +
-+	if (earlycon_neutered || !earlycon->read(earlycon, &c, 1))
-+		return NO_POLL_CHAR;
++	mutex_lock(&config_mutex);
++	if (configured != 1) {
++		ret = configure_kgdboc();
 +
-+	return c;
-+}
-+
-+static void earlycon_kgdboc_put_char(u8 chr)
-+{
-+	if (!earlycon_neutered)
-+		earlycon->write(earlycon, &chr, 1);
-+}
-+
-+static void earlycon_kgdboc_pre_exp_handler(void)
-+{
-+	/*
-+	 * We don't get notified when the boot console is unregistered.
-+	 * Double-check when we enter the debugger.  Unfortunately we
-+	 * can't really unregister ourselves now, but at least don't crash.
-+	 */
-+	if (earlycon && !earlycon_neutered && !is_earlycon_still_valid()) {
-+		pr_warn("Neutering kgdb since boot console vanished\n");
-+		earlycon_neutered = true;
++		/* Convert "no device" to "defer" so we'll keep trying */
++		if (ret == -ENODEV)
++			ret = -EPROBE_DEFER;
 +	}
++	mutex_unlock(&config_mutex);
++
++	return ret;
 +}
 +
-+static struct kgdb_io earlycon_kgdboc_io_ops = {
-+	.name			= "earlycon_kgdboc",
-+	.read_char		= earlycon_kgdboc_get_char,
-+	.write_char		= earlycon_kgdboc_put_char,
-+	.pre_exception		= earlycon_kgdboc_pre_exp_handler,
-+	.is_console		= true,
++static struct platform_driver kgdboc_platform_driver = {
++	.probe = kgdboc_probe,
++	.driver = {
++		.name = "kgdboc",
++		.suppress_bind_attrs = true,
++	},
 +};
 +
-+static int __init earlycon_kgdboc_init(char *opt)
-+{
-+	struct console *con;
-+
-+	kdb_init(KDB_INIT_EARLY);
+ static int __init init_kgdboc(void)
+ {
+-	/* Already configured? */
+-	if (configured == 1)
++	int ret;
 +
 +	/*
-+	 * Look for a matching console, or if the name was left blank just
-+	 * pick the first one we find.
++	 * kgdboc is a little bit of an odd "platform_driver".  It can be
++	 * up and running long before the platform_driver object is
++	 * created and thus doesn't actually store anything in it.  There's
++	 * only one instance of kgdb so anything is stored as global state.
++	 * The platform_driver is only created so that we can leverage the
++	 * kernel's mechanisms (like -EPROBE_DEFER) to call us when our
++	 * underlying tty is ready.  Here we init our platform driver and
++	 * then create the single kgdboc instance.
 +	 */
-+	console_lock();
-+	for_each_console(con) {
-+		if (con->write && con->read &&
-+		    (con->flags & (CON_BOOT | CON_ENABLED)) &&
-+		    (!opt || !opt[0] || strcmp(con->name, opt) == 0))
-+			break;
-+	}
-+	console_unlock();
++	ret = platform_driver_register(&kgdboc_platform_driver);
++	if (ret)
++		return ret;
 +
-+	if (!con) {
-+		pr_info("Couldn't find kgdb earlycon\n");
-+		return 0;
++	kgdboc_pdev = platform_device_alloc("kgdboc", PLATFORM_DEVID_NONE);
++	if (!kgdboc_pdev) {
++		ret = -ENOMEM;
++		goto err_did_register;
 +	}
 +
-+	earlycon = con;
-+	pr_info("Going to register kgdb with earlycon '%s'\n", con->name);
-+	if (kgdb_register_io_module(&earlycon_kgdboc_io_ops, false) != 0) {
-+		earlycon = NULL;
-+		pr_info("Failed to register kgdb with earlycon\n");
-+		return 0;
-+	}
++	ret = platform_device_add(kgdboc_pdev);
++	if (!ret)
+ 		return 0;
+ 
+-	return configure_kgdboc();
++	platform_device_put(kgdboc_pdev);
 +
-+	return 0;
++err_did_register:
++	platform_driver_unregister(&kgdboc_platform_driver);
++	return ret;
 +}
 +
-+early_param("earlycon_kgdboc", earlycon_kgdboc_init);
++static void exit_kgdboc(void)
++{
++	mutex_lock(&config_mutex);
++	cleanup_kgdboc();
++	mutex_unlock(&config_mutex);
++
++	platform_device_unregister(kgdboc_pdev);
++	platform_driver_unregister(&kgdboc_platform_driver);
+ }
+ 
+ static int kgdboc_get_char(void)
+@@ -234,24 +299,20 @@ static int param_set_kgdboc_var(const char *kmessage,
+ 				const struct kernel_param *kp)
+ {
+ 	size_t len = strlen(kmessage);
++	int ret = 0;
+ 
+ 	if (len >= MAX_CONFIG_LEN) {
+ 		pr_err("config string too long\n");
+ 		return -ENOSPC;
+ 	}
+ 
+-	/* Only copy in the string if the init function has not run yet */
+-	if (configured < 0) {
+-		strcpy(config, kmessage);
+-		return 0;
+-	}
+-
+ 	if (kgdb_connected) {
+ 		pr_err("Cannot reconfigure while KGDB is connected.\n");
+-
+ 		return -EBUSY;
+ 	}
+ 
++	mutex_lock(&config_mutex);
++
+ 	strcpy(config, kmessage);
+ 	/* Chop out \n char as a result of echo */
+ 	if (len && config[len - 1] == '\n')
+@@ -260,8 +321,30 @@ static int param_set_kgdboc_var(const char *kmessage,
+ 	if (configured == 1)
+ 		cleanup_kgdboc();
+ 
+-	/* Go and configure with the new params. */
+-	return configure_kgdboc();
++	/*
++	 * Configure with the new params as long as init already ran.
++	 * Note that we can get called before init if someone loads us
++	 * with "modprobe kgdboc kgdboc=..." or if they happen to use the
++	 * the odd syntax of "kgdboc.kgdboc=..." on the kernel command.
++	 */
++	if (configured >= 0)
++		ret = configure_kgdboc();
++
++	/*
++	 * If we couldn't configure then clear out the config.  Note that
++	 * specifying an invalid config on the kernel command line vs.
++	 * through sysfs have slightly different behaviors.  If we fail
++	 * to configure what was specified on the kernel command line
++	 * we'll leave it in the 'config' and return -EPROBE_DEFER from
++	 * our probe.  When specified through sysfs userspace is
++	 * responsible for loading the tty driver before setting up.
++	 */
++	if (ret)
++		config[0] = '\0';
++
++	mutex_unlock(&config_mutex);
++
++	return ret;
+ }
+ 
+ static int dbg_restore_graphics;
+@@ -320,15 +403,8 @@ __setup("kgdboc=", kgdboc_option_setup);
+ /* This is only available if kgdboc is a built in for early debugging */
+ static int __init kgdboc_early_init(char *opt)
+ {
+-	/* save the first character of the config string because the
+-	 * init routine can destroy it.
+-	 */
+-	char save_ch;
+-
+ 	kgdboc_option_setup(opt);
+-	save_ch = config[0];
+-	init_kgdboc();
+-	config[0] = save_ch;
++	configure_kgdboc();
+ 	return 0;
+ }
+ 
+@@ -336,7 +412,7 @@ early_param("ekgdboc", kgdboc_early_init);
  #endif /* CONFIG_KGDB_SERIAL_CONSOLE */
  
  module_init(init_kgdboc);
-diff --git a/drivers/usb/early/ehci-dbgp.c b/drivers/usb/early/ehci-dbgp.c
-index ea0d531c63e2..bb04c688e094 100644
---- a/drivers/usb/early/ehci-dbgp.c
-+++ b/drivers/usb/early/ehci-dbgp.c
-@@ -1057,7 +1057,7 @@ static int __init kgdbdbgp_parse_config(char *str)
- 		ptr++;
- 		kgdbdbgp_wait_time = simple_strtoul(ptr, &ptr, 10);
- 	}
--	kgdb_register_io_module(&kgdbdbgp_io_ops);
-+	kgdb_register_io_module(&kgdbdbgp_io_ops, false);
- 	kgdbdbgp_io_ops.is_console = early_dbgp_console.index != -1;
- 
- 	return 0;
-diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-index 7371517aeacc..2e86307f2683 100644
---- a/include/linux/kgdb.h
-+++ b/include/linux/kgdb.h
-@@ -323,7 +323,8 @@ static inline int kgdb_unregister_nmi_console(void) { return 0; }
- static inline bool kgdb_nmi_poll_knock(void) { return 1; }
- #endif
- 
--extern int kgdb_register_io_module(struct kgdb_io *local_kgdb_io_ops);
-+extern int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops,
-+				   bool replace);
- extern void kgdb_unregister_io_module(struct kgdb_io *local_kgdb_io_ops);
- extern struct kgdb_io *dbg_io_ops;
- 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 8f178239856d..1b5435c6d92a 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -1074,16 +1074,21 @@ EXPORT_SYMBOL_GPL(kgdb_schedule_breakpoint);
- /**
-  *	kgdb_register_io_module - register KGDB IO module
-  *	@new_dbg_io_ops: the io ops vector
-+ *	@replace: If true it's OK if there were old ops.  This is used
-+ *		  to transition from early kgdb to normal kgdb.  It's
-+ *		  assumed these are the same device so kgdb can continue.
-  *
-  *	Register it with the KGDB core.
-  */
--int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
-+int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops, bool replace)
- {
-+	struct kgdb_io *old_dbg_io_ops;
- 	int err;
- 
- 	spin_lock(&kgdb_registration_lock);
- 
--	if (dbg_io_ops) {
-+	old_dbg_io_ops = dbg_io_ops;
-+	if (dbg_io_ops && !replace) {
- 		spin_unlock(&kgdb_registration_lock);
- 
- 		pr_err("Another I/O driver is already registered with KGDB\n");
-@@ -1102,6 +1107,12 @@ int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
- 
- 	spin_unlock(&kgdb_registration_lock);
- 
-+	if (replace) {
-+		pr_info("Replaced I/O driver %s with %s\n",
-+			old_dbg_io_ops->name, new_dbg_io_ops->name);
-+		return 0;
-+	}
-+
- 	pr_info("Registered I/O driver %s\n", new_dbg_io_ops->name);
- 
- 	/* Arm KGDB now. */
+-module_exit(cleanup_kgdboc);
++module_exit(exit_kgdboc);
+ module_param_call(kgdboc, param_set_kgdboc_var, param_get_string, &kps, 0644);
+ MODULE_PARM_DESC(kgdboc, "<serial_device>[,baud]");
+ MODULE_DESCRIPTION("KGDB Console TTY Driver");
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
