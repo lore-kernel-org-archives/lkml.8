@@ -2,116 +2,117 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B364CC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF5CC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66B382068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42BA42068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="VEkFTSh0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQDOQIuY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgDUPUZ (ORCPT
+        id S1726232AbgDUPVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:20:25 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:37199 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbgDUPUY (ORCPT
+        Tue, 21 Apr 2020 11:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgDUPVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:20:24 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id CF11923059;
-        Tue, 21 Apr 2020 17:20:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587482423;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=11Is5HZRKmOiZumdMUwNkL7ciOuq8bgi7k2YfmGDNpI=;
-        b=VEkFTSh0uY4eQcKr7G1Ri0EFROHJz5Dlss5bT0wVp6+UlpFMj7EfhrU/KNDBGe3jVnJrRW
-        MB+6ApsUEiALMQDfLtFaAb93h7SVgbovYkwATRjaIdEkKGmwwxKb8Hv0+9ExkqzN+SyXQ9
-        TQ8FEQM7VI/6bcfrJfHCuY9g24a4JpI=
+        Tue, 21 Apr 2020 11:21:53 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910ADC061A10;
+        Tue, 21 Apr 2020 08:21:52 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 131so11394555lfh.11;
+        Tue, 21 Apr 2020 08:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:mime-version
+         :content-disposition:user-agent;
+        bh=G5VKAhwHSCkO13lB215fVqAbEvC64vZ494rjxezJpPQ=;
+        b=KQDOQIuYneRe17hjshDQMNMWIVYgSnxDl/MUcQO7/ctdXD/OwiKyztSJ9kBBozfphB
+         wTBUackTJYCmsg3lv7OPDU2u/t4J+/uy/R9l1/uoJRcFGNjbvn4fF7yOY7notipPWj3P
+         Sl/G0dSNp7if+lJ6JGoK7Ort4AgC5yjBc/qCMqPx664s1PT/cbKDDzK7C6jBoiLCKTLD
+         PhejT2sgf5I4vmbzWJ/jMza/VtHlB52cU3zC2Qo83ZpgvWJ6d4Fuho8topf1atJPuVbJ
+         A/s5HANrEO+C0eLN67wDFyqoySr0p+xAQW2PjQulfwQD+6fGXlcZNlYZnboECZeC1uIL
+         e5hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mime-version:content-disposition:user-agent;
+        bh=G5VKAhwHSCkO13lB215fVqAbEvC64vZ494rjxezJpPQ=;
+        b=eHfFSS/eQ5KLaVBQDr37yabMlwGl/a0ik3AxeCQurB+GQYvEy1KaXrum5K3I1kzofk
+         m0oOthUqkvIvFRaxrzpTNeDQuvpueGEJAZ36Z5AYRMiiTSBPmQ8177/mIQPKxNXXVg8G
+         t1srXNb9qOyveOxkF2H1MW1UrBgKDLd+uKjgidfbPDCSIs3C4I5W7GZa3Bn1pIqEkXn1
+         AmIBVNhTekAPZm+U05rTZeb5Fri+gif6dou8r+Cotn//kMpy8SpSRNxuLyFzQC2Oddn0
+         Xcv6G9Rl9543Tgy8xFDoi1DXgIwIcggNxRBD/WTweVDfRDN2TlwmwXdKzcMG/JUsdZQG
+         0FOQ==
+X-Gm-Message-State: AGi0Pua4+YMM31I/rVcBcu2Kkl0nJbtED7wPHAlP8Kb2FfDKoEXO+KY7
+        QzjZyJtHr6GdnIMIxIA6HC8=
+X-Google-Smtp-Source: APiQypLsR0OuLTnQmGywi2EGGHlC8QJupSgTFfb2fbNmeMRTUt8E9BhC0cHHQyCBDe+ZmPqM8p13kQ==
+X-Received: by 2002:a05:6512:3081:: with SMTP id z1mr14129181lfd.102.1587482510651;
+        Tue, 21 Apr 2020 08:21:50 -0700 (PDT)
+Received: from localhost ([176.212.68.26])
+        by smtp.gmail.com with ESMTPSA id 125sm2373382lfb.89.2020.04.21.08.21.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 08:21:49 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 08:21:48 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Alex Belits <abelits@marvell.com>
+Cc:     yury.norov@gmail.com, "frederic@kernel.org" <frederic@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Prasun Kapoor <pkapoor@marvell.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-mm@vger.kernel.org" <linux-mm@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH 00/12] "Task_isolation" mode
+Message-ID: <20200421152148.GA16576@yury-thinkpad>
+Reply-To: 4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 21 Apr 2020 17:20:22 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC PATCH net-next 1/3] net: phy: add concept of shared storage
- for PHYs
-In-Reply-To: <20200421145214.GD933345@lunn.ch>
-References: <20200420232624.9127-1-michael@walle.cc>
- <20200421143455.GB933345@lunn.ch>
- <20200421144302.GD25745@shell.armlinux.org.uk>
- <20200421145214.GD933345@lunn.ch>
-Message-ID: <f297cb3c07554ef55d3040329978f8d4@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: CF11923059
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.975];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[armlinux.org.uk,vger.kernel.org,gmail.com,davemloft.net,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-21 16:52, schrieb Andrew Lunn:
-> On Tue, Apr 21, 2020 at 03:43:02PM +0100, Russell King - ARM Linux 
-> admin wrote:
->> On Tue, Apr 21, 2020 at 04:34:55PM +0200, Andrew Lunn wrote:
->> > > +static inline bool phy_package_init_once(struct phy_device *phydev)
->> > > +{
->> > > +	struct phy_package_shared *shared = phydev->shared;
->> > > +
->> > > +	if (!shared)
->> > > +		return false;
->> > > +
->> > > +	return !test_and_set_bit(PHY_SHARED_F_INIT_DONE, &shared->flags);
->> > > +}
->> >
->> > I need to look at how you actually use this, but i wonder if this is
->> > sufficient. Can two PHYs probe at the same time? Could we have one PHY
->> > be busy setting up the global init, and the other thinks the global
->> > setup is complete?
+> This is an update of task isolation work that was originally done by
+> Chris Metcalf <cmetcalf@mellanox.com> and maintained by him until
+> November 2017. It is adapted to the current kernel and cleaned up to
+> make this functionality both more complete (as in, prevent isolation
+> breaking in situations that were not covered before) and cleaner (as
+> in, avoid any dubious or fragile use of kernel interfaces, and provide
+> clean and reliable isolation breaking procedure).
+> 
+> I guess, I have to explain why such a thing exists.
+> 
+> ...
+> 
+> My thanks to Chris Metcalf for design and maintenance of the original
+> task isolation patch, Francis Giraldeau <francis.giraldeau@gmail.com>
+> and Yuri Norov <ynorov@marvell.com> for various contributions to this
+> work, and Frederic Weisbecker <frederic@kernel.org> for his work on
+> CPU isolation and housekeeping that made possible to remove some less
+> elegant solutions that I had to devise for earlier, <4.17 kernels.
+> 
+> The previous patch (v16 by Chris Metcalf) is at:
+> 
+> https://lore.kernel.org/lkml/1509728692-10460-1-git-send-email-cmetcalf@mellanox.com
 
-So with Russells answer below, this should be clarified and the
-test_and_set_bit() is enough correct?
+Alex,
 
->> > Do we want a comment like: 'Returns true when the
->> > global package initialization is either under way or complete'?
+For patches that are not authored by you, you removed authors' SOB, like in
+patch 8 of this series.
 
-I've forgot the whole annotation here.
+Please CC me for next revisions.
 
->> IIRC, probe locking in the driver model is by per-driver locks, so
->> any particular driver won't probe more than one device at a time.
-
--michael
+Thanks,
+Yury
