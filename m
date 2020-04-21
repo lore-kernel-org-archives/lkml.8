@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D38C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2287C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4E52206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB482071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587482174;
-	bh=8fNQz1mwIal6Oqh/+LR51hNWYPT0sBjO+Q54FtI2Vvk=;
+	s=default; t=1587482178;
+	bh=tIZoYZVUxqCWwc1jKWbNcvSbCUuN1NyPqiHgTreyT5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A2A/wrVgxXFJRFPdZ9FBbQGg32UbRDcNdBs1vu4RTCurK3fup2jwGkn7mu+zqyLaT
-	 32qSf8C5MNwXgjsETmIs12DDN8PoS4cVBF1vVNeTWYRW1vhpgf2vOBrzE016i60FRr
-	 XgdfRl0x47NR0PsNmCGap6zMyPvpU1RGEeowg7VA=
+	b=JziUTpKYL56hjxXEmz0F8WlG8ZXhH6hzpav7fuUPEJNy0B2yMcN1D1B9RhuQivcAB
+	 SGDcC1u+hOq99o7zyHot79EY4GZfYUJhmZYrlWe3x4dUjHee3vQXL15i8riIG9t0KN
+	 +PB9iGGXwCzMVzN+eLJUPMsgA97jhmYlFT2ohWAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbgDUPQN (ORCPT
+        id S1728743AbgDUPQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:16:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35148 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 11:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbgDUPQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:16:09 -0400
+        id S1728668AbgDUPQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 11:16:15 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 849DD20724;
-        Tue, 21 Apr 2020 15:16:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 595CC2068F;
+        Tue, 21 Apr 2020 15:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587482169;
-        bh=8fNQz1mwIal6Oqh/+LR51hNWYPT0sBjO+Q54FtI2Vvk=;
+        s=default; t=1587482174;
+        bh=tIZoYZVUxqCWwc1jKWbNcvSbCUuN1NyPqiHgTreyT5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5XWupvGBhYFz463+rQtID9y2UoWBa7xQNiJga6LbbIoFhMVCvK6jgeaGwsVSOITX
-         nmUdU14bBo7E5pUtpoJGryJM5L3QrnC1DQnsR4iJi+ykn/77G5vtp+KT97tUJsmwF+
-         v/xBeJ38BFa8KOuuQd/B6iYELibzNP45DvBaHE20=
+        b=2hQTwMlmrbvanuq6fKv60vUEHM34u8nusUrwNhYnftU6VreC6+NsJkFMxXEpHwBVo
+         8isGyQcKnXxayD2hYHWzMpjW+oAkGQ8uwrdMpvQD9QiL2A7CsTG+RGjWyuOL8CrNzP
+         vV/IAmdh0EqyTBnAd1Wo8UJggJvcbFSVRNt9ljuw=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
@@ -54,9 +54,9 @@ Cc:     linux-arch@vger.kernel.org, kernel-team@android.com,
         Peter Oberparleiter <oberpar@linux.ibm.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v4 08/11] READ_ONCE: Drop pointer qualifiers when reading from scalar types
-Date:   Tue, 21 Apr 2020 16:15:34 +0100
-Message-Id: <20200421151537.19241-9-will@kernel.org>
+Subject: [PATCH v4 10/11] arm64: barrier: Use '__unqual_scalar_typeof' for acquire/release macros
+Date:   Tue, 21 Apr 2020 16:15:36 +0100
+Message-Id: <20200421151537.19241-11-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200421151537.19241-1-will@kernel.org>
 References: <20200421151537.19241-1-will@kernel.org>
@@ -67,88 +67,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Passing a volatile-qualified pointer to READ_ONCE() is an absolute
-trainwreck for code generation: the use of 'typeof()' to define a
-temporary variable inside the macro means that the final evaluation in
-macro scope ends up forcing a read back from the stack. When stack
-protector is enabled (the default for arm64, at least), this causes
-the compiler to vomit up all sorts of junk.
+Passing volatile-qualified pointers to the arm64 implementations of the
+load-acquire/store-release macros results in a re-load from the stack
+and a bunch of associated stack-protector churn due to the temporary
+result variable inheriting the volatile semantics thanks to the use of
+'typeof()'.
 
-Unfortunately, dropping pointer qualifiers inside the macro poses quite
-a challenge, especially since the pointed-to type is permitted to be an
-aggregate, and this is relied upon by mm/ code accessing things like
-'pmd_t'. Based on numerous hacks and discussions on the mailing list,
-this is the best I've managed to come up with.
+Define these temporary variables using 'unqual_scalar_typeof' to drop
+the volatile qualifier in the case that they are scalar types.
 
-Introduce '__unqual_scalar_typeof()' which takes an expression and, if
-the expression is an optionally qualified 8, 16, 32 or 64-bit scalar
-type, evaluates to the unqualified type. Other input types, including
-aggregates, remain unchanged. Hopefully READ_ONCE() on volatile aggregate
-pointers isn't something we do on a fast-path.
-
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Michael Ellerman <mpe@ellerman.id.au>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- include/linux/compiler.h       |  6 +++---
- include/linux/compiler_types.h | 21 +++++++++++++++++++++
- 2 files changed, 24 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/barrier.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 50bb2461648f..c363d8debc43 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -203,13 +203,13 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-  * atomicity or dependency ordering guarantees. Note that this may result
-  * in tears!
-  */
--#define __READ_ONCE(x)	(*(const volatile typeof(x) *)&(x))
-+#define __READ_ONCE(x)	(*(const volatile __unqual_scalar_typeof(x) *)&(x))
+diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
+index 7d9cc5ec4971..fb4c27506ef4 100644
+--- a/arch/arm64/include/asm/barrier.h
++++ b/arch/arm64/include/asm/barrier.h
+@@ -76,8 +76,8 @@ static inline unsigned long array_index_mask_nospec(unsigned long idx,
+ #define __smp_store_release(p, v)					\
+ do {									\
+ 	typeof(p) __p = (p);						\
+-	union { typeof(*p) __val; char __c[1]; } __u =			\
+-		{ .__val = (__force typeof(*p)) (v) };			\
++	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u =	\
++		{ .__val = (__force __unqual_scalar_typeof(*p)) (v) };	\
+ 	compiletime_assert_atomic_type(*p);				\
+ 	kasan_check_write(__p, sizeof(*p));				\
+ 	switch (sizeof(*p)) {						\
+@@ -110,7 +110,7 @@ do {									\
  
- #define __READ_ONCE_SCALAR(x)						\
+ #define __smp_load_acquire(p)						\
  ({									\
--	typeof(x) __x = __READ_ONCE(x);					\
-+	__unqual_scalar_typeof(x) __x = __READ_ONCE(x);			\
- 	smp_read_barrier_depends();					\
--	__x;								\
-+	(typeof(x))__x;							\
+-	union { typeof(*p) __val; char __c[1]; } __u;			\
++	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u;	\
+ 	typeof(p) __p = (p);						\
+ 	compiletime_assert_atomic_type(*p);				\
+ 	kasan_check_read(__p, sizeof(*p));				\
+@@ -136,33 +136,33 @@ do {									\
+ 			: "Q" (*__p) : "memory");			\
+ 		break;							\
+ 	}								\
+-	__u.__val;							\
++	(typeof(*p))__u.__val;						\
  })
  
- #define READ_ONCE(x)							\
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index e970f97a7fcb..233066c92f6f 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -210,6 +210,27 @@ struct ftrace_likely_data {
- /* Are two types/vars the same type (ignoring qualifiers)? */
- #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+ #define smp_cond_load_relaxed(ptr, cond_expr)				\
+ ({									\
+ 	typeof(ptr) __PTR = (ptr);					\
+-	typeof(*ptr) VAL;						\
++	__unqual_scalar_typeof(*ptr) VAL;				\
+ 	for (;;) {							\
+ 		VAL = READ_ONCE(*__PTR);				\
+ 		if (cond_expr)						\
+ 			break;						\
+ 		__cmpwait_relaxed(__PTR, VAL);				\
+ 	}								\
+-	VAL;								\
++	(typeof(*ptr))VAL;						\
+ })
  
-+/*
-+ * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
-+ *			       non-scalar types unchanged.
-+ *
-+ * We build this out of a couple of helper macros in a vain attempt to
-+ * help you keep your lunch down while reading it.
-+ */
-+#define __pick_scalar_type(x, type, otherwise)					\
-+	__builtin_choose_expr(__same_type(x, type), (type)0, otherwise)
-+
-+#define __pick_integer_type(x, type, otherwise)					\
-+	__pick_scalar_type(x, unsigned type,					\
-+		__pick_scalar_type(x, signed type, otherwise))
-+
-+#define __unqual_scalar_typeof(x) typeof(					\
-+	__pick_integer_type(x, char,						\
-+		__pick_integer_type(x, short,					\
-+			__pick_integer_type(x, int,				\
-+				__pick_integer_type(x, long,			\
-+					__pick_integer_type(x, long long, x))))))
-+
- /* Is this type a native word size -- useful for atomic operations */
- #define __native_word(t) \
- 	(sizeof(t) == sizeof(char) || sizeof(t) == sizeof(short) || \
+ #define smp_cond_load_acquire(ptr, cond_expr)				\
+ ({									\
+ 	typeof(ptr) __PTR = (ptr);					\
+-	typeof(*ptr) VAL;						\
++	__unqual_scalar_typeof(*ptr) VAL;				\
+ 	for (;;) {							\
+ 		VAL = smp_load_acquire(__PTR);				\
+ 		if (cond_expr)						\
+ 			break;						\
+ 		__cmpwait_relaxed(__PTR, VAL);				\
+ 	}								\
+-	VAL;								\
++	(typeof(*ptr))VAL;						\
+ })
+ 
+ #include <asm-generic/barrier.h>
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
