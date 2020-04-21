@@ -2,208 +2,194 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F906C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBD4C55183
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4720E206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497D0206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TDWQTy1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgDUQgc (ORCPT
+        id S1728649AbgDUQhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:36:32 -0400
-Received: from mga07.intel.com ([134.134.136.100]:41402 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgDUQg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:36:29 -0400
-IronPort-SDR: 0fhwsZ9YdfBBEbdgeDtoZKKizCeaoggCkTOcNPAqApPzG3NKYYidjcy6WYIcv/YtTxeFz2iZfe
- QBaUU2tbwPlg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 09:36:28 -0700
-IronPort-SDR: cEihd1JnjhZNwQ5c8lFnQOjQJpP8TjKZ0BOUTpH6miKIloGmPNXWCMhSAv+c8TlodtvJifJszC
- WO9TJ9mm0cxQ==
-X-IronPort-AV: E=Sophos;i="5.72,410,1580803200"; 
-   d="scan'208";a="429584511"
-Received: from dalessan-mobl1.ir.intel.com ([10.252.22.134])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 09:36:26 -0700
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
-        Paul J Murphy <paul.j.murphy@intel.com>
-Subject: [PATCH 1/1] soc: keembay: Add Keem Bay IMR driver
-Date:   Tue, 21 Apr 2020 17:36:18 +0100
-Message-Id: <13ca92165fab2827b6d439661e75f5b91ef083c2.1587485099.git.daniele.alessandrelli@intel.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <cover.1587485099.git.daniele.alessandrelli@intel.com>
-References: <cover.1587485099.git.daniele.alessandrelli@intel.com>
+        Tue, 21 Apr 2020 12:37:15 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42024 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgDUQhM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:37:12 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LGYLjh065604;
+        Tue, 21 Apr 2020 16:37:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=sKlZEENumxidy8zW0gTcKPlHQj/gVbQX4p/wtrhNzKM=;
+ b=TDWQTy1BSNU5OzuTPNDh3xuaHFDSwrCafaM8HhwNOqHMe0GD7zQ/IMT7h1dr232yO0zP
+ R/jnTKrRUcv43uvf97yd82N2uAd2kHad9XZWhp+U28Nj3fD1CP3mAFv4TjIa1UUFAyJE
+ 7fMiODhz7G4r7zs/7c57XXfffTKLmANlrHpR2Yag5x5IRW2hVld4YstPHUTpjkSOsIWD
+ nPPjzKwrK14UEkzsp7w2yEm5CAqeRoa2Fva2kFddzMjObUCgGkFvfrDYg5vOle79643e
+ rFOlwe2SUHMaWO/TDF9bZCDMqGWI78GcI2xwD/6Tv9I7ivOsqJlCgv8ynaPCzBlCo6nx mQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30grpgjhtq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 16:37:04 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LGWFW2031201;
+        Tue, 21 Apr 2020 16:35:04 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 30gb1gfevs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 16:35:04 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03LGZ1tI024746;
+        Tue, 21 Apr 2020 16:35:01 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 09:35:00 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] padata: add separate cpuhp node for CPUHP_PADATA_DEAD
+Date:   Tue, 21 Apr 2020 12:34:55 -0400
+Message-Id: <20200421163455.2177998-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=2 spamscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004210127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=2 bulkscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004210127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+Removing the pcrypt module triggers this:
 
-Keem Bay bootloader sets up a temporary Isolated Memory Region (IMR) to
-protect itself during pre-Linux boot.
+  general protection fault, probably for non-canonical
+    address 0xdead000000000122
+  CPU: 5 PID: 264 Comm: modprobe Not tainted 5.6.0+ #2
+  Hardware name: QEMU Standard PC
+  RIP: 0010:__cpuhp_state_remove_instance+0xcc/0x120
+  Call Trace:
+   padata_sysfs_release+0x74/0xce
+   kobject_put+0x81/0xd0
+   padata_free+0x12/0x20
+   pcrypt_exit+0x43/0x8ee [pcrypt]
 
-This temporary IMR remains active even when control is passed to the
-Linux Kernel. It is Kernel responsibility to remove such an IMR during
-initialization.
+padata instances wrongly use the same hlist node for the online and dead
+states, so __padata_free()'s second cpuhp remove call chokes on the node
+that the first poisoned.
 
-This driver adds such functionality.
+cpuhp multi-instance callbacks only walk forward in cpuhp_step->list and
+the same node is linked in both the online and dead lists, so the list
+corruption that results from padata_alloc() adding the node to a second
+list without removing it from the first doesn't cause problems as long
+as no instances are freed.
 
-The driver is loaded during `early_init`, which should ensure that the
-IMR is removed before devices that may try to access the IMR are
-initialized.
+Avoid the issue by giving each state its own node.
 
-Signed-off-by: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+Fixes: 894c9ef9780c ("padata: validate cpumask without removed CPU during offline")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # v5.4+
 ---
- MAINTAINERS                       |  5 ++++
- drivers/soc/Kconfig               |  1 +
- drivers/soc/Makefile              |  1 +
- drivers/soc/keembay/Kconfig       | 22 +++++++++++++++++
- drivers/soc/keembay/Makefile      |  5 ++++
- drivers/soc/keembay/keembay-imr.c | 40 +++++++++++++++++++++++++++++++
- 6 files changed, 74 insertions(+)
- create mode 100644 drivers/soc/keembay/Kconfig
- create mode 100644 drivers/soc/keembay/Makefile
- create mode 100644 drivers/soc/keembay/keembay-imr.c
+ include/linux/padata.h |  6 ++++--
+ kernel/padata.c        | 14 ++++++++------
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b816a453b10e..59f1923a0f25 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9194,6 +9194,11 @@ S:	Maintained
- W:	http://lse.sourceforge.net/kdump/
- F:	Documentation/admin-guide/kdump/
+diff --git a/include/linux/padata.h b/include/linux/padata.h
+index a0d8b41850b2..693cae9bfe66 100644
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -139,7 +139,8 @@ struct padata_shell {
+ /**
+  * struct padata_instance - The overall control structure.
+  *
+- * @node: Used by CPU hotplug.
++ * @cpu_online_node: Linkage for CPU online callback.
++ * @cpu_dead_node: Linkage for CPU offline callback.
+  * @parallel_wq: The workqueue used for parallel work.
+  * @serial_wq: The workqueue used for serial work.
+  * @pslist: List of padata_shell objects attached to this instance.
+@@ -150,7 +151,8 @@ struct padata_shell {
+  * @flags: padata flags.
+  */
+ struct padata_instance {
+-	struct hlist_node		 node;
++	struct hlist_node		cpu_online_node;
++	struct hlist_node		cpu_dead_node;
+ 	struct workqueue_struct		*parallel_wq;
+ 	struct workqueue_struct		*serial_wq;
+ 	struct list_head		pslist;
+diff --git a/kernel/padata.c b/kernel/padata.c
+index a6afa12fb75e..aae789896616 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -703,7 +703,7 @@ static int padata_cpu_online(unsigned int cpu, struct hlist_node *node)
+ 	struct padata_instance *pinst;
+ 	int ret;
  
-+KEEMBAY IMR
-+M:	Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-+S:	Maintained
-+F:	drivers/soc/keembay/keembay-imr.c
-+
- KEENE FM RADIO TRANSMITTER DRIVER
- M:	Hans Verkuil <hverkuil@xs4all.nl>
- L:	linux-media@vger.kernel.org
-diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-index 425ab6f7e375..eeeba3ef7338 100644
---- a/drivers/soc/Kconfig
-+++ b/drivers/soc/Kconfig
-@@ -9,6 +9,7 @@ source "drivers/soc/bcm/Kconfig"
- source "drivers/soc/fsl/Kconfig"
- source "drivers/soc/imx/Kconfig"
- source "drivers/soc/ixp4xx/Kconfig"
-+source "drivers/soc/keembay/Kconfig"
- source "drivers/soc/mediatek/Kconfig"
- source "drivers/soc/qcom/Kconfig"
- source "drivers/soc/renesas/Kconfig"
-diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-index 36452bed86ef..65c981207283 100644
---- a/drivers/soc/Makefile
-+++ b/drivers/soc/Makefile
-@@ -13,6 +13,7 @@ obj-y				+= fsl/
- obj-$(CONFIG_ARCH_GEMINI)	+= gemini/
- obj-y				+= imx/
- obj-$(CONFIG_ARCH_IXP4XX)	+= ixp4xx/
-+obj-y				+= keembay/
- obj-$(CONFIG_SOC_XWAY)		+= lantiq/
- obj-y				+= mediatek/
- obj-y				+= amlogic/
-diff --git a/drivers/soc/keembay/Kconfig b/drivers/soc/keembay/Kconfig
-new file mode 100644
-index 000000000000..2161bce131b3
---- /dev/null
-+++ b/drivers/soc/keembay/Kconfig
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Keem Bay SoC drivers.
-+#
-+
-+menu "Keem Bay SoC drivers"
-+
-+config KEEMBAY_IMR
-+	bool "Clean-up Keem Bay bootloader IMR at boot"
-+	depends on ARM64
-+	help
-+	  This option makes the Kernel clean up the Isolated Memory Region
-+	  (IMR) set up by Keem Bay bootloader (U-boot) to protect itself during
-+	  early boot.
-+
-+	  The IMR number to be cleaned up is taken from the device tree
-+	  (property 'u-boot-imr' of the 'chosen' node).
-+
-+	  If you are compiling the Kernel for a Keem Bay SoC select Y,
-+	  otherwise select N.
-+
-+endmenu
-diff --git a/drivers/soc/keembay/Makefile b/drivers/soc/keembay/Makefile
-new file mode 100644
-index 000000000000..dacfdb9f5fc1
---- /dev/null
-+++ b/drivers/soc/keembay/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Makefile for Keem Bay SoC drivers.
-+#
-+obj-$(CONFIG_KEEMBAY_IMR) += keembay-imr.o
-diff --git a/drivers/soc/keembay/keembay-imr.c b/drivers/soc/keembay/keembay-imr.c
-new file mode 100644
-index 000000000000..eabbdd6e69a7
---- /dev/null
-+++ b/drivers/soc/keembay/keembay-imr.c
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2019-2020 Intel Corporation
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/init.h>
-+#include <linux/of.h>
-+#include <linux/printk.h>
-+#include <linux/types.h>
-+
-+/* Keem Bay SiP SVC for clearing an IMR. */
-+#define KMB_SIP_SVC_IMR_CLEAR	0x8200ff13
-+
-+static int __init clear_imr(u64 imr)
-+{
-+	struct arm_smccc_res res = { 0 };
-+
-+	arm_smccc_smc(KMB_SIP_SVC_IMR_CLEAR, imr, 0, 0, 0, 0, 0, 0, &res);
-+
-+	return res.a0;
-+}
-+
-+static int __init kmb_imr_init(void)
-+{
-+	u32 imr;
-+	int rc;
-+
-+	rc = of_property_read_u32(of_chosen, "u-boot-imr", &imr);
-+	if (rc) {
-+		pr_warn("Skipping IMR clean-up: No U-Boot IMR defined in device tree\n");
-+		return 0;
-+	}
-+	pr_info("Disabling Keem Bay U-boot IMR: %u\n", imr);
-+
-+	return clear_imr(imr);
-+}
-+early_initcall(kmb_imr_init);
+-	pinst = hlist_entry_safe(node, struct padata_instance, node);
++	pinst = hlist_entry_safe(node, struct padata_instance, cpu_online_node);
+ 	if (!pinst_has_cpu(pinst, cpu))
+ 		return 0;
+ 
+@@ -718,7 +718,7 @@ static int padata_cpu_dead(unsigned int cpu, struct hlist_node *node)
+ 	struct padata_instance *pinst;
+ 	int ret;
+ 
+-	pinst = hlist_entry_safe(node, struct padata_instance, node);
++	pinst = hlist_entry_safe(node, struct padata_instance, cpu_dead_node);
+ 	if (!pinst_has_cpu(pinst, cpu))
+ 		return 0;
+ 
+@@ -734,8 +734,9 @@ static enum cpuhp_state hp_online;
+ static void __padata_free(struct padata_instance *pinst)
+ {
+ #ifdef CONFIG_HOTPLUG_CPU
+-	cpuhp_state_remove_instance_nocalls(CPUHP_PADATA_DEAD, &pinst->node);
+-	cpuhp_state_remove_instance_nocalls(hp_online, &pinst->node);
++	cpuhp_state_remove_instance_nocalls(CPUHP_PADATA_DEAD,
++					    &pinst->cpu_dead_node);
++	cpuhp_state_remove_instance_nocalls(hp_online, &pinst->cpu_online_node);
+ #endif
+ 
+ 	WARN_ON(!list_empty(&pinst->pslist));
+@@ -939,9 +940,10 @@ static struct padata_instance *padata_alloc(const char *name,
+ 	mutex_init(&pinst->lock);
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+-	cpuhp_state_add_instance_nocalls_cpuslocked(hp_online, &pinst->node);
++	cpuhp_state_add_instance_nocalls_cpuslocked(hp_online,
++						    &pinst->cpu_online_node);
+ 	cpuhp_state_add_instance_nocalls_cpuslocked(CPUHP_PADATA_DEAD,
+-						    &pinst->node);
++						    &pinst->cpu_dead_node);
+ #endif
+ 
+ 	put_online_cpus();
+
+base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
 -- 
-2.21.1
+2.26.0
 
