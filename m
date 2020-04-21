@@ -2,118 +2,127 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4FBC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05327C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9363720738
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587476858;
-	bh=xwGfqpY+jSMQa7+aqhUnV5bg17fNQU268EGV84xlAog=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=u+F7j8jNz+2giYb6qrEFdY59IYu/mmVEvcnKBuBDbnWTRVNWGoiIBA4C0iJoq3EyT
-	 mj/tpLgnTVfElKwDFh30mVQbkxmtdFvPJ/6nZdIH82R5OtjWwqYjtCTB8tGVqgkPkB
-	 c7u4KSTNQ6v2P2vz2/lyWIQvNBGsn5h7hFQA6Dt0=
+	by mail.kernel.org (Postfix) with ESMTP id D320720672
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:50:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l3vkA+1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbgDUNri (ORCPT
+        id S1728899AbgDUNum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbgDUNrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:47:37 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91D8A20738;
-        Tue, 21 Apr 2020 13:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587476856;
-        bh=xwGfqpY+jSMQa7+aqhUnV5bg17fNQU268EGV84xlAog=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Gcc67ApFHiPldJCLWoZ6XmF0SmsCkqA8XNL/gqdg0koH5B58AOWyp8jGs7OZjEqdl
-         G0moNuTw6tpgTmoEc6KTondsaxlioxB6f2zXKI8rAUN/IC5/7GiB8BTQcduneX2o9P
-         w3ThwpDNOl302kA0XTnjG+xvj/q2FGUzdMOS65h8=
-Received: by mail-qk1-f172.google.com with SMTP id 20so14439166qkl.10;
-        Tue, 21 Apr 2020 06:47:36 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYNW0oute4+N586JyPZFoDQjnfjLRJFrQR8K9wF3DT7gQQqY8mN
-        UDS3RRRf7lrV0x5GLN79qNx8WvENev00dJdQoQ==
-X-Google-Smtp-Source: APiQypISnv8ozS7dPUrDNXNOORNfcjGF9xC4yno1CVV5J1VOJiqF6mt7TVU8G9LyEbpZm+a+Jg2LJ5vuxnjQTc0lk5I=
-X-Received: by 2002:a37:61cd:: with SMTP id v196mr21383674qkb.393.1587476855700;
- Tue, 21 Apr 2020 06:47:35 -0700 (PDT)
+        Tue, 21 Apr 2020 09:50:42 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13201 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgDUNul (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:50:41 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9ef9be0000>; Tue, 21 Apr 2020 06:48:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 21 Apr 2020 06:50:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 21 Apr 2020 06:50:41 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
+ 2020 13:50:41 +0000
+Received: from [10.40.201.173] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
+ 2020 13:50:37 +0000
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Vidya Sagar <vidyas@nvidia.com>
+CC:     <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200324191217.1829-1-digetx@gmail.com>
+ <20200324191217.1829-2-digetx@gmail.com>
+ <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
+ <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
+ <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
+ <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
+ <2e99c2f0-4bba-2ea6-dada-3190c0303dcf@nvidia.com>
+ <1a5e5455-597f-7724-f992-32a2492c1e24@nvidia.com>
+X-Nvconfidentiality: public
+From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Message-ID: <f055806b-83ec-612c-9654-0af62feaf9bd@nvidia.com>
+Date:   Tue, 21 Apr 2020 19:19:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
- <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
- <20200421110537.GC5983@pendragon.ideasonboard.com> <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
-In-Reply-To: <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 21 Apr 2020 08:47:23 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLRWdBm24ZmL+muo4Ef8OoxkYPDNo4ksWSrnvmO_89wkA@mail.gmail.com>
-Message-ID: <CAL_JsqLRWdBm24ZmL+muo4Ef8OoxkYPDNo4ksWSrnvmO_89wkA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1a5e5455-597f-7724-f992-32a2492c1e24@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587476926; bh=+KdwucmFE0z3FF/0f3hhnMGhWbDJWnngi7Kzmuk5Zd8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:
+         Content-Transfer-Encoding:Content-Language;
+        b=l3vkA+1FYgsF+YjmBzs+IEFswuFAKLW1MUfYoZ7BvELfx9kSAmiGynbun/kRhmBpn
+         WB4aNn8Jkj1Hcw56oek0wwGSDaj39BJWLGODWHS3Zf9yehFQ79Fu2dnPp7vH5709Rs
+         d1bpkXhQIBj2AZ3TPS7L5Kak7KuXoen+nUGqm1J4QviWbu8M2ABHWmrbDZB7hr2yJG
+         NzuUGKk3/6TJekM+b/AWSp+HsV6SjcYlcCTdI4XNqacBmkwEDNYlyM7UmGJx46aT/W
+         0RWmzFygeS2GotKW5NNgEC6we1KvsbL3s9INW+N/uT/xABxLnPazbDrfbHfJyZJ6zb
+         maG3Xcli2O5GA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 8:16 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi Laurent,
->
-> On Tue, Apr 21, 2020 at 8:05 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > Hi Yamada-san,
-> >
-> > On Tue, Apr 21, 2020 at 07:45:05PM +0900, Masahiro Yamada wrote:
-> > > On Tue, Apr 21, 2020 at 7:08 PM Laurent Pinchart wrote:
-> > > > On Fri, Feb 28, 2020 at 06:37:30PM -0600, Rob Herring wrote:
-> > > > > Most folks only run dt_binding_check on the single schema they care about
-> > > > > by setting DT_SCHEMA_FILES. That means example is only checked against
-> > > > > that one schema which is not always sufficient.
-> > > > >
-> > > > > Let's address this by splitting processed-schema.yaml into 2 files: one
-> > > > > that's always all schemas for the examples and one that's just the schema
-> > > > > in DT_SCHEMA_FILES for dtbs.
-> > > >
-> > > > This broke
-> > > >
-> > > > make DT_SCHEMA_FILES=Documentation/devicetree/.. dt_binding_check
-> > >
-> > > What is intended by
-> > > "DT_SCHEMA_FILES=Documentation/devicetree/.."  ?
-> >
-> > My bad, I forgot to write that ... is the continuation of the string.
-> > It's any yaml schema file that has an example.
->
-> Ah, OK. I just input verbatim.
->
-> Is it broken?
->
-> You can specify any individual file(s) under Documentation/devicetree/bindings/.
->
-> For example, the following worked for me.
 
-Me too.
 
-There is however a bug I just noticed. We're now always setting '-u'
-for dtbs_check which means the core schema are never used.
+On 21-Apr-20 6:38 PM, Jon Hunter wrote:
+>
+> On 21/04/2020 13:39, Manikanta Maddireddy wrote:
+>
+> ...
+>
+>>> I am adding Manikanta to get some feedback on why we moved the PCI
+>>> suspend to the NOIRQ phase because it is not clear to me if we need to
+>>> do this here.
+>>>
+>>> Manikanta, can you comment on whether we really need to suspend Tegra
+>>> PCI during the noirq phase?
+>> PCIe subsystem driver implemented noirq PM callbacks, it will save & restore
+>> endpoint config space in these PM callbacks. PCIe controller should be
+>> available during this time, so noirq PM callbacks are implemented in Tegra
+>> PCIe driver.
+>>
+>> file: drivers/pci/pci-driver.c
+>> static const struct dev_pm_ops pci_dev_pm_ops = {
+>> 	...
+>>         .suspend_noirq = pci_pm_suspend_noirq,
+>>         .resume_noirq = pci_pm_resume_noirq,
+>>         ...
+>> };
+> Thanks, however, it is still not clear why this needs to be done during
+> this phase. When you say PCIe subsystem driver, specifically which
+> driver are you referring too? Are you referring to the
+> pci_pm_suspend_noirq() in the drivers/pci/pci-driver.c driver? If so,
+> just out of curiosity why does this need to be handled in the noirq phase?
 
-Masahiro, Got a better suggestion than adding the ifeq:
+If PCIe device is not in valid state it might cause interrupt issues and
+can lead to system lockup. Please refer to below paper for complete details.
+https://www.kernel.org/doc/ols/2009/ols2009-pages-319-330.pdf
 
-ifeq ("$(origin DT_SCHEMA_FILES)", "command line")
-$(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := -u
-endif
+>
+> Thanks
+> Jon
+>
 
-Rob
