@@ -2,111 +2,72 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB0EC55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 01:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEC9C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 01:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB6D2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 01:52:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JNdxsR9P"
+	by mail.kernel.org (Postfix) with ESMTP id 06621206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 01:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgDUBwv (ORCPT
+        id S1726389AbgDUBxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 21:52:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725829AbgDUBwv (ORCPT
+        Mon, 20 Apr 2020 21:53:37 -0400
+Received: from m176150.mail.qiye.163.com ([59.111.176.150]:16803 "EHLO
+        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbgDUBxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 21:52:51 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBAADC061A0E;
-        Mon, 20 Apr 2020 18:52:50 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 495mmD1y73z9sP7;
-        Tue, 21 Apr 2020 11:52:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587433968;
-        bh=dcUAjJ2YJIPcKjtL3wg3Tuk27IdwMehCCVY6JTOAw1E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JNdxsR9PF+B4CRxWmv3jF7EQ02zp/iKtW9THCtCW9RpWDwZQtjW8U7p80ccJr5hae
-         ggw2Ok0fm3xKBrEOAdtl5I4LSMdXnSwSSIsqp73ezcimqFMT/eUp3OzDn15Yv0pgPH
-         3sEbA40XxqsMLKK5Jb7G+tg+GFqqIBAqI/sRkdrIVh2f32hP+GggeEIeFY3otsmVyZ
-         2sMo0EMGYGt0+PzyaIy4SUGJDfOBnBaVDeO08L252EaWxL9WDz8Hypos1h863ppnzZ
-         XWQGwemazVDpiuCH6SjvSk7sj/ooeOYgwqgVZudsvFiJF0LsMR74xurp7/8DxfBsOe
-         EHyU/6k6NaI3A==
-Date:   Tue, 21 Apr 2020 11:52:41 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: linux-next: manual merge of the drm-misc tree with the
- drm-misc-fixes tree
-Message-ID: <20200421115241.704f2fbf@canb.auug.org.au>
+        Mon, 20 Apr 2020 21:53:36 -0400
+Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
+        by m176150.mail.qiye.163.com (Hmail) with ESMTP id 567F51A2E07;
+        Tue, 21 Apr 2020 09:46:16 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <ACIAcQDuCE8x4hTnQF3SYapx.3.1587433576293.Hmail.luochucheng@vivo.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     alex.shi@linux.alibaba.com, Harry Wei <harryxiyou@gmail.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCB2NixSRVNFTkRdIFRyYW5zbGF0ZSBkZWJ1Z2ZzLnR4dCBpbnRvIENoaW5lc2UgYW5kIGxpbmsgaXQgdG8gdGhlIGluZGV4Lg==?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.226
+In-Reply-To: <20200420171042.66462fe0@lwn.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/q6d+VS6IJMID_hHtC8zLY7g";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Received: from luochucheng@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 21 Apr 2020 09:46:16 +0800 (GMT+08:00)
+From:   =?UTF-8?B?572X5qWa5oiQ?= <luochucheng@vivo.com>
+Date:   Tue, 21 Apr 2020 09:46:16 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VKQklCQkJDSEJMQ0lMSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSElDSkxJTU1NN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6ODI6GCo*Djg#QwNPEy8VKj1IKCIaCwNVSFVKTkNMT0hITkxNT0pCVTMWGhIXVRcOFBgTDhgT
+        HhUcOw0SDRRVGBQWRVlXWRILWUFZTkNVSU5KVUxPVUlJTVlXWQgBWUFITkpONwY+
+X-HM-Tid: 0a719a6a17a993b4kuws567f51a2e07
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/q6d+VS6IJMID_hHtC8zLY7g
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Today's linux-next merge of the drm-misc tree got a conflict in:he drm-misc=
- tree with the drm-misc-fixes tree
-
-  drivers/gpu/drm/tidss/tidss_encoder.c
-
-between commit:
-
-  9da67433f64e ("drm/tidss: fix crash related to accessing freed memory")
-
-from the drm-misc-fixes tree and commit:
-
-  b28ad7deb2f2 ("drm/tidss: Use simple encoder")
-
-from the drm-misc tree.
-
-I fixed it up (I just used the latter version of this file) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/q6d+VS6IJMID_hHtC8zLY7g
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6eUekACgkQAVBC80lX
-0Gz6JAgAkmrmiMLfCI2OjzKabtaC7XpRHlyRj3kBAUcrMAJ5SJyTWqAg0XRSbh4C
-JUNvPZUthTxLKvOgI3JaTD3Ue9/9AkExIAxM5lc6sMG4H5bV+6xAAr0vdkFxW4k4
-EwZ1Ejd3tHr+CTz8X5CB27195yC3vq0TTxhE6F7nXIxr1/VAjL5iJ8eM7jhj6myh
-FtOb7GQxs9rSaa6d85ZiCtop/C1j/e6jccrtNH9XHRM54ppa/7yTwEpSwnnN9Vs9
-kz85bKzuZ+1Lv2z2LQlynykF8WWgclyeJI/S900Dkt1/h4d6b+Q2a2RHCAmwBe98
-lwkK+BQb1YLNEtXWkQ7+MGHswJxSQw==
-=JWOC
------END PGP SIGNATURE-----
-
---Sig_/q6d+VS6IJMID_hHtC8zLY7g--
+ClN1cmUsIEkgd2lsbCBkbyB0aGF0LgoKCgoKRnJvbTogSm9uYXRoYW4gQ29yYmV0IDxjb3JiZXRA
+bHduLm5ldD4KRGF0ZTogMjAyMC0wNC0yMSAwNzoxMDo0MgpUbzogIENodWNoZW5nIEx1byA8bHVv
+Y2h1Y2hlbmdAdml2by5jb20+CkNjOiAgYWxleC5zaGlAbGludXguYWxpYmFiYS5jb20sSGFycnkg
+V2VpIDxoYXJyeXhpeW91QGdtYWlsLmNvbT4sbGludXgtZG9jQHZnZXIua2VybmVsLm9yZyxsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLG9wZW5zb3VyY2Uua2VybmVsQHZpdm8uY29tClN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggdjYsUkVTRU5EXSBUcmFuc2xhdGUgZGVidWdmcy50eHQgaW50byBDaGlu
+ZXNlIGFuZCBsaW5rIGl0IHRvIHRoZSBpbmRleC4+T24gV2VkLCAgOCBBcHIgMjAyMCAxMDoxNTox
+OCArMDgwMAo+Q2h1Y2hlbmcgTHVvIDxsdW9jaHVjaGVuZ0B2aXZvLmNvbT4gd3JvdGU6Cj4KPj4g
+VHJhbnNsYXRlIERvY3VtZW50YXRpb24vZmlsZXN5c3RlbXMvZGVidWdmcy50eHQgaW50byBDaGlu
+ZXNlLgo+PiAKPj4gU2lnbmVkLW9mZi1ieTogQ2h1Y2hlbmcgTHVvIDxsdW9jaHVjaGVuZ0B2aXZv
+LmNvbT4KPj4gLS0tCj4+IENoYW5nZWxvZzoKPj4gdjY6Cj4+ICAtIGtlZXAgZWFjaCBsaW5lIGxl
+c3MgdGhhbiA4MCBjaGFycywgYnV0IGFsc28ga2VlcCBlYWNoIGxpbmUgZnVsbAo+PiAgLSByZW1v
+dmUgcmVkdW5kYW50ICc9JyBpbiBjYXB0aW9uIGFuZCBhbGwgb3RoZXIgc3ViaGVhZGluZ3MKPj4g
+IC0gc2VuZCB0aGUgcGF0Y2ggd2l0aCAnY2hhcnNldD1VVEYtOCcKPgo+SSB3ZW50IHRvIGFwcGx5
+IHRoaXMganVzdCBub3csIGJ1dCBubyBzdWNoIGx1Y2s7IHRoaXMgcGF0Y2ggdHJpZXMgdG8KPmNy
+ZWF0ZSBhbiBpbmRleC5yc3QgZmlsZSwgYnV0IGl0J3MgYWxyZWFkeSB0aGVyZSBkdWUgdG8gYW5v
+dGhlciBwYXRjaCB0aGF0Cj53ZW50IGluIGp1c3Qgb3ZlciBhIG1vbnRoIGFnby4gIEkgcmVhbGx5
+IGRvbid0IHdhbnQgdG8gdHJ5IHRvIHJlc29sdmUgYQo+bWVyZ2UgY29uZmxpY3QgaW4gYSBmaWxl
+IEkgY2FuJ3QgcmVhZC4uLmNvdWxkIEkgYXNrIHlvdSwgcGxlYXNlLCB0byByZWJhc2UKPnRoaXMg
+cGF0Y2ggb24gdG9wIG9mIGN1cnJlbnQgZG9jcy1uZXh0LCB0aGVuIHN1Ym1pdCBvbmUgbW9yZSB0
+aW1lPwo+Cj5UaGFua3MsCj4KPmpvbgoNCg0K
