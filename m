@@ -2,143 +2,168 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD24C55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BAAC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3776720656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D512320656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XONVh23/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgDUOda (ORCPT
+        id S1729377AbgDUOdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:33:30 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33942 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729174AbgDUOd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:33:28 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 36298267342B093BC7CE;
-        Tue, 21 Apr 2020 22:33:21 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Apr 2020
- 22:33:11 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lucien.xin@gmail.com>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] xfrm: policy: Only use mark as policy lookup key
-Date:   Tue, 21 Apr 2020 22:31:49 +0800
-Message-ID: <20200421143149.45108-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 21 Apr 2020 10:33:36 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:10368 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729054AbgDUOdc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:33:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587479612; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=LKhdSg28NnR3I8OZVDPXHKTM1A7Z4ruLmGkZBwTex78=; b=XONVh23/PIPdLRHzuZvIiUZOK7spc/9rDQLATlKs0dGYDlzuDv4NzpGAzGUyDdY78dOzmDhD
+ QKY1oprx7LUJBWiwSzSM1K/p7IEcu69vnjxjflNCb1viC3ILPlyxLTD8Wshf9D6m5+RuKYzB
+ qLIvio9IJ5r94Ll9A4rAwMgkGuY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9f042c.7f7cc6e7c0a0-smtp-out-n02;
+ Tue, 21 Apr 2020 14:33:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AAC38C38567; Tue, 21 Apr 2020 14:33:14 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11FAEC43636;
+        Tue, 21 Apr 2020 14:33:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 11FAEC43636
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        evgreen@chromium.org, ohad@wizery.com, mka@chromium.org,
+        dianders@chromium.org, devicetree@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v2 7/7] arm64: dts: qcom: sc7180: Update Q6V5 MSS node
+Date:   Tue, 21 Apr 2020 20:02:28 +0530
+Message-Id: <20200421143228.8981-8-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200421143228.8981-1-sibis@codeaurora.org>
+References: <20200421143228.8981-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While update xfrm policy as follow:
+Add TCSR node and update MSS node to support MSA based Modem boot on
+SC7180 SoCs.
 
-ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
- priority 1 mark 0 mask 0x10
-ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
- priority 2 mark 0 mask 0x00
-ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
- priority 2 mark 0 mask 0x10
-
-We get this warning:
-
-WARNING: CPU: 0 PID: 4808 at net/xfrm/xfrm_policy.c:1548
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 4808 Comm: ip Not tainted 5.7.0-rc1+ #151
-Call Trace:
-RIP: 0010:xfrm_policy_insert_list+0x153/0x1e0
- xfrm_policy_inexact_insert+0x70/0x330
- xfrm_policy_insert+0x1df/0x250
- xfrm_add_policy+0xcc/0x190 [xfrm_user]
- xfrm_user_rcv_msg+0x1d1/0x1f0 [xfrm_user]
- netlink_rcv_skb+0x4c/0x120
- xfrm_netlink_rcv+0x32/0x40 [xfrm_user]
- netlink_unicast+0x1b3/0x270
- netlink_sendmsg+0x350/0x470
- sock_sendmsg+0x4f/0x60
-
-Policy C and policy A has the same mark.v and mark.m, so policy A is
-matched in first round lookup while updating C. However policy C and
-policy B has same mark and priority, which also leads to matched. So
-the WARN_ON is triggered.
-
-xfrm policy lookup should only be matched when the found policy has the
-same lookup keys (mark.v & mark.m) no matter priority.
-
-Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- net/xfrm/xfrm_policy.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-index 297b2fd..67d0469 100644
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -1436,13 +1436,7 @@ static void xfrm_policy_requeue(struct xfrm_policy *old,
- static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
- 				   struct xfrm_policy *pol)
- {
--	u32 mark = policy->mark.v & policy->mark.m;
--
--	if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
--		return true;
--
--	if ((mark & pol->mark.m) == pol->mark.v &&
--	    policy->priority == pol->priority)
-+	if ((policy->mark.v & policy->mark.m) == (pol->mark.v & pol->mark.m))
- 		return true;
+V2:
+ * use memory-region to reference mba/mpss regions [Bjorn]
+ * overload the base remoteproc_mpss node wherever possible [Bjorn]
+
+Depends on the following bindings:
+iommus: https://patchwork.kernel.org/patch/11499603/
+spare-regs: https://patchwork.kernel.org/patch/11491425/
+
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28 +++++++++++++++++++++----
+ 2 files changed, 31 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 5405cde1a32ef..08f1f04cca734 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -309,6 +309,13 @@ &qupv3_id_1 {
+ 	status = "okay";
+ };
  
- 	return false;
-@@ -1628,7 +1622,7 @@ int xfrm_policy_insert(int dir, struct xfrm_policy *policy, int excl)
- 	hlist_for_each_entry(pol, chain, bydst) {
- 		if (pol->type == type &&
- 		    pol->if_id == if_id &&
--		    (mark & pol->mark.m) == pol->mark.v &&
-+		    mark == (pol->mark.m & pol->mark.v) &&
- 		    !selector_cmp(sel, &pol->selector) &&
- 		    xfrm_sec_ctx_match(ctx, pol->security))
- 			return pol;
-@@ -1726,7 +1720,7 @@ struct xfrm_policy *xfrm_policy_byid(struct net *net, u32 mark, u32 if_id,
- 	hlist_for_each_entry(pol, chain, byidx) {
- 		if (pol->type == type && pol->index == id &&
- 		    pol->if_id == if_id &&
--		    (mark & pol->mark.m) == pol->mark.v) {
-+		    mark == (pol->mark.m & pol->mark.v)) {
- 			xfrm_pol_hold(pol);
- 			if (delete) {
- 				*err = security_xfrm_policy_delete(
-@@ -1898,7 +1892,7 @@ static int xfrm_policy_match(const struct xfrm_policy *pol,
++&remoteproc_mpss {
++	status = "okay";
++	compatible = "qcom,sc7180-mss-pil";
++	iommus = <&apps_smmu 0x460 0x1>, <&apps_smmu 0x444 0x3>;
++	memory-region = <&mba_mem &mpss_mem>;
++};
++
+ &sdhc_1 {
+ 	status = "okay";
  
- 	if (pol->family != family ||
- 	    pol->if_id != if_id ||
--	    (fl->flowi_mark & pol->mark.m) != pol->mark.v ||
-+	    fl->flowi_mark != (pol->mark.m & pol->mark.v) ||
- 	    pol->type != type)
- 		return ret;
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 94cead96eade0..5e2618eb1b7fa 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -932,6 +932,11 @@ tcsr_mutex_regs: syscon@1f40000 {
+ 			reg = <0 0x01f40000 0 0x40000>;
+ 		};
  
-@@ -2177,7 +2171,7 @@ static struct xfrm_policy *xfrm_sk_policy_lookup(const struct sock *sk, int dir,
++		tcsr_regs: syscon@1fc0000 {
++			compatible = "syscon";
++			reg = <0 0x01fc0000 0 0x40000>;
++		};
++
+ 		tlmm: pinctrl@3500000 {
+ 			compatible = "qcom,sc7180-pinctrl";
+ 			reg = <0 0x03500000 0 0x300000>,
+@@ -1325,7 +1330,8 @@ pinconf-sd-cd {
  
- 		match = xfrm_selector_match(&pol->selector, fl, family);
- 		if (match) {
--			if ((sk->sk_mark & pol->mark.m) != pol->mark.v ||
-+			if (sk->sk_mark != (pol->mark.m & pol->mark.v) ||
- 			    pol->if_id != if_id) {
- 				pol = NULL;
- 				goto out;
+ 		remoteproc_mpss: remoteproc@4080000 {
+ 			compatible = "qcom,sc7180-mpss-pas";
+-			reg = <0 0x04080000 0 0x4040>;
++			reg = <0 0x04080000 0 0x4040>, <0 0x04180000 0 0x48>;
++			reg-names = "qdsp6", "rmb";
+ 
+ 			interrupts-extended = <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
+ 					      <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+@@ -1336,19 +1342,33 @@ remoteproc_mpss: remoteproc@4080000 {
+ 			interrupt-names = "wdog", "fatal", "ready", "handover",
+ 					  "stop-ack", "shutdown-ack";
+ 
+-			clocks = <&rpmhcc RPMH_CXO_CLK>;
+-			clock-names = "xo";
++			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
++				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
++				 <&gcc GCC_MSS_NAV_AXI_CLK>,
++				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
++				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "iface", "bus", "nav", "snoc_axi",
++				      "mnoc_axi", "xo";
+ 
+ 			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
+ 					<&rpmhpd SC7180_CX>,
++					<&rpmhpd SC7180_MX>,
+ 					<&rpmhpd SC7180_MSS>;
+-			power-domain-names = "load_state", "cx", "mss";
++			power-domain-names = "load_state", "cx", "mx", "mss";
+ 
+ 			memory-region = <&mpss_mem>;
+ 
+ 			qcom,smem-states = <&modem_smp2p_out 0>;
+ 			qcom,smem-state-names = "stop";
+ 
++			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
++				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
++			reset-names = "mss_restart", "pdc_reset";
++
++			qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
++			qcom,spare-regs = <&tcsr_regs 0xb3e4>;
++
+ 			status = "disabled";
+ 
+ 			glink-edge {
 -- 
-1.8.3.1
-
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
