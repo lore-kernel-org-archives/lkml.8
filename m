@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CDDC55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86694C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C15C20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633F020679
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Dc7tnhC/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="qECgxPjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgDUKlp (ORCPT
+        id S1728689AbgDUKly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 06:41:45 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:43664 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728641AbgDUKlm (ORCPT
+        Tue, 21 Apr 2020 06:41:54 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:49903 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728510AbgDUKlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 06:41:42 -0400
+        Tue, 21 Apr 2020 06:41:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587465702; x=1619001702;
+  t=1587465713; x=1619001713;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=gv5Lsc85B7UueiihmbfMJuLvnyb5NxOjx9cvOi+K248=;
-  b=Dc7tnhC/3T9RrvQxmAN5ugbQFM4OTtG4f0bNiVgMjFa8QH35RIvAnUyO
-   X0yYtQeWswujAdewksckRMWVHEqXnpm/MW+yVFmlQKm0CWTH/WDR1dIe9
-   3VAJjt88wD19DuKLTaLAqiXQ6QpiE4OuORAptt1K1kMNsBeDSykvk/HaZ
-   DPTssdQ75yY162Ndf3L1aWLTTjvlF0I5wsgjtFkTtcegOPSiJwpoYfrjU
-   kgd+b8zQZVXwZRGEW6lhhNZI+f5HHKv12tbik7ZLuDlpzSXUSiXhX2vRq
-   LngPOQeO4FDiOU+qO/yUFDF4zBDCSwl5vVK57X69dG+/tLN/iVSeg9aeK
-   A==;
-IronPort-SDR: DqULQALe3xii32QRWPr9i8FdEdr9EIjmSEFEw9ooFrCGmo5krMhayLY0zrRdXU8JWk2c6x9jYz
- 12JrPxxwD+c2kZDbk2aZiYSnuNDts94fCT2wM1lTlkb5zr/WI3fTKQmc7SmgeAod79/YNs39Gj
- p3W6B1Hntqza+r+YKooru7a69p6Ca8WY59aiDaaUKTi3szjjhks86VNcw99Bmdn2RKv9SzTF83
- v/JDRTpp+T70kU49p0H8oYMcUDAMKtxCFHAHXzd74X4Ca0TXR27syPQM8l9GyfoPKfh5Fgs658
- 0Kk=
+  bh=TztiFxj6Z+X7Jvou8xEXYwVYRRAwnN1c+02Sl4F7ae8=;
+  b=qECgxPjIG5HiYltm7TD1wDKR6+xpmy/jSmu8048xE1EQJZW0y4Aa0wlv
+   KeYDZKqETURL8Hau7UQ8zuS1omvCxl2jUyUzzPRVUeqanZRS6TSDq1glt
+   rRLts+eM/ctsXd1zvccAT/z5jul34AgHQdYNB7Fwgx+0QpT98w6OLX7T9
+   CfGQCqDdRsRfnrkqV1ahBEmH4vqYxq+BDEHMtK7VONtDkz1VxqA+LO9Zq
+   A98Oet/ps1UXaflIF+HAld/KVfqNmAhTQ0Lp3eHa4AK6cyqbjNjjlPGXh
+   0MAveJG82yhFzMKMYRX2eBU0EYro42JFR5gCqyro64cZ0OiLxGTw4hUH9
+   g==;
+IronPort-SDR: 8n0nT7x0fnPmC3HBXMsPZGR9y8V2byVNe++dtzsAvZovsV35htCiHqk/1VyUCChy136/NkiNyN
+ RiqQBbUcGU3It9C2y/P3pGyUlkhhOC1Ew7p1hioUqsIzJgfu/XZ929qw8O1CsgStqrBhAZzPZ2
+ R7gSavMtdKvuolQ9e6c6LdES7tA6A8/cvp0dw8h8hmOGRBde9iH2cs6P5h9q/DkaEKfN4m05VZ
+ n16/kNMAIqIC0QwUXUcCBtZKNM8lV1rNsNNfQBUEBy+fgn2J2Sy7TQqWOL+8hwfB27N8fcqvED
+ ipg=
 X-IronPort-AV: E=Sophos;i="5.72,410,1580799600"; 
-   d="scan'208";a="74019557"
+   d="scan'208";a="73257510"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Apr 2020 03:41:40 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Apr 2020 03:41:52 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 21 Apr 2020 03:41:40 -0700
+ 15.1.1713.5; Tue, 21 Apr 2020 03:41:54 -0700
 Received: from ness.microchip.com (10.10.115.15) by chn-vm-ex01.mchp-main.com
  (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 21 Apr 2020 03:41:39 -0700
+ Transport; Tue, 21 Apr 2020 03:41:49 -0700
 From:   <nicolas.ferre@microchip.com>
 To:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
         "Claudiu Beznea" <claudiu.beznea@microchip.com>,
@@ -63,9 +63,9 @@ CC:     <linux-kernel@vger.kernel.org>,
         <f.fainelli@gmail.com>, <linux@armlinux.org.uk>, <andrew@lunn.ch>,
         <michal.simek@xilinx.com>,
         Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH v2 3/7] net: macb: fix macb_get/set_wol() when moving to phylink
-Date:   Tue, 21 Apr 2020 12:41:00 +0200
-Message-ID: <77a2227ac02b432f42ed454e1ad94e15863ae2ff.1587463802.git.nicolas.ferre@microchip.com>
+Subject: [PATCH v2 5/7] net: macb: fix call to pm_runtime in the suspend/resume functions
+Date:   Tue, 21 Apr 2020 12:41:02 +0200
+Message-ID: <1c537d1287aaf57b8b20a923686dbb551e1727f0.1587463802.git.nicolas.ferre@microchip.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1587463802.git.nicolas.ferre@microchip.com>
 References: <cover.1587463802.git.nicolas.ferre@microchip.com>
@@ -79,64 +79,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-Keep previous function goals and integrate phylink actions to them.
+The calls to pm_runtime_force_suspend/resume() functions are only
+relevant if the device is not configured to act as a WoL wakeup source.
+Add the device_may_wakeup() test before calling them.
 
-phylink_ethtool_get_wol() is not enough to figure out if Ethernet driver
-supports Wake-on-Lan.
-Initialization of "supported" and "wolopts" members is done in phylink
-function, no need to keep them in calling function.
-
-phylink_ethtool_set_wol() return value is not enough to determine
-if WoL is enabled for the calling Ethernet driver. Call it first
-but don't rely on its return value as most of simple PHY drivers
-don't implement a set_wol() function.
-
-Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+Fixes: 3e2a5e153906 ("net: macb: add wake-on-lan support via magic packet")
 Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
 Cc: Harini Katakam <harini.katakam@xilinx.com>
-Cc: Antoine Tenart <antoine.tenart@bootlin.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Sergio Prado <sergio.prado@e-labworks.com>
 Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+Changes in v2:
+- new in v2 serries
+
+ drivers/net/ethernet/cadence/macb_main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 629660d9f17e..b17a33c60cd4 100644
+index 72b8983a763a..8cf8e21fbb07 100644
 --- a/drivers/net/ethernet/cadence/macb_main.c
 +++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -2813,21 +2813,23 @@ static void macb_get_wol(struct net_device *netdev, struct ethtool_wolinfo *wol)
- {
- 	struct macb *bp = netdev_priv(netdev);
+@@ -4564,7 +4564,8 @@ static int __maybe_unused macb_suspend(struct device *dev)
  
--	wol->supported = 0;
--	wol->wolopts = 0;
--
--	if (bp->wol & MACB_WOL_HAS_MAGIC_PACKET)
-+	if (bp->wol & MACB_WOL_HAS_MAGIC_PACKET) {
- 		phylink_ethtool_get_wol(bp->phylink, wol);
-+		wol->supported |= WAKE_MAGIC;
-+
-+		if (bp->wol & MACB_WOL_ENABLED)
-+			wol->wolopts |= WAKE_MAGIC;
-+	}
+ 	if (bp->ptp_info)
+ 		bp->ptp_info->ptp_remove(netdev);
+-	pm_runtime_force_suspend(dev);
++	if (!(device_may_wakeup(dev)))
++		pm_runtime_force_suspend(dev);
+ 
+ 	return 0;
  }
+@@ -4579,7 +4580,8 @@ static int __maybe_unused macb_resume(struct device *dev)
+ 	if (!netif_running(netdev))
+ 		return 0;
  
- static int macb_set_wol(struct net_device *netdev, struct ethtool_wolinfo *wol)
- {
- 	struct macb *bp = netdev_priv(netdev);
--	int ret;
+-	pm_runtime_force_resume(dev);
++	if (!(device_may_wakeup(dev)))
++		pm_runtime_force_resume(dev);
  
--	ret = phylink_ethtool_set_wol(bp->phylink, wol);
--	if (!ret)
--		return 0;
-+	/* Pass the order to phylink layer.
-+	 * Don't test return value as set_wol() is often not supported.
-+	 */
-+	phylink_ethtool_set_wol(bp->phylink, wol);
- 
- 	if (!(bp->wol & MACB_WOL_HAS_MAGIC_PACKET) ||
- 	    (wol->wolopts & ~WAKE_MAGIC))
+ 	if (bp->wol & MACB_WOL_ENABLED) {
+ 		macb_writel(bp, IDR, MACB_BIT(WOL));
 -- 
 2.20.1
 
