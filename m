@@ -2,64 +2,121 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A147EC55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA46BC55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B76E20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0282070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:07:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587460031;
+	bh=2A48sj6HXbjIfHRVn+3vDrEazdldwyY/scu4++J1oXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SW0kA4Z/DwN0eCy15sYK7cnIBnU79taWWdbBMdnWVdN+oP8ArpeBJCcoW1rdThd6b
+	 WcOgz2KlJL9gFdxk0pT7qDh6S7GcgjJgHU8FzOHDszcATsJ5TIygNI5NhRP4Lyr0iw
+	 JPXpmUo+Z7tHpBLZS7rrIqtD+auvyz7Ji8/kj/XI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgDUJFT (ORCPT
+        id S1728119AbgDUJHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:05:19 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:34924 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726095AbgDUJFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:05:19 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT2knt55emXsqAA--.36S2;
-        Tue, 21 Apr 2020 17:04:40 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 0/3] MIPS: Fix some issues about arch_mem_init()
-Date:   Tue, 21 Apr 2020 17:04:26 +0800
-Message-Id: <1587459869-12183-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxT2knt55emXsqAA--.36S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYo7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87
-        Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-        6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72
-        CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
-        MxkIecxEwVAFwVW8uwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
-        026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
-        JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
-        vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2
-        jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-        ZFpf9x0JU4KZXUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 21 Apr 2020 05:07:11 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39059 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbgDUJHK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 05:07:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b11so15543815wrs.6;
+        Tue, 21 Apr 2020 02:07:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OApgUDHOmjUQMN+Xg9vaPzXx/XkuJ1d8P0kWX1KFmuo=;
+        b=HIGNg2v6TN1WDPb3O0zMnn0NQ3YiXRXpZOn3eIoHv+mXdqqyHtBes3YG8xu2egZl3j
+         eLFYXOgakX0/5R1C5HSKRHxsenNhG7QgZ4QQ0O/A6ZImwakfMEzpCnjdd02VYb4TSL2M
+         IfEOErNqGsAyo8fyRasIR/AZfsymvG/EC3nCrDOxWxxCTFybOrvuPs5HrLv1tB4QRgou
+         ibuYf5ptHcQHx6wnVo2psPNLO/BjZM453ZdRIZwEla4+Bp0bGcezOIt8oUPcq2vq9yZK
+         AjACrQ6AdRSfUX0hE69xvEAOGIrwMiPOGXob1ezmbziwKYLzgMeKaOJMgKHTslDFxgeq
+         qYpA==
+X-Gm-Message-State: AGi0PuZUBQCy5Tm549iW5eenbXnORr3B//p6ciX79Ldx6je8U/hMkkG9
+        2RSBzfxhdZbPCe9ckglWX+m5qsSW
+X-Google-Smtp-Source: APiQypLmq7hNT2lRAkk8C/XtVOSchv0MAtJmj05a6Q93atotAeok+5HKF5GhyiNx7W7SS2ry0KWHkQ==
+X-Received: by 2002:adf:ab18:: with SMTP id q24mr19382949wrc.214.1587460028014;
+        Tue, 21 Apr 2020 02:07:08 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id k184sm2655942wmf.9.2020.04.21.02.07.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 02:07:06 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 10:07:04 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/1] Drivers: hv: Move AEOI determination to architecture
+ dependent code
+Message-ID: <20200421090704.gypbtaiplde7ebbq@debian>
+References: <20200420164926.24471-1-mikelley@microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420164926.24471-1-mikelley@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tiezhu Yang (3):
-  MIPS: Do not initialise globals to 0
-  MIPS: Cleanup code about plat_mem_setup()
-  MIPS: Reduce possibility of kernel panic under CONFIG_SWIOTLB
+On Mon, Apr 20, 2020 at 09:49:26AM -0700, Michael Kelley wrote:
+> Hyper-V on ARM64 doesn't provide a flag for the AEOI recommendation
+> in ms_hyperv.hints, so having the test in architecture independent
+> code doesn't work. Resolve this by moving the check of the flag
+> to an architecture dependent helper function. No functionality is
+> changed.
+> 
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 
- arch/mips/include/asm/bootinfo.h |  2 +-
- arch/mips/kernel/setup.c         | 14 +++++++++++---
- 2 files changed, 12 insertions(+), 4 deletions(-)
+Applied to hyperv-fixes. Thanks.
 
--- 
-2.1.0
-
+> ---
+>  arch/x86/include/asm/mshyperv.h | 2 ++
+>  drivers/hv/hv.c                 | 6 +-----
+>  2 files changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index 1c42ecbe75cb..d30805ed323e 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -35,6 +35,8 @@ typedef int (*hyperv_fill_flush_list_func)(
+>  	rdmsrl(HV_X64_MSR_SINT0 + int_num, val)
+>  #define hv_set_synint_state(int_num, val) \
+>  	wrmsrl(HV_X64_MSR_SINT0 + int_num, val)
+> +#define hv_recommend_using_aeoi() \
+> +	(!(ms_hyperv.hints & HV_DEPRECATING_AEOI_RECOMMENDED))
+>  
+>  #define hv_get_crash_ctl(val) \
+>  	rdmsrl(HV_X64_MSR_CRASH_CTL, val)
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index 6098e0cbdb4b..533c8b82b344 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -184,11 +184,7 @@ void hv_synic_enable_regs(unsigned int cpu)
+>  
+>  	shared_sint.vector = HYPERVISOR_CALLBACK_VECTOR;
+>  	shared_sint.masked = false;
+> -	if (ms_hyperv.hints & HV_DEPRECATING_AEOI_RECOMMENDED)
+> -		shared_sint.auto_eoi = false;
+> -	else
+> -		shared_sint.auto_eoi = true;
+> -
+> +	shared_sint.auto_eoi = hv_recommend_using_aeoi();
+>  	hv_set_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
+>  
+>  	/* Enable the global synic bit */
+> -- 
+> 2.18.2
+> 
