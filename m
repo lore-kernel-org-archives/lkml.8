@@ -2,98 +2,244 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83637C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D28C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 547C5206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:03:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bYm640oe"
+	by mail.kernel.org (Postfix) with ESMTP id 4E03A206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDUVDf (ORCPT
+        id S1726261AbgDUVGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725850AbgDUVDe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 17:03:34 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB8CC0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:03:34 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id i16so34333ybq.9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D01UCKv/MItQguC8mrAilu88fpXx1W32uPOZRB3PJZw=;
-        b=bYm640oeAhVA9NCZK2CCkb7t+VHMSBtBdHc230ZONtXxPm6MZiX5XvVPs8HaO2dWtu
-         27oqBNPDjPru7rEjMPUxcfNoLx/hERJNnPAI327ME2uQLv6xbAWEULPfUZjkDvqWG5fg
-         mcDCZcEQLgfvv0lG4j4GSmu5vkqKYta7aAF6dXIdj5+RsMxaYWYvu/LBG2I46AhLwcga
-         QJNMyOa3+qK9uGrd1WZEViqP7edeGBY5pw98RZnzwCvx8/TRVWKDCSRXXwZx2wpca0S/
-         JSAyA9M7ePLvVvrCfSZ1pnvqdRT3xMvZZdZXyjvj4JW/ipQ5SyVItafXOCTe7dAOtJCc
-         N4pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D01UCKv/MItQguC8mrAilu88fpXx1W32uPOZRB3PJZw=;
-        b=YVy/lc9GtDQFBCPQguSVmlR4dnkFHXEYDJWuaN70gsfsS7SIQlQKW6/Azsp9WV5Ukt
-         mqR/bAl2PRkpDjhuvKKNPv9xPPn/kBFFsYSoRdljzbqHbwuxeXSEnpr9u6hyMvpgp4gC
-         zX0CEiNo/qXCAkDUdJcp2LuyKE3e1stNAV2uUotiogJ3/keOTwfcctClwTv88TVhXXIM
-         sAB3Z1HDA+PUJV407bQ2kcwY6JCiEsTDuEK/000HIxhJf6DvB/gDL8X6GGIfYclREbT9
-         njPXanExcdRf95wbafeybxCTVD19Z0vOXGExqW/ouFAvE1l4N81s5qsj5Ajd96EF7ezY
-         BRmA==
-X-Gm-Message-State: AGi0PuY8JzM/EIfB12MsO5J/zrR2vWPXUNDrYDhNTV0bqPSKgTJEv/3v
-        4KImdbxKx+ZngbMwwlZ1B4j0MDY290GZlz4Vg3ObEA==
-X-Google-Smtp-Source: APiQypLtN97fWtQ1tE6aTvwjmihM5lZ2075m+3KltJR1tPsePNmOSac2Wq+aX/nXHf+0gAdo3xFjvesh5VyBQdhlKtM=
-X-Received: by 2002:a25:4443:: with SMTP id r64mr29908611yba.41.1587503013619;
- Tue, 21 Apr 2020 14:03:33 -0700 (PDT)
+        Tue, 21 Apr 2020 17:06:16 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28010 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbgDUVGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 17:06:16 -0400
+IronPort-SDR: lOhI0e8OcXG212Kq0E0NuZhH3vLTKYq5qgiCXMVQR54xFNZ78zjQFBShZvKjIsvjawu1DreW3C
+ onaJLfqrUfqw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 14:06:14 -0700
+IronPort-SDR: 2CCZkszox3eLfft6skKgsMLCysekRUQChTi8gMQDFijz0K7gNcG2u2vyC9DV8GUDk75cR7sPbU
+ ogHM84hCGDZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
+   d="scan'208";a="291722870"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga008.jf.intel.com with ESMTP; 21 Apr 2020 14:06:14 -0700
+Date:   Tue, 21 Apr 2020 14:06:14 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     ira.weiny@intel.comg, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V9 05/11] fs/xfs: Make DAX mount option a tri-state
+Message-ID: <20200421210613.GA3372712@iweiny-DESK2.sc.intel.com>
+References: <20200421191754.3372370-1-ira.weiny@intel.com>
+ <20200421191754.3372370-6-ira.weiny@intel.com>
+ <20200421201641.GA6742@magnolia>
 MIME-Version: 1.0
-References: <20200420190916.GA11695@gmail.com> <CAHk-=wiejBvKnrDysDva=DNFgyX02TZred_JMjzUnjFgVOUtOg@mail.gmail.com>
-In-Reply-To: <CAHk-=wiejBvKnrDysDva=DNFgyX02TZred_JMjzUnjFgVOUtOg@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 21 Apr 2020 14:03:22 -0700
-Message-ID: <CAP-5=fVhWREzzjnXH4j+dcnP-GbSMnT_07qVrZM8huAhx6wtVw@mail.gmail.com>
-Subject: Re: [GIT PULL] clang-format for v5.7-rc3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421201641.GA6742@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 12:10 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Mon, Apr 20, 2020 at 12:09 PM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
-> >
-> >  - Don't indent C++ namespaces (Ian Rogers)
->
-> I've taken this, since it doesn't matter, but I'm wondering at the
-> motivation for it (exactly because it shouldn't matter).
+On Tue, Apr 21, 2020 at 01:16:41PM -0700, Darrick J. Wong wrote:
+> On Tue, Apr 21, 2020 at 12:17:47PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > As agreed upon[1].  We make the dax mount option a tri-state.  '-o dax'
+> > continues to operate the same.  We add 'always', 'never', and 'inode'
+> > (default).
+> > 
+> > [1] https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from v8:
+> > 	Move NEVER bit to 27
+> > 	Use xfs signature style
+> > 	use xfs_dax_mode enum
+> > 
+> > Changes from v7:
+> > 	Change to XFS_MOUNT_DAX_NEVER
+> > 
+> > Changes from v6:
+> > 	Use 2 flag bits rather than a field.
+> > 	change iflag to inode
+> > 
+> > Changes from v5:
+> > 	New Patch
+> > ---
+> >  fs/xfs/xfs_mount.h |  1 +
+> >  fs/xfs/xfs_super.c | 51 ++++++++++++++++++++++++++++++++++++++++++----
+> >  2 files changed, 48 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> > index f6123fb0113c..37bfb50db809 100644
+> > --- a/fs/xfs/xfs_mount.h
+> > +++ b/fs/xfs/xfs_mount.h
+> > @@ -238,6 +238,7 @@ typedef struct xfs_mount {
+> >  						   allocator */
+> >  #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
+> >  #define XFS_MOUNT_DAX_ALWAYS	(1ULL << 26)
+> > +#define XFS_MOUNT_DAX_NEVER	(1ULL << 27)
+> >  
+> >  /*
+> >   * Max and min values for mount-option defined I/O
+> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> > index ce169d1c7474..0d0f74786799 100644
+> > --- a/fs/xfs/xfs_super.c
+> > +++ b/fs/xfs/xfs_super.c
+> > @@ -47,6 +47,39 @@ static struct kset *xfs_kset;		/* top-level xfs sysfs dir */
+> >  static struct xfs_kobj xfs_dbg_kobj;	/* global debug sysfs attrs */
+> >  #endif
+> >  
+> > +enum xfs_dax_mode {
+> > +	XFS_DAX_INODE = 0,
+> > +	XFS_DAX_ALWAYS = 1,
+> > +	XFS_DAX_NEVER = 2,
+> > +};
+> > +
+> > +static void
+> > +xfs_mount_set_dax_mode(
+> > +	struct xfs_mount *mp,
+> > +	enum xfs_dax_mode mode)
+> 
+> Indent between the type name and the variable name, please.
+> 
+> static void
+> xfs_mount_set_dax_mode(
+> 	struct xfs_mount	*mp,
+> 	enum xfs_dax_mode	mode)
 
-Hi Linus!
+Done.
 
-We (Google, Stephane Eranian, ..) have a tool that converts Intel's
-topdown metrics:
-https://download.01.org/perfmon/TMA_Metrics.xlsx
-into the json format used for metrics in perf. It is written in C++
-and we are planning to upstream it. In C++ there is preference for
-anonymous namespaces over static functions and the namespace
-indentation was pretty annoying for this. There's a little more
-motivation in the commit message too.
+> 
+> > +{
+> > +	switch (mode) {
+> > +		case XFS_DAX_INODE:
+> > +			mp->m_flags &= ~(XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER);
+> > +			break;
+> > +		case XFS_DAX_ALWAYS:
+> > +			mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
+> > +			mp->m_flags &= ~XFS_MOUNT_DAX_NEVER;
+> > +			break;
+> > +		case XFS_DAX_NEVER:
+> > +			mp->m_flags |= XFS_MOUNT_DAX_NEVER;
+> > +			mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
+> > +			break;
+> 
+> You can skip one level of indentation, e.g.
+> 
+> 	switch (mode) {
+> 	case XFS_DAX_INODE:
+> 		mp->m_flags &= ~(XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER);
+> 		break;
 
-Thanks,
-Ian Rogers
+done.
 
->                    Linus
+> 
+> > +	}
+> > +}
+> > +
+> > +static const struct constant_table dax_param_enums[] = {
+> > +	{"inode",	XFS_DAX_INODE },
+> > +	{"always",	XFS_DAX_ALWAYS },
+> > +	{"never",	XFS_DAX_NEVER },
+> > +	{}
+> > +};
+> > +
+> >  /*
+> >   * Table driven mount option parser.
+> >   */
+> > @@ -59,7 +92,7 @@ enum {
+> >  	Opt_filestreams, Opt_quota, Opt_noquota, Opt_usrquota, Opt_grpquota,
+> >  	Opt_prjquota, Opt_uquota, Opt_gquota, Opt_pquota,
+> >  	Opt_uqnoenforce, Opt_gqnoenforce, Opt_pqnoenforce, Opt_qnoenforce,
+> > -	Opt_discard, Opt_nodiscard, Opt_dax,
+> > +	Opt_discard, Opt_nodiscard, Opt_dax, Opt_dax_enum,
+> >  };
+> >  
+> >  static const struct fs_parameter_spec xfs_fs_parameters[] = {
+> > @@ -103,6 +136,7 @@ static const struct fs_parameter_spec xfs_fs_parameters[] = {
+> >  	fsparam_flag("discard",		Opt_discard),
+> >  	fsparam_flag("nodiscard",	Opt_nodiscard),
+> >  	fsparam_flag("dax",		Opt_dax),
+> > +	fsparam_enum("dax",		Opt_dax_enum, dax_param_enums),
+> >  	{}
+> >  };
+> >  
+> > @@ -129,7 +163,6 @@ xfs_fs_show_options(
+> >  		{ XFS_MOUNT_GRPID,		",grpid" },
+> >  		{ XFS_MOUNT_DISCARD,		",discard" },
+> >  		{ XFS_MOUNT_LARGEIO,		",largeio" },
+> > -		{ XFS_MOUNT_DAX_ALWAYS,		",dax" },
+> >  		{ 0, NULL }
+> >  	};
+> >  	struct xfs_mount	*mp = XFS_M(root->d_sb);
+> > @@ -185,6 +218,13 @@ xfs_fs_show_options(
+> >  	if (!(mp->m_qflags & XFS_ALL_QUOTA_ACCT))
+> >  		seq_puts(m, ",noquota");
+> >  
+> > +	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS)
+> > +		seq_puts(m, ",dax=always");
+> > +	else if (mp->m_flags & XFS_MOUNT_DAX_NEVER)
+> > +		seq_puts(m, ",dax=never");
+> > +	else
+> > +		seq_puts(m, ",dax=inode");
+> 
+> No need to report dax=inode, since that's the default.
+
+done.
+
+thanks,
+Ira
+
+> 
+> --D
+> 
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -1261,7 +1301,10 @@ xfs_fc_parse_param(
+> >  		return 0;
+> >  #ifdef CONFIG_FS_DAX
+> >  	case Opt_dax:
+> > -		mp->m_flags |= XFS_MOUNT_DAX_ALWAYS;
+> > +		xfs_mount_set_dax_mode(mp, XFS_DAX_ALWAYS);
+> > +		return 0;
+> > +	case Opt_dax_enum:
+> > +		xfs_mount_set_dax_mode(mp, result.uint_32);
+> >  		return 0;
+> >  #endif
+> >  	default:
+> > @@ -1468,7 +1511,7 @@ xfs_fc_fill_super(
+> >  		if (!rtdev_is_dax && !datadev_is_dax) {
+> >  			xfs_alert(mp,
+> >  			"DAX unsupported by block device. Turning off DAX.");
+> > -			mp->m_flags &= ~XFS_MOUNT_DAX_ALWAYS;
+> > +			xfs_mount_set_dax_mode(mp, XFS_DAX_NEVER);
+> >  		}
+> >  		if (xfs_sb_version_hasreflink(&mp->m_sb)) {
+> >  			xfs_alert(mp,
+> > -- 
+> > 2.25.1
+> > 
