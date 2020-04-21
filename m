@@ -2,153 +2,145 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0720C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F4EC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980D4206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB81206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587486484;
+	bh=KpEi4KqsRoYZmLYN9uEHbqvwZI0iVXAOFwlpf7D714U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=u7EyLyBCEEb029Je+I7SbUa786tpUXhVPKhwJR1U4rMkRTjb/NFMczt9vo2vm7eu5
+	 OAo9CGwE35Q+M+hH/hjU68YyjcIRxxS4YrswvYpIIe+SJDk8aqwJRrGBOtI2xqimrG
+	 w3EhKb/4q2ryFCwDcumkaqqwDc2bK3UIgJRhkYX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgDUQ1K (ORCPT
+        id S1728371AbgDUQ2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:27:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42559 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgDUQ1J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:27:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m18so11642105otq.9;
-        Tue, 21 Apr 2020 09:27:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z1ojXwNxr6fCrXSGTkvpXUDrRNbvPdHnN0pbWQDg8tI=;
-        b=Aa2d1pVkGDl9x3TnUJag2Vo6eoTDZoKpgQdpL0awnF7isiOL4vfLBAPNP54pvctNNT
-         3mO92ONefT+13qV2DyUcOGC0zQeO1KILzmtJotApa2aywxAjfOac20Bd8A6mrkSN8arp
-         3kch/yf9+JqGc7W8MafPXh+xZnY54ajTCcvTZa7H4VRDByJHJrw/3E7BStEKo3+flQ72
-         JLLrNoN587VACLbkeoC3UU0GTWLZwIsZt2XHUbkxpqaLXHZpInuyC9lBSVgmvLRYvwW1
-         xXY3VzhtgWpqw0F3UMtkssylhtX6P1c10B1RCAuBeXwRvJeA8mYnKRhPE0uRjY3wsZLq
-         srcw==
-X-Gm-Message-State: AGi0Pua/uV7hpIimDHxOjhgEobdQubTloaZW3fFnjJ0o+Ias1ED1WRWb
-        KNblCRk8q2L71lvfvIulg/0trV9ZES3cqYGIDsg=
-X-Google-Smtp-Source: APiQypIgjJPykdfEevGKb/2cffNOv+ps81j/7PYsnO1VUUkclaMSWdBbtbbqnNQUgCd31g2SXhEjkUxwnK7jaBN7I8o=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr10595518ots.250.1587486427362;
- Tue, 21 Apr 2020 09:27:07 -0700 (PDT)
+        Tue, 21 Apr 2020 12:28:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbgDUQ2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:28:03 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAE78206E9;
+        Tue, 21 Apr 2020 16:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587486482;
+        bh=KpEi4KqsRoYZmLYN9uEHbqvwZI0iVXAOFwlpf7D714U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tNjW+pTpWWnvHd9gTc5hrnFWebJXzQ5dLIS+7Sxk34YOUoOB8hjz+9f5jLKvQ8OW4
+         2+CcjzqDFeCxlKzVGRGzC/hQwZie6Hx7mssgp0lGJFYgrwUO/wquJkYAPKkc7R4i2l
+         pySdlLGiWXxM1OptvlFHk++hOHj8Vr7otT7hBq60=
+Date:   Tue, 21 Apr 2020 18:27:58 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v1.1 5/5] scripts: sphinx-pre-install: change the output
+ order
+Message-ID: <20200421182758.04e0a53e@coco.lan>
+In-Reply-To: <36cecf7fe19d165db8e93f8a0f6fc88ec705d131.1587478901.git.mchehab+huawei@kernel.org>
+References: <cover.1587478901.git.mchehab+huawei@kernel.org>
+        <36cecf7fe19d165db8e93f8a0f6fc88ec705d131.1587478901.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
- <1585289423-18440-3-git-send-email-hadar.gat@arm.com> <CAMuHMdV6Uce79MPs7jfJfX3WOqAMH22vf2V_=Ui0zLHYqsJ+Xg@mail.gmail.com>
- <DB6PR0802MB25338BD19DD2F7E662BB1065E9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
- <CAMuHMdWujabV8dr=EojXFBVD0TcUuZ2kCGjjo93u=PE-AmzVHA@mail.gmail.com> <DB6PR0802MB2533347A35A466B99ADD4D23E9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-In-Reply-To: <DB6PR0802MB2533347A35A466B99ADD4D23E9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 Apr 2020 18:26:56 +0200
-Message-ID: <CAMuHMdVGwLQxDj9dtF02L3P5MxBCZAiJ1_4OyK3Yomn9y-nPzQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] hw_random: cctrng: introduce Arm CryptoCell driver
-To:     Hadar Gat <Hadar.Gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hadar,
+When the script detects the need for an upgrade, it will
+print either a warning or a note.
 
-On Tue, Apr 21, 2020 at 5:13 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > On Tue, Apr 21, 2020 at 3:16 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
-> > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > Sent: Monday, 20 April 2020 16:45
-> > > > On Fri, Mar 27, 2020 at 7:11 AM Hadar Gat <hadar.gat@arm.com> wrote:
-> > > > > Introduce low level Arm CryptoCell TRNG HW support.
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/char/hw_random/cctrng.c
-> > > >
-> > > > > +static int cctrng_probe(struct platform_device *pdev) {
+Let's change a little bit the order where messages will be
+displayed, in order to make easier for the user to identify
+the more important messages.
 
-> > > > > +       /* register the driver isr function */
-> > > > > +       rc = devm_request_irq(dev, irq, cc_isr, IRQF_SHARED,
-> > > > > + "cctrng", drvdata);
-> > > >
-> > > > Shoudn't this be done after clearing the pending interrupts below?
-> > >
-> > > I'm not sure what do you mean in your question...
-> > > I assume you're suggesting that the registration of the driver ISR function
-> > should be done only after clearing the pending interrupts?!
-> >
-> > Indeed.
-> >
-> > > Anyway, any pending interrupt that might exist is irrelevant to the
-> > > current cctrng driver which just started (we're in the probe function)
-> >
-> > If there is a pending interrupt, your interrupt handler (which returns
-> > IRQ_NONE in this case) will be called repeatedly, until the driver gets to
-> > clearing the pending interrupts below, or until the interrupt core decides to
-> > give up, and disable it for good.
->
-> Ok, I get your point now.
-> But note that when the cctrng HW boots, the default is that all interrupts are masked, hence the interrupt handler will not be called.
+It should now be like this:
 
-Is that also the case when booting into a new kernel using kexec?
+	Detected OS: Fedora release 31 (Thirty One).
+	Sphinx version: 1.7.9
 
-> The unmask of the RNG interrupts is done afterwards and only then ISR may potentially be called.
+	Note: It is recommended at least Sphinx version 2.4.4 if you need PDF support.
+	To upgrade Sphinx, use:
 
-> > > > > +       if (rc) {
-> > > > > +               dev_err(dev, "Could not register to interrupt %d\n", irq);
-> > > > > +               goto post_clk_err;
-> > > > > +       }
-> > > > > +       dev_dbg(dev, "Registered to IRQ: %d\n", irq);
-> > > > > +
-> > > > > +       /* Clear all pending interrupts */
-> > > > > +       val = cc_ioread(drvdata, CC_HOST_RGF_IRR_REG_OFFSET);
-> > > > > +       dev_dbg(dev, "IRR=0x%08X\n", val);
-> > > > > +       cc_iowrite(drvdata, CC_HOST_RGF_ICR_REG_OFFSET, val);
-> > > >
-> > > > The above accesses the engine's registers...
-> > >
-> > > That is right.
-> > >
-> > > > > +
-> > > > > +       /* unmask HOST RNG interrupt */
-> > > > > +       cc_iowrite(drvdata, CC_HOST_RGF_IMR_REG_OFFSET,
-> > > > > +                  cc_ioread(drvdata, CC_HOST_RGF_IMR_REG_OFFSET) &
-> > > > > +                  ~CC_HOST_RNG_IRQ_MASK);
->
-> The above unmask the RNG interrupt.
+		/usr/bin/python3 -m venv sphinx_2.4.4
+		. sphinx_2.4.4/bin/activate
+		pip install -r ./Documentation/sphinx/requirements.txt
 
-Gr{oetje,eeting}s,
+	If you want to exit the virtualenv, you can use:
+		deactivate
 
-                        Geert
+All optional dependencies are met.
+Needed package dependencies are met.
 
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+
+v 1.1: I forgot to commit some minor changes to the patch
+
+ scripts/sphinx-pre-install | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index 987aebf7e3a0..c680c3efb176 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -320,15 +320,10 @@ sub check_sphinx()
+ 	}
+ 
+ 	if ($cur_version lt $rec_version) {
+-		printf "Sphinx version %s\n", $cur_version;
+-		print "Warning: It is recommended at least Sphinx version $rec_version.\n";
+-		print "         If you want pdf, you need at least $min_pdf_version.\n";
+ 		$rec_sphinx_upgrade = 1;
+ 		return;
+ 	}
+ 	if ($cur_version lt $min_pdf_version) {
+-		printf "Sphinx version %s\n", $cur_version;
+-		print "Note: It is recommended at least Sphinx version $min_pdf_version if you need PDF support.\n";
+ 		$rec_sphinx_upgrade = 1;
+ 		return;
+ 	}
+@@ -716,10 +711,11 @@ sub check_needs()
+ 	check_sphinx();
+ 
+ 	if ($system_release) {
+-		print "Detected OS: $system_release.\n\n";
++		print "Detected OS: $system_release.\n";
+ 	} else {
+-		print "Unknown OS\n\n";
++		print "Unknown OS\n";
+ 	}
++	printf "Sphinx version: %s\n\n", $cur_version if ($cur_version);
+ 
+ 	# Check python command line, trying first python3
+ 	$python_cmd = findprog("python3");
+@@ -799,6 +795,13 @@ sub check_needs()
+ 		my $min_activate = "$ENV{'PWD'}/${virtenv_prefix}${min_version}/bin/activate";
+ 		my @activates = glob "$ENV{'PWD'}/${virtenv_prefix}*/bin/activate";
+ 
++		if ($cur_version lt $rec_version) {
++			print "Warning: It is recommended at least Sphinx version $rec_version.\n";
++			print "         If you want pdf, you need at least $min_pdf_version.\n";
++		}
++		if ($cur_version lt $min_pdf_version) {
++			print "Note: It is recommended at least Sphinx version $min_pdf_version if you need PDF support.\n";
++		}
+ 		@activates = sort {$b cmp $a} @activates;
+ 		my ($activate, $ver);
+ 		foreach my $f (@activates) {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+
