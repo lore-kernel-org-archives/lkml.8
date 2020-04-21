@@ -2,76 +2,65 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A736C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1329BC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34682206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B8D206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:02:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MU2YBSol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgDURBw (ORCPT
+        id S1728823AbgDURC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:01:52 -0400
-Received: from mga05.intel.com ([192.55.52.43]:49478 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbgDURBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 13:01:51 -0400
-IronPort-SDR: 7nG4+BdcQ/rZd8BNrrWtVqrlg+r2W7GqyH/C/xnVFXo19BmjqXt5vh0YpC7XJPG44VoMiUBZlR
- fhcvyT1aIfjA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 10:01:51 -0700
-IronPort-SDR: JtAUKfagxhvnf6AeQdYCiYQHiytb1Ad1qH2Qc5H1zIiAWkeoNgIYSUjMVw3HhK35dcMoSzrcYS
- 9QhyvugUmYhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
-   d="scan'208";a="247220823"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Apr 2020 10:01:51 -0700
-Date:   Tue, 21 Apr 2020 10:01:50 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH v3 0/2] KVM: VMX: Unionize vcpu_vmx.exit_reason
-Message-ID: <20200421170150.GA16486@linux.intel.com>
-References: <20200421075328.14458-1-sean.j.christopherson@intel.com>
- <bcf9cbba-6cce-f10b-da94-232403a3f7f6@redhat.com>
+        Tue, 21 Apr 2020 13:02:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726018AbgDURCZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 13:02:25 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C38C061A41;
+        Tue, 21 Apr 2020 10:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wuF6glVROYbPM3r9lPyVTY3Ec0nGVm2GCfVQiXVfRVY=; b=MU2YBSolyc8RiAMCdBHGeC3uNQ
+        qeGwbqtvVY+vbruuhfyMS/cq6/Liwo69PIxQcBbF7Nl+RMpyRr3fDePaF4pcFWY6Grjnn0mM2enUq
+        Z2oaw3kysp3dVPRzx9uMRwxAZHvb0oewZ9JfX/03N8GHr2JtJeEZ/AZnyJTD7IbkCMaNoUypckhFC
+        g4kKSLjan/BCiGdeVEy1UNYTYj9C46iWJH1/oVaLau/GJpEfEZewUhka8CfXw/u9XnyrR7ysVIHM1
+        XEZ5Xlo+1j49Ltz7//xo2TxIqrVAhAXtEiKXEMkaCkBPIuvazpyUVFpyPM86VjAD+Tzq59ZCtDs86
+        md+O3b2A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQwHv-0004SX-BR; Tue, 21 Apr 2020 17:02:23 +0000
+Date:   Tue, 21 Apr 2020 10:02:23 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Becker <jlbec@evilplan.org>, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 08/29] docs: filesystems: convert configfs.txt to ReST
+Message-ID: <20200421170223.GP5820@bombadil.infradead.org>
+References: <cover.1587487612.git.mchehab+huawei@kernel.org>
+ <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org>
+ <20200421165534.GA16511@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bcf9cbba-6cce-f10b-da94-232403a3f7f6@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200421165534.GA16511@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 06:19:15PM +0200, Paolo Bonzini wrote:
-> On 21/04/20 09:53, Sean Christopherson wrote:
-> > Minor fixup patch for a mishandled conflict between the vmcs.INTR_INFO
-> > caching series and the union series, plus the actual unionization patch
-> > rebased onto kvm/queue, commit 604e8bba0dc5 ("KVM: Remove redundant ...").
-> > 
-> > Sean Christopherson (2):
-> >   KVM: nVMX: Drop a redundant call to vmx_get_intr_info()
-> >   KVM: VMX: Convert vcpu_vmx.exit_reason to a union
-> > 
-> >  arch/x86/kvm/vmx/nested.c | 39 ++++++++++++++---------
-> >  arch/x86/kvm/vmx/vmx.c    | 65 ++++++++++++++++++++-------------------
-> >  arch/x86/kvm/vmx/vmx.h    | 25 ++++++++++++++-
-> >  3 files changed, 83 insertions(+), 46 deletions(-)
-> > 
-> 
-> Thanks, I queued patch 1.  I am not too enthusiastic about patch 2, but
-> when SGX comes around it may be a better idea.
+On Tue, Apr 21, 2020 at 06:55:34PM +0200, Christoph Hellwig wrote:
+> NAK, this makes the document significantly harder to read.
 
-And maybe it'll grow on you by the time I figure out how to send a pull
-request ;-).
+Really?  It reads more easily to me in the new format.  Enclosing
+section headers in [] is really weird.
