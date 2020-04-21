@@ -2,157 +2,176 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C881C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FE1C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2732120672
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F25720672
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:47:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Aj5pQid4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbgDUNq1 (ORCPT
+        id S1729009AbgDUNrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:46:27 -0400
-Received: from mga11.intel.com ([192.55.52.93]:24956 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbgDUNq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:46:26 -0400
-IronPort-SDR: WK2ZbXs25jQ1I8l+ZyvmGOZU6fHpaO1syIs4EaHg64Okk+xL6P3xPqEzm+Gp+zHW7pnAfyB0Jp
- /OO5JcehnEYw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 06:46:22 -0700
-IronPort-SDR: UPESVjSCK3u5cE0PeP9C+Axzz/PnExtVdu1cmtUEqGtdm+HtC7h08U8LySC5nVoRBfVrTyfGpw
- SCJoDMTjvLIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,410,1580803200"; 
-   d="scan'208";a="245686844"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Apr 2020 06:46:19 -0700
-Subject: Re: [PATCH V6 13/15] perf intel-pt: Add support for text poke events
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200405201327.7332-1-adrian.hunter@intel.com>
- <20200405201327.7332-14-adrian.hunter@intel.com>
- <20200421125050.GG809467@krava>
- <4308a61d-cbed-e0ed-d8a9-c7306a933e7b@intel.com>
- <20200421130613.GH809467@krava>
- <65e3e544-62cc-1d0c-4daa-9425f06d903e@intel.com>
- <20200421133540.GJ809467@krava>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <bed2b368-920b-59a6-36a4-7d3c5d62212a@intel.com>
-Date:   Tue, 21 Apr 2020 16:45:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 09:47:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728479AbgDUNrJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:47:09 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC1CEC061A10;
+        Tue, 21 Apr 2020 06:47:09 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 81BB2528;
+        Tue, 21 Apr 2020 15:47:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587476827;
+        bh=etmf9PYF8EvQ0KcScRiA46EXmW/61wAdo5/3jftZZH4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Aj5pQid4RjTwp4IsZVTXPL7pQGtTHv84JajtYI4NhCjyEyQnOk7WRljQWz8gQZPJH
+         qqxStFM/e59/tkUUFb6slNEWx9mBQzEqIMzbAV4ylIiiSIjkBHnTumiobQmCWp07HS
+         sFbOMLUjIeG7AGY8RBUwskz6F25u2NKwM3hnvHx0=
+Date:   Tue, 21 Apr 2020 16:46:54 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
+Message-ID: <20200421134654.GD5983@pendragon.ideasonboard.com>
+References: <20200229003731.2728-1-robh@kernel.org>
+ <20200421100749.GA5429@pendragon.ideasonboard.com>
+ <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
+ <20200421110537.GC5983@pendragon.ideasonboard.com>
+ <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200421133540.GJ809467@krava>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/20 4:35 pm, Jiri Olsa wrote:
-> On Tue, Apr 21, 2020 at 04:10:33PM +0300, Adrian Hunter wrote:
+Hi Yamada-san,
+
+On Tue, Apr 21, 2020 at 10:15:02PM +0900, Masahiro Yamada wrote:
+> On Tue, Apr 21, 2020 at 8:05 PM Laurent Pinchart wrote:
+> > On Tue, Apr 21, 2020 at 07:45:05PM +0900, Masahiro Yamada wrote:
+> > > On Tue, Apr 21, 2020 at 7:08 PM Laurent Pinchart wrote:
+> > > > On Fri, Feb 28, 2020 at 06:37:30PM -0600, Rob Herring wrote:
+> > > > > Most folks only run dt_binding_check on the single schema they care about
+> > > > > by setting DT_SCHEMA_FILES. That means example is only checked against
+> > > > > that one schema which is not always sufficient.
+> > > > >
+> > > > > Let's address this by splitting processed-schema.yaml into 2 files: one
+> > > > > that's always all schemas for the examples and one that's just the schema
+> > > > > in DT_SCHEMA_FILES for dtbs.
+> > > >
+> > > > This broke
+> > > >
+> > > > make DT_SCHEMA_FILES=Documentation/devicetree/.. dt_binding_check
+> > >
+> > > What is intended by
+> > > "DT_SCHEMA_FILES=Documentation/devicetree/.."  ?
+> >
+> > My bad, I forgot to write that ... is the continuation of the string.
+> > It's any yaml schema file that has an example.
 > 
-> SNIP
+> Ah, OK. I just input verbatim.
 > 
->>>>> I'm still seeing some, probably I'm missing some CONFIG, will check
->>>>>
->>>>> 	# ./perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
->>>>> 	[1] 5880
->>>>> 	# cat /proc/sys/kernel/sched_schedstats
->>>>> 	0
->>>>> 	# echo 1 > /proc/sys/kernel/sched_schedstats
->>>>> 	# cat /proc/sys/kernel/sched_schedstats
->>>>> 	1
->>>>> 	# echo 0 > /proc/sys/kernel/sched_schedstats
->>>>> 	# kill %1
->>>>> 	# [ perf record: Woken up 1 times to write data ]
->>>>> 	[ perf record: Captured and wrote 6.181 MB perf.data.after ]
->>>>> 	[1]+  Terminated              ./perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M
->>>>> 	# ./perf script --itrace=e -i perf.data.after > /dev/null
->>>>> 	Warning:
->>>>> 	18837 instruction trace errors
->>>>>
->>>>> 	# ./perf script --itrace=e -i perf.data.after | head
->>>>> 	instruction trace error type 1 time 9274.420582345 cpu 9 pid 845 tid 845 ip 0xffffffff814e6cf2 code 6: Trace doesn't match instruction
->>>>> 	instruction trace error type 1 time 9274.422229726 cpu 39 pid 5880 tid 5880 ip 0xffffffffa030a320 code 6: Trace doesn't match instruction
->>>>> 	instruction trace error type 1 time 9274.422231972 cpu 39 pid 5880 tid 5880 ip 0xffffffffa0315c1c code 6: Trace doesn't match instruction
->>>>> 	instruction trace error type 1 time 9274.422236141 cpu 39 pid 5880 tid 5880 ip 0xffffffff81143263 code 6: Trace doesn't match instruction
->>>>> 	instruction trace error type 1 time 9274.422237424 cpu 39 pid 5880 tid 5880 ip 0xffffffff8115c388 code 6: Trace doesn't match instruction
->>>>> 	instruction trace error type 1 time 9274.422239028 cpu 39 pid 5880 tid 5880 ip 0xffffffff811428c9 code 6: Trace doesn't match instruction
->>>>> 	instruction trace error type 1 time 9274.422239028 cpu 39 pid 5880 tid 5880 ip 0xffffffffa13279fb code 5: Failed to get instruction
->>>>> 	instruction trace error type 1 time 9274.422242556 cpu 39 pid 5880 tid 5880 ip 0xffffffff814e9c73 code 6: Trace doesn't match instruction
->>>>> 	instruction trace error type 1 time 9274.422258915 cpu 39 pid 5880 tid 5880 ip 0xffffffff810d7da2 code 6: Trace doesn't match instruction
->>>>> 	instruction trace error type 1 time 9274.422258915 cpu 39 pid 5880 tid 5880 ip 0xffffffffa030a0b2 code 6: Trace doesn't match instruction
->>>>
->>>> I don't think it can be CONFIG.  Can you share the branch you are using?
->>>> Then I can test it.
->>>>
->>>
->>> I built the one you mentioned in cover email:
->>>   git://git.infradead.org/users/ahunter/linux-perf.git text_poke
->>
->> The tools and the kernel?
+> Is it broken?
 > 
-> both from that branch
+> You can specify any individual file(s) under Documentation/devicetree/bindings/.
 > 
->>
->> Does it successfully decode anything? e.g.
->> ./perf script --itrace=be -i perf.data.after | head
->>
+> For example, the following worked for me.
 > 
-> # ./perf script --itrace=be -i perf.data.after | head
->             perf  5880 [000]  9274.419884:          1  branches:k:                 0 [unknown] ([unknown]) => ffffffff8106a4a6 native_write_msr+0x6 (/lib/modules/5.6.0-rc6+/build/vmlinux)
->             perf  5880 [000]  9274.419884:          1  branches:k:  ffffffff8106a4ab native_write_msr+0xb (/lib/modules/5.6.0-rc6+/build/vmlinux) => ffffffff810152f9 pt_config_start+0x59 (/lib/modules/5.6.0-rc6+/build/vmlinux)
->             perf  5880 [000]  9274.419884:          1  branches:k:  ffffffff81015304 pt_config_start+0x64 (/lib/modules/5.6.0-rc6+/build/vmlinux) => ffffffff81015648 pt_event_add+0x38 (/lib/modules/5.6.0-rc6+/build/vmlinux)
->             perf  5880 [000]  9274.419884:          1  branches:k:  ffffffff8101565d pt_event_add+0x4d (/lib/modules/5.6.0-rc6+/build/vmlinux) => ffffffff8121d3ca event_sched_in.isra.0+0xea (/lib/modules/5.6.0-rc6+/build/vmlinux)
->             perf  5880 [000]  9274.419884:          1  branches:k:  ffffffff8121d3dc event_sched_in.isra.0+0xfc (/lib/modules/5.6.0-rc6+/build/vmlinux) => ffffffff8121d3e3 event_sched_in.isra.0+0x103 (/lib/modules/5.6.0-rc6+/build/vmlinux)
->             perf  5880 [000]  9274.419884:          1  branches:k:  ffffffff8121d3f4 event_sched_in.isra.0+0x114 (/lib/modules/5.6.0-rc6+/build/vmlinux) => ffffffff8121d497 event_sched_in.isra.0+0x1b7 (/lib/modules/5.6.0-rc6+/build/vmlinux)
->             perf  5880 [000]  9274.419884:          1  branches:k:  ffffffff8121d4c1 event_sched_in.isra.0+0x1e1 (/lib/modules/5.6.0-rc6+/build/vmlinux) => ffffffff814f9560 __list_add_valid+0x0 (/lib/modules/5.6.0-rc6+/build/vmlinux)
->             perf  5880 [000]  9274.419884:          1  branches:k:  ffffffff814f9593 __list_add_valid+0x33 (/lib/modules/5.6.0-rc6+/build/vmlinux) => ffffffff8121d4c6 event_sched_in.isra.0+0x1e6 (/lib/modules/5.6.0-rc6+/build/vmlinux)
->             perf  5880 [000]  9274.419884:          1  branches:k:  ffffffff8121d4e2 event_sched_in.isra.0+0x202 (/lib/modules/5.6.0-rc6+/build/vmlinux) => ffffffff8121d3fa event_sched_in.isra.0+0x11a (/lib/modules/5.6.0-rc6+/build/vmlinux)
->             perf  5880 [000]  9274.419884:          1  branches:k:  ffffffff8121d401 event_sched_in.isra.0+0x121 (/lib/modules/5.6.0-rc6+/build/vmlinux) => ffffffff8121d40d event_sched_in.isra.0+0x12d (/lib/modules/5.6.0-rc6+/build/vmlinux)
-> 
-> # ./perf script --call-trace -i perf.data.after | head
->             perf  5880 [000]  9274.419884188:  cbr:  8 freq:  798 MHz ( 36%)    
->             perf  5880 [000]  9274.419884389: (/lib/modules/5.6.0-rc6+/build/vmlinux             )          __list_add_valid            
->             perf  5880 [000]  9274.419884389: (/lib/modules/5.6.0-rc6+/build/vmlinux             )          perf_pmu_enable.part.0      
->             perf  5880 [000]  9274.419884389: (/lib/modules/5.6.0-rc6+/build/vmlinux             )              __x86_indirect_thunk_rax
->             perf  5880 [000]  9274.419884389: (/lib/modules/5.6.0-rc6+/build/vmlinux             )          __x86_indirect_thunk_rax    
->             perf  5880 [000]  9274.419884389: (/lib/modules/5.6.0-rc6+/build/vmlinux             )              __x86_indirect_thunk_rax
->             perf  5880 [000]  9274.419884709: (/lib/modules/5.6.0-rc6+/build/vmlinux             )          __list_add_valid            
->             perf  5880 [000]  9274.419884709: (/lib/modules/5.6.0-rc6+/build/vmlinux             )          rb_next                     
->             perf  5880 [000]  9274.419884709: (/lib/modules/5.6.0-rc6+/build/vmlinux             )          merge_sched_in              
->             perf  5880 [000]  9274.419884709: (/lib/modules/5.6.0-rc6+/build/vmlinux             )              __x86_indirect_thunk_rax
-> 
+> $ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml
+>  dt_binding_check
+>   HOSTCC  scripts/basic/fixdep
+>   HOSTCC  scripts/dtc/dtc.o
+>   HOSTCC  scripts/dtc/flattree.o
+>   HOSTCC  scripts/dtc/fstree.o
+>   HOSTCC  scripts/dtc/data.o
+>   HOSTCC  scripts/dtc/livetree.o
+>   HOSTCC  scripts/dtc/treesource.o
+>   HOSTCC  scripts/dtc/srcpos.o
+>   HOSTCC  scripts/dtc/checks.o
+>   HOSTCC  scripts/dtc/util.o
+>   LEX     scripts/dtc/dtc-lexer.lex.c
+>   YACC    scripts/dtc/dtc-parser.tab.[ch]
+>   HOSTCC  scripts/dtc/dtc-lexer.lex.o
+>   HOSTCC  scripts/dtc/dtc-parser.tab.o
+>   HOSTCC  scripts/dtc/yamltree.o
+>   HOSTLD  scripts/dtc/dtc
+>   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+>   DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
 
-perf is not using kcore, which explains the errors.  Not sure why it prefers vmlinux.  It should effectively be doing:
+This is getting interesting.
 
-perf script -i perf.data.after --itrace=e --kallsyms perf.data.after/kcore_dir/kallsyms
+~/src/kernel/linux $ make O=output/x86 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dt_binding_check
+make[1]: Entering directory '/home/laurent/src/kernel/linux/output/x86'
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/data.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/checks.o
+  HOSTCC  scripts/dtc/util.o
+  LEX     scripts/dtc/dtc-lexer.lex.c
+  YACC    scripts/dtc/dtc-parser.tab.[ch]
+  HOSTCC  scripts/dtc/dtc-lexer.lex.o
+  HOSTCC  scripts/dtc/dtc-parser.tab.o
+  HOSTCC  scripts/dtc/yamltree.o
+  HOSTLD  scripts/dtc/dtc
+  CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+  DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+make[1]: Leaving directory '/home/laurent/src/kernel/linux/output/x86'
 
-What is in the perf.data.after directory?
+~/src/kernel/this_is_a_long_directory_name/linux $ make O=output/x86 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dt_binding_check
+make[1]: Entering directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/data.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/checks.o
+  HOSTCC  scripts/dtc/util.o
+  LEX     scripts/dtc/dtc-lexer.lex.c
+  YACC    scripts/dtc/dtc-parser.tab.[ch]
+  HOSTCC  scripts/dtc/dtc-lexer.lex.o
+  HOSTCC  scripts/dtc/dtc-parser.tab.o
+  HOSTCC  scripts/dtc/yamltree.o
+  HOSTLD  scripts/dtc/dtc
+  CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+make[2]: execvp: /bin/sh: Argument list too long
+make[2]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Documentation/devicetree/bindings/Makefile:38: Documentation/devicetree/bindings/processed-schema-examples.yaml] Error 127
+make[1]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Makefile:1300: dt_binding_check] Error 2
+make[1]: Leaving directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
+make: *** [Makefile:180: sub-make] Error 2
 
+It seems to only fail with out of tree builds (O=...). I expect that
+failures will become more common the more YAML bindings we have, even
+without long directory names.
 
+-- 
+Regards,
 
-
-
+Laurent Pinchart
