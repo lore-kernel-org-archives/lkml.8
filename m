@@ -2,371 +2,117 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010A7C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436FFC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBF172072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A4C2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:09:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="AvoLb6Ie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgDUVIk (ORCPT
+        id S1726287AbgDUVJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:08:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgDUVIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 17:08:39 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 21 Apr 2020 17:09:05 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:35740 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbgDUVJE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 17:09:04 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 496GQR4XBHz9vCD5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 21:09:03 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id moJxc8Ynzn_B for <linux-kernel@vger.kernel.org>;
+        Tue, 21 Apr 2020 16:09:03 -0500 (CDT)
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F091F206D9;
-        Tue, 21 Apr 2020 21:08:37 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 17:08:36 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, linux@rasmusvillemoes.dk
-Subject: Re: [PATCH 03/15] print_integer: new and improved way of printing
- integers
-Message-ID: <20200421170836.4aafcbc2@gandalf.local.home>
-In-Reply-To: <20200421164924.GB8735@avx2>
-References: <20200420205743.19964-1-adobriyan@gmail.com>
-        <20200420205743.19964-3-adobriyan@gmail.com>
-        <20200420211911.GC185537@smile.fi.intel.com>
-        <20200420212723.GE185537@smile.fi.intel.com>
-        <20200420215417.6e2753ee@oasis.local.home>
-        <20200421164924.GB8735@avx2>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="MP_/xbI+jYb6tEPw5+QvHxltnyb"
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 496GQR3Rrqz9vCFT
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 16:09:03 -0500 (CDT)
+Received: by mail-qk1-f197.google.com with SMTP id v6so305283qkd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=W230/sPUtrSZ9ChaTDlVXjpS2KjEcvhlwm/p53ONQvg=;
+        b=AvoLb6Ieal43ACfvqYH880cV9d+xFvKYLVpWPUEur08gn0owG/q4oVdMu9+JKefMRS
+         qrvwUh9FamMtxKj8hXcp7iEUpZj1An04ckZ0PoOu/yUEQsc7lI7fxZE0srTFziyx4J9r
+         FM6gLG/9OfV+CTlEMPlz5MkjxuTABowbbbEzDgOTksvQbcNN8de/wFYlxHhi6OO00G4Q
+         st+P3/lxaXPyitgwiOXxbCBYQsJINtOBs975NKt/pSGDB7wD/ZXHelWF63B68Ro6KcC3
+         oa03+fLq2hcxZHOW76sXjtOGhypo4mGKv9smNuAYCZMtu80DwYfpsxJP4khssv4bvXJS
+         Pl2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=W230/sPUtrSZ9ChaTDlVXjpS2KjEcvhlwm/p53ONQvg=;
+        b=umoGWutBJnCgKJH4f31esJMI0pUVj1PS+oV099mWBqAbNmkPlwUBC5hKeYZ/ydfLzw
+         E47dkNocEdiVDkSN0rHi8cMx6/r/EN0Roazu90pqLaNCI3ifl8ecuPxJ2v416O8OvQyX
+         r0EJsee0xItTeIUJq0kjwrVGe0dW47fFt8oAxm8gVrp7v9CZDA1EBREh7woFyUtJtTNE
+         x/X+4CT8cBFKSpVf0i44j3RpVWgA1WfbsZ/48xAGfLuXq/4+fC9vTnMynq2ZZBBswbGM
+         Bv5NVCc9G9EkVxsbTQEWHiKWzQ9vELl0FDk0qPTkFXok9UAjQRFhmkLEmdI+QSRY2ypn
+         f1KQ==
+X-Gm-Message-State: AGi0PuZP1HGmQ6CkV/RIbuVK2seZq1Ul7XbhUX97CkIMqNMGVCp4CNwX
+        QRUv5VrHUCECS5vqEpAV9RM73VW7o+dfLagPhcxnuZnPw5gaVvTx5pRj5JQ6x2zynZjWUauIpsn
+        pXVv/wXPrLgqMHWTS/U1/Aug7Baz7
+X-Received: by 2002:aed:2ac4:: with SMTP id t62mr23981529qtd.381.1587503342773;
+        Tue, 21 Apr 2020 14:09:02 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLdR3F1Di5Dew+F3+Kr/c7o2DI0FiW0dSLJ1NG40UhZMsxQKBkOwhJHe3/Hmrcpl4D4OAcL0Q==
+X-Received: by 2002:aed:2ac4:: with SMTP id t62mr23981500qtd.381.1587503342361;
+        Tue, 21 Apr 2020 14:09:02 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id z40sm2641551qtj.45.2020.04.21.14.08.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 14:08:37 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     jejb@linux.ibm.com
+Cc:     QLogic-Storage-Upstream@qlogic.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kjlu@umn.edu, wu000273@umn.edu
+Subject: [PATCH] scsi: qla4xxx: Fix a potential race condition.
+Date:   Tue, 21 Apr 2020 16:08:22 -0500
+Message-Id: <20200421210822.18994-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---MP_/xbI+jYb6tEPw5+QvHxltnyb
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+From: Qiushi Wu <wu000273@umn.edu>
 
-On Tue, 21 Apr 2020 19:49:24 +0300
-Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> > Exactly. The code in _print_integer_u32() doesn't look as fast as the
-> > code in vsprintf() that happens to use lookup tables and converts
-> > without any loops.
-> >=20
-> > Hint, loops are bad, they cause the CPU to slow down. =20
->=20
-> Oh, come on! Loops make code fit into icache and =CE=BCop decode cache.
+In the function qla4xxx_eh_abort, we should use lock protect both
+kref_get() and kref_put(), because we must serialize access where a
+kref_put() cannot occur during the kref_get(). Otherwise, the object
+"srb" may not remain valid during the kref_get(), and a race condition
+can happen.
 
-Depends on the architecture.
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ drivers/scsi/qla4xxx/ql4_os.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
->=20
-> > Anyway, this patch series would require a pretty good improvement, as
-> > the code replacing the sprintf() usages is pretty ugly compared to a
-> > simple sprintf() call. =20
->=20
-> No! Fast code must look ugly. Or in other words if you try to optimise
-> integer printing to death you'll probably end with something like
-> _print_integer().
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 5504ab11decc..a1400cadb91a 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -9222,8 +9222,10 @@ static int qla4xxx_eh_abort(struct scsi_cmnd *cmd)
+ 		    ha->host_no, id, lun));
+ 		wait = 1;
+ 	}
+-
++
++	spin_lock_irqsave(&ha->hardware_lock, flags);
+ 	kref_put(&srb->srb_ref, qla4xxx_srb_compl);
++	spin_unlock_irqrestore(&ha->hardware_lock, flags);
+ 
+ 	/* Wait for command to complete */
+ 	if (wait) {
+-- 
+2.17.1
 
-As I stated, it will require a "pretty good improvement". There's always a
-trade off. If the improvement is noticeable for real life cases, then ugly
-code is worth it. If we are making ugly code for a benefit of something
-that never shows outside of noise, then the net cost (less maintainable
-code), is not worth it.
-
->=20
-> When the very first patch changed /proc/stat to seq_put_decimal_ull()
-> the speed up was 66% (or 33%). That's how slow printing was back then.
-> It can be made slightly faster even now.
-
-I'd like to see the tests that your ran (to reproduce them myself).
-
-The first patch was making a 64bit number into 32bit number, thus
-shortening the work by half.
-
->=20
-> > Randomly picking patch 6:
-> >=20
-> >  static int loadavg_proc_show(struct seq_file *m, void *v)
-> >  {
-> >  	unsigned long avnrun[3];
-> > =20
-> >  	get_avenrun(avnrun, FIXED_1/200, 0);
-> > =20
-> > 	seq_printf(m, "%lu.%02lu %lu.%02lu %lu.%02lu %u/%d %d\n",
-> > 		LOAD_INT(avnrun[0]), LOAD_FRAC(avnrun[0]),
-> > 		LOAD_INT(avnrun[1]), LOAD_FRAC(avnrun[1]),
-> > 		LOAD_INT(avnrun[2]), LOAD_FRAC(avnrun[2]),
-> > 		nr_running(), nr_threads,
-> > 		idr_get_cursor(&task_active_pid_ns(current)->idr) - 1);
-> >  	return 0;
-> >  }
-> >=20
-> >   *vs*=20
-> >=20
-> >  static int loadavg_proc_show(struct seq_file *m, void *v)
-> >  {
-> >  	unsigned long avnrun[3];
-> > 	char buf[3 * (LEN_UL + 1 + 2 + 1) + 10 + 1 + 10 + 1 + 10 + 1];
-> > 	char *p =3D buf + sizeof(buf);
-> > 	int i;
-> >=20
-> > 	*--p =3D '\n';
-> > 	p =3D _print_integer_u32(p, idr_get_cursor(&task_active_pid_ns(current=
-)->idr) - 1);
-> > 	*--p =3D ' ';
-> > 	p =3D _print_integer_u32(p, nr_threads);
-> > 	*--p =3D '/';
-> > 	p =3D _print_integer_u32(p, nr_running());
-> >=20
-> >  	get_avenrun(avnrun, FIXED_1/200, 0);
-> > 	for (i =3D 2; i >=3D 0; i--) {
-> > 		*--p =3D ' ';
-> > 		--p;		/* overwritten */
-> > 		*--p =3D '0';	/* conditionally overwritten */
-> > 		(void)_print_integer_u32(p + 2, LOAD_FRAC(avnrun[i]));
-> > 		*--p =3D '.';
-> > 		p =3D _print_integer_ul(p, LOAD_INT(avnrun[i]));
-> > 	}
-> > =20
-> > 	seq_write(m, p, buf + sizeof(buf) - p);
-> >  	return 0;
-> >  }
-> >=20
-> >=20
-> > I much rather keep the first version. =20
->=20
-> I did the benchmarks (without stack protector though), everything except
-> /proc/cpuinfo and /proc/meminfo became faster. This requires investigation
-> and I can drop vsprintf() changes until then.
->=20
-> Now given that /proc/uptime format cast in stone, code may look a bit ugly
-> and unusual but it won't require maintainance
-
-Please share what you did as your benchmarks. If this is as good of a
-performance as you claim, then these changes would be worth looking into.
-
-
-So I applied your entire series, added the following patch:
-
-diff --git a/include/linux/spinlock_api_smp.h
-b/include/linux/spinlock_api_smp.h index 19a9be9d97ee..17c582d77ab7 100644
---- a/include/linux/spinlock_api_smp.h
-+++ b/include/linux/spinlock_api_smp.h
-@@ -152,9 +152,16 @@ static inline void __raw_spin_unlock(raw_spinlock_t
-*lock) preempt_enable();
- }
-=20
-+extern u64 sched_clock(void);
- static inline void __raw_spin_unlock_irqrestore(raw_spinlock_t *lock,
- 					    unsigned long flags)
- {
-+	char buf[32];
-+	u64 start, stop;
-+	start =3D sched_clock();
-+	sprintf(buf,"%lld", (unsigned long)lock);
-+	stop =3D sched_clock();
-+	trace_printk("time: %lld '%s'\n", stop - start, buf);
- 	spin_release(&lock->dep_map, _RET_IP_);
- 	do_raw_spin_unlock(lock);
- 	local_irq_restore(flags);
-
-
-Then after boot up, I did the following:
-
- # trace-cmd stop
- # trace-cmd extract
-
-Which captured the traces:
-
-          <idle>-0     [003]     5.405208: bprint:               _raw_spin_=
-unlock_irqrestore: time: 799 '-110308271193088'
-          <idle>-0     [003]     5.405210: bprint:               _raw_spin_=
-unlock_irqrestore: time: 273 '-110308271193088'
-          <idle>-0     [003]     5.412235: bprint:               _raw_spin_=
-unlock_irqrestore: time: 1138 '-110308271193088'
-          <idle>-0     [003]     5.412236: bprint:               _raw_spin_=
-unlock_irqrestore: time: 213 '-110308271193088'
-          <idle>-0     [003]     5.414241: bprint:               _raw_spin_=
-unlock_irqrestore: time: 1094 '-110308271193088'
-          <idle>-0     [003]     5.414243: bprint:               _raw_spin_=
-unlock_irqrestore: time: 182 '-110308271193088'
-          <idle>-0     [003]     5.418241: bprint:               _raw_spin_=
-unlock_irqrestore: time: 1113 '-110308271193088'
-
-
-Where "time: X", X is the delta in nanoseconds around the sprintf() call.
-
-The I ran the attached perl program on the output, and got the following
-results:
-
-Before your patches:
-
- # trace-cmd report | ./report.pl
-full_total =3D 52844823
-  average:   255.902176229032
-  std:       439.269729814847
-
-And with your patches:
-
- # trace-cmd report | ./report.pl
-full_total =3D 84725476
-  average:   407.873274762306
-  std:       555.755670463724
-
-As the standard deviation is bigger than the average, it appears to be all
-in the noise.
-
-Then I decided to see if it affects "ps -eux"
-
-Original:
-
-# perf stat -r 100 ps -eux > /dev/null
-
- Performance counter stats for 'ps -eux' (100 runs):
-
-              8.92 msec task-clock                #    0.937 CPUs utilized =
-           ( +-  0.90% )
-                 5      context-switches          #    0.545 K/sec         =
-           ( +-  1.24% )
-                 0      cpu-migrations            #    0.000 K/sec         =
-        =20
-               259      page-faults               #    0.029 M/sec         =
-           ( +-  0.07% )
-        32,973,751      cycles                    #    3.698 GHz           =
-           ( +-  0.09% )
-        17,254,307      stalled-cycles-frontend   #   52.33% frontend cycle=
-s idle     ( +-  0.17% )
-        38,707,960      instructions              #    1.17  insn per cycle=
-        =20
-                                                  #    0.45  stalled cycles=
- per insn  ( +-  0.01% )
-         8,153,197      branches                  #  914.274 M/sec         =
-           ( +-  0.01% )
-           114,992      branch-misses             #    1.41% of all branche=
-s          ( +-  0.12% )
-
-         0.0095170 +- 0.0000829 seconds time elapsed  ( +-  0.87% )
-
-With your patches:
-
-# perf stat -r 100 ps -eux > /dev/null
-
- Performance counter stats for 'ps -eux' (100 runs):
-
-              8.86 msec task-clock                #    0.918 CPUs utilized =
-           ( +-  1.06% )
-                 5      context-switches          #    0.527 K/sec         =
-           ( +-  1.22% )
-                 0      cpu-migrations            #    0.001 K/sec         =
-           ( +-100.00% )
-               259      page-faults               #    0.029 M/sec         =
-           ( +-  0.08% )
-        32,699,168      cycles                    #    3.692 GHz           =
-           ( +-  0.12% )
-        16,995,861      stalled-cycles-frontend   #   51.98% frontend cycle=
-s idle     ( +-  0.21% )
-        38,114,396      instructions              #    1.17  insn per cycle=
-        =20
-                                                  #    0.45  stalled cycles=
- per insn  ( +-  0.03% )
-         7,985,526      branches                  #  901.625 M/sec         =
-           ( +-  0.03% )
-           112,852      branch-misses             #    1.41% of all branche=
-s          ( +-  0.17% )
-
-          0.009652 +- 0.000276 seconds time elapsed  ( +-  2.86% )
-
-Not really much difference.
-
-Then what about just catting /proc/$$/stat, and do a 1000 runs!
-
-Original:
-
-# perf stat -r 1000 cat /proc/$$/stat > /dev/null
-
- Performance counter stats for 'cat /proc/1622/stat' (1000 runs):
-
-              0.34 msec task-clock                #    0.680 CPUs utilized =
-           ( +-  0.21% )
-                 0      context-switches          #    0.071 K/sec         =
-           ( +- 20.18% )
-                 0      cpu-migrations            #    0.000 K/sec         =
-        =20
-                65      page-faults               #    0.192 M/sec         =
-           ( +-  0.07% )
-           993,486      cycles                    #    2.934 GHz           =
-           ( +-  0.07% )
-           577,903      stalled-cycles-frontend   #   58.17% frontend cycle=
-s idle     ( +-  0.09% )
-           936,489      instructions              #    0.94  insn per cycle=
-        =20
-                                                  #    0.62  stalled cycles=
- per insn  ( +-  0.07% )
-           202,912      branches                  #  599.213 M/sec         =
-           ( +-  0.07% )
-             6,976      branch-misses             #    3.44% of all branche=
-s          ( +-  0.11% )
-
-        0.00049797 +- 0.00000111 seconds time elapsed  ( +-  0.22% )
-
-
-With your patches:
-
-# perf stat -r 1000 cat /proc/$$/stat > /dev/null
-
- Performance counter stats for 'cat /proc/1624/stat' (1000 runs):
-
-              0.34 msec task-clock                #    0.664 CPUs utilized =
-           ( +-  0.23% )
-                 0      context-switches          #    0.018 K/sec         =
-           ( +- 40.72% )
-                 0      cpu-migrations            #    0.000 K/sec         =
-        =20
-                65      page-faults               #    0.190 M/sec         =
-           ( +-  0.07% )
-           988,430      cycles                    #    2.892 GHz           =
-           ( +-  0.07% )
-           574,841      stalled-cycles-frontend   #   58.16% frontend cycle=
-s idle     ( +-  0.09% )
-           933,852      instructions              #    0.94  insn per cycle=
-        =20
-                                                  #    0.62  stalled cycles=
- per insn  ( +-  0.07% )
-           202,096      branches                  #  591.297 M/sec         =
-           ( +-  0.07% )
-             6,836      branch-misses             #    3.38% of all branche=
-s          ( +-  0.09% )
-
-        0.00051476 +- 0.00000557 seconds time elapsed  ( +-  1.08% )
-
-
-They are pretty much identical.
-
-What's the purpose of all these changes again? There was no cover letter.
-
--- Steve
-
---MP_/xbI+jYb6tEPw5+QvHxltnyb
-Content-Type: application/x-perl
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=report.pl
-
-IyEvdXNyL2Jpbi9wZXJsIC13CgpteSBAbGlzdDsKbXkgJHRvdGFsOwoKd2hpbGUgKDw+KSB7Cglj
-aG9tcDsKCWlmICgvdGltZTpccyooXFMqKS8pIHsKCQkkbGlzdFskI2xpc3QgKyAxXSA9ICQxOwoJ
-CSR0b3RhbCArPSAkMTsKCX0KfQoKbXkgJGNudCA9ICQjbGlzdCArIDE7CmlmICghJGNudCkgewoJ
-cHJpbnQgIm5vdGhpbmcgdG8gcmVwb3J0XG4iOwoJZXhpdDsKfQpteSAkYXZnID0gJHRvdGFsIC8g
-JGNudDsKCm15ICRzdGQgPSAwOwokY250ID0gMDsKZm9yZWFjaCBteSAkdmFsIChAbGlzdCkgewoJ
-bXkgJGRlbHRhID0gJHZhbCAtICRhdmc7Cgkkc3RkICs9ICRkZWx0YSAqICRkZWx0YTsKCSRjbnQr
-KzsKfQpteSAkZnVsbF9zdGQgPSBzcXJ0KCRjbnQgPyAkc3RkIC8gJGNudCA6IDApOwoKcHJpbnRm
-IDw8RU9GOwoKZnVsbF90b3RhbCA9ICR0b3RhbAogIGF2ZXJhZ2U6ICAgJGF2ZwogIHN0ZDogICAg
-ICAgJGZ1bGxfc3RkCgpFT0YK
-
---MP_/xbI+jYb6tEPw5+QvHxltnyb--
