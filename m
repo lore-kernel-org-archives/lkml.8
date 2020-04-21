@@ -4,72 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E024C55189
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18996C55186
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB522068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E002220575
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="G74PTK6T"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="eKvYVCAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgDUXlu (ORCPT
+        id S1726462AbgDUXl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 19:41:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49530 "EHLO
+        Tue, 21 Apr 2020 19:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725850AbgDUXlt (ORCPT
+        by vger.kernel.org with ESMTP id S1726440AbgDUXlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 19:41:49 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC3AC0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 16:41:49 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id 71so238059qtc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 16:41:49 -0700 (PDT)
+        Tue, 21 Apr 2020 19:41:55 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C14FC0610D6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 16:41:54 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id o10so264386qtr.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 16:41:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LvYouvVpcqYLPafw/K5/u16SlbXdlEtkvI3+uiIfQUs=;
-        b=G74PTK6TtB9NwQj+FSqGUh2FwwFtWKKCQ+mOSiH63EAaBhzW/vQhn1g45PghckrUdo
-         S871ocFS0GrOqjr/r2si+SWzI5Ge85eGKFPXU2HNCU83mmZgo7S5lItiNiBMEs2mEOJg
-         gsUKJXpwCQXygXlSgssdZ0GyQfnmHVdS0tikEB1I9MYpowwsLxR1F59/1M7fTzLMz7NO
-         VRmXu7/AGWWKMeCNisN1iyQ785p7gL+LwjR2XT3cNhqcHpMbD1ljdRQZ9lVoN+B78zvl
-         ZmqSVBL1DSDDXbhuHR3y0/eGmQdsT0MC8tEm7H+f2dswxFr8BmE8bkRXYMduNScQKsMC
-         BcWQ==
+        bh=b9pVDKP0g8S2MfYf57rVnW4jv51OskWN8uJ/QQ1ShYs=;
+        b=eKvYVCAA3IuMzC7NIFA2msjk5O/EzP63iwMdo1CaabARLRTe3qM6ksBbM7oXPEIzKk
+         dlgbJl0jUwBKgQb+ATjFLoBErcBv70VJ7uE7IPhncYnC1KwmX9CKEO8ciXndyBTAsUjX
+         8RQlo4+a5hSqLWtaANXaw0QP6K9fqOEfQ2p2qDQN37b0FvKfG8IG/ysc25YFZij98p2n
+         pMvRZF/iltw0GvL4Zm5qph2IJAbWCMfPhDaA/mGXEkh+brTR6XxZeGw7DgYFvCCXuQFI
+         rlQqckrRq6FlwsTI5OiM4EDdUSOXF9QAyLnhMBvgfgnLkNh3ca2hqUIhD3dBYOngT+qO
+         4CNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LvYouvVpcqYLPafw/K5/u16SlbXdlEtkvI3+uiIfQUs=;
-        b=f83xHsyCS6ZdRTVix5ZGSOGDERRDWhcSGdI4PDmWU5XVb+kaz+pTPezseP0qBZx78j
-         ulw527fsBfjagCctMtharo1IXT5nFvFdPHaJraYtVoIyrboW75bFnVUo6ZqpEW1L0wM2
-         KbUHIAZvfeyxquwbl7Urjtfh0C3y4N8IX769iMYleoHO3PIaF2kA+Iv/rJCl9quuHiyV
-         zzqSnHbYZCNjs+VkVKWQPk648vF9kcwLKUkh0lM3V4g/6xIfk2YJm2LBaDSmo6EVR7MP
-         vWEsN+oqq/4pFKqeaxiVS7Vr9NRrEsRT8QozxiJMLdsrZHGeM2vig6QRENIlAT2WLRGJ
-         ABkA==
-X-Gm-Message-State: AGi0PubCEqO1/LxbHowAiRXU8KYgmS4M6Pgqe7ALR4DePFcYHXWqxFVD
-        pBbpn+AROVtcR967Jk5IkRDdbw==
-X-Google-Smtp-Source: APiQypK1nmzvS2nmLwnRxDmP5lKch6j44kgbOozEUbrgbvCS5biDAMrxAAoKoc/vJFqcrC/GuSVPhQ==
-X-Received: by 2002:ac8:4cd1:: with SMTP id l17mr23695608qtv.20.1587512508380;
-        Tue, 21 Apr 2020 16:41:48 -0700 (PDT)
+        bh=b9pVDKP0g8S2MfYf57rVnW4jv51OskWN8uJ/QQ1ShYs=;
+        b=dLG+HkFhrzQ0wRpAdeqkFrIlrRBjuUX+D5k55mT72oKuBIX6W20C/T4nCIBux78aGE
+         G/OKjc1eSHhpRY7wAGY5FdmHvMmM7iG7asmdwJDjSnV7/PRYl45iGSkNHH1lPLquvtAS
+         ueC60dU3j1NMS50ssEhYKwPr5wJlsJ+TrIw0VwYrOGNeMJzh9QYCB5p6gN7pSdKx4UC3
+         fyzRCuFx6MkiDO8KIq6333GrixeUGeuoEiVfH5BjY6wXVXx0pv3TvRgxrKNjOxa2ALUe
+         l/IVkF5tQYeBKUGRXkpVcGVfflxHhA0xi0j3/l4z/tr3XRzZRl77N0Zy1o3W+B/yn5IA
+         +GdQ==
+X-Gm-Message-State: AGi0Puao0UIHTV8Mqn1BuQKsOvqDdUzXyby3xHlp6CsI9DLloCjJIL+z
+        nnJja0MN0KMIbFBcM1RRLyrWfw==
+X-Google-Smtp-Source: APiQypJik1AHenL1jETiWCR/SiGe6lM8oTClQwmrr/TKg3hEM68Rw0RUUB7Vc9mjsSvefZOFo63JPA==
+X-Received: by 2002:ac8:2dab:: with SMTP id p40mr23165393qta.6.1587512513360;
+        Tue, 21 Apr 2020 16:41:53 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id y17sm2664010qky.33.2020.04.21.16.41.47
+        by smtp.gmail.com with ESMTPSA id y17sm2664010qky.33.2020.04.21.16.41.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 16:41:48 -0700 (PDT)
+        Tue, 21 Apr 2020 16:41:52 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     freedreno@lists.freedesktop.org
 Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
         linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
         dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
         GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/9] drm/msm: add internal MSM_BO_MAP_PRIV flag
-Date:   Tue, 21 Apr 2020 19:41:20 -0400
-Message-Id: <20200421234127.27965-3-jonathan@marek.ca>
+Subject: [PATCH v2 3/9] drm/msm/a6xx: use msm_gem for GMU memory objects
+Date:   Tue, 21 Apr 2020 19:41:21 -0400
+Message-Id: <20200421234127.27965-4-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200421234127.27965-1-jonathan@marek.ca>
 References: <20200421234127.27965-1-jonathan@marek.ca>
@@ -80,40 +83,275 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This flag sets IOMMU_PRIV, which is required for some a6xx GMU objects.
+This gives more fine-grained control over how memory is allocated over the
+DMA api. In particular, it allows using an address range or pinning to
+a fixed address.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- drivers/gpu/drm/msm/msm_gem.c | 3 +++
- drivers/gpu/drm/msm/msm_gem.h | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 115 ++++++++++++++++++--------
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   9 +-
+ drivers/gpu/drm/msm/adreno/a6xx_hfi.c |   6 +-
+ 3 files changed, 88 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index d8f56a34c117..6277fde13df9 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -428,6 +428,9 @@ static int msm_gem_pin_iova(struct drm_gem_object *obj,
- 	if (!(msm_obj->flags & MSM_BO_GPU_READONLY))
- 		prot |= IOMMU_WRITE;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index c4e71abbdd53..c9fd0470a321 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -2,14 +2,16 @@
+ /* Copyright (c) 2017-2019 The Linux Foundation. All rights reserved. */
  
-+	if (msm_obj->flags & MSM_BO_MAP_PRIV)
-+		prot |= IOMMU_PRIV;
+ #include <linux/clk.h>
+-#include <linux/dma-mapping.h>
+ #include <linux/interconnect.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_opp.h>
+ #include <soc/qcom/cmd-db.h>
++#include <drm/drm_gem.h>
+ 
+ #include "a6xx_gpu.h"
+ #include "a6xx_gmu.xml.h"
++#include "msm_gem.h"
++#include "msm_mmu.h"
+ 
+ static void a6xx_gmu_fault(struct a6xx_gmu *gmu)
+ {
+@@ -620,7 +622,7 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
+ 	gmu_write(gmu, REG_A6XX_GMU_CM3_BOOT_CONFIG, 0x02);
+ 
+ 	/* Write the iova of the HFI table */
+-	gmu_write(gmu, REG_A6XX_GMU_HFI_QTBL_ADDR, gmu->hfi->iova);
++	gmu_write(gmu, REG_A6XX_GMU_HFI_QTBL_ADDR, gmu->hfi.iova);
+ 	gmu_write(gmu, REG_A6XX_GMU_HFI_QTBL_INFO, 1);
+ 
+ 	gmu_write(gmu, REG_A6XX_GMU_AHB_FENCE_RANGE_0,
+@@ -919,34 +921,77 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
+ 	return 0;
+ }
+ 
+-static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu, struct a6xx_gmu_bo *bo)
++static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu)
+ {
+-	if (IS_ERR_OR_NULL(bo))
+-		return;
++	msm_gem_kernel_put(gmu->hfi.obj, gmu->aspace, false);
++	msm_gem_kernel_put(gmu->debug.obj, gmu->aspace, false);
 +
- 	WARN_ON(!mutex_is_locked(&msm_obj->lock));
++	gmu->aspace->mmu->funcs->detach(gmu->aspace->mmu);
++	msm_gem_address_space_put(gmu->aspace);
++}
++
++static int a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu, struct a6xx_gmu_bo *bo,
++		size_t size, u64 iova)
++{
++	struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
++	struct drm_device *dev = a6xx_gpu->base.base.dev;
++	uint32_t flags = MSM_BO_WC;
++	u64 range_start, range_end;
++	int ret;
++
++	size = PAGE_ALIGN(size);
++	if (!iova) {
++		/* no fixed address - use GMU's uncached range */
++		range_start = 0x60000000;
++		range_end = 0x80000000;
++	} else {
++		/* range for fixed address */
++		range_start = iova;
++		range_end = iova + size;
++	}
++
++	bo->obj = msm_gem_new(dev, size, flags);
++	if (IS_ERR(bo->obj))
++		return PTR_ERR(bo->obj);
  
- 	if (WARN_ON(msm_obj->madv != MSM_MADV_WILLNEED))
-diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-index 30584eaf8cc8..972490b14ba5 100644
---- a/drivers/gpu/drm/msm/msm_gem.h
-+++ b/drivers/gpu/drm/msm/msm_gem.h
-@@ -13,6 +13,7 @@
+-	dma_free_wc(gmu->dev, bo->size, bo->virt, bo->iova);
+-	kfree(bo);
++	ret = msm_gem_get_and_pin_iova_range(bo->obj, gmu->aspace, &bo->iova,
++		range_start >> PAGE_SHIFT, range_end >> PAGE_SHIFT);
++	if (ret) {
++		drm_gem_object_put(bo->obj);
++		return ret;
++	}
++
++	bo->virt = msm_gem_get_vaddr(bo->obj);
++	bo->size = size;
++
++	return 0;
+ }
  
- /* Additional internal-use only BO flags: */
- #define MSM_BO_STOLEN        0x10000000    /* try to use stolen/splash memory */
-+#define MSM_BO_MAP_PRIV      0x20000000    /* use IOMMU_PRIV when mapping */
+-static struct a6xx_gmu_bo *a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
+-		size_t size)
++static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
+ {
+-	struct a6xx_gmu_bo *bo;
++	struct iommu_domain *domain;
++	int ret;
  
- struct msm_gem_address_space {
- 	const char *name;
+-	bo = kzalloc(sizeof(*bo), GFP_KERNEL);
+-	if (!bo)
+-		return ERR_PTR(-ENOMEM);
++	domain = iommu_domain_alloc(&platform_bus_type);
++	if (!domain)
++		return -ENODEV;
+ 
+-	bo->size = PAGE_ALIGN(size);
++	domain->geometry.aperture_start = 0x00000000;
++	domain->geometry.aperture_end = 0x7fffffff;
+ 
+-	bo->virt = dma_alloc_wc(gmu->dev, bo->size, &bo->iova, GFP_KERNEL);
++	gmu->aspace = msm_gem_address_space_create(gmu->dev, domain, "gmu");
++	if (IS_ERR(gmu->aspace)) {
++		iommu_domain_free(domain);
++		return PTR_ERR(gmu->aspace);
++	}
+ 
+-	if (!bo->virt) {
+-		kfree(bo);
+-		return ERR_PTR(-ENOMEM);
++	ret = gmu->aspace->mmu->funcs->attach(gmu->aspace->mmu);
++	if (ret) {
++		msm_gem_address_space_put(gmu->aspace);
++		return ret;
+ 	}
+ 
+-	return bo;
++	return 0;
+ }
+ 
+ /* Return the 'arc-level' for the given frequency */
+@@ -1204,7 +1249,7 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
+ 	iounmap(gmu->mmio);
+ 	gmu->mmio = NULL;
+ 
+-	a6xx_gmu_memory_free(gmu, gmu->hfi);
++	a6xx_gmu_memory_free(gmu);
+ 
+ 	free_irq(gmu->gmu_irq, gmu);
+ 	free_irq(gmu->hfi_irq, gmu);
+@@ -1226,15 +1271,7 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ 
+ 	gmu->dev = &pdev->dev;
+ 
+-	/* Pass force_dma false to require the DT to set the dma region */
+-	ret = of_dma_configure(gmu->dev, node, false);
+-	if (ret)
+-		return ret;
+-
+-	/* Set the mask after the of_dma_configure() */
+-	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(31));
+-	if (ret)
+-		return ret;
++	of_dma_configure(gmu->dev, node, true);
+ 
+ 	/* Fow now, don't do anything fancy until we get our feet under us */
+ 	gmu->idle_level = GMU_IDLE_STATE_ACTIVE;
+@@ -1246,20 +1283,26 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ 	if (ret)
+ 		goto err_put_device;
+ 
++	ret = a6xx_gmu_memory_probe(gmu);
++	if (ret)
++		goto err_put_device;
++
+ 	/* Allocate memory for for the HFI queues */
+-	gmu->hfi = a6xx_gmu_memory_alloc(gmu, SZ_16K);
+-	if (IS_ERR(gmu->hfi))
++	ret = a6xx_gmu_memory_alloc(gmu, &gmu->hfi, SZ_16K, 0);
++	if (ret)
+ 		goto err_memory;
+ 
+ 	/* Allocate memory for the GMU debug region */
+-	gmu->debug = a6xx_gmu_memory_alloc(gmu, SZ_16K);
+-	if (IS_ERR(gmu->debug))
++	ret = a6xx_gmu_memory_alloc(gmu, &gmu->debug, SZ_16K, 0);
++	if (ret)
+ 		goto err_memory;
+ 
+ 	/* Map the GMU registers */
+ 	gmu->mmio = a6xx_gmu_get_mmio(pdev, "gmu");
+-	if (IS_ERR(gmu->mmio))
++	if (IS_ERR(gmu->mmio)) {
++		ret = PTR_ERR(gmu->mmio);
+ 		goto err_memory;
++	}
+ 
+ 	/* Get the HFI and GMU interrupts */
+ 	gmu->hfi_irq = a6xx_gmu_get_irq(gmu, pdev, "hfi", a6xx_hfi_irq);
+@@ -1288,11 +1331,11 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ 	iounmap(gmu->mmio);
+ 	free_irq(gmu->gmu_irq, gmu);
+ 	free_irq(gmu->hfi_irq, gmu);
+-err_memory:
+-	a6xx_gmu_memory_free(gmu, gmu->hfi);
+ 
+ 	ret = -ENODEV;
+ 
++err_memory:
++	a6xx_gmu_memory_free(gmu);
+ err_put_device:
+ 	/* Drop reference taken in of_find_device_by_node */
+ 	put_device(gmu->dev);
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+index 4af65a36d5ca..cd66a5e1d7e9 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+@@ -10,9 +10,10 @@
+ #include "a6xx_hfi.h"
+ 
+ struct a6xx_gmu_bo {
++	struct drm_gem_object *obj;
+ 	void *virt;
+ 	size_t size;
+-	dma_addr_t iova;
++	u64 iova;
+ };
+ 
+ /*
+@@ -43,6 +44,8 @@ struct a6xx_gmu_bo {
+ struct a6xx_gmu {
+ 	struct device *dev;
+ 
++	struct msm_gem_address_space *aspace;
++
+ 	void * __iomem mmio;
+ 
+ 	int hfi_irq;
+@@ -52,8 +55,8 @@ struct a6xx_gmu {
+ 
+ 	int idle_level;
+ 
+-	struct a6xx_gmu_bo *hfi;
+-	struct a6xx_gmu_bo *debug;
++	struct a6xx_gmu_bo hfi;
++	struct a6xx_gmu_bo debug;
+ 
+ 	int nr_clocks;
+ 	struct clk_bulk_data *clocks;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+index e450e0b97211..b90343d4caf0 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+@@ -176,8 +176,8 @@ static int a6xx_hfi_send_gmu_init(struct a6xx_gmu *gmu, int boot_state)
+ {
+ 	struct a6xx_hfi_msg_gmu_init_cmd msg = { 0 };
+ 
+-	msg.dbg_buffer_addr = (u32) gmu->debug->iova;
+-	msg.dbg_buffer_size = (u32) gmu->debug->size;
++	msg.dbg_buffer_addr = (u32) gmu->debug.iova;
++	msg.dbg_buffer_size = (u32) gmu->debug.size;
+ 	msg.boot_state = boot_state;
+ 
+ 	return a6xx_hfi_send_msg(gmu, HFI_H2F_MSG_INIT, &msg, sizeof(msg),
+@@ -385,7 +385,7 @@ static void a6xx_hfi_queue_init(struct a6xx_hfi_queue *queue,
+ 
+ void a6xx_hfi_init(struct a6xx_gmu *gmu)
+ {
+-	struct a6xx_gmu_bo *hfi = gmu->hfi;
++	struct a6xx_gmu_bo *hfi = &gmu->hfi;
+ 	struct a6xx_hfi_queue_table_header *table = hfi->virt;
+ 	struct a6xx_hfi_queue_header *headers = hfi->virt + sizeof(*table);
+ 	u64 offset;
 -- 
 2.26.1
 
