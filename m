@@ -2,80 +2,156 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9588C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B896C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C94E82074B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A3912098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587453858;
+	bh=6zceOSWqwAhK0DKj/24rioNk8lT8HlLw+8jDXzMcwu4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zSSXgPhEOqV1vHoWK+o2VJwWhO5jtE296QuoyY5IzGCB8ZI1Hiwr2AfRnWjdOXGT9
+	 t/TZ06chR8LOAFvx0lbYTS1PAHqxgzOAGuzq9bmMam4CA86np3m0qMdQnYhaP4wHba
+	 y+VJke7DwOK3QKrR2tHI7bB69ZNoTgHH8kU8UfPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgDUHXg (ORCPT
+        id S1727118AbgDUHYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:23:36 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57764 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgDUHXf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:23:35 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 21 Apr 2020 03:24:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726563AbgDUHYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 03:24:17 -0400
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 646582A004E;
-        Tue, 21 Apr 2020 08:23:33 +0100 (BST)
-Date:   Tue, 21 Apr 2020 09:23:28 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     broonie@kernel.org, tudor.ambarus@microchip.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        Pratyush Yadav <p.yadav@ti.com>
-Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D
- mode
-Message-ID: <20200421092328.129308f6@collabora.com>
-In-Reply-To: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53C392098B;
+        Tue, 21 Apr 2020 07:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587453856;
+        bh=6zceOSWqwAhK0DKj/24rioNk8lT8HlLw+8jDXzMcwu4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZhKfsthw72RYzNNwt/UQWcOXo5c6OTyhBhIs+q+IZ3lQ/X8hwX/9GVV9KVKGKdZky
+         ttGLRzjR4PGtnOMUEmEfP+DmkjqbBPpl981HAjr8bk/B7mpWg9hKApfYRHTpQkv5AW
+         BStXSzf/nkAbo2uRyrnWwz4e7+4yyxwy1oL+CkS8=
+Received: by mail-io1-f44.google.com with SMTP id e9so6400830iok.9;
+        Tue, 21 Apr 2020 00:24:16 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZNdlRl8s9C8tY0PgIUVtU1EdjsEOa/xLb2FrDVYKoGjU4lBh2W
+        o9o6pQLc878b84H/x6abWcP3fYpmAlbcR8ftS4A=
+X-Google-Smtp-Source: APiQypLLHbqrAD1vb/WetErR87p9iw/49ROjWxRdn0kjV+DQlfDNrQQnbn+LbFZuM8xMBV08/FbGIw1Y0KIeou/Aw6Y=
+X-Received: by 2002:a6b:5904:: with SMTP id n4mr19828247iob.142.1587453855746;
+ Tue, 21 Apr 2020 00:24:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200421033336.9663-1-atish.patra@wdc.com>
+In-Reply-To: <20200421033336.9663-1-atish.patra@wdc.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 21 Apr 2020 09:24:04 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEXTq8RhD-AM4i3ZmXRcLDTW8waNDbWNa0V8V1nz4zb_A@mail.gmail.com>
+Message-ID: <CAMj1kXEXTq8RhD-AM4i3ZmXRcLDTW8waNDbWNa0V8V1nz4zb_A@mail.gmail.com>
+Subject: Re: [v4 PATCH 0/3] Add UEFI support for RISC-V
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Pratyush who's working on a similar patchet [1].
+On Tue, 21 Apr 2020 at 05:34, Atish Patra <atish.patra@wdc.com> wrote:
+>
+> This series adds UEFI support for RISC-V. Currently, only boot time
+> services have been added. Runtime services will be added in a separate
+> series. This series depends on some core EFI patches
+> present in current in efi-next and following other patches.
+>
+> U-Boot: Adds the boot hartid under chosen node.
+> https://lists.denx.de/pipermail/u-boot/2020-April/405726.html
+>
+> Linux kernel: 5.7-rc1
+>
+> OpenSBI: master
+>
+> Patch 1 just moves arm-stub code to a generic code so that it can be used
+> across different architecture.
+>
+> Patch 3 adds fixmap bindings so that CONFIG_EFI can be compiled and we do not
+> have create separate config to enable boot time services.
+> As runtime services are not enabled at this time, full generic early ioremap
+> support is also not added in this series.
+>
+> Patch 4 and 5 adds the PE/COFF header and EFI stub code support for RISC-V
+> respectively.
+>
+> The patches can also be found in following git repo.
+>
+> https://github.com/atishp04/linux/tree/wip_uefi_riscv_v4
+>
+> The patches have been verified on Qemu using bootefi command in U-Boot.
+>
+> Changes from v3->v4:
+> 1. Rebased on top of efi-next.
+> 2. Dropped patch 1 & 2 from this series as it is already queued in efi-next.
+> Changes from v2->v3:
+> 3. Improved handle_kernel_image() for RISC-V.
+>
 
-Hello Mason,
+Thanks Atish. This looks nice and simple now.
 
-On Tue, 21 Apr 2020 14:39:42 +0800
-Mason Yang <masonccyang@mxic.com.tw> wrote:
+I will need an ack from the RISC-V maintainers on these, and it is up
+to them to consider whether the changes to core kconfigs and makefiles
+are likely to cause trouble or not. If so, I am happy to work out a
+way to merge this via a shared stable branch.
 
-> Hello,
-> 
-> This is repost of patchset from Boris Brezillon's
-> [RFC,00/18] mtd: spi-nor: Proposal for 8-8-8 mode support [1].
 
-I only quickly went through the patches you sent and saying it's a
-repost of the RFC is a bit of a lie. You completely ignored the state
-tracking I was trying to do to avoid leaving the flash in 8D mode when
-suspending/resetting the board, and I think that part is crucial. If I
-remember correctly, we already had this discussion so I must say I'm a
-bit disappointed.
 
-Can you sync with Pratyush? I think his series [1] is better in that it
-tries to restore the flash in single-SPI mode before suspend (it's
-missing the shutdown case, but that can be easily added I think). Of
-course that'd be even better to have proper state tracking at the SPI
-NOR level.
-
-Regards,
-
-Boris
-
-[1]https://lkml.org/lkml/2020/3/13/659
+> Changes from v1->v2:
+> 1. Rebased on 5.7-rc1.
+> 2. Fixed minor typos and removed redundant macros/comments.
+>
+> Changes from previous version:
+> 1. Renamed to the generic efi stub macro.
+> 2. Address all redundant comments.
+> 3. Supported EFI kernel image with normal booti command.
+> 4. Removed runtime service related macro defines.
+>
+> Atish Patra (3):
+> RISC-V: Define fixmap bindings for generic early ioremap support
+> RISC-V: Add PE/COFF header for EFI stub
+> RISC-V: Add EFI stub support.
+>
+> arch/riscv/Kconfig                        |  21 +++++
+> arch/riscv/Makefile                       |   1 +
+> arch/riscv/configs/defconfig              |   1 +
+> arch/riscv/include/asm/Kbuild             |   1 +
+> arch/riscv/include/asm/efi.h              |  44 +++++++++
+> arch/riscv/include/asm/fixmap.h           |  18 ++++
+> arch/riscv/include/asm/io.h               |   1 +
+> arch/riscv/include/asm/sections.h         |  13 +++
+> arch/riscv/kernel/Makefile                |   4 +
+> arch/riscv/kernel/efi-header.S            |  99 ++++++++++++++++++++
+> arch/riscv/kernel/head.S                  |  16 ++++
+> arch/riscv/kernel/image-vars.h            |  53 +++++++++++
+> arch/riscv/kernel/vmlinux.lds.S           |  20 +++-
+> drivers/firmware/efi/Kconfig              |   2 +-
+> drivers/firmware/efi/libstub/Makefile     |  10 ++
+> drivers/firmware/efi/libstub/riscv-stub.c | 106 ++++++++++++++++++++++
+> 16 files changed, 407 insertions(+), 3 deletions(-)
+> create mode 100644 arch/riscv/include/asm/efi.h
+> create mode 100644 arch/riscv/include/asm/sections.h
+> create mode 100644 arch/riscv/kernel/efi-header.S
+> create mode 100644 arch/riscv/kernel/image-vars.h
+> create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+>
+> --
+> 2.24.0
+>
