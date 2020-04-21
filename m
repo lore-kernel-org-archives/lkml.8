@@ -2,101 +2,64 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBD3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE8CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC45B20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:13:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="P1A59HSH"
+	by mail.kernel.org (Postfix) with ESMTP id 143B620857
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgDUJNf (ORCPT
+        id S1728475AbgDUJOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:13:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726018AbgDUJNe (ORCPT
+        Tue, 21 Apr 2020 05:14:01 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:35615 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726018AbgDUJOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:13:34 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE18C061A0F;
-        Tue, 21 Apr 2020 02:13:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YO6F5ObedfU/G1cBVZlRZ9Tclj+oI0shB5VAVt4/Ej0=; b=P1A59HSHX8OqJP5aEdGeiV/B2
-        v103CRxWtRZHmqa7NbuMTVDo44ZOmpRq6I05Ol6Qfmk/yPKSw46jyurTZX1KULRynoTJ7DDXfMahT
-        ugzkH5msRllUA5/+9l7CtYY3E1Bi+tcQNSXhvvAU9cp1ya9Fqw8E+bJW/lc+8jbvfEnzcR+jDk9Tr
-        h6eRjjHdbTlY7Ru4qvHMbf/Jx82P+r29op4ZbmdIDi1H9XLtzQlS7iweG7kPStFXjUaZfYafW9oJk
-        q+JXPHTb/cQGKUlhwKX0wRzQ7Xz2naV1pjv9KhcBx58LwqJxxdeUBMFKJGiF5abHjK110/9F+T1s2
-        uasQ9fr8g==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:41518)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jQoxi-0000Ux-OB; Tue, 21 Apr 2020 10:13:03 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jQoxc-0006uR-F0; Tue, 21 Apr 2020 10:12:56 +0100
-Date:   Tue, 21 Apr 2020 10:12:56 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Al Viro <viro@zeniv.linux.org.uk>, Will Deacon <will@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>, Peter Anvin <hpa@zytor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v2 5/5] uaccess: Rename user_access_begin/end() to
- user_full_access_begin/end()
-Message-ID: <20200421091256.GA25745@shell.armlinux.org.uk>
-References: <36e43241c7f043a24b5069e78c6a7edd11043be5.1585898438.git.christophe.leroy@c-s.fr>
- <42da416106d5c1cf92bda1e058434fe240b35f44.1585898438.git.christophe.leroy@c-s.fr>
- <CAHk-=wh_DY_dysMX0NuvJmMFr3+QDKOZPZqWKwLkkjgZTuyQ+A@mail.gmail.com>
- <20200403205205.GK23230@ZenIV.linux.org.uk>
- <20200421024919.GA23230@ZenIV.linux.org.uk>
+        Tue, 21 Apr 2020 05:14:00 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TwDlbjE_1587460437;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TwDlbjE_1587460437)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 21 Apr 2020 17:13:58 +0800
+Subject: Re: [PATCH 06/18] mm: memcontrol: prepare uncharging for removal of
+ private page type counters
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Joonsoo Kim <js1304@gmail.com>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+References: <20200420221126.341272-1-hannes@cmpxchg.org>
+ <20200420221126.341272-7-hannes@cmpxchg.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <20065063-d508-5bb9-572e-ebcb2e41cf85@linux.alibaba.com>
+Date:   Tue, 21 Apr 2020 17:12:51 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421024919.GA23230@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200420221126.341272-7-hannes@cmpxchg.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 03:49:19AM +0100, Al Viro wrote:
-> 	The only source I'd been able to find speeks of >= 60 cycles
-> (and possibly much more) for non-pipelined coprocessor instructions;
-> the list of such does contain loads and stores to a bunch of registers.
-> However, the register in question (p15/c3) has only store mentioned there,
-> so loads might be cheap; no obvious reasons for those to be slow.
-> That's a question to arm folks, I'm afraid...  rmk?
 
-I have no information on that; instruction timings are not defined
-at architecture level (architecture reference manual), nor do I find
-information in the CPU technical reference manual (which would be
-specific to the CPU). Instruction timings tend to be implementation
-dependent.
 
-I've always consulted Will Deacon when I've needed to know whether
-an instruction is expensive or not.
+ÔÚ 2020/4/21 ÉÏÎç6:11, Johannes Weiner Ð´µÀ:
+> The uncharge batching code adds up the anon, file, kmem counts to
+> determine the total number of pages to uncharge and references to
+> drop. But the next patches will remove the anon and file counters.
+> 
+> Maintain an aggregate nr_pages in the uncharge_gather struct.
+> 
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
