@@ -2,221 +2,138 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BC3C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88315C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B20206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:44:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="S4jVdIKl"
+	by mail.kernel.org (Postfix) with ESMTP id 6FF25206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgDUXog (ORCPT
+        id S1726423AbgDUXpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 19:44:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgDUXof (ORCPT
+        Tue, 21 Apr 2020 19:45:21 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:33138 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbgDUXpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 19:44:35 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F87C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 16:44:34 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 198so133581lfo.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 16:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LQhtlsw1+T6reMAEhFyYFr2m8Qv3jouQUXJ8R8StFM8=;
-        b=S4jVdIKlRsEiRGbtdIe4araEhiFTR6d+6KJqowgAjs2Aw6i7qWq9+rhzeWPW20Lwyv
-         JhvwC5N0zDc010k/ZQ+WQZZcJc/egZZBd/t6Y4mO8M8oWzOIXkF4OQfuGBD1CUnwuMRh
-         WNQD8NykXmqQHrYCtadUapSWEhcTe8FKW9ISCfS9PMxycykPibhwsI+BAq5OCxBcfoA/
-         BDaLL2qwtILN6XtP3yNpbDfpYwbZAR7KxfkG2tpluOBDpHiHbgo3jtNFD4cQDT8DQ/BP
-         2hSEMCAkRz9D49XieNfmFuymeONKUhx54J56YEwvhksgchmHLUUYrKXFeCcwmqD/lex6
-         z63w==
+        Tue, 21 Apr 2020 19:45:20 -0400
+Received: by mail-il1-f200.google.com with SMTP id l18so205733ilg.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 16:45:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LQhtlsw1+T6reMAEhFyYFr2m8Qv3jouQUXJ8R8StFM8=;
-        b=iyfAH30yQhzNARNSgNkzJivO+2ECN4ghIcUFcVp9XBdLOxoa6ja1pA6qylZ7ha535F
-         UnGKIJE2O3afKC+ir5hb6kXFrIejIfExRg+8Oe0lXJPiOCq7XSfy6IrEhps9/2e2GqhY
-         IjImAtODfdS/hZfaXGovKFxp2rn9rKKkPf2BtMcOM4tpTYp4p203UK1XYc/2KKICaJYZ
-         DO6IYpFAwcGkPVPiJe4D+XVJds6fwXr8YLx9hEvWE1+0pQFqvdfCe17oRJZB3rlVSy2s
-         nUYgAcyMF/5gwbI/vf4KoeC9gMHmegh1MivNIOJNtJYJzUt6S5QN5WtV9oHZ3hKaWkM1
-         YtXw==
-X-Gm-Message-State: AGi0PuY1IQ2kYSAZIV3B6rMdR3FOp5dKT2w2dT8u6BkeJhI3vnAjmiwA
-        jUND39JfGw30w3QGIHmAUUkVqrh7AvCg6pu3R8r6Bg==
-X-Google-Smtp-Source: APiQypKb2BXKLr6nvOOiLiS7ib4bgDZHP5d7Dp+7WeRvGIhSc1y5feKb+/KNTb10Rd1TBtBcLrXe2xWQhq1x5j95PIQ=
-X-Received: by 2002:ac2:5e26:: with SMTP id o6mr14712374lfg.49.1587512672917;
- Tue, 21 Apr 2020 16:44:32 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=jTIxAe9T+4WkiAVG73kHih2hhaSLgZCpyY1ft6c8qGg=;
+        b=exi9iFzzEpD5OsS1gQKupP7X7XYr5QNAovpvg2K/vdDucvORbxMUDCjJoFnj85jysG
+         NBrzJjZTTCuC3I6OBdy+PyogRb+sT37WSW/913ABquQHTuLi3ES+9TzTLh31a2PfW7rR
+         FLdy6cuR4mlN7hH9DULirE6tdqv1rKQi69XTerzmewwYjA2ul3gFEp/lGfgLRZTN5T/0
+         fLY4GjZ3cko/GJNFK8u6KI0BMWejNp9vQUHoV69L2zkGSa6hFy0xmb5muK9ZQ+4RkFo8
+         Wy8hsYuQBMep3ItopyDjQlArx6RW8Pv8kWFskci1kg5COnbqBDUMBS8MWVj0e4QrGUYQ
+         9hog==
+X-Gm-Message-State: AGi0PubfwGJbqX4vXc4gcZAweu20452eGYkltMuFtt17b+GtmLzelj1n
+        zdeoUpMiG7upgnL8k544rSvlpcZHbZeo7zaIv+u3+iFJJWdE
+X-Google-Smtp-Source: APiQypLvkDHTqXH5797LHKlltA3GcfkoYFrxZV+TVupKDNdFevLY9T11EVZjotcaZ8+uqYJjMJu1x5G/gZvle2H/ny3P2kzVapHy
 MIME-Version: 1.0
-References: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
- <20200418122123.10157ddd@why> <CY4PR12MB1271277CEE4F1FE06B71DDE8DAD60@CY4PR12MB1271.namprd12.prod.outlook.com>
- <8a03b55223b118c6fc605d7204e01460@kernel.org> <CABEDWGxLKB68iknXtK8-4ke3wGW-6RKBnDEh6rFbBekLyawVOw@mail.gmail.com>
- <20200421093928.4a600662@why>
-In-Reply-To: <20200421093928.4a600662@why>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Tue, 21 Apr 2020 16:44:21 -0700
-Message-ID: <CABEDWGxkn-rSnbjugWDPiOH1J_H9gen97CQ=NXFf44dFbFEyxQ@mail.gmail.com>
-Subject: Re: [PATCH] genirq/msi: Check null pointer before copying struct msi_msg
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>, tglx@linutronix.de,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
+X-Received: by 2002:a92:ba46:: with SMTP id o67mr23216384ili.66.1587512717930;
+ Tue, 21 Apr 2020 16:45:17 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 16:45:17 -0700
+In-Reply-To: <0000000000003cbf8e05a3d57b98@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a0f56c05a3d59b69@google.com>
+Subject: Re: general protection fault in go7007_usb_probe
+From:   syzbot <syzbot+cabfa4b5b05ff6be4ef0@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, hverkuil-cisco@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 1:39 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> On Mon, 20 Apr 2020 09:08:27 -0700
-> Alan Mikhak <alan.mikhak@sifive.com> wrote:
->
-> Alan,
->
-> > On Mon, Apr 20, 2020 at 2:14 AM Marc Zyngier <maz@kernel.org> wrote:
-> > >
-> > > On 2020-04-18 16:19, Gustavo Pimentel wrote:
-> > > > Hi Marc and Alan,
-> > > >
-> > > >> I'm not convinced by this. If you know that, by construction, these
-> > > >> interrupts are not associated with an underlying MSI, why calling
-> > > >> get_cached_msi_msg() the first place?
-> > > >>
-> > > >> There seem to be some assumptions in the DW EDMA driver that the
-> > > >> signaling would be MSI based, so maybe someone from Synopsys
-> > > >> (Gustavo?)
-> > > >> could clarify that. From my own perspective, running on an endpoint
-> > > >> device means that it is *generating* interrupts, and I'm not sure what
-> > > >> the MSIs represent here.
-> > > >
-> > > > Giving a little context to this topic.
-> > > >
-> > > > The eDMA IP present on the Synopsys DesignWare PCIe Endpoints can be
-> > > > configured and triggered *remotely* as well *locally*.
-> > > > For the sake of simplicity let's assume for now the eDMA was
-> > > > implemented
-> > > > on the EP and that is the IP that we want to configure and use.
-> > > >
-> > > > When I say *remotely* I mean that this IP can be configurable through
-> > > > the
-> > > > RC/CPU side, however, for that, it requires the eDMA registers to be
-> > > > exposed through a PCIe BAR on the EP. This will allow setting the SAR,
-> > > > DAR and other settings, also need(s) the interrupt(s) address(es) to be
-> > > > set as well (MSI or MSI-X only) so that it can signal through PCIe (to
-> > > > the RC and consecutively the associated EP driver) if the data transfer
-> > > > has been completed, aborted or if the Linked List consumer algorithm
-> > > > has
-> > > > passed in some linked element marked with a watermark.
-> > > >
-> > > > It was based on this case that the eDMA driver was exclusively
-> > > > developed.
-> > > >
-> > > > However, Alan, wants to expand a little more this, by being able to use
-> > > > this driver on the EP side (through
-> > > > pcitest/pci_endpoint_test/pci_epf_test) so that he can configure this
-> > > > IP
-> > > > *locally*.
-> > > > In fact, when doing this, he doesn't need to configure the interrupt
-> > > > address (MSI or MSI-X), because this IP provides a local interrupt line
-> > > > so that be connected to other blocks on the EP side.
-> > >
-> > > Right, so this confirms my hunch that the driver is being used in
-> > > a way that doesn't reflect the expected use case. Rather than
-> > > papering over the problem by hacking the core code, I'd rather see
-> > > the eDMA driver be updated to support both host and endpoint cases.
-> > > This probably boils down to a PCI vs non-PCI set of helpers.
-> > >
-> > > Alan, could you confirm whether we got it right?
-> >
-> > Thanks Marc and Gustavo. I appreciate all your comments and feedback.
-> >
-> > You both got it right. As Gustavo mentioned, I am trying to expand dw-edma
-> > for additional use cases.
-> >
-> > First new use case is for integration of dw-edma with pci-epf-test so the latter
-> > can initiate dma transfers locally from endpoint memory to host memory over the
-> > PCIe bus in response to a user command issued from the host-side command
-> > prompt using the pcitest utility. When the locally-initiated dma
-> > transfer completes
-> > in this use case on the endpoint side, dw-edma issues an interrupt to the local
-> > CPU on the endpoint side by way of a legacy interrupt and pci-epf-test issues
-> > an interrupt toward the remote host CPU across the PCIe bus by way of legacy,
-> > MSI, or possibly MSI-X interrupt.
-> >
-> > Second new use case is for integration of dw-edma with pci_endpoint_test
-> > running on the host CPU so the latter can initiate dma transfers locally from
-> > host-side in response to a user command issued from the host-side command
-> > prompt using the pcitest utility. This use case is for host systems that have
-> > Synopsys DesignWare PCI eDMA hardware on the host side. When the
-> > locally-initiated dma transfer completes in this use case on the host-side,
-> > dw-edma issues a legacy interrupt to its local host CPU and pci-epf-test running
-> > on the endpoint side issues a legacy, MSI, or possibly MSI-X interrupt
-> > across the
-> > PCIe bus toward the host CPU.
-> >
-> > When both the host and endpoint sides have the Synopsys DesignWare PCI
-> > eDMA hardware, more use cases become possible in which eDMA controllers
-> > from both systems can be engaged to move data. Embedded DMA controllers
-> > from other PCIe IP vendors may also be supported with additional dmaengine
-> > drivers under the Linux PCI Endpoint Framework with pci-epf-test, pcitest, and
-> > pci_endpoint_test suite as well as new PCI endpoint function drivers for such
-> > applications that require dma, for example nvme or virtio_net endpoint function
-> > drivers.
-> >
-> > I submitted a recent patch [1] and [2] which Gustavo ACk'd to decouple dw-edma
-> > from struct pci_dev. This enabled me to exercise dw-edma on some riscv host
-> > and endpoint systems that I work with.
-> >
-> > I will submit another patch to decouple dw-edma from struct msi_msg such
-> > that it would only call get_cached_msi_msg() on the host-side in its
-> > original use case with remotely initiated dma transfers using the BAR
-> > access method.
-> >
-> > The crash that I reported in __get_cached_msi_msg() is probably worth
-> > fixing too. It seems to be low impact since get_cached_msi_msg()
-> > seems to be called infrequently by a few callers.
->
-> It isn't about the frequency of the calls, nor the overhead of this
-> function. It is about the fundamental difference between a wired
-> interrupt (in most case a level triggered one) and a MSI (edge by
-> definition on PCI). By making get_cached_msi_msg() "safe" to be called
-> for non-MSI IRQs, you hide a variety of design bugs which would
-> otherwise be obvious, like the one you are currently dealing with.
->
-> Your eDMA driver uses MSI by construction, and is likely to use the MSI
-> semantics (edge triggering, coalescing, memory barrier). On the other
-> hand, your use case is likely to have interrupts with very different
-> semantics (level triggered, no barrier effect). Papering over these
-> differences is not the way to go, I'm afraid.
->
-> I would recommend that you adapt the driver to have a separate
-> interrupt management for the non-MSI case, or at least not blindly use
-> MSI-specific APIs when not using them.
+syzbot has found a reproducer for the following crash on:
 
-Thanks Marc,
+HEAD commit:    e9010320 usb: cdns3: gadget: make a bunch of functions sta..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=12da0b58100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bd14feb44652cfaf
+dashboard link: https://syzkaller.appspot.com/bug?extid=cabfa4b5b05ff6be4ef0
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1146eb17e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=159d136fe00000
 
-I understand that the crash I reported here is to be kept to catch such
-issues. The design of dw-edma was correct for its original use case.
-Since I am the one trying to expand its use cases, I accept your
-recommendation and will see if I can offer patches that would be
-acceptable there.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+cabfa4b5b05ff6be4ef0@syzkaller.appspotmail.com
 
-Regards,
-Alan
+usb 1-1: New USB device found, idVendor=0eb1, idProduct=7007, bcdDevice= 2.08
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+usb 1-1: string descriptor 0 read error: -71
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:go7007_usb_probe+0x4ba/0x1d49 drivers/media/usb/go7007/go7007-usb.c:1145
+Code: c1 ee 03 80 3c 0e 00 0f 85 59 16 00 00 4c 8b a2 e8 05 00 00 48 b9 00 00 00 00 00 fc ff df 49 8d 7c 24 03 48 89 fe 48 c1 ee 03 <0f> b6 0c 0e 48 89 fe 83 e6 07 40 38 f1 7f 08 84 c9 0f 85 11 16 00
+RSP: 0018:ffff8881da21f190 EFLAGS: 00010246
+RAX: ffff8881cd522800 RBX: ffff8881cd9de000 RCX: dffffc0000000000
+RDX: ffff8881cd9dd000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: ffff8881cd5ac000 R08: 0000000000000001 R09: fffffbfff1268ad6
+R10: ffffffff893456af R11: fffffbfff1268ad5 R12: 0000000000000000
+R13: ffff8881cd9dd0a0 R14: ffff8881cf81c800 R15: ffffffff86786240
+FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055c401d2c160 CR3: 0000000007024000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:374
+ really_probe+0x290/0xac0 drivers/base/dd.c:527
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:701
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:808
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x21a/0x390 drivers/base/dd.c:874
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0x1367/0x1c20 drivers/base/core.c:2533
+ usb_set_configuration+0xed4/0x1850 drivers/usb/core/message.c:2025
+ usb_generic_driver_probe+0x9d/0xe0 drivers/usb/core/generic.c:241
+ usb_probe_device+0xd9/0x230 drivers/usb/core/driver.c:272
+ really_probe+0x290/0xac0 drivers/base/dd.c:527
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:701
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:808
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x21a/0x390 drivers/base/dd.c:874
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0x1367/0x1c20 drivers/base/core.c:2533
+ usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2548
+ hub_port_connect drivers/usb/core/hub.c:5195 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5335 [inline]
+ port_event drivers/usb/core/hub.c:5481 [inline]
+ hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5563
+ process_one_work+0x965/0x1630 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x326/0x430 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace 822665be1be4fef9 ]---
+RIP: 0010:go7007_usb_probe+0x4ba/0x1d49 drivers/media/usb/go7007/go7007-usb.c:1145
+Code: c1 ee 03 80 3c 0e 00 0f 85 59 16 00 00 4c 8b a2 e8 05 00 00 48 b9 00 00 00 00 00 fc ff df 49 8d 7c 24 03 48 89 fe 48 c1 ee 03 <0f> b6 0c 0e 48 89 fe 83 e6 07 40 38 f1 7f 08 84 c9 0f 85 11 16 00
+RSP: 0018:ffff8881da21f190 EFLAGS: 00010246
+RAX: ffff8881cd522800 RBX: ffff8881cd9de000 RCX: dffffc0000000000
+RDX: ffff8881cd9dd000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: ffff8881cd5ac000 R08: 0000000000000001 R09: fffffbfff1268ad6
+R10: ffffffff893456af R11: fffffbfff1268ad5 R12: 0000000000000000
+R13: ffff8881cd9dd0a0 R14: ffff8881cf81c800 R15: ffffffff86786240
+FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055c401d2c160 CR3: 0000000007024000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
->
-> Thanks,
->
->         M.
-> --
-> Jazz is not dead. It just smells funny...
