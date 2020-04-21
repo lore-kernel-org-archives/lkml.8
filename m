@@ -2,309 +2,114 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166F8C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F961C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6D7F206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0259A206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgDUMKM convert rfc822-to-8bit (ORCPT
+        id S1728735AbgDUMKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:10:12 -0400
-Received: from mga07.intel.com ([134.134.136.100]:25969 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDUMKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:10:10 -0400
-IronPort-SDR: Awx3OzUxumH8ciMuwr7EBqoh1XDL7GWI3d1ZvQmkVLMRS1PJ7jKXVMWQBNd9uHnm7+FCW4UfhZ
- K5nXHf+/lMcQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 05:10:09 -0700
-IronPort-SDR: 8VxAIGwySK5prjvHeIPeC8fZRtUkDn5qBKFzwHsR72++3pK9BIM1nETFu7DTcPjbGlQJJnkkMy
- eruHb2hIDYBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,410,1580803200"; 
-   d="scan'208";a="429510291"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga005.jf.intel.com with ESMTP; 21 Apr 2020 05:10:08 -0700
-Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 21 Apr 2020 05:08:53 -0700
-Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
- fmsmsx156.amr.corp.intel.com (10.18.116.74) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 21 Apr 2020 05:08:53 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX152.ccr.corp.intel.com ([169.254.6.209]) with mapi id 14.03.0439.000;
- Tue, 21 Apr 2020 20:08:49 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     "Zhao, Yan Y" <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Zeng, Xin" <xin.zeng@intel.com>,
-        "dgilbert@redhat.com" <dgilbert@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: RE: [PATCH v5 0/4] introduction of migration_version attribute for
- VFIO live migration
-Thread-Topic: [PATCH v5 0/4] introduction of migration_version attribute for
- VFIO live migration
-Thread-Index: AQHWEVkQX2D3KsUjJk2k1DZCtXaM5qh8gBsAgAASxgCAABn2gIAED1uAgAFotwCAAD3VAIABIlKw
-Date:   Tue, 21 Apr 2020 12:08:49 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D86DF06@SHSMSX104.ccr.corp.intel.com>
-References: <20200413055201.27053-1-yan.y.zhao@intel.com>
- <20200417104450.2d2f2fa9.cohuck@redhat.com>
- <20200417095202.GD16688@joy-OptiPlex-7040>
- <20200417132457.45d91fe3.cohuck@redhat.com>
- <20200420012457.GE16688@joy-OptiPlex-7040>
- <20200420165600.4951ae82@w520.home>
- <20200421023718.GA12111@joy-OptiPlex-7040>
-In-Reply-To: <20200421023718.GA12111@joy-OptiPlex-7040>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 21 Apr 2020 08:10:20 -0400
+Received: from m176149.mail.qiye.163.com ([59.111.176.149]:11207 "EHLO
+        m176149.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgDUMKT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 08:10:19 -0400
+Received: from vivo.com (wm-9.qy.internal [127.0.0.1])
+        by m176149.mail.qiye.163.com (Hmail) with ESMTP id 905DC282636;
+        Tue, 21 Apr 2020 20:09:43 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AIEABQDACBGx7eaGVybumqrT.3.1587470983521.Hmail.bernard@vivo.com>
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tom St Denis <tom.stdenis@amd.com>,
+        Ori Messinger <Ori.Messinger@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gYW1kZ3B1OiBmaXhlcyBtZW1sZWFrIGlzc3VlIHdoZW4gaW5pdCBmYWlsZWQ=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <738537e5-9a1a-25c8-3dd0-b1f5fd045979@amd.com>
 MIME-Version: 1.0
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 21 Apr 2020 20:09:43 +0800 (GMT+08:00)
+From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
+Date:   Tue, 21 Apr 2020 20:09:43 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVMQ0lCQkJCQklITEtNSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSE9IQkhLTExJN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Mj46OSo*Ojg5PANMHho8LQIZDhYKCS9VSFVKTkNMT0xLQkNITU5CVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTU1CTDcG
+X-HM-Tid: 0a719ca4e1ad9395kuws905dc282636
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Yan Zhao
-> Sent: Tuesday, April 21, 2020 10:37 AM
-> 
-> On Tue, Apr 21, 2020 at 06:56:00AM +0800, Alex Williamson wrote:
-> > On Sun, 19 Apr 2020 21:24:57 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >
-> > > On Fri, Apr 17, 2020 at 07:24:57PM +0800, Cornelia Huck wrote:
-> > > > On Fri, 17 Apr 2020 05:52:02 -0400
-> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > >
-> > > > > On Fri, Apr 17, 2020 at 04:44:50PM +0800, Cornelia Huck wrote:
-> > > > > > On Mon, 13 Apr 2020 01:52:01 -0400
-> > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > > > >
-> > > > > > > This patchset introduces a migration_version attribute under sysfs
-> of VFIO
-> > > > > > > Mediated devices.
-> > > > > > >
-> > > > > > > This migration_version attribute is used to check migration
-> compatibility
-> > > > > > > between two mdev devices.
-> > > > > > >
-> > > > > > > Currently, it has two locations:
-> > > > > > > (1) under mdev_type node,
-> > > > > > >     which can be used even before device creation, but only for
-> mdev
-> > > > > > >     devices of the same mdev type.
-> > > > > > > (2) under mdev device node,
-> > > > > > >     which can only be used after the mdev devices are created, but
-> the src
-> > > > > > >     and target mdev devices are not necessarily be of the same
-> mdev type
-> > > > > > > (The second location is newly added in v5, in order to keep
-> consistent
-> > > > > > > with the migration_version node for migratable pass-though
-> devices)
-> > > > > >
-> > > > > > What is the relationship between those two attributes?
-> > > > > >
-> > > > > (1) is for mdev devices specifically, and (2) is provided to keep the
-> same
-> > > > > sysfs interface as with non-mdev cases. so (2) is for both mdev
-> devices and
-> > > > > non-mdev devices.
-> > > > >
-> > > > > in future, if we enable vfio-pci vendor ops, (i.e. a non-mdev device
-> > > > > is binding to vfio-pci, but is able to register migration region and do
-> > > > > migration transactions from a vendor provided affiliate driver),
-> > > > > the vendor driver would export (2) directly, under device node.
-> > > > > It is not able to provide (1) as there're no mdev devices involved.
-> > > >
-> > > > Ok, creating an alternate attribute for non-mdev devices makes sense.
-> > > > However, wouldn't that rather be a case (3)? The change here only
-> > > > refers to mdev devices.
-> > > >
-> > > as you pointed below, (3) and (2) serve the same purpose.
-> > > and I think a possible usage is to migrate between a non-mdev device and
-> > > an mdev device. so I think it's better for them both to use (2) rather
-> > > than creating (3).
-> >
-> > An mdev type is meant to define a software compatible interface, so in
-> > the case of mdev->mdev migration, doesn't migrating to a different type
-> > fail the most basic of compatibility tests that we expect userspace to
-> > perform?  IOW, if two mdev types are migration compatible, it seems a
-> > prerequisite to that is that they provide the same software interface,
-> > which means they should be the same mdev type.
-> >
-> > In the hybrid cases of mdev->phys or phys->mdev, how does a
-> management
-> > tool begin to even guess what might be compatible?  Are we expecting
-> > libvirt to probe ever device with this attribute in the system?  Is
-> > there going to be a new class hierarchy created to enumerate all
-> > possible migrate-able devices?
-> >
-> yes, management tool needs to guess and test migration compatible
-> between two devices. But I think it's not the problem only for
-> mdev->phys or phys->mdev. even for mdev->mdev, management tool needs
-> to
-> first assume that the two mdevs have the same type of parent devices
-> (e.g.their pciids are equal). otherwise, it's still enumerating
-> possibilities.
-> 
-> on the other hand, for two mdevs,
-> mdev1 from pdev1, its mdev_type is 1/2 of pdev1;
-> mdev2 from pdev2, its mdev_type is 1/4 of pdev2;
-> if pdev2 is exactly 2 times of pdev1, why not allow migration between
-> mdev1 <-> mdev2.
-
-How could the manage tool figure out that 1/2 of pdev1 is equivalent 
-to 1/4 of pdev2? If we really want to allow such thing happen, the best
-choice is to report the same mdev type on both pdev1 and pdev2.
-
-btw mdev<->phys just brings trouble to upper stack as Alex pointed out. 
-Can we simplify the requirement by allowing only mdev<->mdev and 
-phys<->phys migration? If an customer does want to migrate between a 
-mdev and phys, he could wrap physical device into a wrapped mdev 
-instance (with the same type as the source mdev) instead of using vendor 
-ops. Doing so does add some burden but if mdev<->phys is not dominant 
-usage then such tradeoff might be worthywhile...
-
-Thanks
-Kevin
-
-> 
-> 
-> > I agree that there was a gap in the previous proposal for non-mdev
-> > devices, but I think this bring a lot of questions that we need to
-> > puzzle through and libvirt will need to re-evaluate how they might
-> > decide to pick a migration target device.  For example, I'm sure
-> > libvirt would reject any policy decisions regarding picking a physical
-> > device versus an mdev device.  Had we previously left it that only a
-> > layer above libvirt would select a target device and libvirt only tests
-> > compatibility to that target device?
-> I'm not sure if there's a layer above libvirt would select a target
-> device. but if there is such a layer (even it's human), we need to
-> provide an interface for them to know whether their decision is suitable
-> for migration. The migration_version interface provides a potential to
-> allow mdev->phys migration, even libvirt may currently reject it.
-> 
-> 
-> > We also need to consider that this expands the namespace.  If we no
-> > longer require matching types as the first level of comparison, then
-> > vendor migration strings can theoretically collide.  How do we
-> > coordinate that can't happen?  Thanks,
-> yes, it's indeed a problem.
-> could only allowing migration beteen devices from the same vendor be a
-> good
-> prerequisite?
-> 
-> Thanks
-> Yan
-> >
-> > > > > > Is existence (and compatibility) of (1) a pre-req for possible
-> > > > > > existence (and compatibility) of (2)?
-> > > > > >
-> > > > > no. (2) does not reply on (1).
-> > > >
-> > > > Hm. Non-existence of (1) seems to imply "this type does not support
-> > > > migration". If an mdev created for such a type suddenly does support
-> > > > migration, it feels a bit odd.
-> > > >
-> > > yes. but I think if the condition happens, it should be reported a bug
-> > > to vendor driver.
-> > > should I add a line in the doc like "vendor driver should ensure that the
-> > > migration compatibility from migration_version under mdev_type should
-> be
-> > > consistent with that from migration_version under device node" ?
-> > >
-> > > > (It obviously cannot be a prereq for what I called (3) above.)
-> > > >
-> > > > >
-> > > > > > Does userspace need to check (1) or can it completely rely on (2), if
-> > > > > > it so chooses?
-> > > > > >
-> > > > > I think it can completely reply on (2) if compatibility check before
-> > > > > mdev creation is not required.
-> > > > >
-> > > > > > If devices with a different mdev type are indeed compatible, it
-> seems
-> > > > > > userspace can only find out after the devices have actually been
-> > > > > > created, as (1) does not apply?
-> > > > > yes, I think so.
-> > > >
-> > > > How useful would it be for userspace to even look at (1) in that case?
-> > > > It only knows if things have a chance of working if it actually goes
-> > > > ahead and creates devices.
-> > > >
-> > > hmm, is it useful for userspace to test the migration_version under mdev
-> > > type before it knows what mdev device to generate ?
-> > > like when the userspace wants to migrate an mdev device in src vm,
-> > > but it has not created target vm and the target mdev device.
-> > >
-> > > > >
-> > > > > > One of my worries is that the existence of an attribute with the
-> same
-> > > > > > name in two similar locations might lead to confusion. But maybe it
-> > > > > > isn't a problem.
-> > > > > >
-> > > > > Yes, I have the same feeling. but as (2) is for sysfs interface
-> > > > > consistency, to make it transparent to userspace tools like libvirt,
-> > > > > I guess the same name is necessary?
-> > > >
-> > > > What do we actually need here, I wonder? (1) and (2) seem to serve
-> > > > slightly different purposes, while (2) and what I called (3) have the
-> > > > same purpose. Is it important to userspace that (1) and (2) have the
-> > > > same name?
-> > > so change (1) to migration_type_version and (2) to
-> > > migration_instance_version?
-> > > But as they are under different locations, could that location imply
-> > > enough information?
-> > >
-> > >
-> > > Thanks
-> > > Yan
-> > >
-> > >
-> >
-> _______________________________________________
-> intel-gvt-dev mailing list
-> intel-gvt-dev@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
+CkZyb206ICJDaHJpc3RpYW4gS8O2bmlnIiA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPgpEYXRl
+OiAyMDIwLTA0LTIxIDE5OjIyOjQ5ClRvOiAgQmVybmFyZCBaaGFvIDxiZXJuYXJkQHZpdm8uY29t
+PixBbGV4IERldWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFtZC5jb20+LCJEYXZpZCAoQ2h1bk1p
+bmcpIFpob3UiIDxEYXZpZDEuWmhvdUBhbWQuY29tPixEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGlu
+dXguaWU+LERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4sVG9tIFN0IERlbmlzIDx0b20u
+c3RkZW5pc0BhbWQuY29tPixPcmkgTWVzc2luZ2VyIDxPcmkuTWVzc2luZ2VyQGFtZC5jb20+LFNh
+bSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4sYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcsZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZyxsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnCkNjOiAgb3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20KU3ViamVjdDogUmU6IFtQQVRD
+SF0gYW1kZ3B1OiBmaXhlcyBtZW1sZWFrIGlzc3VlIHdoZW4gaW5pdCBmYWlsZWQ+QW0gMjEuMDQu
+MjAgdW0gMTM6MTcgc2NocmllYiBCZXJuYXJkIFpoYW86Cj4+IFZSQU0gbWFuYWdlciBhbmQgRFJN
+IE1NIHdoZW4gaW5pdCBmYWlsZWQsIHRoZXJlIGlzIG5vIG9wZXJhY3Rpb24KPj4gdG8gZnJlZSBr
+emFsbG9jIG1lbW9yeSAmIHJlbW92ZSBkZXZpY2UgZmlsZS4KPj4gVGhpcyB3aWxsIGxlYWQgdG8g
+bWVtbGVhayAmIGNhdXNlIHN0YWJpbGl0eSBpc3N1ZS4KPgo+TkFLLCBmYWlsdXJlIHRvIGNyZWF0
+ZSBzeXNmcyBub2RlcyBhcmUgbm90IGNyaXRpY2FsLgo+Cj5DaHJpc3RpYW4uCj4KCk9LLCBnZXQg
+aXQuCkJ5IHRoZSB3YXksIHNob3VsZCBpIG1vZGlmeSB0aGlzIHBhdGNoIHRvIGp1c3QgaGFuZGxl
+IDxrZnJlZShtZ3IpPiBpbiBlcnJvciBicmFuY2gsIG9yIHRoYXQgaXQgaXMgYWxzbyB1bm5lY2Vz
+c2FyeT8KClJlZ2FyZHMsCkJlcm5hcmQKCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEJlcm5hcmQgWmhh
+byA8YmVybmFyZEB2aXZvLmNvbT4KPj4gLS0tCj4+ICAgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRn
+cHUvYW1kZ3B1X3ZyYW1fbWdyLmMgfCAyNCArKysrKysrKysrKysrKysrLS0tLQo+PiAgIDEgZmls
+ZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X3ZyYW1fbWdyLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfdnJhbV9tZ3IuYwo+PiBpbmRleCA4MmEzMjk5
+ZTUzYzAuLjRjNWZiMTUzZTZiNCAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9h
+bWRncHUvYW1kZ3B1X3ZyYW1fbWdyLmMKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRn
+cHUvYW1kZ3B1X3ZyYW1fbWdyLmMKPj4gQEAgLTE3NSwzMCArMTc1LDQ0IEBAIHN0YXRpYyBpbnQg
+YW1kZ3B1X3ZyYW1fbWdyX2luaXQoc3RydWN0IHR0bV9tZW1fdHlwZV9tYW5hZ2VyICptYW4sCj4+
+ICAgCXJldCA9IGRldmljZV9jcmVhdGVfZmlsZShhZGV2LT5kZXYsICZkZXZfYXR0cl9tZW1faW5m
+b192cmFtX3RvdGFsKTsKPj4gICAJaWYgKHJldCkgewo+PiAgIAkJRFJNX0VSUk9SKCJGYWlsZWQg
+dG8gY3JlYXRlIGRldmljZSBmaWxlIG1lbV9pbmZvX3ZyYW1fdG90YWxcbiIpOwo+PiAtCQlyZXR1
+cm4gcmV0Owo+PiArCQlnb3RvIFZSQU1fVE9UQUxfRkFJTDsKPj4gICAJfQo+PiAgIAlyZXQgPSBk
+ZXZpY2VfY3JlYXRlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdmlzX3ZyYW1f
+dG90YWwpOwo+PiAgIAlpZiAocmV0KSB7Cj4+ICAgCQlEUk1fRVJST1IoIkZhaWxlZCB0byBjcmVh
+dGUgZGV2aWNlIGZpbGUgbWVtX2luZm9fdmlzX3ZyYW1fdG90YWxcbiIpOwo+PiAtCQlyZXR1cm4g
+cmV0Owo+PiArCQlnb3RvIFZJU19WUkFNX1RPVEFfRkFJTDsKPj4gICAJfQo+PiAgIAlyZXQgPSBk
+ZXZpY2VfY3JlYXRlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdnJhbV91c2Vk
+KTsKPj4gICAJaWYgKHJldCkgewo+PiAgIAkJRFJNX0VSUk9SKCJGYWlsZWQgdG8gY3JlYXRlIGRl
+dmljZSBmaWxlIG1lbV9pbmZvX3ZyYW1fdXNlZFxuIik7Cj4+IC0JCXJldHVybiByZXQ7Cj4+ICsJ
+CWdvdG8gVlJBTV9VU0VEX0ZBSUw7Cj4+ICAgCX0KPj4gICAJcmV0ID0gZGV2aWNlX2NyZWF0ZV9m
+aWxlKGFkZXYtPmRldiwgJmRldl9hdHRyX21lbV9pbmZvX3Zpc192cmFtX3VzZWQpOwo+PiAgIAlp
+ZiAocmV0KSB7Cj4+ICAgCQlEUk1fRVJST1IoIkZhaWxlZCB0byBjcmVhdGUgZGV2aWNlIGZpbGUg
+bWVtX2luZm9fdmlzX3ZyYW1fdXNlZFxuIik7Cj4+IC0JCXJldHVybiByZXQ7Cj4+ICsJCWdvdG8g
+VklTX1ZSQU1fVVNFRF9GQUlMOwo+PiAgIAl9Cj4+ICAgCXJldCA9IGRldmljZV9jcmVhdGVfZmls
+ZShhZGV2LT5kZXYsICZkZXZfYXR0cl9tZW1faW5mb192cmFtX3ZlbmRvcik7Cj4+ICAgCWlmIChy
+ZXQpIHsKPj4gICAJCURSTV9FUlJPUigiRmFpbGVkIHRvIGNyZWF0ZSBkZXZpY2UgZmlsZSBtZW1f
+aW5mb192cmFtX3ZlbmRvclxuIik7Cj4+IC0JCXJldHVybiByZXQ7Cj4+ICsJCWdvdG8gVlJBTV9W
+RVJET1JfRkFJTDsKPj4gICAJfQo+PiAgIAo+PiAgIAlyZXR1cm4gMDsKPj4gKwo+PiArVlJBTV9W
+RVJET1JfRkFJTDoKPj4gKwlkZXZpY2VfcmVtb3ZlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJf
+bWVtX2luZm9fdmlzX3ZyYW1fdXNlZCk7Cj4+ICtWSVNfVlJBTV9VU0VEX0ZBSUw6Cj4+ICsJZGV2
+aWNlX3JlbW92ZV9maWxlKGFkZXYtPmRldiwgJmRldl9hdHRyX21lbV9pbmZvX3ZyYW1fdXNlZCk7
+Cj4+ICtSVkFNX1VTRURfRkFJTDoKPj4gKwlkZXZpY2VfcmVtb3ZlX2ZpbGUoYWRldi0+ZGV2LCAm
+ZGV2X2F0dHJfbWVtX2luZm9fdmlzX3ZyYW1fdG90YWwpOwo+PiArVklTX1ZSQU1fVE9UQV9GQUlM
+Ogo+PiArCWRldmljZV9yZW1vdmVfZmlsZShhZGV2LT5kZXYsICZkZXZfYXR0cl9tZW1faW5mb192
+cmFtX3RvdGFsKTsKPj4gK1ZSQU1fVE9UQUxfRkFJTDoKPj4gKwlrZnJlZShtZ3IpOwo+PiArCW1h
+bi0+cHJpdiA9IE5VTEw7Cj4+ICsKPj4gKwlyZXR1cm4gcmV0Owo+PiAgIH0KPj4gICAKPj4gICAv
+KioKPgoNCg0K
