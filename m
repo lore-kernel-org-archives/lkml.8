@@ -2,81 +2,155 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACF3C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A966C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAC6A20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0932A20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:38:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Vb+6+eIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgDUIhz (ORCPT
+        id S1728437AbgDUIiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:37:55 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:36808 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgDUIhx (ORCPT
+        Tue, 21 Apr 2020 04:38:24 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:56430 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgDUIiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:37:53 -0400
-Received: by mail-yb1-f195.google.com with SMTP id n188so6954754ybc.3;
-        Tue, 21 Apr 2020 01:37:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v/3+VZnCM3ynIiT8UZUwJeZ01xBwJWokxUvrEQAQiYo=;
-        b=bFiWT9gfbZn/9gjObOQOTbFNwt54kCMcvWNu0aIy4nTdD0qM6djPi68yql1KO2b07h
-         LGK4eLtd1PGPIfE9J8zMbsVtGkDe+tFmG22BrgKrsIHXNgr86W2zzCr59avhi5FBoW21
-         1gO2ZVUjUTgTShYVC7QUEzdTIg1EgrWB3JqFgMPbBF2/jZiwTypRtcKVFNmc4kOnKCr8
-         FtzqnA+IM0nF71xpUFyk1w/9A1qMI12Iy8ZyRoEu6yK/RI4dAMTyaMGpu5jptGt8Cjvj
-         Ag6JRbfPkAtA+YQD46JxdgcGMytJjNJA33HggkiOv8jlsFISUmEt/kzTt9AjOEHlJaV6
-         dDYw==
-X-Gm-Message-State: AGi0Pub+120rqvy724HfOey6uUx4SsczN1QYhLSmtSz9vHbw5jM59PKt
-        UWgD54nL//XYGYGf6JvviSW/9mWHv9afCNJtf7+3Lki7
-X-Google-Smtp-Source: APiQypIaHQB7wPhEVieQJfu8de8zwg12nMpx1Ox449Qw7TthaEYyLuX1tCmdRhbmN76uN/LTV2imJSE1sR5SRTbdF3M=
-X-Received: by 2002:a25:cec8:: with SMTP id x191mr24951591ybe.39.1587458272417;
- Tue, 21 Apr 2020 01:37:52 -0700 (PDT)
+        Tue, 21 Apr 2020 04:38:23 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1AA4497D;
+        Tue, 21 Apr 2020 10:38:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587458300;
+        bh=M4JnM4GjvLEco6/O8nqZUJCQJ6W6eag7+dGlDjYn/+Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vb+6+eIW8vz8kOW8VNVyZLYL9GXfkJerZLOL9xivPPgeaV/eHmTZ3y2DxatzPa36s
+         E3G2rc7AQ59LxL+wEWbP85vmDy/gP6EkkO3pzMUL/eU4tLikNh46cjN/TCaDOAVsXY
+         G4xmN1JnYeAucJwc0nXGZb/3gG8u8B0rD4tCp/oQ=
+Date:   Tue, 21 Apr 2020 11:38:07 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Vishal Sagar <vishal.sagar@xilinx.com>,
+        Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>
+Subject: Re: [PATCH v11 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem driver
+Message-ID: <20200421083807.GB5983@pendragon.ideasonboard.com>
+References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
+ <20200409194424.45555-3-vishal.sagar@xilinx.com>
+ <20200419180222.GB8117@pendragon.ideasonboard.com>
+ <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
+ <20200420195714.GB8195@pendragon.ideasonboard.com>
+ <0a3ea86b-cb4c-a1db-664e-cfa555d8ccf8@lucaceresoli.net>
 MIME-Version: 1.0
-References: <cover.1587058078.git.nicolas.ferre@microchip.com>
- <56bb7a742093cec160c4465c808778a14b2607e7.1587058078.git.nicolas.ferre@microchip.com>
- <61762f4b-03fa-5484-334e-8515eed485e2@microchip.com> <8fcf4a8a-362c-a71f-c99e-be9500db7371@microchip.com>
-In-Reply-To: <8fcf4a8a-362c-a71f-c99e-be9500db7371@microchip.com>
-From:   Harini Katakam <harinik@xilinx.com>
-Date:   Tue, 21 Apr 2020 14:07:41 +0530
-Message-ID: <CAFcVECL-uYF2dpOZvAeGpot4wstT3551QKuYm0TCTXv_SxsyXA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] net: macb: WoL support for GEM type of Ethernet controller
-To:     Nicolas Ferre <Nicolas.Ferre@microchip.com>
-Cc:     linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        Claudiu Beznea <Claudiu.Beznea@microchip.com>,
-        Harini Katakam <harini.katakam@xilinx.com>,
-        Florian Fainelli <f.fainelli@gmail.com>, linux@armlinux.org.uk,
-        Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Parshuram Raju Thombare <pthombar@cadence.com>,
-        antoine.tenart@bootlin.com, linux-kernel@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0a3ea86b-cb4c-a1db-664e-cfa555d8ccf8@lucaceresoli.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 1:55 PM <Nicolas.Ferre@microchip.com> wrote:
-<snip>
-> I've reviewed this series to fix this last issues. It's was a
-> combination of runtime_pm not handled properly and a mix of
-> netif_carrier_* call with phylink calls not well positioned nor balanced
-> between suspend and resume.
->
-> I have a v2 series that I'm preparing for today: Harini, I prefer to
-> post it now so it could avoid that you hit the same issues as me while
-> testing on your platform.
+Hi Luca,
 
-OK thanks Nicolas.
+On Tue, Apr 21, 2020 at 09:45:56AM +0200, Luca Ceresoli wrote:
+> On 20/04/20 21:57, Laurent Pinchart wrote:
+> > On Mon, Apr 20, 2020 at 09:24:25PM +0200, Luca Ceresoli wrote:
+> >> On 19/04/20 20:02, Laurent Pinchart wrote:
+> >> [...]
+> >>>> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *dev_id)
+> >>>> +{
+> >>>> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)dev_id;
+> >>>> +	struct xcsi2rxss_core *core = &state->core;
+> >>>> +	u32 status;
+> >>>> +
+> >>>> +	status = xcsi2rxss_read(core, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
+> >>>> +	dev_dbg_ratelimited(core->dev, "interrupt status = 0x%08x\n", status);
+> >>>
+> >>> As this is expected to occur for every frame, I would drop the message,
+> >>> even if rate-limited.
+> >>>
+> >>>> +
+> >>>> +	if (!status)
+> >>>> +		return IRQ_NONE;
+> >>>> +
+> >>>> +	/* Received a short packet */
+> >>>> +	if (status & XCSI_ISR_SPFIFONE) {
+> >>>> +		dev_dbg_ratelimited(core->dev, "Short packet = 0x%08x\n",
+> >>>> +				    xcsi2rxss_read(core, XCSI_SPKTR_OFFSET));
+> >>>> +	}
+> >>>
+> >>> Same here, this will occur all the time, I'd remove this message. You
+> >>> need to read XCSI_SPKTR_OFFSET though, and you should do so in a loop
+> >>> until the XCSI_CSR_SPFIFONE in XCSI_CSR_OFFSET is cleared in case
+> >>> multiple short packets are received before the interrupt handler
+> >>> executes.
+> >>>
+> >>> I also wonder if it would make sense to extract the frame number from
+> >>> the FS short packet, and make it available through the subdev API. I
+> >>> think it should be reported through a V4L2_EVENT_FRAME_SYNC event. This
+> >>> can be implemented later.
+> >>>
+> >>>> +
+> >>>> +	/* Short packet FIFO overflow */
+> >>>> +	if (status & XCSI_ISR_SPFIFOF)
+> >>>> +		dev_dbg_ratelimited(core->dev, "Short packet FIFO overflowed\n");
+> >>>> +
+> >>>> +	/*
+> >>>> +	 * Stream line buffer full
+> >>>> +	 * This means there is a backpressure from downstream IP
+> >>>> +	 */
+> >>>> +	if (status & XCSI_ISR_SLBF) {
+> >>>> +		dev_alert_ratelimited(core->dev, "Stream Line Buffer Full!\n");
+> >>>> +		xcsi2rxss_stop_stream(state);
+> >>>> +		if (core->rst_gpio) {
+> >>>> +			gpiod_set_value(core->rst_gpio, 1);
+> >>>> +			/* minimum 40 dphy_clk_200M cycles */
+> >>>> +			ndelay(250);
+> >>>> +			gpiod_set_value(core->rst_gpio, 0);
+> >>>> +		}
+> >>>
+> >>> I don't think you should stop the core here. xcsi2rxss_stop_stream()
+> >>> calls the source .s_stream(0) operation, which usually involves I2C
+> >>> writes that will sleep.
+> >>>
+> >>> You should instead report an event to userspace (it looks like we have
+> >>> no error event defined in V4L2, one should be added), and rely on the
+> >>> normal stop procedure.
+> >>
+> >> FWIW, since a long time I've been using a modified version of this
+> >> routine, where after a Stream Line Buffer Full condition I just stop and
+> >> restart the csi2rx core and the stream continues after a minimal glitch.
+> >> Other subdev are unaware that anything has happened and keep on streaming.
+> >>
+> >> Not sure this is the correct thing to do, but it's working for me. Also
+> >> I proposed this topic in one of the previous iterations of this patch,
+> >> but the situation was different because the stream on/off was not
+> >> propagated back at that time.
+> > 
+> > Thanks for the feedback. How often does this occur in practice ?
+> 
+> Quite often indeed in my case, as the MIPI stream comes from a remote
+> sensor via a video serdes chipset, and both the cable and the remote
+> sensor module are subject to heavy EMI. Depending on the setup I
+> observed SLBF happening up to 5~10 times per hour.
 
+Ouch, that is a lot ! Is that really caused by EMI though ? I thought
+SLBF was due to the downstream components applying backpressure.
+
+-- 
 Regards,
-Harini
+
+Laurent Pinchart
