@@ -2,125 +2,93 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0085C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5809FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98B972071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:20:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CfWmPsEx"
+	by mail.kernel.org (Postfix) with ESMTP id 3A3D8206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgDULUh (ORCPT
+        id S1728636AbgDULUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:20:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgDULUg (ORCPT
+        Tue, 21 Apr 2020 07:20:40 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:13042 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbgDULUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:20:36 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC5F2C061A0F;
-        Tue, 21 Apr 2020 04:20:36 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id x26so6615978pgc.10;
-        Tue, 21 Apr 2020 04:20:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5INuHDo8RkxBQI1c6D+UV2G0d783U8nnilEvfGe2hU0=;
-        b=CfWmPsExRg8TFieNHdsCul6CDg7KQXi/925bXG18wBDsPfbylGrKs3CqHnCJ9Qcf9/
-         Rvff0UYzO3ndeb8H9FyA1PzZywww/9/xujQc3HvsMj+UexNj27db/Thn41aIlXas386Q
-         VEvSDzx/pdf+vKkOZzNOX7+UHb/zQa73Z/a2STyvXatMTDBIO8hyAV0F92jqZnpIYaLl
-         af9aPGoBqS/39UJZnFXjqHbQKN3+MDO89fry8qdV0PShnrH49zamFChLdvmymTATRJS/
-         QqaiZT0G0Oel9hvi5BHGXJBKIjhSd5q5vKmUbVPKWFw+AQkB9Glx2Ra8TgiqJBWs1Ail
-         gcAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5INuHDo8RkxBQI1c6D+UV2G0d783U8nnilEvfGe2hU0=;
-        b=AAAQDinV0laZSidiq/88VlZVEqC5ooV5w9jUJKDFOD/Km5rwfOj/Ogf7Vp9Tuw8BaK
-         q4pc61x6YDdHH5wX1rBuy8Pz3wA095RtSq5d0ro4eFhvBcZixDFW1wuq5iFtFE8ada2i
-         FRlAHiRt++DNsgfSJsWbs57n7bwMbIA2RDtMISOmF2D0SkXFNON5or6Qxb6g50/jVEle
-         gJidKLk3Mh5h88rxs7fd4pxIUsOMkDc9CuSffW8Angj3dcG6QAxXqmd6DGNt1ymYrXwO
-         hyju1R4Es8Vd4jyrzEdbYIx5w5ApCJjSDJVQI46hNEAGNV4RYs21+geiYqpiWX8pO21Q
-         vhAg==
-X-Gm-Message-State: AGi0Pua10nWuh8WiZQWoGSMRv5TrWUGlaqp9WR51pYxim2xJi3FmzTdL
-        B1D1maTUVO16IxRISJHeZLQbvjtv
-X-Google-Smtp-Source: APiQypI/2oekz+UfVOVdGkdIhyx1xtrd01Pv3bmvUrf59arfqv4RQYs+6JXxh8y6C4lQx7kAZiyJ1g==
-X-Received: by 2002:a63:2e44:: with SMTP id u65mr1855828pgu.142.1587468036204;
-        Tue, 21 Apr 2020 04:20:36 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id f74sm8643176pje.3.2020.04.21.04.20.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Apr 2020 04:20:35 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-Subject: [PATCH 0/2] KVM: VMX: Tscdeadline timer emulation fastpath
-Date:   Tue, 21 Apr 2020 19:20:24 +0800
-Message-Id: <1587468026-15753-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 21 Apr 2020 07:20:38 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app04-12004 (RichMail) with SMTP id 2ee45e9ed6f055e-ee89b; Tue, 21 Apr 2020 19:20:20 +0800 (CST)
+X-RM-TRANSID: 2ee45e9ed6f055e-ee89b
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.146.166] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65e9ed6f215c-ede35;
+        Tue, 21 Apr 2020 19:20:20 +0800 (CST)
+X-RM-TRANSID: 2ee65e9ed6f215c-ede35
+Subject: Re: [PATCH] crypto: Delete redundant variable definition
+To:     Joe Perches <joe@perches.com>, davem@davemloft.net,
+        herbert@gondor.apana.org.au
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+References: <20200419071245.3924-1-tangbin@cmss.chinamobile.com>
+ <e4a2c1206cc8009f0e0881e2b9ec2e828c5d9e7c.camel@perches.com>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <74fa3578-b62f-4618-4af1-d8105e561800@cmss.chinamobile.com>
+Date:   Tue, 21 Apr 2020 19:22:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <e4a2c1206cc8009f0e0881e2b9ec2e828c5d9e7c.camel@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IPI and Timer cause the main vmexits in cloud environment observation, 
-after single target IPI fastpath, let's optimize tscdeadline timer 
-latency by introducing tscdeadline timer emulation fastpath , it will 
-skip various KVM related checks when possible. i.e. after vmexit due 
-to tscdeadline timer emulation, handle it and vmentry immediately 
-without checking various kvm stuff when possible. 
+Hi, Joe:
 
-Testing on SKX Server.
+On 2020/4/19 19:44, Joe Perches wrote:
+> On Sun, 2020-04-19 at 15:12 +0800, Tang Bin wrote:
+>> The variable "i" is redundant to be assigned a value
+>> of zero,because it's assigned in the for loop, so remove
+>> redundant one here.
+>>
+>> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+>> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+>>
+>> ---
+>>   drivers/crypto/bcm/cipher.c | 1 -
+>>   1 file changed, 1 deletion(-)
+>>
+>> diff --git a/drivers/crypto/bcm/cipher.c b/drivers/crypto/bcm/cipher.c
+>> index c8b940854..5db23c18c 100644
+>> --- a/drivers/crypto/bcm/cipher.c
+>> +++ b/drivers/crypto/bcm/cipher.c
+>> @@ -4724,7 +4724,6 @@ static int spu_dt_read(struct platform_device *pdev)
+>>   	spu->spu_type = matched_spu_type->type;
+>>   	spu->spu_subtype = matched_spu_type->subtype;
+>>   
+>> -	i = 0;
+>>   	for (i = 0; (i < MAX_SPUS) && ((spu_ctrl_regs =
+>>   		platform_get_resource(pdev, IORESOURCE_MEM, i)) != NULL); i++) {
+> Maybe the for loop could be simplified too by
+> moving the assignment inside the loop.
+>
+> Also, the %pe extension could be used.
 
-cyclictest in guest(w/o mwait exposed, adaptive advance lapic timer is default -1):
+Sorry for the delay. Thank you for your advice, I was already thinking 
+about optimizing this place.
 
-5632.75ns -> 4559.25ns, 19%
+Thanks,
 
-kvm-unit-test/vmexit.flat:
+Tang Bin
 
-w/o APICv, w/o advance timer:
-tscdeadline_immed: 4780.75 -> 3851    19.4%
-tscdeadline:       7474    -> 6528.5  12.7%
 
-w/o APICv, w/ adaptive advance timer default -1:
-tscdeadline_immed: 4845.75 -> 3930.5  18.9%
-tscdeadline:       6048    -> 5871.75    3%
+>
 
-w/ APICv, w/o avanced timer:
-tscdeadline_immed: 2919    -> 2467.75 15.5%
-tscdeadline:       5661.75 -> 5188.25  8.4%
-
-w/ APICv, w/ adaptive advance timer default -1:
-tscdeadline_immed: 3018.5  -> 2561    15.2%
-tscdeadline:       4663.75 -> 4626.5     1%
-
-Tested-by: Haiwei Li <lihaiwei@tencent.com>
-Cc: Haiwei Li <lihaiwei@tencent.com>
-
-Wanpeng Li (2):
-  KVM: X86: TSCDEADLINE MSR emulation fastpath
-  KVM: VMX: Handle preemption timer fastpath
-
- arch/x86/include/asm/kvm_host.h |   3 ++
- arch/x86/kvm/lapic.c            |  20 ++------
- arch/x86/kvm/lapic.h            |  16 +++++++
- arch/x86/kvm/vmx/vmx.c          | 101 ++++++++++++++++++++++++++++++++++++++--
- arch/x86/kvm/x86.c              |  55 +++++++++++++++++++---
- 5 files changed, 167 insertions(+), 28 deletions(-)
-
--- 
-2.7.4
 
