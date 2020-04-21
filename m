@@ -2,120 +2,209 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167F0C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6901AC55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E90B420724
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:52:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OKA7Cqag"
+	by mail.kernel.org (Postfix) with ESMTP id 4DC46206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587498802;
+	bh=9CQUlrC6I3zdb3MwnmyL7p4wbLljz1e6KpVFkkjBUWE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0SzC2grmgLbd/1C0sUDzNgGAYzoFMziwQhVmojS7BDhtPLdqVVW+/dzhOCxZOwNee
+	 gvWFnXN5Uj6gjpOMT5uIIuuo8vr/oZPgEwkwIeGuFuyqUtYl5IzB42yvz5LXTjpRIj
+	 Jb4mu3uz5J+gvqitdfmHfVvIP1CgTzGOZYfiTQ5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgDUTw6 (ORCPT
+        id S1726324AbgDUTxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:52:58 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59647 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726039AbgDUTw5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:52:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587498772;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TTdCjw+xJyiyOVepRoiBzPpX6UPTHW6RSy1+eF5nCoY=;
-        b=OKA7CqagVR8YJzhv3BP5d/4LXlmwR9B72PI+za5vSt9aKcCss+YcZnwM860ZfhQj0DUAN+
-        Sg+yHE6uGqfnoYoutwIEYKkeQRqSURHX1c6Pvo6v7SQ5U4jTEF1zR6+usFdfwtfCN4o2XT
-        02ioOqsbExewzZlU6whFtbws/Yd3K0A=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-oJhYh3o-OV-v8nhpARUK3w-1; Tue, 21 Apr 2020 15:52:50 -0400
-X-MC-Unique: oJhYh3o-OV-v8nhpARUK3w-1
-Received: by mail-wr1-f70.google.com with SMTP id s11so8287246wru.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:52:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TTdCjw+xJyiyOVepRoiBzPpX6UPTHW6RSy1+eF5nCoY=;
-        b=XZBGfs4gy8T/H5OVJ+3akMjYL4YlLn6RVeQRPzphR1Sd5xE95RTfkelXFbNTcXkfUx
-         KEMsQcEXq0hyZEaXyFjEbjDNTQtyn8jZa+FX/VMYkEupUnXjmdBSjQNPr9NKLEMDqWqJ
-         z2CMj2ZYkD0vIlzqUph0C5i8ZMgbhglpbvNBlyTyTFsKz86KPdC1Y38FqN7h85YjCzWi
-         ZbSCuOv2lVZ1fbwdTcVYHNJk0oXq12whtaPD/XEXINW4BNN0Y1IKLpduZOeYzMtH70XO
-         /FGYGTW2DoubKm8Dhz/gqbxkHCp20Vr70vFNXXxZqwtF2xHmPQQIZdczsEufSTr1IzEa
-         3IJQ==
-X-Gm-Message-State: AGi0Pubj7tOZ2GUlTryjIDSezXh0f52uHC8LZt1a+Gaxx1ABHedboCuu
-        b+6ipS0CQlANFlVB6Fk+2wQo+VWCUg7L0ZNQ2j5DFTelpE6XPpCYtSCRnWmN9Mbr5Lq3N9s8XtA
-        aC6L5Um0G+UmosaVtDt6LvX7e
-X-Received: by 2002:adf:bc05:: with SMTP id s5mr25183111wrg.70.1587498769683;
-        Tue, 21 Apr 2020 12:52:49 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLppZDmxlXD8GhpLz87T+p+wy/ipriyB1TljFwkP+/SqFt2cdsfkDNAw/S0mujJ1KBuTCSHFg==
-X-Received: by 2002:adf:bc05:: with SMTP id s5mr25183091wrg.70.1587498769480;
-        Tue, 21 Apr 2020 12:52:49 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
-        by smtp.gmail.com with ESMTPSA id 5sm4473852wmg.34.2020.04.21.12.52.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 12:52:48 -0700 (PDT)
-Subject: Re: [PATCH v2] kvm: Replace vcpu->swait with rcuwait
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Marc Zyngier <maz@kernel.org>, tglx@linutronix.de,
-        kvm@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>,
-        peterz@infradead.org, torvalds@linux-foundation.org,
-        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, linux-mips@vger.kernel.org,
-        Paul Mackerras <paulus@ozlabs.org>, joel@joelfernandes.org,
-        will@kernel.org, kvmarm@lists.cs.columbia.edu
-References: <20200324044453.15733-1-dave@stgolabs.net>
- <20200324044453.15733-4-dave@stgolabs.net>
- <20200420164132.tjzk5ebx35m66yce@linux-p48b>
- <418acdb5001a9ae836095b7187338085@misterjones.org>
- <20200420205641.6sgsllj6pmsnwrvp@linux-p48b>
- <f7cc83fe-3e91-0057-9af2-26c201456689@redhat.com>
- <20200420215014.sarodevmhphnkkn7@linux-p48b>
- <02e1b00d-a8ea-a947-bbe6-0b1380aa7ec4@redhat.com>
- <20200421180733.xrl5ta6cuo2weuva@linux-p48b>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ab78bbc8-aa03-6e88-940e-5e1c041f48e4@redhat.com>
-Date:   Tue, 21 Apr 2020 21:52:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 21 Apr 2020 15:53:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbgDUTxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:53:20 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D18F206D9;
+        Tue, 21 Apr 2020 19:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587498799;
+        bh=9CQUlrC6I3zdb3MwnmyL7p4wbLljz1e6KpVFkkjBUWE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IbaJjE2yCaHwvsE+Gf5R9HULObEdPcY315s9bXU/UX3i97gXcsY60pU/6U4SRK55E
+         6uk2AALA2TD3SmPibf+SgFfx77vxHsZFSXEG670HfRyvwgIJ4iBZz90nBu0dXCGj0E
+         22sn23iN8k/LX4wLKJkQMrln6TbhE+y/Os4LlIU4=
+Date:   Tue, 21 Apr 2020 21:53:15 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        ira.weiny@intel.com
+Subject: Re: [PATCH 12/34] docs: filesystems: convert dax.txt to ReST
+Message-ID: <20200421215315.4f591021@coco.lan>
+In-Reply-To: <20200421183121.GC6733@magnolia>
+References: <cover.1586960617.git.mchehab+huawei@kernel.org>
+        <71b1f910b2c3569a9fdaa8778378dd734f4f0091.1586960617.git.mchehab+huawei@kernel.org>
+        <20200415154144.GA6733@magnolia>
+        <20200421183117.2bf2b716@coco.lan>
+        <20200421183121.GC6733@magnolia>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200421180733.xrl5ta6cuo2weuva@linux-p48b>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/20 20:07, Davidlohr Bueso wrote:
->> 
+Em Tue, 21 Apr 2020 11:31:21 -0700
+"Darrick J. Wong" <darrick.wong@oracle.com> escreveu:
+
+> On Tue, Apr 21, 2020 at 06:31:17PM +0200, Mauro Carvalho Chehab wrote:
+> > Em Wed, 15 Apr 2020 08:41:44 -0700
+> > "Darrick J. Wong" <darrick.wong@oracle.com> escreveu:
+> >   
+> > > [add ira weiny to cc]
+> > > 
+> > > On Wed, Apr 15, 2020 at 04:32:25PM +0200, Mauro Carvalho Chehab wrote:  
+> > > > - Add a SPDX header;
+> > > > - Adjust document title;
+> > > > - Some whitespace fixes and new line breaks;
+> > > > - Add it to filesystems/index.rst.
+> > > > 
+> > > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > > ---
+> > > >  Documentation/admin-guide/ext4.rst             | 2 +-
+> > > >  Documentation/filesystems/{dax.txt => dax.rst} | 9 +++++++--
+> > > >  Documentation/filesystems/ext2.rst             | 2 +-
+> > > >  Documentation/filesystems/index.rst            | 1 +
+> > > >  4 files changed, 10 insertions(+), 4 deletions(-)
+> > > >  rename Documentation/filesystems/{dax.txt => dax.rst} (97%)
+> > > > 
+> > > > diff --git a/Documentation/admin-guide/ext4.rst b/Documentation/admin-guide/ext4.rst
+> > > > index 9443fcef1876..103bcc345bad 100644
+> > > > --- a/Documentation/admin-guide/ext4.rst
+> > > > +++ b/Documentation/admin-guide/ext4.rst
+> > > > @@ -392,7 +392,7 @@ When mounting an ext4 filesystem, the following option are accepted:
+> > > >  
+> > > >    dax
+> > > >          Use direct access (no page cache).  See
+> > > > -        Documentation/filesystems/dax.txt.  Note that this option is
+> > > > +        Documentation/filesystems/dax.rst.  Note that this option is
+> > > >          incompatible with data=journal.
+> > > >  
+> > > >  Data Mode
+> > > > diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.rst
+> > > > similarity index 97%
+> > > > rename from Documentation/filesystems/dax.txt
+> > > > rename to Documentation/filesystems/dax.rst
+> > > > index 735f3859b19f..5838144f80f0 100644
+> > > > --- a/Documentation/filesystems/dax.txt
+> > > > +++ b/Documentation/filesystems/dax.rst    
+> > > 
+> > > Err, this will collide with the work that Ira's doing on DAX for 5.8[1].
+> > > Can the dax.txt conversion wait?  
+> > 
+> > Well, I can re-schedule it to 5.9. Or, if you merge the dax changes
+> > at linux-next, I can rebase my patch on the top of it.  
 > 
-> I should have looked closer here - I was thinking about the return
-> value of rcuwait_wait_event. Yes, that signal_pending check you
-> mention makes the sleep semantics change bogus as interruptible is no
-> longer just to avoid contributing to the load balance.
+> That depends on how quick Ira can get the series merged. :)
 > 
-> And yes, unfortunately adding prepare_to and finish_rcuwait() looks
-> like the most reasonable approach to keeping the tracepoint
-> semantics. I also considered extending rcuwait_wait_event() by
-> another parameter to pass back to the caller if there was any wait at
-> all, but that enlarges the call and is probably less generic.
+> I personally think (hope) everyone's tired of arguing and we can just
+> get it done for 5.8, but past experience tells me that rescheduling the
+> rst conversion to 5.90 is at least a safer bet.
 
-Yes, at some point the usual prepare_to/finish APIs become simpler.
+I can't tell much about Ira's patches, but, in the case of the ReST
+conversion, there are not much left to convert anymore. The vast majority
+of files under Documentation/*.txt are already in ReST format. They just
+need to be renamed/moved to a better place. Besides that, there are
+the fs patches on this series, network and a few misc text files.
 
-> I'll send another version keeping the current sleep and tracepoint 
-> semantics.
+I have patches for the remaining stuff already.
 
-Thanks---and sorry, I should have noticed that way earlier.
+> 
+> --D
+> 
+> > > 
+> > > --D
+> > > 
+> > > [1] https://lore.kernel.org/linux-xfs/20200415152942.GS6742@magnolia/T/#m804562299416d865d8829caa82589a522b2080a5
+> > >   
+> > > > @@ -1,5 +1,8 @@
+> > > > +.. SPDX-License-Identifier: GPL-2.0
+> > > > +
+> > > > +=======================
+> > > >  Direct Access for files
+> > > > ------------------------
+> > > > +=======================
+> > > >  
+> > > >  Motivation
+> > > >  ----------
+> > > > @@ -46,6 +49,7 @@ stall the CPU for an extended period, you should also not attempt to
+> > > >  implement direct_access.
+> > > >  
+> > > >  These block devices may be used for inspiration:
+> > > > +
+> > > >  - brd: RAM backed block device driver
+> > > >  - dcssblk: s390 dcss block device driver
+> > > >  - pmem: NVDIMM persistent memory driver
+> > > > @@ -55,6 +59,7 @@ Implementation Tips for Filesystem Writers
+> > > >  ------------------------------------------
+> > > >  
+> > > >  Filesystem support consists of
+> > > > +
+> > > >  - adding support to mark inodes as being DAX by setting the S_DAX flag in
+> > > >    i_flags
+> > > >  - implementing ->read_iter and ->write_iter operations which use dax_iomap_rw()
+> > > > @@ -127,6 +132,6 @@ by adding optional struct page support for pages under the control of
+> > > >  the driver (see CONFIG_NVDIMM_PFN in drivers/nvdimm for an example of
+> > > >  how to do this). In the non struct page cases O_DIRECT reads/writes to
+> > > >  those memory ranges from a non-DAX file will fail (note that O_DIRECT
+> > > > -reads/writes _of a DAX file_ do work, it is the memory that is being
+> > > > +reads/writes _of a DAX ``file_`` do work, it is the memory that is being
+> > > >  accessed that is key here).  Other things that will not work in the
+> > > >  non struct page case include RDMA, sendfile() and splice().
+> > > > diff --git a/Documentation/filesystems/ext2.rst b/Documentation/filesystems/ext2.rst
+> > > > index d83dbbb162e2..fa416b7a5802 100644
+> > > > --- a/Documentation/filesystems/ext2.rst
+> > > > +++ b/Documentation/filesystems/ext2.rst
+> > > > @@ -24,7 +24,7 @@ check=none, nocheck	(*)	Don't do extra checking of bitmaps on mount
+> > > >  				(check=normal and check=strict options removed)
+> > > >  
+> > > >  dax				Use direct access (no page cache).  See
+> > > > -				Documentation/filesystems/dax.txt.
+> > > > +				Documentation/filesystems/dax.rst.
+> > > >  
+> > > >  debug				Extra debugging information is sent to the
+> > > >  				kernel syslog.  Useful for developers.
+> > > > diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+> > > > index c4f95f76ba6a..8e3ccb4ed483 100644
+> > > > --- a/Documentation/filesystems/index.rst
+> > > > +++ b/Documentation/filesystems/index.rst
+> > > > @@ -24,6 +24,7 @@ algorithms work.
+> > > >     splice
+> > > >     locking
+> > > >     directory-locking
+> > > > +   dax
+> > > >  
+> > > >     automount-support
+> > > >  
+> > > > -- 
+> > > > 2.25.2
+> > > >     
+> > 
+> > 
+> > 
+> > Thanks,
+> > Mauro  
 
-Paolo
 
+
+Thanks,
+Mauro
