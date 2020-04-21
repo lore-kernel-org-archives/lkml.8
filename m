@@ -2,114 +2,145 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48277C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAA5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2829A206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:38:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoRIJCZp"
+	by mail.kernel.org (Postfix) with ESMTP id ED3B6206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgDUNip (ORCPT
+        id S1728964AbgDUNkF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:38:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46569 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728786AbgDUNio (ORCPT
+        Tue, 21 Apr 2020 09:40:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46112 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728391AbgDUNkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:38:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587476323;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LEkmEchC7I6Vap+POG7SrCstDGTOmfDnvgVnpaVVqk0=;
-        b=EoRIJCZpLtBSoreadek2bJaY7n8tLDc3usSGlQaN4Q3Qb1wgLV3s5fRRKvz/i7vvvYWH9j
-        mpik2VG4C+VTyFBVC00kPCQrs5g31fPeNydaPVsl92MkxAIFEAjizGBB2pFWc0Sx33ALAb
-        /sqzEwHzgLVmsKnSO7bII0PsY0F2wVI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-hfN_2UzvNp2qIToTwFQxOA-1; Tue, 21 Apr 2020 09:38:41 -0400
-X-MC-Unique: hfN_2UzvNp2qIToTwFQxOA-1
-Received: by mail-wr1-f70.google.com with SMTP id g7so6606639wrw.18
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:38:41 -0700 (PDT)
+        Tue, 21 Apr 2020 09:40:04 -0400
+Received: by mail-oi1-f195.google.com with SMTP id q204so11970165oia.13;
+        Tue, 21 Apr 2020 06:40:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LEkmEchC7I6Vap+POG7SrCstDGTOmfDnvgVnpaVVqk0=;
-        b=Df+XJniRCvuktK/jeNnxxdvtuEdLbW3T1YOHX6Cy1BL7u53x7o9WLRX6D7kXCkDeIB
-         U/gWUfSnH+gJDJzuoUOErPgukeUjqBZscYtV7wttRLaAp50XCiCR3uWA29lgw4J3umEJ
-         NYm8hl6WtqucbJOAhWUyjE6Utwss84buoz4Pmbx67csEUE8S0RIPQ5i1ZsWFQSEFw/ZC
-         DtFYF1roA4Cqyy8ORWvR0r3+s0uuVPgdD3I7c89b+28QfHEgG3cXyHeF//7UMfZrVIpH
-         z3pnwD2SOyFr+aX94dUt3RbNiR2WEkFBdc6O1yzKaV+FNYBNqS1dBVJ8VuqNIKaHxfB3
-         Xw/Q==
-X-Gm-Message-State: AGi0PuaP1ggFHMPmcF+EB0GyE3o0J4esIvnEctE47Yr6P7OhN9PtDUlc
-        5N5K3nQY+VLl+Rsfl8VuwdFZG1KZOvti/zj31+g5aib0CSMjHJCsu51xcs8AjHc6GTK/rpx+pSV
-        UcpeJuXC4J+pKwmwox5cveD06
-X-Received: by 2002:adf:fc4f:: with SMTP id e15mr24315811wrs.415.1587476320532;
-        Tue, 21 Apr 2020 06:38:40 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKGek4tZqkiTucU3V8cPDTVi9zZurddNwoKPsBF0EAMyszVMjHpOEpUuGJxWg6voWo+68yGKQ==
-X-Received: by 2002:adf:fc4f:: with SMTP id e15mr24315782wrs.415.1587476320320;
-        Tue, 21 Apr 2020 06:38:40 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
-        by smtp.gmail.com with ESMTPSA id k9sm3741361wrd.17.2020.04.21.06.38.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 06:38:39 -0700 (PDT)
-Subject: Re: KASAN: out-of-bounds Write in nested_sync_vmcs12_to_shadow
-To:     syzbot <syzbot+6ad11779184a3afe9f7e@syzkaller.appspotmail.com>,
-        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, sean.j.christopherson@intel.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
-References: <000000000000b77ac905a3c1e81f@google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <3fed5719-9b30-fe69-9b2d-3584440759d1@redhat.com>
-Date:   Tue, 21 Apr 2020 15:38:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3/1l4+L7c32gnSlR+jJxwn2uHEoI18nOZn1jAcK8+9Q=;
+        b=qVWO7oiIChojoNCxQH8rGnO1CVw0zz2QrOO4Z+nt2O0mUtAoNVX7jlgmRi6ZJbdUYz
+         EXPDych6FonQIco66FjGYP6BxiD4JVFLFaf94W2WgFDv2gMgjdASu4h+5MJyjXtZDsoK
+         FUz00XV5Qyafy5bJG2Bt5iKZAfc39fTje+zGPn/aKXr7U+Btq9l9KdQRuFEXSSvsPJM4
+         Q+FesvCsm4C4ud5j3bIRVit2YRPQDbRFren53Ujq10nLU1M4j29NGVa2dpnPLIUBKgXp
+         RtUgeQvRcwFed5NZsTm2Q4xPDskRaJAAc3ct1Vb6rvg1+WXVyQs4F01ORfV0+RRr8Hv/
+         4F4w==
+X-Gm-Message-State: AGi0PuaPvH/9AoSKN/8xJVXF02dUkl2zQWvVO6Sc6HXrETsq2hWEju0D
+        heJTnyzIKhn/qCfJXhoV48thCE8TKovN0GR2FfA=
+X-Google-Smtp-Source: APiQypLnyE8M1S3nafbqgPsJWblXWZUy3OMvbgpZ18EMhwOIcc0Hy40xHYlEJ+5FEBBaTRknY0lppcu8TbDznbLPHQw=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr3020719oih.148.1587476402149;
+ Tue, 21 Apr 2020 06:40:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <000000000000b77ac905a3c1e81f@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
+ <CAMuHMdUUJATs+G-hvty=fgyrhyx1EafpFHoWfcm=V_tVLn3q2A@mail.gmail.com>
+ <DB6PR0802MB25330E55914346B46288C712E9D40@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+ <CAMuHMdV1Lp0uEOm_KtUA-nF7-6y1kfyvArcunrLipp6h5A_GMw@mail.gmail.com> <DB6PR0802MB25330B64ABAE083E31B427DDE9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+In-Reply-To: <DB6PR0802MB25330B64ABAE083E31B427DDE9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 21 Apr 2020 15:39:50 +0200
+Message-ID: <CAMuHMdWjBTEM-cU32ZcvvoYDcjdMzcKbQZUyvGggZRMRhkOmFg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] hw_random: introduce Arm CryptoCell TRNG driver
+To:     Hadar Gat <Hadar.Gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/20 02:15, syzbot wrote:
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+6ad11779184a3afe9f7e@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: out-of-bounds in copy_vmcs12_to_enlightened arch/x86/kvm/vmx/nested.c:1820 [inline]
-> BUG: KASAN: out-of-bounds in nested_sync_vmcs12_to_shadow+0x49e3/0x4a60 arch/x86/kvm/vmx/nested.c:2000
-> Write of size 2 at addr ffffc90004db72e8 by task syz-executor.4/8294
-> 
-> CPU: 1 PID: 8294 Comm: syz-executor.4 Not tainted 5.7.0-rc1-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  <IRQ>
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0x5/0x315 mm/kasan/report.c:382
->  __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
->  kasan_report+0x33/0x50 mm/kasan/common.c:625
->  copy_vmcs12_to_enlightened arch/x86/kvm/vmx/nested.c:1820 [inline]
->  nested_sync_vmcs12_to_shadow+0x49e3/0x4a60 arch/x86/kvm/vmx/nested.c:2000
->  </IRQ>
+Hi Hadar (and Gilad),
 
-That's a weird stack trace for a reproducer that is doing operations on
-/dev/fb0.  What's going on?
+On Tue, Apr 21, 2020 at 3:13 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
+> To better explain the relationship between ccree and cctrng drivers, here an description of the underlying hardware and the relationship to the two drivers:
+>
+> Arm TrustZone CryptoCell is a hardware block that implements two separate and discreet, although related, interfaces: one for the Rich Execution Environment  (read: Linux) and the other for the Trusted Execution Environment (e.g. Trusty, Op-TEE).
+>
+> The ccree driver exposes the REE interface of CryptoCell to Linux. Where a SoC vendor implements both REE and TEE in their design, that is all that is needed.
+>
+> However, we have some customers that make use CryptoCell but never implement a Trusted Execution Environment. This is a design decision taken when the SoC hardware is being designed and not a software controlled configuration, as it involves how the buses are laid out. Some of these customers have requested from us to allow making use in Linux of the TRNG resources which are normally associated with the TEE side when it is not in use. For these customers, the cctrng driver allows making use in Linux the TRNG which is normally part of the TEE side of CryptoCell.
 
-Paolo
+Thank you, that is the part I was missing.
 
+BTW, there seems to be no mention of CryptoCell 630 on arm.com; it
+covers only CC-300 and CC-700.
+But from the (very limited) information about the crypto engine on R-Car
+Gen3 SoCs, it looks like the RNG is indeed only present in the secure
+(trusted) part.
+
+> > -----Original Message-----
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > On Mon, Apr 20, 2020 at 2:27 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
+> > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > Sent: Monday, 20 April 2020 12:35
+> > > >
+> > > > On Fri, Mar 27, 2020 at 7:11 AM Hadar Gat <hadar.gat@arm.com> wrote:
+> > > > > The Arm CryptoCell is a hardware security engine.
+> > > > > This patch introduces driver for its TRNG (True Random Number
+> > > > > Generator) engine.
+> > > >
+> > > > Thanks for your series!
+> > > >
+> > > > I am wondering what is the relation between this and
+> > > > Documentation/devicetree/bindings/crypto/arm-cryptocell.txt?
+> > >
+> > > Arm TrustZone CryptoCell hardware contains both cryptographic engine
+> > (ccree) and true random number generator engine (cctrng).
+> >
+> > OK.
+> >
+> > > These are separate engines with some sharing in logic and interface.
+> >
+> > Do they share the same register block?
+> >
+> > > cctrng engine may not always be present.
+> >
+> > I assume that applies to e.g. the older 630p?
+> >
+> > > The devicetree documentation is in:
+> > > For ccree -
+> > > Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+> > > For cctrng - Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> >
+> > Thank you, I had already read both documents.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
