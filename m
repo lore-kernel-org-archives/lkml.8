@@ -2,298 +2,205 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6FCC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C1EC55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C0F20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587492849;
-	bh=WdIFy6vrsum21qUjwMbqoMHjlL25lWqWkTxfnoSgYpQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aWjPmoNBePpB2Hxhngphw4I+60EcjG70zQkMhOQ+Fu/55vnVVMFTSVpF1aMwwP2M3
-	 E38QqxHCOaE+/OaMEJ91J0/P0c6i9NmqlIXN5omRFRczymXJ5gZ50eZrPuAmq9M2JX
-	 Wws5sHi0MDLx819PUWAM2iJ+7TK1TmC/n2EnN8cQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2138D206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQnQ0MOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgDUSOH convert rfc822-to-8bit (ORCPT
+        id S1729212AbgDUSRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:14:07 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58487 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729083AbgDUSOC (ORCPT
+        Tue, 21 Apr 2020 14:17:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgDUSRv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:14:02 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-wmhDccJUPpqzac3h8w80Gg-1; Tue, 21 Apr 2020 14:13:58 -0400
-X-MC-Unique: wmhDccJUPpqzac3h8w80Gg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92C92802568;
-        Tue, 21 Apr 2020 18:13:56 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.196.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 861FDB3A64;
-        Tue, 21 Apr 2020 18:13:53 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 3/3] perf stat: Add --metrics-file option
-Date:   Tue, 21 Apr 2020 20:13:36 +0200
-Message-Id: <20200421181337.988681-4-jolsa@kernel.org>
-In-Reply-To: <20200421181337.988681-1-jolsa@kernel.org>
-References: <20200421181337.988681-1-jolsa@kernel.org>
+        Tue, 21 Apr 2020 14:17:51 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ABFAC0610D5;
+        Tue, 21 Apr 2020 11:17:51 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id d17so17560130wrg.11;
+        Tue, 21 Apr 2020 11:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=d+6jESbCvom8boV1Iz569w6jKc+CILAkX582DGmlOlo=;
+        b=mQnQ0MOZb5HAjIp/13NpjEXuDIO7U9B4is6pfGQDxq3kJQmaqO0qZliXaA+crLKeiv
+         hZ3fyzWaKTi36Gji2yKwBR5Vuoh7wNGQKsSW2PGuaHEzamk3jATQ5Mt3rc0+ARve6/Ka
+         t2hiL07+7kcG0iuaoGdIG/QfV9bHL6Jc/LmjqRSWP4GdNMmv11FKpfmquznU0nbxGz91
+         4BYH4vGjLXZ5TXMWuE8L/jSK2LjiRTAYSzVAb8Rn8BdTFnMKWr/YoAcdUZXx/7bA8Ees
+         av41L8pcXPoQK52trQrU347Ym30hgRHNP1koZumWJRnO3DlgTwXFzI5dAN3ui8PL6Sze
+         ki/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d+6jESbCvom8boV1Iz569w6jKc+CILAkX582DGmlOlo=;
+        b=fqVB9IeQwechWtHUUsv1L+rwbqWlT2vgJwUODl8S6a6A/JgMlyySBDDi0E2g+eWQXe
+         0AIvQvQwhA9SkoyvYqVPIuhue97zRteUvI8ABJMKeE6R6w4xjcf1WvJzgS5QosBfQT8U
+         GSofYYbuIZA7TmGrd1U4ignJrOYWW23/+7sROhDAagQWlnYFUqtJh4PKavALI+1P1MPr
+         dDMS3B5G4wKCE+ocj3F5r6tnb2GNiLQWCLQvFlxtzxM6s+c+cYs5Mr1Dy3i22i22Ght0
+         o8juYwZuYUMB4PzySs0V93nJ4QSiDWP+cOUynJYl+jPIRTsBUGjs8TC3OpQuuNKTvtpu
+         mXKg==
+X-Gm-Message-State: AGi0PuYyThQ5ZUpDuYEBQWiq9ZVMASQYsNcpV8m70OL7TGXnz2JIUB0d
+        Wkxfy5416j2LHBA9Fy5oAXmGn4FJ
+X-Google-Smtp-Source: APiQypIxTRtDUCBScSJRt+j/IVmGwz+hgVch8UpwbARQGIcr29Ekhok/1Q6jgx61gq3YOJYzbqHd4w==
+X-Received: by 2002:adf:decb:: with SMTP id i11mr24292487wrn.140.1587493068988;
+        Tue, 21 Apr 2020 11:17:48 -0700 (PDT)
+Received: from ?IPv6:2a02:810d:340:2e50:b4a9:f772:3340:fbf9? ([2a02:810d:340:2e50:b4a9:f772:3340:fbf9])
+        by smtp.gmail.com with ESMTPSA id p5sm5580060wrg.49.2020.04.21.11.17.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 11:17:48 -0700 (PDT)
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
+ PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org
+References: <cover.1586939718.git.hns@goldelico.com>
+ <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
+ <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
+ <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
+ <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
+ <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
+ <20200420073842.nx4xb3zqvu23arkc@gilmour.lan>
+ <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com>
+ <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
+From:   Philipp Rossak <embed3d@gmail.com>
+Message-ID: <5749af21-e707-c998-c83b-50c48867c9e8@gmail.com>
+Date:   Tue, 21 Apr 2020 18:42:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding --metrics-file option that allows to specify metrics
-in the file.
+Hi,
 
-It's now possible to define metrics in file and use them like:
+On 21.04.20 13:21, Maxime Ripard wrote:
+> Hi,
+> 
+> On Tue, Apr 21, 2020 at 11:57:33AM +0200, Philipp Rossak wrote:
+>> On 20.04.20 09:38, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Fri, Apr 17, 2020 at 02:09:06PM +0200, Philipp Rossak wrote:
+>>>>>> I'm a bit skeptical on that one since it doesn't even list the
+>>>>>> interrupts connected to the GPU that the binding mandates.
+>>>>>
+>>>>> I think he left it out for a future update.
+>>>>> But best he comments himself.
+>>>>
+>>>> I'm currently working on those bindings. They are now 90% done, but they are
+>>>> not finished till now. Currently there is some mainline support missing to
+>>>> add the full binding. The A83T and also the A31/A31s have a GPU Power Off
+>>>> Gating Register in the R_PRCM module, that is not supported right now in
+>>>> Mainline. The Register need to be written when the GPU is powered on and
+>>>> off.
+>>>>
+>>>> @Maxime: I totally agree on your point that a demo needs to be provided
+>>>> before the related DTS patches should be provided. That's the reason why I
+>>>> added the gpu placeholder patches.
+>>>> Do you have an idea how a driver for the R_PRCM stuff can look like? I'm not
+>>>> that experienced with the clock driver framework.
+>>>
+>>> It looks like a power-domain to me, so you'd rather plug that into the genpd
+>>> framework.
+>>
+>> I had a look on genpd and I'm not really sure if that fits.
+>>
+>> It is basically some bit that verify that the clocks should be enabled or
+>> disabled.
+> 
+> No, it can do much more than that. It's a framework to control the SoCs power
+> domains, so clocks might be a part of it, but most of the time it's going to be
+> about powering up a particular device.
+> 
+So I think I've found now the right piece of documentation and a driver 
+that implements something similar [1].
 
-  $ cat metrics
-  # IPC
-  mine1 = instructions / cycles;
-  /* DECODED_ICACHE_UOPS% */
-  mine2 = 100 * (idq.dsb_uops / \ (idq.ms_uops + idq.mite_uops + idq.dsb_uops + lsd.uops));
+So I will write a similar driver like linked above that only sets the 
+right bits for A83T and A31/A31s.
+Do you think this is the right approach?
 
-  $ sudo perf stat --metrics-file ./metrics -M mine1,mine2 --metric-only -a -I 1000
-  #           time       insn per cycle                mine1                mine2
-       1.000536263                0.71                   0.7                 41.4
-       2.002069025                0.31                   0.3                 14.1
-       3.003427684                0.27                   0.3                 14.8
-       4.004807132                0.25                   0.2                 12.1
-  ...
+>> I think this is better placed somewhere in the clocking framework.
+>> I see there more similarities to the gating stuff.
+>> Do you think it is suitable to implement it like the clock gating?
+> 
+> I'm really not sure what makes you think that this should be modelled as a
+> clock?
+> 
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/Documentation/perf-stat.txt |  3 ++
- tools/perf/builtin-stat.c              |  7 ++-
- tools/perf/util/metricgroup.c          | 66 +++++++++++++++++++++++---
- tools/perf/util/metricgroup.h          |  3 +-
- tools/perf/util/stat.h                 |  1 +
- 5 files changed, 70 insertions(+), 10 deletions(-)
+Looks like I looked in the wrong place and got some information that are 
+not suitable for this.
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 4d56586b2fb9..263b0d2bb835 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -264,6 +264,9 @@ For a group all metrics from the group are added.
- The events from the metrics are automatically measured.
- See perf list output for the possble metrics and metricgroups.
- 
-+--metrics-file file::
-+Read metrics definitions from file in addition to compiled in metrics.
-+
- -A::
- --no-aggr::
- Do not aggregate counts across all monitored CPUs.
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 9207b6c45475..81c2b2f8ec53 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -841,7 +841,8 @@ static int parse_metric_groups(const struct option *opt,
- 			       const char *str,
- 			       int unset __maybe_unused)
- {
--	return metricgroup__parse_groups(opt, str, &stat_config.metric_events);
-+	return metricgroup__parse_groups(opt, str, &stat_config.metric_events,
-+					 stat_config.metrics_file);
- }
- 
- static struct option stat_options[] = {
-@@ -926,6 +927,8 @@ static struct option stat_options[] = {
- 	OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
- 		     "monitor specified metrics or metric groups (separated by ,)",
- 		     parse_metric_groups),
-+	OPT_STRING(0, "metrics-file", &stat_config.metrics_file, "file path",
-+		   "file with metrics definitions"),
- 	OPT_BOOLEAN_FLAG(0, "all-kernel", &stat_config.all_kernel,
- 			 "Configure all used events to run in kernel space.",
- 			 PARSE_OPT_EXCLUSIVE),
-@@ -1443,7 +1446,7 @@ static int add_default_attributes(void)
- 			struct option opt = { .value = &evsel_list };
- 
- 			return metricgroup__parse_groups(&opt, "transaction",
--							 &stat_config.metric_events);
-+							 &stat_config.metric_events, NULL);
- 		}
- 
- 		if (pmu_have_event("cpu", "cycles-ct") &&
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 7ad81c8177ea..99e0ef725a6f 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -519,17 +519,17 @@ static int __metricgroup__add_metric(struct strbuf *events,
- }
- 
- static int metricgroup__add_metric(const char *metric, struct strbuf *events,
--				   struct list_head *group_list)
-+				   struct list_head *group_list,
-+				   struct expr_parse_ctx *ctx)
- {
- 	struct pmu_events_map *map = perf_pmu__find_map(NULL);
--	struct pmu_event *pe;
- 	int i, ret = -EINVAL;
- 
- 	if (!map)
- 		return 0;
- 
- 	for (i = 0; ; i++) {
--		pe = &map->table[i];
-+		struct pmu_event *pe = &map->table[i];
- 
- 		if (!pe->name && !pe->metric_group && !pe->metric_name)
- 			break;
-@@ -545,15 +545,56 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 				break;
- 		}
- 	}
-+
-+	if (!ctx->num_custom || ret == -ENOMEM)
-+		return ret;
-+
-+	for (i = 0; i < ctx->num_custom; i++) {
-+		struct pmu_event pe = { 0 };
-+
-+		if (!match_metric(ctx->custom[i].name, metric))
-+			continue;
-+
-+		pe.metric_name = strdup(ctx->custom[i].name);
-+		pe.metric_expr = strdup(ctx->custom[i].expr);
-+
-+		if (!pe.metric_name && !pe.metric_expr)
-+			return -ENOMEM;
-+
-+		ret = __metricgroup__add_metric(events, group_list, &pe);
-+		if (ret) {
-+			free((char *) pe.metric_name);
-+			free((char *) pe.metric_expr);
-+			break;
-+		}
-+	}
-+
- 	return ret;
- }
- 
- static int metricgroup__add_metric_list(const char *list, struct strbuf *events,
--				        struct list_head *group_list)
-+					struct list_head *group_list,
-+					const char *metrics_file)
- {
-+	struct expr_parse_ctx ctx = { 0 };
- 	char *llist, *nlist, *p;
- 	int ret = -EINVAL;
- 
-+	if (metrics_file) {
-+		size_t size;
-+		char *buf;
-+
-+		if (filename__read_str(metrics_file, &buf, &size)) {
-+			pr_err("failed to read metrics file: %s\n", metrics_file);
-+			return -1;
-+		}
-+
-+		expr__ctx_init(&ctx);
-+		expr__parse_custom(&ctx, buf);
-+
-+		free(buf);
-+	}
-+
- 	nlist = strdup(list);
- 	if (!nlist)
- 		return -ENOMEM;
-@@ -563,7 +604,7 @@ static int metricgroup__add_metric_list(const char *list, struct strbuf *events,
- 	strbuf_addf(events, "%s", "");
- 
- 	while ((p = strsep(&llist, ",")) != NULL) {
--		ret = metricgroup__add_metric(p, events, group_list);
-+		ret = metricgroup__add_metric(p, events, group_list, &ctx);
- 		if (ret == -EINVAL) {
- 			fprintf(stderr, "Cannot find metric or group `%s'\n",
- 					p);
-@@ -575,6 +616,15 @@ static int metricgroup__add_metric_list(const char *list, struct strbuf *events,
- 	if (!ret)
- 		metricgroup___watchdog_constraint_hint(NULL, true);
- 
-+	if (metrics_file) {
-+		int i;
-+
-+		for (i = 0; i < ctx.num_custom; i++) {
-+			zfree(&ctx.custom[i].name);
-+			zfree(&ctx.custom[i].expr);
-+		}
-+	}
-+
- 	return ret;
- }
- 
-@@ -594,7 +644,8 @@ static void metricgroup__free_egroups(struct list_head *group_list)
- 
- int metricgroup__parse_groups(const struct option *opt,
- 			   const char *str,
--			   struct rblist *metric_events)
-+			   struct rblist *metric_events,
-+			   const char *metrics_file)
- {
- 	struct parse_events_error parse_error;
- 	struct evlist *perf_evlist = *(struct evlist **)opt->value;
-@@ -604,7 +655,8 @@ int metricgroup__parse_groups(const struct option *opt,
- 
- 	if (metric_events->nr_entries == 0)
- 		metricgroup__rblist_init(metric_events);
--	ret = metricgroup__add_metric_list(str, &extra_events, &group_list);
-+	ret = metricgroup__add_metric_list(str, &extra_events, &group_list,
-+					   metrics_file);
- 	if (ret)
- 		return ret;
- 	pr_debug("adding %s\n", extra_events.buf);
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 475c7f912864..bf6e4281915f 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -29,7 +29,8 @@ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
- 					 bool create);
- int metricgroup__parse_groups(const struct option *opt,
- 			const char *str,
--			struct rblist *metric_events);
-+			struct rblist *metric_events,
-+			const char *metrics_file);
- 
- void metricgroup__print(bool metrics, bool groups, char *filter,
- 			bool raw, bool details);
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b4fdfaa7f2c0..57c4c7695aaf 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -123,6 +123,7 @@ struct perf_stat_config {
- 	struct runtime_stat	*stats;
- 	int			 stats_num;
- 	const char		*csv_sep;
-+	const char		*metrics_file;
- 	struct stats		*walltime_nsecs_stats;
- 	struct rusage		 ru_data;
- 	struct perf_cpu_map		*aggr_map;
--- 
-2.25.3
+>>>> The big question is right now how to proceed with the A83T and A31s patches.
+>>>> I see there three options, which one do you prefer?:
+>>>>
+>>>> 1. Provide now placeholder patches and send new patches, if everything is
+>>>> clear and other things are mainlined
+>>>> 2. Provide now patches as complete as possible and provide later patches to
+>>>> complete them when the R_PRCM things are mainlined
+>>>> 3. Leave them out, till the related work is mainlined and the bindings are
+>>>> final.
+>>>
+>>> Like I said, the DT *has* to be backward-compatible, so for any DT patch that
+>>> you are asking to be merged, you should be prepared to support it indefinitely
+>>> and be able to run from it, and you won't be able to change the bindings later
+>>> on.
+>>
+>> I agree on your points. But is this also suitable to drivers that are
+>> currently off tree and might be merged in one or two years?
+> 
+> This is what we done for the Mali. The devicetree binding was first done for the
+> out-of-tree driver, and then lima/panfrost reused it.
+> 
+> The key thing here is to have enough confidence about how the hardware works so
+> that you can accurately describe it.
 
+Ok thanks! So I will resend my patches when the work got a more mature 
+state and we know enough about the Hardware.
+
+Cheers,
+Philipp
+
+
+[1]: 
+https://elixir.bootlin.com/linux/latest/source/drivers/soc/amlogic/meson-gx-pwrc-vpu.c
