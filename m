@@ -2,86 +2,167 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC541C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9CEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BD4621D94
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587439286;
-	bh=xEmUHAOoyZcRhEoFa4R3C3VggYvh9vMG39wtbPGgH1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QrAHOkHCqgzIykF6HGRVEKfEb8BnPZw3fexiX9dke50YFFL4dthKhQqxWUwHos+wo
-	 Wm+2wIoCKj2UQMkgO7UjvXgpKs/vpcEVJ4rmqWglygdrkMuFPfkmU8vudDVlmbNKmS
-	 P/6b373w0C+QUF7o5gJvy8R1nhU4sPdJIILLU6QY=
+	by mail.kernel.org (Postfix) with ESMTP id 94ABF206F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgDUDVZ (ORCPT
+        id S1727987AbgDUDXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:21:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38804 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 23:23:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:57300 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgDUDVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:21:25 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11A86206F9;
-        Tue, 21 Apr 2020 03:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587439285;
-        bh=xEmUHAOoyZcRhEoFa4R3C3VggYvh9vMG39wtbPGgH1s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yd21Ne0fDGlsG9hDF1efk/I564yGFpzgFZFsP1yBrZAVAz5nMXJ49sQTAqfnuRauF
-         K4AIlzKFC8Fm2XVUUY2lL+xgOjxMvqxl0awzBrCWD/sUH3aEpbyM/4y0rlcmf8VLqu
-         bTJ3cC3JKi5NI3xiVwEJxcK++wkD7P9AmlbIh+EE=
-Date:   Tue, 21 Apr 2020 11:21:17 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Rouven Czerwinski <r.czerwinski@pengutronix.de>,
-        stable@vger.kernel.org,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: imx: provide v7_cpu_resume() only on
- ARM_CPU_SUSPEND=y
-Message-ID: <20200421032116.GD8571@dragon>
-References: <20200323081933.31497-1-a.fatoum@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323081933.31497-1-a.fatoum@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1725989AbgDUDXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 23:23:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 601D331B;
+        Mon, 20 Apr 2020 20:23:23 -0700 (PDT)
+Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7ADBD3F6CF;
+        Mon, 20 Apr 2020 20:23:16 -0700 (PDT)
+From:   Jianyong Wu <jianyong.wu@arm.com>
+To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
+        suzuki.poulose@arm.com, steven.price@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        jianyong.wu@arm.com, nd@arm.com
+Subject: [RFC PATCH v11 0/9] Enable ptp_kvm for arm64
+Date:   Tue, 21 Apr 2020 11:22:55 +0800
+Message-Id: <20200421032304.26300-1-jianyong.wu@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 09:19:33AM +0100, Ahmad Fatoum wrote:
-> 512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
-> introduced an unintended linker error for i.MX6 configurations that have
-> ARM_CPU_SUSPEND=n which can happen if neither CONFIG_PM, CONFIG_CPU_IDLE,
-> nor ARM_PSCI_FW are selected.
-> 
-> Fix this by having v7_cpu_resume() compiled only when cpu_resume() it
-> calls is available as well.
-> 
-> The C declaration for the function remains unguarded to avoid future code
-> inadvertently using a stub and introducing a regression to the bug the
-> original commit fixed.
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixes: 512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
-> Reported-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+kvm ptp targets to provide high precision time sync between guest
+and host in virtualization environment. Here, we enable kvm ptp
+for arm64.
 
-Applied, thanks.
+change log:
+
+from v11 to v10:
+        (1) rebase code on 5.7_rc2.
+        (2) remove support for arm32, as kvm support for arm32 will be
+removed [1]
+        (3) add error report in ptp_kvm initialization.
+
+from v10 to v9:
+        (1) change code base to v5.5.
+	(2) enable ptp_kvm both for arm32 and arm64.
+        (3) let user choose which of virtual counter or physical counter
+should return when using crosstimestamp mode of ptp_kvm for arm/arm64.
+        (4) extend input argument for getcrosstimestamp API.
+
+from v8 to v9:
+        (1) move ptp_kvm.h to driver/ptp/
+        (2) replace license declaration of ptp_kvm.h the same with other
+header files in the same directory.
+
+from v7 to v8:
+        (1) separate adding clocksource id for arm_arch_counter as a
+single patch.
+        (2) update commit message for patch 4/8.
+        (3) refine patch 7/8 and patch 8/8 to make them more independent.
+
+from v6 to v7:
+        (1) include the omitted clocksource_id.h in last version.
+        (2) reorder the header file in patch.
+        (3) refine some words in commit message to make it more impersonal.
+
+from v5 to v6:
+        (1) apply Mark's patch[4] to get SMCCC conduit.
+        (2) add mechanism to recognize current clocksource by add
+clocksouce_id value into struct clocksource instead of method in patch-v5.
+        (3) rename kvm_arch_ptp_get_clock_fn into
+kvm_arch_ptp_get_crosststamp.
+
+from v4 to v5:
+        (1) remove hvc delay compensasion as it should leave to userspace.
+        (2) check current clocksource in hvc call service.
+        (3) expose current clocksource by adding it to
+system_time_snapshot.
+        (4) add helper to check if clocksource is arm_arch_counter.
+        (5) rename kvm_ptp.c to ptp_kvm_common.c
+
+from v3 to v4:
+        (1) fix clocksource of ptp_kvm to arch_sys_counter.
+        (2) move kvm_arch_ptp_get_clock_fn into arm_arch_timer.c
+        (3) subtract cntvoff before return cycles from host.
+        (4) use ktime_get_snapshot instead of getnstimeofday and
+get_current_counterval to return time and counter value.
+        (5) split ktime and counter into two 32-bit block respectively
+to avoid Y2038-safe issue.
+        (6) set time compensation to device time as half of the delay of
+hvc call.
+        (7) add ARM_ARCH_TIMER as dependency of ptp_kvm for
+arm64.
+
+from v2 to v3:
+        (1) fix some issues in commit log.
+        (2) add some receivers in send list.
+
+from v1 to v2:
+        (1) move arch-specific code from arch/ to driver/ptp/
+        (2) offer mechanism to inform userspace if ptp_kvm service is
+available.
+        (3) separate ptp_kvm code for arm64 into hypervisor part and
+guest part.
+        (4) add API to expose monotonic clock and counter value.
+        (5) refine code: remove no necessary part and reconsitution.
+
+[1] https://patchwork.kernel.org/cover/11373351/
+
+Jianyong Wu (8):
+  psci: export psci conduit get helper.
+  ptp: Reorganize ptp_kvm modules to make it arch-independent.
+  clocksource: Add clocksource id for arm arch counter
+  psci: Add hypercall service for ptp_kvm.
+  ptp: arm64: Enable ptp_kvm for arm/arm64
+  ptp: extend input argument for getcrosstimestamp API
+  arm64: add mechanism to let user choose which counter to return
+  arm64: Add kvm capability check extension for ptp_kvm
+
+Thomas Gleixner (1):
+  time: Add mechanism to recognize clocksource in time_get_snapshot
+
+ drivers/clocksource/arm_arch_timer.c        | 33 ++++++++
+ drivers/firmware/psci/psci.c                |  1 +
+ drivers/net/ethernet/intel/e1000e/ptp.c     |  3 +-
+ drivers/ptp/Kconfig                         |  2 +-
+ drivers/ptp/Makefile                        |  1 +
+ drivers/ptp/ptp_chardev.c                   |  8 +-
+ drivers/ptp/ptp_kvm.h                       | 11 +++
+ drivers/ptp/ptp_kvm_arm64.c                 | 53 ++++++++++++
+ drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 85 ++++++--------------
+ drivers/ptp/ptp_kvm_x86.c                   | 89 +++++++++++++++++++++
+ include/linux/arm-smccc.h                   | 21 +++++
+ include/linux/clocksource.h                 |  6 ++
+ include/linux/clocksource_ids.h             | 12 +++
+ include/linux/ptp_clock_kernel.h            |  3 +-
+ include/linux/timekeeping.h                 | 12 +--
+ include/uapi/linux/kvm.h                    |  1 +
+ include/uapi/linux/ptp_clock.h              |  4 +-
+ kernel/time/clocksource.c                   |  3 +
+ kernel/time/timekeeping.c                   |  1 +
+ virt/kvm/arm/arm.c                          |  1 +
+ virt/kvm/arm/hypercalls.c                   | 44 +++++++++-
+ 21 files changed, 322 insertions(+), 72 deletions(-)
+ create mode 100644 drivers/ptp/ptp_kvm.h
+ create mode 100644 drivers/ptp/ptp_kvm_arm64.c
+ rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (60%)
+ create mode 100644 drivers/ptp/ptp_kvm_x86.c
+ create mode 100644 include/linux/clocksource_ids.h
+
+-- 
+2.17.1
+
