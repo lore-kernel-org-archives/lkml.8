@@ -2,544 +2,278 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10152C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6423EC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C904A2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5622074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgDUMlW (ORCPT
+        id S1726691AbgDUMl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:41:22 -0400
-Received: from mga18.intel.com ([134.134.136.126]:42194 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728951AbgDUMlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:41:19 -0400
-IronPort-SDR: jIC+Jw+sjBEfiUL1F0065mCyKpaxjHm/I7hjthw4yQKgDHTS3n6l1H9GCxH5EQ3ln8kl1naJlC
- 2gS4CTgH2hcQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 05:41:15 -0700
-IronPort-SDR: q/73TOooUnNP9eIGriS9aRNDRrEztCch3FJ1/YmOk2xp/VS8zDv21ujk7odW9Y7qOPktHq7tI9
- azcDogw29dvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,410,1580803200"; 
-   d="scan'208";a="365336570"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 21 Apr 2020 05:41:13 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 21 Apr 2020 15:41:12 +0300
-Date:   Tue, 21 Apr 2020 15:41:12 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Mathew King <mathewk@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v0 2/2] typec: Add Type-C charger
-Message-ID: <20200421124112.GA618654@kuha.fi.intel.com>
-References: <20200420163657.60650-1-mathewk@chromium.org>
- <20200420163657.60650-3-mathewk@chromium.org>
- <AM6PR10MB2263B60191A7240E3F6E0C7A80D50@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+        Tue, 21 Apr 2020 08:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728951AbgDUMl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 08:41:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D904C061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:41:27 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jQsCy-0002fm-SX; Tue, 21 Apr 2020 14:41:00 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jQsCx-00055y-6C; Tue, 21 Apr 2020 14:40:59 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: [PATCH v6 4/5] ARM: dts: add Protonic RVT board
+Date:   Tue, 21 Apr 2020 14:40:56 +0200
+Message-Id: <20200421124057.19238-5-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200421124057.19238-1-o.rempel@pengutronix.de>
+References: <20200421124057.19238-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR10MB2263B60191A7240E3F6E0C7A80D50@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 08:44:38AM +0000, Adam Thomson wrote:
-> On 20 April 2020 17:37, Mathew King wrote:
-> 
-> > Add an option to expose USB Type-C ports that can charge system
-> > batteries as a power_supply class. This implementation only exposes
-> > three properties of the power supply.
-> > 
-> > POWER_SUPPLY_PROP_ONLINE - Set to true if the Type-C port is configured
-> >                            as a sink and is connected to a partner
-> > POWER_SUPPLY_PROP_STATUS - Set to CHARGING if a partner is connected and
-> >                            the port is a sink and set to NOT_CHARGING
-> >                            otherwise
-> > POWER_SUPPLY_PROP_USB_TYPE - When a partner is conneced set to TYPE_C,
-> >                              TYPE_PD, or TYPE_PD_DRP depending on the
-> >                              partner capibilities and set to
-> >                              TYPE_UNKNOWN otherwise
-> > 
-> > This implementation can be expanded as the typec class is expaneded. In
-> > particular the STATUS property should show more than CHARGING and
-> > NOT_CHARGING. Also properties like VOLTAGE and CURRENT can be added
-> > when
-> > the typec class supports getting PDOs.
-> 
-> Hmm, this functionally looks almost exactly like code already available in TCPM,
-> except a much smaller subset. This looks like it would duplicate that work so as
-> it stands doesn't feel sensible to me. It may be that the work in TCPM needs
-> refactoring, but I don't believe the two should coexist.
+Protonic RVT is an internal development platform for a wireless ISObus
+Virtual Terminal based on COTS tablets, and the predecessor of the WD2
+platform.
 
-I agree. We can't register a psy for every port and partner
-unconditionally like that.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: David Jander <david@protonic.nl>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/arm/boot/dts/Makefile          |   1 +
+ arch/arm/boot/dts/imx6dl-prtrvt.dts | 182 ++++++++++++++++++++++++++++
+ 2 files changed, 183 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-prtrvt.dts
 
-I do think that for the sake of uniformity it would make sense to have
-the Type-C subsystem supply API that the Type-C drivers can use for
-registering the psy instead of every Type-C driver doing that directly
-with the psy API. So this patch should first introduce that API
-without doing anything automatically.
-
-Once things settle down, we can consider taking care of the psy
-registration for the drivers as well.
-
-Ideally the psy(s) registered here would supply the same information
-and functionality as the psy registered in TCPM. Then a separate patch
-that follows (that is part of the series) could simply convert TCPM to
-use this new API for registering the psy.
-
-thanks,
-
-> > 
-> > Signed-off-by: Mathew King <mathewk@chromium.org>
-> > ---
-> >  drivers/usb/typec/Kconfig   |  11 ++
-> >  drivers/usb/typec/Makefile  |   1 +
-> >  drivers/usb/typec/charger.c | 204
-> > ++++++++++++++++++++++++++++++++++++
-> >  drivers/usb/typec/charger.h |  33 ++++++
-> >  drivers/usb/typec/class.c   |  48 +++++++--
-> >  drivers/usb/typec/class.h   |   2 +
-> >  6 files changed, 290 insertions(+), 9 deletions(-)
-> >  create mode 100644 drivers/usb/typec/charger.c
-> >  create mode 100644 drivers/usb/typec/charger.h
-> > 
-> > diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-> > index b4f2aac7ae8a..1040c990cb7e 100644
-> > --- a/drivers/usb/typec/Kconfig
-> > +++ b/drivers/usb/typec/Kconfig
-> > @@ -46,6 +46,17 @@ menuconfig TYPEC
-> > 
-> >  if TYPEC
-> > 
-> > +config TYPEC_CHARGER
-> > +	bool "Type-C Power Supply support"
-> > +	depends on POWER_SUPPLY
-> > +	help
-> > +	  Say Y here to enable Type-C charging ports to be exposed as a power
-> > +	  supply class.
-> > +
-> > +	  If you choose this option Type-C charger support will be built into
-> > +	  the typec driver. This will expose all Type-C ports as a power_supply
-> > +	  class.
-> > +
-> >  source "drivers/usb/typec/tcpm/Kconfig"
-> > 
-> >  source "drivers/usb/typec/ucsi/Kconfig"
-> > diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
-> > index 7753a5c3cd46..6fc5424761a1 100644
-> > --- a/drivers/usb/typec/Makefile
-> > +++ b/drivers/usb/typec/Makefile
-> > @@ -1,6 +1,7 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  obj-$(CONFIG_TYPEC)		+= typec.o
-> >  typec-y				:= class.o mux.o bus.o
-> > +typec-$(CONFIG_TYPEC_CHARGER)	+= charger.o
-> >  obj-$(CONFIG_TYPEC)		+= altmodes/
-> >  obj-$(CONFIG_TYPEC_TCPM)	+= tcpm/
-> >  obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
-> > diff --git a/drivers/usb/typec/charger.c b/drivers/usb/typec/charger.c
-> > new file mode 100644
-> > index 000000000000..07c3cd065be8
-> > --- /dev/null
-> > +++ b/drivers/usb/typec/charger.c
-> > @@ -0,0 +1,204 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * USB Type-C Charger Class
-> > + *
-> > + * Copyright (C) 2020, Google LLC
-> > + * Author: Mathew King <mathewk@google.com>
-> > + */
-> > +
-> > +#include <linux/slab.h>
-> > +
-> > +#include "charger.h"
-> > +#include "class.h"
-> > +
-> > +static enum power_supply_property typec_charger_props[] = {
-> > +	POWER_SUPPLY_PROP_ONLINE,
-> > +	POWER_SUPPLY_PROP_STATUS,
-> > +	POWER_SUPPLY_PROP_USB_TYPE
-> > +};
-> > +
-> > +static enum power_supply_usb_type typec_charger_usb_types[] = {
-> > +	POWER_SUPPLY_USB_TYPE_UNKNOWN,
-> > +	POWER_SUPPLY_USB_TYPE_C,
-> > +	POWER_SUPPLY_USB_TYPE_PD,
-> > +	POWER_SUPPLY_USB_TYPE_PD_DRP,
-> > +};
-> > +
-> > +static int typec_charger_get_prop(struct power_supply *psy,
-> > +				  enum power_supply_property psp,
-> > +				  union power_supply_propval *val)
-> > +{
-> > +	struct typec_charger *charger = power_supply_get_drvdata(psy);
-> > +
-> > +	switch (psp) {
-> > +	case POWER_SUPPLY_PROP_ONLINE:
-> > +		val->intval = charger->psy_online;
-> > +		break;
-> > +	case POWER_SUPPLY_PROP_STATUS:
-> > +		val->intval = charger->psy_status;
-> > +		break;
-> > +	case POWER_SUPPLY_PROP_USB_TYPE:
-> > +		val->intval = charger->psy_usb_type;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int typec_charger_set_prop(struct power_supply *psy,
-> > +				  enum power_supply_property psp,
-> > +				  const union power_supply_propval *val)
-> > +{
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static int typec_charger_is_writeable(struct power_supply *psy,
-> > +				      enum power_supply_property psp)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +/**
-> > + * typec_charger_changed - Notify of a Type-C charger change
-> > + * @charger: Type-C charger that changed
-> > + *
-> > + * Notifies the Type-C charger that one or more of its attributes may have
-> > + * changed.
-> > + */
-> > +void typec_charger_changed(struct typec_charger *charger)
-> > +{
-> > +	int last_psy_status, last_psy_usb_type, last_psy_online;
-> > +
-> > +	last_psy_online = charger->psy_online;
-> > +	last_psy_status = charger->psy_status;
-> > +	last_psy_usb_type = charger->psy_usb_type;
-> > +
-> > +	if (!charger->partner) {
-> > +		charger->psy_usb_type =
-> > POWER_SUPPLY_USB_TYPE_UNKNOWN;
-> > +		charger->psy_online = 0;
-> > +		charger->psy_status =
-> > POWER_SUPPLY_STATUS_NOT_CHARGING;
-> > +		goto out_notify;
-> > +	}
-> > +
-> > +	if (charger->port->pwr_role == TYPEC_SOURCE) {
-> > +		charger->psy_online = 0;
-> > +		charger->psy_status =
-> > POWER_SUPPLY_STATUS_NOT_CHARGING;
-> > +		if (charger->partner->usb_pd)
-> > +			charger->psy_usb_type =
-> > POWER_SUPPLY_USB_TYPE_PD_DRP;
-> > +		else
-> > +			charger->psy_usb_type =
-> > POWER_SUPPLY_USB_TYPE_UNKNOWN;
-> > +
-> > +		goto out_notify;
-> > +	}
-> > +
-> > +	charger->psy_online = 1;
-> > +	charger->psy_status = POWER_SUPPLY_STATUS_CHARGING;
-> > +
-> > +	if (charger->partner->usb_pd)
-> > +		charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_PD;
-> > +	else
-> > +		charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_C;
-> > +
-> > +out_notify:
-> > +	if (last_psy_usb_type != charger->psy_usb_type ||
-> > +	    last_psy_status != charger->psy_status ||
-> > +	    last_psy_online != charger->psy_online)
-> > +		power_supply_changed(charger->psy);
-> > +}
-> > +EXPORT_SYMBOL_GPL(typec_charger_changed);
-> > +
-> > +/**
-> > + * typec_register_charger - Register a USB Type-C Charger
-> > + * @port: Type-C port to register as a charger
-> > + *
-> > + * Registers a Type-C port as a charger.
-> > + *
-> > + * Returns handle to the charger on success or ERR_PTR on failure.
-> > + */
-> > +struct typec_charger *typec_register_charger(struct typec_port *port)
-> > +{
-> > +	struct power_supply_config psy_cfg = {};
-> > +	struct typec_charger *charger;
-> > +	struct power_supply *psy;
-> > +
-> > +	charger = kzalloc(sizeof(struct typec_charger), GFP_KERNEL);
-> > +	if (!port)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	charger->port = port;
-> > +	sprintf(charger->name, TYPEC_CHARGER_DIR_NAME, port->id);
-> > +	charger->psy_usb_type = POWER_SUPPLY_USB_TYPE_UNKNOWN;
-> > +	charger->psy_online = 0;
-> > +	charger->psy_status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-> > +
-> > +	charger->psy_desc.name = charger->name;
-> > +	charger->psy_desc.type = POWER_SUPPLY_TYPE_USB;
-> > +	charger->psy_desc.get_property = typec_charger_get_prop;
-> > +	charger->psy_desc.set_property = typec_charger_set_prop;
-> > +	charger->psy_desc.property_is_writeable =
-> > +		typec_charger_is_writeable;
-> > +	charger->psy_desc.properties = typec_charger_props;
-> > +	charger->psy_desc.num_properties =
-> > +				ARRAY_SIZE(typec_charger_props);
-> > +	charger->psy_desc.usb_types = typec_charger_usb_types;
-> > +	charger->psy_desc.num_usb_types =
-> > +			ARRAY_SIZE(typec_charger_usb_types);
-> > +	psy_cfg.drv_data = charger;
-> > +
-> > +	psy = devm_power_supply_register_no_ws(&port->dev, &charger-
-> > >psy_desc,
-> > +					       &psy_cfg);
-> > +	if (IS_ERR(psy)) {
-> > +		dev_err(&port->dev, "Failed to register Type-C power
-> > supply\n");
-> > +		return ERR_CAST(psy);
-> > +	}
-> > +	charger->psy = psy;
-> > +
-> > +	return charger;
-> > +}
-> > +EXPORT_SYMBOL_GPL(typec_register_charger);
-> > +
-> > +/**
-> > + * typec_unregister_charger - Unregister a USB Type-C Charger
-> > + * @charger: The charger to unregister
-> > + *
-> > + * Unregisters a charger created with typec_register_charger().
-> > + */
-> > +void typec_unregister_charger(struct typec_charger *charger)
-> > +{
-> > +	if (!IS_ERR_OR_NULL(charger))
-> > +		kfree(charger);
-> > +}
-> > +EXPORT_SYMBOL_GPL(typec_unregister_charger);
-> > +
-> > +/**
-> > + * typec_charger_register_partner - Register a partner with a USB Type-C
-> > Charger
-> > + * @charger: The charger to add the partner too
-> > + * @partner: The partner to add
-> > + *
-> > + * Add a partner to a Type-C charger to indicate that the partner is connected
-> > + * and may be charging.
-> > + */
-> > +void typec_charger_register_partner(struct typec_charger *charger,
-> > +				    struct typec_partner *partner)
-> > +{
-> > +	charger->partner = partner;
-> > +	typec_charger_changed(charger);
-> > +}
-> > +EXPORT_SYMBOL_GPL(typec_charger_register_partner);
-> > +
-> > +/**
-> > + * typec_charger_unregister_partner - Unregister a USB Type-C Charger partner
-> > + * @charger: The charger to remove the partner from
-> > + *
-> > + * Remove partner added with typec_charger_register_partner().
-> > + */
-> > +void typec_charger_unregister_partner(struct typec_charger *charger)
-> > +{
-> > +	if (!IS_ERR_OR_NULL(charger))
-> > +		charger->partner = NULL;
-> > +
-> > +	typec_charger_changed(charger);
-> > +}
-> > +EXPORT_SYMBOL_GPL(typec_charger_unregister_partner);
-> > diff --git a/drivers/usb/typec/charger.h b/drivers/usb/typec/charger.h
-> > new file mode 100644
-> > index 000000000000..32cdaa7c1a83
-> > --- /dev/null
-> > +++ b/drivers/usb/typec/charger.h
-> > @@ -0,0 +1,33 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +#ifndef __USB_TYPEC_CHARGER_H__
-> > +#define __USB_TYPEC_CHARGER_H__
-> > +
-> > +#include <linux/power_supply.h>
-> > +#include <linux/usb/typec.h>
-> > +
-> > +#include "class.h"
-> > +
-> > +#define TYPEC_CHARGER_DIR_NAME
-> > 	"TYPEC_CHARGER%d"
-> > +#define TYPEC_CHARGER_DIR_NAME_LENGTH
-> > 	sizeof(TYPEC_CHARGER_DIR_NAME)
-> > +
-> > +struct typec_charger {
-> > +	struct typec_port *port;
-> > +	struct typec_partner *partner;
-> > +	char name[TYPEC_CHARGER_DIR_NAME_LENGTH];
-> > +	struct power_supply *psy;
-> > +	struct power_supply_desc psy_desc;
-> > +	int psy_usb_type;
-> > +	int psy_online;
-> > +	int psy_status;
-> > +};
-> > +
-> > +struct typec_charger *typec_register_charger(struct typec_port *port);
-> > +void typec_unregister_charger(struct typec_charger *charger);
-> > +
-> > +void typec_charger_register_partner(struct typec_charger *charger,
-> > +				    struct typec_partner *partner);
-> > +void typec_charger_unregister_partner(struct typec_charger *charger);
-> > +void typec_charger_changed(struct typec_charger *charger);
-> > +
-> > +#endif /* __USB_TYPEC_CHARGER_H__ */
-> > diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> > index 9a1fdce137b9..1542d3af342c 100644
-> > --- a/drivers/usb/typec/class.c
-> > +++ b/drivers/usb/typec/class.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/slab.h>
-> > 
-> >  #include "bus.h"
-> > +#include "charger.h"
-> >  #include "class.h"
-> > 
-> >  static DEFINE_IDA(typec_index_ida);
-> > @@ -489,6 +490,12 @@ static void typec_partner_release(struct device *dev)
-> >  {
-> >  	struct typec_partner *partner = to_typec_partner(dev);
-> > 
-> > +	if (IS_ENABLED(CONFIG_TYPEC_CHARGER)) {
-> > +		struct typec_port *port = to_typec_port(dev->parent);
-> > +
-> > +		typec_charger_unregister_partner(port->charger);
-> > +	}
-> > +
-> >  	ida_destroy(&partner->mode_ids);
-> >  	kfree(partner);
-> >  }
-> > @@ -580,6 +587,10 @@ struct typec_partner *typec_register_partner(struct
-> > typec_port *port,
-> >  		return ERR_PTR(ret);
-> >  	}
-> > 
-> > +	if (IS_ENABLED(CONFIG_TYPEC_CHARGER) && port->charger) {
-> > +		typec_charger_register_partner(port->charger, partner);
-> > +	}
-> > +
-> >  	return partner;
-> >  }
-> >  EXPORT_SYMBOL_GPL(typec_register_partner);
-> > @@ -1283,6 +1294,9 @@ static void typec_release(struct device *dev)
-> >  {
-> >  	struct typec_port *port = to_typec_port(dev);
-> > 
-> > +	if (IS_ENABLED(CONFIG_TYPEC_CHARGER))
-> > +		typec_unregister_charger(port->charger);
-> > +
-> >  	ida_simple_remove(&typec_index_ida, port->id);
-> >  	ida_destroy(&port->mode_ids);
-> >  	typec_switch_put(port->sw);
-> > @@ -1564,7 +1578,8 @@ struct typec_port *typec_register_port(struct device
-> > *parent,
-> >  	id = ida_simple_get(&typec_index_ida, 0, 0, GFP_KERNEL);
-> >  	if (id < 0) {
-> >  		kfree(port);
-> > -		return ERR_PTR(id);
-> > +		ret = id;
-> > +		goto err_return;
-> >  	}
-> > 
-> >  	switch (cap->type) {
-> > @@ -1617,32 +1632,47 @@ struct typec_port *typec_register_port(struct device
-> > *parent,
-> > 
-> >  	port->cap = kmemdup(cap, sizeof(*cap), GFP_KERNEL);
-> >  	if (!port->cap) {
-> > -		put_device(&port->dev);
-> > -		return ERR_PTR(-ENOMEM);
-> > +		ret = -ENOMEM;
-> > +		goto err_put_device;
-> >  	}
-> > 
-> >  	port->sw = typec_switch_get(&port->dev);
-> >  	if (IS_ERR(port->sw)) {
-> >  		ret = PTR_ERR(port->sw);
-> > -		put_device(&port->dev);
-> > -		return ERR_PTR(ret);
-> > +		goto err_put_device;
-> >  	}
-> > 
-> >  	port->mux = typec_mux_get(&port->dev, NULL);
-> >  	if (IS_ERR(port->mux)) {
-> >  		ret = PTR_ERR(port->mux);
-> > -		put_device(&port->dev);
-> > -		return ERR_PTR(ret);
-> > +		goto err_put_device;
-> >  	}
-> > 
-> >  	ret = device_add(&port->dev);
-> >  	if (ret) {
-> >  		dev_err(parent, "failed to register port (%d)\n", ret);
-> > -		put_device(&port->dev);
-> > -		return ERR_PTR(ret);
-> > +		goto err_put_device;
-> > +	}
-> > +
-> > +	if (IS_ENABLED(CONFIG_TYPEC_CHARGER)) {
-> > +		port->charger = typec_register_charger(port);
-> > +
-> > +		if (IS_ERR(port->charger)) {
-> > +			ret = PTR_ERR(port->charger);
-> > +			goto err_device_del;
-> > +		}
-> >  	}
-> > 
-> >  	return port;
-> > +
-> > +err_device_del:
-> > +	device_del(&port->dev);
-> > +
-> > +err_put_device:
-> > +	put_device(&port->dev);
-> > +
-> > +err_return:
-> > +	return ERR_PTR(ret);
-> >  }
-> >  EXPORT_SYMBOL_GPL(typec_register_port);
-> > 
-> > diff --git a/drivers/usb/typec/class.h b/drivers/usb/typec/class.h
-> > index ec933dfe1323..0ff0a590d316 100644
-> > --- a/drivers/usb/typec/class.h
-> > +++ b/drivers/usb/typec/class.h
-> > @@ -41,6 +41,8 @@ struct typec_port {
-> >  	struct typec_switch		*sw;
-> >  	struct typec_mux		*mux;
-> > 
-> > +	struct typec_charger		*charger;
-> > +
-> >  	const struct typec_capability	*cap;
-> >  	const struct typec_operations   *ops;
-> >  };
-> > --
-> > 2.26.1.301.g55bc3eb7cb9-goog
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 66ee89e7929f9..89842a034e4ba 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -450,6 +450,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-pico-hobbit.dtb \
+ 	imx6dl-pico-nymph.dtb \
+ 	imx6dl-pico-pi.dtb \
++	imx6dl-prtrvt.dtb \
+ 	imx6dl-prtvt7.dtb \
+ 	imx6dl-rex-basic.dtb \
+ 	imx6dl-riotboard.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-prtrvt.dts b/arch/arm/boot/dts/imx6dl-prtrvt.dts
+new file mode 100644
+index 0000000000000..b7721e52a463a
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-prtrvt.dts
+@@ -0,0 +1,182 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/*
++ * Copyright (c) 2014 Protonic Holland
++ */
++
++/dts-v1/;
++#include "imx6dl.dtsi"
++#include "imx6qdl-prti6q.dtsi"
++#include <dt-bindings/leds/common.h>
++
++/ {
++	model = "Protonic RVT board";
++	compatible = "prt,prtrvt", "fsl,imx6dl";
++
++	memory@10000000 {
++		device_type = "memory";
++		reg = <0x10000000 0x10000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_leds>;
++
++		led-debug0 {
++			function = LED_FUNCTION_STATUS;
++			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++};
++
++&can1 {
++	pinctrl-0 = <&pinctrl_can1 &pinctrl_can1phy>;
++};
++
++&ecspi1 {
++	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <20000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++};
++
++&ecspi3 {
++	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi3>;
++	status = "okay";
++
++	nfc@0 {
++		compatible = "ti,trf7970a";
++		reg = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_nfc>;
++		spi-max-frequency = <2000000>;
++		interrupts-extended = <&gpio5 14 IRQ_TYPE_LEVEL_LOW>;
++		ti,enable-gpios = <&gpio5 12 GPIO_ACTIVE_LOW>,
++				  <&gpio5 11 GPIO_ACTIVE_LOW>;
++		vin-supply = <&reg_3v3>;
++		vin-voltage-override = <3100000>;
++		autosuspend-delay = <30000>;
++		irq-status-read-quirk;
++		en2-rf-quirk;
++		t5t-rmb-extra-byte-quirk;
++		status = "okay";
++	};
++};
++
++&i2c3 {
++	adc@49 {
++		compatible = "ti,ads1015";
++		reg = <0x49>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		/* nc */
++		channel@4 {
++			reg = <4>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++
++		/* nc */
++		channel@5 {
++			reg = <5>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++
++		/* can1_l */
++		channel@6 {
++			reg = <6>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++
++		/* can1_h */
++		channel@7 {
++			reg = <7>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++	};
++
++	rtc@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
++
++&pcie {
++	status = "okay";
++};
++
++&usbh1 {
++	status = "disabled";
++};
++
++&vpu {
++	status = "disabled";
++};
++
++&iomuxc {
++	pinctrl_can1phy: can1phy {
++		fsl,pins = <
++			/* CAN1_SR */
++			MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x13070
++			/* CAN1_TERM */
++			MX6QDL_PAD_GPIO_0__GPIO1_IO00	0x1b0b0
++		>;
++	};
++
++	pinctrl_ecspi1: ecspi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
++			MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
++			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
++			/* CS */
++			MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x000b1
++		>;
++	};
++
++	pinctrl_ecspi3: ecspi3grp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
++			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
++			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
++			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x000b1
++		>;
++	};
++
++	pinctrl_leds: ledsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x1b0b0
++		>;
++	};
++
++	pinctrl_nfc: nfcgrp {
++		fsl,pins = <
++			/* NFC_ASK_OOK */
++			MX6QDL_PAD_DISP0_DAT15__GPIO5_IO09	0x100b1
++			/* NFC_PWR_EN */
++			MX6QDL_PAD_DISP0_DAT16__GPIO5_IO10	0x100b1
++			/* NFC_EN2 */
++			MX6QDL_PAD_DISP0_DAT17__GPIO5_IO11	0x100b1
++			/* NFC_EN */
++			MX6QDL_PAD_DISP0_DAT18__GPIO5_IO12	0x100b1
++			/* NFC_MOD */
++			MX6QDL_PAD_DISP0_DAT19__GPIO5_IO13	0x100b1
++			/* NFC_IRQ */
++			MX6QDL_PAD_DISP0_DAT20__GPIO5_IO14	0x100b1
++		>;
++	};
++};
 -- 
-heikki
+2.26.1
+
