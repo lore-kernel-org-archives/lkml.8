@@ -2,173 +2,157 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0645AC55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0C8C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5282206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:31:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhnkTtco"
+	by mail.kernel.org (Postfix) with ESMTP id 88197206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:31:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587479474;
+	bh=2hhaL3b04GTa9hGkzgDtd8Jti5DfwEcuKgZiFOrKA4o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lAJlyzSQmXq153S9o1onAcp+JKLEFiEGMsCTrS7Efy3eXEVPxkR5IiyhTB3uiCGGC
+	 G2JHz2bZi1zdsawPckkgNjNilyBiRs4uc3x8FfNI8eaKPko1w9kJ7FdHB/P6kZbgYB
+	 rB+2Tc7Qq5oFBM6piFtENfAHmKTF99jqEphouR48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgDUObB (ORCPT
+        id S1729225AbgDUObO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728422AbgDUObA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:31:00 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B440FC061A10;
-        Tue, 21 Apr 2020 07:30:59 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id x1so11139888ejd.8;
-        Tue, 21 Apr 2020 07:30:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=nJKmwmL8pJeyEkXSJcr3CbIoVGjTvKtRz5mLqOZGiFM=;
-        b=WhnkTtco3iWRQt6NFjmoYU9L1wfydDjHO2SvHJp+KDB2RgB3AgDTsA/GTLnu1lFqV7
-         Zoar8hUYXl22NCEiW9OLuM6g4ZpigIq1k+fGakrItDCr5csRuT2nTq1tEN3hY7sASA35
-         QQDYwD+W2cemygxtTq+6p/8bXUFvSmPUfcupMcYEwTpMhQMNzTQKHHByFvZRAmiqakCI
-         3nNqBUs4DTRYabiA4O8RSJ9HKYGKFg7nV29Xh9rD/6dok3gjVqn9/YhDbSI/6Vem0yGA
-         5XhMVFY2DWrsc/BVBKYRoQ/BeFZWODboD3lFpwKsITVIq1BAFrAdIhgyM9kmZWWBdP+g
-         R0Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=nJKmwmL8pJeyEkXSJcr3CbIoVGjTvKtRz5mLqOZGiFM=;
-        b=Nvk9w+4E5xzesvvPiND8i+cM+OJXfc7Tts2giQx2IxajKPGmi3VggXFxtpXJ5q8P1n
-         DG+T1wfm+3zo4p6rvZagLCMMDaekITF1zFWHiCFFea7jtumO3QMcf2r+kG2QKG+GOASr
-         7Gzq0PpgxJzkdyXH6+5KBA907DfE4+EY4Xq3J7xkD7s4Il/22lSKaklzNwu7STLnxybD
-         iGJ/KqotjLN2slWmCOtBnrvVYbGTvB7OwJfhI3MOKB5gzzE2zkuMSrJuSq53x/RKdamB
-         FEKWm2mHKsSzJTwtv2YOYMgNxUPvsMPoxtd9IXSplN7hzYTDTFive23/bGRm1ALb4N8L
-         jigw==
-X-Gm-Message-State: AGi0Pua5g55Ss6e1Rg6+k4PUnFmX7g9DW70HRZR7FztS8Oyikd/7Vhx4
-        8xWgvGMwmsyHz7NZZPn3cHj+hEBb2z6gwJCXdCc=
-X-Google-Smtp-Source: APiQypLvKjlIrLLDZw7H9NUfR5+MQ7F35cXfQad0lKg6B/PUGcGli1jOCM/Qn1qXml6rqBmbydwxEzLoYlAyc6lbVGk=
-X-Received: by 2002:a17:906:1fd6:: with SMTP id e22mr21913379ejt.150.1587479458385;
- Tue, 21 Apr 2020 07:30:58 -0700 (PDT)
+        Tue, 21 Apr 2020 10:31:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729204AbgDUObM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:31:12 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5019F206D4;
+        Tue, 21 Apr 2020 14:31:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587479472;
+        bh=2hhaL3b04GTa9hGkzgDtd8Jti5DfwEcuKgZiFOrKA4o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sZgCunWSTEpCKIDm+O41UNN6tUk+WQOXMM5rvDiW/0R/lDdQquI8kDIRdAbZJ92UH
+         Z+F0iqQngMOhJ8NMs6h67aYAV/LGs2fAbk/TVB/Z19IVhW8AIK2IxE/9PB3ddLHlBs
+         quL3b8zpJprxVm8Ev5e3jt/nHZg1hPew+eJJJthE=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jQtva-00BkqM-Gm; Tue, 21 Apr 2020 16:31:10 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 2/5] scripts: sphinx-pre-install: change the warning for version < 2.4.4
+Date:   Tue, 21 Apr 2020 16:31:06 +0200
+Message-Id: <79584d317ba16f5d4f37801c5ee57cf04085f962.1587478901.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1587478901.git.mchehab+huawei@kernel.org>
+References: <cover.1587478901.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <CAKgNAkhL0zCj11LS9vfae872YVeRsxdz20sZWuXdi+UjH21=0g@mail.gmail.com>
- <20200410104132.294639-1-christian@brauner.io> <b7550fcd-ba12-e64a-3228-e6668b31a8a7@gmail.com>
-In-Reply-To: <b7550fcd-ba12-e64a-3228-e6668b31a8a7@gmail.com>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Tue, 21 Apr 2020 16:30:46 +0200
-Message-ID: <CAKgNAkhQr+sKGAu+KcxPEsuwG3kjQOyzVW7E1yM9cMtSZrhW9A@mail.gmail.com>
-Subject: Re: [PATCH] clone.2: Document CLONE_INTO_CGROUP
-To:     Christian Brauner <christian@brauner.io>
-Cc:     "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+As requested by Jon, change the version check, in order to not
+emit a warning if version is >= 1.7.9, but below 2.4.4.
 
-Ping!
+After this patch, if someone used an older version, it will
+say:
 
-Cheers,
+	./scripts/sphinx-pre-install
+	Sphinx version 1.7.9
+	Note: It is recommended at least Sphinx version 2.4.4 if you need PDF support.
+	Detected OS: Fedora release 31 (Thirty One).
 
-Michael
+	To upgrade Sphinx, use:
 
-On Fri, 10 Apr 2020 at 22:18, Michael Kerrisk (man-pages)
-<mtk.manpages@gmail.com> wrote:
->
-> Hi Christian,
->
-> Thank you for writing this!
->
-> On 4/10/20 12:41 PM, Christian Brauner wrote:
-> > From: Christian Brauner <christian.brauner@ubuntu.com>
-> >
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> >  man2/clone.2 | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >
-> > diff --git a/man2/clone.2 b/man2/clone.2
-> > index 39cec4c86..8d9aa9f99 100644
-> > --- a/man2/clone.2
-> > +++ b/man2/clone.2
-> > @@ -197,6 +197,7 @@ struct clone_args {
-> >      u64 tls;          /* Location of new TLS */
-> >      u64 set_tid;      /* Pointer to a \fIpid_t\fP array */
-> >      u64 set_tid_size; /* Number of elements in \fIset_tid\fP */
-> > +    u64 cgroup;       /* Target cgroup file descriptor for the child process */
-> >  };
-> >  .EE
-> >  .in
-> > @@ -448,6 +449,25 @@ Specifying this flag together with
-> >  .B CLONE_SIGHAND
-> >  is nonsensical and disallowed.
-> >  .TP
-> > +.BR CLONE_INTO_CGROUP " (since Linux 5.7)"
-> > +.\" commit ef2c41cf38a7559bbf91af42d5b6a4429db8fc68
-> > +By default, the child process will belong to the same cgroup as its parent.
->
-> s/belong to/be placed in/
->
-> s/cgroup/version 2 cgroup/
->
-> > +If this flag is specified the child process will be created in a
-> > +different cgroup than its parent.
-> > +
-> > +When using
-> > +.RB clone3 ()
-> > +the target cgroup can be specified by setting the
-> > +.I cl_args.cgroup
-> > +member to the file descriptor of the target cgroup. The cgroup file
->
-> We need to say something about how this file descriptor is
-> obtained. Is it by opening a directory in the v2 cgroup hierarchy?
-> With what flags? O_RDONLY? or is O_PATH also possible? Yes, these
-> are some rhetorical questions (I read your nice commit message);
-> these things need to be explicit in the manual page though.
->
-> Also, your commit message mentions a nice list of use cases.
-> I think it would be well worth capturing those in a paragraph
-> in the manual page text.
->
-> > +descriptor must refer to a cgroup in a cgroup v2 hierarchy
-> > +(see
-> > +.BR cgroup (2)).
->
-> s/cgroup/cgroups/
-> s/2/7/
->
-> > +
-> > +Note that all usual cgroup v2 process migration restrictions apply. See
-> > +.BR cgroup (2)
->
-> s/cgroup/cgroups/
-> s/2/7/
->
-> Thanks,
->
-> Michael
->
-> --
-> Michael Kerrisk
-> Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-> Linux/UNIX System Programming Training: http://man7.org/training/
+		/devel/v4l/docs/sphinx_1.7.9/bin/python3 -m venv sphinx_2.4.4
+		. sphinx_2.4.4/bin/activate
+		pip install -r ./Documentation/sphinx/requirements.txt
 
+	If you want to exit the virtualenv, you can use:
+		deactivate
 
+	All optional dependencies are met.
+	Needed package dependencies are met.
 
+If Sphinx is not detected at all, it
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ scripts/sphinx-pre-install | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index 249edb3932af..0d5684c08bbc 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -29,6 +29,8 @@ my $install = "";
+ my $virtenv_dir = "";
+ my $python_cmd = "";
+ my $min_version;
++my $rec_version = "1.7.9";	# PDF won't build here
++my $min_pdf_version = "2.4.4";	# Min version where pdf builds
+ 
+ #
+ # Command line arguments
+@@ -254,7 +256,7 @@ sub get_sphinx_version($)
+ 
+ sub check_sphinx()
+ {
+-	my $rec_version;
++	my $default_version;
+ 	my $cur_version;
+ 
+ 	open IN, $conf or die "Can't open $conf";
+@@ -271,15 +273,15 @@ sub check_sphinx()
+ 	open IN, $requirement_file or die "Can't open $requirement_file";
+ 	while (<IN>) {
+ 		if (m/^\s*Sphinx\s*==\s*([\d\.]+)$/) {
+-			$rec_version=$1;
++			$default_version=$1;
+ 			last;
+ 		}
+ 	}
+ 	close IN;
+ 
+-	die "Can't get recommended sphinx version from $requirement_file" if (!$min_version);
++	die "Can't get default sphinx version from $requirement_file" if (!$default_version);
+ 
+-	$virtenv_dir = $virtenv_prefix . $rec_version;
++	$virtenv_dir = $virtenv_prefix . $default_version;
+ 
+ 	my $sphinx = get_sphinx_fname();
+ 	if ($sphinx eq "") {
+@@ -294,7 +296,7 @@ sub check_sphinx()
+ 
+ 	if ($cur_version lt $min_version) {
+ 		printf "ERROR: Sphinx version is %s. It should be >= %s (recommended >= %s)\n",
+-		       $cur_version, $min_version, $rec_version;;
++		       $cur_version, $min_version, $default_version;
+ 		$need_sphinx = 1;
+ 		return;
+ 	}
+@@ -302,6 +304,13 @@ sub check_sphinx()
+ 	if ($cur_version lt $rec_version) {
+ 		printf "Sphinx version %s\n", $cur_version;
+ 		print "Warning: It is recommended at least Sphinx version $rec_version.\n";
++		print "         If you want pdf, you need at least $min_pdf_version.\n";
++		$rec_sphinx_upgrade = 1;
++		return;
++	}
++	if ($cur_version lt $min_pdf_version) {
++		printf "Sphinx version %s\n", $cur_version;
++		print "Note: It is recommended at least Sphinx version $min_pdf_version if you need PDF support.\n";
+ 		$rec_sphinx_upgrade = 1;
+ 		return;
+ 	}
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.25.2
+
