@@ -2,267 +2,143 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F32C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22156C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2712073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:41:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FpgGVn8b"
+	by mail.kernel.org (Postfix) with ESMTP id 030DF2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587454897;
+	bh=zh2H7DRySG6m96/3f26C5OxmbKDqup5V8vk5fUcSMS0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jNjlTZ3X9vV0E9UHywu8VViWnN6cs3iBsRMLXMflMH1eYaC+mo49rm27XqXfAQ5hC
+	 W//832/JrV/eGoB8R+hQpfiGpVRf2RLEG0ldSTKNHi71FRSFvIPPV7W/OiCoMpIeaL
+	 q2hXD5onf1p3ond1ySlYexV1fVfpnSMUnoZcHWkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgDUHlO (ORCPT
+        id S1728091AbgDUHlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:41:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgDUHlM (ORCPT
+        Tue, 21 Apr 2020 03:41:36 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:30981 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgDUHlf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:41:12 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00635C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 00:41:11 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 18so2605342pfx.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 00:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=EsNcm2QyXE0JffGh+pkvc6bbJEwtWjuB0Wr2Sf2lXbY=;
-        b=FpgGVn8b4GSV6n81bPJiJsBMDGJ9ltWjFEH7eGZkueRrdU/uIYWjlAa5QmDN9UcJAc
-         x6hXCcj7vHjmEC4Fhh/oBMIv5Uo7SQ9l8ssUV6SVOGCYO/x6+IZqrs3eL18syMLVFuXX
-         Vl48vUEOusANomqKpVSls6ToJXVO3h7cqH7soGrqEZXMkXNKLRCbuNKPvP1mF7iCcEjt
-         TPM/+XVHtAoqEY+9bUX580gZoVXx+P0A2yoylCJ2r7heBeXvr7OJDzRZ+cRNlIXUyJU/
-         NG5BpFSmYQLub0Y1koIYC3Cnzj/C97D8c/cSAj3V5uVOBVqziSEx+jjB0h/8UOC4IHIJ
-         ci2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EsNcm2QyXE0JffGh+pkvc6bbJEwtWjuB0Wr2Sf2lXbY=;
-        b=L0V6KKIZEvVe2OIN6hGChCRZTIXg96LhpsZ21GABOvJSEEzNadK/8XzJ6nKBepgsus
-         nVtCcNei7CntYANIy/0CSN9cgWv3hWOcAdVqJOq0r4v/uFr6hdaXnaA2i8zJq+HkARyi
-         FGie7DKUorL51bLTKbP4Yosvd+VsKVYH+1ccchmXq8pcJKXpbImP6mX/DdIUXADclaAO
-         rMQODeB7rkkeioSf7nfoh2gpbHm2uUlcfm2ZbH6s3Z7edsbYrph8qK9gALpIdGHXHZdQ
-         smLbDki9BLK+Ud3Ayxzot6X2CY5DmZGGE1R1Vvd3Qi0X2Iydn9LhJ13/pfY1ckL3WUqL
-         V6LA==
-X-Gm-Message-State: AGi0PuZHrEUGLffnVUkH9IcQ7OrNj7Szpdp3d9fUjDnJIcAfBfe+Z+V5
-        c4J9FwT5k9iXEi/69/VLGxV+
-X-Google-Smtp-Source: APiQypKK7ZAxY6aQjP4/84tAUiZ60907CjmPq272+8pgw2xIDqFByoZSgiGyEnqElyLcf/TcF762lA==
-X-Received: by 2002:aa7:919a:: with SMTP id x26mr20333990pfa.39.1587454871426;
-        Tue, 21 Apr 2020 00:41:11 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:6289:7463:c15b:2de1:b77e:d971])
-        by smtp.gmail.com with ESMTPSA id i15sm1574564pfo.195.2020.04.21.00.41.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 00:41:10 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     bjorn.andersson@linaro.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] net: qrtr: Add tracepoint support
-Date:   Tue, 21 Apr 2020 13:10:54 +0530
-Message-Id: <20200421074054.23613-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Apr 2020 03:41:35 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 03L7dstU022941;
+        Tue, 21 Apr 2020 16:39:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 03L7dstU022941
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587454796;
+        bh=hDth+M9ZwaPqBRV2FRAMHf1NN8+Bjd7sx4+asoEQ3Z8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1pOuLkiIr2qBPM7IIf4OwT/D3ZBko3CDnFRxbu/c707moGDSsxMYC5RJV0yRQJcwg
+         mzgohE2T51XMqWv3YTiYa3CdCt06kW2f1DvdI+8c+BSI3pxjaLAaaHxwaXndJaV3Kq
+         NLF9vKCBXhVttQg17c9NaRdA++jny+U951ZKqNhggU6asiERorX26VaGny51LAsP0f
+         e+OhCRAeln38aZKlleLG5r0+/VXvH0rT/iqSSZHgS9Ym5LY8dAwBUDvZz6Oc4EPytV
+         RIAiEURY8NPwSslZuc8LI9iNoBFP/pIZuu3OlBo7tG5iuMZIxzLZWsbd9muMfzvq31
+         qqsObdt9Ycecg==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        linux-crypto@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] raid6/algos.c: refactor raid6_algos array for x86
+Date:   Tue, 21 Apr 2020 16:39:47 +0900
+Message-Id: <20200421073947.586662-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200421073947.586662-1-masahiroy@kernel.org>
+References: <20200421073947.586662-1-masahiroy@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add tracepoint support for QRTR with NS as the first candidate. Later on
-this can be extended to core QRTR and transport drivers.
+Factor out the common pointer references.
 
-The trace_printk() used in NS has been replaced by tracepoints.
+Common for i386 and x86_64:
+  raid6_avx512x2
+  raid6_avx512x1
+  raid6_avx2x2
+  raid6_avx2x1
+  raid6_sse2x2
+  raid6_sse2x1
+  raid6_sse1x2
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Only for i386:
+  raid6_sse1x1
+  raid6_mmxx2
+  raid6_mmxx1
+
+Only for x86_64:
+  raid6_avx512x4
+  raid6_avx2x4
+  raid6_sse2x4
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- include/trace/events/qrtr.h | 115 ++++++++++++++++++++++++++++++++++++
- net/qrtr/ns.c               |  20 ++++---
- 2 files changed, 126 insertions(+), 9 deletions(-)
- create mode 100644 include/trace/events/qrtr.h
 
-diff --git a/include/trace/events/qrtr.h b/include/trace/events/qrtr.h
-new file mode 100644
-index 000000000000..b1de14c3bb93
---- /dev/null
-+++ b/include/trace/events/qrtr.h
-@@ -0,0 +1,115 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM qrtr
-+
-+#if !defined(_TRACE_QRTR_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_QRTR_H
-+
-+#include <linux/qrtr.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(qrtr_ns_service_announce_new,
-+
-+	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
-+
-+	TP_ARGS(service, instance, node, port),
-+
-+	TP_STRUCT__entry(
-+		__field(__le32, service)
-+		__field(__le32, instance)
-+		__field(__le32, node)
-+		__field(__le32, port)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->service = service;
-+		__entry->instance = instance;
-+		__entry->node = node;
-+		__entry->port = port;
-+	),
-+
-+	TP_printk("advertising new server [%d:%x]@[%d:%d]",
-+		  __entry->service, __entry->instance, __entry->node,
-+		  __entry->port
-+	)
-+);
-+
-+TRACE_EVENT(qrtr_ns_service_announce_del,
-+
-+	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
-+
-+	TP_ARGS(service, instance, node, port),
-+
-+	TP_STRUCT__entry(
-+		__field(__le32, service)
-+		__field(__le32, instance)
-+		__field(__le32, node)
-+		__field(__le32, port)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->service = service;
-+		__entry->instance = instance;
-+		__entry->node = node;
-+		__entry->port = port;
-+	),
-+
-+	TP_printk("advertising removal of server [%d:%x]@[%d:%d]",
-+		  __entry->service, __entry->instance, __entry->node,
-+		  __entry->port
-+	)
-+);
-+
-+TRACE_EVENT(qrtr_ns_server_add,
-+
-+	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
-+
-+	TP_ARGS(service, instance, node, port),
-+
-+	TP_STRUCT__entry(
-+		__field(__le32, service)
-+		__field(__le32, instance)
-+		__field(__le32, node)
-+		__field(__le32, port)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->service = service;
-+		__entry->instance = instance;
-+		__entry->node = node;
-+		__entry->port = port;
-+	),
-+
-+	TP_printk("add server [%d:%x]@[%d:%d]",
-+		  __entry->service, __entry->instance, __entry->node,
-+		  __entry->port
-+	)
-+);
-+
-+TRACE_EVENT(qrtr_ns_message,
-+
-+	TP_PROTO(const char * const ctrl_pkt_str, __u32 sq_node, __u32 sq_port),
-+
-+	TP_ARGS(ctrl_pkt_str, sq_node, sq_port),
-+
-+	TP_STRUCT__entry(
-+		__string(ctrl_pkt_str, ctrl_pkt_str)
-+		__field(__u32, sq_node)
-+		__field(__u32, sq_port)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(ctrl_pkt_str, ctrl_pkt_str);
-+		__entry->sq_node = sq_node;
-+		__entry->sq_port = sq_port;
-+	),
-+
-+	TP_printk("%s from %d:%d",
-+		  __get_str(ctrl_pkt_str), __entry->sq_node, __entry->sq_port
-+	)
-+);
-+
-+#endif /* _TRACE_QRTR_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/net/qrtr/ns.c b/net/qrtr/ns.c
-index a703d4fbdedf..4b0cffdcfed1 100644
---- a/net/qrtr/ns.c
-+++ b/net/qrtr/ns.c
-@@ -12,6 +12,9 @@
+ lib/raid6/algos.c | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
+
+diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
+index 978fa19efbbf..c0f2fd6e0621 100644
+--- a/lib/raid6/algos.c
++++ b/lib/raid6/algos.c
+@@ -30,32 +30,28 @@ EXPORT_SYMBOL_GPL(raid6_call);
  
- #include "qrtr.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/qrtr.h>
-+
- static RADIX_TREE(nodes, GFP_KERNEL);
- 
- static struct {
-@@ -105,8 +108,8 @@ static int service_announce_new(struct sockaddr_qrtr *dest,
- 	struct msghdr msg = { };
- 	struct kvec iv;
- 
--	trace_printk("advertising new server [%d:%x]@[%d:%d]\n",
--		     srv->service, srv->instance, srv->node, srv->port);
-+	trace_qrtr_ns_service_announce_new(srv->service, srv->instance,
-+					   srv->node, srv->port);
- 
- 	iv.iov_base = &pkt;
- 	iv.iov_len = sizeof(pkt);
-@@ -132,8 +135,8 @@ static int service_announce_del(struct sockaddr_qrtr *dest,
- 	struct kvec iv;
- 	int ret;
- 
--	trace_printk("advertising removal of server [%d:%x]@[%d:%d]\n",
--		     srv->service, srv->instance, srv->node, srv->port);
-+	trace_qrtr_ns_service_announce_del(srv->service, srv->instance,
-+					   srv->node, srv->port);
- 
- 	iv.iov_base = &pkt;
- 	iv.iov_len = sizeof(pkt);
-@@ -244,8 +247,8 @@ static struct qrtr_server *server_add(unsigned int service,
- 
- 	radix_tree_insert(&node->servers, port, srv);
- 
--	trace_printk("add server [%d:%x]@[%d:%d]\n", srv->service,
--		     srv->instance, srv->node, srv->port);
-+	trace_qrtr_ns_server_add(srv->service, srv->instance,
-+				 srv->node, srv->port);
- 
- 	return srv;
- 
-@@ -633,9 +636,8 @@ static void qrtr_ns_worker(struct work_struct *work)
- 		cmd = le32_to_cpu(pkt->cmd);
- 		if (cmd < ARRAY_SIZE(qrtr_ctrl_pkt_strings) &&
- 		    qrtr_ctrl_pkt_strings[cmd])
--			trace_printk("%s from %d:%d\n",
--				     qrtr_ctrl_pkt_strings[cmd], sq.sq_node,
--				     sq.sq_port);
-+			trace_qrtr_ns_message(qrtr_ctrl_pkt_strings[cmd],
-+					      sq.sq_node, sq.sq_port);
- 
- 		ret = 0;
- 		switch (cmd) {
+ const struct raid6_calls * const raid6_algos[] = {
+ #ifdef CONFIG_X86
+-#if defined(CONFIG_X86_32)
+ #ifdef CONFIG_AS_AVX512
+-	&raid6_avx512x2,
+-	&raid6_avx512x1,
+-#endif
+-	&raid6_avx2x2,
+-	&raid6_avx2x1,
+-	&raid6_sse2x2,
+-	&raid6_sse2x1,
+-	&raid6_sse1x2,
+-	&raid6_sse1x1,
+-	&raid6_mmxx2,
+-	&raid6_mmxx1,
+-#endif
+ #if defined(CONFIG_X86_64)
+-#ifdef CONFIG_AS_AVX512
+ 	&raid6_avx512x4,
++#endif
+ 	&raid6_avx512x2,
+ 	&raid6_avx512x1,
+ #endif
++#ifdef CONFIG_X86_64
+ 	&raid6_avx2x4,
++#endif
+ 	&raid6_avx2x2,
+ 	&raid6_avx2x1,
++#ifdef CONFIG_X86_64
+ 	&raid6_sse2x4,
++#endif
+ 	&raid6_sse2x2,
+ 	&raid6_sse2x1,
++	&raid6_sse1x2,
++#ifdef CONFIG_X86_32
++	&raid6_sse1x1,
++	&raid6_mmxx2,
++	&raid6_mmxx1,
+ #endif
+ #endif /* CONFIG_X86 */
+ #ifdef CONFIG_ALTIVEC
 -- 
-2.17.1
+2.25.1
 
