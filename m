@@ -2,109 +2,93 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD05C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8795DC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1D7F206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587481569;
-	bh=4ADim16T+0u2BglcyovCuf/IIjoL8W8PhOujJLyZSGY=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=qGlPR5bQ3IL1KqWP5TWu8Yiaq1ArqEhJvvDiVEeibKwcrky+YXeYMecKxndrQ73TB
-	 Q3jSC4PL31UmNCzNuz1RJr28aGXbqN37/FmdSfSLCgFRx+oOP1RvjwhLDM0kr6PMQn
-	 sLnlco7eoV8iWk1yrIyYDUa0g5O0bUKNCqmyRAlk=
+	by mail.kernel.org (Postfix) with ESMTP id 6DF30206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbgDUPGJ (ORCPT
+        id S1728841AbgDUPIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:06:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgDUPGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:06:08 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99A5206D6;
-        Tue, 21 Apr 2020 15:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587481568;
-        bh=4ADim16T+0u2BglcyovCuf/IIjoL8W8PhOujJLyZSGY=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Kxm3YcSHyHIXzDQAStma9KNvqYRZ5pyKFzGDqMVKNNj4lHR5mJ679glTavCTRbGU6
-         cFJ9Fpfxyp/jynNwxRkBw0dKGDeHsKyEeVE8buMsRGqHtTDFj5h6wlBDhCpE+OWg7q
-         GwDjN6E5JhHlh6/7qLHWGQ4XcO5DUnnUYtZinMS0=
-Date:   Tue, 21 Apr 2020 16:06:05 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-In-Reply-To: <20200420190853.45614-2-kdasu.kdev@gmail.com>
-References: <20200420190853.45614-1-kdasu.kdev@gmail.com> <20200420190853.45614-2-kdasu.kdev@gmail.com>
-Subject: Re: [Patch v3 1/9] spi: bcm-qspi: Handle clock probe deferral
-Message-Id: <158748156553.18089.8164001089518853868.b4-ty@kernel.org>
+        Tue, 21 Apr 2020 11:08:18 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:39462 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbgDUPIS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 11:08:18 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jQuVU-0005rQ-Qg; Tue, 21 Apr 2020 09:08:16 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jQuVU-000873-0g; Tue, 21 Apr 2020 09:08:16 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Christof Meerwald <cmeerw@cmeerw.org>,
+        Linux Containers <containers@lists.linux-foundation.org>
+References: <20200419201336.GI22017@edge.cmeerw.net>
+        <87sggyytnh.fsf@x220.int.ebiederm.org>
+        <20200421090426.GA6787@redhat.com> <20200421101904.GA9358@redhat.com>
+Date:   Tue, 21 Apr 2020 10:05:10 -0500
+In-Reply-To: <20200421101904.GA9358@redhat.com> (Oleg Nesterov's message of
+        "Tue, 21 Apr 2020 12:19:04 +0200")
+Message-ID: <87mu74517d.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1jQuVU-000873-0g;;;mid=<87mu74517d.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19Yjwrl5mq9JkJujsk7jmlVVXuCbMojEnw=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] remove the no longer needed pid_alive() check in __task_pid_nr_ns()
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 15:08:45 -0400, Kamal Dasu wrote:
-> From: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> The clock provider may not be ready by the time spi-bcm-qspi gets
-> probed, handle probe deferral using devm_clk_get_optional().
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> 
-> [...]
+Oleg Nesterov <oleg@redhat.com> writes:
 
-Applied to
+> Starting from 2c4704756cab ("pids: Move the pgrp and session pid pointers
+> from task_struct to signal_struct") __task_pid_nr_ns() doesn't dereference
+> task->group_leader, we can remove the pid_alive() check.
+>
+> pid_nr_ns() has to check pid != NULL anyway, pid_alive() just adds the
+> unnecessary confusion.
+>
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Reviewed-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.7
+> ---
 
-Thanks!
+Good catch that does simplify things.
 
-[1/9] spi: bcm-qspi: Handle clock probe deferral
-      commit: 0392727c261bab65a35cd4f82ee9459bc237591d
-[2/9] dt: bindings: spi: Add support for mspi on brcmstb SoCs
-      (not applied)
-[3/9] spi: bcm-qspi: Handle lack of MSPI_REV offset
-      (not applied)
-[4/9] spi: bcm-qspi: Drive MSPI peripheral SSb pin on cs_change
-      commit: 742d5958062488d03082a9ff01a6afb3cf7bd634
-[5/9] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
-      commit: 4df3bea7f9d2ddd9ac2c29ba945c7c4db2def29c
-[6/9] spi: bcm-qspi: Make PM suspend/resume work with SCMI clock management
-      commit: 1b7ad8c405c3dc0ad6c2dc61fe21fe7a446cceeb
-[7/9] spi: bcm-qspi: Use fastbr setting to allow faster MSPI speeds
-      (not applied)
-[8/9] spi: bcm-qspi: add support for MSPI sys clk 108Mhz
-      (not applied)
-[9/9] spi: bcm-qspi: MSPI_SPCR0_MSB MSTR bit exists only on legacy controllers
-      (not applied)
+Eric
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+>  kernel/pid.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index bc21c0fb26d8..47221db038e2 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -475,8 +475,7 @@ pid_t __task_pid_nr_ns(struct task_struct *task, enum pid_type type,
+>  	rcu_read_lock();
+>  	if (!ns)
+>  		ns = task_active_pid_ns(current);
+> -	if (likely(pid_alive(task)))
+> -		nr = pid_nr_ns(rcu_dereference(*task_pid_ptr(task, type)), ns);
+> +	nr = pid_nr_ns(rcu_dereference(*task_pid_ptr(task, type)), ns);
+>  	rcu_read_unlock();
+>  
+>  	return nr;
