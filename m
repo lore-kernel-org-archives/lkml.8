@@ -2,89 +2,100 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157D2C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5379C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED76206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AECE2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:10:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="PDAIgt2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgDUMKp (ORCPT
+        id S1728780AbgDUMK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:10:45 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55996 "EHLO inva021.nxp.com"
+        Tue, 21 Apr 2020 08:10:56 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:57792 "EHLO smtp2.axis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728702AbgDUMKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:10:44 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 246E4200C8F;
-        Tue, 21 Apr 2020 14:10:43 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8FD72200C7B;
-        Tue, 21 Apr 2020 14:10:38 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C567A4029E;
-        Tue, 21 Apr 2020 20:10:32 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, shengjiu.wang@nxp.com, tglx@linutronix.de,
-        allison@lohutok.net, info@metux.net, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: wm8962: restore the CLOCKING2 register in resume
-Date:   Tue, 21 Apr 2020 20:02:15 +0800
-Message-Id: <1587470535-20469-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728677AbgDUMK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 08:10:56 -0400
+X-Greylist: delayed 432 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Apr 2020 08:10:54 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=1056; q=dns/txt; s=axis-central1;
+  t=1587471054; x=1619007054;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=e5l7Ey7eBk6W1PjZ+8XYrNk38uNUci4BU1Rlr0SxkAU=;
+  b=PDAIgt2iNuzm1dBV1HwBpgbinmHHij+br805kbW5aQuCacjaaIuIRtki
+   9s13zOx/WcqKrP/pE7Eb+tZ1CHjtT9yy1LgrrvsYZJwfLkFtg0R2DJl0k
+   E9cfma5NV1/MsmiJkCVyZWDbDxG6sMpcSejdFW7oZSTf8Mbk3nrPo8f82
+   Nqswau/s3H1w0x+A5b/UP6MC/PYdkVP9VYeQiM5dRNC/trV5L1UbaanBt
+   13+4zczOc0JDM3lgL89sRBguhaDNW8f18T4FjJN17rFZk0WQK6FZPHfZV
+   TZjwweUo9TFS/9XZKd1i5VPMDPUanmlC7oPkajQNDdMWghZo0sm6gAg3r
+   A==;
+IronPort-SDR: slkoKAD4j0YkY2zI+xu9W07GCchlGtfS7tGbFv/xAo8lxJWdBLtassZJcREGjd8nzt58hAXoxF
+ 2iLU1UWZSP7S8sbzH2A8LL4LnlIXEdcvjdKfbELCkpiWmz5WjY/uiDC2TQ5jL+FQdDKkJhX/wc
+ ZZln1Lc2AMIg3UBGgLYwUphqWUibnOiwp3qUyxiLMpB5wZ6e2JEWJLcx7QR5aYOtsOuixVK+TD
+ mYikWO76OVe3Oi3ysdUDaDTcjLMqhU9KmpM5CuEVpYZ/tQAOqtj97W5LpnvGc5asGhXHFpZStX
+ 7x8=
+X-IronPort-AV: E=Sophos;i="5.72,410,1580770800"; 
+   d="scan'208";a="7641338"
+Subject: Re: [PATCH 1/2] i2c: slave-eeprom: initialize empty eeprom properly
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Patrick Williams <patrick@stwcx.xyz>
+CC:     =?UTF-8?B?QmrDtnJuIEFyZMO2?= <bjornar@axis.com>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191001164009.21610-1-alpawi@amazon.com>
+ <150599be-9125-4ab9-e2a6-e792b41910e6@axis.com>
+ <20200420164349.GD3721@ninjato>
+ <20200420203146.GC95151@heinlein.lan.stwcx.xyz>
+ <20200420205325.GA1693@ninjato>
+From:   Bjorn Ardo <bjorn.ardo@axis.com>
+Message-ID: <adb03545-88db-689c-dbf7-9f746236adb4@axis.com>
+Date:   Tue, 21 Apr 2020 14:03:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200420205325.GA1693@ninjato>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.0.5.60]
+X-ClientProxiedBy: XBOX03.axis.com (10.0.5.17) To XBOX02.axis.com (10.0.5.16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CLOCKING2 is a volatile register, but some bits should
-be restored when resume, for example SYSCLK_SRC. otherwise
-the output clock is wrong
+On 4/20/20 10:53 PM, Wolfram Sang wrote:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/codecs/wm8962.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> On Mon, Apr 20, 2020 at 03:31:46PM -0500, Patrick Williams wrote:
+>> On Mon, Apr 20, 2020 at 06:43:49PM +0200, Wolfram Sang wrote:
+>>> On Wed, Oct 02, 2019 at 08:20:53AM +0200, Bjorn Ardo wrote:
+>>>> Hi,
+>>>>
+>>>>
+>>>> I sent in another patch earlier that added support for specifying a file in
+>>>> devicetree to initilize the eeprom from, corresponding to the case of
+>>>> pre-flashed eeprom. Maybe these two patches should be merged so this
+>>>> initialization is only done if no file is specified?
+>>> Yes, I agree.
+>>>
+>> It looks like Bjorn's referenced patches are still unmerged also?
+> Yes, it might be easiest if he merges your patch (with attribution) into
+> the else branch of his fw-load patch.
+>
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index d9d59f45833f..6e96c0c5ad2a 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -82,6 +82,7 @@ struct wm8962_priv {
- #endif
- 
- 	int irq;
-+	u32 regcache_clocking2;
- };
- 
- /* We can't use the same notifier block for more than one supply and
-@@ -3813,6 +3814,10 @@ static int wm8962_runtime_resume(struct device *dev)
- 
- 	regcache_sync(wm8962->regmap);
- 
-+	regmap_update_bits(wm8962->regmap, WM8962_CLOCKING2,
-+			   WM8962_SYSCLK_SRC_MASK,
-+			   wm8962->regcache_clocking2);
-+
- 	regmap_update_bits(wm8962->regmap, WM8962_ANTI_POP,
- 			   WM8962_STARTUP_BIAS_ENA | WM8962_VMID_BUF_ENA,
- 			   WM8962_STARTUP_BIAS_ENA | WM8962_VMID_BUF_ENA);
-@@ -3842,6 +3847,9 @@ static int wm8962_runtime_suspend(struct device *dev)
- 			   WM8962_STARTUP_BIAS_ENA |
- 			   WM8962_VMID_BUF_ENA, 0);
- 
-+	regmap_read(wm8962->regmap, WM8962_CLOCKING2,
-+		    &wm8962->regcache_clocking2);
-+
- 	regcache_cache_only(wm8962->regmap, true);
- 
- 	regulator_bulk_disable(ARRAY_SIZE(wm8962->supplies),
--- 
-2.21.0
+OK, so to summarize, I should update my patch to use 
+device_property_read_string() instead and also init the memory to 0XFF 
+if no file is present. And change name of the function to 
+i2c_slave_init_eeprom_data.
+
+
+I will look into that and let you know once I'm done.
+
+
+/BA
 
