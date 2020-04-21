@@ -2,334 +2,191 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81804C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ED4C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5020E2078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19F72076B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:02:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y1fbcTDd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="URZGgZAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgDUNBq (ORCPT
+        id S1728861AbgDUNCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726780AbgDUNBp (ORCPT
+        Tue, 21 Apr 2020 09:02:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45583 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726780AbgDUNCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:01:45 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93D40C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:01:45 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id p13so6430195qvt.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6bxpXR7bk9lriyagOO2UqkV9Fm2IwK+BGPfkmvwlllg=;
-        b=Y1fbcTDdB4pAfXbWuu0qCG+GiUYb96vpjnmGAFccY+9j1v13cfYYYRjb73MRcZXYkp
-         U6EUTapHN9b9XenIOE4lK9D0skhRRaKRbgIi6UH10YgxB4FSdYbtrmmyy2mFX7rQ+8R/
-         kGn6S3t1uPAksnkCI4N/P4q0xaxZzwS+9Yp5d8ADm/pq1cwx0wJSHVhSFnoBFkZKOH+E
-         yDdrM2omM7plYRSKEiPH9ZORCCGp7mEKBEyRIXDcFjWKwc7f5WS6l8QkW9Ak/SJoA07r
-         kCGwk+SL2V5/2244fqoqANhTIqFEGclIW9TN9d2rthe3JBNWnOtS58O/PtfRNthm8+61
-         T37Q==
+        Tue, 21 Apr 2020 09:02:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587474165;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aaEA8A65Hjd1q8vy0RpNkfQhEN5T+ZQ/o66hncuahbw=;
+        b=URZGgZAIS6pjZ9/5Q0VixmcbsHjMCrQYifEv56W5JqfCJoQ9ziZ9rPdYryPFmThdHCdVpk
+        dfJdEpdTcWIZobUv3FFwzKkGRRh2jvrCcL2Gr6YX4IDewWq5KN6bpDimK4lTY6UEFzi8SP
+        /sFU6vQ/B4R+Cf6Z/1arQOjMGIljlkE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-329-vYck52OANe-3vSEiErherg-1; Tue, 21 Apr 2020 09:02:44 -0400
+X-MC-Unique: vYck52OANe-3vSEiErherg-1
+Received: by mail-wr1-f72.google.com with SMTP id r17so7455939wrg.19
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:02:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6bxpXR7bk9lriyagOO2UqkV9Fm2IwK+BGPfkmvwlllg=;
-        b=HCOR6mllnzH3s9jMs/+NSgY0HgQemIsmRocK5Ug0E84AQpB9jcRVSzdmJgdnIzCocI
-         UDFSQRF2VNPx4Eah+9eytKSor7X94WL1OUGObO/IQ9nHk+xtaTwxCky9DieEf07ou9Pr
-         MW7SPc8o+GNvYhOIfqSoEUlsMS1DKkKyBjozT6XJHeITpxAggB7E31p5Qtv1XKKBJ1iw
-         m/r6j4LGoPvtBWCvvAm836qYMJmLooIf44G/NvobqoqBnJPO8tr3EygVcvWyiyOzBo1O
-         zvBXbAw3pBfacjpChlDcPkLQ/IXkzQnDIuH2S44P5oW4L+Qx6ggENUGY7ay8fLswExio
-         QycQ==
-X-Gm-Message-State: AGi0PuYflrviKFl77aRuEnm/H2FDd5mSR8OVJqq+7ydDgl7o95WFqdEu
-        4nti8MqzrFrzCQJRolW8sZrXkth5tnl1lTDXOA/gsg==
-X-Google-Smtp-Source: APiQypLBt/g9IVIcofjvmBFH/qVYPkFDIZThvQ9tJkf8X2mWe5oPzgaUwrZkerf+z9oIHEEkmTmVpUTSEno7/Es3070=
-X-Received: by 2002:a0c:b2d2:: with SMTP id d18mr2496270qvf.80.1587474103980;
- Tue, 21 Apr 2020 06:01:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=aaEA8A65Hjd1q8vy0RpNkfQhEN5T+ZQ/o66hncuahbw=;
+        b=XSHhGSbNjwhTKT/4FxFJoy4Fz0blHBypr+1Hxh8anGdgB6jqoFQHQoWqmVbH2WK5K1
+         3IhuKqOHnCJo8UFGRcfUeoytDucBOq7+w81dJeSzZQyQTsmnA8M9ssTSaMOFAvckV+HD
+         mg+DiHmnAgi5wI6cIaKl4oCUo1DvxmSj4HzbMq4dHKMrc5+jwGTuhyo35YyUZXK3MJX3
+         cNt5xjQcebabcix+JIZzkuOSMOPWja6w44zQ6XkIOUBa92TjAFvXltNu3D3GXSKEB5IA
+         x68Tya28m3m1pto+/h+jU9u5kyM3FoxyZLE7c9AWW1HfawGQeyzVQs2IL/q2BfKp3vyW
+         gQwg==
+X-Gm-Message-State: AGi0PubsAMkxLN1NaZX+nCyCAWo4UwFU5MJw6t9EFIshZ2cfTMuBpulN
+        rkOyiEPX+rqu7s+gfsJQF80rgUlTvn5Hcgqka2wEx4Dnds+04Bzhhm07JUFdFSixMToSkYhWRb8
+        eQ684hFIER8dqUeJaZ93TIAHK
+X-Received: by 2002:adf:ab09:: with SMTP id q9mr16345100wrc.240.1587474162903;
+        Tue, 21 Apr 2020 06:02:42 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKNiKj9wds+sx5QIkXpkgfDNGj8TNZk53XoVrqBO6RLLn2LkQt5e4hi3w/czp7u6Ns5Jcm8Fg==
+X-Received: by 2002:adf:ab09:: with SMTP id q9mr16345068wrc.240.1587474162502;
+        Tue, 21 Apr 2020 06:02:42 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id b2sm3941512wrn.6.2020.04.21.06.02.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 06:02:41 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 4/4] asm-generic/hyperv: Add definitions for Get/SetVpRegister hypercalls
+In-Reply-To: <20200420173838.24672-5-mikelley@microsoft.com>
+References: <20200420173838.24672-1-mikelley@microsoft.com> <20200420173838.24672-5-mikelley@microsoft.com>
+Date:   Tue, 21 Apr 2020 15:02:40 +0200
+Message-ID: <87y2qpq9e7.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200421014007.6012-1-walter-zh.wu@mediatek.com>
- <CACT4Y+af5fegnN9XOUSkf_B62J5sf2ZZbUwYk=GxtSmAhF3ryQ@mail.gmail.com> <1587472005.5870.7.camel@mtksdccf07>
-In-Reply-To: <1587472005.5870.7.camel@mtksdccf07>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 21 Apr 2020 15:01:31 +0200
-Message-ID: <CACT4Y+avYV1xoqB6V5XrQSs-p2s3mKKu+LZQc4EzPaW-jV+KaA@mail.gmail.com>
-Subject: Re: [PATCH] kasan: fix KASAN unit tests for tag-based KASAN
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Patricia Alfonso <trishalfonso@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 2:26 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> Hi Dmitry,
->
-> On Tue, 2020-04-21 at 13:56 +0200, Dmitry Vyukov wrote:
-> > On Tue, Apr 21, 2020 at 3:40 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > >
-> > > When we use tag-based KASAN, then KASAN unit tests don't detect
-> > > out-of-bounds memory access. Because with tag-based KASAN the state
-> > > of each 16 aligned bytes of memory is encoded in one shadow byte
-> > > and the shadow value is tag of pointer, so we need to read next
-> > > shadow byte, the shadow value is not equal to tag of pointer,
-> > > then tag-based KASAN will detect out-of-bounds memory access.
-> > >
-> > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> > > Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> > > Cc: Dmitry Vyukov <dvyukov@google.com>
-> > > Cc: Alexander Potapenko <glider@google.com>
-> > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > > Cc: Andrey Konovalov <andreyknvl@google.com>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > ---
-> > >  lib/test_kasan.c | 62 ++++++++++++++++++++++++++++++++++++++++++------
-> > >  1 file changed, 55 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> > > index e3087d90e00d..a164f6b47fe5 100644
-> > > --- a/lib/test_kasan.c
-> > > +++ b/lib/test_kasan.c
-> > > @@ -40,7 +40,12 @@ static noinline void __init kmalloc_oob_right(void)
-> > >                 return;
-> > >         }
-> >
-> > Hi Walter,
-> >
-> > This would be great to have!
-> > But I am concerned about these series that port KASAN tests to KUNIT:
-> > https://lkml.org/lkml/2020/4/17/1144
-> > I suspect it will be one large merge conflict. Not sure what is the
-> > proper way to resovle this. I've added authors to CC.
-> >
-> Yes, it should have conflicts. Thanks for your reminder.
-> >
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > >         ptr[size] = 'x';
-> > > +#else
-> > > +       ptr[size + 5] = 'x';
-> > > +#endif
-> > > +
-> >
-> > For this particular snippet I think we can reduce amount of idef'ery
-> > and amount of non-compiled code in each configuration with something
-> > like:
-> >
-> >   ptr[size + 5] = 'x';
-> >   if (ENABLED(CONFIG_KASAN_GENERIC))
-> >       ptr[size] = 'x';
-> >
-> > One check runs always (it should pass in both configs, right?). The
->
-> There is a problem, With generic KASAN it may trigger two KASAN reports.
+Michael Kelley <mikelley@microsoft.com> writes:
 
-Why is this a problem? If there are 2, fine. KUNIT can check that if
-we expect 2, there are indeed 2.
+> Add definitions for GetVpRegister and SetVpRegister hypercalls, which
+> are implemented for both x86 and ARM64.
+>
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  include/asm-generic/hyperv-tlfs.h | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+> index 1f92ef92eb56..29b60f5b6323 100644
+> --- a/include/asm-generic/hyperv-tlfs.h
+> +++ b/include/asm-generic/hyperv-tlfs.h
+> @@ -141,6 +141,8 @@ struct ms_hyperv_tsc_page {
+>  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX	0x0013
+>  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX	0x0014
+>  #define HVCALL_SEND_IPI_EX			0x0015
+> +#define HVCALL_GET_VP_REGISTERS			0x0050
+> +#define HVCALL_SET_VP_REGISTERS			0x0051
+>  #define HVCALL_POST_MESSAGE			0x005c
+>  #define HVCALL_SIGNAL_EVENT			0x005d
+>  #define HVCALL_RETARGET_INTERRUPT		0x007e
+> @@ -439,4 +441,30 @@ struct hv_retarget_device_interrupt {
+>  	struct hv_device_interrupt_target int_target;
+>  } __packed __aligned(8);
+>  
+> +
+> +/* HvGetVPRegister hypercall */
 
-> if we change it like:
->
-> if (ENABLED(CONFIG_KASAN_GENERIC))
->     ptr[size] = 'x';
-> else
->     ptr[size + 5] = 'x';
->
-> > only only in GENERIC, but it's C-level if rather than preprocessor.
-> > KUNIT should make 2 bugs per test easily expressable (and testable).
-> >
->
-> >
-> >
-> >
-> > >         kfree(ptr);
-> > >  }
-> > >
-> > > @@ -92,7 +97,12 @@ static noinline void __init kmalloc_pagealloc_oob_right(void)
-> > >                 return;
-> > >         }
-> > >
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > >         ptr[size] = 0;
-> > > +#else
-> > > +       ptr[size + 6] = 0;
-> > > +#endif
-> > > +
-> > >         kfree(ptr);
-> > >  }
-> > >
-> > > @@ -162,7 +172,11 @@ static noinline void __init kmalloc_oob_krealloc_more(void)
-> > >                 return;
-> > >         }
-> > >
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > >         ptr2[size2] = 'x';
-> > > +#else
-> > > +       ptr2[size2 + 13] = 'x';
-> > > +#endif
-> > >         kfree(ptr2);
-> > >  }
-> > >
-> > > @@ -180,7 +194,12 @@ static noinline void __init kmalloc_oob_krealloc_less(void)
-> > >                 kfree(ptr1);
-> > >                 return;
-> > >         }
-> > > +
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > >         ptr2[size2] = 'x';
-> > > +#else
-> > > +       ptr2[size2 + 2] = 'x';
-> > > +#endif
-> > >         kfree(ptr2);
-> > >  }
-> > >
-> > > @@ -216,7 +235,11 @@ static noinline void __init kmalloc_oob_memset_2(void)
-> > >                 return;
-> > >         }
-> > >
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > >         memset(ptr+7, 0, 2);
-> > > +#else
-> > > +       memset(ptr+15, 0, 2);
-> > > +#endif
-> > >         kfree(ptr);
-> > >  }
-> > >
-> > > @@ -232,7 +255,11 @@ static noinline void __init kmalloc_oob_memset_4(void)
-> > >                 return;
-> > >         }
-> > >
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > >         memset(ptr+5, 0, 4);
-> > > +#else
-> > > +       memset(ptr+15, 0, 4);
-> > > +#endif
-> > >         kfree(ptr);
-> > >  }
-> > >
-> > > @@ -249,7 +276,11 @@ static noinline void __init kmalloc_oob_memset_8(void)
-> > >                 return;
-> > >         }
-> > >
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > >         memset(ptr+1, 0, 8);
-> > > +#else
-> > > +       memset(ptr+15, 0, 8);
-> > > +#endif
-> > >         kfree(ptr);
-> > >  }
-> > >
-> > > @@ -265,7 +296,11 @@ static noinline void __init kmalloc_oob_memset_16(void)
-> > >                 return;
-> > >         }
-> > >
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > >         memset(ptr+1, 0, 16);
-> > > +#else
-> > > +       memset(ptr+15, 0, 16);
-> > > +#endif
-> > >         kfree(ptr);
-> > >  }
-> > >
-> > > @@ -281,7 +316,11 @@ static noinline void __init kmalloc_oob_in_memset(void)
-> > >                 return;
-> > >         }
-> > >
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > >         memset(ptr, 0, size+5);
-> > > +#else
-> > > +       memset(ptr, 0, size+7);
-> > > +#endif
-> > >         kfree(ptr);
-> > >  }
-> > >
-> > > @@ -415,7 +454,11 @@ static noinline void __init kmem_cache_oob(void)
-> > >                 return;
-> > >         }
-> > >
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > >         *p = p[size];
-> > > +#else
-> > > +       *p = p[size + 8];
-> > > +#endif
-> > >         kmem_cache_free(cache, p);
-> > >         kmem_cache_destroy(cache);
-> > >  }
-> > > @@ -497,6 +540,11 @@ static noinline void __init copy_user_test(void)
-> > >         char __user *usermem;
-> > >         size_t size = 10;
-> > >         int unused;
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > > +       size_t oob_size = 1;
-> > > +#else
-> > > +       size_t oob_size = 7;
-> > > +#endif
-> > >
-> > >         kmem = kmalloc(size, GFP_KERNEL);
-> > >         if (!kmem)
-> > > @@ -512,25 +560,25 @@ static noinline void __init copy_user_test(void)
-> > >         }
-> > >
-> > >         pr_info("out-of-bounds in copy_from_user()\n");
-> > > -       unused = copy_from_user(kmem, usermem, size + 1);
-> > > +       unused = copy_from_user(kmem, usermem, size + oob_size);
-> > >
-> > >         pr_info("out-of-bounds in copy_to_user()\n");
-> > > -       unused = copy_to_user(usermem, kmem, size + 1);
-> > > +       unused = copy_to_user(usermem, kmem, size + oob_size);
-> > >
-> > >         pr_info("out-of-bounds in __copy_from_user()\n");
-> > > -       unused = __copy_from_user(kmem, usermem, size + 1);
-> > > +       unused = __copy_from_user(kmem, usermem, size + oob_size);
-> > >
-> > >         pr_info("out-of-bounds in __copy_to_user()\n");
-> > > -       unused = __copy_to_user(usermem, kmem, size + 1);
-> > > +       unused = __copy_to_user(usermem, kmem, size + oob_size);
-> > >
-> > >         pr_info("out-of-bounds in __copy_from_user_inatomic()\n");
-> > > -       unused = __copy_from_user_inatomic(kmem, usermem, size + 1);
-> > > +       unused = __copy_from_user_inatomic(kmem, usermem, size + oob_size);
-> > >
-> > >         pr_info("out-of-bounds in __copy_to_user_inatomic()\n");
-> > > -       unused = __copy_to_user_inatomic(usermem, kmem, size + 1);
-> > > +       unused = __copy_to_user_inatomic(usermem, kmem, size + oob_size);
-> > >
-> > >         pr_info("out-of-bounds in strncpy_from_user()\n");
-> > > -       unused = strncpy_from_user(kmem, usermem, size + 1);
-> > > +       unused = strncpy_from_user(kmem, usermem, size + oob_size);
-> > >
-> > >         vm_munmap((unsigned long)usermem, PAGE_SIZE);
-> > >         kfree(kmem);
-> > > --
-> > > 2.18.0
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200421014007.6012-1-walter-zh.wu%40mediatek.com.
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1587472005.5870.7.camel%40mtksdccf07.
+Nit: 'HvGetVpRegisters' in TLFS
+
+> +struct hv_get_vp_register_input {
+
+Nit: I would also to name it 'hv_get_vp_registers_input' (plural, like
+the hypercall).
+
+> +	u64 partitionid;
+> +	u32 vpindex;
+> +	u8  inputvtl;
+> +	u8  padding[3];
+> +	u32 name0;
+> +	u32 name1;
+> +} __packed;
+
+Isn't it a REP hypercall where we can we can pass a list? In that case
+this should look like
+
+struct hv_get_vp_registers_input {
+	struct {
+		u64 partitionid;
+		u32 vpindex;
+		u8  inputvtl;
+		u8  padding[3];
+        } header;
+	struct {
+		u32 name0;
+		u32 name1;
+        } elem[];
+} __packed;
+
+> +
+> +struct hv_get_vp_register_output {
+
+Ditto.
+
+> +	union {
+> +		struct {
+> +			u32 a;
+> +			u32 b;
+ > +			u32 c;
+> +			u32 d;
+> +		} as32 __packed;
+> +		struct {
+> +			u64 low;
+> +			u64 high;
+> +		} as64 __packed;
+> +	};
+> +};
+
+I'm wondering why you define both
+HVCALL_GET_VP_REGISTERS/HVCALL_SET_VP_REGISTERS but only add 'struct
+hv_get_vp_register_input' and not 'struct hv_set_vp_register_input'. 
+
+The later should look similar, AFAIU it is:
+
+struct hv_set_vp_registers_input {
+	struct {
+		u64 partitionid;
+		u32 vpindex;
+		u8  inputvtl;
+		u8  padding[3];
+        } header;
+	struct {
+		u32 name;
+		u32 padding1;
+		u64 padding2; //not sure this is not a mistake in TLFS
+            	u64 regvallow;
+            	u64 regvalhigh;
+	} elem[];
+} __packed;
+
+> +
+>  #endif
+
+-- 
+Vitaly
+
