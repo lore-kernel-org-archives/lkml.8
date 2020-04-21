@@ -2,110 +2,148 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC63BC55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FC0C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F35A206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C003D2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587468792;
+	bh=wuWcfKVVQJWBIvO//gYpP6cdrjsK4jOZs78nE2BpXGo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=05sZupBdqA5uAUqziF77Gi/xknghEWcC/h5LoAXydDykm7C6oDX4XHYmX0KETiKrg
+	 bU2cwSV3zLE2dCJnpJVgRpmjcDhIF4Ub5+0OxImTzgVu22B+CCYZ2SbME/QqlnZSOr
+	 E7apG65RjOF5KHux7hJ1zaUq1rOQVXCSlDwrosMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgDULc0 (ORCPT
+        id S1728645AbgDULdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:32:26 -0400
-Received: from correo.us.es ([193.147.175.20]:40622 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728285AbgDULcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:32:25 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 856A8F258A
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:32:23 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 77D6A100A47
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:32:23 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 6C3D0100798; Tue, 21 Apr 2020 13:32:23 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 845C5FF6EF;
-        Tue, 21 Apr 2020 13:32:21 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Tue, 21 Apr 2020 13:32:21 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 6056742EF42B;
-        Tue, 21 Apr 2020 13:32:21 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 13:32:21 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Stefano Brivio <sbrivio@redhat.com>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.5 27/35] netfilter: nf_tables: Allow set
- back-ends to report partial overlaps on insertion
-Message-ID: <20200421113221.rvh3jkjet32m6ng4@salvia>
-References: <20200407000058.16423-1-sashal@kernel.org>
- <20200407000058.16423-27-sashal@kernel.org>
- <20200407021848.626df832@redhat.com>
- <20200413163900.GO27528@sasha-vm>
- <20200413223858.17b0f487@redhat.com>
- <20200414150840.GD1068@sasha-vm>
+        Tue, 21 Apr 2020 07:33:12 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37883 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbgDULdL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:33:11 -0400
+Received: by mail-oi1-f196.google.com with SMTP id r25so11723615oij.4;
+        Tue, 21 Apr 2020 04:33:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HW9k9kfTW78ME8X5ahcJnyYNk11gvYfm0hTWpxib3PU=;
+        b=kYvcoUfMP/IQ7Y6lMxW/hMoH6vfLAB8YNs0GbF86ZOQVMVLOUTKQP2lxTEekdIsDG2
+         4D+YgLjQ4nG+RF0UfYG+gjNjm/bsGNoI4m3bCc/tbXsURFclaCoj1wO6QHUeCOSvnnmA
+         qLYmDxVxpoOVePbkjlkZ5dlpyz0CjySv402aFuvvALMn3YqVA6QoPkR4c1Js1hdw0sVM
+         dEUZCM85svc8SlKV/782qF1dR1QgAwE4ujVaM6ptsVpfERBtR5cy9OrKnxGTrIbjWYxv
+         xgnh6yZn953cam1OUmga8jb+NCUd15z078f5WYFuN4KYe4TTdgJfdiKr3K8KSYyFL2rR
+         vu5A==
+X-Gm-Message-State: AGi0PuaHaSS7sjkPjqcZpMa9uBZWkCfVM15K1oiUEYL9356Vk1qrsFgP
+        przzXsJgKtk5DyuDqqru6H3i0NW58iE8wqnbf1o=
+X-Google-Smtp-Source: APiQypLN96ZexQcfh1NyKo0/zqGY6oMeGu2AGd9i5r1cD0mnDcePTx9i44H4ZpIkfqEAujnUYUtfIKys73CXfTqBwXU=
+X-Received: by 2002:a05:6808:81:: with SMTP id s1mr2709126oic.68.1587468790638;
+ Tue, 21 Apr 2020 04:33:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414150840.GD1068@sasha-vm>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <1888197.j9z7NJ8yPn@kreacher> <5673945.BT02kTCndr@kreacher> <CAPDyKFoV-gMn34nghBBK91pRYy3c90D8jrA4-OP2SGxQPzxgdg@mail.gmail.com>
+In-Reply-To: <CAPDyKFoV-gMn34nghBBK91pRYy3c90D8jrA4-OP2SGxQPzxgdg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 21 Apr 2020 13:32:50 +0200
+Message-ID: <CAJZ5v0hsVZQpm5SFfvCQQMNURJ28RNd+i6Cyh=ZUmt+izZhvRw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
+ power management flags
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
+On Tue, Apr 21, 2020 at 12:30 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Sat, 18 Apr 2020 at 19:11, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > Hi,
+> >
+> > This is an update including some fixes and extra patches based on the
+> > continuation of the discussion [1].
+> >
+> > On Friday, April 10, 2020 5:46:27 PM CEST Rafael J. Wysocki wrote:
+> > > Hi Alan,
+> > >
+> > > Following our recent discussion regarding the DPM_FLAG_* family of flags [1],
+> > > I have decided to follow some of your recommendations and make changes to the
+> > > core code handling those flags.
+> > >
+> > > The purpose of this is basically to make the code more consistent internally,
+> > > easier to follow and better documented.
+> > >
+> > > First of all, patch [1/7] changes the PM core to skip driver-level "late"
+> > > and "noirq" suspend callbacks for devices with SMART_SUSPEND set if they are
+> > > still runtime-suspended during the "late" system-wide suspend phase (without
+> > > the patch it does that only if subsystem-level late/noirq/early suspend/resume
+> > > callbacks are not present for the device, which is demonstrably inconsistent)
+> > > and updates the resume part of the code accordingly (it doesn't need to check
+> > > whether or not the subsystem-level callbacks are present any more).
+> > >
+> > > The next patch, [2/7], is purely cosmetic and its only purpose is to reduce
+> > > the LOC number and move related pieces of code closer to each other.
+> >
+> > The first two patches have not changed.
+> >
+> > > Patch [3/7] changes the PM core so that it doesn't skip any subsystem-level
+> > > callbacks during system-wide resume (without the patch they may be skipped in
+> > > the "early resume" and "resume" phases due to LEAVE_SUSPENDED being set which
+> > > may be problematic) and to always run the driver's ->resume callback if the
+> > > corresponding subsystem-level callback is not present (without the patch it
+> > > may be skipped if LEAVE_SUSPENDED is set) to let it reverse the changes made
+> > > by the driver's ->suspend callback (which always runs too) if need be.
+> >
+> > The difference between this one and patch [3/9] in the v2 is the fixed
+> > definition of dev_pm_may_skip_resume(), renamed to dev_pm_skip_resume() by
+> > one of the next patches.
+> >
+> > Patch [4/9] changes the handling of the power.may_skip_resume flag to set it
+> > to 'true' by default and updates the subsystems aware of it to clear it when
+> > they don't want devices to stay in suspend.
+> >
+> > > Patches [4-6/7] rename one function in the PM core and two driver PM flags to
+> > > make their names better reflect their purpose.
+> >
+> > These are patches [5/9] and [7-8/9] in the v2 and patch [6/9] renames
+> > dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
+> >
+> > > Finally, patch [7/7] updates the documentation of the driver PM flags to
+> > > reflect the new code flows.
+> >
+> > This patch [9/9] now and it has been updated to reflect the new code changes.
+> >
+> > The pm-sleep-core branch:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+> >   pm-sleep-core
+> >
+> > contains the v2 now.
+> >
+> > Cheers!
+>
+> Rafael, apologize for taking some time to review and respond. I
+> noticed you have queued this up on your next branch by now, good.
+>
+> In any case, I have looked through the series and I think it looks good, thanks!
 
-On Tue, Apr 14, 2020 at 11:08:40AM -0400, Sasha Levin wrote:
-> On Mon, Apr 13, 2020 at 10:38:58PM +0200, Stefano Brivio wrote:
-> > On Mon, 13 Apr 2020 12:39:00 -0400
-> > Sasha Levin <sashal@kernel.org> wrote:
-> > 
-> > > On Tue, Apr 07, 2020 at 02:18:48AM +0200, Stefano Brivio wrote:
-> > > 
-> > > >I'm used to not Cc: stable on networking patches (Dave's net.git),
-> > > >but I guess I should instead if they go through nf.git (Pablo's tree),
-> > > >right?
-> > > 
-> > > Yup, this confusion has caused for quite a few netfilter fixes to not
-> > > land in -stable. If it goes through Pablo's tree (and unless he intructs
-> > > otherwise), you should Cc stable.
-> > 
-> > Hah, thanks for clarifying.
-> > 
-> > What do you think I should do specifically with 72239f2795fa
-> > ("netfilter: nft_set_rbtree: Drop spurious condition for overlap detection
-> > on insertion")?
-> > 
-> > I haven't Cc'ed stable on that one. Can I expect AUTOSEL to pick it up
-> > anyway?
-> 
-> I'll make sure it gets queued up when it hits Linus's tree :)
+Thanks for letting me know!
 
-5.6.6 is out and this fix is still not included...
-
-Would you please enqueue...
-
-commit 72239f2795fab9a58633bd0399698ff7581534a3
-Author: Stefano Brivio <sbrivio@redhat.com>
-Date:   Wed Apr 1 17:14:38 2020 +0200
-
-    netfilter: nft_set_rbtree: Drop spurious condition for overlap detection on insertion
-
-for 5.6.x -stable ?
-
-Thank you very much.
+Cheers!
