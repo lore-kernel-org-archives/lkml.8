@@ -2,119 +2,291 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACB0C38A30
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9956EC38A30
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76AAD20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B4AF2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:14:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tyCqA5Wb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jKUvEIXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgDUCOH (ORCPT
+        id S1726628AbgDUCO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 22:14:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48076 "EHLO
+        Mon, 20 Apr 2020 22:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725829AbgDUCOH (ORCPT
+        by vger.kernel.org with ESMTP id S1725829AbgDUCO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 22:14:07 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D41C061A0E;
-        Mon, 20 Apr 2020 19:14:06 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id e9so5845186iok.9;
-        Mon, 20 Apr 2020 19:14:06 -0700 (PDT)
+        Mon, 20 Apr 2020 22:14:57 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2072C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 19:14:57 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id t18so5392462pgi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 19:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ue82uDYWA62Hy59Wvk+2+qxFCKkQmMn/AGbB8RRC57I=;
-        b=tyCqA5WbnRlAG1A0UEbtRMXCtwlCbvvBqUfyP/iw4MncAbCWHIEtQExSiFvOL65Qn4
-         hjbMRds+nQeTSof2Lekw0gY96gefVlO/613LP61ywtYGcdaB3qHD2hmv48Bgj3Lbm/uE
-         D7Y/j68rCMduqxPiwj80p7ISto7gqEjYpDu8L0bg3m31ygrEYrZA3pIYzctRoKZxxHew
-         5qXNsA5B8KlZS3zzfE6RCq+R7wRZTaeGdxCHXWOWEAevfHZgyk41VRAWNgTuNbHN+QRr
-         7jnf1UstgTC6qTgBkOzrWAEJbWvRTBAegJVIhdlV7HXDS3qr5IejnGWBu6wVk6/7QimB
-         /jdg==
+        bh=zO2dq0dcbhJ815P0MdiGU5l5HoFPErQL7jVCuXU15vU=;
+        b=jKUvEIXKjCwDi7VxiaGGgm+68jE8+gLIwtbS+nQGP2L55Kvgz6jrR0cg3HBLaQDoPT
+         kj2PvdQC2DeAWJV72KovdvbTYG8nIjROlwRbD27sjH2MTne2b/KK5BXK5qOPzplqlfTY
+         iO5582vvMRpdtqvwdFebuvlR0FXmT2jaD9u0mCUxAtbZPLb8Kznwu0LZButBO7qPGBHZ
+         hkyBpvnTyccdUytXn6wZyT3yHsWk4yEhlsgEbDAonGBobz5iIBqCMgzXIw4VzeVAcf5r
+         3/vnl6fgLtroSGs7JJlqY48dt4fsC2dUcO7gAweUIRtA+AYgk9akyAP57JmYvLnStf6s
+         7Tog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ue82uDYWA62Hy59Wvk+2+qxFCKkQmMn/AGbB8RRC57I=;
-        b=F/0C308sjQiJweZbPxfNAqJFmD6qC6eEPU58BG7gFSgX0+e9EJZQSFDAbbexipULJX
-         H9AM1u2hRz8ARyPIzafazqQjniis2WqRgzo5amHZdi8pXtxAdtXdZPRqUa7hvsfP8PT5
-         5yjfKFvFTEkI02xbMOsGZrV9AiULX9jU5jfL8qucybZw4w9t+ynR+tuvIoVIyxfJifgx
-         EfjaNTojSydtp/y4YbvCmSSkZnJhf/BZahL5hmKC3lVO/0KxnqEuirHoX4RNJTR5kv/8
-         U21v658mw53R41dXdv3SOMlYT1G1ah5zBO3kD4APsE80XDyujVJ5Is9gX+TfHtPWmQuY
-         uxhw==
-X-Gm-Message-State: AGi0PuaRPfJ2FU681qy9O/zPSBlEcWgFeFL8B7P/fwh294AUk2cJ3IfY
-        +aORC38zn6TMrFcxPueiNYB6qsMlR+gNTVVKMMg=
-X-Google-Smtp-Source: APiQypJwTvgHVt3MC3cyrtS/iRoUs1cJRDc1EoqUrFSy0YzEvzaX1lXUlInAMAF8I3JDra5peL0g2+GnpIBWAdwhPCo=
-X-Received: by 2002:a5d:8b57:: with SMTP id c23mr18541347iot.161.1587435246122;
- Mon, 20 Apr 2020 19:14:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200417110723.12235-1-gmayyyha@gmail.com> <ad6ca41f601d4feb2c3bd2850aeab95c3187bf2d.camel@kernel.org>
-In-Reply-To: <ad6ca41f601d4feb2c3bd2850aeab95c3187bf2d.camel@kernel.org>
-From:   Yanhu Cao <gmayyyha@gmail.com>
-Date:   Tue, 21 Apr 2020 10:13:55 +0800
-Message-ID: <CAB9OAC1+E6Qs=hr0naT73MNQ5scKOck4vF2gzsCS=0fQMLvG8A@mail.gmail.com>
-Subject: Re: [v3] ceph: if we are blacklisted, __do_request returns directly
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=zO2dq0dcbhJ815P0MdiGU5l5HoFPErQL7jVCuXU15vU=;
+        b=ERCDQFLeKWMn9DT33piP42YuRkYoZ8cOtu17jykiAgZxtpiTw5ZVTOq01pDecfUqJj
+         7NvRdwty20qL3cs2/xgpdb3ibPOt8yOJqzmC329+2aXbC2+c8RtiH+y3VLI6p5Lpt0Oc
+         1ijLEXl3e4Vszp8G09oMivhPgt/Ry39OuXx9Lm5XooK3Q1lU/Z3yRFOuaXFkkVMWFqJF
+         cOXQxah/HcWN7CpmoT0OOKIt1B7r6SjZ9Aw98quxYBylLRWhPOnmPIOYSgMPp7JeD+fP
+         A2JoycuG+GyGmIDj96CODSCFiJ39fLU3W+2BTjAvsuICnV3vAkb892EAoSqeBvw2fYBW
+         gWrw==
+X-Gm-Message-State: AGi0PuZcgEUlDtG7xFquC6p9fUMWF5mKwX2YZ/+WNIfDQT+nwU87r9T0
+        qtZXNfVDUxXqIOLNU9rOUnnVxNZecc7yltGgEac=
+X-Google-Smtp-Source: APiQypI6hIcsvKrgAQe5tUAMEv7w3A4ud+O0jxc/RslUTwHtHvwlmXLhEyl2LbgnQXIEo+fNbdmgcHh423jngQPBqK4=
+X-Received: by 2002:a17:90a:fc89:: with SMTP id ci9mr2810302pjb.140.1587435297066;
+ Mon, 20 Apr 2020 19:14:57 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 19:14:41 -0700
+In-Reply-To: <20191018161033.261971-1-samitolvanen@google.com>
+Message-Id: <20200421021453.198187-1-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20191018161033.261971-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+Subject: [PATCH v12 00/12] add support for Clang's Shadow Call Stack
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 8:16 PM Jeff Layton <jlayton@kernel.org> wrote:
->
-> On Fri, 2020-04-17 at 19:07 +0800, Yanhu Cao wrote:
-> > If we mount cephfs by the recover_session option,
-> > __do_request can return directly until the client automatically reconnects.
-> >
-> > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > ---
-> >  fs/ceph/mds_client.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-> > index 486f91f9685b..16ac5e5f7f79 100644
-> > --- a/fs/ceph/mds_client.c
-> > +++ b/fs/ceph/mds_client.c
-> > @@ -2708,6 +2708,12 @@ static void __do_request(struct ceph_mds_client *mdsc,
-> >
-> >       put_request_session(req);
-> >
-> > +     if (mdsc->fsc->blacklisted &&
-> > +         ceph_test_mount_opt(mdsc->fsc, CLEANRECOVER)) {
-> > +             err = -EBLACKLISTED;
-> > +             goto finish;
-> > +     }
-> > +
->
-> Why check for CLEANRECOVER? If we're mounted with recover_session=no
-> wouldn't we want to do the same thing here?
->
-> Either way, it's still blacklisted. The only difference is that it won't
-> attempt to automatically recover the session that way.
+This patch series adds support for Clang's Shadow Call Stack
+(SCS) mitigation, which uses a separately allocated shadow stack
+to protect against return address overwrites. More information
+can be found here:
 
-I think mds will clear the blacklist. In addition to loading cephfs
-via recover_session=clean, I didn't find a location where
-fsc->blacklisted is set to false. If the client has been blacklisted,
-should it always be blacklisted (fsc->blacklisted=true)? Or is there
-another way to set fsc->blacklised to false?
+  https://clang.llvm.org/docs/ShadowCallStack.html
 
->
->
-> >       mds = __choose_mds(mdsc, req, &random);
-> >       if (mds < 0 ||
-> >           ceph_mdsmap_get_state(mdsc->mdsmap, mds) < CEPH_MDS_STATE_ACTIVE) {
-> --
-> Jeff Layton <jlayton@kernel.org>
->
+SCS provides better protection against traditional buffer
+overflows than CONFIG_STACKPROTECTOR_*, but it should be noted
+that SCS security guarantees in the kernel differ from the ones
+documented for user space. The kernel must store addresses of
+shadow stacks used by inactive tasks and interrupt handlers in
+memory, which means an attacker capable of reading and writing
+arbitrary memory may be able to locate them and hijack control
+flow by modifying shadow stacks that are not currently in use.
+
+SCS is currently supported only on arm64, where the compiler
+requires the x18 register to be reserved for holding the current
+task's shadow stack pointer.
+
+With -fsanitize=shadow-call-stack, the compiler injects
+instructions to all non-leaf C functions to store the return
+address to the shadow stack, and unconditionally load it again
+before returning. As a result, SCS is incompatible with features
+that rely on modifying function return addresses in the kernel
+stack to alter control flow. A copy of the return address is
+still kept in the kernel stack for compatibility with stack
+unwinding, for example.
+
+SCS has a minimal performance overhead, but allocating
+shadow stacks increases kernel memory usage. The feature is
+therefore mostly useful on hardware that lacks support for PAC
+instructions.
+
+Changes in v12:
+ - Removed CONFIG_SHADOW_CALL_STACK_VMAP.
+ - Added CC_IS_CLANG as a dependency to CONFIG_SHADOW_CALL_STACK.
+ - Changed SCS_END_MAGIC to use POISON_POINTER_DELTA.
+ - Removed the unnecessary scs_set_magic() helper function.
+ - Moved scs_task_reset() and scs_corrupted() to scs.h, along with
+   __scs_magic() and __scs_base().
+ - Removed a redundant warning from memory allocation.
+ - Removed an unnecessary task_set_scs() call from scs_release().
+ - Changed the accounting code to calculate KiB instead of bytes.
+ - Replaced the lock in scs_check_usage() with a cmpxchg() loop.
+
+Changes in v11:
+ - Rebased, added maintainers for kernel/ changes.
+
+Changes in v10:
+ - Removed an unnecessary <asm/scs.h> include from head.S.
+
+Changes in v9:
+ - Fixed grammar in the Kconfig help text.
+ - Changed Kconfig to allow SCS to be selected with the patchable-
+   function-entry graph tracer.
+ - Changed the EFI stub patch to not filter out -ffixed-x18, only
+   SCS flags.
+
+Changes in v8:
+ - Added __noscs to __hyp_text instead of filtering SCS flags from
+   the entire arch/arm64/kvm/hyp directory.
+ - Added a patch to filter out -ffixed-x18 and SCS flags from the
+   EFI stub.
+
+Changes in v7:
+ - Changed irq_stack_entry/exit to store the shadow stack pointer
+   in x24 instead of x20 as kernel_entry uses x20-x23 to store
+   data that can be used later. Updated the comment as well.
+ - Changed the Makefile in arch/arm64/kvm/hyp to also filter out
+   -ffixed-x18.
+ - Changed SHADOW_CALL_STACK to depend on !FUNCTION_GRAPH_TRACER
+   instead of not selecting HAVE_FUNCTION_GRAPH_TRACER with SCS.
+ - Removed ifdefs from the EFI wrapper and updated the comment to
+   explain why we are restoring x18.
+ - Rebased as Ard's x18 patches that were part of this series have
+   already been merged.
+
+Changes in v6:
+ - Updated comment in the EFI RT wrapper to include the
+   explanation from the commit message.
+ - Fixed the SHADOW_CALL_STACK_VMAP config option and the
+   compilation errors in scs_init_irq()
+ - Updated the comment in entry.S to Mark's suggestion
+ - Fixed the WARN_ON in scs_init() to trip only when the return
+   value for cpuhp_setup_state() is < 0.
+ - Removed ifdefs from the code in arch/arm64/kernel/scs.c and
+   added separate shadow stacks for the SDEI handler
+
+Changes in v5:
+ - Updated the comment in __scs_base() to Mark's suggestion
+ - Changed all instances of uintptr_t to unsigned long
+ - Added allocation poisoning for KASAN to catch unintentional
+   shadow stack accesses; moved set_set_magic before poisoning
+   and switched scs_used() and scs_corrupted() to access the
+   buffer using READ_ONCE_NOCHECK() instead
+ - Changed scs_free() to check for NULL instead of zero
+ - Renamed SCS_CACHE_SIZE to NR_CACHED_SCS
+ - Added a warning if cpuhp_setup_state fails in scs_init()
+ - Dropped patches disabling kretprobes after confirming there's
+   no functional conflict with SCS instrumentation
+ - Added an explanation to the commit message why function graph
+   tracing and SCS are incompatible
+ - Removed the ifdefs from arch/arm64/mm/proc.S and added
+   comments explaining why we are saving and restoring x18
+ - Updated scs_check_usage format to include process information
+
+Changes in v4:
+ - Fixed authorship for Ard's patches
+ - Added missing commit messages
+ - Commented code that clears SCS from thread_info
+ - Added a comment about SCS_END_MAGIC being non-canonical
+
+Changes in v3:
+ - Switched to filter-out for removing SCS flags in Makefiles
+ - Changed the __noscs attribute to use __no_sanitize__("...")
+   instead of no_sanitize("...")
+ - Cleaned up inline function definitions and moved task_scs()
+   into a macro
+ - Cleaned up scs_free() and scs_magic()
+ - Moved SCS initialization into dup_task_struct() and removed
+   the now unused scs_task_init()
+ - Added comments to __scs_base() and scs_task_reset() to better
+   document design choices
+ - Changed copy_page to make the offset and bias explicit
+
+Changes in v2:
+ - Changed Ard's KVM patch to use x29 instead of x18 for the
+   guest context, which makes restore_callee_saved_regs cleaner
+ - Updated help text (and commit messages) to point out
+   differences in security properties compared to user space SCS
+ - Cleaned up config options: removed the ROP protection choice,
+   replaced the CC_IS_CLANG dependency with an arch-specific
+   cc-option test, and moved disabling of incompatible config
+   options to an arch-specific Kconfig
+ - Added CC_FLAGS_SCS, which are filtered out where needed
+   instead of using DISABLE_SCS
+ - Added a __has_feature guard around __noscs for older clang
+   versions
+
+Sami Tolvanen (12):
+  add support for Clang's Shadow Call Stack (SCS)
+  scs: add accounting
+  scs: add support for stack usage debugging
+  scs: disable when function graph tracing is enabled
+  arm64: reserve x18 from general allocation with SCS
+  arm64: preserve x18 when CPU is suspended
+  arm64: efi: restore x18 if it was corrupted
+  arm64: vdso: disable Shadow Call Stack
+  arm64: disable SCS for hypervisor code
+  arm64: implement Shadow Call Stack
+  arm64: scs: add shadow stacks for SDEI
+  efi/libstub: disable SCS
+
+ Makefile                              |   6 ++
+ arch/Kconfig                          |  26 ++++++
+ arch/arm64/Kconfig                    |   5 ++
+ arch/arm64/Makefile                   |   4 +
+ arch/arm64/include/asm/kvm_hyp.h      |   2 +-
+ arch/arm64/include/asm/scs.h          |  34 ++++++++
+ arch/arm64/include/asm/suspend.h      |   2 +-
+ arch/arm64/include/asm/thread_info.h  |   3 +
+ arch/arm64/kernel/Makefile            |   1 +
+ arch/arm64/kernel/asm-offsets.c       |   3 +
+ arch/arm64/kernel/efi-rt-wrapper.S    |  11 ++-
+ arch/arm64/kernel/entry.S             |  47 +++++++++-
+ arch/arm64/kernel/head.S              |   8 ++
+ arch/arm64/kernel/process.c           |   2 +
+ arch/arm64/kernel/scs.c               |  21 +++++
+ arch/arm64/kernel/smp.c               |   4 +
+ arch/arm64/kernel/vdso/Makefile       |   2 +-
+ arch/arm64/mm/proc.S                  |  14 +++
+ drivers/base/node.c                   |   6 ++
+ drivers/firmware/efi/libstub/Makefile |   3 +
+ fs/proc/meminfo.c                     |   4 +
+ include/linux/compiler-clang.h        |   6 ++
+ include/linux/compiler_types.h        |   4 +
+ include/linux/mmzone.h                |   3 +
+ include/linux/scs.h                   |  92 ++++++++++++++++++++
+ init/init_task.c                      |   8 ++
+ kernel/Makefile                       |   1 +
+ kernel/fork.c                         |   9 ++
+ kernel/sched/core.c                   |   2 +
+ kernel/scs.c                          | 121 ++++++++++++++++++++++++++
+ mm/page_alloc.c                       |   6 ++
+ mm/vmstat.c                           |   3 +
+ 32 files changed, 456 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/include/asm/scs.h
+ create mode 100644 arch/arm64/kernel/scs.c
+ create mode 100644 include/linux/scs.h
+ create mode 100644 kernel/scs.c
+
+
+base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
+
