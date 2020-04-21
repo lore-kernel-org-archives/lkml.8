@@ -2,166 +2,72 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4CAC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17577C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BCC72068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ESaRYqCn"
+	by mail.kernel.org (Postfix) with ESMTP id 02D932068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgDUSr7 (ORCPT
+        id S1726446AbgDUSuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:47:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60502 "EHLO
+        Tue, 21 Apr 2020 14:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726012AbgDUSr6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726164AbgDUSuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:47:58 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BC4C0610D5;
-        Tue, 21 Apr 2020 11:47:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=76M7+1Sr4SkV4k1jNKhJ5SiMeMdDXpYSUYbS88cAIiY=; b=ESaRYqCnMzn90s++UMzbJoGIdq
-        kOzlLzBzXljYc9c2vz8kRuhB2nCHJ8JQBakiMg+uqyl8sf58KN2DMyHTEYmSOGy4Wfn+BxKe5rIAr
-        wa/efYLiMhnnXg8NPALjtQJjS3bdy+/KvwCgPdZUitBY9OrvffP2ddMeLvsJsxNMlWnr7s5yN/fxr
-        jiqZT+jACsUqUQaGx4/cQwX1GQGbZzhKPUY7df4XAFFfjDj+XHXNTsQRsAmBfJQ6utni5ZAQ6gxg6
-        DK2zYvzEu07eLmt25cmKMsdZXlldDQGifRINMe9SQw5p5A4AGTpRv4XYh4I3uVunPz9ZJOQELktSx
-        WzDVOLWA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQxw5-00071K-IU; Tue, 21 Apr 2020 18:47:57 +0000
-Subject: Re: [PATCH v1 01/15] nitro_enclaves: Add ioctl interface definition
-To:     Andra Paraschiv <andraprs@amazon.com>, linux-kernel@vger.kernel.org
-Cc:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <20200421184150.68011-2-andraprs@amazon.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7e0cb729-60ca-3b2e-909b-8883b24908a8@infradead.org>
-Date:   Tue, 21 Apr 2020 11:47:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 14:50:05 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA758C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:50:05 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQxxl-007lIL-Bu; Tue, 21 Apr 2020 18:49:41 +0000
+Date:   Tue, 21 Apr 2020 19:49:41 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] powerpc/spufs: simplify spufs core dumping
+Message-ID: <20200421184941.GD23230@ZenIV.linux.org.uk>
+References: <20200421154204.252921-1-hch@lst.de>
+ <20200421154204.252921-2-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200421184150.68011-2-andraprs@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421154204.252921-2-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi--
+On Tue, Apr 21, 2020 at 05:41:58PM +0200, Christoph Hellwig wrote:
 
-On 4/21/20 11:41 AM, Andra Paraschiv wrote:
-> The Nitro Enclaves driver handles the enclave lifetime management. This
-> includes enclave creation, termination and setting up its resources such
-> as memory and CPU.
-> 
-> An enclave runs alongside the VM that spawned it. It is abstracted as a
-> process running in the VM that launched it. The process interacts with
-> the NE driver, that exposes an ioctl interface for creating an enclave
-> and setting up its resources.
-> 
-> Include the KVM API as part of the provided ioctl interface, with an
-> additional ENCLAVE_START ioctl command that triggers the enclave run.
-> 
-> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-> ---
->  include/linux/nitro_enclaves.h      | 23 +++++++++++++
->  include/uapi/linux/nitro_enclaves.h | 52 +++++++++++++++++++++++++++++
->  2 files changed, 75 insertions(+)
->  create mode 100644 include/linux/nitro_enclaves.h
->  create mode 100644 include/uapi/linux/nitro_enclaves.h
-> 
+>  static ssize_t spufs_proxydma_info_read(struct file *file, char __user *buf,
+>  				   size_t len, loff_t *pos)
+>  {
+>  	struct spu_context *ctx = file->private_data;
+> +	struct spu_proxydma_info info;
+>  	int ret;
+>  
+> +	if (len < sizeof(info))
+> +		return -EINVAL;
+> +	if (!access_ok(buf, len))
+> +		return -EFAULT;
+> +
+>  	ret = spu_acquire_saved(ctx);
+>  	if (ret)
+>  		return ret;
+>  	spin_lock(&ctx->csa.register_lock);
+> -	ret = __spufs_proxydma_info_read(ctx, buf, len, pos);
+> +	__spufs_proxydma_info_read(ctx, &info);
+> +	ret = simple_read_from_buffer(buf, len, pos, &info, sizeof(info));
 
-> diff --git a/include/uapi/linux/nitro_enclaves.h b/include/uapi/linux/nitro_enclaves.h
-> new file mode 100644
-> index 000000000000..b90dfcf6253a
-> --- /dev/null
-> +++ b/include/uapi/linux/nitro_enclaves.h
-> @@ -0,0 +1,52 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef _UAPI_LINUX_NITRO_ENCLAVES_H_
-> +#define _UAPI_LINUX_NITRO_ENCLAVES_H_
-> +
-> +#include <linux/kvm.h>
-> +#include <linux/types.h>
-> +
-> +/* Nitro Enclaves (NE) Kernel Driver Interface */
-> +
-> +/**
-> + * The command is used to trigger enclave start after the enclave resources,
-> + * such as memory and CPU, have been set.
-> + *
-> + * The enclave start metadata is an in / out data structure. It includes
-> + * provided info by the caller - enclave cid and flags - and returns the
-> + * slot uid and the cid (if input cid is 0).
-> + */
-> +#define NE_ENCLAVE_START _IOWR('B', 0x1, struct enclave_start_metadata)
-
-Please document ioctl major ('B' in this case) and range used in
-Documentation/userspace-api/ioctl/ioctl-number.rst.
-
-> +
-> +/* Setup metadata necessary for enclave start. */
-> +struct enclave_start_metadata {
-> +	/* Flags for the enclave to start with (e.g. debug mode) (in). */
-> +	__u64 flags;
-> +
-> +	/**
-> +	 * Context ID (CID) for the enclave vsock device. If 0 as input, the
-> +	 * CID is autogenerated by the hypervisor and returned back as output
-> +	 * by the driver (in/out).
-> +	 */
-> +	__u64 enclave_cid;
-> +
-> +	/* Slot unique id mapped to the enclave to start (out). */
-> +	__u64 slot_uid;
-> +};
-> +
-> +#endif /* _UAPI_LINUX_NITRO_ENCLAVES_H_ */
-> 
-
-thanks.
--- 
-~Randy
-
+IDGI...  What's that access_ok() for?  If you are using simple_read_from_buffer(),
+the damn thing goes through copy_to_user().  Why bother with separate access_ok()
+here?
