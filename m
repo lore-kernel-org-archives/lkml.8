@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA07C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD73BC55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 649DB2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883542070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="b3QneW5N"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DLOOB3q1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgDUMdW (ORCPT
+        id S1728884AbgDUMdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:33:22 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:34824 "EHLO
+        Tue, 21 Apr 2020 08:33:23 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5350 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728841AbgDUMdU (ORCPT
+        by vger.kernel.org with ESMTP id S1728839AbgDUMdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 08:33:20 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LCMRxo023343;
-        Tue, 21 Apr 2020 14:33:11 +0200
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LCO4wA004143;
+        Tue, 21 Apr 2020 14:33:13 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=0hET9m9U8HNjSCYqn7p/h2ZCXaeqDDYalebZRnWlOT0=;
- b=b3QneW5N9a4sAQW94ax4zdlhJBaO/Co186+VagX9ucAasAeOpCXA2Ly1LV/BsNvxrXuU
- G5V0VbiInVKGmMVmIpPGg/HewSZsO2r2D8LBxYEjocKoT2wVU4jHe+POWOyHZfPgSD5K
- fX05RU6ehCvcGv/czJEZKD9UK580QVbdAurFPHlOFrh4lJb3eKeaAPwke31b5Te07i8H
- CfF7dm2m9UrN2cR8z7I/aaxae15WCmkeZbs3RgJy9oGCV5SK/BPOVd+99YSLbjK/sxfH
- 77la8hWrIglCRBm0+6YN0BGD6Od0kX+uHIqDnpyvurW0GTq3doaulTQuWfLUQKxH02GX tw== 
+ bh=BCdNw/6bNXDgvzYMM/yuCjYQaZbw1vGHMQ1wGH6OfQw=;
+ b=DLOOB3q1xzpkHuWVQE1W3GjjNP5r0gaRi3HZdwgCBZe9UN3Y+2ePKe8zkp1dLYzqxDFF
+ VlNpr1z/paTkNWP1sXYtEyg8WCLDaat6YLCohITc6Dt5L0WFNDO4hthfMgNAf7SpRKW8
+ qBWXOLNdGZ4fPFLN0tCqQvfYbQiN3MqTflVX9S3fYkIJIvOoVC+3hCOi7rCNF8uNjdy9
+ TEYRETf/9kMBpfcq2Q7yHRUCSKZbEmBMvjoGC7VjseTN39E2EtFdHiNckZQYOCjFZgCe
+ eM+XbkYTWhsOIZrJ2h0+PWOjxRZW60Zmx/9vppT/jTb2hEiuxxrSr9uE2ajiNX/HDxnd yg== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fregfxse-1
+        by mx07-00178001.pphosted.com with ESMTP id 30fpp8rapj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Apr 2020 14:33:11 +0200
+        Tue, 21 Apr 2020 14:33:13 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5970B100034;
-        Tue, 21 Apr 2020 14:33:11 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AD49A100034;
+        Tue, 21 Apr 2020 14:33:12 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4CB152B0FCB;
-        Tue, 21 Apr 2020 14:33:11 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9FB322B0FCB;
+        Tue, 21 Apr 2020 14:33:12 +0200 (CEST)
 Received: from localhost (10.75.127.46) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr 2020 14:33:10
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr 2020 14:33:11
  +0200
 From:   Fabrice Gasnier <fabrice.gasnier@st.com>
 To:     <hminas@synopsys.com>, <balbi@kernel.org>
@@ -54,9 +54,9 @@ CC:     <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <amelie.delaunay@st.com>
-Subject: [PATCH 1/4] usb: dwc2: gadget: move gadget resume after the core is in L0 state
-Date:   Tue, 21 Apr 2020 14:32:18 +0200
-Message-ID: <1587472341-17935-2-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH 2/4] usb: gadget: u_serial: add suspend resume callbacks
+Date:   Tue, 21 Apr 2020 14:32:19 +0200
+Message-ID: <1587472341-17935-3-git-send-email-fabrice.gasnier@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587472341-17935-1-git-send-email-fabrice.gasnier@st.com>
 References: <1587472341-17935-1-git-send-email-fabrice.gasnier@st.com>
@@ -72,53 +72,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the remote wakeup interrupt is triggered, lx_state is resumed from L2
-to L0 state. But when the gadget resume is called, lx_state is still L2.
-This prevents the resume callback to queue any request. Any attempt
-to queue a request from resume callback will result in:
-- "submit request only in active state" debug message to be issued
-- dwc2_hsotg_ep_queue() returns -EAGAIN
+Add suspend resume callbacks to handle the case seen when the bus is
+suspended by the HOST, and the device opens the port (cat /dev/ttyGS0).
 
-Move the call to resume gadget after the core is put in DWC2_L0 state.
+Gadget controller (like DWC2) doesn't accept usb requests to be queued in
+this case (when in L2 state), from the gs_open() call. Error log is printed
+- configfs-gadget gadget: acm ttyGS0 can't notify serial state, -11
+If the HOST resumes (opens) the bus, the port still isn't functional.
+
+Use suspend/resume callbacks to monitor the gadget suspended state by using
+'suspended' flag. In case the port gets opened (cat /dev/ttyGS0), the I/O
+stream will be delayed until the bus gets resumed by the HOST.
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- drivers/usb/dwc2/core_intr.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/function/u_serial.c | 57 +++++++++++++++++++++++++++++-----
+ drivers/usb/gadget/function/u_serial.h |  2 ++
+ 2 files changed, 51 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-index 876ff31..b8ebda5 100644
---- a/drivers/usb/dwc2/core_intr.c
-+++ b/drivers/usb/dwc2/core_intr.c
-@@ -404,9 +404,11 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+index 8167d37..3cfc6e2 100644
+--- a/drivers/usb/gadget/function/u_serial.c
++++ b/drivers/usb/gadget/function/u_serial.c
+@@ -120,6 +120,8 @@ struct gs_port {
+ 	wait_queue_head_t	drain_wait;	/* wait while writes drain */
+ 	bool                    write_busy;
+ 	wait_queue_head_t	close_wait;
++	bool			suspended;	/* port suspended */
++	bool			start_delayed;	/* delay start when suspended */
+ 
+ 	/* REVISIT this state ... */
+ 	struct usb_cdc_line_coding port_line_coding;	/* 8-N-1 etc */
+@@ -630,13 +632,19 @@ static int gs_open(struct tty_struct *tty, struct file *file)
+ 
+ 	/* if connected, start the I/O stream */
+ 	if (port->port_usb) {
+-		struct gserial	*gser = port->port_usb;
+-
+-		pr_debug("gs_open: start ttyGS%d\n", port->port_num);
+-		gs_start_io(port);
+-
+-		if (gser->connect)
+-			gser->connect(gser);
++		/* if port is suspended, wait resume to start I/0 stream */
++		if (!port->suspended) {
++			struct gserial	*gser = port->port_usb;
++
++			pr_debug("gs_open: start ttyGS%d\n", port->port_num);
++			gs_start_io(port);
++
++			if (gser->connect)
++				gser->connect(gser);
++		} else {
++			pr_debug("delay start of ttyGS%d\n", port->port_num);
++			port->start_delayed = true;
++		}
  	}
  
- 	if (dwc2_is_device_mode(hsotg)) {
-+		enum dwc2_lx_state lx_state = hsotg->lx_state;
-+
- 		dev_dbg(hsotg->dev, "DSTS=0x%0x\n",
- 			dwc2_readl(hsotg, DSTS));
--		if (hsotg->lx_state == DWC2_L2) {
-+		if (lx_state == DWC2_L2) {
- 			u32 dctl = dwc2_readl(hsotg, DCTL);
+ 	pr_debug("gs_open: ttyGS%d (%p,%p)\n", port->port_num, tty, file);
+@@ -680,7 +688,7 @@ static void gs_close(struct tty_struct *tty, struct file *file)
+ 	pr_debug("gs_close: ttyGS%d (%p,%p) ...\n", port->port_num, tty, file);
  
- 			/* Clear Remote Wakeup Signaling */
-@@ -415,11 +417,13 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
- 			ret = dwc2_exit_partial_power_down(hsotg, true);
- 			if (ret && (ret != -ENOTSUPP))
- 				dev_err(hsotg->dev, "exit power_down failed\n");
--
--			call_gadget(hsotg, resume);
- 		}
- 		/* Change to L0 state */
- 		hsotg->lx_state = DWC2_L0;
+ 	gser = port->port_usb;
+-	if (gser && gser->disconnect)
++	if (gser && !port->suspended && gser->disconnect)
+ 		gser->disconnect(gser);
+ 
+ 	/* wait for circular write buffer to drain, disconnect, or at
+@@ -708,6 +716,7 @@ static void gs_close(struct tty_struct *tty, struct file *file)
+ 	else
+ 		kfifo_reset(&port->port_write_buf);
+ 
++	port->start_delayed = false;
+ 	port->port.count = 0;
+ 	port->port.tty = NULL;
+ 
+@@ -1403,6 +1412,38 @@ void gserial_disconnect(struct gserial *gser)
+ }
+ EXPORT_SYMBOL_GPL(gserial_disconnect);
+ 
++void gserial_suspend(struct gserial *gser)
++{
++	struct gs_port	*port = gser->ioport;
++	unsigned long	flags;
 +
-+		/* Gadget may queue new requests upon resume to L0 state */
-+		if (lx_state == DWC2_L2)
-+			call_gadget(hsotg, resume);
- 	} else {
- 		if (hsotg->params.power_down)
- 			return;
++	spin_lock_irqsave(&port->port_lock, flags);
++	port->suspended = true;
++	spin_unlock_irqrestore(&port->port_lock, flags);
++}
++EXPORT_SYMBOL_GPL(gserial_suspend);
++
++void gserial_resume(struct gserial *gser)
++{
++	struct gs_port *port = gser->ioport;
++	unsigned long	flags;
++
++	spin_lock_irqsave(&port->port_lock, flags);
++	port->suspended = false;
++	if (!port->start_delayed) {
++		spin_unlock_irqrestore(&port->port_lock, flags);
++		return;
++	}
++
++	pr_debug("delayed start ttyGS%d\n", port->port_num);
++	gs_start_io(port);
++	if (gser->connect)
++		gser->connect(gser);
++	port->start_delayed = false;
++	spin_unlock_irqrestore(&port->port_lock, flags);
++}
++EXPORT_SYMBOL_GPL(gserial_resume);
++
+ static int userial_init(void)
+ {
+ 	unsigned			i;
+diff --git a/drivers/usb/gadget/function/u_serial.h b/drivers/usb/gadget/function/u_serial.h
+index e5b08ab..009a959 100644
+--- a/drivers/usb/gadget/function/u_serial.h
++++ b/drivers/usb/gadget/function/u_serial.h
+@@ -68,6 +68,8 @@ ssize_t gserial_get_console(unsigned char port_num, char *page);
+ /* connect/disconnect is handled by individual functions */
+ int gserial_connect(struct gserial *, u8 port_num);
+ void gserial_disconnect(struct gserial *);
++void gserial_suspend(struct gserial *p);
++void gserial_resume(struct gserial *p);
+ 
+ /* functions are bound to configurations by a config or gadget driver */
+ int gser_bind_config(struct usb_configuration *c, u8 port_num);
 -- 
 2.7.4
 
