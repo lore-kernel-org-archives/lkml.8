@@ -2,143 +2,116 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E50BC55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5222CC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7902D206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488207;
-	bh=xhaZXir06iAtnnI5oD2YIdQ7HPySr1ED65+aM8CiVTc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3YUddJQYcW296rPOgTxE8bdxivEscR6nVMAITrth7YPUfxLcwWN/CFREEUahdIOZ
-	 O7gBlGjm+OkNEHv1Fe8A97KhCB7mZvztX8HFsE15IiBO1IbghuUJmwkpcVWtvh12XJ
-	 sLFt4AXHMbJ9ShDNRm8w/At2s4pYtqnOy2zubq0M=
+	by mail.kernel.org (Postfix) with ESMTP id 3166B206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="evO56PU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbgDUQ4p (ORCPT
+        id S1729598AbgDUQ4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:56:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729057AbgDUQyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:54:46 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 21 Apr 2020 12:56:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41957 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729576AbgDUQ4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:56:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587488202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=OO6OowO7xy8Rs3mr+i17wCMk9IZgrscuaH75BkfSh7g=;
+        b=evO56PU5j2loLZHGyQ/1Sn62iGCY+pDdY+JPEW/Smx9oekmvv3j+MBtS0rTYTzyJI/8/Jj
+        JXXUOBR2yGnqD/MxQaieTHPB7+jgyxdv4Qo6bhYBTh998BwAWRjdenFzV0yd6ynU+1n+9p
+        GqruNFVeRXAIe8hrGLHpfCyQzHCS1X8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-QyPeJtrpOIKWuzMpxC-Hhw-1; Tue, 21 Apr 2020 12:56:39 -0400
+X-MC-Unique: QyPeJtrpOIKWuzMpxC-Hhw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E55720774;
-        Tue, 21 Apr 2020 16:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587488084;
-        bh=xhaZXir06iAtnnI5oD2YIdQ7HPySr1ED65+aM8CiVTc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2UJGmMGR3wssmVAPwL/ck+aI5KrCT+w1LqlDNoBXSZlxyW2HxOS6FqwUcdf/YjKt/
-         M4ix7oNEuiuaFCmCUU8Kr3KPFVv22V1rrLqkssgAZMz/lI5flCPv9R7h1PfYKN0xZw
-         df2Ks8HhORGf31mEs34RTTVKTfylMlnX37f8UJFE=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jQwAU-00CmER-Gq; Tue, 21 Apr 2020 18:54:42 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 14/29] docs: filesystems: convert files.txt to ReST
-Date:   Tue, 21 Apr 2020 18:54:25 +0200
-Message-Id: <c366b49269c97c7ecc11722b15348fdf35f2a652.1587487612.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1587487612.git.mchehab+huawei@kernel.org>
-References: <cover.1587487612.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3AA141034AE5;
+        Tue, 21 Apr 2020 16:56:38 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 917D99DD78;
+        Tue, 21 Apr 2020 16:56:37 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     peterx@redhat.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH v2 2/3] KVM: eVMCS: check if nesting is enabled
+Date:   Tue, 21 Apr 2020 12:56:31 -0400
+Message-Id: <20200421165632.20157-3-pbonzini@redhat.com>
+In-Reply-To: <20200421165632.20157-1-pbonzini@redhat.com>
+References: <20200421165632.20157-1-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document title;
-- Some whitespace fixes and new line breaks;
-- Mark literal blocks as such;
-- Add it to filesystems/index.rst.
+In the next patch nested_get_evmcs_version will be always set in kvm_x86_ops for
+VMX, even if nesting is disabled.  Therefore, check whether VMX (aka nesting)
+is available in the function, the caller will not do the check anymore.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- .../filesystems/{files.txt => files.rst}          | 15 ++++++++++-----
- Documentation/filesystems/index.rst               |  1 +
- 2 files changed, 11 insertions(+), 5 deletions(-)
- rename Documentation/filesystems/{files.txt => files.rst} (95%)
+ arch/x86/kvm/vmx/evmcs.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/filesystems/files.txt b/Documentation/filesystems/files.rst
-similarity index 95%
-rename from Documentation/filesystems/files.txt
-rename to Documentation/filesystems/files.rst
-index 46dfc6b038c3..cbf8e57376bf 100644
---- a/Documentation/filesystems/files.txt
-+++ b/Documentation/filesystems/files.rst
-@@ -1,5 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
+index 73f3e07c1852..e5325bd0f304 100644
+--- a/arch/x86/kvm/vmx/evmcs.c
++++ b/arch/x86/kvm/vmx/evmcs.c
+@@ -4,6 +4,7 @@
+ #include <linux/smp.h>
+ 
+ #include "../hyperv.h"
++#include "../cpuid.h"
+ #include "evmcs.h"
+ #include "vmcs.h"
+ #include "vmx.h"
+@@ -326,17 +327,18 @@ bool nested_enlightened_vmentry(struct kvm_vcpu *vcpu, u64 *evmcs_gpa)
+ 
+ uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
+ {
+-       struct vcpu_vmx *vmx = to_vmx(vcpu);
+-       /*
+-        * vmcs_version represents the range of supported Enlightened VMCS
+-        * versions: lower 8 bits is the minimal version, higher 8 bits is the
+-        * maximum supported version. KVM supports versions from 1 to
+-        * KVM_EVMCS_VERSION.
+-        */
+-       if (vmx->nested.enlightened_vmcs_enabled)
+-               return (KVM_EVMCS_VERSION << 8) | 1;
+-
+-       return 0;
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
++	/*
++	 * vmcs_version represents the range of supported Enlightened VMCS
++	 * versions: lower 8 bits is the minimal version, higher 8 bits is the
++	 * maximum supported version. KVM supports versions from 1 to
++	 * KVM_EVMCS_VERSION.
++	 */
++	if (kvm_cpu_cap_get(X86_FEATURE_VMX) &&
++	    vmx->nested.enlightened_vmcs_enabled)
++		return (KVM_EVMCS_VERSION << 8) | 1;
 +
-+===================================
- File management in the Linux kernel
-------------------------------------
-+===================================
++	return 0;
+ }
  
- This document describes how locking for files (struct file)
- and file descriptor table (struct files) works.
-@@ -34,7 +37,7 @@ appear atomic. Here are the locking rules for
- the fdtable structure -
- 
- 1. All references to the fdtable must be done through
--   the files_fdtable() macro :
-+   the files_fdtable() macro::
- 
- 	struct fdtable *fdt;
- 
-@@ -61,7 +64,8 @@ the fdtable structure -
- 4. To look up the file structure given an fd, a reader
-    must use either fcheck() or fcheck_files() APIs. These
-    take care of barrier requirements due to lock-free lookup.
--   An example :
-+
-+   An example::
- 
- 	struct file *file;
- 
-@@ -77,7 +81,7 @@ the fdtable structure -
-    of the fd (fget()/fget_light()) are lock-free, it is possible
-    that look-up may race with the last put() operation on the
-    file structure. This is avoided using atomic_long_inc_not_zero()
--   on ->f_count :
-+   on ->f_count::
- 
- 	rcu_read_lock();
- 	file = fcheck_files(files, fd);
-@@ -106,7 +110,8 @@ the fdtable structure -
-    holding files->file_lock. If ->file_lock is dropped, then
-    another thread expand the files thereby creating a new
-    fdtable and making the earlier fdtable pointer stale.
--   For example :
-+
-+   For example::
- 
- 	spin_lock(&files->file_lock);
- 	fd = locate_fd(files, file, start);
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 30925e73666c..a996d880025e 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -27,6 +27,7 @@ algorithms work.
-    devpts
-    dnotify
-    fiemap
-+   files
- 
-    automount-support
- 
+ void nested_evmcs_filter_control_msr(u32 msr_index, u64 *pdata)
 -- 
-2.25.2
+2.18.2
+
 
