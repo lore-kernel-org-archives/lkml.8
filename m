@@ -2,144 +2,185 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACCFC55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5515C55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1EB2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43CF2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="KpaZLk24"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlKRZFFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgDUHbE (ORCPT
+        id S1728140AbgDUHbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:31:04 -0400
-Received: from sonic309-49.consmr.mail.ne1.yahoo.com ([66.163.184.175]:35674
-        "EHLO sonic309-49.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727888AbgDUHbC (ORCPT
+        Tue, 21 Apr 2020 03:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgDUHbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:31:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1587454261; bh=8SaBe657SUqzMIHOQXCqE8E7juFfQ/VceplMPZo+D8w=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=KpaZLk24UVqPwIBYC2dgf14lue+EQnfVzZFTJmxMC6TsT7WKiMhtq08Fetju5nTIV7GNbh+7nSybfvPnBgN8i47khQXY2HmIZwMOVXi4SCV3ErhFWLgDWLc2qBmEGV/6gKpYAGFLOSpKngk5Fx2V55XG7FOC/CX3KhYAWpkwIEl+fBOolBaLqdW199swuNwiic9emeccaeytk3kqWy82b4F21pRQo4rUC1hG14VNbemWbF7qNmIuidaA/IETfF1jZ+UTturFaZOLzhTfNo+5e2YDhl/8PsxH+52Lu72oiczyuSUxS+PZ3ZjnFSgA0E0917mBCFV3SeEDzDu6/f1cVQ==
-X-YMail-OSG: ZLEfS2sVM1lk0I6iQYW5PaC27I6c61k7i1jV62cC4k.LmLL85pmV5Bd1SzzocJs
- sRfj94Pu4n3wFv1H_bhWjKvopCKSTupX0RCYaDhBaUw4l2N0pSafWoYv1p7Gw8PadYcrpqeTJkmo
- x.vFg3ICrxKeHJe5A2VjBgVUEF_eugMhyT2Kzqr946MYTvBF0X25MXIHn.W6.2gGmuFxfVNfaJbk
- wf1cvUYnRTlz9VbmQ8jqsBWcWWybpFhhWarQb6ys_3OK4WNIHvOc4acXtDGYtFUo9mGbPDdixfii
- .HyxC5mNMUnl7mF5dDGXJk.NzpSa9FZzkes7m9A7H764xLIzf5hXzgHq73Dw8qQTc6ZysClNsbE7
- Cqg9zJzR_MaVhtU0.wAbKgwJzQHR1iJ55jaOcg0byMOZ0uoQBJAH6TuYXoONFmR8od58M32mpPWr
- kURn0vEpDgo6ziJSLwNCffWjfg29YmK5biUHIxwVkaZMtJMwypJqiKONdSszFXqeKZfkZ43yMVzk
- NPsOGpF.B8McUrusJ8bU8V5_Pw64P2MzyRG_xOqHU4PEVJ8QcHSUKutvC17bM3hlbXN2URZlENMd
- d8Vf1DHE0kXtkkPZ4VOiSoIDBZgLuWkasmiahU4upu6la7rTzo9lzmbxZtBgCASkn1ZknrsBuanq
- s4gwFJJjx5JRJ0M1OfPm.ljypeTz2C8k.2sDFGlFcZsVpIqoi40CLTwWZeDTLPR4EziHpb3AWhiQ
- Wny4DBpwdRD7gPOjsiGO6w9OZAtrGiJd3daH7ELv6V9EsinNln6wYjpf.P03ZtSSeGVjLpj3gwC5
- 4ZQ6xDPuavzeSH5cPOYSWdDTfO.IUhjmAJhRjKlmSu6B5Wa6rtLrtlScqypRMQAKGuAV8YduU5KI
- 8eYtkpmUVzCmZgEhtfKGxS2GYC7jxikiAGdV2ElykH1jwQOXG9_6MJeHgM_S7wG.sIVzW5BvY46S
- U3gM0PK5AVuKU8r8W4jpC5_MOIUbRM1UFWE9AR4pGtumwfhniOhER3TyiCVZI2xKHrkD432P83Gd
- mZN3fPspYLogkNTC4Pp5BnehwQnuS7.Q1LEDG7K4yXIHWEWw5JIZ46YoZm5pXFYVnPVa0w84MN_.
- 8ErDK4fqws8tDW_ASdgJBiWOupx35rpfu.rPF2224lydresvTjLnTIf8lFnhXN7BgaLoaBZcuELo
- 7d7.6T.VinNDGuXqbdmE_ducuAYaeJ7cmmW3_ZpH5nIJXxXTPL1SLIUhl1cz6mcX_baEL4kuRe7G
- QBHv3bahyaZqtCrIWnR0n7wmtRNy2FEYSnHq3oUlt19LRQgWfoZcQe_GuDMFKfNB5Pxuoy3b4KVt
- CFMHhQXta0y6ZgvoOw5i9EEPCWKsh5_gwAwF5XcK3wkcG3LGE6p37DRvSe3ZA6rk.EbJd2mEQghM
- kIyy4lSay2M49R9IvFN5a5UPkXOLi14eHbk.8BNbLJhtErNaT725b8ay_JaMv_czB0ue.SfOtgpY
- XWyRQdpzwRYjzGhxb6.MNFQCTSQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Tue, 21 Apr 2020 07:31:01 +0000
-Received: by smtp407.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 98aed6c61d98e300b5dca39559149029;
-          Tue, 21 Apr 2020 07:28:59 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 15:28:51 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-xfs@vger.kernel.org,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
-        Dave Chinner <dchinner@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v11 19/25] erofs: Convert compressed files from readpages
- to readahead
-Message-ID: <20200421072839.GA13867@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200414150233.24495-1-willy@infradead.org>
- <20200414150233.24495-20-willy@infradead.org>
- <20200420224210.dff005bc62957a4d81d58226@linux-foundation.org>
+        Tue, 21 Apr 2020 03:31:40 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A902C061A0F;
+        Tue, 21 Apr 2020 00:31:40 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b11so15222155wrs.6;
+        Tue, 21 Apr 2020 00:31:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D9m3MRy8x+o4H1EEycml0VyqSiaYH7kBtrQzXfBUS8w=;
+        b=GlKRZFFyQs7kZycqIc8kmWXH6Ud4+HQlXs3tT/pPSNZiMX9h8VVS8uJ4YjqPe9VH8K
+         VOsgHdZHB+X8w3fU84GRwWmtLSlcVzqJK7F/LoKjnYTtGYgq3XlXvWec2jF5yMlqXgqT
+         DMgM1TfcX2lja1KJLWe7ISkMNWMptDaq+uRd0auhbWqgVgW1EPpuWXmJWENaC70cqkHl
+         W1OAI+RQF3UbWRsqpDAk3GeJKKu0TXTiXcokuG6Qfw9gi4uhUhhkh/njN+XgNpd68M6p
+         4MIsTwBlPzPF6/fdkxJpNRxasCq6hiJzXqMxnl+6c6ccJiiwVjHBSMjSmK14iNLpPdBh
+         8oig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D9m3MRy8x+o4H1EEycml0VyqSiaYH7kBtrQzXfBUS8w=;
+        b=bY/MPHcON/9Cyl0dJG7ZISbjSsW7j3kyWOXuAeo8mOG2BGNVF26/Eg6TZ0cWQS0V37
+         VrcMTPEoyxsYGMxEJKCcJNfrqQ2sxqW6ZpO+P9XGb/nAnhzmE4IBnRekH+CsFbUJyKYe
+         9J/faFROUifUSEPa8sVsCh1jygNKPqistxBtW/5aCkrdCoVmtSacHypaNroSpH7IKP8C
+         s97ILkCDoguJ1AM495ZMeHYQ+kmoQWTS88c4eLWct3++ERwaCF30gWG2+4mlH3m2wos/
+         sJgC/FhMMaMQnSfHe4CAhT1KkfRLYl6dY88CtLJ1httWDvvyQ+fQKQipLEZozbr70/pa
+         huvA==
+X-Gm-Message-State: AGi0PuZVzIQHCFRDKr3qm5t0izjp7hRL8ZxIaG8qS824WxDHt9Z8Sj6w
+        U8SkI3bI123jpTG4qtfi2KvwxX/w4LaXFXrjKNQOHFjp
+X-Google-Smtp-Source: APiQypIBhAroyKy7dbi8XsEqmZkN6GmZp54F8mQFxWhAQGQ6iOUSPlckooO9rwUr3eRUH0h46LenNWSVw4928Sfzm+M=
+X-Received: by 2002:adf:8b1d:: with SMTP id n29mr22239047wra.196.1587454299040;
+ Tue, 21 Apr 2020 00:31:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420224210.dff005bc62957a4d81d58226@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.15739 hermes Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+References: <20200413070014.12960-1-zhang.lyra@gmail.com> <20200413070014.12960-2-zhang.lyra@gmail.com>
+ <20200420114222.GA14343@lakrids.cambridge.arm.com>
+In-Reply-To: <20200420114222.GA14343@lakrids.cambridge.arm.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Tue, 21 Apr 2020 15:31:02 +0800
+Message-ID: <CAAfSe-u+wraKLWFK2+oKed_ZzkckP0sFRhMkA5LB-b30CGawOw@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 1/2] cpuidle: allow idle state to be found as
+ deepest state for s2idle only
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Hi Mark,
 
-On Mon, Apr 20, 2020 at 10:42:10PM -0700, Andrew Morton wrote:
-> On Tue, 14 Apr 2020 08:02:27 -0700 Matthew Wilcox <willy@infradead.org> wrote:
-> 
-> > 
-> > Use the new readahead operation in erofs.
-> > 
-> 
-> Well this is exciting.
-> 
-> fs/erofs/data.c: In function erofs_raw_access_readahead:
-> fs/erofs/data.c:149:18: warning: last_block may be used uninitialized in this function [-Wmaybe-uninitialized]
-> 	*last_block + 1 != current_block) {
-> 
-> It seems to be a preexisting bug, which your patch prompted gcc-7.2.0
-> to notice.
-> 
-> erofs_read_raw_page() goes in and uses *last_block, but neither of its
-> callers has initialized it.  Could the erofs maintainers please take a
-> look?
+Many thanks for your comments.
 
-simply because last_block doesn't need to be initialized at first,
-because bio == NULL in the begining anyway. I believe this is a gcc
-false warning because some gcc versions raised some before (many gccs
-don't, including my current gcc (Debian 8.3.0-6) 8.3.0).
+On Mon, 20 Apr 2020 at 19:42, Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Mon, Apr 13, 2020 at 03:00:13PM +0800, zhang.lyra@gmail.com wrote:
+> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >
+> > Add a new flag CPUIDLE_FLAG_S2IDLE to allow c-state to be found as
+> > deepest state for s2idle only, so that users can add a new c-state
+> > for using s2idle and don't worry disturbing other use cases such as
+> > play_idle() which probably don't want to enter into so much deep
+> > idle state since devices are not suspended for that kind of cases.
+>
+> Can you please elaborate on this?
 
-in detail,
+Ok.
 
-146         /* note that for readpage case, bio also equals to NULL */
-147         if (bio &&
-148             /* not continuous */
-149             *last_block + 1 != current_block) {
-150 submit_bio_retry:
-151                 submit_bio(bio);
-152                 bio = NULL;
-153         }
+The thing was, I added a new c-state (named DOMAIN_PD for example) in
+DT for using s2idle, and the target power level indicated in DOMAIN_PD
+would be deeper than the level for regular cpuidle (for example
+level-0 is for regular cpuidle; level-1 is for system suspend and
+power domain would be shutdown as well as all cores , DOMAIN_PD uses
+level-1). I worried that would cause the deeper power domain to be
+shutdown if DOMAIN_PD was selected by play_idle().
 
-bio will be NULL and will bypass the next condition at first.
-after that,
+But after have another look at PSCI in ATF, I consider that it
+probably is not a problem which would really happen. Since play_idle()
+wouldn't occur on all cpus at the same time, although play_idle()
+could use DOMAIN_PD, the system wouldn't enter into that so deep power
+level.
 
-155         if (!bio) {
+Hope I've explained the things clearly :)
 
-...
-
-221                 bio = bio_alloc(GFP_NOIO, nblocks);
-
-...
-
-}
-
-...
-
-230         err = bio_add_page(bio, page, PAGE_SIZE, 0);
-231         /* out of the extent or bio is full */
-232         if (err < PAGE_SIZE)
-233                 goto submit_bio_retry;
-234
-235         *last_block = current_block;
-
-so bio != NULL, and last_block will be assigned then as well.
-
-Thanks,
-Gao Xiang
+In a word, this patch seems not needed for now.
 
 
+Thanks again,
+Chunyan
+
+
+>
+> Why exactly are these states not suited for regular cpu idle? What
+> problems do they cause? e.g. long wakeup latency?
+>
+> The flag and the for-s2-idle-only DT property are encoding a policy
+> rarher than a property, and as such I don't think this is the right way
+> to describe this in the DT. However, if there might be porperties of the
+> idle state that we could describe so that the OS can come to the same
+> conclusion.
+>
+> Thanks,
+> Mark.
+>
+> >
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > ---
+> >  drivers/cpuidle/cpuidle.c        | 3 ++-
+> >  drivers/cpuidle/dt_idle_states.c | 3 +++
+> >  include/linux/cpuidle.h          | 1 +
+> >  3 files changed, 6 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> > index de81298051b3..bb61f0c271d2 100644
+> > --- a/drivers/cpuidle/cpuidle.c
+> > +++ b/drivers/cpuidle/cpuidle.c
+> > @@ -89,7 +89,8 @@ static int find_deepest_state(struct cpuidle_driver *drv,
+> >                   s->exit_latency_ns <= latency_req ||
+> >                   s->exit_latency_ns > max_latency_ns ||
+> >                   (s->flags & forbidden_flags) ||
+> > -                 (s2idle && !s->enter_s2idle))
+> > +                 (s2idle && !s->enter_s2idle) ||
+> > +                 (!s2idle && (s->flags & CPUIDLE_FLAG_S2ILDE)))
+> >                       continue;
+> >
+> >               latency_req = s->exit_latency_ns;
+> > diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
+> > index 252f2a9686a6..530db2726c05 100644
+> > --- a/drivers/cpuidle/dt_idle_states.c
+> > +++ b/drivers/cpuidle/dt_idle_states.c
+> > @@ -80,6 +80,9 @@ static int init_state_node(struct cpuidle_state *idle_state,
+> >       idle_state->flags = 0;
+> >       if (of_property_read_bool(state_node, "local-timer-stop"))
+> >               idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> > +
+> > +     if (of_property_read_bool(state_node, "for-s2idle-only"))
+> > +             idle_state->flags |= CPUIDLE_FLAG_S2ILDE;
+> >       /*
+> >        * TODO:
+> >        *      replace with kstrdup and pointer assignment when name
+> > diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+> > index ec2ef63771f0..08da701f74cd 100644
+> > --- a/include/linux/cpuidle.h
+> > +++ b/include/linux/cpuidle.h
+> > @@ -78,6 +78,7 @@ struct cpuidle_state {
+> >  #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
+> >  #define CPUIDLE_FLAG_UNUSABLE        BIT(3) /* avoid using this state */
+> >  #define CPUIDLE_FLAG_OFF     BIT(4) /* disable this state by default */
+> > +#define CPUIDLE_FLAG_S2ILDE  BIT(5) /* state is used for s2idle only */
+> >
+> >  struct cpuidle_device_kobj;
+> >  struct cpuidle_state_kobj;
+> > --
+> > 2.20.1
+> >
