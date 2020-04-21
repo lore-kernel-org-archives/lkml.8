@@ -2,144 +2,103 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFDAC55185
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E66C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA0D820736
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:16:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RrGLy4OK"
+	by mail.kernel.org (Postfix) with ESMTP id 533F520724
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587503836;
+	bh=kFU2dgolJgSwGTDef1I5rI/vXFpK+Nlf0oa4fBuvSqo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Rpipyo3R9/3wS3KC2O68VgyPLzx2Ql/IyiAYfFhLvx8kdTwLQevXh8ox15E/7E52x
+	 RS4PP3MDOTeQr1SJejy87ma8eO/i96gLl8qNwT+pk7J6IQfSMHj9leqI42yKoOpIrE
+	 dfHDfN61UNqFkjDNAd1fVwuP1G+GtJ6rE4AuGp1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgDUVQH (ORCPT
+        id S1726505AbgDUVRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:16:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55134 "EHLO
+        Tue, 21 Apr 2020 17:17:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726151AbgDUVPU (ORCPT
+        by vger.kernel.org with ESMTP id S1726151AbgDUVRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 17:15:20 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2342C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:19 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a5so1152013pjh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:19 -0700 (PDT)
+        Tue, 21 Apr 2020 17:17:14 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64BF0C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:17:14 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id f8so12293487lfe.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:17:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0FYzutaOWwkobDVvluYcuHm9VXwfDfu/lChsJmXCxj8=;
-        b=RrGLy4OKZdZcG8ieGRjfJ4zZHn+LjWtKJ9z8GfIKxz2r/6HXOuTE6X4vBBofmQTFV1
-         3J1MxMDzRXSUJte11GSbUy++0LWNKDT8dA3sg3TK1qcBNj1PjcyX+hM6avDkOQXZfxF9
-         eC4B2EXg5l4CTwe2mz0DPy6bBEaOsUySU0TR4=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b5pLl+D5tNip97GFPQ+tLS3+5WUwZ1zuA/I0ykv4UqE=;
+        b=GJM81lIK3eo2XovGG5vBhA2ndv5S6gnrXVRfHf4R3TiUc6Xb+F0svBJRHZsPsTf6pt
+         pLeWZrS3E/cSwGAou5y0Obvsp5+HTLH6XKr0OaRHcyBdU2Fu9AWeM9V+HkvG7SpPKOjc
+         GbzjIUODzR4GrMODTgAQo56kyr4aXnNKLO40I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0FYzutaOWwkobDVvluYcuHm9VXwfDfu/lChsJmXCxj8=;
-        b=A6B3lzpidLua4Z054iYHWLYy9kQEFP95xQBdSAt2EpkapfqgZOzdqJQYfAkN/tuj/7
-         niZ1ERx5w2k/MpiVv4kvq4o12NKg//pjCVK1o9wte3O7kvOAKWSe/FwaGfKch6PLrt4r
-         8qOSbGy83eom+/J/fGfycFnYPQ9BF3sf7wkz6iVM8nI4BBwmYc+/n+SHt+252Fx3sVlO
-         sT/6nsJd33S0fDlU2EGHcnsZhssJ0FEScZGGjYTBboMaio1UJ17oRac45adRVYtLb+9S
-         BJNu6VlL+OuNYWPsrz07El6MX0ZWODsRi5u8ikZ16wDvZfZp+FlzCDiLYosjCbTorJpX
-         gwRg==
-X-Gm-Message-State: AGi0PubqVg8ZP+VlnNQmLX9SrJJg2dHKNunhKYD7T9MyRKmoG5NRTjJI
-        L66htswstX8kTfCL59uYqlXt6Q==
-X-Google-Smtp-Source: APiQypIj7iK+ENNSKb4XQE4AkZpuuv1vhCL8EgK3cFai/GvUv4iH3IENUvbKD1Nzenb8tsIv34YzcQ==
-X-Received: by 2002:a17:902:bcc4:: with SMTP id o4mr208635pls.233.1587503719408;
-        Tue, 21 Apr 2020 14:15:19 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id c1sm3287880pfo.152.2020.04.21.14.15.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 14:15:18 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
-        gregkh@linuxfoundation.org
-Cc:     kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
-        hpa@zytor.com, bp@alien8.de, linux-serial@vger.kernel.org,
-        agross@kernel.org, tglx@linutronix.de, frowand.list@gmail.com,
-        bjorn.andersson@linaro.org, jslaby@suse.com,
-        catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/9] kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb
-Date:   Tue, 21 Apr 2020 14:14:39 -0700
-Message-Id: <20200421141234.v2.1.Ied2b058357152ebcc8bf68edd6f20a11d98d7d4e@changeid>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-In-Reply-To: <20200421211447.193860-1-dianders@chromium.org>
-References: <20200421211447.193860-1-dianders@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b5pLl+D5tNip97GFPQ+tLS3+5WUwZ1zuA/I0ykv4UqE=;
+        b=OCVbhSAfxNjQGO0aNOhtaQJY84l+Kyteriap5NcxtSoiIJ2bXygusPiB5NLuFD2QKk
+         MvVJdk8gYcHs+0xhLlaqi9yQIU6h7IcdCkUqR08tE0ev7Cq2sRVLI6hJRnLErryhRP0S
+         mQ2dumqA8ZMYVKYrrzgvgLmEodBHE8Q2pIM+0sY7wvlrezrFkfBWMdbUtL1n19lcgybs
+         H4pGw3eLWNdDxyskWP5DuJtAKOv6PWWkxEhd8kkfUswH7hdUtzcao+HY/iLb47pt5L25
+         s+qQ3g4sBXBiQPWoKEExbaV4u5IpXJ0II+GkkZh91p+hhg4MeFrA0Ke1vNKniTo6uu5t
+         zmmw==
+X-Gm-Message-State: AGi0PubyB0AG2f+wo60UJ+5Dy5KDqco0/3qtOz6prDJ35v6tRa3Ev56k
+        sGTLB9WMkYSCsy2AosFjpE3LHeg8T2M=
+X-Google-Smtp-Source: APiQypKxvB9U1lkwBawN72OpDFO5sDRnf4kNYSAPhHXR3GM4cTLpsj2W/aNM7dxrI53qyC6jCL/XNA==
+X-Received: by 2002:ac2:4551:: with SMTP id j17mr14837831lfm.147.1587503832347;
+        Tue, 21 Apr 2020 14:17:12 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id j14sm3051252lfm.73.2020.04.21.14.17.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 14:17:11 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id j14so12293073lfg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:17:11 -0700 (PDT)
+X-Received: by 2002:a05:6512:405:: with SMTP id u5mr14628462lfk.192.1587503831120;
+ Tue, 21 Apr 2020 14:17:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200420190916.GA11695@gmail.com> <CAHk-=wiejBvKnrDysDva=DNFgyX02TZred_JMjzUnjFgVOUtOg@mail.gmail.com>
+ <CAP-5=fVhWREzzjnXH4j+dcnP-GbSMnT_07qVrZM8huAhx6wtVw@mail.gmail.com>
+In-Reply-To: <CAP-5=fVhWREzzjnXH4j+dcnP-GbSMnT_07qVrZM8huAhx6wtVw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 21 Apr 2020 14:16:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wifecOQcL6vbL0uOY68jH4i3nBCksmc+As9hrUm_hjw1Q@mail.gmail.com>
+Message-ID: <CAHk-=wifecOQcL6vbL0uOY68jH4i3nBCksmc+As9hrUm_hjw1Q@mail.gmail.com>
+Subject: Re: [GIT PULL] clang-format for v5.7-rc3
+To:     Ian Rogers <irogers@google.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 81eaadcae81b ("kgdboc: disable the console lock when in
-kgdb") we avoided the WARN_CONSOLE_UNLOCKED() yell when we were in
-kgdboc.  That still works fine, but it turns out that we get a similar
-yell when using other I/O drivers.  One example is the "I/O driver"
-for the kgdb test suite (kgdbts).  When I enabled that I again got the
-same yells.
+On Tue, Apr 21, 2020 at 2:03 PM Ian Rogers <irogers@google.com> wrote:
+>
+> We (Google, Stephane Eranian, ..) have a tool that converts Intel's
+> topdown metrics:
+> https://download.01.org/perfmon/TMA_Metrics.xlsx
+> into the json format used for metrics in perf. It is written in C++
+> and we are planning to upstream it.
 
-Even though "kgdbts" doesn't actually interact with the user over the
-console, using it still causes kgdb to print to the consoles.  That
-trips the same warning:
-  con_is_visible+0x60/0x68
-  con_scroll+0x110/0x1b8
-  lf+0x4c/0xc8
-  vt_console_print+0x1b8/0x348
-  vkdb_printf+0x320/0x89c
-  kdb_printf+0x68/0x90
-  kdb_main_loop+0x190/0x860
-  kdb_stub+0x2cc/0x3ec
-  kgdb_cpu_enter+0x268/0x744
-  kgdb_handle_exception+0x1a4/0x200
-  kgdb_compiled_brk_fn+0x34/0x44
-  brk_handler+0x7c/0xb8
-  do_debug_exception+0x1b4/0x228
+Oh, ok.
 
-Let's increment/decrement the "ignore_console_lock_warning" variable
-all the time when we enter the debugger.
+> There's a little more motivation in the commit message too.
 
-This will allow us to later revert commit 81eaadcae81b ("kgdboc:
-disable the console lock when in kgdb").
+Well, not really. I _did_ check the commit message. It says nothing
+very useful at all, in that the kernel doesn't use C++ (aside from a
+couple of clang tests), so the commit message didn't at all clarify
+why we should care about C++ namespace rules..
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v2:
-- ("kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb") new for v2.
-
- kernel/debug/debug_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 2b7c9b67931d..950dc667c823 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -668,6 +668,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	if (kgdb_skipexception(ks->ex_vector, ks->linux_regs))
- 		goto kgdb_restore;
- 
-+	atomic_inc(&ignore_console_lock_warning);
-+
- 	/* Call the I/O driver's pre_exception routine */
- 	if (dbg_io_ops->pre_exception)
- 		dbg_io_ops->pre_exception();
-@@ -740,6 +742,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	if (dbg_io_ops->post_exception)
- 		dbg_io_ops->post_exception();
- 
-+	atomic_dec(&ignore_console_lock_warning);
-+
- 	if (!kgdb_single_step) {
- 		raw_spin_unlock(&dbg_slave_lock);
- 		/* Wait till all the CPUs have quit from the debugger. */
--- 
-2.26.1.301.g55bc3eb7cb9-goog
-
+              Linus
