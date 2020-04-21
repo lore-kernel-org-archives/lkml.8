@@ -2,193 +2,404 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF3CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D3CC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB3C206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844DA206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VlF7JCo+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="kGP8gTgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDUPhT (ORCPT
+        id S1726878AbgDUPhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:37:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725902AbgDUPhT (ORCPT
+        Tue, 21 Apr 2020 11:37:35 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:12757 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbgDUPhe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:37:19 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6448C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 08:37:17 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id e6so1488118pjt.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 08:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dvnUaepumbrX3tLwN7T+aV2zw9enslYEEKwoxp15Rbw=;
-        b=VlF7JCo+pg6lkixAwHZhO5mSofYdutUMyuY/di4EA8M5drWY39LWPg7IPRo9iJZlYK
-         xgCyAk2Rx6whnclxT4H6sXumN+FC6f4K1wejPs3i09hvt/pEBdC62m776LpdeWo148AC
-         fZZKdgxoRyVZSBCKbfKIISoPMUsAzrUtCJfu4dR5/6m/mUTyQZvExCFMJlA1XhxKnFVB
-         Rj9TZDid75U7muZmyaklevkrx7RjBlFKUSRt32U9IblhutLCLHwqpfdfBlPNYeLFiteO
-         w6UEh/ny6Su1USgPxrynJ4CcYNLitw4zJP6OG2pMNyL9lC18UHm+QMft87+gsX/8u8ID
-         Kl6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dvnUaepumbrX3tLwN7T+aV2zw9enslYEEKwoxp15Rbw=;
-        b=OBKqprTIj8cZ33TzRuu1kXTF6UcNd00rypxAeeT/GsdWvgAHkTJQoV47yV04j5BGiW
-         9M0VF47wJ4G+wSpmueaR+9z+dVLDSx6PHLqGCXNDdqEJI/HGj7bYoDp0nRhtSH+LYiDl
-         6J6IwqA9hWsmCOyHo0WJ9xBKHiO8Vic+loja652VZYsgR8tR9CbymUVKbAicuyAXnHEA
-         LCZydZqNuRLHLbqRHvjocDeVwAcWN8/VJ0OiNGBZCb4RT3uMW1YJsKs7w8kLxRc/Wcas
-         zjdMkE6FvR7iBFfKkbYcX6AQvja40Cx/E2DdHfNCkMS+y3HmeQrRqn9XVPKtAd6MqjQc
-         BVTQ==
-X-Gm-Message-State: AGi0Pua7O5xPXr2c2mQasExseb9UbkebNMEzcrk5hPo5IVV4voYrCwWK
-        OOdZYDCNl1SRtrRnoVyuE7iwvfmsrbrLwBfD4dgUfQ==
-X-Google-Smtp-Source: APiQypL8NV5Stv4Tp37UrS0JSiyBP9L8NiZecBSv44W/NoAc9RSdkqgH+eSR15LF7zdwxQ/miIxk5rf4tZ3eABPM15U=
-X-Received: by 2002:a17:90a:26a2:: with SMTP id m31mr6207645pje.128.1587483436814;
- Tue, 21 Apr 2020 08:37:16 -0700 (PDT)
+        Tue, 21 Apr 2020 11:37:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587483453; x=1619019453;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=lW4uHGsnpzwFM+faXKPSaaKQRdb/6mWKe2OT5jhIAU0=;
+  b=kGP8gTgmdvlxKzh3xcVXyc7Vr06/dXUTj8G10+0meNRYwIR2R4eaq4My
+   NuCVFrsNFSg0Fr5Fq19xlNFOoyvF6YvoODHOBsye8rrR0oMMQNz4lV7d8
+   XnsbBXaCg+tCVrRh6Jw9fMGepf94or285Y9VZGhfGSZ5tM4cNpDfP3aSC
+   nv5NDcnDwLHWsPUZmPkztolrN5bvH88iuJb4tKR6YvQ7+x9kNK0/4sDIk
+   soGy2UH8y9clUC35oyqUhEQGQH+vwQSeXHRcsARb3sM/8jFZrn4P3PVEC
+   q3SXbZD9vfnuW/I5/l51T61ZIBzKefF3CHB13gu4Ihk88rsKccmSoafYm
+   g==;
+IronPort-SDR: XBMsN1uxujrpfSYRmplkz/S2DyIBVqtFtAiVD4i7jT8NhsPygMhvfVNctjd5BO0cBzyJ3SPI7s
+ r+XeyE/mVNG+BqEJAu/eGqVNCQP3rIQQV2TxHwtjz0ft3TyhefyQW/QDhTGM0WNLUXO0Scjc5O
+ 5Gr5GJoXcbHBHCcf4nQYaZyCxrOVr6AESZAF6B9sIbb5lRYJZxjZTw9ePHBvU7hdVcHo/fflrX
+ 8sXrY58QWxx1wFQ/codSR9GyWl2OHum4ZanWuf/zLpldQswkFFoLoNR1oCR5pyhg4JyCzs9P/d
+ cug=
+X-IronPort-AV: E=Sophos;i="5.72,410,1580799600"; 
+   d="scan'208";a="76714501"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Apr 2020 08:37:32 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 21 Apr 2020 08:37:35 -0700
+Received: from [10.205.29.91] (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 21 Apr 2020 08:37:27 -0700
+Subject: Re: [PATCH v2 6/7] net: macb: WoL support for GEM type of Ethernet
+ controller
+To:     Claudiu Beznea - M18063 <Claudiu.Beznea@microchip.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "harini.katakam@xilinx.com" <harini.katakam@xilinx.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "sergio.prado@e-labworks.com" <sergio.prado@e-labworks.com>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>
+References: <cover.1587463802.git.nicolas.ferre@microchip.com>
+ <a0ba982bed5adcd7cdb5bd526855702bb8a1c8fd.1587463802.git.nicolas.ferre@microchip.com>
+ <299e181e-de7c-ec01-6214-c0bd3256df76@microchip.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+Message-ID: <db8540ea-72e2-0e59-d77a-daa44b6a0e6d@microchip.com>
+Date:   Tue, 21 Apr 2020 17:37:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200418031833.234942-1-davidgow@google.com> <20200418031833.234942-5-davidgow@google.com>
-In-Reply-To: <20200418031833.234942-5-davidgow@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 21 Apr 2020 17:37:05 +0200
-Message-ID: <CAAeHK+yQqyw4GNTkk8eQMFU5baCmVQyQTrvSAk+zBNHDaJKwvQ@mail.gmail.com>
-Subject: Re: [PATCH v6 4/5] KASAN: Testing Documentation
-To:     David Gow <davidgow@google.com>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <299e181e-de7c-ec01-6214-c0bd3256df76@microchip.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 5:18 AM 'David Gow' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
->
-> From: Patricia Alfonso <trishalfonso@google.com>
->
-> Include documentation on how to test KASAN using CONFIG_TEST_KASAN and
-> CONFIG_TEST_KASAN_USER.
+On 21/04/2020 at 17:13, Claudiu Beznea - M18063 wrote:
+> Hi Nicolas,
 
-Hi David,
+Claudiu,
 
-Please update commit message too.
+Thanks for your feedback.
 
-Thanks!
+> On 21.04.2020 13:41, nicolas.ferre@microchip.com wrote:
+>> From: Nicolas Ferre <nicolas.ferre@microchip.com>
+>>
+>> Adapt the Wake-on-Lan feature to the Cadence GEM Ethernet controller.
+>> This controller has different register layout and cannot be handled by
+>> previous code.
+>> We disable completely interrupts on all the queues but the queue 0.
+>> Handling of WoL interrupt is done in another interrupt handler
+>> positioned depending on the controller version used, just between
+>> suspend() and resume() calls.
+>> It allows to lower pressure on the generic interrupt hot path by
+>> removing the need to handle 2 tests for each IRQ: the first figuring out
+>> the controller revision, the second for actually knowing if the WoL bit
+>> is set.
+>>
+>> Queue management in suspend()/resume() functions inspired from RFC patch
+>> by Harini Katakam <harinik@xilinx.com>, thanks!
+>>
+>> Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
+>> Cc: Harini Katakam <harini.katakam@xilinx.com>
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+>> ---
+>> Changes in v2:
+>> - Addition of pm_wakeup_event() in WoL IRQ
+>> - In macb_resume(), removal of setting the MPE bit in NCR register which is not
+>>    needed in any case: IP is reset on the usual path and kept alive if WoL is used
+>> - In macb_resume(), complete reset of the controller is kept only for non-WoL
+>>    case. For the WoL case, we only replace the usual IRQ handler.
+>>
+>>   drivers/net/ethernet/cadence/macb.h      |   3 +
+>>   drivers/net/ethernet/cadence/macb_main.c | 134 ++++++++++++++++++++---
+>>   2 files changed, 119 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+>> index ab827fb4b6b9..4f1b41569260 100644
+>> --- a/drivers/net/ethernet/cadence/macb.h
+>> +++ b/drivers/net/ethernet/cadence/macb.h
+>> @@ -90,6 +90,7 @@
+>>   #define GEM_SA3T		0x009C /* Specific3 Top */
+>>   #define GEM_SA4B		0x00A0 /* Specific4 Bottom */
+>>   #define GEM_SA4T		0x00A4 /* Specific4 Top */
+>> +#define GEM_WOL			0x00b8 /* Wake on LAN */
+>>   #define GEM_EFTSH		0x00e8 /* PTP Event Frame Transmitted Seconds Register 47:32 */
+>>   #define GEM_EFRSH		0x00ec /* PTP Event Frame Received Seconds Register 47:32 */
+>>   #define GEM_PEFTSH		0x00f0 /* PTP Peer Event Frame Transmitted Seconds Register 47:32 */
+>> @@ -396,6 +397,8 @@
+>>   #define MACB_PDRSFT_SIZE	1
+>>   #define MACB_SRI_OFFSET		26 /* TSU Seconds Register Increment */
+>>   #define MACB_SRI_SIZE		1
+>> +#define GEM_WOL_OFFSET		28 /* Enable wake-on-lan interrupt */
+>> +#define GEM_WOL_SIZE		1
+>>   
+>>   /* Timer increment fields */
+>>   #define MACB_TI_CNS_OFFSET	0
+>> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+>> index 8cf8e21fbb07..56ce39dd1cc0 100644
+>> --- a/drivers/net/ethernet/cadence/macb_main.c
+>> +++ b/drivers/net/ethernet/cadence/macb_main.c
+>> @@ -1513,6 +1513,35 @@ static void macb_tx_restart(struct macb_queue *queue)
+>>   	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(TSTART));
+>>   }
+>>   
+>> +static irqreturn_t gem_wol_interrupt(int irq, void *dev_id)
+>> +{
+>> +	struct macb_queue *queue = dev_id;
+>> +	struct macb *bp = queue->bp;
+>> +	u32 status;
+>> +
+>> +	status = queue_readl(queue, ISR);
+>> +
+>> +	if (unlikely(!status))
+>> +		return IRQ_NONE;
+>> +
+>> +	spin_lock(&bp->lock);
+>> +
+>> +	if (status & GEM_BIT(WOL)) {
+>> +		queue_writel(queue, IDR, GEM_BIT(WOL));
+>> +		gem_writel(bp, WOL, 0);
+>> +		netdev_vdbg(bp->dev, "GEM WoL: queue = %u, isr = 0x%08lx\n",
+>> +			    (unsigned int)(queue - bp->queues),
+>> +			    (unsigned long)status);
+>> +		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
+>> +			queue_writel(queue, ISR, GEM_BIT(WOL));
+>> +		pm_wakeup_event(&bp->pdev->dev, 0);
+>> +	}
+>> +
+>> +	spin_unlock(&bp->lock);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>>   static irqreturn_t macb_interrupt(int irq, void *dev_id)
+>>   {
+>>   	struct macb_queue *queue = dev_id;
+>> @@ -3306,6 +3335,8 @@ static const struct ethtool_ops macb_ethtool_ops = {
+>>   static const struct ethtool_ops gem_ethtool_ops = {
+>>   	.get_regs_len		= macb_get_regs_len,
+>>   	.get_regs		= macb_get_regs,
+>> +	.get_wol		= macb_get_wol,
+>> +	.set_wol		= macb_set_wol,
+>>   	.get_link		= ethtool_op_get_link,
+>>   	.get_ts_info		= macb_get_ts_info,
+>>   	.get_ethtool_stats	= gem_get_ethtool_stats,
+>> @@ -4534,20 +4565,54 @@ static int __maybe_unused macb_suspend(struct device *dev)
+>>   	struct macb_queue *queue = bp->queues;
+>>   	unsigned long flags;
+>>   	unsigned int q;
+>> +	int err;
+>>   
+>>   	if (!netif_running(netdev))
+>>   		return 0;
+>>   
+>>   	if (bp->wol & MACB_WOL_ENABLED) {
+>> -		macb_writel(bp, IER, MACB_BIT(WOL));
+>> -		macb_writel(bp, WOL, MACB_BIT(MAG));
+>> -		enable_irq_wake(bp->queues[0].irq);
+>> -		netif_device_detach(netdev);
+>> -	} else {
+>> -		netif_device_detach(netdev);
+>> +		spin_lock_irqsave(&bp->lock, flags);
+>> +		/* Flush all status bits */
+>> +		macb_writel(bp, TSR, -1);
+>> +		macb_writel(bp, RSR, -1);
+>>   		for (q = 0, queue = bp->queues; q < bp->num_queues;
+>> -		     ++q, ++queue)
+>> -			napi_disable(&queue->napi);
+>> +		     ++q, ++queue) {
+>> +			/* Disable all interrupts */
+>> +			queue_writel(queue, IDR, -1);
+>> +			queue_readl(queue, ISR);
+>> +			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
+>> +				queue_writel(queue, ISR, -1);
+>> +		}
+>> +		/* Change interrupt handler and
+>> +		 * Enable WoL IRQ on queue 0
+>> +		 */
+>> +		if (macb_is_gem(bp)) {
+> 
+> Couldn't this starting here:
+> 
+>> +			devm_free_irq(dev, bp->queues[0].irq, bp->queues);
+>> +			err = devm_request_irq(dev, bp->queues[0].irq, gem_wol_interrupt,
+>> +					       IRQF_SHARED, netdev->name, bp->queues);
+>> +			if (err) {
+>> +				dev_err(dev,
+>> +					"Unable to request IRQ %d (error %d)\n",
+>> +					bp->queues[0].irq, err);
+>> +				return err;
+>> +			}
+> 
+> ending ^ (and the equivalent in resume function) be avoided by moving the
+> content of gem_wol_interrupt:
+> 
+> +	if (status & GEM_BIT(WOL)) {
+> +		queue_writel(queue, IDR, GEM_BIT(WOL));
+> +		gem_writel(bp, WOL, 0);
+> +		netdev_vdbg(bp->dev, "GEM WoL: queue = %u, isr = 0x%08lx\n",
+> +			    (unsigned int)(queue - bp->queues),
+> +			    (unsigned long)status);
+> +		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
+> +			queue_writel(queue, ISR, GEM_BIT(WOL));
+> +		pm_wakeup_event(&bp->pdev->dev, 0);
+> +	}
+> 
+> at the beginning of macb_interrupt() and issuing a return after
+> pm_wakeup_event()?
+> 
+> Instead of these:
+> 
+>> +			queue_writel(bp->queues, IER, GEM_BIT(WOL));
+>> +			gem_writel(bp, WOL, MACB_BIT(MAG));
+>> +		} else {
+>> +			queue_writel(bp->queues, IER, MACB_BIT(WOL));
+>> +			macb_writel(bp, WOL, MACB_BIT(MAG));
+>> +		}
+> 
+> You could use:
+> 		queue_writel(bp->queues, IER, GEM_BIT(WOL));
+> 		macb_or_gem_writel(bp, WOL, MACB_BIT(MAG))
 
->
-> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-> Signed-off-by: David Gow <davidgow@google.com>
-> ---
->  Documentation/dev-tools/kasan.rst | 70 +++++++++++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->
-> diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
-> index c652d740735d..74fa6aa0f0df 100644
-> --- a/Documentation/dev-tools/kasan.rst
-> +++ b/Documentation/dev-tools/kasan.rst
-> @@ -281,3 +281,73 @@ unmapped. This will require changes in arch-specific code.
->
->  This allows ``VMAP_STACK`` support on x86, and can simplify support of
->  architectures that do not have a fixed module region.
-> +
-> +CONFIG_TEST_KASAN_KUNIT & CONFIG_TEST_KASAN_MODULE
-> +--------------------------------------------------
-> +
-> +``CONFIG_TEST_KASAN_KUNIT`` utilizes the KUnit Test Framework for testing.
-> +This means each test focuses on a small unit of functionality and
-> +there are a few ways these tests can be run.
-> +
-> +Each test will print the KASAN report if an error is detected and then
-> +print the number of the test and the status of the test:
-> +
-> +pass::
-> +
-> +        ok 28 - kmalloc_double_kzfree
-> +or, if kmalloc failed::
-> +
-> +        # kmalloc_large_oob_right: ASSERTION FAILED at lib/test_kasan.c:163
-> +        Expected ptr is not null, but is
-> +        not ok 4 - kmalloc_large_oob_right
-> +or, if a KASAN report was expected, but not found::
-> +
-> +        # kmalloc_double_kzfree: EXPECTATION FAILED at lib/test_kasan.c:629
-> +        Expected kasan_data->report_expected == kasan_data->report_found, but
-> +        kasan_data->report_expected == 1
-> +        kasan_data->report_found == 0
-> +        not ok 28 - kmalloc_double_kzfree
-> +
-> +All test statuses are tracked as they run and an overall status will
-> +be printed at the end::
-> +
-> +        ok 1 - kasan_kunit_test
-> +
-> +or::
-> +
-> +        not ok 1 - kasan_kunit_test
-> +
-> +(1) Loadable Module
-> +~~~~~~~~~~~~~~~~~~~~
-> +
-> +With ``CONFIG_KUNIT`` enabled, ``CONFIG_TEST_KASAN_KUNIT`` can be built as
-> +a loadable module and run on any architecture that supports KASAN
-> +using something like insmod or modprobe.
-> +
-> +(2) Built-In
-> +~~~~~~~~~~~~~
-> +
-> +With ``CONFIG_KUNIT`` built-in, ``CONFIG_TEST_KASAN_KUNIT`` can be built-in
-> +on any architecure that supports KASAN. These and any other KUnit
-> +tests enabled will run and print the results at boot as a late-init
-> +call.
-> +
-> +(3) Using kunit_tool
-> +~~~~~~~~~~~~~~~~~~~~~
-> +
-> +With ``CONFIG_KUNIT`` and ``CONFIG_TEST_KASAN`` built-in, we can also
+This was my first though, even if it added one more test to the 
+interrupt routine even when WoL is not enabled.
 
-CONFIG_TEST_KASAN_KUNIT here
+But where it's becoming annoying is that what you highlight above as:
+if (status & GEM_BIT(WOL))
+for GEM, is actually:
+if (status & MACB_BIT(WOL))
+for MACB...
+which means that we have to test controller's revision for each 
+interrupt before knowing if the WoL one is activated or not. To my mind, 
+it's really loosing CPU power where we are already chasing for it in our 
+little SoC configurations. Moreover for something which is fairly 
+specialized to some use cases.
 
-> +use kunit_tool to see the results of these along with other KUnit
-> +tests in a more readable way. This will not print the KASAN reports
-> +of tests that passed. Use `KUnit documentation <https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html>`_ for more up-to-date
-> +information on kunit_tool.
-> +
-> +.. _KUnit: https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html
-> +
-> +``CONFIG_TEST_KASAN_MODULE`` is a set of KASAN tests that could not be
-> +converted to KUnit. These tests can be run only as a module with
-> +``CONFIG_TEST_KASAN_MODULE`` built as a loadable module and
-> +``CONFIG_KASAN`` built-in. The type of error expected and the
-> +function being run is printed before the expression expected to give
-> +an error. Then the error is printed, if found, and that test
-> +should be interpretted to pass only if the error was the one expected
-> +by the test.
-> --
-> 2.26.1.301.g55bc3eb7cb9-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200418031833.234942-5-davidgow%40google.com.
+If found a solution by specializing the IRQ routine just during 
+suspend/resume.
+
+
+>> +		spin_unlock_irqrestore(&bp->lock, flags);
+>> +
+>> +		enable_irq_wake(bp->queues[0].irq);
+>> +	}
+>> +
+>> +	netif_device_detach(netdev);
+>> +	for (q = 0, queue = bp->queues; q < bp->num_queues;
+>> +	     ++q, ++queue)
+>> +		napi_disable(&queue->napi);
+>> +
+>> +	if (!(bp->wol & MACB_WOL_ENABLED)) {
+>>   		rtnl_lock();
+>>   		phylink_stop(bp->phylink);
+>>   		rtnl_unlock();
+>> @@ -4575,7 +4640,9 @@ static int __maybe_unused macb_resume(struct device *dev)
+>>   	struct net_device *netdev = dev_get_drvdata(dev);
+>>   	struct macb *bp = netdev_priv(netdev);
+>>   	struct macb_queue *queue = bp->queues;
+>> +	unsigned long flags;
+>>   	unsigned int q;
+>> +	int err;
+>>   
+>>   	if (!netif_running(netdev))
+>>   		return 0;
+>> @@ -4584,29 +4651,60 @@ static int __maybe_unused macb_resume(struct device *dev)
+>>   		pm_runtime_force_resume(dev);
+>>   
+>>   	if (bp->wol & MACB_WOL_ENABLED) {
+>> -		macb_writel(bp, IDR, MACB_BIT(WOL));
+>> -		macb_writel(bp, WOL, 0);
+>> +		spin_lock_irqsave(&bp->lock, flags);
+>> +		/* Disable WoL */
+>> +		if (macb_is_gem(bp)) {
+>> +			queue_writel(bp->queues, IDR, GEM_BIT(WOL));
+>> +			gem_writel(bp, WOL, 0);
+>> +		} else {
+>> +			queue_writel(bp->queues, IDR, MACB_BIT(WOL));
+>> +			macb_writel(bp, WOL, 0);
+>> +		}
+>> +		/* Clear ISR on queue 0 */
+>> +		queue_readl(bp->queues, ISR);
+>> +		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
+>> +			queue_writel(bp->queues, ISR, -1);
+>> +		/* Replace interrupt handler on queue 0 */
+>> +		devm_free_irq(dev, bp->queues[0].irq, bp->queues);
+>> +		err = devm_request_irq(dev, bp->queues[0].irq, macb_interrupt,
+>> +				       IRQF_SHARED, netdev->name, bp->queues);
+>> +		if (err) {
+>> +			dev_err(dev,
+>> +				"Unable to request IRQ %d (error %d)\n",
+>> +				bp->queues[0].irq, err);
+>> +			return err;
+>> +		}
+>> +		/* Enable interrupts */
+>> +		for (q = 0, queue = bp->queues; q < bp->num_queues;
+>> +		     ++q, ++queue)
+>> +			queue_writel(queue, IER,
+>> +				     bp->rx_intr_mask |
+>> +				     MACB_TX_INT_FLAGS |
+>> +				     MACB_BIT(HRESP));
+>> +		spin_unlock_irqrestore(&bp->lock, flags);
+>> +
+>>   		disable_irq_wake(bp->queues[0].irq);
+>> -	} else {
+>> -		macb_writel(bp, NCR, MACB_BIT(MPE));
+>> +	}
+>> +
+>> +	for (q = 0, queue = bp->queues; q < bp->num_queues;
+>> +	     ++q, ++queue)
+>> +		napi_enable(&queue->napi);
+>>   
+>> +	if (!(bp->wol & MACB_WOL_ENABLED)) {
+>>   		if (netdev->hw_features & NETIF_F_NTUPLE)
+>>   			gem_writel_n(bp, ETHT, SCRT2_ETHT, bp->pm_data.scrt2);
+>>   
+>>   		if (!(bp->caps & MACB_CAPS_USRIO_DISABLED))
+>>   			macb_or_gem_writel(bp, USRIO, bp->pm_data.usrio);
+>>   
+>> -		for (q = 0, queue = bp->queues; q < bp->num_queues;
+>> -		     ++q, ++queue)
+>> -			napi_enable(&queue->napi);
+>> +		macb_init_hw(bp);
+>> +		macb_set_rx_mode(netdev);
+>> +		macb_restore_features(bp);
+> 
+> Even WoL may not be available in backup and self-refresh mode (present on
+> SAMA5D2 devices), switching to BSR mode while WoL is enabled may lead to
+> ethernet being unavailable after resuming. Did you manage to test this
+> scenario?
+
+WoL is not available for BSR. But... it's an interesting scenario indeed 
+;-) Which I didn't test.
+
+I have to think about it and come back with a solution to this. Thanks 
+Claudiu for having found that.
+
+>>   		rtnl_lock();
+>>   		phylink_start(bp->phylink);
+>>   		rtnl_unlock();
+>>   	}
+>>   
+>> -	macb_init_hw(bp);
+>> -	macb_set_rx_mode(netdev);
+>> -	macb_restore_features(bp);
+>>   	netif_device_attach(netdev);
+>>   	if (bp->ptp_info)
+>>   		bp->ptp_info->ptp_init(netdev);
+
+Best regards,
+-- 
+Nicolas Ferre
