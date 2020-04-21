@@ -2,195 +2,220 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759C9C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49044C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2562071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DD52071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:59:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PHB69R7o"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Cje0RUyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgDUN6g (ORCPT
+        id S1729174AbgDUN7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:58:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59926 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728852AbgDUN5x (ORCPT
+        Tue, 21 Apr 2020 09:59:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728745AbgDUN7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:57:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587477471;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5GipQquvXdS60T0xD4t06gmL9kKohzWhQBgW2pGftGs=;
-        b=PHB69R7o2UCiOfbBuu6Q6vcQ8xOPXNr4q/fYz6yrM+vvdF9JDDv47kZAKUBFrYm+rNzqrX
-        lNeAhIakLVW/DXhxZsNanVNGHjId8aNKRbGM7DQLqCZo5PVnNADig8PotLoAgplV2T6C+g
-        jvUevzVoASftwSWkQX9cjw3InM9MOMU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-322-wTRWWYtgOuq_zkP19Uuw_w-1; Tue, 21 Apr 2020 09:57:49 -0400
-X-MC-Unique: wTRWWYtgOuq_zkP19Uuw_w-1
-Received: by mail-wr1-f69.google.com with SMTP id t8so7469176wrq.22
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:57:49 -0700 (PDT)
+        Tue, 21 Apr 2020 09:59:11 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ADC6C061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:59:11 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id e26so3664548wmk.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 06:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GFhVcwNkH19cbR+cE1ypfH56nXaAVZCLec2xJqB4kFg=;
+        b=Cje0RUyUW8yZe79iZsor+8dzm23NXNZJ6S9VH8UVO9QRfVvhQ3rggw5tCYa3jMeE7p
+         3qJjIF8mqBY9qgK1Htwamf5L8vvpm7FUqIK8p1ZB11DdtpdZ3YeJxD5P999SiexzhLNA
+         P3E77WgVZvTJGej9UVAmIT7dFemOmy5x3SZ20=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5GipQquvXdS60T0xD4t06gmL9kKohzWhQBgW2pGftGs=;
-        b=uFy1dN2xNSI5d1mfJ0tRpfGZvmRNBx514OkzHJeekOZQFY5c0T70FwENm+2oQBYZs1
-         T8bsfOl1mMvWNvy5IVXZG1wVibSKXpKrDOfAqy4gIKIvN018QznX71ySCkF4NoW9CN8o
-         /IBZALWoJrspgf+L7xvs8igC0PYw0gJrIvnS1ezWygB0V7iIAkffOVS2G2cnnxeWuJyD
-         ReLWCshh3MSD+uV3hffZ8PK5zmjj8Jktqa51pYjVIVcrgyVXy8p7J7ON51B+dLWvbJQe
-         yEW9+jKyF78ul5JWmqUXlfzCBu0JFHV+8X5OcgWI51K//9cJ/C4ZordDy9nus68MwPYa
-         lpkg==
-X-Gm-Message-State: AGi0PuZnhG3cm1mF7h/ky7jutLjwwmnqRtN502AkwJvnRhOUoL8b38uX
-        uOSrfxajUFsLMZHBZGmvlSD4gdlhV1A7fzASSDeWy8O6n2ygmDT/d+Dy5pso8SlP4kJEpmx82XD
-        BCuNW4/I8xkF9ZgYgH3f/u38+
-X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr3548545wrx.203.1587477468497;
-        Tue, 21 Apr 2020 06:57:48 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIF3TEMFKgVlkqjV5D8Ac9x2gOX23CIH+SaywYNkeLA37qXXTG9GqXHBVuGZrEE7VAAb2MwEw==
-X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr3548522wrx.203.1587477468324;
-        Tue, 21 Apr 2020 06:57:48 -0700 (PDT)
-Received: from localhost.localdomain.com ([194.230.155.194])
-        by smtp.gmail.com with ESMTPSA id f23sm3562989wml.4.2020.04.21.06.57.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=GFhVcwNkH19cbR+cE1ypfH56nXaAVZCLec2xJqB4kFg=;
+        b=G/Z1o26KnaFjZgZr5hPcADsNsN7YafpqAMnFXHSuxy4T4aCXdFspxiagNhxtd6LYFy
+         TTot7q65Kd4adG2LCBXHFOJhkZBiiTcr7KHzMvoCplWHzdsbrbrdIYH5nRmJ4KV11GqZ
+         iWsAm93ZiP45jQO8xeEUtVlWy8xwl0plvQ7GigFvkXRO/UsKYdIBGFstxOwG79FTNQTV
+         yMlI0IV2i5vLUhU6v1pXAaasfE1k6HJrsEqD4O6CSyvUgjg4CEMDe+rxOMra7G+vMnXP
+         /2izwmi2lPf0pHiz2KBamMYCmo2HveOM021pF9y5S6r4qrGVDxHhyFZkRe2jvKAeq85d
+         KR5A==
+X-Gm-Message-State: AGi0PuahjyX8UCwecqvjGc/j1vDXt0sdi4nrjwnZCse/2J5/tl7BFiIt
+        xjuKJCmQusxRQGwapUXSn3k84g==
+X-Google-Smtp-Source: APiQypIThebpIsiA00RlINe3F/bJOmBXZSBWSdmsF3bQaYRTVrY4O3DozqrT76sEJG1Uw2UhgdLnBA==
+X-Received: by 2002:a7b:cdfa:: with SMTP id p26mr5000192wmj.186.1587477550341;
+        Tue, 21 Apr 2020 06:59:10 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id d5sm3863822wrp.44.2020.04.21.06.59.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 06:57:47 -0700 (PDT)
-From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Manoj N. Kumar" <manoj@linux.ibm.com>,
-        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
-        Uma Krishnan <ukrishn@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Subject: [PATCH v2 4/7] libfs: add alloc_anon_inode wrapper
-Date:   Tue, 21 Apr 2020 15:57:38 +0200
-Message-Id: <20200421135741.30657-2-eesposit@redhat.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200421135119.30007-1-eesposit@redhat.com>
-References: <20200421135119.30007-1-eesposit@redhat.com>
+        Tue, 21 Apr 2020 06:59:09 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 15:59:07 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] drm/meson: add mode selection limits against specific
+ SoC revisions
+Message-ID: <20200421135907.GC3456981@phenom.ffwll.local>
+Mail-Followup-To: Neil Armstrong <narmstrong@baylibre.com>,
+        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200421134410.30603-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421134410.30603-1-narmstrong@baylibre.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-libfs.c has many functions that are useful to implement dentry and inode
-operations, but not many at the filesystem level. Start adding file
-creation wrappers, the simplest returns an anonymous inode.
+On Tue, Apr 21, 2020 at 03:44:10PM +0200, Neil Armstrong wrote:
+> The Amlogic S805X/Y uses the same die as the S905X, but with more
+> limited graphics capabilities.
+> 
+> This adds a soc version detection adding specific limitations on the HDMI
+> mode selections.
+> 
+> Here, we limit to HDMI 1.3a max HDMI PHY clock frequency.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-There is no functional change intended.
+Just a drive-by, but the code organization between the dw-hdmi bridge and
+the driver looks pretty terribly and really leaky. Can't we do better?
+Either by fixing the dw-hdmi bridge abstraction to actually abstract
+something, or by givin up the dw-hdmi is a bridge and convert it to some
+helper to implement a drm_encoder. Current status just doesn't make too
+much sense to me.
+-Daniel
 
-Signed-off-by: Emanuele Giuseppe Esposito <eesposit@redhat.com>
----
- drivers/gpu/drm/drm_drv.c       |  2 +-
- drivers/misc/cxl/api.c          |  2 +-
- drivers/scsi/cxlflash/ocxl_hw.c |  2 +-
- fs/libfs.c                      | 10 +++++++++-
- include/linux/fs.h              |  2 ++
- 5 files changed, 14 insertions(+), 4 deletions(-)
+> ---
+>  drivers/gpu/drm/meson/meson_drv.c     | 29 ++++++++++++++++++++++++++-
+>  drivers/gpu/drm/meson/meson_drv.h     |  6 ++++++
+>  drivers/gpu/drm/meson/meson_dw_hdmi.c |  7 +++++++
+>  3 files changed, 41 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+> index 6f29fab79952..621f6de0f076 100644
+> --- a/drivers/gpu/drm/meson/meson_drv.c
+> +++ b/drivers/gpu/drm/meson/meson_drv.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/component.h>
+>  #include <linux/module.h>
+>  #include <linux/of_graph.h>
+> +#include <linux/sys_soc.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/soc/amlogic/meson-canvas.h>
+>  
+> @@ -183,6 +184,24 @@ static void meson_remove_framebuffers(void)
+>  	kfree(ap);
+>  }
+>  
+> +struct meson_drm_soc_attr {
+> +	struct meson_drm_soc_limits limits;
+> +	const struct soc_device_attribute *attrs;
+> +};
+> +
+> +static const struct meson_drm_soc_attr meson_drm_soc_attrs[] = {
+> +	/* S805X/S805Y HDMI PLL won't lock for HDMI PHY freq > 1,65GHz */
+> +	{
+> +		.limits = {
+> +			.max_hdmi_phy_freq = 1650000,
+> +		},
+> +		.attrs = (const struct soc_device_attribute []) {
+> +			{ .soc_id = "GXL (S805*)", },
+> +			{ /* sentinel */ },
+> +		}
+> +	},
+> +};
+> +
+>  static int meson_drv_bind_master(struct device *dev, bool has_components)
+>  {
+>  	struct platform_device *pdev = to_platform_device(dev);
+> @@ -191,7 +210,7 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
+>  	struct drm_device *drm;
+>  	struct resource *res;
+>  	void __iomem *regs;
+> -	int ret;
+> +	int ret, i;
+>  
+>  	/* Checks if an output connector is available */
+>  	if (!meson_vpu_has_available_connectors(dev)) {
+> @@ -281,6 +300,14 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
+>  	if (ret)
+>  		goto free_drm;
+>  
+> +	/* Assign limits per soc revision/package */
+> +	for (i = 0 ; i < ARRAY_SIZE(meson_drm_soc_attrs) ; ++i) {
+> +		if (soc_device_match(meson_drm_soc_attrs[i].attrs)) {
+> +			priv->limits = &meson_drm_soc_attrs[i].limits;
+> +			break;
+> +		}
+> +	}
+> +
+>  	/* Remove early framebuffers (ie. simplefb) */
+>  	meson_remove_framebuffers();
+>  
+> diff --git a/drivers/gpu/drm/meson/meson_drv.h b/drivers/gpu/drm/meson/meson_drv.h
+> index 04fdf3826643..5b23704a80d6 100644
+> --- a/drivers/gpu/drm/meson/meson_drv.h
+> +++ b/drivers/gpu/drm/meson/meson_drv.h
+> @@ -30,6 +30,10 @@ struct meson_drm_match_data {
+>  	struct meson_afbcd_ops *afbcd_ops;
+>  };
+>  
+> +struct meson_drm_soc_limits {
+> +	unsigned int max_hdmi_phy_freq;
+> +};
+> +
+>  struct meson_drm {
+>  	struct device *dev;
+>  	enum vpu_compatible compat;
+> @@ -48,6 +52,8 @@ struct meson_drm {
+>  	struct drm_plane *primary_plane;
+>  	struct drm_plane *overlay_plane;
+>  
+> +	const struct meson_drm_soc_limits *limits;
+> +
+>  	/* Components Data */
+>  	struct {
+>  		bool osd1_enabled;
+> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> index e8c94915a4fc..dc3d5122475a 100644
+> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> @@ -695,6 +695,13 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
+>  	dev_dbg(connector->dev->dev, "%s: vclk:%d phy=%d venc=%d hdmi=%d\n",
+>  		__func__, phy_freq, vclk_freq, venc_freq, hdmi_freq);
+>  
+> +	/* Check against soc revision/package limits */
+> +	if (priv->limits) {
+> +		if (priv->limits->max_hdmi_phy_freq &&
+> +		    phy_freq > priv->limits->max_hdmi_phy_freq)
+> +			return MODE_CLOCK_HIGH;
+> +	}
+> +
+>  	return meson_vclk_vic_supported_freq(phy_freq, vclk_freq);
+>  }
+>  
+> -- 
+> 2.22.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-index e29424d64874..1854f760ad39 100644
---- a/drivers/gpu/drm/drm_drv.c
-+++ b/drivers/gpu/drm/drm_drv.c
-@@ -539,7 +539,7 @@ static struct inode *drm_fs_inode_new(void)
- 		return ERR_PTR(r);
- 	}
- 
--	inode = alloc_anon_inode(drm_fs.mount->mnt_sb);
-+	inode = simple_alloc_anon_inode(&drm_fs);
- 	if (IS_ERR(inode))
- 		simple_release_fs(&drm_fs);
- 
-diff --git a/drivers/misc/cxl/api.c b/drivers/misc/cxl/api.c
-index 67e4808bce49..57672abb6223 100644
---- a/drivers/misc/cxl/api.c
-+++ b/drivers/misc/cxl/api.c
-@@ -72,7 +72,7 @@ static struct file *cxl_getfile(const char *name,
- 		goto err_module;
- 	}
- 
--	inode = alloc_anon_inode(cxl_fs.mount->mnt_sb);
-+	inode = simple_alloc_anon_inode(&cxl_fs);
- 	if (IS_ERR(inode)) {
- 		file = ERR_CAST(inode);
- 		goto err_fs;
-diff --git a/drivers/scsi/cxlflash/ocxl_hw.c b/drivers/scsi/cxlflash/ocxl_hw.c
-index 7fa98dd4fa28..0e9f2ae7eebf 100644
---- a/drivers/scsi/cxlflash/ocxl_hw.c
-+++ b/drivers/scsi/cxlflash/ocxl_hw.c
-@@ -85,7 +85,7 @@ static struct file *ocxlflash_getfile(struct device *dev, const char *name,
- 		goto err2;
- 	}
- 
--	inode = alloc_anon_inode(ocxlflash_fs.mount->mnt_sb);
-+	inode = simple_alloc_anon_inode(&ocxlflash_fs);
- 	if (IS_ERR(inode)) {
- 		rc = PTR_ERR(inode);
- 		dev_err(dev, "%s: alloc_anon_inode failed rc=%d\n",
-diff --git a/fs/libfs.c b/fs/libfs.c
-index 3fa0cd27ab06..5c76e4c648dc 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -741,7 +741,15 @@ void simple_release_fs(struct simple_fs *fs)
- }
- EXPORT_SYMBOL(simple_release_fs);
- 
--
-+/**
-+ * simple_alloc_anon_inode - wrapper for alloc_anon_inode
-+ * @fs: a pointer to a struct simple_fs containing a valid vfs_mount pointer
-+ **/
-+struct inode *simple_alloc_anon_inode(struct simple_fs *fs)
-+{
-+	return alloc_anon_inode(fs->mount->mnt_sb);
-+}
-+EXPORT_SYMBOL(simple_alloc_anon_inode);
- 
- /**
-  * simple_read_from_buffer - copy data from the buffer to user space
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index de2577df30ae..5e93de72118b 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3373,6 +3373,8 @@ struct simple_fs {
- extern int simple_pin_fs(struct simple_fs *, struct file_system_type *);
- extern void simple_release_fs(struct simple_fs *);
- 
-+extern struct inode *simple_alloc_anon_inode(struct simple_fs *fs);
-+
- extern ssize_t simple_read_from_buffer(void __user *to, size_t count,
- 			loff_t *ppos, const void *from, size_t available);
- extern ssize_t simple_write_to_buffer(void *to, size_t available, loff_t *ppos,
 -- 
-2.25.2
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
