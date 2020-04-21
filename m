@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A3EC55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C07C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E08D2071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BFC2071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:01:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Md9y6ssM"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="2P4upNIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgDUIBU (ORCPT
+        id S1728363AbgDUIBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:01:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45046 "EHLO
+        Tue, 21 Apr 2020 04:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728290AbgDUIBR (ORCPT
+        with ESMTP id S1728337AbgDUIBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:01:17 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD36C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:01:17 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id u13so15339739wrp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:01:17 -0700 (PDT)
+        Tue, 21 Apr 2020 04:01:20 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1169FC061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:01:20 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x18so15368374wrq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:01:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PW/4clGD+cpV/fhovnrun++NoVB5+LjULUtHoJY62Ro=;
-        b=Md9y6ssMrmxnRFOzwDtyc3RnxZm3nSdhd7K9l4xzl4/VWbFceYuflIerAN7he2TWFR
-         oNTsfEn2Q6Xkb3ecjkbJckzrNkaSGdUuulC6mufGJ0jAlNBQOajgMkfnBBYE58ikB4r1
-         ISX+etHAS7QP2Uc9I/db4Odza0EoQwgn5DeeShK/I0SQKdFqU3zsuRnlUXGV2Cj/sSeC
-         ei2xrxhha8RcR2Fu5PDtUnOPbzmaKYNFRcNmSArTvonErYUEP4N0gFApNgUGVf+xoAki
-         c/Wi3kdy5iDqG9ZoiKx3UYAhlH7T0vOITbplT1K4cn1POCpdoRtyeeZFvedC054JqDc/
-         gDQA==
+        bh=itZ8nYpO9rVwAB+XOSiZ1Zaz+WlUMeN8KYJbRrgai8w=;
+        b=2P4upNIcIwgvXsINcNwMKuLoNxfbr7DA+Jnu8ANYIWyy5/smGGvO2txOPebp357SyM
+         9xtX+ZfPGfwrIPzvc5j36V2tN3+T1D+q3dwpBGFE7VWJMfZzVUcqeB+umjUadUUjSCq4
+         dATQNiLI4T751oM+fcu4U/Y5XgsSygl4fgAYRVtuCQrFEXrvrVqsI9pgHO4pzjVa1d2T
+         x/g46FT49QfIbn30BHst4ECbSzYAcH8x1/3QHciYWeaJJLSUi9kpiF14nf+kIFgFYPdr
+         z7RlPTlHlYTEHzsbmqAs+tXOYt5s2M3tLDtDiyBpBUbkaQQNjDkzXMclSxyyLuFi0kbu
+         iiBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PW/4clGD+cpV/fhovnrun++NoVB5+LjULUtHoJY62Ro=;
-        b=g+b106olaHWVuZfSKmTepuvsCD+pYvdcyM5aBPI3je4KKT8MYOxrUmN6Bcpp1FqNjK
-         JCvsB5p0cN2fzmnC+w6BBrLDHa0HnNNzlg0nxlbXuk7NdC+uZN/Ip8zL8G9Pzzz+4VE9
-         jE0EHEFcB+OFHBZD7AZGh3kp0BorRYnNYYKLNPSYAPPrbuVSg6a1yigMEpFxTKsqYZ8z
-         X92U2DSpYNUnUCkkfy44WXUbQQ1PaaIoIS4krmutYM2pRrz+S29XSRsX/Xosfcneqf5S
-         n9SAXyADKNaRRX1ATU8RFwjtzws0sW2zrgVZbLMe8zkxqvv8s/7WsgWTnn1bvFe/D3Ke
-         NSBw==
-X-Gm-Message-State: AGi0PubzvV9c8Z1aI1X8anOVaSKxbDR0bBo6rmEjSh3BRMiQlUfXn1wg
-        8hbfVjNre3mH23GbIxe9ntK6MQ==
-X-Google-Smtp-Source: APiQypL3utEsf7dB2jih1sknlBtO+Mz3QtokX8dpUitlTh5nRmGcN9zA3N6rmgcof9M+WmyytjSehg==
-X-Received: by 2002:a5d:4a4b:: with SMTP id v11mr21989927wrs.32.1587456075927;
-        Tue, 21 Apr 2020 01:01:15 -0700 (PDT)
+        bh=itZ8nYpO9rVwAB+XOSiZ1Zaz+WlUMeN8KYJbRrgai8w=;
+        b=GV4jYwoYDUx+sYXp0/pB8dyVI5N22xYaQ2q1W5HKqFDJyVDDhc4Z1Ly6DgXCIK+KrQ
+         DKfn85Meg7E6hlwIO1nWSDsqw0hqD3LqH7Te7lIGwtbW4E1meq8D4je3nR/Utfs1swMB
+         3cXVp160lkngQqK3wXARajHRzGrHMEUsADbrtpi4GIhC2fAaXeroaZtlPmKLjkYys9N2
+         1P46OeInt5jggwgIHMjw7eWwlom53PHx3j8IdXNMHLN+RhcO9SeTrFBVDD42uImOxH62
+         K/xpt5cA4QiwMrKtvFU0cY0+iHfurtWRe60tEYoTgQokFD/bv7Qy5MH0j9Zz/17M9jBz
+         jWhg==
+X-Gm-Message-State: AGi0PuaPZLtQMdvUUXks88CVYtobpa87LBNd6NadErVLnVvSeWM/P3Hp
+        nNK0KyJAg8Zp7ZmT5Y7ctuXeYA==
+X-Google-Smtp-Source: APiQypJ7I94NWf5qVdER06WU1+s/LCyUTU03msM+BLEEdT8t06/AWQHMkHiC71sCWlgXL4pKvRiNdw==
+X-Received: by 2002:adf:db41:: with SMTP id f1mr21790458wrj.13.1587456078705;
+        Tue, 21 Apr 2020 01:01:18 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
-        by smtp.gmail.com with ESMTPSA id x132sm2561552wmg.33.2020.04.21.01.01.14
+        by smtp.gmail.com with ESMTPSA id x132sm2561552wmg.33.2020.04.21.01.01.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 01:01:15 -0700 (PDT)
+        Tue, 21 Apr 2020 01:01:18 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     nick@khadas.com, art@khadas.com,
         Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-hwmon@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC 6/8] arm64: dts: meson-g12b: move G12B thermal nodes to meson-g12b.dtsi
-Date:   Tue, 21 Apr 2020 10:01:00 +0200
-Message-Id: <20200421080102.22796-7-narmstrong@baylibre.com>
+Subject: [RFC 8/8] arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
+Date:   Tue, 21 Apr 2020 10:01:02 +0200
+Message-Id: <20200421080102.22796-9-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200421080102.22796-1-narmstrong@baylibre.com>
 References: <20200421080102.22796-1-narmstrong@baylibre.com>
@@ -78,78 +78,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The G12B thermal nodes should be in the meson-g12b.dtsi file.
+Add the Khadas MCU node with active FAN thermal nodes for all the
+Khadas VIM3 variants.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12.dtsi  | 23 ---------------------
- arch/arm64/boot/dts/amlogic/meson-g12b.dtsi | 22 ++++++++++++++++++++
- 2 files changed, 22 insertions(+), 23 deletions(-)
+ .../boot/dts/amlogic/meson-khadas-vim3.dtsi   | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-index 783e5a397f86..e932205badea 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-@@ -355,29 +355,6 @@
- 	};
- };
- 
--&cpu_thermal {
--	cooling-maps {
--		map0 {
--			trip = <&cpu_passive>;
--			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
--		};
--		map1 {
--			trip = <&cpu_hot>;
--			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
--		};
--	};
--};
--
- &ethmac {
- 	power-domains = <&pwrc PWRC_G12A_ETH_ID>;
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-index 6dbc3968045b..9b8548e5f6e5 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-@@ -113,3 +113,25 @@
- 	compatible = "amlogic,g12b-clkc";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 094ecf2222bb..3325e54ea690 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -183,6 +183,23 @@
+ 	hdmi-phandle = <&hdmi_tx>;
  };
  
 +&cpu_thermal {
-+	cooling-maps {
-+		map0 {
-+			trip = <&cpu_passive>;
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++	trips {
++		cpu_active: cpu-active {
++			temperature = <80000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "active";
 +		};
-+		map1 {
-+			trip = <&cpu_hot>;
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++	};
++
++	cooling-maps {
++		map {
++			trip = <&cpu_active>;
++			cooling-device = <&khadas_mcu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +		};
 +	};
 +};
++
+ &ext_mdio {
+ 	external_phy: ethernet-phy@0 {
+ 		/* Realtek RTL8211F (0x001cc916) */
+@@ -222,6 +239,12 @@
+ 	pinctrl-0 = <&i2c_ao_sck_pins>, <&i2c_ao_sda_pins>;
+ 	pinctrl-names = "default";
+ 
++	khadas_mcu: system-controller@18 {
++		compatible = "khadas,mcu";
++		reg = <0x18>;
++		#cooling-cells = <2>;
++	};
++
+ 	gpio_expander: gpio-controller@20 {
+ 		compatible = "ti,tca6408";
+ 		reg = <0x20>;
 -- 
 2.22.0
 
