@@ -2,235 +2,333 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE63C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ED1C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF8C20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9CE3206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:34:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDZcdswI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgDUNeP (ORCPT
+        id S1728993AbgDUNey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:34:15 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38680 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728422AbgDUNeO (ORCPT
+        Tue, 21 Apr 2020 09:34:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728626AbgDUNew (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:34:14 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g19so1070170otk.5;
-        Tue, 21 Apr 2020 06:34:13 -0700 (PDT)
+        Tue, 21 Apr 2020 09:34:52 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD84C061A10;
+        Tue, 21 Apr 2020 06:34:51 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x4so3600554wmj.1;
+        Tue, 21 Apr 2020 06:34:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=5Q7u58F6l2JZ0p4YchFIOElg4tS0GMZkcm6JNAdwZZI=;
+        b=QDZcdswIp+68Yz7Ywiw7/gnRTKtUbva3CMYpFGowfLiD0OzofqIuDZQ7L5XevD9/Lq
+         9vjr9EzUlXOZenWWpwaGMWWsW0jcy32Y3VEAA4CSlOwFY/QAjoov/+47Ts2spuDa8vJO
+         g3g+6iptmh435ZzzLuvN7sUxFk1d0W0xEIRcEsVqVCeh7pGnsqVRHd3gSlcY1Lgc5tti
+         XG2LBKT3XmqYyca8AMKBp7NB+Riy7tmzL30pWuEXNxVP09rf7E2958relKFCqTxMuIfA
+         PmU6uXZwPzhdKsuyN1jmQFicL+o2I2AuTR62cFBGToAq8TRuh8gVSLy3O3FXDycJrqxd
+         N/iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lh5pVJZRcLVBFtKesabUO59pO9pTmaMQl3f9s4jugGY=;
-        b=rMjeWykbnunU7DIQCZ+K054kvjWz4FsTtfu7x4d6fSoL108s8HCXry/A5kRmojSF6u
-         Fflu5IEluoy6FLqDaNFIxBIRltUKoAsAPvpGtFiWUBzdmzmFPsR2/uah9y06wt7Gb4M/
-         Cl1/mQGwjcw/x45fSM6m9QvzqVo6Pt3Ye6gIzYaL7arC7vU6uw9fQTifvqdjsnZrL7hc
-         OgduFSXh6nYuLdFTbSadBVoATrMln9Jf3rxznvhXrIZlivMK/6gLZK5zQ7F8MnRlVTHr
-         tG3DpLYjA9AyDuHSOfs3I1I+bSiJnDLx2mKm5o5ZXG5TJaBsmrBBDKF3LUlsVObGz2L9
-         WoIw==
-X-Gm-Message-State: AGi0PuZc9S3ZK3+CRuedtRJrIUCuR0JHE9w3zwOiKg+wm/EA/gQR9Zy5
-        NOIFZs4m7elOm9FNwyajmA6IIKFHuEVY5kc42Wg=
-X-Google-Smtp-Source: APiQypKjSLZvCUom9i5XEMJJRF+xev9IVN+sAhLGeyV7fqmrQYYuyDhWvpuOL/sM0BJlaEAL07MAxjJetD+5d4xBD78=
-X-Received: by 2002:a9d:76c7:: with SMTP id p7mr13264034otl.145.1587476053078;
- Tue, 21 Apr 2020 06:34:13 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=5Q7u58F6l2JZ0p4YchFIOElg4tS0GMZkcm6JNAdwZZI=;
+        b=EXfzymtpMPMBbUHkhTeGC24XwWLeP1vGG7ytNQsQI3+13jeM8o9hBhwp8vbFfZY3Mu
+         CnscJB5WKyAMz2JZIHJVuYXjxIm1UyqXmMjv/R4Db7zpi9W4Uw0i53R1a3fAwvphqWZF
+         fsdI8LBqemdaTT0JaSD36T2c7cLjSMXHpYG42xJOabD+e38m46wMDihQdVwd33pLN2K/
+         6/bl8lUAy93N+33ty/Yo5B/H82zaGl5vYvv/1mVuHwlyuQJu1DwNWZoXnWku4sfyJonw
+         bMLxLeX3hGrCSbYEbtfDSGvzCiZ0OLBYtwXh2888oNdVkiW/vmamuO7SUDHZMhb6s6bz
+         jiMA==
+X-Gm-Message-State: AGi0PuZQy9E6if1MzLMuHjJfevKSRDbWXhknKB0bTpaXLUSEOYd1f0Qy
+        1TkeKbkTVirls/h5kn9ceGU=
+X-Google-Smtp-Source: APiQypI7Gkaitg2nS4icOQfpi/UHfFzKjKct0O7G1ATUREFnm/XrfEZxAS4WsUupim8vlrtZESFSLA==
+X-Received: by 2002:a1c:5fc4:: with SMTP id t187mr5193209wmb.181.1587476090363;
+        Tue, 21 Apr 2020 06:34:50 -0700 (PDT)
+Received: from [192.168.43.138] ([80.246.137.75])
+        by smtp.gmail.com with ESMTPSA id l9sm3815467wrq.83.2020.04.21.06.34.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 06:34:49 -0700 (PDT)
+Subject: Re: [PATCH v6 2/7] tpm: tpm_tis: Add check_data handle to
+ tpm_tis_phy_ops
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Christophe Ricard <christophe-h.ricard@st.com>
+References: <20200407162044.168890-1-amirmizi6@gmail.com>
+ <20200407162044.168890-3-amirmizi6@gmail.com>
+ <20200408183324.GB33486@linux.intel.com>
+From:   Amir Mizinski <amirmizi6@gmail.com>
+Message-ID: <0cfa0486-8ccb-d7d1-acf2-ca103f723b3a@gmail.com>
+Date:   Tue, 21 Apr 2020 13:34:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
- <1585289423-18440-3-git-send-email-hadar.gat@arm.com> <CAMuHMdV6Uce79MPs7jfJfX3WOqAMH22vf2V_=Ui0zLHYqsJ+Xg@mail.gmail.com>
- <DB6PR0802MB25338BD19DD2F7E662BB1065E9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-In-Reply-To: <DB6PR0802MB25338BD19DD2F7E662BB1065E9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 Apr 2020 15:34:01 +0200
-Message-ID: <CAMuHMdWujabV8dr=EojXFBVD0TcUuZ2kCGjjo93u=PE-AmzVHA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] hw_random: cctrng: introduce Arm CryptoCell driver
-To:     Hadar Gat <Hadar.Gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200408183324.GB33486@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hadar,
 
-On Tue, Apr 21, 2020 at 3:16 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
-> > -----Original Message-----
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Sent: Monday, 20 April 2020 16:45
-> >
-> > On Fri, Mar 27, 2020 at 7:11 AM Hadar Gat <hadar.gat@arm.com> wrote:
-> > > Introduce low level Arm CryptoCell TRNG HW support.
-> > >
-> > > Signed-off-by: Hadar Gat <hadar.gat@arm.com>
-> >
-> > Thanks for your patch!
-> >
-> > > --- /dev/null
-> > > +++ b/drivers/char/hw_random/cctrng.c
-> >
-> > > +static int cctrng_probe(struct platform_device *pdev) {
-> > > +       struct resource *req_mem_cc_regs = NULL;
-> > > +       struct cctrng_drvdata *drvdata;
-> > > +       struct device *dev = &pdev->dev;
-> > > +       int rc = 0;
-> > > +       u32 val;
-> > > +       int irq;
-> > > +
-> > > +       drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> > > +       if (!drvdata)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       drvdata->rng.name = devm_kstrdup(dev, dev_name(dev),
-> > GFP_KERNEL);
-> > > +       if (!drvdata->rng.name)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       drvdata->rng.read = cctrng_read;
-> > > +       drvdata->rng.priv = (unsigned long)drvdata;
-> > > +       drvdata->rng.quality = CC_TRNG_QUALITY;
-> > > +
-> > > +       platform_set_drvdata(pdev, drvdata);
-> > > +       drvdata->pdev = pdev;
-> > > +
-> > > +       drvdata->circ.buf = (char *)drvdata->data_buf;
-> > > +
-> > > +       /* Get device resources */
-> > > +       /* First CC registers space */
-> > > +       req_mem_cc_regs = platform_get_resource(pdev,
-> > IORESOURCE_MEM, 0);
-> > > +       /* Map registers space */
-> > > +       drvdata->cc_base = devm_ioremap_resource(dev,
-> > req_mem_cc_regs);
-> > > +       if (IS_ERR(drvdata->cc_base)) {
-> > > +               dev_err(dev, "Failed to ioremap registers");
-> > > +               return PTR_ERR(drvdata->cc_base);
-> > > +       }
-> > > +
-> > > +       dev_dbg(dev, "Got MEM resource (%s): %pR\n", req_mem_cc_regs-
-> > >name,
-> > > +               req_mem_cc_regs);
-> > > +       dev_dbg(dev, "CC registers mapped from %pa to 0x%p\n",
-> > > +               &req_mem_cc_regs->start, drvdata->cc_base);
-> > > +
-> > > +       /* Then IRQ */
-> > > +       irq = platform_get_irq(pdev, 0);
-> > > +       if (irq < 0) {
-> > > +               dev_err(dev, "Failed getting IRQ resource\n");
-> > > +               return irq;
-> > > +       }
-> > > +
-> > > +       /* parse sampling rate from device tree */
-> > > +       rc = cc_trng_parse_sampling_ratio(drvdata);
-> > > +       if (rc) {
-> > > +               dev_err(dev, "Failed to get legal sampling ratio for rosc\n");
-> > > +               return rc;
-> > > +       }
-> > > +
-> > > +       rc = cc_trng_clk_init(drvdata);
-> > > +       if (rc) {
-> > > +               dev_err(dev, "cc_trng_clk_init failed\n");
-> > > +               return rc;
-> > > +       }
-> > > +
-> > > +       INIT_WORK(&drvdata->compwork, cc_trng_compwork_handler);
-> > > +       INIT_WORK(&drvdata->startwork, cc_trng_startwork_handler);
-> > > +       spin_lock_init(&drvdata->read_lock);
-> > > +
-> > > +       /* register the driver isr function */
-> > > +       rc = devm_request_irq(dev, irq, cc_isr, IRQF_SHARED, "cctrng",
-> > > + drvdata);
-> >
-> > Shoudn't this be done after clearing the pending interrupts below?
+Hello jarkko,
+I reconfigure my email client by the instructions you've sent, and
+re-responsing as you requested.
+please tell me if there are still any issues. thank you.
+
+On 2020-04-08 18:33, Jarkko Sakkinen wrote:
+> On Tue, Apr 07, 2020 at 07:20:39PM +0300, amirmizi6@gmail.com wrote:
+>> From: Amir Mizinski <amirmizi6@gmail.com>
+>>
+>> In order to validate data integrity we need to compute the crc over the data
+>> sent in lower layer (I2C for instance).
 >
-> I'm not sure what do you mean in your question...
-> I assume you're suggesting that the registration of the driver ISR function should be done only after clearing the pending interrupts?!
-
-Indeed.
-
-> Anyway, any pending interrupt that might exist is irrelevant to the current cctrng driver which just started (we're in the probe function)
-
-If there is a pending interrupt, your interrupt handler (which returns
-IRQ_NONE in this case) will be called repeatedly, until the driver gets
-to clearing the pending interrupts below, or until the interrupt core
-decides to give up, and disable it for good.
-
-> > > +       if (rc) {
-> > > +               dev_err(dev, "Could not register to interrupt %d\n", irq);
-> > > +               goto post_clk_err;
-> > > +       }
-> > > +       dev_dbg(dev, "Registered to IRQ: %d\n", irq);
-> > > +
-> > > +       /* Clear all pending interrupts */
-> > > +       val = cc_ioread(drvdata, CC_HOST_RGF_IRR_REG_OFFSET);
-> > > +       dev_dbg(dev, "IRR=0x%08X\n", val);
-> > > +       cc_iowrite(drvdata, CC_HOST_RGF_ICR_REG_OFFSET, val);
-> >
-> > The above accesses the engine's registers...
+> s/crc/CRC/
 >
-> That is right.
+>> To do that tpm_tis_check_data() calls a "check_data" operation (if available).
 >
-> > > +
-> > > +       /* unmask HOST RNG interrupt */
-> > > +       cc_iowrite(drvdata, CC_HOST_RGF_IMR_REG_OFFSET,
-> > > +                  cc_ioread(drvdata, CC_HOST_RGF_IMR_REG_OFFSET) &
-> > > +                  ~CC_HOST_RNG_IRQ_MASK);
-> > > +
-> > > +       /* init PM */
-> > > +       rc = cc_trng_pm_init(drvdata);
-> > > +       if (rc) {
-> > > +               dev_err(dev, "cc_trng_pm_init failed\n");
-> > > +               goto post_clk_err;
-> > > +       }
-> >
-> > > +
-> > > +       /* increment device's usage counter */
-> > > +       rc = cc_trng_pm_get(dev);
-> >
-> > ... but only here is Runtime PM initialized, and the device guaranteed to be
-> > powered.  If a device is accessed while powered down, this may lead to an
-> > asynchronous external abort, or a plain lockup.
+> "check_data" does not exist.
 >
-> It is assumed that when the driver is probed it is already powered. Only then, the driver initializes and enables the runtime PM to allow power down of the HW when it is not in use.
 
-Who guarantees it is powered up? Your driver has indeed enabled the
-(optional) clock above, but if the hardware block is part of a power
-domain, it may still be powered down. The only way to make sure a
-hardware block in a power domain is powered, is by enabling Runtime
-PM and calling pm_runtime_get_sync().
+it is added in this commit to "tpm_tis_phy_ops" struct in
+"tpm_tis_core.h", which is inherited in "tpm_tis_i2c.c" on later patch
+(7/7).
 
-Gr{oetje,eeting}s,
+>> If data integrity check fails, a retry to save the sent/received
+>> data is implemented in tpm_tis_send_main()/tpm_tis_recv() functions.
+>>
+>> Considering this commit, the following steps are done when sending a command:
+>>    1. Host writes to TPM_STS.commandReady.
+>>    2. Host writes command.
+>>    3. Host checks that TPM received data is valid.
+>>    4. If data is currupted go to step 1.
+>>
+>> When receiving data:
+>>    1. Host checks that TPM_STS.dataAvail is set.
+>>    2. Host saves received data.
+>>    3. Host checks that received data is correct.
+>>    4. If data is currupted Host writes to TPM_STS.responseRetry and go to
+>>       step 1.
+>
+> These sequences in the commit message look somewhat uselss. Maybe
+> just remove them.
+>
 
-                        Geert
+Their main porpose is to describe how the retry attempt is implemented
+in case of currupted data.
+should i just describe that with a few words or that's unnecessary?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>>
+>> Co-developed-by: Christophe Ricard <christophe-h.ricard@st.com>
+>> Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+>> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+>> ---
+>>  drivers/char/tpm/tpm_tis_core.c | 102 +++++++++++++++++++++++++---------------
+>>  drivers/char/tpm/tpm_tis_core.h |   3 ++
+>>  2 files changed, 67 insertions(+), 38 deletions(-)
+>>
+>> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+>> index 27c6ca0..6c4f232 100644
+>> --- a/drivers/char/tpm/tpm_tis_core.c
+>> +++ b/drivers/char/tpm/tpm_tis_core.c
+>> @@ -242,6 +242,15 @@ static u8 tpm_tis_status(struct tpm_chip *chip)
+>>      return status;
+>>  }
+>>  
+>> +static bool tpm_tis_check_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+>
+> Not sure if this is the best possible function name, "check" can
+> mean almost anything.
+>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Ok, i'm changing it to "verify_data_integrity". is that ok?
+
+>> +{
+>> +    struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+>> +
+>> +    if (priv->phy_ops->check_data)
+>> +        return priv->phy_ops->check_data(priv, buf, len);
+>
+> New line here before the return statement.
+>
+>> +    return true;
+>> +}
+>> +
+>>  static void tpm_tis_ready(struct tpm_chip *chip)
+>>  {
+>>      struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+>> @@ -308,47 +317,59 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+>>  {
+>>      struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+>>      int size = 0;
+>> -    int status;
+>> +    int status, i;
+>>      u32 expected;
+>> +    bool check_data = false;
+>>  
+>> -    if (count < TPM_HEADER_SIZE) {
+>> -        size = -EIO;
+>> -        goto out;
+>> -    }
+>> +    for (i = 0; i < TPM_RETRY; i++) {
+>> +        if (count < TPM_HEADER_SIZE) {
+>> +            size = -EIO;
+>> +            goto out;
+>> +        }
+>>  
+>> -    size = recv_data(chip, buf, TPM_HEADER_SIZE);
+>> -    /* read first 10 bytes, including tag, paramsize, and result */
+>> -    if (size < TPM_HEADER_SIZE) {
+>> -        dev_err(&chip->dev, "Unable to read header\n");
+>> -        goto out;
+>> -    }
+>> +        size = recv_data(chip, buf, TPM_HEADER_SIZE);
+>> +        /* read first 10 bytes, including tag, paramsize, and result */
+>> +        if (size < TPM_HEADER_SIZE) {
+>> +            dev_err(&chip->dev, "Unable to read header\n");
+>> +            goto out;
+>> +        }
+>>  
+>> -    expected = be32_to_cpu(*(__be32 *) (buf + 2));
+>> -    if (expected > count || expected < TPM_HEADER_SIZE) {
+>> -        size = -EIO;
+>> -        goto out;
+>> -    }
+>> +        expected = be32_to_cpu(*(__be32 *) (buf + 2));
+>> +        if (expected > count || expected < TPM_HEADER_SIZE) {
+>> +            size = -EIO;
+>> +            goto out;
+>> +        }
+>>  
+>> -    size += recv_data(chip, &buf[TPM_HEADER_SIZE],
+>> -              expected - TPM_HEADER_SIZE);
+>> -    if (size < expected) {
+>> -        dev_err(&chip->dev, "Unable to read remainder of result\n");
+>> -        size = -ETIME;
+>> -        goto out;
+>> -    }
+>> +        size += recv_data(chip, &buf[TPM_HEADER_SIZE],
+>> +                  expected - TPM_HEADER_SIZE);
+>> +        if (size < expected) {
+>> +            dev_err(&chip->dev, "Unable to read remainder of result\n");
+>> +            size = -ETIME;
+>> +            goto out;
+>> +        }
+>>  
+>> -    if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
+>> -                &priv->int_queue, false) < 0) {
+>> -        size = -ETIME;
+>> -        goto out;
+>> +        if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
+>> +                      &priv->int_queue, false) < 0) {
+>> +            size = -ETIME;
+>> +            goto out;
+>> +        }
+>> +
+>> +        status = tpm_tis_status(chip);
+>> +        if (status & TPM_STS_DATA_AVAIL) {    /* retry? */
+>> +            dev_err(&chip->dev, "Error left over data\n");
+>> +            size = -EIO;
+>> +            goto out;
+>> +        }
+>> +
+>> +        check_data = tpm_tis_check_data(chip, buf, size);
+>> +        if (!check_data)
+>> +            tpm_tis_write8(priv, TPM_STS(priv->locality),
+>> +                       TPM_STS_RESPONSE_RETRY);
+>> +        else
+>> +            break;
+>>      }
+>> -    status = tpm_tis_status(chip);
+>> -    if (status & TPM_STS_DATA_AVAIL) {    /* retry? */
+>> -        dev_err(&chip->dev, "Error left over data\n");
+>> +    if (!check_data)
+>>          size = -EIO;
+>> -        goto out;
+>> -    }
+>> -
+>>  out:
+>>      tpm_tis_ready(chip);
+>>      return size;
+>> @@ -453,14 +474,19 @@ static void disable_interrupts(struct tpm_chip *chip)
+>>  static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
+>>  {
+>>      struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+>> -    int rc;
+>> +    int rc, i;
+>>      u32 ordinal;
+>>      unsigned long dur;
+>> +    bool data_valid = false;
+>>  
+>> -    rc = tpm_tis_send_data(chip, buf, len);
+>> -    if (rc < 0)
+>> -        return rc;
+>> -
+>> +    for (i = 0; i < TPM_RETRY && !data_valid; i++) {
+>> +        rc = tpm_tis_send_data(chip, buf, len);
+>> +        if (rc < 0)
+>> +            return rc;
+>> +        data_valid = tpm_tis_check_data(chip, buf, len);
+>> +    }
+>> +    if (!data_valid)
+>> +        return -EIO;
+>>      /* go and do it */
+>>      rc = tpm_tis_write8(priv, TPM_STS(priv->locality), TPM_STS_GO);
+>>      if (rc < 0)
+>> diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+>> index d06c65b..486c2e9 100644
+>> --- a/drivers/char/tpm/tpm_tis_core.h
+>> +++ b/drivers/char/tpm/tpm_tis_core.h
+>> @@ -34,6 +34,7 @@ enum tis_status {
+>>      TPM_STS_GO = 0x20,
+>>      TPM_STS_DATA_AVAIL = 0x10,
+>>      TPM_STS_DATA_EXPECT = 0x08,
+>> +    TPM_STS_RESPONSE_RETRY = 0x02,
+>>  };
+>>  
+>>  enum tis_int_flags {
+>> @@ -106,6 +107,8 @@ struct tpm_tis_phy_ops {
+>>      int (*read16)(struct tpm_tis_data *data, u32 addr, u16 *result);
+>>      int (*read32)(struct tpm_tis_data *data, u32 addr, u32 *result);
+>>      int (*write32)(struct tpm_tis_data *data, u32 addr, u32 src);
+>> +    bool (*check_data)(struct tpm_tis_data *data, const u8 *buf,
+>> +               size_t len);
+>
+> Aren't you validating the contents of the buf?
+>
+> /Jarkko
+
+i do.
+when sending, the data is written to the buff in "tpm_tis_send_data(chip,buf, len)".
+and validated in "data_valid = tpm_tis_check_data(chip, buf, len)".
+data is not sent until TPM_STS_GO is set.
+
+when receiving, the data in the buffer is verified after recv_data, and
+writing to TPM_STS_RESPONSE_RETRY in case it fails to recive it again.
+
+
+Thank you
+Amir Mizinski
+
