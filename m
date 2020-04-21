@@ -2,121 +2,115 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E94BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D356FC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7812068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E71206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:09:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQ/6oIX9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LYUGuQFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgDUPJD (ORCPT
+        id S1729112AbgDUPJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:09:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgDUPJC (ORCPT
+        Tue, 21 Apr 2020 11:09:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50844 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726018AbgDUPJ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:09:02 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E9B9C061A10;
-        Tue, 21 Apr 2020 08:09:00 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id n6so10985109ljg.12;
-        Tue, 21 Apr 2020 08:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PJ2vFfBZGdU5ZRkYjORGT3QSQUV1Hukqw/CItLnNVhc=;
-        b=FQ/6oIX9b978+5Q1Y4zMHr2x6a8mSsdPkcpbVARmjtij5YsPeezRAOvVFKCz8k4sQp
-         tInfv+J4u0YksA3KufqvEs0yqHu8Foy7Mhghghg6Z9sd+dFwMNpmsZzHlt3gDdVZU3NM
-         v8KIaAEknpv0JnN+MCqWQzB018Eb87bbQGK67qyHk80ZSfNyPCefMV2BiQvSsMwoktit
-         ktw2OhY4avaUT4D+7OBEuCR9yiOQmzxOIqOUj7NzdMMoSA7uNZq4a2FLWGNZKZwG8A90
-         /Wwjyci5XLSL4FQr/kCS8hFCaFbAMnnW77T9TEWUw48bBr5AK7KCfrIcUdqHkrZkJl+d
-         HMew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PJ2vFfBZGdU5ZRkYjORGT3QSQUV1Hukqw/CItLnNVhc=;
-        b=Ur90Rq701V7k439zzNLf5i0dHh/ntxcmppmfm61pYkJKq7AddQdZ+kZ2UqG2rjYBrs
-         Ex+kOsutG/5VxmMatgGWH7ysjTmwAwwVxUHoTsbcfQSKMNg3Fv7NARWvuVp4hCQWjBxL
-         pKhQoIjIreEZ3ddjrXqtqFClEUVkqgGLUWS1rA9b2cukXPixPo9/xPbLabYzO8duzZwv
-         kwe7nyulN6IO6BtusE/cBRFeHUBNRiGECGPLRTLbw5dYd47CKQ3/ejcggnf+zjWYjlmW
-         GgXaLx4uBrkniLoQwRf5RFPkE8gfwRE5VPIwjQ2an5YNZUPu8fNLU/oiBCmdihfnJ5lq
-         g4bw==
-X-Gm-Message-State: AGi0PuYwzsLnV2hvMykNHUgW01pEp4RC8eCGyp87a14j0sMk4UwaeowJ
-        8CDKnoDne8T9iUwj4scKu2DbmOJk
-X-Google-Smtp-Source: APiQypIC9LVkOozdTl4B0Afm5JLxwzKJf777JLJ2FTMjtOurX85K6qZm/988+5RfsAdQsHIB68r3+A==
-X-Received: by 2002:a2e:6c16:: with SMTP id h22mr3311996ljc.30.1587481738520;
-        Tue, 21 Apr 2020 08:08:58 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id a19sm2347295lff.11.2020.04.21.08.08.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 08:08:57 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200324191217.1829-1-digetx@gmail.com>
- <20200324191217.1829-2-digetx@gmail.com>
- <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
- <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
- <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
- <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
- <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
- <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
-Date:   Tue, 21 Apr 2020 18:08:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 11:09:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587481767;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z0+4zQmptA1LzH0MyzzFbxw+OgbhZZrQrJFNKgXpR/M=;
+        b=LYUGuQFKcNjaGNPIm7LL6gqz02ngjtUIwVVX+Gn09i3oM63nqjQ3dP6zIV6wSxcQBoNbYx
+        L2R8wxOvVjwqMgbtNP/3+7XuXWkz7Q0JsY2kLLztBpfcEuP6ld5PNsXWz8trSPnMMHsH35
+        1cvwBrGKkGpvSe6Rn2NdRmxdroHD9A8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-247-J6Zg_KR1MfqmJV2tO6LIFw-1; Tue, 21 Apr 2020 11:09:22 -0400
+X-MC-Unique: J6Zg_KR1MfqmJV2tO6LIFw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 463328017FE;
+        Tue, 21 Apr 2020 15:09:19 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-113-97.phx2.redhat.com [10.3.113.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 46F482898A;
+        Tue, 21 Apr 2020 15:09:15 +0000 (UTC)
+Date:   Tue, 21 Apr 2020 11:09:13 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Huaixin Chang <changhuaixin@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, bsegall@google.com, chiluk+linux@indeed.com,
+        vincent.guittot@linaro.org, pauld@redhead.com
+Subject: Re: [PATCH 2/2] sched/fair: Refill bandwidth before scaling
+Message-ID: <20200421150913.GB26514@lorien.usersys.redhat.com>
+References: <20200420024421.22442-1-changhuaixin@linux.alibaba.com>
+ <20200420024421.22442-3-changhuaixin@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420024421.22442-3-changhuaixin@linux.alibaba.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.04.2020 17:40, Jon Hunter пишет:
+Hi,
+
+On Mon, Apr 20, 2020 at 10:44:21AM +0800 Huaixin Chang wrote:
+> In order to prevent possible hardlockup of sched_cfs_period_timer()
+> loop, loop count is introduced to denote whether to scale quota and
+> period or not. However, scale is done between forwarding period timer
+> and refilling cfs bandwidth runtime, which means that period timer is
+> forwarded with old "period" while runtime is refilled with scaled
+> "quota".
 > 
-> On 21/04/2020 14:25, Dmitry Osipenko wrote:
->> 21.04.2020 12:49, Jon Hunter пишет:
->> ...
->>> I can try the above, but I agree it would be best to avoid messing with
->>> the suspend levels if possible.
->>
->> Will be awesome if you could try it and report back the result.
->>
+> Move do_sched_cfs_period_timer() before scaling to solve this.
 > 
-> I gave it a try but suspend still fails.
+> Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
+> Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
+> ---
+>  kernel/sched/fair.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 02f323b85b6d..9ace1c5c73a5 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5152,6 +5152,8 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+>  		if (!overrun)
+>  			break;
+>  
+> +		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
+> +
+>  		if (++count > 3) {
+>  			u64 new, old = ktime_to_ns(cfs_b->period);
+>  
+> @@ -5181,8 +5183,6 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+>  			/* reset count so we don't come right back in here */
+>  			count = 0;
+>  		}
+> -
+> -		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
+>  	}
+>  	if (idle)
+>  		cfs_b->period_active = 0;
+> -- 
+> 2.14.4.44.g2045bb6
+> 
 
-Perhaps the RPM's -EACCES is returned from here:
+This one is independent of the first so could be taken as is.
 
-https://elixir.free-electrons.com/linux/v5.7-rc2/source/drivers/base/power/runtime.c#L723
+Reviewed-by: Phil Auld <pauld@redhat.com>
+-- 
 
-Which suggests that I2C is accessed after being suspended. I guess the
-PCIe driver suspends after the I2C and somehow my change affected the
-suspension order, although not sure how.
-
-Jon, could you please try to enable PM logging and post the log? Please
-also post log of the working kernel version, so that we could compare
-the PM sequence.
-
-Something like this should enable the logging: "echo 1 >
-/sys/power/pm_trace" + there is RPM tracing.
