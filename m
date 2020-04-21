@@ -2,187 +2,83 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09778C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE661C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D9020882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBC720882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:25:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="oEFuCFGO"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="iGfkHhTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDUEYZ (ORCPT
+        id S1726547AbgDUEZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 00:24:25 -0400
-Received: from mail-bn7nam10on2083.outbound.protection.outlook.com ([40.107.92.83]:34848
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbgDUEYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 00:24:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nGbGp+uYwaGicVM4nsaF0yoUO7keluSj0BUukqAOz7z3Lo+Hl5L35bBaOAifUumUYzkEByIhZv34a6mt5u+tYQovZZquLBIrMmp948R1KGyku3qpQEh7Nr6Zjt3BqtEUdw94Up1YteSkiVRsvkIsJoAOZEaesWXeLa4PQQeWKyZj2/1Z69vdHgR9KBSfpFTokqEeDHeI3Fchrh9osQ124fJ1iHOyEBaPSA76OKYNoipNUvXtxEFmTg1SXexeyC+xFsuhFr1cLxVi5FjLLpCtOTF8iY57VdMLgg2MXKJQh3FDIWnH4bDa5dB/N8Cvik6mJsu5tYNcIMcnJy4fZZO/eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aD5NizHRGj0I9gxECMqK3hkrXrT+bz07WHXVMFTolVk=;
- b=b5re075T6maFL7KlyAU34QW7w/DbBsQtRPjbFR8hV2ekJGlBmz4TiaXPqA9bFihpET8gmqgDS6HQQOIWhviZOfwYe71SbTSQWao5AX/1GudtHgoNPY3EB9TdLiLIYMduN0lcMZjKAmSFFFiPg8qipxZpSLq/IWuOaa721O6Pto5P5LITc1JDaVGSUEqGGg0xHudlhkpXJeP0PgBhlLxqaSw5X6MtAosT5zmgDrZFBQLPj5+HQzzynStvwpqHK90duNtEb7rIRC1cIjGii472XuSC8cmj6irT92ajtagaADnKfab2jwjKdH4DrtPvcvR70lgw8ciBMRDDLUz4nrqG4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aD5NizHRGj0I9gxECMqK3hkrXrT+bz07WHXVMFTolVk=;
- b=oEFuCFGOOzxx9GJY9IrJGLf/lXh2NTOZ4/y+4aspbtI26izgSimeFhwUzXYHz4S1RWk1JrbOhE0GkciB21MtdTyHKnXbQr3T22Rcti+1Y19gnzRx/rzpw78BSx56pAqHzlnAgqBQjlVb7a0F4lpUsAcMLGRdm5LwGXnhYL0RENU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Felix.Kuehling@amd.com; 
-Received: from DM5PR12MB2407.namprd12.prod.outlook.com (2603:10b6:4:b4::24) by
- DM5PR12MB1548.namprd12.prod.outlook.com (2603:10b6:4:a::23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.29; Tue, 21 Apr 2020 04:24:21 +0000
-Received: from DM5PR12MB2407.namprd12.prod.outlook.com
- ([fe80::7d36:4eac:2088:637f]) by DM5PR12MB2407.namprd12.prod.outlook.com
- ([fe80::7d36:4eac:2088:637f%3]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
- 04:24:21 +0000
-Subject: Re: [PATCH V2] amdgpu: remove unnecessary condition check
-To:     1587180037-113840-1-git-send-email-bernard@vivo.com,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-References: <20200421024159.126753-1-bernard@vivo.com>
-From:   Felix Kuehling <felix.kuehling@amd.com>
-Message-ID: <7fe6eeef-3129-3e54-67a2-46eccca9f529@amd.com>
-Date:   Tue, 21 Apr 2020 00:24:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-In-Reply-To: <20200421024159.126753-1-bernard@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: YT1PR01CA0117.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2c::26) To DM5PR12MB2407.namprd12.prod.outlook.com
- (2603:10b6:4:b4::24)
+        Tue, 21 Apr 2020 00:25:51 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:60443 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgDUEZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 00:25:50 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 92529dce;
+        Tue, 21 Apr 2020 04:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=zvvCeZA2387aZ4dB2b02Y3gaNhg=; b=iGfkHh
+        TK6cMmmzXfYLKEjyScILROnwUjgF89rl6fdjES/ogbS3L+PnK8ab0yst1LqhK703
+        542twOi1u53Ps0B7FqIHPC6hum4W3CyBwfVpGxMSAcyVGq/5Jqvg2gM2dGWVEx3v
+        9mlajNhxsA+DJIW8JvLJG2eaCGvObr8fUE/YsuEzPGbCXjcg0qhpJAkdjhSh/5uD
+        stOXstkkQWcoThCiSOJLWv2t65urtX9VHFFR36nkAjWEpSCE7+Ylt2EF2eBeHhk1
+        fd/7QfZ0gzm5t/NP2SFTg3hMLvZdvnZsPU8lV3E1cXuJHyTpeb41jyOZXx62oICN
+        ypkg/8u3TbtpwDIg==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 4f58fcca (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 21 Apr 2020 04:15:03 +0000 (UTC)
+Received: by mail-io1-f49.google.com with SMTP id u11so13670903iow.4;
+        Mon, 20 Apr 2020 21:25:44 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYkSc4OhDd5ZPJU1sP9htCPrWtJGo9dIbnbNZUrqdV9RIevTquf
+        6Xfzc0rjw0QNB+IxtmWO8VY0JzWLYSKvRvUaF6E=
+X-Google-Smtp-Source: APiQypIyRj2PoMMuv4crd15eUsa84Ysc6zLCi+qX7meem+au7YS2pQ0yUhvSUith/HDjNeRf03EIoEMHv9xqqlNoiSU=
+X-Received: by 2002:a05:6602:21d3:: with SMTP id c19mr18687073ioc.29.1587443144218;
+ Mon, 20 Apr 2020 21:25:44 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.2.100] (142.116.63.128) by YT1PR01CA0117.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2c::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Tue, 21 Apr 2020 04:24:20 +0000
-X-Originating-IP: [142.116.63.128]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 990e234a-2325-47d3-5e4b-08d7e5abdd32
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1548:|DM5PR12MB1548:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB154840A2A45FBB18FED246AD92D50@DM5PR12MB1548.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:873;
-X-Forefront-PRVS: 038002787A
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB2407.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(16526019)(956004)(2906002)(5660300002)(44832011)(31696002)(478600001)(186003)(26005)(36756003)(86362001)(31686004)(2616005)(966005)(81156014)(66556008)(8936002)(16576012)(6486002)(52116002)(110136005)(66946007)(66476007)(4326008)(8676002)(316002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2IZ0OOX7LFD3OjvGaQvxPsGlz55U4rgOTMHlkvro4soabEEdDFX1ArFv7OPxE91JCQhQQIZfwGO4OlMzUW5vgnxLlGyb/viEeZliu7msDTsskAwSxT/oS93MLCaUBlDnqtABfgU8tVwsfRZIzju1pR2rwD1Wke42N/OJwIjr4ZOjZZ7I+CjariLXGb0p0S4ANQIMm34w0h+PQ5d5bdm2tWYJSnNCh3qSynq9/XQ9kwqIfXvL1m4aL4pK21edrUrotULKsAQChICfxLSOnnW182S2SVuJ9MF8Unq974AYd9iZsE5wz11N5Hme+58NmmnzmUJ/tcFz2oRD7YDr9xIsboh/n+CJTr38pFpDTMtbHYLfb2JtYJesGtmAPg0CBKnslWOvKB7UggTOGqD+dMMlokzixkBIYsPUvApQpBEFWh8GciMRrPjA9IuDRVLM8ce8bY2dc0Pj/Sf649YpZhzXrT0W5qMOSC7KLJxEGRSOCyft0V2BDt+k4tNhdThno+viz0OZDCgZTcuq70A0mrf+bw==
-X-MS-Exchange-AntiSpam-MessageData: o5dYl1/jTuWpYb5bkSYLXyKY/0uwsKtZ5nVvuNvmcIrsgFvekYp/5qRrsXFUPw+cbw7WztMxxtdC3LGz7SpWckIuRiHRX2XPFDrGzxOnMnCYIkcSA7iwkIIRVMUoe3UNpf1q9Yh65KadQkmrsBFckw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 990e234a-2325-47d3-5e4b-08d7e5abdd32
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2020 04:24:21.0947
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fVrIoCOqNiQObYKJ46RRGAbL6osF/U7U7F93dzY+AGJZ/xlup7kINFTJMdK9BHWYmvhjoifABLGbl1Sh24X0pQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1548
+References: <20200420075711.2385190-1-Jason@zx2c4.com> <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
+ <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
+In-Reply-To: <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 20 Apr 2020 22:25:33 -0600
+X-Gmail-Original-Message-ID: <CAHmME9pRFGRi8oxazFrd05S+m=_s7=WF5x_jfUAE_Qt+c5-anA@mail.gmail.com>
+Message-ID: <CAHmME9pRFGRi8oxazFrd05S+m=_s7=WF5x_jfUAE_Qt+c5-anA@mail.gmail.com>
+Subject: Re: FPU register granularity [Was: Re: [PATCH crypto-stable] crypto:
+ arch/lib - limit simd usage to PAGE_SIZE chunks]
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bernard,
-
-Please see comments inline.
-
-Am 2020-04-20 um 10:41 p.m. schrieb Bernard Zhao:
-> There is no need to if check again, maybe we could merge
-> into the above else branch.
+On Mon, Apr 20, 2020 at 10:14 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
 >
-> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+> Hi David,
 >
-> ---
-> Changes since V1:
-> *commit message improve
-> *code style refactoring
+> On Mon, Apr 20, 2020 at 2:32 AM David Laight <David.Laight@aculab.com> wrote:
+> > Maybe kernel_fp_begin() should be passed the address of somewhere
+> > the address of an fpu save area buffer can be written to.
+> > Then the pre-emption code can allocate the buffer and save the
+> > state into it.
 >
-> Link for V1:
-> * https://lore.kernel.org/patchwork/patch/1226587/
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> index 9dff792c9290..a64eeb07bec4 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> @@ -660,13 +660,15 @@ static int reserve_bo_and_vm(struct kgd_mem *mem,
->  
->  	ret = ttm_eu_reserve_buffers(&ctx->ticket, &ctx->list,
->  				     false, &ctx->duplicates);
-> -	if (!ret)
-> -		ctx->reserved = true;
-> -	else {
-> +
-> +	if (ret) {
->  		pr_err("Failed to reserve buffers in ttm\n");
->  		kfree(ctx->vm_pd);
->  		ctx->vm_pd = NULL;
->  	}
-> +	else {
-> +		ctx->reserved = true;
-> +	}
+> Interesting idea. It looks like `struct xregs_state` is only 576
+> bytes. That's not exactly small, but it's not insanely huge either,
+> and maybe we could justifiably stick that on the stack, or even
+> reserve part of the stack allocation for that that the function would
+> know about, without needing to specify any address.
 
-Here you're just reversing the if and else branches. This change looks
-completely superfluous to me.
-
-You're also breaking coding style conventions. The "else" should be on
-the same line as the closing brace "}". I'm pretty sure checkpatch.pl
-will complain about this.
-
-
->  
->  	return ret;
->  }
-> @@ -733,15 +735,15 @@ static int reserve_bo_and_cond_vms(struct kgd_mem *mem,
->  
->  	ret = ttm_eu_reserve_buffers(&ctx->ticket, &ctx->list,
->  				     false, &ctx->duplicates);
-> -	if (!ret)
-> -		ctx->reserved = true;
-> -	else
-> -		pr_err("Failed to reserve buffers in ttm.\n");
->  
->  	if (ret) {
-> +		pr_err("Failed to reserve buffers in ttm.\n");
->  		kfree(ctx->vm_pd);
->  		ctx->vm_pd = NULL;
->  	}
-> +	else {
-> +		ctx->reserved = true;
-> +	}
-
-Same as above regarding coding style.
-
-To minimize unnecessary code changes, you can merge the "if (ret) ..."
-code into the else-branch of the previous if.
-
-Regards,
-  Felix
-
-
->  
->  	return ret;
->  }
+Hah-hah, nevermind here. extended_state_area is of course huge,
+bringing the whole structure to a whopping 3k with avx512. :)
