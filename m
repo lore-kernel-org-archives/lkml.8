@@ -2,136 +2,154 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067B4C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4541EC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67BC206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587479391;
-	bh=vq62htzQrEGkXQgbmBIdb3flO+yGFZQ1M31v4/nKJRM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VjLJMaiDFUXvUXrlQQ3hhWn8jQfmhHYRQ3V+QsQpx1r9dBxYroCzPF7AjA7KjPhJV
-	 +5j+C1uo1iwukUNHj0kF56OE6nhJw3DaiKLznVktV6lTzWoYW1DYRpyoIgUm/2pr+r
-	 UMuvW590AVoTyt+wVp/DRBSqi31lpwSPaETm+03g=
+	by mail.kernel.org (Postfix) with ESMTP id 2C3FA206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbgDUO3v (ORCPT
+        id S1729193AbgDUO36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:29:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42638 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 10:29:58 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54846 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729159AbgDUO3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:29:48 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5080C20724;
-        Tue, 21 Apr 2020 14:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587479387;
-        bh=vq62htzQrEGkXQgbmBIdb3flO+yGFZQ1M31v4/nKJRM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hu8zjX8bct2a6eO9hoEe3hbPq+qhKJA3kLRvPBvyROaRtSdHsc0csp7/E9Jx7ZGCG
-         gdbzQa31ODGBaEHFBB36vsimK/YYtIJ4KspcGBQq0hDjrjdUA2efBGuHIjQtGW1zwh
-         uRyDvXHtb5D44+ytNrHc8bdNyUXfK2g4OVH++ZP8=
-From:   Will Deacon <will@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>, kernel-team@android.com
-Subject: [PATCH v2 8/8] arm64: cpufeature: Add an overview comment for the cpufeature framework
-Date:   Tue, 21 Apr 2020 15:29:22 +0100
-Message-Id: <20200421142922.18950-9-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200421142922.18950-1-will@kernel.org>
-References: <20200421142922.18950-1-will@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1729159AbgDUO3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:29:55 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F1D71A0CA7;
+        Tue, 21 Apr 2020 16:29:53 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B26FA1A0C71;
+        Tue, 21 Apr 2020 16:29:48 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D7A45402D9;
+        Tue, 21 Apr 2020 22:29:42 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 1/2] dt-bindings: watchdog: Convert i.MX to json-schema
+Date:   Tue, 21 Apr 2020 22:21:25 +0800
+Message-Id: <1587478886-21512-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that Suzuki isn't within throwing distance, I thought I'd better add
-a rough overview comment to cpufeature.c so that it doesn't take me days
-to remember how it works next time.
+Convert the i.MX watchdog binding to DT schema format using json-schema.
 
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm64/kernel/cpufeature.c | 50 ++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Changes since V2:
+	- drop clocks description;
+	- drop unused label.
+---
+ .../devicetree/bindings/watchdog/fsl-imx-wdt.txt   | 24 ----------
+ .../devicetree/bindings/watchdog/fsl-imx-wdt.yaml  | 54 ++++++++++++++++++++++
+ 2 files changed, 54 insertions(+), 24 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index d63653d7c5d0..c1d44d127baa 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -3,6 +3,56 @@
-  * Contains CPU feature definitions
-  *
-  * Copyright (C) 2015 ARM Ltd.
-+ *
-+ * A note for the weary kernel hacker: the code here is confusing and hard to
-+ * follow! That's partly because it's solving a nasty problem, but also because
-+ * there's a little bit of over-abstraction that tends to obscure what's going
-+ * on behind a maze of helper functions and macros.
-+ *
-+ * The basic problem is that hardware folks have started gluing together CPUs
-+ * with distinct architectural features; in some cases even creating SoCs where
-+ * user-visible instructions are available only on a subset of the available
-+ * cores. We try to address this by snapshotting the feature registers of the
-+ * boot CPU and comparing these with the feature registers of each secondary
-+ * CPU when bringing them up. If there is a mismatch, then we update the
-+ * snapshot state to indicate the lowest-common denominator of the feature,
-+ * known as the "safe" value. This snapshot state can be queried to view the
-+ * "sanitised" value of a feature register.
-+ *
-+ * The sanitised register values are used to decide which capabilities we
-+ * have in the system. These may be in the form of traditional "hwcaps"
-+ * advertised to userspace or internal "cpucaps" which are used to configure
-+ * things like alternative patching and static keys. While a feature mismatch
-+ * may result in a TAINT_CPU_OUT_OF_SPEC kernel taint, a capability mismatch
-+ * may prevent a CPU from being onlined at all.
-+ *
-+ * Some implementation details worth remembering:
-+ *
-+ * - Mismatched features are *always* sanitised to a "safe" value, which
-+ *   usually indicates that the feature is not supported.
-+ *
-+ * - A mismatched feature marked with FTR_STRICT will cause a "SANITY CHECK"
-+ *   warning when onlining an offending CPU and the kernel will be tainted
-+ *   with TAINT_CPU_OUT_OF_SPEC.
-+ *
-+ * - Features marked as FTR_VISIBLE have their sanitised value visible to
-+ *   userspace. FTR_VISIBLE features in registers that are only visible
-+ *   to EL0 by trapping *must* have a corresponding HWCAP so that late
-+ *   onlining of CPUs cannot lead to features disappearing at runtime.
-+ *
-+ * - A "feature" is typically a 4-bit register field. A "capability" is the
-+ *   high-level description derived from the sanitised field value.
-+ *
-+ * - Read the Arm ARM (DDI 0487F.a) section D13.1.3 ("Principles of the ID
-+ *   scheme for fields in ID registers") to understand when feature fields
-+ *   may be signed or unsigned (FTR_SIGNED and FTR_UNSIGNED accordingly).
-+ *
-+ * - KVM exposes its own view of the feature registers to guest operating
-+ *   systems regardless of FTR_VISIBLE. This is typically driven from the
-+ *   sanitised register values to allow virtual CPUs to be migrated between
-+ *   arbitrary physical CPUs, but some features not present on the host are
-+ *   also advertised and emulated. Look at sys_reg_descs[] for the gory
-+ *   details.
-  */
- 
- #define pr_fmt(fmt) "CPU features: " fmt
+diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+deleted file mode 100644
+index adc6b76..0000000
+--- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-* Freescale i.MX Watchdog Timer (WDT) Controller
+-
+-Required properties:
+-- compatible : Should be "fsl,<soc>-wdt"
+-- reg : Should contain WDT registers location and length
+-- interrupts : Should contain WDT interrupt
+-
+-Optional properties:
+-- big-endian: If present the watchdog device's registers are implemented
+-  in big endian mode, otherwise in native mode(same with CPU), for more
+-  detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
+-- fsl,ext-reset-output: If present the watchdog device is configured to
+-  assert its external reset (WDOG_B) instead of issuing a software reset.
+-- timeout-sec : Contains the watchdog timeout in seconds
+-
+-Examples:
+-
+-wdt@73f98000 {
+-	compatible = "fsl,imx51-wdt", "fsl,imx21-wdt";
+-	reg = <0x73f98000 0x4000>;
+-	interrupts = <58>;
+-	big-endian;
+-	timeout-sec = <20>;
+-};
+diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+new file mode 100644
+index 0000000..ec77b77
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/watchdog/fsl-imx-wdt.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX Watchdog Timer (WDT) Controller
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++allOf:
++  - $ref: "watchdog.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx21-wdt
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  fsl,ext-reset-output:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      If present, the watchdog device is configured to assert its
++      external reset (WDOG_B) instead of issuing a software reset.
++
++required:
++  - compatible
++  - interrupts
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/imx6qdl-clock.h>
++
++    watchdog@20bc000 {
++        compatible = "fsl,imx21-wdt";
++        reg = <0x020bc000 0x4000>;
++        interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX6QDL_CLK_IPG>;
++    };
++
++...
 -- 
-2.26.1.301.g55bc3eb7cb9-goog
+2.7.4
 
