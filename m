@@ -2,200 +2,170 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF6FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBF2C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7952073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A96B2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:15:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HfqgBbZ+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="frOKGgAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgDUIOk (ORCPT
+        id S1728268AbgDUIPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47108 "EHLO
+        Tue, 21 Apr 2020 04:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgDUIOi (ORCPT
+        with ESMTP id S1728162AbgDUIPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:14:38 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1233DC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:14:38 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r26so2611413wmh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:14:37 -0700 (PDT)
+        Tue, 21 Apr 2020 04:15:37 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455E5C061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:15:37 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id e26so2498207wmk.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 01:15:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hzdBfCko64Cr24a0dsvDnS+0zFtQQxlJxNUpgXOxXug=;
-        b=HfqgBbZ+KORLSWrZg+uwnOOQfUMtqRbkrl38Q632Fdc6V5IW56KGWPgEM24jxdobdM
-         QAi/sKJkSkCEYYoUeiGq4KXLZi8VLLS+r3A/R9eaEJC91h+MTYe3wdxaaVhmZ7sjwnOg
-         NXeiVjQl1pL9wW1HjdPWpB0rIMGSHtx19/KiJN81BNVVzaN/xLD5f1Z//5BIh3hija2n
-         YPjkhc8paEWjmecpb1xVwDt3kZ/PNsaiV3tNfSZ/LJgPigjVcBpLk1SYcxNSOm/BWSdb
-         V+6n/1zKm02sVo2B0frd08g90qwhvEiiidp6YlQyZvPPYjkF/AWr3GkBtgtsfeYCxKFA
-         +vUQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7xjSknTeR+7dqcaL1YgejpgJ9/KujY8j8UEnyfLmZD4=;
+        b=frOKGgAVIjbSzucTY8HiXqzPrWgYdihoiEtz+cb34v3+J49RpTLLTKTwBeXk+DnyE/
+         Ma/xI/Oz4r+iM7CFvAgmw0X7Oa1CoDY3pQPLZWCm04SaG+jx1Cg8F8ipUTjca56HpLcP
+         sqW3/+7LhmRxDOqO4/j0dRG2dGQhvnU1BAhRMGEYqTQqX/1dnb99c+ctJj7h0fXVuc6f
+         B/5XyRppCG6V9Hs8TWKyfwNOYfNldnC2fjsFvYYbASsK8YajbRqqTQl1VOee2YmGjuVN
+         DgzLhyyFVbu5ax5j4VzJ+uGJhqdBCMQbAETtVyt1n1J2iqSZmvbUoeKXPnVVc0XZIRHo
+         DqrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hzdBfCko64Cr24a0dsvDnS+0zFtQQxlJxNUpgXOxXug=;
-        b=nAz3N2/5GdtmD0c30FuGP2MCbPN1h1kFwFB06+2zYxP7BnBqNf2Zo8jzvqM7WHyId0
-         QaOZCWn2Vz3otOJCREMnqcuxcPDHgnkxPcAjCM9pquAOjxLLCxgRSdSgpPriXrbvIcbY
-         IBzEED99Rz9bdZfFPngcrIDRQ9iKO02S5K8E85gS5VRGrKd4nZuBcummV9YivgLK09vq
-         nAHkB6bFiCFtEXF2D9y7hoDvQuBMG1OFCuwfXSgrduZUdIALaUOx0QdAwB5HGnWOrvu/
-         dpug5o3+8F6stn8jPjfBkM6yhQvOHOyMMesfZnOgo1857TcMEkXKUVKDwmJQn0Ix31yq
-         TO1Q==
-X-Gm-Message-State: AGi0PubX76YpSY3sm5sE67Lw8I4zyvG4/jhiLPSKOcf6e8YFQ87o3t2E
-        wm0vfocrB24TM0j8yIZLwookYceCZiaSB5fPYeB9Gg==
-X-Google-Smtp-Source: APiQypLT4d1gLh7HfoMWCX5K/gIVomdjR0LZgpdYpVrGjdc2dDWKXWmyoBN5HMsumMUMwTuZ3kXM1TIGMv0+3x35zvQ=
-X-Received: by 2002:a1c:f312:: with SMTP id q18mr3562037wmq.175.1587456876418;
- Tue, 21 Apr 2020 01:14:36 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7xjSknTeR+7dqcaL1YgejpgJ9/KujY8j8UEnyfLmZD4=;
+        b=DvHEa75O71xkaBvzBvtW4NI76aTS+yb6CrbP52FbFm9oUMH8kXDz+Q7o/Aa2YrmIOF
+         xnejDGoqmVcfZd90a3o0MJJMFId6LOZd8FwybS1ppFLgAZSsFhrAufjm0D2WZiuR3kr4
+         ge+mcYTkmZivhtai+b1OdhqI38OwuYtr2LcPfwk76jVA+YbvE5kjB0BGct9v06OzL64w
+         7vPJ9zpwNKlsCxWMYh7vJC5Yj865kln0M7o05TeO8gvIele6uMqOBvLn55humhUrEiUv
+         H5fFf16kNVfG85FCy29sLyqzcrm+tMl1AJlRa78lN0gMsuXA81QxeyJgH1BdypY0c3B8
+         yPkQ==
+X-Gm-Message-State: AGi0PuYc9vwxtIAmE3UC/DkgZQG6BkI8sOwzyD1DH0+TuLiJNzxaZKj3
+        y1FKCBzNLZHdcX424dNc1ArsZQ==
+X-Google-Smtp-Source: APiQypLAbrQ/7+vnxMSEVWZPMUZwhWOh+FsfXCIwjmuMJt8X2Ze0PcEBnGHrEyqo46iBVLy1lNevDA==
+X-Received: by 2002:a1c:1d4b:: with SMTP id d72mr3484494wmd.19.1587456935761;
+        Tue, 21 Apr 2020 01:15:35 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:8985:83c2:22f1:8de3? ([2a01:e34:ed2f:f020:8985:83c2:22f1:8de3])
+        by smtp.googlemail.com with ESMTPSA id k14sm2678325wrp.53.2020.04.21.01.15.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 01:15:35 -0700 (PDT)
+Subject: Re: [PATCH v3 4/4] thermal: cpuidle: Register cpuidle cooling device
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Cc:     rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
+        <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CPUIDLE DRIVER - ARM PSCI" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200414220837.9284-1-daniel.lezcano@linaro.org>
+ <20200414220837.9284-4-daniel.lezcano@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <6b58035c-fe48-09ab-f042-729b07bcfec6@linaro.org>
+Date:   Tue, 21 Apr 2020 10:15:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200419100848.63472-1-glider@google.com> <20200420153352.6682533e794f591dae7aafbc@linux-foundation.org>
- <202004201540.01C8F82B@keescook> <20200421034249.GB23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200421034249.GB23230@ZenIV.linux.org.uk>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Tue, 21 Apr 2020 10:14:25 +0200
-Message-ID: <CAG_fn=VZZ7yUxtOGzuTLkr7wmfXWtKK9BHHYawj=rt9XWnCYvg@mail.gmail.com>
-Subject: Re: [PATCH] fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, sunhaoyl@outlook.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200414220837.9284-4-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Not lately and I would also like to hear the details; which regset it is?
-> Should be reasonably easy to find - just memset() the damn thing to somet=
-hing
-> recognizable, do whatever triggers that KMSAN report and look at that
-> resulting coredump.
 
-The bug is easily triggerable by the following program:
+Hi Lorenzo, Sudeep,
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-int main() {
-  volatile char *c =3D 0;
-  (void)*c;
-  return 0;
-}
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+other patches of the series are acked / reviewed.
 
-in my QEMU after I do `ulimit -c 10000`.
+If you are ok with these changes, could you add your acked-by so I can
+merge all the series via the thermal tree?
 
-I use the following patch:
+Thanks
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index f4713ea76e827..570193a1b291d 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1734,6 +1734,7 @@ static int fill_thread_core_info(struct
-elf_thread_core_info *t,
-                        int ret;
-                        size_t size =3D regset_size(t->task, regset);
-                        void *data =3D kmalloc(size, GFP_KERNEL);
-+                       memset(data, 0xae, size);
-                        if (unlikely(!data))
-                                return 0;
-                        ret =3D regset->get(t->task, regset,
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+  -- Daniel
 
-to find uninitialized bytes in the core file using hexdump.
-Those are:
-
-0x96c--0x984 (24 bytes)
-0x98c--0xa0c (128 bytes)
-0xb0c--0xb3c (48 bytes)
-0xbac--0x13ec (2112 bytes)
-
-I added kmsan_check_memory(addr, nr) to dump_emit() and got the
-following reports when calling dump_emit(cprm, men->data, men->datasz)
-in writenote():
-
-BUG: KMSAN: uninit-value in kmsan_check_memory+0xd/0x10
-mm/kmsan/kmsan_hooks.c:428
-Bytes 0-23 of 2696 are uninitialized
-BUG: KMSAN: uninit-value in kmsan_check_memory+0xd/0x10
-mm/kmsan/kmsan_hooks.c:428
-Bytes 32-159 of 2696 are uninitialized
-BUG: KMSAN: uninit-value in kmsan_check_memory+0xd/0x10
-mm/kmsan/kmsan_hooks.c:428
-Bytes 416-463 of 2696 are uninitialized
-BUG: KMSAN: uninit-value in kmsan_check_memory+0xd/0x10
-mm/kmsan/kmsan_hooks.c:428
-Bytes 576-2687 of 2696 are uninitialized
-
-FWIW one of such reports looks as follows:
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-BUG: KMSAN: uninit-value in kmsan_check_memory+0xd/0x10
-mm/kmsan/kmsan_hooks.c:428
-CPU: 0 PID: 1503 Comm: probe Not tainted 5.6.0-rc7+ #4105
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/=
-2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77
- dump_stack+0x16f/0x208 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- kmsan_internal_check_memory+0x22e/0x3c0 mm/kmsan/kmsan.c:423
- kmsan_check_memory+0xd/0x10 mm/kmsan/kmsan_hooks.c:428
- dump_emit+0x1ab/0x580 fs/coredump.c:824
- writenote+0x30a/0x4b0 fs/binfmt_elf.c:1420
- free_note_info fs/binfmt_elf.c:1910
- elf_core_dump+0x644c/0x6e60 fs/binfmt_elf.c:2377
- do_coredump+0x488d/0x5400 fs/coredump.c:790
- get_signal+0x147f/0x2d50 kernel/signal.c:2733
- do_signal+0x6d/0xda0 arch/x86/kernel/signal.c:813
- exit_to_usermode_loop arch/x86/entry/common.c:160
-...
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144
- kmsan_internal_poison_shadow+0x5c/0xf0 mm/kmsan/kmsan.c:127
- kmsan_poison_shadow+0x5f/0xa0 mm/kmsan/kmsan_hooks.c:405
- kmalloc ./include/linux/slab.h:560
- fill_thread_core_info fs/binfmt_elf.c:1736
- fill_note_info fs/binfmt_elf.c:1838
- elf_core_dump+0x2f8c/0x6e60 fs/binfmt_elf.c:2239
- do_coredump+0x488d/0x5400 fs/coredump.c:790
- get_signal+0x147f/0x2d50 kernel/signal.c:2733
- do_signal+0x6d/0xda0 arch/x86/kernel/signal.c:813
- exit_to_usermode_loop arch/x86/entry/common.c:160
- prepare_exit_to_usermode+0x337/0x480 arch/x86/entry/common.c:195
- swapgs_restore_regs_and_return_to_usermode+0x0/0x80
-arch/x86/entry/entry_64.S:625
-
-Bytes 0-23 of 2696 are uninitialized
-Memory access of size 2696 starts at ffff9e85a7115000
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
+On 15/04/2020 00:08, Daniel Lezcano wrote:
+> The cpuidle driver can be used as a cooling device by injecting idle
+> cycles. The DT binding for the idle state added an optional
+> 
+> When the property is set, register the cpuidle driver with the idle
+> state node pointer as a cooling device. The thermal framework will do
+> the association automatically with the thermal zone via the
+> cooling-device defined in the device tree cooling-maps section.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  drivers/cpuidle/cpuidle-arm.c  | 5 +++++
+>  drivers/cpuidle/cpuidle-psci.c | 5 +++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
+> index 9e5156d39627..2406ac0ae134 100644
+> --- a/drivers/cpuidle/cpuidle-arm.c
+> +++ b/drivers/cpuidle/cpuidle-arm.c
+> @@ -8,6 +8,7 @@
+>  
+>  #define pr_fmt(fmt) "CPUidle arm: " fmt
+>  
+> +#include <linux/cpu_cooling.h>
+>  #include <linux/cpuidle.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/cpu_pm.h>
+> @@ -124,6 +125,10 @@ static int __init arm_idle_init_cpu(int cpu)
+>  	if (ret)
+>  		goto out_kfree_drv;
+>  
+> +	ret = cpuidle_cooling_register(drv);
+> +	if (ret)
+> +		pr_err("Failed to register the idle cooling device: %d\n", ret);
+> +
+>  	return 0;
+>  
+>  out_kfree_drv:
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index edd7a54ef0d3..8e805bff646f 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -9,6 +9,7 @@
+>  #define pr_fmt(fmt) "CPUidle PSCI: " fmt
+>  
+>  #include <linux/cpuhotplug.h>
+> +#include <linux/cpu_cooling.h>
+>  #include <linux/cpuidle.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/cpu_pm.h>
+> @@ -305,6 +306,10 @@ static int __init psci_idle_init_cpu(int cpu)
+>  	if (ret)
+>  		goto out_kfree_drv;
+>  
+> +	ret = cpuidle_cooling_register(drv);
+> +	if (ret)
+> +		pr_err("Failed to register the idle cooling device: %d\n", ret);
+> +
+>  	return 0;
+>  
+>  out_kfree_drv:
+> 
 
 
---=20
-Alexander Potapenko
-Software Engineer
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
