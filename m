@@ -2,121 +2,121 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE453C55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE04EC55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFC972076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:16:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HlrVX0Gs"
+	by mail.kernel.org (Postfix) with ESMTP id 96CAD20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgDULQs (ORCPT
+        id S1728694AbgDULRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:16:48 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53021 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726018AbgDULQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:16:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587467806;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=97DLxg4Yjg3km/mFNl5Zacv6VSLE1VXtqLZ5V4giXi0=;
-        b=HlrVX0GsVKY+PNOhH8kTEyTdXU1qVbiJHKgccyIqX3DhE6pqXPhMEgn7owWA0C3bBOWVnf
-        T8eHCQPdf0JTtQ1kTLSllOrjsYfchMeq8RNEo8uoJBxNRx1hz0tBmFVCgt90lnTAqFz/ZM
-        rgo4EOYKmdzPYEx+hVdV4wjssYoW+Nk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-4NZ7qyVbNU-zDvsmYgxkfQ-1; Tue, 21 Apr 2020 07:16:44 -0400
-X-MC-Unique: 4NZ7qyVbNU-zDvsmYgxkfQ-1
-Received: by mail-wr1-f72.google.com with SMTP id i10so7313044wrq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:16:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=97DLxg4Yjg3km/mFNl5Zacv6VSLE1VXtqLZ5V4giXi0=;
-        b=jrA8xI4s62W8juof+/CHVJQXh/Vz0xbtnqUEEAwkY2xckghnbXxzJGxK8+v9HXvizr
-         EOWzOXh2s1zIi6yxTYniodwC+UJlNA++aGe5GcEDOgvX2wT8TYQis0QugBnerOYb+QdM
-         5fydesyQTasV23SiWRF6b7HsitWRAHBN5qm3gmCGg7wSmZvLjfUN7U/XLnbCeDHpk/dF
-         M9JXtvwanBEQf0lxXlNg1yLfQ6lQtkQRf50UVmmw/TtQ9+1rkiLQW4JOnvD/cDqdznLn
-         OL5sbAvcV/tBKK2U3tp5oQDFG9Fyr0X41K7sV01Vptk11lNxtFZ3XlF9xcwgspHCFzNs
-         mC6Q==
-X-Gm-Message-State: AGi0Puaaa9bWAMS1PHvvWFH2mS0rOR6JDBbDH1TJqfSu7cDuIVU0hjt0
-        YnmPlT4u+ANrjEmyYc3amzYJ6CpqlQFth8Moz9uO8PdElHb4wrzfuGR5QeHTF/V9jWmgeKaKnw8
-        cJX116P1WI7NPAx8C7AGdFk9m
-X-Received: by 2002:a5d:5652:: with SMTP id j18mr6767442wrw.40.1587467803535;
-        Tue, 21 Apr 2020 04:16:43 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIM+q3J6iSnskRnURVF3g9hh9MdKKvxJisuR8ZZlbkBs6sJqC1TWZ4HVghfB2r6qghAm3/t8A==
-X-Received: by 2002:a5d:5652:: with SMTP id j18mr6767417wrw.40.1587467803259;
-        Tue, 21 Apr 2020 04:16:43 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
-        by smtp.gmail.com with ESMTPSA id t17sm3290485wro.2.2020.04.21.04.16.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 04:16:42 -0700 (PDT)
-Subject: Re: [PATCH 1/4] KVM: x86: hyperv: Remove duplicate definitions of
- Reference TSC Page
-To:     Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-References: <20200420173838.24672-1-mikelley@microsoft.com>
- <20200420173838.24672-2-mikelley@microsoft.com>
- <20200421092925.rxb72yep4paruvi6@debian>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6c2bae31-14a8-39cf-6e6d-139d84146477@redhat.com>
-Date:   Tue, 21 Apr 2020 13:16:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 21 Apr 2020 07:17:10 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2072 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728663AbgDULRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:17:06 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id A887EBF23DF29DC07A5F;
+        Tue, 21 Apr 2020 12:17:04 +0100 (IST)
+Received: from localhost (10.47.92.218) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 21 Apr
+ 2020 12:17:04 +0100
+Date:   Tue, 21 Apr 2020 12:16:51 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Will Deacon <will@kernel.org>
+CC:     Tian Tao <tiantao6@hisilicon.com>, <catalin.marinas@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <james.morse@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
+        <info@metux.net>, <allison@lohutok.net>
+Subject: Re: [PATCH] arm32: fix flushcache syscall with device address
+Message-ID: <20200421121651.000009f0@Huawei.com>
+In-Reply-To: <20200421081239.GA15439@willie-the-truck>
+References: <1587456514-61156-1-git-send-email-tiantao6@hisilicon.com>
+        <20200421081239.GA15439@willie-the-truck>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20200421092925.rxb72yep4paruvi6@debian>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.92.218]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/20 11:29, Wei Liu wrote:
-> On Mon, Apr 20, 2020 at 10:38:35AM -0700, Michael Kelley wrote:
->> The Hyper-V Reference TSC Page structure is defined twice. struct
->> ms_hyperv_tsc_page has padding out to a full 4 Kbyte page size. But
->> the padding is not needed because the declaration includes a union
->> with HV_HYP_PAGE_SIZE.  KVM uses the second definition, which is
->> struct _HV_REFERENCE_TSC_PAGE, because it does not have the padding.
->>
->> Fix the duplication by removing the padding from ms_hyperv_tsc_page.
->> Fix up the KVM code to use it. Remove the no longer used struct
->> _HV_REFERENCE_TSC_PAGE.
->>
->> There is no functional change.
->>
->> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
->> ---
->>  arch/x86/include/asm/hyperv-tlfs.h | 8 --------
->>  arch/x86/include/asm/kvm_host.h    | 2 +-
->>  arch/x86/kvm/hyperv.c              | 4 ++--
+On Tue, 21 Apr 2020 09:12:39 +0100
+Will Deacon <will@kernel.org> wrote:
+
+> On Tue, Apr 21, 2020 at 04:08:34PM +0800, Tian Tao wrote:
+> > An issue has been observed on our Kungpeng916 systems when using a PCI
+> > express GPU. This occurs when a 32 bit application running on a 64 bit
+> > kernel issues a cache flush operation to a memory address that is in
+> > a PCI BAR of the GPU.The results in an illegal operation and
+> > subsequent crash.  
 > 
-> Paolo, this patch touches KVM code. Let me know how you would like to
-> handle this.
+> A kernel crash? If so, please can you include the log here?
 
-Just include it, I don't expect conflicts.
+Deploying my finest copy typing from the image Tian Tao sent out
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+      KERNEL: /root/vmlinux-4.19.36-3patch-00228-debuginfo
+    DUMPFILE: vmcore [PARTIAL DUMP]
+        CPUS: 64
+        DATE: Fri Mar 20 06:59:56 2020
+      UPTIME: 07:01:01
+LOAD AVERAGE: 33.76, 35.45, 35.79
+       TASKS: 59447
+    NODENAME: cpus-new-ondemand-0509
+     RELEASE: 4.19.36-3patch-0228
+     VERSION: #4 SMP Fri Feb 28 15:18:51 UTC 2020
+     MACHINE: aarch64 (unknown MHz)
+      MEMORY: 255.7 GB
+       PANIC: "kernel panic - not syncing: Asynchronous SError Interrupt"
+         PID: 175108
+     COMMAND: "UnityMain"
+        TASK: ffff80a96999dd00 [THREAD_INFO: ffff80a96999dd00]
+         CPU: 62
+       STATE: TASK_RUNNING (PANIC)
 
-Paolo
+crash> bt
+PID: 175108 TASK: ffff80a96999dd00 CPU: 62 COMMAND: "UnityMain"
+  #0 [ffff000194e1b920] machine_kexec at ffff0000080a265c
+  #1 [ffff000194e1b980] __crash_kexec at ffff0000081b3ba8
+  #2 [ffff000194e1bb10] panic at ffff0000080ecc98
+  #3 [ffff000194e1bbf0] nmi_panic at ffff0000080ec7f4
+  #4 [ffff000194e1bc10] arm64_serror_panic at fff00000809019c
+  #5 [ffff000194e1bc30] do_serror at ffff00000809039c
+  #6 [ffff000194e1bd90] el1_error at ffff000008083e50
+  #7 [ffff000194e1bda0] __flush_icache_range at ffff0000080a9ec4
+  #8 [ffff000194e1be60] el0_svc_common at fff0000080977d8
+  #9 [ffff000194e1bea0] el0_svc_compat_handler at ffff0000080979b4
+ #10 [ffff000194e1bff0] el0_svc_compat at ffff0000008083874
+
+     PC: c90fe7f8  LR: c90ff09c  SP: d2afa8e0  PSTATE: 800b0010
+    X12: c56e96e4 X11: d2afaa48 X10: d0ff1000  X9: d2afab68
+     x8: 000000d6  X7: 000f0002  X6: d3c61840  X5: d3c61001
+     X4: d3c03000  X3: 0004d54a  x2: 00000000  x1: d3c61040
+     X0: d3c61000
+
+
+New advanced test for Mavis Beacon teaches typing.
+
+In summary this is all we have to hand...
+
+> 
+> Will
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 
