@@ -2,54 +2,55 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD0AC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9B8C55183
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0764C206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38994206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488099;
-	bh=3INumy2CH07Xe/xHwV+zORc6HQ+uK/PC/mzF7jM8eLE=;
+	s=default; t=1587488103;
+	bh=uIZj5tfgmhvq3cs/nTn7VA+2k47tEWnFMWu+gPZ8Uyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BYafzdZFr+QgnO4MHn2O+GDO4LR15EbJZ0ilr6PGpHHlmroYpq3CcxfGRT7acuX1q
-	 slNqJjyB0doN9K/Q3ooOZ+YkyXrqt1nH8AvnJ8FtSU5o30FytC8+hnw7THvWWsB7Dr
-	 7YPY0oYKsfoKkrmKtiL48O+rgpysTjR4kJkUqF4c=
+	b=e9zmjyx6QhmJwiIOJG52liExGmDKeqDv3L1TxmwMgxPZPYucMF3hzrr2/UWbIl0FM
+	 EWsAu1+RKswtgkcn+cULGSH9cI3d7hROZIiVaizvEljo1teqfyjh8AFvKY7By0XRMp
+	 jbzzLC4rCwSkadsNT4ZF6d8iVRNfEkseewf8EbQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgDUQyv (ORCPT
+        id S1729249AbgDUQzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:54:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56888 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 12:55:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbgDUQyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:54:44 -0400
+        id S1729182AbgDUQyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:54:51 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD86A206B8;
-        Tue, 21 Apr 2020 16:54:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD05421927;
+        Tue, 21 Apr 2020 16:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587488084;
-        bh=3INumy2CH07Xe/xHwV+zORc6HQ+uK/PC/mzF7jM8eLE=;
+        bh=uIZj5tfgmhvq3cs/nTn7VA+2k47tEWnFMWu+gPZ8Uyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+o2W4m2us6WAWgciKuGMgDvLKD1ZZ35gGLY4Q948q+6qj+PrwbaQb9R9/iDg3/Vq
-         MAMDdY2bdNRojFkoIGW88sDw1+RAajHJAHpYyz7dX4WytruameC5yV2wkaZxlHwY6i
-         JZYOUfpIPJ1pDfat6FBIJ7LJQA8hXQ+rvumoDKSA=
+        b=UaqkuQqilJ6A5QVeKxsDbFhN4hiEanUOzY6QlBjObNm6zwr5NzPuM2gKAavswPXLP
+         1nBtNwhDNbWx1CQy7pEnbmiMZAekNmj76kge4ci9jCo8J15/XUKOvlMKTuAYhVDyjb
+         48YWpb0FsUonEsc6rzQ9aYaTcxrlJqqZXXD/OKJs=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jQwAU-00CmDN-1q; Tue, 21 Apr 2020 18:54:42 +0200
+        id 1jQwAU-00CmFZ-Vu; Tue, 21 Apr 2020 18:54:42 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com
-Subject: [PATCH v2 01/29] docs: filesystems: convert caching/object.txt to ReST
-Date:   Tue, 21 Apr 2020 18:54:12 +0200
-Message-Id: <4467b30d614b6362e5c5e690cc43b9633b7b3ff0.1587487612.git.mchehab+huawei@kernel.org>
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v2 28/29] docs: filesystems: convert xfs-delayed-logging-design.txt to ReST
+Date:   Tue, 21 Apr 2020 18:54:39 +0200
+Message-Id: <e665ef422eb8b96659c0393eb790140ecc004ed1.1587487612.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1587487612.git.mchehab+huawei@kernel.org>
 References: <cover.1587487612.git.mchehab+huawei@kernel.org>
@@ -62,204 +63,235 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 - Add a SPDX header;
 - Adjust document and section titles;
-- Comment out text ToC for html/pdf output;
 - Some whitespace fixes and new line breaks;
-- Adjust the events list to make them look better for html output;
+- Mark literal blocks as such;
 - Add it to filesystems/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/filesystems/caching/fscache.txt |  2 +-
- Documentation/filesystems/caching/index.rst   |  9 ++++
- .../caching/{object.txt => object.rst}        | 43 ++++++++-----------
- Documentation/filesystems/index.rst           |  2 +
- fs/fscache/object.c                           |  2 +-
- 5 files changed, 31 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/filesystems/caching/index.rst
- rename Documentation/filesystems/caching/{object.txt => object.rst} (95%)
+ Documentation/filesystems/index.rst           |  1 +
+ ...ign.txt => xfs-delayed-logging-design.rst} | 65 +++++++++++--------
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 40 insertions(+), 28 deletions(-)
+ rename Documentation/filesystems/{xfs-delayed-logging-design.txt => xfs-delayed-logging-design.rst} (97%)
 
-diff --git a/Documentation/filesystems/caching/fscache.txt b/Documentation/filesystems/caching/fscache.txt
-index 50f0a5757f48..071ff50a774d 100644
---- a/Documentation/filesystems/caching/fscache.txt
-+++ b/Documentation/filesystems/caching/fscache.txt
-@@ -191,7 +191,7 @@ The cache backend API to FS-Cache can be found in:
- A description of the internal representations and object state machine can be
- found in:
- 
--	Documentation/filesystems/caching/object.txt
-+	Documentation/filesystems/caching/object.rst
- 
- 
- =======================
-diff --git a/Documentation/filesystems/caching/index.rst b/Documentation/filesystems/caching/index.rst
-new file mode 100644
-index 000000000000..e5ec95ff0be2
---- /dev/null
-+++ b/Documentation/filesystems/caching/index.rst
-@@ -0,0 +1,9 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Filesystem Caching
-+==================
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   object
-diff --git a/Documentation/filesystems/caching/object.txt b/Documentation/filesystems/caching/object.rst
-similarity index 95%
-rename from Documentation/filesystems/caching/object.txt
-rename to Documentation/filesystems/caching/object.rst
-index 100ff41127e4..ce0e043ccd33 100644
---- a/Documentation/filesystems/caching/object.txt
-+++ b/Documentation/filesystems/caching/object.rst
-@@ -1,10 +1,12 @@
--	     ====================================================
--	     IN-KERNEL CACHE OBJECT REPRESENTATION AND MANAGEMENT
--	     ====================================================
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+====================================================
-+In-Kernel Cache Object Representation and Management
-+====================================================
- 
- By: David Howells <dhowells@redhat.com>
- 
--Contents:
-+.. Contents:
- 
-  (*) Representation
- 
-@@ -18,8 +20,7 @@ Contents:
-  (*) The set of events.
- 
- 
--==============
--REPRESENTATION
-+Representation
- ==============
- 
- FS-Cache maintains an in-kernel representation of each object that a netfs is
-@@ -38,7 +39,7 @@ or even by no objects (it may not be cached).
- 
- Furthermore, both cookies and objects are hierarchical.  The two hierarchies
- correspond, but the cookies tree is a superset of the union of the object trees
--of multiple caches:
-+of multiple caches::
- 
- 	    NETFS INDEX TREE               :      CACHE 1     :      CACHE 2
- 	                                   :                  :
-@@ -89,8 +90,7 @@ pointers to the cookies.  The cookies themselves and any objects attached to
- those cookies are hidden from it.
- 
- 
--===============================
--OBJECT MANAGEMENT STATE MACHINE
-+Object Management State Machine
- ===============================
- 
- Within FS-Cache, each active object is managed by its own individual state
-@@ -124,7 +124,7 @@ is not masked, the object will be queued for processing (by calling
- fscache_enqueue_object()).
- 
- 
--PROVISION OF CPU TIME
-+Provision of CPU Time
- ---------------------
- 
- The work to be done by the various states was given CPU time by the threads of
-@@ -141,7 +141,7 @@ because:
-      workqueues don't necessarily have the right numbers of threads.
- 
- 
--LOCKING SIMPLIFICATION
-+Locking Simplification
- ----------------------
- 
- Because only one worker thread may be operating on any particular object's
-@@ -151,8 +151,7 @@ from the cache backend's representation (fscache_object) - which may be
- requested from either end.
- 
- 
--=================
--THE SET OF STATES
-+The Set of States
- =================
- 
- The object state machine has a set of states that it can be in.  There are
-@@ -275,19 +274,17 @@ memory and potentially deletes stuff from disk:
-      this state.
- 
- 
--THE SET OF EVENTS
-+The Set of Events
- -----------------
- 
- There are a number of events that can be raised to an object state machine:
- 
-- (*) FSCACHE_OBJECT_EV_UPDATE
--
-+ FSCACHE_OBJECT_EV_UPDATE
-      The netfs requested that an object be updated.  The state machine will ask
-      the cache backend to update the object, and the cache backend will ask the
-      netfs for details of the change through its cookie definition ops.
- 
-- (*) FSCACHE_OBJECT_EV_CLEARED
--
-+ FSCACHE_OBJECT_EV_CLEARED
-      This is signalled in two circumstances:
- 
-      (a) when an object's last child object is dropped and
-@@ -296,20 +293,16 @@ There are a number of events that can be raised to an object state machine:
- 
-      This is used to proceed from the dying state.
- 
-- (*) FSCACHE_OBJECT_EV_ERROR
--
-+ FSCACHE_OBJECT_EV_ERROR
-      This is signalled when an I/O error occurs during the processing of some
-      object.
- 
-- (*) FSCACHE_OBJECT_EV_RELEASE
-- (*) FSCACHE_OBJECT_EV_RETIRE
--
-+ FSCACHE_OBJECT_EV_RELEASE, FSCACHE_OBJECT_EV_RETIRE
-      These are signalled when the netfs relinquishes a cookie it was using.
-      The event selected depends on whether the netfs asks for the backing
-      object to be retired (deleted) or retained.
- 
-- (*) FSCACHE_OBJECT_EV_WITHDRAW
--
-+ FSCACHE_OBJECT_EV_WITHDRAW
-      This is signalled when the cache backend wants to withdraw an object.
-      This means that the object will have to be detached from the netfs's
-      cookie.
 diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 0641429f53a2..f8781c13aee3 100644
+index 11852bf3e758..477496763473 100644
 --- a/Documentation/filesystems/index.rst
 +++ b/Documentation/filesystems/index.rst
-@@ -25,6 +25,8 @@ algorithms work.
-    locking
-    directory-locking
- 
-+   caching/index
+@@ -119,4 +119,5 @@ Documentation for filesystem implementations.
+    udf
+    virtiofs
+    vfat
++   xfs-delayed-logging-design
+    zonefs
+diff --git a/Documentation/filesystems/xfs-delayed-logging-design.txt b/Documentation/filesystems/xfs-delayed-logging-design.rst
+similarity index 97%
+rename from Documentation/filesystems/xfs-delayed-logging-design.txt
+rename to Documentation/filesystems/xfs-delayed-logging-design.rst
+index 9a6dd289b17b..464405d2801e 100644
+--- a/Documentation/filesystems/xfs-delayed-logging-design.txt
++++ b/Documentation/filesystems/xfs-delayed-logging-design.rst
+@@ -1,8 +1,11 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-    porting
++==========================
+ XFS Delayed Logging Design
+---------------------------
++==========================
  
- Filesystem support layers
-diff --git a/fs/fscache/object.c b/fs/fscache/object.c
-index cfeba839a0f2..efaa003b8323 100644
---- a/fs/fscache/object.c
-+++ b/fs/fscache/object.c
-@@ -4,7 +4,7 @@
-  * Copyright (C) 2007 Red Hat, Inc. All Rights Reserved.
-  * Written by David Howells (dhowells@redhat.com)
-  *
-- * See Documentation/filesystems/caching/object.txt for a description of the
-+ * See Documentation/filesystems/caching/object.rst for a description of the
-  * object state machine and the in-kernel representations.
-  */
+ Introduction to Re-logging in XFS
+----------------------------------
++=================================
  
+ XFS logging is a combination of logical and physical logging. Some objects,
+ such as inodes and dquots, are logged in logical format where the details
+@@ -25,7 +28,7 @@ changes in the new transaction that is written to the log.
+ That is, if we have a sequence of changes A through to F, and the object was
+ written to disk after change D, we would see in the log the following series
+ of transactions, their contents and the log sequence number (LSN) of the
+-transaction:
++transaction::
+ 
+ 	Transaction		Contents	LSN
+ 	   A			   A		   X
+@@ -85,7 +88,7 @@ IO permanently. Hence the XFS journalling subsystem can be considered to be IO
+ bound.
+ 
+ Delayed Logging: Concepts
+--------------------------
++=========================
+ 
+ The key thing to note about the asynchronous logging combined with the
+ relogging technique XFS uses is that we can be relogging changed objects
+@@ -154,9 +157,10 @@ The fundamental requirements for delayed logging in XFS are simple:
+ 	6. No performance regressions for synchronous transaction workloads.
+ 
+ Delayed Logging: Design
+------------------------
++=======================
+ 
+ Storing Changes
++---------------
+ 
+ The problem with accumulating changes at a logical level (i.e. just using the
+ existing log item dirty region tracking) is that when it comes to writing the
+@@ -194,30 +198,30 @@ asynchronous transactions to the log. The differences between the existing
+ formatting method and the delayed logging formatting can be seen in the
+ diagram below.
+ 
+-Current format log vector:
++Current format log vector::
+ 
+-Object    +---------------------------------------------+
+-Vector 1      +----+
+-Vector 2                    +----+
+-Vector 3                                   +----------+
++    Object    +---------------------------------------------+
++    Vector 1      +----+
++    Vector 2                    +----+
++    Vector 3                                   +----------+
+ 
+-After formatting:
++After formatting::
+ 
+-Log Buffer    +-V1-+-V2-+----V3----+
++    Log Buffer    +-V1-+-V2-+----V3----+
+ 
+-Delayed logging vector:
++Delayed logging vector::
+ 
+-Object    +---------------------------------------------+
+-Vector 1      +----+
+-Vector 2                    +----+
+-Vector 3                                   +----------+
++    Object    +---------------------------------------------+
++    Vector 1      +----+
++    Vector 2                    +----+
++    Vector 3                                   +----------+
+ 
+-After formatting:
++After formatting::
+ 
+-Memory Buffer +-V1-+-V2-+----V3----+
+-Vector 1      +----+
+-Vector 2           +----+
+-Vector 3                +----------+
++    Memory Buffer +-V1-+-V2-+----V3----+
++    Vector 1      +----+
++    Vector 2           +----+
++    Vector 3                +----------+
+ 
+ The memory buffer and associated vector need to be passed as a single object,
+ but still need to be associated with the parent object so if the object is
+@@ -242,6 +246,7 @@ relogged in memory.
+ 
+ 
+ Tracking Changes
++----------------
+ 
+ Now that we can record transactional changes in memory in a form that allows
+ them to be used without limitations, we need to be able to track and accumulate
+@@ -278,6 +283,7 @@ done for convenience/sanity of the developers.
+ 
+ 
+ Delayed Logging: Checkpoints
++----------------------------
+ 
+ When we have a log synchronisation event, commonly known as a "log force",
+ all the items in the CIL must be written into the log via the log buffers.
+@@ -341,7 +347,7 @@ Hence log vectors need to be able to be chained together to allow them to be
+ detached from the log items. That is, when the CIL is flushed the memory
+ buffer and log vector attached to each log item needs to be attached to the
+ checkpoint context so that the log item can be released. In diagrammatic form,
+-the CIL would look like this before the flush:
++the CIL would look like this before the flush::
+ 
+ 	CIL Head
+ 	   |
+@@ -362,7 +368,7 @@ the CIL would look like this before the flush:
+ 					-> vector array
+ 
+ And after the flush the CIL head is empty, and the checkpoint context log
+-vector list would look like:
++vector list would look like::
+ 
+ 	Checkpoint Context
+ 	   |
+@@ -411,6 +417,7 @@ compare" situation that can be done after a working and reviewed implementation
+ is in the dev tree....
+ 
+ Delayed Logging: Checkpoint Sequencing
++--------------------------------------
+ 
+ One of the key aspects of the XFS transaction subsystem is that it tags
+ committed transactions with the log sequence number of the transaction commit.
+@@ -474,6 +481,7 @@ force the log at the LSN of that transaction) and so the higher level code
+ behaves the same regardless of whether delayed logging is being used or not.
+ 
+ Delayed Logging: Checkpoint Log Space Accounting
++------------------------------------------------
+ 
+ The big issue for a checkpoint transaction is the log space reservation for the
+ transaction. We don't know how big a checkpoint transaction is going to be
+@@ -491,7 +499,7 @@ the size of the transaction and the number of regions being logged (the number
+ of log vectors in the transaction).
+ 
+ An example of the differences would be logging directory changes versus logging
+-inode changes. If you modify lots of inode cores (e.g. chmod -R g+w *), then
++inode changes. If you modify lots of inode cores (e.g. ``chmod -R g+w *``), then
+ there are lots of transactions that only contain an inode core and an inode log
+ format structure. That is, two vectors totaling roughly 150 bytes. If we modify
+ 10,000 inodes, we have about 1.5MB of metadata to write in 20,000 vectors. Each
+@@ -565,6 +573,7 @@ which is once every 30s.
+ 
+ 
+ Delayed Logging: Log Item Pinning
++---------------------------------
+ 
+ Currently log items are pinned during transaction commit while the items are
+ still locked. This happens just after the items are formatted, though it could
+@@ -605,6 +614,7 @@ object, we have a race with CIL being flushed between the check and the pin
+ lock to guarantee that we pin the items correctly.
+ 
+ Delayed Logging: Concurrent Scalability
++---------------------------------------
+ 
+ A fundamental requirement for the CIL is that accesses through transaction
+ commits must scale to many concurrent commits. The current transaction commit
+@@ -683,8 +693,9 @@ woken by the wrong event.
+ 
+ 
+ Lifecycle Changes
++-----------------
+ 
+-The existing log item life cycle is as follows:
++The existing log item life cycle is as follows::
+ 
+ 	1. Transaction allocate
+ 	2. Transaction reserve
+@@ -729,7 +740,7 @@ at the same time. If the log item is in the AIL or between steps 6 and 7
+ and steps 1-6 are re-entered, then the item is relogged. Only when steps 8-9
+ are entered and completed is the object considered clean.
+ 
+-With delayed logging, there are new steps inserted into the life cycle:
++With delayed logging, there are new steps inserted into the life cycle::
+ 
+ 	1. Transaction allocate
+ 	2. Transaction reserve
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 968c97eda352..c8851e7c443a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18607,7 +18607,7 @@ W:	http://xfs.org/
+ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ F:	Documentation/ABI/testing/sysfs-fs-xfs
+ F:	Documentation/admin-guide/xfs.rst
+-F:	Documentation/filesystems/xfs-delayed-logging-design.txt
++F:	Documentation/filesystems/xfs-delayed-logging-design.rst
+ F:	Documentation/filesystems/xfs-self-describing-metadata.txt
+ F:	fs/xfs/
+ F:	include/uapi/linux/dqblk_xfs.h
 -- 
 2.25.2
 
