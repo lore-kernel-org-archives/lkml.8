@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82617C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1ECC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C288206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7123C206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:39:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xOgAT3c2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wVPOFqok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgDUQjX (ORCPT
+        id S1729198AbgDUQj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40488 "EHLO
+        Tue, 21 Apr 2020 12:39:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725930AbgDUQjT (ORCPT
+        by vger.kernel.org with ESMTP id S1729015AbgDUQjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:39:19 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EBBBC061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:39:18 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u16so4449454wmc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:39:18 -0700 (PDT)
+        Tue, 21 Apr 2020 12:39:16 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BFEFC061A41
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:39:14 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id t14so17142351wrw.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 09:39:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sKTMTyV6o0e+hE/bx04wYYAqYgApZOSrkknoj7MN0Vo=;
-        b=xOgAT3c2LG/MUAXQCPRvCO5Eh6W+IH4Eqt7fpuFUCGa5jMRs2/QhIj3UPqzvYa99XR
-         TvdJ7L+d1mDnCn8wz6rdUt5QVHKWT8FuEhHBrIifnRZIRBLR/kMoDNV3f+Fm8r73S8z9
-         Vjc3lcdTBG4IUUzpSrGPSzN51l+w0IGhsFDTrQAUk4Uh90m4gsfxG9Y3yXCzp5vjryew
-         e3152pIIocOb1rajAAy/xHNLb8YLYB0x/e1mxxa2yhAft5lHSj6dq6L1sqsQLpqlkQ48
-         MF2ztXPSoG1A7tYcPjHw2YVaHzq0uAF7BUycI/xlKW9ApiLyTL5dmVclvwnGnveXO7BK
-         Vq3w==
+        bh=T4RV+W5A0WTJfrEJC2MWNCKclGhSBwoQ8rtDkcyUPgc=;
+        b=wVPOFqokqQHtu5wiekfE2ea3FnkoODS0MoRFNeU6Cy8cLP/Gka9g3IOQyGPya52nKW
+         dtHlqR1XERO8CxEXPHnzUq8rNDxWO+sQbF1SJ5fgyxwTtDagIWKtuEXoaBR6CRTISQUi
+         Bmb81B7Zff+oZFfXP+cA4vI6jYlBN3fuJrKlTipGYZcQVIi5rXCcNAH971uPVW5808p1
+         mkB5w4uWieapIl3w53xy1k+78Inex2fsGyWiE0/cCZ+zS7wh3zOWMDo3SbKJ3CttXl/U
+         RJnXtJwvEJ7fkSeUEVCpkYuRGEnEj7U90BONzq4y2yLFy8mbtjoTrTY5u87++tbqf1sj
+         Fzxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=sKTMTyV6o0e+hE/bx04wYYAqYgApZOSrkknoj7MN0Vo=;
-        b=g5dL0/iOg83DhjmeeJEp4gfV/sS44B/1GMutM5NVZ2znDSYH3YRYSgspvYct6r8zDL
-         dqpmGNm7RrAxy+I4YSWaiioAqTehTbrfGO6DFbzRACfofKfVyaMep658jxyV+O4MWBrb
-         uxuEgT9JEwQSziYPaIX8loUNl0TggK97XA3to8vf3ishi/5/devLbcfbKMRidxg2ruB3
-         9byEdp4824Ft08P6Z5lNddQ5F8zigUTyH1vhSV2rWPW9LkCX5ROcFGBtj0z0G+ExOnpz
-         SG7yoQDCNjDxDsJsxXrWrk9o6x+MDY6PKDRNFN+fPDREV6qmkbHwDclqjy5EyqFIE7da
-         mBjw==
-X-Gm-Message-State: AGi0PuYqEPtgNQLVTuOVs/HTpVcDbnvC8ifov9h/wj6vrIqR1T6mpQZ1
-        eWj3bMxVGjqMtwQkMEkR2WwE9XxlutchoD2m
-X-Google-Smtp-Source: APiQypKWuem6B271D6t/BnwUQw22yIwGDbkhfre7hmxMRMdRAg7cCIsRTM2j44+gqqZxkZ5Lbv4cpw==
-X-Received: by 2002:a7b:c941:: with SMTP id i1mr5346795wml.132.1587487156496;
-        Tue, 21 Apr 2020 09:39:16 -0700 (PDT)
+        bh=T4RV+W5A0WTJfrEJC2MWNCKclGhSBwoQ8rtDkcyUPgc=;
+        b=QucwbzSx8y49N7jbrc1Aqri54VSspGgZFlLR27UlA1TviMeEQscrcZq5vYeWcBYeEv
+         fnaD9gqiie7ms+7RfSgXk1YFgrz51E2Ei3BwiJaVioeKhxXmp+FLj+BedRYR/4Sf+bL7
+         mIEpLhDSgW1T61EOvBbqS77BseNTdpUw1RyRmnTBr6CqDHpmZ+usagTZ0cVATej67m26
+         UiwKkI5kS1AZQS7hP3qBY0dyGhfZbGAeyILsX9W5obbXg0I8M4CfGjRT11Gi+tLT6P2T
+         YCZYGJm39B+6wlNeBoCmHRtGnOKslpb7xvEa9/x3ATexN1Ho4Z8xaK25aBAhZL+E0QaR
+         X6gQ==
+X-Gm-Message-State: AGi0PuaM1T9+LMJQaaIXUzCPuTCS7dkv2gPxxFiRbihCvmgB/NhUCYzh
+        rAZlP8dF7ulTKXs1UOTFJ2TrZMueLeeCCgZp
+X-Google-Smtp-Source: APiQypJB4EHuOBE2fjZUyPlp6XB8p0fICrWtA3qUbKT84ynEufetpvCrJ1PQHxE7SnDYkjlldnfmbw==
+X-Received: by 2002:a5d:66ce:: with SMTP id k14mr26717757wrw.73.1587487152764;
+        Tue, 21 Apr 2020 09:39:12 -0700 (PDT)
 Received: from lmecxl0524.lme.st.com (2a01cb058702ff00947c0d9b78b8fa1e.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:947c:d9b:78b8:fa1e])
-        by smtp.gmail.com with ESMTPSA id q143sm4389055wme.31.2020.04.21.09.39.15
+        by smtp.gmail.com with ESMTPSA id q143sm4389055wme.31.2020.04.21.09.39.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 09:39:16 -0700 (PDT)
+        Tue, 21 Apr 2020 09:39:12 -0700 (PDT)
 From:   Etienne Carriere <etienne.carriere@linaro.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, james.morse@arm.com,
@@ -66,9 +66,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, james.morse@arm.com,
         jens.wiklander@linaro.org, tee-dev@lists.linaro.org,
         sudeep.holla@arm.com,
         Etienne Carriere <etienne.carriere@linaro.org>
-Subject: [RFC PATCH v2 5/6] firmware: stratix10: use SMCCC v1.0 helper functions
-Date:   Tue, 21 Apr 2020 18:38:10 +0200
-Message-Id: <20200421163811.22720-6-etienne.carriere@linaro.org>
+Subject: [RFC PATCH v2 2/6] firmware: psci: set SMCCC v1.0 conduit and use helpers functions
+Date:   Tue, 21 Apr 2020 18:38:07 +0200
+Message-Id: <20200421163811.22720-3-etienne.carriere@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200421163811.22720-1-etienne.carriere@linaro.org>
 References: <20200421163811.22720-1-etienne.carriere@linaro.org>
@@ -77,214 +77,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change Stratix 10 firmware driver to use SMCCC v1.0 helper functions.
+Change PSCI driver to use SMCCC v1.0 helper functions. As PSCI device
+is initialized before other devices, it sets the SMCCC conduit used
+for SMCCC calls and other devices can rely on it.
 
-Main functional change is that SMCCC conduit for the device is ensured
-to be consistent with the method used by PSCI firmware if the later
-is enabled.
-
-Another functional change is a additional info trace in the device
-probed sequence: "probing for conduit method from DT.".
+No functional change in the PSCI device itself.
 
 Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
 ---
- drivers/firmware/stratix10-svc.c | 97 +++-----------------------------
- 1 file changed, 9 insertions(+), 88 deletions(-)
+ drivers/firmware/psci/psci.c | 60 +++++-------------------------------
+ include/linux/psci.h         |  1 -
+ 2 files changed, 8 insertions(+), 53 deletions(-)
 
-diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index d5f0769f3761..484f87e14ae0 100644
---- a/drivers/firmware/stratix10-svc.c
-+++ b/drivers/firmware/stratix10-svc.c
-@@ -41,10 +41,6 @@
- /* stratix10 service layer clients */
- #define STRATIX10_RSU				"stratix10-rsu"
- 
--typedef void (svc_invoke_fn)(unsigned long, unsigned long, unsigned long,
--			     unsigned long, unsigned long, unsigned long,
--			     unsigned long, unsigned long,
--			     struct arm_smccc_res *);
- struct stratix10_svc_chan;
- 
- /**
-@@ -60,7 +56,6 @@ struct stratix10_svc {
-  * @sync_complete: state for a completion
-  * @addr: physical address of shared memory block
-  * @size: size of shared memory block
-- * @invoke_fn: function to issue secure monitor or hypervisor call
-  *
-  * This struct is used to save physical address and size of shared memory
-  * block. The shared memory blocked is allocated by secure monitor software
-@@ -73,7 +68,6 @@ struct stratix10_svc_sh_memory {
- 	struct completion sync_complete;
- 	unsigned long addr;
- 	unsigned long size;
--	svc_invoke_fn *invoke_fn;
- };
- 
- /**
-@@ -126,7 +120,6 @@ struct stratix10_svc_data {
-  * @svc_fifo: a queue for storing service message data
-  * @complete_status: state for completion
-  * @svc_fifo_lock: protect access to service message data queue
-- * @invoke_fn: function to issue secure monitor call or hypervisor call
-  *
-  * This struct is used to create communication channels for service clients, to
-  * handle secure monitor or hypervisor call.
-@@ -142,7 +135,6 @@ struct stratix10_svc_controller {
- 	struct kfifo svc_fifo;
- 	struct completion complete_status;
- 	spinlock_t svc_fifo_lock;
--	svc_invoke_fn *invoke_fn;
- };
- 
- /**
-@@ -206,8 +198,8 @@ static void svc_thread_cmd_data_claim(struct stratix10_svc_controller *ctrl,
- 
- 	pr_debug("%s: claim back the submitted buffer\n", __func__);
- 	do {
--		ctrl->invoke_fn(INTEL_SIP_SMC_FPGA_CONFIG_COMPLETED_WRITE,
--				0, 0, 0, 0, 0, 0, 0, &res);
-+		arm_smccc_1_0_invoke(INTEL_SIP_SMC_FPGA_CONFIG_COMPLETED_WRITE,
-+				     0, 0, 0, 0, 0, 0, 0, &res);
- 
- 		if (res.a0 == INTEL_SIP_SMC_STATUS_OK) {
- 			if (!res.a1) {
-@@ -256,8 +248,8 @@ static void svc_thread_cmd_config_status(struct stratix10_svc_controller *ctrl,
- 
- 	count_in_sec = FPGA_CONFIG_STATUS_TIMEOUT_SEC;
- 	while (count_in_sec) {
--		ctrl->invoke_fn(INTEL_SIP_SMC_FPGA_CONFIG_ISDONE,
--				0, 0, 0, 0, 0, 0, 0, &res);
-+		arm_smccc_1_0_invoke(INTEL_SIP_SMC_FPGA_CONFIG_ISDONE,
-+				     0, 0, 0, 0, 0, 0, 0, &res);
- 		if ((res.a0 == INTEL_SIP_SMC_STATUS_OK) ||
- 		    (res.a0 == INTEL_SIP_SMC_FPGA_CONFIG_STATUS_ERROR))
- 			break;
-@@ -420,7 +412,7 @@ static int svc_normal_to_secure_thread(void *data)
- 			 __func__, (unsigned int)a0, (unsigned int)a1);
- 		pr_debug(" a2=0x%016x\n", (unsigned int)a2);
- 
--		ctrl->invoke_fn(a0, a1, a2, 0, 0, 0, 0, 0, &res);
-+		arm_smccc_1_0_invoke(a0, a1, a2, 0, 0, 0, 0, 0, &res);
- 
- 		pr_debug("%s: after SMC call -- res.a0=0x%016x",
- 			 __func__, (unsigned int)res.a0);
-@@ -540,8 +532,8 @@ static int svc_normal_to_secure_shm_thread(void *data)
- 	struct arm_smccc_res res;
- 
- 	/* SMC or HVC call to get shared memory info from secure world */
--	sh_mem->invoke_fn(INTEL_SIP_SMC_FPGA_CONFIG_GET_MEM,
--			  0, 0, 0, 0, 0, 0, 0, &res);
-+	arm_smccc_1_0_invoke(INTEL_SIP_SMC_FPGA_CONFIG_GET_MEM,
-+			     0, 0, 0, 0, 0, 0, 0, &res);
- 	if (res.a0 == INTEL_SIP_SMC_STATUS_OK) {
- 		sh_mem->addr = res.a1;
- 		sh_mem->size = res.a2;
-@@ -661,73 +653,6 @@ svc_create_memory_pool(struct platform_device *pdev,
- 	return genpool;
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index 2937d44b5df4..00bb205cad7c 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -53,7 +53,6 @@ bool psci_tos_resident_on(int cpu)
  }
  
--/**
-- * svc_smccc_smc() - secure monitor call between normal and secure world
-- * @a0: argument passed in registers 0
-- * @a1: argument passed in registers 1
-- * @a2: argument passed in registers 2
-- * @a3: argument passed in registers 3
-- * @a4: argument passed in registers 4
-- * @a5: argument passed in registers 5
-- * @a6: argument passed in registers 6
-- * @a7: argument passed in registers 7
-- * @res: result values from register 0 to 3
-- */
--static void svc_smccc_smc(unsigned long a0, unsigned long a1,
--			  unsigned long a2, unsigned long a3,
--			  unsigned long a4, unsigned long a5,
--			  unsigned long a6, unsigned long a7,
--			  struct arm_smccc_res *res)
--{
--	arm_smccc_smc(a0, a1, a2, a3, a4, a5, a6, a7, res);
+ struct psci_operations psci_ops = {
+-	.conduit = SMCCC_CONDUIT_NONE,
+ 	.smccc_version = SMCCC_VERSION_1_0,
+ };
+ 
+@@ -62,13 +61,9 @@ enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
+ 	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
+ 		return SMCCC_CONDUIT_NONE;
+ 
+-	return psci_ops.conduit;
++	return arm_smccc_1_0_get_conduit();
+ }
+ 
+-typedef unsigned long (psci_fn)(unsigned long, unsigned long,
+-				unsigned long, unsigned long);
+-static psci_fn *invoke_psci_fn;
+-
+ enum psci_function {
+ 	PSCI_FN_CPU_SUSPEND,
+ 	PSCI_FN_CPU_ON,
+@@ -120,23 +115,14 @@ bool psci_power_state_is_valid(u32 state)
+ 	return !(state & ~valid_mask);
+ }
+ 
+-static unsigned long __invoke_psci_fn_hvc(unsigned long function_id,
+-			unsigned long arg0, unsigned long arg1,
+-			unsigned long arg2)
++static unsigned long invoke_psci_fn(unsigned long function_id,
++				    unsigned long arg0, unsigned long arg1,
++				    unsigned long arg2)
+ {
+ 	struct arm_smccc_res res;
+ 
+-	arm_smccc_hvc(function_id, arg0, arg1, arg2, 0, 0, 0, 0, &res);
+-	return res.a0;
 -}
--
--/**
-- * svc_smccc_hvc() - hypervisor call between normal and secure world
-- * @a0: argument passed in registers 0
-- * @a1: argument passed in registers 1
-- * @a2: argument passed in registers 2
-- * @a3: argument passed in registers 3
-- * @a4: argument passed in registers 4
-- * @a5: argument passed in registers 5
-- * @a6: argument passed in registers 6
-- * @a7: argument passed in registers 7
-- * @res: result values from register 0 to 3
-- */
--static void svc_smccc_hvc(unsigned long a0, unsigned long a1,
--			  unsigned long a2, unsigned long a3,
--			  unsigned long a4, unsigned long a5,
--			  unsigned long a6, unsigned long a7,
--			  struct arm_smccc_res *res)
++	arm_smccc_1_0_invoke(function_id, arg0, arg1, arg2, 0, 0, 0, 0, &res);
+ 
+-static unsigned long __invoke_psci_fn_smc(unsigned long function_id,
+-			unsigned long arg0, unsigned long arg1,
+-			unsigned long arg2)
 -{
--	arm_smccc_hvc(a0, a1, a2, a3, a4, a5, a6, a7, res);
--}
+-	struct arm_smccc_res res;
 -
--/**
-- * get_invoke_func() - invoke SMC or HVC call
-- * @dev: pointer to device
-- *
-- * Return: function pointer to svc_smccc_smc or svc_smccc_hvc.
-- */
--static svc_invoke_fn *get_invoke_func(struct device *dev)
+-	arm_smccc_smc(function_id, arg0, arg1, arg2, 0, 0, 0, 0, &res);
+ 	return res.a0;
+ }
+ 
+@@ -229,41 +215,11 @@ static unsigned long psci_migrate_info_up_cpu(void)
+ 			      0, 0, 0);
+ }
+ 
+-static void set_conduit(enum arm_smccc_conduit conduit)
 -{
--	const char *method;
--
--	if (of_property_read_string(dev->of_node, "method", &method)) {
--		dev_warn(dev, "missing \"method\" property\n");
--		return ERR_PTR(-ENXIO);
+-	switch (conduit) {
+-	case SMCCC_CONDUIT_HVC:
+-		invoke_psci_fn = __invoke_psci_fn_hvc;
+-		break;
+-	case SMCCC_CONDUIT_SMC:
+-		invoke_psci_fn = __invoke_psci_fn_smc;
+-		break;
+-	default:
+-		WARN(1, "Unexpected PSCI conduit %d\n", conduit);
 -	}
 -
--	if (!strcmp(method, "smc"))
--		return svc_smccc_smc;
--	if (!strcmp(method, "hvc"))
--		return svc_smccc_hvc;
--
--	dev_warn(dev, "invalid \"method\" property: %s\n", method);
--
--	return ERR_PTR(-EINVAL);
+-	psci_ops.conduit = conduit;
 -}
 -
- /**
-  * stratix10_svc_request_channel_byname() - request a service channel
-  * @client: pointer to service client
-@@ -979,20 +904,17 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
- 	struct stratix10_svc_sh_memory *sh_memory;
- 	struct stratix10_svc *svc;
+ static int get_set_conduit_method(struct device_node *np)
+ {
+-	const char *method;
+-
+-	pr_info("probing for conduit method from DT.\n");
+-
+-	if (of_property_read_string(np, "method", &method)) {
+-		pr_warn("missing \"method\" property\n");
++	if (of_arm_smccc_1_0_set_conduit(np))
+ 		return -ENXIO;
+-	}
  
--	svc_invoke_fn *invoke_fn;
- 	size_t fifo_size;
- 	int ret;
+-	if (!strcmp("hvc", method)) {
+-		set_conduit(SMCCC_CONDUIT_HVC);
+-	} else if (!strcmp("smc", method)) {
+-		set_conduit(SMCCC_CONDUIT_SMC);
+-	} else {
+-		pr_warn("invalid \"method\" property: %s\n", method);
+-		return -EINVAL;
+-	}
+ 	return 0;
+ }
  
--	/* get SMC or HVC function */
--	invoke_fn = get_invoke_func(dev);
--	if (IS_ERR(invoke_fn))
-+	/* get SMC or HVC conduit */
-+	if (arm_smccc_1_0_set_conduit(&pdev->dev))
- 		return -EINVAL;
+@@ -605,9 +561,9 @@ int __init psci_acpi_init(void)
+ 	pr_info("probing for conduit method from ACPI.\n");
  
- 	sh_memory = devm_kzalloc(dev, sizeof(*sh_memory), GFP_KERNEL);
- 	if (!sh_memory)
- 		return -ENOMEM;
+ 	if (acpi_psci_use_hvc())
+-		set_conduit(SMCCC_CONDUIT_HVC);
++		arm_smccc_1_0_set_conduit(SMCCC_CONDUIT_HVC);
+ 	else
+-		set_conduit(SMCCC_CONDUIT_SMC);
++		arm_smccc_1_0_set_conduit(SMCCC_CONDUIT_SMC);
  
--	sh_memory->invoke_fn = invoke_fn;
- 	ret = svc_get_sh_memory(pdev, sh_memory);
- 	if (ret)
- 		return ret;
-@@ -1017,7 +939,6 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
- 	controller->chans = chans;
- 	controller->genpool = genpool;
- 	controller->task = NULL;
--	controller->invoke_fn = invoke_fn;
- 	init_completion(&controller->complete_status);
+ 	return psci_probe();
+ }
+diff --git a/include/linux/psci.h b/include/linux/psci.h
+index a67712b73b6c..9de579a1d237 100644
+--- a/include/linux/psci.h
++++ b/include/linux/psci.h
+@@ -35,7 +35,6 @@ struct psci_operations {
+ 	int (*affinity_info)(unsigned long target_affinity,
+ 			unsigned long lowest_affinity_level);
+ 	int (*migrate_info_type)(void);
+-	enum arm_smccc_conduit conduit;
+ 	enum smccc_version smccc_version;
+ };
  
- 	fifo_size = sizeof(struct stratix10_svc_data) * SVC_NUM_DATA_IN_FIFO;
 -- 
 2.17.1
 
