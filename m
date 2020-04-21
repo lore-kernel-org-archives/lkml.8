@@ -2,160 +2,126 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A62C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0496CC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7113206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587475161;
-	bh=zUU5C4PlFIXHSx5tbV3MEWj5AqS2eNayRxU3vyvHeEw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=1gG6lL3l4lUAZ8/KUJNEOazTXPpbT+iK5oDRkmL+7P07xl+s08aY9c0fdgzglkniX
-	 apFCaGRVwRFS5Ug4Bpje8Jm5HOV+4rRcvJiYG4WByQHmthIkNhFlcYN4Od0gpClIUd
-	 998gtaxZAgE9ije0pgqKznJ6qpZzfUyXsQifDcyE=
+	by mail.kernel.org (Postfix) with ESMTP id D708220753
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:19:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9x5mxHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgDUNTV (ORCPT
+        id S1729040AbgDUNTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:19:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbgDUNTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:19:20 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A802F20679;
-        Tue, 21 Apr 2020 13:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587475159;
-        bh=zUU5C4PlFIXHSx5tbV3MEWj5AqS2eNayRxU3vyvHeEw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=zvYjOhkalKeSPjC86A99nVnEqG+8uyzNbBUIHyyWdeKMtDp0CkW9ZVF0X1LN55Aww
-         qp5tkopu8IlJCbMhGW06tuLPF1mt/5UNX65RENYNtISj2HWzxLP3lp6A7m8Fq4YSbN
-         +o91r6CkCp6op8e585fB+SwTqhRs+O0aeRMwWApk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7617D35226BE; Tue, 21 Apr 2020 06:19:19 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 06:19:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Petko Manolov <petko.manolov@konsulko.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] WRITE_ONCE_INC() and friends
-Message-ID: <20200421131919.GM17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200419094439.GA32841@carbon>
- <491f0b0bc9e4419d93a78974fd7f44c7@AcuMS.aculab.com>
- <20200419182957.GA36919@carbon>
- <8e5a0283ed76465aac19a2b97a27ff15@AcuMS.aculab.com>
- <20200420150545.GB17661@paulmck-ThinkPad-P72>
- <20200420225715.GA176156@google.com>
- <20200420231244.GK17661@paulmck-ThinkPad-P72>
- <CANpmjNOfXNE-Zh3MNP=-gmnhvKbsfUfTtWkyg_=VqTxS4nnptQ@mail.gmail.com>
+        Tue, 21 Apr 2020 09:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726691AbgDUNTk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:19:40 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B5F0C061A10;
+        Tue, 21 Apr 2020 06:19:40 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x25so3550698wmc.0;
+        Tue, 21 Apr 2020 06:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TAO+0ZkQGzRlz79i9so3eTTstzU170GvA9NPAGQEIMQ=;
+        b=D9x5mxHFMGg+HnZopS9+Zgl4ocxvopuSEo6BqEwDW+5f7Jn7eo+EHmjtUGZw43My+S
+         nIDulDrnrMxWXgjM4y+tGlVDAEjZkxqJfKld3UD7pDfmcQWp7ayYOkwv3kHM9k3z3L4B
+         y5BRcojU/DG5+0lIoEZ9XlRNCvYgxfhnxkwo3KIpIcdX7iZZSfh5ZbR7OrNk/g0LvUCs
+         Lf84VWlivj4vXdm6uRvwXD+7ay1CdeqM6cDVKe7MNMOVKUryPAnqYJDMGUwlWZc1zEvL
+         O76dUv+liatt0wUeHHESLmXa+leq7LgDWVVEXEf+nAEFNd5+7kvSQVgncU87Xi2rarAD
+         Ok5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TAO+0ZkQGzRlz79i9so3eTTstzU170GvA9NPAGQEIMQ=;
+        b=DXP+6cR1TQYsUf649J0ij4gQNtQcfS70MwPi3Qfy/5DnwM84Vs3wxXXvI/QQSAEygC
+         waNs2FBXPHVZr1SmgRvGunCdPnTxWZNAlVAmV3EM4s2BTve7obb9+OKZA6YXVqkTu/Tw
+         r1ItWUHIHLuRJy/CFYuopToEkks1nRY9XLf2RljmqyMTh7eOrADKtbZG2ZFJ8lyIgE0j
+         5vZdVRiLOgHV8ePbs+/Ixiuq/ncy9cr3dUaGj1FpWHNX1CdTqO8+ghXe+oJgZYLRy0AO
+         2j72HLNGI2FmR6f6bkcUi5PIRePLBxJe6AYgN42GLUvhVvFVOwChovoQGywn+I7VqZeT
+         Pl7A==
+X-Gm-Message-State: AGi0PuYHbUPkMVdZUYET/jQXvHLnZpDGJY88Rh07QKlrIs1pjWoUsU5x
+        quB6vchIV1Tjo3h9t+5L5cY=
+X-Google-Smtp-Source: APiQypLr/7nO9p+xL01dDsn1rdwzQMyND4hb6/GRHkqQt+WjCBL145fU5drl2P0dW+IH4WO5WuiZew==
+X-Received: by 2002:a7b:ce0b:: with SMTP id m11mr4981350wmc.67.1587475178825;
+        Tue, 21 Apr 2020 06:19:38 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id w6sm3847410wrm.86.2020.04.21.06.19.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 06:19:38 -0700 (PDT)
+Subject: Re: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to
+ json-schema
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     ezequiel@collabora.com, devicetree@vger.kernel.org,
+        hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        mark.rutland@arm.com, robh@kernel.org
+References: <20200326191343.1989-1-ezequiel@collabora.com>
+ <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
+Message-ID: <9328212d-139f-6a0e-7d0c-3a5529a392f2@gmail.com>
+Date:   Tue, 21 Apr 2020 15:19:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNOfXNE-Zh3MNP=-gmnhvKbsfUfTtWkyg_=VqTxS4nnptQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 11:33:57AM +0200, Marco Elver wrote:
-> On Tue, 21 Apr 2020 at 01:12, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Tue, Apr 21, 2020 at 12:57:15AM +0200, Marco Elver wrote:
-> > > On Mon, 20 Apr 2020, Paul E. McKenney wrote:
-> > >
-> > > > On Sun, Apr 19, 2020 at 09:37:10PM +0000, David Laight wrote:
-> > > > > From: Petko Manolov
-> > > > > > Sent: 19 April 2020 19:30
-> > > > > >
-> > > > > > On 20-04-19 18:02:50, David Laight wrote:
-> > > > > > > From: Petko Manolov
-> > > > > > > > Sent: 19 April 2020 10:45
-> > > > > > > > Recently I started reading up on KCSAN and at some point I ran into stuff like:
-> > > > > > > >
-> > > > > > > > WRITE_ONCE(ssp->srcu_lock_nesting[idx], ssp->srcu_lock_nesting[idx] + 1);
-> > > > > > > > WRITE_ONCE(p->mm->numa_scan_seq, READ_ONCE(p->mm->numa_scan_seq) + 1);
-> > > > > > >
-> > > > > > > If all the accesses use READ/WRITE_ONCE() why not just mark the structure
-> > > > > > > field 'volatile'?
-> > > > > >
-> > > > > > This is a bit heavy.  I guess you've read this one:
-> > > > > >
-> > > > > >         https://lwn.net/Articles/233479/
-> > > > >
-> > > > > I remember reading something similar before.
-> > > > > I also remember a very old gcc (2.95?) that did a readback
-> > > > > after every volatile write on sparc (to flush the store buffer).
-> > > > > That broke everything.
-> > > > >
-> > > > > I suspect there is a lot more code that is attempting to be lockless
-> > > > > these days.
-> > > > > Ring buffers (one writer and one reader) are a typical example where
-> > > > > you don't need locks but do need to use a consistent value.
-> > > > >
-> > > > > Now you may also need ordering between accesses - which I think needs
-> > > > > more than volatile.
-> > > >
-> > > > In Petko's patch, all needed ordering is supplied by the fact that it
-> > > > is the same variable being read and written.  But yes, in many other
-> > > > cases, more ordering is required.
-> > > >
-> > > > > > And no, i am not sure all accesses are through READ/WRITE_ONCE().  If, for
-> > > > > > example, all others are from withing spin_lock/unlock pairs then we _may_ not
-> > > > > > need READ/WRITE_ONCE().
-> > > > >
-> > > > > The cost of volatile accesses is probably minimal unless the
-> > > > > code is written assuming the compiler will only access things once.
-> > > >
-> > > > And there are variables marked as volatile, for example, jiffies.
-> > > >
-> > > > But one downside of declaring variables volatile is that it can prevent
-> > > > KCSAN from spotting violations of the concurrency design for those
-> > > > variables.
-> > >
-> > > Note that, KCSAN currently treats volatiles not as special, except a
-> > > list of some known global volatiles (like jiffies). This means, that
-> > > KCSAN will tell us about data races involving unmarked volatiles (unless
-> > > they're in the list).
-> > >
-> > > As far as I can tell, this is what we want. At least according to LKMM.
-> > >
-> > > If, for whatever reason, volatiles should be treated differently, we'll
-> > > have to modify the compilers to emit different instrumentation for the
-> > > kernel.
-> >
-> > I stand corrected, then, thank you!
-> >
-> > In the current arrangement, declaring a variable volatile will cause
-> > KCSAN to generate lots of false positives.
-> >
-> > I don't currently have a strong feeling on changing the current situation
-> > with respect to volatile variables.  Is there a strong reason to change?
-> > The general view of the community, as you say, has been that you don't use
-> > the volatile keyword outside of exceptions such as jiffies, atomic_read(),
-> > atomic_set(), READ_ONCE(), WRITE_ONCE() and perhaps a few others.
-> >
-> > Thoughts?
-> 
-> I certainly agree, and also want to point out that checkpatch.pl
-> complains about volatile. We know using volatile has problems. KCSAN
-> is (along with checkpatch.pl) another tool that can warn us about such
-> problems (warning in case there is real concurrency). Another thing to
-> point out is that volatile is not portable, in case
-> READ_ONCE()/WRITE_ONCE()'s smp_load_barrier_depends() is not a noop.
-> So from what I see, there are strong reasons against changing the
-> situation for volatiles and KCSAN.
+Hi,
 
-All good points, thank you!
+Question for the media maintainers Hans & Co. :
 
-							Thanx, Paul
+What's nxp,imx8mq-vpu.yaml doing under rga?
+Why is rockchip-vpu.yaml inserted under rga instead of vpu?
+
+Johan
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f0e7b4d17fcc..0cfd86594b0b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14471,7 +14471,8 @@ M:	Jacob Chen <jacob-chen@iotwrt.com>
+>  M:	Ezequiel Garcia <ezequiel@collabora.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/media/rockchip-rga.txt
+> +F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+> +F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+>  F:	drivers/media/platform/rockchip/rga/
+
+HANTRO VPU CODEC DRIVER
+M:	Ezequiel Garcia <ezequiel@collabora.com>
+M:	Philipp Zabel <p.zabel@pengutronix.de>
+L:	linux-media@vger.kernel.org
+L:	linux-rockchip@lists.infradead.org
+S:	Maintained
+F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
+F:	drivers/staging/media/hantro/
+
+ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+M:	Jacob Chen <jacob-chen@iotwrt.com>
+M:	Ezequiel Garcia <ezequiel@collabora.com>
+L:	linux-media@vger.kernel.org
+S:	Maintained
+F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+F:	drivers/media/platform/rockchip/rga/
