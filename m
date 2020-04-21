@@ -2,106 +2,148 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCB9C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC18CC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED51206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C56F6206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:30:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lnfsIgOT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgDUNa0 (ORCPT
+        id S1728960AbgDUNaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:30:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30394 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726018AbgDUNaZ (ORCPT
+        Tue, 21 Apr 2020 09:30:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728519AbgDUNaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:30:25 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LD9Clb132674;
-        Tue, 21 Apr 2020 09:30:14 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghu6wr5r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Apr 2020 09:30:13 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03LDUCvF028782;
-        Tue, 21 Apr 2020 13:30:13 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma02dal.us.ibm.com with ESMTP id 30fs66qu59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Apr 2020 13:30:13 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03LDUC9o32571744
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 13:30:12 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 69B0CB205F;
-        Tue, 21 Apr 2020 13:30:12 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42538B2064;
-        Tue, 21 Apr 2020 13:30:12 +0000 (GMT)
-Received: from localhost (unknown [9.85.163.64])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Apr 2020 13:30:12 +0000 (GMT)
-From:   Nathan Lynch <nathanl@linux.ibm.com>
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH v5 0/5] Track and expose idle PURR and SPURR ticks
-In-Reply-To: <1586249263-14048-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1586249263-14048-1-git-send-email-ego@linux.vnet.ibm.com>
-Date:   Tue, 21 Apr 2020 08:30:11 -0500
-Message-ID: <877dy92cgs.fsf@linux.ibm.com>
+        Tue, 21 Apr 2020 09:30:46 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6335EC061A10;
+        Tue, 21 Apr 2020 06:30:45 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id n6so10616749ljg.12;
+        Tue, 21 Apr 2020 06:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=80lm6Fk0sekxxITrDb5bHy56T1zgUeTIAIaDXyiWSbc=;
+        b=lnfsIgOT3/zSmQqA3A46dvPVKaDYEVabkhhKgjiqY74xqHvpBO+58J5eBepYDNYtfc
+         sIwarSKjCSijir339k4w2TOywidHeOcJnrQ/y8c3pbYAo3vDYcoNPjixYPNpNM+Uwwfo
+         lK5TNu6b7TRZj5Ly//EGBvDqLe9S+3fDKVMfDxg6h8xPk3Xq10JONj3eRENnrxipGSKP
+         LlaIRzvlzdHnF/QIwX7+7zccSlJiXazWBPHr2fahBcsRvQ9Q3OUO10kX4YdKHh7gYBZy
+         wMCFI3opl2p1BJj+v6eO8MPeWrOTRB0HM7eHyfAi/bnfUNrJYud1QftkGtVVxlyONGcM
+         ql8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=80lm6Fk0sekxxITrDb5bHy56T1zgUeTIAIaDXyiWSbc=;
+        b=WprZVsa1CspqRPNHeK2UVcThdbkYOxZU77eXMbmQGGm9qla8u3UsLWy7/QamscVbBZ
+         JdA8lX97XNud1pB4A6aEGghCetWz5poDMYmqR8ar4Ju1zDRV64iXNNsBjdl54YRLTmlY
+         HxQxVFNXZkjAji0kZ4CHuy6vNtmSnG3Uznr9C9JOFh1em2AFm1Cn9qzTn1k/feCfWvnj
+         Ts6v1XP/075HIgSoIcnegVAin8cQxGtDcDGzEgZmpm1yqDyKaCzG2r9dBNO05pWMMETg
+         PYvznQ8VsCZaqEf5YBGfL9ZX1XYGUMCAHCIVxMVh9OlLGPwIFftm4CrWdSY+/OONKM5K
+         s2oQ==
+X-Gm-Message-State: AGi0PuY1jWDqs/NaCODGj8tiesTv3/+RxzgN9OiFOUVSHdVvhmsg16LM
+        rpYkZKKU4Qm+rBi1PMzxzAiV+FtK6Es=
+X-Google-Smtp-Source: APiQypKSxRpChdTnmNbZQWNvmSsagPnFGHTzxOoipT9qphhjvxRuBRdugg7zAZ4jjwkEiWbTXZsJMA==
+X-Received: by 2002:a2e:b610:: with SMTP id r16mr13297479ljn.254.1587475843687;
+        Tue, 21 Apr 2020 06:30:43 -0700 (PDT)
+Received: from oak.local ([188.123.231.141])
+        by smtp.gmail.com with ESMTPSA id v17sm2031456lfi.49.2020.04.21.06.30.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 06:30:42 -0700 (PDT)
+From:   matwey.kornilov@gmail.com
+To:     stern@rowland.harvard.edu, b-liu@ti.com, gregkh@linuxfoundation.org
+Cc:     "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6] musb: Improve performance for hub-attached webcams
+Date:   Tue, 21 Apr 2020 16:30:13 +0300
+Message-Id: <20200421133019.27167-1-matwey.kornilov@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-21_05:2020-04-20,2020-04-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
- clxscore=1015 malwarescore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004210100
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
-> This is the fifth version of the patches to track and expose idle PURR
-> and SPURR ticks. These patches are required by tools such as lparstat
-> to compute system utilization for capacity planning purposes.
->
-> The previous versions can be found here:
-> v4: https://lkml.org/lkml/2020/3/27/323
-> v3: https://lkml.org/lkml/2020/3/11/331
-> v2: https://lkml.org/lkml/2020/2/21/21
-> v1: https://lore.kernel.org/patchwork/cover/1159341/
->
-> They changes from v4 are:
->
->    - As suggested by Naveen, moved the functions read_this_idle_purr()
->      and read_this_idle_spurr() from Patch 2 and Patch 3 respectively
->      to Patch 4 where it is invoked.
->
->    - Dropped Patch 6 which cached the values of purr, spurr,
->      idle_purr, idle_spurr in order to minimize the number of IPIs
->      sent.
->
->    - Updated the dates for the idle_purr, idle_spurr in the
->      Documentation Patch 5.
+From: "Matwey V. Kornilov" <matwey@sai.msu.ru>
 
-LGTM
+The series is concerned to issues with isochronous transfer while
+streaming the USB webcam data. I discovered the issue first time
+when attached PWC USB webcam to AM335x-based BeagleBone Black SBC.
+It appeared that the root issue was in numerous missed IN requests
+during isochronous transfer where each missing leaded to the frame
+drop. Since every IN request is triggered in MUSB driver
+individually, it is important to queue the send IN request as
+earlier as possible when the previous IN completed. At the same
+time the URB giveback handler of the device driver has also to be
+called there, that leads to arbitrarily delay depending on the
+device driver performance. The details with the references are
+described in [1].
 
-Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
+The issue has two parts:
 
-Thanks.
+  1) peripheral driver URB callback performance
+  2) MUSB host driver performance
+
+It appeared that the first part is related to the wrong memory
+allocation strategy in the most USB webcam drivers. Non-cached
+memory is used in assumption that coherent DMA memory leads to
+the better performance than non-coherent memory in conjunction with
+the proper synchronization. Yet the assumption might be valid for
+x86 platforms some time ago, the issue was fixed for PWC driver in:
+
+    1161db6776bd ("media: usb: pwc: Don't use coherent DMA buffers for ISO transfer")
+
+that leads to 3.5x performance gain. The more generic fix for this
+common issue are coming for the rest drivers [2].
+
+The patch allowed successfully running full-speed USB PWC webcams
+attached directly to BeagleBone Black USB port.
+
+However, the second part of the issue is still present for
+peripheral device attached through the high-speed USB hub due to
+its 125us frame time. The patch series is intended to reorganize
+musb_advance_schedule() to allow host to send IN request quicker.
+
+The patch series is organized as the following. First three patches
+improve readability of the existing code in
+musb_advance_schedule(). Patches 4 and 5 introduce updated
+signature for musb_start_urb(). The last patch introduce new
+code-path in musb_advance_schedule() which allows for faster
+response.
+
+References:
+
+[1] https://www.spinics.net/lists/linux-usb/msg165735.html
+[2] https://www.spinics.net/lists/linux-media/msg144279.html
+
+Changes since v2:
+ - rebase changes onto v5.7-rc2
+Changes since v1:
+ - Patch 6 was redone to keep URB giveback order and stop transmission at
+   erroneous URB.
+
+Matwey V. Kornilov (6):
+  usb: musb: Use USB_DIR_IN when calling musb_advance_schedule()
+  usb: musb: Introduce musb_qh_empty() helper function
+  usb: musb: Introduce musb_qh_free() helper function
+  usb: musb: Rename musb_start_urb() to musb_start_next_urb()
+  usb: musb: Introduce musb_start_urb()
+  usb: musb: Decrease URB starting latency in musb_advance_schedule()
+
+ drivers/usb/musb/musb_host.c | 132 ++++++++++++++++++++++-------------
+ drivers/usb/musb/musb_host.h |   1 +
+ 2 files changed, 86 insertions(+), 47 deletions(-)
+
+-- 
+2.25.0
+
