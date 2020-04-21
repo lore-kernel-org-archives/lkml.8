@@ -2,67 +2,120 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C046EC38A30
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57830C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E872078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3448720781
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:46:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KN56EWmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgDUCnk (ORCPT
+        id S1726959AbgDUCqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 22:43:40 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2418 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725988AbgDUCnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 22:43:40 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B7548967859294BEC17A;
-        Tue, 21 Apr 2020 10:43:35 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Apr 2020
- 10:43:29 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <eric@anholt.net>, <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] drm/v3d: Set pm_ops
-Date:   Tue, 21 Apr 2020 10:42:21 +0800
-Message-ID: <20200421024221.20204-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 20 Apr 2020 22:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725829AbgDUCqT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 22:46:19 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78445C061A0E;
+        Mon, 20 Apr 2020 19:46:19 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 198so9845340lfo.7;
+        Mon, 20 Apr 2020 19:46:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o5OcbUGHwiU1CmRyAs5hmz04gA+MaTAsH/b/sIzr7cU=;
+        b=KN56EWmXtN8o0IvMzCvJH3XSM9pOdbqZ5nAD9AoPLE+MXetTf0Rykt8SGBHkjtiMS9
+         lx6EJ2iYn+Pb7oDrdVUyQf7mjWvfGr6bjVmSI2zJUN4SnupxsawEOPpdj7GfJcQ+wLPk
+         rX95L534Ob9XyS3Wm8xeShzZ9JidZZjbOjujWoyKdJ2xgW1/EmsUsC0L1kS9IZNVOI3r
+         9wvLdfnenrs9mKqyvz1DX8++9R1cGxFuWwrrnCWOZ/6X9tCTnzD7c4Zpkh0ozM3vrIsD
+         niO5m1SZibfXVqrMMxg1a9P3xw00ZBqaXUquszXVRjEM29HVQudqy7jl+E2zhaPVv0W9
+         xvCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o5OcbUGHwiU1CmRyAs5hmz04gA+MaTAsH/b/sIzr7cU=;
+        b=YWtBOgANUjI/n8MbEFksXwCf7ffDM30zSotpjtgZee0VTj1htfiC/u6vk1GOmaWOU7
+         j0qITZf7J6/V/N0CRezWMbg3k2vEi8tsYT40KsnaWWAleOCcxxmjkKM7LHoRlt2p5FHd
+         1mq9Y7N0ilIRo3ey9AAlqiUALL+kXJnqmuaeOHHsZwdiAMFl8wbcb+dVAZz+9xH7oHU1
+         IH0PBdUWRVD/B+nxqyjPClyZTzhYWEMtCWT9hiSGPH5tCPXvXyj1MkvUBijNdVTVX0cF
+         E5dt2jeH+aVdzjv5zLNApnMdZx9RWFIpg5t16IiSOsDDS9LI3BtBRAsLdEQ7B/LjRHoc
+         8coA==
+X-Gm-Message-State: AGi0PuaJWoDkf5QU0IscHS7RF+2320m4NvJpvSCAzoASuSRBFUK+B8UE
+        IY7gbWnKcbJLSO/IHRSzXsJ/fW8ws7F0it/lo7U=
+X-Google-Smtp-Source: APiQypIqJWu9QiVesaaTnVGOdtYMSxVQY4sEJwiueOtyt8iKdNYmFMDvnjRUOFgNvj+br6RKUBHnoBWXACbWLX9LPe0=
+X-Received: by 2002:ac2:569b:: with SMTP id 27mr12499931lfr.134.1587437177744;
+ Mon, 20 Apr 2020 19:46:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+References: <20200418232655.23870-1-luke.r.nels@gmail.com>
+In-Reply-To: <20200418232655.23870-1-luke.r.nels@gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 20 Apr 2020 19:46:05 -0700
+Message-ID: <CAADnVQL+--GLyaPdj2cRncQ9X-EAravt1_2fjfPhORWA-VUWuQ@mail.gmail.com>
+Subject: Re: [PATCH bpf 1/2] bpf, x86: Fix encoding for lower 8-bit registers
+ in BPF_STX BPF_B
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
+        Xi Wang <xi.wang@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v3d_v3d_pm_ops is defined but forgot to set in v3d_platform_driver.
+On Sat, Apr 18, 2020 at 4:27 PM Luke Nelson <lukenels@cs.washington.edu> wrote:
+>
+> This patch fixes an encoding bug in emit_stx for BPF_B when the source
+> register is BPF_REG_FP.
+>
+> The current implementation for BPF_STX BPF_B in emit_stx saves one REX
+> byte when the operands can be encoded using Mod-R/M alone. The lower 8
+> bits of registers %rax, %rbx, %rcx, and %rdx can be accessed without using
+> a REX prefix via %al, %bl, %cl, and %dl, respectively. Other registers,
+> (e.g., %rsi, %rdi, %rbp, %rsp) require a REX prefix to use their 8-bit
+> equivalents (%sil, %dil, %bpl, %spl).
+>
+> The current code checks if the source for BPF_STX BPF_B is BPF_REG_1
+> or BPF_REG_2 (which map to %rdi and %rsi), in which case it emits the
+> required REX prefix. However, it misses the case when the source is
+> BPF_REG_FP (mapped to %rbp).
+>
+> The result is that BPF_STX BPF_B with BPF_REG_FP as the source operand
+> will read from register %ch instead of the correct %bpl. This patch fixes
+> the problem by fixing and refactoring the check on which registers need
+> the extra REX byte. Since no BPF registers map to %rsp, there is no need
+> to handle %spl.
+>
+> Fixes: 622582786c9e0 ("net: filter: x86: internal BPF JIT")
+> Signed-off-by: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 
-Fixes: 57692c94dcbe ("drm/v3d: Introduce a new DRM driver for Broadcom V3D V3.x+")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/v3d/v3d_drv.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
-index 8d0c0daaac81..e799a41248c9 100644
---- a/drivers/gpu/drm/v3d/v3d_drv.c
-+++ b/drivers/gpu/drm/v3d/v3d_drv.c
-@@ -368,6 +368,7 @@ static struct platform_driver v3d_platform_driver = {
- 	.driver		= {
- 		.name	= "v3d",
- 		.of_match_table = v3d_of_match,
-+		.pm = &v3d_v3d_pm_ops,
- 	},
- };
- 
--- 
-2.17.1
-
-
+Applied. Thanks for the fix.
+It's questionable whether the verifier should have allowed such insn
+in the first place, but JIT fix is good regardless.
