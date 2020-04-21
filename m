@@ -2,180 +2,140 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471F4C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C4AC55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21E292078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D492071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ECVEWbex"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P6R6j28S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgDULUs (ORCPT
+        id S1728684AbgDULVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47602 "EHLO
+        Tue, 21 Apr 2020 07:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728662AbgDULUm (ORCPT
+        with ESMTP id S1728519AbgDULVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:20:42 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F4CC061A0F;
-        Tue, 21 Apr 2020 04:20:42 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id f20so387851pgl.12;
-        Tue, 21 Apr 2020 04:20:42 -0700 (PDT)
+        Tue, 21 Apr 2020 07:21:30 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D09DC061A10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:21:30 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n4so10690646ejs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IJ6JZkiPYFKr9qoqt6fhwkwymZZp1I817zsI085cYIo=;
-        b=ECVEWbexBcseymDuaNtzAX8DRgj4x6F5lrLy31bXwdmQ9Brgohq3AWboZMbe5FLtq0
-         21Z/i34UeIffbCfSEGwJ/pbCe8Id9ptcVngWM1patsbr5cFKh2HLHpf5Yx9oy0BeA82b
-         NbW3Tkk3IIfcZaD/0nrEANyb7s2R+fgaduJDnfkWunplVVfVWHe34VXp2Cr942yKMOqT
-         OV0N7gqXKj3I6ROqa1xRf7tlZITQ6tWRPRczo8ncKRlMlDMMZepSsNB+WhbXIs1/5fKe
-         lZ/R7/4yESf+59jDTH/XK8AU3yp0lr5K6rv89zKJnJPD/gZG8hB0UssblhJ/XVmZLLp0
-         Q0+Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s/ZKt1QsY+s5TFtb7WFmhUkcWp4v5hTkDaDBAF3oOQM=;
+        b=P6R6j28SYh+z+pH4O0HBcIa7GGF3sMHeYZK2cJ9Pbx/XlxHbSvDCTL2CCa1pwbYTDw
+         1iogg6Bquq1DtRNbEK57f6NFECXcr7flECD+TrC4vok7oaKH/qwaIJ5ZUnuDqogV+8AG
+         hxUr2NlPWQbw6fI57Dqfh2dbw7FeyFGTdkCec=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IJ6JZkiPYFKr9qoqt6fhwkwymZZp1I817zsI085cYIo=;
-        b=E5UypdE0t3WnySIsQEIlak9H8y1f4QNIYdM/47VdiKGhHD3AR0PTjhuR6eBfo4FzXf
-         6h1CQgfJoDcGos3SGt43XdCW1Va7EUcyFBiPWrFH11KU/hu7pKzFRKKvu/Ii6i+0tqNP
-         mpv8HQBHSpdXAUvInL8n6OOwoFaAFDd0F7P+h1Ui3nL6X+9Fw0wL9+wU+IWNfz3Bbz0/
-         I4oUxfxzRlcjZyOBa/7orXqitEXxk5YI1pV/vqGgHSEGQ68vLpBEpSEMBnXSPorjwh86
-         KWD8J4UxxouHK0/95NLCkL7cytvnFRJ7yI86YW4NuUHo2Avbmbr6x39SLl0ZrKCBMCWF
-         e2Pg==
-X-Gm-Message-State: AGi0PuZoiZnHq9guh0W/5yeJ741sz+7tyu1IYkI5r0YR8OxXTQRUocBK
-        q28bsT4BI7SwHgexCex5bR5pu/w7
-X-Google-Smtp-Source: APiQypJY/VtK1rmXpeHsVWCjecFmk7L3oIOZ00v+D8RA2f62M4iRTOqukizWko3q6VDuP6l782PPOQ==
-X-Received: by 2002:a65:49cf:: with SMTP id t15mr21026486pgs.39.1587468041852;
-        Tue, 21 Apr 2020 04:20:41 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id f74sm8643176pje.3.2020.04.21.04.20.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Apr 2020 04:20:41 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-Subject: [PATCH 2/2] KVM: VMX: Handle preemption timer fastpath
-Date:   Tue, 21 Apr 2020 19:20:26 +0800
-Message-Id: <1587468026-15753-3-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587468026-15753-1-git-send-email-wanpengli@tencent.com>
-References: <1587468026-15753-1-git-send-email-wanpengli@tencent.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s/ZKt1QsY+s5TFtb7WFmhUkcWp4v5hTkDaDBAF3oOQM=;
+        b=nQ3zyCQAel6PJKHlyX0LDgKHPeudElKJaw1VCtbvvUx1wXD3dVXt8CkJNpi15ymDpR
+         jrBADDx51/Pfuy4pnRGZm3tYxjjHJ3Qfz4q6b3UcI9cYRFLmjCmXPcsqe3OEt9QVU+ct
+         DUZCF9h6CEQYgYOkNbWheBgdRxlZvpnI2WRUNi00aB/9IVC5M0DsR9qv1LfadxSpyKY9
+         9iJTX8xOHNIK4QVlY2yfvaXa2/thlR6RGH7NtjheHajfFd4im5faeJvAanGy0CHnGHIf
+         nCFrIsA/pbcTc1xDSE8pq4H6uVagJfcq3Cxb7/axSzRQWjbrUUVra3DCBRNj2AIgBYxP
+         lZJg==
+X-Gm-Message-State: AGi0PuYwWaxlVucnf4Z0/6UTwGozAvwBPUyo/He08PF+/9TtT7pXu7fU
+        C/OerMJn6HS0KgyFhDikIS+pkIL5+mVLmw==
+X-Google-Smtp-Source: APiQypJ3thm/r06rzi6qEzIYiIeK3YymsQnxGsbNxLBWQ+NXtlBp1Py8WUvDmM+4cEPlaYeRPfHQHg==
+X-Received: by 2002:a17:906:54cd:: with SMTP id c13mr19850532ejp.307.1587468088356;
+        Tue, 21 Apr 2020 04:21:28 -0700 (PDT)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com. [209.85.128.47])
+        by smtp.gmail.com with ESMTPSA id m6sm444855ejj.22.2020.04.21.04.21.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 04:21:27 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id x4so3139420wmj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:21:26 -0700 (PDT)
+X-Received: by 2002:a05:600c:2f88:: with SMTP id t8mr4271980wmn.46.1587468086147;
+ Tue, 21 Apr 2020 04:21:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190802131226.123800-1-shik@chromium.org> <CANMq1KD3Pth7LNnVqxSesx3kSFte0eR5JqEBETv45s_9_YKWHw@mail.gmail.com>
+ <20190930082310.GA1750@infradead.org> <20191001063744.GA10402@infradead.org> <CAAFQd5BN63Y-zufQo9_b6kKVX7-1Qf1LwCOKQpMKkQ5KTOf2hw@mail.gmail.com>
+In-Reply-To: <CAAFQd5BN63Y-zufQo9_b6kKVX7-1Qf1LwCOKQpMKkQ5KTOf2hw@mail.gmail.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 21 Apr 2020 13:21:15 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5A3iazOo+MordCqKk4+5nfSOT-rFu1ypGXF+geRec0aow@mail.gmail.com>
+Message-ID: <CAAFQd5A3iazOo+MordCqKk4+5nfSOT-rFu1ypGXF+geRec0aow@mail.gmail.com>
+Subject: Re: [PATCH] media: uvcvideo: Use streaming DMA APIs to transfer buffers
+To:     Christoph Hellwig <hch@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Shik Chen <shik@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        notify@kernel.org, Keiichi Watanabe <keiichiw@chromium.org>,
+        Ricky Liang <jcliang@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Thu, Feb 27, 2020 at 7:28 AM Tomasz Figa <tfiga@chromium.org> wrote:
+>
+> +Sergey Senozhatsky who's going to be looking into this.
+>
+> Hi Christoph,
+>
+> On Tue, Oct 1, 2019 at 3:37 PM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Mon, Sep 30, 2019 at 01:23:10AM -0700, Christoph Hellwig wrote:
+> > > And drivers really have no business looking at the dma mask.  I have
+> > > a plan for dma_alloc_pages API that could replace that cruft, but
+> > > until then please use GFP_KERNEL and let the dma subsystem bounce
+> > > buffer if needed.
+> >
+> > Can you try this series:
+> >
+> > http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma_alloc_pages
+> >
+> > and see if it does whay you need for usb?
+>
+> Reviving this thread. Sorry for no updates for a long time.
+>
+> dma_alloc_pages() still wouldn't be an equivalent replacement of the
+> existing dma_alloc_coherent() (used behind the scenes by
+> usb_alloc_coherent()). That's because the latter can allocate
+> non-contiguous memory if the DMA device can handle it (i.e. is behind
+> an IOMMU), but the former can only allocate a contiguous range of
+> pages.
+>
+> That said, I noticed that you also put a lot of effort into making the
+> NONCONSISTENT attribute more usable. Perhaps that's the way to go here
+> then? Of course we would need to make sure that the attribute is
+> handled properly on ARM and ARM64, which are the most affected
+> platforms. Right now neither handles them. The former doesn't use the
+> generic DMA mapping ops, while the latter does, but doesn't enable a
+> Kconfig option needed to allow generic inconsistent allocations.
+>
+> Any hints would be appreciated.
 
-This patch implements handle preemption timer fastpath, after timer fire 
-due to VMX-preemption timer counts down to zero, handle it as soon as 
-possible and vmentry immediately without checking various kvm stuff when 
-possible.
+Hi Christoph, would you have some time to check the above?
 
-Testing on SKX Server.
+Hi Catalin, Will, do you know why CONFIG_DMA_NONCOHERENT_CACHE_SYNC is
+not enabled on arm64?
 
-cyclictest in guest(w/o mwait exposed, adaptive advance lapic timer is default -1):
+Thanks in advance. :)
 
-5632.75ns -> 4559.25ns, 19%
-
-kvm-unit-test/vmexit.flat:
-
-w/o APICv, w/o advance timer:
-tscdeadline_immed: 4780.75 -> 3851    19.4%
-tscdeadline:       7474    -> 6528.5  12.7%
-
-w/o APICv, w/ adaptive advance timer default -1:
-tscdeadline_immed: 4845.75 -> 3930.5  18.9%
-tscdeadline:       6048    -> 5871.75    3%
-
-w/ APICv, w/o avanced timer:
-tscdeadline_immed: 2919    -> 2467.75 15.5%
-tscdeadline:       5661.75 -> 5188.25  8.4%
-
-w/ APICv, w/ adaptive advance timer default -1:
-tscdeadline_immed: 3018.5  -> 2561    15.2%
-tscdeadline:       4663.75 -> 4626.5     1%
-
-Tested-by: Haiwei Li <lihaiwei@tencent.com>
-Cc: Haiwei Li <lihaiwei@tencent.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/vmx/vmx.c | 41 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 7688e40..623c4a0 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6593,12 +6593,53 @@ static void vmx_fast_deliver_interrupt(struct kvm_vcpu *vcpu)
- 	}
- }
- 
-+static void vmx_cancel_hv_timer(struct kvm_vcpu *vcpu);
-+
-+static enum exit_fastpath_completion handle_fastpath_preemption_timer(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	struct kvm_lapic *apic = vcpu->arch.apic;
-+	struct kvm_timer *ktimer = &apic->lapic_timer;
-+
-+	if (vmx_event_needs_reinjection(vcpu))
-+		return EXIT_FASTPATH_NONE;
-+
-+	if (!vmx->req_immediate_exit &&
-+		!unlikely(vmx->loaded_vmcs->hv_timer_soft_disabled)) {
-+		if (!vmx_interrupt_allowed(vcpu) ||
-+			!apic_lvtt_tscdeadline(apic) ||
-+			vmx->rmode.vm86_active ||
-+			is_smm(vcpu) ||
-+			!kvm_apic_hw_enabled(apic))
-+			return EXIT_FASTPATH_NONE;
-+
-+		if (!apic->lapic_timer.hv_timer_in_use)
-+			return EXIT_FASTPATH_CONT_RUN;
-+
-+		WARN_ON(swait_active(&vcpu->wq));
-+		vmx_cancel_hv_timer(vcpu);
-+		apic->lapic_timer.hv_timer_in_use = false;
-+
-+		if (atomic_read(&apic->lapic_timer.pending))
-+			return EXIT_FASTPATH_CONT_RUN;
-+
-+		ktimer->expired_tscdeadline = ktimer->tscdeadline;
-+		vmx_fast_deliver_interrupt(vcpu);
-+		ktimer->tscdeadline = 0;
-+		return EXIT_FASTPATH_CONT_RUN;
-+	}
-+
-+	return EXIT_FASTPATH_NONE;
-+}
-+
- static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
- {
- 	if (!is_guest_mode(vcpu)) {
- 		switch(to_vmx(vcpu)->exit_reason) {
- 		case EXIT_REASON_MSR_WRITE:
- 			return handle_fastpath_set_msr_irqoff(vcpu);
-+		case EXIT_REASON_PREEMPTION_TIMER:
-+			return handle_fastpath_preemption_timer(vcpu);
- 		default:
- 			return EXIT_FASTPATH_NONE;
- 		}
--- 
-2.7.4
-
+Best regards,
+Tomasz
