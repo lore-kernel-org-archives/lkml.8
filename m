@@ -2,105 +2,116 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFAEC38A30
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5646C54FCB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07DEB20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B372E2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mahRy4Gz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgDUC7s (ORCPT
+        id S1727873AbgDUDAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 22:59:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726793AbgDUC7r (ORCPT
+        Mon, 20 Apr 2020 23:00:19 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:63718 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726644AbgDUDAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 22:59:47 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E6AFC061A0E;
-        Mon, 20 Apr 2020 19:59:47 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id C6B722A11CD
-Message-ID: <2d1da0b9d857c5607c989be85a04c9d7d9d19b38.camel@collabora.com>
-Subject: Re: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to
- json-schema
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
-Cc:     devicetree@vger.kernel.org, hverkuil@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh@kernel.org
-Date:   Mon, 20 Apr 2020 23:59:33 -0300
-In-Reply-To: <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
-References: <20200326191343.1989-1-ezequiel@collabora.com>
-         <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Mon, 20 Apr 2020 23:00:18 -0400
+X-UUID: 280ccff0309840b3861706258c11236f-20200421
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=99oh6N8mdr4ZmH3MgX6Bmt28F3Ip4r6y2UmH1UwY2G4=;
+        b=mahRy4Gz0S1L3iZv8qxHJooFesAqhOcL+L3gSIoHOJLLORwMY5nmjMtSIwotMpH7RPRYYz1t4uHJ2HHGkuHyQ58nDTu9qNyeYkqunWsGlqMIMt7ap23ewW84d19gUVJDIlm7wcvrW5cEYvBKxSxPDE3S1KEgutWXWpukBKKi5HY=;
+X-UUID: 280ccff0309840b3861706258c11236f-20200421
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 630533692; Tue, 21 Apr 2020 11:00:14 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 21 Apr 2020 11:00:14 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 21 Apr 2020 11:00:12 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     <drinkcat@chromium.org>, Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ran Bi <ran.bi@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH v13 2/6] mfd: mt6397: Trim probe function to support different chips more cleanly
+Date:   Tue, 21 Apr 2020 11:00:08 +0800
+Message-ID: <1587438012-24832-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
+In-Reply-To: <1587438012-24832-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1587438012-24832-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Johan,
-
-On Mon, 2020-04-20 at 15:33 +0200, Johan Jonker wrote:
-> Hi Heiko,
-> 
-> This patch was applied by the media people Hans and Ezequil without note
-> and test I think.
-> 
-
-I did test it, but I guess something felt thru the cracks.
-If you'd be kind enough to submit a patch, that would be lovely.
-
-Thanks!
-Ezequiel
-
-> make ARCH=arm64 dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-> 
-> Errors for example:
-> 
->   DTC     arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml
->   CHECK   arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml
-> arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
-> interrupts: [[0, 9, 4]] is too short
-> arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
-> interrupt-names: ['vdpu'] is too short
-> arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
-> interrupt-names:0: 'vepu' was expected
-> 
-> See:
-> https://lore.kernel.org/lkml/20200403124316.5445-1-jbx6244@gmail.com/
-> 
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  interrupt-names:
-> +    oneOf:
-> +      - const: vdpu
-> +      - items:
-> +        - const: vepu
-> +        - const: vdpu
-> 
-> Vs.:
-> 
-> 
-> +  interrupts:
-> +    maxItems: 2
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: vepu
-> +      - const: vdpu
-
+QWRkIG5ldyBzdHJ1Y3QgbWVtYmVycyBmb3IgbWZkLWNlbGxzIGFuZCBpcnEgaW5pdGlhbCBmdW5j
+dGlvbiwgc28gd2UgY2FuDQpjYWxsIGRldm1fbWZkX2FkZF9kZXZpY2VzKCkgb25seSBvbmNlLg0K
+DQpTaWduZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhzaXVuZy53YW5nQG1lZGlh
+dGVrLmNvbT4NCkFja2VkLWZvci1NRkQtYnk6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5v
+cmc+DQotLS0NCiBkcml2ZXJzL21mZC9tdDYzOTctY29yZS5jIHwgMzUgKysrKysrKysrKysrKyst
+LS0tLS0tLS0tLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKSwg
+MjEgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9tdDYzOTctY29yZS5j
+IGIvZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUuYw0KaW5kZXggZDJlNzBkOC4uYTMxM2E3MiAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvbWZkL210NjM5Ny1jb3JlLmMNCisrKyBiL2RyaXZlcnMvbWZkL210
+NjM5Ny1jb3JlLmMNCkBAIC0xMDMsMjIgKzEwMywzMSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG1m
+ZF9jZWxsIG10NjM5N19kZXZzW10gPSB7DQogc3RydWN0IGNoaXBfZGF0YSB7DQogCXUzMiBjaWRf
+YWRkcjsNCiAJdTMyIGNpZF9zaGlmdDsNCisJY29uc3Qgc3RydWN0IG1mZF9jZWxsICpjZWxsczsN
+CisJaW50IGNlbGxfc2l6ZTsNCisJaW50ICgqaXJxX2luaXQpKHN0cnVjdCBtdDYzOTdfY2hpcCAq
+Y2hpcCk7DQogfTsNCiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IGNoaXBfZGF0YSBtdDYzMjNfY29y
+ZSA9IHsNCiAJLmNpZF9hZGRyID0gTVQ2MzIzX0NJRCwNCiAJLmNpZF9zaGlmdCA9IDAsDQorCS5j
+ZWxscyA9IG10NjMyM19kZXZzLA0KKwkuY2VsbF9zaXplID0gQVJSQVlfU0laRShtdDYzMjNfZGV2
+cyksDQorCS5pcnFfaW5pdCA9IG10NjM5N19pcnFfaW5pdCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgY2hpcF9kYXRhIG10NjM5N19jb3JlID0gew0KIAkuY2lkX2FkZHIgPSBNVDYzOTdf
+Q0lELA0KIAkuY2lkX3NoaWZ0ID0gMCwNCisJLmNlbGxzID0gbXQ2Mzk3X2RldnMsDQorCS5jZWxs
+X3NpemUgPSBBUlJBWV9TSVpFKG10NjM5N19kZXZzKSwNCisJLmlycV9pbml0ID0gbXQ2Mzk3X2ly
+cV9pbml0LA0KIH07DQogDQogc3RhdGljIGludCBtdDYzOTdfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
+X2RldmljZSAqcGRldikNCiB7DQogCWludCByZXQ7DQotCXVuc2lnbmVkIGludCBpZDsNCisJdW5z
+aWduZWQgaW50IGlkID0gMDsNCiAJc3RydWN0IG10NjM5N19jaGlwICpwbWljOw0KIAljb25zdCBz
+dHJ1Y3QgY2hpcF9kYXRhICpwbWljX2NvcmU7DQogDQpAQCAtMTU0LDI5ICsxNjMsMTMgQEAgc3Rh
+dGljIGludCBtdDYzOTdfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJaWYg
+KHBtaWMtPmlycSA8PSAwKQ0KIAkJcmV0dXJuIHBtaWMtPmlycTsNCiANCi0JcmV0ID0gbXQ2Mzk3
+X2lycV9pbml0KHBtaWMpOw0KKwlyZXQgPSBwbWljX2NvcmUtPmlycV9pbml0KHBtaWMpOw0KIAlp
+ZiAocmV0KQ0KIAkJcmV0dXJuIHJldDsNCiANCi0Jc3dpdGNoIChwbWljLT5jaGlwX2lkKSB7DQot
+CWNhc2UgTVQ2MzIzX0NISVBfSUQ6DQotCQlyZXQgPSBkZXZtX21mZF9hZGRfZGV2aWNlcygmcGRl
+di0+ZGV2LCBQTEFURk9STV9ERVZJRF9OT05FLA0KLQkJCQkJICAgbXQ2MzIzX2RldnMsIEFSUkFZ
+X1NJWkUobXQ2MzIzX2RldnMpLA0KLQkJCQkJICAgTlVMTCwgMCwgcG1pYy0+aXJxX2RvbWFpbik7
+DQotCQlicmVhazsNCi0NCi0JY2FzZSBNVDYzOTFfQ0hJUF9JRDoNCi0JY2FzZSBNVDYzOTdfQ0hJ
+UF9JRDoNCi0JCXJldCA9IGRldm1fbWZkX2FkZF9kZXZpY2VzKCZwZGV2LT5kZXYsIFBMQVRGT1JN
+X0RFVklEX05PTkUsDQotCQkJCQkgICBtdDYzOTdfZGV2cywgQVJSQVlfU0laRShtdDYzOTdfZGV2
+cyksDQotCQkJCQkgICBOVUxMLCAwLCBwbWljLT5pcnFfZG9tYWluKTsNCi0JCWJyZWFrOw0KLQ0K
+LQlkZWZhdWx0Og0KLQkJZGV2X2VycigmcGRldi0+ZGV2LCAidW5zdXBwb3J0ZWQgY2hpcDogJWRc
+biIsIHBtaWMtPmNoaXBfaWQpOw0KLQkJcmV0dXJuIC1FTk9ERVY7DQotCX0NCi0NCisJcmV0ID0g
+ZGV2bV9tZmRfYWRkX2RldmljZXMoJnBkZXYtPmRldiwgUExBVEZPUk1fREVWSURfTk9ORSwNCisJ
+CQkJICAgcG1pY19jb3JlLT5jZWxscywgcG1pY19jb3JlLT5jZWxsX3NpemUsDQorCQkJCSAgIE5V
+TEwsIDAsIHBtaWMtPmlycV9kb21haW4pOw0KIAlpZiAocmV0KSB7DQogCQlpcnFfZG9tYWluX3Jl
+bW92ZShwbWljLT5pcnFfZG9tYWluKTsNCiAJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0
+byBhZGQgY2hpbGQgZGV2aWNlczogJWRcbiIsIHJldCk7DQotLSANCjIuNi40DQo=
 
