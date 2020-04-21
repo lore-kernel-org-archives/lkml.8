@@ -4,33 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933C4C55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70781C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77FD82076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D3C2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbgDUMwb (ORCPT
+        id S1728626AbgDUMws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33588 "EHLO
+        Tue, 21 Apr 2020 08:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728391AbgDUMwa (ORCPT
+        by vger.kernel.org with ESMTP id S1728769AbgDUMwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:52:30 -0400
+        Tue, 21 Apr 2020 08:52:31 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D7B3C061A41
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD1CBC061A41
         for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:52:30 -0700 (PDT)
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jQsNz-0004N3-SF; Tue, 21 Apr 2020 14:52:23 +0200
+        id 1jQsNz-0004N6-SH; Tue, 21 Apr 2020 14:52:23 +0200
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jQsNx-0002Gp-5g; Tue, 21 Apr 2020 14:52:21 +0200
+        id 1jQsNx-0002JF-Gk; Tue, 21 Apr 2020 14:52:21 +0200
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -43,9 +44,9 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
         devicetree@vger.kernel.org
-Subject: [PATCH net-next v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
-Date:   Tue, 21 Apr 2020 14:52:16 +0200
-Message-Id: <20200421125219.8402-2-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v4 4/4] net: phy: tja11xx: add delayed registration of TJA1102 PHY1
+Date:   Tue, 21 Apr 2020 14:52:19 +0200
+Message-Id: <20200421125219.8402-5-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200421125219.8402-1-o.rempel@pengutronix.de>
 References: <20200421125219.8402-1-o.rempel@pengutronix.de>
@@ -60,81 +61,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the NXP TJA11xx PHY bindings.
+TJA1102 is a dual PHY package with PHY0 having proper PHYID and PHY1
+having no ID. On one hand it is possible to for PHY detection by
+compatible, on other hand we should be able to reset complete chip
+before PHY1 configured it, and we need to define dependencies for proper
+power management.
+
+We can solve it by defining PHY1 as child of PHY0:
+	tja1102_phy0: ethernet-phy@4 {
+		reg = <0x4>;
+
+		interrupts-extended = <&gpio5 8 IRQ_TYPE_LEVEL_LOW>;
+
+		reset-gpios = <&gpio5 9 GPIO_ACTIVE_LOW>;
+		reset-assert-us = <20>;
+		reset-deassert-us = <2000>;
+
+		tja1102_phy1: ethernet-phy@5 {
+			reg = <0x5>;
+
+			interrupts-extended = <&gpio5 8 IRQ_TYPE_LEVEL_LOW>;
+		};
+	};
+
+The PHY1 should be a subnode of PHY0 and registered only after PHY0 was
+completely reset and initialized.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- .../devicetree/bindings/net/nxp,tja11xx.yaml  | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+ drivers/net/phy/nxp-tja11xx.c | 112 +++++++++++++++++++++++++++++++---
+ 1 file changed, 105 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-new file mode 100644
-index 000000000000..42be0255512b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+index a064e4ab3616..2bde9386baf1 100644
+--- a/drivers/net/phy/nxp-tja11xx.c
++++ b/drivers/net/phy/nxp-tja11xx.c
+@@ -6,11 +6,14 @@
+ #include <linux/delay.h>
+ #include <linux/ethtool.h>
+ #include <linux/kernel.h>
++#include <linux/mdio.h>
+ #include <linux/mii.h>
+ #include <linux/module.h>
+ #include <linux/phy.h>
+ #include <linux/hwmon.h>
+ #include <linux/bitfield.h>
++#include <linux/of_mdio.h>
++#include <linux/of_irq.h>
+ 
+ #define PHY_ID_MASK			0xfffffff0
+ #define PHY_ID_TJA1100			0x0180dc40
+@@ -57,6 +60,8 @@
+ struct tja11xx_priv {
+ 	char		*hwmon_name;
+ 	struct device	*hwmon_dev;
++	struct phy_device *phydev;
++	struct work_struct phy_register_work;
+ };
+ 
+ struct tja11xx_phy_stats {
+@@ -333,16 +338,12 @@ static const struct hwmon_chip_info tja11xx_hwmon_chip_info = {
+ 	.info		= tja11xx_hwmon_info,
+ };
+ 
+-static int tja11xx_probe(struct phy_device *phydev)
++static int tja11xx_hwmon_register(struct phy_device *phydev,
++				  struct tja11xx_priv *priv)
+ {
+ 	struct device *dev = &phydev->mdio.dev;
+-	struct tja11xx_priv *priv;
+ 	int i;
+ 
+-	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+-	if (!priv)
+-		return -ENOMEM;
+-
+ 	priv->hwmon_name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
+ 	if (!priv->hwmon_name)
+ 		return -ENOMEM;
+@@ -360,6 +361,103 @@ static int tja11xx_probe(struct phy_device *phydev)
+ 	return PTR_ERR_OR_ZERO(priv->hwmon_dev);
+ }
+ 
++static int tja11xx_probe(struct phy_device *phydev)
++{
++	struct device *dev = &phydev->mdio.dev;
++	struct tja11xx_priv *priv;
 +
-+title: NXP TJA11xx PHY
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
 +
-+maintainers:
-+  - Andrew Lunn <andrew@lunn.ch>
-+  - Florian Fainelli <f.fainelli@gmail.com>
-+  - Heiner Kallweit <hkallweit1@gmail.com>
++	priv->phydev = phydev;
 +
-+description:
-+  Bindings for NXP TJA11xx automotive PHYs
++	return tja11xx_hwmon_register(phydev, priv);
++}
 +
-+allOf:
-+  - $ref: ethernet-phy.yaml#
++static void tja1102_p1_register(struct work_struct *work)
++{
++	struct tja11xx_priv *priv = container_of(work, struct tja11xx_priv,
++						 phy_register_work);
++	struct phy_device *phydev_phy0 = priv->phydev;
++	struct mii_bus *bus = phydev_phy0->mdio.bus;
++	struct device *dev = &phydev_phy0->mdio.dev;
++	struct device_node *np = dev->of_node;
++	struct device_node *child;
++	int ret;
 +
-+patternProperties:
-+  "^ethernet-phy@[0-9a-f]+$":
-+    type: object
-+    description: |
-+      Some packages have multiple PHYs. Secondary PHY should be defines as
-+      subnode of the first (parent) PHY.
++	for_each_available_child_of_node(np, child) {
++		struct phy_device *phy;
++		int addr;
 +
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 31
-+        description:
-+          The ID number for the child PHY. Should be +1 of parent PHY.
++		addr = of_mdio_parse_addr(dev, child);
++		if (addr < 0) {
++			dev_err(dev, "Can't parse addr\n");
++			continue;
++		} else if (addr != phydev_phy0->mdio.addr + 1) {
++			/* Currently we care only about double PHY chip TJA1102.
++			 * If some day NXP will decide to bring chips with more
++			 * PHYs, this logic should be reworked.
++			 */
++			dev_err(dev, "Unexpected address. Should be: %i\n",
++				phydev_phy0->mdio.addr + 1);
++			continue;
++		}
 +
-+    required:
-+      - reg
++		if (mdiobus_is_registered_device(bus, addr)) {
++			dev_err(dev, "device is already registered\n");
++			continue;
++		}
 +
-+examples:
-+  - |
-+    mdio {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++		/* Real PHY ID of Port 1 is 0 */
++		phy = phy_device_create(bus, addr, PHY_ID_TJA1102, false, NULL);
++		if (IS_ERR(phy)) {
++			dev_err(dev, "Can't create PHY device for Port 1: %i\n",
++				addr);
++			continue;
++		}
 +
-+        tja1101_phy0: ethernet-phy@4 {
-+            reg = <0x4>;
-+        };
-+    };
-+  - |
-+    mdio {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++		/* Overwrite parent device. phy_device_create() set parent to
++		 * the mii_bus->dev, which is not correct in case.
++		 */
++		phy->mdio.dev.parent = dev;
 +
-+        tja1102_phy0: ethernet-phy@4 {
-+            reg = <0x4>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
++		ret = __of_mdiobus_register_phy(bus, phy, child, addr);
++		if (ret) {
++			/* All resources needed for Port 1 should be already
++			 * available for Port 0. Both ports use the same
++			 * interrupt line, so -EPROBE_DEFER would make no sense
++			 * here.
++			 */
++			dev_err(dev, "Can't register Port 1. Unexpected error: %i\n",
++				ret);
++			phy_device_free(phy);
++		}
++	}
++}
 +
-+            tja1102_phy1: ethernet-phy@5 {
-+                reg = <0x5>;
-+            };
-+        };
-+    };
++static int tja1102_p0_probe(struct phy_device *phydev)
++{
++	struct device *dev = &phydev->mdio.dev;
++	struct tja11xx_priv *priv;
++	int ret;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->phydev = phydev;
++	INIT_WORK(&priv->phy_register_work, tja1102_p1_register);
++
++	ret = tja11xx_hwmon_register(phydev, priv);
++	if (ret)
++		return ret;
++
++	schedule_work(&priv->phy_register_work);
++
++	return 0;
++}
++
+ static int tja1102_match_phy_device(struct phy_device *phydev, bool port0)
+ {
+ 	int ret;
+@@ -443,7 +541,7 @@ static struct phy_driver tja11xx_driver[] = {
+ 	}, {
+ 		.name		= "NXP TJA1102 Port 0",
+ 		.features       = PHY_BASIC_T1_FEATURES,
+-		.probe		= tja11xx_probe,
++		.probe		= tja1102_p0_probe,
+ 		.soft_reset	= tja11xx_soft_reset,
+ 		.config_init	= tja11xx_config_init,
+ 		.read_status	= tja11xx_read_status,
 -- 
 2.25.1
 
