@@ -2,79 +2,125 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978D2C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0085C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B126206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B972071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:20:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uPEqZ7eo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CfWmPsEx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgDULTE (ORCPT
+        id S1728592AbgDULUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47336 "EHLO
+        Tue, 21 Apr 2020 07:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbgDULTD (ORCPT
+        with ESMTP id S1726741AbgDULUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:19:03 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AFA1C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 04:19:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zTZk99AiK5OjEAUI30e4RyjGcOqu7o/1DlNaNqdP1sM=; b=uPEqZ7eoM9Nf+ex2VARi90OFMI
-        BlgWj8s1VbeYfOJ5p6Cp7KjPB40VZvnmVQLet+CiB8Nd85t93MQto0tWtFqjJSdnVtcgBWvo/0syV
-        cW62zgfDK1qOJ1cgJMsqmI0c3pup4O4wOEHKA2XM+fClfAaopNFuK37futYMRraFTtcRYUSZqBSYW
-        zrFsPcgYUP5FNgGqooNzKEy5VK4ZyQOVubtQf0Y5y5mzMDLoBcjLeOz2K4cpCJx4RWqbAPG+4Td84
-        ScZCQsQJk3CFQBKeXOg/2aF/d+gcP0Oy0PQ92biA8OJ3TGbPzi/4Tmbglq2hkdqFOW0bR5EtiKs8K
-        JsChop9Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQqvR-00034i-FN; Tue, 21 Apr 2020 11:18:49 +0000
-Date:   Tue, 21 Apr 2020 04:18:49 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     1587089010-110083-1-git-send-email-bernard@vivo.com
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, opensource.kernel@vivo.com,
-        Bernard Zhao <bernard@vivo.com>
-Subject: Re: [PATCH V2] kmalloc_index optimization(code size & runtime stable)
-Message-ID: <20200421111849.GL5820@bombadil.infradead.org>
-References: <20200421032501.127370-1-bernard@vivo.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421032501.127370-1-bernard@vivo.com>
+        Tue, 21 Apr 2020 07:20:36 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC5F2C061A0F;
+        Tue, 21 Apr 2020 04:20:36 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id x26so6615978pgc.10;
+        Tue, 21 Apr 2020 04:20:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=5INuHDo8RkxBQI1c6D+UV2G0d783U8nnilEvfGe2hU0=;
+        b=CfWmPsExRg8TFieNHdsCul6CDg7KQXi/925bXG18wBDsPfbylGrKs3CqHnCJ9Qcf9/
+         Rvff0UYzO3ndeb8H9FyA1PzZywww/9/xujQc3HvsMj+UexNj27db/Thn41aIlXas386Q
+         VEvSDzx/pdf+vKkOZzNOX7+UHb/zQa73Z/a2STyvXatMTDBIO8hyAV0F92jqZnpIYaLl
+         af9aPGoBqS/39UJZnFXjqHbQKN3+MDO89fry8qdV0PShnrH49zamFChLdvmymTATRJS/
+         QqaiZT0G0Oel9hvi5BHGXJBKIjhSd5q5vKmUbVPKWFw+AQkB9Glx2Ra8TgiqJBWs1Ail
+         gcAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5INuHDo8RkxBQI1c6D+UV2G0d783U8nnilEvfGe2hU0=;
+        b=AAAQDinV0laZSidiq/88VlZVEqC5ooV5w9jUJKDFOD/Km5rwfOj/Ogf7Vp9Tuw8BaK
+         q4pc61x6YDdHH5wX1rBuy8Pz3wA095RtSq5d0ro4eFhvBcZixDFW1wuq5iFtFE8ada2i
+         FRlAHiRt++DNsgfSJsWbs57n7bwMbIA2RDtMISOmF2D0SkXFNON5or6Qxb6g50/jVEle
+         gJidKLk3Mh5h88rxs7fd4pxIUsOMkDc9CuSffW8Angj3dcG6QAxXqmd6DGNt1ymYrXwO
+         hyju1R4Es8Vd4jyrzEdbYIx5w5ApCJjSDJVQI46hNEAGNV4RYs21+geiYqpiWX8pO21Q
+         vhAg==
+X-Gm-Message-State: AGi0Pua10nWuh8WiZQWoGSMRv5TrWUGlaqp9WR51pYxim2xJi3FmzTdL
+        B1D1maTUVO16IxRISJHeZLQbvjtv
+X-Google-Smtp-Source: APiQypI/2oekz+UfVOVdGkdIhyx1xtrd01Pv3bmvUrf59arfqv4RQYs+6JXxh8y6C4lQx7kAZiyJ1g==
+X-Received: by 2002:a63:2e44:: with SMTP id u65mr1855828pgu.142.1587468036204;
+        Tue, 21 Apr 2020 04:20:36 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id f74sm8643176pje.3.2020.04.21.04.20.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Apr 2020 04:20:35 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Subject: [PATCH 0/2] KVM: VMX: Tscdeadline timer emulation fastpath
+Date:   Tue, 21 Apr 2020 19:20:24 +0800
+Message-Id: <1587468026-15753-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 08:25:01PM -0700, Bernard Zhao wrote:
-> kmalloc_index inline function code size optimization and runtime
-> performance stability optimization. After optimization, the function
-> kmalloc_index is more stable, the size will never affecte the function`s
-> execution efficiency.
+IPI and Timer cause the main vmexits in cloud environment observation, 
+after single target IPI fastpath, let's optimize tscdeadline timer 
+latency by introducing tscdeadline timer emulation fastpath , it will 
+skip various KVM related checks when possible. i.e. after vmexit due 
+to tscdeadline timer emulation, handle it and vmentry immediately 
+without checking various kvm stuff when possible. 
 
-Please stop posting this patch until it's faster *for small sizes*.
-As I explained last time you posted it, it's not an optimisation.
+Testing on SKX Server.
 
->             size        time/Per 100 million times
->                         old fun		new fun with optimise
-> 		8	203777		241934
-> 		16	245611		409278
-> 		32	236384		408419
-> 		64	275499		447732
-> 		128	354909		416439
+cyclictest in guest(w/o mwait exposed, adaptive advance lapic timer is default -1):
 
-^^^^ these are the important cases that need to be fast.
+5632.75ns -> 4559.25ns, 19%
+
+kvm-unit-test/vmexit.flat:
+
+w/o APICv, w/o advance timer:
+tscdeadline_immed: 4780.75 -> 3851    19.4%
+tscdeadline:       7474    -> 6528.5  12.7%
+
+w/o APICv, w/ adaptive advance timer default -1:
+tscdeadline_immed: 4845.75 -> 3930.5  18.9%
+tscdeadline:       6048    -> 5871.75    3%
+
+w/ APICv, w/o avanced timer:
+tscdeadline_immed: 2919    -> 2467.75 15.5%
+tscdeadline:       5661.75 -> 5188.25  8.4%
+
+w/ APICv, w/ adaptive advance timer default -1:
+tscdeadline_immed: 3018.5  -> 2561    15.2%
+tscdeadline:       4663.75 -> 4626.5     1%
+
+Tested-by: Haiwei Li <lihaiwei@tencent.com>
+Cc: Haiwei Li <lihaiwei@tencent.com>
+
+Wanpeng Li (2):
+  KVM: X86: TSCDEADLINE MSR emulation fastpath
+  KVM: VMX: Handle preemption timer fastpath
+
+ arch/x86/include/asm/kvm_host.h |   3 ++
+ arch/x86/kvm/lapic.c            |  20 ++------
+ arch/x86/kvm/lapic.h            |  16 +++++++
+ arch/x86/kvm/vmx/vmx.c          | 101 ++++++++++++++++++++++++++++++++++++++--
+ arch/x86/kvm/x86.c              |  55 +++++++++++++++++++---
+ 5 files changed, 167 insertions(+), 28 deletions(-)
+
+-- 
+2.7.4
 
