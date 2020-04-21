@@ -2,132 +2,165 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAE0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537F9C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2086206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D0AA206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ETzqOnQ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgDUJd4 (ORCPT
+        id S1728422AbgDUJeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:33:56 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:49515 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725920AbgDUJd4 (ORCPT
+        Tue, 21 Apr 2020 05:34:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725920AbgDUJeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:33:56 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TwDj3zG_1587461629;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TwDj3zG_1587461629)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Apr 2020 17:33:50 +0800
-Subject: Re: [PATCH 00/18] mm: memcontrol: charge swapin pages on
- instantiation
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Joonsoo Kim <js1304@gmail.com>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <e5f966d8-8b1c-cecf-7022-ae160d266443@linux.alibaba.com>
-Date:   Tue, 21 Apr 2020 17:32:43 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        Tue, 21 Apr 2020 05:34:10 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A17AC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 02:34:10 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id m10so520684oie.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 02:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z4lUem6J31Z1o9v7Dk0MyJIdWtAPPyTWPMlNC8wY8cI=;
+        b=ETzqOnQ6ktcw7qLsv0AqL9NW9zS0cjRuCnMWV3XaTeAHF51px8JFDw6Oy0MQZnn77o
+         W0HsSEOjnS6G1rgFK5eWWbAtkvq0ngdp4csOjpuwMwsPQXbf7CPqPUbcmvYPSA+vfyIa
+         B/ZdeWuDq+s1uEwXoWPv+6rY/Cvru9cEwApvavhjjQqmg8b/wYG8ljZs9sG0VJIxQ0Q+
+         Pyv37lMT5KmPFttDfJ5eBdmjPUJ5TOOBzz8PbN+967RSCwj+86hyWEzYEutvmFC2zMxV
+         OhptjSXknaRMvFnLnDr+vMODCbmOH6cfFauWRGjmaw5Gzy7c2fx0BLOoER54sWLGvDij
+         sIwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z4lUem6J31Z1o9v7Dk0MyJIdWtAPPyTWPMlNC8wY8cI=;
+        b=tXtNB0TSe33UkR/AuT4CRr35Z/OX078IZKJvoP+LfOOUl33wl7b04OYf02UzYsyyHG
+         BwlRZRQ7BVCMCh0DigZwkytiao4R5fFEYlrhGbnUCVj5phqAQB20O6R9hEv531tMLpUz
+         SEKQdWaxjnTliOCh0a8dirPZlMLvwqok70tkQ1brZ7C8TufyJhBPOm5giZLv4kTj5xCO
+         oy3cjioAqhYNKZ/zgXPODDxOcAqJwVTBCL1zoq7otleMkkh7iws2S+MNE2kYqukeGdCj
+         cipT6FHSA/iIFqqYhsUKz8bM9BWmdc3T/ymIUQpaIQwI96peQYq3iMcvAUybEL2TGyU8
+         6+DA==
+X-Gm-Message-State: AGi0Pua2Yhy6i8AyPU8FIzNjQvbu9FMAIRpBV/PF0KBEg5VzttwyYKJ3
+        zVTh8+OGdindt02ppT3J5kstwgRmBrcNkk5h3xBC2g==
+X-Google-Smtp-Source: APiQypJD0csI6smYkR6G35u9L/1AKGmw6sOUpQA5lng7nTgg6dTRQD7g1O6fQgRa81o+FVGU8OrLg/i3Id29vtHk9Xs=
+X-Received: by 2002:aca:c5cf:: with SMTP id v198mr2616654oif.70.1587461649249;
+ Tue, 21 Apr 2020 02:34:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200420221126.341272-1-hannes@cmpxchg.org>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+References: <20200419094439.GA32841@carbon> <491f0b0bc9e4419d93a78974fd7f44c7@AcuMS.aculab.com>
+ <20200419182957.GA36919@carbon> <8e5a0283ed76465aac19a2b97a27ff15@AcuMS.aculab.com>
+ <20200420150545.GB17661@paulmck-ThinkPad-P72> <20200420225715.GA176156@google.com>
+ <20200420231244.GK17661@paulmck-ThinkPad-P72>
+In-Reply-To: <20200420231244.GK17661@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 21 Apr 2020 11:33:57 +0200
+Message-ID: <CANpmjNOfXNE-Zh3MNP=-gmnhvKbsfUfTtWkyg_=VqTxS4nnptQ@mail.gmail.com>
+Subject: Re: [RFC] WRITE_ONCE_INC() and friends
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Petko Manolov <petko.manolov@konsulko.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 21 Apr 2020 at 01:12, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Tue, Apr 21, 2020 at 12:57:15AM +0200, Marco Elver wrote:
+> > On Mon, 20 Apr 2020, Paul E. McKenney wrote:
+> >
+> > > On Sun, Apr 19, 2020 at 09:37:10PM +0000, David Laight wrote:
+> > > > From: Petko Manolov
+> > > > > Sent: 19 April 2020 19:30
+> > > > >
+> > > > > On 20-04-19 18:02:50, David Laight wrote:
+> > > > > > From: Petko Manolov
+> > > > > > > Sent: 19 April 2020 10:45
+> > > > > > > Recently I started reading up on KCSAN and at some point I ran into stuff like:
+> > > > > > >
+> > > > > > > WRITE_ONCE(ssp->srcu_lock_nesting[idx], ssp->srcu_lock_nesting[idx] + 1);
+> > > > > > > WRITE_ONCE(p->mm->numa_scan_seq, READ_ONCE(p->mm->numa_scan_seq) + 1);
+> > > > > >
+> > > > > > If all the accesses use READ/WRITE_ONCE() why not just mark the structure
+> > > > > > field 'volatile'?
+> > > > >
+> > > > > This is a bit heavy.  I guess you've read this one:
+> > > > >
+> > > > >         https://lwn.net/Articles/233479/
+> > > >
+> > > > I remember reading something similar before.
+> > > > I also remember a very old gcc (2.95?) that did a readback
+> > > > after every volatile write on sparc (to flush the store buffer).
+> > > > That broke everything.
+> > > >
+> > > > I suspect there is a lot more code that is attempting to be lockless
+> > > > these days.
+> > > > Ring buffers (one writer and one reader) are a typical example where
+> > > > you don't need locks but do need to use a consistent value.
+> > > >
+> > > > Now you may also need ordering between accesses - which I think needs
+> > > > more than volatile.
+> > >
+> > > In Petko's patch, all needed ordering is supplied by the fact that it
+> > > is the same variable being read and written.  But yes, in many other
+> > > cases, more ordering is required.
+> > >
+> > > > > And no, i am not sure all accesses are through READ/WRITE_ONCE().  If, for
+> > > > > example, all others are from withing spin_lock/unlock pairs then we _may_ not
+> > > > > need READ/WRITE_ONCE().
+> > > >
+> > > > The cost of volatile accesses is probably minimal unless the
+> > > > code is written assuming the compiler will only access things once.
+> > >
+> > > And there are variables marked as volatile, for example, jiffies.
+> > >
+> > > But one downside of declaring variables volatile is that it can prevent
+> > > KCSAN from spotting violations of the concurrency design for those
+> > > variables.
+> >
+> > Note that, KCSAN currently treats volatiles not as special, except a
+> > list of some known global volatiles (like jiffies). This means, that
+> > KCSAN will tell us about data races involving unmarked volatiles (unless
+> > they're in the list).
+> >
+> > As far as I can tell, this is what we want. At least according to LKMM.
+> >
+> > If, for whatever reason, volatiles should be treated differently, we'll
+> > have to modify the compilers to emit different instrumentation for the
+> > kernel.
+>
+> I stand corrected, then, thank you!
+>
+> In the current arrangement, declaring a variable volatile will cause
+> KCSAN to generate lots of false positives.
+>
+> I don't currently have a strong feeling on changing the current situation
+> with respect to volatile variables.  Is there a strong reason to change?
+> The general view of the community, as you say, has been that you don't use
+> the volatile keyword outside of exceptions such as jiffies, atomic_read(),
+> atomic_set(), READ_ONCE(), WRITE_ONCE() and perhaps a few others.
+>
+> Thoughts?
 
+I certainly agree, and also want to point out that checkpatch.pl
+complains about volatile. We know using volatile has problems. KCSAN
+is (along with checkpatch.pl) another tool that can warn us about such
+problems (warning in case there is real concurrency). Another thing to
+point out is that volatile is not portable, in case
+READ_ONCE()/WRITE_ONCE()'s smp_load_barrier_depends() is not a noop.
+So from what I see, there are strong reasons against changing the
+situation for volatiles and KCSAN.
 
-ÔÚ 2020/4/21 ÉÏÎç6:11, Johannes Weiner Ð´µÀ:
-> This patch series reworks memcg to charge swapin pages directly at
-> swapin time, rather than at fault time, which may be much later, or
-> not happen at all.
-> 
-> The delayed charging scheme we have right now causes problems:
-> 
-> - Alex's per-cgroup lru_lock patches rely on pages that have been
->   isolated from the LRU to have a stable page->mem_cgroup; otherwise
->   the lock may change underneath him. Swapcache pages are charged only
->   after they are added to the LRU, and charging doesn't follow the LRU
->   isolation protocol.
-
-Hi Johannes,
-
-Thanks a lot! 
-It looks all fine for me. I will rebase per cgroup lru_lock on this.
-Thanks!
-
-Alex
-
-> 
-> - Joonsoo's anon workingset patches need a suitable LRU at the time
->   the page enters the swap cache and displaces the non-resident
->   info. But the correct LRU is only available after charging.
-> 
-> - It's a containment hole / DoS vector. Users can trigger arbitrarily
->   large swap readahead using MADV_WILLNEED. The memory is never
->   charged unless somebody actually touches it.
-> 
-> - It complicates the page->mem_cgroup stabilization rules
-> 
-> In order to charge pages directly at swapin time, the memcg code base
-> needs to be prepared, and several overdue cleanups become a necessity:
-> 
-> To charge pages at swapin time, we need to always have cgroup
-> ownership tracking of swap records. We also cannot rely on
-> page->mapping to tell apart page types at charge time, because that's
-> only set up during a page fault.
-> 
-> To eliminate the page->mapping dependency, memcg needs to ditch its
-> private page type counters (MEMCG_CACHE, MEMCG_RSS, NR_SHMEM) in favor
-> of the generic vmstat counters and accounting sites, such as
-> NR_FILE_PAGES, NR_ANON_MAPPED etc.
-> 
-> To switch to generic vmstat counters, the charge sequence must be
-> adjusted such that page->mem_cgroup is set up by the time these
-> counters are modified.
-> 
-> The series is structured as follows:
-> 
-> 1. Bug fixes
-> 2. Decoupling charging from rmap
-> 3. Swap controller integration into memcg
-> 4. Direct swapin charging
-> 
-> The patches survive a simple swapout->swapin test inside a virtual
-> machine. Because this is blocking two major patch sets, I'm sending
-> these out early and will continue testing in parallel to the review.
-> 
->  include/linux/memcontrol.h |  53 +----
->  include/linux/mm.h         |   4 +-
->  include/linux/swap.h       |   6 +-
->  init/Kconfig               |  17 +-
->  kernel/events/uprobes.c    |  10 +-
->  mm/filemap.c               |  43 ++---
->  mm/huge_memory.c           |  45 ++---
->  mm/khugepaged.c            |  25 +--
->  mm/memcontrol.c            | 448 ++++++++++++++-----------------------------
->  mm/memory.c                |  51 ++---
->  mm/migrate.c               |  20 +-
->  mm/rmap.c                  |  53 +++--
->  mm/shmem.c                 | 117 +++++------
->  mm/swap_cgroup.c           |   6 -
->  mm/swap_state.c            |  89 +++++----
->  mm/swapfile.c              |  25 +--
->  mm/userfaultfd.c           |   5 +-
->  17 files changed, 367 insertions(+), 650 deletions(-)
-> 
+Thanks,
+-- Marco
