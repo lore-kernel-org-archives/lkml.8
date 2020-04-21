@@ -2,145 +2,140 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAA5C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648A8C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED3B6206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8D9206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgDUNkF convert rfc822-to-8bit (ORCPT
+        id S1728970AbgDUNkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:40:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46112 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbgDUNkE (ORCPT
+        Tue, 21 Apr 2020 09:40:23 -0400
+Received: from m176149.mail.qiye.163.com ([59.111.176.149]:2718 "EHLO
+        m176149.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728391AbgDUNkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:40:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id q204so11970165oia.13;
-        Tue, 21 Apr 2020 06:40:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3/1l4+L7c32gnSlR+jJxwn2uHEoI18nOZn1jAcK8+9Q=;
-        b=qVWO7oiIChojoNCxQH8rGnO1CVw0zz2QrOO4Z+nt2O0mUtAoNVX7jlgmRi6ZJbdUYz
-         EXPDych6FonQIco66FjGYP6BxiD4JVFLFaf94W2WgFDv2gMgjdASu4h+5MJyjXtZDsoK
-         FUz00XV5Qyafy5bJG2Bt5iKZAfc39fTje+zGPn/aKXr7U+Btq9l9KdQRuFEXSSvsPJM4
-         Q+FesvCsm4C4ud5j3bIRVit2YRPQDbRFren53Ujq10nLU1M4j29NGVa2dpnPLIUBKgXp
-         RtUgeQvRcwFed5NZsTm2Q4xPDskRaJAAc3ct1Vb6rvg1+WXVyQs4F01ORfV0+RRr8Hv/
-         4F4w==
-X-Gm-Message-State: AGi0PuaPvH/9AoSKN/8xJVXF02dUkl2zQWvVO6Sc6HXrETsq2hWEju0D
-        heJTnyzIKhn/qCfJXhoV48thCE8TKovN0GR2FfA=
-X-Google-Smtp-Source: APiQypLnyE8M1S3nafbqgPsJWblXWZUy3OMvbgpZ18EMhwOIcc0Hy40xHYlEJ+5FEBBaTRknY0lppcu8TbDznbLPHQw=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr3020719oih.148.1587476402149;
- Tue, 21 Apr 2020 06:40:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
- <CAMuHMdUUJATs+G-hvty=fgyrhyx1EafpFHoWfcm=V_tVLn3q2A@mail.gmail.com>
- <DB6PR0802MB25330E55914346B46288C712E9D40@DB6PR0802MB2533.eurprd08.prod.outlook.com>
- <CAMuHMdV1Lp0uEOm_KtUA-nF7-6y1kfyvArcunrLipp6h5A_GMw@mail.gmail.com> <DB6PR0802MB25330B64ABAE083E31B427DDE9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-In-Reply-To: <DB6PR0802MB25330B64ABAE083E31B427DDE9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 Apr 2020 15:39:50 +0200
-Message-ID: <CAMuHMdWjBTEM-cU32ZcvvoYDcjdMzcKbQZUyvGggZRMRhkOmFg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/3] hw_random: introduce Arm CryptoCell TRNG driver
-To:     Hadar Gat <Hadar.Gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+        Tue, 21 Apr 2020 09:40:23 -0400
+Received: from vivo.com (wm-9.qy.internal [127.0.0.1])
+        by m176149.mail.qiye.163.com (Hmail) with ESMTP id 0D38F282502;
+        Tue, 21 Apr 2020 21:39:48 +0800 (CST)
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: base64
+Message-ID: <ABgAqADYCC8xUvKN7bT8YKp1.3.1587476387645.Hmail.bernard@vivo.com>
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tom St Denis <tom.stdenis@amd.com>,
+        Ori Messinger <Ori.Messinger@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gYW1kZ3B1OiBmaXhlcyBtZW1sZWFrIGlzc3VlIHdoZW4gaW5pdCBmYWlsZWQ=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <5c1510e2-9007-50b8-9be9-b8a00f943c9b@amd.com>
+MIME-Version: 1.0
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 21 Apr 2020 21:39:47 +0800 (GMT+08:00)
+From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
+Date:   Tue, 21 Apr 2020 21:39:47 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVPSk9CQkJCTUpDTkhLSFlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSE9PQkxJT01ON1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6ORw6Cjo*Ijg4QwMuDTA1TBkvQyIwC0pVSFVKTkNMT0xNSENDSklMVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBQ0xJTjcG
+X-HM-Tid: 0a719cf758dc9395kuws0d38f282502
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hadar (and Gilad),
-
-On Tue, Apr 21, 2020 at 3:13 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
-> To better explain the relationship between ccree and cctrng drivers, here an description of the underlying hardware and the relationship to the two drivers:
->
-> Arm TrustZone CryptoCell is a hardware block that implements two separate and discreet, although related, interfaces: one for the Rich Execution Environment  (read: Linux) and the other for the Trusted Execution Environment (e.g. Trusty, Op-TEE).
->
-> The ccree driver exposes the REE interface of CryptoCell to Linux. Where a SoC vendor implements both REE and TEE in their design, that is all that is needed.
->
-> However, we have some customers that make use CryptoCell but never implement a Trusted Execution Environment. This is a design decision taken when the SoC hardware is being designed and not a software controlled configuration, as it involves how the buses are laid out. Some of these customers have requested from us to allow making use in Linux of the TRNG resources which are normally associated with the TEE side when it is not in use. For these customers, the cctrng driver allows making use in Linux the TRNG which is normally part of the TEE side of CryptoCell.
-
-Thank you, that is the part I was missing.
-
-BTW, there seems to be no mention of CryptoCell 630 on arm.com; it
-covers only CC-300 and CC-700.
-But from the (very limited) information about the crypto engine on R-Car
-Gen3 SoCs, it looks like the RNG is indeed only present in the secure
-(trusted) part.
-
-> > -----Original Message-----
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > On Mon, Apr 20, 2020 at 2:27 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
-> > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > Sent: Monday, 20 April 2020 12:35
-> > > >
-> > > > On Fri, Mar 27, 2020 at 7:11 AM Hadar Gat <hadar.gat@arm.com> wrote:
-> > > > > The Arm CryptoCell is a hardware security engine.
-> > > > > This patch introduces driver for its TRNG (True Random Number
-> > > > > Generator) engine.
-> > > >
-> > > > Thanks for your series!
-> > > >
-> > > > I am wondering what is the relation between this and
-> > > > Documentation/devicetree/bindings/crypto/arm-cryptocell.txt?
-> > >
-> > > Arm TrustZone CryptoCell hardware contains both cryptographic engine
-> > (ccree) and true random number generator engine (cctrng).
-> >
-> > OK.
-> >
-> > > These are separate engines with some sharing in logic and interface.
-> >
-> > Do they share the same register block?
-> >
-> > > cctrng engine may not always be present.
-> >
-> > I assume that applies to e.g. the older 630p?
-> >
-> > > The devicetree documentation is in:
-> > > For ccree -
-> > > Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-> > > For cctrng - Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> >
-> > Thank you, I had already read both documents.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+CuWPkeS7tuS6uu+8miJDaHJpc3RpYW4gS8O2bmlnIiA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29t
+Pgrlj5HpgIHml6XmnJ/vvJoyMDIwLTA0LTIxIDIxOjAyOjI3CuaUtuS7tuS6uu+8miLotbXlhpvl
+pY4iIDxiZXJuYXJkQHZpdm8uY29tPgrmioTpgIHkurrvvJpBbGV4IERldWNoZXIgPGFsZXhhbmRl
+ci5kZXVjaGVyQGFtZC5jb20+LCJEYXZpZCAoQ2h1bk1pbmcpIFpob3UiIDxEYXZpZDEuWmhvdUBh
+bWQuY29tPixEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+LERhbmllbCBWZXR0ZXIgPGRh
+bmllbEBmZndsbC5jaD4sVG9tIFN0IERlbmlzIDx0b20uc3RkZW5pc0BhbWQuY29tPixPcmkgTWVz
+c2luZ2VyIDxPcmkuTWVzc2luZ2VyQGFtZC5jb20+LFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3Jn
+Lm9yZz4sYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZyxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLG9wZW5zb3VyY2Uua2VybmVs
+QHZpdm8uY29tCuS4u+mimO+8mlJlOiBbUEFUQ0hdIGFtZGdwdTogZml4ZXMgbWVtbGVhayBpc3N1
+ZSB3aGVuIGluaXQgZmFpbGVkPkFtIDIxLjA0LjIwIHVtIDE0OjA5IHNjaHJpZWIg6LW15Yab5aWO
+Ogo+PiBGcm9tOiAiQ2hyaXN0aWFuIEvDtm5pZyIgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4K
+Pj4gRGF0ZTogMjAyMC0wNC0yMSAxOToyMjo0OQo+PiBUbzogIEJlcm5hcmQgWmhhbyA8YmVybmFy
+ZEB2aXZvLmNvbT4sQWxleCBEZXVjaGVyIDxhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPiwiRGF2
+aWQgKENodW5NaW5nKSBaaG91IiA8RGF2aWQxLlpob3VAYW1kLmNvbT4sRGF2aWQgQWlybGllIDxh
+aXJsaWVkQGxpbnV4LmllPixEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+LFRvbSBTdCBE
+ZW5pcyA8dG9tLnN0ZGVuaXNAYW1kLmNvbT4sT3JpIE1lc3NpbmdlciA8T3JpLk1lc3NpbmdlckBh
+bWQuY29tPixTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+LGFtZC1nZnhAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnLGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZwo+PiBDYzogIG9wZW5zb3VyY2Uua2VybmVsQHZpdm8uY29tCj4+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0hdIGFtZGdwdTogZml4ZXMgbWVtbGVhayBpc3N1ZSB3aGVuIGluaXQg
+ZmFpbGVkPkFtIDIxLjA0LjIwIHVtIDEzOjE3IHNjaHJpZWIgQmVybmFyZCBaaGFvOgo+Pj4+IFZS
+QU0gbWFuYWdlciBhbmQgRFJNIE1NIHdoZW4gaW5pdCBmYWlsZWQsIHRoZXJlIGlzIG5vIG9wZXJh
+Y3Rpb24KPj4+PiB0byBmcmVlIGt6YWxsb2MgbWVtb3J5ICYgcmVtb3ZlIGRldmljZSBmaWxlLgo+
+Pj4+IFRoaXMgd2lsbCBsZWFkIHRvIG1lbWxlYWsgJiBjYXVzZSBzdGFiaWxpdHkgaXNzdWUuCj4+
+PiBOQUssIGZhaWx1cmUgdG8gY3JlYXRlIHN5c2ZzIG5vZGVzIGFyZSBub3QgY3JpdGljYWwuCj4+
+Pgo+Pj4gQ2hyaXN0aWFuLgo+Pj4KPj4gT0ssIGdldCBpdC4KPj4gQnkgdGhlIHdheSwgc2hvdWxk
+IGkgbW9kaWZ5IHRoaXMgcGF0Y2ggdG8ganVzdCBoYW5kbGUgPGtmcmVlKG1ncik+IGluIGVycm9y
+IGJyYW5jaCwgb3IgdGhhdCBpdCBpcyBhbHNvIHVubmVjZXNzYXJ5Pwo+Cj5XaGF0IHlvdSBjYW4g
+ZG8gaXMgdG8gZHJvcCB0aGUgInJldHVybiByZXQiIGlmIGFueXRoaW5nIHdpdGggdGhlIHN5c2Zz
+IAo+bm9kZXMgZ29lcyB3cm9uZyBhbmQgaW5zdGVhZCBwcmludCB0aGUgZXJyb3IgY29kZS4KCkVt
+bW0sIGZvciB0aGlzIHBhcnQsIGkgYW0gbm90IHN1cmUsIG15IG1vZGlmeSBmaXJzdCBwcmludCB0
+aGUgZXJyb3IsIHNlY29uZSByZWxlYXNlIG5vdCBmcmVlIG1lbW9yeSwgCmFuZCBsYXN0IHJldHVy
+biBlcnJvciwgbWFrZSBldmVyeXRoaW5nIGNsZWFyIHRvIHRoZSBzeXN0ZW0uCkkgdGhpbmsgaXRg
+cyB0aGUgc2FtZSB3aXRoIHdoYXQgeW91IG1lbnRpb25lZCwgaXMgdGhlcmUgc29tZXRoaW5nIHRo
+YXQgSSBtaXN1bmRlcnN0b29kPwoKPgo+SXQncyByZWFsbHkgYW5ub3lpbmcgdGhhdCBsb2FkaW5n
+LCB1bmxvYWRpbmcgYW5kIGxvYWRpbmcgdGhlIGRyaXZlciAKPmFnYWluIHNvbWV0aW1lcyBmYWls
+cyBiZWNhdXNlIHdlIGhhdmUgYSBidWcgaW4gdGhlIHN5c2ZzIGZpbGVzIGNsZWFudXAuCj4KPldl
+IGNlcnRhaW5seSBzaG91bGQgZml4IHRob3NlIGJ1Z3MgYXMgd2VsbCwgYnV0IHRoZXkgYXJlIGp1
+c3Qgbm90IAo+Y3JpdGljYWwgZm9yIGNvcnJlY3QgZHJpdmVyIGZ1bmN0aW9uYWxpdHkuCj4KPlJl
+Z2FyZHMsCj5DaHJpc3RpYW4uCgoKPj4KPj4gUmVnYXJkcywKPj4gQmVybmFyZAo+Pgo+Pj4+IFNp
+Z25lZC1vZmYtYnk6IEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KPj4+PiAtLS0KPj4+
+PiAgICBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfdnJhbV9tZ3IuYyB8IDI0ICsr
+KysrKysrKysrKysrKystLS0tCj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMo
+KyksIDUgZGVsZXRpb25zKC0pCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L2FtZC9hbWRncHUvYW1kZ3B1X3ZyYW1fbWdyLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdw
+dS9hbWRncHVfdnJhbV9tZ3IuYwo+Pj4+IGluZGV4IDgyYTMyOTllNTNjMC4uNGM1ZmIxNTNlNmI0
+IDEwMDY0NAo+Pj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV92cmFt
+X21nci5jCj4+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X3ZyYW1f
+bWdyLmMKPj4+PiBAQCAtMTc1LDMwICsxNzUsNDQgQEAgc3RhdGljIGludCBhbWRncHVfdnJhbV9t
+Z3JfaW5pdChzdHJ1Y3QgdHRtX21lbV90eXBlX21hbmFnZXIgKm1hbiwKPj4+PiAgICAJcmV0ID0g
+ZGV2aWNlX2NyZWF0ZV9maWxlKGFkZXYtPmRldiwgJmRldl9hdHRyX21lbV9pbmZvX3ZyYW1fdG90
+YWwpOwo+Pj4+ICAgIAlpZiAocmV0KSB7Cj4+Pj4gICAgCQlEUk1fRVJST1IoIkZhaWxlZCB0byBj
+cmVhdGUgZGV2aWNlIGZpbGUgbWVtX2luZm9fdnJhbV90b3RhbFxuIik7Cj4+Pj4gLQkJcmV0dXJu
+IHJldDsKPj4+PiArCQlnb3RvIFZSQU1fVE9UQUxfRkFJTDsKPj4+PiAgICAJfQo+Pj4+ICAgIAly
+ZXQgPSBkZXZpY2VfY3JlYXRlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdmlz
+X3ZyYW1fdG90YWwpOwo+Pj4+ICAgIAlpZiAocmV0KSB7Cj4+Pj4gICAgCQlEUk1fRVJST1IoIkZh
+aWxlZCB0byBjcmVhdGUgZGV2aWNlIGZpbGUgbWVtX2luZm9fdmlzX3ZyYW1fdG90YWxcbiIpOwo+
+Pj4+IC0JCXJldHVybiByZXQ7Cj4+Pj4gKwkJZ290byBWSVNfVlJBTV9UT1RBX0ZBSUw7Cj4+Pj4g
+ICAgCX0KPj4+PiAgICAJcmV0ID0gZGV2aWNlX2NyZWF0ZV9maWxlKGFkZXYtPmRldiwgJmRldl9h
+dHRyX21lbV9pbmZvX3ZyYW1fdXNlZCk7Cj4+Pj4gICAgCWlmIChyZXQpIHsKPj4+PiAgICAJCURS
+TV9FUlJPUigiRmFpbGVkIHRvIGNyZWF0ZSBkZXZpY2UgZmlsZSBtZW1faW5mb192cmFtX3VzZWRc
+biIpOwo+Pj4+IC0JCXJldHVybiByZXQ7Cj4+Pj4gKwkJZ290byBWUkFNX1VTRURfRkFJTDsKPj4+
+PiAgICAJfQo+Pj4+ICAgIAlyZXQgPSBkZXZpY2VfY3JlYXRlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2
+X2F0dHJfbWVtX2luZm9fdmlzX3ZyYW1fdXNlZCk7Cj4+Pj4gICAgCWlmIChyZXQpIHsKPj4+PiAg
+ICAJCURSTV9FUlJPUigiRmFpbGVkIHRvIGNyZWF0ZSBkZXZpY2UgZmlsZSBtZW1faW5mb192aXNf
+dnJhbV91c2VkXG4iKTsKPj4+PiAtCQlyZXR1cm4gcmV0Owo+Pj4+ICsJCWdvdG8gVklTX1ZSQU1f
+VVNFRF9GQUlMOwo+Pj4+ICAgIAl9Cj4+Pj4gICAgCXJldCA9IGRldmljZV9jcmVhdGVfZmlsZShh
+ZGV2LT5kZXYsICZkZXZfYXR0cl9tZW1faW5mb192cmFtX3ZlbmRvcik7Cj4+Pj4gICAgCWlmIChy
+ZXQpIHsKPj4+PiAgICAJCURSTV9FUlJPUigiRmFpbGVkIHRvIGNyZWF0ZSBkZXZpY2UgZmlsZSBt
+ZW1faW5mb192cmFtX3ZlbmRvclxuIik7Cj4+Pj4gLQkJcmV0dXJuIHJldDsKPj4+PiArCQlnb3Rv
+IFZSQU1fVkVSRE9SX0ZBSUw7Cj4+Pj4gICAgCX0KPj4+PiAgICAKPj4+PiAgICAJcmV0dXJuIDA7
+Cj4+Pj4gKwo+Pj4+ICtWUkFNX1ZFUkRPUl9GQUlMOgo+Pj4+ICsJZGV2aWNlX3JlbW92ZV9maWxl
+KGFkZXYtPmRldiwgJmRldl9hdHRyX21lbV9pbmZvX3Zpc192cmFtX3VzZWQpOwo+Pj4+ICtWSVNf
+VlJBTV9VU0VEX0ZBSUw6Cj4+Pj4gKwlkZXZpY2VfcmVtb3ZlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2
+X2F0dHJfbWVtX2luZm9fdnJhbV91c2VkKTsKPj4+PiArUlZBTV9VU0VEX0ZBSUw6Cj4+Pj4gKwlk
+ZXZpY2VfcmVtb3ZlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdmlzX3ZyYW1f
+dG90YWwpOwo+Pj4+ICtWSVNfVlJBTV9UT1RBX0ZBSUw6Cj4+Pj4gKwlkZXZpY2VfcmVtb3ZlX2Zp
+bGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdnJhbV90b3RhbCk7Cj4+Pj4gK1ZSQU1f
+VE9UQUxfRkFJTDoKPj4+PiArCWtmcmVlKG1ncik7Cj4+Pj4gKwltYW4tPnByaXYgPSBOVUxMOwo+
+Pj4+ICsKPj4+PiArCXJldHVybiByZXQ7Cj4+Pj4gICAgfQo+Pj4+ICAgIAo+Pj4+ICAgIC8qKgo+
+Pgo+Cg0KDQo=
