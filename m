@@ -2,89 +2,120 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E7EC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35DEC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAD52064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBC32064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:51:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bLiEezq1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/PyuREx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgDUPvd (ORCPT
+        id S1728413AbgDUPvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:51:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33000 "EHLO
+        Tue, 21 Apr 2020 11:51:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726136AbgDUPvc (ORCPT
+        by vger.kernel.org with ESMTP id S1725994AbgDUPvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:51:32 -0400
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C31D3C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 08:51:32 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id c16so6944548ilr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 08:51:32 -0700 (PDT)
+        Tue, 21 Apr 2020 11:51:41 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3864C061A10;
+        Tue, 21 Apr 2020 08:51:40 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x18so17050250wrq.2;
+        Tue, 21 Apr 2020 08:51:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ucc26Bj81AjJz1d/vC9eI8ex7RUUxpik4V5yYcotuFw=;
-        b=bLiEezq1puvn33tEiH/uMc12FH9WXxAqpJV1nlIBvxjFLwkxlqnpdwngQnbulmdmFa
-         H+WCcRWCgW6qrwC5aFEUV5aWShHQyPPFW48v2J9kYUjS0Bw4FrVKdhioL8h3YttZuY18
-         4QOXHZhiVvqmBd3winT4yFkc8yv8G7I6NDzp3xXpDEx9wks7J+oc/5RpWGkEQfOFE1kU
-         Zj05wGIBGNXYOh3/F2cZ4RCa4v57HzJWm/wjGXEtUtuGqY8s3pYlz1YJbnOq0TLpGyhi
-         bkbTAFTvRCzqurxhXOAVn/c5lpEGBF9jUlTs1R/gQ4neVgTKbMw+NDp+E4ExgXF4tnES
-         qugQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kcT8YhRThPhegOm3BQj7wUe66PuL6hDa8ErzC+LQvVA=;
+        b=T/PyuRExpYtl18m3qkte0wueAWmWWpHTRgZgK8uwu12i+5YbEWa0GkQnamXwmmz2ym
+         HnDhNv2mBoB9JSc/2zO24+fUuBTWzCT81vqx7x/beNBoW2Cd5JlP50LrNaiIDdARVTY8
+         9sOn3cfal5fmxmyBKT2JFMwIzpFqAgVi9hKyEoKy3wy+BNKyqoyxTn7bgh02qlQqm7RA
+         4jSQfhpNWkjxqAkY0QObUBLau0NXNyECQ6J7+J8P/AnZz/3VYvfv5HOxkawlcQ6q2RQF
+         wXBghlmE8m7LWE8EISO7TF1NwV3wItGrFtlorZhTzNRY/p0HaUCSteOWlgJzbn1FNE26
+         YtUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ucc26Bj81AjJz1d/vC9eI8ex7RUUxpik4V5yYcotuFw=;
-        b=WlOXE1M6RGikda8ZJXEzvw0yUmule0XGz3RpO1aRYMA6KyYUJ16lTBfUWivWjTYZsB
-         q2YmeQhLAd/DNbvNCGOSmH63SEX2e0t2+12AHzhbEE2yWjcs4NEFt661g+u42JVWjO7H
-         q6Vy/E8fEI0zNqJf91LxplgPwZEiYzDMRJ0OpwPNvB+BBA3mpzYFEJ+Gq2L/mipzlkFL
-         yYP11BVzcKGTe063a0l1oqRubw4Lz/Sn21iiQom6yofUpBRwrGCxk3xtvahx2AW5hLEl
-         e8xXyHPdIVYry8YCP+/lwkSRwzFEwzK9oBdE19ux4E8Z3u+lsndCB0lLNbuocbAChRuG
-         znig==
-X-Gm-Message-State: AGi0PuYU6/uoqMTPTLsRyiVCDitsSucq1B+d8l0aeuDglCB+59iC4Yni
-        oap7Uqw/LQEPGTTS8mxImBKaLDTbYmUxag==
-X-Google-Smtp-Source: APiQypIJxzyhZTQeTb7npJKsKQymReUDPbDW+nECgF2KFNC/f4kH7ZfMv6U/8+cvtAzS9yY5kciqqw==
-X-Received: by 2002:a92:48d0:: with SMTP id j77mr20967506ilg.274.1587484291866;
-        Tue, 21 Apr 2020 08:51:31 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id d23sm831038ioc.48.2020.04.21.08.51.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 08:51:31 -0700 (PDT)
-Subject: Re: [RESEND]block: remove unused header
-To:     "Ma, Jianpeng" <jianpeng.ma@intel.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <6AA21C22F0A5DA478922644AD2EC308C73C54781@SHSMSX101.ccr.corp.intel.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <284a10cf-3829-d891-3193-c468fd0e8fe6@kernel.dk>
-Date:   Tue, 21 Apr 2020 09:51:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <6AA21C22F0A5DA478922644AD2EC308C73C54781@SHSMSX101.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kcT8YhRThPhegOm3BQj7wUe66PuL6hDa8ErzC+LQvVA=;
+        b=cvNsezhPgw4mvaB58C6wJsgVjcFXx/uhyop07eo3U9GBKF1jCxmG2vbitadggrZE9k
+         OL2tHVFjAI/ak3JQK9MixRN47jL57r7U0Px+qmtXfwgXNClDu/yFnXXBa7U+uEXsmZ9h
+         OCD6gCzntN0Cn3uxCTmsb70GaSSANNZCfOGNZ9grqBAgCvGurG2aWoN4KQLqc9yXTLp0
+         rjzxHMLSgbAoU/8Wu4UWArqxVXyUIzERFT9thXEiNxC/UChD+EgRgqGfB9XWTXI6BiOX
+         elLRRPOw2iyvo/ClWHeyrRwdHfic/4vFPwphhEwGH4PxnvI0TJXVxY+7siREhI/H7S51
+         eeZA==
+X-Gm-Message-State: AGi0PuYS2oDcvQKB71NuQ1OUlFnezeGyOUpOHetmztZceJclIRbH6bn7
+        q8ohc4E0YzBdDUl8qOSsRfN6NgTR
+X-Google-Smtp-Source: APiQypLwxUr2g6yIkcRAqbgAzcYzXQ/xaGoq2pE5TKNjpKqN73rSSuaC3AUnTp3g8GDcaDbKPiJI/g==
+X-Received: by 2002:a5d:4cd0:: with SMTP id c16mr23192004wrt.98.1587484299782;
+        Tue, 21 Apr 2020 08:51:39 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id v19sm4357664wra.57.2020.04.21.08.51.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Apr 2020 08:51:38 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, mchehab@kernel.org, ezequiel@collabora.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: media: rockchip-vpu: fix interrupt-names
+Date:   Tue, 21 Apr 2020 17:51:31 +0200
+Message-Id: <20200421155131.5839-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/21/20 5:48 AM, Ma, Jianpeng wrote:
-> Dax related code already removed from this file.
+A test with the command below gives for example this error:
 
-Applied, thanks.
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
+interrupts: [[0, 9, 4]] is too short
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
+interrupt-names: ['vdpu'] is too short
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
+interrupt-names:0: 'vepu' was expected
 
+With the conversion of rockchip-vpu.txt to yaml the correct
+'interrupt-names' for rk3328 was not included, so add them now.
+Also add 'minItems' to 'interrupts'for the completeness.
+
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/media/rockchip-vpu.yaml | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+index d7a42e6f9..27df18ad6 100644
+--- a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
++++ b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+@@ -24,12 +24,15 @@ properties:
+     maxItems: 1
+ 
+   interrupts:
++    minItems: 1
+     maxItems: 2
+ 
+   interrupt-names:
+-    items:
+-      - const: vepu
++    oneOf:
+       - const: vdpu
++      - items:
++        - const: vepu
++        - const: vdpu
+ 
+   clocks:
+     maxItems: 2
 -- 
-Jens Axboe
+2.11.0
 
