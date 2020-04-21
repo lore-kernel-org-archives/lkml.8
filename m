@@ -2,52 +2,53 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32F2C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D47C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8622C206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1AF7206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:43:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LFal6lDD"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="g7G4nI2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgDUSmz (ORCPT
+        id S1729560AbgDUSnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:42:55 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:62315 "EHLO
+        Tue, 21 Apr 2020 14:43:10 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:62367 "EHLO
         smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729501AbgDUSmy (ORCPT
+        with ESMTP id S1729542AbgDUSnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:42:54 -0400
+        Tue, 21 Apr 2020 14:43:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1587494573; x=1619030573;
+  t=1587494588; x=1619030588;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=hCVuFtt9M+P1AunrCOwfanKEEX8ct24ptrnRC6w3jCI=;
-  b=LFal6lDDDpQAQe4W5FE/CYdts/ePXeYeQIFCQRrqEyP9npZjdAV/Eqhn
-   RNkq4Y83Hv2FLjoqPJB6kZVobmkXBz5U9Kg8+E+rPdWmf9TBHdXbfRwQB
-   mt5EIsF+RNHkYQZVyY9C4bvb09D5mmvQmiKDiXM3QmSAm+Suc3K9jcLp9
-   k=;
-IronPort-SDR: 1eC9AHuypUgqQi5opmT0fPhKBsynrA/xsnzQcjJ3chmR2ilYNEKVDxbhhhg6KHfRej3AuCpfui
- 3PJktKAyrvAw==
+  bh=dnaTm1aF+1cLi/7DGn/IqxJTYcFCqrkiSr63xiWSCiw=;
+  b=g7G4nI2lIREJhnV7emZuBPoEw/KX/UDwbE9Uoqx2O7DLChbRKQO8X1F9
+   lgVDqE5/O6H/Osd3YX4WGWhgmBw1Occhq/+9P96ckM7r7BNhSiu+B6toB
+   /7NnBr/79CmMi97TogLZGqBDyUB91fu76K2BRyUFteUNKswsmV5lkRYwM
+   Y=;
+IronPort-SDR: QdqEgfSxVuT0T2BMhPVvqLkO1BJBGznv7qxXLC50KC3eSOnm1hiYsqM0GSlwiHQT7QRSEE5hqn
+ wjZ9YR5e2J7Q==
 X-IronPort-AV: E=Sophos;i="5.72,411,1580774400"; 
-   d="scan'208";a="39978453"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 21 Apr 2020 18:42:53 +0000
+   d="scan'208";a="39978497"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 21 Apr 2020 18:43:08 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id D58C6A1DC5;
-        Tue, 21 Apr 2020 18:42:51 +0000 (UTC)
+        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id A704DA06EE;
+        Tue, 21 Apr 2020 18:43:07 +0000 (UTC)
 Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 21 Apr 2020 18:42:51 +0000
+ id 15.0.1497.2; Tue, 21 Apr 2020 18:43:07 +0000
 Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.90) by
  EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 21 Apr 2020 18:42:42 +0000
+ id 15.0.1497.2; Tue, 21 Apr 2020 18:42:58 +0000
 From:   Andra Paraschiv <andraprs@amazon.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Anthony Liguori <aliguori@amazon.com>,
@@ -65,9 +66,9 @@ CC:     Anthony Liguori <aliguori@amazon.com>,
         Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
         <ne-devel-upstream@amazon.com>,
         Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v1 05/15] nitro_enclaves: Handle PCI device command requests
-Date:   Tue, 21 Apr 2020 21:41:40 +0300
-Message-ID: <20200421184150.68011-6-andraprs@amazon.com>
+Subject: [PATCH v1 07/15] nitro_enclaves: Init misc device providing the ioctl interface
+Date:   Tue, 21 Apr 2020 21:41:42 +0300
+Message-ID: <20200421184150.68011-8-andraprs@amazon.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200421184150.68011-1-andraprs@amazon.com>
 References: <20200421184150.68011-1-andraprs@amazon.com>
@@ -82,320 +83,237 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Nitro Enclaves PCI device exposes a MMIO space that this driver
-uses to submit command requests and to receive command replies e.g. for
-enclave creation / termination or setting enclave resources.
+The Nitro Enclaves driver provides an ioctl interface to the user space
+for enclave lifetime management e.g. enclave creation / termination and
+setting enclave resources such as memory and CPU.
 
-Add logic for handling PCI device command requests based on the given
-command type.
+This ioctl interface is mapped to a Nitro Enclaves misc device.
 
-Register an MSI-X interrupt vector for command reply notifications to
-handle this type of communication events.
-
-Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
 Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 ---
- .../virt/amazon/nitro_enclaves/ne_pci_dev.c   | 264 ++++++++++++++++++
- 1 file changed, 264 insertions(+)
+ .../virt/amazon/nitro_enclaves/ne_misc_dev.c  | 174 ++++++++++++++++++
+ .../virt/amazon/nitro_enclaves/ne_pci_dev.c   |  13 ++
+ 2 files changed, 187 insertions(+)
+ create mode 100644 drivers/virt/amazon/nitro_enclaves/ne_misc_dev.c
 
+diff --git a/drivers/virt/amazon/nitro_enclaves/ne_misc_dev.c b/drivers/virt/amazon/nitro_enclaves/ne_misc_dev.c
+new file mode 100644
+index 000000000000..d22a76ed07e5
+--- /dev/null
++++ b/drivers/virt/amazon/nitro_enclaves/ne_misc_dev.c
+@@ -0,0 +1,174 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++/**
++ * Enclave lifetime management driver for Nitro Enclaves (NE).
++ * Nitro is a hypervisor that has been developed by Amazon.
++ */
++
++#include <linux/anon_inodes.h>
++#include <linux/bug.h>
++#include <linux/cpu.h>
++#include <linux/device.h>
++#include <linux/file.h>
++#include <linux/hugetlb.h>
++#include <linux/kvm_host.h>
++#include <linux/list.h>
++#include <linux/miscdevice.h>
++#include <linux/mm.h>
++#include <linux/mman.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/nitro_enclaves.h>
++#include <linux/pci.h>
++#include <linux/poll.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++#include "ne_misc_dev.h"
++#include "ne_pci_dev.h"
++
++#define NE_DEV_NAME "nitro_enclaves"
++
++#define MIN_MEM_REGION_SIZE (2 * 1024UL * 1024UL)
++
++static char *ne_cpus;
++module_param(ne_cpus, charp, 0644);
++MODULE_PARM_DESC(ne_cpus, "<cpu-list> - CPU pool used for Nitro Enclaves");
++
++/* CPU pool used for Nitro Enclaves. */
++struct ne_cpu_pool {
++	/* Available CPUs in the pool. */
++	cpumask_var_t avail;
++};
++
++static struct ne_cpu_pool ne_cpu_pool;
++
++static struct mutex ne_cpu_pool_mutex;
++
++static int ne_open(struct inode *node, struct file *file)
++{
++	return 0;
++}
++
++static long ne_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	switch (cmd) {
++
++	default:
++		return -ENOTTY;
++	}
++
++	return 0;
++}
++
++static int ne_release(struct inode *inode, struct file *file)
++{
++	return 0;
++}
++
++static const struct file_operations ne_fops = {
++	.owner		= THIS_MODULE,
++	.llseek		= noop_llseek,
++	.unlocked_ioctl	= ne_ioctl,
++	.open		= ne_open,
++	.release	= ne_release,
++};
++
++struct miscdevice ne_miscdevice = {
++	.minor	= MISC_DYNAMIC_MINOR,
++	.name	= NE_DEV_NAME,
++	.fops	= &ne_fops,
++	.mode	= 0664,
++};
++
++static int __init ne_init(void)
++{
++	unsigned int cpu = 0;
++	int rc = -EINVAL;
++
++	memset(&ne_cpu_pool, 0, sizeof(ne_cpu_pool));
++
++	if (!zalloc_cpumask_var(&ne_cpu_pool.avail, GFP_KERNEL))
++		return -ENOMEM;
++
++	mutex_init(&ne_cpu_pool_mutex);
++
++	rc = cpulist_parse(ne_cpus, ne_cpu_pool.avail);
++	if (rc < 0) {
++		pr_err_ratelimited("Failure in cpulist parse [rc=%d]\n", rc);
++
++		goto err_cpulist_parse;
++	}
++
++	for_each_cpu(cpu, ne_cpu_pool.avail) {
++		rc = remove_cpu(cpu);
++		if (rc != 0) {
++			pr_err_ratelimited("Failure in cpu=%d remove [rc=%d]\n",
++					   cpu, rc);
++
++			goto err_remove_cpu;
++		}
++	}
++
++	rc = pci_register_driver(&ne_pci_driver);
++	if (rc < 0) {
++		pr_err_ratelimited("Failure in pci register driver [rc=%d]\n",
++				   rc);
++
++		goto err_pci_register_driver;
++	}
++
++	return 0;
++
++err_pci_register_driver:
++err_remove_cpu:
++	for_each_cpu(cpu, ne_cpu_pool.avail)
++		add_cpu(cpu);
++err_cpulist_parse:
++	free_cpumask_var(ne_cpu_pool.avail);
++	return rc;
++}
++
++static void __exit ne_exit(void)
++{
++	unsigned int cpu = 0;
++	int rc = -EINVAL;
++
++	pci_unregister_driver(&ne_pci_driver);
++
++	if (!ne_cpu_pool.avail)
++		return;
++
++	for_each_cpu(cpu, ne_cpu_pool.avail) {
++		rc = add_cpu(cpu);
++		if (WARN_ON(rc != 0))
++			pr_err_ratelimited("Failure in cpu=%d add [rc=%d]\n",
++					   cpu, rc);
++	}
++
++	free_cpumask_var(ne_cpu_pool.avail);
++}
++
++/* TODO: Handle actions such as reboot, kexec. */
++
++module_init(ne_init);
++module_exit(ne_exit);
++
++MODULE_AUTHOR("Amazon.com, Inc. or its affiliates");
++MODULE_DESCRIPTION("Nitro Enclaves Driver");
++MODULE_LICENSE("GPL v2");
 diff --git a/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c b/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c
-index 8fbee95ea291..7453d129689a 100644
+index 884acbb92305..19b3836b08f4 100644
 --- a/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c
 +++ b/drivers/virt/amazon/nitro_enclaves/ne_pci_dev.c
-@@ -40,6 +40,251 @@ static const struct pci_device_id ne_pci_ids[] = {
- 
- MODULE_DEVICE_TABLE(pci, ne_pci_ids);
- 
-+/**
-+ * ne_submit_request - Submit command request to the PCI device based on the
-+ * command type.
-+ *
-+ * This function gets called with the ne_pci_dev mutex held.
-+ *
-+ * @pdev: PCI device to send the command to.
-+ * @cmd_type: command type of the request sent to the PCI device.
-+ * @cmd_request: command request payload.
-+ * @cmd_request_size: size of the command request payload.
-+ *
-+ * @returns: 0 on success, negative return value on failure.
-+ */
-+static int ne_submit_request(struct pci_dev *pdev,
-+			     enum ne_pci_dev_cmd_type cmd_type,
-+			     void *cmd_request, size_t cmd_request_size)
-+{
-+	struct ne_pci_dev *ne_pci_dev = NULL;
-+
-+	BUG_ON(!pdev);
-+
-+	ne_pci_dev = pci_get_drvdata(pdev);
-+	BUG_ON(!ne_pci_dev);
-+	BUG_ON(!ne_pci_dev->iomem_base);
-+
-+	if (WARN_ON(cmd_type <= INVALID_CMD || cmd_type >= MAX_CMD)) {
-+		dev_err_ratelimited(&pdev->dev, "Invalid cmd type=%d\n",
-+				    cmd_type);
-+
-+		return -EINVAL;
-+	}
-+
-+	if (WARN_ON(!cmd_request))
-+		return -EINVAL;
-+
-+	if (WARN_ON(cmd_request_size > NE_SEND_DATA_SIZE)) {
-+		dev_err_ratelimited(&pdev->dev,
-+				    "Invalid req size=%ld for cmd type=%d\n",
-+				    cmd_request_size, cmd_type);
-+
-+		return -EINVAL;
-+	}
-+
-+	memcpy_toio(ne_pci_dev->iomem_base + NE_SEND_DATA, cmd_request,
-+		    cmd_request_size);
-+
-+	iowrite32(cmd_type, ne_pci_dev->iomem_base + NE_COMMAND);
-+
-+	return 0;
-+}
-+
-+/**
-+ * ne_retrieve_reply - Retrieve reply from the PCI device.
-+ *
-+ * This function gets called with the ne_pci_dev mutex held.
-+ *
-+ * @pdev: PCI device to receive the reply from.
-+ * @cmd_reply: command reply payload.
-+ * @cmd_reply_size: size of the command reply payload.
-+ *
-+ * @returns: 0 on success, negative return value on failure.
-+ */
-+static int ne_retrieve_reply(struct pci_dev *pdev,
-+			     struct ne_pci_dev_cmd_reply *cmd_reply,
-+			     size_t cmd_reply_size)
-+{
-+	struct ne_pci_dev *ne_pci_dev = NULL;
-+
-+	BUG_ON(!pdev);
-+
-+	ne_pci_dev = pci_get_drvdata(pdev);
-+	BUG_ON(!ne_pci_dev);
-+	BUG_ON(!ne_pci_dev->iomem_base);
-+
-+	if (WARN_ON(!cmd_reply))
-+		return -EINVAL;
-+
-+	if (WARN_ON(cmd_reply_size > NE_RECV_DATA_SIZE)) {
-+		dev_err_ratelimited(&pdev->dev, "Invalid reply size=%ld\n",
-+				    cmd_reply_size);
-+
-+		return -EINVAL;
-+	}
-+
-+	memcpy_fromio(cmd_reply, ne_pci_dev->iomem_base + NE_RECV_DATA,
-+		      cmd_reply_size);
-+
-+	return 0;
-+}
-+
-+/**
-+ * ne_wait_for_reply - Wait for a reply of a PCI command.
-+ *
-+ * This function gets called with the ne_pci_dev mutex held.
-+ *
-+ * @pdev: PCI device for which a reply is waited.
-+ *
-+ * @returns: 0 on success, negative return value on failure.
-+ */
-+static int ne_wait_for_reply(struct pci_dev *pdev)
-+{
-+	struct ne_pci_dev *ne_pci_dev = NULL;
-+	int rc = -EINVAL;
-+
-+	BUG_ON(!pdev);
-+
-+	ne_pci_dev = pci_get_drvdata(pdev);
-+	BUG_ON(!ne_pci_dev);
-+
-+	/*
-+	 * TODO: Update to _interruptible and handle interrupted wait event
-+	 * e.g. -ERESTARTSYS, incoming signals + add / update timeout.
-+	 */
-+	rc = wait_event_timeout(ne_pci_dev->cmd_reply_wait_q,
-+				atomic_read(&ne_pci_dev->cmd_reply_avail) != 0,
-+				msecs_to_jiffies(DEFAULT_TIMEOUT_MSECS));
-+	if (!rc) {
-+		pr_err("Wait event timed out when waiting for PCI cmd reply\n");
-+
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
-+int ne_do_request(struct pci_dev *pdev, enum ne_pci_dev_cmd_type cmd_type,
-+		  void *cmd_request, size_t cmd_request_size,
-+		  struct ne_pci_dev_cmd_reply *cmd_reply, size_t cmd_reply_size)
-+{
-+	struct ne_pci_dev *ne_pci_dev = NULL;
-+	int rc = -EINVAL;
-+
-+	BUG_ON(!pdev);
-+
-+	ne_pci_dev = pci_get_drvdata(pdev);
-+	BUG_ON(!ne_pci_dev);
-+	BUG_ON(!ne_pci_dev->iomem_base);
-+
-+	if (WARN_ON(cmd_type <= INVALID_CMD || cmd_type >= MAX_CMD)) {
-+		dev_err_ratelimited(&pdev->dev, "Invalid cmd type=%d\n",
-+				    cmd_type);
-+
-+		return -EINVAL;
-+	}
-+
-+	if (WARN_ON(!cmd_request))
-+		return -EINVAL;
-+
-+	if (WARN_ON(cmd_request_size > NE_SEND_DATA_SIZE)) {
-+		dev_err_ratelimited(&pdev->dev,
-+				    "Invalid req size=%ld for cmd type=%d\n",
-+				    cmd_request_size, cmd_type);
-+
-+		return -EINVAL;
-+	}
-+
-+	if (WARN_ON(!cmd_reply))
-+		return -EINVAL;
-+
-+	if (WARN_ON(cmd_reply_size > NE_RECV_DATA_SIZE)) {
-+		dev_err_ratelimited(&pdev->dev, "Invalid reply size=%ld\n",
-+				    cmd_reply_size);
-+
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Use this mutex so that the PCI device handles one command request at
-+	 * a time.
-+	 */
-+	mutex_lock(&ne_pci_dev->pci_dev_mutex);
-+
-+	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
-+
-+	rc = ne_submit_request(pdev, cmd_type, cmd_request, cmd_request_size);
-+	if (rc < 0) {
-+		dev_err_ratelimited(&pdev->dev,
-+				    "Failure in submit cmd request [rc=%d]\n",
-+				    rc);
-+
-+		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
-+
-+		return rc;
-+	}
-+
-+	rc = ne_wait_for_reply(pdev);
-+	if (rc < 0) {
-+		dev_err_ratelimited(&pdev->dev,
-+				    "Failure in wait cmd reply [rc=%d]\n",
-+				    rc);
-+
-+		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
-+
-+		return rc;
-+	}
-+
-+	rc = ne_retrieve_reply(pdev, cmd_reply, cmd_reply_size);
-+	if (rc < 0) {
-+		dev_err_ratelimited(&pdev->dev,
-+				    "Failure in retrieve cmd reply [rc=%d]\n",
-+				    rc);
-+
-+		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
-+
-+		return rc;
-+	}
-+
-+	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
-+
-+	if (cmd_reply->rc < 0) {
-+		dev_err_ratelimited(&pdev->dev,
-+				    "Failure in cmd process logic [rc=%d]\n",
-+				    cmd_reply->rc);
-+
-+		mutex_unlock(&ne_pci_dev->pci_dev_mutex);
-+
-+		return cmd_reply->rc;
-+	}
-+
-+	mutex_unlock(&ne_pci_dev->pci_dev_mutex);
-+
-+	return 0;
-+}
-+
-+/**
-+ * ne_reply_handler - Interrupt handler for retrieving a reply matching
-+ * a request sent to the PCI device for enclave lifetime management.
-+ *
-+ * @irq: received interrupt for a reply sent by the PCI device.
-+ * @args: PCI device private data structure.
-+ *
-+ * @returns: IRQ_HANDLED on handled interrupt, IRQ_NONE otherwise.
-+ */
-+static irqreturn_t ne_reply_handler(int irq, void *args)
-+{
-+	struct ne_pci_dev *ne_pci_dev = (struct ne_pci_dev *)args;
-+
-+	atomic_set(&ne_pci_dev->cmd_reply_avail, 1);
-+
-+	/* TODO: Update to _interruptible. */
-+	wake_up(&ne_pci_dev->cmd_reply_wait_q);
-+
-+	return IRQ_HANDLED;
-+}
-+
- /**
-  * ne_setup_msix - Setup MSI-X vectors for the PCI device.
-  *
-@@ -75,8 +320,25 @@ static int ne_setup_msix(struct pci_dev *pdev, struct ne_pci_dev *ne_pci_dev)
- 		goto err_alloc_irq_vecs;
+@@ -593,6 +593,15 @@ static int ne_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		goto err_ne_pci_dev_enable;
  	}
  
-+	/*
-+	 * This IRQ gets triggered every time the PCI device responds to a
-+	 * command request. The reply is then retrieved, reading from the MMIO
-+	 * space of the PCI device.
-+	 */
-+	rc = request_irq(pci_irq_vector(pdev, NE_VEC_REPLY),
-+			 ne_reply_handler, 0, "enclave_cmd", ne_pci_dev);
++	rc = misc_register(&ne_miscdevice);
 +	if (rc < 0) {
 +		dev_err_ratelimited(&pdev->dev,
-+				    "Failure in allocating irq reply [rc=%d]\n",
++				    "Failure in misc dev register [rc=%d]\n",
 +				    rc);
 +
-+		goto err_req_irq_reply;
++		goto err_misc_register;
 +	}
 +
+ 	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
+ 	init_waitqueue_head(&ne_pci_dev->cmd_reply_wait_q);
+ 	INIT_LIST_HEAD(&ne_pci_dev->enclaves_list);
+@@ -603,6 +612,8 @@ static int ne_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
  	return 0;
  
-+err_req_irq_reply:
-+	pci_free_irq_vectors(pdev);
- err_alloc_irq_vecs:
- 	return rc;
- }
-@@ -232,6 +494,7 @@ static int ne_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
++err_misc_register:
++	ne_pci_dev_disable(pdev, ne_pci_dev);
  err_ne_pci_dev_enable:
  err_ne_pci_dev_disable:
-+	free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
- 	pci_free_irq_vectors(pdev);
- err_setup_msix:
- 	pci_iounmap(pdev, ne_pci_dev->iomem_base);
-@@ -255,6 +518,7 @@ static void ne_remove(struct pci_dev *pdev)
+ 	free_irq(pci_irq_vector(pdev, NE_VEC_EVENT), ne_pci_dev);
+@@ -627,6 +638,8 @@ static void ne_remove(struct pci_dev *pdev)
+ 	if (!ne_pci_dev || !ne_pci_dev->iomem_base)
+ 		return;
+ 
++	misc_deregister(&ne_miscdevice);
++
+ 	ne_pci_dev_disable(pdev, ne_pci_dev);
  
  	pci_set_drvdata(pdev, NULL);
- 
-+	free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
- 	pci_free_irq_vectors(pdev);
- 
- 	pci_iounmap(pdev, ne_pci_dev->iomem_base);
 -- 
 2.20.1 (Apple Git-117)
 
