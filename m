@@ -2,371 +2,146 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879C0C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA32C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63331206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9EF206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="123Ks98f"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NFQwfC7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgDUUId (ORCPT
+        id S1726358AbgDUUIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:08:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgDUUIc (ORCPT
+        Tue, 21 Apr 2020 16:08:38 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55392 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgDUUIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:08:32 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9FCC0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:08:32 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id g30so7116640pfr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6kF4p52p1ybubZnJvTo0PlRTDf0IqwPux1Z+sjlWQy0=;
-        b=123Ks98fBL2usWs4gLQHWQapNV5cUJB94QLxNuoGsGPJE/Ac5OGFjJV4y9ThZNWawr
-         SINUJ9xDcT/yeImAqBhFtie6c3QewCC+Mso0ter42gaQEnio249Mcq40iAiB5W9fjdI9
-         QJI/jOU6XROf9UCNuMEGvM6sD51iBNNkGinGzwG5Cq3XKP6zkKK4nu6zaVuiziuq8+17
-         T1TkWkBMzatpBlNwFqaOt7omYNM+GI4QO7noS/zm2uO/U8oBqZGBTWCnBy9uLcufU/fV
-         rjF0moPvI+ITSO24MoPvKuw31OHjbQL7iz3xn/0wZzlbggcwQySNaoVIoyxTuQ6wEvYV
-         UWdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=6kF4p52p1ybubZnJvTo0PlRTDf0IqwPux1Z+sjlWQy0=;
-        b=dNXFTRgQtdrbaZwWwltPtpE6ilMNc2WkXPffJC3kvUKPDGoBwmItfnczhMqPD6LEpz
-         pGDX0jpe8KeyLkKHIYpbGUrnVgm6/nbOdxfWzAsxhk4zB3ooWWHO5twmlknBcdLPaWLf
-         ZBQFQjb9X+yj0+eNuHiEqTPKVPnGVjubN5998PDlJVz8mkxriFSu2fTKKTPLMNwBqF6y
-         yfDLZLzDtSSxHcbQli3yDRE8j+WqHk7aD2t9voF7TpmGSVvenrsKj3GL+ZvOjbsmrUYR
-         boGd2yKzYiyHInwOQ4MUyZvLDA9Pjaxxrf0fqp4RRRBs6SQa3NsRLCiqrJVk5CN22qL9
-         TAUg==
-X-Gm-Message-State: AGi0PuZdKyTN7QXrSF2qj3boo2oV4b7rbZthpRqzb2h1Gzhjh1UVH5+m
-        q1Pl06CEBkE9goqYSI3agPMH9bVRt/WBSw==
-X-Google-Smtp-Source: APiQypLc+RFKzhlcT+yNvaiIQEAqcgzRD1N2l4iw9mkJiVSh1/1ihKmVCdhjlZ2AH4Ql83E3dznixw==
-X-Received: by 2002:aa7:90d6:: with SMTP id k22mr11471175pfk.57.1587499711307;
-        Tue, 21 Apr 2020 13:08:31 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id o99sm3253836pjo.8.2020.04.21.13.08.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 13:08:30 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 13:08:30 -0700 (PDT)
-X-Google-Original-Date: Tue, 21 Apr 2020 13:08:27 PDT (-0700)
-Subject:     Re: [v4 PATCH 3/3] RISC-V: Add EFI stub support.
-In-Reply-To: <20200421033336.9663-4-atish.patra@wdc.com>
-CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        ardb@kernel.org, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org, masahiroy@kernel.org,
-        xypron.glpk@gmx.de
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Message-ID: <mhng-eeb13dd6-b358-491a-909c-30b1725f95c7@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 21 Apr 2020 16:08:37 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LK2bFe134049;
+        Tue, 21 Apr 2020 20:08:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=X+//GjRlupUmIYIFzP0Ctl779RKP1FxieoOD/8PQKf8=;
+ b=NFQwfC7R605RcIgKo5Bh4sZ43bethE5EefhF9TffLBQgJfOqa4IJ6QtNFnyOIofTqFeF
+ QqLgeMAV+Hbz3nElDNa5aropDYZnBfxXIarOP1OA7o0jMjnDjorcSnC0/ytIVSjhtc/T
+ C6C9YApg1Xq7QhZZCqoEU8KWvabxnkKFo13OixJyPMTDh1dgVw79bB4zT9kAbVSN8SW6
+ se3r8m47IdbxR1FWo6+j1GB2aT00imuiA2jUi79nUTItAhJ0akBRIjXlqpe1yzJRjUB3
+ bWnRqD4tGr/OtMmdLkMbbCjNymlIlxZX443+BmSxefAfFaHaEgtFKThkb+Dz7WmPDXyA Ug== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30fsgky4a5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 20:08:21 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LK2Vee128225;
+        Tue, 21 Apr 2020 20:08:21 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30gbber9dh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 20:08:21 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03LK8JCT006680;
+        Tue, 21 Apr 2020 20:08:19 GMT
+Received: from mihai.localdomain (/10.153.73.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 13:08:19 -0700
+From:   Mihai Carabas <mihai.carabas@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mihai Carabas <mihai.carabas@oracle.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v2] x86: microcode: fix return value for microcode late loading
+Date:   Tue, 21 Apr 2020 22:28:38 +0300
+Message-Id: <1587497318-4438-1-git-send-email-mihai.carabas@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1586858135-29337-1-git-send-email-mihai.carabas@oracle.com>
+References: <1586858135-29337-1-git-send-email-mihai.carabas@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ suspectscore=1 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 bulkscore=0 phishscore=0 suspectscore=1 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 20:33:36 PDT (-0700), Atish Patra wrote:
-> Add a RISC-V architecture specific stub code that actually copies the
-> actual kernel image to a valid address and jump to it after boot services
-> are terminated. Enable UEFI related kernel configs as well for RISC-V.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/Kconfig                        |  20 ++++
->  arch/riscv/Makefile                       |   1 +
->  arch/riscv/configs/defconfig              |   1 +
->  arch/riscv/include/asm/efi.h              |  44 +++++++++
->  drivers/firmware/efi/Kconfig              |   2 +-
->  drivers/firmware/efi/libstub/Makefile     |  10 ++
->  drivers/firmware/efi/libstub/riscv-stub.c | 106 ++++++++++++++++++++++
->  7 files changed, 183 insertions(+), 1 deletion(-)
->  create mode 100644 arch/riscv/include/asm/efi.h
->  create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index f39e326a7a42..eb4f41c8f3ce 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -379,10 +379,30 @@ config CMDLINE_FORCE
->
->  endchoice
->
-> +config EFI_STUB
-> +	bool
-> +
-> +config EFI
-> +	bool "UEFI runtime support"
-> +	depends on OF
-> +	select LIBFDT
-> +	select UCS2_STRING
-> +	select EFI_PARAMS_FROM_FDT
-> +	select EFI_STUB
-> +	select EFI_GENERIC_STUB
+The return value from stop_machine might not be consistent.
 
-So I guess just "select RISCV_ISA_C" would be sufficient to make this work, but
-I still feel flike an explicit "c.li" is saner.
+stop_machine_cpuslocked returns:
+- zero if all functions have returned 0
+- a non-zero value if at least one of the functions returned
+a non-zero value
 
-> +	default y
-> +	help
-> +	  This option provides support for runtime services provided
-> +	  by UEFI firmware (such as non-volatile variables, realtime
-> +          clock, and platform reset). A UEFI stub is also provided to
-> +	  allow the kernel to be booted as an EFI application. This
-> +	  is only useful on systems that have UEFI firmware.
-> +
->  endmenu
->
->  menu "Power management options"
->
->  source "kernel/power/Kconfig"
-> +source "drivers/firmware/Kconfig"
->
->  endmenu
-> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> index fb6e37db836d..079435804d6d 100644
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@ -80,6 +80,7 @@ head-y := arch/riscv/kernel/head.o
->  core-y += arch/riscv/
->
->  libs-y += arch/riscv/lib/
-> +core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
->
->  PHONY += vdso_install
->  vdso_install:
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index 4da4886246a4..ae69e12d306a 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -129,3 +129,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
->  # CONFIG_RUNTIME_TESTING_MENU is not set
->  CONFIG_MEMTEST=y
->  # CONFIG_SYSFS_SYSCALL is not set
-> +CONFIG_EFI=y
-> diff --git a/arch/riscv/include/asm/efi.h b/arch/riscv/include/asm/efi.h
-> new file mode 100644
-> index 000000000000..62d7d5eafed8
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/efi.h
-> @@ -0,0 +1,44 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> + * Based on arch/arm64/include/asm/efi.h
-> + */
-> +#ifndef _ASM_EFI_H
-> +#define _ASM_EFI_H
-> +
-> +#include <asm/io.h>
-> +#include <asm/mmu_context.h>
-> +#include <asm/ptrace.h>
-> +#include <asm/tlbflush.h>
-> +
-> +#define VA_BITS_MIN 39
+There is no way to know if it is negative or positive. So make
+__reload_late return 0 on success, or negative otherwise.
 
-I don't see this actually being used, but if it's releant to some macro that
-I'm missing then EFI support should depend on rv64.
+Signed-off-by: Mihai Carabas <mihai.carabas@oracle.com>
+---
+Changes in v2:
+- do not print anything on UCODE_NFOUND as microcode not found
+is not an error
 
-> +
-> +/* on RISC-V, the FDT may be located anywhere in system RAM */
-> +static inline unsigned long efi_get_max_fdt_addr(unsigned long dram_base)
-> +{
-> +	return ULONG_MAX;
-> +}
-> +
-> +/* Load initrd at enough distance from DRAM start */
-> +static inline unsigned long efi_get_max_initrd_addr(unsigned long dram_base,
-> +						    unsigned long image_addr)
-> +{
-> +	return dram_base + SZ_256M;
-> +}
-> +
-> +#define efi_bs_call(func, ...)	efi_system_table()->boottime->func(__VA_ARGS__)
-> +#define efi_rt_call(func, ...)	efi_system_table()->runtime->func(__VA_ARGS__)
-> +#define efi_is_native()		(true)
-> +
-> +#define efi_table_attr(inst, attr)	(inst->attr)
-> +
-> +#define efi_call_proto(inst, func, ...) inst->func(inst, ##__VA_ARGS__)
-> +
-> +#define alloc_screen_info(x...)		(&screen_info)
-> +extern char stext_offset[];
-> +
-> +static inline void free_screen_info(struct screen_info *si)
-> +{
-> +}
-> +
-> +#endif /* _ASM_EFI_H */
-> diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> index 2a2b2b96a1dc..fcdc789d3f87 100644
-> --- a/drivers/firmware/efi/Kconfig
-> +++ b/drivers/firmware/efi/Kconfig
-> @@ -111,7 +111,7 @@ config EFI_GENERIC_STUB
->
->  config EFI_ARMSTUB_DTB_LOADER
->  	bool "Enable the DTB loader"
-> -	depends on EFI_GENERIC_STUB
-> +	depends on EFI_GENERIC_STUB && !RISCV
->  	default y
->  	help
->  	  Select this config option to add support for the dtb= command
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index 0f57293d777e..eb365c55c0fe 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -22,6 +22,8 @@ cflags-$(CONFIG_ARM64)		:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->  cflags-$(CONFIG_ARM)		:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->  				   -fno-builtin -fpic \
->  				   $(call cc-option,-mno-single-pic-base)
-> +cflags-$(CONFIG_RISCV)		:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> +				   -fpic
->
->  cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
->
-> @@ -57,6 +59,7 @@ lib-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o fdt.o string.o \
->  lib-$(CONFIG_ARM)		+= arm32-stub.o
->  lib-$(CONFIG_ARM64)		+= arm64-stub.o
->  lib-$(CONFIG_X86)		+= x86-stub.o
-> +lib-$(CONFIG_RISCV)		+= riscv-stub.o
->  CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
->  CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
->
-> @@ -100,6 +103,13 @@ STUBCOPY_FLAGS-$(CONFIG_X86)	+= --rename-section .bss=.bss.efistub,load,alloc
->  STUBCOPY_RELOC-$(CONFIG_X86_32)	:= R_386_32
->  STUBCOPY_RELOC-$(CONFIG_X86_64)	:= R_X86_64_64
->
-> +# For RISC-V, we don't need anything special other than arm64. Keep all the
-> +# symbols in .init section and make sure that no absolute symbols references
-> +# doesn't exist.
-> +STUBCOPY_FLAGS-$(CONFIG_RISCV)	+= --prefix-alloc-sections=.init \
-> +				   --prefix-symbols=__efistub_
-> +STUBCOPY_RELOC-$(CONFIG_RISCV)	:= R_RISCV_HI20
-> +
->  $(obj)/%.stub.o: $(obj)/%.o FORCE
->  	$(call if_changed,stubcopy)
->
-> diff --git a/drivers/firmware/efi/libstub/riscv-stub.c b/drivers/firmware/efi/libstub/riscv-stub.c
-> new file mode 100644
-> index 000000000000..bd1d6fed8754
-> --- /dev/null
-> +++ b/drivers/firmware/efi/libstub/riscv-stub.c
-> @@ -0,0 +1,106 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2013, 2014 Linaro Ltd;  <roy.franz@linaro.org>
-> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> + *
-> + * This file implements the EFI boot stub for the RISC-V kernel.
-> + * Adapted from ARM64 version at drivers/firmware/efi/libstub/arm64-stub.c.
-> + */
-> +
-> +#include <linux/efi.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/libfdt_env.h>
-> +#include <asm/efi.h>
-> +#include <asm/sections.h>
-> +
-> +#include "efistub.h"
-> +/*
-> + * RISC-V requires the kernel image to placed 2 MB aligned base for 64 bit and
-> + * 4MB for 32 bit.
-> + */
-> +#ifdef CONFIG_64BIT
-> +#define MIN_KIMG_ALIGN	SZ_2M
-> +#else
-> +#define MIN_KIMG_ALIGN	SZ_4M
-> +#endif
-> +
-> +typedef __attribute__((noreturn)) void (*jump_kernel_func)(unsigned int,
-> +							   unsigned long);
-> +efi_status_t check_platform_features(void)
-> +{
-> +	return EFI_SUCCESS;
-> +}
-> +
-> +static u32 get_boot_hartid_from_fdt(unsigned long fdt)
-> +{
-> +	int chosen_node, len;
-> +	const fdt32_t *prop;
-> +
-> +	chosen_node = fdt_path_offset((void *)fdt, "/chosen");
-> +	if (chosen_node < 0)
-> +		return U32_MAX;
-> +	prop = fdt_getprop((void *)fdt, chosen_node, "boot-hartid", &len);
-> +	if (!prop || len != sizeof(u32))
-> +		return U32_MAX;
-> +
-> +	return fdt32_to_cpu(*prop);
-> +}
-> +
-> +/*
-> + * Jump to real kernel here with following constraints.
-> + * 1. MMU should be disabled.
-> + * 2. a0 should contain hartid
-> + * 3. a1 should DT address
-> + */
-> +void __noreturn efi_enter_kernel(unsigned long entrypoint, unsigned long fdt,
-> +				 unsigned long fdt_size)
-> +{
-> +	unsigned long kernel_entry = entrypoint + (unsigned long)stext_offset;
-> +	jump_kernel_func jump_kernel = (jump_kernel_func) kernel_entry;
-> +	u32 hartid = get_boot_hartid_from_fdt(fdt);
-> +
-> +	if (hartid == U32_MAX)
-> +		/* We can not use panic or BUG at this point */
-> +		__asm__ __volatile__ ("ebreak");
-> +	/* Disable MMU */
-> +	csr_write(CSR_SATP, 0);
-> +	jump_kernel(hartid, fdt);
-> +}
-> +
-> +efi_status_t handle_kernel_image(unsigned long *image_addr,
-> +				 unsigned long *image_size,
-> +				 unsigned long *reserve_addr,
-> +				 unsigned long *reserve_size,
-> +				 unsigned long dram_base,
-> +				 efi_loaded_image_t *image)
-> +{
-> +	efi_status_t status;
-> +	unsigned long kernel_size = 0;
-> +	unsigned long preferred_addr;
-> +
-> +	kernel_size = _edata - _start;
-> +	*reserve_size = kernel_size + (_end - _edata);
-> +	*image_addr = (unsigned long)_start;
-> +
-> +	/*
-> +	 * RISC-V kernel maps PAGE_OFFSET virtual address to the same physical
-> +	 * address where kernel is booted. That's why kernel should boot from
-> +	 * as low as possible to avoid wastage of memory. Currently, dram_base
-> +	 * is occupied by the firmware. So the preferred address for kernel to
-> +	 * boot is next aligned address. If preferred address is not available,
-> +	 * relocate_kernel will fall back to efi_low_alloc_above to allocate
-> +	 * lowest possible memory region as long as the address and size meets
-> +	 * the alignment constraints.
-> +	 */
-> +	preferred_addr = round_up(dram_base, MIN_KIMG_ALIGN) + MIN_KIMG_ALIGN;
-> +	status = efi_relocate_kernel(image_addr, kernel_size, *reserve_size,
-> +				     preferred_addr, MIN_KIMG_ALIGN, dram_base);
-> +
-> +	if (status != EFI_SUCCESS) {
-> +		pr_efi_err("Failed to relocate kernel\n");
-> +		*reserve_size = 0;
-> +		return status;
-> +	}
-> +
-> +	return EFI_SUCCESS;
-> +}
+ arch/x86/kernel/cpu/microcode/core.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index 7019d4b..a2ae3da 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -545,8 +545,7 @@ static int __wait_for_cpus(atomic_t *t, long long timeout)
+ /*
+  * Returns:
+  * < 0 - on error
+- *   0 - no update done
+- *   1 - microcode was updated
++ *   0 - success (no update done or microcode was updated)
+  */
+ static int __reload_late(void *info)
+ {
+@@ -576,8 +575,8 @@ static int __reload_late(void *info)
+ 	if (err > UCODE_NFOUND) {
+ 		pr_warn("Error reloading microcode on CPU %d\n", cpu);
+ 		ret = -1;
+-	} else if (err == UCODE_UPDATED || err == UCODE_OK) {
+-		ret = 1;
++	} else if (err == UCODE_NFOUND) {
++		ret = -1;
+ 	}
+ 
+ wait_for_siblings:
+@@ -608,7 +607,7 @@ static int microcode_reload_late(void)
+ 	atomic_set(&late_cpus_out, 0);
+ 
+ 	ret = stop_machine_cpuslocked(__reload_late, NULL, cpu_online_mask);
+-	if (ret > 0)
++	if (ret == 0)
+ 		microcode_check();
+ 
+ 	pr_info("Reload completed, microcode revision: 0x%x\n", boot_cpu_data.microcode);
+@@ -649,7 +648,7 @@ static ssize_t reload_store(struct device *dev,
+ put:
+ 	put_online_cpus();
+ 
+-	if (ret >= 0)
++	if (ret == 0)
+ 		ret = size;
+ 
+ 	return ret;
+-- 
+1.8.3.1
+
