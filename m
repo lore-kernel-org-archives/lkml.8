@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE6EC55185
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9986CC55185
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B888E20747
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6D520724
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PKvElx00"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kJd+C8iy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgDUVPZ (ORCPT
+        id S1726412AbgDUVPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:15:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55142 "EHLO
+        Tue, 21 Apr 2020 17:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726316AbgDUVPW (ORCPT
+        by vger.kernel.org with ESMTP id S1726335AbgDUVPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 17:15:22 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37765C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:21 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t4so361plq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:21 -0700 (PDT)
+        Tue, 21 Apr 2020 17:15:25 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF600C03C1A6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:23 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 145so4933611pfw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:15:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=u1Fvyyf5nczEffjGBcL+8ckFidnOh9Vp/pUQ4gio37U=;
-        b=PKvElx00HHdwyyEhNv9HrFEWal6afEqN2MXBKrf15GbVJ1eqTVjzJ6PBhfgwxArQ19
-         utaZDQ51WhLVHhZzbl4Ndd3g3CEgTOuSoyzsZq6y/bGCEj9EjYU3rkyWXz+mEGaXN0ri
-         A/vxKbYEYsvT+2dcKVPlQPPPY8HZwtQmJYTV0=
+        bh=mJYvH0CE4/wZqoor5a8GmQPL/6GeWa4KAGNJ8Y7uZEA=;
+        b=kJd+C8iy2SgY/FLRXeSVkJO+nnv/1XJy9qd6f5ZyeBeyuC32MXYg2CH+onXXoLPo1r
+         3EdZjhqsCb9jR3VQqZmIzjos5lIINXu+31S8eaG4KH8oHBIImlJnPftFei+NhUHvL4LV
+         W1hnG7L8iG0ikcFUJamvna3SSc1bFgLHEMFjU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=u1Fvyyf5nczEffjGBcL+8ckFidnOh9Vp/pUQ4gio37U=;
-        b=TxqoeVHdjBsk8SeGsoqPo/GPwzz/7TsSmABz32MvxylrxUTXqKlIIn4VmG/KU8TNsD
-         SQHhA5IPh5srVAZOzrjzFZamUHRGJK7WCUhvw0cqU44huyepln9LzgYSm9gQ3b8pD6Ux
-         xo5iZD5BMW9dkvyL3ISBdFE7TatQty/zzYhRNmdftlOp63F7kNLLqselngPjBCaE4qST
-         mOfYjfafSXIxn6eSjb6jFi+7Au+fgZNU1P6v/4IIraU2YTR5tLoRxUagqPjBGn3QQVZY
-         VImrWtqem63zQ2rWbarjXwn9axxuqV5kFM5gXEi1G7EhsaXJPoQZlppMFkpg6NcTPSUU
-         r2CQ==
-X-Gm-Message-State: AGi0Pub2lZWCvjPUYGtLpOoIfOxWlyahYv1i01Sy7qf1rL1iO/CyHxNk
-        0+ZFfQKOiNZTbiNHgGMOI7AsZA==
-X-Google-Smtp-Source: APiQypLO8Vq+2uFDtn1QekfYaQkMUKtaot3jc7Cj/gRVKWbD0siljhiALve3Rxk+OpHLYMMkTVAwJA==
-X-Received: by 2002:a17:902:c111:: with SMTP id 17mr23179231pli.334.1587503720751;
-        Tue, 21 Apr 2020 14:15:20 -0700 (PDT)
+        bh=mJYvH0CE4/wZqoor5a8GmQPL/6GeWa4KAGNJ8Y7uZEA=;
+        b=mMLOyq1zm7c4x9qT1ScgGvK+C4/5e1sfCVEu/KZi/nyKJ+HIowojjZkKWDVZF1j66Y
+         IllaLkqHG2mLSCBNeN3OgQcRW3QCYkFjP9lH05kmwDZmh4mGPc/L4pua42ZeOWLLJEo6
+         XxAIgdV2aVvbGOPwUw49z8ynVv5qN9yTRrUD+OhHC5QpJmY7ueSTwQUg9YwcbNP7pC6y
+         89erqJjQYVXxpM3W58bZHlQX8YPiFwfQfrA6Hhb991pI8fSr5n49ziPnLARuzaXUqqnF
+         3sTii1cbShSRNo0hzreetQjMwZ6vhsFcjwmH92kbE2KGLtMrA9RtQFY1JpAuqrQ4MoQV
+         JlGw==
+X-Gm-Message-State: AGi0PuY9H1runyOoucNcXcw9PGPWN4ojueUQy35e3Is3AaRbQEuV5P8C
+        vj/zH/uzQRg5KYWxOpAg/xyIIg==
+X-Google-Smtp-Source: APiQypKrAIjcvppHX3VAMktxpR9SjBHsIStBZJyRzzJ6SK0xC6kDonOdrw5X4atf+9cmrdmnE7gllQ==
+X-Received: by 2002:a62:7b03:: with SMTP id w3mr17166118pfc.313.1587503723328;
+        Tue, 21 Apr 2020 14:15:23 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id c1sm3287880pfo.152.2020.04.21.14.15.19
+        by smtp.gmail.com with ESMTPSA id c1sm3287880pfo.152.2020.04.21.14.15.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 14:15:20 -0700 (PDT)
+        Tue, 21 Apr 2020 14:15:22 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
         gregkh@linuxfoundation.org
@@ -65,10 +65,13 @@ Cc:     kgdb-bugreport@lists.sourceforge.net, mingo@redhat.com,
         bjorn.andersson@linaro.org, jslaby@suse.com,
         catalin.marinas@arm.com, corbet@lwn.net, will@kernel.org,
         Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/9] Revert "kgdboc: disable the console lock when in kgdb"
-Date:   Tue, 21 Apr 2020 14:14:40 -0700
-Message-Id: <20200421141234.v2.2.I02258eee1497e55bcbe8dc477de90369c7c7c2c5@changeid>
+        Matt Mullins <mmullins@fb.com>, Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v2 4/9] kgdb: Delay "kgdbwait" to dbg_late_init() by default
+Date:   Tue, 21 Apr 2020 14:14:42 -0700
+Message-Id: <20200421141234.v2.4.I3113aea1b08d8ce36dc3720209392ae8b815201b@changeid>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 In-Reply-To: <20200421211447.193860-1-dianders@chromium.org>
 References: <20200421211447.193860-1-dianders@chromium.org>
@@ -79,40 +82,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 81eaadcae81b4c1bf01649a3053d1f54e2d81cf1.
+Using kgdb requires at least some level of architecture-level
+initialization.  If nothing else, it relies on the architecture to
+pass breakpoints / crashes onto kgdb.
 
-Commit 81eaadcae81b ("kgdboc: disable the console lock when in kgdb")
-is no longer needed now that we have the patch ("kgdb: Disable
-WARN_CONSOLE_UNLOCKED for all kgdb").  Revert it.
+On some architectures this all works super early, specifically it
+starts working at some point in time before Linux parses
+early_params's.  On other architectures it doesn't.  A survey of a few
+platforms:
+
+a) x86: Presumably it all works early since "ekgdboc" is documented to
+   work here.
+b) arm64: Catching crashes works; with a simple patch breakpoints can
+   also be made to work.
+c) arm: Nothing in kgdb works until
+   paging_init() -> devicemaps_init() -> early_trap_init()
+
+Let's be conservative and, by default, process "kgdbwait" (which tells
+the kernel to drop into the debugger ASAP at boot) a bit later at
+dbg_late_init() time.  If an architecture has tested it and wants to
+re-enable super early debugging, they can implement the weak function
+kgdb_arch_can_debug_early() to return true.  We'll do this for x86 to
+start.  It should be noted that dbg_late_init() is still called quite
+early in the system.
+
+Note that this patch doesn't affect when kgdb runs its init.  If kgdb
+is set to initialize early it will still initialize when parsing
+early_params's.  This patch _only_ inhibits the initial breakpoint
+from "kgdbwait".  This means:
+
+* Without any extra patches arm64 platforms will at least catch
+  crashes after kgdb inits.
+* arm platforms will catch crashes (and could handle a hardcoded
+  kgdb_breakpoint()) any time after early_trap_init() runs, even
+  before dbg_late_init().
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
 ---
 
-Changes in v2:
-- ("Revert "kgdboc: disable the console lock when in kgdb"") new for v2.
+Changes in v2: None
 
- drivers/tty/serial/kgdboc.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/x86/kernel/kgdb.c    |  5 +++++
+ include/linux/kgdb.h      | 22 ++++++++++++++++++++++
+ kernel/debug/debug_core.c | 29 +++++++++++++++++++----------
+ 3 files changed, 46 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index c9f94fa82be4..8a1a4d1b6768 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -275,14 +275,10 @@ static void kgdboc_pre_exp_handler(void)
- 	/* Increment the module count when the debugger is active */
- 	if (!kgdb_connected)
- 		try_module_get(THIS_MODULE);
--
--	atomic_inc(&ignore_console_lock_warning);
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index c44fe7d8d9a4..60c47787c588 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -673,6 +673,11 @@ void kgdb_arch_late(void)
+ 	}
  }
  
- static void kgdboc_post_exp_handler(void)
++bool kgdb_arch_can_debug_early(void)
++{
++	return true;
++}
++
+ /**
+  *	kgdb_arch_exit - Perform any architecture specific uninitalization.
+  *
+diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+index b072aeb1fd78..7371517aeacc 100644
+--- a/include/linux/kgdb.h
++++ b/include/linux/kgdb.h
+@@ -226,6 +226,28 @@ extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
+  */
+ extern void kgdb_arch_late(void);
+ 
++/**
++ *	kgdb_arch_can_debug_early - Check if OK to break before dbg_late_init()
++ *
++ *	If an architecture can definitely handle entering the debugger when
++ *	early_param's are parsed then it can override this function to return
++ *	true.  Otherwise if "kgdbwait" is passed on the kernel command line it
++ *	won't actually be processed until dbg_late_init() just after the call
++ *	to kgdb_arch_late() is made.
++ *
++ *	NOTE: Even if this returns false we will still try to register kgdb to
++ *	handle breakpoints and crashes when early_params's are parsed, we just
++ *	won't act on the "kgdbwait" parameter until dbg_late_init().  If you
++ *	get a crash and try to drop into kgdb somewhere between these two
++ *	places you might or might not end up being able to use kgdb depending
++ *	on exactly how far along the architecture has initted.
++ *
++ *	ALSO: dbg_late_init() is actually still fairly early in the system
++ *	boot process.
++ *
++ *	Return: true if platform can handle kgdb early.
++ */
++extern bool kgdb_arch_can_debug_early(void);
+ 
+ /**
+  * struct kgdb_arch - Describe architecture specific values.
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 950dc667c823..8f178239856d 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -950,16 +950,32 @@ void kgdb_panic(const char *msg)
+ 	kgdb_breakpoint();
+ }
+ 
++static void kgdb_initial_breakpoint(void)
++{
++	kgdb_break_asap = 0;
++
++	pr_crit("Waiting for connection from remote gdb...\n");
++	kgdb_breakpoint();
++}
++
+ void __weak kgdb_arch_late(void)
  {
--	atomic_dec(&ignore_console_lock_warning);
+ }
+ 
++bool __weak kgdb_arch_can_debug_early(void)
++{
++	return false;
++}
++
+ void __init dbg_late_init(void)
+ {
+ 	dbg_is_early = false;
+ 	if (kgdb_io_module_registered)
+ 		kgdb_arch_late();
+ 	kdb_init(KDB_INIT_FULL);
++
++	if (kgdb_io_module_registered && kgdb_break_asap)
++		kgdb_initial_breakpoint();
+ }
+ 
+ static int
+@@ -1055,14 +1071,6 @@ void kgdb_schedule_breakpoint(void)
+ }
+ EXPORT_SYMBOL_GPL(kgdb_schedule_breakpoint);
+ 
+-static void kgdb_initial_breakpoint(void)
+-{
+-	kgdb_break_asap = 0;
 -
- 	/* decrement the module count when the debugger detaches */
- 	if (!kgdb_connected)
- 		module_put(THIS_MODULE);
+-	pr_crit("Waiting for connection from remote gdb...\n");
+-	kgdb_breakpoint();
+-}
+-
+ /**
+  *	kgdb_register_io_module - register KGDB IO module
+  *	@new_dbg_io_ops: the io ops vector
+@@ -1099,7 +1107,8 @@ int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
+ 	/* Arm KGDB now. */
+ 	kgdb_register_callbacks();
+ 
+-	if (kgdb_break_asap)
++	if (kgdb_break_asap &&
++	    (!dbg_is_early || kgdb_arch_can_debug_early()))
+ 		kgdb_initial_breakpoint();
+ 
+ 	return 0;
+@@ -1169,7 +1178,7 @@ static int __init opt_kgdb_wait(char *str)
+ 	kgdb_break_asap = 1;
+ 
+ 	kdb_init(KDB_INIT_EARLY);
+-	if (kgdb_io_module_registered)
++	if (kgdb_io_module_registered && kgdb_arch_can_debug_early())
+ 		kgdb_initial_breakpoint();
+ 
+ 	return 0;
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
