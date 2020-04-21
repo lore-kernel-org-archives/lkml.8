@@ -2,194 +2,92 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A7BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FE1C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D06E206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16A6206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:43:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="GLThiMbU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NdUIgbRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbgDUOnO (ORCPT
+        id S1729354AbgDUOnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:43:14 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:56853 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729282AbgDUOnJ (ORCPT
+        Tue, 21 Apr 2020 10:43:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728963AbgDUOnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:43:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587480188; x=1619016188;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=0As9yCEoo8wuIjCPpQSANbvOMZTIRzcx0rCbgIibC1w=;
-  b=GLThiMbUHUmfPss4Ig7gUrh7vDTOwC3ionH4an4Xm3iqyFA2OxRjWpis
-   Lp2Ztd1w5D0Pr9RyUk0g9H699pzpKAmtm3OKcqXqQYjdKsSxcwT2azR2o
-   +RQVVOpdEenQlnQ06grsvDyW2Ft8Eu/Ok14WyNJtIBDMNlnQ4wV/1hDTb
-   aH+sroBN+brddo/fkXvrxEXtXxoeW9vljfKYg3jN5/ZydeRUTFTrntr+f
-   So7iYBVtR1Qe4/T40xo89JHb+SsRbAPDGXFJhn241FBOLcY3AywyZ3MIU
-   PZ6pMxqc+lh//pFp8imYo9LRmLcIlliE51cfmRa6ZvSJvq0EDGpc6QnlG
-   A==;
-IronPort-SDR: qb8SBQ/9S965B9W39hCufnEnZWAlHep+VoXbthAFahLYtEFZa0ktVowW6n7SWepyswve41xa1m
- KGZb3gD6pAjIOJW3Kfg4wcC3fFX/T7SpqsXB+9dxbA0vOAbrzchD9/uF912La0LhsIydR98GAf
- 9uTHqCHvBQRZJ6Xr1R4W/0JxQUuy6tPqZ9r3I2wnQJopx6aWMHbBH33gMvDecNAbRLvgOBhDmH
- zuoPA/kfx3Ga74d41Bkdjx2jrL04/GXmvVKlCdu7Mqn2poPbfl1BuWwrsALSIH0BA5QEn1g1nW
- /KY=
-X-IronPort-AV: E=Sophos;i="5.72,410,1580799600"; 
-   d="scan'208";a="71040901"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Apr 2020 07:43:07 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 21 Apr 2020 07:43:07 -0700
-Received: from soft-dev3.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 21 Apr 2020 07:43:04 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
-        <jiri@resnulli.us>, <ivecera@redhat.com>, <kuba@kernel.org>,
-        <roopa@cumulusnetworks.com>, <olteanv@gmail.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v2 10/11] bridge: mrp: Integrate MRP into the bridge
-Date:   Tue, 21 Apr 2020 16:37:51 +0200
-Message-ID: <20200421143752.2248-11-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200421143752.2248-1-horatiu.vultur@microchip.com>
-References: <20200421143752.2248-1-horatiu.vultur@microchip.com>
+        Tue, 21 Apr 2020 10:43:17 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB49DC061A41;
+        Tue, 21 Apr 2020 07:43:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dY79REsLwvs8M2Rkjsj0Kv3oPbcFcJ+41V7FNNmLGX0=; b=NdUIgbRV16Ex4LIOSDoUFWIvZ
+        Qrit5lY9w/b9nPH0BzKucYkau8v8BZO66kQ6heEp6+gFPxFjjw5Ulf6HNDZrA7Fnd+mOPRjWlmP/h
+        ybj9+N7kEQJpBz2G6pjWmv6qIuddsPJPSKY1B3dDpsShbivNRzT0r7PRQ3STQe/fi/KUVTh2l7mSp
+        DIXs9SaMEmj1kP5S5tkSGSJpA0RA3cb2/j5C0B81CkMAImgjc+x2UI2GAvHUDKKPEPXLEWw0Cgivh
+        n+snrn7u9TbIBv4SMnwzDd2fiUcENfABz0t8o2f6H1HWZEIh67xbBL/5nUGXeEg3QMahrPG1DOF4D
+        Jo7yd6LNA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:41618)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jQu79-00029h-LK; Tue, 21 Apr 2020 15:43:07 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jQu74-00076r-NY; Tue, 21 Apr 2020 15:43:02 +0100
+Date:   Tue, 21 Apr 2020 15:43:02 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [RFC PATCH net-next 1/3] net: phy: add concept of shared storage
+ for PHYs
+Message-ID: <20200421144302.GD25745@shell.armlinux.org.uk>
+References: <20200420232624.9127-1-michael@walle.cc>
+ <20200421143455.GB933345@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421143455.GB933345@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To integrate MRP into the bridge, the bridge needs to do the following:
-- detect if the MRP frame was received on MRP ring port in that case it would be
-  processed otherwise just forward it as usual.
-- enable parsing of MRP
-- before whenever the bridge was set up, it would set all the ports in
-  forwarding state. Add an extra check to not set ports in forwarding state if
-  the port is an MRP ring port. The reason of this change is that if the MRP
-  instance initially sets the port in blocked state by setting the bridge up it
-  would overwrite this setting.
+On Tue, Apr 21, 2020 at 04:34:55PM +0200, Andrew Lunn wrote:
+> > +static inline bool phy_package_init_once(struct phy_device *phydev)
+> > +{
+> > +	struct phy_package_shared *shared = phydev->shared;
+> > +
+> > +	if (!shared)
+> > +		return false;
+> > +
+> > +	return !test_and_set_bit(PHY_SHARED_F_INIT_DONE, &shared->flags);
+> > +}
+> 
+> I need to look at how you actually use this, but i wonder if this is
+> sufficient. Can two PHYs probe at the same time? Could we have one PHY
+> be busy setting up the global init, and the other thinks the global
+> setup is complete? Do we want a comment like: 'Returns true when the
+> global package initialization is either under way or complete'?
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- net/bridge/br_device.c  |  3 +++
- net/bridge/br_if.c      |  2 ++
- net/bridge/br_input.c   |  3 +++
- net/bridge/br_netlink.c |  5 +++++
- net/bridge/br_private.h | 31 +++++++++++++++++++++++++++++++
- 5 files changed, 44 insertions(+)
+IIRC, probe locking in the driver model is by per-driver locks, so
+any particular driver won't probe more than one device at a time.
 
-diff --git a/net/bridge/br_device.c b/net/bridge/br_device.c
-index 0e3dbc5f3c34..8ec1362588af 100644
---- a/net/bridge/br_device.c
-+++ b/net/bridge/br_device.c
-@@ -463,6 +463,9 @@ void br_dev_setup(struct net_device *dev)
- 	spin_lock_init(&br->lock);
- 	INIT_LIST_HEAD(&br->port_list);
- 	INIT_HLIST_HEAD(&br->fdb_list);
-+#if IS_ENABLED(CONFIG_BRIDGE_MRP)
-+	INIT_LIST_HEAD(&br->mrp_list);
-+#endif
- 	spin_lock_init(&br->hash_lock);
- 
- 	br->bridge_id.prio[0] = 0x80;
-diff --git a/net/bridge/br_if.c b/net/bridge/br_if.c
-index 4fe30b182ee7..ca685c0cdf95 100644
---- a/net/bridge/br_if.c
-+++ b/net/bridge/br_if.c
-@@ -333,6 +333,8 @@ static void del_nbp(struct net_bridge_port *p)
- 	br_stp_disable_port(p);
- 	spin_unlock_bh(&br->lock);
- 
-+	br_mrp_port_del(br, p);
-+
- 	br_ifinfo_notify(RTM_DELLINK, NULL, p);
- 
- 	list_del_rcu(&p->list);
-diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
-index fcc260840028..d5c34f36f0f4 100644
---- a/net/bridge/br_input.c
-+++ b/net/bridge/br_input.c
-@@ -342,6 +342,9 @@ rx_handler_result_t br_handle_frame(struct sk_buff **pskb)
- 		}
- 	}
- 
-+	if (unlikely(br_mrp_process(p, skb)))
-+		return RX_HANDLER_PASS;
-+
- forward:
- 	switch (p->state) {
- 	case BR_STATE_FORWARDING:
-diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
-index 4084f1ef8641..1a5e681a626a 100644
---- a/net/bridge/br_netlink.c
-+++ b/net/bridge/br_netlink.c
-@@ -672,6 +672,11 @@ static int br_afspec(struct net_bridge *br,
- 			if (err)
- 				return err;
- 			break;
-+		case IFLA_BRIDGE_MRP:
-+			err = br_mrp_parse(br, p, attr, cmd, extack);
-+			if (err)
-+				return err;
-+			break;
- 		}
- 	}
- 
-diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index 835a70f8d3ea..5835828320b6 100644
---- a/net/bridge/br_private.h
-+++ b/net/bridge/br_private.h
-@@ -1308,6 +1308,37 @@ unsigned long br_timer_value(const struct timer_list *timer);
- extern int (*br_fdb_test_addr_hook)(struct net_device *dev, unsigned char *addr);
- #endif
- 
-+/* br_mrp.c */
-+#if IS_ENABLED(CONFIG_BRIDGE_MRP)
-+int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
-+		 struct nlattr *attr, int cmd, struct netlink_ext_ack *extack);
-+int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb);
-+bool br_mrp_enabled(struct net_bridge *br);
-+void br_mrp_port_del(struct net_bridge *br, struct net_bridge_port *p);
-+#else
-+static inline int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
-+			       struct nlattr *attr, int cmd,
-+			       struct netlink_ext_ack *extack)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb)
-+{
-+	return 0;
-+}
-+
-+static inline bool br_mrp_enabled(struct net_bridge *br)
-+{
-+	return 0;
-+}
-+
-+static inline void br_mrp_port_del(struct net_bridge *br,
-+				   struct net_bridge_port *p)
-+{
-+}
-+#endif
-+
- /* br_netlink.c */
- extern struct rtnl_link_ops br_link_ops;
- int br_netlink_init(void);
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
