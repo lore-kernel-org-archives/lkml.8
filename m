@@ -2,71 +2,104 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C704EC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA585C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFB01206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC679206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:26:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSrGDRnz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgDUT0B (ORCPT
+        id S1726228AbgDUT0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:26:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38222 "EHLO
+        Tue, 21 Apr 2020 15:26:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725902AbgDUT0B (ORCPT
+        by vger.kernel.org with ESMTP id S1725902AbgDUT0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:26:01 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14E6CC0610D5;
-        Tue, 21 Apr 2020 12:26:01 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQyWW-007mYP-P6; Tue, 21 Apr 2020 19:25:36 +0000
-Date:   Tue, 21 Apr 2020 20:25:36 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] powerpc/spufs: simplify spufs core dumping
-Message-ID: <20200421192536.GG23230@ZenIV.linux.org.uk>
-References: <20200421154204.252921-1-hch@lst.de>
- <20200421154204.252921-2-hch@lst.de>
- <20200421184941.GD23230@ZenIV.linux.org.uk>
- <20200421190148.GA26071@lst.de>
- <20200421191909.GF23230@ZenIV.linux.org.uk>
+        Tue, 21 Apr 2020 15:26:50 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EACB0C0610D5;
+        Tue, 21 Apr 2020 12:26:49 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id k8so3525772ejv.3;
+        Tue, 21 Apr 2020 12:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=idTKxWpEYXSpWMVyn2696fqjJ0Ry7jBlA9LPzj52ir0=;
+        b=FSrGDRnziT2sbgdhl+Ig8+exvCHWQV4xq20QWOQWHknyMnYuhzK19fDo+s3GWbBlvH
+         ePPjKY3vfs21mKR1ShEnjLfwyPd4PQlI7tqynuAXnRNhGABVpS9in2rWv3B4u4nCS/d7
+         CDQncWQC/B5aGHPHmNf7DrwVSC2dg4QuJydV6uUf45pwNzjizDffAJaXlpUnWyq4AUnG
+         p2TxW/7s55su2urUvTwWo4j9oCcxUHFCYPquKp0kPkuUkAvGqG6qbC8LbJsvZVnbdB4m
+         lU300xJheMMkNe1lTxfALNCmbgAQkeJ48llYhi+FY0at/8RRfmNJRarkni3JL4kHlAd7
+         iUAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=idTKxWpEYXSpWMVyn2696fqjJ0Ry7jBlA9LPzj52ir0=;
+        b=X/c0R/R4uP2EMroOYXNvDw+zzEckGd/ErG0V+PoWfWsRJI2eBK88x4Z9STnD15z0CV
+         wuU/nlJSsHpJvhl0qJEsP3Nd5E6/ytpRfHVXShjY0hRFyY9cMQr2l+U40GsKNsmzjEBW
+         9Mf6IDnRthG0FSZUSIYNMoXY1JSWSOzmC2MnL3DOWVRczsYJJ42yF6/9VCMnNb15AMvF
+         40knkWKQ59laNdEjDXBzc606QWi9SDhVLy3Fuh8mkOTnRBA3sF4BVPiw75Aj4b0AzAQ8
+         9HHJ1yWzYX+YCSs0GuzXxsfBdViZAjPrr07N+cLQ9w9km4XogqSl7bj20hXlcB+Oc+d9
+         pjIQ==
+X-Gm-Message-State: AGi0PubruIhgEQTNqV8qcdj7RcEZXihnWgu9NxtPZ5PucRLn93qlUw8t
+        OPg/B/WluLbu4dgzAI4VI/qfwynt5YHTYyqHdy0=
+X-Google-Smtp-Source: APiQypKbVFuc0+4pupCD+KUCBYs2OqlbXKOSdEObVGiR4iem9xbPhga7MoJS0F3OqoOUgWjD05yzDfNKHMWuH9SuZ48=
+X-Received: by 2002:a17:906:54cd:: with SMTP id c13mr21911261ejp.307.1587497208543;
+ Tue, 21 Apr 2020 12:26:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421191909.GF23230@ZenIV.linux.org.uk>
+References: <20200421171552.28393-1-luke.r.nels@gmail.com> <6f1130b3-eaea-cc5e-716f-5d6be77101b9@zytor.com>
+In-Reply-To: <6f1130b3-eaea-cc5e-716f-5d6be77101b9@zytor.com>
+From:   Xi Wang <xi.wang@gmail.com>
+Date:   Tue, 21 Apr 2020 12:26:12 -0700
+Message-ID: <CAKU6vyb38-XcFeAiP7OW0j++0jS-J4gZP6S2E21dpQwvcEFpKQ@mail.gmail.com>
+Subject: Re: [PATCH bpf 1/2] bpf, x32: Fix invalid instruction in BPF_LDX zero-extension
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Wang YanQing <udknight@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 08:19:09PM +0100, Al Viro wrote:
-> On Tue, Apr 21, 2020 at 09:01:48PM +0200, Christoph Hellwig wrote:
-> > On Tue, Apr 21, 2020 at 07:49:41PM +0100, Al Viro wrote:
-> > > >  	spin_lock(&ctx->csa.register_lock);
-> > > > -	ret = __spufs_proxydma_info_read(ctx, buf, len, pos);
-> > > > +	__spufs_proxydma_info_read(ctx, &info);
-> > > > +	ret = simple_read_from_buffer(buf, len, pos, &info, sizeof(info));
-> > > 
-> > > IDGI...  What's that access_ok() for?  If you are using simple_read_from_buffer(),
-> > > the damn thing goes through copy_to_user().  Why bother with separate access_ok()
-> > > here?
-> > 
-> > I have no idea at all, this just refactors the code.
-> 
-> Wait a bloody minute, it's doing *what* under a spinlock?
+On Tue, Apr 21, 2020 at 10:39 AM H. Peter Anvin <hpa@zytor.com> wrote:
+> x32 is not x86-32.  In Linux we generally call the latter "i386".
 
-... and yes, I realize that it's been broken the same way.  It still needs fixing.
-AFAICS, that got broken in commit bf1ab978be23 "[POWERPC] coredump: Add SPU elf
-notes to coredump." when spufs_proxydma_info_read() had copy_to_user() (until
-then done after dropping the spinlock) moved into an area where blocking is very
-much *not* allowed.
+Agreed.  Most of the previous patches to this file use "x32" and this
+one just wanted to be consistent.
+
+> C7 /0 imm32 is a valid instruction on i386. However, it is also
+> inefficient when the destination is a register, because B8+r imm32 is
+> equivalent, and when the value is zero, XOR is indeed more efficient.
+>
+> The real error is using EMIT3() instead of EMIT2_off32(), but XOR is
+> more efficient. However, let's make the bug statement *correct*, or it
+> is going to confuse the Hades out of people in the future.
+
+I don't see how the bug statement is incorrect, which merely points
+out that "C7 C0 0" is an invalid instruction, regardless of whether
+the JIT intended to emit C7 /0 imm32, B8+r imm32, 31 /r, 33 /r, or any
+other equivalent form.
