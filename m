@@ -2,73 +2,86 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43277C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE1BC55183
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 244EB2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406B820781
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587473304;
+	bh=MX//OISkXMkefkAGS97bnGPUwUOdUgkMZrE4oSc7af0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TRLi7cFaw2kz2Mo8YUtkOs3DJAWVIJPOVQ7qIQaaZQ6hVL9t5WWLOidaORrwmM1RI
+	 2gMWfJ8HdmovKedDj/0Mx5zf0aMl+PnhFTBO9kMqvjKdRL9a1YetrjKw4VRcd0WWrU
+	 yH9KLOexzLs4R6MB2o2szpttZfvOXeLHoJJpa09s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbgDUMrL (ORCPT
+        id S1728807AbgDUMsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:47:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57649 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728524AbgDUMrK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:47:10 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jQsIp-0002Xh-II; Tue, 21 Apr 2020 12:47:03 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Qu Wenruo <wqu@suse.com>, linux-btrfs@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] btrfs: fix check for memory allocation failure of ret->path
-Date:   Tue, 21 Apr 2020 13:47:03 +0100
-Message-Id: <20200421124703.149466-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 21 Apr 2020 08:48:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726691AbgDUMsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 08:48:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5179D2076E;
+        Tue, 21 Apr 2020 12:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587473302;
+        bh=MX//OISkXMkefkAGS97bnGPUwUOdUgkMZrE4oSc7af0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I61zNOARA45e29Y+vMJPmWFEfryzRhUTwFgUmghn5kTdgaT9VFPaYn7sYVK/88ZxU
+         skzz9Eb3OKBdZvBv4RCa0D1IvH80O7Nyir94yeG5lQk5ilxKf7TKqQCeRh5UEmWyMz
+         RAYA+9XeaKcFuXAhSdQel0SJ9Jsli7axPfagcNVQ=
+Date:   Tue, 21 Apr 2020 14:48:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv5 0/4] n_gsm serdev support and protocol driver for
+ droid4 modem
+Message-ID: <20200421124820.GB784065@kroah.com>
+References: <20200319173755.65082-1-tony@atomide.com>
+ <20200421115920.GA16890@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421115920.GA16890@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Apr 21, 2020 at 01:59:20PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > Here's v4 set of n_gsm serdev support patches, and the related protocol
+> > driver for the modem found on Motorola Mapphone phones and tablets
+> > like droid4.
+> > 
+> > This series only adds basic character device support for the serdev
+> > driver. Other serdev consumer drivers for specific devices will be
+> > posted separately.
+> > 
+> > The patches are against v5.6-rc series.
+> 
+> And it would be good to get them into v5.7... pretty please :-).
 
-Currently the memory allocation failure check for ret->path is checking
-that ret is null rather than ret->path.  Fix this by checking ret->path
-instead.
+No, 5.7 is not ok for this, and i think it already needs a respin as
+this is not in my patch queue anymore.
 
-Addresses-Coverity: ("Dereference null return")
-Fixes: bd8bdc532152 ("btrfs: backref: introduce the skeleton of btrfs_backref_iter")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/btrfs/backref.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
-index 60a69f7c0b36..78e6c9a64212 100644
---- a/fs/btrfs/backref.c
-+++ b/fs/btrfs/backref.c
-@@ -2307,7 +2307,7 @@ struct btrfs_backref_iter *btrfs_backref_iter_alloc(
- 		return NULL;
- 
- 	ret->path = btrfs_alloc_path();
--	if (!ret) {
-+	if (!ret->path) {
- 		kfree(ret);
- 		return NULL;
- 	}
--- 
-2.25.1
-
+greg k-h
