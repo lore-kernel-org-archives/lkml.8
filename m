@@ -2,74 +2,153 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475B9C38A30
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1629CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 223A52078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C7C208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:43:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKmwOwQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgDUCmX (ORCPT
+        id S1727841AbgDUCnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 22:42:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34460 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726024AbgDUCmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 22:42:22 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 379CB910E53135906621;
-        Tue, 21 Apr 2020 10:42:20 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Apr 2020
- 10:42:10 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <hariprasad.kelam@gmail.com>
-CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] staging: rtl8723bs: remove unused variable 'pregistrypriv'
-Date:   Tue, 21 Apr 2020 10:41:45 +0800
-Message-ID: <20200421024145.43576-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 20 Apr 2020 22:43:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725988AbgDUCm7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 22:42:59 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DD25C061A0E;
+        Mon, 20 Apr 2020 19:42:59 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id s202so10833202oih.3;
+        Mon, 20 Apr 2020 19:42:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=22HJzOmHnmam1tgxVzraGLccgsF7pCDzxppnKXmeCcc=;
+        b=jKmwOwQWKpYMPZofyZTuYn+7LdAMlYL6swWuBqaWWYS2ZHe065aplsFe1ypvqsjVg/
+         E79G3ZVOsXfSzITV1aNWOhL/+In9irYnxjpqJ4QUtvf3mMJCwB1hqygj3wSyZkyM9jtI
+         GL9bG947tM1umGFCgOdTRzHnZl2M1t1CwGB4ZyZeoh2ONAnlOTPW7w5sJ6dHdOC7LGy1
+         M70e4C+70oD1J2hsUkjImoXoNrDzlyd0lcd/IAMObQgb9rHaw0OegZzdtbtSdFUpJ67c
+         +xlz3pyhFZEtqYXqFur48USkQu5StZsixLj2jtbp5NqpaFCungz+3cEiNzynVfhMoG1i
+         WyQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=22HJzOmHnmam1tgxVzraGLccgsF7pCDzxppnKXmeCcc=;
+        b=TvH+Cssds32hzl6A7L8Yh8+D5+9gcYCudhLr28WqlPGSoV4qrjfuAXL2bV2uyBzGoR
+         jsueqJj+/kA6ps65AQLMhqk5hx1VcYsd1KRVtWX0M35ipedYyLP7lfOBM+qIpf7H57Za
+         6vSPvpBh0R0Tq6PziI7mIRmYWHBvIUaqlMZ0K2+kyOPFrXzIKMRvNfBd7wqWq0w73Oka
+         VKMn+o5py3EtJVOG7T38HSa5pAfVWfPTThAUzJn+Crrnl/g0eB6ey/kajctTEossG2tB
+         gv9B947GnqOLiEJSWUChKb4ob7GM01+EbpqvbPLzdUg8GMNlqMPvomvc+k+objLXoG7u
+         vf7w==
+X-Gm-Message-State: AGi0PuZpNKmk+cZ/tWg/SbGx/dP3S3g5gKr+y1vR0/ukf6kUGqkEzqGN
+        n1jCyQKOe3fEIYnU8VyBvMQ=
+X-Google-Smtp-Source: APiQypJkewVCDBhIo/LPbuliAqXKDGfd5imYzqWqvA5pHn7Gaa4TcDgnRMZK41fAT8W64wzDCFRm+w==
+X-Received: by 2002:a05:6808:64a:: with SMTP id z10mr1702091oih.71.1587436978810;
+        Mon, 20 Apr 2020 19:42:58 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id b6sm425594otq.18.2020.04.20.19.42.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Apr 2020 19:42:58 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 19:42:56 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Dmitry Golovin <dima@golovin.in>
+Subject: Re: [PATCH v2 2/3] MIPS: VDSO: Move disabling the VDSO logic to
+ Kconfig
+Message-ID: <20200421024256.GA42179@ubuntu-s3-xlarge-x86>
+References: <20200419180445.26722-1-natechancellor@gmail.com>
+ <20200419202128.20571-1-natechancellor@gmail.com>
+ <20200419202128.20571-2-natechancellor@gmail.com>
+ <CA+icZUVaLW+38WEJhqnfO7B_unHvrbSr0moKnfJ6zXGGA06CWQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+icZUVaLW+38WEJhqnfO7B_unHvrbSr0moKnfJ6zXGGA06CWQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/staging/rtl8723bs/hal/sdio_halinit.c: In function HalRxAggr8723BSdio:
-drivers/staging/rtl8723bs/hal/sdio_halinit.c:547:24: warning: variable pregistrypriv set but not used [-Wunused-but-set-variable]
+On Mon, Apr 20, 2020 at 11:53:55AM +0200, Sedat Dilek wrote:
+> On Sun, Apr 19, 2020 at 10:21 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > After commit 9553d16fa671 ("init/kconfig: Add LD_VERSION Kconfig"), we
+> > have access to GNU ld's version at configuration time. As a result, we
+> > can make it clearer under what configuration circumstances the MIPS VDSO
+> > needs to be disabled.
+> >
+> > This is a prerequisite for getting rid of the MIPS VDSO binutils
+> > warning and linking the VDSO when LD is ld.lld. Wrapping the call to
+> > ld-ifversion with CONFIG_LD_IS_LLD does not work because the config
+> > values are wiped away during 'make clean'.
+> >
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >
+> > v1 -> v2:
+> >
+> > * New patch.
+> >
+> >  arch/mips/Kconfig         |  2 ++
+> >  arch/mips/vdso/Kconfig    | 18 ++++++++++++++++++
+> >  arch/mips/vdso/Makefile   | 30 ++----------------------------
+> >  arch/mips/vdso/vdso.lds.S |  2 +-
+> >  4 files changed, 23 insertions(+), 29 deletions(-)
+> >  create mode 100644 arch/mips/vdso/Kconfig
+> >
+> > diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> > index 690718b3701a..45220e4b8a65 100644
+> > --- a/arch/mips/Kconfig
+> > +++ b/arch/mips/Kconfig
+> > @@ -3275,3 +3275,5 @@ endmenu
+> >  source "drivers/firmware/Kconfig"
+> >
+> >  source "arch/mips/kvm/Kconfig"
+> > +
+> > +source "arch/mips/vdso/Kconfig"
+> > diff --git a/arch/mips/vdso/Kconfig b/arch/mips/vdso/Kconfig
+> ...
+> > --- /dev/null
+> > +++ b/arch/mips/vdso/Kconfig
+> ...
+> > +config MIPS_DISABLE_VDSO
+> > +       def_bool CPU_MICROMIPS || (!CPU_MIPSR6 && !MIPS_LD_CAN_LINK_VDSO)
+> ...
+> > diff --git a/arch/mips/vdso/vdso.lds.S b/arch/mips/vdso/vdso.lds.S
+> ...
+> > --- a/arch/mips/vdso/vdso.lds.S
+> > +++ b/arch/mips/vdso/vdso.lds.S
+> ...
+> > -#ifndef DISABLE_MIPS_VDSO
+> > +#ifndef CONFIG_DISABLE_MIPS_VDSO
+> 
+> Should be s/CONFIG_DISABLE_MIPS_VDSO/CONFIG_MIPS_DISABLE_VDSO ?
+> 
+> - Sedat -
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/rtl8723bs/hal/sdio_halinit.c | 4 ----
- 1 file changed, 4 deletions(-)
+Ugh yes, thank you much for pointing it out.
 
-diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-index 7853af53051d..e42d8c18e1ae 100644
---- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-+++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-@@ -544,13 +544,9 @@ static void _InitRetryFunction(struct adapter *padapter)
- 
- static void HalRxAggr8723BSdio(struct adapter *padapter)
- {
--	struct registry_priv *pregistrypriv;
- 	u8 valueDMATimeout;
- 	u8 valueDMAPageCount;
- 
--
--	pregistrypriv = &padapter->registrypriv;
--
- 	valueDMATimeout = 0x06;
- 	valueDMAPageCount = 0x06;
- 
--- 
-2.17.1
+I'll send a v3 once I get further feedback on the series.
 
-
+Cheers!
+Nathan
