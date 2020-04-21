@@ -2,111 +2,88 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BCDC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D8DC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57A86206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2626C206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587494530;
+	bh=W5iqH8D4ozFwKcYfj6Xz7G3N7rFf+lJ6e2XoJilKYKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ircyL48R3EI4jgFLY3pjqmH64grNzDldxhlUfQlImavv6fnkLkmJ5uSppYIyg7gVU
+	 gceWxHEqoOrRQJLDbkWEjdomsB2ONbXoQLTNJtbSY2x0Tecn9DbTY4D48+JBWmFD6W
+	 nLfj9lJqw1PHmuJYmf8hhfcez83ly2/5OY3rE6f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbgDUSlp (ORCPT
+        id S1729321AbgDUSmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:41:45 -0400
-Received: from mga02.intel.com ([134.134.136.20]:18744 "EHLO mga02.intel.com"
+        Tue, 21 Apr 2020 14:42:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbgDUSlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:41:44 -0400
-IronPort-SDR: PTS5lSis9Qt1jcgpVsovZUVlq9tuDb5w1WAIklpW8/WycJl9kUkYLfiY4f0EBG0XfYInt7Pxon
- l+ti4t5Jdrog==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 11:41:43 -0700
-IronPort-SDR: wxusfE3TwKkqUex+ckbUR0PXgl6jp5AVs0GAuZF2Yz11Cf+4DqLyaVx0NvE14wZ+R9dSrr7+R9
- Si+SLKcEFIRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
-   d="scan'208";a="429625590"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga005.jf.intel.com with ESMTP; 21 Apr 2020 11:41:43 -0700
-Date:   Tue, 21 Apr 2020 11:41:43 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/8] fs/ext4: Disallow encryption if inode is DAX
-Message-ID: <20200421184143.GA3004764@iweiny-DESK2.sc.intel.com>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-4-ira.weiny@intel.com>
- <20200415160307.GJ90651@mit.edu>
- <20200415195433.GC2305801@iweiny-DESK2.sc.intel.com>
+        id S1725870AbgDUSmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:42:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AE90206D9;
+        Tue, 21 Apr 2020 18:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587494528;
+        bh=W5iqH8D4ozFwKcYfj6Xz7G3N7rFf+lJ6e2XoJilKYKE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uxrTDI7aOq3eN/0af17tTwnT++GuqYFU6PmgagzU7Wvb4b+7GSJ0ROLxU/L51S3Um
+         q53KgHl1Sz03V2jaF2aBzwDKL2by4PkWqLEmTBdoaGHnvXa4FpAcNAq6CXgQSsoLFZ
+         yg9x4uhtUuqn9kqclJDz66KCn2e3kmHC8ordGPSU=
+Date:   Tue, 21 Apr 2020 20:42:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 00/71] 5.6.6-rc1 review
+Message-ID: <20200421184206.GA1417862@kroah.com>
+References: <20200420121508.491252919@linuxfoundation.org>
+ <b2fe599c-4cd6-1302-99ad-336fdaf67912@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415195433.GC2305801@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <b2fe599c-4cd6-1302-99ad-336fdaf67912@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:54:34PM -0700, 'Ira Weiny' wrote:
-> On Wed, Apr 15, 2020 at 12:03:07PM -0400, Theodore Y. Ts'o wrote:
-> > On Mon, Apr 13, 2020 at 09:00:25PM -0700, ira.weiny@intel.com wrote:
- 
-[snip]
-
+On Tue, Apr 21, 2020 at 10:49:59AM -0600, shuah wrote:
+> On 4/20/20 6:38 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.6 release.
+> > There are 71 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> > Also note that encrypted files are read/write so we must never allow
-> > the combination of ENCRPYT_FL and DAX_FL.  So that may be something
-> > where we should teach __ext4_iget() to check for this, and declare the
-> > file system as corrupted if it sees this combination.
+> > Responses should be made by Wed, 22 Apr 2020 12:10:36 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.6-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> ok...
+> Compiled and booted on my test system. No dmesg regressions.
+> Reboot/poweroff worked with no hangs.
 
-After thinking about this...
+Yeah, glad that issue is now resolved.  THanks for testing and letting
+me know.
 
-Do we really want to declare the FS corrupted?
-
-If so, I think we need to return errors when such a configuration is attempted.
-If in the future we have an encrypted mode which can co-exist with DAX (such as
-Dan mentioned) we can change this.
-
-FWIW I think we should return errors when such a configuration is attempted but
-_not_ declare the FS corrupted.  That allows users to enable this configuration
-later if we can figure out how to support it.
-
-> 
-> > (For VERITY_FL
-> > && DAX_FL that is a combo that we might want to support in the future,
-> > so that's probably a case where arguably, we should just ignore the
-> > DAX_FL for now.)
-> 
-> ok...
-
-I think this should work the same.
-
-It looks like VERITY_FL and ENCRYPT_FL are _not_ user modifiable?  Is that
-correct?
-
-You said that ENCRPYT_FL is set from the parent directory?  But I'm not seeing
-where that occurs?
-
-Similarly I don't see where VERITY_FL is being set either?  :-/
-
-I think to make this work correctly we should restrict setting those flags if
-DAX_FL is set and vice versa.  But I'm not finding where to do that.  :-/
-
-Ira
-
-> 
-> Ira
-> 
+greg k-h
