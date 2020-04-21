@@ -2,98 +2,139 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE48C55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A17BC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F34E3206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E517F206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:20:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jo5FKBn/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="H+KGwlgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgDUUUJ (ORCPT
+        id S1726386AbgDUUUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:20:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgDUUUH (ORCPT
+        Tue, 21 Apr 2020 16:20:35 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:58266 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726321AbgDUUUe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:20:07 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB933C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:20:07 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id r14so7133552pfg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:20:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1iFjbz8Jw8ibbB0XT4DmNFkXZwjx8auTEGChMa/iuHI=;
-        b=Jo5FKBn/tL3wInA9uRKBGO7/qcNeByYqd8aj+ZPI/jZnMwO1Ri4RCYwLxdiGWOnWJ3
-         81+z6pM3SfjUTSGiebWv9b7mvD649MBsCCeJ26rAJo5DjBTBnvMGpAfY4npst/Yftt21
-         9kGTDYZwCWo1/4kTiXkLqGu3aXauoDgiW89TVNYvLUVIRo1n2Nqh9h9Z5tM6pFwT5BWP
-         QX3tqAyg7qicEhQpZxenUWUwJBY/JR3+2b7UIikaOLPfH14abE2Ebbbea5nSdTwwUd4n
-         KrFT87ffoi48QT2cdh9fxZ3+4QS7KyFk4Zaffibqp9fTrUsLw2K8P1ROKNMR/WaUQ8LU
-         ii4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1iFjbz8Jw8ibbB0XT4DmNFkXZwjx8auTEGChMa/iuHI=;
-        b=r9fJl4K0TWvV2UIHUcymWs4/vLjpfUG3k6ttEqFJ/HzX9uz+M7AnRorfE56oyrPmHV
-         gqLlQFsr2q2sCW8lqiQu9NM6L6AibjDO/WxxCKGSDpgHA9OPSLeHlWQtY87OHqD+DV5y
-         RTzzHO8UVuvFPI+vm11AELiuwyBwy9T/qNzd6Hg8ZnzknDN554M1B1ycWyi2qXSSGOzD
-         /2T0akVNi+3cFlrrI5Zf1zZnNXfojEC8Nfq7Y/Uys7F/Bral6iusnpU3gx3vVZbDjBYs
-         1cqtlLV8k7RGqf0LyxC+aqAiPA2kFWN1ZTyKvTz8jwjrtwQjKEbDZfPtJfcG5PIBFNx3
-         aWng==
-X-Gm-Message-State: AGi0PuauxKmT4rpbIhcLIGo12ZYfnLP+p01Ib8xE+y2sUZDBVGdjHDIU
-        FN5CFotynXfc4LDPr1YGjV5NtA==
-X-Google-Smtp-Source: APiQypJ88+z5exqmvb480JeRvdSbXBkxyS0uUX9BssPV8KA+/lvJw1UIgbmAqaln7qpJNY0B022HHw==
-X-Received: by 2002:a63:49:: with SMTP id 70mr6495452pga.275.1587500406869;
-        Tue, 21 Apr 2020 13:20:06 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id i9sm3211391pfk.199.2020.04.21.13.20.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 13:20:06 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 13:20:01 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] objtool: optimize insn_hash for split sections
-Message-ID: <20200421202001.GA90686@google.com>
-References: <20200421180724.245410-1-samitolvanen@google.com>
- <20200421180724.245410-3-samitolvanen@google.com>
- <20200421194749.GX20730@hirez.programming.kicks-ass.net>
+        Tue, 21 Apr 2020 16:20:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587500434; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=8Z/altQqTKdjp/pVqayBVEKEPSRCz4KgGRuB1EudGTI=; b=H+KGwlgH8ppjMGwvhdUywJtHLNqaIQWmO85zdgSe9MX07yqomyp+31GwOjRS0WGFkPamcs2T
+ UWXUzSB+3SC4v0zh07JpJP6njfcebt/Po1I0c/zEDIkEQwdZQdefPCoM1C6NfF2UWY4W4/Ha
+ G77saQ0DL8EVaMYhK9bsSZdw7go=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9f5582.7f4593a22500-smtp-out-n02;
+ Tue, 21 Apr 2020 20:20:18 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 69107C44791; Tue, 21 Apr 2020 20:20:17 +0000 (UTC)
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 609F3C432C2;
+        Tue, 21 Apr 2020 20:20:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 609F3C432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] iomm/arm-smmu: Add stall implementation hook
+Date:   Wed, 22 Apr 2020 01:50:04 +0530
+Message-Id: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421194749.GX20730@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 09:47:49PM +0200, Peter Zijlstra wrote:
-> On Tue, Apr 21, 2020 at 11:07:23AM -0700, Sami Tolvanen wrote:
-> > When running objtool on vmlinux.o compiled with -ffunction-sections,
-> > we end up with a ton of collisions in the insn_hash table as each
-> > function is in its own section. This results in a runtime of minutes
-> > instead of seconds. Use both section index and offset as the key to
-> > avoid this, similarly to rela_hash.
-> > 
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> 
-> I already have this queued:
-> 
->   https://lkml.kernel.org/r/20200416115119.227240432@infradead.org
-> 
-> which looks very similar.
+Add stall implementation hook to enable stalling
+faults on QCOM platforms which supports it without
+causing any kind of hardware mishaps. Without this
+on QCOM platforms, GPU faults can cause unrelated
+GPU memory accesses to return zeroes. This has the
+unfortunate result of command-stream reads from CP
+getting invalid data, causing a cascade of fail.
 
-Great, that works for me. Thanks for the link!
+Suggested-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+This has been attempted previously by Rob Clark in 2017, 2018.
+Hopefully we can get something concluded in 2020.
+ * https://patchwork.kernel.org/patch/9953803/
+ * https://patchwork.kernel.org/patch/10618713/
+---
+ drivers/iommu/arm-smmu-qcom.c | 1 +
+ drivers/iommu/arm-smmu.c      | 7 +++++++
+ drivers/iommu/arm-smmu.h      | 1 +
+ 3 files changed, 9 insertions(+)
 
-Sami
+diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+index 24c071c1d8b0..a13b229389d4 100644
+--- a/drivers/iommu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm-smmu-qcom.c
+@@ -32,6 +32,7 @@ static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
+ 
+ static const struct arm_smmu_impl qcom_smmu_impl = {
+ 	.reset = qcom_sdm845_smmu500_reset,
++	.stall = true,
+ };
+ 
+ struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu)
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index e622f4e33379..16b03fca9966 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -488,6 +488,11 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
+ 			    fsr, iova, fsynr, cbfrsynra, idx);
+ 
+ 	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
++
++	if (smmu->impl && smmu->impl->stall && (fsr & ARM_SMMU_FSR_SS))
++		arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_RESUME,
++				  ARM_SMMU_RESUME_TERMINATE);
++
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -659,6 +664,8 @@ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+ 		reg |= ARM_SMMU_SCTLR_S1_ASIDPNE;
+ 	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+ 		reg |= ARM_SMMU_SCTLR_E;
++	if (smmu->impl && smmu->impl->stall)
++		reg |= ARM_SMMU_SCTLR_CFCFG;
+ 
+ 	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_SCTLR, reg);
+ }
+diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+index 8d1cd54d82a6..d5134e0d5cce 100644
+--- a/drivers/iommu/arm-smmu.h
++++ b/drivers/iommu/arm-smmu.h
+@@ -386,6 +386,7 @@ struct arm_smmu_impl {
+ 	int (*init_context)(struct arm_smmu_domain *smmu_domain);
+ 	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+ 			 int status);
++	bool stall;
+ };
+ 
+ static inline void __iomem *arm_smmu_page(struct arm_smmu_device *smmu, int n)
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
