@@ -2,149 +2,130 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C714C55186
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8E8C55186
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8472F206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D68520738
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:38:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+kyl4n3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgDUVb3 (ORCPT
+        id S1726183AbgDUViu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:31:29 -0400
-Received: from mga06.intel.com ([134.134.136.31]:6255 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgDUVb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 17:31:28 -0400
-IronPort-SDR: yaYxE/S3DvKhjz2VR80Cy2FBsuaKAnsQV95xfv1bh0Pul+L8CFBBcGxUI6vk8+pUcmCYPynZfD
- TLS7r4NJ6WMA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 14:31:27 -0700
-IronPort-SDR: yu9wFQzmjUr5k9T4LttPFzX/986E+PU+0a2JvT1wc9VuuuSsTWryGQrFmD97RqGr6r+sipYwfo
- +NRT7opDs6tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
-   d="scan'208";a="258849293"
-Received: from rpiazzo-mobl.amr.corp.intel.com (HELO [10.254.108.210]) ([10.254.108.210])
-  by orsmga006.jf.intel.com with ESMTP; 21 Apr 2020 14:31:25 -0700
-Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-From:   Dave Hansen <dave.hansen@intel.com>
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>, linux-next@vger.kernel.org,
-        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
- <20200306132537.783769-3-imbrenda@linux.ibm.com>
- <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
- <20200415221754.GM2483@worktop.programming.kicks-ass.net>
- <a7c2eb84-94c2-a608-4b04-a740fa9a389d@intel.com>
- <20200416141547.29be5ea0@p-imbrenda>
- <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
- <20200416165900.68bd4dba@p-imbrenda>
- <a6b8728d-7382-9316-412d-dd48b5e7c41a@intel.com>
- <20200416183431.7216e1d1@p-imbrenda>
- <396a4ece-ec66-d023-2c7e-f09f84b358bc@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <cbaddd28-c5d3-61a2-84d8-c883fb3d6290@intel.com>
-Date:   Tue, 21 Apr 2020 14:31:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <396a4ece-ec66-d023-2c7e-f09f84b358bc@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 21 Apr 2020 17:38:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725850AbgDUViu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 17:38:50 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C7FC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:38:49 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id k1so6107wrx.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:38:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QgHQYt+tSYmVX1FszAKxvpLA+NP+fPMv9Zm76RuSMDY=;
+        b=G+kyl4n334TCZJ0kpD3OlF7g3uExQx5sGvCxzuEreMno1d9LZsTxQQGpRaQfmmcTr2
+         +tNWGLmqgt6B9XK230gc9C0rx5dMZ6PYeF+uAQ+EMgrGmIS9E1F2f67NpK3jw0QSSEXj
+         D+dum1sm57swdZ8Y65LkRCXCRRddFOcIurynbAnJyN3Ei1Xt6zN5CSQmvV4HFQKkQ8ny
+         dk+hES3vuLPeXma1MCbv6ZJpXdf/HDk0crpKTwQlOhfFHnuzYtL/gIrvWVNCNLgUDrCr
+         1GilaKl13y4DhBRJ2IlMM48Je6JjPuYSAgQ4S9ZTr7Umpfo8HbXFTUS5xdqAge8Ycugy
+         EUTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QgHQYt+tSYmVX1FszAKxvpLA+NP+fPMv9Zm76RuSMDY=;
+        b=plhYI1wBE3IKd6GzgxmVtbWvJBdAeeerNtQYSkCo7+ootdlkViwBhR7jhT69Ycfrxe
+         xcjlqrb7Bx+P+kNt94kUvo/kJJpRlpumA2yMnCDkT/mxo4cHzgsDI3DwNGKRf9NUg4p4
+         qpeJFTyImFBBKpPf6QgLvMx1FeiodH7QTsLTsF6p2DR7Ijs5ZTZGkyoE1mh9FpbhNuX+
+         xppsHzpGeffEda3ISA0R6u2lmp9Y04akUs/zBJaJHWIf5A3Xk5Gsws6YfTX79kQX7QqL
+         KdvM6Dm7YGLozxq5TWzNNhhDS1k3cq0Ewb1EBSF63mG3+OpgMy2E19gQz+92w8zQanTB
+         VO5A==
+X-Gm-Message-State: AGi0PuZetmUbaNM4AYxurGfWkFAGFI8zZCVHlAu30mVR8x2Ik78wRo4N
+        wc1UsSE0Ut/vGNPs/MIGvW4=
+X-Google-Smtp-Source: APiQypLq6kd84+XIo3taeW1VrsqbybXePe+7oakneNj52RAHgTQ9SX7DCMV5m5610uW5+gYBcRYJ+Q==
+X-Received: by 2002:adf:f34e:: with SMTP id e14mr15160051wrp.193.1587505128647;
+        Tue, 21 Apr 2020 14:38:48 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id m188sm4989305wme.47.2020.04.21.14.38.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Apr 2020 14:38:47 -0700 (PDT)
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        tim.c.chen@linux.intel.com, ying.huang@intel.com,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: [Patch v2 1/3] mm/swapfile.c: found_free could be represented by (tmp < max)
+Date:   Tue, 21 Apr 2020 21:38:22 +0000
+Message-Id: <20200421213824.8099-1-richard.weiyang@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/20 12:02 PM, Dave Hansen wrote:
-> On 4/16/20 9:34 AM, Claudio Imbrenda wrote:
->>> Ahh, so this is *just* intended to precede I/O done on the page, when
->>> a non-host entity is touching the memory?
->> yep
-> OK, so we've got to do an action that precedes *all* I/O to a page.
-> That's not too bad.
-> 
-> I still don't understand how this could work generally, though  There
-> are lots of places where I/O is done to a page without either going
-> through __test_set_page_writeback() or gup() with FOLL_PIN set.
-> 
-> sendfile() is probably the best example of this:
-> 
-> 	fd = open("/normal/ext4/file", O_RDONLY);
-> 	sendfile(socket_fd, fd, &off, count);
-> 
-> There's no gup in sight since the file doesn't have an address and it's
-> not being written to so there's no writeback.
-> 
-> How does sendfile work?
+This is not necessary to use the variable found_free to record the
+status. Just check tmp and max is enough.
 
-Did you manage to see if sendfile works (or any other operation that
-DMAs file-backed data without being preceded by a gup)?
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+---
+ mm/swapfile.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-I suspect it's actually not that hard to fix.  As long as you have a
-dma_ops for the devices in question either via dev->dma_ops or you add
-an s390 get_arch_vm_ops(), you can fix *all* the DMA sites, sendfile()
-included.
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 469ab417ed43..d203cdc6750a 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -601,7 +601,6 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+ {
+ 	struct percpu_cluster *cluster;
+ 	struct swap_cluster_info *ci;
+-	bool found_free;
+ 	unsigned long tmp, max;
+ 
+ new_cluster:
+@@ -623,8 +622,6 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+ 			return false;
+ 	}
+ 
+-	found_free = false;
+-
+ 	/*
+ 	 * Other CPUs can use our cluster if they can't find a free cluster,
+ 	 * check if there is still free entry in the cluster
+@@ -638,21 +635,19 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+ 	}
+ 	ci = lock_cluster(si, tmp);
+ 	while (tmp < max) {
+-		if (!si->swap_map[tmp]) {
+-			found_free = true;
++		if (!si->swap_map[tmp])
+ 			break;
+-		}
+ 		tmp++;
+ 	}
+ 	unlock_cluster(ci);
+-	if (!found_free) {
++	if (tmp >= max) {
+ 		cluster_set_null(&cluster->index);
+ 		goto new_cluster;
+ 	}
+ 	cluster->next = tmp + 1;
+ 	*offset = tmp;
+ 	*scan_base = tmp;
+-	return found_free;
++	return tmp < max;
+ }
+ 
+ static void __del_from_avail_list(struct swap_info_struct *p)
+-- 
+2.23.0
 
-BTW, device drivers do need to know how to use the DMA mapping API.  If
-s390 has drivers that need to be updated, I think that's vastly
-preferable to incomplete hooks in core mm code.
