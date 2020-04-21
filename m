@@ -2,56 +2,59 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F99C55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50729C55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA13E206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:02:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="juAWy4UL"
+	by mail.kernel.org (Postfix) with ESMTP id 335F620724
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:04:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587499457;
+	bh=ijsxzxLtyR1+w8+1bP8Fp637enB8g9lYXr9wOsUw4AI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=IdNxaa2iEr4k9qL/9yPC1RMvZL6C7MBlOFBC9MibHvfTNq8f/zrQ2NNFs7hMDUC7i
+	 LjCvsrg7PXz4Caih/MX1M0r5PTOYpmTNq6LtxXpvoHvND3bTEZOc8MyXOJsH1b2NkE
+	 /Ft5BGuxPQPmOBu4DTy1Jgb3bLePU263IVS/lAR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgDUUCn (ORCPT
+        id S1726372AbgDUUEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:02:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgDUUCm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:02:42 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFEA4C0610D5;
-        Tue, 21 Apr 2020 13:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=spA0yht61SX/nlft9ZjTifopY+knPCrtbt6HVKbDaj0=; b=juAWy4ULyiTHIGDhaOz70MnkO2
-        BT6z0CYCa5cdd84BF+WeivLQiDsLhiGLr9tDzFuLEQAhjC9reHf9SDRsXIWUNXl+MQ7Xa2fNXPW3X
-        rEa0o0OuLpk/zwwZ1n177BTwj50DadzLUJAtZFGQLgIfCM7vHANnuhBwkSYecbXCyZEqTBw9pKdKZ
-        bgdFcNgy+UZcMQu1y9Iri6a9uLxqZ0qpSprU4MRrNCFCrUj+PXbI8ixpDBOHTy/QhM0rhkxDeaLFS
-        M3jFi//gvDzqcHBMTiZwqV+vPKYuopQtZHhAedzTYxwoTNm5TS8st1O8bTjEPx04V8aYV1TwrevyU
-        FYol1LbA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQz6P-0004R8-Nf; Tue, 21 Apr 2020 20:02:41 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] Documentation: admin-guide: sysctl/kernel.h: fix
- underlines and headings
-Message-ID: <83eef4ae-8a31-aef6-038e-1d1de51a5c00@infradead.org>
-Date:   Tue, 21 Apr 2020 13:02:40 -0700
+        Tue, 21 Apr 2020 16:04:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgDUUEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 16:04:16 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A63C206B8;
+        Tue, 21 Apr 2020 20:04:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587499455;
+        bh=ijsxzxLtyR1+w8+1bP8Fp637enB8g9lYXr9wOsUw4AI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PkOMYxVo/pe9fJmGqjeSpxdSW0c205O2wCrdYxW5Z3nK0AoMSUhHztjY+zjll9XvF
+         u1EGc7gdqEwamlXe3A073MXfLcEynqZXDeIq7Lu2gKFrhtIrVy8P0O0z9RWvgDDlZy
+         10PYkRHvN/laN8w+VUAF/8tOFeMJtL6fyYwOgfME=
+Subject: Re: [PATCH 4.19 00/40] 4.19.117-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200420121444.178150063@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <b53be106-95a4-4ada-c8e8-22f149dc16e5@kernel.org>
+Date:   Tue, 21 Apr 2020 14:04:14 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200420121444.178150063@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,52 +62,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On 4/20/20 6:39 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.117 release.
+> There are 40 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 22 Apr 2020 12:10:36 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.117-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Fix underline length warnings and drop the ending semi-colon from the
-title so that they match other title lines.
+Compiled and booted on my test system. No dmesg regressions.
 
-linux-next-20200420/Documentation/admin-guide/sysctl/kernel.rst:281: WARNING: Title underline too short.
-
-hung_task_all_cpu_backtrace:
-================
-
-linux-next-20200420/Documentation/admin-guide/sysctl/kernel.rst:564: WARNING: Title underline too short.
-
-oops_all_cpu_backtrace:
-================
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
----
-
-@Andrew: Jonathan says that this needs to go via you since it fixes something
-that went via your tree. ("introduced by patch 93a0fba3de9a")
-
-
- Documentation/admin-guide/sysctl/kernel.rst |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
---- linux-next-20200420.orig/Documentation/admin-guide/sysctl/kernel.rst
-+++ linux-next-20200420/Documentation/admin-guide/sysctl/kernel.rst
-@@ -277,8 +277,8 @@ Path for the hotplug policy agent.
- Default value is "``/sbin/hotplug``".
- 
- 
--hung_task_all_cpu_backtrace:
--================
-+hung_task_all_cpu_backtrace
-+===========================
- 
- If this option is set, the kernel will send an NMI to all CPUs to dump
- their backtraces when a hung task is detected. This file shows up if
-@@ -560,8 +560,8 @@ rate for each task.
- scanned for a given scan.
- 
- 
--oops_all_cpu_backtrace:
--================
-+oops_all_cpu_backtrace
-+======================
- 
- If this option is set, the kernel will send an NMI to all CPUs to dump
- their backtraces when an oops event occurs. It should be used as a last
+thanks,
+-- Shuah
 
