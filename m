@@ -2,89 +2,116 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E34C55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D305AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67DB22082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2C32082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OFlCEJI0"
+	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="F5Ecnjii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgDUA0H (ORCPT
+        id S1726812AbgDUA2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:26:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58906 "EHLO
+        Mon, 20 Apr 2020 20:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726056AbgDUA0H (ORCPT
+        by vger.kernel.org with ESMTP id S1726341AbgDUA2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 20:26:07 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305F4C061A0E;
-        Mon, 20 Apr 2020 17:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=Ls7V5eRm0M7hlg17zUFuXhOBW3Ybwk4LdSmc8ysz8kM=; b=OFlCEJI0Io366vesuYb2P9vhAe
-        CkBOcnjzx01Bd7b6WH4cIGinoBL1/Mlt9krJ/lue36AuqKiiHPSKopfmatLmEZRkWI1qqJPBslU+E
-        b0S0lQFHewNCz+F9sLER8kUo5xfRFsDALZw7r3OSoEaiS4u6Yo4lolziRvNfcThsjTvkM7gUkiqyi
-        A+FhLIljNN9KmGxI3ROqKhu0Z6s1DLpKyKV7ugrSMIUSiQkd+w3cAXPGvsq5YDiuVGeI8D6ETo4Jg
-        vm1EXoMJN7PRKp2AP+RG2nCxkMfgBBUykwqmpl1GfcCqPor+hX2fnElpcNRZ1HdTRJETI5tc32Bto
-        7TJjtfSA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQgjj-0001U7-Vn; Tue, 21 Apr 2020 00:26:04 +0000
-To:     Vinod Koul <vkoul@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: drivers/dma/iop-adma.c cast build warnings
-Message-ID: <5019a2d6-bace-26dc-dda2-c263efc30185@infradead.org>
-Date:   Mon, 20 Apr 2020 17:26:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 20 Apr 2020 20:28:16 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B472C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:28:16 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ng8so633806pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 17:28:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cs.washington.edu; s=goo201206;
+        h=from:to:cc:subject:date:message-id;
+        bh=FMzj+KBAT9oKczxa74v3DQRv9Cfu8gbIxOZJWY/KwN4=;
+        b=F5Ecnjii1wOD6Z8F6N/EQ+BJvmRcCDXykdLJXNecm3nPcHmSBK8LG/V4JXCAT7Cxqp
+         2L9yQo5z9bM5Ftq6Sye8tV3ZsqCdsgQXBH3nSq0DSBdCoOXb9i8pPKoHRCmYHNiLy4T0
+         E+RWpg//Wu7E6ucg7Vm0c4gvUqHngOsJU/um4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FMzj+KBAT9oKczxa74v3DQRv9Cfu8gbIxOZJWY/KwN4=;
+        b=TRCljUQAECffKbFAUdRNWFKXFMrJa4HaNhAnBlR22d1S2UWp9doWyHSk3Fs8IfpmTg
+         KlAUlVAkagBIcOm0g4hrV7UefpEjPWwpb3fJhg+ynpgNQAwuft8SpiMg2ZK7MLwlmc9k
+         3Hbbiyl8B+gK3HlC0tltW1ez4VgnIq/uoddwvTfMY7KwVzUXxXlCtpwDFL2TDYScg3jp
+         QWIo3olaA9AVzePnYtQCudIapiJAVwXBan/4JamkuyWqzTDhmrRjKGEs/UIDSNZlYRKy
+         boiQhVvcxhwqfGfmO4DG09EyZAWumFAgpaeqB8yptgde6LDH3f5LbzoczG+gsUeZquvS
+         qhKQ==
+X-Gm-Message-State: AGi0PuZrmcdIcamphxnPR3Vosnb3xYFtrk+0ZNRk4/PdD/woAety52p3
+        uQVlQG0+uNKjJM1gIPXo0ogpuw==
+X-Google-Smtp-Source: APiQypJfRL/P24IvYTwSBmOVCK9iHgVzsETnPpci6H5O5Yc64EM8WVFWpSkRtjhEl62+jhSjad3bFQ==
+X-Received: by 2002:a17:90b:19c1:: with SMTP id nm1mr2367164pjb.73.1587428895331;
+        Mon, 20 Apr 2020 17:28:15 -0700 (PDT)
+Received: from localhost.localdomain (c-73-53-94-119.hsd1.wa.comcast.net. [73.53.94.119])
+        by smtp.gmail.com with ESMTPSA id f2sm547247pju.32.2020.04.20.17.28.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 17:28:14 -0700 (PDT)
+From:   Luke Nelson <lukenels@cs.washington.edu>
+X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
+To:     bpf@vger.kernel.org
+Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
+        netdev@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH bpf] bpf, riscv: Fix tail call count off by one in RV32 BPF JIT
+Date:   Mon, 20 Apr 2020 17:28:04 -0700
+Message-Id: <20200421002804.5118-1-luke.r.nels@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch fixes an off by one error in the RV32 JIT handling for BPF
+tail call. Currently, the code decrements TCC before checking if it
+is less than zero. This limits the maximum number of tail calls to 32
+instead of 33 as in other JITs. The fix is to instead check the old
+value of TCC before decrementing.
 
-On i386, when CONFIG_ARCH_DMA_ADDR_T_64BIT=y,
-but long and void* are only 32 bits, there are a few build warnings:
+Fixes: 5f316b65e99f ("riscv, bpf: Add RV32G eBPF JIT")
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+---
+ arch/riscv/net/bpf_jit_comp32.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-  CC [M]  drivers/dma/iop-adma.o
-../drivers/dma/iop-adma.c: In function 'iop_adma_alloc_chan_resources':
-../drivers/dma/iop-adma.c:448:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-   hw_desc = (char *) iop_chan->device->dma_desc_pool;
-             ^
-../drivers/dma/iop-adma.c:450:4: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-    (dma_addr_t) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
-    ^
-In file included from ../include/linux/printk.h:328:0,
-                 from ../include/linux/kernel.h:15,
-                 from ../include/linux/list.h:9,
-                 from ../include/linux/module.h:12,
-                 from ../drivers/dma/iop-adma.c:13:
-../drivers/dma/iop-adma.c: In function 'iop_adma_probe':
-../drivers/dma/iop-adma.c:1302:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-   (void *) adev->dma_desc_pool);
-   ^
-
-This is on linux-next 20200420.
-
-Are DMA addresses for this driver/hw device limited to 32 bits?
-
-thanks.
+diff --git a/arch/riscv/net/bpf_jit_comp32.c b/arch/riscv/net/bpf_jit_comp32.c
+index 302934177760..11083d4d5f2d 100644
+--- a/arch/riscv/net/bpf_jit_comp32.c
++++ b/arch/riscv/net/bpf_jit_comp32.c
+@@ -770,12 +770,13 @@ static int emit_bpf_tail_call(int insn, struct rv_jit_context *ctx)
+ 	emit_bcc(BPF_JGE, lo(idx_reg), RV_REG_T1, off, ctx);
+ 
+ 	/*
+-	 * if ((temp_tcc = tcc - 1) < 0)
++	 * temp_tcc = tcc - 1;
++	 * if (tcc < 0)
+ 	 *   goto out;
+ 	 */
+ 	emit(rv_addi(RV_REG_T1, RV_REG_TCC, -1), ctx);
+ 	off = (tc_ninsn - (ctx->ninsns - start_insn)) << 2;
+-	emit_bcc(BPF_JSLT, RV_REG_T1, RV_REG_ZERO, off, ctx);
++	emit_bcc(BPF_JSLT, RV_REG_TCC, RV_REG_ZERO, off, ctx);
+ 
+ 	/*
+ 	 * prog = array->ptrs[index];
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.17.1
+
