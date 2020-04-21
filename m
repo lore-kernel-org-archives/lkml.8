@@ -2,38 +2,38 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9CDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F0CC55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5CA20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A4F20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgDUJ1B (ORCPT
+        id S1728568AbgDUJ1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58292 "EHLO
+        Tue, 21 Apr 2020 05:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728517AbgDUJ1A (ORCPT
+        by vger.kernel.org with ESMTP id S1728528AbgDUJ1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:27:00 -0400
+        Tue, 21 Apr 2020 05:27:01 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569C1C061A10
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3DC6C061A0F
         for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 02:27:00 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jQpB4-0007xk-7I; Tue, 21 Apr 2020 11:26:50 +0200
+        id 1jQpB6-0007ym-PQ; Tue, 21 Apr 2020 11:26:53 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id B110A1002EE;
-        Tue, 21 Apr 2020 11:26:49 +0200 (CEST)
-Message-Id: <20200421092027.591582014@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2C987104099;
+        Tue, 21 Apr 2020 11:26:52 +0200 (CEST)
+Message-Id: <20200421092558.939985695@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 21 Apr 2020 11:20:27 +0200
+Date:   Tue, 21 Apr 2020 11:20:29 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Christoph Hellwig <hch@lst.de>,
@@ -43,7 +43,10 @@ Cc:     x86@kernel.org, Christoph Hellwig <hch@lst.de>,
         Thomas Lendacky <Thomas.Lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [patch V2 00/16] x86/tlb: Unexport per-CPU tlbstate
+Subject: [patch V2 02/16] x86/cpu: Uninline CR4 accessors
+References: <20200421092027.591582014@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-transfer-encoding: 8-bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
@@ -53,56 +56,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The per-CPU tlbstate contains sensitive information which should be really
-only accessible in core code. It is exported to modules because some inline
-functions which are required by KVM need access to it.
+cpu_tlbstate is exported because various TLB related functions need access
+to it, but cpu_tlbstate is sensitive information which should only be
+accessed by well contained kernel functions and not be directly exposed to
+modules.
 
-The first version can be found here:
+The various CR4 accessors require cpu_tlbstate as the CR4 shadow cache is
+located there.
 
-    https://lore.kernel.org/r/20200419203137.214111265@linutronix.de
+In preparation of unexporting cpu_tlbstate create a builtin function for
+manipulating CR4 and rework the various helpers to use it.
 
-Changes vs. V1:
+Export native_write_cr4() only when CONFIG_LKTDM=m.
 
-  - Reduced the number of exports by uninlining __flush_tlb_all() (Christoph)
+No functional change.
 
-  - Addressed fallout reported by 0-day
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/include/asm/tlbflush.h |   36 +++++-------------------------------
+ arch/x86/kernel/cpu/common.c    |   25 ++++++++++++++++++++++++-
+ arch/x86/kernel/process.c       |   11 +++++++++++
+ 3 files changed, 40 insertions(+), 32 deletions(-)
 
-  - Picked up acks/reviewed tags
-
-I left the LKDTM part alone for now and decided to keep the
-__flush_tlb_all() export for SVM as moving that errata handling to builtin
-code would required two exports in turn.
-
-The series is also available from git:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel x86/tlb
-
-Thanks,
-
-	tglx
-
-8<-----------------
- arch/x86/events/core.c             |   11 
- arch/x86/include/asm/mmu_context.h |   88 -------
- arch/x86/include/asm/paravirt.h    |   12 -
- arch/x86/include/asm/pgtable_32.h  |    2 
- arch/x86/include/asm/tlbflush.h    |  441 +++----------------------------------
- arch/x86/kernel/alternative.c      |   55 ++++
- arch/x86/kernel/cpu/common.c       |   25 ++
- arch/x86/kernel/cpu/mtrr/generic.c |    4 
- arch/x86/kernel/paravirt.c         |   21 -
- arch/x86/kernel/process.c          |   11 
- arch/x86/mm/init.c                 |   14 +
- arch/x86/mm/init_64.c              |    2 
- arch/x86/mm/ioremap.c              |    2 
- arch/x86/mm/kmmio.c                |    2 
- arch/x86/mm/mem_encrypt.c          |    2 
- arch/x86/mm/pat/set_memory.c       |    2 
- arch/x86/mm/pgtable.c              |    8 
- arch/x86/mm/pgtable_32.c           |    2 
- arch/x86/mm/tlb.c                  |  384 +++++++++++++++++++++++++++++++-
- arch/x86/platform/uv/tlb_uv.c      |    4 
- drivers/xen/privcmd.c              |    1 
- 21 files changed, 556 insertions(+), 537 deletions(-)
-
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -276,37 +276,25 @@ static inline bool nmi_uaccess_okay(void
+ 
+ #define nmi_uaccess_okay nmi_uaccess_okay
+ 
++void cr4_update_irqsoff(unsigned long set, unsigned long clear);
++unsigned long cr4_read_shadow(void);
++
+ /* Initialize cr4 shadow for this CPU. */
+ static inline void cr4_init_shadow(void)
+ {
+ 	this_cpu_write(cpu_tlbstate.cr4, __read_cr4());
+ }
+ 
+-static inline void __cr4_set(unsigned long cr4)
+-{
+-	lockdep_assert_irqs_disabled();
+-	this_cpu_write(cpu_tlbstate.cr4, cr4);
+-	__write_cr4(cr4);
+-}
+-
+ /* Set in this cpu's CR4. */
+ static inline void cr4_set_bits_irqsoff(unsigned long mask)
+ {
+-	unsigned long cr4;
+-
+-	cr4 = this_cpu_read(cpu_tlbstate.cr4);
+-	if ((cr4 | mask) != cr4)
+-		__cr4_set(cr4 | mask);
++	cr4_update_irqsoff(mask, 0);
+ }
+ 
+ /* Clear in this cpu's CR4. */
+ static inline void cr4_clear_bits_irqsoff(unsigned long mask)
+ {
+-	unsigned long cr4;
+-
+-	cr4 = this_cpu_read(cpu_tlbstate.cr4);
+-	if ((cr4 & ~mask) != cr4)
+-		__cr4_set(cr4 & ~mask);
++	cr4_update_irqsoff(0, mask);
+ }
+ 
+ /* Set in this cpu's CR4. */
+@@ -329,20 +317,6 @@ static inline void cr4_clear_bits(unsign
+ 	local_irq_restore(flags);
+ }
+ 
+-static inline void cr4_toggle_bits_irqsoff(unsigned long mask)
+-{
+-	unsigned long cr4;
+-
+-	cr4 = this_cpu_read(cpu_tlbstate.cr4);
+-	__cr4_set(cr4 ^ mask);
+-}
+-
+-/* Read the CR4 shadow. */
+-static inline unsigned long cr4_read_shadow(void)
+-{
+-	return this_cpu_read(cpu_tlbstate.cr4);
+-}
+-
+ /*
+  * Mark all other ASIDs as invalid, preserves the current.
+  */
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -387,7 +387,30 @@ void native_write_cr4(unsigned long val)
+ 			  bits_missing);
+ 	}
+ }
+-EXPORT_SYMBOL(native_write_cr4);
++#if IS_MODULE(CONFIG_LKDTM)
++EXPORT_SYMBOL_GPL(native_write_cr4);
++#endif
++
++void cr4_update_irqsoff(unsigned long set, unsigned long clear)
++{
++	unsigned long newval, cr4 = this_cpu_read(cpu_tlbstate.cr4);
++
++	lockdep_assert_irqs_disabled();
++
++	newval = (cr4 & ~clear) | set;
++	if (newval != cr4) {
++		this_cpu_write(cpu_tlbstate.cr4, newval);
++		__write_cr4(newval);
++	}
++}
++EXPORT_SYMBOL(cr4_update_irqsoff);
++
++/* Read the CR4 shadow. */
++unsigned long cr4_read_shadow(void)
++{
++	return this_cpu_read(cpu_tlbstate.cr4);
++}
++EXPORT_SYMBOL_GPL(cr4_read_shadow);
+ 
+ void cr4_init(void)
+ {
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -612,6 +612,17 @@ void speculation_ctrl_update_current(voi
+ 	preempt_enable();
+ }
+ 
++static inline void cr4_toggle_bits_irqsoff(unsigned long mask)
++{
++	unsigned long newval, cr4 = this_cpu_read(cpu_tlbstate.cr4);
++
++	newval = cr4 ^ mask;
++	if (newval != cr4) {
++		this_cpu_write(cpu_tlbstate.cr4, newval);
++		__write_cr4(newval);
++	}
++}
++
+ void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
+ {
+ 	unsigned long tifp, tifn;
 
