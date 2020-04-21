@@ -2,100 +2,153 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF20C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149D3C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF3C9206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05F920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="M2eFPR91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgDUSLF convert rfc822-to-8bit (ORCPT
+        id S1729058AbgDUSNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:11:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44520 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbgDUSLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:11:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EB498ADDD;
-        Tue, 21 Apr 2020 18:11:01 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 11:07:33 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Marc Zyngier <maz@kernel.org>, tglx@linutronix.de,
-        kvm@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>,
-        peterz@infradead.org, torvalds@linux-foundation.org,
-        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, linux-mips@vger.kernel.org,
-        Paul Mackerras <paulus@ozlabs.org>, joel@joelfernandes.org,
-        will@kernel.org, kvmarm@lists.cs.columbia.edu
-Subject: Re: [PATCH v2] kvm: Replace vcpu->swait with rcuwait
-Message-ID: <20200421180733.xrl5ta6cuo2weuva@linux-p48b>
-References: <20200324044453.15733-1-dave@stgolabs.net>
- <20200324044453.15733-4-dave@stgolabs.net>
- <20200420164132.tjzk5ebx35m66yce@linux-p48b>
- <418acdb5001a9ae836095b7187338085@misterjones.org>
- <20200420205641.6sgsllj6pmsnwrvp@linux-p48b>
- <f7cc83fe-3e91-0057-9af2-26c201456689@redhat.com>
- <20200420215014.sarodevmhphnkkn7@linux-p48b>
- <02e1b00d-a8ea-a947-bbe6-0b1380aa7ec4@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <02e1b00d-a8ea-a947-bbe6-0b1380aa7ec4@redhat.com>
-User-Agent: NeoMutt/20180716
+        Tue, 21 Apr 2020 14:13:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgDUSNs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:13:48 -0400
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E651AC0610D5;
+        Tue, 21 Apr 2020 11:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587492826;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=k1WX4cUqtiApT75DRAINIjIc6nKu2ha9Txwb3LzKu4k=;
+        b=M2eFPR91fHIYUBEZaW2RUIQ1xy3IvUva7gc39isg9NcwT9CrPfpMV2m8wjCAV2+xyP
+        mlmMklGiMkqOgtUwSCQmYg9nZtO20wY9XeCEkC8w9k52sFdqt9dWxOo6QGrLEdL2OMg5
+        I8SBZtCxrnX/dR8Wnz1yfBIdHlH2+p20QY3qgLGG575MH0vQvcVjjz6twtF5PnXKFqiF
+        wiIn5OBgmjGmCGKpWDM5JzQovc+uY3oygswy9K4/hcIkaRIyigbd7kjDQSqjsbJuBGkh
+        7JeKB2t13TLyCRJ2p2TriT0fM+y+h90p3BlR7X5jHLXmADu2oWYArnNGv77ZjFoF+jUG
+        97yg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw43oXkQ="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.5.0 DYNA|AUTH)
+        with ESMTPSA id g06d2dw3LIDdJlX
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 21 Apr 2020 20:13:39 +0200 (CEST)
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200421180220.GB37466@atomide.com>
+Date:   Tue, 21 Apr 2020 20:13:39 +0200
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com>
+References: <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com> <20200416184638.GI37466@atomide.com> <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com> <20200417164340.3d9043d1@aktux> <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com> <20200417150721.GL37466@atomide.com> <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com> <20200420150802.GR37466@atomide.com> <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com> <20200421085336.32cf8ffe@aktux> <20200421180220.GB37466@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020, Paolo Bonzini wrote:
+Hi Tony,
 
->On 20/04/20 23:50, Davidlohr Bueso wrote:
->> On Mon, 20 Apr 2020, Paolo Bonzini wrote:
->>
->>> On 20/04/20 22:56, Davidlohr Bueso wrote:
->>>> On Mon, 20 Apr 2020, Marc Zyngier wrote:
->>>>
->>>>> This looks like a change in the semantics of the tracepoint. Before
->>>>> this
->>>>> change, 'waited' would have been true if the vcpu waited at all. Here,
->>>>> you'd
->>>>> have false if it has been interrupted by a signal, even if the vcpu
->>>>> has waited
->>>>> for a period of time.
->>>>
->>>> Hmm but sleeps are now uninterruptible as we're using TASK_IDLE.
->>>
->>> Hold on, does that mean that you can't anymore send a signal in order to
->>> kick a thread out of KVM_RUN?  Or am I just misunderstanding?
->>
->> Considering that the return value of the interruptible wait is not
->> checked, I would not think this breaks KVM_RUN.
->
->What return value?  kvm_vcpu_check_block checks signal_pending, so you
->could have a case where the signal is injected but you're not woken up.
->
->Admittedly I am not familiar with how TASK_* work under the hood, but it
->does seem to be like that.
+> Am 21.04.2020 um 20:02 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * Andreas Kemnade <andreas@kemnade.info> [200421 06:54]:
+>> On Mon, 20 Apr 2020 23:11:18 +0200
+>> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+>>> The only maybe important observation was when I disabled all
+>>> kernel modules except *hdq*.ko and *bq27*.ko. Then I did only
+>>> get an emergency shell so that it is quite similar to the
+>>> scenario Andreas has tested. With this setup it did work.
+>>>=20
+>> So I guess without idling uarts?
+>>=20
+>>> I then tried to reenable other kernel modules but the result
+>>> wasn't convincing that it gives a reliable result.
+>>>=20
+>>> So I have still no clear indication when the problem occurs and
+>>> when not.
+>>>=20
+>> Hmm, last summer I had problems even without that patch reading
+>> temperature while doing umts transfers. Maybe there are some
+>> connections,
+>> maybe not. For that scenario we might have emc issues, thermal =
+problems
+>> or a real kernel problem.
+>=20
+> I have confimed here that logicpd torpedo devkit with battery
+> works just fine while entering off mode during idle. I can see
+> the temperature just fine with:
+>=20
+> # cat /sys/class/power_supply/bq27000-battery/uevent
+> POWER_SUPPLY_NAME=3Dbq27000-battery
+> POWER_SUPPLY_STATUS=3DCharging
+> POWER_SUPPLY_PRESENT=3D1
+> POWER_SUPPLY_VOLTAGE_NOW=3D3829000
+> POWER_SUPPLY_CURRENT_NOW=3D-592084
+> POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
+> POWER_SUPPLY_TEMP=3D306
+> POWER_SUPPLY_TECHNOLOGY=3DLi-ion
+> POWER_SUPPLY_CHARGE_FULL_DESIGN=3D2056320
+> POWER_SUPPLY_CYCLE_COUNT=3D0
+> POWER_SUPPLY_POWER_AVG=3D0
+> POWER_SUPPLY_MANUFACTURER=3DTexas Instruments
+>=20
+> This is 37xx though, maybe you have 35xx and there's some errata
+> that we're not handling?
 
-I should have looked closer here - I was thinking about the return value
-of rcuwait_wait_event. Yes, that signal_pending check you mention makes
-the sleep semantics change bogus as interruptible is no longer just to
-avoid contributing to the load balance.
+No, it is dm3730 on three different units I have tried.
 
-And yes, unfortunately adding prepare_to and finish_rcuwait() looks like the
-most reasonable approach to keeping the tracepoint semantics. I also considered
-extending rcuwait_wait_event() by another parameter to pass back to the caller
-if there was any wait at all, but that enlarges the call and is probably less
-generic.
+> I'm only seeing "2.7. HDQTM/1-Wire=C2=AE Communication Constraints"
+> for external pull-up resitor in 34xx errata at [0].
+>=20
+> I wonder if wrong external pull could cause flakyeness after
+> enabling the hdq module?
 
-I'll send another version keeping the current sleep and tracepoint semantics.
+I have checked and we have 10 kOhm pullup to 1.8 V and a 470 Ohm
+series resistor.
 
-Thanks,
-Davidlohr
+>=20
+> If nothing else helps, you could try to block idle for hdq
+> module, but I have a feeling that's a workaround for something
+> else.
+
+Well, what helps is reverting the patch and using the old driver
+(which did work for several years). So I would not assume that
+there is a hardware influence. It seems to be something the new
+driver is doing differently.
+
+I need more time to understand and trace this issue on what it
+depends... It may depend on the sequence some other modules are
+loaded and what the user-space (udevd) is doing in the meantime.
+
+>=20
+> Regards,
+>=20
+> Tony
+>=20
+> [0] =
+https://www.ti.com/pdfs/wtbu/SWPZ009A_OMAP4430_Errata_Public_vA.pdf
+>=20
+
+BR and thanks,
+Nikolaus
+
