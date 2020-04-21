@@ -6,109 +6,70 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75B0C54FCB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475B9C38A30
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF73D2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223A52078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 02:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgDUCmN (ORCPT
+        id S1727820AbgDUCmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 22:42:13 -0400
-Received: from m176115.mail.qiye.163.com ([59.111.176.115]:26947 "EHLO
-        m176115.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgDUCmM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 22:42:12 -0400
-Received: from ubuntu.localdomain (unknown [157.0.31.122])
-        by m176115.mail.qiye.163.com (Hmail) with ESMTPA id CAD0E664EC6;
-        Tue, 21 Apr 2020 10:42:05 +0800 (CST)
-From:   Bernard Zhao <bernard@vivo.com>
-To:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: [PATCH V2] amdgpu: remove unnecessary condition check
-Date:   Mon, 20 Apr 2020 19:41:59 -0700
-Message-Id: <20200421024159.126753-1-bernard@vivo.com>
-X-Mailer: git-send-email 2.26.2
-Reply-To: 1587180037-113840-1-git-send-email-bernard@vivo.com
+        Mon, 20 Apr 2020 22:42:23 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34460 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726024AbgDUCmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 22:42:22 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 379CB910E53135906621;
+        Tue, 21 Apr 2020 10:42:20 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Apr 2020
+ 10:42:10 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <hariprasad.kelam@gmail.com>
+CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] staging: rtl8723bs: remove unused variable 'pregistrypriv'
+Date:   Tue, 21 Apr 2020 10:41:45 +0800
+Message-ID: <20200421024145.43576-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVPT05LS0tKTEpNTUpIQ1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6K006Kgw6KTgrFgMtAk4qCS5J
-        ETpPCS9VSlVKTkNMT0hNQklCSUhIVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
-        S1VISlVKSUlZV1kIAVlBSUJDTjcG
-X-HM-Tid: 0a719a9d34659373kuwscad0e664ec6
+Content-Type: text/plain
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to if check again, maybe we could merge
-into the above else branch.
+drivers/staging/rtl8723bs/hal/sdio_halinit.c: In function HalRxAggr8723BSdio:
+drivers/staging/rtl8723bs/hal/sdio_halinit.c:547:24: warning: variable pregistrypriv set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
-
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
-Changes since V1:
-*commit message improve
-*code style refactoring
+ drivers/staging/rtl8723bs/hal/sdio_halinit.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Link for V1:
-* https://lore.kernel.org/patchwork/patch/1226587/
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index 9dff792c9290..a64eeb07bec4 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -660,13 +660,15 @@ static int reserve_bo_and_vm(struct kgd_mem *mem,
+diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+index 7853af53051d..e42d8c18e1ae 100644
+--- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
++++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+@@ -544,13 +544,9 @@ static void _InitRetryFunction(struct adapter *padapter)
  
- 	ret = ttm_eu_reserve_buffers(&ctx->ticket, &ctx->list,
- 				     false, &ctx->duplicates);
--	if (!ret)
--		ctx->reserved = true;
--	else {
-+
-+	if (ret) {
- 		pr_err("Failed to reserve buffers in ttm\n");
- 		kfree(ctx->vm_pd);
- 		ctx->vm_pd = NULL;
- 	}
-+	else {
-+		ctx->reserved = true;
-+	}
+ static void HalRxAggr8723BSdio(struct adapter *padapter)
+ {
+-	struct registry_priv *pregistrypriv;
+ 	u8 valueDMATimeout;
+ 	u8 valueDMAPageCount;
  
- 	return ret;
- }
-@@ -733,15 +735,15 @@ static int reserve_bo_and_cond_vms(struct kgd_mem *mem,
+-
+-	pregistrypriv = &padapter->registrypriv;
+-
+ 	valueDMATimeout = 0x06;
+ 	valueDMAPageCount = 0x06;
  
- 	ret = ttm_eu_reserve_buffers(&ctx->ticket, &ctx->list,
- 				     false, &ctx->duplicates);
--	if (!ret)
--		ctx->reserved = true;
--	else
--		pr_err("Failed to reserve buffers in ttm.\n");
- 
- 	if (ret) {
-+		pr_err("Failed to reserve buffers in ttm.\n");
- 		kfree(ctx->vm_pd);
- 		ctx->vm_pd = NULL;
- 	}
-+	else {
-+		ctx->reserved = true;
-+	}
- 
- 	return ret;
- }
 -- 
-2.26.2
+2.17.1
+
 
