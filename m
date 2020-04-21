@@ -2,114 +2,119 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857F6C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1D2C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 655B9206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:25:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OFLiLcky"
+	by mail.kernel.org (Postfix) with ESMTP id 97167206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbgDUOZx (ORCPT
+        id S1729038AbgDUOZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:25:53 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52444 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgDUOZx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:25:53 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LECPuf104152;
-        Tue, 21 Apr 2020 14:16:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=KH7JSrOcrG0YkK05NQHdKXeBwOzqSpU/M/EkFRPsDJU=;
- b=OFLiLckynNhGGR/eAiiEYrtmckqtERtrg3zbWlTXTubdUgYeX6D8zCfogsqLvU5hIMy1
- nLESg71meqYz9dk8pt5Qxsf7x3FWIDchid7Dtuu1yrZ98A4heR6OSFHEg5OV0XTDhEaY
- fKD+nKPUYNw093M51+HnMNsMQ49lg+6lVI2UAntsxguELIUpy20Ju5GDDeobCplLYtlD
- yGZwDSjp4c4r1lfz0Wix1mQzL901RpGgx0gwIfNaS0+2Arvnv6SoV1fh/Z2QVwXEw61S
- LyM+gtTLd5DFsWH6iHv/mYHG0a8GiWPzsSjhrhWXe9WVxZIO9EfGj/JpAySuPxAtmXb2 WA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30fsgkw880-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 14:16:40 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LEBd5o143244;
-        Tue, 21 Apr 2020 14:14:39 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 30gb3sa2jh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 14:14:39 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03LEEaDS007921;
-        Tue, 21 Apr 2020 14:14:36 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Apr 2020 07:14:35 -0700
-Date:   Tue, 21 Apr 2020 17:14:26 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, bp@alien8.de,
-        james.morse@arm.com, helgaas@kernel.org, lenb@kernel.org,
-        tony.luck@intel.com, gregkh@linuxfoundation.org,
-        zhangliguang@linux.alibaba.com, tglx@linutronix.de,
-        linuxarm@huawei.com, jonathan.cameron@huawei.com,
-        tanxiaofei@huawei.com, yangyicong@hisilicon.com
-Subject: Re: [RESEND PATCH v7 4/6] ACPI / APEI: Add callback for ARM HW
- errors to the GHES notifier
-Message-ID: <20200421141426.GD2682@kadam>
-References: <ShijuJose>
- <20200421132136.1595-1-shiju.jose@huawei.com>
- <20200421132136.1595-5-shiju.jose@huawei.com>
+        Tue, 21 Apr 2020 10:25:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:35814 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726628AbgDUOZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:25:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2656131B;
+        Tue, 21 Apr 2020 07:25:56 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A84FA3F68F;
+        Tue, 21 Apr 2020 07:25:53 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 15:25:51 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        Paul Turner <pjt@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Josh Don <joshdon@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 0/4] sched/rt: Distribute tasks in find_lowest_rq()
+Message-ID: <20200421142551.hadvuw65vshzp6fe@e107158-lin.cambridge.arm.com>
+References: <20200414150556.10920-1-qais.yousef@arm.com>
+ <jhjh7xlvqqe.mognet@arm.com>
+ <20200421121305.ziu3dfqwo7cw6ymu@e107158-lin.cambridge.arm.com>
+ <jhjv9ltkmel.mognet@arm.com>
+ <CAKfTPtB9gYh_7qV0y_t7HRg7HOpYfkJ96fXCYFFTBmcJxnnXEA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200421132136.1595-5-shiju.jose@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9597 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004210112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9597 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004210112
+In-Reply-To: <CAKfTPtB9gYh_7qV0y_t7HRg7HOpYfkJ96fXCYFFTBmcJxnnXEA@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 02:21:34PM +0100, Shiju Jose wrote:
->  static BLOCKING_NOTIFIER_HEAD(ghes_event_notify_list);
-> @@ -670,12 +692,7 @@ static void ghes_do_proc(struct ghes *ghes,
->  			pr_warn(GHES_PFX "ghes event queue full\n");
->  			break;
->  		}
-> -
-> -		if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
-> -			struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
-> -
-> -			log_arm_hw_error(err);
-> -		} else {
-> +		{
->  			void *err = acpi_hest_get_payload(gdata);
+On 04/21/20 15:28, Vincent Guittot wrote:
+> On Tue, 21 Apr 2020 at 15:18, Valentin Schneider
+> <valentin.schneider@arm.com> wrote:
+> >
+> >
+> > On 21/04/20 13:13, Qais Yousef wrote:
+> > > On 04/14/20 19:58, Valentin Schneider wrote:
+> > >>
+> > >> I'm a bit wary about such blanket changes. I feel like most places impacted
+> > >> by this change don't gain anything by using the random thing. In sched land
+> > >> that would be:
+> > >
+> > > The API has always been clear that cpumask_any return a random cpu within the
+> > > mask. And the fact it's a one liner with cpumask_first() directly visible,
+> > > a user made the choice to stick to cpumask_any() indicates that that's what
+> > > they wanted.
+> > >
+> > > Probably a lot of them they don't care what cpu is returned and happy with the
+> > > random value. I don't see why it has to have an effect. Some could benefit,
+> > > like my use case here. Or others truly don't care, then it's fine to return
+> > > anything, as requested.
+> > >
+> >
+> > Exactly, *some* (which AFAICT is a minority) might benefit. So why should
+> > all the others pay the price for a functionality they do not need?
+> >
+> > I don't think your change would actually cause a splat somewhere; my point
+> > is about changing existing behaviour without having a story for it. The
+> > thing said 'pick a "random" cpu', sure, but it never did that, it always
+> > picked the first.
+> >
+> > I've pointed out two examples that want to be cpumask_first(), and I'm
+> > absolutely certain there are more than these two out there. What if folks
+> > ran some performance test and were completely fine with the _first()
+> > behaviour? What tells you randomness won't degrade some cases?
+> 
+> I tend to agree that any doesn't mean random and using a random cpu
+> will create strange behavior
+> 
+> One example is the irq affinity on b.L system. Right now, the irq are
+> always pinned to the same CPU (the 1st one which is most probably a
+> Little) but with your change we can imagine that this will change and
+> might ever change over 2 consecutives boot if for whatever reason (and
+> this happen) the drivers are not probed in the same order . At the end
+> you will run some tests with irq on little and other time irq on big.
+> And more generally speaking and a SMP system can be impacted because
+> the irq will not be pinned to the same CPU with always the same other
+> irqs
 
-This is ugly.  Just move the "void *err;" declaration to the top of the
-function so we can delete this block.
+For me this highlights issues that needs to be addressed. Which I think are
+easy enough to address. But I won't push too hard for this.
 
->  
->  			log_non_standard_event(sec_type, fru_id, fru_text,
-> -- 
+Thanks
 
-regards,
-dan carpenter
+--
+Qais Yousef
