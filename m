@@ -2,160 +2,218 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C31C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59DDC55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A762F206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1274206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eFCf/fNP"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="lomhw53N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgDUKu6 (ORCPT
+        id S1728694AbgDUKvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 06:50:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42964 "EHLO
+        Tue, 21 Apr 2020 06:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgDUKu4 (ORCPT
+        with ESMTP id S1728479AbgDUKvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 06:50:56 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D61C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 03:50:56 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id v18so6274702qvx.9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 03:50:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X97gowXSXVuj90hXQ6kQpDZGS51aik4UM3Tpue+54yo=;
-        b=eFCf/fNPi3IrRTS06krXS2ZMEjJX8GKQ2J7VKIUNFHjMEHXoiLJBPNpxCePML0yGxn
-         jSN6Bi1BtJqbNIv6rNs4TSS/q33MdfZzi2ZsR5r2KFTIxgOclA+Q1+ZpLaHBvwRSPajI
-         LidR7KucPFXVKb2H1IHYcI7Nt6kxMIrbf1YbmLsHx1Lba0zX3QKpn5UxbaRDjqqzGyGO
-         o2AauplIbuT6czoZn4D20ciho6JwKS6XcD4Fxp0CZhjbNIRoEZkhX2aNIHRRIf0y4c4N
-         3q3v6rMwxGZuPM/4wRHTFaAkR1k3wIF/FqoVfnQVAw5vlry/yu1YUuHI3HEcMd4YAp/y
-         2xnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X97gowXSXVuj90hXQ6kQpDZGS51aik4UM3Tpue+54yo=;
-        b=Y+uLtgy7gIK0uH30XOl6BwXK+nJ/azmKzjVY2+YkBb5GGmmqrc8h4LZFvFyjLU2yt1
-         lD2Qi/7zHXQl9vyNl5ZvwqPG5O1dfc/qv0qQ5f++Reiif+F8WLxw+INzNloIU36YVm+B
-         GcwTBenaUzjuAsqaMFFExVTBOz9suv+RHkisocOVLvwpYPQ1iajnQMiHUYd0gebnbjZx
-         //Tqivhbwh4wV0GVd4IJeZ5Fqtu6dOEhj5rdqJW9JcgpXi9l25aZ2CqBqVMQLMB1gyDt
-         CpIj1bjYEpTZElYj4MSwzWLnBvYHTx/rdOJ3ZvwQVcNvajLDkQ+Mtq/MT7JZcOq+aP46
-         YGAg==
-X-Gm-Message-State: AGi0Puayda7g6ADufcce0VzH0quZLP6Zt9iUTkiFC+bmv6Vp8vKsPe9V
-        KrmRsyHRsAZB7sz89GYxmnegMgAKL8vgnJy4kV+Vtg==
-X-Google-Smtp-Source: APiQypJV/TkyKYL3JG6ZElcl+LDXWVoV5Zz2Nn/25blcKt7NCRqYuax1dcadhWUfAfrBLAbzu71QX7wTora2Y1MAEUU=
-X-Received: by 2002:ad4:4d06:: with SMTP id l6mr5926201qvl.34.1587466255012;
- Tue, 21 Apr 2020 03:50:55 -0700 (PDT)
+        Tue, 21 Apr 2020 06:51:05 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CF0C061A0F;
+        Tue, 21 Apr 2020 03:51:04 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3C07E23059;
+        Tue, 21 Apr 2020 12:51:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587466263;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OSieuTLDTWJZlGZSja3Um3+Gmk1FrxNg3rEeH5FZD9Y=;
+        b=lomhw53NjPGviUGO5c6ReoggM7XHM605itwqG5h1JP3Dpj8r6pXCY28LtwhLVpYpY40Ihd
+        Ku3dGMHKcp68tgLHGsSTqOfceoAzyHJUvzqjunut4xiPDyHEsdpt6Wwkcg8Nu0BdYzkTzj
+        pFap2F6Dl6lKIfJ4b7WMMOlrxShKN0w=
 MIME-Version: 1.0
-References: <0000000000004ede4505a3cab90e@google.com>
-In-Reply-To: <0000000000004ede4505a3cab90e@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 21 Apr 2020 12:50:43 +0200
-Message-ID: <CACT4Y+ZuGaeyyVsCkqJRo4+0hoMP8Eq_JTuU0L-NFqTrQP_czA@mail.gmail.com>
-Subject: Re: linux-next test error: WARNING: suspicious RCU usage in ipmr_device_event
-To:     syzbot <syzbot+21f82f61c24a7295edf5@syzkaller.appspotmail.com>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     David Miller <davem@davemloft.net>, kuba@kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 21 Apr 2020 12:50:59 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
+ regmap
+In-Reply-To: <f82706a8596436d13642c49e26233133@walle.cc>
+References: <20200402203656.27047-1-michael@walle.cc>
+ <20200402203656.27047-11-michael@walle.cc>
+ <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
+ <f82706a8596436d13642c49e26233133@walle.cc>
+Message-ID: <3ef94b68893e2fb3075bd5236d0fa6ee@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 3C07E23059
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[23];
+         NEURAL_HAM(-0.00)[-0.743];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,baylibre.com,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 12:46 PM syzbot
-<syzbot+21f82f61c24a7295edf5@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    39a314cd Add linux-next specific files for 20200421
-> git tree:       linux-next
+Hi Linus,
 
-+linux-next, Stephen for a new linux-next breakage
+Am 2020-04-17 08:34, schrieb Michael Walle:
+> Hi Linus,
+> 
+> Am 2020-04-16 11:27, schrieb Linus Walleij:
+>> On Thu, Apr 2, 2020 at 10:37 PM Michael Walle <michael@walle.cc> 
+>> wrote:
+>> 
+>>> There are quite a lot simple GPIO controller which are using regmap 
+>>> to
+>>> access the hardware. This driver tries to be a base to unify existing
+>>> code into one place. This won't cover everything but it should be a 
+>>> good
+>>> starting point.
+>>> 
+>>> It does not implement its own irq_chip because there is already a
+>>> generic one for regmap based devices. Instead, the irq_chip will be
+>>> instanciated in the parent driver and its irq domain will be 
+>>> associate
+>>> to this driver.
+>>> 
+>>> For now it consists of the usual registers, like set (and an optional
+>>> clear) data register, an input register and direction registers.
+>>> Out-of-the-box, it supports consecutive register mappings and 
+>>> mappings
+>>> where the registers have gaps between them with a linear mapping 
+>>> between
+>>> GPIO offset and bit position. For weirder mappings the user can 
+>>> register
+>>> its own .xlate().
+>>> 
+>>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> 
+>> Overall I really like this driver and I think we should merge is as 
+>> soon
+>> as it is in reasonable shape and then improve on top so we can start
+>> migrating drivers to it.
+>> 
+>>> +static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int 
+>>> offset)
+>>> +{
+>>> +       struct gpio_regmap_data *data = gpiochip_get_data(chip);
+>>> +       struct gpio_regmap *gpio = data->gpio;
+>>> +
+>>> +       /* the user might have its own .to_irq callback */
+>>> +       if (gpio->to_irq)
+>>> +               return gpio->to_irq(gpio, offset);
+>>> +
+>>> +       return irq_create_mapping(gpio->irq_domain, offset);
+>> 
+>> I think that should at least be irq_find_mapping(), the mapping should
+>> definately not be created by the .to_irq() callback since that is just
+>> a convenience function.
+> 
+> what do you mean by conenience function? are there other ways? if you 
+> use
+> irq_find_mapping() who will create the mappings? most gpio drivers use 
+> a
+> similar function like gpio_regmap_to_irq().
+> 
+>> 
+>>> +       if (gpio->irq_domain)
+>>> +               chip->to_irq = gpio_regmap_to_irq;
+>> 
+>> I don't know about this.
+>> (...)
+>>> + * @irq_domain:                (Optional) IRQ domain if the 
+>>> controller is
+>>> + *                     interrupt-capable
+>> (...)
+>>> +       struct irq_domain *irq_domain;
+>> 
+>> I don't think this is a good storage place for the irqdomain, we 
+>> already have
+>> gpio_irq_chip inside gpio_chip and that has an irqdomain, we should
+>> strive to reuse that infrastructure also for regmap GPIO I think, for 
+>> now
+>> I would just leave .to_irq() out of this and let the driver deal with 
+>> any
+>> irqs.
+> 
+> How would a driver attach the to_irq callback then? At the moment, the
+> gpio_regmap doesn't expose the gpio_chip. So either we have to do that 
+> or
+> the config still have to have a .to_irq property.
 
-> console output: https://syzkaller.appspot.com/x/log.txt?x=127ede73e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8ef80c3f5d43f5bd
-> dashboard link: https://syzkaller.appspot.com/bug?extid=21f82f61c24a7295edf5
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+21f82f61c24a7295edf5@syzkaller.appspotmail.com
->
-> tipc: TX() has been purged, node left!
-> =============================
-> WARNING: suspicious RCU usage
-> 5.7.0-rc2-next-20200421-syzkaller #0 Not tainted
-> -----------------------------
-> net/ipv4/ipmr.c:1757 RCU-list traversed in non-reader section!!
->
-> other info that might help us debug this:
->
->
-> rcu_scheduler_active = 2, debug_locks = 1
-> 4 locks held by kworker/u4:0/7:
->  #0: ffff8880a9772138 ((wq_completion)netns){+.+.}-{0:0}, at: __write_once_size include/linux/compiler.h:250 [inline]
->  #0: ffff8880a9772138 ((wq_completion)netns){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
->  #0: ffff8880a9772138 ((wq_completion)netns){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
->  #0: ffff8880a9772138 ((wq_completion)netns){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
->  #0: ffff8880a9772138 ((wq_completion)netns){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:615 [inline]
->  #0: ffff8880a9772138 ((wq_completion)netns){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
->  #0: ffff8880a9772138 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work+0x844/0x16a0 kernel/workqueue.c:2239
->  #1: ffffc90000cdfdc0 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work+0x878/0x16a0 kernel/workqueue.c:2243
->  #2: ffffffff8a5a2b70 (pernet_ops_rwsem){++++}-{3:3}, at: cleanup_net+0x9b/0xa50 net/core/net_namespace.c:565
->  #3: ffffffff8a5aeae8 (rtnl_mutex){+.+.}-{3:3}, at: ip6gre_exit_batch_net+0x88/0x700 net/ipv6/ip6_gre.c:1602
->
-> stack backtrace:
-> CPU: 0 PID: 7 Comm: kworker/u4:0 Not tainted 5.7.0-rc2-next-20200421-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: netns cleanup_net
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  ipmr_device_event+0x240/0x2b0 net/ipv4/ipmr.c:1757
->  notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
->  call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
->  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
->  call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
->  call_netdevice_notifiers net/core/dev.c:1974 [inline]
->  rollback_registered_many+0x75c/0xe70 net/core/dev.c:8828
->  unregister_netdevice_many.part.0+0x16/0x1e0 net/core/dev.c:9993
->  unregister_netdevice_many+0x36/0x50 net/core/dev.c:9992
->  ip6gre_exit_batch_net+0x4e8/0x700 net/ipv6/ip6_gre.c:1605
->  ops_exit_list.isra.0+0x103/0x150 net/core/net_namespace.c:189
->  cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
->  process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
->  worker_thread+0x96/0xe20 kernel/workqueue.c:2414
->  kthread+0x38b/0x470 kernel/kthread.c:274
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000004ede4505a3cab90e%40google.com.
+Also, if I move the interrupt hanling completely out of the gpio-regmap, 
+the
+driver would have to deal with "struct gpio_chip" which I would like to 
+avoid
+if possible and keep it private to gpio-regmap.
+
+Unfortunately, I don't have much experience how a good API for the 
+interrupt
+handling and the gpio-regmap might look like. And there seems to be some
+overlap between regmap-irq and the interrupt stuff in gpiolib. For 
+example,
+both provide and set the irq_domain_ops. Thus handing the domain over to
+gpio-regmap looked like a good idea to me. I get you point, that there 
+is
+already a irqdomain in gpiolib and also a _to_irq() which is the same as
+the current implementation in gpio-regmap. Maybe it makes sense to just
+have a new function
+
+int gpiolib_add_irqdomain(struct gpio_chip *gc, struct irq_domain 
+domain)
+{
+   gc->irq.domain = domain;
+   gc->to_irq = gpiochip_to_irq;
+}
+
+which is called by gpio_regmap_register() if a config->irq_domain is 
+given.
+
+-michael
