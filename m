@@ -2,147 +2,111 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5360DC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E500C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 232DA2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:56:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQK8jSBm"
+	by mail.kernel.org (Postfix) with ESMTP id E3B442070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:56:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbgDUL4u (ORCPT
+        id S1728731AbgDUL4v convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 21 Apr 2020 07:56:51 -0400
+Received: from mga17.intel.com ([192.55.52.151]:14306 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726403AbgDUL4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 07:56:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726403AbgDUL4t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:56:49 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F6DC061A0F;
-        Tue, 21 Apr 2020 04:56:49 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id l3so7081752edq.13;
-        Tue, 21 Apr 2020 04:56:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HDl4PcryGuPjgJh8iajtlR3OBsl1Kn7J0vY5z+ZmlDQ=;
-        b=FQK8jSBm3fq1kmBDwPBY92h9XWiG4/47OGHLQx7mjNgD0YuiMeLzKlLHV06th5Tghl
-         6JjDzkbBNWH/jxmQj8kpLLjdS9cvxmYVMQA7jxf5ljQc7AKr6e6MzSS/l2bbPXopaAXS
-         DmsWdo9943w3scHjLvFOHDfDeCffjlY6DnAIkAS5Ulqoa6D5fzZ5bTjAlYzbklCHQ66T
-         95wzL4IsPparxs0UYYk1qMEfk6KMAX9sGf3tZE6vELjjTNA11Wdh7tFW7HV5vQjr3BYX
-         6eGc9lgmpO7uY/aVX66i3Hv24F2PhKOALyHOq2GZBEu7J0kGPkU8zk6DCqNjJ7msUrl+
-         +Gjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HDl4PcryGuPjgJh8iajtlR3OBsl1Kn7J0vY5z+ZmlDQ=;
-        b=mVT8omN+WM0vFHfE/ykTNzrW0FgQpXUTIRujsMji8zTODdE14+JO2xI7vSQVEbInoz
-         Ofn9eVB7PccBmQos6qI1o/Kx0wYn9fcZ7dOr/qBpNEJx9E4lx3GXRG3JtVw+3mNiwCCr
-         M6gIwS5WDUmyR2nWuO+HY/ulXDrO5Nkp13tasVgun/F5sy8RF+aTOgf5RLCVltgFjaC+
-         W8JbrVKpNw+Q/1LJ7YAT4SL7LJ4cQMsckpEJDuyOmnSeH4GrltXqc+wxnn+WFUICO4zY
-         MOAuJ6w3heeea8fx8T2Bu75FZ67PmRh6Fw2ujtsTlUTeEwdh+26YaIFOKjcflN6W2R8D
-         vV9w==
-X-Gm-Message-State: AGi0Pua540wdUV1mi7ahtO3D0WsyKnMJU9w4txZWkbqGyHkr4qBN/iXq
-        yvMKmc6b3S2j6625y/fkoCT3mU3yqfeDNwdoKec=
-X-Google-Smtp-Source: APiQypI0MWThGq6YBjMemZa0yhIY9LEoNJt9Db1HDYRxRrxiOj9Aio9OF32UVFWaOjR1CDfAOJPT+nthCqzMLc1vWG0=
-X-Received: by 2002:a50:f288:: with SMTP id f8mr13696974edm.337.1587470208280;
- Tue, 21 Apr 2020 04:56:48 -0700 (PDT)
+IronPort-SDR: z+CsqIZzFRQqE4/qgUnDcKoUaDmzQCGRPDobaunAQ2JQfnK8de4q8toiIvzWJwhUOL82Z0skz+
+ LjqAnxSNAiew==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 04:56:50 -0700
+IronPort-SDR: ss5gZPH9RFXb/mbTaVOM9KDF+8qBwsRimZ4nsKZ+Y39bb7azaHnyps5sn0NKG2EhdwxYfnEFlp
+ Lfm+8sEUlcJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,410,1580803200"; 
+   d="scan'208";a="279611530"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Apr 2020 04:56:50 -0700
+Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 21 Apr 2020 04:56:50 -0700
+Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.129]) by
+ SHSMSX106.ccr.corp.intel.com ([169.254.10.89]) with mapi id 14.03.0439.000;
+ Tue, 21 Apr 2020 19:48:09 +0800
+From:   "Ma, Jianpeng" <jianpeng.ma@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [RESEND]block: remove unused header
+Thread-Topic: [RESEND]block: remove unused header
+Thread-Index: AdYX0rl3DxU1LQC5RfqOTHbWaoDw/w==
+Date:   Tue, 21 Apr 2020 11:48:08 +0000
+Message-ID: <6AA21C22F0A5DA478922644AD2EC308C73C54781@SHSMSX101.ccr.corp.intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200421113324.vxh2lyasylf5kgkz@pengutronix.de>
-In-Reply-To: <20200421113324.vxh2lyasylf5kgkz@pengutronix.de>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 21 Apr 2020 14:56:37 +0300
-Message-ID: <CA+h21ho2YnUfzMja1Y7=B7Yrqk=WD6jm-OoKKzX4uS3WJiU5aw@mail.gmail.com>
-Subject: Re: dsa: sja1105: regression after patch: "net: dsa: configure the
- MTU for switch ports"
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     mkl@pengutronix.de, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        David Jander <david@protonic.nl>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleksij,
+Dax related code already removed from this file.
 
-On Tue, 21 Apr 2020 at 14:33, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
->
-> Hi Vladimir,
->
-> I have a regression after this patch:
-> |commit bfcb813203e619a8960a819bf533ad2a108d8105
-> |Author:     Vladimir Oltean <vladimir.oltean@nxp.com>
-> |
-> |  net: dsa: configure the MTU for switch ports
->
-> with following log:
-> [    3.044065] sja1105 spi1.0: Probed switch chip: SJA1105Q
-> [    3.071385] sja1105 spi1.0: Enabled switch tagging
-> [    3.076484] sja1105 spi1.0: error -34 setting MTU on port 0
-> [    3.082795] sja1105: probe of spi1.0 failed with error -34
->
-> this is devicetree snippet for the port 0:
->         port@0 {
->                 reg = <0>;
->                 label = "usb";
->                 phy-handle = <&usbeth_phy>;
->                 phy-mode = "rmii";
->         };
->
->
-> Is it know issue?
->
-> Regards,
-> Oleksij
-> --
-> Pengutronix e.K.                           |                             |
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Signed-off-by: Jianpeng Ma <jianpeng.ma@intel.com>
+---
+ fs/block_dev.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-The code which is causing problems seems to be this one:
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 52b6f646cdbd..4163435dc231 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -19,7 +19,6 @@
+ #include <linux/module.h>
+ #include <linux/blkpg.h>
+ #include <linux/magic.h>
+-#include <linux/dax.h>
+ #include <linux/buffer_head.h>
+ #include <linux/swap.h>
+ #include <linux/pagevec.h>
+-- 
+2.17.1
 
-    mtu_limit = min_t(int, master->max_mtu, dev->max_mtu);
-    old_master_mtu = master->mtu;
-    new_master_mtu = largest_mtu + cpu_dp->tag_ops->overhead;
-    if (new_master_mtu > mtu_limit)
-        return -ERANGE;
-
-called from
-
-    rtnl_lock();
-    ret = dsa_slave_change_mtu(slave_dev, ETH_DATA_LEN);
-    rtnl_unlock();
-    if (ret && ret != -EOPNOTSUPP) {
-        dev_err(ds->dev, "error %d setting MTU on port %d\n",
-            ret, port->index);
-        goto out_free;
-    }
-
-Before this patch, it was silently failing, now it's preventing the
-probing of the ports which I might agree with you is not better.
-Andrew warned about this, and I guess that during probe, we should
-warn but ignore any nonzero return code, not just EOPNOTSUPP. I'll
-send a patch out shortly to correct this.
-
-Out of curiosity, what DSA master port do you have? Does it not
-support an MTU of 1504 bytes? Does MTU-sized traffic pass correctly
-through your interface? (you can test with iperf3)
-
-Thanks,
--Vladimir
+> -----Original Message-----
+> From: Christoph Hellwig <hch@infradead.org>
+> Sent: Tuesday, April 21, 2020 7:33 PM
+> To: Ma, Jianpeng <jianpeng.ma@intel.com>
+> Cc: axboe@kernel.dk; Williams, Dan J <dan.j.williams@intel.com>; linux-
+> kernel@vger.kernel.org
+> Subject: Re: block: remove unused header
+> 
+> On Tue, Apr 21, 2020 at 05:48:46AM +0000, Ma, Jianpeng wrote:
+> > >From 95218bc1d79f2bcbdd8819be26efa698868a34ca Mon Sep 17 00:00:00
+> 2001
+> > From: Jianpeng Ma <jianpeng.ma@intel.com>
+> > Date: Tue, 21 Apr 2020 01:15:24 -0400
+> > Subject: [PATCH] block: remove unused header.
+> >
+> > Dax related code already removed from this file.
+> >
+> > Signed-off-by: Jianpeng Ma <jianpeng.ma@intel.com>
+> 
+> Except for the mangled patch format this looks good:
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+> Can you resend it with proper patch headers?
