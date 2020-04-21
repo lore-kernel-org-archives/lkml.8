@@ -2,94 +2,145 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84014C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44EFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48CC9206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D4420706
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 23:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGrFsSwm"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DSFm5szq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgDUXwk (ORCPT
+        id S1726377AbgDUXyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 19:52:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41341 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725850AbgDUXwj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 19:52:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587513158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=X7qRnFwMY1veO8968/GmG7PEXtDC2w7mYSghI/mbNIs=;
-        b=KGrFsSwmvugibb3B/w4PYVxP+Jw/s960W7hb0RwWFBtayeUlecMKbSJI6PeSOHRcl69sIj
-        QrS3w2DqbsXbS8rlu2Zt71x4zNg+TQeE3nQcWkmP1/gKMStcG9NzQkWAb+Wv5kLPZRJXYu
-        pjS/KHQHIF9p8H0uH98jEBEVaaTWKZg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-361-fikglMOdOUW3iOE1C4CK7Q-1; Tue, 21 Apr 2020 19:52:36 -0400
-X-MC-Unique: fikglMOdOUW3iOE1C4CK7Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4DFE0107ACC7;
-        Tue, 21 Apr 2020 23:52:35 +0000 (UTC)
-Received: from treble (ovpn-114-228.rdu2.redhat.com [10.10.114.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1DB0719C70;
-        Tue, 21 Apr 2020 23:52:33 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 18:52:31 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] objtool: add support for >64k sections
-Message-ID: <20200421235231.citpfigkpahztorj@treble>
-References: <20200421180724.245410-1-samitolvanen@google.com>
- <20200421220843.188260-1-samitolvanen@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Tue, 21 Apr 2020 19:54:54 -0400
+Received: from mail-eopbgr20077.outbound.protection.outlook.com ([40.107.2.77]:9958
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726024AbgDUXyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 19:54:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LbjGSJ+8wMbR/j3l8b8zsJqA5x6FH4m6s5d34nWE1jddhXqRSQsuoVHSl1JMoGHWfmvlnDpvMj2vZghrYHIG/swqYyBGi/fMGDGZBLOD93jTpMOz5va+hdYtJB8BXmABIrW6uXUMY3U7i2AlTp7T7biC5KgdYXfH1WIsNRw3btSFSup5JS5frkrg7Y6BBsnNWELKitRUA8aVuT9R8WDBcezaKkXNN/3D3gQ9kN3qQn/40RGuQAutSHP6Xl+DBBh9wZlrPejzjybkA6zzYqx12BZRwmL3z7bAemxXuR0qMtlGxslP4YSTJMfZQK+5vPZlHDu30BwpQkvpHWoTqFW2Wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DI9TeCUlk6cr5ju3k7eo3+sB68Jb2gjnkbV1klVWn9Y=;
+ b=UtwysLo57q2tC2w1u8JfOftmbENCyGR+aWV1ri1eSoqFRq1gUO8UUZPLItY7uJz0qHbnSGZ8/Dje3U4A+XrkwzBdg6ylNgAspW3j4r28vJkRwpDOHPpKIbJnSN5bRbcMruiWaM9JrkKiaKnf+pcMNfYQRG0JiquEc+umYMtq5qSAYiuBkDFd5ZCuCanhaOktBcL8ylYKNsIqQ2kunnQSWTMyOoBzSKm7UG5/ffs6cAojoSfM1hyO+9K0W5MLc40x9/AyC9dJulreL456zdheSe43ErVbvFdIHebMUnxUHqHAOaEnYoWKCzbmbWFIZpuoubmUPCYG2mUym4D8Tz6buw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DI9TeCUlk6cr5ju3k7eo3+sB68Jb2gjnkbV1klVWn9Y=;
+ b=DSFm5szqqmnS4/XpckF0juzwpqk734aZJ+nGfZUCFrtsYL7ac5jTiEg9OkMZom3n6rT+g0lIK4H9B2Q+C9CK9LkLW+KiLoll58G4SKNTYAIIceRRA6+IOoTJmQebpTKHh21XjjeMtiddlws/bymFlPq+zP4ITyCwOrfVK/ItNBg=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB6863.eurprd05.prod.outlook.com (2603:10a6:800:183::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Tue, 21 Apr
+ 2020 23:54:49 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
+ 23:54:49 +0000
+Date:   Tue, 21 Apr 2020 20:54:42 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, megha.dey@linux.intel.com, maz@kernel.org,
+        bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com,
+        jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200421235442.GO11945@mellanox.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200421220843.188260-1-samitolvanen@google.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR22CA0029.namprd22.prod.outlook.com
+ (2603:10b6:208:238::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR22CA0029.namprd22.prod.outlook.com (2603:10b6:208:238::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27 via Frontend Transport; Tue, 21 Apr 2020 23:54:49 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jR2iw-0007oP-Pw; Tue, 21 Apr 2020 20:54:42 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 309a3179-a52b-477a-3a21-08d7e64f6080
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6863:|VI1PR05MB6863:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB6863CA4B83A973F0581F605ECFD50@VI1PR05MB6863.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 038002787A
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(376002)(346002)(136003)(396003)(366004)(8676002)(81156014)(5660300002)(36756003)(8936002)(2906002)(9786002)(9746002)(478600001)(1076003)(316002)(7416002)(6916009)(33656002)(86362001)(186003)(66946007)(66556008)(66476007)(52116002)(4326008)(2616005)(26005)(24400500001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: F4MNDwIOzI+h0VJSfivbVuOQVuwZspASOC+Ot9w4JnW8gNFyJvWO3Kz3pCaktnJGjG4bfhy2FumyfdLsYAKSaZeJZq3yjk+5udGd6Y2srOTq6ZupsnV0Ojv3bRy3APIMyLGGhgXfDx9fLcK9Sgs6hXxfo2n4fTmbyiwATHlVGiFFHtmWIdILB1OGUzgFa3yLv3ky95LnIgodfOk4Agg2KisU7WXmbFlRUlafyRTpHtumujJNRABMyU16A4ic3vLqtboUHlekU/HGJkvNHfntjc0s7IQLf+Y00rW1+fNPEZR0zW+82BIoX5ZlcKCUKLabSCCfa9+793J8Ky3PHCQiIp93AHRJvMMxJbvCWzL22uggPclN/SmuK8Pv7MNQ+v/N3/oQ+NoYFANVpiiqvOqM/01HxtKqXKkjG09gJkx95/R25+zjjvDMzWZz7Pcoah0q8J/vCA606ezHX9A3qK6UoVTP5YmDfDX2bjdo95k2IFRFve8tHWZ2FOgb0zAxMRAn
+X-MS-Exchange-AntiSpam-MessageData: cRXwN6dlLtb/HnXl15bJS0YEJDnAXCvTb3/1r1PoUxXJWjF+rD6L0tV5CaigP0VFyYrdhW2lvJkIs6fvlbPkV8qs9BTeGjMdKqPu98TFpjirSz5vBQYKe8T0OJ0Zlt4mhZVXwIFpYr2/N8hIghCDCA==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 309a3179-a52b-477a-3a21-08d7e64f6080
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2020 23:54:49.4713
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zdofpYbLtc4zdD45B9tHWq2/iFU6GmjsJzirzlH8oCYN7CF28v2UlFk1HCS3RHLsHj+Pkk3pfzA/iBxkGft7UQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6863
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 03:08:41PM -0700, Sami Tolvanen wrote:
-> This series fixes objtool for binaries with >64k sections, and
-> includes optimizations to reduce the runtime for a binary with
-> ~130k sections from >15 minutes to ~4 seconds.
-> 
-> Changes in v2:
->  - Dropped the insn_hash optimization as Peter has a nearly
->    similar change queued already.
->  - Instead of storing the last instruction for each section,
->    use find_insn to locate it.
-> 
-> 
-> Sami Tolvanen (2):
->   objtool: use gelf_getsymshndx to handle >64k sections
->   objtool: optimize add_dead_ends for split sections
-> 
->  tools/objtool/check.c | 36 +++++++++++++++++-------------------
->  tools/objtool/elf.c   | 24 +++++++++++++++++-------
->  2 files changed, 34 insertions(+), 26 deletions(-)
-> 
-> 
-> base-commit: 18bf34080c4c3beb6699181986cc97dd712498fe
+On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
+> The actual code is independent of the stage 2 driver code submission that adds
+> support for SVM, ENQCMD(S), PASID, and shared workqueues. This code series will
+> support dedicated workqueue on a guest with no vIOMMU.
+>   
+> A new device type "mdev" is introduced for the idxd driver. This allows the wq
+> to be dedicated to the usage of a VFIO mediated device (mdev). Once the work
+> queue (wq) is enabled, an uuid generated by the user can be added to the wq
+> through the uuid sysfs attribute for the wq.  After the association, a mdev can
+> be created using this UUID. The mdev driver code will associate the uuid and
+> setup the mdev on the driver side. When the create operation is successful, the
+> uuid can be passed to qemu. When the guest boots up, it should discover a DSA
+> device when doing PCI discovery.
 
-Looks good to me, thanks.  I'll add them to the queue for testing, along
-with that other patch.
+I'm feeling really skeptical that adding all this PCI config space and
+MMIO BAR emulation to the kernel just to cram this into a VFIO
+interface is a good idea, that kind of stuff is much safer in
+userspace.
 
--- 
-Josh
+Particularly since vfio is not really needed once a driver is using
+the PASID stuff. We already have general code for drivers to use to
+attach a PASID to a mm_struct - and using vfio while disabling all the
+DMA/iommu config really seems like an abuse.
 
+A /dev/idxd char dev that mmaps a bar page and links it to a PASID
+seems a lot simpler and saner kernel wise.
+
+> The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
+> interrupts for the guest. This preserves MSIX for host usages and also allows a
+> significantly larger number of interrupt vectors for guest usage.
+
+I never did get a reply to my earlier remarks on the IMS patches.
+
+The concept of a device specific addr/data table format for MSI is not
+Intel specific. This should be general code. We have a device that can
+use this kind of kernel capability today.
+
+Jason
