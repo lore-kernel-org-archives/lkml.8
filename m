@@ -2,109 +2,183 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D90DC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D38C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C402071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A2820882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 06:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPdqCzrC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgJrpa05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgDUGlz (ORCPT
+        id S1726591AbgDUGnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 02:41:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
+        Tue, 21 Apr 2020 02:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725831AbgDUGlz (ORCPT
+        by vger.kernel.org with ESMTP id S1725831AbgDUGnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 02:41:55 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED84C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 23:41:54 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x25so2259897wmc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 23:41:54 -0700 (PDT)
+        Tue, 21 Apr 2020 02:43:39 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4BBAC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 23:43:38 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id l13so10770927qtr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Apr 2020 23:43:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0xKvOssuL7JJmsttBiv1fIXPKP57ObqKY4ux9qvYDN4=;
-        b=NPdqCzrCrWuwp+BbdSfKZ2wALJctVNpq9FOqH+qB9W24tH9XaW4iJTx94HdiJIg+Jk
-         gJvbfBKxzzUC6+x3KsFTH5EnnMCrVoRl4jp44lzdRsMEJ0DfoFxWB2fbjVNj+p4h1SZG
-         1rOvHFe/qN4OkYu8FAhb0eOBw98VasxIoCwWh253ScQjZDRNkElYpGXkFddu/4VR5xVQ
-         hSOXUK/WPpre1DM5A5psxWtcBypmRzb5P3VRboIRBlIT8G3DhzRUuECQOSmxG7lY5mpi
-         EkOEjP8OM3HfohmXPRu/SXqVfBuik/aEQJt7Md3CPenE81KcRt8WLCRTKneCuc2V3Qe2
-         OQHQ==
+         :cc:content-transfer-encoding;
+        bh=bj3IP9yKUKzLV9bYA43k4lnx/OmIzqwOuSm3Fw5P9lk=;
+        b=NgJrpa05t8bNQnoB1pnjRHU9naYtq9BiF/JbfN2rZV2bYOwIhstSj9EGQT4b9RuHIb
+         eaTWgcE7dh1WwB6vuRNq7rnE805fVum1PNBHodJEIepFr9y25ORiIxCW7WVOW59Jl2vv
+         oSMFrpiaTHpFWX4zbIAXtzBtKLRd0xoJazB39TGbJjgsg4l/pX337Y0NOIiZprkkvhdc
+         U1ESOItDrKkVUOzvg6N+uJSOO4B3UXRGjRlu2mbPqZ8RkbfmlukT5Fi8fb7+jWtLnoTj
+         hNz4y/GafOsZiFcRS7BOAd3lryDZ1LWpbCsGZyzmx2pqYSlshrgLOjhqiELj0GFjsq+A
+         oLJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0xKvOssuL7JJmsttBiv1fIXPKP57ObqKY4ux9qvYDN4=;
-        b=JhF5Wl2kkuTEYy/Fq38Bp7AlG4Nvv/+Vyu6AprxQ7M3e3fMnCbZXxxPhjNy4ow2fXl
-         GjQ0lmhLVpJ/PDB20OClj+I5Fs7KWNeavODX7eddWxnm5aqmiQNIAm9yZgjinwJkzHd4
-         U548s9mTKwQghjlmI85DW8ZL8DIOLDNs9sSGNNksn87G45jcPUAhydAjCeyDPVGmLHBP
-         PAW4jruxDjuV1mRU7otQjpAeK/SwDVz5vpC4MILIhcTSwb+W+qpvMJIAhhSpeIXALOC+
-         Cudm1Hg3mM8BeAYa4tlAl2NlrKSPJE8UAVPTUGs+4OXoYeCjHx83/i7WINgaGFlvPuYS
-         NmxA==
-X-Gm-Message-State: AGi0PuahaR3Y2g7Lwviin6NyqJkXJxASrxFfL4FNRcyoGpIsOtuSeFTP
-        V5WCllcxO9zEq4oxri+aD9MT4kyZU+IPV9nKUQLgQufMjxQ=
-X-Google-Smtp-Source: APiQypL02YAnnZNGNB1vVxatPuOQrOmWIDtdves32H3kJJT5fycOolc4jjUmSakihyWqP6PQdmFnK/5UgqnzgjQuM6Q=
-X-Received: by 2002:a1c:148:: with SMTP id 69mr3347855wmb.181.1587451313367;
- Mon, 20 Apr 2020 23:41:53 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bj3IP9yKUKzLV9bYA43k4lnx/OmIzqwOuSm3Fw5P9lk=;
+        b=izLamtHjUuOyC3AiiqKN3apouevc9L9j1HML9iIX0uki+gVcnwQcQjl530sqg4pSts
+         Z/k9aDsCCTfV3Wdga6UNvWI1IOhSPauc15GMThlBEiujGk3QyTQO5C0wQJwZTFoDTvjF
+         PQAkdiUDpRJ1yV2qJwicumQad5kDyy7hhYtE+FrRGPvDkYprPGTygk/rs42yBfGBJqtK
+         VjO8T2+BIAK0N6tN44rqPoJxLdv37B32n5ay0ibNz0hTdcq82K7b9+RjgEUKCVMSZjp2
+         qLbbEKMuIyKfZp+2WH6JTw588fGf+f3idt3GJEtd4fGZk90akVkynWpH07Rem8iQgy4A
+         MZkA==
+X-Gm-Message-State: AGi0PuYgmSmnB7rWScmBiGeuZv/KSd0l65eGvxP51KGPJf1poC+bhImU
+        bK+NSOBiTlAjVHWTrFeuLvsFNYzx+/AAGwIYP5Y=
+X-Google-Smtp-Source: APiQypKZGqSt1hIJMFGEiw90jd5DOVexhu22Ifz7g6bif/sGkp2QcCue3pF2LyPXlMPHIcd4PHQqSZS2xriM3qW5OG0=
+X-Received: by 2002:ac8:2a70:: with SMTP id l45mr5743292qtl.232.1587451417781;
+ Mon, 20 Apr 2020 23:43:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200420120037.1537-1-evalds.iodzevics@gmail.com>
- <20200421085344.1804-1-evalds.iodzevics@gmail.com> <20200421055955.GA343434@kroah.com>
-In-Reply-To: <20200421055955.GA343434@kroah.com>
-From:   Evalds Iodzevics <evalds.iodzevics@gmail.com>
-Date:   Tue, 21 Apr 2020 09:41:42 +0300
-Message-ID: <CADqhmmeNd3A7Ki8SZi4j7aubm3bHDxQ-pNM6bR56geE9BwUjww@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/microcode/intel: replace sync_core() with native_cpuid_reg(eax)
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ben Hutchings <ben@decadent.org.uk>
+References: <1587369582-3882-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1587369582-3882-2-git-send-email-iamjoonsoo.kim@lge.com> <20200420112010.GA5820@bombadil.infradead.org>
+ <2c45bab6-8c29-e227-56b8-307e8bee46c6@suse.cz>
+In-Reply-To: <2c45bab6-8c29-e227-56b8-307e8bee46c6@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Tue, 21 Apr 2020 15:43:26 +0900
+Message-ID: <CAAmzW4PUHw4utuS3tzMDFWqjDwUu14z8u=kxJa4wVEfEynFr1g@mail.gmail.com>
+Subject: Re: [PATCH 01/10] mm/page-flags: introduce PageHighMemZone()
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 8:59 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+Hello, Matthew and Vlastimil.
+
+2020=EB=85=84 4=EC=9B=94 20=EC=9D=BC (=EC=9B=94) =EC=98=A4=ED=9B=84 8:37, V=
+lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
 >
-> On Tue, Apr 21, 2020 at 11:53:44AM +0300, Evalds Iodzevics wrote:
-> > On Intel it is required to do CPUID(1) before reading the microcode
-> > revision MSR. Current code in 4.4 an 4.9 relies on sync_core() to call
-> > CPUID, unfortunately on 32 bit machines code inside sync_core() always
-> > jumps past CPUID instruction as it depends on data structure boot_cpu_data
-> > witch are not populated correctly so early in boot sequence.
+> On 4/20/20 1:20 PM, Matthew Wilcox wrote:
+> > On Mon, Apr 20, 2020 at 04:59:33PM +0900, js1304@gmail.com wrote:
+> >> ZONE_MOVABLE is special. It is considered as normal type zone on
+> >> !CONFIG_HIGHMEM, but, it is considered as highmem type zone
+> >> on CONFIG_HIGHMEM. Let's focus on later case. In later case, all pages
+> >> on the ZONE_MOVABLE has no direct mapping until now.
+> >>
+> >> However, following patchset
+> >> "mm/cma: manage the memory of the CMA area by using the ZONE_MOVABLE"
+> >> , which is once merged and reverted, will be tried again and will brea=
+k
+> >> this assumption that all pages on the ZONE_MOVABLE has no direct mappi=
+ng.
+> >> Hence, the ZONE_MOVABLE which is considered as highmem type zone could
+> >> have the both types of pages, direct mapped and not. Since
+> >> the ZONE_MOVABLE could have both type of pages, __GFP_HIGHMEM is still
+> >> required to allocate the memory from it. And, we conservatively need t=
+o
+> >> consider the ZONE_MOVABLE as highmem type zone.
 > >
-> > It depends on:
-> > commit 5dedade6dfa2 ("x86/CPU: Add native CPUID variants returning a single
-> > datum")
+> > I don't understand why CMA allocating pages from ZONE_MOVABLE somehow
+> > gives these pages a direct mapping.  Maybe you have a freaky layout in
+> > the architecture that makes no sense and that's what needs to be fixed?
 > >
-> > This patch is for 4.4 but also should apply to 4.9
+> > My understanding of the zones is based on x86, and it looks like this
+> > on a 32-bit system with 8GB of memory:
 > >
-> > Signed-off-by: Evalds Iodzevics <evalds.iodzevics@gmail.com>
-> > ---
-> >  arch/x86/include/asm/microcode_intel.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > ZONE_DMA      0-16MB
+> > ZONE_NORMAL   16-896MB
+> > ZONE_HIGHMEM  896-xMB
+> > ZONE_MOVABLE  x-8192MB
+> >
+> > where x is a boot option used to partition the highmem between movable
+> > and unmovable.
+> >
+> > Now, why would allocating the CMA from ZONE_NORMAL suddenly make these
+> > pages part of the direct mapping?
 >
-> Why are you not sending this to the stable mailing list like I have
-> pointed out numerous times by sending you a link to _how_ to get a patch
-> into the stable kernel trees?
->
-> Again, here it is:
->     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
->
-> Please follow that so that we can do this correctly.
->
-> thanks,
->
-> greg k-h
-Sorry, I might sound dumb here but should i just send it to
-stable@vger.kernel.org or try to tag it Cc: stable... in sign-off
-area, its quite confusing for newcomer.
-Thanks for patience!
+> I assume the scenario is that ZONE_MOVABLE could extend into today's ZONE=
+_NORMAL
+> range, which is the range covered by direct mapping.
+> At that point, testing page's zone stops being a reliable test of "does t=
+his
+> page have direct mapping"?
+
+Correct explanation. Thanks, Vlastimil.
+
+This patchset is a preparation for my future patchset "mm/cma: manage the m=
+emory
+of the CMA area by using the ZONE_MOVABLE" [1] to solve the many CMA proble=
+ms.
+
+CMA areas can be on the all the memory range, from ZONE_DMA to ZONE_HIGHMEM=
+.
+And, in my future patchset [1], all the CMA areas are managed through
+the ZONE_MOVABLE
+and the range of the ZONE_MOVABLE is extended to cover all the CMA
+areas. In this
+case, following scenario would be possible.
+
+CMA area 1: 32MB size on the memory range 16MB~48MB (originally on the
+ZONE_NORMAL)
+CMA area 2: 32MB size on the memory range 896MB~928MB (originally on
+the ZONE_HIGHMEM)
+
+With my future patchset [1], ZONE_MOVABLE manages all the pages from
+CMA area 1 and 2.
+So, ZONE_MOVABLE has both direct mapped page and un-mapped page. Since one =
+zone
+has two types of pages, current PageHighMem() implemented by using
+zone index could not
+work correctly. So, I make this patchset to change the PagHighMem()
+implementation.
+
+> I don't know the exact motivation why that will happen but I can imagine =
+two.
+> 1) some CMA user needs the CMA allocations to be in direct mapping range
+> 2) the amount of CMA memory reservation required is so high it won't fit =
+in
+> highmem range only.
+
+The range of CMA area is highly depends on system architecture and
+device. Each device
+using CMA area would have different limitation for address range and
+someone's limitation
+could be low memory range.
+
+Thanks.
