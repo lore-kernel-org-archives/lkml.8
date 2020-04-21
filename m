@@ -2,83 +2,155 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABFAC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4936AC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38F47206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:41:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cWWla4YW"
+	by mail.kernel.org (Postfix) with ESMTP id 338EB20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgDUVl4 (ORCPT
+        id S1726335AbgDUVnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:41:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgDUVl4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 17:41:56 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C30ECC0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3aJDfem8HcOXCFMg+XNb1qpNzxQmMHRSjAwqO/k6tyQ=; b=cWWla4YWOjna8mXFQgFehxRZDk
-        +vU42IyEiGg3xy2Cvlw9RQqLxjmsmffuhYorZSAO3SuT0tIAS2daq+xm+M9/FLhm5nALMpiCvIzxt
-        Pts10XRjdudCq0DOtv7vDH1zuwY1vcwef/h8kbsqeQdODTr5EE936AkangiiSeA10258T9ssTln8E
-        SY2pk2mimqRljnxbNrl4WrPDc+0JjNvRhOQozni86z160RrffvZRCWSo7eOOXcez6m8v7fR85zSu2
-        jGzVVG4GzuMNGuWkmc2xTUBeA1X2CipA3lFGuWUN0zZNqkORHTkEimdCnyR9kn+71PaKtejfJbFQK
-        Ai9LgyUA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jR0e3-0000x2-Kj; Tue, 21 Apr 2020 21:41:32 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 54FE0983ABB; Tue, 21 Apr 2020 23:41:28 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 23:41:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Harald Arnesen <harald@skogtun.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>
-Subject: Re: [BISECTED]: Kernel panic (was: Linux 5.7-rc2)
-Message-ID: <20200421214128.GW2483@worktop.programming.kicks-ass.net>
-References: <CAHk-=wiQsJu-ZFjt7+c9FVD5R40khtZiihrT+7O3UaVvHYz=HQ@mail.gmail.com>
- <428bac87-b6dd-0867-c8f8-622cd606de3e@skogtun.org>
- <CAHk-=wiX+NT2yxtdPszH9U_S96MCNQA56GJFXY45mZc47yG5KQ@mail.gmail.com>
- <20200421212347.GV2483@worktop.programming.kicks-ass.net>
- <CAHk-=whhpFhUV51jabGEzHN51aKTL5fbQBvNw9=3cXnO8PXs3A@mail.gmail.com>
+        Tue, 21 Apr 2020 17:43:31 -0400
+Received: from mga05.intel.com ([192.55.52.43]:3426 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbgDUVna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 17:43:30 -0400
+IronPort-SDR: 7P8WNAcWUyj0aQ3Xi9OK9W1KZ9ggHx/r4D4g3kNIXe7tb1Jh77NDsEDZsyKWLMXtViP+DAeqfF
+ Vpfe0R5UHuDw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 14:43:29 -0700
+IronPort-SDR: l9v2emWz69/KRu2nwYAzuWNK6yG8VzlTGptMSXs336pBbWT0m/0+nvmKP3w1ZyAH2wx8R3haKM
+ 7VHY+96vMIrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
+   d="scan'208";a="279792039"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Apr 2020 14:43:29 -0700
+Date:   Tue, 21 Apr 2020 14:43:29 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V9 10/11] fs/xfs: Update
+ xfs_ioctl_setattr_dax_invalidate()
+Message-ID: <20200421214328.GD3372712@iweiny-DESK2.sc.intel.com>
+References: <20200421191754.3372370-1-ira.weiny@intel.com>
+ <20200421191754.3372370-11-ira.weiny@intel.com>
+ <20200421203140.GD6742@magnolia>
+ <20200421213049.GC27860@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whhpFhUV51jabGEzHN51aKTL5fbQBvNw9=3cXnO8PXs3A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200421213049.GC27860@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 02:30:06PM -0700, Linus Torvalds wrote:
-> Also, see
+On Wed, Apr 22, 2020 at 07:30:49AM +1000, Dave Chinner wrote:
+> On Tue, Apr 21, 2020 at 01:31:40PM -0700, Darrick J. Wong wrote:
+> > On Tue, Apr 21, 2020 at 12:17:52PM -0700, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > Because of the separation of FS_XFLAG_DAX from S_DAX and the delayed
+> > > setting of S_DAX, data invalidation no longer needs to happen when
+> > > FS_XFLAG_DAX is changed.
+> > > 
+> > > Change xfs_ioctl_setattr_dax_invalidate() to be
+> > > xfs_ioctl_dax_check_set_cache() and alter the code to reflect the new
+> > > functionality.
+> > > 
+> > > Furthermore, we no longer need the locking so we remove the join_flags
+> > > logic.
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > ---
+> > > Changes from V8:
+> > > 	Change name of function to xfs_ioctl_dax_check_set_cache()
+> > > 	Update commit message
+> > > 	Fix bit manipulations
+> > > 
+> > > Changes from V7:
+> > > 	Use new flag_inode_dontcache()
+> > > 	Skip don't cache if mount over ride is active.
+> > > 
+> > > Changes from v6:
+> > > 	Fix completely broken implementation and update commit message.
+> > > 	Use the new VFS layer I_DONTCACHE to facilitate inode eviction
+> > > 	and S_DAX changing on drop_caches
+> > > 
+> > > Changes from v5:
+> > > 	New patch
+> > > ---
+> > >  fs/xfs/xfs_ioctl.c | 108 +++++++++------------------------------------
+> > >  1 file changed, 20 insertions(+), 88 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > > index 104495ac187c..b87b571a6748 100644
+> > > --- a/fs/xfs/xfs_ioctl.c
+> > > +++ b/fs/xfs/xfs_ioctl.c
+> > > @@ -1245,64 +1245,26 @@ xfs_ioctl_setattr_xflags(
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -/*
+> > > - * If we are changing DAX flags, we have to ensure the file is clean and any
+> > > - * cached objects in the address space are invalidated and removed. This
+> > > - * requires us to lock out other IO and page faults similar to a truncate
+> > > - * operation. The locks need to be held until the transaction has been committed
+> > > - * so that the cache invalidation is atomic with respect to the DAX flag
+> > > - * manipulation.
+> > > - */
+> > > -static int
+> > > -xfs_ioctl_setattr_dax_invalidate(
+> > > +static void
+> > > +xfs_ioctl_dax_check_set_cache(
+> > 
+> > That's a ... strange name.  Set cache on what?
+> > 
+> > Oh, this is the function that sets I_DONTCACHE if an FS_XFLAG_DAX change
+> > could have an immediate effect on S_DAX (assuming no other users).  What
+> > do you think of the following?
+> > 
+> > 	/*
+> > 	 * If a change to FS_XFLAG_DAX will result in an change to S_DAX
+> > 	 * the next time the incore inode is initialized, set the VFS
+> > 	 * I_DONTCACHE flag to try to hurry that along.
+> > 	 */
+> > 	static void
+> > 	xfs_ioctl_try_change_vfs_dax(...)
 > 
->   https://lore.kernel.org/lkml/b90ba443-9b9d-481e-7ecc-d5a25816e02f@oracle.com/
-> 
-> where Dave Kleikamp seems to say that it happens on his Lenovo T410.
-> 
-> So I do think it's real, and _not_ virtualization. Please don't
-> dismiss it as some vmware artifact. Looks more like it's triggered by
-> some Lenovo Thinkpad BIOS setup issue.
+> That doesn't seem any better. This is a preparation function now, in
+> that it can't fail and doesn't change the outcome of the operation
+> being performed. So, IMO, calling it something like
+> xfs_ioctl_setattr_prepare_dax() would be a better name for it.
 
-Oh, right (I actually saw that email when I picked up the patches, but
-clearly instantly forgot about it again). If the BIOS gets the tables
-funny we hit the same paths.
+But it does potentially (after a check) set I_DONTCACHE.
 
-Anyway, it would be good if the reporter can confirm, I've also queued
-those patches for /urgent, so they should show up soonish.
+What about?
+
+xfs_ioctl_dax_check_set_dontcache()?
+
+Ira
+
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
