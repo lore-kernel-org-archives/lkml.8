@@ -2,143 +2,200 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED59C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341B1C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCF5320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:18:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgLmPLwx"
+	by mail.kernel.org (Postfix) with ESMTP id 15665206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:19:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgDUOS7 (ORCPT
+        id S1729104AbgDUOTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728479AbgDUOS6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:18:58 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E25C061A10;
-        Tue, 21 Apr 2020 07:18:58 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j1so11237894wrt.1;
-        Tue, 21 Apr 2020 07:18:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XZzndPnYtYbbEF/KUZVNIJz+EcXy0p75DzfqczwlSe8=;
-        b=kgLmPLwxUl5/Ma+EDAS7OwNd58zyhTcO0jxcdmbufGrysR7FvlZ9M7c2Vqs4uYk//I
-         NtCsPb+nsu2eUmQfKxg/RNmFIlU8jpRgqkqImtzJnDsA4j1bIJaxTVEnJDJcfRdrNS+b
-         QcY172YKngn+A8fR6B4Rw1TUti4r0pKIcRjzANa3rOsg/9O1hNm3hzTsu0mxBGaFAlnu
-         HreuzgMaUwKocNly5bo3jhPzAU7Ax2qiBcJh3EoAi3de3PVLgISOxVGSoFvxo9v5giVM
-         +9LIeVtljWhNV3LEbQ0Tb06ND/qEGg6kIH3Y0Bp8SeWeHcMs74C30d9mjAZDmxmzAjQd
-         KpHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XZzndPnYtYbbEF/KUZVNIJz+EcXy0p75DzfqczwlSe8=;
-        b=QOx63j9YHlLxsD2NkUIJ3d9hkW3g9NH68HBxbNOK4cysTeHNNCtU6qW45QDDoxNLDg
-         9B1HBpmyTn591LmdFy/86Y68veFtdtqWenYZ2VIeozMOtVvU9b8kfrQYxxQzzxqcWU4C
-         eAp8PCUGF60RCc5yPr5Z8b1/e+CE/G251DFRxtHBoWqeBR/+1C4dzDLptyCTdEcekb7X
-         41JYQQnHrdtZZRXKKWsMWGh5uQIKbJARg9598p7TcZP0NoL1JXb9WPVdYI+t5r3UZuA9
-         6xOwZ7BrPK3XKyemkspBO06+48y0I6UnNizTYzqqKRAo8GQtxa+lU1MuIuwzhxOQx400
-         /3zQ==
-X-Gm-Message-State: AGi0PuZi3qWkwtW1sp/mtdrG4UYfYJjQhBAdASr/h/8jHublWnXvxjrC
-        W5ie3BaGlr42zMOCjk6jESUcoSUUneiYzbV2juI=
-X-Google-Smtp-Source: APiQypJ4ai2ZaRvEMbuZeelgSbTJL39HJnQ583AlT1gQuWTbnZsztUo86fQBN9mjsQkbukzDpzbexYNN1zF/4xAZ5dY=
-X-Received: by 2002:a5d:45cf:: with SMTP id b15mr23682887wrs.78.1587478736843;
- Tue, 21 Apr 2020 07:18:56 -0700 (PDT)
+        Tue, 21 Apr 2020 10:19:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2826 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728337AbgDUOTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:19:12 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 37F28F4CD612CA17545A;
+        Tue, 21 Apr 2020 22:19:09 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Apr 2020
+ 22:18:59 +0800
+Subject: Re: [PATCH v1 5/6] mm: tlb: Provide flush_*_tlb_range wrappers
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <mark.rutland@arm.com>, <will@kernel.org>,
+        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
+        <rostedt@goodmis.org>, <maz@kernel.org>, <suzuki.poulose@arm.com>,
+        <tglx@linutronix.de>, <yuzhao@google.com>, <Dave.Martin@arm.com>,
+        <steven.price@arm.com>, <broonie@kernel.org>,
+        <guohanjun@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+References: <20200403090048.938-1-yezhenyu2@huawei.com>
+ <20200403090048.938-6-yezhenyu2@huawei.com>
+ <20200420120916.GE20696@hirez.programming.kicks-ass.net>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <8f6e877c-1462-441b-23ec-2a6bd3308099@huawei.com>
+Date:   Tue, 21 Apr 2020 22:18:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200304121943.28989-1-daniel.baluta@oss.nxp.com>
- <20200304121943.28989-2-daniel.baluta@oss.nxp.com> <CAPDyKFp6KLuuuVFcEWGxn5NkuDSkhM-MjRiiYj_zC4mFxhOBag@mail.gmail.com>
-In-Reply-To: <CAPDyKFp6KLuuuVFcEWGxn5NkuDSkhM-MjRiiYj_zC4mFxhOBag@mail.gmail.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Tue, 21 Apr 2020 17:18:45 +0300
-Message-ID: <CAEnQRZDX8PZ7V+c8zfoxK-+oGp2pt8N3oTAC6=Ps1W33LGY7WA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/2] PM / domains: Introduce multi PM domains helpers
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Len Brown <len.brown@intel.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Olaru <paul.olaru@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Anson Huang <anson.huang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200420120916.GE20696@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 5:01 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Wed, 4 Mar 2020 at 13:20, Daniel Baluta <daniel.baluta@oss.nxp.com> wrote:
-> >
-> > From: Daniel Baluta <daniel.baluta@nxp.com>
-> >
-> > This patch introduces helpers support for multi PM domains.
-> >
-> > API consists of:
-> >
-> > 1) dev_multi_pm_attach - powers up all PM domains associated with a given
-> > device. Because we can attach one PM domain per device, we create
-> > virtual devices (children of initial device) and associate PM domains
-> > one per virtual device.
-> >
-> > 2) dev_multi_pm_detach - detaches all virtual devices from PM domains
-> > attached with.
-> >
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
->
-> First, apologize for the delay.
->
-> In general I don't mind adding helpers that can be used to decrease
-> open coding. However, in this case, I wonder how useful the helpers
-> would really be.
->
-> More precisely, according to the information I have, a device may not
-> always need all of its PM domains to be turned on together, but
-> perhaps only a subset of them. Depending on the current use case that
-> is running.
->
-> Of course, some cases follow your expectations, but as stated, some
-> others do not.
->
-> Do you have an idea how many users that would be able to switch to
-> these new APIs as of today?
+Hi Peter,
 
-IMX Sound Open Firmware driver will immediately be available
-to use this new API.
+On 2020/4/20 20:09, Peter Zijlstra wrote:
+> On Fri, Apr 03, 2020 at 05:00:47PM +0800, Zhenyu Ye wrote:
+>> This patch provides flush_{pte|pmd|pud|p4d}_tlb_range() in generic
+>> code, which are expressed through the mmu_gather APIs.  These
+>> interface set tlb->cleared_* and finally call tlb_flush(), so we
+>> can do the tlb invalidation according to the information in
+>> struct mmu_gather.
+>>
+>> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+>> ---
+>>  include/asm-generic/pgtable.h | 12 +++++++--
+>>  mm/pgtable-generic.c          | 50 +++++++++++++++++++++++++++++++++++
+>>  2 files changed, 60 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+>> index e2e2bef07dd2..2bedeee94131 100644
+>> --- a/include/asm-generic/pgtable.h
+>> +++ b/include/asm-generic/pgtable.h
+>> @@ -1160,11 +1160,19 @@ static inline int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+>>   * invalidate the entire TLB which is not desitable.
+>>   * e.g. see arch/arc: flush_pmd_tlb_range
+>>   */
+>> -#define flush_pmd_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
+>> -#define flush_pud_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
+>> +extern void flush_pte_tlb_range(struct vm_area_struct *vma,
+>> +				unsigned long addr, unsigned long end);
+>> +extern void flush_pmd_tlb_range(struct vm_area_struct *vma,
+>> +				unsigned long addr, unsigned long end);
+>> +extern void flush_pud_tlb_range(struct vm_area_struct *vma,
+>> +				unsigned long addr, unsigned long end);
+>> +extern void flush_p4d_tlb_range(struct vm_area_struct *vma,
+>> +				unsigned long addr, unsigned long end);
+>>  #else
+>> +#define flush_pte_tlb_range(vma, addr, end)	BUILD_BUG()
+>>  #define flush_pmd_tlb_range(vma, addr, end)	BUILD_BUG()
+>>  #define flush_pud_tlb_range(vma, addr, end)	BUILD_BUG()
+>> +#define flush_p4d_tlb_range(vma, addr, end)	BUILD_BUG()
+>>  #endif
+>>  #endif
+> 
+> Ideally you'd make __HAVE_ARCH_FLUSH_PMD_TLB_RANGE go away. Power
+> certainly doesnt need it with the below.
+> 
 
-https://elixir.bootlin.com/linux/latest/source/sound/soc/sof/imx/imx8.c#L221
+However, arch `arc` also uses __HAVE_ARCH_FLUSH_PMD_TLB_RANGE :
 
-Aside, from that there are the ACM clock modules for i.MX8QXP / i.MX8QM. Also,
-looking at our internal tree there are XUVI, VPU, DPU drivers that need multi
-power domain support.
+grep -nr __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+	mm/pgtable-generic.c:104:#ifndef __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+	mm/pgtable-generic.c:152:#endif /* __HAVE_ARCH_FLUSH_PMD_TLB_RANGE */
+	include/asm-generic/pgtable.h:1153:#ifndef __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+	arch/powerpc/include/asm/book3s/64/tlbflush.h:49:#define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+	arch/arc/include/asm/hugepage.h:69:#define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
 
-Anson, Aisheng do you have a number of users on your side for
-multi power domain?
+So I am not sure if we can remove it.
 
-thanks,
-daniel.
+And if we remove the __HAVE_ARCH_FLUSH_PMD_TLB_RANGE, how to ensure not
+redefine flush_pXX_tlb_range() ?
+
+>> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+>> index 3d7c01e76efc..0f5414a4a2ec 100644
+>> --- a/mm/pgtable-generic.c
+>> +++ b/mm/pgtable-generic.c
+>> @@ -101,6 +101,56 @@ pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
+>>  
+>>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>  
+>> +#ifndef __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+>> +void flush_pte_tlb_range(struct vm_area_struct *vma,
+>> +			 unsigned long addr, unsigned long end)
+>> +{
+>> +	struct mmu_gather tlb;
+>> +
+>> +	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);
+>> +	tlb_start_vma(&tlb, vma);
+>> +	tlb_set_pte_range(&tlb, addr, end - addr);
+>> +	tlb_end_vma(&tlb, vma);
+>> +	tlb_finish_mmu(&tlb, addr, end);
+>> +}
+>> +
+>> +void flush_pmd_tlb_range(struct vm_area_struct *vma,
+>> +			 unsigned long addr, unsigned long end)
+>> +{
+>> +	struct mmu_gather tlb;
+>> +
+>> +	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);
+>> +	tlb_start_vma(&tlb, vma);
+>> +	tlb_set_pmd_range(&tlb, addr, end - addr);
+>> +	tlb_end_vma(&tlb, vma);
+>> +	tlb_finish_mmu(&tlb, addr, end);
+>> +}
+>> +
+>> +void flush_pud_tlb_range(struct vm_area_struct *vma,
+>> +			 unsigned long addr, unsigned long end)
+>> +{
+>> +	struct mmu_gather tlb;
+>> +
+>> +	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);
+>> +	tlb_start_vma(&tlb, vma);
+>> +	tlb_set_pud_range(&tlb, addr, end - addr);
+>> +	tlb_end_vma(&tlb, vma);
+>> +	tlb_finish_mmu(&tlb, addr, end);
+>> +}
+>> +
+>> +void flush_p4d_tlb_range(struct vm_area_struct *vma,
+>> +			 unsigned long addr, unsigned long end)
+>> +{
+>> +	struct mmu_gather tlb;
+>> +
+>> +	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);
+>> +	tlb_start_vma(&tlb, vma);
+>> +	tlb_set_p4d_range(&tlb, addr, end - addr);
+>> +	tlb_end_vma(&tlb, vma);
+>> +	tlb_finish_mmu(&tlb, addr, end);
+>> +}
+>> +#endif /* __HAVE_ARCH_FLUSH_PMD_TLB_RANGE */
+> 
+> You're nowhere near lazy enough:
+> 
+> #define FLUSH_Pxx_TLB_RANGE(_pxx) \
+> void flush_##_pxx##_tlb_range(struct vm_area_struct *vma, \
+> 			      unsigned long addr, unsigned long end) \
+> { \
+> 	struct mmu_gather tlb; \
+> 	\
+> 	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end); \
+> 	tlb_start_vma(&tlb, vma); \
+> 	tlb_flush_##_pxx##_range(&tlb, addr, end-addr); \
+> 	tlb_end_vma(&tlb, vma); \
+> 	tlb_finish_mmu(&tlb, addr, end); \
+> }
+> 
+> FLUSH_Pxx_TLB_RANGE(pte)
+> FLUSH_Pxx_TLB_RANGE(pmd)
+> FLUSH_Pxx_TLB_RANGE(pud)
+> FLUSH_Pxx_TLB_RANGE(p4d)
+> 
+> 
+> .
+> 
+
