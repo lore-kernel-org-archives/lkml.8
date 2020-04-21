@@ -2,163 +2,130 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E1BC55184
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4B6C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F572068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D144206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="a4cWUdIF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EdDxnU61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbgDUS5P (ORCPT
+        id S1726054AbgDUS6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:57:15 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57398 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDUS5N (ORCPT
+        Tue, 21 Apr 2020 14:58:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40603 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725902AbgDUS6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:57:13 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LIv2kU001553;
-        Tue, 21 Apr 2020 18:57:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=WOyKZjY+eI2YMOo8cv9qPTAY/ZyP/gYFXzlUCbXYSH8=;
- b=a4cWUdIFlDDioH4LRw2Vi4Qbh7qzccfCV+4M+GbiqNrek4Jx2nJhf5c/txZJAMPoArlt
- Vdkb3z3Lpf0vIZ8BR2DKJ1Lq2wtzAG5I0dBF9S4oAV6wqCfuXKaOt4WcScK6fZc288QY
- ThWuE7MiWl/N6RLQZ0/NaNkowmnpway4Q13X7lLYayOpbnIRHtYCpgDSOejchH+bLkYD
- xU9G6aS2uh7qmQqVElTWgsHdBRsxo92TRUd+emoLLnzkdHvjpHfxKWwVRJriMAtf3iTE
- PHoJHxEV2iXs8dglRwaHE0nwAI3J9aN+/sPcy/1H8ADEst/KRKPSAfoyKJxK4LjqUk7n CQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30ft6n6r5q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 18:57:02 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LIrQUF119834;
-        Tue, 21 Apr 2020 18:57:02 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30gb90rnff-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 18:57:02 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03LIuxPi029627;
-        Tue, 21 Apr 2020 18:56:59 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Apr 2020 11:56:59 -0700
-Date:   Tue, 21 Apr 2020 11:56:57 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/8] fs/ext4: Disallow encryption if inode is DAX
-Message-ID: <20200421185657.GK6749@magnolia>
-References: <20200414040030.1802884-1-ira.weiny@intel.com>
- <20200414040030.1802884-4-ira.weiny@intel.com>
- <20200415160307.GJ90651@mit.edu>
- <20200415195433.GC2305801@iweiny-DESK2.sc.intel.com>
- <20200421184143.GA3004764@iweiny-DESK2.sc.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421184143.GA3004764@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004210141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxlogscore=999 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004210141
+        Tue, 21 Apr 2020 14:58:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587495511;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=rUPjxBn3nVUsB3LHb1zBAgrE865CvJIwCFnHhNpJjCs=;
+        b=EdDxnU61LMKulDWL2yttQt+HO1fAkQccvZzFEu6RmtklM9/VwhgwXqXGaGTecIvSFxFboh
+        6avAEiPYMjP9zw5mbwLop5Ov8lc1yArwTInYA6JRQpkxCUL8QklduASNHwsdRnQFEzktc6
+        FAjSCYymLPT8CrbPSJVW5J5aXc5+9do=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-121-QJ7adI31OCuUQsmIm-vRDg-1; Tue, 21 Apr 2020 14:58:27 -0400
+X-MC-Unique: QJ7adI31OCuUQsmIm-vRDg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F14DE107ACCC;
+        Tue, 21 Apr 2020 18:58:25 +0000 (UTC)
+Received: from llong.com (ovpn-114-241.rdu2.redhat.com [10.10.114.241])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 17B1A60C63;
+        Tue, 21 Apr 2020 18:58:18 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v2] blk-iocost: Simplify parameter type in iocost_ioc_vrate_adj trace entry
+Date:   Tue, 21 Apr 2020 14:58:00 -0400
+Message-Id: <20200421185800.22094-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 11:41:43AM -0700, Ira Weiny wrote:
-> On Wed, Apr 15, 2020 at 12:54:34PM -0700, 'Ira Weiny' wrote:
-> > On Wed, Apr 15, 2020 at 12:03:07PM -0400, Theodore Y. Ts'o wrote:
-> > > On Mon, Apr 13, 2020 at 09:00:25PM -0700, ira.weiny@intel.com wrote:
->  
-> [snip]
-> 
-> > > 
-> > > Also note that encrypted files are read/write so we must never allow
-> > > the combination of ENCRPYT_FL and DAX_FL.  So that may be something
-> > > where we should teach __ext4_iget() to check for this, and declare the
-> > > file system as corrupted if it sees this combination.
-> > 
-> > ok...
-> 
-> After thinking about this...
-> 
-> Do we really want to declare the FS corrupted?
+The iocost_ioc_vrate_adj() trace entry in include/trace/events/iocost.h
+has one parameter of type "u32 (*missed_ppm)[2]" which is rather ugly
+and hard to read. It makes me think for seconds to figure out what
+it is and I have to double-check the the caller to confirm that it is
+actually a pointer to a 2-entry u32 array.
 
-Seeing as we're defining the dax inode flag to be advisory (since its
-value is ignored if the fs isn't on pmem, or the administrator overrode
-with dax=never mount option), I don't see why that's filesystem
-corruption.
+It also happens that some tools that parse trace entries may not be
+able to correctly interpret this parameter type which leads me to take
+a look in the first place.
 
-I can see a case for returning errors if you're trying to change ENCRYPT
-or VERITY on a file that's has S_DAX set.  We can't encrypt or set
-verity data for a file that could be changed behind our backs, so the
-kernel cannot satisfy /that/ request.
+For simplicity sake, it is better to change the parameter type to just
+"u32 *" and adjust the trace entry accordingly.
 
-As for changing FS_DAX_FL on an encrypted/verity'd file, the API says
-that it might not have an immedate effect on S_DAX and that programs
-have to check S_DAX after changing FS_DAX_FL.  It'll never result in
-S_DAX being set, but the current spec never guarantees that. ;)
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+---
+ block/blk-iocost.c            | 4 ++--
+ include/trace/events/iocost.h | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-(If FS_DAX_FL were *mandatory* then yes that would be corruption.)
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index db35ee682294..3ab0c1c704b6 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1591,7 +1591,7 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 				      vrate_min, vrate_max);
+ 		}
+ 
+-		trace_iocost_ioc_vrate_adj(ioc, vrate, &missed_ppm, rq_wait_pct,
++		trace_iocost_ioc_vrate_adj(ioc, vrate, missed_ppm, rq_wait_pct,
+ 					   nr_lagging, nr_shortages,
+ 					   nr_surpluses);
+ 
+@@ -1600,7 +1600,7 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 			ioc->period_us * vrate * INUSE_MARGIN_PCT, 100);
+ 	} else if (ioc->busy_level != prev_busy_level || nr_lagging) {
+ 		trace_iocost_ioc_vrate_adj(ioc, atomic64_read(&ioc->vtime_rate),
+-					   &missed_ppm, rq_wait_pct, nr_lagging,
++					   missed_ppm, rq_wait_pct, nr_lagging,
+ 					   nr_shortages, nr_surpluses);
+ 	}
+ 
+diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
+index 7ecaa65b7106..c2f580fd371b 100644
+--- a/include/trace/events/iocost.h
++++ b/include/trace/events/iocost.h
+@@ -130,7 +130,7 @@ DEFINE_EVENT(iocg_inuse_update, iocost_inuse_reset,
+ 
+ TRACE_EVENT(iocost_ioc_vrate_adj,
+ 
+-	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 (*missed_ppm)[2],
++	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 *missed_ppm,
+ 		u32 rq_wait_pct, int nr_lagging, int nr_shortages,
+ 		int nr_surpluses),
+ 
+@@ -155,8 +155,8 @@ TRACE_EVENT(iocost_ioc_vrate_adj,
+ 		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);;
+ 		__entry->new_vrate = new_vrate;
+ 		__entry->busy_level = ioc->busy_level;
+-		__entry->read_missed_ppm = (*missed_ppm)[READ];
+-		__entry->write_missed_ppm = (*missed_ppm)[WRITE];
++		__entry->read_missed_ppm = missed_ppm[READ];
++		__entry->write_missed_ppm = missed_ppm[WRITE];
+ 		__entry->rq_wait_pct = rq_wait_pct;
+ 		__entry->nr_lagging = nr_lagging;
+ 		__entry->nr_shortages = nr_shortages;
+-- 
+2.18.1
 
---D
-
-> If so, I think we need to return errors when such a configuration is attempted.
-> If in the future we have an encrypted mode which can co-exist with DAX (such as
-> Dan mentioned) we can change this.
-> 
-> FWIW I think we should return errors when such a configuration is attempted but
-> _not_ declare the FS corrupted.  That allows users to enable this configuration
-> later if we can figure out how to support it.
-> 
-> > 
-> > > (For VERITY_FL
-> > > && DAX_FL that is a combo that we might want to support in the future,
-> > > so that's probably a case where arguably, we should just ignore the
-> > > DAX_FL for now.)
-> > 
-> > ok...
-> 
-> I think this should work the same.
-> 
-> It looks like VERITY_FL and ENCRYPT_FL are _not_ user modifiable?  Is that
-> correct?
-> 
-> You said that ENCRPYT_FL is set from the parent directory?  But I'm not seeing
-> where that occurs?
-> 
-> Similarly I don't see where VERITY_FL is being set either?  :-/
-> 
-> I think to make this work correctly we should restrict setting those flags if
-> DAX_FL is set and vice versa.  But I'm not finding where to do that.  :-/
-> 
-> Ira
-> 
-> > 
-> > Ira
-> > 
