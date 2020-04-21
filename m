@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D8EC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FD0C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16132071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA622071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:07:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BkiXl71J"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fpmx15OT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbgDUSHj (ORCPT
+        id S1729263AbgDUSHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54192 "EHLO
+        Tue, 21 Apr 2020 14:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728974AbgDUSHg (ORCPT
+        with ESMTP id S1728974AbgDUSHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:07:36 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01F9C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:35 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id e18so12090332pld.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:35 -0700 (PDT)
+        Tue, 21 Apr 2020 14:07:39 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A40C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:38 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id o6so4025598pjl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 11:07:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=mKZgWKTP9nyB3m6imB1oWbJmLGuM3Run3ACrycwRXo0=;
-        b=BkiXl71Ju4RoZwGuop1242f7nPTIl1QtJbh0t1/aJS5V1RbTj0ig+XmGT4ANz+ObG2
-         JbmwyufL7tqvPmoqkImWWmAgQ1G9l16RL+ocbWy5WDJljW1KdTK1Xlk6miC5G1GJyfSC
-         CnBHK8d8ZICOQ1NCQJOqdduvYbt2h5cvgc8ujidiZ6vGCjJWN5F6zZEYrVUhHDHVdDKd
-         yZGNzA+FarHu383z1bpWfYdsOpnpHLTSIc1Nit1aI9v6Lk+ciEsp4E8bY+SRVk+rBo4q
-         F3M74IMWQhKrkzUOXarzuelT0A6fRUQCkPIVWn+15BEaUWOSGA3Hy5BphgNS4Fuw2TpM
-         Hj3g==
+        bh=au6uumjT1zWMK8KDLrkHDsklveSUNzLhdmZb1DNGngU=;
+        b=fpmx15OTRr3+QAzH+yoCVT5PkrBO6/jyUfC6ePBBca/zz12ZoK7bbNuCPJat8YIrlc
+         jpVy115I+rNwCC3AZ5pj3TxOXF0X40MONWVBzCYd9wY5IiHU+XIPl0uyNrFFhK1fSMKG
+         SeVieulfgGVwIkqgeH9aPgMN5g6oXA2ODFW1HEGGqGTLFukOTL+BNr1p+ep+/usVdtC0
+         A4bNPbSnftASqIfIAsV92V3pbn9kmx5d3U9XUdl68htx/Fm59BMTOZYBbMd8RZMcPkWV
+         BCscd1+Ftf2bAeiJ9F7qNu6zojb5yvU572UA+Apf7jJIS+HbNaEusPawwgmDfCuZQHhh
+         0Jaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=mKZgWKTP9nyB3m6imB1oWbJmLGuM3Run3ACrycwRXo0=;
-        b=UMuH5hM16csGEnKjNB/uXGzMLyOCwpXDlScdNPMYg2gtyMsDjEjuQHWcH0LQyCVLkg
-         HJkxpTLf6UXmYExBAHcwLSYecRAyiod1cKe2SSYymIxsiyt0HuXOPJWr5cZea2a1cWR6
-         KX9fGHz4auymiW+DndHHiZ63StDIFBBFWlUt8ldctkAjH4huOQjEijSnRUoBWrYfHwic
-         CAw8nGPH2A8NQU2D4/seK+HGuTUdPIRfyCmWG4NCO8WCpnRgiIw8IOkEsT8x7Wr9Rim2
-         WDSc9RcXUFZaKzoxuD3xegbSOCmdoOBcTEzTfKMBDJ9GS4WfX/jAXSU3ZLN3U7ItREXf
-         46YA==
-X-Gm-Message-State: AGi0PuZxjVLMRgF2bFLRAN49p9/N9hDlb+WsrcCs6g7rRUmr46LxLPBb
-        KmpHRehV013QkCTfcOH9fTJuoJfqIe2py8dpPJ8=
-X-Google-Smtp-Source: APiQypIB1Hn2TWcwGvGfZLdETbRCDJ/Wqg5d98rBz4Ei2HyNE+9LmwS7HVGo2ypBkYFB63iTI0DsX1wWPUhsRqa+oQY=
-X-Received: by 2002:a63:5d60:: with SMTP id o32mr22283536pgm.172.1587492455521;
- Tue, 21 Apr 2020 11:07:35 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 11:07:23 -0700
+        bh=au6uumjT1zWMK8KDLrkHDsklveSUNzLhdmZb1DNGngU=;
+        b=YDptBSqyA1nbxXLzYvbq12qdSHzsiF8Ge0unQuk+i0pCOW8tgPq2BjkTC+l2qJ5xQj
+         W25wYOyL3+v3oI8M88bP/TA6v+EJ/B5UvzNt7FTbHqMnDK1NUCW1Km6kaPospmMrZQzs
+         GZNS1qSc8v/Lt8E/YU8fUtEkzkwjGiVM4TSxgS3TLp5WIoCU53hPnV0HIZEMJeEahqYA
+         IecyXRoQIw5F/8+89HSNsc6nk+qovFhRCEP4537MRwLHpRfrAmdHhkKkBNmP1Ok1D2om
+         SMMHnVBxEQSzwfhS8p0mDNLubM4DdSS9qIxGH5G9y8ZlSNFqOkVl6BKEBWZ0gEZ6rWfD
+         wHRg==
+X-Gm-Message-State: AGi0PuaajWZtnkBxAyoNGWRlgWz6/Qvmrelx/tdV42rCm4xei24gGvMi
+        QsFE21yz53jedOebTlRUqca1PF9vzAFeJoA9YwU=
+X-Google-Smtp-Source: APiQypIFE/p55Ry6sL96Gs0HWYmVuj/HgnvBESSfawHZ1FkRSX612AAHTmcTqO2ctUvpKAw3DqNgcdWCS7hmUAUphT0=
+X-Received: by 2002:a17:90a:77cb:: with SMTP id e11mr7360422pjs.0.1587492457823;
+ Tue, 21 Apr 2020 11:07:37 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 11:07:24 -0700
 In-Reply-To: <20200421180724.245410-1-samitolvanen@google.com>
-Message-Id: <20200421180724.245410-3-samitolvanen@google.com>
+Message-Id: <20200421180724.245410-4-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20200421180724.245410-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH 2/3] objtool: optimize insn_hash for split sections
+Subject: [PATCH 3/3] objtool: optimize add_dead_ends for split sections
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>
@@ -74,56 +74,136 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 When running objtool on vmlinux.o compiled with -ffunction-sections,
-we end up with a ton of collisions in the insn_hash table as each
-function is in its own section. This results in a runtime of minutes
-instead of seconds. Use both section index and offset as the key to
-avoid this, similarly to rela_hash.
+.rela.discard.(un)reachable often contains relocations that point to
+a different section. Instead of iterating through the list of all
+instructions each time, store a pointer to the last instruction of
+each section when decoding instructions.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- tools/objtool/check.c | 5 +++--
- tools/objtool/check.h | 5 +++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ tools/objtool/check.c | 43 ++++++++++++++++++++++++++-----------------
+ tools/objtool/check.h |  4 ++++
+ tools/objtool/elf.h   |  1 +
+ 3 files changed, 31 insertions(+), 17 deletions(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 4b170fd08a28..4770fb07b365 100644
+index 4770fb07b365..7d4104de0a5e 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -34,7 +34,8 @@ struct instruction *find_insn(struct objtool_file *file,
+@@ -237,6 +237,7 @@ static void clear_insn_state(struct insn_state *state)
+ static int decode_instructions(struct objtool_file *file)
  {
+ 	struct section *sec;
++	struct section_info *sec_info = NULL;
+ 	struct symbol *func;
+ 	unsigned long offset;
  	struct instruction *insn;
+@@ -253,6 +254,8 @@ static int decode_instructions(struct objtool_file *file)
+ 		    strncmp(sec->name, ".discard.", 9))
+ 			sec->text = true;
  
--	hash_for_each_possible(file->insn_hash, insn, hash, offset)
-+	hash_for_each_possible(file->insn_hash, insn, hash,
-+			       sec_offset_hash(sec, offset))
- 		if (insn->sec == sec && insn->offset == offset)
- 			return insn;
- 
-@@ -273,7 +274,7 @@ static int decode_instructions(struct objtool_file *file)
- 			if (ret)
- 				goto err;
- 
--			hash_add(file->insn_hash, &insn->hash, insn->offset);
-+			hash_add(file->insn_hash, &insn->hash, insn_hash(insn));
- 			list_add_tail(&insn->list, &file->insn_list);
++		insn = NULL;
++
+ 		for (offset = 0; offset < sec->len; offset += insn->len) {
+ 			insn = malloc(sizeof(*insn));
+ 			if (!insn) {
+@@ -279,6 +282,17 @@ static int decode_instructions(struct objtool_file *file)
  			nr_insns++;
  		}
+ 
++		if (insn) {
++			sec_info = malloc(sizeof(*sec_info));
++			if (!sec_info) {
++				WARN("malloc failed");
++				return -1;
++			}
++
++			sec_info->last_insn = insn;
++			sec->section_info = sec_info;
++		}
++
+ 		list_for_each_entry(func, &sec->symbol_list, list) {
+ 			if (func->type != STT_FUNC || func->alias != func)
+ 				continue;
+@@ -312,7 +326,6 @@ static int add_dead_ends(struct objtool_file *file)
+ 	struct section *sec;
+ 	struct rela *rela;
+ 	struct instruction *insn;
+-	bool found;
+ 
+ 	/*
+ 	 * By default, "ud2" is a dead end unless otherwise annotated, because
+@@ -338,15 +351,13 @@ static int add_dead_ends(struct objtool_file *file)
+ 		if (insn)
+ 			insn = list_prev_entry(insn, list);
+ 		else if (rela->addend == rela->sym->sec->len) {
+-			found = false;
+-			list_for_each_entry_reverse(insn, &file->insn_list, list) {
+-				if (insn->sec == rela->sym->sec) {
+-					found = true;
+-					break;
+-				}
+-			}
++			struct section_info *sec_info = (struct section_info *)
++				rela->sym->sec->section_info;
++
++			if (sec_info)
++				insn = sec_info->last_insn;
+ 
+-			if (!found) {
++			if (!insn) {
+ 				WARN("can't find unreachable insn at %s+0x%x",
+ 				     rela->sym->sec->name, rela->addend);
+ 				return -1;
+@@ -380,15 +391,13 @@ static int add_dead_ends(struct objtool_file *file)
+ 		if (insn)
+ 			insn = list_prev_entry(insn, list);
+ 		else if (rela->addend == rela->sym->sec->len) {
+-			found = false;
+-			list_for_each_entry_reverse(insn, &file->insn_list, list) {
+-				if (insn->sec == rela->sym->sec) {
+-					found = true;
+-					break;
+-				}
+-			}
++			struct section_info *sec_info = (struct section_info *)
++				rela->sym->sec->section_info;
++
++			if (sec_info)
++				insn = sec_info->last_insn;
+ 
+-			if (!found) {
++			if (!insn) {
+ 				WARN("can't find reachable insn at %s+0x%x",
+ 				     rela->sym->sec->name, rela->addend);
+ 				return -1;
 diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index f0ce8ffe7135..bc78eca7982e 100644
+index bc78eca7982e..353677ec85d4 100644
 --- a/tools/objtool/check.h
 +++ b/tools/objtool/check.h
-@@ -56,6 +56,11 @@ struct objtool_file {
+@@ -47,6 +47,10 @@ struct instruction {
+ 	struct orc_entry orc;
+ };
  
- int check(const char *objname, bool orc);
- 
-+static inline u32 insn_hash(struct instruction *insn)
-+{
-+	return sec_offset_hash(insn->sec, insn->offset);
-+}
++struct section_info {
++	struct instruction *last_insn;
++};
 +
- struct instruction *find_insn(struct objtool_file *file,
- 			      struct section *sec, unsigned long offset);
+ struct objtool_file {
+ 	struct elf *elf;
+ 	struct list_head insn_list;
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index ebbb10c61e24..98f2b41d18e4 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -40,6 +40,7 @@ struct section {
+ 	int idx;
+ 	unsigned int len;
+ 	bool changed, text, rodata;
++	void *section_info;
+ };
  
+ struct symbol {
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
