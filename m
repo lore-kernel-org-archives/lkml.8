@@ -2,120 +2,91 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35DEC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E259C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFBC32064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/PyuREx"
+	by mail.kernel.org (Postfix) with ESMTP id 2760E206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 15:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgDUPvl (ORCPT
+        id S1726200AbgDUPyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:51:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725994AbgDUPvl (ORCPT
+        Tue, 21 Apr 2020 11:54:44 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33333 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbgDUPyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:51:41 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3864C061A10;
-        Tue, 21 Apr 2020 08:51:40 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x18so17050250wrq.2;
-        Tue, 21 Apr 2020 08:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kcT8YhRThPhegOm3BQj7wUe66PuL6hDa8ErzC+LQvVA=;
-        b=T/PyuRExpYtl18m3qkte0wueAWmWWpHTRgZgK8uwu12i+5YbEWa0GkQnamXwmmz2ym
-         HnDhNv2mBoB9JSc/2zO24+fUuBTWzCT81vqx7x/beNBoW2Cd5JlP50LrNaiIDdARVTY8
-         9sOn3cfal5fmxmyBKT2JFMwIzpFqAgVi9hKyEoKy3wy+BNKyqoyxTn7bgh02qlQqm7RA
-         4jSQfhpNWkjxqAkY0QObUBLau0NXNyECQ6J7+J8P/AnZz/3VYvfv5HOxkawlcQ6q2RQF
-         wXBghlmE8m7LWE8EISO7TF1NwV3wItGrFtlorZhTzNRY/p0HaUCSteOWlgJzbn1FNE26
-         YtUQ==
+        Tue, 21 Apr 2020 11:54:43 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay1so5392356plb.0;
+        Tue, 21 Apr 2020 08:54:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kcT8YhRThPhegOm3BQj7wUe66PuL6hDa8ErzC+LQvVA=;
-        b=cvNsezhPgw4mvaB58C6wJsgVjcFXx/uhyop07eo3U9GBKF1jCxmG2vbitadggrZE9k
-         OL2tHVFjAI/ak3JQK9MixRN47jL57r7U0Px+qmtXfwgXNClDu/yFnXXBa7U+uEXsmZ9h
-         OCD6gCzntN0Cn3uxCTmsb70GaSSANNZCfOGNZ9grqBAgCvGurG2aWoN4KQLqc9yXTLp0
-         rjzxHMLSgbAoU/8Wu4UWArqxVXyUIzERFT9thXEiNxC/UChD+EgRgqGfB9XWTXI6BiOX
-         elLRRPOw2iyvo/ClWHeyrRwdHfic/4vFPwphhEwGH4PxnvI0TJXVxY+7siREhI/H7S51
-         eeZA==
-X-Gm-Message-State: AGi0PuYS2oDcvQKB71NuQ1OUlFnezeGyOUpOHetmztZceJclIRbH6bn7
-        q8ohc4E0YzBdDUl8qOSsRfN6NgTR
-X-Google-Smtp-Source: APiQypLwxUr2g6yIkcRAqbgAzcYzXQ/xaGoq2pE5TKNjpKqN73rSSuaC3AUnTp3g8GDcaDbKPiJI/g==
-X-Received: by 2002:a5d:4cd0:: with SMTP id c16mr23192004wrt.98.1587484299782;
-        Tue, 21 Apr 2020 08:51:39 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id v19sm4357664wra.57.2020.04.21.08.51.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Apr 2020 08:51:38 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mchehab@kernel.org, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: media: rockchip-vpu: fix interrupt-names
-Date:   Tue, 21 Apr 2020 17:51:31 +0200
-Message-Id: <20200421155131.5839-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WA9A83mNO4Jsc2bWW6Z8o2K5ouW7sqEUFm9fDXDQEic=;
+        b=gtxmJPBj3O9ErUcTi8LRjbZwGVHqYQWgRgQLQcvFXIStN8gCEZ7QTqOgFgzRSIQ3RG
+         TNfPUbV4P4ouBMiySvmxuOCfu909T81bSgpzoi1Zzu2r831GtkbDHuPDeX5O1dKteDh1
+         sDAbbYO0bE5Ndn1ps6MlFa0SmMRuS6vxPCpysi/DxCAIw1P36IY/fGK0IgsUveBT8/Gw
+         T5VnBBvQEXGU1coRgfBtpHZskQPeNSrxi8ud0QCdFJIL/dA6LPwHScMFfL5aBa3w1Yzf
+         f6ddwx3ISJFkrF9n8gOnd3UcKrg37vaSlniX3A0etgDX0rKCTr/qSbJEmOIZZOyAD1cM
+         gq5g==
+X-Gm-Message-State: AGi0PuYxbpoGzqZXOSWCPUeDGj3UMGua6lBy7KFDrCCUqWo+0A/QVKrZ
+        uN2aQdL12qka8f5wgNYmwUM=
+X-Google-Smtp-Source: APiQypIaMU86jrFKZ3g4JB1E5/X3QoymTNnWg2UjNrJeZc8T2p7/jLVqRto/TPPKBMt8E8Ug9uLBJA==
+X-Received: by 2002:a17:90a:4e81:: with SMTP id o1mr6125309pjh.161.1587484483049;
+        Tue, 21 Apr 2020 08:54:43 -0700 (PDT)
+Received: from sultan-box.localdomain ([104.200.129.62])
+        by smtp.gmail.com with ESMTPSA id x185sm2770600pfx.155.2020.04.21.08.54.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 08:54:42 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 08:54:40 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>, stable@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthew Auld <matthew.auld@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] drm/i915: Synchronize active and retire callbacks
+Message-ID: <20200421155440.GA2289@sultan-box.localdomain>
+References: <20200404024156.GA10382@sultan-box.localdomain>
+ <20200407064007.7599-1-sultan@kerneltoast.com>
+ <20200414061312.GA90768@sultan-box.localdomain>
+ <158685263618.16269.9317893477736764675@build.alporthouse.com>
+ <20200414144309.GB2082@sultan-box.localdomain>
+ <20200420052419.GA40250@sultan-box.localdomain>
+ <158737090265.8380.6644489879531344891@jlahtine-desk.ger.corp.intel.com>
+ <20200420161514.GB1963@sultan-box.localdomain>
+ <158745189706.5265.10618964185012452715@saswiest-mobl.ger.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158745189706.5265.10618964185012452715@saswiest-mobl.ger.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives for example this error:
+On Tue, Apr 21, 2020 at 09:51:37AM +0300, Joonas Lahtinen wrote:
+> Quoting Sultan Alsawaf (2020-04-20 19:15:14)
+> > On Mon, Apr 20, 2020 at 11:21:42AM +0300, Joonas Lahtinen wrote:
+> > > So it seems that the patch got pulled into v5.6 and has been backported
+> > > to v5.5 but not v5.4.
+> > 
+> > You're right, that's my mistake.
+> 
+> Did applying the patch to v5.4 fix the issue at hand?
 
-arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
-interrupts: [[0, 9, 4]] is too short
-arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
-interrupt-names: ['vdpu'] is too short
-arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
-interrupt-names:0: 'vepu' was expected
+Of course the patch doesn't apply as-is because the code's been shuffled around,
+but yes. The crashes are gone with that patch, and I don't have the motivation
+to check if that patch is actually correct, so hurray, problem solved. I'm not
+going to send the backport myself because I'll probably be ignored, so you can
+go ahead and do that.
 
-With the conversion of rockchip-vpu.txt to yaml the correct
-'interrupt-names' for rk3328 was not included, so add them now.
-Also add 'minItems' to 'interrupts'for the completeness.
-
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/media/rockchip-vpu.yaml | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-index d7a42e6f9..27df18ad6 100644
---- a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-+++ b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-@@ -24,12 +24,15 @@ properties:
-     maxItems: 1
- 
-   interrupts:
-+    minItems: 1
-     maxItems: 2
- 
-   interrupt-names:
--    items:
--      - const: vepu
-+    oneOf:
-       - const: vdpu
-+      - items:
-+        - const: vepu
-+        - const: vdpu
- 
-   clocks:
-     maxItems: 2
--- 
-2.11.0
-
+Sultan
