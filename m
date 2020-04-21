@@ -2,112 +2,149 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4961BC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F04C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 230AF206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0884A2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:24:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgDULX5 (ORCPT
+        id S1728664AbgDULYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:23:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:33512 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDULX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:23:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBA3CC14;
-        Tue, 21 Apr 2020 04:23:55 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CFE03F73D;
-        Tue, 21 Apr 2020 04:23:53 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 12:23:51 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200421112350.4hzqdc3vd3aen2ba@e107158-lin.cambridge.arm.com>
-References: <20200403123020.13897-1-qais.yousef@arm.com>
- <20200414182152.GB20442@darkstar>
- <54ac2709-54e5-7a33-a6af-0a07e272365c@arm.com>
- <20200420151941.47ualxul5seqwdgh@e107158-lin.cambridge.arm.com>
- <20200420205210.7217651c@oasis.local.home>
- <1abbe4a5-61e6-a918-ff89-3dea0c7a277c@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1abbe4a5-61e6-a918-ff89-3dea0c7a277c@arm.com>
-User-Agent: NeoMutt/20171215
+        Tue, 21 Apr 2020 07:24:08 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:57364 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728626AbgDULYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:24:07 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD97O155eNIYqAA--.18S5;
+        Tue, 21 Apr 2020 19:24:02 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>
+Subject: [PATCH v2 3/3] MIPS: Make sparse_init() using top-down allocation
+Date:   Tue, 21 Apr 2020 19:23:58 +0800
+Message-Id: <1587468238-24032-4-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1587468238-24032-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1587468238-24032-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9DxD97O155eNIYqAA--.18S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw43uFW3Cr13Aw18Ar4UCFg_yoW5GFW7pr
+        y7Ca4Yqr4vqFn7AayfC348ZFyak3s5Cry7W3yavrs5uwnrWrs8Ar4vgF43ZF1xtrW0qF4a
+        qa4FvFW09Fs7AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBq14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+        x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+        8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+        IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gw4l42xK82
+        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
+        IF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
+        0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87
+        Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7sRRZjjJUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/21/20 13:16, Dietmar Eggemann wrote:
-> On 21/04/2020 02:52, Steven Rostedt wrote:
-> > On Mon, 20 Apr 2020 16:19:42 +0100
-> > Qais Yousef <qais.yousef@arm.com> wrote:
-> > 
-> >>> root@h960:~# find / -name "*util_clamp*"
-> >>> /proc/sys/kernel/sched_rt_default_util_clamp_min
-> >>> /proc/sys/kernel/sched_util_clamp_max
-> >>> /proc/sys/kernel/sched_util_clamp_min
-> >>>
-> >>> IMHO, keeping the common 'sched_util_clamp_' would be helpful here, e.g.
-> >>>
-> >>> /proc/sys/kernel/sched_util_clamp_rt_default_min  
-> >>
-> >> All RT related knobs are prefixed with 'sched_rt'. I kept the 'util_clamp_min'
-> >> coherent with the current sysctl (sched_util_clamp_min). Quentin suggested
-> >> adding 'default' to be more obvious, so I ended up with
-> >>
-> >> 	'sched_rt' + '_default' + '_util_clamp_min'.
-> >>
-> >> I think this is the logical and most consistent form. Given that Patrick seems
-> >> to be okay with the 'default' now, does this look good to you too?
-> > 
-> > There's only two files with "sched_rt" and they are tightly coupled
-> > (they define how much an RT task may use the CPU).
-> > 
-> > My question is, is this "sched_rt_default_util_clamp_min" related in
-> > any way to those other two files that start with "sched_rt", or is it
-> > more related to the files that start with "sched_util_clamp"?
-> > 
-> > If the latter, then I would suggest using
-> > "sched_util_clamp_min_rt_default", as it looks to be more related to
-> > the "sched_util_clamp_min" than to anything else.
-> 
-> For me it's the latter.
+In the current code, if CONFIG_SWIOTLB is set, when failed to get IO TLB
+memory from the low pages by plat_swiotlb_setup(), it may lead to the boot
+process failed with kernel panic.
 
-The way I see it is that 'sched_rt' define an rt class property. And running at
-max performance level is an RT class property that uclamp honoured and has an
-extra side effect that it allows us to tune.
+(1) On the Loongson and SiByte platform
+arch/mips/loongson64/dma.c
+arch/mips/sibyte/common/dma.c
+void __init plat_swiotlb_setup(void)
+{
+	swiotlb_init(1);
+}
 
-That said, I'm fine with whatever.
+kernel/dma/swiotlb.c
+void  __init
+swiotlb_init(int verbose)
+{
+...
+	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
+	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
+		return;
+...
+	pr_warn("Cannot allocate buffer");
+	no_iotlb_memory = true;
+}
 
-Patrick, Quentin, is sched_util_clamp_min_rt_default fine with you too?
+phys_addr_t swiotlb_tbl_map_single()
+{
+...
+	if (no_iotlb_memory)
+		panic("Can not allocate SWIOTLB buffer earlier ...");
+...
+}
 
-Thanks
+(2) On the Cavium OCTEON platform
+arch/mips/cavium-octeon/dma-octeon.c
+void __init plat_swiotlb_setup(void)
+{
+...
+	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
+	if (!octeon_swiotlb)
+		panic("%s: Failed to allocate %zu bytes align=%lx\n",
+		      __func__, swiotlbsize, PAGE_SIZE);
+...
+}
 
---
-Qais Yousef
+Because IO_TLB_DEFAULT_SIZE is 64M, if the rest size of low memory is less
+than 64M when call plat_swiotlb_setup(), we can easily reproduce the panic
+case.
+
+In order to reduce the possibility of kernel panic when failed to get IO
+TLB memory under CONFIG_SWIOTLB, it is better to allocate low memory as
+small as possible before plat_swiotlb_setup(), so make sparse_init() using
+top-down allocation.
+
+Reported-by: Juxin Gao <gaojuxin@loongson.cn>
+Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+v2:
+  - modify the patch subject
+
+ arch/mips/kernel/setup.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 5481a0c..8db533c 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -700,7 +700,17 @@ static void __init arch_mem_init(char **cmdline_p)
+ 		memblock_reserve(crashk_res.start, resource_size(&crashk_res));
+ #endif
+ 	device_tree_init();
++
++	/*
++	 * In order to reduce the possibility of kernel panic when failed to
++	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
++	 * low memory as small as possible before plat_swiotlb_setup(), so
++	 * make sparse_init() using top-down allocation.
++	 */
++	memblock_set_bottom_up(false);
+ 	sparse_init();
++	memblock_set_bottom_up(true);
++
+ 	plat_swiotlb_setup();
+ 
+ 	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
+-- 
+2.1.0
+
