@@ -2,171 +2,151 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B084BC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D972AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BD7A2074B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A74DD2074B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:18:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qFZMqD/B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pCDqqkMc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgDUHPX (ORCPT
+        id S1726600AbgDUHSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:15:23 -0400
-Received: from mail-co1nam11on2042.outbound.protection.outlook.com ([40.107.220.42]:6167
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725926AbgDUHPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:15:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EDl5fmA+5cS+b34ZqO+3mJ7YzKKifh+sL3T/msos6WHsaLqFdbGtlJYr0Iesa3IXs9bkGlKhZh5AM9I/xic4bm5sDiBQqQRXswPGEPnEt0P34F1EHQzUFi9nl/P45AOhdjzEizqUP4si/ymZcql2oZ+8DtxWGyEr3KW7+r1DaUDOqE77+zaCrI73gtzA51V9PBcwzScfmfj+ci4M9nc5QhU8FtMp6bXB9c2abd6PlNUXabWx8m3XAOfRhat19Fxt5fvbVkcW/qP7415azOoid/LYmwES0V3z7UHlA8fEpZ7aklW+yxsS2AETYHrFT/ud53X2fzNcJHJZ6NKM/LA3gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CGXNcJLW4jk/g+Gp7QI3GcaXDANKpNcHrQATgsmfphw=;
- b=O7Tt+PFEAzEcfC+XYsif1zr5XM+t/ZxVC2dx1YkeMaFC8t5GBFR+/UAS4FYZ2nviOJ00SJH89nHae83Kf8iMQYVXzLW+TCY+6ZfhS/bPZodK/PnLT1OJV6ZpMgNQi/XXQeHtIi21YyFsVraiW+nd/SccqCczmo8ei5xFlZdJmpTwbLZpWIGa9oawrPMx0cdd+k04MR6NJZTFoXpzL5ByelqQczCi9C1MMRbebDDoP8p9aQbNJvKN79pq+yyU/kiUrRuLp6jSkRY88YL93rR8ayHKAbdIde+jbVilTFyVVMI0+9HhmHfiBRaxpg4au+mNdIxowFTPMf+yzMzIvNdSog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 21 Apr 2020 03:18:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgDUHSE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 03:18:04 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B1D1C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 00:18:04 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id f8so10240670lfe.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 00:18:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CGXNcJLW4jk/g+Gp7QI3GcaXDANKpNcHrQATgsmfphw=;
- b=qFZMqD/Bd5PVnWrASDQdlnsDwE/Piu5N7zuUK8KI1Y9dAFj9SFg6Udarlq+jki9DI5/VjAD+0pGVhmjBvFeJGb+jXDF/COmdGa/ap0QlJqjARqaWBlXkwcHhlBibVXcdMgzvWJn9AvpsuvZCp9k19mkRNQQdJ6mljBj67Ln8m1w=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
- by DM6PR12MB3851.namprd12.prod.outlook.com (2603:10b6:5:1c2::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Tue, 21 Apr
- 2020 07:15:20 +0000
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766]) by DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766%3]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
- 07:15:20 +0000
-Subject: Re: [PATCH V2] amdgpu: remove unnecessary condition check
-To:     1587180037-113840-1-git-send-email-bernard@vivo.com,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-References: <20200421024159.126753-1-bernard@vivo.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <35ff841a-c3ee-d127-adbe-2c2c54880aef@amd.com>
-Date:   Tue, 21 Apr 2020 09:15:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <20200421024159.126753-1-bernard@vivo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR07CA0025.eurprd07.prod.outlook.com
- (2603:10a6:208:ac::38) To DM6PR12MB4401.namprd12.prod.outlook.com
- (2603:10b6:5:2a9::15)
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BX4Z7l5ylvlpD/cGHF2TlCLLoCRJ2GUG9rjWlG7lI/8=;
+        b=pCDqqkMcZ8vHjCvBaXooqfUmIfX2khXqw1s6Yg3SpnDKlOmiSEv8xbReXpZqKhBfhh
+         6zVHpQmaB9IR1qSmFRPtVPpgsi6i2aHhCe4kF8JlZjHCafKzkw5Ec1rewA9VxKbagYMu
+         soRP69kCOqDjaVLiEUbq1YjNpgAn4yuVZzA6nvVl576LiLB9RA45lbLr+Ba6h6sbV6Ug
+         KlLVy0/1GScs1nWRXNiUb6Bucb61GFQNfqNs77JOQBv9gAQd0QvVIKPVsCqimGoC+uSN
+         8uvkw4dNLVaWQRPHz7b4mZ6QfOJTfBj3Wi3RPidxv1GMzVUfSUToD1fEVqmRUtPMwoAb
+         eQkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BX4Z7l5ylvlpD/cGHF2TlCLLoCRJ2GUG9rjWlG7lI/8=;
+        b=M7QNxE2sHMVVr8fWa8e/WXlH3NjSfNemC0Twks8LyNgyOEwzC9vXEQbWK8/P8OBcot
+         ulXMZ+3j0ZgDT9V7V/YfmCZ4gmjXOdbBKXFSO4IB+8VYmiWirHS5iwarcZRp6/ZDaZ1t
+         B2/zvVblHNzk6erl+OPShH/4h/P1QgwzRlvlNJ8vnTam3xZeDrdIzqfQBJ1bVsalFq5N
+         lkHIH0n1UYvw9ZLfYOSZiLqHqO2ex/S1UC6u5pksretsfGSdAepVFe9UIMYbBivJymc4
+         nCqa+0XharD3ao1/bqDIeNX+93TrG94fwiZFr0Dw2GcMtwmb2KJyCnVHxsPsDRBqiQja
+         62QQ==
+X-Gm-Message-State: AGi0PuZMf+fhApxfwlJJ5hQY18/kJJ0MMRFWTwo8+9tJqhCOi9eShcGj
+        FcG36O4ydRlsYkLc6LUVg8GuxmJsiGqN20rYFIxgpjNB
+X-Google-Smtp-Source: APiQypK+PN9MRPeavkXiNY/zDMA/5bCPt8NvlD44YYisUkDb0UYn+96ndAzPVQnpgAS/jc8q0p8sQPBX38uI96K42yw=
+X-Received: by 2002:a19:c7d8:: with SMTP id x207mr12632280lff.190.1587453482312;
+ Tue, 21 Apr 2020 00:18:02 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR07CA0025.eurprd07.prod.outlook.com (2603:10a6:208:ac::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.10 via Frontend Transport; Tue, 21 Apr 2020 07:15:17 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 519f9509-1a0b-45b9-d965-08d7e5c3bfe7
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3851:|DM6PR12MB3851:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3851201221D4330847B7D67C83D50@DM6PR12MB3851.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1051;
-X-Forefront-PRVS: 038002787A
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(5660300002)(6666004)(110136005)(186003)(4326008)(316002)(2616005)(16526019)(66556008)(66476007)(66946007)(2906002)(36756003)(8936002)(8676002)(81156014)(45080400002)(6486002)(86362001)(31686004)(966005)(478600001)(31696002)(52116002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qB4e1B6U8zUTdQ2A7Az/qwN4w36JqMDPmLaxlm4PT+xfOM3LZ6rQGrc4u3Wk9EDsgvBOGOu40Ic2UYPJKq4ld43HR4ekA0OJeYvJtDjy/EL0dciC/zyVp/DqhUy6nPn4pChZZUom/eswS+V2jbmev4PqF95pt62sNEVN4locmHB0rTP6aa/kcabITx34Y7YQ6QP5SjrNPNj30HE2JnYEQmJiHD8CvvddPdC8tuEFYuuO2X0z6VPPwJfUKnh1SD97fHSzL9eZAE32xFlYrlaPNDwHlj1wG4yZLcedYTjMXFGupau+Ff34EsiMY2jzWn04G90WOEVlzcvRWiuXTt2uVkYXvktehlAXjyjzUsqw6bVzwNf0D3pzBPksjlQ9fYbfBD2UGfq2k8sgDnkJPGU+H937I8hDbbkC5Of6lxNeDLfzdqgrvftm9YaK0A4Y/zCMYPT4uubFZsVPqLHXSEStcrm/m+3g3MPwz3zjBmuAw6BiVrvrpX14nWsAbSRz6QO2JsLNSLFsZalbHGzqTIdjKQ==
-X-MS-Exchange-AntiSpam-MessageData: PAzhmdB50Eu4Skt7R17WafxRwO8WHlvNbx0CuzVOiqQgrkQLlx6lF4lxlu7qiGhtLLquSBJd/plTT+HwGh7a1AfLDKc5O1XP1G26EoyGp21JZYzvBq7+W9rwRnV2Led97CHE2y/gHg7AtDf4Qhk/naZ0xvcxNSN/2Aj/s7Tpnbs2cSHlndNu3HWetuHALW+8GyXzk0N4YYDAxZT6gqJhV3aUCq4xOgyM8JJCFNwEVIEqI6OuM8h0SnGys4B6hI0Le+LmLyyNMBr27pdX0V1bHg+eSab0/lqA8VEHVQqHROK6IWeTz5L6b9etUNtuCXBFhdYaaKiAQ65OEycBl2EoHA+K+hWOMftiNfCvArwwvmy93Ypz13faIvs+M7K3i7U2Kipl/2nMwQ9ocQW4fSH2/PkyJ3Mqx/nkojZE0gPJWoqbmt1qlNTlWf/2pVfdbR1WkzPAjLkx43xbMIU8zRBjKZvi+qQVEbsFospDekwhlTYrtnv7htsovKL1qaCWTu/NTbtaThz2pjpMxBkmxPjIlfNQBU62peffmmEnRl07GhJGCN3RzK20LrkG6B9LcFRK6pPmtZH6MKVHhBXIQqOuUt8bt4SMtffdvynA3ALdzQW5DVsLYyeR77U6I0X1xydZprB6qdE+6eBPaljfJ+2MULKlkR51tGeJL5xmAcoOBk1FZ5EdFMOECrJD4V5ksECYE5fKRtmtQtdbaNtMYhxhGtrGcdSzk2Q3VPurIwm+CPqRWNYt7iw33sF7XsqOfieXgyvuvYFIdC1ja4iho11u/ZZeOHB3V0WYofZ4Et8g7Ktmy9dBD6iN8rVMTL4t1b78U8YOCt2e9COdQ8+XVbpC/uyKhUofaUwZEsKUFmL7G/k=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 519f9509-1a0b-45b9-d965-08d7e5c3bfe7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2020 07:15:20.0267
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JWU7lFe+9ZbeZfNPrPHJVzEoY9FNGKhDQRK3gdBLGCQ8dINb1YN9GKUDRlwLFmwF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3851
+References: <cover.1587393807.git.yu.c.chen@intel.com> <34d7c9496b77c928fcbe6085213115bd4d48d5a2.1587393807.git.yu.c.chen@intel.com>
+In-Reply-To: <34d7c9496b77c928fcbe6085213115bd4d48d5a2.1587393807.git.yu.c.chen@intel.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 21 Apr 2020 09:17:50 +0200
+Message-ID: <CAKfTPtAh0mgPyQLe9W3iPt_7eUZWqa1x+kTmdsP2+qxi_5icWw@mail.gmail.com>
+Subject: Re: [PATCH 1/2][v2] sched: Make newidle_balance() static again
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 21.04.20 um 04:41 schrieb Bernard Zhao:
-> There is no need to if check again, maybe we could merge
-> into the above else branch.
+On Mon, 20 Apr 2020 at 17:01, Chen Yu <yu.c.chen@intel.com> wrote:
 >
-> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+> After Commit 6e2df0581f56 ("sched: Fix pick_next_task() vs 'change'
+> pattern race"), there is no need to expose newidle_balance() as it
+> is only used within fair.c file. Change this function back to static again.
 >
+> No functional change.
+>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 > ---
-> Changes since V1:
-> *commit message improve
-> *code style refactoring
->
-> Link for V1:
-> * https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Fpatchwork%2Fpatch%2F1226587%2F&amp;data=02%7C01%7Cchristian.koenig%40amd.com%7C50bb3a13f28b4e5d787508d7e59d9903%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637230337359422169&amp;sdata=LXUJgHOxfwSpacdW6suiI00z8egbRC3z3za0H3XtNV4%3D&amp;reserved=0
+> v2: Rename the remaining idle_balance() to newidle_balance()
+>     to fix an compile error when CONFIG_SMP is not set.
 > ---
->   drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 16 +++++++++-------
->   1 file changed, 9 insertions(+), 7 deletions(-)
+>  kernel/sched/fair.c  | 6 ++++--
+>  kernel/sched/sched.h | 4 ----
+>  2 files changed, 4 insertions(+), 6 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> index 9dff792c9290..a64eeb07bec4 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> @@ -660,13 +660,15 @@ static int reserve_bo_and_vm(struct kgd_mem *mem,
->   
->   	ret = ttm_eu_reserve_buffers(&ctx->ticket, &ctx->list,
->   				     false, &ctx->duplicates);
-> -	if (!ret)
-> -		ctx->reserved = true;
-> -	else {
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 02f323b85b6d..cca5c9b7b5ae 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3873,6 +3873,8 @@ static inline unsigned long cfs_rq_load_avg(struct cfs_rq *cfs_rq)
+>         return cfs_rq->avg.load_avg;
+>  }
+>
+> +static int newidle_balance(struct rq *this_rq, struct rq_flags *rf);
 > +
-> +	if (ret) {
->   		pr_err("Failed to reserve buffers in ttm\n");
->   		kfree(ctx->vm_pd);
->   		ctx->vm_pd = NULL;
->   	}
-> +	else {
-> +		ctx->reserved = true;
-> +	}
->   
->   	return ret;
->   }
-> @@ -733,15 +735,15 @@ static int reserve_bo_and_cond_vms(struct kgd_mem *mem,
->   
->   	ret = ttm_eu_reserve_buffers(&ctx->ticket, &ctx->list,
->   				     false, &ctx->duplicates);
-> -	if (!ret)
-> -		ctx->reserved = true;
-> -	else
-> -		pr_err("Failed to reserve buffers in ttm.\n");
->   
->   	if (ret) {
-> +		pr_err("Failed to reserve buffers in ttm.\n");
->   		kfree(ctx->vm_pd);
->   		ctx->vm_pd = NULL;
->   	}
-> +	else {
-
-Please use "} else {" here.
-
-Christian.
-
-> +		ctx->reserved = true;
-> +	}
->   
->   	return ret;
->   }
-
+>  static inline unsigned long task_util(struct task_struct *p)
+>  {
+>         return READ_ONCE(p->se.avg.util_avg);
+> @@ -4054,7 +4056,7 @@ attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
+>  static inline void
+>  detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
+>
+> -static inline int idle_balance(struct rq *rq, struct rq_flags *rf)
+> +static inline int newidle_balance(struct rq *rq, struct rq_flags *rf)
+>  {
+>         return 0;
+>  }
+> @@ -10425,7 +10427,7 @@ static inline void nohz_newidle_balance(struct rq *this_rq) { }
+>   *     0 - failed, no new tasks
+>   *   > 0 - success, new (fair) tasks present
+>   */
+> -int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
+> +static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
+>  {
+>         unsigned long next_balance = jiffies + HZ;
+>         int this_cpu = this_rq->cpu;
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index db3a57675ccf..be83f88495fb 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1504,14 +1504,10 @@ static inline void unregister_sched_domain_sysctl(void)
+>  }
+>  #endif
+>
+> -extern int newidle_balance(struct rq *this_rq, struct rq_flags *rf);
+> -
+>  #else
+>
+>  static inline void sched_ttwu_pending(void) { }
+>
+> -static inline int newidle_balance(struct rq *this_rq, struct rq_flags *rf) { return 0; }
+> -
+>  #endif /* CONFIG_SMP */
+>
+>  #include "stats.h"
+> --
+> 2.17.1
+>
