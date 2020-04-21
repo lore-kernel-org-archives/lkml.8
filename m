@@ -2,131 +2,92 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC26C55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF9BC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82E1C206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587497509;
-	bh=BE4IFnhZXL+QecB5RHlSvGSBQfuvKjcw+a+56tvjuPI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wHKrtOSQegKCfVrr5+lLyUbTkku2YdMULkBXsa2rzQ4hBwnWdFKaCDjNfGGBBdcre
-	 kFnmEKz1YN4tJ/oEMmodYNLtfiOT6iwHTsWdEujx6hEYHGLpLia6za4Bb7MfH9pYqF
-	 /fjwBtBBBaEjzPhgiVpodleQdUS0r6G2vWvfT2wc=
+	by mail.kernel.org (Postfix) with ESMTP id 4617D2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D5E4GkQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgDUTbs (ORCPT
+        id S1726364AbgDUTb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgDUTbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:31:48 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8555F206D5;
-        Tue, 21 Apr 2020 19:29:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587497351;
-        bh=BE4IFnhZXL+QecB5RHlSvGSBQfuvKjcw+a+56tvjuPI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tSARBWUP64gzQ5NLyeeC4TZ3buBZeIwn+Y3/W/QIGKUcqRbg74UFh/abweOaGS7S8
-         GFaDTsqncX4r1WL5lWFb6SHDZIRr4dlvswFtzmck/3ho/rWCKv5rLGegjNGrHBv+tb
-         /+uf2y3ydxg5X7aUSSvAuI8sOW6M8cgoH0wKnsm4=
-Date:   Tue, 21 Apr 2020 21:29:06 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH 07/10] docs: RCU: RTFP: fix bibtex entries
-Message-ID: <20200421212850.616db8b0@coco.lan>
-In-Reply-To: <20200421175225.GA32083@paulmck-ThinkPad-P72>
-References: <cover.1587488137.git.mchehab+huawei@kernel.org>
-        <3cc10823634f12c3d3c44ee03f73b7aaa347df63.1587488137.git.mchehab+huawei@kernel.org>
-        <20200421174329.GR17661@paulmck-ThinkPad-P72>
-        <20200421175225.GA32083@paulmck-ThinkPad-P72>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 21 Apr 2020 15:31:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725987AbgDUTb5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:31:57 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65E9DC03C1A6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:31:57 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id nu11so1841950pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 12:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=NZNBzPPg39ZyrA+9K1+5SfyJG/p/D3ab1EaiN8kOOpQ=;
+        b=D5E4GkQI8kMxBOpuDMOjkCGLYjzhv9SzQx5s04xfcN97rcZAXp10VOjQbSAr2Va2Ep
+         xOLMpcHjY6zHeW3ZNP3LQzJ0SI8bn5J7t4sslKU5XoQ8Hh7f/hmV2OTnxPoAF8Ci6nyN
+         khM6ZLtn45Nblr0G9fbnMUFmCSjbE687sAfFlBF1OaQI60mi6gjnomTCbesFpqhm3BVV
+         RD+IOKedrI/zH7nugKGj5JxvNaJpwHc7iAPT/cZDE2h8z/lyWZ5haQUSHayyaaVJjnis
+         3vFRPZc89wAtD42w3NPuMAAgRbODqu8Ixx1ApaoC8jSjx15fAdrO1g+HM4T+YSNo5KeE
+         imow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=NZNBzPPg39ZyrA+9K1+5SfyJG/p/D3ab1EaiN8kOOpQ=;
+        b=QmG7nGKpi91be4YrszETDbDO0yy6sMnNWy8tTgIhDArN5szUopUbB1vWyPLFKKyiT8
+         pvSWbI43f921L1VQKORVD0OA09RFk3iOtuWcye+jgAGzNdelwSZHXs1q9DMBnH8PKqDE
+         3ng1FzCwQLqzF8nherTw/aUGTMAo4an6lzBXHyqqpJjGM0261+tL5mrhSILl3yigr50s
+         V06sWK9cX04StfJ0bafszEQl/FhOL5dukS72OPuw7nS88DP9gQlZ/GTxjxGFxDzVMhBl
+         kIa3I82Dq+kVz8+DQgrI006j3LYHJfybDod8niOkmqYIhJpfDZcZ+xsYQhQEg9osGixq
+         iE2w==
+X-Gm-Message-State: AGi0PuZQUCgJ7VsNSAzN5nPUtH5XNEowsHjWOWMOFYm28crgVMwmEv6L
+        sgnUI0goSpXU8Urzy/rENZqorQ==
+X-Google-Smtp-Source: APiQypJFBgqr1TsKQVWWIkIK19DIg+mC/W2jjmH2JPSKGjxUsdqPajleKdFLi5uyE7M2nN3ydVuYqg==
+X-Received: by 2002:a17:902:c193:: with SMTP id d19mr21224614pld.184.1587497516540;
+        Tue, 21 Apr 2020 12:31:56 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id y25sm2998977pgc.36.2020.04.21.12.31.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 12:31:55 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 12:31:54 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Christoph Hellwig <hch@lst.de>
+cc:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 2/5] mm: remove watermark_boost_factor_sysctl_handler
+In-Reply-To: <20200421171539.288622-3-hch@lst.de>
+Message-ID: <alpine.DEB.2.22.394.2004211231410.54578@chino.kir.corp.google.com>
+References: <20200421171539.288622-1-hch@lst.de> <20200421171539.288622-3-hch@lst.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 21 Apr 2020 10:52:25 -0700
-"Paul E. McKenney" <paulmck@kernel.org> escreveu:
+On Tue, 21 Apr 2020, Christoph Hellwig wrote:
 
-> On Tue, Apr 21, 2020 at 10:43:29AM -0700, Paul E. McKenney wrote:
-> > On Tue, Apr 21, 2020 at 07:04:08PM +0200, Mauro Carvalho Chehab wrote:  
-> > > There are several troubles at the bibtex entries with
-> > > prevent them to be processed by LaTeX:
-> > > 
-> > > - On LaTeX, comment lines start with '%', but here, comments
-> > >   are starting with "#";
-> > > - Underlines should be escaped.
-> > > - While the best would be to use \url{} for all URL entries,
-> > >   let's do it at least for a couple that would otherwise
-> > >   produce errors on LaTeX.
-> > > 
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
-> > 
-> > Another approach might be just to link to a public repo containing
-> > cleaned-up versions of these bibliography entries:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/perfbook.git/tree/bib/RCU.bib
-> > 
-> > That would have the advantage of keeping this information in only one
-> > place, and reducing the number of updates required.
-
-Yeah. I didn't know you had it somewhere else.
-
-> > 
-> > Thoughts?  
+> watermark_boost_factor_sysctl_handler is just a pointless wrapper for
+> proc_dointvec_minmax, so remove it and use proc_dointvec_minmax
+> directly.
 > 
-> OK, I should have read the next patch in the series, where you convert
-> into a Sphinx-compatible bibliography.  Except that you had to convert
-> the bibtex entries by hand to produce the Sphinx-compatible entries?
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-No, but it still required a lot of manual work.
-
-I manually converted the file to ReST. That was the easiest part.
-
-Then, I used sphinx-build to convert it into a LaTeX file and changed
-the produced .tex for it to use the .bib file. 
-
-The last step was the hardest one. I'm not familiar with LaTeX. I did
-several attempts to produce an output with the same kind of captions
-as the original file, but I was unable to generate it.
-
-So, I ended doing the final step the hard way: I used XeLaTeX to produce
-a PDF file. Then, I manually copied the entries from the output back into 
-the ReST file, carefully adjusting the captions, in order for them to
-point to the right places. 
-
-Before that, I tried to use a few Sphinx BibTeX extensions, but they
-are not complete: they were unable to parse some types of entries.
-If I'm not mistaken (I did it some time ago, on another computer),
-the ones I tested crashed when trying to parse some entries, like 
-'@Conference'.
-
-> That will get a bit ugly when it comes time to add more entries.
-> 
-> Or was the conversion of bibliography entries automated?
-
-I suspect it should be possible to automate it, but, as I said,
-I'm not too familiar with LaTeX. 
-
-Thanks,
-Mauro
+Acked-by: David Rientjes <rientjes@google.com>
