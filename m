@@ -2,126 +2,113 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC31C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32240C55185
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE2220724
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:19:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ryGczwr6"
+	by mail.kernel.org (Postfix) with ESMTP id 126A020724
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587504009;
+	bh=pFS2yzzer8QmZtAyTrONwxocmpCDAdckbuwvMAT2QwY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ow6010gO6s18eP6Jyt+YqiPXrMbMH6C85cobb/7IcOefKHz2TMzF4FAp6lJZFUDaE
+	 nLIGanmMCap8zBWhgzgHva2n9P8Nao5o910zi+5wkfzziKUbp1TThymatoJZaK9I2x
+	 QfFSqjoG3hvlUcV/XYyUNLvxzeI4BeAo1tEvE5UE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgDUVTv (ORCPT
+        id S1726402AbgDUVUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 17:19:51 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:50209 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgDUVTv (ORCPT
+        Tue, 21 Apr 2020 17:20:08 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35414 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgDUVUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 17:19:51 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5FB1D22FE3;
-        Tue, 21 Apr 2020 23:19:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587503988;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QJCmpPlfT0jhbjpmDTIcPC9jUtk8NLpD0FJUCgCWl8A=;
-        b=ryGczwr6UFQ8WNhssB2ni/EeoyeMhz84YBfkDZFS6uJ2mr2YStuCiC5QJXJAwlRQW4V6X6
-        JeaDrQquXCVtLVY27Ks9UYXYhLq9uwfyU+f618OuFoY0XpFe3AlOC54iD6s9rHl3YPVg5/
-        IpCUoAuTa6nO8vLt3H3N5kbTOfjAhNQ=
+        Tue, 21 Apr 2020 17:20:07 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o7so61858oif.2;
+        Tue, 21 Apr 2020 14:20:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BekGHQXhf3Jp2g2yBPT6sfHMkawHAJ1e7QouDFB2tgI=;
+        b=uORWPMJTrzsmtUNiX1N/VOoxwKCVrXlP4MTNtaFPGv309mGsPIHlc4Z3c6VrfAjIpJ
+         Q6evG9c967S70aeaDKxMDJGuKFGOTUVUeiDvdaD2VhjP4Rbrs+YURYjMtCleW8J/VG7k
+         opMDpUle4xogIp5wd6HJaPuZqaQZS+38LFrenBHbhX4obJSNj8pMK5Pt5tnP8tpYJW0q
+         8B5Wunw6vagFUuUH+nX3Goq910Ej6PIr5eQRGaYQ+8aMIItQt4KKqhcRSN4D+C7WnxHR
+         hB/bKPWKQTbgT8jkJlM+gztmMqticXkErCKnNRVHqQNLAy95RcGsqagznOBt5VbxfWhY
+         ckCg==
+X-Gm-Message-State: AGi0PuYk8rGjxbYLIKymoM+NOZtRanHxK9s7+MKNHkfg7oPtwM4HY3vE
+        VPRir182R69ACZt2ewDzt+Ph5OU=
+X-Google-Smtp-Source: APiQypJrtH80baDZtKRTOT0kMElY1jA2cRjLb3VeIJ1NvV5x+EnvfLhDMQL6YiHEORNm+arCo/wTiA==
+X-Received: by 2002:aca:4d47:: with SMTP id a68mr4743679oib.60.1587504006390;
+        Tue, 21 Apr 2020 14:20:06 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id e15sm1040430otr.36.2020.04.21.14.20.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 14:20:05 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: Fix command line length limit calling dt-mk-schema
+Date:   Tue, 21 Apr 2020 16:20:03 -0500
+Message-Id: <20200421212004.6146-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 21 Apr 2020 23:19:48 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC PATCH net-next 1/3] net: phy: add concept of shared storage
- for PHYs
-In-Reply-To: <20200421193055.GI933345@lunn.ch>
-References: <20200420232624.9127-1-michael@walle.cc>
- <7bcd7a65740a6f85637ef17ed6b6a1e3@walle.cc>
- <20200421155031.GE933345@lunn.ch>
- <47bdeaf298a09f20ad6631db13df37d2@walle.cc>
- <20200421193055.GI933345@lunn.ch>
-Message-ID: <a3add59040db907be22d7299d0896c5d@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 5FB1D22FE3
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.948];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,armlinux.org.uk,davemloft.net,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-21 21:30, schrieb Andrew Lunn:
->> Speaking of it. Does anyone have an idea how I could create the hwmon
->> device without the PHY device? At the moment it is attached to the
->> first PHY device and is removed when the PHY is removed, although
->> there might be still other PHYs in this package. Its unlikely to
->> happen though, but if someone has a good idea how to handle that,
->> I'd give it a try.
-> 
-> There is a somewhat similar problem with Marvell Ethernet switches and
-> their internal PHYs. The PHYs are the same as the discrete PHYs, and
-> the usual Marvell PHY driver is used. But there is only one
-> temperature sensor for the whole switch, and it is mapped into all the
-> PHYs. So we end up creating multiple hwmon devices for the one
-> temperature sensor, one per PHY.
-> 
-> You could take the same approach here. Each PHY exposes a hwmon
-> device?
-> 
-> Looking at
-> static struct device *
-> __hwmon_device_register(struct device *dev, const char *name, void 
-> *drvdata,
->                         const struct hwmon_chip_info *chip,
->                         const struct attribute_group **groups)
-> 
-> I think it is O.K. to pass dev as NULL. You don't have to associate it
-> to a device. So you could create the hwmon device as part of package
-> initialisation and put it into shared->priv.
+As the number of schemas has increased, we're starting to hit the error
+"execvp: /bin/sh: Argument list too long". This is due to passing all the
+schema files on the command line to dt-mk-schema. It currently is only
+with out of tree builds and is intermittent depending on the file path
+lengths.
 
-I actually tried that before writing my mail. Have a look at commit
-59df4f4e8e0b ("hwmon: (core) check parent dev != NULL when chip != 
-NULL")
+Commit 2ba06cd8565b ("kbuild: Always validate DT binding examples") made
+hitting this proplem more likely since the example validation now always
+gets the full list of schemas.
 
-and the corresponding discussion here:
-   https://patchwork.kernel.org/patch/10381759/
+Fix this by putting the schema file list into a temp file and using xargs.
 
-And if I'd had to choose, I'd prefer having one hwmon device on the
-first PHY (with its drawback) rather than having it four times.
+Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/.gitignore | 2 +-
+ Documentation/devicetree/bindings/Makefile   | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
--michael
+diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
+index 5c6d8ea1a09c..0a6aef915fa4 100644
+--- a/Documentation/devicetree/bindings/.gitignore
++++ b/Documentation/devicetree/bindings/.gitignore
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ *.example.dts
+-processed-schema*.yaml
++processed-schema*.yaml*
+diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+index 1df680d07461..1c1cad860b7c 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -14,7 +14,8 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
+ DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+ 
+ quiet_cmd_mk_schema = SCHEMA  $@
+-      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
++      cmd_mk_schema = $(file >$@.tmp, $(real-prereqs)) \
++                      cat $@.tmp | xargs $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+ 
+ DT_DOCS = $(addprefix $(src)/, \
+ 	$(shell \
+-- 
+2.20.1
+
