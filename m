@@ -2,158 +2,143 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF01C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37D9C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A400420724
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E64720735
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 22:15:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aGCQDwXU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGfG3VUU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgDUWJC (ORCPT
+        id S1726112AbgDUWPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 18:09:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35228 "EHLO
+        Tue, 21 Apr 2020 18:15:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgDUWJA (ORCPT
+        with ESMTP id S1725850AbgDUWPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 18:09:00 -0400
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B3BC0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 15:09:00 -0700 (PDT)
-Received: by mail-pf1-x44a.google.com with SMTP id i128so279880pfc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 15:09:00 -0700 (PDT)
+        Tue, 21 Apr 2020 18:15:41 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 744C1C0610D5;
+        Tue, 21 Apr 2020 15:15:41 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x18so101019wrq.2;
+        Tue, 21 Apr 2020 15:15:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=mDHmY9kBbmtNLTrTQf1PZE7xxuj6hLsL/6YrTc8c7yY=;
-        b=aGCQDwXUwab/IFGFL0C2/sPd00y7giG3htT2IvaQwERtnmIhE4vFRCiTlAk8ZK2lD4
-         cWmNTyBbRDLEAp4xxbbb8nJzimMh9DGynsK9Zeo9bNGhV1bH1bDWy5OJA/aAyKEVLc9U
-         aq0U0jZZgDO83gaseC7GtEEm+TomUY/EtJoieeq6FUPFDOs8kQF1S514KYXZIGerTjOY
-         Pnb58cHk9jUAUY4ZSmcv1x7xuFL6c0tQrXwAFEFHr0+6mjTAjuU9ItNAIIx1uQSPJTjf
-         fK5kgxKsyZX0GRMt745tsKADCUuBO7gudvEoR2MeS4Tar5KAKdZpJAk1N+IIsgp3NUSl
-         beLg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yvv6tja4Yk+eVEILjZRBST0jDGm4v/FbXtO/ZgqjM74=;
+        b=RGfG3VUURFNtWc+VoPO9NVYyWunzCVcQA22ux57ph9xyOtZCIvDPzw9sG3NnSGWdxD
+         DPxCABohIZKsnwINyit+tsz4qVL9lf3GROmiBgEHtVIHUrKbEIzp7MpwzW8UzCdZGjhg
+         y4W7IgEX7maGTmX3ZT/8htQG30zvyLhaa5YID/wDuygZsqAKn8tWqq1Z1wepVZ/nDrcK
+         Qtpdy5n2HknWu2HOGkPt8OJm9dDEQAVruqBXFcwsEqG4HnbTZYsZTVBakz3vVsp/neKL
+         arxywQi8oxwxeEbF6c0r38sd+Iw5WYhlpzMfnCqVQIa6vybC6rrQEz4h1t2qrmJzPjzv
+         38og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=mDHmY9kBbmtNLTrTQf1PZE7xxuj6hLsL/6YrTc8c7yY=;
-        b=cKcIOQoAXjRFJRZ6FUbjnEe/YzF2Qe1JVBrB4VQBQYOH1QSOSnKnnlW3iSUlF3Jqlg
-         19HjxWH2HicEgiWXe0rPqqm1qa5RVTIl/qo17env4ixol+rRtZP/BiJ3xVM51QKQ4kwk
-         kYJAKlQxC1/GYlRkNS5J/cSux8PToXdYdSikN50sJMy4bjKNrTf+ny2F8ZgkLwhL7yU3
-         uQbytdRKaJD4p4rO9+ilRA2u4Uwf16ckaDEf8+HeRu7socIqbqsVN/b+GHVTu4gtWSnI
-         C7wvenzokDgLJUrZmcSKMte3wnaJBPhjpi3mZxLqMCXWNLIyLFn2E+FYJdWgdzC7scCt
-         Hkug==
-X-Gm-Message-State: AGi0Pua9SIk47i/71l56+ZChqUJjGLJZKF+QP6Z6g9oZMoyHA7XLaYhX
-        upvUCw5z+DLQmDOBkTOhrxU43pqwCQl/P23A5Tk=
-X-Google-Smtp-Source: APiQypLrhcQL0vqQUMMlsvCCuOZabqtDCM2FzSnRjUVEsqtbk9nsbyrXKQqTYh2/VriwXxrYIjzW5d4L9zjsu3exT/U=
-X-Received: by 2002:a65:611a:: with SMTP id z26mr22656595pgu.341.1587506940061;
- Tue, 21 Apr 2020 15:09:00 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 15:08:43 -0700
-In-Reply-To: <20200421220843.188260-1-samitolvanen@google.com>
-Message-Id: <20200421220843.188260-3-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20200421180724.245410-1-samitolvanen@google.com> <20200421220843.188260-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH v2 2/2] objtool: optimize add_dead_ends for split sections
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yvv6tja4Yk+eVEILjZRBST0jDGm4v/FbXtO/ZgqjM74=;
+        b=Ry1gipnDDjnD364YixM1ntuSfVqzdFID00rAVh7uQk60o2WT322DiamBQKBiqmGEAC
+         iURyNuHPXy3aOAeBTm59DoRUer/kuXi4FjSChUe34dNb+Spq7/6qRIhhYx8f2BBScS4z
+         /XGUkTSECaLpL8Nvc9QMNH7nSvQ6c6jtZozu5Awshmjc3teVHmywgAGAagsTpZdW34r3
+         LvQT0WmScr/MNRNZVjU4AYOPMKxUOIm2x44TcPHFU/bYhKUkli7fgAGjMj1Eha5p7y4D
+         UVEoaLrCUABEE4Nqp+A63fZI/Yqno7QtPnKXqKvXxT5owl1A+VYGWj+/gqakr7JeuxnJ
+         71mA==
+X-Gm-Message-State: AGi0PubIKOtfSaBzjFAuwOmeF5W3J7QBq0VG7tbj45UYXdfqsHhD+C3f
+        ZgMyFG2z5QV0iOY6251PCDvF+ue0
+X-Google-Smtp-Source: APiQypI5TRVNGnBxrY9Qs5LadawigWas7BSd7e+LErX/pZCbbEu2ZW0JsegsVtN1Jl5LDmSdi6pjBA==
+X-Received: by 2002:adf:df01:: with SMTP id y1mr25888894wrl.401.1587507340215;
+        Tue, 21 Apr 2020 15:15:40 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id o18sm5551756wrp.23.2020.04.21.15.15.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 15:15:39 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 00:15:38 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 1/2] soc/tegra: fuse: Add custom SoC attributes
+Message-ID: <20200421221538.GB3445172@ulmo>
+References: <20200417123949.26288-1-jonathanh@nvidia.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
+Content-Disposition: inline
+In-Reply-To: <20200417123949.26288-1-jonathanh@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of iterating through all instructions to find the last
-instruction each time .rela.discard.(un)reachable points beyond the
-section, use find_insn to locate the last instruction by looking at
-the last bytes of the section instead.
 
-Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- tools/objtool/check.c | 36 +++++++++++++++++-------------------
- 1 file changed, 17 insertions(+), 19 deletions(-)
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 4b170fd08a28..4f1d405420a4 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -303,6 +303,19 @@ static int decode_instructions(struct objtool_file *file)
- 	return ret;
- }
- 
-+static struct instruction *find_last_insn(struct objtool_file *file,
-+					  struct section *sec)
-+{
-+	struct instruction *insn = NULL;
-+	unsigned int offset;
-+	unsigned int end = (sec->len > 10) ? sec->len - 10 : 0;
-+
-+	for (offset = sec->len - 1; offset >= end && !insn; offset--)
-+		insn = find_insn(file, sec, offset);
-+
-+	return insn;
-+}
-+
- /*
-  * Mark "ud2" instructions and manually annotated dead ends.
-  */
-@@ -311,7 +324,6 @@ static int add_dead_ends(struct objtool_file *file)
- 	struct section *sec;
- 	struct rela *rela;
- 	struct instruction *insn;
--	bool found;
- 
- 	/*
- 	 * By default, "ud2" is a dead end unless otherwise annotated, because
-@@ -337,15 +349,8 @@ static int add_dead_ends(struct objtool_file *file)
- 		if (insn)
- 			insn = list_prev_entry(insn, list);
- 		else if (rela->addend == rela->sym->sec->len) {
--			found = false;
--			list_for_each_entry_reverse(insn, &file->insn_list, list) {
--				if (insn->sec == rela->sym->sec) {
--					found = true;
--					break;
--				}
--			}
--
--			if (!found) {
-+			insn = find_last_insn(file, rela->sym->sec);
-+			if (!insn) {
- 				WARN("can't find unreachable insn at %s+0x%x",
- 				     rela->sym->sec->name, rela->addend);
- 				return -1;
-@@ -379,15 +384,8 @@ static int add_dead_ends(struct objtool_file *file)
- 		if (insn)
- 			insn = list_prev_entry(insn, list);
- 		else if (rela->addend == rela->sym->sec->len) {
--			found = false;
--			list_for_each_entry_reverse(insn, &file->insn_list, list) {
--				if (insn->sec == rela->sym->sec) {
--					found = true;
--					break;
--				}
--			}
--
--			if (!found) {
-+			insn = find_last_insn(file, rela->sym->sec);
-+			if (!insn) {
- 				WARN("can't find reachable insn at %s+0x%x",
- 				     rela->sym->sec->name, rela->addend);
- 				return -1;
--- 
-2.26.1.301.g55bc3eb7cb9-goog
+On Fri, Apr 17, 2020 at 01:39:48PM +0100, Jon Hunter wrote:
+> Add a custom SoC attribute for Tegra to expose the HIDREV register
+> fields to userspace via the sysfs. This register provides additional
+> details about the type of device (eg, silicon, FPGA, etc) as well as
+> revision. Exposing this information is useful for identifying the
+> exact device revision and device type.
+>=20
+> For Tegra devices up until Tegra186, the majorrev and minorrev fields of
+> the HIDREV register are used to determine the device revision and device
+> type. For Tegra194, the majorrev and minorrev fields only determine the
+> revision. Starting with Tegra194, there is an additional field,
+> pre_si_platform (which occupies bits 20-23), that now determines device
+> type. Therefore, for all Tegra devices, add a custom SoC attribute for
+> the majorrev and minorrev fields and for Tegra194 add an additional
+> attribute for the pre_si_platform field.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+> Changes since V2:
+> - Renamed attributes
+> - Fix checkpatch warnings
+> - Simplified code by using DEVICE_ATTR_RO
+>=20
+> Changes since V1:
+> - Exported individual fields of the HIDREV register
+>=20
+>  drivers/soc/tegra/fuse/fuse-tegra.c    | 54 ++++++++++++++++++++++++++
+>  drivers/soc/tegra/fuse/fuse-tegra20.c  |  1 +
+>  drivers/soc/tegra/fuse/fuse-tegra30.c  |  6 +++
+>  drivers/soc/tegra/fuse/fuse.h          |  8 ++++
+>  drivers/soc/tegra/fuse/tegra-apbmisc.c | 10 +++++
+>  5 files changed, 79 insertions(+)
 
+Applied, thanks.
+
+Thierry
+
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6fcIoACgkQ3SOs138+
+s6HqSQ/8Ce2MbHuw0lLNqNQYqrIExlw4tXEFdJYralJSe4UYsJgrw6YODCCxwL7N
+IyMWNAD4w0zw1dK6bIOiwRfI2hx6UzM3W1j2868X/qTvureTJ8k5fGMFqA7kLM7h
+5iTNjwtT/IWpBXU0sVO8hQuHHh8PWV9PpgU1ALUWQzekbSuo8Xd8jJzwWyYcqpn9
+C9zCxa71Y6+mzEVHoHby0NSBMmhHl7bLcPkGqrFxySTWNLm9XtNVxkd9XXfKd5R9
+iMffnZCL0Y2seM/Ug+axHu8hdqU+VXbAHdwxHAI6gSFmzx1kVQdM6iamr8bu0kkj
+7wWWf/Pjx5G+y4VKFp2peGW4GIqmOUkJpvp/g1hC7gLztCyZ5mOdCmhfWLLogpG8
+hP/nuaHaHADwY6s5YbMfjNCChyuJJMYTjajcpAVcvK6WzWbf8J9A+kI9AlGyOtBn
+0cT4T1DxlJc5hf0TfJzsiziEDp0JQk9UhYZvfyxDlgY2HcvfOC1dYGAGs3rkOzOr
+muXUkg1MF9p4OrQxoVpxqIQqBQZ5LisbnMg0nfaWC/fMoEIovM4iOlRfzere45Ln
+WNAbLB3Wpy3kXHVIbmTTbovAslOpv3+3+pZ5GgOpQkdqK4XLgW3d2F8D/5OFs8JS
+lpHYnosUl0zJPdr7RelvHSovvZrl88g+MDSDtO7SZpUjpUCZNss=
+=huHJ
+-----END PGP SIGNATURE-----
+
+--hQiwHBbRI9kgIhsi--
