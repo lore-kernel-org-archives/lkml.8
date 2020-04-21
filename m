@@ -2,101 +2,123 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ECBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9CDC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAFE20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:03:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587441815;
-	bh=RgxAeo6o21slOdeo/oi5CMpvkiC62LoMPO2UXH4ytCg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QxTQ5ZJK58q5Skob9yCEl6GVP0kIVUnFIB2WQuF925UZgkmIcesvi5whFAnjyYdoI
-	 KSGxeaWaLzB4UNDISvP6bxqApqXvW9SuK65gkjTqcKsNCX9ViQ6f6AgZHMoa9bG7W9
-	 NnbXcg4AwfN/RTVyG7TreFnJvX6MoJ5D9vILO5K4=
+	by mail.kernel.org (Postfix) with ESMTP id 0434F206CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgDUEDe (ORCPT
+        id S1726462AbgDUEGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 00:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49646 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 00:06:25 -0400
+Received: from mga17.intel.com ([192.55.52.151]:53853 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgDUEDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 00:03:34 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 346EA206CD;
-        Tue, 21 Apr 2020 04:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587441813;
-        bh=RgxAeo6o21slOdeo/oi5CMpvkiC62LoMPO2UXH4ytCg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FGLJJlZ/+pwYtllfiyvbICis0kR+XtiFWxk8jd4DCCrB0AVKN6G0EEvo0s3IyG5hJ
-         OoLitET1styvnih6JBJnLm+5ftxRowAsgfZvhK8SXw2ENrQaH21ENEYQD76wP6mpJ6
-         QBWhmiL/3DUF0iZsaw1bADGS4Kt+owXLiEWtycFA=
-Date:   Mon, 20 Apr 2020 21:03:32 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 0/6] Silence some instances of -Wtautological-compare
- and enable globally
-Message-Id: <20200420210332.7ff9652c8bdca7fb91ccfb0c@linux-foundation.org>
-In-Reply-To: <20200219045423.54190-1-natechancellor@gmail.com>
-References: <20200219045423.54190-1-natechancellor@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1725283AbgDUEGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 00:06:24 -0400
+IronPort-SDR: gCNpke3e6SB3YvskM0uZMBXJfNVYz5y2hIhG4RMG99Nz27aWAwn/YjqpFD3P+iWtc3PCDES+oi
+ T+nzmKWR6r0g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 21:06:24 -0700
+IronPort-SDR: jQ5S4iO8mBHoBUGFUFbqLCye4VRHBbTzfry3odGoq4oSZv2cVmTs/VUczYKTJgJF0TMaPfAvOF
+ XnS0sxdN8wrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,408,1580803200"; 
+   d="scan'208";a="456615581"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Apr 2020 21:06:24 -0700
+Received: from [10.214.151.210] (ekotax-mobl.gar.corp.intel.com [10.214.151.210])
+        by linux.intel.com (Postfix) with ESMTP id 9F3295802C9;
+        Mon, 20 Apr 2020 21:06:19 -0700 (PDT)
+Subject: Re: [RESEND PATCH v6 1/4] mfd: syscon: Add fwnode_to_regmap
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+References: <cover.1585889042.git.eswara.kota@linux.intel.com>
+ <9c58aeb1561f28f302921d54aee75942545c4971.1585889042.git.eswara.kota@linux.intel.com>
+ <20200417093551.GH2167633@dell>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <d5b7eb87-7468-a1c4-bf19-d676c8e9c49d@linux.intel.com>
+Date:   Tue, 21 Apr 2020 12:06:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200417093551.GH2167633@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 21:54:17 -0700 Nathan Chancellor <natechancellor@gmail.com> wrote:
 
-> Hi everyone,
-> 
-> This patch series aims to silence some instances of clang's
-> -Wtautological-compare that are not problematic and enable it globally
-> for the kernel because it has a bunch of subwarnings that can find real
-> bugs in the kernel such as
-> https://lore.kernel.org/lkml/20200116222658.5285-1-natechancellor@gmail.com/
-> and https://bugs.llvm.org/show_bug.cgi?id=42666, which was specifically
-> requested by Dmitry.
-> 
-> The first patch adds a macro that casts the section variables to
-> unsigned long (uintptr_t), which silences the warning and adds
-> documentation.
-> 
-> Patches two through four silence the warning in the places I have
-> noticed it across all of my builds with -Werror, including arm, arm64,
-> and x86_64 defconfig/allmodconfig/allyesconfig. There might still be
-> more lurking but those will have to be teased out over time.
-> 
-> Patch six finally enables the warning, while leaving one of the
-> subwarnings disabled because it is rather noisy and somewhat pointless
-> for the kernel, where core kernel code is expected to build and run with
-> many different configurations where variable types can be different
-> sizes.
-> 
+On 4/17/2020 5:35 PM, Lee Jones wrote:
+> On Mon, 06 Apr 2020, Dilip Kota wrote:
+>
+>> Traverse regmap handle entry from firmware node handle.
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>> Changes on v5:
+>>    No changes
+>>    
+>> Changes on v5:
+>>    No changes
+>>
+>> Changes on v4:
+>>    No changes
+>>
+>>   drivers/mfd/syscon.c       | 8 ++++++++
+>>   include/linux/mfd/syscon.h | 6 ++++++
+>>   2 files changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+>> index 3a97816d0cba..e085c50816b9 100644
+>> --- a/drivers/mfd/syscon.c
+>> +++ b/drivers/mfd/syscon.c
+>> @@ -178,6 +178,14 @@ struct regmap *device_node_to_regmap(struct device_node *np)
+>>   }
+>>   EXPORT_SYMBOL_GPL(device_node_to_regmap);
+>>   
+>> +struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
+>> +{
+>> +	struct device_node *np = to_of_node(fwnode);
+> You are assuming that the fwnode was Device Tree pointer.
+>
+> The point of a fwnode is that it could be one of multiple types.
+>
+> What if it was a pointer to an ACPI property?
+Yes, i missed to check in other perspective. Thanks for pointing it.
+While going through the System control driver to address the query, i 
+noticed that System Control
+driver is talking with 'of' framework only. (No ACPI)
 
-For some reason none of these patches apply.  Not sure why - prehaps
-something in the diff headers.
+So, i think to add a defensive check and return error pointer if 
+'to_of_node' returns NULL
+As System control Driver cannot talk with ACPI, so fwnode_to_regmap() 
+cannot talk and return error.
 
-Anyway, the kmemleak.c code has recently changed in ways which impact
-these patches.  Please take a look at that, redo, retest and resend?
+Or, the other option is removing the 'fwnode_to_regmap()' definition 
+itself, to avoid confusion as fwnode can
+point to 'OF', 'ACPI'or 'swnode'.
 
+But, i feel return error for ACPI or oother, looks better because 
+'device_node' has fwnode pointer. And provide description
+in the header file, mentioning function is success for 'OF' and returns 
+error for the rest.
 
+Regards,
+Dilip
+
+>
+>
