@@ -2,90 +2,101 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6CDC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ECBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 318BF20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:02:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="PyxDIlH9"
+	by mail.kernel.org (Postfix) with ESMTP id 3BAFE20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587441815;
+	bh=RgxAeo6o21slOdeo/oi5CMpvkiC62LoMPO2UXH4ytCg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QxTQ5ZJK58q5Skob9yCEl6GVP0kIVUnFIB2WQuF925UZgkmIcesvi5whFAnjyYdoI
+	 KSGxeaWaLzB4UNDISvP6bxqApqXvW9SuK65gkjTqcKsNCX9ViQ6f6AgZHMoa9bG7W9
+	 NnbXcg4AwfN/RTVyG7TreFnJvX6MoJ5D9vILO5K4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgDUECr (ORCPT
+        id S1726448AbgDUEDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 00:02:47 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:33661 "EHLO mail.zx2c4.com"
+        Tue, 21 Apr 2020 00:03:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgDUECr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 00:02:47 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 9ffef1c0;
-        Tue, 21 Apr 2020 03:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=b5Yc33rjro0LOJft6o7awVjkTZ0=; b=PyxDIl
-        H9MWbDtDahbXjBBAyWJvpmLpmvikrFMo2CjFcCKoL+dLt1lHmcBzm7vhC5ZzJxqM
-        v3xJbgeszgVR8hoCwoXK0iLKqjiQIvgvt9Z3R62+3wMIrNt8/HycnK9eJOrg8K5C
-        P/KPeB633xgi/qzzOA7p+IpQprCNegFkxASMfyfEjDzLfWGbHr+U40lCcWV5GlUR
-        gt44UgCYhgb8YuwPxrVF6wSPXMPtyQG8/UlbTcydAWxqziKN4cmBhtVQcMXpuDvA
-        5ajoUGB/IdDPbzdHLbLXxbnfTLqxbRwx5zJun4KvjgbYnVyMZMlRqqGIRP0+JKkF
-        3pj/dSLYtJ7JlOiQ==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f07f93df (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 21 Apr 2020 03:52:01 +0000 (UTC)
-Received: by mail-io1-f47.google.com with SMTP id f3so13647296ioj.1;
-        Mon, 20 Apr 2020 21:02:42 -0700 (PDT)
-X-Gm-Message-State: AGi0PubU/q1Dff67GrvbKvvHPEiwJbzNHCqoTtlsbTamX4ww3Snr5XFv
-        Miw9LgIVI3uxSeiaO3NnHaNOdv1XpjmR7a2epHM=
-X-Google-Smtp-Source: APiQypJdNT8UItWFDKtAKDekJkgZ+KtTzn8bv/h9qcNsTyes4y9VnE4cLcMW9yqKJGy8Pyrq8to9I3nqyEWXr9nt7CI=
-X-Received: by 2002:a05:6602:21d3:: with SMTP id c19mr18626695ioc.29.1587441762080;
- Mon, 20 Apr 2020 21:02:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200420075711.2385190-1-Jason@zx2c4.com> <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
-In-Reply-To: <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 20 Apr 2020 22:02:31 -0600
-X-Gmail-Original-Message-ID: <CAHmME9qfrHVQ+-4HjqCO2TaGF6DNTHmS1max1KcVaP5_QjUDRQ@mail.gmail.com>
-Message-ID: <CAHmME9qfrHVQ+-4HjqCO2TaGF6DNTHmS1max1KcVaP5_QjUDRQ@mail.gmail.com>
-Subject: Re: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
- PAGE_SIZE chunks
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1725283AbgDUEDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 00:03:34 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 346EA206CD;
+        Tue, 21 Apr 2020 04:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587441813;
+        bh=RgxAeo6o21slOdeo/oi5CMpvkiC62LoMPO2UXH4ytCg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FGLJJlZ/+pwYtllfiyvbICis0kR+XtiFWxk8jd4DCCrB0AVKN6G0EEvo0s3IyG5hJ
+         OoLitET1styvnih6JBJnLm+5ftxRowAsgfZvhK8SXw2ENrQaH21ENEYQD76wP6mpJ6
+         QBWhmiL/3DUF0iZsaw1bADGS4Kt+owXLiEWtycFA=
+Date:   Mon, 20 Apr 2020 21:03:32 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 0/6] Silence some instances of -Wtautological-compare
+ and enable globally
+Message-Id: <20200420210332.7ff9652c8bdca7fb91ccfb0c@linux-foundation.org>
+In-Reply-To: <20200219045423.54190-1-natechancellor@gmail.com>
+References: <20200219045423.54190-1-natechancellor@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 2:32 AM David Laight <David.Laight@aculab.com> wrote:
-> Maybe kernel_fp_begin() should be passed the address of somewhere
-> the address of an fpu save area buffer can be written to.
-> Then the pre-emption code can allocate the buffer and save the
-> state into it.
->
-> However that doesn't solve the problem for non-preemptive kernels.
-> The may need a cond_resched() in the loop if it might take 1ms (or so).
->
-> kernel_fpu_begin() ought also be passed a parameter saying which
-> fpu features are required, and return which are allocated.
-> On x86 this could be used to check for AVX512 (etc) which may be
-> available in an ISR unless it interrupted inside a kernel_fpu_begin()
-> section (etc).
-> It would also allow optimisations if only 1 or 2 fpu registers are
-> needed (eg for some of the crypto functions) rather than the whole
-> fpu register set.
+On Tue, 18 Feb 2020 21:54:17 -0700 Nathan Chancellor <natechancellor@gmail.com> wrote:
 
-There might be ways to improve lots of FPU things, indeed. This patch
-here is just a patch to Herbert's branch in order to make uniform
-usage of our existing solution for this, fixing the existing bug. I
-wouldn't mind seeing more involved and better solutions in a patchset
-for crypto-next.
+> Hi everyone,
+> 
+> This patch series aims to silence some instances of clang's
+> -Wtautological-compare that are not problematic and enable it globally
+> for the kernel because it has a bunch of subwarnings that can find real
+> bugs in the kernel such as
+> https://lore.kernel.org/lkml/20200116222658.5285-1-natechancellor@gmail.com/
+> and https://bugs.llvm.org/show_bug.cgi?id=42666, which was specifically
+> requested by Dmitry.
+> 
+> The first patch adds a macro that casts the section variables to
+> unsigned long (uintptr_t), which silences the warning and adds
+> documentation.
+> 
+> Patches two through four silence the warning in the places I have
+> noticed it across all of my builds with -Werror, including arm, arm64,
+> and x86_64 defconfig/allmodconfig/allyesconfig. There might still be
+> more lurking but those will have to be teased out over time.
+> 
+> Patch six finally enables the warning, while leaving one of the
+> subwarnings disabled because it is rather noisy and somewhat pointless
+> for the kernel, where core kernel code is expected to build and run with
+> many different configurations where variable types can be different
+> sizes.
+> 
 
-Will follow up with your suggestion in a different thread, so as not
-to block this one.
+For some reason none of these patches apply.  Not sure why - prehaps
+something in the diff headers.
+
+Anyway, the kmemleak.c code has recently changed in ways which impact
+these patches.  Please take a look at that, redo, retest and resend?
+
+
