@@ -2,134 +2,185 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F50C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52893C55181
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF52206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:12:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="fr+vNmxv"
+	by mail.kernel.org (Postfix) with ESMTP id 3E67F206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 11:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgDULMm (ORCPT
+        id S1728618AbgDULNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:12:42 -0400
-Received: from mout.web.de ([212.227.17.12]:58359 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgDULMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 07:12:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1587467549;
-        bh=O5UFoBp/u/YGve2539Ml1suvS962s7VYeI16yybZvPs=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=fr+vNmxvF6ksTrRXdZK4j5atjhg2vhao13RM4Ppg20XbCXSsutf+cN6EBspZT/WyG
-         uWYJIqKKcVVluYAxcrLJPco5hDKyGSAwL9Y6JqY7Jh9bug0T1nMdSy4MqX+8w5WCfh
-         g0lmlKKuJUSCvIHQDIZyRzYTlnvzm+jQdMzyDeII=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.91.59]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M9XM3-1jW7E33KOd-00D1e6; Tue, 21
- Apr 2020 13:12:28 +0200
-Subject: Re: [V3] amdgpu: remove unnecessary condition check
-To:     =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     opensource.kernel@vivo.com, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        =?UTF-8?Q?Felix_K=c3=bchling?= <Felix.Kuehling@amd.com>
-References: <AIsA-wCZCFCxiq0WKb3WjKr*.3.1587458683834.Hmail.bernard@vivo.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <c12c2bfe-785a-3279-721e-3efd2e0f7b2c@web.de>
-Date:   Tue, 21 Apr 2020 13:12:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 07:13:33 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:55664 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726018AbgDULNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:13:33 -0400
+Received: from [10.130.0.79] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT2lO1Z5erYUqAA--.59S3;
+        Tue, 21 Apr 2020 19:13:20 +0800 (CST)
+Subject: Re: [PATCH 3/3] MIPS: Reduce possibility of kernel panic under
+ CONFIG_SWIOTLB
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1587459869-12183-1-git-send-email-yangtiezhu@loongson.cn>
+ <1587459869-12183-4-git-send-email-yangtiezhu@loongson.cn>
+ <20200421173525.460949b0@flygoat-x1e>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <cde19f52-1c13-63f6-8a92-26011d70069c@loongson.cn>
+Date:   Tue, 21 Apr 2020 19:13:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <AIsA-wCZCFCxiq0WKb3WjKr*.3.1587458683834.Hmail.bernard@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:mCPUfKMzwUiOkjUTV5F70mtnY9PpBoYAwL6Vc5A1nyuUxnokLJA
- TKqhFejjfmU1T/A/0WsYdV3do9OwELrcIioUHURJ9EkSzwsBCfzctvY1a8V+a70GWTFcdxd
- foCVKbcaPlim5xA0GbRH9rrGNNexa6L1/MO5heq1uKVww5EehFEEJr7qtTQs6eo1COqLHE2
- J+34otu69y2xq9aISg2hg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dya4Us5oLyU=:mCwa85+cUoC74r+ODmJtK9
- 3IktGA0M6a4qXuHi2rnC13RGVR7OYOnenC06SkYnsX//MGRUs+wgqEab4iAcCR0d5342wFDfN
- dk+fOJInAdBdpnjg2/f3VLQ3hHW+y1Ubd/v5ejQmzaXQFvsweXXYTlXuJmOe4NotJKQBvZ/7T
- CM347BMEen7iBEeu0cxinWBEn6z+8/Gwcl/xgBpHDPm1KXLoa8hJK78mUnHM21IbwV6K7ePo7
- ziBSdUkuuQk1duiEjskgTvM6ppXFC5R12Skm9EUCnrbwy6yG7yhbeJGqy+icBUa/JBUiNpJxD
- dqPyzRX0KO4raZSlc21BtCKpVq+OjFR627f1MrTZlNpzRzzhU4nHqENhtR69c7dBRIn4bDcJc
- FdpsxWzTRXHnV/x4izp8vS3TEl0ihr0GRXiCPA8BcpNQUw3OMye/TWa0qiBo9v7NBiTdLUb2P
- kuKayIgYydA1EKcFX0H1eXzUZpSyJ3YEeA3Npef1LWpZ7GmvnEgvqXHysFF3+HnP+vKjbYW/s
- 5mZ7J54tTeTDJL39kddWqi58c9meTtrQKhIwEUlyafbWh6Td5FdB5zESI7fe4qdf+hVUfJYQB
- jnhd3rVVtcQCqHS9bcU5WiBNzrnCjeiKUtcdup/vkDGj257HlewCryakTA4/h9t0h/rbhrdST
- mrE9BynDQNhCp2wJuDc9m1YAuti/2k1GTq+D1nocFOQ76nskfAEHZL3TdZtBSjqg+Cr6dTJDH
- JEjEofGDL5o0NXd/DHJMkk7wyDrQo3+oNcVY5ieaf24V5tYxk+66KPVcDrzqfgYI0d2wkVy2A
- flGw0TtivNkjfwWQRyN/NvNwusrjs9NoWR0iGkWcbks62U+hvOpoNEywz6i2mBG2DsPM7vtWt
- 9nCLjO0gfoXVulHPwT73Xz4ftuUAnVIFxO9561ufTiQTQHFDP2S0JTFAihOjiNXZF1e5GPtBJ
- YdRZvP5DprdD6a24ii0nObrHlEdR8lySSQNsW6UZCHBwhDXy1F/M35PIgCqsXmF9XslQ7N+MZ
- mSr69H+tixc7gg4tU8FR1WSyTcSbVc431mTpLklI/WnvI6ROBPA0ziyecoEapwClaizfoF786
- mJ+rrs1KDrcThhFWYE6VW+mARpBrnJvruuDCbQEI7iIMyx1MPhzu7fMEdCIVoID8+6X/EsYvV
- n1CbacYxkUYKg2SHewoGOTVPBPOey0Krujf1fm8oWixjscDkJuBjsDdCZdafHQxDG8dIdlbqu
- YPiYhR3cMcue0F7+8
+In-Reply-To: <20200421173525.460949b0@flygoat-x1e>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxT2lO1Z5erYUqAA--.59S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCF1rGFWxuFyxZw4rZFWxCrg_yoWrJw4fpr
+        yUAa13KF4vqr97A3yxCwn5uFyak3s5Cry7G3ySvr45u3sxuwnxAF1vgr43urWxZr48Xa1I
+        va40vr1q9F43AaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr0_
+        Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb0D73
+        UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> There is no need to if check again, maybe we could merge
->>> into the above else branch.
+On 04/21/2020 05:35 PM, Jiaxun Yang wrote:
+> On Tue, 21 Apr 2020 17:04:29 +0800
+> Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+>> In the current code, if CONFIG_SWIOTLB is set, when failed to get IO
+>> TLB memory from the low pages by plat_swiotlb_setup(), it may lead to
+>> the boot process failed with kernel panic.
+> Hi Tiezhu,
+>
+> Thanks for you patch.
+>
+> Firstly, your commit message should be more straight forward. Please
+> describe what you have changed (e.g. MIPS: Set memblock bottom up)
+> instead of what you solved.
 
-I find also this commit message still improvable (besides the mentioned
-implementation details around coding style concerns).
-How will corresponding review comments be taken better into account?
+HI Jiaxun,
 
-Regards,
-Markus
+Thanks for your suggestion.
+
+I will send a v2 patch used with the following subject:
+"MIPS: Make sparse_init() using top-down allocation"
+
+>
+>> (1) On the Loongson and SiByte platform
+>> arch/mips/loongson64/dma.c
+>> arch/mips/sibyte/common/dma.c
+>> void __init plat_swiotlb_setup(void)
+>> {
+>> 	swiotlb_init(1);
+>> }
+>>
+>> kernel/dma/swiotlb.c
+>> void  __init
+>> swiotlb_init(int verbose)
+>> {
+>> ...
+>> 	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
+>> 	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs,
+>> verbose)) return;
+>> ...
+>> 	pr_warn("Cannot allocate buffer");
+>> 	no_iotlb_memory = true;
+>> }
+>>
+>> phys_addr_t swiotlb_tbl_map_single()
+>> {
+>> ...
+>> 	if (no_iotlb_memory)
+>> 		panic("Can not allocate SWIOTLB buffer earlier ...");
+>> ...
+>> }
+>>
+>> (2) On the Cavium OCTEON platform
+>> arch/mips/cavium-octeon/dma-octeon.c
+>> void __init plat_swiotlb_setup(void)
+>> {
+>> ...
+>> 	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
+>> 	if (!octeon_swiotlb)
+>> 		panic("%s: Failed to allocate %zu bytes align=%lx\n",
+>> 		      __func__, swiotlbsize, PAGE_SIZE);
+>> ...
+>> }
+>>
+>> Because IO_TLB_DEFAULT_SIZE is 64M, if the rest size of low memory is
+>> less than 64M when call plat_swiotlb_setup(), we can easily reproduce
+>> the panic case.
+>>
+>> In order to reduce the possibility of kernel panic when failed to get
+>> IO TLB memory under CONFIG_SWIOTLB, it is better to allocate low
+>> memory as small as possible before plat_swiotlb_setup(), so make
+>> sparse_init() using top-down allocation.
+> AFAIK there are some reasons that we set it to bottom_up.
+> On some platforms, bootloader won't place cmdline & devicetree into
+> reserved memory but place them just after kernel in memory. That means
+> if you set it as bottom up, then early allocate memory might collide
+> with these boot arguments.
+>
+> I'm not even sure if it works fine on Loongson with early PMON.
+>
+> I had met that issue before, the solution for me is to reduce SWIOTLB
+> size.
+>
+>> Reported-by: Juxin Gao <gaojuxin@loongson.cn>
+>> Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+>> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>   arch/mips/kernel/setup.c | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+>> index 5481a0c..8db533c 100644
+>> --- a/arch/mips/kernel/setup.c
+>> +++ b/arch/mips/kernel/setup.c
+>> @@ -700,7 +700,17 @@ static void __init arch_mem_init(char
+>> **cmdline_p) memblock_reserve(crashk_res.start,
+>> resource_size(&crashk_res)); #endif
+>>   	device_tree_init();
+>> +
+>> +	/*
+>> +	 * In order to reduce the possibility of kernel panic when
+>> failed to
+>> +	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to
+>> allocate
+>> +	 * low memory as small as possible before
+>> plat_swiotlb_setup(), so
+>> +	 * make sparse_init() using top-down allocation.
+>> +	 */
+>> +	memblock_set_bottom_up(false);
+>>   	sparse_init();
+>> +	memblock_set_bottom_up(true);
+>> +
+>>   	plat_swiotlb_setup();
+>>   
+>>   	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
+> --
+> Jiaxun Yang
+
