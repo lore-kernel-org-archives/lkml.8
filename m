@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216BFC55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEDCC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEC4720679
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD5220679
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:41:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="lj5+u4r+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pTnCWWqQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgDUKlf (ORCPT
+        id S1728649AbgDUKlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 06:41:35 -0400
+        Tue, 21 Apr 2020 06:41:39 -0400
 Received: from esa4.microchip.iphmx.com ([68.232.154.123]:32622 "EHLO
         esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgDUKlc (ORCPT
+        with ESMTP id S1728625AbgDUKlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 06:41:32 -0400
+        Tue, 21 Apr 2020 06:41:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587465691; x=1619001691;
+  t=1587465696; x=1619001696;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=NOcmh5wSPVgLUcMIR4hOBcwD/2Gw7qPvnYvOwH8gw0o=;
-  b=lj5+u4r+4Fo8cyWlqtR4wu+jxckWI86qmHRiDdi52DiYLTiXe5K2IGHt
-   rHqSA3zF/boh9Swr6ePjzR8dSlBGRBXQ/KykqR4aZnc0WOjRzsteNWkJ0
-   SGlTcCZTBnecKeDPS1yFYtjgVNFQuh6ZPyjwU63z6IxgR7FZYFMZToFF2
-   M8N7gPxSE/lX35OO2ToyZsAKv1O3iI6buoE/qx1YE40rkqGaBj3ZKNmbc
-   dPVjh1i67LHIAddls1syhjPMq9T7TaX9xWAnPHI59JBBnVWMtLU95P1O2
-   xgBYBJv4c5sp2xryM6gEOLT+jCFaTO6XRuGzaAXLXMdD3uKAYMg56l3wP
-   A==;
-IronPort-SDR: BY0Z+hEolj493awKaw4Kr5rbDTZujZ4LappJrd/8qGXQtAPFQFo7GyLexcMNQpwB6bDp3kW5cJ
- V2cnua+nvsltjsz5sJNwj+NjMPFmq5a6lA/t7QYmpgJ4SSSuYlNTP3FwD2wHfNyYwiqjIDaoRz
- Woh7MjE+7ufQfR6gHaDafzkvH44PpomueMt0P3K0QbDKFdtA3zjWejdPHdhtHzei2Hh4MqX3XO
- hfFOSMWLEMGCQUGYnATzjqV6R5hMrBupVfXH/MpSl2Ek2DBi3n9cX82QjbbuzqBJDYtSeE1au4
- YZ0=
+  bh=rK6cWA0PkySI7DE/ZpSxKyujUEY/9QCd7k1z9i+Kkpw=;
+  b=pTnCWWqQ0DYvSUMGhoQq0iWj/xMCHgENDxQmEKxMNMNKXGc+Sj09BkGP
+   2FbdxoaV+xpFWL1tAF5by9rOYMHWTWE5Nv/i/Ee4j2tl1p4Xm5iUXLdkg
+   SPoPUDlJ8MyWOd0iQABN1fAlME6HPq61CdK8oZ8wBXoG08UfzsXnLV9h+
+   EZsR2ofwZbqOb993JHelsB3hOf8auV8Bn885DvR7EaFoEcnZm8cUMpJr9
+   PKQVcstFsVMXpYGv0TZhO7H7AYIhWYwRknfXVYl9gUt9vtVf/B2N493Eb
+   VCMl1NGltVd5828FzKIXFOgemeE1sqYh5v3ZZga36H/o/UqQV2E2uM6x5
+   w==;
+IronPort-SDR: Qx6hDdrwJI2R/qlc5JFMUD8EJnBzhQlN/WWBqRszDFmUhCVBj09HRHIUFqCUUfQYNOcfwsOnYT
+ 2+KIECJr0oSyDww824uSAaiYX6lr/CQxdwfOhnSlf66QNxLHQhMdh9NSl7LtO5jCZ7wVygeCU4
+ +VikIo4XNrV2MQFTbApx45x+yOZRo4WK/5ZMK4yY2Qf7ACtdZljNYK3mJRMjd+UMcwQvPk2kkq
+ oLV3GDvOD0ci7MjvCMyiw4SAtgJVx1CQdpHcqAxkZsMED2rFwKq9+hHycDa94Yke2/CKmxKOnf
+ bpE=
 X-IronPort-AV: E=Sophos;i="5.72,410,1580799600"; 
-   d="scan'208";a="71017497"
+   d="scan'208";a="71017508"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Apr 2020 03:41:30 -0700
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Apr 2020 03:41:36 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 21 Apr 2020 03:41:30 -0700
+ 15.1.1713.5; Tue, 21 Apr 2020 03:41:35 -0700
 Received: from ness.microchip.com (10.10.115.15) by chn-vm-ex01.mchp-main.com
  (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 21 Apr 2020 03:41:28 -0700
+ Transport; Tue, 21 Apr 2020 03:41:33 -0700
 From:   <nicolas.ferre@microchip.com>
 To:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
         "Claudiu Beznea" <claudiu.beznea@microchip.com>,
@@ -63,9 +63,9 @@ CC:     <linux-kernel@vger.kernel.org>,
         <f.fainelli@gmail.com>, <linux@armlinux.org.uk>, <andrew@lunn.ch>,
         <michal.simek@xilinx.com>,
         Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH v2 1/7] net: macb: fix wakeup test in runtime suspend/resume routines
-Date:   Tue, 21 Apr 2020 12:40:58 +0200
-Message-ID: <760ececd082c834c1ab4b1b410c605cc10bb6224.1587463802.git.nicolas.ferre@microchip.com>
+Subject: [PATCH v2 2/7] net: macb: mark device wake capable when "magic-packet" property present
+Date:   Tue, 21 Apr 2020 12:40:59 +0200
+Message-ID: <b01c5d9e5e112c8620e28e538109efa70d566509.1587463802.git.nicolas.ferre@microchip.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1587463802.git.nicolas.ferre@microchip.com>
 References: <cover.1587463802.git.nicolas.ferre@microchip.com>
@@ -79,45 +79,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-Use the proper struct device pointer to check if the wakeup flag
-and wakeup source are positioned.
-Use the one passed by function call which is equivalent to
-&bp->dev->dev.parent.
+Change the way the "magic-packet" DT property is handled in the
+macb_probe() function, matching DT binding documentation.
+Now we mark the device as "wakeup capable" instead of calling the
+device_init_wakeup() function that would enable the wakeup source.
 
-It's preventing the trigger of a spurious interrupt in case the
-Wake-on-Lan feature is used.
+For Ethernet WoL, enabling the wakeup_source is done by
+using ethtool and associated macb_set_wol() function that
+already calls device_set_wakeup_enable() for this purpose.
 
-Fixes: bc1109d04c39 ("net: macb: Add pm runtime support")
+That would reduce power consumption by cutting more clocks if
+"magic-packet" property is set but WoL is not configured by ethtool.
+
+Fixes: 3e2a5e153906 ("net: macb: add wake-on-lan support via magic packet")
 Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
 Cc: Harini Katakam <harini.katakam@xilinx.com>
+Cc: Sergio Prado <sergio.prado@e-labworks.com>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index a0e8c5bbabc0..d1b4d6b6d7c8 100644
+index d1b4d6b6d7c8..629660d9f17e 100644
 --- a/drivers/net/ethernet/cadence/macb_main.c
 +++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4616,7 +4616,7 @@ static int __maybe_unused macb_runtime_suspend(struct device *dev)
- 	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct macb *bp = netdev_priv(netdev);
+@@ -4384,7 +4384,7 @@ static int macb_probe(struct platform_device *pdev)
+ 	bp->wol = 0;
+ 	if (of_get_property(np, "magic-packet", NULL))
+ 		bp->wol |= MACB_WOL_HAS_MAGIC_PACKET;
+-	device_init_wakeup(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
++	device_set_wakeup_capable(&pdev->dev, bp->wol & MACB_WOL_HAS_MAGIC_PACKET);
  
--	if (!(device_may_wakeup(&bp->dev->dev))) {
-+	if (!(device_may_wakeup(dev))) {
- 		clk_disable_unprepare(bp->tx_clk);
- 		clk_disable_unprepare(bp->hclk);
- 		clk_disable_unprepare(bp->pclk);
-@@ -4632,7 +4632,7 @@ static int __maybe_unused macb_runtime_resume(struct device *dev)
- 	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct macb *bp = netdev_priv(netdev);
+ 	spin_lock_init(&bp->lock);
  
--	if (!(device_may_wakeup(&bp->dev->dev))) {
-+	if (!(device_may_wakeup(dev))) {
- 		clk_prepare_enable(bp->pclk);
- 		clk_prepare_enable(bp->hclk);
- 		clk_prepare_enable(bp->tx_clk);
 -- 
 2.20.1
 
