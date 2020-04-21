@@ -2,74 +2,255 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F63AC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E672EC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45AB0206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hONjiqy/"
+	by mail.kernel.org (Postfix) with ESMTP id CAF4B206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgDUJAN (ORCPT
+        id S1728345AbgDUJAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:00:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726052AbgDUJAN (ORCPT
+        Tue, 21 Apr 2020 05:00:16 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:33825 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgDUJAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:00:13 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6710C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 02:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=d40xS3Zbw/pMXgln3ygv6nRVMsVWeln3BpvTx1qiDQU=; b=hONjiqy/vUe6UnxP0LCJ1byLyL
-        h5QuDIAr63PlmihkCb/6V8z8UVshOrBPKi4wq2Ydw8XBaqx0JjXgHWj7QkKlXuQ41EeGYhBwwOhAe
-        aKEqwdkpXZGVjLr0ZuY7ggJqL2HXl6EeEJkpGiyjAsyOa826Llzv6/1KExDbqCXQHvXwU8KIM9fZC
-        qPIIJLwjl3cUGfvgYEvqvRWN7d3X/MQxUmbxu9J6sZTKna6LlRIdeNqaNenjO8woWN70PGKuYubSP
-        hcCBDihkubEbnWG2YwZ4+V77M7sR7K/WSIivz7pEPqKSv/l8f7AvFbexcCipgpa5ubMmHrathS5tQ
-        AZ/SfUSw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQolB-0007rq-Lu; Tue, 21 Apr 2020 09:00:05 +0000
-Date:   Tue, 21 Apr 2020 02:00:05 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Laura Abbott <labbott@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH 01/10] mm/page-flags: introduce PageHighMemZone()
-Message-ID: <20200421090005.GA23085@infradead.org>
-References: <1587369582-3882-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1587369582-3882-2-git-send-email-iamjoonsoo.kim@lge.com>
+        Tue, 21 Apr 2020 05:00:14 -0400
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id E8C7AE0015;
+        Tue, 21 Apr 2020 09:00:06 +0000 (UTC)
+Date:   Tue, 21 Apr 2020 11:00:05 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc:     linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [linux-sunxi] [PATCH] media: cedrus: Implement runtime PM
+Message-ID: <20200421090005.GB610776@aptenodytes>
+References: <20200408010232.48432-1-samuel@sholland.org>
+ <5590139.lOV4Wx5bFT@jernej-laptop>
+ <20200420175651.GA610776@aptenodytes>
+ <4523224.GXAFRqVoOG@jernej-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
 Content-Disposition: inline
-In-Reply-To: <1587369582-3882-2-git-send-email-iamjoonsoo.kim@lge.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <4523224.GXAFRqVoOG@jernej-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I don't think the names are very good.  I'd keep PageHighMem for the
-existing highmem zone, and add something like PageDirectMapped or
-similar for ay page that has a valid direct mapping address.  This will
-also come in handy if we plan to go ahead with the xpfo work.
+
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon 20 Apr 20, 20:09, Jernej =C5=A0krabec wrote:
+> Hi!
+>=20
+> Dne ponedeljek, 20. april 2020 ob 19:56:51 CEST je Paul Kocialkowski=20
+> napisal(a):
+> > Hi Jernej,
+> >=20
+> > On Mon 20 Apr 20, 18:41, Jernej =C5=A0krabec wrote:
+> > > Dne ponedeljek, 20. april 2020 ob 17:10:10 CEST je Paul Kocialkowski
+> > >=20
+> > > napisal(a):
+> > > > Hi,
+> > > >=20
+> > > > On Sun 19 Apr 20, 15:28, Samuel Holland wrote:
+> > > > > On 4/8/20 11:01 AM, Jernej =C5=A0krabec wrote:
+> > > > > > Hi Samuel!
+> > > > > >=20
+> > > > > > Dne sreda, 08. april 2020 ob 03:02:32 CEST je Samuel Holland=20
+> napisal(a):
+> > > > > >> This allows the VE clocks and PLL_VE to be disabled most of the
+> > > > > >> time.
+> > > > > >>=20
+> > > > > >> Since the device is stateless, each frame gets a separate runt=
+ime
+> > > > > >> PM
+> > > > > >> reference. Enable autosuspend so the PM callbacks are not run
+> > > > > >> before
+> > > > > >> and
+> > > > > >> after every frame.
+> > > > > >>=20
+> > > > > >> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> > > > > >> ---
+> > > > > >>=20
+> > > > > >> I tested this with v4l2-request-test. I don't have the setup t=
+o do
+> > > > > >> anything more complicated at the moment.
+> > > > > >>=20
+> > > > > >> ---
+> > > > > >>=20
+> > > > > >>  drivers/staging/media/sunxi/cedrus/cedrus.c   |   7 ++
+> > > > > >>  .../staging/media/sunxi/cedrus/cedrus_hw.c    | 115
+> > > > > >>  ++++++++++++------
+> > > > > >>  .../staging/media/sunxi/cedrus/cedrus_hw.h    |   3 +
+> > > > > >>  3 files changed, 88 insertions(+), 37 deletions(-)
+> > > > >=20
+> > > > > [snip]
+> > > > >=20
+> > > > > > Reset above causes problem. When format is set in
+> > > > > > cedrus_s_fmt_vid_cap()
+> > > > > > a
+> > > > > > function is called, which sets few registers in HW. Of course, =
+there
+> > > > > > is
+> > > > > > no
+> > > > > > guarantee that someone will start decoding immediately after ca=
+pture
+> > > > > > format is set. So, if the driver puts VPU to sleep in the mean =
+time,
+> > > > > > reset will clear those registers and decoded video will be in
+> > > > > > different
+> > > > > > format than expected. It could be even argued that registers sh=
+ould
+> > > > > > not
+> > > > > > be set in that function and that this is design issue or bug in
+> > > > > > driver.
+> > > > >=20
+> > > > > You're right. I didn't see that cedrus_dst_format_set() was called
+> > > > > outside
+> > > > > cedrus_engine_enable/disable().
+> > > >=20
+> > > > This might indeed be an issue with multiple decoding contexts in
+> > > > parallel,
+> > > > with potentially different formats. For that reason, it looks like =
+the
+> > > > right thing to do would be to set the format at each decoding run b=
+ased
+> > > > on
+> > > > the format set in the context by s_fmt.
+> > >=20
+> > > So you are suggesting that cedrus_dst_format_set() should be moved to
+> > > cedrus_device_run(), right? This way all registers are set at each ru=
+n,
+> > > which is then truly stateless.
+> >=20
+> > Yes, exactly! But this is outside of the scope of this series though.
+>=20
+> I'm not sure about being out of scope. It has to be moved anyway, so why =
+not=20
+> put it in best place?
+
+I agree it should be moved to cedrus_device_run, for sure!
+
+What I meant is that Samuel doesn't have to make that change with the runti=
+me PM
+patch series because it's a different issue. But reading the discussion aga=
+in,
+it's true that there is a chance of the VPU going to sleep between set fmt =
+and
+start streaming, so we should probably take care of it before merging runti=
+me
+PM.
+
+Samuel, do you feel like making that change with your series?
+I can do it otherwise.
+
+Cheers,
+
+Paul
+
+> Best
+>=20
+> >=20
+> > Cheers,
+> >=20
+> > Paul
+> >=20
+> > > Best regards,
+> > > Jernej
+> > >=20
+> > > > > > Anyway, I made a runtime PM support long time ago, but never do
+> > > > > > anything
+> > > > > > besides running few tests:
+> > > > > > https://github.com/jernejsk/linux-1/commit/
+> > > > > > d245b7fa2a26e519ff675a255c45230575a4a848
+> > > > > >=20
+> > > > > > It takes a bit different approach. Power is enabled in start
+> > > > > > streaming
+> > > > > > and
+> > > > > > disabled in stop streaming. This is simpler approach and doesn't
+> > > > > > need
+> > > > > > autosuspend functionality. I also moved call to a function which
+> > > > > > sets
+> > > > > > format in HW registers to start streaming handler, so it's
+> > > > > > guaranteed
+> > > > > > to be set at the beginning.
+> > > > >=20
+> > > > > Assuming cedrus_device_run() only gets called between streamon and
+> > > > > streamoff (which appears to be the case), this looks like a better
+> > > > > design.
+> > > >=20
+> > > > Yes, this is defintiely ensured by the V4L2 framework. I agree that
+> > > > streamon/off are the correct sync points.
+> > > >=20
+> > > > > > Note that some registers are only set in start streaming handle=
+r.
+> > > > > > With
+> > > > > > your
+> > > > > > approach, if first frame is submitted too late, asserting and
+> > > > > > de-asserting
+> > > > > > reset line could reset those registers.
+> > > > >=20
+> > > > > I only see registers being set in cedrus_start_streaming() after =
+your
+> > > > > patch, where you add a call to cedrus_dst_format_set(). I can't f=
+ind
+> > > > > any
+> > > > > registers being written in any of the ->start() callbacks.
+> > > > >=20
+> > > > > I'll send a v2 which combines the two patches: yours which handle=
+s the
+> > > > > runtime part better, and mine which handles the probe/remove part
+> > > > > better
+> > > > > with !CONFIG_PM.
+> > > >=20
+> > > > Thanks, that should do it!
+> > > >=20
+> > > > Cheers,
+> > > >=20
+> > > > Paul
+>=20
+>=20
+>=20
+>=20
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6ethUACgkQ3cLmz3+f
+v9Ew4Qf+OsCirGHO5U3TqjH7KcY4Rjw8LUvEvxIHIlRK4ldsZb2K+JpgUM3n7e91
+zMbRienlmbtTkUWbjvx+JyRauUUacyYGnVqsW1qfuvW4IDrS8gCmTEfeT3h7DZ8W
+FNIadZRwiaoEH/ckVRtKV6t+1Y7xSZC0f4prZlwPy8GbZa1x7/3W8TGKEk4fAOSc
+h3lsykDREA4zvlxUhyjM7sc0DHpzp91ItV+lJaeXNRCOos9li6nz0fYgQbpjS7Gf
+4epH0um6o6UCctggxXX0ElrrnOL3Jk0pdJija+vjEzXwmh+jVk6eX4DrIy8ZT1aP
+sPKnIi1gseYx3NaZpo0K1gI5MX1Glg==
+=Wg0J
+-----END PGP SIGNATURE-----
+
+--hQiwHBbRI9kgIhsi--
