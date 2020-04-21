@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D539AC55183
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D20EC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A053D206F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41FC1206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488129;
-	bh=K1xnnq2EptO25N1jH5111IqpA2cwLRLLIr5q8BNqdmE=;
+	s=default; t=1587488142;
+	bh=85Hb/Vl2BC3BeHWKtYOntLnrUTWb3H2EexK36MH0Wa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBQTh5A/Wc79krudG6Fc35caMWrUhm4zx4nkTEDI4jtCqMyR1D/M5dolmSrm7PuJJ
-	 eCKQqHWFno4D/r/sdnowfJJ80T4e5VwoDYfsDospORHPC7CfnZoWLwSjtUxXLWHYS9
-	 0LZjv5JAwMhf9lEQYKOHFUc2ooh3nbuoq+vIaGZI=
+	b=zWQ1KkqAtbewXzxZOdNL03GmowQFNv0CC85oSObjrCiQIpSXGWOXCm1S4vlz19oOW
+	 HgA08xmQ6t+kSk8Da2ZPpavXqKRrodSR+Ah1mglHyREvMgZqmuc11ypTLsJjA3Qx80
+	 6Z35Q0nvuJmrDRgWDKvn2WNOSj0eMC8yOM/C1bAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgDUQz2 (ORCPT
+        id S1729415AbgDUQzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57284 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 12:55:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729038AbgDUQys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729112AbgDUQys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 12:54:48 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E49242071C;
-        Tue, 21 Apr 2020 16:54:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DCF72098B;
+        Tue, 21 Apr 2020 16:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587488084;
-        bh=K1xnnq2EptO25N1jH5111IqpA2cwLRLLIr5q8BNqdmE=;
+        bh=85Hb/Vl2BC3BeHWKtYOntLnrUTWb3H2EexK36MH0Wa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x372mL0ZkLqcsGKwtwJQKgRLeIRBBSy117XwsYFDNY2ZybtNe8XJRmQ6/Yd3RrbdK
-         gk85Gx4ACtZRcwG96DIZ5ua0rce7umTBpIYp8XgDdv0mD2imjGRINoFa1DA1pzDj8v
-         OEypLJBIfXrr7tfZ9rlZOoIz80bo4ibd1VBueoPE=
+        b=T5Jb2vZB5CISYLdTRVKgKGAPs7rex6qIpH731WmbhchZt/J3jNQRQHltHSjWnIJXx
+         F+pFhPswhuR90sS+u8WzOMvz7g18iaOMwq0i0euWsv/5jBcIe4cXzgy9G8zxP05nw3
+         m/AJXp6YvRlth/qpaD2kuThO1q5zQ9I2m5cY5Qjo=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jQwAU-00CmDS-2p; Tue, 21 Apr 2020 18:54:42 +0200
+        id 1jQwAU-00CmEv-NA; Tue, 21 Apr 2020 18:54:42 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com
-Subject: [PATCH v2 02/29] docs: filesystems: convert caching/fscache.txt to ReST format
-Date:   Tue, 21 Apr 2020 18:54:13 +0200
-Message-Id: <1aabe4a473028f8f870f75caccecb931d7a50d35.1587487612.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 20/29] docs: filesystems: convert seq_file.txt to ReST
+Date:   Tue, 21 Apr 2020 18:54:31 +0200
+Message-Id: <68bafc8d454f25de4a8736f97baf8aaf6659c43a.1587487612.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1587487612.git.mchehab+huawei@kernel.org>
 References: <cover.1587487612.git.mchehab+huawei@kernel.org>
@@ -61,1097 +60,255 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - Add a SPDX header;
-- Adjust document and section titles;
-- Comment out text ToC for html/pdf output;
+- Add a document title;
+- Adjust section titles;
 - Some whitespace fixes and new line breaks;
-- Add table markups;
+- Mark literal blocks as such;
 - Add it to filesystems/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/filesystems/caching/fscache.rst | 565 ++++++++++++++++++
- Documentation/filesystems/caching/fscache.txt | 448 --------------
- Documentation/filesystems/caching/index.rst   |   1 +
- fs/fscache/Kconfig                            |   8 +-
- 4 files changed, 570 insertions(+), 452 deletions(-)
- create mode 100644 Documentation/filesystems/caching/fscache.rst
- delete mode 100644 Documentation/filesystems/caching/fscache.txt
+ Documentation/filesystems/index.rst           |  1 +
+ .../{seq_file.txt => seq_file.rst}            | 61 +++++++++++--------
+ 2 files changed, 38 insertions(+), 24 deletions(-)
+ rename Documentation/filesystems/{seq_file.txt => seq_file.rst} (92%)
 
-diff --git a/Documentation/filesystems/caching/fscache.rst b/Documentation/filesystems/caching/fscache.rst
-new file mode 100644
-index 000000000000..950602147aa5
---- /dev/null
-+++ b/Documentation/filesystems/caching/fscache.rst
-@@ -0,0 +1,565 @@
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index 6458891f74e4..3d35317b0c46 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -32,6 +32,7 @@ algorithms work.
+    mandatory-locking
+    mount_api
+    quota
++   seq_file
+ 
+    automount-support
+ 
+diff --git a/Documentation/filesystems/seq_file.txt b/Documentation/filesystems/seq_file.rst
+similarity index 92%
+rename from Documentation/filesystems/seq_file.txt
+rename to Documentation/filesystems/seq_file.rst
+index d412b236a9d6..fab302046b13 100644
+--- a/Documentation/filesystems/seq_file.txt
++++ b/Documentation/filesystems/seq_file.rst
+@@ -1,6 +1,11 @@
+-The seq_file interface
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+==========================
-+General Filesystem Caching
-+==========================
++======================
++The seq_file Interface
++======================
+ 
+ 	Copyright 2003 Jonathan Corbet <corbet@lwn.net>
 +
-+Overview
+ 	This file is originally from the LWN.net Driver Porting series at
+ 	http://lwn.net/Articles/driver-porting/
+ 
+@@ -43,7 +48,7 @@ loadable module which creates a file called /proc/sequence. The file, when
+ read, simply produces a set of increasing integer values, one per line. The
+ sequence will continue until the user loses patience and finds something
+ better to do. The file is seekable, in that one can do something like the
+-following:
++following::
+ 
+     dd if=/proc/sequence of=out1 count=1
+     dd if=/proc/sequence skip=1 of=out2 count=1
+@@ -55,16 +60,18 @@ wanting to see the full source for this module can find it at
+ http://lwn.net/Articles/22359/).
+ 
+ Deprecated create_proc_entry
++============================
+ 
+ Note that the above article uses create_proc_entry which was removed in
+-kernel 3.10. Current versions require the following update
++kernel 3.10. Current versions require the following update::
+ 
+--	entry = create_proc_entry("sequence", 0, NULL);
+--	if (entry)
+--		entry->proc_fops = &ct_file_ops;
+-+	entry = proc_create("sequence", 0, NULL, &ct_file_ops);
++    -	entry = create_proc_entry("sequence", 0, NULL);
++    -	if (entry)
++    -		entry->proc_fops = &ct_file_ops;
++    +	entry = proc_create("sequence", 0, NULL, &ct_file_ops);
+ 
+ The iterator interface
++======================
+ 
+ Modules implementing a virtual file with seq_file must implement an
+ iterator object that allows stepping through the data of interest
+@@ -99,7 +106,7 @@ position.  The pos passed to start() will always be either zero, or
+ the most recent pos used in the previous session.
+ 
+ For our simple sequence example,
+-the start() function looks like:
++the start() function looks like::
+ 
+ 	static void *ct_seq_start(struct seq_file *s, loff_t *pos)
+ 	{
+@@ -129,7 +136,7 @@ move the iterator forward to the next position in the sequence.  The
+ example module can simply increment the position by one; more useful
+ modules will do what is needed to step through some data structure. The
+ next() function returns a new iterator, or NULL if the sequence is
+-complete. Here's the example version:
++complete. Here's the example version::
+ 
+ 	static void *ct_seq_next(struct seq_file *s, void *v, loff_t *pos)
+ 	{
+@@ -141,10 +148,10 @@ complete. Here's the example version:
+ The stop() function closes a session; its job, of course, is to clean
+ up. If dynamic memory is allocated for the iterator, stop() is the
+ place to free it; if a lock was taken by start(), stop() must release
+-that lock.  The value that *pos was set to by the last next() call
++that lock.  The value that ``*pos`` was set to by the last next() call
+ before stop() is remembered, and used for the first start() call of
+ the next session unless lseek() has been called on the file; in that
+-case next start() will be asked to start at position zero.
++case next start() will be asked to start at position zero::
+ 
+ 	static void ct_seq_stop(struct seq_file *s, void *v)
+ 	{
+@@ -152,7 +159,7 @@ case next start() will be asked to start at position zero.
+ 	}
+ 
+ Finally, the show() function should format the object currently pointed to
+-by the iterator for output.  The example module's show() function is:
++by the iterator for output.  The example module's show() function is::
+ 
+ 	static int ct_seq_show(struct seq_file *s, void *v)
+ 	{
+@@ -169,7 +176,7 @@ generated output before returning SEQ_SKIP, that output will be dropped.
+ 
+ We will look at seq_printf() in a moment. But first, the definition of the
+ seq_file iterator is finished by creating a seq_operations structure with
+-the four functions we have just defined:
++the four functions we have just defined::
+ 
+ 	static const struct seq_operations ct_seq_ops = {
+ 	        .start = ct_seq_start,
+@@ -194,6 +201,7 @@ other locks while the iterator is active.
+ 
+ 
+ Formatted output
++================
+ 
+ The seq_file code manages positioning within the output created by the
+ iterator and getting it into the user's buffer. But, for that to work, that
+@@ -203,7 +211,7 @@ been defined which make this task easy.
+ Most code will simply use seq_printf(), which works pretty much like
+ printk(), but which requires the seq_file pointer as an argument.
+ 
+-For straight character output, the following functions may be used:
++For straight character output, the following functions may be used::
+ 
+ 	seq_putc(struct seq_file *m, char c);
+ 	seq_puts(struct seq_file *m, const char *s);
+@@ -213,7 +221,7 @@ The first two output a single character and a string, just like one would
+ expect. seq_escape() is like seq_puts(), except that any character in s
+ which is in the string esc will be represented in octal form in the output.
+ 
+-There are also a pair of functions for printing filenames:
++There are also a pair of functions for printing filenames::
+ 
+ 	int seq_path(struct seq_file *m, const struct path *path,
+ 		     const char *esc);
+@@ -226,8 +234,10 @@ the path relative to the current process's filesystem root.  If a different
+ root is desired, it can be used with seq_path_root().  If it turns out that
+ path cannot be reached from root, seq_path_root() returns SEQ_SKIP.
+ 
+-A function producing complicated output may want to check
++A function producing complicated output may want to check::
++
+ 	bool seq_has_overflowed(struct seq_file *m);
++
+ and avoid further seq_<output> calls if true is returned.
+ 
+ A true return from seq_has_overflowed means that the seq_file buffer will
+@@ -236,6 +246,7 @@ buffer and retry printing.
+ 
+ 
+ Making it all work
++==================
+ 
+ So far, we have a nice set of functions which can produce output within the
+ seq_file system, but we have not yet turned them into a file that a user
+@@ -244,7 +255,7 @@ creation of a set of file_operations which implement the operations on that
+ file. The seq_file interface provides a set of canned operations which do
+ most of the work. The virtual file author still must implement the open()
+ method, however, to hook everything up. The open function is often a single
+-line, as in the example module:
++line, as in the example module::
+ 
+ 	static int ct_open(struct inode *inode, struct file *file)
+ 	{
+@@ -263,7 +274,7 @@ by the iterator functions.
+ There is also a wrapper function to seq_open() called seq_open_private(). It
+ kmallocs a zero filled block of memory and stores a pointer to it in the
+ private field of the seq_file structure, returning 0 on success. The
+-block size is specified in a third parameter to the function, e.g.:
++block size is specified in a third parameter to the function, e.g.::
+ 
+ 	static int ct_open(struct inode *inode, struct file *file)
+ 	{
+@@ -273,7 +284,7 @@ block size is specified in a third parameter to the function, e.g.:
+ 
+ There is also a variant function, __seq_open_private(), which is functionally
+ identical except that, if successful, it returns the pointer to the allocated
+-memory block, allowing further initialisation e.g.:
++memory block, allowing further initialisation e.g.::
+ 
+ 	static int ct_open(struct inode *inode, struct file *file)
+ 	{
+@@ -295,7 +306,7 @@ frees the memory allocated in the corresponding open.
+ 
+ The other operations of interest - read(), llseek(), and release() - are
+ all implemented by the seq_file code itself. So a virtual file's
+-file_operations structure will look like:
++file_operations structure will look like::
+ 
+ 	static const struct file_operations ct_file_ops = {
+ 	        .owner   = THIS_MODULE,
+@@ -309,7 +320,7 @@ There is also a seq_release_private() which passes the contents of the
+ seq_file private field to kfree() before releasing the structure.
+ 
+ The final step is the creation of the /proc file itself. In the example
+-code, that is done in the initialization code in the usual way:
++code, that is done in the initialization code in the usual way::
+ 
+ 	static int ct_init(void)
+ 	{
+@@ -325,9 +336,10 @@ And that is pretty much it.
+ 
+ 
+ seq_list
 +========
-+
-+This facility is a general purpose cache for network filesystems, though it
-+could be used for caching other things such as ISO9660 filesystems too.
-+
-+FS-Cache mediates between cache backends (such as CacheFS) and network
-+filesystems::
-+
-+	+---------+
-+	|         |                        +--------------+
-+	|   NFS   |--+                     |              |
-+	|         |  |                 +-->|   CacheFS    |
-+	+---------+  |   +----------+  |   |  /dev/hda5   |
-+	             |   |          |  |   +--------------+
-+	+---------+  +-->|          |  |
-+	|         |      |          |--+
-+	|   AFS   |----->| FS-Cache |
-+	|         |      |          |--+
-+	+---------+  +-->|          |  |
-+	             |   |          |  |   +--------------+
-+	+---------+  |   +----------+  |   |              |
-+	|         |  |                 +-->|  CacheFiles  |
-+	|  ISOFS  |--+                     |  /var/cache  |
-+	|         |                        +--------------+
-+	+---------+
-+
-+Or to look at it another way, FS-Cache is a module that provides a caching
-+facility to a network filesystem such that the cache is transparent to the
-+user::
-+
-+	+---------+
-+	|         |
-+	| Server  |
-+	|         |
-+	+---------+
-+	     |                  NETWORK
-+	~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+	     |
-+	     |           +----------+
-+	     V           |          |
-+	+---------+      |          |
-+	|         |      |          |
-+	|   NFS   |----->| FS-Cache |
-+	|         |      |          |--+
-+	+---------+      |          |  |   +--------------+   +--------------+
-+	     |           |          |  |   |              |   |              |
-+	     V           +----------+  +-->|  CacheFiles  |-->|  Ext3        |
-+	+---------+                        |  /var/cache  |   |  /dev/sda6   |
-+	|         |                        +--------------+   +--------------+
-+	|   VFS   |                                ^                     ^
-+	|         |                                |                     |
-+	+---------+                                +--------------+      |
-+	     |                  KERNEL SPACE                      |      |
-+	~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~|~~~~
-+	     |                  USER SPACE                        |      |
-+	     V                                                    |      |
-+	+---------+                                           +--------------+
-+	|         |                                           |              |
-+	| Process |                                           | cachefilesd  |
-+	|         |                                           |              |
-+	+---------+                                           +--------------+
-+
-+
-+FS-Cache does not follow the idea of completely loading every netfs file
-+opened in its entirety into a cache before permitting it to be accessed and
-+then serving the pages out of that cache rather than the netfs inode because:
-+
-+ (1) It must be practical to operate without a cache.
-+
-+ (2) The size of any accessible file must not be limited to the size of the
-+     cache.
-+
-+ (3) The combined size of all opened files (this includes mapped libraries)
-+     must not be limited to the size of the cache.
-+
-+ (4) The user should not be forced to download an entire file just to do a
-+     one-off access of a small portion of it (such as might be done with the
-+     "file" program).
-+
-+It instead serves the cache out in PAGE_SIZE chunks as and when requested by
-+the netfs('s) using it.
-+
-+
-+FS-Cache provides the following facilities:
-+
-+ (1) More than one cache can be used at once.  Caches can be selected
-+     explicitly by use of tags.
-+
-+ (2) Caches can be added / removed at any time.
-+
-+ (3) The netfs is provided with an interface that allows either party to
-+     withdraw caching facilities from a file (required for (2)).
-+
-+ (4) The interface to the netfs returns as few errors as possible, preferring
-+     rather to let the netfs remain oblivious.
-+
-+ (5) Cookies are used to represent indices, files and other objects to the
-+     netfs.  The simplest cookie is just a NULL pointer - indicating nothing
-+     cached there.
-+
-+ (6) The netfs is allowed to propose - dynamically - any index hierarchy it
-+     desires, though it must be aware that the index search function is
-+     recursive, stack space is limited, and indices can only be children of
-+     indices.
-+
-+ (7) Data I/O is done direct to and from the netfs's pages.  The netfs
-+     indicates that page A is at index B of the data-file represented by cookie
-+     C, and that it should be read or written.  The cache backend may or may
-+     not start I/O on that page, but if it does, a netfs callback will be
-+     invoked to indicate completion.  The I/O may be either synchronous or
-+     asynchronous.
-+
-+ (8) Cookies can be "retired" upon release.  At this point FS-Cache will mark
-+     them as obsolete and the index hierarchy rooted at that point will get
-+     recycled.
-+
-+ (9) The netfs provides a "match" function for index searches.  In addition to
-+     saying whether a match was made or not, this can also specify that an
-+     entry should be updated or deleted.
-+
-+(10) As much as possible is done asynchronously.
-+
-+
-+FS-Cache maintains a virtual indexing tree in which all indices, files, objects
-+and pages are kept.  Bits of this tree may actually reside in one or more
-+caches::
-+
-+                                            FSDEF
-+                                              |
-+                         +------------------------------------+
-+                         |                                    |
-+                        NFS                                  AFS
-+                         |                                    |
-+            +--------------------------+                +-----------+
-+            |                          |                |           |
-+         homedir                     mirror          afs.org   redhat.com
-+            |                          |                            |
-+      +------------+           +---------------+              +----------+
-+      |            |           |               |              |          |
-+    00001        00002       00007           00125        vol00001   vol00002
-+      |            |           |               |                         |
-+  +---+---+     +-----+      +---+      +------+------+            +-----+----+
-+  |   |   |     |     |      |   |      |      |      |            |     |    |
-+ PG0 PG1 PG2   PG0  XATTR   PG0 PG1   DIRENT DIRENT DIRENT        R/W   R/O  Bak
-+                      |                                            |
-+                     PG0                                       +-------+
-+                                                               |       |
-+                                                             00001   00003
-+                                                               |
-+                                                           +---+---+
-+                                                           |   |   |
-+                                                          PG0 PG1 PG2
-+
-+In the example above, you can see two netfs's being backed: NFS and AFS.  These
-+have different index hierarchies:
-+
-+   * The NFS primary index contains per-server indices.  Each server index is
-+     indexed by NFS file handles to get data file objects.  Each data file
-+     objects can have an array of pages, but may also have further child
-+     objects, such as extended attributes and directory entries.  Extended
-+     attribute objects themselves have page-array contents.
-+
-+   * The AFS primary index contains per-cell indices.  Each cell index contains
-+     per-logical-volume indices.  Each of volume index contains up to three
-+     indices for the read-write, read-only and backup mirrors of those volumes.
-+     Each of these contains vnode data file objects, each of which contains an
-+     array of pages.
-+
-+The very top index is the FS-Cache master index in which individual netfs's
-+have entries.
-+
-+Any index object may reside in more than one cache, provided it only has index
-+children.  Any index with non-index object children will be assumed to only
-+reside in one cache.
-+
-+
-+The netfs API to FS-Cache can be found in:
-+
-+	Documentation/filesystems/caching/netfs-api.txt
-+
-+The cache backend API to FS-Cache can be found in:
-+
-+	Documentation/filesystems/caching/backend-api.txt
-+
-+A description of the internal representations and object state machine can be
-+found in:
-+
-+	Documentation/filesystems/caching/object.rst
-+
-+
-+Statistical Information
-+=======================
-+
-+If FS-Cache is compiled with the following options enabled::
-+
-+	CONFIG_FSCACHE_STATS=y
-+	CONFIG_FSCACHE_HISTOGRAM=y
-+
-+then it will gather certain statistics and display them through a number of
-+proc files.
-+
-+/proc/fs/fscache/stats
-+----------------------
-+
-+     This shows counts of a number of events that can happen in FS-Cache:
-+
-++--------------+-------+-------------------------------------------------------+
-+|CLASS         |EVENT  |MEANING                                                |
-++==============+=======+=======================================================+
-+|Cookies       |idx=N  |Number of index cookies allocated                      |
-++              +-------+-------------------------------------------------------+
-+|              |dat=N  |Number of data storage cookies allocated               |
-++              +-------+-------------------------------------------------------+
-+|              |spc=N  |Number of special cookies allocated                    |
-++--------------+-------+-------------------------------------------------------+
-+|Objects       |alc=N  |Number of objects allocated                            |
-++              +-------+-------------------------------------------------------+
-+|              |nal=N  |Number of object allocation failures                   |
-++              +-------+-------------------------------------------------------+
-+|              |avl=N  |Number of objects that reached the available state     |
-++              +-------+-------------------------------------------------------+
-+|              |ded=N  |Number of objects that reached the dead state          |
-++--------------+-------+-------------------------------------------------------+
-+|ChkAux        |non=N  |Number of objects that didn't have a coherency check   |
-++              +-------+-------------------------------------------------------+
-+|              |ok=N   |Number of objects that passed a coherency check        |
-++              +-------+-------------------------------------------------------+
-+|              |upd=N  |Number of objects that needed a coherency data update  |
-++              +-------+-------------------------------------------------------+
-+|              |obs=N  |Number of objects that were declared obsolete          |
-++--------------+-------+-------------------------------------------------------+
-+|Pages         |mrk=N  |Number of pages marked as being cached                 |
-+|              |unc=N  |Number of uncache page requests seen                   |
-++--------------+-------+-------------------------------------------------------+
-+|Acquire       |n=N    |Number of acquire cookie requests seen                 |
-++              +-------+-------------------------------------------------------+
-+|              |nul=N  |Number of acq reqs given a NULL parent                 |
-++              +-------+-------------------------------------------------------+
-+|              |noc=N  |Number of acq reqs rejected due to no cache available  |
-++              +-------+-------------------------------------------------------+
-+|              |ok=N   |Number of acq reqs succeeded                           |
-++              +-------+-------------------------------------------------------+
-+|              |nbf=N  |Number of acq reqs rejected due to error               |
-++              +-------+-------------------------------------------------------+
-+|              |oom=N  |Number of acq reqs failed on ENOMEM                    |
-++--------------+-------+-------------------------------------------------------+
-+|Lookups       |n=N    |Number of lookup calls made on cache backends          |
-++              +-------+-------------------------------------------------------+
-+|              |neg=N  |Number of negative lookups made                        |
-++              +-------+-------------------------------------------------------+
-+|              |pos=N  |Number of positive lookups made                        |
-++              +-------+-------------------------------------------------------+
-+|              |crt=N  |Number of objects created by lookup                    |
-++              +-------+-------------------------------------------------------+
-+|              |tmo=N  |Number of lookups timed out and requeued               |
-++--------------+-------+-------------------------------------------------------+
-+|Updates       |n=N    |Number of update cookie requests seen                  |
-++              +-------+-------------------------------------------------------+
-+|              |nul=N  |Number of upd reqs given a NULL parent                 |
-++              +-------+-------------------------------------------------------+
-+|              |run=N  |Number of upd reqs granted CPU time                    |
-++--------------+-------+-------------------------------------------------------+
-+|Relinqs       |n=N    |Number of relinquish cookie requests seen              |
-++              +-------+-------------------------------------------------------+
-+|              |nul=N  |Number of rlq reqs given a NULL parent                 |
-++              +-------+-------------------------------------------------------+
-+|              |wcr=N  |Number of rlq reqs waited on completion of creation    |
-++--------------+-------+-------------------------------------------------------+
-+|AttrChg       |n=N    |Number of attribute changed requests seen              |
-++              +-------+-------------------------------------------------------+
-+|              |ok=N   |Number of attr changed requests queued                 |
-++              +-------+-------------------------------------------------------+
-+|              |nbf=N  |Number of attr changed rejected -ENOBUFS               |
-++              +-------+-------------------------------------------------------+
-+|              |oom=N  |Number of attr changed failed -ENOMEM                  |
-++              +-------+-------------------------------------------------------+
-+|              |run=N  |Number of attr changed ops given CPU time              |
-++--------------+-------+-------------------------------------------------------+
-+|Allocs        |n=N    |Number of allocation requests seen                     |
-++              +-------+-------------------------------------------------------+
-+|              |ok=N   |Number of successful alloc reqs                        |
-++              +-------+-------------------------------------------------------+
-+|              |wt=N   |Number of alloc reqs that waited on lookup completion  |
-++              +-------+-------------------------------------------------------+
-+|              |nbf=N  |Number of alloc reqs rejected -ENOBUFS                 |
-++              +-------+-------------------------------------------------------+
-+|              |int=N  |Number of alloc reqs aborted -ERESTARTSYS              |
-++              +-------+-------------------------------------------------------+
-+|              |ops=N  |Number of alloc reqs submitted                         |
-++              +-------+-------------------------------------------------------+
-+|              |owt=N  |Number of alloc reqs waited for CPU time               |
-++              +-------+-------------------------------------------------------+
-+|              |abt=N  |Number of alloc reqs aborted due to object death       |
-++--------------+-------+-------------------------------------------------------+
-+|Retrvls       |n=N    |Number of retrieval (read) requests seen               |
-++              +-------+-------------------------------------------------------+
-+|              |ok=N   |Number of successful retr reqs                         |
-++              +-------+-------------------------------------------------------+
-+|              |wt=N   |Number of retr reqs that waited on lookup completion   |
-++              +-------+-------------------------------------------------------+
-+|              |nod=N  |Number of retr reqs returned -ENODATA                  |
-++              +-------+-------------------------------------------------------+
-+|              |nbf=N  |Number of retr reqs rejected -ENOBUFS                  |
-++              +-------+-------------------------------------------------------+
-+|              |int=N  |Number of retr reqs aborted -ERESTARTSYS               |
-++              +-------+-------------------------------------------------------+
-+|              |oom=N  |Number of retr reqs failed -ENOMEM                     |
-++              +-------+-------------------------------------------------------+
-+|              |ops=N  |Number of retr reqs submitted                          |
-++              +-------+-------------------------------------------------------+
-+|              |owt=N  |Number of retr reqs waited for CPU time                |
-++              +-------+-------------------------------------------------------+
-+|              |abt=N  |Number of retr reqs aborted due to object death        |
-++--------------+-------+-------------------------------------------------------+
-+|Stores        |n=N    |Number of storage (write) requests seen                |
-++              +-------+-------------------------------------------------------+
-+|              |ok=N   |Number of successful store reqs                        |
-++              +-------+-------------------------------------------------------+
-+|              |agn=N  |Number of store reqs on a page already pending storage |
-++              +-------+-------------------------------------------------------+
-+|              |nbf=N  |Number of store reqs rejected -ENOBUFS                 |
-++              +-------+-------------------------------------------------------+
-+|              |oom=N  |Number of store reqs failed -ENOMEM                    |
-++              +-------+-------------------------------------------------------+
-+|              |ops=N  |Number of store reqs submitted                         |
-++              +-------+-------------------------------------------------------+
-+|              |run=N  |Number of store reqs granted CPU time                  |
-++              +-------+-------------------------------------------------------+
-+|              |pgs=N  |Number of pages given store req processing time        |
-++              +-------+-------------------------------------------------------+
-+|              |rxd=N  |Number of store reqs deleted from tracking tree        |
-++              +-------+-------------------------------------------------------+
-+|              |olm=N  |Number of store reqs over store limit                  |
-++--------------+-------+-------------------------------------------------------+
-+|VmScan        |nos=N  |Number of release reqs against pages with no           |
-+|              |       |pending store                                          |
-++              +-------+-------------------------------------------------------+
-+|              |gon=N  |Number of release reqs against pages stored by         |
-+|              |       |time lock granted                                      |
-++              +-------+-------------------------------------------------------+
-+|              |bsy=N  |Number of release reqs ignored due to in-progress store|
-++              +-------+-------------------------------------------------------+
-+|              |can=N  |Number of page stores cancelled due to release req     |
-++--------------+-------+-------------------------------------------------------+
-+|Ops           |pend=N |Number of times async ops added to pending queues      |
-++              +-------+-------------------------------------------------------+
-+|              |run=N  |Number of times async ops given CPU time               |
-++              +-------+-------------------------------------------------------+
-+|              |enq=N  |Number of times async ops queued for processing        |
-++              +-------+-------------------------------------------------------+
-+|              |can=N  |Number of async ops cancelled                          |
-++              +-------+-------------------------------------------------------+
-+|              |rej=N  |Number of async ops rejected due to object             |
-+|              |       |lookup/create failure                                  |
-++              +-------+-------------------------------------------------------+
-+|              |ini=N  |Number of async ops initialised                        |
-++              +-------+-------------------------------------------------------+
-+|              |dfr=N  |Number of async ops queued for deferred release        |
-++              +-------+-------------------------------------------------------+
-+|              |rel=N  |Number of async ops released                           |
-+|              |       |(should equal ini=N when idle)                         |
-++              +-------+-------------------------------------------------------+
-+|              |gc=N   |Number of deferred-release async ops garbage collected |
-++--------------+-------+-------------------------------------------------------+
-+|CacheOp       |alo=N  |Number of in-progress alloc_object() cache ops         |
-++              +-------+-------------------------------------------------------+
-+|              |luo=N  |Number of in-progress lookup_object() cache ops        |
-++              +-------+-------------------------------------------------------+
-+|              |luc=N  |Number of in-progress lookup_complete() cache ops      |
-++              +-------+-------------------------------------------------------+
-+|              |gro=N  |Number of in-progress grab_object() cache ops          |
-++              +-------+-------------------------------------------------------+
-+|              |upo=N  |Number of in-progress update_object() cache ops        |
-++              +-------+-------------------------------------------------------+
-+|              |dro=N  |Number of in-progress drop_object() cache ops          |
-++              +-------+-------------------------------------------------------+
-+|              |pto=N  |Number of in-progress put_object() cache ops           |
-++              +-------+-------------------------------------------------------+
-+|              |syn=N  |Number of in-progress sync_cache() cache ops           |
-++              +-------+-------------------------------------------------------+
-+|              |atc=N  |Number of in-progress attr_changed() cache ops         |
-++              +-------+-------------------------------------------------------+
-+|              |rap=N  |Number of in-progress read_or_alloc_page() cache ops   |
-++              +-------+-------------------------------------------------------+
-+|              |ras=N  |Number of in-progress read_or_alloc_pages() cache ops  |
-++              +-------+-------------------------------------------------------+
-+|              |alp=N  |Number of in-progress allocate_page() cache ops        |
-++              +-------+-------------------------------------------------------+
-+|              |als=N  |Number of in-progress allocate_pages() cache ops       |
-++              +-------+-------------------------------------------------------+
-+|              |wrp=N  |Number of in-progress write_page() cache ops           |
-++              +-------+-------------------------------------------------------+
-+|              |ucp=N  |Number of in-progress uncache_page() cache ops         |
-++              +-------+-------------------------------------------------------+
-+|              |dsp=N  |Number of in-progress dissociate_pages() cache ops     |
-++--------------+-------+-------------------------------------------------------+
-+|CacheEv       |nsp=N  |Number of object lookups/creations rejected due to     |
-+|              |       |lack of space                                          |
-++              +-------+-------------------------------------------------------+
-+|              |stl=N  |Number of stale objects deleted                        |
-++              +-------+-------------------------------------------------------+
-+|              |rtr=N  |Number of objects retired when relinquished            |
-++              +-------+-------------------------------------------------------+
-+|              |cul=N  |Number of objects culled                               |
-++--------------+-------+-------------------------------------------------------+
-+
-+
-+
-+/proc/fs/fscache/histogram
-+--------------------------
-+
-+     ::
-+
-+	cat /proc/fs/fscache/histogram
-+	JIFS  SECS  OBJ INST  OP RUNS   OBJ RUNS  RETRV DLY RETRIEVLS
-+	===== ===== ========= ========= ========= ========= =========
-+
-+     This shows the breakdown of the number of times each amount of time
-+     between 0 jiffies and HZ-1 jiffies a variety of tasks took to run.  The
-+     columns are as follows:
-+
-+	=========	=======================================================
-+	COLUMN		TIME MEASUREMENT
-+	=========	=======================================================
-+	OBJ INST	Length of time to instantiate an object
-+	OP RUNS		Length of time a call to process an operation took
-+	OBJ RUNS	Length of time a call to process an object event took
-+	RETRV DLY	Time between an requesting a read and lookup completing
-+	RETRIEVLS	Time between beginning and end of a retrieval
-+	=========	=======================================================
-+
-+     Each row shows the number of events that took a particular range of times.
-+     Each step is 1 jiffy in size.  The JIFS column indicates the particular
-+     jiffy range covered, and the SECS field the equivalent number of seconds.
-+
-+
-+
-+Object List
-+===========
-+
-+If CONFIG_FSCACHE_OBJECT_LIST is enabled, the FS-Cache facility will maintain a
-+list of all the objects currently allocated and allow them to be viewed
-+through::
-+
-+	/proc/fs/fscache/objects
-+
-+This will look something like::
-+
-+	[root@andromeda ~]# head /proc/fs/fscache/objects
-+	OBJECT   PARENT   STAT CHLDN OPS OOP IPR EX READS EM EV F S | NETFS_COOKIE_DEF TY FL NETFS_DATA       OBJECT_KEY, AUX_DATA
-+	======== ======== ==== ===== === === === == ===== == == = = | ================ == == ================ ================
-+	   17e4b        2 ACTV     0   0   0   0  0     0 7b  4 0 0 | NFS.fh           DT  0 ffff88001dd82820 010006017edcf8bbc93b43298fdfbe71e50b57b13a172c0117f38472, e567634700000000000000000000000063f2404a000000000000000000000000c9030000000000000000000063f2404a
-+	   1693a        2 ACTV     0   0   0   0  0     0 7b  4 0 0 | NFS.fh           DT  0 ffff88002db23380 010006017edcf8bbc93b43298fdfbe71e50b57b1e0162c01a2df0ea6, 420ebc4a000000000000000000000000420ebc4a0000000000000000000000000e1801000000000000000000420ebc4a
-+
-+where the first set of columns before the '|' describe the object:
-+
-+	=======	===============================================================
-+	COLUMN	DESCRIPTION
-+	=======	===============================================================
-+	OBJECT	Object debugging ID (appears as OBJ%x in some debug messages)
-+	PARENT	Debugging ID of parent object
-+	STAT	Object state
-+	CHLDN	Number of child objects of this object
-+	OPS	Number of outstanding operations on this object
-+	OOP	Number of outstanding child object management operations
-+	IPR
-+	EX	Number of outstanding exclusive operations
-+	READS	Number of outstanding read operations
-+	EM	Object's event mask
-+	EV	Events raised on this object
-+	F	Object flags
-+	S	Object work item busy state mask (1:pending 2:running)
-+	=======	===============================================================
-+
-+and the second set of columns describe the object's cookie, if present:
-+
-+	================ ======================================================
-+	COLUMN		 DESCRIPTION
-+	================ ======================================================
-+	NETFS_COOKIE_DEF Name of netfs cookie definition
-+	TY		 Cookie type (IX - index, DT - data, hex - special)
-+	FL		 Cookie flags
-+	NETFS_DATA	 Netfs private data stored in the cookie
-+	OBJECT_KEY	 Object key } 1 column, with separating comma
-+	AUX_DATA	 Object aux data } presence may be configured
-+	================ ======================================================
-+
-+The data shown may be filtered by attaching the a key to an appropriate keyring
-+before viewing the file.  Something like::
-+
-+		keyctl add user fscache:objlist <restrictions> @s
-+
-+where <restrictions> are a selection of the following letters:
-+
-+	==	=========================================================
-+	K	Show hexdump of object key (don't show if not given)
-+	A	Show hexdump of object aux data (don't show if not given)
-+	==	=========================================================
-+
-+and the following paired letters:
-+
-+	==	=========================================================
-+	C	Show objects that have a cookie
-+	c	Show objects that don't have a cookie
-+	B	Show objects that are busy
-+	b	Show objects that aren't busy
-+	W	Show objects that have pending writes
-+	w	Show objects that don't have pending writes
-+	R	Show objects that have outstanding reads
-+	r	Show objects that don't have outstanding reads
-+	S	Show objects that have work queued
-+	s	Show objects that don't have work queued
-+	==	=========================================================
-+
-+If neither side of a letter pair is given, then both are implied.  For example:
-+
-+	keyctl add user fscache:objlist KB @s
-+
-+shows objects that are busy, and lists their object keys, but does not dump
-+their auxiliary data.  It also implies "CcWwRrSs", but as 'B' is given, 'b' is
-+not implied.
-+
-+By default all objects and all fields will be shown.
-+
-+
-+Debugging
-+=========
-+
-+If CONFIG_FSCACHE_DEBUG is enabled, the FS-Cache facility can have runtime
-+debugging enabled by adjusting the value in::
-+
-+	/sys/module/fscache/parameters/debug
-+
-+This is a bitmask of debugging streams to enable:
-+
-+	=======	=======	===============================	=======================
-+	BIT	VALUE	STREAM				POINT
-+	=======	=======	===============================	=======================
-+	0	1	Cache management		Function entry trace
-+	1	2					Function exit trace
-+	2	4					General
-+	3	8	Cookie management		Function entry trace
-+	4	16					Function exit trace
-+	5	32					General
-+	6	64	Page handling			Function entry trace
-+	7	128					Function exit trace
-+	8	256					General
-+	9	512	Operation management		Function entry trace
-+	10	1024					Function exit trace
-+	11	2048					General
-+	=======	=======	===============================	=======================
-+
-+The appropriate set of values should be OR'd together and the result written to
-+the control file.  For example::
-+
-+	echo $((1|8|64)) >/sys/module/fscache/parameters/debug
-+
-+will turn on all function entry debugging.
-diff --git a/Documentation/filesystems/caching/fscache.txt b/Documentation/filesystems/caching/fscache.txt
-deleted file mode 100644
-index 071ff50a774d..000000000000
---- a/Documentation/filesystems/caching/fscache.txt
-+++ /dev/null
-@@ -1,448 +0,0 @@
--			  ==========================
--			  General Filesystem Caching
--			  ==========================
--
--========
--OVERVIEW
--========
--
--This facility is a general purpose cache for network filesystems, though it
--could be used for caching other things such as ISO9660 filesystems too.
--
--FS-Cache mediates between cache backends (such as CacheFS) and network
--filesystems:
--
--	+---------+
--	|         |                        +--------------+
--	|   NFS   |--+                     |              |
--	|         |  |                 +-->|   CacheFS    |
--	+---------+  |   +----------+  |   |  /dev/hda5   |
--	             |   |          |  |   +--------------+
--	+---------+  +-->|          |  |
--	|         |      |          |--+
--	|   AFS   |----->| FS-Cache |
--	|         |      |          |--+
--	+---------+  +-->|          |  |
--	             |   |          |  |   +--------------+
--	+---------+  |   +----------+  |   |              |
--	|         |  |                 +-->|  CacheFiles  |
--	|  ISOFS  |--+                     |  /var/cache  |
--	|         |                        +--------------+
--	+---------+
--
--Or to look at it another way, FS-Cache is a module that provides a caching
--facility to a network filesystem such that the cache is transparent to the
--user:
--
--	+---------+
--	|         |
--	| Server  |
--	|         |
--	+---------+
--	     |                  NETWORK
--	~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--	     |
--	     |           +----------+
--	     V           |          |
--	+---------+      |          |
--	|         |      |          |
--	|   NFS   |----->| FS-Cache |
--	|         |      |          |--+
--	+---------+      |          |  |   +--------------+   +--------------+
--	     |           |          |  |   |              |   |              |
--	     V           +----------+  +-->|  CacheFiles  |-->|  Ext3        |
--	+---------+                        |  /var/cache  |   |  /dev/sda6   |
--	|         |                        +--------------+   +--------------+
--	|   VFS   |                                ^                     ^
--	|         |                                |                     |
--	+---------+                                +--------------+      |
--	     |                  KERNEL SPACE                      |      |
--	~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~|~~~~
--	     |                  USER SPACE                        |      |
--	     V                                                    |      |
--	+---------+                                           +--------------+
--	|         |                                           |              |
--	| Process |                                           | cachefilesd  |
--	|         |                                           |              |
--	+---------+                                           +--------------+
--
--
--FS-Cache does not follow the idea of completely loading every netfs file
--opened in its entirety into a cache before permitting it to be accessed and
--then serving the pages out of that cache rather than the netfs inode because:
--
-- (1) It must be practical to operate without a cache.
--
-- (2) The size of any accessible file must not be limited to the size of the
--     cache.
--
-- (3) The combined size of all opened files (this includes mapped libraries)
--     must not be limited to the size of the cache.
--
-- (4) The user should not be forced to download an entire file just to do a
--     one-off access of a small portion of it (such as might be done with the
--     "file" program).
--
--It instead serves the cache out in PAGE_SIZE chunks as and when requested by
--the netfs('s) using it.
--
--
--FS-Cache provides the following facilities:
--
-- (1) More than one cache can be used at once.  Caches can be selected
--     explicitly by use of tags.
--
-- (2) Caches can be added / removed at any time.
--
-- (3) The netfs is provided with an interface that allows either party to
--     withdraw caching facilities from a file (required for (2)).
--
-- (4) The interface to the netfs returns as few errors as possible, preferring
--     rather to let the netfs remain oblivious.
--
-- (5) Cookies are used to represent indices, files and other objects to the
--     netfs.  The simplest cookie is just a NULL pointer - indicating nothing
--     cached there.
--
-- (6) The netfs is allowed to propose - dynamically - any index hierarchy it
--     desires, though it must be aware that the index search function is
--     recursive, stack space is limited, and indices can only be children of
--     indices.
--
-- (7) Data I/O is done direct to and from the netfs's pages.  The netfs
--     indicates that page A is at index B of the data-file represented by cookie
--     C, and that it should be read or written.  The cache backend may or may
--     not start I/O on that page, but if it does, a netfs callback will be
--     invoked to indicate completion.  The I/O may be either synchronous or
--     asynchronous.
--
-- (8) Cookies can be "retired" upon release.  At this point FS-Cache will mark
--     them as obsolete and the index hierarchy rooted at that point will get
--     recycled.
--
-- (9) The netfs provides a "match" function for index searches.  In addition to
--     saying whether a match was made or not, this can also specify that an
--     entry should be updated or deleted.
--
--(10) As much as possible is done asynchronously.
--
--
--FS-Cache maintains a virtual indexing tree in which all indices, files, objects
--and pages are kept.  Bits of this tree may actually reside in one or more
--caches.
--
--                                           FSDEF
--                                             |
--                        +------------------------------------+
--                        |                                    |
--                       NFS                                  AFS
--                        |                                    |
--           +--------------------------+                +-----------+
--           |                          |                |           |
--        homedir                     mirror          afs.org   redhat.com
--           |                          |                            |
--     +------------+           +---------------+              +----------+
--     |            |           |               |              |          |
--   00001        00002       00007           00125        vol00001   vol00002
--     |            |           |               |                         |
-- +---+---+     +-----+      +---+      +------+------+            +-----+----+
-- |   |   |     |     |      |   |      |      |      |            |     |    |
--PG0 PG1 PG2   PG0  XATTR   PG0 PG1   DIRENT DIRENT DIRENT        R/W   R/O  Bak
--                     |                                            |
--                    PG0                                       +-------+
--                                                              |       |
--                                                            00001   00003
--                                                              |
--                                                          +---+---+
--                                                          |   |   |
--                                                         PG0 PG1 PG2
--
--In the example above, you can see two netfs's being backed: NFS and AFS.  These
--have different index hierarchies:
--
-- (*) The NFS primary index contains per-server indices.  Each server index is
--     indexed by NFS file handles to get data file objects.  Each data file
--     objects can have an array of pages, but may also have further child
--     objects, such as extended attributes and directory entries.  Extended
--     attribute objects themselves have page-array contents.
--
-- (*) The AFS primary index contains per-cell indices.  Each cell index contains
--     per-logical-volume indices.  Each of volume index contains up to three
--     indices for the read-write, read-only and backup mirrors of those volumes.
--     Each of these contains vnode data file objects, each of which contains an
--     array of pages.
--
--The very top index is the FS-Cache master index in which individual netfs's
--have entries.
--
--Any index object may reside in more than one cache, provided it only has index
--children.  Any index with non-index object children will be assumed to only
--reside in one cache.
--
--
--The netfs API to FS-Cache can be found in:
--
--	Documentation/filesystems/caching/netfs-api.txt
--
--The cache backend API to FS-Cache can be found in:
--
--	Documentation/filesystems/caching/backend-api.txt
--
--A description of the internal representations and object state machine can be
--found in:
--
--	Documentation/filesystems/caching/object.rst
--
--
--=======================
--STATISTICAL INFORMATION
--=======================
--
--If FS-Cache is compiled with the following options enabled:
--
--	CONFIG_FSCACHE_STATS=y
--	CONFIG_FSCACHE_HISTOGRAM=y
--
--then it will gather certain statistics and display them through a number of
--proc files.
--
-- (*) /proc/fs/fscache/stats
--
--     This shows counts of a number of events that can happen in FS-Cache:
--
--	CLASS	EVENT	MEANING
--	=======	=======	=======================================================
--	Cookies	idx=N	Number of index cookies allocated
--		dat=N	Number of data storage cookies allocated
--		spc=N	Number of special cookies allocated
--	Objects	alc=N	Number of objects allocated
--		nal=N	Number of object allocation failures
--		avl=N	Number of objects that reached the available state
--		ded=N	Number of objects that reached the dead state
--	ChkAux	non=N	Number of objects that didn't have a coherency check
--		ok=N	Number of objects that passed a coherency check
--		upd=N	Number of objects that needed a coherency data update
--		obs=N	Number of objects that were declared obsolete
--	Pages	mrk=N	Number of pages marked as being cached
--		unc=N	Number of uncache page requests seen
--	Acquire	n=N	Number of acquire cookie requests seen
--		nul=N	Number of acq reqs given a NULL parent
--		noc=N	Number of acq reqs rejected due to no cache available
--		ok=N	Number of acq reqs succeeded
--		nbf=N	Number of acq reqs rejected due to error
--		oom=N	Number of acq reqs failed on ENOMEM
--	Lookups	n=N	Number of lookup calls made on cache backends
--		neg=N	Number of negative lookups made
--		pos=N	Number of positive lookups made
--		crt=N	Number of objects created by lookup
--		tmo=N	Number of lookups timed out and requeued
--	Updates	n=N	Number of update cookie requests seen
--		nul=N	Number of upd reqs given a NULL parent
--		run=N	Number of upd reqs granted CPU time
--	Relinqs	n=N	Number of relinquish cookie requests seen
--		nul=N	Number of rlq reqs given a NULL parent
--		wcr=N	Number of rlq reqs waited on completion of creation
--	AttrChg	n=N	Number of attribute changed requests seen
--		ok=N	Number of attr changed requests queued
--		nbf=N	Number of attr changed rejected -ENOBUFS
--		oom=N	Number of attr changed failed -ENOMEM
--		run=N	Number of attr changed ops given CPU time
--	Allocs	n=N	Number of allocation requests seen
--		ok=N	Number of successful alloc reqs
--		wt=N	Number of alloc reqs that waited on lookup completion
--		nbf=N	Number of alloc reqs rejected -ENOBUFS
--		int=N	Number of alloc reqs aborted -ERESTARTSYS
--		ops=N	Number of alloc reqs submitted
--		owt=N	Number of alloc reqs waited for CPU time
--		abt=N	Number of alloc reqs aborted due to object death
--	Retrvls	n=N	Number of retrieval (read) requests seen
--		ok=N	Number of successful retr reqs
--		wt=N	Number of retr reqs that waited on lookup completion
--		nod=N	Number of retr reqs returned -ENODATA
--		nbf=N	Number of retr reqs rejected -ENOBUFS
--		int=N	Number of retr reqs aborted -ERESTARTSYS
--		oom=N	Number of retr reqs failed -ENOMEM
--		ops=N	Number of retr reqs submitted
--		owt=N	Number of retr reqs waited for CPU time
--		abt=N	Number of retr reqs aborted due to object death
--	Stores	n=N	Number of storage (write) requests seen
--		ok=N	Number of successful store reqs
--		agn=N	Number of store reqs on a page already pending storage
--		nbf=N	Number of store reqs rejected -ENOBUFS
--		oom=N	Number of store reqs failed -ENOMEM
--		ops=N	Number of store reqs submitted
--		run=N	Number of store reqs granted CPU time
--		pgs=N	Number of pages given store req processing time
--		rxd=N	Number of store reqs deleted from tracking tree
--		olm=N	Number of store reqs over store limit
--	VmScan	nos=N	Number of release reqs against pages with no pending store
--		gon=N	Number of release reqs against pages stored by time lock granted
--		bsy=N	Number of release reqs ignored due to in-progress store
--		can=N	Number of page stores cancelled due to release req
--	Ops	pend=N	Number of times async ops added to pending queues
--		run=N	Number of times async ops given CPU time
--		enq=N	Number of times async ops queued for processing
--		can=N	Number of async ops cancelled
--		rej=N	Number of async ops rejected due to object lookup/create failure
--		ini=N	Number of async ops initialised
--		dfr=N	Number of async ops queued for deferred release
--		rel=N	Number of async ops released (should equal ini=N when idle)
--		gc=N	Number of deferred-release async ops garbage collected
--	CacheOp	alo=N	Number of in-progress alloc_object() cache ops
--		luo=N	Number of in-progress lookup_object() cache ops
--		luc=N	Number of in-progress lookup_complete() cache ops
--		gro=N	Number of in-progress grab_object() cache ops
--		upo=N	Number of in-progress update_object() cache ops
--		dro=N	Number of in-progress drop_object() cache ops
--		pto=N	Number of in-progress put_object() cache ops
--		syn=N	Number of in-progress sync_cache() cache ops
--		atc=N	Number of in-progress attr_changed() cache ops
--		rap=N	Number of in-progress read_or_alloc_page() cache ops
--		ras=N	Number of in-progress read_or_alloc_pages() cache ops
--		alp=N	Number of in-progress allocate_page() cache ops
--		als=N	Number of in-progress allocate_pages() cache ops
--		wrp=N	Number of in-progress write_page() cache ops
--		ucp=N	Number of in-progress uncache_page() cache ops
--		dsp=N	Number of in-progress dissociate_pages() cache ops
--	CacheEv	nsp=N	Number of object lookups/creations rejected due to lack of space
--		stl=N	Number of stale objects deleted
--		rtr=N	Number of objects retired when relinquished
--		cul=N	Number of objects culled
--
--
-- (*) /proc/fs/fscache/histogram
--
--	cat /proc/fs/fscache/histogram
--	JIFS  SECS  OBJ INST  OP RUNS   OBJ RUNS  RETRV DLY RETRIEVLS
--	===== ===== ========= ========= ========= ========= =========
--
--     This shows the breakdown of the number of times each amount of time
--     between 0 jiffies and HZ-1 jiffies a variety of tasks took to run.  The
--     columns are as follows:
--
--	COLUMN		TIME MEASUREMENT
--	=======		=======================================================
--	OBJ INST	Length of time to instantiate an object
--	OP RUNS		Length of time a call to process an operation took
--	OBJ RUNS	Length of time a call to process an object event took
--	RETRV DLY	Time between an requesting a read and lookup completing
--	RETRIEVLS	Time between beginning and end of a retrieval
--
--     Each row shows the number of events that took a particular range of times.
--     Each step is 1 jiffy in size.  The JIFS column indicates the particular
--     jiffy range covered, and the SECS field the equivalent number of seconds.
--
--
--===========
--OBJECT LIST
--===========
--
--If CONFIG_FSCACHE_OBJECT_LIST is enabled, the FS-Cache facility will maintain a
--list of all the objects currently allocated and allow them to be viewed
--through:
--
--	/proc/fs/fscache/objects
--
--This will look something like:
--
--	[root@andromeda ~]# head /proc/fs/fscache/objects
--	OBJECT   PARENT   STAT CHLDN OPS OOP IPR EX READS EM EV F S | NETFS_COOKIE_DEF TY FL NETFS_DATA       OBJECT_KEY, AUX_DATA
--	======== ======== ==== ===== === === === == ===== == == = = | ================ == == ================ ================
--	   17e4b        2 ACTV     0   0   0   0  0     0 7b  4 0 0 | NFS.fh           DT  0 ffff88001dd82820 010006017edcf8bbc93b43298fdfbe71e50b57b13a172c0117f38472, e567634700000000000000000000000063f2404a000000000000000000000000c9030000000000000000000063f2404a
--	   1693a        2 ACTV     0   0   0   0  0     0 7b  4 0 0 | NFS.fh           DT  0 ffff88002db23380 010006017edcf8bbc93b43298fdfbe71e50b57b1e0162c01a2df0ea6, 420ebc4a000000000000000000000000420ebc4a0000000000000000000000000e1801000000000000000000420ebc4a
--
--where the first set of columns before the '|' describe the object:
--
--	COLUMN	DESCRIPTION
--	=======	===============================================================
--	OBJECT	Object debugging ID (appears as OBJ%x in some debug messages)
--	PARENT	Debugging ID of parent object
--	STAT	Object state
--	CHLDN	Number of child objects of this object
--	OPS	Number of outstanding operations on this object
--	OOP	Number of outstanding child object management operations
--	IPR
--	EX	Number of outstanding exclusive operations
--	READS	Number of outstanding read operations
--	EM	Object's event mask
--	EV	Events raised on this object
--	F	Object flags
--	S	Object work item busy state mask (1:pending 2:running)
--
--and the second set of columns describe the object's cookie, if present:
--
--	COLUMN		DESCRIPTION
--	===============	=======================================================
--	NETFS_COOKIE_DEF Name of netfs cookie definition
--	TY		Cookie type (IX - index, DT - data, hex - special)
--	FL		Cookie flags
--	NETFS_DATA	Netfs private data stored in the cookie
--	OBJECT_KEY	Object key	} 1 column, with separating comma
--	AUX_DATA	Object aux data	} presence may be configured
--
--The data shown may be filtered by attaching the a key to an appropriate keyring
--before viewing the file.  Something like:
--
--		keyctl add user fscache:objlist <restrictions> @s
--
--where <restrictions> are a selection of the following letters:
--
--	K	Show hexdump of object key (don't show if not given)
--	A	Show hexdump of object aux data (don't show if not given)
--
--and the following paired letters:
--
--	C	Show objects that have a cookie
--	c	Show objects that don't have a cookie
--	B	Show objects that are busy
--	b	Show objects that aren't busy
--	W	Show objects that have pending writes
--	w	Show objects that don't have pending writes
--	R	Show objects that have outstanding reads
--	r	Show objects that don't have outstanding reads
--	S	Show objects that have work queued
--	s	Show objects that don't have work queued
--
--If neither side of a letter pair is given, then both are implied.  For example:
--
--	keyctl add user fscache:objlist KB @s
--
--shows objects that are busy, and lists their object keys, but does not dump
--their auxiliary data.  It also implies "CcWwRrSs", but as 'B' is given, 'b' is
--not implied.
--
--By default all objects and all fields will be shown.
--
--
--=========
--DEBUGGING
--=========
--
--If CONFIG_FSCACHE_DEBUG is enabled, the FS-Cache facility can have runtime
--debugging enabled by adjusting the value in:
--
--	/sys/module/fscache/parameters/debug
--
--This is a bitmask of debugging streams to enable:
--
--	BIT	VALUE	STREAM				POINT
--	=======	=======	===============================	=======================
--	0	1	Cache management		Function entry trace
--	1	2					Function exit trace
--	2	4					General
--	3	8	Cookie management		Function entry trace
--	4	16					Function exit trace
--	5	32					General
--	6	64	Page handling			Function entry trace
--	7	128					Function exit trace
--	8	256					General
--	9	512	Operation management		Function entry trace
--	10	1024					Function exit trace
--	11	2048					General
--
--The appropriate set of values should be OR'd together and the result written to
--the control file.  For example:
--
--	echo $((1|8|64)) >/sys/module/fscache/parameters/debug
--
--will turn on all function entry debugging.
-diff --git a/Documentation/filesystems/caching/index.rst b/Documentation/filesystems/caching/index.rst
-index e5ec95ff0be2..f488747630aa 100644
---- a/Documentation/filesystems/caching/index.rst
-+++ b/Documentation/filesystems/caching/index.rst
-@@ -6,4 +6,5 @@ Filesystem Caching
- .. toctree::
-    :maxdepth: 2
  
-+   fscache
-    object
-diff --git a/fs/fscache/Kconfig b/fs/fscache/Kconfig
-index 506c5e643f0d..5e796e6c38e5 100644
---- a/fs/fscache/Kconfig
-+++ b/fs/fscache/Kconfig
-@@ -8,7 +8,7 @@ config FSCACHE
- 	  Different sorts of caches can be plugged in, depending on the
- 	  resources available.
+ If your file will be iterating through a linked list, you may find these
+-routines useful:
++routines useful::
  
--	  See Documentation/filesystems/caching/fscache.txt for more information.
-+	  See Documentation/filesystems/caching/fscache.rst for more information.
+ 	struct list_head *seq_list_start(struct list_head *head,
+ 	       		 		 loff_t pos);
+@@ -338,15 +350,16 @@ routines useful:
  
- config FSCACHE_STATS
- 	bool "Gather statistical information on local caching"
-@@ -25,7 +25,7 @@ config FSCACHE_STATS
- 	  between CPUs.  On the other hand, the stats are very useful for
- 	  debugging purposes.  Saying 'Y' here is recommended.
+ These helpers will interpret pos as a position within the list and iterate
+ accordingly.  Your start() and next() functions need only invoke the
+-seq_list_* helpers with a pointer to the appropriate list_head structure.
++``seq_list_*`` helpers with a pointer to the appropriate list_head structure.
  
--	  See Documentation/filesystems/caching/fscache.txt for more information.
-+	  See Documentation/filesystems/caching/fscache.rst for more information.
  
- config FSCACHE_HISTOGRAM
- 	bool "Gather latency information on local caching"
-@@ -42,7 +42,7 @@ config FSCACHE_HISTOGRAM
- 	  bouncing between CPUs.  On the other hand, the histogram may be
- 	  useful for debugging purposes.  Saying 'N' here is recommended.
+ The extra-simple version
++========================
  
--	  See Documentation/filesystems/caching/fscache.txt for more information.
-+	  See Documentation/filesystems/caching/fscache.rst for more information.
+ For extremely simple virtual files, there is an even easier interface.  A
+ module can define only the show() function, which should create all the
+ output that the virtual file will contain. The file's open() method then
+-calls:
++calls::
  
- config FSCACHE_DEBUG
- 	bool "Debug FS-Cache"
-@@ -52,7 +52,7 @@ config FSCACHE_DEBUG
- 	  management module.  If this is set, the debugging output may be
- 	  enabled by setting bits in /sys/modules/fscache/parameter/debug.
- 
--	  See Documentation/filesystems/caching/fscache.txt for more information.
-+	  See Documentation/filesystems/caching/fscache.rst for more information.
- 
- config FSCACHE_OBJECT_LIST
- 	bool "Maintain global object list for debugging purposes"
+ 	int single_open(struct file *file,
+ 	                int (*show)(struct seq_file *m, void *p),
 -- 
 2.25.2
 
