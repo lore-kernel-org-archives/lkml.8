@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13962C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D48C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD6B72072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09CE92075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 16:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587488164;
-	bh=2aRdoHfJoUwCH8fSp3Qny7RnOOZMeRrEZLn7MbAbT+Y=;
+	s=default; t=1587488166;
+	bh=KsoaNwgIS/FbS/tQMuw9JxqzFKt+s5yExdop2Zs3cCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1OQilQ/THk8QIue/X7ovozKF8szDfU8U0G5pQLygMlS3AACFQK3OS3Mv0MZ+SX9Yp
-	 uIW5BLosCgaLJ/PdST/aJISmC+wjghh37o+O+uwMWQttY2JcNH85YI8WG0nLPqneFf
-	 e6xcfERaj9qmOvFYM8BVb1JvPskAMyeHxjjfbNO0=
+	b=PZefp+MGZaxq6ROw76D+EArdvKPQisYjdPDhQXL3FWJYKSyMeA5zOvDEMTBhmaegr
+	 QYRK62SbHXGOZHgXBQhAVHg5/FPbE/ajFYt+jQWQLvaP9ahLo8sr/bQUGJF6QR5LX1
+	 lgccCOvDrROeZSfPzN+yOK7Q+Bk3aGKHJ0IK9Qyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgDUQ4D (ORCPT
+        id S1729462AbgDUQ4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 12:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57246 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 12:56:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729092AbgDUQyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729144AbgDUQyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 12:54:47 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E3E82084D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9190D2166E;
         Tue, 21 Apr 2020 16:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587488084;
-        bh=2aRdoHfJoUwCH8fSp3Qny7RnOOZMeRrEZLn7MbAbT+Y=;
+        bh=KsoaNwgIS/FbS/tQMuw9JxqzFKt+s5yExdop2Zs3cCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I2y9p9M5NSJ4LVQYJXlZO6kCfxe64fUeT+zF42CSY4XXqpd91QTw9dtRgOtlF1FPe
-         2z/nn0RahQnmyZOciXiglLZDakP4MFsneObJBEYVeHsGBRfznEV6uTJs9kukIZBwZC
-         FZBz/Ixh+oelFLQgEKwgJiNaxWy5VDl2ygDE7xFg=
+        b=J9FEnG+eWDchYmB/irYq2m/ChCSWoeBWqEUCy7l7mBxOFWPxzPvBTXb+W+eSTa39Q
+         7mfcXPgKSCWlW+xDA2xaAwndbFj+c/kJMc1se9McuWksojSkjt4qq57cK5ZjaRwSXm
+         +xs903OGR08LqozjMvKHOuhi6B9w4dWmMg1xsMSA=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jQwAU-00CmEg-Jt; Tue, 21 Apr 2020 18:54:42 +0200
+        id 1jQwAU-00CmFA-Qp; Tue, 21 Apr 2020 18:54:42 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 17/29] docs: filesystems: convert mandatory-locking.txt to ReST
-Date:   Tue, 21 Apr 2020 18:54:28 +0200
-Message-Id: <e3094aef0253df8d0599735894ad5bfa08eff25e.1587487612.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 23/29] docs: filesystems: convert spufs/spu_create.txt to ReST
+Date:   Tue, 21 Apr 2020 18:54:34 +0200
+Message-Id: <dc48536e964ecd8074271f15ccadb8920bb17a04.1587487612.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1587487612.git.mchehab+huawei@kernel.org>
 References: <cover.1587487612.git.mchehab+huawei@kernel.org>
@@ -63,107 +59,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a SPDX header;
-- Adjust document title;
-- Some whitespace fixes and new line breaks;
-- Use notes markups;
-- Add it to filesystems/index.rst.
+This file is at groff output format. Manually convert it to
+ReST format, trying to preserve a similar output after parsed.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
  Documentation/filesystems/index.rst           |  1 +
- Documentation/filesystems/locks.rst           |  2 +-
- ...tory-locking.txt => mandatory-locking.rst} | 25 ++++++++++++-------
- fs/locks.c                                    |  2 +-
- 4 files changed, 19 insertions(+), 11 deletions(-)
- rename Documentation/filesystems/{mandatory-locking.txt => mandatory-locking.rst} (91%)
+ Documentation/filesystems/spufs/index.rst     | 11 ++++
+ .../spufs/{spu_create.txt => spu_create.rst}  | 52 ++++++++++++-------
+ 3 files changed, 44 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/filesystems/spufs/index.rst
+ rename Documentation/filesystems/spufs/{spu_create.txt => spu_create.rst} (90%)
 
 diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 96190e268c11..02d52b536baf 100644
+index 56fd515af5ef..74b1e18af37e 100644
 --- a/Documentation/filesystems/index.rst
 +++ b/Documentation/filesystems/index.rst
-@@ -29,6 +29,7 @@ algorithms work.
-    fiemap
-    files
-    locks
-+   mandatory-locking
- 
-    automount-support
- 
-diff --git a/Documentation/filesystems/locks.rst b/Documentation/filesystems/locks.rst
-index 10f67fb9ce07..c5ae858b1aac 100644
---- a/Documentation/filesystems/locks.rst
-+++ b/Documentation/filesystems/locks.rst
-@@ -58,7 +58,7 @@ fcntl(), with all the problems that implies.
- ---------------------------------------
- 
- Mandatory locking, as described in
--'Documentation/filesystems/mandatory-locking.txt' was prior to this release a
-+'Documentation/filesystems/mandatory-locking.rst' was prior to this release a
- general configuration option that was valid for all mounted filesystems.  This
- had a number of inherent dangers, not the least of which was the ability to
- freeze an NFS server by asking it to read a file for which a mandatory lock
-diff --git a/Documentation/filesystems/mandatory-locking.txt b/Documentation/filesystems/mandatory-locking.rst
-similarity index 91%
-rename from Documentation/filesystems/mandatory-locking.txt
-rename to Documentation/filesystems/mandatory-locking.rst
-index a251ca33164a..9ce73544a8f0 100644
---- a/Documentation/filesystems/mandatory-locking.txt
-+++ b/Documentation/filesystems/mandatory-locking.rst
-@@ -1,8 +1,13 @@
--	Mandatory File Locking For The Linux Operating System
+@@ -107,6 +107,7 @@ Documentation for filesystem implementations.
+    ramfs-rootfs-initramfs
+    relay
+    romfs
++   spufs/index
+    squashfs
+    sysfs
+    sysv-fs
+diff --git a/Documentation/filesystems/spufs/index.rst b/Documentation/filesystems/spufs/index.rst
+new file mode 100644
+index 000000000000..39553c6ebefd
+--- /dev/null
++++ b/Documentation/filesystems/spufs/index.rst
+@@ -0,0 +1,11 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=====================================================
-+Mandatory File Locking For The Linux Operating System
-+=====================================================
- 
- 		Andy Walker <andy@lysaker.kvaerner.no>
- 
- 			   15 April 1996
++==============
++SPU Filesystem
++==============
 +
- 		     (Updated September 2007)
- 
- 0. Why you should avoid mandatory locking
-@@ -53,15 +58,17 @@ possible on existing user code. The scheme is based on marking individual files
- as candidates for mandatory locking, and using the existing fcntl()/lockf()
- interface for applying locks just as if they were normal, advisory locks.
- 
--Note 1: In saying "file" in the paragraphs above I am actually not telling
--the whole truth. System V locking is based on fcntl(). The granularity of
--fcntl() is such that it allows the locking of byte ranges in files, in addition
--to entire files, so the mandatory locking rules also have byte level
--granularity.
-+.. Note::
- 
--Note 2: POSIX.1 does not specify any scheme for mandatory locking, despite
--borrowing the fcntl() locking scheme from System V. The mandatory locking
--scheme is defined by the System V Interface Definition (SVID) Version 3.
-+   1. In saying "file" in the paragraphs above I am actually not telling
-+      the whole truth. System V locking is based on fcntl(). The granularity of
-+      fcntl() is such that it allows the locking of byte ranges in files, in
-+      addition to entire files, so the mandatory locking rules also have byte
-+      level granularity.
 +
-+   2. POSIX.1 does not specify any scheme for mandatory locking, despite
-+      borrowing the fcntl() locking scheme from System V. The mandatory locking
-+      scheme is defined by the System V Interface Definition (SVID) Version 3.
++.. toctree::
++   :maxdepth: 1
++
++   spu_create
+diff --git a/Documentation/filesystems/spufs/spu_create.txt b/Documentation/filesystems/spufs/spu_create.rst
+similarity index 90%
+rename from Documentation/filesystems/spufs/spu_create.txt
+rename to Documentation/filesystems/spufs/spu_create.rst
+index 8ede5a35340f..83108c099696 100644
+--- a/Documentation/filesystems/spufs/spu_create.txt
++++ b/Documentation/filesystems/spufs/spu_create.rst
+@@ -1,18 +1,26 @@
+-SPU_CREATE(2)              Linux Programmer's Manual             SPU_CREATE(2)
++.. SPDX-License-Identifier: GPL-2.0
  
- 2. Marking a file for mandatory locking
- ---------------------------------------
-diff --git a/fs/locks.c b/fs/locks.c
-index b8a31c1c4fff..1d4f4d5da704 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -61,7 +61,7 @@
-  *
-  *  Initial implementation of mandatory locks. SunOS turned out to be
-  *  a rotten model, so I implemented the "obvious" semantics.
-- *  See 'Documentation/filesystems/mandatory-locking.txt' for details.
-+ *  See 'Documentation/filesystems/mandatory-locking.rst' for details.
-  *  Andy Walker (andy@lysaker.kvaerner.no), April 06, 1996.
-  *
-  *  Don't allow mandatory locks on mmap()'ed files. Added simple functions to
++==========
++spu_create
++==========
+ 
+-
+-NAME
++Name
++====
+        spu_create - create a new spu context
+ 
+ 
+-SYNOPSIS
+-       #include <sys/types.h>
+-       #include <sys/spu.h>
++Synopsis
++========
+ 
+-       int spu_create(const char *pathname, int flags, mode_t mode);
++       ::
+ 
+-DESCRIPTION
++         #include <sys/types.h>
++         #include <sys/spu.h>
++
++         int spu_create(const char *pathname, int flags, mode_t mode);
++
++Description
++===========
+        The  spu_create  system call is used on PowerPC machines that implement
+        the Cell Broadband Engine Architecture in order to  access  Synergistic
+        Processor  Units (SPUs). It creates a new logical context for an SPU in
+@@ -43,13 +51,15 @@ DESCRIPTION
+        possible mode values.
+ 
+ 
+-RETURN VALUE
++Return Value
++============
+        spu_create  returns a new file descriptor. It may return -1 to indicate
+        an error condition and set errno to  one  of  the  error  codes  listed
+        below.
+ 
+ 
+-ERRORS
++Errors
++======
+        EACCES
+               The  current  user does not have write access on the spufs mount
+               point.
+@@ -87,33 +97,35 @@ ERRORS
+ 
+ 
+ 
+-NOTES
++Notes
++=====
+        spu_create  is  meant  to  be used from libraries that implement a more
+        abstract interface to SPUs, not to be used from  regular  applications.
+        See  http://www.bsc.es/projects/deepcomputing/linuxoncell/ for the rec-
+        ommended libraries.
+ 
+ 
+-FILES
++Files
++=====
+        pathname must point to a location beneath the mount point of spufs.  By
+        convention, it gets mounted in /spu.
+ 
+ 
+-CONFORMING TO
++Conforming to
++=============
+        This call is Linux specific and only implemented by the ppc64 architec-
+        ture. Programs using this system call are not portable.
+ 
+ 
+-BUGS
++Bugs
++====
+        The code does not yet fully implement all features lined out here.
+ 
+ 
+-AUTHOR
++Author
++======
+        Arnd Bergmann <arndb@de.ibm.com>
+ 
+-SEE ALSO
++See Also
++========
+        capabilities(7), close(2), spu_run(2), spufs(7)
+-
+-
+-
+-Linux                             2005-09-28                     SPU_CREATE(2)
 -- 
 2.25.2
 
