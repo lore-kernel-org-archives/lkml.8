@@ -2,140 +2,232 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648A8C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A23C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8D9206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1DE206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 13:41:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="h8iyN+76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgDUNkX (ORCPT
+        id S1728993AbgDUNla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:40:23 -0400
-Received: from m176149.mail.qiye.163.com ([59.111.176.149]:2718 "EHLO
-        m176149.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbgDUNkX (ORCPT
+        Tue, 21 Apr 2020 09:41:30 -0400
+Received: from forward104j.mail.yandex.net ([5.45.198.247]:47698 "EHLO
+        forward104j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728337AbgDUNl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:40:23 -0400
-Received: from vivo.com (wm-9.qy.internal [127.0.0.1])
-        by m176149.mail.qiye.163.com (Hmail) with ESMTP id 0D38F282502;
-        Tue, 21 Apr 2020 21:39:48 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <ABgAqADYCC8xUvKN7bT8YKp1.3.1587476387645.Hmail.bernard@vivo.com>
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tom St Denis <tom.stdenis@amd.com>,
-        Ori Messinger <Ori.Messinger@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gYW1kZ3B1OiBmaXhlcyBtZW1sZWFrIGlzc3VlIHdoZW4gaW5pdCBmYWlsZWQ=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 157.0.31.122
-In-Reply-To: <5c1510e2-9007-50b8-9be9-b8a00f943c9b@amd.com>
+        Tue, 21 Apr 2020 09:41:29 -0400
+Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
+        by forward104j.mail.yandex.net (Yandex) with ESMTP id 4E4314A20FC;
+        Tue, 21 Apr 2020 16:41:21 +0300 (MSK)
+Received: from mxback12q.mail.yandex.net (mxback12q.mail.yandex.net [IPv6:2a02:6b8:c0e:1b3:0:640:3818:d096])
+        by forward101q.mail.yandex.net (Yandex) with ESMTP id 460A9CF40002;
+        Tue, 21 Apr 2020 16:41:21 +0300 (MSK)
+Received: from vla4-d1b041059520.qloud-c.yandex.net (vla4-d1b041059520.qloud-c.yandex.net [2a02:6b8:c17:914:0:640:d1b0:4105])
+        by mxback12q.mail.yandex.net (mxback/Yandex) with ESMTP id 93xlLFHrpE-fIB0fnjQ;
+        Tue, 21 Apr 2020 16:41:21 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1587476481;
+        bh=xCogxVJggB4U0WxqK21fNHt81GXV7XMyn6/5t3LcMbA=;
+        h=Subject:To:From:Cc:Date:Message-Id;
+        b=h8iyN+76zznVlaSgkJSHKBzd+V/7zOQG160+7quNxObd2jljOUq6wQchjPfcyKg0K
+         thZ5XwDNLtpkM4Md/ngAUb5yr4YWuraTezhtDrcr2yzM3Gf+apfwx80soLY+5PacVo
+         zC8b3m2igt0SSBbBj4jIojJ1w5FqtG9xXL0ulWEc=
+Authentication-Results: mxback12q.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by vla4-d1b041059520.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id X5d09Yh5QJ-fG2W9Rr2;
+        Tue, 21 Apr 2020 16:41:17 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Alexander Lobakin <bloodyreaper@yandex.ru>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Mao Wenan <maowenan@huawei.com>,
+        Alexander Lobakin <bloodyreaper@yandex.ru>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH v2 net-next] net: dsa: add GRO support via gro_cells
+Date:   Tue, 21 Apr 2020 16:41:08 +0300
+Message-Id: <20200421134108.167646-1-bloodyreaper@yandex.ru>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 21 Apr 2020 21:39:47 +0800 (GMT+08:00)
-From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
-Date:   Tue, 21 Apr 2020 21:39:47 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVPSk9CQkJCTUpDTkhLSFlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSE9PQkxJT01ON1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6ORw6Cjo*Ijg4QwMuDTA1TBkvQyIwC0pVSFVKTkNMT0xNSENDSklMVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBQ0xJTjcG
-X-HM-Tid: 0a719cf758dc9395kuws0d38f282502
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CuWPkeS7tuS6uu+8miJDaHJpc3RpYW4gS8O2bmlnIiA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29t
-Pgrlj5HpgIHml6XmnJ/vvJoyMDIwLTA0LTIxIDIxOjAyOjI3CuaUtuS7tuS6uu+8miLotbXlhpvl
-pY4iIDxiZXJuYXJkQHZpdm8uY29tPgrmioTpgIHkurrvvJpBbGV4IERldWNoZXIgPGFsZXhhbmRl
-ci5kZXVjaGVyQGFtZC5jb20+LCJEYXZpZCAoQ2h1bk1pbmcpIFpob3UiIDxEYXZpZDEuWmhvdUBh
-bWQuY29tPixEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+LERhbmllbCBWZXR0ZXIgPGRh
-bmllbEBmZndsbC5jaD4sVG9tIFN0IERlbmlzIDx0b20uc3RkZW5pc0BhbWQuY29tPixPcmkgTWVz
-c2luZ2VyIDxPcmkuTWVzc2luZ2VyQGFtZC5jb20+LFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3Jn
-Lm9yZz4sYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZyxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLG9wZW5zb3VyY2Uua2VybmVs
-QHZpdm8uY29tCuS4u+mimO+8mlJlOiBbUEFUQ0hdIGFtZGdwdTogZml4ZXMgbWVtbGVhayBpc3N1
-ZSB3aGVuIGluaXQgZmFpbGVkPkFtIDIxLjA0LjIwIHVtIDE0OjA5IHNjaHJpZWIg6LW15Yab5aWO
-Ogo+PiBGcm9tOiAiQ2hyaXN0aWFuIEvDtm5pZyIgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4K
-Pj4gRGF0ZTogMjAyMC0wNC0yMSAxOToyMjo0OQo+PiBUbzogIEJlcm5hcmQgWmhhbyA8YmVybmFy
-ZEB2aXZvLmNvbT4sQWxleCBEZXVjaGVyIDxhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPiwiRGF2
-aWQgKENodW5NaW5nKSBaaG91IiA8RGF2aWQxLlpob3VAYW1kLmNvbT4sRGF2aWQgQWlybGllIDxh
-aXJsaWVkQGxpbnV4LmllPixEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+LFRvbSBTdCBE
-ZW5pcyA8dG9tLnN0ZGVuaXNAYW1kLmNvbT4sT3JpIE1lc3NpbmdlciA8T3JpLk1lc3NpbmdlckBh
-bWQuY29tPixTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+LGFtZC1nZnhAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnLGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZwo+PiBDYzogIG9wZW5zb3VyY2Uua2VybmVsQHZpdm8uY29tCj4+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0hdIGFtZGdwdTogZml4ZXMgbWVtbGVhayBpc3N1ZSB3aGVuIGluaXQg
-ZmFpbGVkPkFtIDIxLjA0LjIwIHVtIDEzOjE3IHNjaHJpZWIgQmVybmFyZCBaaGFvOgo+Pj4+IFZS
-QU0gbWFuYWdlciBhbmQgRFJNIE1NIHdoZW4gaW5pdCBmYWlsZWQsIHRoZXJlIGlzIG5vIG9wZXJh
-Y3Rpb24KPj4+PiB0byBmcmVlIGt6YWxsb2MgbWVtb3J5ICYgcmVtb3ZlIGRldmljZSBmaWxlLgo+
-Pj4+IFRoaXMgd2lsbCBsZWFkIHRvIG1lbWxlYWsgJiBjYXVzZSBzdGFiaWxpdHkgaXNzdWUuCj4+
-PiBOQUssIGZhaWx1cmUgdG8gY3JlYXRlIHN5c2ZzIG5vZGVzIGFyZSBub3QgY3JpdGljYWwuCj4+
-Pgo+Pj4gQ2hyaXN0aWFuLgo+Pj4KPj4gT0ssIGdldCBpdC4KPj4gQnkgdGhlIHdheSwgc2hvdWxk
-IGkgbW9kaWZ5IHRoaXMgcGF0Y2ggdG8ganVzdCBoYW5kbGUgPGtmcmVlKG1ncik+IGluIGVycm9y
-IGJyYW5jaCwgb3IgdGhhdCBpdCBpcyBhbHNvIHVubmVjZXNzYXJ5Pwo+Cj5XaGF0IHlvdSBjYW4g
-ZG8gaXMgdG8gZHJvcCB0aGUgInJldHVybiByZXQiIGlmIGFueXRoaW5nIHdpdGggdGhlIHN5c2Zz
-IAo+bm9kZXMgZ29lcyB3cm9uZyBhbmQgaW5zdGVhZCBwcmludCB0aGUgZXJyb3IgY29kZS4KCkVt
-bW0sIGZvciB0aGlzIHBhcnQsIGkgYW0gbm90IHN1cmUsIG15IG1vZGlmeSBmaXJzdCBwcmludCB0
-aGUgZXJyb3IsIHNlY29uZSByZWxlYXNlIG5vdCBmcmVlIG1lbW9yeSwgCmFuZCBsYXN0IHJldHVy
-biBlcnJvciwgbWFrZSBldmVyeXRoaW5nIGNsZWFyIHRvIHRoZSBzeXN0ZW0uCkkgdGhpbmsgaXRg
-cyB0aGUgc2FtZSB3aXRoIHdoYXQgeW91IG1lbnRpb25lZCwgaXMgdGhlcmUgc29tZXRoaW5nIHRo
-YXQgSSBtaXN1bmRlcnN0b29kPwoKPgo+SXQncyByZWFsbHkgYW5ub3lpbmcgdGhhdCBsb2FkaW5n
-LCB1bmxvYWRpbmcgYW5kIGxvYWRpbmcgdGhlIGRyaXZlciAKPmFnYWluIHNvbWV0aW1lcyBmYWls
-cyBiZWNhdXNlIHdlIGhhdmUgYSBidWcgaW4gdGhlIHN5c2ZzIGZpbGVzIGNsZWFudXAuCj4KPldl
-IGNlcnRhaW5seSBzaG91bGQgZml4IHRob3NlIGJ1Z3MgYXMgd2VsbCwgYnV0IHRoZXkgYXJlIGp1
-c3Qgbm90IAo+Y3JpdGljYWwgZm9yIGNvcnJlY3QgZHJpdmVyIGZ1bmN0aW9uYWxpdHkuCj4KPlJl
-Z2FyZHMsCj5DaHJpc3RpYW4uCgoKPj4KPj4gUmVnYXJkcywKPj4gQmVybmFyZAo+Pgo+Pj4+IFNp
-Z25lZC1vZmYtYnk6IEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4KPj4+PiAtLS0KPj4+
-PiAgICBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfdnJhbV9tZ3IuYyB8IDI0ICsr
-KysrKysrKysrKysrKystLS0tCj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMo
-KyksIDUgZGVsZXRpb25zKC0pCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L2FtZC9hbWRncHUvYW1kZ3B1X3ZyYW1fbWdyLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdw
-dS9hbWRncHVfdnJhbV9tZ3IuYwo+Pj4+IGluZGV4IDgyYTMyOTllNTNjMC4uNGM1ZmIxNTNlNmI0
-IDEwMDY0NAo+Pj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV92cmFt
-X21nci5jCj4+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X3ZyYW1f
-bWdyLmMKPj4+PiBAQCAtMTc1LDMwICsxNzUsNDQgQEAgc3RhdGljIGludCBhbWRncHVfdnJhbV9t
-Z3JfaW5pdChzdHJ1Y3QgdHRtX21lbV90eXBlX21hbmFnZXIgKm1hbiwKPj4+PiAgICAJcmV0ID0g
-ZGV2aWNlX2NyZWF0ZV9maWxlKGFkZXYtPmRldiwgJmRldl9hdHRyX21lbV9pbmZvX3ZyYW1fdG90
-YWwpOwo+Pj4+ICAgIAlpZiAocmV0KSB7Cj4+Pj4gICAgCQlEUk1fRVJST1IoIkZhaWxlZCB0byBj
-cmVhdGUgZGV2aWNlIGZpbGUgbWVtX2luZm9fdnJhbV90b3RhbFxuIik7Cj4+Pj4gLQkJcmV0dXJu
-IHJldDsKPj4+PiArCQlnb3RvIFZSQU1fVE9UQUxfRkFJTDsKPj4+PiAgICAJfQo+Pj4+ICAgIAly
-ZXQgPSBkZXZpY2VfY3JlYXRlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdmlz
-X3ZyYW1fdG90YWwpOwo+Pj4+ICAgIAlpZiAocmV0KSB7Cj4+Pj4gICAgCQlEUk1fRVJST1IoIkZh
-aWxlZCB0byBjcmVhdGUgZGV2aWNlIGZpbGUgbWVtX2luZm9fdmlzX3ZyYW1fdG90YWxcbiIpOwo+
-Pj4+IC0JCXJldHVybiByZXQ7Cj4+Pj4gKwkJZ290byBWSVNfVlJBTV9UT1RBX0ZBSUw7Cj4+Pj4g
-ICAgCX0KPj4+PiAgICAJcmV0ID0gZGV2aWNlX2NyZWF0ZV9maWxlKGFkZXYtPmRldiwgJmRldl9h
-dHRyX21lbV9pbmZvX3ZyYW1fdXNlZCk7Cj4+Pj4gICAgCWlmIChyZXQpIHsKPj4+PiAgICAJCURS
-TV9FUlJPUigiRmFpbGVkIHRvIGNyZWF0ZSBkZXZpY2UgZmlsZSBtZW1faW5mb192cmFtX3VzZWRc
-biIpOwo+Pj4+IC0JCXJldHVybiByZXQ7Cj4+Pj4gKwkJZ290byBWUkFNX1VTRURfRkFJTDsKPj4+
-PiAgICAJfQo+Pj4+ICAgIAlyZXQgPSBkZXZpY2VfY3JlYXRlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2
-X2F0dHJfbWVtX2luZm9fdmlzX3ZyYW1fdXNlZCk7Cj4+Pj4gICAgCWlmIChyZXQpIHsKPj4+PiAg
-ICAJCURSTV9FUlJPUigiRmFpbGVkIHRvIGNyZWF0ZSBkZXZpY2UgZmlsZSBtZW1faW5mb192aXNf
-dnJhbV91c2VkXG4iKTsKPj4+PiAtCQlyZXR1cm4gcmV0Owo+Pj4+ICsJCWdvdG8gVklTX1ZSQU1f
-VVNFRF9GQUlMOwo+Pj4+ICAgIAl9Cj4+Pj4gICAgCXJldCA9IGRldmljZV9jcmVhdGVfZmlsZShh
-ZGV2LT5kZXYsICZkZXZfYXR0cl9tZW1faW5mb192cmFtX3ZlbmRvcik7Cj4+Pj4gICAgCWlmIChy
-ZXQpIHsKPj4+PiAgICAJCURSTV9FUlJPUigiRmFpbGVkIHRvIGNyZWF0ZSBkZXZpY2UgZmlsZSBt
-ZW1faW5mb192cmFtX3ZlbmRvclxuIik7Cj4+Pj4gLQkJcmV0dXJuIHJldDsKPj4+PiArCQlnb3Rv
-IFZSQU1fVkVSRE9SX0ZBSUw7Cj4+Pj4gICAgCX0KPj4+PiAgICAKPj4+PiAgICAJcmV0dXJuIDA7
-Cj4+Pj4gKwo+Pj4+ICtWUkFNX1ZFUkRPUl9GQUlMOgo+Pj4+ICsJZGV2aWNlX3JlbW92ZV9maWxl
-KGFkZXYtPmRldiwgJmRldl9hdHRyX21lbV9pbmZvX3Zpc192cmFtX3VzZWQpOwo+Pj4+ICtWSVNf
-VlJBTV9VU0VEX0ZBSUw6Cj4+Pj4gKwlkZXZpY2VfcmVtb3ZlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2
-X2F0dHJfbWVtX2luZm9fdnJhbV91c2VkKTsKPj4+PiArUlZBTV9VU0VEX0ZBSUw6Cj4+Pj4gKwlk
-ZXZpY2VfcmVtb3ZlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdmlzX3ZyYW1f
-dG90YWwpOwo+Pj4+ICtWSVNfVlJBTV9UT1RBX0ZBSUw6Cj4+Pj4gKwlkZXZpY2VfcmVtb3ZlX2Zp
-bGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdnJhbV90b3RhbCk7Cj4+Pj4gK1ZSQU1f
-VE9UQUxfRkFJTDoKPj4+PiArCWtmcmVlKG1ncik7Cj4+Pj4gKwltYW4tPnByaXYgPSBOVUxMOwo+
-Pj4+ICsKPj4+PiArCXJldHVybiByZXQ7Cj4+Pj4gICAgfQo+Pj4+ICAgIAo+Pj4+ICAgIC8qKgo+
-Pgo+Cg0KDQo=
+gro_cells lib is used by different encapsulating netdevices, such as
+geneve, macsec, vxlan etc. to speed up decapsulated traffic processing.
+CPU tag is a sort of "encapsulation", and we can use the same mechs to
+greatly improve overall DSA performance.
+skbs are passed to the GRO layer after removing CPU tags, so we don't
+need any new packet offload types as it was firstly proposed by me in
+the first GRO-over-DSA variant [1].
+
+The size of struct gro_cells is sizeof(void *), so hot struct
+dsa_slave_priv becomes only 4/8 bytes bigger, and all critical fields
+remain in one 32-byte cacheline.
+The other positive side effect is that drivers for network devices
+that can be shipped as CPU ports of DSA-driven switches can now use
+napi_gro_frags() to pass skbs to kernel. Packets built that way are
+completely non-linear and are likely being dropped without GRO.
+
+This was tested on to-be-mainlined-soon Ethernet driver that uses
+napi_gro_frags(), and the overall performance was on par with the
+variant from [1], sometimes even better due to minimal overhead.
+net.core.gro_normal_batch tuning may help to push it to the limit
+on particular setups and platforms.
+
+iperf3 IPoE VLAN NAT TCP forwarding (port1.218 -> port0) setup
+on 1.2 GHz MIPS board:
+
+5.7-rc2 baseline:
+
+[ID]  Interval         Transfer     Bitrate        Retr
+[ 5]  0.00-120.01 sec  9.00 GBytes  644 Mbits/sec  413  sender
+[ 5]  0.00-120.00 sec  8.99 GBytes  644 Mbits/sec       receiver
+
+Iface      RX packets  TX packets
+eth0       7097731     7097702
+port0      426050      6671829
+port1      6671681     425862
+port1.218  6671677     425851
+
+With this patch:
+
+[ID]  Interval         Transfer     Bitrate        Retr
+[ 5]  0.00-120.01 sec  12.2 GBytes  870 Mbits/sec  122  sender
+[ 5]  0.00-120.00 sec  12.2 GBytes  870 Mbits/sec       receiver
+
+Iface      RX packets  TX packets
+eth0       9474792     9474777
+port0      455200      353288
+port1      9019592     455035
+port1.218  353144      455024
+
+v2:
+ - Add some performance examples in the commit message;
+ - No functional changes.
+
+[1] https://lore.kernel.org/netdev/20191230143028.27313-1-alobakin@dlink.ru/
+
+Signed-off-by: Alexander Lobakin <bloodyreaper@yandex.ru>
+---
+ net/dsa/Kconfig    |  1 +
+ net/dsa/dsa.c      |  2 +-
+ net/dsa/dsa_priv.h |  3 +++
+ net/dsa/slave.c    | 10 +++++++++-
+ 4 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/net/dsa/Kconfig b/net/dsa/Kconfig
+index 92663dcb3aa2..739613070d07 100644
+--- a/net/dsa/Kconfig
++++ b/net/dsa/Kconfig
+@@ -9,6 +9,7 @@ menuconfig NET_DSA
+ 	tristate "Distributed Switch Architecture"
+ 	depends on HAVE_NET_DSA
+ 	depends on BRIDGE || BRIDGE=n
++	select GRO_CELLS
+ 	select NET_SWITCHDEV
+ 	select PHYLINK
+ 	select NET_DEVLINK
+diff --git a/net/dsa/dsa.c b/net/dsa/dsa.c
+index ee2610c4d46a..0384a911779e 100644
+--- a/net/dsa/dsa.c
++++ b/net/dsa/dsa.c
+@@ -234,7 +234,7 @@ static int dsa_switch_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	if (dsa_skb_defer_rx_timestamp(p, skb))
+ 		return 0;
+ 
+-	netif_receive_skb(skb);
++	gro_cells_receive(&p->gcells, skb);
+ 
+ 	return 0;
+ }
+diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
+index 904cc7c9b882..6d9a1ef65fa0 100644
+--- a/net/dsa/dsa_priv.h
++++ b/net/dsa/dsa_priv.h
+@@ -11,6 +11,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/netpoll.h>
+ #include <net/dsa.h>
++#include <net/gro_cells.h>
+ 
+ enum {
+ 	DSA_NOTIFIER_AGEING_TIME,
+@@ -77,6 +78,8 @@ struct dsa_slave_priv {
+ 
+ 	struct pcpu_sw_netstats	*stats64;
+ 
++	struct gro_cells	gcells;
++
+ 	/* DSA port data, such as switch, port index, etc. */
+ 	struct dsa_port		*dp;
+ 
+diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+index 5390ff541658..36c7491e8e5f 100644
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -1762,6 +1762,11 @@ int dsa_slave_create(struct dsa_port *port)
+ 		free_netdev(slave_dev);
+ 		return -ENOMEM;
+ 	}
++
++	ret = gro_cells_init(&p->gcells, slave_dev);
++	if (ret)
++		goto out_free;
++
+ 	p->dp = port;
+ 	INIT_LIST_HEAD(&p->mall_tc_list);
+ 	p->xmit = cpu_dp->tag_ops->xmit;
+@@ -1781,7 +1786,7 @@ int dsa_slave_create(struct dsa_port *port)
+ 	ret = dsa_slave_phy_setup(slave_dev);
+ 	if (ret) {
+ 		netdev_err(master, "error %d setting up slave phy\n", ret);
+-		goto out_free;
++		goto out_gcells;
+ 	}
+ 
+ 	dsa_slave_notify(slave_dev, DSA_PORT_REGISTER);
+@@ -1800,6 +1805,8 @@ int dsa_slave_create(struct dsa_port *port)
+ 	phylink_disconnect_phy(p->dp->pl);
+ 	rtnl_unlock();
+ 	phylink_destroy(p->dp->pl);
++out_gcells:
++	gro_cells_destroy(&p->gcells);
+ out_free:
+ 	free_percpu(p->stats64);
+ 	free_netdev(slave_dev);
+@@ -1820,6 +1827,7 @@ void dsa_slave_destroy(struct net_device *slave_dev)
+ 	dsa_slave_notify(slave_dev, DSA_PORT_UNREGISTER);
+ 	unregister_netdev(slave_dev);
+ 	phylink_destroy(dp->pl);
++	gro_cells_destroy(&p->gcells);
+ 	free_percpu(p->stats64);
+ 	free_netdev(slave_dev);
+ }
+-- 
+2.26.0
+
