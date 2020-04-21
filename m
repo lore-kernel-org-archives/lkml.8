@@ -2,140 +2,146 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53419C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACFDC55182
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29A312071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E952075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 12:35:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="euQ3cJaN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E4PwaSlj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgDUMfF (ORCPT
+        id S1728765AbgDUMfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 08:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726628AbgDUMfE (ORCPT
+        Tue, 21 Apr 2020 08:35:21 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25972 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726628AbgDUMfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 08:35:04 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA66C061A10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:35:03 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x18so16307390wrq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 05:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Rcuv9zZok45/Wj3VEtEchXA85grG3e+F+EQYK2BGvVs=;
-        b=euQ3cJaN/vqjYl7t9h0rr8+Iv7xSNP83vHImGwVTuWXwXhw1NQoMOd4CIFDB7Etgd9
-         hbIYF/4LTVaRBCXWeSTMn46IM9QWjvh9FRR4gWO/v4UBDom86HRMEF73VY7WZfGYgCJF
-         NeZb+o5z5ESbSAQkbzr2gnKvLEQCe33ljVORo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=Rcuv9zZok45/Wj3VEtEchXA85grG3e+F+EQYK2BGvVs=;
-        b=rrQELlkkzrpaWQtUMnteZCbiSETWavb7Nx3QgGFHtFCA7Tm1K3RK2A+QJvT++8bjQG
-         SWwm1UNs2Ck7nD2ff+Ol5LXJkPv87lYMszFvmiw8oP64TG+rlrGUrTz0gjtuHV0ebmHb
-         j8jwVBm/lL+19Hgh486Ue9h4wgrwK8zcYVLggcNsLXeJ7eeFcJwCtgInnk+QZ/1pqV6E
-         E9I0Sl7kXIviN04ZeEvL9flmJZKFKaBLNRTf+fq+773Kdv2D7FyTShm4qc0/x0TXGClU
-         91qHbexdHfbD5KUA+qDyD9Wlo9qREofLp+1N9llBiPaVJqs5swI2T3Bbh0pMfl+XShvJ
-         b4Cw==
-X-Gm-Message-State: AGi0PubhBq1bk5lbHrwUw5MwUX8Wvzij3vL6FmRIiKs7+nr54S90IrMh
-        jZZrKng3mZvpRdkof3neSezHcQ==
-X-Google-Smtp-Source: APiQypLr8+PKlIrlKHW0Pay4sEh++wGhVyagS1g4lWtu15F4/Bjb2HbItpKHrCGA/Bcd8Lt3Xh9xpg==
-X-Received: by 2002:a5d:6148:: with SMTP id y8mr23363738wrt.236.1587472502397;
-        Tue, 21 Apr 2020 05:35:02 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id x23sm3161978wmj.6.2020.04.21.05.35.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 05:35:01 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 14:34:59 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
-Subject: Re: [Poke: Tejun] Re: [RFC v3 03/11] drm/vblank: Add vblank works
-Message-ID: <20200421123459.GY3456981@phenom.ffwll.local>
-Mail-Followup-To: Tejun Heo <tj@kernel.org>, Lyude Paul <lyude@redhat.com>,
-        dri-devel@lists.freedesktop.org,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
-References: <20200417194145.36350-1-lyude@redhat.com>
- <20200417194145.36350-4-lyude@redhat.com>
- <ef9da9d93022822fe4bec7e906540fcc9852ce59.camel@redhat.com>
- <20200417210356.GD43469@mtj.thefacebook.com>
+        Tue, 21 Apr 2020 08:35:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587472518;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=KUdZYWoPBhrYDHcB0rWvBYTHWgCIXI81giUAEnOOVC0=;
+        b=E4PwaSljIaIpKclsOT9Nx1qlpx/ZXi+8OceM4ogpJrhAyPiqG/9ciU2b3IlqK2GKuA7HwD
+        OSKsEbOqEiQOmamA+x/3xyll/pubwpG5hxQB+EoMtxyQsTOuWOaCw/Wh7qrLxPWu1fcnO/
+        K4M+9QVBekFjysazspmNduIm14VZbCA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-141-8NQ1YEL8NueFN_q6EYHBEg-1; Tue, 21 Apr 2020 08:35:16 -0400
+X-MC-Unique: 8NQ1YEL8NueFN_q6EYHBEg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C868818FE862;
+        Tue, 21 Apr 2020 12:35:14 +0000 (UTC)
+Received: from [10.36.113.245] (ovpn-113-245.ams2.redhat.com [10.36.113.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F3EED76E8D;
+        Tue, 21 Apr 2020 12:35:12 +0000 (UTC)
+Subject: Re: [PATCH RFC 1/2] mm/memory_hotplug: no need to init new pgdat with
+ node_start_pfn
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+References: <20200416104707.20219-1-david@redhat.com>
+ <20200416104707.20219-2-david@redhat.com>
+ <20200421123011.GE27314@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <ac246ba8-9a61-0e0b-3aff-caf78743e81f@redhat.com>
+Date:   Tue, 21 Apr 2020 14:35:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417210356.GD43469@mtj.thefacebook.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <20200421123011.GE27314@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 05:03:56PM -0400, Tejun Heo wrote:
-> Hello,
+On 21.04.20 14:30, Michal Hocko wrote:
+> Sorry for the late reply
 > 
-> On Fri, Apr 17, 2020 at 04:16:28PM -0400, Lyude Paul wrote:
-> > Hey Tejun! So I ended up rewriting the drm_vblank_work stuff so that it used
-> > kthread_worker. Things seem to work alright now. But while we're doing just
-> > fine with vblank workers on nouveau, we're still having trouble meeting the
-> > time constraints needed for using vblank works for i915's needs. There still
-> > seems to be a considerable latency between when the irq handler for the vblank
-> > interrupts fires, and when the actual drm_vblank_work we scheduled starts:
-> ...
-> > Tejun, do you have any idea if we might be able to further reduce the latency
-> > from the scheduler here? I believe we're already using pm_qos to at least
-> > reduce the latency between when the vblank interrupt fires and the interrupt
-> > handler starts, but that still isn't enough to fix the other latency issues
-> > apparently. We're also already setting the priority of kthread_worker->task to
-> > RT_FIFO as well.
+> On Thu 16-04-20 12:47:06, David Hildenbrand wrote:
+>> A hotadded node/pgdat will span no pages at all, until memory is moved to
+>> the zone/node via move_pfn_range_to_zone() -> resize_pgdat_range - e.g.,
+>> when onlining memory blocks. We don't have to initialize the
+>> node_start_pfn to the memory we are adding.
 > 
-> I don't think the kernel can do much better than what you're seeing. I don't
-> know the time scale that you need - is it some tens of microseconds range? I'm
-> definitely not an expert on the subject but on generic kernels I don't think
-> you can achieve anything sub millisec with any kind of reliability.
-> 
-> If the timing is that tight and it's not a hot path, the right solution may be
-> polling for it rather than yielding the cpu and hoping to get scheduled in
-> time.
+> You are right that the node is empty at this phase but that is already
+> reflected by zero present pages (hmm, I do not see spanned pages to be
+> set 0 though). What I am missing here is why this is an improvement. The
+> new node is already visible here and I do not see why we hide the
+> information we already know.
 
-What we've discussed on irc is that the hand-rolled version is apparently
-a bit better (but not perfect, since indeed this isn't possible without
--rt). I think we need to look more into whether that difference is real,
-and why exactly it happens. From a quick look our hand-rolled worker and
-kthread_worker have identical code ...
+"information we already know" - no, not before we online the memory.
 
-> > Also, of course, let me know if yu're not happy with the
-> > __kthread_queue_work() changes/kthread_worker usage in drm_vblank_work as well
-> 
-> Just glanced over it and I still wonder whether it needs to be that tightly
-> integrated, but we can look into that once we settle on whether this is the
-> right direction.
+Before onlining, it's just setting node_start_pfn to *some value* to be
+overwritten in move_pfn_range_to_zone()->resize_pgdat_range().
 
-I don't think we absolutely have to do this, simply means some nested
-irq-safe spinlock. One in vblank_work, other in kthread_worker. Since the
-delayed work doesn't do that I think it'd be nice if the drm_vblank
-(instead of timer) delayed work could use the same pattern.
--Daniel
+(I have some more patches to clean up __try_online_node(), and this
+change here makes it clear that there isn't any magic happening in
+__try_online_node() related to the start pfn and memblocks - see patch #2)
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Thanks,
+
+David / dhildenb
+
