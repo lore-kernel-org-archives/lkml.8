@@ -2,140 +2,117 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB567C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB01EC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8FB2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:39:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="KxYeTqdE"
+	by mail.kernel.org (Postfix) with ESMTP id CC90E206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgDURj3 (ORCPT
+        id S1729232AbgDURjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:39:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgDURj2 (ORCPT
+        Tue, 21 Apr 2020 13:39:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59554 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725870AbgDURjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 13:39:28 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF178C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:39:27 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d17so7106870pgo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 10:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:date:message-id:mime-version:content-transfer-encoding:cc
-         :from:to;
-        bh=fLBHNTyEET/yN5Pbpw/2Hy4qmejsajrMOOJIyx+I7vQ=;
-        b=KxYeTqdE2Xi/vsj4nfFw22Mcod7tNepgLgc7ivj4J1gSCt6gZxeOxbavGFtnIwhVrF
-         cyCfz+vVg56J/H2lfYv4JDibjvABfMelTSj26Lt4JBQQzGDEmRatxGsJWjIIU3YsUBo/
-         IixeXzxsautP+LS5WbTP55rRehic1N2mklNfHQWqf4+57SoXzSYkWqnxqGCo3VgIqvUF
-         /ZjEFTlmUKmb93uKsH0LwJodvDRfDhFnc3IOD3VdrJ5fBY6u0B2jV9TGyO/2hRWGzRGe
-         6gZo4RJS2IPaLpr3f6baakWQgFNSfjtwToSPI+sf6lCDbb9xX89jrUVzdJUOp+xFQxt3
-         RcxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:message-id:mime-version
-         :content-transfer-encoding:cc:from:to;
-        bh=fLBHNTyEET/yN5Pbpw/2Hy4qmejsajrMOOJIyx+I7vQ=;
-        b=Es1h+3VXnaBte6mDRHZ0ZUEBfrh0bBunBMvOrtsd2R95e/9a8bFt/AEU5mD8EkwsXD
-         GyJZPQ5J4o8Iwiu1QXXZPV6h7M3sgxTcNUQ3aLwTMKrj7wJ+8uTqMEFB8hxWSc8/ULtI
-         6y0h4Np4hcjw58jNqGXKsXFLV8vziWkOhS//EVIgMQxm+CrCNeFFOQAa3gJ1gSGrcGSP
-         /YtpJlGzzVrj/hFKU1X2Sts8VvVSwY1HCmbOoiqAmuLFXY6ru5tnkmXxlhPhNPcB7hf+
-         8u5dpvgIOtG9K4hQqi9FQj5UMCgroKb88AJt+5nayn3b0JglvF1QogX5CV+fCsqVp7QQ
-         LPdg==
-X-Gm-Message-State: AGi0PuZw1WDmu1fAccBRX9+BOqwcDNLaWNJdh6XywYYxv1wL6cnX5+ZB
-        Kd8MT1wi6c8UffAWB3UPXR0wLRKVQQIkaA==
-X-Google-Smtp-Source: APiQypKywrO7hvKPoqgv4/W+BCQ475nPawaOscHavB+UF8mMal6F4MZ01I4kbOku83ik8xRZ5a2M0w==
-X-Received: by 2002:a62:6807:: with SMTP id d7mr6229124pfc.296.1587490767094;
-        Tue, 21 Apr 2020 10:39:27 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id f99sm3213045pjg.22.2020.04.21.10.39.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 10:39:26 -0700 (PDT)
-Subject: [PATCH] checkpatch: Allow users to specify the python command to use
-Date:   Tue, 21 Apr 2020 10:36:05 -0700
-Message-Id: <20200421173604.38979-1-palmer@dabbelt.com>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+        Tue, 21 Apr 2020 13:39:40 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LHYqjn064244
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:39:38 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gg281jnj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:39:38 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Tue, 21 Apr 2020 18:38:52 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 Apr 2020 18:38:48 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03LHdV8u2883916
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 17:39:31 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CCB05A405B;
+        Tue, 21 Apr 2020 17:39:31 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7EDCEA4054;
+        Tue, 21 Apr 2020 17:39:31 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.149.94])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Apr 2020 17:39:31 +0000 (GMT)
+Subject: Re: [PATCH] KVM: PPC: Book3S HV: read ibm,secure-memory nodes
+To:     "Oliver O'Halloran" <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     kvm-ppc@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Paul Mackerras <paulus@samba.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200416162715.45846-1-ldufour@linux.ibm.com>
+ <87k129gdx8.fsf@mpe.ellerman.id.au>
+ <CAOSf1CF2YEG1U_1XP_Vvk3Bn1RCiNa1DAKEbemWu00JimoPsUQ@mail.gmail.com>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Date:   Tue, 21 Apr 2020 19:39:31 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAOSf1CF2YEG1U_1XP_Vvk3Bn1RCiNa1DAKEbemWu00JimoPsUQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Cc:     apw@canonical.com, joe@perches.com, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Palmer Dabbelt <palmerdabbelt@google.com>
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:        linux-kernel@vger.kernel.org
+X-TM-AS-GCONF: 00
+x-cbid: 20042117-4275-0000-0000-000003C4150D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042117-4276-0000-0000-000038D99A6F
+Message-Id: <db211c9c-3e6c-761c-8c9f-4110d3c0fcbe@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_07:2020-04-20,2020-04-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Palmer Dabbelt <palmerdabbelt@google.com>
+Le 21/04/2020 à 15:43, Oliver O'Halloran a écrit :
+> On Tue, Apr 21, 2020 at 11:37 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>>
+>> Hi Laurent,
+>>
+>> Laurent Dufour <ldufour@linux.ibm.com> writes:
+>>> The newly introduced ibm,secure-memory nodes supersede the
+>>> ibm,uv-firmware's property secure-memory-ranges.
+>>
+>> Is either documented in a device tree binding document anywhere?
+>>
+>> cheers
+>>
+>>> Firmware will no more expose the secure-memory-ranges property so first
+>>> read the new one and if not found rollback to the older one.
+> 
+> There's some in Ryan's UV support series for skiboot:
+> 
+> https://patchwork.ozlabs.org/project/skiboot/patch/20200227204023.22125-2-grimm@linux.ibm.com/
+> 
+> ...which is also marked RFC. Cool.
 
-checkpatch.pl invokes spdxcheck.py using "python".  On my system that's
-Python 2, but I only have a git package for Python 3.  This patch adds a
-"--python=..." argument to checkpatch.pl that allows users to specify a
-command to invoke Python.  I've just given this a little smoke test:
-running it without any arguments still works, and running with
---python=python3 finds the git module.
+Thanks Oliver for this pointer.
 
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Yes this is an RFC but this documentation details the secure memory nodes 
+created by skiboot and parsed by this patch.
 
----
-I'd considered reading some sort of environment variable, but searching
-for "getenv" in checkpatch.pl didn't reveal any other enviornment
-variables so I figured it'd be cleaner to avoid adding one.  I only
-invoke checkpatch.pl from wrapper scripts anyway, so it's the same for
-me.
----
- scripts/checkpatch.pl | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Michael, is that enough for you?
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index d64c67b67e3c..05ce52a2aaa9 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -65,6 +65,7 @@ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANC
- # git output parsing needs US English output, so first set backtick child process LANGUAGE
- my $git_command ='export LANGUAGE=en_US.UTF-8; git';
- my $tabsize = 8;
-+my $python = "python";
- 
- sub help {
- 	my ($exitcode) = @_;
-@@ -125,6 +126,7 @@ Options:
-   --typedefsfile             Read additional types from this file
-   --color[=WHEN]             Use colors 'always', 'never', or only when output
-                              is a terminal ('auto'). Default is 'auto'.
-+  --python=COMMAND           Use the give command to invoke python.
-   -h, --help, --version      display this help and exit
- 
- When FILE is - read standard input.
-@@ -233,6 +235,7 @@ GetOptions(
- 	'color=s'	=> \$color,
- 	'no-color'	=> \$color,	#keep old behaviors of -nocolor
- 	'nocolor'	=> \$color,	#keep old behaviors of -nocolor
-+	'python=s'      => \$python,
- 	'h|help'	=> \$help,
- 	'version'	=> \$help
- ) or help(1);
-@@ -897,10 +900,10 @@ sub is_maintained_obsolete {
- sub is_SPDX_License_valid {
- 	my ($license) = @_;
- 
--	return 1 if (!$tree || which("python") eq "" || !(-e "$root/scripts/spdxcheck.py") || !(-e "$root/.git"));
-+	return 1 if (!$tree || which($python) eq "" || !(-e "$root/scripts/spdxcheck.py") || !(-e "$root/.git"));
- 
- 	my $root_path = abs_path($root);
--	my $status = `cd "$root_path"; echo "$license" | python scripts/spdxcheck.py -`;
-+	my $status = `cd "$root_path"; echo "$license" | $python scripts/spdxcheck.py -`;
- 	return 0 if ($status ne "");
- 	return 1;
- }
--- 
-2.26.1.301.g55bc3eb7cb9-goog
+Laurent.
 
