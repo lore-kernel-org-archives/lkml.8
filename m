@@ -2,96 +2,100 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C26C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA61CC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B19AE20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:19:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UN3S42+k"
+	by mail.kernel.org (Postfix) with ESMTP id D0AD520679
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbgDUSTu (ORCPT
+        id S1729320AbgDUSUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgDUSTt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:19:49 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03F0C0610D5;
-        Tue, 21 Apr 2020 11:19:49 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id o127so16039367iof.0;
-        Tue, 21 Apr 2020 11:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lxQpwQq8B/XSdgKzbh2ahosuLBgTHXKsqcO5uWxCwRw=;
-        b=UN3S42+kISuAL0JElfgUijnqMegdzpd3S5HIX6vcUNGFk8y3zllJ43MfIEkhQUCFic
-         Tku1lzpC75lZwS4Zyjp/0RTKrcuf3aHXJiTmWbrRzyYhJbISG2In4Df9UmYUAdmBmRPm
-         OAPl0zSXkxLKlJ9+PKLU18qkkCYvDRU2jOlRHZSt3OwlWsfCG1Pa9o+PEF4MkrvWxRIW
-         fQXPeaObIL65tZjiQhJ1Cc6y6I1NIHRyyrowBpi2Ao/6PXU7XTTwdRSRBRZM17F4DdWB
-         UJJzJGwVFkmFZrxWklU5D5kNM24V+xUdPaOmL+IOYvr6a6DTQzHHQiTX1mF8n8YjwS8X
-         8lnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lxQpwQq8B/XSdgKzbh2ahosuLBgTHXKsqcO5uWxCwRw=;
-        b=LEjej7dp2zAlVIcuRWVBZmlL/tQxmrYATpyCNVuXpntbRt5mPTHDc8zy/Sg0cv+ptv
-         tfnfk1xHv5z1zz25HdH2L6Vi0J4DDFMr9rF9bOfHKHfU9jNg+pkImcyFXVilZHn8De5x
-         LcZN/zKHUid2o/7KcuV73unRfZkBSOMa/r6U2Tk37ZBudtdXTmaxdS7/cCtyXXAj1Lox
-         FLGG4AfW/0JJVJ+9wjaGK1QZwdwbZyxzehYKgDItrpGlBO6qLK4Zmo41Bm54BMpNbx6/
-         ovaFwoBelXHai87DjGQwFCjgEcuRDHjVimYSTfG1t1S2TExdn+Ef319w7fZqM7AAX+bU
-         FI/Q==
-X-Gm-Message-State: AGi0PuZrKiWKqU/nVoDEpDSxapadFVu7rmYH3YyP86SbTxQi+TwurJB4
-        mTocE3eAc2u33x5alXUgFKQfFoKAcj00gdxm9/g=
-X-Google-Smtp-Source: APiQypIQH0s4O6zPIpOdsnG/1oem9N6RoPEneIiwVs6RC+JfDHwt2zPz+dHBF1bl2/OdqYNtiSGxbvV6KNK7M6VFA+s=
-X-Received: by 2002:a05:6638:4e:: with SMTP id a14mr20610719jap.108.1587493189031;
- Tue, 21 Apr 2020 11:19:49 -0700 (PDT)
+        Tue, 21 Apr 2020 14:20:24 -0400
+Received: from muru.com ([72.249.23.125]:50780 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726628AbgDUSUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:20:23 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id DC8B98081;
+        Tue, 21 Apr 2020 18:21:08 +0000 (UTC)
+Date:   Tue, 21 Apr 2020 11:20:17 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
+ autosuspend
+Message-ID: <20200421182017.GC37466@atomide.com>
+References: <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
+ <20200417164340.3d9043d1@aktux>
+ <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com>
+ <20200417150721.GL37466@atomide.com>
+ <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com>
+ <20200420150802.GR37466@atomide.com>
+ <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com>
+ <20200421085336.32cf8ffe@aktux>
+ <20200421180220.GB37466@atomide.com>
+ <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com>
 MIME-Version: 1.0
-References: <20200420190853.45614-1-kdasu.kdev@gmail.com> <20200420190853.45614-10-kdasu.kdev@gmail.com>
- <20200421125025.GB4540@sirena.org.uk> <CAC=U0a35yfnuXN1CXV7YnHCff-Ba+7UZ2dd0rFVFSNuA=O98VQ@mail.gmail.com>
- <20200421145927.GC4540@sirena.org.uk>
-In-Reply-To: <20200421145927.GC4540@sirena.org.uk>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Tue, 21 Apr 2020 14:19:36 -0400
-Message-ID: <CAC=U0a1oMy-RLdCTJ9=Wkn4o8ET8USL4euU-a6meaCJexRgzTA@mail.gmail.com>
-Subject: Re: [Patch v3 9/9] spi: bcm-qspi: MSPI_SPCR0_MSB MSTR bit exists only
- on legacy controllers
-To:     Mark Brown <broonie@kernel.org>
-Cc:     bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 10:59 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, Apr 21, 2020 at 10:53:57AM -0400, Kamal Dasu wrote:
-> > On Tue, Apr 21, 2020 at 8:50 AM Mark Brown <broonie@kernel.org> wrote:
->
-> > > If this is a fix it should have been near the start of the series before
-> > > any new features to make sure that it can be applied cleanly as a fix.
->
-> > Yes it could can be after [Patch v3 3/9] spi: bcm-qspi: Handle lack of
-> > MSPI_REV offset
->
-> That's not a fix though, that's adding support for new devices?
+* H. Nikolaus Schaller <hns@goldelico.com> [200421 18:14]:
+> > Am 21.04.2020 um 20:02 schrieb Tony Lindgren <tony@atomide.com>:
+> > This is 37xx though, maybe you have 35xx and there's some errata
+> > that we're not handling?
+> 
+> No, it is dm3730 on three different units I have tried.
+> 
+> > I'm only seeing "2.7. HDQTM/1-Wire® Communication Constraints"
+> > for external pull-up resitor in 34xx errata at [0].
+> > 
+> > I wonder if wrong external pull could cause flakyeness after
+> > enabling the hdq module?
+> 
+> I have checked and we have 10 kOhm pullup to 1.8 V and a 470 Ohm
+> series resistor.
 
-Since its dependent on knowing if the MSPI_REV register exists on a
-given SoC and path 3/9, maybe I can remove the fixes tag for that
-commit.
+OK
 
-Kamal
+> > If nothing else helps, you could try to block idle for hdq
+> > module, but I have a feeling that's a workaround for something
+> > else.
+> 
+> Well, what helps is reverting the patch and using the old driver
+> (which did work for several years). So I would not assume that
+> there is a hardware influence. It seems to be something the new
+> driver is doing differently.
 
-Kamal
+Well earlier hdq1w.c did not idle, now it does. If you just want
+to keep it enabled like earlier, you can just add something like:
+
+&hdqw1w {
+	ti,no-idle;
+};
+
+> I need more time to understand and trace this issue on what it
+> depends... It may depend on the sequence some other modules are
+> loaded and what the user-space (udevd) is doing in the meantime.
+
+Yes would be good to understand what goes wrong here before we
+apply the ti,no-idle as that will block SoC deeper idle states.
+
+Regards,
+
+Tony
