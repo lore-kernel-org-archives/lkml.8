@@ -2,95 +2,83 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 839A8C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12D9C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6270A20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:04:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MKwRAESw"
+	by mail.kernel.org (Postfix) with ESMTP id AD19D20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 09:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgDUJEz (ORCPT
+        id S1728434AbgDUJE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 21 Apr 2020 05:04:58 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:34738 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726018AbgDUJEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Apr 2020 05:04:55 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52757 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726052AbgDUJEx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:04:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587459892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jiq5vxLEVOIwG9hr0wweOUq8q9Kc0ppf4k/26mm9nI0=;
-        b=MKwRAESwgOjoQ/t//ugozYJo2EZUoxkRxBm3CY1KoFafEhbb/10B2ysMpaMjGREMy+3fgO
-        8fmEg8tAaI45a0xsO3Dml8fbKHbKXJADgDXA6bc89Zp/X4WVjnZEPSXz8d5a3N/R7ogyYZ
-        bdAHj64luipLgcu7GyDUBH+Gs4Rskkg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401-zvLOlh2NMJOWjtqGbie_IQ-1; Tue, 21 Apr 2020 05:04:31 -0400
-X-MC-Unique: zvLOlh2NMJOWjtqGbie_IQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2198B107ACC9;
-        Tue, 21 Apr 2020 09:04:30 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.130])
-        by smtp.corp.redhat.com (Postfix) with SMTP id CC2C85DA66;
-        Tue, 21 Apr 2020 09:04:28 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 21 Apr 2020 11:04:29 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 11:04:27 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Christof Meerwald <cmeerw@cmeerw.org>,
-        Linux Containers <containers@lists.linux-foundation.org>
-Subject: Re: [PATCH] signal: Avoid corrupting si_pid and si_uid in
- do_notify_parent
-Message-ID: <20200421090426.GA6787@redhat.com>
-References: <20200419201336.GI22017@edge.cmeerw.net>
- <87sggyytnh.fsf@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sggyytnh.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT2knt55emXsqAA--.36S3;
+        Tue, 21 Apr 2020 17:04:41 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH 1/3] MIPS: Do not initialise globals to 0
+Date:   Tue, 21 Apr 2020 17:04:27 +0800
+Message-Id: <1587459869-12183-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1587459869-12183-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1587459869-12183-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9DxT2knt55emXsqAA--.36S3
+X-Coremail-Antispam: 1UD129KBjvdXoWruFy8tw4fur1DJrWDuF1UAwb_yoWftFc_KF
+        1xtw4kWrn0vFWjvw47Gw4rWFyYqw45Wry5AwnIqay2v3sIqryUA39xAr1fXrs5JrZ5ArZY
+        y3sxGrn8Gw4fWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbSAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
+        0Ec7CjxVAFwI0_Jrv_JF4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+        vE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+        r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8uwCF04k20x
+        vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+        3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
+        AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
+        cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2js
+        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUfsqXUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/20, Eric W. Biederman wrote:
->
-> The immediate problem is as Christof noticed that "pid_alive(current) == false".
+Fix the following checkpatch error:
 
-this is slightly offtopic, but we can probably remove this "pid_alive" check,
-pid_nr_ns() checks pid != NULL anyway.
+ERROR: do not initialise globals to 0
+#834: FILE: arch/mips/kernel/setup.c:834:
++int hw_coherentio = 0;	/* Actual hardware supported DMA coherency setting. */
 
-> Inspecting the code it appears this problem has existed since the pid
-> namespace support started handling this case
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/mips/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Agreed...
-
-> @@ -1993,8 +1993,12 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
->  		if (psig->action[SIGCHLD-1].sa.sa_handler == SIG_IGN)
->  			sig = 0;
->  	}
-> +	/*
-> +	 * Bypass send_signal as the si_pid and si_uid values have
-> +	 * been generated in the parent's namespaces.
-> +	 */
->  	if (valid_signal(sig) && sig)
-> -		__group_send_sig_info(sig, &info, tsk->parent);
-> +		__send_signal(sig, &info, tsk->parent, PIDTYPE_TGID, false);
-
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 10bef8f..b1e2d43 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -831,7 +831,7 @@ arch_initcall(debugfs_mips);
+ /* User defined DMA coherency from command line. */
+ enum coherent_io_user_state coherentio = IO_COHERENCE_DEFAULT;
+ EXPORT_SYMBOL_GPL(coherentio);
+-int hw_coherentio = 0;	/* Actual hardware supported DMA coherency setting. */
++int hw_coherentio;	/* Actual hardware supported DMA coherency setting. */
+ 
+ static int __init setcoherentio(char *str)
+ {
+-- 
+2.1.0
 
