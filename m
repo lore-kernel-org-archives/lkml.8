@@ -2,116 +2,176 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A9EC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDF3C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89965206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB4D206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:13:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q1EevHCX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O3qpEO6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgDUUNP (ORCPT
+        id S1726377AbgDUUNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:13:15 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55040 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726017AbgDUUNN (ORCPT
+        Tue, 21 Apr 2020 16:13:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59696 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgDUUNp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:13:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587499992;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=e9HeTSfyPlkVvW4ulq1b0jN/kd/pOyFPzUX/DLpGmmI=;
-        b=Q1EevHCXiLYXUqH9Y2wQtfkMrAxsS6e63/gcUhUJG5ZIoS+9sGZwrJAc8W2SVd+oL7Q7+T
-        g8ifFe270mbO8Mm7d2fKNLOxGpqOPWmjjxsKcYIhcvq3/Gi09T7p+VNMXFXUqoNsyKY72d
-        FJUNPAZIa5I8lNHN1Oy1JY+x+uIwq0A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-QT7j9eXYNO6AyaAv6And_A-1; Tue, 21 Apr 2020 16:13:10 -0400
-X-MC-Unique: QT7j9eXYNO6AyaAv6And_A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1417107ACC4;
-        Tue, 21 Apr 2020 20:13:08 +0000 (UTC)
-Received: from treble (ovpn-114-228.rdu2.redhat.com [10.10.114.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BBAF85C219;
-        Tue, 21 Apr 2020 20:13:07 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 15:13:05 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] objtool: optimize add_dead_ends for split sections
-Message-ID: <20200421201305.66y2u473htzcuhfu@treble>
-References: <20200421180724.245410-1-samitolvanen@google.com>
- <20200421180724.245410-4-samitolvanen@google.com>
+        Tue, 21 Apr 2020 16:13:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LK2brM134090;
+        Tue, 21 Apr 2020 20:13:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=hc3EKpE/i0NRRdRTSFSD0gA/bZ9G0lF+IfO3Z7scYuI=;
+ b=O3qpEO6G/y3LGCLBIr4Lxa3WKoucy4/Utz+gphsXv/d5teU/l7ajzPZgrmko0WqV3Kkg
+ QLhgCbXJA/7S86YSSq6goNkLD3/K94LS290bn+pzveSn99Hk6Oc/DMpr7ZWkOziHBgu6
+ m4OdrfOsQ7yfuSCpsOwtwr1VZIMyP1MD6EI65KCXuX1r0fzr3YWd648Z9zj9q0vEqa5p
+ w7y4dM7YVwAxaUvpZHhnnVM9alKzeeIpeCEBToCYE11d6i34ddCQ4j6CTOCejgii5Ljd
+ WhKUJ3M+Typ/s/TpjllgfsenNoH0PtU18C/OfPpYeZChNmSwOlg9dVok1I6uiLzkgusU iA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 30fsgky50d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 20:13:33 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LKDSSL193352;
+        Tue, 21 Apr 2020 20:13:32 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 30gb90vmcu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 20:13:32 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03LKDUWu004838;
+        Tue, 21 Apr 2020 20:13:31 GMT
+Received: from localhost (/10.159.227.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 13:13:30 -0700
+Date:   Tue, 21 Apr 2020 13:13:29 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V9 02/11] fs: Remove unneeded IS_DAX() check in
+ io_is_direct()
+Message-ID: <20200421201328.GZ6742@magnolia>
+References: <20200421191754.3372370-1-ira.weiny@intel.com>
+ <20200421191754.3372370-3-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200421180724.245410-4-samitolvanen@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200421191754.3372370-3-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 suspectscore=1 malwarescore=0 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 bulkscore=0 phishscore=0 suspectscore=1 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 11:07:24AM -0700, Sami Tolvanen wrote:
-> @@ -338,15 +351,13 @@ static int add_dead_ends(struct objtool_file *file)
->  		if (insn)
->  			insn = list_prev_entry(insn, list);
->  		else if (rela->addend == rela->sym->sec->len) {
-> -			found = false;
-> -			list_for_each_entry_reverse(insn, &file->insn_list, list) {
-> -				if (insn->sec == rela->sym->sec) {
-> -					found = true;
-> -					break;
-> -				}
-> -			}
-> +			struct section_info *sec_info = (struct section_info *)
-> +				rela->sym->sec->section_info;
-> +
-> +			if (sec_info)
-> +				insn = sec_info->last_insn;
+On Tue, Apr 21, 2020 at 12:17:44PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Remove the check because DAX now has it's own read/write methods and
+> file systems which support DAX check IS_DAX() prior to IOCB_DIRECT on
+> their own.  Therefore, it does not matter if the file state is DAX when
+> the iocb flags are created.
+> 
+> Also remove io_is_direct() as it is just a simple flag check.
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+Looks fine to me,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+--D
+
+> 
+> ---
+> Changes from v8:
+> 	Rebase to latest Linus tree
+> 
+> Changes from v6:
+> 	remove io_is_direct() as well.
+> 	Remove Reviews since this is quite a bit different.
+> 
+> Changes from v3:
+> 	Reword commit message.
+> 	Reordered to be a 'pre-cleanup' patch
+> ---
+>  drivers/block/loop.c | 6 +++---
+>  include/linux/fs.h   | 7 +------
+>  2 files changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index da693e6a834e..14372df0f354 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -634,8 +634,8 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
 >  
-> -			if (!found) {
-> +			if (!insn) {
->  				WARN("can't find unreachable insn at %s+0x%x",
->  				     rela->sym->sec->name, rela->addend);
->  				return -1;
-
-Instead of the 'section_info' abstraction I think I'd rather just store
-the 'last_insn' pointer directly in the section struct.
-
-Also, the unreachable annotation at the end of a section is really an
-edge case.  I'm sort of wondering if there's a way to accomplish the
-same thing without storing the last_insn.
-
-For example, I wonder if we could use find_insn() for some bytes at the
-end of the section.  Most of the time I _think_ there will be a two-byte
-UD2 instruction there anyway.  So maybe we could do something like:
-
-	for (offset = rela->sym->sec->len - 1;
-	     offset > rela->sym->sec->len - 10;
-	     offset --) {
-
-	     insn = find_insn(file, rela->sym->sec, offset);
-	     if (insn)
-	     	break;
-	}
-
-It's kind of ugly, but then we could maybe avoid the need for the
-last_insn thing.
-
-BTW, just curious, what's your use case for -ffunction-sections?  Is it
-for fgkaslr?
-
--- 
-Josh
-
+>  static inline void loop_update_dio(struct loop_device *lo)
+>  {
+> -	__loop_update_dio(lo, io_is_direct(lo->lo_backing_file) |
+> -			lo->use_dio);
+> +	__loop_update_dio(lo, (lo->lo_backing_file->f_flags & O_DIRECT) |
+> +				lo->use_dio);
+>  }
+>  
+>  static void loop_reread_partitions(struct loop_device *lo,
+> @@ -1028,7 +1028,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+>  	if (!(lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
+>  		blk_queue_write_cache(lo->lo_queue, true, false);
+>  
+> -	if (io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev) {
+> +	if ((lo->lo_backing_file->f_flags & O_DIRECT) && inode->i_sb->s_bdev) {
+>  		/* In case of direct I/O, match underlying block size */
+>  		unsigned short bsize = bdev_logical_block_size(
+>  			inode->i_sb->s_bdev);
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 4f6f59b4f22a..a87cc5845a02 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3394,11 +3394,6 @@ extern void setattr_copy(struct inode *inode, const struct iattr *attr);
+>  
+>  extern int file_update_time(struct file *file);
+>  
+> -static inline bool io_is_direct(struct file *filp)
+> -{
+> -	return (filp->f_flags & O_DIRECT) || IS_DAX(filp->f_mapping->host);
+> -}
+> -
+>  static inline bool vma_is_dax(const struct vm_area_struct *vma)
+>  {
+>  	return vma->vm_file && IS_DAX(vma->vm_file->f_mapping->host);
+> @@ -3423,7 +3418,7 @@ static inline int iocb_flags(struct file *file)
+>  	int res = 0;
+>  	if (file->f_flags & O_APPEND)
+>  		res |= IOCB_APPEND;
+> -	if (io_is_direct(file))
+> +	if (file->f_flags & O_DIRECT)
+>  		res |= IOCB_DIRECT;
+>  	if ((file->f_flags & O_DSYNC) || IS_SYNC(file->f_mapping->host))
+>  		res |= IOCB_DSYNC;
+> -- 
+> 2.25.1
+> 
