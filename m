@@ -4,102 +4,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA585C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83B7C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC679206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF706206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 19:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSrGDRnz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kha6OSbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgDUT0v (ORCPT
+        id S1726117AbgDUT2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:26:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
+        Tue, 21 Apr 2020 15:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725902AbgDUT0u (ORCPT
+        by vger.kernel.org with ESMTP id S1725963AbgDUT2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:26:50 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EACB0C0610D5;
-        Tue, 21 Apr 2020 12:26:49 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id k8so3525772ejv.3;
-        Tue, 21 Apr 2020 12:26:49 -0700 (PDT)
+        Tue, 21 Apr 2020 15:28:34 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4783DC0610D5;
+        Tue, 21 Apr 2020 12:28:33 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t40so1831543pjb.3;
+        Tue, 21 Apr 2020 12:28:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=idTKxWpEYXSpWMVyn2696fqjJ0Ry7jBlA9LPzj52ir0=;
-        b=FSrGDRnziT2sbgdhl+Ig8+exvCHWQV4xq20QWOQWHknyMnYuhzK19fDo+s3GWbBlvH
-         ePPjKY3vfs21mKR1ShEnjLfwyPd4PQlI7tqynuAXnRNhGABVpS9in2rWv3B4u4nCS/d7
-         CDQncWQC/B5aGHPHmNf7DrwVSC2dg4QuJydV6uUf45pwNzjizDffAJaXlpUnWyq4AUnG
-         p2TxW/7s55su2urUvTwWo4j9oCcxUHFCYPquKp0kPkuUkAvGqG6qbC8LbJsvZVnbdB4m
-         lU300xJheMMkNe1lTxfALNCmbgAQkeJ48llYhi+FY0at/8RRfmNJRarkni3JL4kHlAd7
-         iUAw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ylAfLFxsriqqePphFNepgAUrNjlPLS6CtzpqdHOIzFc=;
+        b=kha6OSbMInYcR9hm2zEI4iW2rTk379V3SLY+qdnGPuuh7YiO6Ds8IwXpMj3ruCruxX
+         TUkUFOV5mrR9VhYMh7d9p8FH/FxmnIEO1+PU4ALzbok/93K4jYK96C2QMa1FHW7AF+Wl
+         G5iFQS858+MqaCdBCOyvgxb8fpixLU5ncqS9iM9nuOwB45vU/YUMvrQNKxg3RTHaoMCR
+         4ykMNSyaugFvsHcXnS55Ny+qpuKgFwuTWMirAzQgie0P7ViKveBfLCgwbdHO3Pks53Je
+         i9u3Mf+hWK7a6xLXsUxTpwvm9qFrb48Dlp55wmdYyAfLAX1PL+IgjG/6quSwfUJJDNwh
+         B1Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=idTKxWpEYXSpWMVyn2696fqjJ0Ry7jBlA9LPzj52ir0=;
-        b=X/c0R/R4uP2EMroOYXNvDw+zzEckGd/ErG0V+PoWfWsRJI2eBK88x4Z9STnD15z0CV
-         wuU/nlJSsHpJvhl0qJEsP3Nd5E6/ytpRfHVXShjY0hRFyY9cMQr2l+U40GsKNsmzjEBW
-         9Mf6IDnRthG0FSZUSIYNMoXY1JSWSOzmC2MnL3DOWVRczsYJJ42yF6/9VCMnNb15AMvF
-         40knkWKQ59laNdEjDXBzc606QWi9SDhVLy3Fuh8mkOTnRBA3sF4BVPiw75Aj4b0AzAQ8
-         9HHJ1yWzYX+YCSs0GuzXxsfBdViZAjPrr07N+cLQ9w9km4XogqSl7bj20hXlcB+Oc+d9
-         pjIQ==
-X-Gm-Message-State: AGi0PubruIhgEQTNqV8qcdj7RcEZXihnWgu9NxtPZ5PucRLn93qlUw8t
-        OPg/B/WluLbu4dgzAI4VI/qfwynt5YHTYyqHdy0=
-X-Google-Smtp-Source: APiQypKbVFuc0+4pupCD+KUCBYs2OqlbXKOSdEObVGiR4iem9xbPhga7MoJS0F3OqoOUgWjD05yzDfNKHMWuH9SuZ48=
-X-Received: by 2002:a17:906:54cd:: with SMTP id c13mr21911261ejp.307.1587497208543;
- Tue, 21 Apr 2020 12:26:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ylAfLFxsriqqePphFNepgAUrNjlPLS6CtzpqdHOIzFc=;
+        b=nnBgGgXNfLVWt0j4zJo7+UabSU0FzX5Md69b6Cd443LjT97peiqaleeY4MXftPodGP
+         l9fsL5TlK+8COndHoaeRdold8PebqSnPKJOAYe5DCYSB1GX0V45nkEUAxZcL8+73Dcgl
+         xBiH+hFGGpiBewRgKUCN7grtHjsXdCkKYp6xbHBANFQacd2Vk/BepEQlxgKUS8HdbWMq
+         K5b7hUD9pR45V/4NMmuLMBklm/w/TH/3N4kKoqk0ExXq1tog2QzOkK0m7bieBgZruJa6
+         loLYIPajR95dmNOgmHEglsZYXHT8k7FBs/TrnGgwU5ekjZ0X6kZad6Y6fe987+P3FqKy
+         AN8g==
+X-Gm-Message-State: AGi0PuYqHjWhvXsufp+lZGj8a+RonBgZtwB2DUbXw37kLffjmPHXjf+Q
+        Hzd4w1atY2nqzn0Z0HGrmt8=
+X-Google-Smtp-Source: APiQypKa7+JJBgKWMKENf1y38p33ouL8FwaQ2E3Ko3mn7fuLxfJvmhBJyaH9VbcgEiIgNxIey9DUxA==
+X-Received: by 2002:a17:90a:d0c5:: with SMTP id y5mr7257509pjw.67.1587497312525;
+        Tue, 21 Apr 2020 12:28:32 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id o63sm3326604pjb.40.2020.04.21.12.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 12:28:31 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 12:28:29 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Brendan Shanks <bshanks@codeweavers.com>
+Cc:     linux-input@vger.kernel.org, rydberg@bitmath.org,
+        linux-kernel@vger.kernel.org,
+        Mathieu Maret <mathieu.maret@gmail.com>,
+        mmaret@pixium-vision.com
+Subject: Re: BUG: ff_effects lost after a fork
+Message-ID: <20200421192829.GB125362@dtor-ws>
+References: <20191127101008.GA327265@nuka.localdomain>
+ <5404D7D5-47EF-4399-B0D9-B3C68A3D5895@codeweavers.com>
 MIME-Version: 1.0
-References: <20200421171552.28393-1-luke.r.nels@gmail.com> <6f1130b3-eaea-cc5e-716f-5d6be77101b9@zytor.com>
-In-Reply-To: <6f1130b3-eaea-cc5e-716f-5d6be77101b9@zytor.com>
-From:   Xi Wang <xi.wang@gmail.com>
-Date:   Tue, 21 Apr 2020 12:26:12 -0700
-Message-ID: <CAKU6vyb38-XcFeAiP7OW0j++0jS-J4gZP6S2E21dpQwvcEFpKQ@mail.gmail.com>
-Subject: Re: [PATCH bpf 1/2] bpf, x32: Fix invalid instruction in BPF_LDX zero-extension
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Wang YanQing <udknight@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5404D7D5-47EF-4399-B0D9-B3C68A3D5895@codeweavers.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 10:39 AM H. Peter Anvin <hpa@zytor.com> wrote:
-> x32 is not x86-32.  In Linux we generally call the latter "i386".
+On Tue, Apr 21, 2020 at 11:53:19AM -0700, Brendan Shanks wrote:
+> 
+> > On Nov 27, 2019, at 2:10 AM, Mathieu Maret <mathieu.maret@gmail.com>
+> > wrote:
+> > 
+> > Hi,
+> > 
+> > I'm using evdev for vibrator interface.  I can register ff_effect
+> > and play them.  But, if I do any kind of fork, all the effects are
+> > flush and cannot be used.
+> > 
+> > You can find, below, an example of such a program.  From some trace
+> > have put in the kernel, it's seems that at the end of the system()
+> > call, evdev_flush get called.
+> > 
+> > evdev_flush() will call flush_effects() that will remove all the
+> > registered effects.
+> > 
+> > I've only one device with vibrator and it's a imx6 4.1.15 kernel.
+> > But code looks the same that in linus master that why I'm posting it
+> > here. I hope that it will not waste people time
+> > 
+> 
+> Hi everyone,
+> 
+> I’m also hitting this bug with games that use force-feedback steering
+> wheels under Wine/Proton. It typically shows up as EVIOCSFF ioctls
+> failing with EINVAL, since all the effects were unexpectedly flushed.
+> 
+> The problem is that input_ff_flush() is called whenever a file
+> descriptor is closed, but there can be multiple descriptors open to
+> the same file description (through fork(), dup(), etc).
+> input_ff_flush() removes all effects added by that file description,
+> which the users of the other descriptors certainly don't expect.
+> 
+> As for the fix, maybe fd_ops->flush() shouldn’t be implemented at all?
+> In the current design, effects “belong” to a file description (a
+> struct file *), not a descriptor. This seems sensible to me: a process
+> could open a device, upload an effect, then fork(), and it makes sense
+> that the child would have full control of the effects created by the
+> parent. It seems to me like nothing should be done when a descriptor
+> is closed, and input_ff_flush() should be called only when the whole
+> struct file is released.
+> 
 
-Agreed.  Most of the previous patches to this file use "x32" and this
-one just wanted to be consistent.
+Yes, I agree, we should drop setting fops->flush and move the code into
+evdev_release(). This will ensure that the effects are stopped and
+erased once file is closed, but will allow passing the descriptors
+around.
 
-> C7 /0 imm32 is a valid instruction on i386. However, it is also
-> inefficient when the destination is a register, because B8+r imm32 is
-> equivalent, and when the value is zero, XOR is indeed more efficient.
->
-> The real error is using EMIT3() instead of EMIT2_off32(), but XOR is
-> more efficient. However, let's make the bug statement *correct*, or it
-> is going to confuse the Hades out of people in the future.
+Can I get a real patch for this please?
 
-I don't see how the bug statement is incorrect, which merely points
-out that "C7 C0 0" is an invalid instruction, regardless of whether
-the JIT intended to emit C7 /0 imm32, B8+r imm32, 31 /r, 33 /r, or any
-other equivalent form.
+Thanks.
+
+-- 
+Dmitry
