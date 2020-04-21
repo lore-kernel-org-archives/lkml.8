@@ -2,289 +2,200 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A31C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A20BC54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9591C20747
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:00:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kCcz+Vvy"
+	by mail.kernel.org (Postfix) with ESMTP id 5C4D6206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 14:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587477707;
+	bh=0/vQA+06myS9w12zgVJltCpDyjHNAbrJL3ofBd0iyqs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wB+dxISIPAEey3oNPuM5X2XhSZRjIUPZ8d3LEgeE3OXSFW523jypsQwRHnJCohqSa
+	 /ZHhxKCdZyIg2HnM9UlUpoWkcStIDDjJ6lwg0SXZsPpDog++DX1bxE1jLlX95BPmGi
+	 yuBvV1rNh3R+aXnRttytX95LQ10DdR9x4Vq4EI6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgDUOAr (ORCPT
+        id S1728856AbgDUOBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:00:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728772AbgDUOAq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:00:46 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A42A2C061A41
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 07:00:46 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id o3so8461182vsd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 07:00:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3ufO0oc55SP4ppmrO49IkerUiLNfh37ywo2Lik40Adk=;
-        b=kCcz+VvyC/0IdI5gEKgvRf59mDcFEWTu/D1Ov9OACQKF1YEkdo/czGTGb09gPZe9nz
-         CfsRp2cuik7vLYUVXc/zRZIz/M1iAydX8PM+/hsH0pTD5HFXabDTfMSk9eFgJkf3ycO7
-         HwuB5lGEuv0muapa9Iicl4fVKvJVOBKTUwZNnrjM1HewRbx4nfgTaatf1/BoG80s61zW
-         zUZqNfnUAgdZ4NNjRfNyQ7RzgUiJnjKAU5TERSmQGAsn+H+9jQpQp0sn66wVsw8QKIBy
-         9i+kJngnYZVql2Yc/4MY3Wcxtw20Jw09IHP0gKmV2Uy8DOQ/gPTUZZAHunscQ2NmHS2m
-         LbgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3ufO0oc55SP4ppmrO49IkerUiLNfh37ywo2Lik40Adk=;
-        b=LYG/m3e3RuXlzPZfdTz88zBWo7N92p8XFFWF9dhQqySqhUY5J4AjpuQZaED8dVrrXz
-         PB8ztVlr5i9ccnocps3ZC6CRRN5mdzDaTeDiL/+T6kfbgbgf93t7Eu9aJGw5i3js+GXY
-         WJTnalOqgoSaMW4XoCssh9QAuXwBGg/WFCllIpWuM5k26l5M61eo3NF95CqtKimnHYTZ
-         rGBxiezCAKIrfgocTL8F0JLznU3cEDBzMGDoyGGUAnwqSgLNIYVVX6/gWt1fafEu2Pfa
-         lHRPmzu4CSeO+5quZjp296ZbWtBFsWJfCdVBVrct1PogqegGBHJ6QMpwThkOzS9QFoGw
-         lDMQ==
-X-Gm-Message-State: AGi0PubaK3igfHxWaDN5pvx4+W6xp5HgLTAZ3i+qAoyRwsKVcR0PK5Wi
-        RlKaEQGkeJ3bSNxe/nnaHGQ8VHwdppePhcRwnhkM0Q==
-X-Google-Smtp-Source: APiQypIQv+t4aZS0+jM79vzmZ4/jT5P5I5xj04qZzFmgC4QPVEnzYfRtjHR37+JUUyx2j+WbklBp5MY8qqFQMsGI4Pk=
-X-Received: by 2002:a67:8b09:: with SMTP id n9mr15252066vsd.191.1587477645532;
- Tue, 21 Apr 2020 07:00:45 -0700 (PDT)
+        Tue, 21 Apr 2020 10:01:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbgDUOBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:01:46 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E94A20679;
+        Tue, 21 Apr 2020 14:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587477705;
+        bh=0/vQA+06myS9w12zgVJltCpDyjHNAbrJL3ofBd0iyqs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Kz2e4XnCFbk6VbsPQIcV3zjxNZYM1a1OFHKEbEfX5WpOIqCu/yjJc77Os4fCLubWH
+         hwXo4yyb2Zt0yN9I+jIPm4gmEMxvcxttbUkhOpv24NSGy4uoFaDDyCnqReFSVsfFoT
+         e6HZDtycaaBEFfILCfF2uUY8ePnHTnHk4Iub9BL4=
+Received: by mail-qt1-f177.google.com with SMTP id z90so11555406qtd.10;
+        Tue, 21 Apr 2020 07:01:45 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZcaT/3kcrQN37gTePm6VV8yx9ue128eOAXLyyOQfeGeWc5PdpR
+        eTthRMhQR3CkvZG1Hg5Og06Q04xS0JK7n3yj1g==
+X-Google-Smtp-Source: APiQypKbFgwXWO0X+MdJIdqnmE60P1/zCgH5EWDZARwe6ZtYF6Vf583clemWqHDkdhmu0JX82hpeUDHUlbCtHKEhIMA=
+X-Received: by 2002:aed:3ac8:: with SMTP id o66mr9578884qte.110.1587477704278;
+ Tue, 21 Apr 2020 07:01:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200304121943.28989-1-daniel.baluta@oss.nxp.com> <20200304121943.28989-2-daniel.baluta@oss.nxp.com>
-In-Reply-To: <20200304121943.28989-2-daniel.baluta@oss.nxp.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 21 Apr 2020 16:00:09 +0200
-Message-ID: <CAPDyKFp6KLuuuVFcEWGxn5NkuDSkhM-MjRiiYj_zC4mFxhOBag@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/2] PM / domains: Introduce multi PM domains helpers
-To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        ranjani.sridharan@linux.intel.com,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        alsa-devel@alsa-project.org, Linux PM <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Kevin Hilman <khilman@kernel.org>,
+References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
+ <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
+ <20200421110537.GC5983@pendragon.ideasonboard.com> <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
+ <20200421134654.GD5983@pendragon.ideasonboard.com>
+In-Reply-To: <20200421134654.GD5983@pendragon.ideasonboard.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 21 Apr 2020 09:01:32 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
+Message-ID: <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        paul.olaru@nxp.com, dl-linux-imx <linux-imx@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, shengjiu.wang@nxp.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 13:20, Daniel Baluta <daniel.baluta@oss.nxp.com> wrote:
+On Tue, Apr 21, 2020 at 8:47 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 >
-> From: Daniel Baluta <daniel.baluta@nxp.com>
+> Hi Yamada-san,
 >
-> This patch introduces helpers support for multi PM domains.
+> On Tue, Apr 21, 2020 at 10:15:02PM +0900, Masahiro Yamada wrote:
+> > On Tue, Apr 21, 2020 at 8:05 PM Laurent Pinchart wrote:
+> > > On Tue, Apr 21, 2020 at 07:45:05PM +0900, Masahiro Yamada wrote:
+> > > > On Tue, Apr 21, 2020 at 7:08 PM Laurent Pinchart wrote:
+> > > > > On Fri, Feb 28, 2020 at 06:37:30PM -0600, Rob Herring wrote:
+> > > > > > Most folks only run dt_binding_check on the single schema they care about
+> > > > > > by setting DT_SCHEMA_FILES. That means example is only checked against
+> > > > > > that one schema which is not always sufficient.
+> > > > > >
+> > > > > > Let's address this by splitting processed-schema.yaml into 2 files: one
+> > > > > > that's always all schemas for the examples and one that's just the schema
+> > > > > > in DT_SCHEMA_FILES for dtbs.
+> > > > >
+> > > > > This broke
+> > > > >
+> > > > > make DT_SCHEMA_FILES=Documentation/devicetree/.. dt_binding_check
+> > > >
+> > > > What is intended by
+> > > > "DT_SCHEMA_FILES=Documentation/devicetree/.."  ?
+> > >
+> > > My bad, I forgot to write that ... is the continuation of the string.
+> > > It's any yaml schema file that has an example.
+> >
+> > Ah, OK. I just input verbatim.
+> >
+> > Is it broken?
+> >
+> > You can specify any individual file(s) under Documentation/devicetree/bindings/.
+> >
+> > For example, the following worked for me.
+> >
+> > $ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml
+> >  dt_binding_check
+> >   HOSTCC  scripts/basic/fixdep
+> >   HOSTCC  scripts/dtc/dtc.o
+> >   HOSTCC  scripts/dtc/flattree.o
+> >   HOSTCC  scripts/dtc/fstree.o
+> >   HOSTCC  scripts/dtc/data.o
+> >   HOSTCC  scripts/dtc/livetree.o
+> >   HOSTCC  scripts/dtc/treesource.o
+> >   HOSTCC  scripts/dtc/srcpos.o
+> >   HOSTCC  scripts/dtc/checks.o
+> >   HOSTCC  scripts/dtc/util.o
+> >   LEX     scripts/dtc/dtc-lexer.lex.c
+> >   YACC    scripts/dtc/dtc-parser.tab.[ch]
+> >   HOSTCC  scripts/dtc/dtc-lexer.lex.o
+> >   HOSTCC  scripts/dtc/dtc-parser.tab.o
+> >   HOSTCC  scripts/dtc/yamltree.o
+> >   HOSTLD  scripts/dtc/dtc
+> >   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+> >   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+> >   DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+> >   CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+> >   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
 >
-> API consists of:
+> This is getting interesting.
 >
-> 1) dev_multi_pm_attach - powers up all PM domains associated with a given
-> device. Because we can attach one PM domain per device, we create
-> virtual devices (children of initial device) and associate PM domains
-> one per virtual device.
+> ~/src/kernel/linux $ make O=output/x86 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dt_binding_check
+> make[1]: Entering directory '/home/laurent/src/kernel/linux/output/x86'
+>   HOSTCC  scripts/basic/fixdep
+>   HOSTCC  scripts/dtc/dtc.o
+>   HOSTCC  scripts/dtc/flattree.o
+>   HOSTCC  scripts/dtc/fstree.o
+>   HOSTCC  scripts/dtc/data.o
+>   HOSTCC  scripts/dtc/livetree.o
+>   HOSTCC  scripts/dtc/treesource.o
+>   HOSTCC  scripts/dtc/srcpos.o
+>   HOSTCC  scripts/dtc/checks.o
+>   HOSTCC  scripts/dtc/util.o
+>   LEX     scripts/dtc/dtc-lexer.lex.c
+>   YACC    scripts/dtc/dtc-parser.tab.[ch]
+>   HOSTCC  scripts/dtc/dtc-lexer.lex.o
+>   HOSTCC  scripts/dtc/dtc-parser.tab.o
+>   HOSTCC  scripts/dtc/yamltree.o
+>   HOSTLD  scripts/dtc/dtc
+>   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+>   DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+> make[1]: Leaving directory '/home/laurent/src/kernel/linux/output/x86'
 >
-> 2) dev_multi_pm_detach - detaches all virtual devices from PM domains
-> attached with.
+> ~/src/kernel/this_is_a_long_directory_name/linux $ make O=output/x86 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dt_binding_check
+> make[1]: Entering directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
+>   HOSTCC  scripts/basic/fixdep
+>   HOSTCC  scripts/dtc/dtc.o
+>   HOSTCC  scripts/dtc/flattree.o
+>   HOSTCC  scripts/dtc/fstree.o
+>   HOSTCC  scripts/dtc/data.o
+>   HOSTCC  scripts/dtc/livetree.o
+>   HOSTCC  scripts/dtc/treesource.o
+>   HOSTCC  scripts/dtc/srcpos.o
+>   HOSTCC  scripts/dtc/checks.o
+>   HOSTCC  scripts/dtc/util.o
+>   LEX     scripts/dtc/dtc-lexer.lex.c
+>   YACC    scripts/dtc/dtc-parser.tab.[ch]
+>   HOSTCC  scripts/dtc/dtc-lexer.lex.o
+>   HOSTCC  scripts/dtc/dtc-parser.tab.o
+>   HOSTCC  scripts/dtc/yamltree.o
+>   HOSTLD  scripts/dtc/dtc
+>   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+> make[2]: execvp: /bin/sh: Argument list too long
+> make[2]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Documentation/devicetree/bindings/Makefile:38: Documentation/devicetree/bindings/processed-schema-examples.yaml] Error 127
+> make[1]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Makefile:1300: dt_binding_check] Error 2
+> make[1]: Leaving directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
+> make: *** [Makefile:180: sub-make] Error 2
 >
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> It seems to only fail with out of tree builds (O=...). I expect that
+> failures will become more common the more YAML bindings we have, even
+> without long directory names.
 
-First, apologize for the delay.
+dt-mk-schema can take and recurse a single directory already, so does
+this fix it for you:
 
-In general I don't mind adding helpers that can be used to decrease
-open coding. However, in this case, I wonder how useful the helpers
-would really be.
+@@ -22,7 +22,7 @@ $(obj)/%.example.dts: $(src)/%.yaml
+check_dtschema_version FORCE
+ DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
 
-More precisely, according to the information I have, a device may not
-always need all of its PM domains to be turned on together, but
-perhaps only a subset of them. Depending on the current use case that
-is running.
+ quiet_cmd_mk_schema = SCHEMA  $@
+-      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+$(real-prereqs)
++      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+$(srctree)/$(src)
 
-Of course, some cases follow your expectations, but as stated, some
-others do not.
-
-Do you have an idea how many users that would be able to switch to
-these new APIs as of today?
-
-Kind regards
-Uffe
-
-> ---
->  drivers/base/power/common.c | 93 +++++++++++++++++++++++++++++++++++++
->  include/linux/pm_domain.h   | 19 ++++++++
->  2 files changed, 112 insertions(+)
->
-> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
-> index bbddb267c2e6..6d1f142833b1 100644
-> --- a/drivers/base/power/common.c
-> +++ b/drivers/base/power/common.c
-> @@ -228,3 +228,96 @@ void dev_pm_domain_set(struct device *dev, struct dev_pm_domain *pd)
->         device_pm_check_callbacks(dev);
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_domain_set);
-> +
-> +/**
-> + * dev_multi_pm_attach - power up device associated power domains
-> + * @dev: The device used to lookup the PM domains
-> + *
-> + * Parse device's OF node to find all PM domains specifiers. For each power
-> + * domain found, create a virtual device and associate it with the
-> + * current power domain.
-> + *
-> + * This function should typically be invoked by a driver during the
-> + * probe phase, in the case its device requires power management through
-> + * multiple PM domains.
-> + *
-> + * Returns a pointer to @dev_multi_pm_domain_data if successfully attached PM
-> + * domains, NULL when the device doesn't need a PM domain or when single
-> + * power-domains exists for it, else an ERR_PTR() in case of
-> + * failures.
-> + */
-> +struct dev_multi_pm_domain_data *dev_multi_pm_attach(struct device *dev)
-> +{
-> +       struct dev_multi_pm_domain_data *mpd, *retp;
-> +       int num_domains;
-> +       int i;
-> +
-> +       num_domains = of_count_phandle_with_args(dev->of_node, "power-domains",
-> +                                                "#power-domain-cells");
-> +       if (num_domains < 2)
-> +               return NULL;
-> +
-> +       mpd = devm_kzalloc(dev, GFP_KERNEL, sizeof(*mpd));
-> +       if (!mpd)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       mpd->dev = dev;
-> +       mpd->num_domains = num_domains;
-> +
-> +       mpd->virt_devs = devm_kmalloc_array(dev, mpd->num_domains,
-> +                                           sizeof(*mpd->virt_devs),
-> +                                           GFP_KERNEL);
-> +       if (!mpd->virt_devs)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       mpd->links = devm_kmalloc_array(dev, mpd->num_domains,
-> +                                       sizeof(*mpd->links), GFP_KERNEL);
-> +       if (!mpd->links)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       for (i = 0; i < mpd->num_domains; i++) {
-> +               mpd->virt_devs[i] = dev_pm_domain_attach_by_id(dev, i);
-> +               if (IS_ERR(mpd->virt_devs[i])) {
-> +                       retp = (struct dev_multi_pm_domain_data *)
-> +                               mpd->virt_devs[i];
-> +                       goto exit_unroll_pm;
-> +               }
-> +               mpd->links[i] = device_link_add(dev, mpd->virt_devs[i],
-> +                                               DL_FLAG_STATELESS |
-> +                                               DL_FLAG_PM_RUNTIME |
-> +                                               DL_FLAG_RPM_ACTIVE);
-> +               if (!mpd->links[i]) {
-> +                       retp = ERR_PTR(-ENOMEM);
-> +                       dev_pm_domain_detach(mpd->virt_devs[i], false);
-> +                       goto exit_unroll_pm;
-> +               }
-> +       }
-> +       return mpd;
-> +
-> +exit_unroll_pm:
-> +       while (--i >= 0) {
-> +               device_link_del(mpd->links[i]);
-> +               dev_pm_domain_detach(mpd->virt_devs[i], false);
-> +       }
-> +
-> +       return retp;
-> +}
-> +EXPORT_SYMBOL(dev_multi_pm_attach);
-> +
-> +/**
-> + * dev_multi_pm_detach - Detach a device from its PM domains.
-> + * Each multi power domain is attached to a virtual children device
-> + *
-> + * @mpd: multi power domains data, contains the association between
-> + * virtul device and PM domain
-> + */
-> +void dev_multi_pm_detach(struct dev_multi_pm_domain_data *mpd)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < mpd->num_domains; i++) {
-> +               device_link_del(mpd->links[i]);
-> +               dev_pm_domain_detach(mpd->virt_devs[i], false);
-> +       }
-> +}
-> +EXPORT_SYMBOL(dev_multi_pm_detach);
-> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-> index 9ec78ee53652..5bcb35150af2 100644
-> --- a/include/linux/pm_domain.h
-> +++ b/include/linux/pm_domain.h
-> @@ -183,6 +183,13 @@ struct generic_pm_domain_data {
->         void *data;
->  };
->
-> +struct dev_multi_pm_domain_data {
-> +       struct device *dev; /* parent device */
-> +       struct device **virt_devs; /* virtual children links */
-> +       struct device_link **links; /*  links parent <-> virtual children */
-> +       int num_domains;
-> +};
-> +
->  #ifdef CONFIG_PM_GENERIC_DOMAINS
->  static inline struct generic_pm_domain_data *to_gpd_data(struct pm_domain_data *pdd)
->  {
-> @@ -369,18 +376,27 @@ struct generic_pm_domain *of_genpd_remove_last(struct device_node *np)
->
->  #ifdef CONFIG_PM
->  int dev_pm_domain_attach(struct device *dev, bool power_on);
-> +struct dev_multi_pm_domain_data *dev_multi_pm_attach(struct device *dev);
->  struct device *dev_pm_domain_attach_by_id(struct device *dev,
->                                           unsigned int index);
->  struct device *dev_pm_domain_attach_by_name(struct device *dev,
->                                             const char *name);
->  void dev_pm_domain_detach(struct device *dev, bool power_off);
->  int dev_pm_domain_start(struct device *dev);
-> +void dev_multi_pm_detach(struct dev_multi_pm_domain_data *mpd);
->  void dev_pm_domain_set(struct device *dev, struct dev_pm_domain *pd);
-> +
->  #else
->  static inline int dev_pm_domain_attach(struct device *dev, bool power_on)
->  {
->         return 0;
->  }
-> +
-> +struct dev_multi_pm_domain_data *dev_multi_pm_attach(struct device *dev)
-> +{
-> +       return NULL;
-> +}
-> +
->  static inline struct device *dev_pm_domain_attach_by_id(struct device *dev,
->                                                         unsigned int index)
->  {
-> @@ -396,6 +412,9 @@ static inline int dev_pm_domain_start(struct device *dev)
->  {
->         return 0;
->  }
-> +
-> +void dev_multi_pm_detach(struct dev_multi_pm_domain_data *mpd) {}
-> +
->  static inline void dev_pm_domain_set(struct device *dev,
->                                      struct dev_pm_domain *pd) {}
->  #endif
-> --
-> 2.17.1
->
+ DT_DOCS = $(addprefix $(src)/, \
+        $(shell \
