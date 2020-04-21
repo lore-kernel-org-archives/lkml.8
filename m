@@ -2,117 +2,71 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA6FC55181
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AB0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 348542084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:10:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tN0ezxY1"
+	by mail.kernel.org (Postfix) with ESMTP id 5978A2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 08:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgDUIKl (ORCPT
+        id S1728276AbgDUILx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:10:41 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:10522 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726691AbgDUIKl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:10:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587456641; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=qhaNkfzyboUvEtiuhO92CVabH2/SAoOegZ9nrvZgMWo=; b=tN0ezxY1Mxl8UD7vD3a6o8qYJdtZG7ca7qMhCEreqa4+Bh9rajOEhA32dD5Dvv9lTkIz4nKQ
- UDyaDxUSefF4Nv1KQ9004oBGybziVsNitbFG6SR7tDSDgK+C6/uf2noi4tncFIXBRJJ8jNNb
- yA3Sj6afQipgWUQK4L7UeVMyx8A=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9eaa71.7f8335735fb8-smtp-out-n01;
- Tue, 21 Apr 2020 08:10:25 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6D5D4C433F2; Tue, 21 Apr 2020 08:10:24 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.184.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC36CC433CB;
-        Tue, 21 Apr 2020 08:10:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC36CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH] arm64: dts: qcom: sm8250: Fix PDC compatible and reg
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200415054703.739507-1-bjorn.andersson@linaro.org>
- <20200421070227.GD72691@vkoul-mobl>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <d67adcc2-7f5c-3ed7-5c7c-c3b6b46cbd0b@codeaurora.org>
-Date:   Tue, 21 Apr 2020 13:40:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 04:11:53 -0400
+Received: from mga04.intel.com ([192.55.52.120]:43881 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbgDUILw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 04:11:52 -0400
+IronPort-SDR: WO4rKBY3M6PZUmzFDM9MMJjl2sm1R+ts5CGrkzXHY96+zWBsHsWIR24VImCy8YkMJ3TVHNHx4h
+ TpSS422mCqsQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 01:11:52 -0700
+IronPort-SDR: ixj8cJC6iVxpphbvx58ZvD8piP3yswAmL2PZ1MnJhmBv0/+E5BR36AM0FW2MydEmmDTsVSOPiL
+ 6kaKKZESdsBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,409,1580803200"; 
+   d="scan'208";a="456017509"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Apr 2020 01:11:52 -0700
+Date:   Tue, 21 Apr 2020 01:11:51 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH v2 00/10] KVM: VMX: Unionize vcpu_vmx.exit_reason
+Message-ID: <20200421081151.GG11134@linux.intel.com>
+References: <20200415175519.14230-1-sean.j.christopherson@intel.com>
+ <a77ca940-afe4-a94a-2698-6cda0f95ba5c@redhat.com>
+ <20200416150749.GA12170@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200421070227.GD72691@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416150749.GA12170@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Apr 16, 2020 at 08:07:49AM -0700, Sean Christopherson wrote:
+> On Thu, Apr 16, 2020 at 03:44:06PM +0200, Paolo Bonzini wrote:
+> > On 15/04/20 19:55, Sean Christopherson wrote:
+> > For now I committed only patches 1-9, just to limit the conflicts with
+> > the other series.  I would like to understand how you think the
+> > conflicts should be fixed with the union.
+> 
+> Pushed a branch.  Basically, take the union code and then make sure there
+> aren't any vmcs_read32(VM_EXIT_INTR_INFO) or vmcs_readl(EXIT_QUALIFICATION)
+> calls outside of the caching accessors or dump_vmcs().
+> 
+>   https://github.com/sean-jc/linux for_paolo_merge_union_cache 
 
-We can drop the second reg,
-, <0 0x17c000f0 0 0x60>
-
-The change [1] to read second reg and configure it, is not yet gone in 
-pdc irqchip driver.
-Otherthan this, the patch looks good to me.
-
-Thanks,
-Maulik
-
-On 4/21/2020 12:32 PM, Vinod Koul wrote:
-> On 14-04-20, 22:47, Bjorn Andersson wrote:
->> The pdc node suffers from both too narrow compatible and insufficient
->> cells in the reg, fix these.
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> Tested-by: Vinod Koul <vkoul@kernel.org>
->
->> Fixes: 60378f1a171e ("arm64: dts: qcom: sm8250: Add sm8250 dts file")
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sm8250.dtsi | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> index 891d83b2afea..2a7eaefd221d 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> @@ -314,8 +314,8 @@ intc: interrupt-controller@17a00000 {
->>   		};
->>   
->>   		pdc: interrupt-controller@b220000 {
->> -			compatible = "qcom,sm8250-pdc";
->> -			reg = <0x0b220000 0x30000>, <0x17c000f0 0x60>;
->> +			compatible = "qcom,sm8250-pdc", "qcom,pdc";
->> +			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x60>;
->>   			qcom,pdc-ranges = <0 480 94>, <94 609 31>,
->>   					  <125 63 1>, <126 716 12>;
->>   			#interrupt-cells = <2>;
->> -- 
->> 2.24.0
-[1] https://patchwork.kernel.org/patch/11145353/
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Sent v3, seemed easier than having you decipher my merge resolution and
+then fix more conflicts with kvm/queue.
