@@ -2,110 +2,86 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E79E5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC541C54FC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C34DA2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD4621D94
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587438936;
-	bh=Dv18RkM/i/aNmqHhDlxgNPltdMz92rPWl42vH2eEQjg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qWO4XsbGYVpV8bpWbXOxK2efpCHv9u4jso/lPlitFt4DB3gCvSY9l/JeFV9WZOFqJ
-	 X90Q+iQnDDDQId2AZd8x7nmYCBLulOI4qQJXx0k2cBSBXidN+0HhuI7mutYXKxoqJ8
-	 iPsfCFeXgTvrdhO+I5eRvzmTa1RB/Zbf1dajEuMo=
+	s=default; t=1587439286;
+	bh=xEmUHAOoyZcRhEoFa4R3C3VggYvh9vMG39wtbPGgH1s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QrAHOkHCqgzIykF6HGRVEKfEb8BnPZw3fexiX9dke50YFFL4dthKhQqxWUwHos+wo
+	 Wm+2wIoCKj2UQMkgO7UjvXgpKs/vpcEVJ4rmqWglygdrkMuFPfkmU8vudDVlmbNKmS
+	 P/6b373w0C+QUF7o5gJvy8R1nhU4sPdJIILLU6QY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgDUDPb (ORCPT
+        id S1727848AbgDUDVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:15:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37270 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 23:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgDUDPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:15:30 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        id S1725989AbgDUDVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 23:21:25 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25D0A2078C;
-        Tue, 21 Apr 2020 03:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11A86206F9;
+        Tue, 21 Apr 2020 03:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587438928;
-        bh=Dv18RkM/i/aNmqHhDlxgNPltdMz92rPWl42vH2eEQjg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aUsrVfvDLG9F2d9reZ0pddGudkYrEt1bkskJ86vx0WNg7NjV8Fdo7DrSvjr0hk/ET
-         uFSwiA+q7ZwyGROzOHZTF77Ne9ndJIoQ4up9rwVaSQEWa383jx+e5LMCSK+7Axnxuk
-         SrdSeKdUo8v0c4Uqal4IfVxKE/nG/VbaPcGmMQYc=
-Date:   Mon, 20 Apr 2020 20:15:27 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        RCU <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v1 5/6] rcu: rename kfree_call_rcu()/__kfree_rcu()
-Message-Id: <20200420201527.679247f6fa76cba4331f3cd3@linux-foundation.org>
-In-Reply-To: <20200316190144.GB10577@pc636>
-References: <20200315181840.6966-1-urezki@gmail.com>
-        <20200315181840.6966-6-urezki@gmail.com>
-        <20200316152541.GD190951@google.com>
-        <20200316190144.GB10577@pc636>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1587439285;
+        bh=xEmUHAOoyZcRhEoFa4R3C3VggYvh9vMG39wtbPGgH1s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Yd21Ne0fDGlsG9hDF1efk/I564yGFpzgFZFsP1yBrZAVAz5nMXJ49sQTAqfnuRauF
+         K4AIlzKFC8Fm2XVUUY2lL+xgOjxMvqxl0awzBrCWD/sUH3aEpbyM/4y0rlcmf8VLqu
+         bTJ3cC3JKi5NI3xiVwEJxcK++wkD7P9AmlbIh+EE=
+Date:   Tue, 21 Apr 2020 11:21:17 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rouven Czerwinski <r.czerwinski@pengutronix.de>,
+        stable@vger.kernel.org,
+        Clemens Gruber <clemens.gruber@pqgruber.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: imx: provide v7_cpu_resume() only on
+ ARM_CPU_SUSPEND=y
+Message-ID: <20200421032116.GD8571@dragon>
+References: <20200323081933.31497-1-a.fatoum@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323081933.31497-1-a.fatoum@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Mar 2020 20:01:44 +0100 Uladzislau Rezki <urezki@gmail.com> wrote:
-
-> On Mon, Mar 16, 2020 at 11:25:41AM -0400, Joel Fernandes wrote:
-> > On Sun, Mar 15, 2020 at 07:18:39PM +0100, Uladzislau Rezki (Sony) wrote:
-> > > Rename kfree_call_rcu() to the kvfree_call_rcu().
-> > > The reason is, it is capable of freeing vmalloc()
-> > > memory now.
-> > > 
-> > > Do the same with __kfree_rcu() macro, it becomes
-> > > __kvfree_rcu(), the reason is the same as pointed
-> > > above.
-> > 
-> > Vlad, this patch does not apply to my branch that I shared with you. Sorry if
-> > I was not clear earlier, could we work on the same branch to avoid conflicts?
-> > 
-> It was clear to me. Basically i knew that you would be able to apply it
-> because of slim changes. I based my work on latest Paul's branch simply
-> because that my current setup was based on that, it would take more time
-> to switch.
+On Mon, Mar 23, 2020 at 09:19:33AM +0100, Ahmad Fatoum wrote:
+> 512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
+> introduced an unintended linker error for i.MX6 configurations that have
+> ARM_CPU_SUSPEND=n which can happen if neither CONFIG_PM, CONFIG_CPU_IDLE,
+> nor ARM_PSCI_FW are selected.
 > 
-> Next changes i will base on your branch.
+> Fix this by having v7_cpu_resume() compiled only when cpu_resume() it
+> calls is available as well.
 > 
-> > I based the kfree_rcu shrinker patches on an 'rcu/kfree' branch in my git
-> > tree: https://github.com/joelagnel/linux-kernel/tree/rcu/kfree
-> > 
-> > For now I manually applied 5/6. All others applied cleanly.
-> > 
-> > Updated the tree as I continue to review your patches.
-> >
+> The C declaration for the function remains unguarded to avoid future code
+> inadvertently using a stub and introducing a regression to the bug the
+> original commit fixed.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
+> Reported-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-I'm not sure what's happening here - these patches aren't yet in
-linux-next.
-
-A couple of thoughts:
-
-- Please cc linux-mm@kvack.org on this patchset and anything else
-  which impacts MM.
-
-- It's a bit strange to create new infrastructure which has but a
-  single call site.  Please tell us much more about "there was also
-  request/interest so there will be new comers" to set minds at ease. 
-
-  Who/where are these possible new callsites and when can we expect to
-  see that code?
-
+Applied, thanks.
