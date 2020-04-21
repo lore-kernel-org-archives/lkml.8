@@ -2,243 +2,111 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8329CC54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C3CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2002098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28270206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 07:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587452453;
-	bh=zj9d9cwdHZ5qHikaJDBubllxAlkLIGcOH7Hj3crnKcA=;
+	s=default; t=1587452534;
+	bh=Z+fmf3MZTanUK1eDlZtoFdJGrDCVH0CGd4BwENIe5E0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bKq0Jz+MffTRYM4hhTg+gOEAtSr+ZPKFlPX76znLVqwMpsSHxJLGRmqPxL0xStJAo
-	 2bzp01uFUPz0Z8deOF9dlHRQMDmOkHMVcnb4WxIkc4U066J2m/1cgaV8fJN2+Emt2F
-	 C4pJiMyHqr72cIKlYh1OkunHR8+ppjQYVqWif1ts=
+	b=OXJbeLxrV8/6a/un5NMfSKM3q7aDaAOc2phVKHHLzM8C4jHcu0hZaCjpowOmHloH9
+	 khNos3AkFNJ8Fpw0/9vrQ7vYareidsk+sV5fQ5+Is0a03cuq8jBSFepXZNnVbdku23
+	 T5qfmTuJUYi4j0CS6CcgD0r+gbLKzIeZTkFIILFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgDUHAw (ORCPT
+        id S1726801AbgDUHCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:00:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57796 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 03:02:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbgDUHAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 03:00:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725926AbgDUHCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 03:02:13 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59138206A5;
-        Tue, 21 Apr 2020 07:00:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2DC8206A5;
+        Tue, 21 Apr 2020 07:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587452450;
-        bh=zj9d9cwdHZ5qHikaJDBubllxAlkLIGcOH7Hj3crnKcA=;
+        s=default; t=1587452532;
+        bh=Z+fmf3MZTanUK1eDlZtoFdJGrDCVH0CGd4BwENIe5E0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TMK6nl0EyaFuaRtNuMsz/e5jUwPHi2u02DWp2g2sLTfVNXzMWYILZOM6BCKprGkE9
-         8q8w0L+SDJwuCI+QnBVkBTOjUnHqyH9jqEdAfZdiUJsRrHOgGPo0tmntLaBRl8HKJF
-         I1zhcg99WhKMQsTb606k/nO+lmvevgM/peUuU1BI=
-Date:   Tue, 21 Apr 2020 09:00:48 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
-Message-ID: <20200421070048.GD347130@kroah.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-4-mcgrof@kernel.org>
- <20200420201615.GC302402@kroah.com>
- <20200420204156.GO11244@42.do-not-panic.com>
+        b=GBUY2Mu1pH5QqANYe1GJjosD6c/oF6gvLuIOBkUU4xMMIBCPQc8eHirwbD/lIN+fo
+         pUy9A2APpR3RQVTYdoe85rp+Z4PEu0b/7iqs2G14lfRh1kJ+t8bXU8/q58TDECxLfu
+         Zii20HSrpehI+Mop+ZzV1HtSTFSAZqshN53NFF/4=
+Date:   Tue, 21 Apr 2020 08:02:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jann Horn <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] arm64: entry: Enable random_kstack_offset support
+Message-ID: <20200421070206.GB14448@willie-the-truck>
+References: <20200324203231.64324-1-keescook@chromium.org>
+ <20200324203231.64324-6-keescook@chromium.org>
+ <20200420205458.GC29998@willie-the-truck>
+ <202004201529.BB787BB@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200420204156.GO11244@42.do-not-panic.com>
+In-Reply-To: <202004201529.BB787BB@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 08:41:56PM +0000, Luis Chamberlain wrote:
-> On Mon, Apr 20, 2020 at 10:16:15PM +0200, Greg KH wrote:
-> > On Sun, Apr 19, 2020 at 07:45:22PM +0000, Luis Chamberlain wrote:
-> > 
-> > This patch triggered gmail's spam detection, your changelog text is
-> > whack...
-> 
-> Oh? What do you think triggered it?
-
-No idea.
-
-> 
-> > > diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
-> > > index 19091e1effc0..d84038bce0a5 100644
-> > > --- a/block/blk-debugfs.c
-> > > +++ b/block/blk-debugfs.c
-> > > @@ -3,6 +3,9 @@
-> > >  /*
-> > >   * Shared request-based / make_request-based functionality
-> > >   */
-> > > +
-> > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > > +
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/blkdev.h>
-> > >  #include <linux/debugfs.h>
-> > > @@ -13,3 +16,30 @@ void blk_debugfs_register(void)
-> > >  {
-> > >  	blk_debugfs_root = debugfs_create_dir("block", NULL);
-> > >  }
-> > > +
-> > > +int __must_check blk_queue_debugfs_register(struct request_queue *q)
-> > > +{
-> > > +	struct dentry *dir = NULL;
-> > > +
-> > > +	/* This can happen if we have a bug in the lower layers */
-> > > +	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
-> > > +	if (dir) {
-> > > +		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
-> > > +			kobject_name(q->kobj.parent));
-> > > +		dput(dir);
-> > > +		return -EALREADY;
-> > > +	}
-> > > +
-> > > +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> > > +					    blk_debugfs_root);
-> > > +	if (!q->debugfs_dir)
-> > > +		return -ENOMEM;
-> > 
-> > Why doesn't the directory just live in the request queue, or somewhere
-> > else, so that you save it when it is created and then that's it.  No
-> > need to "look it up" anywhere else.
-> 
-> Its already there. And yes, after my changes it is technically possible
-> to just re-use it directly. But this is complicated by a few things. One
-> is that at this point in time, asynchronous request_queue removal is
-> still possible, and so a race was exposed where a requeust_queue may be
-> lingering but its old device is gone. That race is fixed by reverting us
-> back to synchronous request_queue removal, therefore ensuring that the
-> debugfs dir exists so long as the device does.
-> 
-> I can remove the debugfs_lookup() *after* we revert to synchronous
-> request_queue removal, or we just re-order the patches so that the
-> revert happens first. That should simplify this patch.
-> 
-> The code in this patch was designed to help dispute the logic behind
-> the CVE, in particular it shows exactly where debugfs_dir *is* the
-> one found by debugfs_lookup(), and shows the real issue behind the
-> removal.
-> 
-> But yeah, now that that is done, I hope its clear to all, and I think
-> this patch can be simplified if we just revert the async requeust_queue
-> removal first.
-
-Don't try to "dispute" crazyness, that's not what kernel code is for.
-Just do the right thing, and simply saving off the pointer to the
-debugfs file when created is the "correct" thing to do, no matter what.
-No race conditions or anything else can happen when you do that.
-
-> > Or do you do that in later patches?  I only see this one at the moment,
-> > sorry...
-> > 
-> > >  static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
-> > > +					    struct request_queue *q,
-> > >  					    struct blk_trace *bt)
-> > >  {
-> > >  	struct dentry *dir = NULL;
-> > >  
-> > > +	/* This can only happen if we have a bug on our lower layers */
-> > > +	if (!q->kobj.parent) {
-> > > +		pr_warn("%s: request_queue parent is gone\n", buts->name);
-> > 
-> > A kobject always has a parent, unless it has not been registered yet, so
-> > I don't know what you are testing could ever happen.
-> 
-> Or it has been kobject_del()'d?
-
-If that happened, how in the world are you in this function anyway, as
-the request_queue is an invalid pointer at that point in time???
-
-> A deferred requeust_queue removal shows this is possible, the parent is
-> taken underneath from us because the refcounting of this kobject is
-> already kobject_del()'d, and its actual removal scheduled for later.
-> The parent is taken underneath from us prior to the scheduled removal
-> completing.
-
-No, a parent's reference is always valid while the child pointer is
-alive.
-
-There is an odd race condition right now that we are working on fixing
-if you notice another lkml thread, but that race will soon be fixed.  So
-no need for every single user in the kernel to try to test for something
-like this (hint, this check is still wrong as with this logic, what
-could prevent parent from going away right _after_ you check it???)
-
-Just remove this invalid check please.
-
-> > > +		return NULL;
-> > > +	}
-> > > +
+On Mon, Apr 20, 2020 at 03:34:57PM -0700, Kees Cook wrote:
+> On Mon, Apr 20, 2020 at 09:54:58PM +0100, Will Deacon wrote:
+> > On Tue, Mar 24, 2020 at 01:32:31PM -0700, Kees Cook wrote:
 > > > +	/*
-> > > +	 * From a sysfs kobject perspective, the request_queue sits on top of
-> > > +	 * the gendisk, which has the name of the disk. We always create a
-> > > +	 * debugfs directory upon init for this gendisk kobject, so we re-use
-> > > +	 * that if blktrace is going to be done for it.
+> > > +	 * Since the compiler chooses a 4 bit alignment for the stack,
+> > > +	 * let's save one additional bit (9 total), which gets us up
+> > > +	 * near 5 bits of entropy.
 > > > +	 */
-> > > +	if (blk_trace_target_disk(buts->name, kobject_name(q->kobj.parent))) {
-> > > +		if (!q->debugfs_dir) {
-> > > +			pr_warn("%s: expected request_queue debugfs_dir is not set\n",
-> > > +				buts->name);
+> > > +	choose_random_kstack_offset(get_random_int() & 0x1FF);
 > > 
-> > What is userspace supposed to be able to do if they see this warning?
+> > Hmm, this comment doesn't make any sense to me. I mean, I get that 0x1ff
+> > is 9 bits, and that is 4+5 but so what?
 > 
-> Userspace doesn't parse warnings, but the NULL ensures it won't crash
-> the kernel. The warn informs the kernel of a possible block layer bug.
-
-Again, the code should not care if the pointer is NULL, as only debugfs
-deals with those pointers (and it can handle a NULL pointer just fine.)
-
-> > > +			return NULL;
-> > > +		}
-> > > +		/*
-> > > +		 * debugfs_lookup() is used to ensure the directory is not
-> > > +		 * taken from underneath us. We must dput() it later once
-> > > +		 * done with it within blktrace.
-> > > +		 */
-> > > +		dir = debugfs_lookup(buts->name, blk_debugfs_root);
-> > > +		if (!dir) {
-> > > +			pr_warn("%s: expected request_queue debugfs_dir dentry is gone\n",
-> > > +				buts->name);
-> > 
-> > Again, can't we just save the pointer when we create it and not have to
-> > look it up again?
+> Er, well, yes. I guess I was just trying to explain why there were 9
+> bits saved here and to document what I was seeing the compiler actually
+> doing with the values. (And it serves as a comparison to the x86 comment
+> which is explaining similar calculations in the face of x86_64 vs ia32.)
 > 
-> Only if we do the revert of the requeust_queue removal first.
-
-Your end goal should be no more debugfs_lookup() calls.  Hopefully by
-the end of this patch series, that is the result.
-
-> > > +			return NULL;
-> > > +		}
-> > > +		 /*
-> > > +		 * This is a reaffirmation that debugfs_lookup() shall always
-> > > +		 * return the same dentry if it was already set.
-> > > +		 */
-> > 
-> > I'm all for reaffirmation and the like, but really, is this needed???
+> Would something like this be better?
 > 
-> To those who were still not sure that the issue was not a debugfs issue
-> I hoped this to make it clear. But indeed, if we revert back to
-> synchronous request_queue removal, that should simplify this.
+> /*
+>  * Since the compiler uses 4 bit alignment for the stack (1 more than
+>  * x86_64), let's try to match the 5ish-bit entropy seen in x86_64,
+>  * instead of having needlessly lower entropy. As a result, keep the
+>  * low 9 bits.
+>  */
 
-Again, don't pander to crazies :)
+Yes, thank you! I was missing the comparison to x86_64 and so the one
+"additional" bit didn't make sense to me.
 
-thanks,
+With the new comment:
 
-greg k-h
+Acked-by: Will Deacon <will@kernel.org>
+
+I'm assuming you're merging this via some other tree, but let me know
+if you need anything else from me.
+
+Cheers,
+
+Will
